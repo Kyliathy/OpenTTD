@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_sl.cpp Code handling saving and loading of map. */
+/** @file map_sl.cpp Code handling saving and loading of map. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 
@@ -14,6 +14,7 @@
 #include "compat/map_sl_compat.h"
 
 #include "../map_func.h"
+#include "../map_layer.h"
 #include "../core/bitmath_func.hpp"
 #include "../fios.h"
 
@@ -68,6 +69,8 @@ struct MAPSChunkHandler : ChunkHandler {
 		SlGlobList(slt);
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() != -1) SlErrorCorrupt("Too many MAPS entries");
 
+		//H-3: the file's count sizes every plane read, so a count this build cannot store is a corrupt file.
+		if (!MultiLayerMap::IsStorableLayerCount(_map_layers)) SlErrorCorrupt("Invalid map layer count");
 		_map_file_layers = _map_layers;
 		//The live world always has every layer. Missing planes are filled in AfterLoadGame.
 		Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS);
@@ -82,6 +85,8 @@ struct MAPSChunkHandler : ChunkHandler {
 		SlGlobList(slt);
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() != -1) SlErrorCorrupt("Too many MAPS entries");
 
+		//H-3: the file's count sizes every plane read, so a count this build cannot store is a corrupt file.
+		if (!MultiLayerMap::IsStorableLayerCount(_map_layers)) SlErrorCorrupt("Invalid map layer count");
 		_load_check_data.map_size_x = _map_dim_x;
 		_load_check_data.map_size_y = _map_dim_y;
 		_load_check_data.map_layers = _map_layers;

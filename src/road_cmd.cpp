@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file road_cmd.cpp Commands related to road tiles. */
+/** @file road_cmd.cpp Commands related to road tiles. @see docs/zz-reach2/architecture/landscape/road-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -22,6 +22,7 @@
 #include "autoslope.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
+#include "layer_portal_cmd.h"
 #include "strings_func.h"
 #include "vehicle_func.h"
 #include "sound_func.h"

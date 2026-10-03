@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail_cmd.cpp Handling of rail tiles. */
+/** @file rail_cmd.cpp Handling of rail tiles. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -22,6 +22,7 @@
 #include "water.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
+#include "layer_portal_cmd.h"
 #include "vehicle_func.h"
 #include "tunnelbridge.h"
 #include "elrail_func.h"

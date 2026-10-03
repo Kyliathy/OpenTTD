@@ -5,12 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_cmd.h Command that builds a pair of layer portal tiles. */
+/** @file layer_portal_cmd.h Command that builds a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef LAYER_PORTAL_CMD_H
 #define LAYER_PORTAL_CMD_H
 
 #include "command_type.h"
+#include "direction_type.h"
 #include "map_layer_type.h"
 #include "rail_type.h"
 #include "road_type.h"

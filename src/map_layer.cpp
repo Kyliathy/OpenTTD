@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer.cpp The multi-layered map controller. */
+/** @file map_layer.cpp The multi-layered map controller. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "map_layer.h"
@@ -80,7 +80,7 @@ static const MapLayerRules _map_layer_rules[] = {
 /* static */ void MultiLayerMap::ValidateLayerCount(uint layer_count)
 {
 	//Live games allocate every layer. Tests may ask for one.
-	if (layer_count < 1 || layer_count > MAX_MAP_LAYERS) {
+	if (!MultiLayerMap::IsStorableLayerCount(layer_count)) {
 		FatalError("Invalid map layer count");
 	}
 }

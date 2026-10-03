@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_func.h Functions related to maps. */
+/** @file map_func.h Functions related to maps. @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef MAP_FUNC_H
 #define MAP_FUNC_H
@@ -239,7 +239,7 @@ public:
 	 * (Re)allocates a map with the given dimension.
 	 * @param size_x Width of one layer along the NE/SW edge.
 	 * @param size_y Height of one layer along the SE/NW edge.
-	 * @param layer_count How many layers to store. Live games stay at 1 until a later plan.
+	 * @param layer_count How many layers to store. Live games store MAX_MAP_LAYERS; the default of 1 serves tests.
 	 */
 	static void Allocate(uint size_x, uint size_y, uint layer_count = 1);
 	static void CountLandTiles();

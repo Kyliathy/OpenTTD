@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file road_gui.cpp GUI for building roads. */
+/** @file road_gui.cpp GUI for building roads. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "gui.h"
@@ -69,6 +69,8 @@ static bool _place_road_end_half;
 static RoadType _cur_roadtype;
 
 static DiagDirection _road_depot_orientation;
+/** Door direction chosen in the road elevator picker. */
+static DiagDirection _road_elevator_door_direction = DiagDirection::NE;
 
 struct RoadWaypointPickerSelection {
 	RoadStopClassID sel_class; ///< Selected road waypoint class.
@@ -1312,9 +1314,6 @@ static void ShowRoadDepotPicker(Window *parent)
 	new BuildRoadDepotWindow(_build_road_depot_desc, parent);
 }
 
-/** Door direction chosen in the road elevator picker. */
-static DiagDirection _road_elevator_door_direction = DiagDirection::NE;
-
 /** Picker for the door a road elevator faces on the viewed layer. */
 struct BuildRoadElevatorWindow : public PickerWindowBase {
 	/**
@@ -1407,8 +1406,9 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_elevator_
 	EndContainer(),
 };
 
+/** Window description of the road elevator picker. It has neither a sticky nor a default-size box, so it keeps no ini_key. */
 static WindowDesc _build_road_elevator_desc(
-	WindowPosition::Automatic, "build_road_elevator", 0, 0,
+	WindowPosition::Automatic, {}, 0, 0,
 	WindowClass::BuildDepot, WindowClass::BuildToolbar,
 	WindowDefaultFlag::Construction,
 	_nested_build_road_elevator_widgets

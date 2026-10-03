@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file object_cmd.cpp Handling of object tiles. */
+/** @file object_cmd.cpp Handling of object tiles. @see docs/zz-reach2/architecture/landscape/object-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -39,6 +39,7 @@
 #include "station_func.h"
 #include "object_cmd.h"
 #include "landscape_cmd.h"
+#include "map_layer.h"
 #include "pathfinder/water_regions.h"
 
 #include "table/strings.h"

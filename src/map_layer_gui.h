@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.h Names, icons and view-layer switching. */
+/** @file map_layer_gui.h Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef MAP_LAYER_GUI_H
 #define MAP_LAYER_GUI_H
@@ -14,7 +14,7 @@
 #include "gfx_type.h"
 #include "strings_type.h"
 
-class Window;
+struct Window;
 
 /**
  * Player-facing name of one map layer.

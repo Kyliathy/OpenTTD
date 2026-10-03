@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file misc.cpp Misc functions that shouldn't be here. */
+/** @file misc.cpp Misc functions that shouldn't be here. @see docs/zz-reach2/architecture/game-loop/archi-game-loop.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "landscape.h"
@@ -37,6 +37,7 @@
 
 extern TileIndex _cur_tileloop_tile;
 extern void MakeNewgameSettingsLive();
+extern uint8_t _map_file_layers;
 
 void InitializeSound();
 void InitializeMusic();
@@ -98,6 +99,8 @@ void InitializeGame(uint size_x, uint size_y, bool reset_date, bool reset_settin
 
 	//AD-11: from this plan on, a live game stores every layer.
 	Map::Allocate(size_x, size_y, MAX_MAP_LAYERS);
+	//M-4: no file has been read for this game yet. A MAPS chunk sets the real count; an old TTD save has none, so its missing planes are initialised.
+	_map_file_layers = 1;
 
 	_pause_mode = {};
 	_game_speed = 100;

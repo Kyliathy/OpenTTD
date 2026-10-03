@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. */
+/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
@@ -32,10 +32,19 @@
 #include "newgrf_railtype.h"
 #include "newgrf_roadtype.h"
 #include "map_layer_gui.h"
+#include "viewport_func.h"
 
 #include "table/track_land.h"
+/** One sprite of a road tile layout. table/road_land.h needs it; the layout is the one in road_cmd.cpp. */
+struct DrawRoadTileStruct {
+	uint16_t image; ///< Sprite of this part of the layout.
+	uint8_t subcoord_x; ///< X offset of the sprite within the tile.
+	uint8_t subcoord_y; ///< Y offset of the sprite within the tile.
+};
+
 #include "table/road_land.h"
 #include "table/sprites.h"
+#include "table/strings.h"
 
 #include "safeguards.h"
 
@@ -265,7 +274,8 @@ static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 	blocked = EnsureNoVehicleOnGround(pair);
 	if (blocked.Failed()) return blocked;
 
-	if (GetLayerPortalTransportType(tile) == TransportType::Rail && HasLayerPortalReservation(tile)) {
+	//M-2: a train may have reserved through either end, so both ends are checked.
+	if (GetLayerPortalTransportType(tile) == TransportType::Rail && (HasLayerPortalReservation(tile) || HasLayerPortalReservation(pair))) {
 		return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
 	}
 
@@ -286,14 +296,17 @@ static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 		DoClearSquare(tile);
 		DoClearSquare(pair);
 		if (transport == TransportType::Rail) {
-			NotifyRailPortalChanged(tile, owner);
-			AddSideToSignalBuffer(pair, ReverseDiagDir(shaft), owner);
-			YapfNotifyTrackLayoutChange(pair, DiagDirToDiagTrack(shaft));
+			//H-1: both ends are Clear now, so the saved shaft gives the doors. The pair's door faces the clicked end's shaft direction.
+			Track track = DiagDirToDiagTrack(shaft);
+			AddSideToSignalBuffer(tile, ReverseDiagDir(shaft), owner);
+			AddSideToSignalBuffer(pair, shaft, owner);
+			YapfNotifyTrackLayoutChange(tile, track);
+			YapfNotifyTrackLayoutChange(pair, track);
 		}
 	}
 
 	//One price for the pair, the same multiple used when the pair was built.
-	return CommandCost(ExpensesType::Construction, -_price[Price::ClearTunnel] * 4);
+	return CommandCost(ExpensesType::Construction, _price[Price::ClearTunnel] * 4);
 }
 
 /**
@@ -331,13 +344,16 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 	if (transport_type == TransportType::Rail) {
 		if (!ValParamRailType(railtype)) return CMD_ERROR;
 	} else if (transport_type == TransportType::Road) {
+		//An elevator carries road vehicles only: the type must exist for this company and must not be a tram type.
 		if (!ValParamRoadType(roadtype) || !RoadTypeIsRoad(roadtype)) return CMD_ERROR;
 	} else {
 		return CMD_ERROR;
 	}
 	if (to_underlying(shaft_dir) > to_underlying(DiagDirection::NW)) return CMD_ERROR;
-	//Version 1 pairs Surface with Underground only.
-	if (!IsValidTile(tile) || target_layer != MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile))) {
+	//Version 1 pairs Surface with Underground only. M-11: a layer without a pair (Space) is refused here, so TileInLayer never receives MapLayer::Invalid.
+	if (!IsValidTile(tile)) return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
+	MapLayer expected_target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
+	if (expected_target == MapLayer::Invalid || target_layer != expected_target) {
 		return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
 	}
 
@@ -349,10 +365,10 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 	CommandCost cost(ExpensesType::Construction);
 	CommandCost cleared = Command<Commands::LandscapeClear>::Do(flags, tile);
 	if (cleared.Failed()) return cleared;
-	cost.AddCost(cleared);
+	cost.AddCost(std::move(cleared));
 	cleared = Command<Commands::LandscapeClear>::Do(flags, pair);
 	if (cleared.Failed()) return cleared;
-	cost.AddCost(cleared);
+	cost.AddCost(std::move(cleared));
 	cost.AddCost(_price[Price::BuildTunnel] * 4);
 
 	if (flags.Test(DoCommandFlag::Execute)) {

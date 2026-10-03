@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer.cpp Test stacked-plane addressing and MultiLayerMap. */
+/** @file map_layer.cpp Test stacked-plane addressing and MultiLayerMap. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 
@@ -21,6 +21,7 @@
 #include "../layer_portal_cmd.h"
 #include "../rail_type.h"
 #include "../road_type.h"
+#include "../road.h"
 
 #include "../safeguards.h"
 
@@ -55,6 +56,16 @@ TEST_CASE("Map::Allocate layer count")
 	Map::Allocate(64, 64);
 	CHECK(Map::LayerCount() == 1);
 	CHECK(Map::Size() == Map::PlaneSize());
+}
+
+//FD-11: a savegame layer count is storable only from one layer up to every layer this build knows.
+TEST_CASE("Storable layer counts")
+{
+	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(0));
+	CHECK(MultiLayerMap::IsStorableLayerCount(1));
+	CHECK(MultiLayerMap::IsStorableLayerCount(MAX_MAP_LAYERS));
+	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(MAX_MAP_LAYERS + 1));
+	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(255));
 }
 
 //I-1: a tile round-trips through its column, plane row and layer, and TileY stays stacked.
@@ -255,6 +266,7 @@ TEST_CASE("Layer portal neighbour mapping and relocation")
 	TileIndex surface = TileXYL(10, 10, MapLayer::Surface);
 	TileIndex underground = TileXYL(10, 10, MapLayer::Underground);
 
+	//Every shaft direction: build the pair, then check its bits, its neighbour steps and the relocation across the shaft.
 	for (DiagDirection shaft : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
 		MakeRailLayerPortal(surface, OWNER_NONE, shaft, MapLayer::Underground, RAILTYPE_RAIL);
 		MakeRailLayerPortal(underground, OWNER_NONE, ReverseDiagDir(shaft), MapLayer::Surface, RAILTYPE_RAIL);
@@ -269,6 +281,7 @@ TEST_CASE("Layer portal neighbour mapping and relocation")
 		CHECK(HasLayerPortalReservation(surface));
 		SetLayerPortalReservation(surface, false);
 
+		//Only the shaft exit leaves the layer. Every other exit is the plain neighbour on the same layer.
 		for (DiagDirection exit : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
 			TileIndex expected = (exit == shaft) ? underground : TileAddByDiagDir(surface, exit);
 			CHECK(GetLayerPortalNextTile(surface, exit) == expected);
@@ -284,6 +297,8 @@ TEST_CASE("Layer portal neighbour mapping and relocation")
 		CHECK(TileVirtXY(x, y) == underground);
 	}
 
+	//Road type masks are game state. The test sets the original types so SetRoadTypes accepts ROADTYPE_ROAD.
+	ResetRoadTypes();
 	MakeRoadLayerPortal(surface, OWNER_NONE, DiagDirection::SE, MapLayer::Underground, ROADTYPE_ROAD);
 	CHECK(GetLayerPortalTransportType(surface) == TransportType::Road);
 	CHECK(GetRoadTypeRoad(surface) == ROADTYPE_ROAD);

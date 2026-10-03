@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file network_command.cpp Command handling over network connections. */
+/** @file network_command.cpp Command handling over network connections. @see docs/zz-reach2/architecture/commands/archi-commands.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 #include "network_admin.h"
@@ -27,6 +27,7 @@
 #include "../group_cmd.h"
 #include "../industry_cmd.h"
 #include "../landscape_cmd.h"
+#include "../layer_portal_cmd.h"
 #include "../league_cmd.h"
 #include "../misc_cmd.h"
 #include "../news_cmd.h"
@@ -84,7 +85,8 @@ static constexpr auto _callback_tuple = std::make_tuple(
 	&CcGame,
 	&CcAddVehicleNewGroup,
 	&CcMoveStationName,
-	&CcMoveWaypointName
+	&CcMoveWaypointName,
+	&CcBuildLayerPortal
 );
 
 #ifdef SILENCE_GCC_FUNCTION_POINTER_CAST

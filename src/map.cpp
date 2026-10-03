@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map.cpp Base functions related to the map and distances on them. */
+/** @file map.cpp Base functions related to the map and distances on them. @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "debug.h"
@@ -48,7 +48,7 @@
 		FatalError("Invalid map size");
 	}
 
-	//One layer for a live game. Tests may ask for every layer this build knows.
+	//Live games store every layer (MAX_MAP_LAYERS). Tests may ask for fewer.
 	MultiLayerMap::ValidateLayerCount(layer_count);
 
 	Debug(Facility::Map, Severity::Error, "Allocating map of size {}x{}x{}", size_x, size_y, layer_count);

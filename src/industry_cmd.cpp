@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.cpp Handling of industry tiles. */
+/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "misc/history_type.hpp"
@@ -48,6 +48,7 @@
 #include "landscape_cmd.h"
 #include "terraform_cmd.h"
 #include "map_func.h"
+#include "map_layer.h"
 #include "script/api/script_event_types.hpp"
 #include "timer/timer.h"
 #include "timer/timer_game_calendar.h"

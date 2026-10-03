@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file train_cmd.cpp Handling of trains. */
+/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "error.h"
@@ -2462,9 +2462,6 @@ static void ClearPathReservation(const Train *v, TileIndex tile, Trackdir track_
 	} else if (IsLayerPortalTile(tile)) {
 		//This end is freed now. The pair, reached through the shaft, is freed when the train leaves that end.
 		UnreserveRailTrack(tile, TrackdirToTrack(track_dir));
-		if (IsLayerPortalShaftExit(tile, dir)) {
-			[[maybe_unused]] TileIndex pair = GetLayerPortalNextTile(tile, dir);
-		}
 	} else if (IsRailStationTile(tile)) {
 		//Station tiles are never portals, so the next platform tile stays a same-layer neighbour.
 		TileIndex new_tile = TileAddByDiagDir(tile, dir);

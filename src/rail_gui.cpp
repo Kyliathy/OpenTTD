@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail_gui.cpp %File for dealing with rail construction user interface. */
+/** @file rail_gui.cpp %File for dealing with rail construction user interface. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "gui.h"
@@ -62,6 +62,8 @@ static DiagDirection _build_depot_direction; ///< Currently selected depot direc
 static bool _convert_signal_button;          ///< convert signal button in the signal GUI pressed
 static SignalVariant _cur_signal_variant;    ///< set the signal variant (for signal GUI)
 static SignalType _cur_signal_type;          ///< set the signal type (for signal GUI)
+/** Mouth direction chosen in the rail portal picker. */
+static DiagDirection _rail_portal_mouth_direction = DiagDirection::NE;
 
 struct WaypointPickerSelection {
 	StationClassID sel_class; ///< Selected station class.
@@ -1891,9 +1893,6 @@ static void ShowBuildTrainDepotPicker(Window *parent)
 	new BuildRailDepotWindow(_build_depot_desc, parent);
 }
 
-/** Mouth direction chosen in the rail portal picker. */
-static DiagDirection _rail_portal_mouth_direction = DiagDirection::NE;
-
 /** Picker for the mouth a rail portal faces on the viewed layer. */
 struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	/**
@@ -1982,8 +1981,9 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_portal_wi
 	EndContainer(),
 };
 
+/** Window description of the rail portal picker. It has neither a sticky nor a default-size box, so it keeps no ini_key. */
 static WindowDesc _build_rail_portal_desc(
-	WindowPosition::Automatic, "build_rail_layer_portal", 0, 0,
+	WindowPosition::Automatic, {}, 0, 0,
 	WindowClass::BuildDepot, WindowClass::BuildToolbar,
 	WindowDefaultFlag::Construction,
 	_nested_build_rail_portal_widgets

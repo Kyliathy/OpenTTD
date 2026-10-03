@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file smallmap_gui.cpp GUI that shows a small map of the world with metadata like owner or height. */
+/** @file smallmap_gui.cpp GUI that shows a small map of the world with metadata like owner or height. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -1512,12 +1512,16 @@ public:
 	}
 
 	/**
-	 * Center the small map on the current center of the viewport.
+	 * Center the small map on the current center of the main viewport, switching the small map to the layer that viewport shows.
 	 */
 	void SmallMapCenterOnCurrentPos()
 	{
 		Window *main = GetMainWindow();
-		SetViewportLayer(main, this->layer);
+		//M-7: the smallmap follows the main view's layer to centre on it. It never pushes its own layer onto the main view.
+		if (this->layer != main->viewport->layer) {
+			this->layer = main->viewport->layer;
+			this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+		}
 		const Viewport &vp = *main->viewport;
 		Point viewport_center = InverseRemapCoords2(vp.virtual_left + vp.virtual_width / 2, vp.virtual_top + vp.virtual_height / 2, false, nullptr, this->layer);
 		viewport_center.y -= static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
