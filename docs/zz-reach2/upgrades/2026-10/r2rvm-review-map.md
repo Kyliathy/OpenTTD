@@ -355,6 +355,8 @@ Tasks 1.1 to 7.5 are in this file; tasks from 8.1 on are in [r2rvm2-review-map-2
 
 #### L-2 Split toolbars lose Subsidies
 
+- **Fix:** the Subsidies half by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) (Towns menu entry); the Pause and Fast-forward half stays open. Implementation is staged; split-width checks are pending.
+
 `arrange14` and `arrange15` ([toolbar_gui.cpp:1578-1646](../../../../src/toolbar_gui.cpp#L1578-L1646)) no longer contain `WID_TN_SUBSIDIES`. For 15 to 20 buttons, Pause and Fast-forward appear in one row only. This follows r2mlm1 task 4.3. The Subsidies half is planned in [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md), the fix the user chose on 2026-10-03. The Pause and Fast-forward half is open.
 
 #### L-3 String hygiene

@@ -46,8 +46,24 @@ static MapLayerConstructions UndergroundConstructions()
 	allowed.Set(MapLayerConstruction::Road);
 	allowed.Set(MapLayerConstruction::RailStation);
 	allowed.Set(MapLayerConstruction::RoadStop);
-	allowed.Set(MapLayerConstruction::Depot);
+	allowed.Set(MapLayerConstruction::TrainDepot);
+	allowed.Set(MapLayerConstruction::RoadDepot);
 	allowed.Set(MapLayerConstruction::Signal);
+	allowed.Set(MapLayerConstruction::Sign);
+	allowed.Set(MapLayerConstruction::LayerPortal);
+	return allowed;
+}
+
+/**
+ * D-2: Deep Underground accepts roads, road stops, road depots, signs and portals, with no rail.
+ * @return The road-only construction bitset.
+ */
+static MapLayerConstructions DeepUndergroundConstructions()
+{
+	MapLayerConstructions allowed;
+	allowed.Set(MapLayerConstruction::Road);
+	allowed.Set(MapLayerConstruction::RoadStop);
+	allowed.Set(MapLayerConstruction::RoadDepot);
 	allowed.Set(MapLayerConstruction::Sign);
 	allowed.Set(MapLayerConstruction::LayerPortal);
 	return allowed;
@@ -66,13 +82,61 @@ static MapLayerConstructions SpaceConstructions()
 
 /**
  * One row per layer, in MapLayer order.
- * Surface is the historical map. Underground is flat bedrock. Space is flat vacuum.
+ * Surface is the historical Map, Underground is bedrock, Space is vacuum, and Deep Underground is dark bedrock.
  */
 static const MapLayerRules _map_layer_rules[] = {
 	{ AllConstructions(), MapLayerGround::Natural, 0, true, true, true },
 	{ UndergroundConstructions(), MapLayerGround::Bedrock, 0, false, false, false },
 	{ SpaceConstructions(), MapLayerGround::Vacuum, 0, false, false, false },
+	{ DeepUndergroundConstructions(), MapLayerGround::DeepBedrock, 0, false, false, false },
 };
+static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);
+
+/**
+ * Whether a portal kind may join two Layers in either order.
+ * @param kind Kind of portal.
+ * @param a Layer of one end.
+ * @param b Layer of the other end.
+ * @return True for Surface/Underground tunnels or an upper-Layer/Deep Underground elevator.
+ */
+/* static */ bool MultiLayerMap::IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b)
+{
+	//Pairs are unordered, so compare their stable storage values lower first.
+	if (a > b) std::swap(a, b);
+	switch (kind) {
+		case LayerPortalKind::RailTunnel:
+		case LayerPortalKind::RoadTunnel:
+			return a == MapLayer::Surface && b == MapLayer::Underground;
+		case LayerPortalKind::RoadElevator:
+			return b == MapLayer::DeepUnderground && (a == MapLayer::Surface || a == MapLayer::Underground);
+	}
+	NOT_REACHED();
+}
+
+/**
+ * The Layer a new portal connects to from its clicked Tile.
+ * @param from Layer of the clicked Tile.
+ * @param kind Kind of portal being built.
+ * @param elevator_upper Upper destination selected when building from Deep Underground.
+ * @return Target Layer, or MapLayer::Invalid for an unsupported start or destination.
+ */
+/* static */ MapLayer MultiLayerMap::GetPortalTargetLayer(MapLayer from, LayerPortalKind kind, MapLayer elevator_upper)
+{
+	switch (kind) {
+		case LayerPortalKind::RailTunnel:
+		case LayerPortalKind::RoadTunnel:
+			//Tunnels retain the original Surface and Underground pair in both directions.
+			if (from == MapLayer::Surface) return MapLayer::Underground;
+			if (from == MapLayer::Underground) return MapLayer::Surface;
+			return MapLayer::Invalid;
+		case LayerPortalKind::RoadElevator:
+			//Either upper Layer can descend; the picker chooses the ascent destination at the bottom.
+			if (from == MapLayer::Surface || from == MapLayer::Underground) return MapLayer::DeepUnderground;
+			if (from == MapLayer::DeepUnderground && (elevator_upper == MapLayer::Surface || elevator_upper == MapLayer::Underground)) return elevator_upper;
+			return MapLayer::Invalid;
+	}
+	NOT_REACHED();
+}
 
 /**
  * Stop the game when a map asks for a layer count this build cannot store.
@@ -159,7 +223,7 @@ static void FillLayer(MapLayer layer, ClearGround ground, uint height, bool void
 		return;
 	}
 
-	//Underground and Space must not consume random numbers. The surface seed stays bit-identical.
+	//Every Layer other than the Surface must not consume random numbers. The surface seed stays bit-identical.
 #ifdef _DEBUG
 	uint32_t random_before_0 = _random.state[0];
 	uint32_t random_before_1 = _random.state[1];

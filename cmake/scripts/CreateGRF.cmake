@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.17)
 #
 # Create a single GRF file based on sprites/<grfname>.nfo and sprites/*.png
 # files.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md
 #
 
 if(NOT NFORENUM_EXECUTABLE)
@@ -45,8 +46,20 @@ foreach(NFO_LINE IN LISTS NFO_LINES)
     endif()
 endforeach()
 
-execute_process(COMMAND ${NFORENUM_EXECUTABLE} -s sprites/${GRF_SOURCE_FOLDER_NAME}.nfo RESULT_VARIABLE RESULT)
+# NFORenum 6.2.0 on Windows needs its embedded data materialised before linting.
+# Keep that cache beside the generated sprites instead of writing to the user profile.
+if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/.nforenum/5.dat")
+    execute_process(COMMAND ${NFORENUM_EXECUTABLE} "--data=${CMAKE_CURRENT_BINARY_DIR}" --write-data
+        OUTPUT_QUIET ERROR_VARIABLE DATA_ERROR RESULT_VARIABLE RESULT)
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to initialise NFORenum data (${RESULT}): ${DATA_ERROR}")
+    endif()
+endif()
+
+execute_process(COMMAND ${NFORENUM_EXECUTABLE} "--data=${CMAKE_CURRENT_BINARY_DIR}" -s sprites/${GRF_SOURCE_FOLDER_NAME}.nfo
+    OUTPUT_VARIABLE NFORENUM_OUTPUT RESULT_VARIABLE RESULT)
 if(RESULT)
+    message(STATUS "${NFORENUM_OUTPUT}")
     if(NOT RESULT MATCHES "^[0-9]*$")
         message(FATAL_ERROR "Failed to run NFORenum (${RESULT}), please check NFORENUM_EXECUTABLE variable")
     endif()

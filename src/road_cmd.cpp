@@ -1160,7 +1160,7 @@ CommandCost CmdBuildRoadDepot(DoCommandFlags flags, TileIndex tile, RoadType rt,
 	if (!ValParamRoadType(rt) || !IsValidDiagDirection(dir)) return CMD_ERROR;
 
 	//A road depot needs the depot permission. A tram depot also needs the tram permission.
-	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Depot); layer_cost.Failed()) return layer_cost;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::RoadDepot); layer_cost.Failed()) return layer_cost;
 	if (GetRoadTramType(rt) == RoadTramType::Tram) {
 		if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Tram); layer_cost.Failed()) return layer_cost;
 	}

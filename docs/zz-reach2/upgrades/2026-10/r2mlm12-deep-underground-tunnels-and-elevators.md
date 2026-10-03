@@ -222,6 +222,8 @@ _Applies to Group 1._
 
 **Entry gate (whole plan).**
 
+**Coding-stage override, 2026-10-03.** The user directed this session to "do the coding" and defer testing until their save is ready. Code can be staged once the code/art prerequisites exist; this does not satisfy the runtime or human-review gate. The original acceptance gate below remains open. R2MLM6's 44 sprites and Action 5 integration now exist and build in Debug, and the R2MLM8/R2MLM9 drawing swaps are implemented. Their visibility checks and R2RVM2's scenario/decision tasks remain pending. No in-game capture or scenario is claimed here.
+
 - **Required:**
   - every task of [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) is checked and its `## Completion Conditions` hold;
   - [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) `## Completion Conditions` hold: 44 sprites in `map_layers.png` and `map_layers.nfo`, the `0x1C` row, the constants in `src/table/sprites.h`, and no missing-sprite warning;
@@ -244,6 +246,8 @@ _Applies to Group 1._
 | [tools/run_game_logged.sh](tools/run_game_logged.sh) | 1-17 | Usage and output locations of the logged Debug game: the log in `build/scenario-logs/`, desync messages in `build/save/autosave/commands-out.log`, and crash files in `build/`. |
 
 ### Group 1 - Entry gate and baseline
+
+Coding baseline: `build/build-layer-art-Debug.log` builds both targets without compiler warnings; the existing unit-test baseline is 106/106 in `build/ctest-Debug.log`. A fresh runtime baseline and the user's version-369 portal save are pending. All six named capture/input functions exist in `tools/ottd_window.ps1`.
 
 {{SIMPLE}}
 - [ ] 1.1 Check the entry gate above and record each of its three conditions under this task, with the grep output. If one fails, stop here and tell the user which plan must finish first.

@@ -89,7 +89,7 @@ _Applies to Groups 1-2._
 - [x] 2.5 Create `src/map_layer_gui.cpp` implementing the name and icon lookups with a `switch` over `MapLayer` (stand-in icons from `## Outcome and Boundaries`), and `GetNextMapLayer` wrapping to `MapLayer::Surface` after `layer_count - 1`.
 - [x] 2.6 Implement the interim `SetViewportLayer`: assign `w->viewport->layer`, mark the window dirty, and call `InvalidateWindowData(WindowClass::MainToolbar, 0)`; add a comment that r2mlm5 replaces this body with scroll translation.
 - [x] 2.7 Implement `CycleMainViewportLayer` as `SetViewportLayer(GetMainWindow(), GetNextMapLayer(current, MAX_MAP_LAYERS))`, with a comment that r2mlm2 swaps `MAX_MAP_LAYERS` for `MultiLayerMap::GetLayerCount()`.
-- [ ] 2.8 Register `map_layer_gui.h` and `map_layer_gui.cpp` in `src/CMakeLists.txt`, then build both configurations. The files are registered. The build waits on the toolchain.
+- [x] 2.8 Register `map_layer_gui.h` and `map_layer_gui.cpp` in `src/CMakeLists.txt`, then build both configurations. Verified 2026-10-03: both targets build in Debug and RelWithDebInfo (`build/verify-Debug.log`, `build/verify-RelWithDebInfo.log`).
 
 ### Area Mandatory Reading - Main toolbar wiring
 
@@ -115,7 +115,7 @@ _Applies to Groups 3-5._
 - [x] 3.3 Insert `ToolbarMapLayerClick` (declared in Group 5) after `ToolbarMapClick` in `_toolbar_button_procs`, keeping a forward declaration above the array.
 - [x] 3.4 Insert `nullptr, // 5` after `MenuClickMap, // 4` in `_menu_clicked_procs` and renumber every following `// N` comment.
 - [x] 3.5 Insert `{WID_TN_MAP_LAYER, WWT_PUSHIMGBTN, SPR_IMG_PLANTTREES}` right after the `WID_TN_SMALL_MAP` row of `_toolbar_button_sprites`.
-- [ ] 3.6 Add `static_assert(std::size(_toolbar_button_procs) == WID_TN_END)` and `static_assert(std::size(_menu_clicked_procs) == WID_TN_SWITCH_BAR)` with a comment explaining the parallel-array contract, then build. The asserts are in the code. The build waits on the toolchain.
+- [x] 3.6 Add `static_assert(std::size(_toolbar_button_procs) == WID_TN_END)` and `static_assert(std::size(_menu_clicked_procs) == WID_TN_SWITCH_BAR)` with a comment explaining the parallel-array contract, then build. Both assertions are present; both configurations build on 2026-10-03.
 
 ### Group 4 - Toolbar arrangements
 
@@ -123,6 +123,7 @@ _Applies to Groups 3-5._
 - [x] 4.1 Insert `WID_TN_MAP_LAYER` directly after `WID_TN_SMALL_MAP` in `arrange_all`.
 - [x] 4.2 In each of `arrange14` to `arrange20`, insert `WID_TN_MAP_LAYER` directly after every `WID_TN_SMALL_MAP` entry.
 - [x] 4.3 Restore exactly N entries per row in each split array by removing one entry from the affected row, choosing in this order: a button that appears in both rows (never `WID_TN_SWITCH_BAR`), then `WID_TN_SUBSIDIES`, then `WID_TN_LEAGUE`, `WID_TN_STORY`, `WID_TN_GOAL`; record each removal as a comment on the row.
+  - Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11. Runtime checks are pending.
 - [x] 4.4 Add a `static_assert` per split array that its length is `2 * N`, so a future insertion cannot unbalance the rows.
 - [ ] 4.5 Build, start the game, and resize the window through every split width (14 to 20 buttons) plus full width; confirm the layer button always sits immediately right of the map button and no row overflows.
 
@@ -169,8 +170,8 @@ _Applies to Group 7._
 ### Group 7 - Verification
 
 {{SIMPLE}}
-- [ ] 7.1 Build RelWithDebInfo and Debug with no new warnings compared with the warning baseline in master plan `## Baseline Data`.
-- [ ] 7.2 Run `ctest`; all baseline tests pass, including the `WindowDesc` tests.
+- [x] 7.1 Build RelWithDebInfo and Debug with no new warnings compared with the warning baseline in master plan `## Baseline Data`. Both builds succeeded on 2026-10-03 with zero compiler warnings (`build/verify-Debug.log`, `build/verify-RelWithDebInfo.log`).
+- [x] 7.2 Run `ctest`; all baseline tests pass, including the `WindowDesc` tests. Existing Debug evidence: `build/ctest-Debug.log`, 106/106 passed, including both `WindowDesc` cases. No runtime checks are inferred from this result.
 - [ ] 7.3 In a Debug build, cycle the layer in a new game and in the scenario editor; confirm no assert fires and the button stays next to the map button.
 - [ ] 7.4 Save and reload a game while viewing Underground; confirm the game loads and the view starts on Surface (the layer is not saved, AD-7).
 - [x] 7.5 Grep `src/` for `->layer` and `.layer` uses added by this plan; confirm none is reachable from command or tick code (I-4). Every read is in `map_layer_gui.cpp`, `viewport.cpp` `InitializeWindowViewport`, or the toolbar icon and tooltip.

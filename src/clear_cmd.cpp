@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file clear_cmd.cpp Commands related to clear tiles. */
+/** @file clear_cmd.cpp Commands related to clear tiles. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -140,20 +140,25 @@ static void DrawClearLandFence(const TileInfo *ti)
 }
 
 /**
- * Stand-in ground sprite for a layer whose own art is not in the baseset yet.
+ * Generated ground sprite for a Layer whose terrain has no surface climate.
  * @param ground Ground kind from the layer rules.
+ * @param tile Tile whose plane position chooses the texture variant.
  * @return Sprite to draw. Natural ground is not drawn here.
  */
-static SpriteID GetLayerGroundSprite(MapLayerGround ground)
+static SpriteID GetLayerGroundSprite(MapLayerGround ground, TileIndex tile)
 {
+	uint hash = TileHash(TileX(tile), TilePlaneY(tile));
 	switch (ground) {
 		case MapLayerGround::Bedrock:
-			//Stand-in for SPR_MAP_LAYER_UNDERGROUND_FLOOR until that sprite is published.
-			return SPR_FLAT_ROCKY_LAND_1;
+			//Three bedrock variants break up repetition without changing the simulation RNG.
+			return SPR_MAP_LAYER_UNDERGROUND_FLOOR + hash % 3;
 
 		case MapLayerGround::Vacuum:
-			//Stand-in for SPR_MAP_LAYER_SPACE_FLOOR. Space stays a uniform black vacuum, the same black used past the map edge, so it does not look like a fence.
-			return SPR_FLAT_BARE_LAND;
+			//Sparse stars distinguish vacuum from the black off-map fence.
+			return SPR_MAP_LAYER_SPACE_FLOOR + hash % 2;
+		case MapLayerGround::DeepBedrock:
+			//Stand-in for SPR_MAP_LAYER_DEEP_FLOOR until r2mlm13 Group 9. Grey distinguishes Deep Underground from Underground.
+			return SPR_FLAT_ROCKY_LAND_1;
 
 		default:
 			NOT_REACHED();
@@ -166,8 +171,9 @@ static void DrawTile_Clear(TileInfo *ti)
 	//Bedrock and vacuum replace the climate sprites. Natural ground keeps the grass, snow and desert drawing below.
 	MapLayerGround ground_kind = MultiLayerMap::GetRules(ti->tile).ground;
 	if (ground_kind != MapLayerGround::Natural) {
-		PaletteID palette = (ground_kind == MapLayerGround::Vacuum) ? PALETTE_ALL_BLACK : PAL_NONE;
-		DrawGroundSprite(GetLayerGroundSprite(ground_kind), palette);
+		//Deep Underground uses a grey stand-in; the existing generated Space art retains its visible stars.
+		PaletteID palette = ground_kind == MapLayerGround::DeepBedrock ? PALETTE_TO_GREY : PAL_NONE;
+		DrawGroundSprite(GetLayerGroundSprite(ground_kind, ti->tile), palette);
 		return;
 	}
 

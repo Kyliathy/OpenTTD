@@ -33,7 +33,7 @@ Status: `[X]` every task box of the plan is checked, `[~]` some are, `[ ]` none 
 | [~] | [r2mlm8-bus-elevators.md](r2mlm8-bus-elevators.md) | 3 | Road elevators: placement GUI, road vehicle traversal, pathfinding, underground bus routes | r2mlm7 |
 | [~] | [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) | 4 | Rail portals: placement GUI, train traversal, reservations, signals, underground track building | r2mlm7 |
 | [~] | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 6 | Multiplayer, savegame matrix, combined traffic run, performance, architecture documentation | r2mlm8, r2mlm9, r2mlm13 |
-| [ ] | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 1 | A Subsidies entry in the Towns menu whenever the Subsidies button is off screen in a split toolbar (review finding L-2) | r2mlm1 |
+| [~] | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 1 | A Subsidies entry in the Towns menu whenever the Subsidies button is off screen in a split toolbar (review finding L-2) | r2mlm1 |
 | [ ] | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 1, 3 | Deep Underground as a fourth layer (savegame 370), road tunnels to the Underground, timed road elevators to Deep Underground, layer dropdowns on all four layer buttons; stand-in art | r2rvm2, r2mlm6, Group 7 (art) of r2mlm8 and r2mlm9 |
 | [ ] | [r2mlm13-layer-art-review-and-new-sprites.md](r2mlm13-layer-art-review-and-new-sprites.md) | 5 | In-game review of the layer art, regenerated sprites, the Deep Underground and road tunnel sprites, extended sprite and capture tools | r2mlm12; **Groups 6 to 8 need an image-generation harness** |
 
@@ -51,6 +51,8 @@ Order:
 - r2mlm12 (planned 2026-10-03) starts only after r2rvm2, r2mlm6 and the Group 7 art of r2mlm8 and r2mlm9 are done. r2mlm13 was split from it the same day and runs after it. r2mlm10 runs last, after r2mlm13.
 
 ## Execution Notes
+
+- **Coding and test staging, 2026-10-03.** The user requested completing code and generated assets now, with in-game testing postponed until they provide a representative save. Runtime, scenario and human-review boxes stay open. Earlier plans remain partial while those checks are pending; completed code and build tasks are checked with their evidence. Coding for later plans may be staged after their code/art prerequisites exist, without claiming the pending runtime or human-review prerequisites passed.
 
 - **Image generation.** r2mlm6 Groups 3 and 4 and r2mlm13 Groups 6 to 8 make sprites with an AI image tool. They need a harness that can generate images from a prompt and reference images, such as Cursor with its `GenerateImage` tool. The Claude Code sessions used so far have no such tool, so those groups run in a harness that has one. Every other group runs anywhere. Both plans say this where those groups start.
 - **Groups that need the user.** r2rvm2 Group 17 and r2mlm12 Group 10 are scenario runs with the user. r2mlm13 tasks 5.4 and 8.2 ask the user to judge and approve the art. r2rvm2 Group 18 and r2mlm12 task 11.7 ask the user for decisions.

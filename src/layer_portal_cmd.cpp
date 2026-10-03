@@ -35,15 +35,6 @@
 #include "map_layer_gui.h"
 #include "viewport_func.h"
 
-#include "table/track_land.h"
-/** One sprite of a road tile layout. table/road_land.h needs it; the layout is the one in road_cmd.cpp. */
-struct DrawRoadTileStruct {
-	uint16_t image; ///< Sprite of this part of the layout.
-	uint8_t subcoord_x; ///< X offset of the sprite within the tile.
-	uint8_t subcoord_y; ///< Y offset of the sprite within the tile.
-};
-
-#include "table/road_land.h"
 #include "table/sprites.h"
 #include "table/strings.h"
 
@@ -100,32 +91,75 @@ bool IsHiddenInLayerPortal(DiagDirection shaft, int x, int y)
 	return GetLayerPortalDepth(shaft, x, y) >= _tunnel_visibility_frame[shaft];
 }
 
+/** Front-part layouts replace depot tile layouts, retaining each door edge for vehicle sorting. */
+static constexpr DiagDirectionIndexArray<SpriteBounds> _layer_portal_front_bounds{{{
+	{{0, 0, 0}, {1, 16, 20}, {}},
+	{{0, 15, 0}, {16, 1, 20}, {0, -15, 0}},
+	{{15, 0, 0}, {1, 16, 20}, {-15, 0, 0}},
+	{{0, 0, 0}, {16, 1, 20}, {}},
+}}};
+
+/** Vanilla tunnel roof bounds, anchored at tile point 15,15; stand-in until r2mlm13 Group 9. */
+static constexpr DiagDirectionIndexArray<SpriteBounds> _road_tunnel_stand_in_roof_bounds{{{
+	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {TILE_SIZE - 1, TILE_SIZE - 2, -BB_Z_SEPARATOR}},
+	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {TILE_SIZE - 2, TILE_SIZE - 1, -BB_Z_SEPARATOR}},
+	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {TILE_SIZE - 1, TILE_SIZE - 2, -BB_Z_SEPARATOR}},
+	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {TILE_SIZE - 2, TILE_SIZE - 1, -BB_Z_SEPARATOR}},
+}}};
+
 /**
- * Draw a portal end with a depot stand-in until the layer art exists.
- * Rail art is swapped by r2mlm9. Road art is swapped by r2mlm8 Group 7.
+ * Draw a portal end using the aligned generated back/front pair.
+ * Back parts are ground sprites; front door frames sort at their physical door edge.
+ * Rail and road surfaces retain the end's transport type, including NewGRF overlays.
  * @param ti Tile to draw.
  */
 static void DrawTile_LayerPortal(TileInfo *ti)
 {
+	//Stand-in until r2mlm13 Group 9: vanilla road tunnel entrances preserve their shaft-direction indexing.
+	if (GetLayerPortalKind(ti->tile) == LayerPortalKind::RoadTunnel) {
+		DiagDirection shaft = GetLayerPortalShaftDirection(ti->tile);
+		SpriteID image = SPR_TUNNEL_ENTRY_REAR_ROAD + to_underlying(shaft) * 2;
+		DrawGroundSprite(image, PAL_NONE);
+		uint offset = DiagDirToAxis(shaft) == Axis::X ? 1 : 0;
+		DrawRoadOverlays(ti, PAL_NONE, GetRoadTypeInfo(GetRoadTypeRoad(ti->tile)), nullptr, offset, offset);
+		AddSortableSpriteToDraw(image + 1, PAL_NONE, *ti, _road_tunnel_stand_in_roof_bounds[shaft], false);
+		return;
+	}
 	DiagDirection door = GetLayerPortalDoorDirection(ti->tile);
-	PaletteID palette = GetCompanyPalette(GetTileOwner(ti->tile));
-	if (GetLayerPortalTransportType(ti->tile) == TransportType::Rail) {
-		//Barren ground and the axis track, then the rail depot building with its opening on the mouth.
+	bool rail = GetLayerPortalTransportType(ti->tile) == TransportType::Rail;
+	bool surface = GetTileLayer(ti->tile) == MapLayer::Surface;
+	SpriteID base = rail ? (surface ? SPR_MAP_LAYER_RAIL_PORTAL_SURFACE : SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND)
+	                     : (surface ? SPR_MAP_LAYER_ROAD_ELEVATOR_SURFACE : SPR_MAP_LAYER_ROAD_ELEVATOR_UNDERGROUND);
+	SpriteID back = base + to_underlying(door) * 2;
+	bool invisible = IsInvisibilitySet(TransparencyOption::Buildings);
+	bool transparent = IsTransparencySet(TransparencyOption::Buildings);
+	Axis axis = DiagDirToAxis(GetLayerPortalShaftDirection(ti->tile));
+	DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
+	//Both building parts follow the existing building transparency controls.
+	if (!invisible) {
+		SpriteID image = back;
+		if (transparent) SetBit(image, PALETTE_MODIFIER_TRANSPARENT);
+		DrawGroundSprite(image, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+	}
+	if (rail) {
+		//The axis track uses the rail type's own sprites, including monorail and maglev.
 		const RailTypeInfo *rti = GetRailTypeInfo(GetRailType(ti->tile));
-		DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
-		SpriteID track = (DiagDirToAxis(GetLayerPortalShaftDirection(ti->tile)) == Axis::X) ? rti->base_sprites.single_x : rti->base_sprites.single_y;
-		DrawGroundSprite(track, PALETTE_TO_BARE_LAND);
-		const DrawTileSprites *dts = &_depot_gfx_table[door];
-		DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, rti->GetRailtypeSpriteOffset(), 0, palette);
+		SpriteID track = rti->UsesOverlay() ? GetCustomRailSprite(rti, ti->tile, RailSpriteType::Overlay) + to_underlying(axis)
+		                                 : (axis == Axis::X ? rti->base_sprites.single_x : rti->base_sprites.single_y);
+		DrawGroundSprite(track, rti->UsesOverlay() ? PAL_NONE : PALETTE_TO_BARE_LAND);
+		//L-11: only a reserved rail end receives the reservation tint.
+		if (_settings_client.gui.show_track_reservation && HasLayerPortalReservation(ti->tile)) {
+			DrawGroundSprite(track, PALETTE_CRASH);
+		}
 	} else {
-		//The road depot layout faces the door. Road type overlays are drawn with it.
-		DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
-		const DrawTileSprites *dts = &_road_depot[door];
+		//The road axis replaces the depot layout; road type overlays are still drawn with it.
 		RoadType road_rt = GetRoadTypeRoad(ti->tile);
 		const RoadTypeInfo *rti = GetRoadTypeInfo(road_rt);
-		int relocation = GetCustomRoadSprite(rti, ti->tile, RoadSpriteType::Depot);
-		if (relocation != 0) relocation -= SPR_ROAD_DEPOT;
-		DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, relocation, 0, palette);
+		if (!rti->UsesOverlay()) DrawGroundSprite(SPR_ROAD_Y + to_underlying(axis), PALETTE_TO_BARE_LAND);
+		DrawRoadOverlays(ti, PAL_NONE, rti, nullptr, to_underlying(axis), 0);
+	}
+	if (!invisible) {
+		AddSortableSpriteToDraw(back + 1, PAL_NONE, *ti, _layer_portal_front_bounds[door], transparent);
 	}
 }
 
@@ -139,7 +173,11 @@ static int GetSlopePixelZ_LayerPortal(TileIndex tile, uint, uint, bool)
 /** @copydoc GetTileDescProc */
 static void GetTileDesc_LayerPortal(TileIndex tile, TileDesc &td)
 {
-	td.str = GetLayerPortalTransportType(tile) == TransportType::Rail ? STR_LAI_LAYER_PORTAL_RAIL : STR_LAI_LAYER_PORTAL_ROAD;
+	switch (GetLayerPortalKind(tile)) {
+		case LayerPortalKind::RailTunnel: td.str = STR_LAI_LAYER_PORTAL_RAIL; break;
+		case LayerPortalKind::RoadTunnel: td.str = STR_LAI_LAYER_PORTAL_ROAD; break;
+		case LayerPortalKind::RoadElevator: td.str = STR_LAI_LAYER_PORTAL_ROAD_ELEVATOR; break;
+	}
 	td.dparam = GetMapLayerName(GetLayerPortalTargetLayer(tile)).base();
 	td.owner[0] = GetTileOwner(tile);
 	if (GetLayerPortalTransportType(tile) == TransportType::Rail) {
@@ -402,10 +440,12 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 		return CMD_ERROR;
 	}
 	if (to_underlying(shaft_dir) > to_underlying(DiagDirection::NW)) return CMD_ERROR;
-	//Version 1 pairs Surface with Underground only. M-11: a layer without a pair (Space) is refused here, so TileInLayer never receives MapLayer::Invalid.
+	//M-11: reject invalid targets and unsupported kind/Layer pairs before TileInLayer sees the target.
 	if (!IsValidTile(tile)) return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
-	MapLayer expected_target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
-	if (expected_target == MapLayer::Invalid || target_layer != expected_target) {
+	MapLayer from = GetTileLayer(tile);
+	LayerPortalKind kind = transport_type == TransportType::Rail ? LayerPortalKind::RailTunnel
+		: (from == MapLayer::DeepUnderground || target_layer == MapLayer::DeepUnderground ? LayerPortalKind::RoadElevator : LayerPortalKind::RoadTunnel);
+	if (!MultiLayerMap::IsValidLayer(target_layer) || !MultiLayerMap::IsPortalPairAllowed(kind, from, target_layer)) {
 		return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
 	}
 

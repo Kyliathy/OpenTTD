@@ -1,0 +1,56 @@
+// This file is part of OpenTTD.
+// OpenTTD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
+// OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
+//
+// @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md
+   -1 * 0 0C "Map layer graphics"
+//NFORenum 6.2.0 predates this fork's Action 5 type 1C; suppress only that feature diagnostic.
+//@@WARNING DISABLE 44
+   -1 * 3 05 1C \b 44 //MAP_LAYER_SPRITE_COUNT
+//@@WARNING ENABLE 44
+
+   -1 sprites/map_layers.png 8bpp    0    0  20  20    0    0 normal
+   -1 sprites/map_layers.png 8bpp   22    0  20  20    0    0 normal
+   -1 sprites/map_layers.png 8bpp   44    0  20  20    0    0 normal
+   -1 sprites/map_layers.png 8bpp   66    0  20  20    0    0 normal
+   -1 sprites/map_layers.png 8bpp   88    0  17  16    1    2 normal
+   -1 sprites/map_layers.png 8bpp  107    0  32  32    0    0 normal
+   -1 sprites/map_layers.png 8bpp  141    0  27  26    2    3 normal
+   -1 sprites/map_layers.png 8bpp  170    0  64  31  -31    0 normal
+   -1 sprites/map_layers.png 8bpp  236    0  64  31  -31    0 normal
+   -1 sprites/map_layers.png 8bpp  302    0  64  31  -31    0 normal
+   -1 sprites/map_layers.png 8bpp  368    0  64  31  -31    0 normal
+   -1 sprites/map_layers.png 8bpp  434    0  64  31  -31    0 normal
+   -1 sprites/map_layers.png 8bpp  500    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  566    0  34  38   -1  -22 normal
+   -1 sprites/map_layers.png 8bpp  602    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  668    0  34  37   -1   -8 normal
+   -1 sprites/map_layers.png 8bpp  704    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  770    0  32  38  -31   -7 normal
+   -1 sprites/map_layers.png 8bpp  804    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  870    0  32  38  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  904    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  970    0  34  38   -1  -22 normal
+   -1 sprites/map_layers.png 8bpp 1006    0  63  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1071    0  34  38   -1   -8 normal
+   -1 sprites/map_layers.png 8bpp 1107    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1173    0  32  39  -31   -8 normal
+   -1 sprites/map_layers.png 8bpp 1207    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1273    0  32  39  -31  -23 normal
+   -1 sprites/map_layers.png 8bpp 1307    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1373    0  34  31   -1  -15 normal
+   -1 sprites/map_layers.png 8bpp 1409    0  63  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1474    0  34  30   -1    1 normal
+   -1 sprites/map_layers.png 8bpp 1510    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1576    0  29  29  -31    0 normal
+   -1 sprites/map_layers.png 8bpp 1607    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1673    0  32  30  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1707    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1773    0  34  31   -1  -15 normal
+   -1 sprites/map_layers.png 8bpp 1809    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1875    0  34  31   -1    0 normal
+   -1 sprites/map_layers.png 8bpp 1911    0  63  44  -30  -14 normal
+   -1 sprites/map_layers.png 8bpp 1976    0  33  30  -31    0 normal
+   -1 sprites/map_layers.png 8bpp 2011    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2077    0  32  30  -31  -14 normal

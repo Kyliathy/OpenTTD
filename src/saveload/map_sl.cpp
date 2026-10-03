@@ -35,7 +35,7 @@ static const SaveLoad _map_desc[] = {
 
 /**
  * Tiles the open file stored.
- * A RIFF length is 28 bits. A 4096 by 4096 map of three layers still fits.
+ * A RIFF length is 28 bits. A 4096 by 4096 map of four layers still fits.
  * @return Plane size times the file's layer count.
  */
 static uint MapFileTileCount()
@@ -71,6 +71,8 @@ struct MAPSChunkHandler : ChunkHandler {
 
 		//H-3: the file's count sizes every plane read, so a count this build cannot store is a corrupt file.
 		if (!MultiLayerMap::IsStorableLayerCount(_map_layers)) SlErrorCorrupt("Invalid map layer count");
+		//Before Deep Underground a file holds at most Surface, Underground and Space.
+		if (IsSavegameVersionBefore(SaveLoadVersion::DeepUnderground) && _map_layers > 3) SlErrorCorrupt("Invalid map layer count");
 		_map_file_layers = _map_layers;
 		//The live world always has every layer. Missing planes are filled in AfterLoadGame.
 		Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS);
@@ -87,6 +89,8 @@ struct MAPSChunkHandler : ChunkHandler {
 
 		//H-3: the file's count sizes every plane read, so a count this build cannot store is a corrupt file.
 		if (!MultiLayerMap::IsStorableLayerCount(_map_layers)) SlErrorCorrupt("Invalid map layer count");
+		//Before Deep Underground a file holds at most Surface, Underground and Space.
+		if (IsSavegameVersionBefore(SaveLoadVersion::DeepUnderground) && _map_layers > 3) SlErrorCorrupt("Invalid map layer count");
 		_load_check_data.map_size_x = _map_dim_x;
 		_load_check_data.map_size_y = _map_dim_y;
 		_load_check_data.map_layers = _map_layers;

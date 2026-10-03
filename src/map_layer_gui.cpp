@@ -40,14 +40,14 @@ StringID GetMapLayerName(MapLayer layer)
 /**
  * Toolbar icon for one map layer.
  * @param layer Layer whose icon is needed.
- * @return Stand-in sprite until the layer art exists.
+ * @return Sprite from the Map Layer graphics block in OpenTTD's extra GRF.
  */
 SpriteID GetMapLayerIcon(MapLayer layer)
 {
 	switch (layer) {
-		case MapLayer::Surface: return SPR_IMG_PLANTTREES;
-		case MapLayer::Underground: return SPR_IMG_TUNNEL_RAIL;
-		case MapLayer::Space: return SPR_IMG_AIRPLANESLIST;
+		case MapLayer::Surface: return SPR_IMG_MAP_LAYER_SURFACE;
+		case MapLayer::Underground: return SPR_IMG_MAP_LAYER_UNDERGROUND;
+		case MapLayer::Space: return SPR_IMG_MAP_LAYER_SPACE;
 		default: NOT_REACHED();
 	}
 }

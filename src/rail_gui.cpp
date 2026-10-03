@@ -610,7 +610,7 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_SIGNALS: return ANIMCURSOR_BUILDSIGNALS;
 			case WID_RAT_BUILD_BRIDGE: return SPR_CURSOR_BRIDGE;
 			case WID_RAT_BUILD_TUNNEL: return GetRailTypeInfo(_cur_railtype)->cursor.tunnel;
-			case WID_RAT_BUILD_LAYER_PORTAL: return GetRailTypeInfo(_cur_railtype)->cursor.tunnel;
+			case WID_RAT_BUILD_LAYER_PORTAL: return SPR_CURSOR_RAIL_LAYER_PORTAL;
 			case WID_RAT_CONVERT_RAIL: return GetRailTypeInfo(_cur_railtype)->cursor.convert;
 			default: NOT_REACHED();
 		}
@@ -755,7 +755,7 @@ struct BuildRailToolbarWindow : Window {
 
 			case WID_RAT_BUILD_LAYER_PORTAL: {
 				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place a portal. The command refuses a layer without a pair.
-				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, MapLayer::Invalid);
 				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
 						tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE);
 				break;
@@ -975,7 +975,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_widgets =
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_TUNNEL_RAIL, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_BUILD_LAYER_PORTAL),
-						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_TUNNEL_RAIL, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_RAIL_LAYER_PORTAL, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_REMOVE),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_REMOVE, STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_CONVERT_RAIL),

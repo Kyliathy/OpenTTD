@@ -15,6 +15,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/chars.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/elrails.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.nfo
+                         ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttd.nfo
@@ -39,6 +40,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/chars.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/elrails.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.png
+                         ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttdgui.png

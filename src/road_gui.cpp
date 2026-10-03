@@ -563,7 +563,7 @@ struct BuildRoadToolbarWindow : Window {
 			case WID_ROT_TRUCK_STATION: return SPR_CURSOR_TRUCK_STATION;
 			case WID_ROT_BUILD_BRIDGE: return SPR_CURSOR_BRIDGE;
 			case WID_ROT_BUILD_TUNNEL: return GetRoadTypeInfo(this->roadtype)->cursor.tunnel;
-			case WID_ROT_LAYER_ELEVATOR: return GetRoadTypeInfo(this->roadtype)->cursor.depot;
+			case WID_ROT_LAYER_ELEVATOR: return SPR_CURSOR_ROAD_ELEVATOR;
 			case WID_ROT_CONVERT_ROAD: return GetRoadTypeInfo(this->roadtype)->cursor.convert_road;
 			default: NOT_REACHED();
 		}
@@ -1041,7 +1041,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_widgets =
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
-						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_DEPOT, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_REMOVE, STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR_ROAD),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_CONVERT_ROAD),
@@ -1157,7 +1157,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_scen_widg
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
-						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_DEPOT, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_REMOVE, STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR_ROAD),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_CONVERT_ROAD),

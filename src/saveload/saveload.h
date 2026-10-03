@@ -426,6 +426,7 @@ enum class SaveLoadVersion : uint16_t {
 	DoubleEndedShips, ///< Saveload version: 368, GitHub pull request: 16002\n Double-ended (NewGRF-only) ships can reverse without turning.
 
 	MapLayers, ///< Saveload version: 369\n Map stores Surface, Underground and Space layers.
+	DeepUnderground, ///< Saveload version: 370\n Map stores Deep Underground; road vehicles store their elevator wait.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

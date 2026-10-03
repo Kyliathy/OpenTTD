@@ -54,6 +54,9 @@ TEST_CASE("Map::Allocate layer count")
 	Map::Allocate(64, 64, 3);
 	CHECK(Map::LayerCount() == 3);
 	CHECK(Map::Size() == 3 * Map::PlaneSize());
+	Map::Allocate(64, 64, 4);
+	CHECK(Map::LayerCount() == 4);
+	CHECK(Map::Size() == 4 * Map::PlaneSize());
 
 	Map::Allocate(64, 64);
 	CHECK(Map::LayerCount() == 1);
@@ -65,6 +68,8 @@ TEST_CASE("Storable layer counts")
 {
 	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(0));
 	CHECK(MultiLayerMap::IsStorableLayerCount(1));
+	CHECK(MultiLayerMap::IsStorableLayerCount(4));
+	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(5));
 	CHECK(MultiLayerMap::IsStorableLayerCount(MAX_MAP_LAYERS));
 	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(MAX_MAP_LAYERS + 1));
 	CHECK_FALSE(MultiLayerMap::IsStorableLayerCount(255));
@@ -73,10 +78,10 @@ TEST_CASE("Storable layer counts")
 //I-1: a tile round-trips through its column, plane row and layer, and TileY stays stacked.
 TEST_CASE("TileXYL round trip")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 
 	static const uint coords[] = {0, 32, 63};
-	for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space}) {
+	for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground}) {
 		//Corners and the centre of every layer.
 		for (uint x : coords) {
 			for (uint y : coords) {
@@ -94,12 +99,12 @@ TEST_CASE("TileXYL round trip")
 //I-5: each layer has its own void fence, with and without freeform edges.
 TEST_CASE("Per-layer void fence")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 	bool saved_freeform = _settings_game.construction.freeform_edges;
 
 	for (bool freeform : {false, true}) {
 		_settings_game.construction.freeform_edges = freeform;
-		for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space}) {
+		for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground}) {
 			for (uint x = 0; x < Map::SizeX(); ++x) {
 				for (uint y = 0; y < Map::SizeY(); ++y) {
 					TileIndex tile = TileXYL(x, y, layer);
@@ -117,12 +122,12 @@ TEST_CASE("Per-layer void fence")
 //I-2: a one-tile step from an inner tile stays in its layer.
 TEST_CASE("Neighbour steps stay in their layer")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 	bool saved_freeform = _settings_game.construction.freeform_edges;
 
 	for (bool freeform : {false, true}) {
 		_settings_game.construction.freeform_edges = freeform;
-		for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space}) {
+		for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground}) {
 			for (uint x = 0; x < Map::SizeX(); ++x) {
 				for (uint y = 0; y < Map::SizeY(); ++y) {
 					TileIndex tile = TileXYL(x, y, layer);
@@ -154,7 +159,7 @@ TEST_CASE("Neighbour steps stay in their layer")
 //AD-5: distances use the plane, and a cross-layer pair has no diagonal direction.
 TEST_CASE("Plane distances ignore the layer")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 
 	TileIndex origin = TileXYL(1, 1, MapLayer::Surface);
 	TileIndex same_spot_below = MultiLayerMap::TileInLayer(origin, MapLayer::Underground);
@@ -178,9 +183,9 @@ TEST_CASE("Plane distances ignore the layer")
 //I-5: a layer walk covers that plane only, and random tiles stay in the requested layer.
 TEST_CASE("IterateLayer and RandomTileInLayer")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 
-	for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space}) {
+	for (MapLayer layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground}) {
 		uint seen = 0;
 		for (TileIndex tile : MultiLayerMap::IterateLayer(layer)) {
 			CHECK(GetTileLayer(tile) == layer);
@@ -204,7 +209,7 @@ TEST_CASE("IterateLayer and RandomTileInLayer")
 //C6: a spiral, an expanded area and a slope neighbour stay in the tile's layer.
 TEST_CASE("Migrated spatial helpers stay in their layer")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 
 	TileIndex centre = TileXYL(20, 20, MapLayer::Space);
 	for (TileIndex tile : SpiralTileSequence(centre, 5)) {
@@ -231,7 +236,7 @@ TEST_CASE("Migrated spatial helpers stay in their layer")
 //Underground initialises as flat rock with its own void fence, and does not depend on freeform edges for the south fence.
 TEST_CASE("InitialiseLayer underground ground and fence")
 {
-	Map::Allocate(64, 64, 3);
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
 	bool saved_freeform = _settings_game.construction.freeform_edges;
 
 	for (bool freeform : {false, true}) {
@@ -259,8 +264,63 @@ TEST_CASE("InitialiseLayer underground ground and fence")
 	_settings_game.construction.freeform_edges = saved_freeform;
 }
 
+/** Deep Underground accepts road infrastructure and refuses every rail kind. */
+TEST_CASE("Deep Underground rules")
+{
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
+	const MapLayerRules &rules = MultiLayerMap::GetRules(MapLayer::DeepUnderground);
+	CHECK(rules.ground == MapLayerGround::DeepBedrock);
+	CHECK_FALSE(rules.has_climate);
+	CHECK_FALSE(rules.has_water_flow);
+	CHECK_FALSE(rules.has_ambient_sound);
+	//Road-only infrastructure remains available at the bottom of the world.
+	for (MapLayerConstruction kind : {MapLayerConstruction::Road, MapLayerConstruction::RoadStop,
+	                                 MapLayerConstruction::RoadDepot, MapLayerConstruction::Sign, MapLayerConstruction::LayerPortal}) {
+		CHECK(rules.allowed.Test(kind));
+	}
+	//Trains have no elevator, so Deep Underground cannot contain their infrastructure.
+	for (MapLayerConstruction kind : {MapLayerConstruction::Rail, MapLayerConstruction::RailStation,
+	                                 MapLayerConstruction::TrainDepot, MapLayerConstruction::Signal}) {
+		CHECK_FALSE(rules.allowed.Test(kind));
+	}
+	const MapLayerRules &underground = MultiLayerMap::GetRules(MapLayer::Underground);
+	CHECK(underground.allowed.Test(MapLayerConstruction::TrainDepot));
+	CHECK(underground.allowed.Test(MapLayerConstruction::RoadDepot));
+}
+
+/** Initialising Deep Underground fills flat rock, preserves RNG state, and installs the correct fence. */
+TEST_CASE("InitialiseLayer deep underground ground and fence")
+{
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
+	bool saved_freeform = _settings_game.construction.freeform_edges;
+	uint32_t random_before_0 = _random.state[0];
+	uint32_t random_before_1 = _random.state[1];
+	//Both map-edge modes must produce the same inner rock and their own void fence.
+	for (bool freeform : {false, true}) {
+		_settings_game.construction.freeform_edges = freeform;
+		MultiLayerMap::InitialiseLayer(MapLayer::DeepUnderground);
+		for (uint x = 0; x < Map::SizeX(); ++x) {
+			for (uint y = 0; y < Map::SizeY(); ++y) {
+				TileIndex tile = TileXYL(x, y, MapLayer::DeepUnderground);
+				bool fence = x == Map::MaxX() || y == Map::MaxY() || (freeform && (x == 0 || y == 0));
+				//Each Layer owns its border; playable Tiles must remain flat rock.
+				if (fence) {
+					CHECK(IsTileType(tile, TileType::Void));
+				} else {
+					CHECK(IsTileType(tile, TileType::Clear));
+					CHECK(IsClearGround(tile, ClearGround::Rocks));
+					CHECK(TileHeight(tile) == 0);
+				}
+			}
+		}
+		CHECK(_random.state[0] == random_before_0);
+		CHECK(_random.state[1] == random_before_1);
+	}
+	_settings_game.construction.freeform_edges = saved_freeform;
+}
+
 /**
- * A hand-built pair on a 64x64x3 map: shaft exits reach the other layer and every other exit stays a neighbour.
+ * A hand-built pair on a 64x64 Map: shaft exits reach the other Layer and every other exit stays a neighbour.
  */
 TEST_CASE("Layer portal neighbour mapping and relocation")
 {

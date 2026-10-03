@@ -21,6 +21,7 @@ enum class MapLayerGround : uint8_t {
 	Natural, ///< Grass, snow and desert, drawn by the existing landscape.
 	Bedrock, ///< Flat rock. r2mlm5 draws this as the underground ground.
 	Vacuum, ///< Empty space. r2mlm5 draws this as the space ground.
+	DeepBedrock, ///< Dark Deep Underground rock; stand-in until SPR_MAP_LAYER_DEEP_FLOOR exists (r2mlm13 Group 9).
 };
 
 /**
@@ -33,7 +34,8 @@ enum class MapLayerConstruction : uint8_t {
 	Tram, ///< Tram track.
 	RailStation, ///< Rail station or rail waypoint.
 	RoadStop, ///< Bus stop, truck stop or road waypoint.
-	Depot, ///< Train or road depot.
+	TrainDepot, ///< Train depot.
+	RoadDepot, ///< Road depot.
 	Signal, ///< Rail signal.
 	Bridge, ///< Bridge.
 	Tunnel, ///< Tunnel.
@@ -64,6 +66,13 @@ struct MapLayerRules {
 	bool has_climate; ///< Snow, desert, grass growth and town paving run here.
 	bool has_water_flow; ///< Flooding and water tile loops run here.
 	bool has_ambient_sound; ///< Ambient tile sounds play here.
+};
+
+/** Portal behaviour derived from transport and the two Layers, never stored in Tile bits. */
+enum class LayerPortalKind : uint8_t {
+	RailTunnel, ///< Instant rail passage between Surface and Underground.
+	RoadTunnel, ///< Instant road passage between Surface and Underground.
+	RoadElevator, ///< Timed road passage from an upper Layer to Deep Underground.
 };
 
 /**
@@ -270,17 +279,23 @@ struct MultiLayerMap {
 	static void InitialiseLayer(MapLayer layer);
 
 	/**
-	 * The other layer a version-1 portal connects to.
-	 * Surface pairs with Underground and Underground pairs with Surface.
-	 * @param from Layer the portal is built on.
-	 * @return The paired layer, or MapLayer::Invalid when this layer has no pair.
+	 * Whether a portal kind may join two Layers in either order.
+	 * Tunnels pair Surface with Underground; road elevators pair either upper Layer with Deep Underground.
+	 * @param kind Kind of portal.
+	 * @param a Layer of one end.
+	 * @param b Layer of the other end.
+	 * @return True for a supported pair.
 	 */
-	static inline MapLayer GetPortalTargetLayer(MapLayer from)
-	{
-		if (from == MapLayer::Surface) return MapLayer::Underground;
-		if (from == MapLayer::Underground) return MapLayer::Surface;
-		return MapLayer::Invalid;
-	}
+	static bool IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b);
+
+	/**
+	 * The Layer a new portal connects to from its clicked Tile.
+	 * @param from Layer of the clicked Tile.
+	 * @param kind Kind of portal being built.
+	 * @param elevator_upper Upper destination selected when building from Deep Underground.
+	 * @return Target Layer, or MapLayer::Invalid when this kind cannot start here.
+	 */
+	static MapLayer GetPortalTargetLayer(MapLayer from, LayerPortalKind kind, MapLayer elevator_upper);
 };
 
 /**

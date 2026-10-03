@@ -989,7 +989,7 @@ CommandCost CmdBuildTrainDepot(DoCommandFlags flags, TileIndex tile, RailType ra
 	if (!ValParamRailType(railtype) || !IsValidDiagDirection(dir)) return CMD_ERROR;
 
 	//This layer may refuse a train depot before any cost is counted.
-	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Depot); layer_cost.Failed()) return layer_cost;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::TrainDepot); layer_cost.Failed()) return layer_cost;
 
 	Slope tileh = GetTileSlope(tile);
 

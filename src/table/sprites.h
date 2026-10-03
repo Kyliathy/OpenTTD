@@ -377,8 +377,29 @@ static const SpriteID SPR_BRIDGE_DECKS_MGLV = SPR_BRIDGE_DECKS_BASE + 12;
 static const SpriteID SPR_BRIDGE_DECKS_ROAD = SPR_BRIDGE_DECKS_BASE + 18;
 /** @} */
 
+/** @{
+ * Map Layer sprites, in the stable Action 5 type 0x1C contract order.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md
+ */
+static constexpr SpriteID SPR_MAP_LAYER_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT; ///< First Map Layer sprite.
+static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = 44; ///< Sprites in the original Map Layer graphics contract.
+static constexpr SpriteID SPR_IMG_MAP_LAYER_SURFACE = SPR_MAP_LAYER_BASE + 0; ///< Surface toolbar icon.
+static constexpr SpriteID SPR_IMG_MAP_LAYER_UNDERGROUND = SPR_MAP_LAYER_BASE + 1; ///< Underground toolbar icon.
+static constexpr SpriteID SPR_IMG_MAP_LAYER_SPACE = SPR_MAP_LAYER_BASE + 2; ///< Space toolbar icon.
+static constexpr SpriteID SPR_IMG_BUILD_ROAD_ELEVATOR = SPR_MAP_LAYER_BASE + 3; ///< Road elevator toolbar icon.
+static constexpr SpriteID SPR_IMG_BUILD_RAIL_LAYER_PORTAL = SPR_MAP_LAYER_BASE + 4; ///< Rail Layer portal toolbar icon.
+static constexpr SpriteID SPR_CURSOR_ROAD_ELEVATOR = SPR_MAP_LAYER_BASE + 5; ///< Road elevator placement cursor.
+static constexpr SpriteID SPR_CURSOR_RAIL_LAYER_PORTAL = SPR_MAP_LAYER_BASE + 6; ///< Rail Layer portal placement cursor.
+static constexpr SpriteID SPR_MAP_LAYER_UNDERGROUND_FLOOR = SPR_MAP_LAYER_BASE + 7; ///< Three Underground floor variants.
+static constexpr SpriteID SPR_MAP_LAYER_SPACE_FLOOR = SPR_MAP_LAYER_BASE + 10; ///< Two Space floor variants.
+static constexpr SpriteID SPR_MAP_LAYER_ROAD_ELEVATOR_SURFACE = SPR_MAP_LAYER_BASE + 12; ///< Surface elevator back/front pairs in NE, SE, SW, NW order.
+static constexpr SpriteID SPR_MAP_LAYER_ROAD_ELEVATOR_UNDERGROUND = SPR_MAP_LAYER_BASE + 20; ///< Underground elevator back/front pairs in NE, SE, SW, NW order.
+static constexpr SpriteID SPR_MAP_LAYER_RAIL_PORTAL_SURFACE = SPR_MAP_LAYER_BASE + 28; ///< Surface rail portal back/front pairs in NE, SE, SW, NW order.
+static constexpr SpriteID SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND = SPR_MAP_LAYER_BASE + 36; ///< Underground rail portal back/front pairs in NE, SE, SW, NW order.
+/** @} */
+
 /** From where can we start putting NewGRFs. */
-static const SpriteID SPR_NEWGRFS_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT;
+static const SpriteID SPR_NEWGRFS_BASE = SPR_MAP_LAYER_BASE + MAP_LAYER_SPRITE_COUNT;
 
 /** Manager face sprites.
  * @{ */

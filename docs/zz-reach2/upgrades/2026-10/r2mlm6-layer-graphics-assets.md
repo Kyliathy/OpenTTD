@@ -99,8 +99,9 @@ Entry gate, 2026-10-03: Pillow 12.3.0 and GRFCodec / NFORenum / GRFID 6.2.0 are 
   - Pillow 12.3.0 for Python 3.10.0 (user site-packages).
 - [x] 1.2 Download the latest Windows release of GRFCodec (which ships NFORenum and GRFID) from the OpenTTD `grfcodec` GitHub releases into `D:\Codez\Tools\grfcodec` (outside the repository) and record the version.
   - GRFCodec 6.2.0 (`grfcodec-6.2.0-windows-win64.zip`, SHA-256 `A60A402BBFC37CE326CB89B9017AF58ADB8CAB8F99E5B0201F016006873D0553`). The binaries `grfcodec.exe`, `nforenum.exe`, `grfid.exe` and `grfstrip.exe` are in `D:\Codez\Tools\grfcodec\grfcodec-6.2.0-windows-win64\bin`. Each one reports version 6.2.0 with `-v`.
-- [ ] 1.3 Re-run the configure command with `-DGRFCODEC_EXECUTABLE`, `-DNFORENUM_EXECUTABLE` and `-DGRFID_EXECUTABLE` pointing at those binaries; confirm CMake reports GRFCodec as found.
-- [ ] 1.4 Build once without any sprite change; record whether the regenerated `openttd.grf` and `openttd.grf.hash` are byte-identical to the committed ones (a different tool version may change bytes; note it, do not fix it).
+- [x] 1.3 Re-run the configure command with `-DGRFCODEC_EXECUTABLE`, `-DNFORENUM_EXECUTABLE` and `-DGRFID_EXECUTABLE` pointing at those binaries; confirm CMake reports GRFCodec as found. Verified in `build/configure-graphics.log`, 2026-10-03.
+- [x] 1.4 Build once without any sprite change; record whether the regenerated `openttd.grf` and `openttd.grf.hash` are byte-identical to the committed ones (a different tool version may change bytes; note it, do not fix it).
+  - `build/build-grf-baseline.log`: Debug targets succeeded. `openttd.grf` is byte-identical (SHA-256 `b96cdc70ccabe75479aecb30b46d593c6189b7cbe04cd52fa726963c54c13b96`). The hash file has CRLF instead of the committed LF; its stripped contents match. The Windows NFORenum 6.2.0 binary crashed with an uninitialised data cache; `CreateGRF.cmake` now materialises that cache inside the build folder before linting, retaining the normal NFORenum/GRFCodec/GRFID pipeline.
 
 ### Area Mandatory Reading - Art specification and templates
 
@@ -136,6 +137,8 @@ _Applies to Groups 3-4._
 
 ### Group 3 - AI generation: icons and ground
 
+2026-10-03 replacement candidates and exact prompts: [assets/generation-prompts.md](assets/generation-prompts.md). The Space and elevator icons were regenerated with the built-in `image_gen.imagegen` tool. Both cursors now use their corresponding toolbar artwork at 32 x 32; the mistaken mouse-pointer image is preserved but no longer consumed. Offline palette preview: [assets/icon_preview_v2.png](assets/icon_preview_v2.png). In-game capture checks remain pending.
+
 {{COMPLEX}}
 - [x] 3.1 Generate the three layer toolbar icons (contract offsets 0 to 2) with `GenerateImage`, one call per icon at `1:1`, using the guide and reference images; copy each result into `docs/zz-reach2/upgrades/2026-10/assets/raw/` with a contract-based name.
 - [x] 3.2 Generate the two build-toolbar icons and two cursors (offsets 3 to 6) in the same way.
@@ -162,13 +165,15 @@ A 4x quantise of the icons is `docs/zz-reach2/upgrades/2026-10/assets/icon_previ
 
 ### Group 4 - AI generation: elevators and portals
 
+2026-10-03: all sixteen directional pairs are generated as aligned two-panel assets, supplying 32 separate contract sprites. Selected files are `assets/raw/<family>_<direction>_pair_v4.png`, where families are `elevator_surface`, `elevator_underground`, `rail_portal_surface` and `rail_portal_underground`, and directions are `ne`, `se`, `sw`, `nw`. The left/right source panels share their canvas and anchor. Exact prompts and guide paths: [assets/directional-prompts-v4.md](assets/directional-prompts-v4.md); guides are reproduced with `tools/make_portal_guides.py`. Each direction was generated independently to preserve top-left lighting. Earlier raw attempts are retained. Task 4.7 is pending the representative save and visual checks.
+
 {{COMPLEX}}
 - [x] 4.1 Generate the surface road elevator for the NE door direction as two images: back (floor, side walls, shaft roof) and front (door frame and front pillars only), both on the same guide so they align.
-- [ ] 4.2 Derive SE, SW and NW variants: mirror horizontally where the isometric projection allows (NE and NW, SE and SW), and generate the other pair; check lighting stays top-left.
-- [ ] 4.3 Generate the underground elevator housing (back and front) for all four directions the same way.
+- [x] 4.2 Derive SE, SW and NW variants: mirror horizontally where the isometric projection allows (NE and NW, SE and SW), and generate the other pair; check lighting stays top-left.
+- [x] 4.3 Generate the underground elevator housing (back and front) for all four directions the same way.
 - [x] 4.4 Generate the surface rail descent portal (track ramp into a tunnel mouth) for NE, back and front, using `tunnel_portals.png` as the scale reference.
-- [ ] 4.5 Derive the other three surface portal directions as in task 4.2.
-- [ ] 4.6 Generate the underground emergence portal (lit mouth in rock) for all four directions.
+- [x] 4.5 Derive the other three surface portal directions as in task 4.2.
+- [x] 4.6 Generate the underground emergence portal (lit mouth in rock) for all four directions.
 - [ ] 4.7 Composite each back and front pair over a road tile and a rail tile at game size and confirm a vehicle-sized gap exists between them; regenerate pairs that overlap wrongly.
 - [x] 4.8 Record prompts and chosen files under this task.
 
@@ -196,21 +201,25 @@ _Applies to Groups 5-6._
 
 ### Group 5 - Quantisation tool
 
+2026-10-03: the manifest covers all 44 offsets exactly once. Pillow keys magenta before area filtering, preserves source alpha, and keeps shared margins for aligned pairs. `--write-nfo` reproduces the NFO; `--dry-run --preview` leaves the integrated sheet unchanged. The real sheet was generated twice with identical SHA-256 `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`.
+
 {{MEDIUM}}
 - [x] 5.1 Write `docs/zz-reach2/upgrades/2026-10/tools/sprite_quantize.py` with a Javadoc-style module docstring and per-function docstrings: key out magenta to index 0, downscale with area filtering to the contract size, quantise to the DOS palette excluding the forbidden indices, crop transparent margins and recompute `rel x` / `rel y`.
 - [x] 5.2 Make the script take a manifest (a Python list in the script, not JSON) mapping contract offsets to raw files, and write `media/baseset/openttd/map_layers.png` as one sheet with a 2-pixel gap between sprites.
 - [x] 5.3 Make the script emit the real-sprite lines (`-1 sprites/map_layers.png 8bpp x y w h relx rely normal`) in contract order to stdout.
 - [x] 5.4 Add a `--preview` mode that writes a 4x enlarged sheet to `docs/zz-reach2/upgrades/2026-10/assets/preview.png` for review.
-- [ ] 5.5 Run the script twice and confirm the output PNG is byte-identical (determinism). `sprite_quantize.py --self-test` wrote two synthetic PNGs and they matched. The contract sheet is not written until `MANIFEST` lists all 44 raw sprites.
+- [x] 5.5 Run the script twice and confirm the output PNG is byte-identical (determinism). `sprite_quantize.py --self-test` wrote two synthetic PNGs and they matched. The contract sheet is not written until `MANIFEST` lists all 44 raw sprites.
 
 ### Group 6 - GRF integration
 
+2026-10-03: Debug builds both targets without compiler warnings (`build/build-layer-art-Debug.log`). NFORenum 6.2.0 does not know this fork's new type 0x1C, so the NFO scopes diagnostic 44 suppression to that Action 5; all real sprites are still linted. GRFCodec and GRFID regenerated the extra GRF. Source and build copies match, SHA-256 `c1e88812e85d96bdb411ef8db0fba2848c3d306a230ed1ded1e395c3bd6960b4` before the final header-only regeneration. In-game startup and alignment checks remain pending.
+
 {{MEDIUM}}
-- [ ] 6.1 Create `media/baseset/openttd/map_layers.nfo` with the licence header, `-1 * 0 0C "Map layer graphics"`, `-1 * 3 05 1C \b 44 // MAP_LAYER_SPRITE_COUNT` and the emitted real-sprite lines.
-- [ ] 6.2 Append `#include "map_layers.nfo"` to `openttd.nfo` after `bridge_decks.nfo`, and add `map_layers.nfo` and `map_layers.png` to `media/baseset/openttd/CMakeLists.txt`.
-- [ ] 6.3 Append `/* 0x1C */ { Action5BlockType::AllowOffset, SPR_MAP_LAYER_BASE, 1, MAP_LAYER_SPRITE_COUNT, "Map layer graphics" },` to `_action5_types`.
-- [ ] 6.4 In `src/table/sprites.h`, add the `SPR_MAP_LAYER_BASE` block after the bridge decks with `MAP_LAYER_SPRITE_COUNT` and every named constant from the contract, each with a `///<` comment, and change `SPR_NEWGRFS_BASE` to follow it.
-- [ ] 6.5 Build; confirm `openttd.grf` and `openttd.grf.hash` are regenerated and that the build copies them into `build/baseset/`.
+- [x] 6.1 Create `media/baseset/openttd/map_layers.nfo` with the licence header, `-1 * 0 0C "Map layer graphics"`, `-1 * 3 05 1C \b 44 // MAP_LAYER_SPRITE_COUNT` and the emitted real-sprite lines.
+- [x] 6.2 Append `#include "map_layers.nfo"` to `openttd.nfo` after `bridge_decks.nfo`, and add `map_layers.nfo` and `map_layers.png` to `media/baseset/openttd/CMakeLists.txt`.
+- [x] 6.3 Append `/* 0x1C */ { Action5BlockType::AllowOffset, SPR_MAP_LAYER_BASE, 1, MAP_LAYER_SPRITE_COUNT, "Map layer graphics" },` to `_action5_types`.
+- [x] 6.4 In `src/table/sprites.h`, add the `SPR_MAP_LAYER_BASE` block after the bridge decks with `MAP_LAYER_SPRITE_COUNT` and every named constant from the contract, each with a `///<` comment, and change `SPR_NEWGRFS_BASE` to follow it.
+- [x] 6.5 Build; confirm `openttd.grf` and `openttd.grf.hash` are regenerated and that the build copies them into `build/baseset/`.
 - [ ] 6.6 Start the game and confirm no missing-extra-graphics warning and no "unimplemented Action 5 type" message in the `grf` debug output (`-d grf=2`).
 
 ### Area Mandatory Reading - Wiring and acceptance
@@ -226,11 +235,11 @@ _Applies to Group 7._
 ### Group 7 - Wiring and acceptance
 
 {{SIMPLE}}
-- [ ] 7.1 Unless r2mlm5 task 8.1 already did it, switch `GetMapLayerIcon` to `SPR_IMG_MAP_LAYER_SURFACE`, `_UNDERGROUND` and `_SPACE`, and switch the toolbar sprite rows from the stand-in.
-- [ ] 7.2 Switch `GetLayerGroundSprite` to `SPR_MAP_LAYER_UNDERGROUND_FLOOR` and `SPR_MAP_LAYER_SPACE_FLOOR` with a `TileHash` variant pick (only if r2mlm5 Group 5 is done).
+- [x] 7.1 Unless r2mlm5 task 8.1 already did it, switch `GetMapLayerIcon` to `SPR_IMG_MAP_LAYER_SURFACE`, `_UNDERGROUND` and `_SPACE`, and switch the toolbar sprite rows from the stand-in.
+- [x] 7.2 Switch `GetLayerGroundSprite` to `SPR_MAP_LAYER_UNDERGROUND_FLOOR` and `SPR_MAP_LAYER_SPACE_FLOOR` with a `TileHash` variant pick (only if r2mlm5 Group 5 is done).
 - [ ] 7.3 Open the NewGRF sprite aligner (`-d grf` debug tools) on each new sprite and confirm offsets anchor at the tile's north corner; fix offsets in the manifest, not in the NFO by hand.
 - [ ] 7.4 Take screenshots of the toolbar at every GUI scale and of each ground layer, with the 8bpp and a 32bpp blitter, and link them under this task.
-- [ ] 7.5 Add a note line under the Group 7 heading of r2mlm8 and of r2mlm9 stating that the elevator and portal constants are available, so those art-swap groups are unblocked.
+- [x] 7.5 Add a note line under the Group 7 heading of r2mlm8 and of r2mlm9 stating that the elevator and portal constants are available, so those art-swap groups are unblocked.
 
 ## Consult on Demand
 

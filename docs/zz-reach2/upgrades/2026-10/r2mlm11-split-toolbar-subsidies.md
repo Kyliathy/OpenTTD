@@ -107,14 +107,16 @@ _Applies to Group 1._
 
 ### Group 1 - Towns menu entry
 
+Implemented 2026-10-03. In-game width checks stay pending until the user's save arrives.
+
 {{SIMPLE}}
-- [ ] 1.1 Add `static bool IsToolbarButtonShown(const Window *w, WidgetID widget)` directly after the second `PopupMainToolbarMenu` overload. Body: `return w->GetWidget<NWidgetBase>(widget)->current_x != 0;`. Its Javadoc block (`@param w`, `@param widget`, `@return`) states the contract: `NWidgetToolbarContainer::AssignSizePosition` gives every button outside the current arrangement page a width of 0.
-- [ ] 1.2 Append `ShowSubsidies, ///< Open the subsidies list. Listed only while the Subsidies button is off screen.` to `enum class TownMenuEntries`.
-- [ ] 1.3 In `ToolbarTownClick`, after the place-houses entry, append `MakeDropDownListStringItem(STR_SUBSIDIES_MENU_SUBSIDIES, TownMenuEntries::ShowSubsidies)` behind `if (!IsToolbarButtonShown(w, WID_TN_SUBSIDIES))`. Put `//A split toolbar can leave the Subsidies button off screen, so this menu offers it instead.` above the `if`. Add no divider, as with the League entries.
-- [ ] 1.4 Give `ToolbarTownClick` a Javadoc block (`@param w Toolbar that was clicked.` and `@return #CallBackFunction::None`); it has none upstream.
-- [ ] 1.5 In `MenuClickTown`, add `case TownMenuEntries::ShowSubsidies: ShowSubsidiesList(); break;` with the comment `//Always valid, even if the toolbar changed while the menu was open.` (D-3).
-- [ ] 1.6 Reword the comments in `arrange14` and `arrange15` to `//WID_TN_SUBSIDIES is left out so this row stays 14 buttons; the Towns menu offers Subsidies instead.` (15 in `arrange15`). Change no entry and no `static_assert`.
-- [ ] 1.7 Re-read every region edited in tasks 1.1 to 1.6. Confirm that `src/toolbar_gui.cpp` is the only file this plan touched, and that no arrangement entry, `static_assert`, string, widget id or hotkey changed.
+- [x] 1.1 Add `static bool IsToolbarButtonShown(const Window *w, WidgetID widget)` directly after the second `PopupMainToolbarMenu` overload. Body: `return w->GetWidget<NWidgetBase>(widget)->current_x != 0;`. Its Javadoc block (`@param w`, `@param widget`, `@return`) states the contract: `NWidgetToolbarContainer::AssignSizePosition` gives every button outside the current arrangement page a width of 0.
+- [x] 1.2 Append `ShowSubsidies, ///< Open the subsidies list. Listed only while the Subsidies button is off screen.` to `enum class TownMenuEntries`.
+- [x] 1.3 In `ToolbarTownClick`, after the place-houses entry, append `MakeDropDownListStringItem(STR_SUBSIDIES_MENU_SUBSIDIES, TownMenuEntries::ShowSubsidies)` behind `if (!IsToolbarButtonShown(w, WID_TN_SUBSIDIES))`. Put `//A split toolbar can leave the Subsidies button off screen, so this menu offers it instead.` above the `if`. Add no divider, as with the League entries.
+- [x] 1.4 Give `ToolbarTownClick` a Javadoc block (`@param w Toolbar that was clicked.` and `@return #CallBackFunction::None`); it has none upstream.
+- [x] 1.5 In `MenuClickTown`, add `case TownMenuEntries::ShowSubsidies: ShowSubsidiesList(); break;` with the comment `//Always valid, even if the toolbar changed while the menu was open.` (D-3).
+- [x] 1.6 Reword the comments in `arrange14` and `arrange15` to `//WID_TN_SUBSIDIES is left out so this row stays 14 buttons; the Towns menu offers Subsidies instead.` (15 in `arrange15`). Change no entry and no `static_assert`.
+- [x] 1.7 Re-read every region edited in tasks 1.1 to 1.6. Confirm that `src/toolbar_gui.cpp` is the only file this plan touched, and that no arrangement entry, `static_assert`, string, widget id or hotkey changed.
 
 ### Area Mandatory Reading - Split-width checks
 
@@ -137,7 +139,7 @@ _Applies to Group 2._
 ### Group 2 - Build and split-width checks
 
 {{SIMPLE}}
-- [ ] 2.1 Build `openttd` and `openttd_test` in Debug with the master-plan command. `src/toolbar_gui.cpp` must add no warning.
+- [x] 2.1 Build `openttd` and `openttd_test` in Debug with the master-plan command. `src/toolbar_gui.cpp` must add no warning.
 - [ ] 2.2 Run `ctest --test-dir build -C Debug --output-on-failure`. Every test that passed before this plan still passes.
 - [ ] 2.3 Start a new game from the Debug build. Raise Interface size and narrow the window (or use `-r`) until the toolbar splits at 14 buttons per page; the upper page starts Pause, Fast-forward, Trains. Without pressing the switch button, open the Towns menu: it ends with "Subsidies", and clicking it opens the subsidies list. This is the case D-2 exists for.
 - [ ] 2.4 Press the switch button, confirm the lower page has no Subsidies button, and repeat the Towns menu check.
@@ -158,10 +160,12 @@ _Applies to Group 3._
 
 ### Group 3 - Plan records
 
+2026-10-03: Group 1 is implemented. The cross-reference records describe code delivery; Group 2's runtime checks remain open.
+
 {{SIMPLE}}
 - [ ] 3.1 In r2rvm2, under the task named in the first row above, add the note "2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) Groups 1 and 2." Leave the task unchecked: its Pause and Fast-forward half is still open.
-- [ ] 3.2 In r2rvm `#### L-2 Split toolbars lose Subsidies`, add the line `- **Fix:** the Subsidies half by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) (Towns menu entry); the Pause and Fast-forward half stays open.`
-- [ ] 3.3 Under r2mlm1 task 4.3, add the note "Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11."
+- [x] 3.2 In r2rvm `#### L-2 Split toolbars lose Subsidies`, add the line `- **Fix:** the Subsidies half by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) (Towns menu entry); the Pause and Fast-forward half stays open.`
+- [x] 3.3 Under r2mlm1 task 4.3, add the note "Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11."
 
 ## Consult on Demand
 

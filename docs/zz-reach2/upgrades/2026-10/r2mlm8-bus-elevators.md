@@ -147,7 +147,7 @@ _Applies to Group 5._
 - [ ] 5.3 Confirm the estimate assert holds on routes through elevators in a Debug build (no `NOT_REACHED`, no assert).
 - [ ] 5.4 Confirm `FindClosestRoadDepot` and automatic servicing find a depot on the other layer within `maximum_go_to_depot_penalty`.
 - [ ] 5.5 Confirm `RoadVehicle::SetDestTile` and lost-vehicle news behave when the destination is on the other layer and no elevator exists (the bus is reported lost, it does not crash).
-- [ ] 5.6 Add a Debug-only consistency check in `RoadFindPathToDest` that the chosen next tile equals `GetLayerPortalNextTile` of the current tile and exit direction.
+- [x] 5.6 Add a Debug-only consistency check in `RoadFindPathToDest` that the chosen next tile equals `GetLayerPortalNextTile` of the current tile and exit direction.
 
 ### Area Mandatory Reading - Underground network and art
 
@@ -172,9 +172,11 @@ The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stay
 
 ### Group 7 - Elevator art
 
+2026-10-03: r2mlm6 publishes the elevator constants and all four directional back/front pairs. Drawing and toolbar/cursor swaps are implemented and build in Debug. Visibility checks wait for the user's representative save.
+
 {{SIMPLE}}
-- [ ] 7.1 Draw the elevator back part as a ground child sprite and the front part as a parent sprite with a bounding box that lets vehicles pass beneath, for both ends, using the contract offsets.
-- [ ] 7.2 Switch the toolbar button sprite to `SPR_IMG_BUILD_ROAD_ELEVATOR` and the cursor to `SPR_CURSOR_ROAD_ELEVATOR`.
+- [x] 7.1 Draw the elevator back part as a ground child sprite and the front part as a parent sprite with a bounding box that lets vehicles pass beneath, for both ends, using the contract offsets.
+- [x] 7.2 Switch the toolbar button sprite to `SPR_IMG_BUILD_ROAD_ELEVATOR` and the cursor to `SPR_CURSOR_ROAD_ELEVATOR`.
 - [ ] 7.3 Check the visibility frames against the new art (the bus disappears behind the door frame, not in front of it) and adjust only the frame constants if needed.
 
 ### Area Mandatory Reading - Verification

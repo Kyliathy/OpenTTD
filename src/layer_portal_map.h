@@ -88,6 +88,19 @@ inline TileIndex GetLayerPortalPairTile(Tile t)
 }
 
 /**
+ * Portal kind derived from its transport and Layers, never stored separately (r2mlm12 D-3).
+ * @param t Portal end.
+ * @return RailTunnel for rail, RoadElevator if either end is Deep Underground, otherwise RoadTunnel.
+ */
+inline LayerPortalKind GetLayerPortalKind(Tile t)
+{
+	if (GetLayerPortalTransportType(t) == TransportType::Rail) return LayerPortalKind::RailTunnel;
+	//An elevator always reaches Deep Underground; a road tunnel never does.
+	if (GetTileLayer(t) == MapLayer::DeepUnderground || GetLayerPortalTargetLayer(t) == MapLayer::DeepUnderground) return LayerPortalKind::RoadElevator;
+	return LayerPortalKind::RoadTunnel;
+}
+
+/**
  * Whether a rail portal end is reserved.
  * m5 bit 4, the same bit a rail tunnel uses.
  * @param t Rail portal end.

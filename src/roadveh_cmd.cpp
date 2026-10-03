@@ -911,8 +911,8 @@ static void RoadZPosAffectSpeed(RoadVehicle *v, int old_z)
 }
 
 /**
- * Returns direction to for a road vehicle to take or
- * Trackdir::Invalid if the direction is currently blocked
+ * Choose the track direction for a road vehicle, accepting portal neighbours across Layers.
+ * Return Trackdir::Invalid if the direction is currently blocked.
  * @param v        the Vehicle to do the pathfinding for
  * @param tile     the where to start the pathfinding
  * @param enterdir the direction the vehicle enters the tile from
@@ -920,6 +920,13 @@ static void RoadZPosAffectSpeed(RoadVehicle *v, int old_z)
  */
 static Trackdir RoadFindPathToDest(RoadVehicle *v, TileIndex tile, DiagDirection enterdir)
 {
+#ifdef _DEBUG
+	//A path step into another Layer must use the shared portal neighbour contract.
+	if (v->tile != tile && GetTileLayer(v->tile) != GetTileLayer(tile)) {
+		assert(IsLayerPortalTile(v->tile));
+		assert(tile == GetLayerPortalNextTile(v->tile, enterdir));
+	}
+#endif
 	bool path_found = true;
 
 	TrackStatus ts = GetTileTrackStatus(tile, TransportType::Road, GetRoadTramType(v->roadtype));

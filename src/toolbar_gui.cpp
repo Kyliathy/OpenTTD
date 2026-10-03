@@ -157,6 +157,18 @@ static void PopupMainToolbarMenu(Window *w, WidgetID widget, const std::initiali
 	PopupMainToolbarMenu(w, widget, std::move(list), 0);
 }
 
+/**
+ * Whether a toolbar button belongs to the visible arrangement page.
+ * NWidgetToolbarContainer::AssignSizePosition gives hidden buttons a width of zero.
+ * @param w Toolbar containing the button.
+ * @param widget Button whose visibility is needed.
+ * @return True when the current page gives the button a nonzero width.
+ */
+static bool IsToolbarButtonShown(const Window *w, WidgetID widget)
+{
+	return w->GetWidget<NWidgetBase>(widget)->current_x != 0;
+}
+
 /* Special values used in the dropdowns related to companies.
  * They cannot interfere with valid IDs for companies. */
 static const int CTMN_CLIENT_LIST = MAX_COMPANIES; ///< Indicates the "all connected players" entry.
@@ -488,14 +500,24 @@ enum class TownMenuEntries {
 	ShowDirectory = 0, ///< Open window with list of towns.
 	ShowFoundTown, ///< Open town generation window.
 	ShowPlaceHouses, ///< Open house selection window.
+	ShowSubsidies, ///< Open the subsidies list. Listed only while the Subsidies button is off screen.
 };
 
+/**
+ * Open the Towns menu, including Subsidies when its own button is hidden.
+ * @param w Toolbar that was clicked.
+ * @return #CallBackFunction::None.
+ */
 static CallBackFunction ToolbarTownClick(Window *w)
 {
 	DropDownList list;
 	list.push_back(MakeDropDownListStringItem(STR_TOWN_MENU_TOWN_DIRECTORY, TownMenuEntries::ShowDirectory));
 	if (_settings_game.economy.found_town != TownFounding::Forbidden) list.push_back(MakeDropDownListStringItem(STR_TOWN_MENU_FOUND_TOWN, TownMenuEntries::ShowFoundTown));
 	if (_settings_game.economy.place_houses != PlaceHouses::Forbidden) list.push_back(MakeDropDownListStringItem(STR_SCENEDIT_TOWN_MENU_PACE_HOUSE, TownMenuEntries::ShowPlaceHouses));
+	//A split toolbar can leave the Subsidies button off screen, so this menu offers it instead.
+	if (!IsToolbarButtonShown(w, WID_TN_SUBSIDIES)) {
+		list.push_back(MakeDropDownListStringItem(STR_SUBSIDIES_MENU_SUBSIDIES, TownMenuEntries::ShowSubsidies));
+	}
 
 	PopupMainToolbarMenu(w, WID_TN_TOWNS, std::move(list), 0);
 
@@ -518,6 +540,8 @@ static CallBackFunction MenuClickTown(int index)
 		case TownMenuEntries::ShowPlaceHouses: // Setting could be changed when the dropdown was open
 			if (_settings_game.economy.place_houses != PlaceHouses::Forbidden) ShowBuildHousePicker(nullptr);
 			break;
+		//Always valid, even if the toolbar changed while the menu was open.
+		case TownMenuEntries::ShowSubsidies: ShowSubsidiesList(); break;
 	}
 	return CallBackFunction::None;
 }
@@ -1596,7 +1620,7 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SMALL_MAP,
 			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
-			//WID_TN_SUBSIDIES is left out so this row stays 14 buttons.
+			//WID_TN_SUBSIDIES is left out so this row stays 14 buttons; the Towns menu offers Subsidies instead.
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -1632,7 +1656,7 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_MAP_LAYER,
 			WID_TN_SAVE,
 			WID_TN_TOWNS,
-			//WID_TN_SUBSIDIES is left out so this row stays 15 buttons.
+			//WID_TN_SUBSIDIES is left out so this row stays 15 buttons; the Towns menu offers Subsidies instead.
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -2289,7 +2313,7 @@ static constexpr std::tuple<WidgetID, WidgetType, SpriteID> _toolbar_button_spri
 	{WID_TN_SETTINGS,     WWT_IMGBTN,     SPR_IMG_SETTINGS},
 	{WID_TN_SAVE,         WWT_IMGBTN_2,   SPR_IMG_SAVE},
 	{WID_TN_SMALL_MAP,    WWT_IMGBTN,     SPR_IMG_SMALLMAP},
-	{WID_TN_MAP_LAYER,    WWT_PUSHIMGBTN, SPR_IMG_PLANTTREES},
+	{WID_TN_MAP_LAYER,    WWT_PUSHIMGBTN, SPR_IMG_MAP_LAYER_SURFACE},
 	{WID_TN_TOWNS,        WWT_IMGBTN,     SPR_IMG_TOWN},
 	{WID_TN_SUBSIDIES,    WWT_IMGBTN,     SPR_IMG_SUBSIDIES},
 	{WID_TN_STATIONS,     WWT_IMGBTN,     SPR_IMG_COMPANY_LIST},
@@ -2686,7 +2710,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_toolb_scen_inner_wid
 	EndContainer(),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_IMGBTN, Colours::Grey, WID_TE_SMALL_MAP), SetSpriteTip(SPR_IMG_SMALLMAP, STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP),
-	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_MAP_LAYER), SetSpriteTip(SPR_IMG_PLANTTREES, STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP),
+	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_MAP_LAYER), SetSpriteTip(SPR_IMG_MAP_LAYER_SURFACE, STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_IN), SetSpriteTip(SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_OUT), SetSpriteTip(SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT),

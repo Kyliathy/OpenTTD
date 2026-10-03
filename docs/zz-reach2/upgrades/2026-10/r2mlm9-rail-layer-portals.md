@@ -184,9 +184,11 @@ The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stay
 
 ### Group 7 - Portal art
 
+2026-10-03: r2mlm6 publishes the portal constants and all four directional back/front pairs. Drawing and toolbar/cursor swaps are implemented and build in Debug. Rail-type sprites and reservation tint are retained. Visibility and monorail/maglev runtime checks wait for the user's representative save.
+
 {{SIMPLE}}
-- [ ] 7.1 Draw the portal back part as a ground child sprite and the front part (the mouth arch) as a parent sprite with a bounding box that lets the train pass beneath, for both ends, using the contract offsets.
-- [ ] 7.2 Switch the toolbar sprite to `SPR_IMG_BUILD_RAIL_LAYER_PORTAL` and the cursor to `SPR_CURSOR_RAIL_LAYER_PORTAL`.
+- [x] 7.1 Draw the portal back part as a ground child sprite and the front part (the mouth arch) as a parent sprite with a bounding box that lets the train pass beneath, for both ends, using the contract offsets.
+- [x] 7.2 Switch the toolbar sprite to `SPR_IMG_BUILD_RAIL_LAYER_PORTAL` and the cursor to `SPR_CURSOR_RAIL_LAYER_PORTAL`.
 - [ ] 7.3 Check that the train disappears inside the mouth (not in front of it) for each direction and adjust only the visibility frames if needed.
 - [ ] 7.4 Check monorail and maglev portals: the track drawn on the portal tile uses the portal's rail type sprites.
 
