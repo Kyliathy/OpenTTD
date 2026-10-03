@@ -15,6 +15,7 @@
 #include "void_map.h"
 #include "bridge_map.h"
 #include "company_func.h"
+#include "command_func.h"
 #include "core/random_func.hpp"
 #include "strings_func.h"
 #include "table/strings.h"
@@ -192,4 +193,19 @@ CommandCost CheckLayerAllowsConstruction(TileIndex tile, MapLayerConstruction ki
 		return error;
 	}
 	return {};
+}
+
+/**
+ * Refuse a command whose two corner or end tiles lie on different layers.
+ * FD-10: an area or a drag stays in one layer, so its walk never has to cross a void fence to find out.
+ * @param a First corner or end tile.
+ * @param b Second corner or end tile.
+ * @return An empty cost when both tiles are on the map and share a layer, otherwise CMD_ERROR.
+ */
+CommandCost CheckTilesShareLayer(TileIndex a, TileIndex b)
+{
+	//A tile past the map has no layer, so it can never share one.
+	if (a >= Map::Size() || b >= Map::Size()) return CMD_ERROR;
+	if (GetTileLayer(a) != GetTileLayer(b)) return CMD_ERROR;
+	return CommandCost();
 }

@@ -291,4 +291,12 @@ struct MultiLayerMap {
  */
 CommandCost CheckLayerAllowsConstruction(TileIndex tile, MapLayerConstruction kind);
 
+/**
+ * Refuse a command whose two corner or end tiles lie on different layers.
+ * @param a First corner or end tile.
+ * @param b Second corner or end tile.
+ * @return An empty cost when both tiles are on the map and share a layer, otherwise CMD_ERROR.
+ */
+CommandCost CheckTilesShareLayer(TileIndex a, TileIndex b);
+
 #endif /* MAP_LAYER_H */

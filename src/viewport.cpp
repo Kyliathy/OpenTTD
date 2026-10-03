@@ -6,7 +6,7 @@
  */
 
 /**
- * @file viewport.cpp Handling of all viewports.
+ * @file viewport.cpp Handling of all viewports. @see docs/zz-reach2/architecture/gui/archi-viewport.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  *
  * \verbatim
  * The in-game coordinate system looks like this *
@@ -248,7 +248,7 @@ void InitializeWindowViewport(Window *w, int x, int y,
 		veh = Vehicle::Get(vp->follow_vehicle)->GetMovingFront();
 		pt = MapXYZToViewport(*vp, veh->x_pos, veh->y_pos, veh->z_pos);
 		//The view opens on the layer the vehicle occupies.
-		vp->layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);
+		vp->layer = GetVehicleDisplayLayer(veh);
 	} else {
 		TileIndex tile = std::get<TileIndex>(focus);
 		if (tile == INVALID_TILE) {
@@ -2021,9 +2021,11 @@ void UpdateViewportPosition(Window *w, uint32_t delta_ms)
 		Point pt = MapXYZToViewport(vp, veh->x_pos, veh->y_pos, veh->z_pos);
 
 		//Following a vehicle also follows its layer. The scroll above is already in that band.
-		MapLayer vehicle_layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);
+		MapLayer vehicle_layer = GetVehicleDisplayLayer(veh);
 		if (vp.layer != vehicle_layer) {
 			vp.layer = vehicle_layer;
+			//FD-8: the link overlay cached the stations of the old layer.
+			if (vp.overlay != nullptr) vp.overlay->SetDirty();
 			if (w == GetMainWindow()) InvalidateWindowData(WindowClass::MainToolbar, 0);
 		}
 
@@ -2170,24 +2172,23 @@ void MarkTileDirtyByTile(TileIndex tile, int bridge_level_offset, int tile_heigh
 }
 
 /**
+ * World Y where one layer's band begins.
+ * FD-7: a selection lives in the layer of its own tiles, not in the main viewport's layer.
+ * @param layer Layer whose band is wanted.
+ * @return Pixel Y of the north edge of that band.
+ */
+static int GetLayerBandY(MapLayer layer)
+{
+	return static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+}
+
+/**
  * Marks the selected tiles as dirty.
  *
  * This function marks the selected tiles as dirty for repaint
  *
  * @ingroup dirty
  */
-/**
- * World Y where the main viewport's layer begins.
- * The selection highlight lives in that view.
- * @return Pixel Y of the north edge of the band.
- */
-static int MainViewportBandY()
-{
-	const Window *main = GetMainWindow();
-	MapLayer layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
-	return static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
-}
-
 static void SetSelectionTilesDirty()
 {
 	int x_size = _thd.size.x;
@@ -2210,7 +2211,8 @@ static void SetSelectionTilesDirty()
 		assert(x_size >= 0);
 		assert(y_size >= 0);
 
-		int band_y = MainViewportBandY();
+		//FD-7: clamp to the band of the layer the highlighted tile is on.
+		int band_y = GetLayerBandY(GetLayerOfWorldY(_thd.pos.y));
 		int y_limit = band_y + static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE) - static_cast<int>(TILE_SIZE);
 		int x_end = Clamp(x_start + x_size, 0, Map::SizeX() * TILE_SIZE - TILE_SIZE);
 		int y_end = Clamp(y_start + y_size, band_y, y_limit);
@@ -2287,12 +2289,16 @@ static void SetSelectionTilesDirty()
 		int interval_a = a_size < 0 ? -(int)TILE_SIZE : (int)TILE_SIZE;
 		int interval_b = b_size < 0 ? -(int)TILE_SIZE : (int)TILE_SIZE;
 
+		//FD-7: the rotated selection lives in the layer of its anchor tile.
+		int band_tile_y = GetLayerBandY(GetLayerOfWorldY(_thd.pos.y)) / static_cast<int>(TILE_SIZE);
 		for (int a = -interval_a; a != a_size + interval_a; a += interval_a) {
 			for (int b = -interval_b; b != b_size + interval_b; b += interval_b) {
 				uint x = (_thd.pos.x + (a + b) / 2) / TILE_SIZE;
 				uint y = (_thd.pos.y + (a - b) / 2) / TILE_SIZE;
 
-				int plane_y = static_cast<int>(y) - MainViewportBandY() / static_cast<int>(TILE_SIZE);
+				int plane_y = static_cast<int>(y) - band_tile_y;
+				//Only tiles inside the anchor layer's band are repainted. A rotated selection near a band edge would otherwise
+				//dirty the void past the map edge or tiles of the neighbouring layer, which no view of this layer shows.
 				if (x < Map::MaxX() && plane_y >= 0 && plane_y < static_cast<int>(Map::MaxY())) {
 					MarkTileDirtyByTile(TileXY(x, y));
 				}
@@ -3202,11 +3208,15 @@ static void CalcRaildirsDrawstyle(int x, int y, int method)
 					}
 
 					/* Make sure we do not overflow the map! */
+					//FD-7: clamp inside the layer the drag started in. y is measured from that layer's band while the vanilla clamps run.
+					int band_y = GetLayerBandY(GetLayerOfWorldY(_thd.selstart.y));
+					y -= band_y;
 					CheckUnderflow(x, y, 1);
 					CheckUnderflow(y, x, 1);
 					CheckOverflow(x, y, (Map::MaxX() - 1) * TILE_SIZE, 1);
-					CheckOverflow(y, x, MainViewportBandY() + (Map::MaxY() - 1) * TILE_SIZE, 1);
-					assert(x >= 0 && y >= MainViewportBandY() && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= MainViewportBandY() + (int)(Map::MaxY() * TILE_SIZE));
+					CheckOverflow(y, x, (Map::MaxY() - 1) * TILE_SIZE, 1);
+					assert(x >= 0 && y >= 0 && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= (int)(Map::MaxY() * TILE_SIZE));
+					y += band_y;
 				}
 				break;
 
@@ -3237,11 +3247,15 @@ static void CalcRaildirsDrawstyle(int x, int y, int method)
 					}
 
 					/* Make sure we do not overflow the map! */
+					//FD-7: clamp inside the layer the drag started in. y is measured from that layer's band while the vanilla clamps run.
+					int band_y = GetLayerBandY(GetLayerOfWorldY(_thd.selstart.y));
+					y -= band_y;
 					CheckUnderflow(x, y, -1);
 					CheckUnderflow(y, x, -1);
 					CheckOverflow(x, y, (Map::MaxX() - 1) * TILE_SIZE, -1);
-					CheckOverflow(y, x, MainViewportBandY() + (Map::MaxY() - 1) * TILE_SIZE, -1);
-					assert(x >= 0 && y >= MainViewportBandY() && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= MainViewportBandY() + (int)(Map::MaxY() * TILE_SIZE));
+					CheckOverflow(y, x, (Map::MaxY() - 1) * TILE_SIZE, -1);
+					assert(x >= 0 && y >= 0 && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= (int)(Map::MaxY() * TILE_SIZE));
+					y += band_y;
 				}
 				break;
 

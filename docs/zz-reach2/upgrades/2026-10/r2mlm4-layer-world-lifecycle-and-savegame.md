@@ -38,11 +38,11 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 83-85 | `### AD-4 Independent layers`: each layer has its own rules, initialiser and void fence; Underground and Space initialise without `Random()`; the surface stays bit-identical. This plan implements the rules and initialisers. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 91-93 | `### AD-6 Every layer is simulated`: the shared LFSR cursor is applied to every plane; climate and flooding only where the rules allow. Governs Group 3. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 103-105 | `### AD-9 Savegame`: `SaveLoadVersion::MapLayers`, the `layers` field, all planes in the RIFF chunks, `AfterLoadGame` upgrade of older files. Governs Group 5. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 111-128 | `### AD-11`, `### AD-12` and `## Cross-plan Invariants`: this plan is where live games switch to three layers; I-6 (surface identical) and I-7 (round-trip and upgrade) are its acceptance tests. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 82-84 | `### AD-4 Independent layers`: each layer has its own rules, initialiser and void fence; Underground and Space initialise without `Random()`; the surface stays bit-identical. This plan implements the rules and initialisers. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 90-92 | `### AD-6 Every layer is simulated`: the shared LFSR cursor is applied to every plane; climate and flooding only where the rules allow. Governs Group 3. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 102-104 | `### AD-9 Savegame`: `SaveLoadVersion::MapLayers`, the `layers` field, all planes in the RIFF chunks, `AfterLoadGame` upgrade of older files. Governs Group 5. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 110-127 | `### AD-11`, `### AD-12` and `## Cross-plan Invariants`: this plan is where live games switch to three layers; I-6 (surface identical) and I-7 (round-trip and upgrade) are its acceptance tests. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 431-442 | `## Invariants a change must not break`: big-endian chunk stream, version enum order, older versions keep loading, `MAPS` before the RIFF planes. Constrains every savegame task and the decision to add a field rather than a new chunk. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 Group 4: `MultiLayerMap` core. This plan adds `GetRules` and `InitialiseLayer` to the same struct; it must not duplicate any existing member. |
 
@@ -201,7 +201,7 @@ _Applies to Groups 6-7._
 | [src/misc.cpp](../../../../src/misc.cpp) | 92-171 | `InitializeGame`: the allocation call for new games, editor worlds and the pre-load reset; switching it to `MAX_MAP_LAYERS` is what makes layers live. |
 | [src/saveload/oldloader_sl.cpp](../../../../src/saveload/oldloader_sl.cpp) | 1527-1531 | TTO allocation inside `LoadOldMapPart1`, changed in task 5.7. |
 | [docs/zz-reach2/architecture/desync/archi-desync.md](../../architecture/desync/archi-desync.md) | 166-172 | `### Cache checks at desync level 2`: `CheckCaches` runs every tick at `-d desync=2`; used as the determinism smoke test in task 6.5. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by master task 1.8. Reference for I-6 in Group 7. |
+| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6 in Group 7. |
 
 ### Group 6 - Three live layers
 

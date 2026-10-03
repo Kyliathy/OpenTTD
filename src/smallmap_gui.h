@@ -5,12 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file smallmap_gui.h Smallmap GUI functions. */
+/** @file smallmap_gui.h Smallmap GUI functions. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef SMALLMAP_GUI_H
 #define SMALLMAP_GUI_H
 
 #include "core/geometry_type.hpp"
+#include "map_layer_type.h"
 #include "station_type.h"
 #include "tile_type.h"
 #include "window_type.h"
@@ -33,5 +34,6 @@ enum class IncludeHeightmap : uint8_t {
 uint32_t GetSmallMapOwnerPixels(TileIndex tile, TileType t, IncludeHeightmap include_heightmap);
 
 Point GetSmallMapStationMiddle(const Window *w, const Station *st);
+MapLayer GetSmallMapLayer(const Window *w);
 
 #endif /* SMALLMAP_GUI_H */

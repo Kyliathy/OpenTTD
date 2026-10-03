@@ -38,8 +38,8 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. The conventions bind every edit here: `//comment` with no space after `//`, a Javadoc block on every function this plan adds or edits, English-only strings, and never `git checkout`, `git reset` or `git stash`. The commands are the only allowed way to configure, build and test (Visual Studio Build Tools 2022, never Community). |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 308-310 | `#### L-2 Split toolbars lose Subsidies`: the finding this plan fixes. `arrange14` and `arrange15` have no `WID_TN_SUBSIDIES`. Only the Subsidies half is in scope. The Pause and Fast-forward half of the same finding stays open and must not be touched here. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. The conventions bind every edit here: `//comment` with no space after `//`, a Javadoc block on every function this plan adds or edits, English-only strings, and never `git checkout`, `git reset` or `git stash`. The commands are the only allowed way to configure, build and test (Visual Studio Build Tools 2022, never Community). |
+| [r2rvm-review-map.md](r2rvm-review-map.md) | 356-358 | `#### L-2 Split toolbars lose Subsidies`: the finding this plan fixes. `arrange14` and `arrange15` have no `WID_TN_SUBSIDIES`. Only the Subsidies half is in scope. The Pause and Fast-forward half of the same finding stays open and must not be touched here. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 90-95, 204 | `enum class ToolbarMode` and `static ToolbarMode _toolbar_mode`. Only `ToolbarSwitchClick` assigns `Upper` or `Lower`, and only `GetButtonArrangement` assigns `Normal`. A toolbar that has just split therefore still reports `Normal`. This is why D-2 tests whether the button is on screen and never reads `_toolbar_mode`. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 1478-1542 | `NWidgetToolbarContainer::AssignSizePosition`. It first sets `current_x = 0` on every child, then gives a width only to the buttons of the current arrangement page. D-2 reads exactly that signal. This plan relies on that behaviour and must not change this function. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 676-706 | `AddDropDownLeagueTableOptions` and `ToolbarGraphsClick`: upstream's precedent for listing a missing button's entries in another button's menu. Copy its shape (append to the list behind a condition, keep the existing dispatch). Do not copy its `_toolbar_mode != ToolbarMode::Normal` condition (D-2). |
@@ -152,14 +152,14 @@ _Applies to Group 3._
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 1230 | The task whose text starts "L-2: ask the user which button `arrange14` and `arrange15` should give up" (numbered 14.3 when this plan was written). Task 3.1 records the user's answer there. |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 111-142 | `### Severity index`, row L-2. Its Status column belongs to r2rvm's own status task; this plan does not fill it. |
+| [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | 1434 | Task 18.3, which starts "L-2: the Subsidies half belongs to r2mlm11". It was r2rvm task 14.3, "L-2: ask the user which button `arrange14` and `arrange15` should give up", when this plan was written, and moved to r2rvm2 when r2rvm was split. Task 3.1 records the user's answer there. |
+| [r2rvm-review-map.md](r2rvm-review-map.md) | 141-175 | `### Severity index`, row L-2 (line 165). Its Status column belongs to r2rvm's own status task; this plan does not fill it. |
 | [r2mlm1-layer-toolbar-button.md](r2mlm1-layer-toolbar-button.md) | 120-127 | `### Group 4 - Toolbar arrangements`, task 4.3: the removal rule that dropped Subsidies from `arrange14` and `arrange15`. It gets a cross-reference note. |
 
 ### Group 3 - Plan records
 
 {{SIMPLE}}
-- [ ] 3.1 In r2rvm, under the task named in the first row above, add the note "2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) Groups 1 and 2." Check the task if it is still unchecked.
+- [ ] 3.1 In r2rvm2, under the task named in the first row above, add the note "2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) Groups 1 and 2." Leave the task unchecked: its Pause and Fast-forward half is still open.
 - [ ] 3.2 In r2rvm `#### L-2 Split toolbars lose Subsidies`, add the line `- **Fix:** the Subsidies half by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) (Towns menu entry); the Pause and Fast-forward half stays open.`
 - [ ] 3.3 Under r2mlm1 task 4.3, add the note "Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11."
 
@@ -178,7 +178,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 
 | File name | Sections or Line Ranges used while planning | Planning contribution |
 | --- | --- | --- |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 132, 308-310, 1230 | Finding L-2 and its open decision task, which this plan answers with the user's choice. |
+| [r2rvm-review-map.md](r2rvm-review-map.md), [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | r2rvm 165, 356-358; r2rvm2 1434 | Finding L-2 and its open decision task, which this plan answers with the user's choice. |
 | [r2mlm1-layer-toolbar-button.md](r2mlm1-layer-toolbar-button.md) | 120-127 | Task 4.3's removal order explained why Subsidies was dropped, and why the arrangements stay owned by r2mlm1. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 90-95, 204, 484-542, 676-706, 1233-1247, 1478-1542, 1578-1905, 2026, 2097-2110, 2117-2121, 2239-2282 | The `_toolbar_mode` writers (leading to D-2), the League precedent, the third-page risks at the `GetButtonArrangement` return and the editor's `arrange_switch` (D-1), the Towns button never being disabled, the per-layout button counts, and the F6 hotkey. |
 | [src/widget_type.h](../../../../src/widget_type.h) | 272 | `NWidgetBase::current_x` is public, so the helper needs no new accessor. |

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle.cpp Base implementations of all vehicles. */
+/** @file vehicle.cpp Base implementations of all vehicles. @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "error.h"
@@ -1188,9 +1188,7 @@ void ViewportAddVehicles(DrawPixelInfo *dpi)
 
 			while (v != nullptr) {
 				//A vehicle in another layer must not appear in this band.
-				MapLayer vehicle_layer = (v->type == VehicleType::Effect || v->type == VehicleType::Disaster || v->tile == INVALID_TILE)
-					? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
-				if (vehicle_layer != _viewport_draw_layer) {
+				if (GetVehicleDisplayLayer(v) != _viewport_draw_layer) {
 					v = v->hash_viewport_next;
 					continue;
 				}
@@ -1277,10 +1275,8 @@ Vehicle *CheckClickOnVehicle(const Viewport &vp, int x, int y)
 			Vehicle *v = _vehicle_viewport_hash[hx + hy]; // already masked & 0xFFF
 
 			while (v != nullptr) {
-				MapLayer vehicle_layer = (v->type == VehicleType::Effect || v->type == VehicleType::Disaster || v->tile == INVALID_TILE)
-					? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
 				//A click must not select a vehicle drawn in another layer.
-				if (vehicle_layer != vp.layer) {
+				if (GetVehicleDisplayLayer(v) != vp.layer) {
 					v = v->hash_viewport_next;
 					continue;
 				}

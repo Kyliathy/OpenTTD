@@ -24,7 +24,7 @@
  * @param transport Transport of the end.
  * @return Piece count for that one end.
  */
-inline uint LAYER_PORTAL_TRACKBIT_FACTOR(TransportType transport)
+inline uint GetLayerPortalPieceCount(TransportType transport)
 {
 	return transport == TransportType::Rail ? 1 : 2;
 }
@@ -42,5 +42,14 @@ void CcBuildLayerPortal(Commands cmd, const CommandCost &result, TileIndex tile,
  * @param y World Y, updated in place.
  */
 void TranslateIntoLayerPortalPair(TileIndex portal, int &x, int &y);
+
+/**
+ * Whether a vehicle at a point on a portal end is inside the shaft, so it is not drawn.
+ * @param shaft Shaft direction of the end.
+ * @param x World X of the point.
+ * @param y World Y of the point.
+ * @return True from the tunnel visibility frame of that shaft to the shaft edge.
+ */
+bool IsHiddenInLayerPortal(DiagDirection shaft, int x, int y);
 
 #endif /* LAYER_PORTAL_CMD_H */

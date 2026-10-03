@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file afterload.cpp Code updating data after game load. */
+/** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 #include "../void_map.h"
@@ -161,7 +161,7 @@ void SetWaterClassDependingOnSurroundings(Tile t, bool include_invalid_water_cla
 
 static void ConvertTownOwner()
 {
-	for (auto tile : Map::Iterate()) {
+	for (auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		switch (GetTileType(tile)) {
 			case TileType::Road:
 				if (GB(tile.m5(), 4, 2) == to_underlying(RoadTileType::Crossing) && HasBit(tile.m3(), 7)) {
@@ -573,6 +573,7 @@ bool AfterLoadGame()
 	for (uint layer_index = _map_file_layers; layer_index < Map::LayerCount(); ++layer_index) {
 		MultiLayerMap::InitialiseLayer(static_cast<MapLayer>(layer_index));
 	}
+	//FD-9: the version-gated conversions below read files that hold one plane, so they walk the surface only.
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::Gamelog)) _gamelog.Oldver();
 
@@ -619,7 +620,7 @@ bool AfterLoadGame()
 		for (Station *st : Station::Iterate()) {
 			st->train_station.w = st->train_station.h = 0;
 		}
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Station)) continue;
 			if (t.m5() > 7) continue; // is it a rail station tile?
 			Station *st = Station::Get(t.m2());
@@ -636,7 +637,7 @@ bool AfterLoadGame()
 		_settings_game.construction.map_height_limit = 15;
 
 		/* In old savegame versions, the heightlevel was coded in bits 0..3 of the type field */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			t.height() = GB(t.type(), 0, 4);
 			SB(t.type(), 0, 2, GB(t.m6(), 0, 2));
 			SB(t.m6(), 0, 2, 0);
@@ -663,7 +664,7 @@ bool AfterLoadGame()
 	 * (4.3) version, so I just check when versions are older, and then
 	 * walk through the whole map.. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::TownTolerancePauseMode, 3)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Water) && GetTileOwner(t) >= MAX_COMPANIES) {
 				SetTileOwner(t, OWNER_WATER);
 			}
@@ -860,7 +861,7 @@ bool AfterLoadGame()
 		 * converted before SaveLoadVersion::SplitStationTypeFromGfxid and SaveLoadVersion::NewGRFIndustryRandomTriggers conversions which use GetWaterTileType. */
 		static constexpr uint8_t WBL_COAST_FLAG = 0; ///< Flag for coast.
 
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Water)) continue;
 
 			switch (GB(t.m5(), 4, 4)) {
@@ -877,7 +878,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::SplitStationTypeFromGfxid)) {
 		/* Locks in very old savegames had OWNER_WATER as owner */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				default: break;
 
@@ -933,13 +934,14 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::IncreaseStationTypeFieldSize)) {
 		/* Expansion of station type field in m6 */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Station)) {
 				ClrBit(t.m6(), 6);
 			}
 		}
 	}
 
+	//FD-9: this loop runs for every save. Stations exist on every layer, so it walks every plane.
 	for (const auto t : Map::Iterate()) {
 		switch (GetTileType(t)) {
 			case TileType::Station: {
@@ -1010,7 +1012,7 @@ bool AfterLoadGame()
 	 *  to use m2 (16bit big), so we need to clean m2, and that is where this is
 	 *  all about ;) */
 	if (IsSavegameVersionBefore(SaveLoadVersion::MultipleRoadStops, 1)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::House:
 					t.m4() = t.m2();
@@ -1066,7 +1068,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::RailTrackTypeUnification)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Railway:
 					if (IsPlainRail(t)) {
@@ -1096,7 +1098,7 @@ bool AfterLoadGame()
 	if (IsSavegameVersionBefore(SaveLoadVersion::MultipleRoadTypes)) {
 		/* Added the RoadType */
 		bool old_bridge = IsSavegameVersionBefore(SaveLoadVersion::BridgeWormhole);
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Road:
 					SB(t.m5(), 6, 2, GB(t.m5(), 4, 2));
@@ -1136,7 +1138,7 @@ bool AfterLoadGame()
 		bool fix_roadtypes = !IsSavegameVersionBefore(SaveLoadVersion::MultipleRoadTypes);
 		bool old_bridge = IsSavegameVersionBefore(SaveLoadVersion::BridgeWormhole);
 
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Road:
 					if (fix_roadtypes) SB(t.m7(), 6, 2, GB(t.m7(), 5, 3));
@@ -1201,7 +1203,7 @@ bool AfterLoadGame()
 
 	/* Railtype moved from m3 to m8 in version SaveLoadVersion::ExtendRailtypes. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::ExtendRailtypes)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Railway:
 					SetRailType(t, (RailType)GB(t.m3(), 0, 4));
@@ -1232,7 +1234,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::BridgeWormhole)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (MayHaveBridgeAbove(t)) ClearBridgeMiddle(t);
 			if (IsBridgeTile(t)) {
 				if (HasBit(t.m5(), 6)) { // middle part
@@ -1314,7 +1316,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::RoadTypes)) {
 		/* Add road subtypes */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			bool has_road = false;
 			switch (GetTileType(t)) {
 				case TileType::Road:
@@ -1358,7 +1360,7 @@ bool AfterLoadGame()
 
 		/* We update the entire map to keep monorail and maglev in place. */
 		/* If min_rail == RAILTYPE_RAIL, this will also upgrade normal rail to electric rail. */
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Railway:
 					SetRailType(t, UpdateRailType(GetRailType(t), min_rail));
@@ -1412,7 +1414,7 @@ bool AfterLoadGame()
 	/* From version 15, we moved a semaphore bit from bit 2 to bit 3 in m4, making
 	 *  room for PBS. Now in version 21 move it back :P. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::RemoveOldPbs) && !IsSavegameVersionBefore(SaveLoadVersion::MoveSemaphoreBits)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Railway:
 					if (HasSignals(t)) {
@@ -1496,7 +1498,7 @@ bool AfterLoadGame()
 	 *  To give this prettiness to old savegames, we remove all farmfields and
 	 *  plant new ones. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::LinkFarmFieldToIndustry)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Clear) && IsClearGround(t, ClearGround::Fields)) {
 				/* remove fields */
 				MakeClear(t, ClearGround::Grass, 3);
@@ -1528,7 +1530,7 @@ bool AfterLoadGame()
 	/* From version 53, the map array was changed for house tiles to allow
 	 * space for newhouses grf features. A new byte, m7, was also added. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::NewGRFHouses)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::House)) {
 				if (GB(t.m3(), 6, 2) != TOWN_HOUSE_COMPLETED) {
 					/* Move the construction stage from m3[7..6] to m5[5..4].
@@ -1562,7 +1564,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::IncreaseHouseLimit)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::House)) {
 				/* House type is moved from m4 + m3[6] to m8. */
 				SetHouseType(t, t.m4() | (GB(t.m3(), 6, 1) << 8));
@@ -1576,7 +1578,7 @@ bool AfterLoadGame()
 	UpdateHousesAndTowns();
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::UnifyAnimationState)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Industry)) {
 				switch (GetIndustryGfx(t)) {
 					case GFX_POWERPLANT_SPARKS:
@@ -1657,7 +1659,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::StatueOwner)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Object) && t.m5() == OBJECT_STATUE) {
 				t.m2() = CalcClosestTownFromTile(t)->index.base();
 			}
@@ -1717,7 +1719,7 @@ bool AfterLoadGame()
 	if (IsSavegameVersionBefore(SaveLoadVersion::MultipleSignalTypes)) {
 		/* Since now we allow different signal types and variants on a single tile.
 		 * Move signal states to m4 to make room and clone the signal type/variant. */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Railway) && HasSignals(t)) {
 				/* move signal states */
 				SetSignalStates(t, GB(t.m2(), 4, 4));
@@ -1745,7 +1747,7 @@ bool AfterLoadGame()
 	/* From version 82, old style canals (above sealevel (0), WATER owner) are no longer supported.
 	    Replace the owner for those by OWNER_NONE. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::NewGRFIndustryRandomTriggers)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Water) &&
 					GetWaterTileType(t) == WaterTileType::Clear &&
 					GetTileOwner(t) == OWNER_WATER &&
@@ -1762,7 +1764,7 @@ bool AfterLoadGame()
 	 * making floods using the removal of ship depots.
 	 */
 	if (IsSavegameVersionBefore(SaveLoadVersion::DepotWaterOwners)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsShipDepotTile(t)) {
 				t.m4() = (TileHeight(t) == 0 ? OWNER_WATER : OWNER_NONE).base();
 			}
@@ -1805,7 +1807,7 @@ bool AfterLoadGame()
 	 * land used to have zero density, now they have full density. Therefore,
 	 * make all grassy/rough land trees have a density of 3. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::FixTreeGround)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (GetTileType(t) == TileType::Trees) {
 				TreeGround ground_type = (TreeGround)GB(t.m2(), 4, 2);
 				if (ground_type != TreeGround::SnowOrDesert) SB(t.m2(), 6, 2, 3);
@@ -1867,7 +1869,7 @@ bool AfterLoadGame()
 
 	/* The water class was moved/unified. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::UnifyWaterClass)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Station:
 					switch (GetStationType(t)) {
@@ -1901,7 +1903,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::WaterClass)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Move river flag and update canals to use water class */
 			if (IsTileType(t, TileType::Water)) {
 				if (GetWaterClass(t) != WaterClass::River) {
@@ -1923,7 +1925,7 @@ bool AfterLoadGame()
 		/* Update locks, depots, docks and buoys to have a water class based
 		 * on its neighbouring tiles. Done after river and canal updates to
 		 * ensure neighbours are correct. */
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileFlat(t)) continue;
 
 			if (IsTileType(t, TileType::Water) && IsLock(t)) SetWaterClassDependingOnSurroundings(t, false);
@@ -1932,7 +1934,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::SimplifyPathfinderSettings)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* skip oil rigs at borders! */
 			if ((IsTileType(t, TileType::Water) || IsBuoyTile(t)) &&
 					(TileX(t) == 0 || TilePlaneY(t) == 0 || TileX(t) == Map::MaxX() - 1 || TilePlaneY(t) == Map::MaxY() - 1)) { //C3
@@ -1979,7 +1981,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::MoreHouseAnimationFrames)) {
 		/* Increase HouseAnimationFrame from 5 to 7 bits */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::House) && GetHouseType(t) >= NEW_HOUSE_OFFSET) {
 				SB(t.m6(), 2, 6, GB(t.m6(), 3, 5));
 				SB(t.m3(), 5, 1, 0);
@@ -2000,7 +2002,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::IndustryTileWaterClass)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Set newly introduced WaterClass of industry tiles */
 			if (IsTileType(t, TileType::Station) && IsOilRig(t)) {
 				SetWaterClassDependingOnSurroundings(t, true);
@@ -2024,7 +2026,7 @@ bool AfterLoadGame()
 	 * format here, as an old layout wouldn't work properly anyway. To be safe, we
 	 * clear any possible PBS reservations as well. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::Yapp)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::Railway:
 					if (HasSignals(t)) {
@@ -2111,7 +2113,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::SplitHQ)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Check for HQ bit being set, instead of using map accessor,
 			 * since we've already changed it code-wise */
 			if (IsTileType(t, TileType::Object) && HasBit(t.m5(), 7)) {
@@ -2123,7 +2125,7 @@ bool AfterLoadGame()
 		}
 	}
 	if (IsSavegameVersionBefore(SaveLoadVersion::ReorderUnmovableRemoveReserved)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Object)) continue;
 
 			/* Reordering/generalisation of the object bits. */
@@ -2139,7 +2141,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::UnifyAnimationFrame) && Object::GetNumItems() == 0) {
 		/* Make real objects for object tiles. */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Object)) continue;
 
 			if (Town::GetNumItems() == 0) {
@@ -2294,7 +2296,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::NonfloodingWaterTiles)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Water)) continue;
 			SetNonFloodingWaterTile(t, false);
 		}
@@ -2306,7 +2308,7 @@ bool AfterLoadGame()
 
 		extern std::vector<TileIndex> _animated_tiles;
 
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Ensure there is no spurious animated tile state. */
 			if (MayAnimateTile(t)) SetAnimatedTileState(t, AnimatedTileState::None);
 		}
@@ -2438,7 +2440,7 @@ bool AfterLoadGame()
 	/* The bits for the tree ground and tree density have
 	 * been swapped (m2 bits 7..6 and 5..4. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::RocksStayUnderSnow)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Clear)) {
 				if (GetClearGround(t) == ClearGround{4}) { // CLEAR_SNOW becomes ClearGround::Grass with IsSnowTile() set.
 					SetClearGroundDensity(t, ClearGround::Grass, GetClearDensity(t));
@@ -2483,7 +2485,7 @@ bool AfterLoadGame()
 			{119, 15}, // 14 unused tiles (radar)
 			{140,  4}, // APT_GRASS_FENCE_NE_FLAG_2
 		};
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsAirportTile(t)) {
 				StationGfx old_gfx = GetStationGfx(t);
 				uint8_t offset = 0;
@@ -2522,7 +2524,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::UniqueDepotNames)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Reset tropic zone for VOID tiles, they shall not have any. */
 			if (IsTileType(t, TileType::Void)) SetTropicZone(t, TropicZone::Normal);
 		}
@@ -2569,7 +2571,7 @@ bool AfterLoadGame()
 
 	/* Move the animation frame to the same location (m7) for all objects. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::UnifyAnimationFrame)) {
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			switch (GetTileType(t)) {
 				case TileType::House:
 					if (GetHouseType(t) >= NEW_HOUSE_OFFSET) {
@@ -2608,7 +2610,7 @@ bool AfterLoadGame()
 	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::CustomSeaLevel)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Station)) continue;
 			if (!IsBuoy(t) && !IsOilRig(t) && !(IsDock(t) && IsTileFlat(t))) {
 				SetWaterClass(t, WaterClass::Invalid);
@@ -2917,7 +2919,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::VehicleCentreAndZPos) && !IsSavegameVersionBefore(SaveLoadVersion::LinkFarmFieldToIndustry)) {
 		/* We store 4 fences in the field tiles instead of only SE and SW. */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsTileType(t, TileType::Clear) && !IsTileType(t, TileType::Trees)) continue;
 			if (IsTileType(t, TileType::Clear) && IsClearGround(t, ClearGround::Fields)) continue;
 			uint fence = GB(t.m4(), 5, 3);
@@ -2986,7 +2988,7 @@ bool AfterLoadGame()
 
 	/* The road owner of standard road stops was not properly accounted for. */
 	if (IsSavegameVersionBefore(SaveLoadVersion::OrderMaxSpeed)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsBayRoadStopTile(t)) continue;
 			Owner o = GetTileOwner(t);
 			SetRoadOwner(t, RoadTramType::Road, o);
@@ -3021,7 +3023,7 @@ bool AfterLoadGame()
 
 		/* Blocked tiles could be reserved due to a bug, which causes
 		 * other places to assert upon e.g. station reconstruction. */
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (HasStationTileRail(t) && IsStationTileBlocked(t)) {
 				SetRailStationReservation(t, false);
 			}
@@ -3046,7 +3048,7 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::ObjectTypeToPool)) {
 		/* Move ObjectType from map to pool */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Object)) {
 				Object *o = Object::Get(t.m2());
 				o->type = t.m5();
@@ -3239,14 +3241,14 @@ bool AfterLoadGame()
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::TreesWaterClass)) {
 		/* Update water class for trees. */
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(t, TileType::Trees)) SetWaterClass(t, GetTreeGround(t) == TreeGround::Shore ? WaterClass::Sea : WaterClass::Invalid);
 		}
 	}
 
 	/* Update structures for multitile docks */
 	if (IsSavegameVersionBefore(SaveLoadVersion::MultitileDocks)) {
-		for (const auto t : Map::Iterate()) {
+		for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			/* Clear docking tile flag from relevant tiles as it
 			 * was not previously cleared. */
 			if (IsTileType(t, TileType::Water) || IsTileType(t, TileType::Railway) || IsTileType(t, TileType::Station) || IsTileType(t, TileType::TunnelBridge)) {
@@ -3341,7 +3343,7 @@ bool AfterLoadGame()
 
 		if (IsSavegameVersionBeforeOrAt(SaveLoadVersion::MultitrackLevelCrossings)) {
 			/* Reset unused tree counters to reduce the savegame size. */
-			for (auto t : Map::Iterate()) {
+			for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 				if (IsTileType(t, TileType::Trees)) {
 					SB(t.m2(), 0, 4, 0);
 				}
@@ -3349,7 +3351,7 @@ bool AfterLoadGame()
 		}
 
 		/* Refresh all level crossings to bar adjacent crossing tiles, if needed. */
-		for (const auto tile : Map::Iterate()) {
+		for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsLevelCrossingTile(tile)) UpdateLevelCrossing(tile, false);
 		}
 	}
@@ -3420,7 +3422,7 @@ bool AfterLoadGame()
 
 	if (!IsSavegameVersionBefore(SaveLoadVersion::StationsUnderBridges) && IsSavegameVersionBeforeOrAt(SaveLoadVersion::DriveBackwards)) {
 		/* Default waypoints were built with an incorrect layout that prevents building bridges over them. */
-		for (auto tile : Map::Iterate()) {
+		for (auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (!IsRailWaypointTile(tile)) continue; // Not a waypoint.
 			if (GetCustomStationSpecIndex(tile) > 0) continue; // Not a default waypoint.
 			SetStationGfx(tile, GetStationGfx(tile) & 1);

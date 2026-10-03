@@ -421,8 +421,9 @@ struct BuildRoadToolbarWindow : Window {
 			CloseWindowById(WindowClass::BuildWaypoint, TransportType::Road);
 		}
 
+		//The elevator exists only on the road toolbar. FD-7 and L-12: it needs layers and the same vehicle gate as the depot and the stops.
 		if (RoadTypeIsRoad(this->roadtype)) {
-			bool enabled = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+			bool enabled = can_build && MultiLayerMap::GetLayerCount() > 1;
 			this->SetWidgetDisabledState(WID_ROT_LAYER_ELEVATOR, !enabled);
 		}
 
@@ -454,9 +455,9 @@ struct BuildRoadToolbarWindow : Window {
 		}
 		this->GetWidget<NWidgetCore>(WID_ROT_CONVERT_ROAD)->SetSprite(rti->gui_sprites.convert_road);
 		this->GetWidget<NWidgetCore>(WID_ROT_BUILD_TUNNEL)->SetSprite(rti->gui_sprites.build_tunnel);
-		//The elevator exists only on the road toolbar, and only between Surface and Underground.
+		//The elevator exists only on the road toolbar. FD-7: it needs layers; OnInvalidateData adds the vehicle gate.
 		if (RoadTypeIsRoad(this->roadtype)) {
-			bool enabled = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+			bool enabled = MultiLayerMap::GetLayerCount() > 1;
 			this->SetWidgetDisabledState(WID_ROT_LAYER_ELEVATOR, !enabled);
 		}
 	}
@@ -723,8 +724,8 @@ struct BuildRoadToolbarWindow : Window {
 				break;
 
 			case WID_ROT_LAYER_ELEVATOR: {
-				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer);
-				if (target == MapLayer::Invalid) break;
+				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place an elevator. The command refuses a layer without a pair.
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
 				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
 						tile, TransportType::Road, target, ReverseDiagDir(_road_elevator_door_direction), INVALID_RAILTYPE, _cur_roadtype);
 				break;

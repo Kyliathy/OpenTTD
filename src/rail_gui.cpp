@@ -498,7 +498,8 @@ struct BuildRailToolbarWindow : Window {
 
 		bool can_build = CanBuildVehicleInfrastructure(VehicleType::Train);
 		for (const WidgetID widget : can_build_widgets) this->SetWidgetDisabledState(widget, !can_build);
-		bool portal_ok = can_build && MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+		//FD-7: a portal can be placed from any viewport, so the button depends on the game having layers, not on the main view's layer.
+		bool portal_ok = can_build && MultiLayerMap::GetLayerCount() > 1;
 		this->SetWidgetDisabledState(WID_RAT_BUILD_LAYER_PORTAL, !portal_ok);
 		if (!can_build) {
 			CloseWindowById(WindowClass::BuildSignal, TransportType::Rail);
@@ -532,7 +533,7 @@ struct BuildRailToolbarWindow : Window {
 		this->GetWidget<NWidgetCore>(WID_RAT_BUILD_DEPOT)->SetSprite(rti->gui_sprites.build_depot);
 		this->GetWidget<NWidgetCore>(WID_RAT_CONVERT_RAIL)->SetSprite(rti->gui_sprites.convert_rail);
 		this->GetWidget<NWidgetCore>(WID_RAT_BUILD_TUNNEL)->SetSprite(rti->gui_sprites.build_tunnel);
-		bool portal_ok = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+		bool portal_ok = MultiLayerMap::GetLayerCount() > 1;
 		this->SetWidgetDisabledState(WID_RAT_BUILD_LAYER_PORTAL, !portal_ok);
 	}
 
@@ -753,8 +754,8 @@ struct BuildRailToolbarWindow : Window {
 				break;
 
 			case WID_RAT_BUILD_LAYER_PORTAL: {
-				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer);
-				if (target == MapLayer::Invalid) break;
+				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place a portal. The command refuses a layer without a pair.
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
 				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
 						tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE);
 				break;

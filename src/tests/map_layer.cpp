@@ -22,6 +22,8 @@
 #include "../rail_type.h"
 #include "../road_type.h"
 #include "../road.h"
+#include "../tile_cmd.h"
+#include "../track_func.h"
 
 #include "../safeguards.h"
 
@@ -305,4 +307,72 @@ TEST_CASE("Layer portal neighbour mapping and relocation")
 	CHECK(GetRoadTypeTram(surface) == INVALID_ROADTYPE);
 	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Surface) == MapLayer::Underground);
 	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Space) == MapLayer::Invalid);
+}
+
+/**
+ * FD-3 and FD-4 on a hand-built pair: which part of an end hides a vehicle, and which sides answer a track query.
+ */
+TEST_CASE("Layer portal visibility and track status")
+{
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
+	//Road type masks are game state. The original types let SetRoadTypes accept ROADTYPE_ROAD.
+	ResetRoadTypes();
+	TileIndex surface = TileXYL(10, 10, MapLayer::Surface);
+	TileIndex underground = TileXYL(10, 10, MapLayer::Underground);
+	const int base_x = static_cast<int>(TileX(surface) * TILE_SIZE);
+	const int base_y = static_cast<int>(TileY(surface) * TILE_SIZE);
+	const int tile_size = static_cast<int>(TILE_SIZE);
+
+	//Every shaft direction: first the hidden band of the end, then the track status of a rail pair and a road pair.
+	for (DiagDirection shaft : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
+		//Walk from the door edge to the shaft edge: hidden starts once and never ends.
+		TileIndexDiffC step = TileIndexDiffCByDiagDir(shaft);
+		bool was_hidden = false;
+		int hidden_count = 0;
+		for (int depth = 0; depth < tile_size; depth++) {
+			//SE and SW head to larger coordinates, so their door edge is the low end of the tile.
+			int along = (step.x + step.y > 0) ? depth : tile_size - 1 - depth;
+			int x = base_x + (step.x != 0 ? along : 5);
+			int y = base_y + (step.y != 0 ? along : 5);
+			bool hidden = IsHiddenInLayerPortal(shaft, x, y);
+			CHECK((hidden || !was_hidden));
+			//The position across the axis never matters.
+			CHECK(IsHiddenInLayerPortal(shaft, x + (step.x == 0 ? 7 : 0), y + (step.y == 0 ? 7 : 0)) == hidden);
+			was_hidden = hidden;
+			if (hidden) hidden_count++;
+		}
+		//The tunnel frames hide the last 4 units of NE and NW ends and the last 8 of SE and SW ends.
+		CHECK(hidden_count == ((shaft == DiagDirection::NE || shaft == DiagDirection::NW) ? 4 : 8));
+
+		//Rail: the door side and a query without a side see the axis; every other side sees nothing.
+		MakeRailLayerPortal(surface, OWNER_NONE, shaft, MapLayer::Underground, RAILTYPE_RAIL);
+		MakeRailLayerPortal(underground, OWNER_NONE, ReverseDiagDir(shaft), MapLayer::Surface, RAILTYPE_RAIL);
+		TrackdirBits axis = TrackBitsToTrackdirBits(DiagDirToDiagTrack(shaft));
+		CHECK(GetTileTrackStatus(surface, TransportType::Rail, RoadTramType::Invalid).trackdirs == axis);
+		for (DiagDirection side : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
+			TrackdirBits expected = (side == ReverseDiagDir(shaft)) ? axis : TrackdirBits{};
+			CHECK(GetTileTrackStatus(surface, TransportType::Rail, RoadTramType::Invalid, side).trackdirs == expected);
+		}
+		CHECK(GetTileTrackStatus(surface, TransportType::Road, RoadTramType::Road).trackdirs.None());
+
+		//Road: the same sides, and trams see nothing.
+		MakeRoadLayerPortal(surface, OWNER_NONE, shaft, MapLayer::Underground, ROADTYPE_ROAD);
+		MakeRoadLayerPortal(underground, OWNER_NONE, ReverseDiagDir(shaft), MapLayer::Surface, ROADTYPE_ROAD);
+		CHECK(GetTileTrackStatus(surface, TransportType::Road, RoadTramType::Road, ReverseDiagDir(shaft)).trackdirs == axis);
+		CHECK(GetTileTrackStatus(surface, TransportType::Road, RoadTramType::Road, shaft).trackdirs.None());
+		CHECK(GetTileTrackStatus(surface, TransportType::Road, RoadTramType::Tram).trackdirs.None());
+	}
+}
+
+//FD-10: two tiles share a layer only when both are on the map and on the same plane.
+TEST_CASE("CheckTilesShareLayer")
+{
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
+	TileIndex surface_a = TileXYL(3, 4, MapLayer::Surface);
+	TileIndex surface_b = TileXYL(60, 61, MapLayer::Surface);
+	TileIndex underground = TileXYL(3, 4, MapLayer::Underground);
+	CHECK(CheckTilesShareLayer(surface_a, surface_b).Succeeded());
+	CHECK(CheckTilesShareLayer(underground, underground).Succeeded());
+	CHECK(CheckTilesShareLayer(surface_a, underground).Failed());
+	CHECK(CheckTilesShareLayer(surface_a, TileIndex{Map::Size()}).Failed());
 }

@@ -15,6 +15,7 @@
 #include "strings_type.h"
 
 struct Window;
+struct Vehicle;
 
 /**
  * Player-facing name of one map layer.
@@ -44,6 +45,14 @@ MapLayer GetNextMapLayer(MapLayer layer, uint layer_count);
  * @return The allocated layer that contains y, clamped to the first or last layer.
  */
 MapLayer GetLayerOfWorldY(int y);
+
+/**
+ * Layer whose views draw a vehicle and accept clicks on it.
+ * FD-8: aircraft, ships and disasters belong to the surface. Effects use their world Y. Every other vehicle uses its tile.
+ * @param v Vehicle to place.
+ * @return The layer that shows the vehicle.
+ */
+MapLayer GetVehicleDisplayLayer(const Vehicle *v);
 
 /**
  * Make one viewport show a map layer.

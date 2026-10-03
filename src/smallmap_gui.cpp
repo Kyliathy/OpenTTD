@@ -972,8 +972,7 @@ protected:
 		for (const Vehicle *v : Vehicle::Iterate()) {
 			if (v->type == VehicleType::Effect) continue;
 			if (v->vehstatus.Any({VehState::Hidden, VehState::Unclickable})) continue;
-			MapLayer vehicle_layer = (v->tile == INVALID_TILE) ? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
-			if (vehicle_layer != this->layer) continue;
+			if (GetVehicleDisplayLayer(v) != this->layer) continue;
 
 			/* Remap into flat coordinates inside this layer. */
 			int plane_y = v->y_pos / static_cast<int>(TILE_SIZE) - static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY());
@@ -1486,6 +1485,15 @@ protected:
 public:
 	friend class NWidgetSmallmapDisplay;
 
+	/**
+	 * Layer this smallmap shows.
+	 * @return The shown layer.
+	 */
+	MapLayer GetLayer() const
+	{
+		return this->layer;
+	}
+
 	SmallMapWindow(WindowDesc &desc, int window_number) : Window(desc)
 	{
 		_smallmap_industry_highlight = IT_INVALID;
@@ -1521,6 +1529,8 @@ public:
 		if (this->layer != main->viewport->layer) {
 			this->layer = main->viewport->layer;
 			this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+			//FD-8: the link overlay cached the stations of the old layer.
+			this->overlay->SetDirty();
 		}
 		const Viewport &vp = *main->viewport;
 		Point viewport_center = InverseRemapCoords2(vp.virtual_left + vp.virtual_width / 2, vp.virtual_top + vp.virtual_height / 2, false, nullptr, this->layer);
@@ -1541,8 +1551,6 @@ public:
 	 */
 	Point GetStationMiddle(const Station *st) const
 	{
-		//A station in another layer has no place on this smallmap.
-		if (GetTileLayer(st->xy) != this->layer) return {INT32_MIN / 2, INT32_MIN / 2};
 		TileIndex tile = st->spread.GetCentreTile();
 		Point ret = this->RemapTile(TileX(tile), TilePlaneY(tile));
 
@@ -1563,7 +1571,7 @@ public:
 	{
 		switch (widget) {
 			case WID_SM_CAPTION:
-				return GetString(STR_SMALLMAP_CAPTION, STR_SMALLMAP_TYPE_CONTOURS + to_underlying(this->map_type)) + " - " + GetString(GetMapLayerName(this->layer));
+				return GetString(STR_SMALLMAP_CAPTION_WITH_LAYER, STR_SMALLMAP_TYPE_CONTOURS + to_underlying(this->map_type), GetMapLayerName(this->layer));
 
 			default:
 				return this->Window::GetWidgetString(widget, stringid);
@@ -1781,6 +1789,8 @@ public:
 			case WID_SM_MAP_LAYER: {
 				this->layer = GetNextMapLayer(this->layer, MultiLayerMap::GetLayerCount());
 				this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+				//FD-8: the link overlay cached the stations of the old layer.
+				this->overlay->SetDirty();
 				this->SetDirty();
 				break;
 			}
@@ -2237,4 +2247,14 @@ bool ScrollMainWindowTo(int x, int y, int z, bool instant)
 Point GetSmallMapStationMiddle(const Window *w, const Station *st)
 {
 	return static_cast<const SmallMapWindow *>(w)->GetStationMiddle(st);
+}
+
+/**
+ * Layer a smallmap window shows.
+ * @param w The smallmap window.
+ * @return The layer of that smallmap.
+ */
+MapLayer GetSmallMapLayer(const Window *w)
+{
+	return static_cast<const SmallMapWindow *>(w)->GetLayer();
 }

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_cmd.cpp Handling of station tiles. */
+/** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "core/flatset_type.hpp"
@@ -1854,6 +1854,8 @@ CommandCost RemoveFromRailBaseStation(TileArea ta, std::vector<T *> &affected_st
 CommandCost CmdRemoveFromRailStation(DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail)
 {
 	if (end == 0) end = start;
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(start, end); layer.Failed()) return layer;
 	if (start >= Map::Size() || end >= Map::Size()) return CMD_ERROR;
 
 	TileArea ta(start, end);
@@ -1887,6 +1889,8 @@ CommandCost CmdRemoveFromRailStation(DoCommandFlags flags, TileIndex start, Tile
 CommandCost CmdRemoveFromRailWaypoint(DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail)
 {
 	if (end == 0) end = start;
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(start, end); layer.Failed()) return layer;
 	if (start >= Map::Size() || end >= Map::Size()) return CMD_ERROR;
 
 	TileArea ta(start, end);
@@ -2504,6 +2508,8 @@ CommandCost CmdRemoveRoadStop(DoCommandFlags flags, TileIndex tile, uint8_t widt
 CommandCost CmdRemoveFromRoadWaypoint(DoCommandFlags flags, TileIndex start, TileIndex end)
 {
 	if (end == 0) end = start;
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(start, end); layer.Failed()) return layer;
 	if (start >= Map::Size() || end >= Map::Size()) return CMD_ERROR;
 
 	TileArea roadstop_area(start, end);

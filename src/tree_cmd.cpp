@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file tree_cmd.cpp Handling of tree tiles. */
+/** @file tree_cmd.cpp Handling of tree tiles. @see docs/zz-reach2/architecture/landscape/tree-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "bridge_map.h"
@@ -518,6 +518,8 @@ void GenerateTrees()
  */
 CommandCost CmdPlantTree(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, uint8_t tree_to_plant, bool diagonal)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, start_tile); layer.Failed()) return layer;
 	StringID msg = INVALID_STRING_ID;
 	CommandCost cost(ExpensesType::Other);
 

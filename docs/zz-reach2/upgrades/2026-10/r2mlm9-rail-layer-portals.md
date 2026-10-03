@@ -38,8 +38,8 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the special train tunnel is a rail portal; trains keep their heading and are relocated at the shaft edge without wormhole state. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 98-100 | `### AD-8 Cross-layer movement only through layer portals`: the special train tunnel is a rail portal; trains keep their heading and are relocated at the shaft edge without wormhole state. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract`: pair, directions, neighbour mapping, relocation, visibility, tile bits and command signature. This plan adds rail-specific behaviour and must not redefine any of it. |
 | [docs/zz-reach2/architecture/vehicles/trains.md](../../architecture/vehicles/trains.md) | 7-46 | `## Tick`, `## Speed` and `## One step`: `TrainLocoHandler` passes, `TrainCheckIfLineEnds`, `TrainController` per-part stepping, `ChooseTrainTrack`, reservation and `CheckCompatibleRail`. Every traversal change hooks into this step. |
 | [docs/zz-reach2/architecture/vehicles/archi-vehicles.md](../../architecture/vehicles/archi-vehicles.md) | 225-228 | `## Invariants`: deterministic motion, commands mutate and ticks simulate. Traversal across layers must not depend on view state or anything outside the simulation. |

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.cpp Names, icons and view-layer switching. */
+/** @file map_layer_gui.cpp Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "map_layer_gui.h"
@@ -15,6 +15,7 @@
 #include "window_type.h"
 #include "landscape.h"
 #include "vehicle_base.h"
+#include "linkgraph/linkgraph_gui.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -85,6 +86,32 @@ MapLayer GetLayerOfWorldY(int y)
 }
 
 /**
+ * Layer whose views draw a vehicle and accept clicks on it.
+ * FD-8: aircraft, ships and disasters belong to the surface. Effects use their world Y. Every other vehicle uses its tile.
+ * @param v Vehicle to place.
+ * @return The layer that shows the vehicle.
+ */
+MapLayer GetVehicleDisplayLayer(const Vehicle *v)
+{
+	switch (v->type) {
+		//L-6: flying and sailing vehicles stay on the surface, even when their position lies south of the surface band.
+		case VehicleType::Aircraft:
+		case VehicleType::Ship:
+		case VehicleType::Disaster:
+			return MapLayer::Surface;
+
+		//An effect has no tile of its own that matters. Its world point decides.
+		case VehicleType::Effect:
+			return GetLayerOfWorldY(v->y_pos);
+
+		default:
+			//A vehicle that is not on the map yet has no tile, so its world point decides.
+			if (v->tile == INVALID_TILE) return GetLayerOfWorldY(v->y_pos);
+			return GetTileLayer(v->tile);
+	}
+}
+
+/**
  * Make one viewport show a map layer.
  * The same plane position stays on screen: the scroll moves by that layer's band.
  * @param w Window whose viewport changes.
@@ -112,15 +139,17 @@ void SetViewportLayer(Window *w, MapLayer layer)
 		//A followed vehicle in another layer would drag the view back.
 		if (vp->follow_vehicle != VehicleID::Invalid()) {
 			const Vehicle *veh = Vehicle::Get(vp->follow_vehicle);
-			if (veh->tile == INVALID_TILE || GetTileLayer(veh->tile) != layer) vp->CancelFollow(*w);
+			if (GetVehicleDisplayLayer(veh) != layer) vp->CancelFollow(*w);
 		}
+		//FD-8: the link overlay cached the stations of the old layer.
+		if (vp->overlay != nullptr) vp->overlay->SetDirty();
 	}
 
 	vp->layer = layer;
 	w->SetDirty();
 	//Both the game toolbar and the scenario editor toolbar use this class.
 	InvalidateWindowData(WindowClass::MainToolbar, 0);
-	//The road elevator button is enabled only when the viewed layer has a pair.
+	//Build toolbars refresh their buttons. Since FD-7 the portal buttons depend on the layer count only.
 	InvalidateWindowData(WindowClass::BuildToolbar, 0);
 	InvalidateWindowData(WindowClass::ScenarioBuildToolbar, 0);
 }

@@ -38,9 +38,9 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 62-64 | `### AD-1 Layer vocabulary`: the exact `MapLayer` enumerators, `MAX_MAP_LAYERS`, and the rule that names and icons live in `src/map_layer_gui.cpp`. This plan is the owner of that vocabulary; later plans consume it unchanged, so the values written here are final. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 95-97 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state and never read by commands or ticks. Constrains every task here: the button changes view state only, posts no command, and nothing in this plan is saved. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: the user's comment style (`//comment`, Javadoc on every function and parameter), file naming, the no-move/no-delete rule, and the exact build and test commands used for verification. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 61-63 | `### AD-1 Layer vocabulary`: the exact `MapLayer` enumerators, `MAX_MAP_LAYERS`, and the rule that names and icons live in `src/map_layer_gui.cpp`. This plan is the owner of that vocabulary; later plans consume it unchanged, so the values written here are final. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 94-96 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state and never read by commands or ticks. Constrains every task here: the button changes view state only, posts no command, and nothing in this plan is saved. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: the user's comment style (`//comment`, Javadoc on every function and parameter), file naming, the no-move/no-delete rule, and the exact build and test commands used for verification. |
 | [src/widgets/toolbar_widget.h](../../../../src/widgets/toolbar_widget.h) | 13-49 | `enum ToolbarNormalWidgets`: its order is the index of `_toolbar_button_procs`, `_menu_clicked_procs` and `_toolbar_button_sprites`, and the offset of each tooltip from `STR_TOOLBAR_TOOLTIP_PAUSE_GAME`. Inserting `WID_TN_MAP_LAYER` shifts every later index, so all parallel arrays and the tooltip block change in the same group. |
 | [docs/zz-reach2/architecture/gui/archi-gui.md](../../architecture/gui/archi-gui.md) | 217-223 | `## Invariants`: `OnPaint` and `DrawWidget` only draw, the GUI changes the world only through commands, widget indices name nested-tree nodes. Decides that the button's icon is updated from `OnInvalidateData`, never from `OnPaint`. |
 
@@ -169,7 +169,7 @@ _Applies to Group 7._
 ### Group 7 - Verification
 
 {{SIMPLE}}
-- [ ] 7.1 Build RelWithDebInfo and Debug with no new warnings compared with the baseline from master task 1.3.
+- [ ] 7.1 Build RelWithDebInfo and Debug with no new warnings compared with the warning baseline in master plan `## Baseline Data`.
 - [ ] 7.2 Run `ctest`; all baseline tests pass, including the `WindowDesc` tests.
 - [ ] 7.3 In a Debug build, cycle the layer in a new game and in the scenario editor; confirm no assert fires and the button stays next to the map button.
 - [ ] 7.4 Save and reload a game while viewing Underground; confirm the game loads and the view starts on Surface (the layer is not saved, AD-7).

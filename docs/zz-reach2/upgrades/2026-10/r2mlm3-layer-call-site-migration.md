@@ -38,9 +38,9 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-89 | `### AD-2` to `### AD-5`: stacked `TileY`, the `Map` / `MultiLayerMap` split, independent surface-only content, plane distances and surface projection for towns. Every classification decision in this plan applies one of these rules. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 111-128 | `### AD-11 Behaviour-neutral staging` and `## Cross-plan Invariants`: the game still runs with one layer, so every migration must be a no-op at one layer (I-6) while being correct at three. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. In particular: port existing comments when rewriting a loop, and add a business comment saying which layer rule applies. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 65-88 | `### AD-2` to `### AD-5`: stacked `TileY`, the `Map` / `MultiLayerMap` split, independent surface-only content, plane distances and surface projection for towns. Every classification decision in this plan applies one of these rules. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 110-127 | `### AD-11 Behaviour-neutral staging` and `## Cross-plan Invariants`: the game still runs with one layer, so every migration must be a no-op at one layer (I-6) while being correct at three. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. In particular: port existing comments when rewriting a loop, and add a business comment saying which layer rule applies. |
 | [r2mlm3-layer-call-site-migration.md](r2mlm3-layer-call-site-migration.md) | 56-66 | `## Classification Rules` C1 to C9 of this plan: the single vocabulary used in the ledger and in code comments. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 Group 4. `MultiLayerMap::IterateLayer`, `TileInLayer`, `ProjectToSurface`, `RandomTileInLayer`, `GetLayerBase`, `IsTileInLayer` are the only allowed replacements; this plan adds no new layer API. |
 | [src/map_func.h](../../../../src/map_func.h) | Live definitions; no fixed range | Extended by r2mlm2 Group 1. `TilePlaneY`, `GetTileLayer`, `TileXYL`, `Map::PlaneSize`, `Map::WrapToLayer` are authoritative; `Map::WrapToMap` is deprecated and removed by task 2.8. |
@@ -235,67 +235,67 @@ Filled by Group 1 and updated by every later group. One row per call site. `Stat
 | src/road_cmd.cpp:2507 | Map::Size() | C4 | kept | Validity bound. Map::Size() covers every layer. |
 | src/road_cmd.cpp:2556 | ClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
 | src/saveload/afterload.cpp:106 | TilePlaneY, Map::MaxY() | C3 | migrated | The edge or neighbour is measured inside the origin layer. |
-| src/saveload/afterload.cpp:163 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:163 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:209 | TileXYL, Map::MaxY() | C2 | migrated | Surface content, written explicitly. |
 | src/saveload/afterload.cpp:210 | Map::SizeY(), TileXYL | C2 | migrated | Surface content, written explicitly. |
-| src/saveload/afterload.cpp:620 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:637 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:664 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:861 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:878 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:934 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:941 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1011 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:620 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:637 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:664 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:861 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:878 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:934 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:941 | Map::Iterate() | C1 | kept | Runs for every save. Stations exist on every layer, so it walks every plane (FD-9). |
+| src/saveload/afterload.cpp:1011 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:1015 | CalcClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
 | src/saveload/afterload.cpp:1022 | CalcClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
-| src/saveload/afterload.cpp:1067 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1097 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1137 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:1067 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1097 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1137 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:1164 | CalcClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
-| src/saveload/afterload.cpp:1202 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1233 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:1202 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1233 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:1248 | ClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
-| src/saveload/afterload.cpp:1315 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1359 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1413 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1497 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1529 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1563 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1577 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1658 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:1315 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1359 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1413 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1497 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1529 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1563 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1577 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1658 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:1660 | CalcClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
-| src/saveload/afterload.cpp:1718 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1746 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1763 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1806 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1868 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1902 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1924 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:1933 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:1718 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1746 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1763 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1806 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1868 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1902 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1924 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:1933 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:1936 | TilePlaneY, Map::MaxY() | C3 | migrated | The edge or neighbour is measured inside the origin layer. |
-| src/saveload/afterload.cpp:1980 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2001 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2025 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2108 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2120 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2136 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:1980 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2001 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2025 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2108 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2120 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2136 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/afterload.cpp:2165 | CalcClosestTownFromTile | C5 | kept | Town association. The projection lives in the town query functions. |
-| src/saveload/afterload.cpp:2291 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2303 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2435 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2480 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2519 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2566 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2605 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2914 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:2983 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3018 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3043 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3236 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3243 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3338 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3346 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
-| src/saveload/afterload.cpp:3417 | Map::Iterate() | C1 | kept | The conversion repairs every stored tile. Old files hold one plane. |
+| src/saveload/afterload.cpp:2291 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2303 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2435 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2480 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2519 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2566 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2605 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2914 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:2983 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3018 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3043 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3236 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3243 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3338 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3346 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
+| src/saveload/afterload.cpp:3417 | Map::Iterate() | C1 | migrated | FD-9: a version-gated conversion reads a one-plane file, so it walks the surface only (r2rvm task 14.5). |
 | src/saveload/company_sl.cpp:141 | Map::Iterate() | C1 | kept | Ownership, label or cache walk over every stored tile. |
 | src/saveload/map_sl.cpp:42 | PlaneSize() | C8 | deferred | Map chunk. Migrated by r2mlm4 Group 5. |
 | src/saveload/map_sl.cpp:53 | Map::SizeY() | C8 | deferred | Map chunk. Migrated by r2mlm4 Group 5. |
@@ -664,7 +664,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [src/viewport.cpp](../../../../src/viewport.cpp) | 1195-1320 | `GetViewportY` and `ViewportAddLandscape`: the main C7 site, recorded only; its migration is r2mlm5 Group 2. |
 | [src/saveload/map_sl.cpp](../../../../src/saveload/map_sl.cpp) | 22-95 | `_map_desc`, `MAPSChunkHandler`, `MAPTChunkHandler`: the C8 pattern repeated by every plane chunk; recorded only, migrated by r2mlm4 Group 5. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by master task 1.8. The neutrality reference for task 8.6. |
+| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). The neutrality reference for task 8.6. |
 
 ### Group 8 - Deferred records and verification
 
@@ -681,7 +681,7 @@ _Applies to Group 8._
 
 | Trigger | File name | Start at | Expand only when | Consultation purpose |
 | --- | --- | --- | --- | --- |
-| A ledger row fits none of C1 to C9 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | `## Architecture Decisions` (lines 60-117) | The decision still depends on gameplay intent | Find the AD that governs the case; if none does, ask the user and record the answer as a new class. |
+| A ledger row fits none of C1 to C9 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | `## Architecture Decisions` (lines 59-116) | The decision still depends on gameplay intent | Find the AD that governs the case; if none does, ask the user and record the answer as a new class. |
 | An `afterload.cpp` loop's purpose is unclear in task 4.1 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | `## Changing the format` (lines 371-389) | The loop's version gate does not explain the repair | Understand whether the loop repairs bytes or rebuilds caches; the code remains the authority. |
 | Digests differ in task 3.8 or 9.4 | [docs/zz-reach2/architecture/landscape/archi-landscape.md](../../architecture/landscape/archi-landscape.md) | `## Dispatch` (lines 183-207) | The difference is in tile types rather than heights | Locate which generator step changed tile content. |
 | A town or station behaves oddly at the map's south edge after Group 5 | [src/town_cmd.cpp](../../../../src/town_cmd.cpp) | `GetTownRadiusGroup` | The issue involves `TileY` clamps | Check for a missed C3 site. |

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file viewport_gui.cpp Extra viewport window. */
+/** @file viewport_gui.cpp Extra viewport window. @see docs/zz-reach2/architecture/gui/archi-viewport.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "window_gui.h"
@@ -68,9 +68,13 @@ public:
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
 		switch (widget) {
-			case WID_EV_CAPTION:
+			case WID_EV_CAPTION: {
+				//InitNested measures the caption before the viewport exists, so that one pass names the surface.
+				//Every later draw reads the viewport's own layer.
+				MapLayer layer = (this->viewport != nullptr) ? this->viewport->layer : MapLayer::Surface;
 				/* set the number in the title bar */
-				return GetString(STR_EXTRA_VIEWPORT_TITLE, this->window_number + 1) + " - " + GetString(GetMapLayerName(this->viewport->layer));
+				return GetString(STR_EXTRA_VIEWPORT_TITLE_WITH_LAYER, this->window_number + 1, GetMapLayerName(layer));
+			}
 
 			default:
 				return this->Window::GetWidgetString(widget, stringid);

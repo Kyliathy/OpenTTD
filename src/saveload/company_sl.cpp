@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file company_sl.cpp Code handling saving and loading of company data. */
+/** @file company_sl.cpp Code handling saving and loading of company data. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 
@@ -233,7 +233,7 @@ void AfterLoadCompanyStats()
 			case TileType::LayerPortal: {
 				TileIndex other_end = GetLayerPortalPairTile(tile);
 				if (tile < other_end) {
-					uint pieces = LAYER_PORTAL_TRACKBIT_FACTOR(GetLayerPortalTransportType(tile));
+					uint pieces = GetLayerPortalPieceCount(GetLayerPortalTransportType(tile));
 					if (GetLayerPortalTransportType(tile) == TransportType::Rail) {
 						c = Company::GetIfValid(GetTileOwner(tile));
 						if (c != nullptr) c->infrastructure.rail[GetRailType(tile)] += pieces * 2;

@@ -985,6 +985,8 @@ static bool CanConnectToRoad(TileIndex tile, RoadType rt, DiagDirection dir)
  */
 CommandCost CmdBuildLongRoad(DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, DisallowedRoadDirections drd, bool start_half, bool end_half, bool is_ai)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(start_tile, end_tile); layer.Failed()) return layer;
 	if (start_tile >= Map::Size()) return CMD_ERROR;
 
 	if (!ValParamRoadType(rt) || !IsValidAxis(axis) || !IsValidDisallowedRoadDirections(drd)) return CMD_ERROR;
@@ -1082,6 +1084,8 @@ CommandCost CmdBuildLongRoad(DoCommandFlags flags, TileIndex end_tile, TileIndex
  */
 std::tuple<CommandCost, Money> CmdRemoveLongRoad(DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, bool start_half, bool end_half)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(start_tile, end_tile); layer.Failed()) return { layer, 0 };
 	CommandCost cost(ExpensesType::Construction);
 
 	if (start_tile >= Map::Size()) return { CMD_ERROR, 0 };
@@ -2512,6 +2516,8 @@ static void ConvertRoadTypeOwner(TileIndex tile, uint num_pieces, Owner owner, R
  */
 CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_start, RoadType to_type, bool diagonal)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, area_start); layer.Failed()) return layer;
 	TileIndex area_end = tile;
 
 	if (!ValParamRoadType(to_type)) return CMD_ERROR;
@@ -2549,7 +2555,7 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				if (GetTunnelBridgeTransportType(cur_tile) != TransportType::Road) continue;
 				break;
 			case TileType::LayerPortal:
-				//Both ends are visited. Each end keeps its own road type bits.
+				//An elevator converts as a pair, in its own branch below.
 				if (GetLayerPortalTransportType(cur_tile) != TransportType::Road) continue;
 				break;
 			default: continue;
@@ -2574,6 +2580,50 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				error = std::move(ret);
 				continue;
 			}
+		}
+
+		//M-8: an elevator converts as one pair, like a tunnel. Its ends are on different layers, so a drag normally holds only one.
+		if (tt == TileType::LayerPortal) {
+			TileIndex endtile = GetLayerPortalPairTile(cur_tile);
+			//Should a drag area ever hold both ends, the pair converts once, from the lower tile, so the test run and the execute run charge the same.
+			if (endtile < cur_tile && tilearea.Contains(endtile)) continue;
+			if (!HasPowerOnRoad(from_type, to_type)) {
+				CommandCost ret = EnsureNoVehicleOnGround(cur_tile);
+				if (ret.Succeeded()) ret = EnsureNoVehicleOnGround(endtile);
+				if (ret.Failed()) {
+					error = std::move(ret);
+					continue;
+				}
+
+				//A town keeps its road usable by its own vehicles, as for plain road and tunnels.
+				if (rtt == RoadTramType::Road && owner == OWNER_TOWN) {
+					error.MakeError(STR_ERROR_OWNED_BY);
+					if (IsLocalCompany()) {
+						auto params = GetParamsForOwnedBy(OWNER_TOWN, cur_tile);
+						error.SetEncodedMessage(GetEncodedStringWithArgs(STR_ERROR_OWNED_BY, params));
+					}
+					continue;
+				}
+			}
+			//Each end counts its own pieces, so the pair moves twice that.
+			uint num_pieces = GetLayerPortalPieceCount(TransportType::Road) * 2;
+			found_convertible_road = true;
+			cost.AddCost(num_pieces * RoadConvertCost(from_type, to_type));
+			if (flags.Test(DoCommandFlag::Execute)) {
+				//The road owner of both ends is the same company, so one call moves the pair's pieces.
+				if (owner == _current_company) ConvertRoadTypeOwner(cur_tile, num_pieces, owner, from_type, to_type);
+				SetRoadType(cur_tile, rtt, to_type);
+				SetRoadType(endtile, rtt, to_type);
+				MarkTileDirtyByTile(cur_tile);
+				MarkTileDirtyByTile(endtile);
+				//Road vehicles on either end get their new road type properties.
+				for (TileIndex end : {cur_tile, endtile}) {
+					for (Vehicle *v : VehiclesOnTile(end)) {
+						if (v->type == VehicleType::Road) include(affected_rvs, RoadVehicle::From(v)->First());
+					}
+				}
+			}
+			continue;
 		}
 
 		/* Vehicle on the tile when not converting normal <-> powered
@@ -2601,8 +2651,6 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				num_pieces *= ROAD_STOP_TRACKBIT_FACTOR;
 			} else if (tt == TileType::Road && IsRoadDepot(cur_tile)) {
 				num_pieces *= ROAD_DEPOT_TRACKBIT_FACTOR;
-			} else if (tt == TileType::LayerPortal) {
-				num_pieces = LAYER_PORTAL_TRACKBIT_FACTOR(TransportType::Road);
 			}
 
 			found_convertible_road = true;

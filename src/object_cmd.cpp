@@ -405,6 +405,8 @@ CommandCost CmdBuildObject(DoCommandFlags flags, TileIndex tile, ObjectType type
  */
 CommandCost CmdBuildObjectArea(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, ObjectType type, uint8_t view, bool diagonal)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, start_tile); layer.Failed()) return layer;
 	if (start_tile >= Map::Size()) return CMD_ERROR;
 
 	if (type >= ObjectSpec::Count()) return CMD_ERROR;

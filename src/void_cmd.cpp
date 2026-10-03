@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file void_cmd.cpp Handling of void tiles. */
+/** @file void_cmd.cpp Handling of void tiles. @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "landscape.h"
@@ -37,8 +37,8 @@ static int GetSlopePixelZ_Void(TileIndex tile, uint x, uint y, [[maybe_unused]] 
 {
 	/* This function may be called on tiles outside the map, don't assume
 	 * that 'tile' is a valid tile index. See GetSlopePixelZOutsideMap. */
-	//A real void tile uses its own layer. A coordinate past the map uses the layer being drawn.
-	MapLayer layer = (tile != INVALID_TILE) ? GetTileLayer(tile) : _viewport_draw_layer;
+	//A real void tile uses its own layer. Since L-1 no caller passes INVALID_TILE; if one does, the surface is the safe answer.
+	MapLayer layer = (tile != INVALID_TILE) ? GetTileLayer(tile) : MapLayer::Surface;
 	auto [tileh, z] = GetTilePixelSlopeOutsideMap(x >> 4, y >> 4, layer);
 
 	return z + GetPartialPixelZ(x & 0xF, y & 0xF, tileh);

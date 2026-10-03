@@ -42,9 +42,9 @@
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 141-175 | `### Severity index`: the finding IDs (C-1, H-1 to H-5, M-1 to M-11, L-1 to L-12) every task cites, the task that fixes each, and the Status column that Group 18 of this file fills. Read a finding's own `####` section only when the current Area block points to it. |
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 569-659 | `### Commands used by every group`: the Bash variables, the configure, build and test commands (with `/nodeReuse:false`), the error and warning extraction, and the rules for starting `openttd.exe`. When a task here says "build Debug" or "run the unit tests", it means exactly these commands. |
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 661-672 | `### Comment and header rules`: the user's rules of 2026-10-03 for file headers (a related `archi-*.md` or `r*.md` page), Javadoc, business comments on compound `if`s and non-trivial loops, and scratch file names. Every file this plan and r2rvm2 create or modify follows them. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-76, 99-102, 119-128 | `### AD-2 Stacked-plane addressing`, `### AD-8 Cross-layer movement only through layer portals` and `## Cross-plan Invariants` I-1 to I-8. AD-2 means a tile's layer is implicit in its `TileIndex`, so no command or pool gains a layer field. AD-8 means `GetLayerPortalNextTile` is the only cross-layer step and portals have no wormhole state. Every fix must keep I-1 to I-8 true. I-6 and I-7 get their final evidence in task 18.1. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-164 | `## Engineering Conventions`: the `//comment` style with no space, Javadoc on every function and parameter, OpenTTD naming, file registration, **never** `git checkout`, `git reset` or `git stash`, never move or delete files, and English-only strings. They bind every edit in this plan, including the snippets below. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 166-177 | `## Build and Test Commands`: the Build Tools 2022 CMake path, the standalone vcpkg at `D:\Codez\Tools\vcpkg` (never the one bundled with Build Tools), and the configure command. `### Commands used by every group` in r2rvm-review-map.md adds the flags this plan needs. Do not use any other toolchain. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 65-75, 98-101, 118-127 | `### AD-2 Stacked-plane addressing`, `### AD-8 Cross-layer movement only through layer portals` and `## Cross-plan Invariants` I-1 to I-8. AD-2 means a tile's layer is implicit in its `TileIndex`, so no command or pool gains a layer field. AD-8 means `GetLayerPortalNextTile` is the only cross-layer step and portals have no wormhole state. Every fix must keep I-1 to I-8 true. I-6 and I-7 get their final evidence in task 18.1. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-147 | `## Engineering Conventions`: the `//comment` style with no space, Javadoc on every function and parameter, OpenTTD naming, file registration, **never** `git checkout`, `git reset` or `git stash`, never move or delete files, and English-only strings. They bind every edit in this plan, including the snippets below. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 149-170 | `## Build and Test Commands`: the Build Tools 2022 CMake path, the standalone vcpkg at `D:\Codez\Tools\vcpkg` (never the one bundled with Build Tools), and the configure command. `### Commands used by every group` in r2rvm-review-map.md adds the flags this plan needs. Do not use any other toolchain. |
 | [src/map_func.h](../../../../src/map_func.h) | 457-498 | `TileY` (stacked), `TilePlaneY`, `GetTileLayer`, `TileXYL`: the addressing primitives every fix uses. Plane-relative logic uses `TilePlaneY` and `TileXYL`, never `TileY` against `Map::MaxY()`. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 188-198, 272-292 | `MultiLayerMap::TileInLayer`, `MultiLayerMap::GetPortalTargetLayer` and `CheckLayerAllowsConstruction`: the controller boundary. Gameplay never adds `Map::PlaneSize()` to a tile by hand, and Surface pairs only with Underground in version 1. |
 
@@ -160,7 +160,7 @@ Depth is measured from the door edge along the shaft heading. It is the tunnel "
 > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: Group 3 leaving `GetTileTrackStatus_LayerPortal` and `VehicleEnterTile_LayerPortal` as the epic wrote them (lines 132-142 and 209-248 after Group 3). If a compile fix reshaped them, apply the same rules to the new shape.
 
 {{MEDIUM}}
-- [ ] 8.1 FD-3: add the depth and visibility helpers.
+- [x] 8.1 FD-3: add the depth and visibility helpers.
   - In `layer_portal_cmd.h`, after `TranslateIntoLayerPortalPair`:
     ```cpp
     /**
@@ -202,7 +202,7 @@ Depth is measured from the door edge along the shaft heading. It is the tunnel "
     	return GetLayerPortalDepth(shaft, x, y) >= _tunnel_visibility_frame[shaft];
     }
     ```
-- [ ] 8.2 C-1, FD-1, FD-3: replace the body of `VehicleEnterTile_LayerPortal` with:
+- [x] 8.2 C-1, FD-1, FD-3: replace the body of `VehicleEnterTile_LayerPortal` with:
   ```cpp
   /** @copydoc VehicleEnterTileProc */
   static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex tile, int x, int y)
@@ -242,12 +242,12 @@ Depth is measured from the door edge along the shaft heading. It is the tunnel "
   }
   ```
   The old `z == 0` condition on unhiding goes away. A vehicle heading out of the shaft is never level-tested, and the height of the point no longer decides visibility. The transport checks now run first; they used to run after the level test, which made no difference to the result.
-- [ ] 8.3 H-5, FD-4: in `GetTileTrackStatus_LayerPortal`, replace the side line and its comment with:
+- [x] 8.3 H-5, FD-4: in `GetTileTrackStatus_LayerPortal`, replace the side line and its comment with:
   ```cpp
   	//FD-4: on its own layer an end is reached only through its door. The shaft side answers nothing; a step through the shaft asks with no side.
   	if (side != DiagDirection::Invalid && side != GetLayerPortalDoorDirection(tile)) return {};
   ```
-- [ ] 8.4 FD-12: add `#include "../tile_cmd.h"` to `src/tests/map_layer.cpp` (and `#include "../track_func.h"` if the build asks for it), and append:
+- [x] 8.4 FD-12: add `#include "../tile_cmd.h"` to `src/tests/map_layer.cpp` (and `#include "../track_func.h"` if the build asks for it), and append:
   ```cpp
   /**
    * FD-3 and FD-4 on a hand-built pair: which part of an end hides a vehicle, and which sides answer a track query.
@@ -304,7 +304,13 @@ Depth is measured from the door edge along the shaft heading. It is the tunnel "
   }
   ```
   `openttd_test` links `openttd_lib`, so `GetTileTrackStatus` reaches the portal proc. `road.h`, which declares `ResetRoadTypes`, is already included (task 3.8). Build `axis` the same way the tile proc builds its trackdirs; if Group 4 changed that expression, mirror the new one.
-- [ ] 8.5 Build Debug and run the unit tests, and record the result under this task. The new test case must be in the pass list.
+- [x] 8.5 Build Debug and run the unit tests, and record the result under this task. The new test case must be in the pass list.
+  - 2026-10-03, done: build exit 0 (1 min 11 s), 0 distinct warnings; 105 of 105 passed, `Layer portal visibility and track status` among them (test 49).
+  - The snippets went in as written. Both test includes (`tile_cmd.h` and `track_func.h`) were added.
+  - Checked before replacing the old frame logic: for a vehicle heading into the shaft, the old frame measured along the heading equals the new depth along the shaft, and the old unhide point (depth 11 of an NE end) is the first shown point of the new rule. The tunnel frames are kept exactly.
+  - Comments added for the comment rules: the road-kind check of `GetTileTrackStatus_LayerPortal`, why only the moving front plays the tunnel sound and only the front of a road vehicle plays the elevator sound, and the NewGRF sound test.
+  - Until tasks 9.1 and 9.2 land, a train entering a pair queries the shaft side of that pair, which now answers nothing; traversal is broken between those tasks, as the plan expects.
+  - Group 11 Area ranges into `layer_portal_cmd.cpp` updated to 173-224, 289-336 and 400-416.
 
 ### Area Mandatory Reading - Vehicle controllers at the shaft
 
@@ -345,7 +351,7 @@ flowchart TD
 ```
 
 {{MEDIUM}}
-- [ ] 9.1 H-5, FD-4: in the new-tile branch of `TrainController`, query the pair without a side. Replace the block from `DiagDirection moving = ...` to the `GetTileTrackStatus` line with:
+- [x] 9.1 H-5, FD-4: in the new-tile branch of `TrainController`, query the pair without a side. Replace the block from `DiagDirection moving = ...` to the `GetTileTrackStatus` line with:
   ```cpp
   				/* A shaft exit is relocated onto the pair. DiagdirBetweenTiles cannot see across layers. */
   				DiagDirection moving = DirToDiagDir(v->GetMovingDirection());
@@ -367,7 +373,7 @@ flowchart TD
   				TrackStatus ts = GetTileTrackStatus(gp.new_tile, TransportType::Rail, RoadTramType::Invalid, side);
   ```
   > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 8.3. Without it the old side still works for the pair, and this change does nothing visible until 8.3 lands.
-- [ ] 9.2 H-5, FD-4: in `TrainCheckIfLineEnds`, replace the two lines after the "Calculate next tile" comment with:
+- [x] 9.2 H-5, FD-4: in `TrainCheckIfLineEnds`, replace the two lines after the "Calculate next tile" comment with:
   ```cpp
   	TileIndex tile = GetLayerPortalNextTile(moving_front->tile, dir);
   	//FD-4: the pair is entered through its shaft, a side its track status refuses, so that query has no side.
@@ -378,7 +384,7 @@ flowchart TD
   ```
   A train behind an end (on the shaft side, same layer) now gets nothing from its query. It treats the end as the line end and stops or reverses there, as at any buffer stop.
   > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 8.3.
-- [ ] 9.3 H-5, FD-4: in `RoadFindPathToDest`, extend the filter chain after the road-stop branch (the `}` before the "The above lookups should be moved" comment):
+- [x] 9.3 H-5, FD-4: in `RoadFindPathToDest`, extend the filter chain after the road-stop branch (the `}` before the "The above lookups should be moved" comment):
   ```cpp
   	} else if (IsLayerPortalTile(tile)) {
   		//FD-4: an end is entered through its door, out of the shaft from its pair, or by finishing a turn on the end itself.
@@ -388,7 +394,7 @@ flowchart TD
   	}
   ```
   `enterdir` here is the heading of the step. A vehicle that moves in direction `shaft` arrives through the door, so the door test compares with the shaft direction. With no trackdir left, the function already returns the reverse trackdir, and the vehicle turns on its current tile instead of entering from behind.
-- [ ] 9.4 H-4, FD-2: delete this block and its comment from the `RDE_NEXT_TILE` branch of `IndividualRoadVehicleController`:
+- [x] 9.4 H-4, FD-2: delete this block and its comment from the `RDE_NEXT_TILE` branch of `IndividualRoadVehicleController`:
   ```cpp
   		//An elevator is a drive-through. A U-turn on it is refused and the vehicle waits.
   		if (IsReversingRoadTrackdir(dir) && (IsLayerPortalTile(v->tile) || IsLayerPortalTile(tile))) {
@@ -397,7 +403,7 @@ flowchart TD
   		}
   ```
   The generic code below it already turns a non-tram vehicle on `v->tile`, because a portal is not a normal road tile. Trams never reach a portal: the tile proc offers them no trackdirs.
-- [ ] 9.5 M-10, FD-1: make the blocking search use the height at the searched point.
+- [x] 9.5 M-10, FD-1: make the blocking search use the height at the searched point.
   - Add a field to `RoadVehFindData`, after `y`:
     ```cpp
     	int z; ///< Height the searching vehicle has at (x, y).
@@ -414,7 +420,10 @@ flowchart TD
     ```
   `RoadVehFindData` is used only in `roadveh_cmd.cpp` (declared at 638, filled at 678), so no other initialiser needs the field. Off the shaft step the layers are equal, and the search behaves exactly as before.
   > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 8.2. Before it, no vehicle crossed between ends of different height, so the blind spot could not occur.
-- [ ] 9.6 Build Debug and run the unit tests. Then grep `src/train_cmd.cpp` for `GetTileTrackStatus(` and confirm that the only calls passing a side are the two changed in 9.1 and 9.2. Record both results under this task.
+- [x] 9.6 Build Debug and run the unit tests. Then grep `src/train_cmd.cpp` for `GetTileTrackStatus(` and confirm that the only calls passing a side are the two changed in 9.1 and 9.2. Record both results under this task.
+  - 2026-10-03, done: build exit 0 (30 s), 0 distinct warnings; 105 of 105 passed. `GetTileTrackStatus(` appears four times in `train_cmd.cpp`; only the two of tasks 9.1 and 9.2 (lines 3438 and 4027) pass a side, the other two (2906, 3010) pass none.
+  - The snippets went in as written. For the comment rules, `RoadVehFindData` got a struct Javadoc and member comments, `FindClosestBlockingRoadVeh` and `RoadVehFindCloseTo` got Javadoc, the axis test of the blocking search a business comment, and the task 9.3 comment now says what happens to an entry from behind: the vehicle turns around. `roadveh_cmd.cpp` got its `@see` header reference.
+  - Behaviour is verified by scenarios S1 to S3 in Group 17; no unit test reaches the controllers (FD-12).
 
 ### Area Mandatory Reading - Signal walk and reservations
 
@@ -445,7 +454,7 @@ flowchart LR
 > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 6.1 (removal queues the two former door sides on cleared tiles) and tasks 9.1 and 9.2 (no train enters an end from behind, so a shaft-side signal entry has no train to find).
 
 {{MEDIUM}}
-- [ ] 10.1 H-5, FD-5: replace the `TileType::LayerPortal` case of `ExploreSegment` with:
+- [x] 10.1 H-5, FD-5: replace the `TileType::LayerPortal` case of `ExploreSegment` with:
   ```cpp
   			case TileType::LayerPortal: {
   				if (GetTileOwner(tile) != owner) continue;
@@ -464,7 +473,7 @@ flowchart LR
   			}
   ```
   `oldtile` is a plain local set at the top of the loop body, so assigning it is allowed. The closing `MaybeAddToTodoSet(tile, enterdir, oldtile, exitdir)` then adds the pair's door neighbour and removes `(pair, door of pair)`, the walk in the other direction. `DiagDirection::Invalid` never reaches this case: it fails the door test and continues.
-- [ ] 10.2 M-1, FD-5: replace the `TileType::LayerPortal` case of `UpdateSignalsInBuffer` with:
+- [x] 10.2 M-1, FD-5: replace the `TileType::LayerPortal` case of `UpdateSignalsInBuffer` with:
   ```cpp
   			case TileType::LayerPortal: {
   				assert(GetLayerPortalTransportType(tile) == TransportType::Rail);
@@ -476,7 +485,7 @@ flowchart LR
   			}
   ```
   The queued side `dir` is ignored, because an end has one block. When a caller queued both axis sides (`AddTrackToSignalBuffer`), the second globset entry walks the same block again. That is harmless.
-- [ ] 10.3 Confirm the caller audit below against the code: grep `src/` for `AddSideToSignalBuffer(`, `AddTrackToSignalBuffer(`, `SetSignalsOnBothDir(` and `UpdateSignalsOnSegment(`. Line numbers are from 2026-10-03, so relocate each row by its call text. Record "confirmed" or the difference under this task.
+- [x] 10.3 Confirm the caller audit below against the code: grep `src/` for `AddSideToSignalBuffer(`, `AddTrackToSignalBuffer(`, `SetSignalsOnBothDir(` and `UpdateSignalsOnSegment(`. Line numbers are from 2026-10-03, so relocate each row by its call text. Record "confirmed" or the difference under this task.
 
   | Caller (line on 2026-10-03) | Starts on | Portal start possible? | Lands in |
   | --- | --- | --- | --- |
@@ -488,14 +497,17 @@ flowchart LR
   | `train_cmd.cpp` 2385, 2392, 2425 and `vehicle.cpp` 1593 | a depot tile | no | — |
   | `train_cmd.cpp` 2533, 3192, `economy.cpp` 492, `rail_cmd.cpp` 1556 | a rail tile with signals | no | — |
   | `rail_cmd.cpp` 608, 750-755, 1057, 1225, 1874, `station_cmd.cpp` 1592, 1808, `tunnelbridge_cmd.cpp` 599, 802, 924-925, 1022-1023 | rail, depot, station or tunnel tiles | not as the start; a door neighbour can push `(end, door)` | `ExploreSegment` portal case, task 10.1 |
-- [ ] 10.4 Confirm that portal reservations need no change, by checking each expected answer below against the code. If an answer is wrong, record a finding. Fix it here only when the fix is one line; otherwise add it to Group 17 as a scenario check.
+  - 2026-10-03: confirmed. Line numbers moved with Groups 7 and 9 (for example `TrainLocoHandler` is now at 4099, the reservation free at 2530, the signal call of the red-signal path at 3189); every call matches its row. One call is not in the table: `DeleteLastWagon` calls `UpdateSignalsOnSegment(tile, DiagDirection::Invalid, owner)` at 3805, but only for tunnel, bridge and depot tiles, so it never starts on a portal.
+- [x] 10.4 Confirm that portal reservations need no change, by checking each expected answer below against the code. If an answer is wrong, record a finding. Fix it here only when the fix is one line; otherwise add it to Group 17 as a scenario check.
   - `TryReserveRailTrack` sets an end's bit only when it is free, and `UnreserveRailTrack` clears it (`pbs.cpp` 137-141, 195-197).
   - `ClearPathReservation` frees only the end the last wagon left. The pair is freed when the last wagon leaves the pair (after task 7.2, the portal branch is one `UnreserveRailTrack` call).
   - `FreeTrainTrackReservation` follows with `CFollowTrackRail`, which steps through the shaft (`is_portal`). Each reserved end ahead is freed through `ClearPathReservation`. `free_tile` is true for a front on a portal, because a portal is neither a station nor a tunnel.
   - `FollowTrainReservation` and `GetTrainForReservation` also look for trains on the pair (`pbs.cpp` 344-347, 394-397).
   - `IsSafeWaitingPosition` never accepts a portal end (`pbs.cpp` 421-422), so no path reservation ends inside a shaft.
   > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 7.2 (dead code removed from `ClearPathReservation`).
-- [ ] 10.5 Build Debug and run the unit tests, and record the result under this task.
+  - 2026-10-03: confirmed, every answer holds: per-end set and clear in `pbs.cpp`, the single `UnreserveRailTrack` of `ClearPathReservation` (task 7.2), `free_tile` true for a front on a portal and the follower walk of `FreeTrainTrackReservation`, the pair checks of `FollowTrainReservation` and `GetTrainForReservation`, and the refusal in `IsSafeWaitingPosition`. No change needed.
+- [x] 10.5 Build Debug and run the unit tests, and record the result under this task.
+  - 2026-10-03, done: build exit 0 (30 s), 0 distinct warnings; 105 of 105 passed. Both snippets went in as written, with one change to the comment: the train test on both ends says it searches only until a train is found. The old portal case of `ExploreSegment` had a stray `}` before its `break`; the new case ends inside its braces like the other cases. `signal.cpp` got its `@see` header reference. Signal behaviour is verified by scenarios S3 and S4.
 
 ### Area Mandatory Reading - Ownership and conversion
 
@@ -505,13 +517,15 @@ _Applies to Group 11._
 | --- | --- | --- |
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 211-222, 268-272, 307-312 | Findings H-2, M-3 and M-8: the merger and bankruptcy accounting errors, the ownerless elevator, and one-end road conversion. FD-6 (Global) prescribes the fix. |
 | [src/layer_portal_cmd.h](../../../../src/layer_portal_cmd.h) | 20-30 | `LAYER_PORTAL_TRACKBIT_FACTOR`, which task 11.1 renames. |
-| [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | 144-195, 263-310, 374-390 | `TransferPortalInfrastructure` and `ChangeTileOwner_LayerPortal`, `ClearTile_LayerPortal`, and the build accounting in `CmdBuildLayerPortal`. Tasks 11.2 to 11.4 rewrite the first three. |
+| [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | 173-224, 289-336, 400-416 | `TransferPortalInfrastructure` and `ChangeTileOwner_LayerPortal`, `ClearTile_LayerPortal`, and the build accounting in `CmdBuildLayerPortal`. Tasks 11.2 to 11.4 rewrite the first three. |
 | [src/saveload/company_sl.cpp](../../../../src/saveload/company_sl.cpp) | 233-247 | The portal case of `AfterLoadCompanyStats`: the authoritative recount (rail by tile owner, road by road owner, lower tile only) that runtime accounting must match. |
 | [src/economy.cpp](../../../../src/economy.cpp) | 478-482 | `ChangeOwnershipOfCompanyItems` calls `ChangeTileOwner` on every tile. This is why the ownership test must come first. |
 | [src/road_cmd.cpp](../../../../src/road_cmd.cpp) | 181-196, 259-276 | `UpdateCompanyRoadInfrastructure` (skips an owner that is not a company, dirties the window) and `CheckAllowRemoveRoad` (the `OWNER_NONE` rule FD-6 adopts). |
 | [src/road_cmd.cpp](../../../../src/road_cmd.cpp) | 2464-2500, 2513-2700 | `CanConvertUnownedRoadType`, `ConvertRoadTypeOwner` and `CmdConvertRoad`: the switch with the portal case, the ownership and town checks, the generic branch with the dead portal piece count, and the tunnel branch that converts both ends. |
 | [src/road_internal.h](../../../../src/road_internal.h) | 18 | The declaration of `CheckAllowRemoveRoad`, which `layer_portal_cmd.cpp` must include. |
 | [src/rail_cmd.cpp](../../../../src/rail_cmd.cpp) | 1783-1820 | The portal case of `CmdConvertRail`: the both-ends pattern task 11.5 copies for road. |
+
+Context has compacted 1 times while executing this group.
 
 ### Group 11 - Ownership, infrastructure and conversion
 
@@ -531,8 +545,8 @@ flowchart TD
 > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: tasks 6.1 to 6.3, which already changed `ClearTile_LayerPortal` (door-side signal updates, both-end reservation check, positive price). Task 11.4 replaces the whole function and keeps those changes.
 
 {{MEDIUM}}
-- [ ] 11.1 L-11: rename `LAYER_PORTAL_TRACKBIT_FACTOR` to `GetLayerPortalPieceCount`, keeping its Javadoc. Use the editor's replace-all in each file that `grep -rln LAYER_PORTAL_TRACKBIT_FACTOR src` lists. On 2026-10-03 that was nine uses in five files: `layer_portal_cmd.h` (the definition), `layer_portal_cmd.cpp` (five), `rail_cmd.cpp`, `road_cmd.cpp` and `saveload/company_sl.cpp`. Afterwards the grep must print nothing. The snippets below use the new name.
-- [ ] 11.2 H-2, FD-6: replace `TransferPortalInfrastructure`, including its Javadoc, with:
+- [x] 11.1 L-11: rename `LAYER_PORTAL_TRACKBIT_FACTOR` to `GetLayerPortalPieceCount`, keeping its Javadoc. Use the editor's replace-all in each file that `grep -rln LAYER_PORTAL_TRACKBIT_FACTOR src` lists. On 2026-10-03 that was nine uses in five files: `layer_portal_cmd.h` (the definition), `layer_portal_cmd.cpp` (five), `rail_cmd.cpp`, `road_cmd.cpp` and `saveload/company_sl.cpp`. Afterwards the grep must print nothing. The snippets below use the new name.
+- [x] 11.2 H-2, FD-6: replace `TransferPortalInfrastructure`, including its Javadoc, with:
   ```cpp
   /**
    * Move the infrastructure pieces of a portal pair from one owner to another.
@@ -568,7 +582,7 @@ flowchart TD
   	}
   }
   ```
-- [ ] 11.3 H-2, M-3, FD-6: replace the body of `ChangeTileOwner_LayerPortal` with:
+- [x] 11.3 H-2, M-3, FD-6: replace the body of `ChangeTileOwner_LayerPortal` with:
   ```cpp
   /** @copydoc ChangeTileOwnerProc */
   static void ChangeTileOwner_LayerPortal(TileIndex tile, Owner old_owner, Owner new_owner)
@@ -605,7 +619,7 @@ flowchart TD
   }
   ```
   The higher end of a rail pair is a Clear tile by the time the walk reaches it, so its own proc does nothing.
-- [ ] 11.4 M-3, FD-6: add `#include "road_internal.h"` after `#include "road_func.h"` in `layer_portal_cmd.cpp`. Then replace the whole of `ClearTile_LayerPortal` with:
+- [x] 11.4 M-3, FD-6: add `#include "road_internal.h"` after `#include "road_func.h"` in `layer_portal_cmd.cpp`. Then replace the whole of `ClearTile_LayerPortal` with:
   ```cpp
   /** @copydoc ClearTileProc */
   static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
@@ -665,7 +679,7 @@ flowchart TD
   }
   ```
   Bankruptcy still works for rail: `ChangeOwnershipOfCompanyItems` sets `_current_company` to the old owner while it runs, so `CheckTileOwnership` passes.
-- [ ] 11.5 M-8: in `CmdConvertRoad`, insert this branch after the town-rating block and directly before the comment `/* Vehicle on the tile when not converting normal <-> powered`:
+- [x] 11.5 M-8: in `CmdConvertRoad`, insert this branch after the town-rating block and directly before the comment `/* Vehicle on the tile when not converting normal <-> powered`:
   ```cpp
   		//M-8: an elevator converts as one pair, like a tunnel. Its ends are on different layers, so a drag never holds both.
   		if (tt == TileType::LayerPortal) {
@@ -702,7 +716,7 @@ flowchart TD
   		}
   ```
   A tram type never reaches it: `GetRoadType(cur_tile, RoadTramType::Tram)` is `INVALID_ROADTYPE` on a portal, and the loop skips the tile earlier.
-- [ ] 11.6 M-8: clean up what task 11.5 made dead in `CmdConvertRoad`:
+- [x] 11.6 M-8: clean up what task 11.5 made dead in `CmdConvertRoad`:
   - in the switch, replace the comment `//Both ends are visited. Each end keeps its own road type bits.` with `//An elevator converts as a pair, in its own branch below.`;
   - in the generic branch, delete the last `else if` of the piece count:
     ```cpp
@@ -710,7 +724,7 @@ flowchart TD
     				num_pieces = GetLayerPortalPieceCount(TransportType::Road);
     ```
     so that the chain ends with the road depot case and its closing `}`.
-- [ ] 11.7 FD-6: check each answer below against the code and record "confirmed" or the difference under this task. Fix a difference only if it is in a function this group changed; otherwise record a finding.
+- [x] 11.7 FD-6: check each answer below against the code and record "confirmed" or the difference under this task. Fix a difference only if it is in a function this group changed; otherwise record a finding.
 
   | Place | Owner charged | Pieces | Expected after this group |
   | --- | --- | --- | --- |
@@ -720,7 +734,12 @@ flowchart TD
   | `ChangeTileOwner_LayerPortal` via `TransferPortalInfrastructure` | old and new owner, lower end only | × 2 | tasks 11.2, 11.3 |
   | `CmdConvertRail`, portal case | `GetTileOwner(cur_tile)` | × 2, once per pair | unchanged |
   | `CmdConvertRoad`, portal branch | road owner, through `ConvertRoadTypeOwner` | × 2, once per pair | task 11.5 |
-- [ ] 11.8 Build Debug and run the unit tests, and record the result under this task.
+- [x] 11.8 Build Debug and run the unit tests, and record the result under this task.
+  - 2026-10-03, done: build exit 0 (59 s), 0 distinct warnings; 105 of 105 passed.
+  - Tasks 11.1 to 11.4: the rename left nine uses in five files, and the grep prints nothing. The snippets went in as written, with two comment changes. The rail branch of `ChangeTileOwner_LayerPortal` now carries the sentence about the higher end. The reservation test of `ClearTile_LayerPortal` now says why both ends block removal. `company_sl.cpp` got its `@see` header reference.
+  - Tasks 11.5 and 11.6: one addition to the snippet. The portal branch of `CmdConvertRoad` also refuses a town-owned elevator with `STR_ERROR_OWNED_BY` when the new type has no power on the old, the same as the plain-road and tunnel branches. The guard against converting both ends now says a drag normally holds only one end.
+  - Task 11.7: every row confirmed. `CmdBuildLayerPortal` charges `_current_company` at `layer_portal_cmd.cpp` 430 and 434. `CmdConvertRail` charges `GetTileOwner(cur_tile)` × 2, once per pair. New finding L-13 (Low), outside this group, so not fixed. Unlike the tunnel branch, the portal case of `CmdConvertRail` does not add trains standing on either end to `affected_trains`. Those trains miss the `ConsistChanged(CCF_TRACK)` update (power and speed limit of the new type). Task 18.5 adds its row to the index.
+  - New ranges: `layer_portal_cmd.cpp` `TransferPortalInfrastructure` 174-206, `ChangeTileOwner_LayerPortal` 208-241, `ClearTile_LayerPortal` 306-363, build accounting 426-442. `road_cmd.cpp` `CmdConvertRoad` 2513-2744, portal branch 2579-2621.
 
 ### Area Mandatory Reading - Vehicle display layer and link overlay
 
@@ -756,7 +775,7 @@ flowchart LR
 ```
 
 {{MEDIUM}}
-- [ ] 12.1 FD-8: in `src/map_layer_gui.h`, add `struct Vehicle;` on the line after `struct Window;`. Then add this declaration after the one of `GetLayerOfWorldY`:
+- [x] 12.1 FD-8: in `src/map_layer_gui.h`, add `struct Vehicle;` on the line after `struct Window;`. Then add this declaration after the one of `GetLayerOfWorldY`:
   ```cpp
   /**
    * Layer whose views draw a vehicle and accept clicks on it.
@@ -767,7 +786,7 @@ flowchart LR
   MapLayer GetVehicleDisplayLayer(const Vehicle *v);
   ```
   `Vehicle` is declared as `struct` in `vehicle_base.h`, so the forward declaration must say `struct` (task 3.7 explains why).
-- [ ] 12.2 FD-8, L-6: in `src/map_layer_gui.cpp`, add the definition after `GetLayerOfWorldY`. The file already includes `vehicle_base.h`.
+- [x] 12.2 FD-8, L-6: in `src/map_layer_gui.cpp`, add the definition after `GetLayerOfWorldY`. The file already includes `vehicle_base.h`.
   ```cpp
   /**
    * Layer whose views draw a vehicle and accept clicks on it.
@@ -795,7 +814,7 @@ flowchart LR
   	}
   }
   ```
-- [ ] 12.3 FD-8: in `src/vehicle.cpp`, replace both copies of the rule.
+- [x] 12.3 FD-8: in `src/vehicle.cpp`, replace both copies of the rule.
   - In `ViewportAddVehicles`, replace
     ```cpp
     				MapLayer vehicle_layer = (v->type == VehicleType::Effect || v->type == VehicleType::Disaster || v->tile == INVALID_TILE)
@@ -804,14 +823,14 @@ flowchart LR
     ```
     with `				if (GetVehicleDisplayLayer(v) != _viewport_draw_layer) {`. Keep the comment above it.
   - In `CheckClickOnVehicle`, replace the same two `vehicle_layer` lines and `if (vehicle_layer != vp.layer) {` with `				if (GetVehicleDisplayLayer(v) != vp.layer) {`. Keep the comment "A click must not select a vehicle drawn in another layer." directly above the `if`.
-- [ ] 12.4 FD-8: replace the other four copies, each with a call of the helper:
+- [x] 12.4 FD-8: replace the other four copies, each with a call of the helper:
   - `src/viewport.cpp`, `InitializeWindowViewport`: `vp->layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);` becomes `vp->layer = GetVehicleDisplayLayer(veh);`.
   - `src/viewport.cpp`, `UpdateViewportPosition`: `MapLayer vehicle_layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);` becomes `MapLayer vehicle_layer = GetVehicleDisplayLayer(veh);`.
   - `src/map_layer_gui.cpp`, `SetViewportLayer`: `if (veh->tile == INVALID_TILE || GetTileLayer(veh->tile) != layer) vp->CancelFollow(*w);` becomes `if (GetVehicleDisplayLayer(veh) != layer) vp->CancelFollow(*w);`.
   - `src/smallmap_gui.cpp`, `DrawVehicles`: the two lines `MapLayer vehicle_layer = ...;` and `if (vehicle_layer != this->layer) continue;` become `if (GetVehicleDisplayLayer(v) != this->layer) continue;`.
 
   Afterwards `grep -rn 'GetLayerOfWorldY(v->y_pos)\|GetLayerOfWorldY(veh->y_pos)' src` lists only `map_layer_gui.cpp`.
-- [ ] 12.5 M-6, FD-8: let the overlay ask a smallmap for its layer.
+- [x] 12.5 M-6, FD-8: let the overlay ask a smallmap for its layer.
   - `src/smallmap_gui.h`: add `#include "map_layer_type.h"` after `#include "core/geometry_type.hpp"`, and `MapLayer GetSmallMapLayer(const Window *w);` after the declaration of `GetSmallMapStationMiddle`.
   - `src/smallmap_gui.cpp`: in `class SmallMapWindow`, directly after `friend class NWidgetSmallmapDisplay;` in the `public:` section, add:
     ```cpp
@@ -838,7 +857,7 @@ flowchart LR
     	return static_cast<const SmallMapWindow *>(w)->GetLayer();
     }
     ```
-- [ ] 12.6 M-6, FD-8: give `LinkGraphOverlay` one layer test and use it while caching.
+- [x] 12.6 M-6, FD-8: give `LinkGraphOverlay` one layer test and use it while caching.
   - `src/linkgraph/linkgraph_gui.h`, in the `protected:` section after `Point GetStationMiddle(const Station *st) const;`:
     ```cpp
     	MapLayer GetLayer() const;
@@ -876,7 +895,7 @@ flowchart LR
     		if (!this->IsStationInLayer(sta)) continue;
     ```
     and after `if (stb->spread.IsEmpty()) continue;` add `				if (!this->IsStationInLayer(stb)) continue;`.
-- [ ] 12.7 M-6, FD-8: filter the drawing and the tooltip, then remove the sentinel.
+- [x] 12.7 M-6, FD-8: filter the drawing and the tooltip, then remove the sentinel.
   - `DrawLinks`: replace the comment and the line `if (this->window->viewport != nullptr && GetTileLayer(from->xy) != this->window->viewport->layer) continue;` with:
     ```cpp
     		//FD-8: a link is drawn only when both stations are on the shown layer. The cache may predate a layer change.
@@ -915,7 +934,11 @@ flowchart LR
 
   The smallmap creates its overlay in its constructor before `SmallMapCenterOnCurrentPos` runs, so `this->overlay` is never null in those two places.
   > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 7.4 (the layer `if` in `SmallMapCenterOnCurrentPos`).
-- [ ] 12.8 Build Debug and run the unit tests. Then grep `src` for `INT32_MIN / 2` and `INT32_MIN / 4`: neither may appear in `smallmap_gui.cpp` or `linkgraph_gui.cpp`. Record both results under this task.
+- [x] 12.8 Build Debug and run the unit tests. Then grep `src` for `INT32_MIN / 2` and `INT32_MIN / 4`: neither may appear in `smallmap_gui.cpp` or `linkgraph_gui.cpp`. Record both results under this task.
+  - 2026-10-03, done: build exit 0 (62 s), 0 distinct warnings; 105 of 105 passed. The sentinel grep prints nothing anywhere in `src`. The `GetLayerOfWorldY(v->y_pos)` grep lists only `map_layer_gui.cpp` (105 and 109).
+  - The snippets went in as written, with one addition. `UpdateViewportPosition` also marks the viewport overlay dirty when a followed vehicle carries the view to another layer. That is the one layer change of a viewport that does not pass through `SetViewportLayer`. Without it, the new layer's links would wait for the next overlay refresh.
+  - `vehicle.cpp`, `viewport.cpp`, `linkgraph_gui.h` and `linkgraph_gui.cpp` keep their CRLF line endings, so the edit helper now writes in each file's own style. `@see` header references were added to `map_layer_gui.cpp`, `vehicle.cpp`, `viewport.cpp` (on its existing `@file` line), `smallmap_gui.h`, `linkgraph_gui.h` and `linkgraph_gui.cpp`.
+  - New ranges: `map_layer_gui.cpp` `GetVehicleDisplayLayer` 88-112 and `SetViewportLayer` 120-155. `smallmap_gui.cpp` `GetStationMiddle` 1552 and `GetSmallMapLayer` 2252-2260.
 
 ### Area Mandatory Reading - Toolbars, selection band and off-map slope
 
@@ -926,9 +949,9 @@ _Applies to Group 13._
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 283-292, 336-348, 352-354, 401-403 | Findings M-5, M-11, L-1 and L-12: where view code still uses the main viewport's layer, the command guard the toolbar change relies on, the dropped layer argument, and the ungated elevator button. FD-7 (Global) prescribes the fixes. |
 | [src/rail_gui.cpp](../../../../src/rail_gui.cpp) | 479-510, 523-537, 755-761 | `BuildRailToolbarWindow::OnInvalidateData`, `OnInit` and the `WID_RAT_BUILD_LAYER_PORTAL` placement. The constructor calls `OnInvalidateData` after `OnInit`, so the `can_build` gate lives in `OnInvalidateData`. |
 | [src/road_gui.cpp](../../../../src/road_gui.cpp) | 384-443, 445-462, 725-731 | `BuildRoadToolbarWindow::OnInvalidateData` with its `can_build` gating, `OnInit`, and the `WID_ROT_LAYER_ELEVATOR` placement. |
-| [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | 119-125 | The toolbar invalidations at the end of `SetViewportLayer`, whose comment task 13.3 updates. |
-| [src/viewport.cpp](../../../../src/viewport.cpp) | 2172-2302 | The doc comment of `SetSelectionTilesDirty`, `MainViewportBandY` wedged between them, and `SetSelectionTilesDirty` with its straight and diagonal branches. |
-| [src/viewport.cpp](../../../../src/viewport.cpp) | 3118-3145, 3147-3250 | `CheckUnderflow` and `CheckOverflow`, then the forced-direction clamps and asserts of `CalcRaildirsDrawstyle`. |
+| [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | 148-155 | The toolbar invalidations at the end of `SetViewportLayer`, whose comment task 13.3 updates. |
+| [src/viewport.cpp](../../../../src/viewport.cpp) | 2174-2304 | The doc comment of `SetSelectionTilesDirty`, `MainViewportBandY` wedged between them, and `SetSelectionTilesDirty` with its straight and diagonal branches. |
+| [src/viewport.cpp](../../../../src/viewport.cpp) | 3120-3147, 3149-3252 | `CheckUnderflow` and `CheckOverflow`, then the forced-direction clamps and asserts of `CalcRaildirsDrawstyle`. |
 | [src/landscape.cpp](../../../../src/landscape.cpp) | 328-345 | `GetSlopePixelZOutsideMap`, which task 13.6 makes compute the off-map height with its own layer. |
 | [src/tile_map.h](../../../../src/tile_map.h) | 44-49 | `TileHeightOutsideMap`: its `y` is the stacked tile row, and it clamps into the given layer's band. |
 | [src/void_cmd.cpp](../../../../src/void_cmd.cpp) | 35-45 | `GetSlopePixelZ_Void` and its `_viewport_draw_layer` fallback, replaced in task 13.7. |
@@ -938,14 +961,14 @@ _Applies to Group 13._
 > ASSUMPTION: this was already built previously. If not, re-asses at runtime. Depends on: task 6.4. Task 13.3 makes a click on a Space tile send `MapLayer::Invalid`, which only the task 6.4 guard refuses safely.
 
 {{MEDIUM}}
-- [ ] 13.1 FD-7: rail toolbar enable rule.
+- [x] 13.1 FD-7: rail toolbar enable rule.
   - `OnInvalidateData`: replace `bool portal_ok = can_build && MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;` with:
     ```cpp
     		//FD-7: a portal can be placed from any viewport, so the button depends on the game having layers, not on the main view's layer.
     		bool portal_ok = can_build && MultiLayerMap::GetLayerCount() > 1;
     ```
   - `OnInit`: replace `bool portal_ok = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;` with `bool portal_ok = MultiLayerMap::GetLayerCount() > 1;`.
-- [ ] 13.2 FD-7, L-12: road toolbar enable rule.
+- [x] 13.2 FD-7, L-12: road toolbar enable rule.
   - `OnInvalidateData`: replace the `if (RoadTypeIsRoad(this->roadtype)) { ... }` block of the elevator with:
     ```cpp
     		//The elevator exists only on the road toolbar. FD-7 and L-12: it needs layers and the same vehicle gate as the depot and the stops.
@@ -955,7 +978,7 @@ _Applies to Group 13._
     		}
     ```
   - `OnInit`: in its elevator block, replace `bool enabled = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;` with `bool enabled = MultiLayerMap::GetLayerCount() > 1;`.
-- [ ] 13.3 M-5, FD-7: take the target layer from the clicked tile.
+- [x] 13.3 M-5, FD-7: take the target layer from the clicked tile.
   - `src/rail_gui.cpp`, case `WID_RAT_BUILD_LAYER_PORTAL`: replace the two lines `MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer);` and `if (target == MapLayer::Invalid) break;` with:
     ```cpp
     				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place a portal. The command refuses a layer without a pair.
@@ -963,7 +986,7 @@ _Applies to Group 13._
     ```
   - `src/road_gui.cpp`, case `WID_ROT_LAYER_ELEVATOR`: the same replacement.
   - `src/map_layer_gui.cpp`, `SetViewportLayer`: replace the comment `//The road elevator button is enabled only when the viewed layer has a pair.` with `//Build toolbars refresh their buttons. Since FD-7 the portal buttons depend on the layer count only.`
-- [ ] 13.4 M-5, FD-7: in `src/viewport.cpp`, add the band helper directly above the comment block that starts with "Marks the selected tiles as dirty." (above `MainViewportBandY`):
+- [x] 13.4 M-5, FD-7: in `src/viewport.cpp`, add the band helper directly above the comment block that starts with "Marks the selected tiles as dirty." (above `MainViewportBandY`):
   ```cpp
   /**
    * World Y where one layer's band begins.
@@ -989,7 +1012,7 @@ _Applies to Group 13._
     		int band_tile_y = GetLayerBandY(GetLayerOfWorldY(_thd.pos.y)) / static_cast<int>(TILE_SIZE);
     ```
     and replace `int plane_y = static_cast<int>(y) - MainViewportBandY() / static_cast<int>(TILE_SIZE);` with `int plane_y = static_cast<int>(y) - band_tile_y;`.
-- [ ] 13.5 M-5, FD-7: in `CalcRaildirsDrawstyle`, run the vanilla clamps on a band-relative `y`. In the `VPM_FIX_HORIZONTAL` branch, replace the five lines after `/* Make sure we do not overflow the map! */` with:
+- [x] 13.5 M-5, FD-7: in `CalcRaildirsDrawstyle`, run the vanilla clamps on a band-relative `y`. In the `VPM_FIX_HORIZONTAL` branch, replace the five lines after `/* Make sure we do not overflow the map! */` with:
   ```cpp
   					//FD-7: clamp inside the layer the drag started in. y is measured from that layer's band while the vanilla clamps run.
   					int band_y = GetLayerBandY(GetLayerOfWorldY(_thd.selstart.y));
@@ -1002,7 +1025,7 @@ _Applies to Group 13._
   					y += band_y;
   ```
   In the `VPM_FIX_VERTICAL` branch, make the same replacement with `-1` instead of `1` as the last argument of all four calls. Both blocks sit inside an `else { }`, so the local `band_y` is allowed. The underflow clamp now also stops at the band's north edge, which the epic's version did not. Finally, delete `MainViewportBandY` and its Javadoc ("World Y where the main viewport's layer begins."). `grep -n MainViewportBandY src/viewport.cpp` must print nothing, and the "Marks the selected tiles as dirty." comment must sit directly above `SetSelectionTilesDirty` again.
-- [ ] 13.6 L-1: in `GetSlopePixelZOutsideMap` (`src/landscape.cpp`), add ` * @param layer Layer whose band and edge heights are used.` to the Javadoc after the `@param y` line. Replace the `else` branch
+- [x] 13.6 L-1: in `GetSlopePixelZOutsideMap` (`src/landscape.cpp`), add ` * @param layer Layer whose band and edge heights are used.` to the Javadoc after the `@param y` line. Replace the `else` branch
   ```cpp
   	} else {
   		return _tile_type_procs[TileType::Void]->get_slope_pixel_z_proc(INVALID_TILE, x, y, false);
@@ -1019,7 +1042,7 @@ _Applies to Group 13._
   	}
   ```
   The Void proc receives `x` and `y` as `uint`, so the casts keep its exact result for negative coordinates.
-- [ ] 13.7 L-1: in `GetSlopePixelZ_Void` (`src/void_cmd.cpp`), replace
+- [x] 13.7 L-1: in `GetSlopePixelZ_Void` (`src/void_cmd.cpp`), replace
   ```cpp
   	//A real void tile uses its own layer. A coordinate past the map uses the layer being drawn.
   	MapLayer layer = (tile != INVALID_TILE) ? GetTileLayer(tile) : _viewport_draw_layer;
@@ -1030,7 +1053,11 @@ _Applies to Group 13._
   	MapLayer layer = (tile != INVALID_TILE) ? GetTileLayer(tile) : MapLayer::Surface;
   ```
   Then `grep -rn 'get_slope_pixel_z_proc(INVALID_TILE' src` must print nothing. Leave the `viewport_func.h` include in place.
-- [ ] 13.8 Build Debug and run the unit tests, and record the result under this task.
+- [x] 13.8 Build Debug and run the unit tests, and record the result under this task.
+  - 2026-10-03, done: build exit 0 (38 s), 0 distinct warnings; 105 of 105 passed. `grep -n MainViewportBandY src/viewport.cpp` and `grep -rn 'get_slope_pixel_z_proc(INVALID_TILE' src` both print nothing. "Marks the selected tiles as dirty." sits directly above `SetSelectionTilesDirty` again, with `GetLayerBandY` above it.
+  - The snippets went in as written, with comment additions only. The compound `if` of the diagonal branch of `SetSelectionTilesDirty` now has a business comment: only tiles of the anchor layer's band are repainted. The comment of the elevator block in the road toolbar's `OnInit` now says the vehicle gate is added in `OnInvalidateData`. Its old text "only between Surface and Underground" went with the main-view rule.
+  - `landscape.cpp` and `void_cmd.cpp` got their `@see` header references. `rail_gui.cpp` and `road_gui.cpp` already had them.
+  - Selection and drag behaviour in an extra viewport is verified by scenario S6.
 
 ### Area Mandatory Reading - Pathfinding and load conversions
 
@@ -1050,7 +1077,7 @@ _Applies to Group 14._
 ### Group 14 - Pathfinding, aircraft clamp and surface-only conversions
 
 {{MEDIUM}}
-- [ ] 14.1 L-4: in `CalcClosestStationTile` (`src/pathfinder/pathfinder_func.h`), clamp inside the station's plane. Replace the code from `uint minx = TileX(ta.tile);` to the `return` with:
+- [x] 14.1 L-4: in `CalcClosestStationTile` (`src/pathfinder/pathfinder_func.h`), clamp inside the station's plane. Replace the code from `uint minx = TileX(ta.tile);` to the `return` with:
   ```cpp
   	uint minx = TileX(ta.tile);  // topmost corner of station
   	//L-4: the station area lives in one layer, so its rows are counted inside that plane.
@@ -1069,12 +1096,12 @@ _Applies to Group 14._
   	return TileXYL(x, y, GetTileLayer(ta.tile));
   ```
   For a station on the vehicle's own layer the result is the same tile as before.
-- [ ] 14.2 L-5: at the top of `SlopeCost` in `src/pathfinder/yapf/yapf_road.cpp`, before `/* height of the center of the current tile */`, add:
+- [x] 14.2 L-5: at the top of `SlopeCost` in `src/pathfinder/yapf/yapf_road.cpp`, before `/* height of the center of the current tile */`, add:
   ```cpp
   		//L-5: an elevator ride changes the layer, and the heights of two layers are not a slope.
   		if (GetTileLayer(tile) != GetTileLayer(next_tile)) return 0;
   ```
-- [ ] 14.3 L-6: give `TileVirtXYClampedToMap` a layer.
+- [x] 14.3 L-6: give `TileVirtXYClampedToMap` a layer.
   - `src/map_func.h`: change the declaration to `TileIndex TileVirtXYClampedToMap(int x, int y, MapLayer layer = MapLayer::Surface);`.
   - `src/map.cpp`: replace the function, including its Javadoc, with:
     ```cpp
@@ -1096,7 +1123,7 @@ _Applies to Group 14._
     }
     ```
   The two aircraft callers stay unchanged and now always get a surface tile.
-- [ ] 14.4 FD-9: confirm the loop list before editing:
+- [x] 14.4 FD-9: confirm the loop list before editing:
   ```bash
   awk '/Map::Iterate\(\)/ {print NR}' src/saveload/afterload.cpp | tr '\n' ' '
   ```
@@ -1106,13 +1133,21 @@ _Applies to Group 14._
   - Every other line sits inside an `IsSavegameVersionBefore` or `IsSavegameVersionBeforeOrAt` guard of a version older than `SaveLoadVersion::MapLayers`.
 
   No earlier group of this plan edits `afterload.cpp`. If the list still differs, open each differing line, classify it by these three rules, and record the new list under this task.
-- [ ] 14.5 FD-9: from the repository root, run the command of `#### FD-9 loop rewrite` below. It rewrites the 51 guarded loops and must print `51 loops rewritten`. Then `grep -c 'Map::Iterate()' src/saveload/afterload.cpp` must print 1. Add two comments; neither changes code:
+  - 2026-10-03, confirmed: the awk printed exactly the 52 expected lines. A scratch classifier walked up from each loop to its enclosing `if` statements and compared every `SaveLoadVersion` they name with the enum order of `saveload.h`. Result: 50 loops sit under a guard whose newest version is older than `MapLayers`. Line 164 is in `ConvertTownOwner`, called only under the guard at 653. Line 943 is unguarded. The three guards with a negated term (1414, 2918, 3421) each also have an upper bound older than `MapLayers`, so no save of version 369 enters them.
+- [x] 14.5 FD-9: from the repository root, run the command of `#### FD-9 loop rewrite` below. It rewrites the 51 guarded loops and must print `51 loops rewritten`. Then `grep -c 'Map::Iterate()' src/saveload/afterload.cpp` must print 1. Add two comments; neither changes code:
   - after the closing `}` of the loop `for (uint layer_index = _map_file_layers; ...)`: `	//FD-9: the version-gated conversions below read files that hold one plane, so they walk the surface only.`
   - directly above the remaining `for (const auto t : Map::Iterate()) {`: `	//FD-9: this loop runs for every save. Stations exist on every layer, so it walks every plane.`
 
   `afterload.cpp` already includes `map_layer.h`.
-- [ ] 14.6 FD-9: from the repository root, run the command of `#### FD-9 ledger update` below. It must print `52 rows updated`. The ledger's line numbers are those of the r2mlm3 migration; row `afterload.cpp:941` is the loop now near line 944.
-- [ ] 14.7 Build Debug and run the unit tests, then build RelWithDebInfo. Repeat tasks 5.3 to 5.5 of [r2rvm-review-map.md](r2rvm-review-map.md) with the save prefix `fd9_` instead of `epic_` (and `fd9_upgraded_`, `fd9_roundtrip_`), so the evidence of Group 5 stays. Confirm the digests still match and record both results.
+  - 2026-10-03, done: the script printed `51 loops rewritten`, and `grep -c` prints 1. The file keeps its CRLF endings (3516 of 3516 lines). Both comments are in place, and `afterload.cpp` got its `@see` header reference. `MultiLayerMap::IterateLayer` returns the same `IterateWrapper` as `Map::Iterate`, so no loop body changed.
+- [x] 14.6 FD-9: from the repository root, run the command of `#### FD-9 ledger update` below. It must print `52 rows updated`. The ledger's line numbers are those of the r2mlm3 migration; row `afterload.cpp:941` is the loop now near line 944.
+  - 2026-10-03, done: `52 rows updated`. Row `afterload.cpp:941` now reads "kept | Runs for every save"; the other 51 read "migrated". The ledger keeps its LF endings.
+- [x] 14.7 Build Debug and run the unit tests, then build RelWithDebInfo. Repeat tasks 5.3 to 5.5 of [r2rvm-review-map.md](r2rvm-review-map.md) with the save prefix `fd9_` instead of `epic_` (and `fd9_upgraded_`, `fd9_roundtrip_`), so the evidence of Group 5 stays. Confirm the digests still match and record both results.
+  - 2026-10-03, done: Debug exit 0 (3 min 34 s, `map_func.h` rebuilt almost everything), 0 distinct warnings, 105 of 105 passed. RelWithDebInfo exit 0 (5 min 49 s), 0 distinct warnings.
+  - Runs: `fd9_invariants.sh` in `%TEMP%` ran the loops of tasks 5.3 and 5.5 through `tools/run_dedicated.sh`. All 12 runs exited 0, and no `fd9_` log mentions an assert, corruption or an error. The four `fd9_` worlds have the same byte sizes as the `epic_` worlds (83180, 80540, 616144, 602820).
+  - Results: `I-6 pass` for all four worlds. `I-7 pass` for all eight upgraded and round-trip saves, against `baseline_reload_`. All eight are version 369, every 8-bit plane holds three planes (196608 at 8x8, 1572864 at 9x10), and `MAP2` and `MAP8` hold twice that.
+  - Limit of this evidence: the baseline saves are version 368, newer than every guard of task 14.4, so these loads run none of the rewritten loops. The evidence shows FD-9 changed nothing for current saves. That the rewritten loops only touch the surface rests on the classification of task 14.4.
+  - New ranges: `map.cpp` `TileVirtXYClampedToMap` 93-108; `pathfinder_func.h` `CalcClosestStationTile` 16-48.
 
 #### FD-9 loop rewrite
 
@@ -1174,10 +1209,10 @@ _Applies to Groups 15-16._
 | [src/rail_cmd.cpp](../../../../src/rail_cmd.cpp) | 899, 1304, 1593 | `CmdRailTrackHelper`, `CmdSignalTrackHelper`, `CmdConvertRail`. |
 | [src/road_cmd.cpp](../../../../src/road_cmd.cpp) | 986, 1083, 2513 | `CmdBuildLongRoad`, `CmdRemoveLongRoad` (returns a tuple), `CmdConvertRoad`. |
 | [src/station_cmd.cpp](../../../../src/station_cmd.cpp) | 1854, 1887, 2504 | `CmdRemoveFromRailStation`, `CmdRemoveFromRailWaypoint`, `CmdRemoveFromRoadWaypoint`. |
-| [src/landscape.cpp](../../../../src/landscape.cpp) | 762-764 | `CmdClearArea`, which returns `{ CommandCost, Money }`. |
+| [src/landscape.cpp](../../../../src/landscape.cpp) | 765-767 | `CmdClearArea`, which returns `{ CommandCost, Money }`. |
 | [src/terraform_cmd.cpp](../../../../src/terraform_cmd.cpp) | 330-332 | `CmdLevelLand`, which returns `{ CommandCost, Money, TileIndex }`. |
 | [src/lang/english.txt](../../../../src/lang/english.txt) | 384-420, 790, 986, 5150, 5416 | The strings Group 16 edits: the main-toolbar tooltip block (`###length 32`, ordered by widget id), `STR_SMALLMAP_CAPTION`, `STR_EXTRA_VIEWPORT_TITLE`, `STR_ERROR_FLAT_LAND_REQUIRED` and the duplicate `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND`. |
-| [src/smallmap_gui.cpp](../../../../src/smallmap_gui.cpp) | 1562-1570 | `SmallMapWindow::GetWidgetString`, the caption concatenation. |
+| [src/smallmap_gui.cpp](../../../../src/smallmap_gui.cpp) | 1570-1578 | `SmallMapWindow::GetWidgetString`, the caption concatenation. |
 | [src/viewport_gui.cpp](../../../../src/viewport_gui.cpp) | 68-77 | The extra viewport's `GetWidgetString`, the other concatenation. |
 | [src/station_kdtree.h](../../../../src/station_kdtree.h) | 28-63 | `ForAllStationsRadius`, which task 16.5 simplifies without changing results. |
 
@@ -1195,7 +1230,7 @@ Every guard is the same statement, placed as the first statement of the command 
 A command that returns a tuple returns `{ layer, 0 }` or `{ layer, 0, INVALID_TILE }` instead, matching its existing `CMD_ERROR` returns. Every file below already includes `map_layer.h`.
 
 {{SIMPLE}}
-- [ ] 15.1 FD-10: add the guard function.
+- [x] 15.1 FD-10: add the guard function.
   - `src/map_layer.h`, after the declaration of `CheckLayerAllowsConstruction`:
     ```cpp
 
@@ -1241,43 +1276,46 @@ A command that returns a tuple returns `{ layer, 0 }` or `{ layer, 0, INVALID_TI
     	CHECK(CheckTilesShareLayer(surface_a, TileIndex{Map::Size()}).Failed());
     }
     ```
-- [ ] 15.2 FD-10: `src/rail_cmd.cpp`:
+- [x] 15.2 FD-10: `src/rail_cmd.cpp`:
   - `CmdRailTrackHelper`: `CheckTilesShareLayer(tile, end_tile)`;
   - `CmdSignalTrackHelper`: `CheckTilesShareLayer(tile, end_tile)`;
   - `CmdConvertRail`: `CheckTilesShareLayer(tile, area_start)`.
 
   The helpers cover `CmdBuildRailroadTrack`, `CmdRemoveRailroadTrack`, `CmdBuildSignalTrack` and `CmdRemoveSignalTrack`, which only forward to them.
-- [ ] 15.3 FD-10: `src/road_cmd.cpp`:
+- [x] 15.3 FD-10: `src/road_cmd.cpp`:
   - `CmdBuildLongRoad`: `CheckTilesShareLayer(start_tile, end_tile)`;
   - `CmdRemoveLongRoad`: `CheckTilesShareLayer(start_tile, end_tile)`, returning `{ layer, 0 }`;
   - `CmdConvertRoad`: `CheckTilesShareLayer(tile, area_start)`.
-- [ ] 15.4 FD-10: `src/station_cmd.cpp`: `CmdRemoveFromRailStation`, `CmdRemoveFromRailWaypoint` and `CmdRemoveFromRoadWaypoint`, each with `CheckTilesShareLayer(start, end)`.
-- [ ] 15.5 FD-10: the two tuple commands:
+- [x] 15.4 FD-10: `src/station_cmd.cpp`: `CmdRemoveFromRailStation`, `CmdRemoveFromRailWaypoint` and `CmdRemoveFromRoadWaypoint`, each with `CheckTilesShareLayer(start, end)`.
+  - 2026-10-03, correction: in these three commands the guard sits directly after `if (end == 0) end = start;`, not as the first statement. An `end` of 0 means "the start tile only". `RemoveRailStation` (flooding) and `RemoveRailWaypoint` pass `TileIndex{}` that way (`station_cmd.cpp` 1950 and 1971). A guard placed first would compare tile 0, on the surface, with the start tile, and refuse every flood removal of an Underground station tile.
+- [x] 15.5 FD-10: the two tuple commands:
   - `CmdClearArea` (`src/landscape.cpp`): `CheckTilesShareLayer(tile, start_tile)`, returning `{ layer, 0 }`;
   - `CmdLevelLand` (`src/terraform_cmd.cpp`): `CheckTilesShareLayer(tile, start_tile)`, returning `{ layer, 0, INVALID_TILE }`.
-- [ ] 15.6 FD-10: the remaining five, each with `CheckTilesShareLayer(tile, start_tile)` unless stated:
+- [x] 15.6 FD-10: the remaining five, each with `CheckTilesShareLayer(tile, start_tile)` unless stated:
   - `CmdPlaceHouseArea` (`src/town_cmd.cpp`);
   - `CmdPlantTree` (`src/tree_cmd.cpp`);
   - `CmdBuildBridge` (`src/tunnelbridge_cmd.cpp`): `CheckTilesShareLayer(tile_start, tile_end)`;
   - `CmdBuildCanal` (`src/water_cmd.cpp`);
   - `CmdBuildObjectArea` (`src/object_cmd.cpp`).
-- [ ] 15.7 FD-10: confirm that no two-tile command is left:
+- [x] 15.7 FD-10: confirm that no two-tile command is left:
   ```bash
   grep -rnE '^(CommandCost|std::tuple<[^>]*>|static CommandCost) Cmd[A-Za-z]+\([^)]*TileIndex [a-z_]+,[^)]*TileIndex ' src --include=*.cpp | sed -E 's/\(.*//'
   ```
   On 2026-10-03 it listed 20 functions: the 16 of tasks 15.2 to 15.6 and the four rail wrappers named in task 15.2. Record any other function under this task, with its guard or the reason it is exempt.
-- [ ] 15.8 Build Debug and run the unit tests. The test case `CheckTilesShareLayer` must be in the pass list. Record the result under this task.
+  - 2026-10-03, confirmed: the grep lists exactly the 20 expected functions. Each of the 16 carries the guard, and the four wrappers `CmdBuildRailroadTrack`, `CmdRemoveRailroadTrack`, `CmdBuildSignalTrack` and `CmdRemoveSignalTrack` only forward to the two guarded helpers.
+- [x] 15.8 Build Debug and run the unit tests. The test case `CheckTilesShareLayer` must be in the pass list. Record the result under this task.
+  - 2026-10-03, done: build exit 0 (76 s), 0 distinct warnings; 106 of 106 passed, including test #50 `CheckTilesShareLayer`. The snippets went in as written, apart from the station placement recorded under task 15.4. `station_cmd.cpp`, `terraform_cmd.cpp`, `town_cmd.cpp`, `tree_cmd.cpp`, `tunnelbridge_cmd.cpp` and `water_cmd.cpp` got their `@see` header references. Each reference is on the existing `@file` line, so line numbers stay valid.
 
 ### Group 16 - Strings and station search
 
 {{SIMPLE}}
-- [ ] 16.1 L-3: in `src/lang/english.txt`, end the `###length 32` block after its 32nd string, `STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR`. Insert these two lines between it and `STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT`:
+- [x] 16.1 L-3: in `src/lang/english.txt`, end the `###length 32` block after its 32nd string, `STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR`. Insert these two lines between it and `STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT`:
   ```text
 
   # Tooltips of the map layer button that name the shown layer
   ```
   The 32 strings of the block are indexed by toolbar widget, so the order inside it must not change.
-- [ ] 16.2 L-3: smallmap caption.
+- [x] 16.2 L-3: smallmap caption.
   - `src/lang/english.txt`: add this line after `STR_SMALLMAP_CAPTION`:
     ```text
     STR_SMALLMAP_CAPTION_WITH_LAYER                                 :{WHITE}Map - {STRING} - {STRING}
@@ -1285,7 +1323,7 @@ A command that returns a tuple returns `{ layer, 0 }` or `{ layer, 0, INVALID_TI
   - `src/smallmap_gui.cpp`, case `WID_SM_CAPTION`: `return GetString(STR_SMALLMAP_CAPTION_WITH_LAYER, STR_SMALLMAP_TYPE_CONTOURS + to_underlying(this->map_type), GetMapLayerName(this->layer));`
 
   Keep `STR_SMALLMAP_CAPTION`: 64 translations carry it, and strgen warns for every translated string that `english.txt` no longer has.
-- [ ] 16.3 L-3: extra viewport caption.
+- [x] 16.3 L-3: extra viewport caption.
   - `src/lang/english.txt`: add this line after `STR_EXTRA_VIEWPORT_TITLE`:
     ```text
     STR_EXTRA_VIEWPORT_TITLE_WITH_LAYER                             :{WHITE}Viewport {COMMA} - {STRING}
@@ -1293,8 +1331,8 @@ A command that returns a tuple returns `{ layer, 0 }` or `{ layer, 0, INVALID_TI
   - `src/viewport_gui.cpp`, case `WID_EV_CAPTION`: `return GetString(STR_EXTRA_VIEWPORT_TITLE_WITH_LAYER, this->window_number + 1, GetMapLayerName(this->viewport->layer));`
 
   Keep `STR_EXTRA_VIEWPORT_TITLE` for the same reason.
-- [ ] 16.4 L-3: in `CheckPortalEnd` (`src/layer_portal_cmd.cpp`), replace `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND` with `STR_ERROR_FLAT_LAND_REQUIRED`. Then delete the line `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND ...` from `src/lang/english.txt`. The epic added it, and no translation has it. `grep -rn STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND src` must print nothing.
-- [ ] 16.5 L-11: in `ForAllStationsRadius` (`src/station_kdtree.h`), compute the exclusive end row the same way as the start row, and drop the layer filter the box already enforces. Replace the code from `y1 = ...` to the end of the `FindContained` call with:
+- [x] 16.4 L-3: in `CheckPortalEnd` (`src/layer_portal_cmd.cpp`), replace `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND` with `STR_ERROR_FLAT_LAND_REQUIRED`. Then delete the line `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND ...` from `src/lang/english.txt`. The epic added it, and no translation has it. `grep -rn STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND src` must print nothing.
+- [x] 16.5 L-11: in `ForAllStationsRadius` (`src/station_kdtree.h`), compute the exclusive end row the same way as the start row, and drop the layer filter the box already enforces. Replace the code from `y1 = ...` to the end of the `FindContained` call with:
   ```cpp
   	//C6: the tree stores stacked Y, so the box is this layer's band, expressed through TileXYL.
   	y1 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_start), layer)));
@@ -1307,7 +1345,10 @@ A command that returns a tuple returns `{ layer, 0 }` or `{ layer, 0, INVALID_TI
   	});
   ```
   `TileXYL` has no asserts, and `TileXYL(0, Map::SizeY(), layer)` is the first tile of the next band, so the results are identical. Keep the lines that compute `layer`, `plane_y`, `y_start`, `y_end`, `x1` and `x2`.
-- [ ] 16.6 Build Debug and run the unit tests. Start the game from `build/` once (tell the user), open the smallmap and an extra viewport, and confirm both captions show the layer name. Record both results under this task.
+- [x] 16.6 Build Debug and run the unit tests. Start the game from `build/` once (tell the user), open the smallmap and an extra viewport, and confirm both captions show the layer name. Record both results under this task.
+  - 2026-10-03, build: exit 0, 0 distinct warnings; 106 of 106 passed. `english.txt` keeps its CRLF endings (6103 lines), and the `###length 32` block still holds its 32 strings in widget order. `grep -rn STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND src` prints nothing. `viewport_gui.cpp` and `station_kdtree.h` got their `@see` header references. The `ForAllStationsRadius` box gives the same end row as before: `Map::Size()` is `plane_size * layer_count`, so `TileXYL(0, Map::SizeY(), last)` is the end of storage.
+  - 2026-10-03, first game run (Debug, `-c baseline.cfg -g -G 1234`, keys sent as posted messages): `M` opened the smallmap; `V` crashed the game with `EXCEPTION_ACCESS_VIOLATION` in `ExtraViewportWindow::GetWidgetString` (`viewport_gui.cpp:73`). New finding H-6 (High), fixed here because task 16.3 changed that function. `InitNested` measures the caption while it sizes the widgets, before `InitializeViewport` creates `this->viewport`, and the caption read `this->viewport->layer`. The epic's version of the line (commit `d4abc0a7dc`) read the same pointer, so in the epic build every extra viewport crashed the game as it opened. Fix: the caption uses `MapLayer::Surface` while `this->viewport` is null, and the viewport's own layer on every later draw. The crash files `crash20261003125101.*` stay in `build/`.
+  - 2026-10-03, second game run after the fix: build exit 0 (25 s), 106 of 106 passed. The smallmap caption reads "Map - Contours - Surface" and the extra viewport "Viewport 1 - Surface" (`r2rvm2-d-captions.png`). After a posted click on the viewport's layer button it reads "Viewport 1 - Underground" and shows the underground plane (`r2rvm2-e-viewport-underground.png`). The game was closed without saving.
 
 ### Area Mandatory Reading - Scenario verification and closure
 
@@ -1326,8 +1367,8 @@ _Applies to Groups 17-18._
 | --- | --- | --- |
 | [r2rvm-review-map.md](r2rvm-review-map.md) | 425-438 | `### Test coverage gaps`: behaviours unit tests cannot reach, each covered by one scenario in Group 17. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 68-71 | `## Portal Contract` bullets Relocation, Visibility, Tile bits, and Track and road bits. Task 18.4 rewrites Relocation, Visibility, and Track and road bits per FD-1, FD-3 and FD-4. |
-| [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 180-186 | `## Completion Conditions` of the acceptance plan. Group 17 must not duplicate its multiplayer, savegame-matrix or performance runs; it proves only the review fixes. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 148-156, 291-297 | `## Deferred Points` (where open findings go) and `### Group 7`, whose task 7.3 remains the master plan's own two-year traffic run. |
+| [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 181-187 | `## Completion Conditions` of the acceptance plan. Group 17 must not duplicate its multiplayer, savegame-matrix or performance runs; it proves only the review fixes. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 131-139 | `## Deferred Points`, where open findings go. The two-year traffic run that was master-plan task 7.3 is now r2mlm10 task 2.8, which Group 17 does not duplicate either. |
 | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 47-66 | `## Outcome and Boundaries`: the Subsidies half of L-2 is planned there, and the Pause and Fast-forward half is out of its scope. Task 18.3 asks the user only about that half. |
 | [src/cachecheck.cpp](../../../../src/cachecheck.cpp) | 37-40, 60-72 | `CheckCaches` runs only when `IsVisibleSeverity(Facility::Desync, Severity::Warning)` is true, and logs `infrastructure cache mismatch`. This is the evidence for scenario S5. |
 | [src/console_cmds.cpp](../../../../src/console_cmds.cpp) | 1091-1134 | `ConResetCompany`: removes a company through `ChangeOwnershipOfCompanyItems`; server only, so S5 needs a local multiplayer server. |
@@ -1336,7 +1377,16 @@ _Applies to Groups 17-18._
 ### Group 17 - Scenario runs with the user
 
 {{MEDIUM}}
-- [ ] 17.1 Prepare the Debug runs: the baseset in `build/baseset/` (task 5.1), a 256x256 temperate game, and the desync cache check enabled (`-d desync=2`, or the level found through Consult on Demand). Tell the user where the debug output appears.
+- [x] 17.1 Prepare the Debug runs: the baseset in `build/baseset/` (task 5.1), a 256x256 temperate game, and the desync cache check enabled (`-d desync=2`, or the level found through Consult on Demand). Tell the user where the debug output appears.
+  - 2026-10-03, done. Entry gate: Groups 1 to 7 and 8 to 16 are all checked (0 open boxes), and the latest Debug build passed 106 of 106 (task 16.6).
+  - Set-up: `build/baseset/` holds the OpenGFX files of task 5.1. `build/scenario.cfg` sets `map_x = 8`, `map_y = 8` and `landscape = temperate`.
+  - Start command, from Git Bash: `bash "$TOOLS/run_game_logged.sh" /d/Codez/Sandbox/OpenTTD/build Debug scenario-logs/<scenario>.log -c scenario.cfg -g -G <seed>`. `tools/run_game_logged.sh` (new) starts the Debug game through a console-subsystem copy, as `run_dedicated.sh` does. The game window opens and no console window appears. Default levels: `desync=2,misc=3,sl=2,net=2`.
+  - Where the output goes:
+    - `desync=2` (Warning) is the level at which `CheckCaches` runs. `DebugPrint` writes every desync message, including `infrastructure cache mismatch`, to `build/save/autosave/commands-out.log`, never to the console.
+    - The other facilities go to `build/scenario-logs/<scenario>.log`.
+    - At desync 1 or more, the game also saves `dmp_cmds_*.sav` into `build/save/autosave/`: once at world creation, then every 32 game days.
+    - An assert opens the "Fatal Application Failure" dialog and writes `crash*.json.log`, `.dmp`, `.sav` and `.png` into `build/`.
+  - Smoke run: seed 4242. The window drew a 256x256 temperate world, and the log got 359 lines. `commands-out.log` recorded `new_map` and the dumps. The run was stopped by force (exit 127); a normal quit exits 0.
 - [ ] 17.2 S1 (C-1, FD-1, FD-3), with the user:
   - build a rail portal whose surface end is at height 3 or more, with a surface station and an underground station;
   - run one train for one in-game year at fast forward;
@@ -1381,11 +1431,11 @@ _Applies to Groups 17-18._
 {{SIMPLE}}
 - [ ] 18.1 Build RelWithDebInfo, then repeat tasks 5.3 to 5.5 of [r2rvm-review-map.md](r2rvm-review-map.md) on the final build with the save prefix `final_`. Record the I-6 and I-7 evidence (the digest lines) under this task.
 - [ ] 18.2 M-9: ask the user whether the cost of three full planes (memory and tick time) is accepted for version 1, and record the answer. If it is not, add the chosen mitigation to master plan `## Deferred Points`; it is not implemented here.
-- [ ] 18.3 L-2: the Subsidies half belongs to r2mlm11 (master-plan task 2.5). Ask the user whether the Pause and Fast-forward half (these buttons appear in one row only for 15 to 20 buttons) is accepted or deferred, and record the answer. If the user wants a change, apply it in `toolbar_gui.cpp` keeping the `static_assert`s, then build Debug.
+- [ ] 18.3 L-2: the Subsidies half belongs to r2mlm11. Ask the user whether the Pause and Fast-forward half (these buttons appear in one row only for 15 to 20 buttons) is accepted or deferred, and record the answer. If the user wants a change, apply it in `toolbar_gui.cpp` keeping the `static_assert`s, then build Debug.
 - [ ] 18.4 Rewrite the Relocation, Visibility, and Track and road bits bullets of r2mlm7 `## Portal Contract` per FD-1, FD-3 and FD-4. Ask the user before adding any sentence to master-plan AD-8.
-- [ ] 18.5 Fill the Status column of `### Severity index` in [r2rvm-review-map.md](r2rvm-review-map.md) with `Fixed (task x.y)`, `Deferred (user, date)` or `Open` for every row. That includes the L-11 reservation-drawing nit, which waits for the r2mlm9 art swap.
+- [ ] 18.5 Fill the Status column of `### Severity index` in [r2rvm-review-map.md](r2rvm-review-map.md) with `Fixed (task x.y)`, `Deferred (user, date)` or `Open` for every row. That includes the L-11 reservation-drawing nit, which waits for the r2mlm9 art swap. Add a row for L-13, found in task 11.7 (`CmdConvertRail` portal case skips `affected_trains`), and add its `####` entry at the end of `### Low findings`. Add a row for H-6, found and fixed in task 16.6 (the extra viewport caption read a null viewport), with `Fixed (task 16.6)` and a `####` entry at the end of `### High findings`.
 - [ ] 18.6 Copy every `Open` or `Deferred` finding, with its ID, to master plan `## Deferred Points`.
-- [ ] 18.7 Add a note under master plan `### Group 7` that the r2rvm fixes are in and r2mlm10 may start. Do not check master-plan tasks this plan did not execute.
+- [ ] 18.7 Add a note under the entry gate of r2mlm10 (`### Area Mandatory Reading - Multiplayer`) that the r2rvm fixes are in and r2mlm10 may start. Do not check r2mlm10 tasks this plan did not execute.
 
 ## Consult on Demand
 
@@ -1414,11 +1464,11 @@ This table records what shaped this plan:
 | File name | Sections or Line Ranges used while planning | Planning contribution |
 | --- | --- | --- |
 | [r2rvm-review-map.md](r2rvm-review-map.md) | `## Review Findings`, `## Fix Decisions`, `### Commands used by every group` | Source of every finding ID, severity, location and fix decision the tasks of this file cite. On 2026-10-03 the plan was split at Group 8; Groups 8 to 18 moved here unchanged, with their numbers. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-76, 99-102, 119-128, 148-177, 291-297 | ADs and invariants the fixes must respect; conventions and build commands reused by reference; `## Deferred Points` and `### Group 7`, which tasks 18.6 and 18.7 update, and whose task 7.3 is not duplicated. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 65-75, 98-101, 118-127, 131-170 | ADs and invariants the fixes must respect; conventions and build commands reused by reference; `## Deferred Points`, which task 18.6 updates; the former master-plan task 7.3, now r2mlm10 task 2.8, which is not duplicated. |
 | `build-probe-tree/` (scratch copy, gitignored) | `src/`, `build/build-round2.log` to `build-round5.log`, `ctest-debug-2.log` | The probe build of 2026-10-03: the nine edits of Group 3, the error each removed, and 103 of 103 unit tests passing in Debug. Its line numbers are the "after Group 3" numbers used from Group 4 on. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 49-72 | `## Outcome and Boundaries` and `## Portal Contract`: the portal semantics FD-1, FD-3 and FD-4 refine, and the exported names that stay stable apart from the rename in task 11.1. |
 | [r2mlm3-layer-call-site-migration.md](r2mlm3-layer-call-site-migration.md) | 237-298, 595-616 | The 52 `C1 kept` rows of `afterload.cpp` loops and their single-plane rationale, which FD-9 supersedes and task 14.6 rewrites. |
-| [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 180-186 | Acceptance scope that Group 17 must not duplicate. |
+| [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 181-187 | Acceptance scope that Group 17 must not duplicate. |
 | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 47-66 | The user's 2026-10-03 fix for the Subsidies half of L-2, which reduced task 18.3 to the Pause and Fast-forward question. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | 1-416 (after Group 3) | The whole portal command file, read to write the snippets of Groups 8 and 11 (and of Group 6 in r2rvm) against its current shape, including the M-11 order of `TileInLayer` before `CheckPortalEnd`. |
 | [src/train_cmd.cpp](../../../../src/train_cmd.cpp) | 1646-1679, 2432-2546, 3386-3716, 3975-4051 | `UpdateStatusAfterSwap` calls `VehicleEnterTile` after a reversal, which made a position-only visibility rule (FD-3) safe. The reservation clearing needs no change (task 10.4). The controller and line-end code are the only train queries that pass a side (tasks 9.1, 9.2). |

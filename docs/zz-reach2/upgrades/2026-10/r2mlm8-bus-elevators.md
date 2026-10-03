@@ -38,9 +38,9 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the bus elevator is a road portal; vehicles keep their heading and are relocated at the shaft edge without wormhole state. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 115-117 | `### AD-12 Version-1 scope`: road elevators carry road vehicles only (no trams); Space has no construction. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 98-100 | `### AD-8 Cross-layer movement only through layer portals`: the bus elevator is a road portal; vehicles keep their heading and are relocated at the shaft edge without wormhole state. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 114-116 | `### AD-12 Version-1 scope`: road elevators carry road vehicles only (no trams); Space has no construction. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract`: pair, directions, neighbour mapping, relocation, visibility, tile bits and the command signature. This plan adds road-specific behaviour on top and must not redefine any of it. |
 | [docs/zz-reach2/architecture/vehicles/road-vehicles.md](../../architecture/vehicles/road-vehicles.md) | 7-44 | `## Tick` and `## One step`: the road controller loop, `IndividualRoadVehicleController`, frame tables, `VehicleEnterTile` refusals and `RoadFindPathToDest`. Every traversal change hooks into this step. |
 | [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | Live definitions; no fixed range | Produced by r2mlm7 Groups 1 and 3: `IsLayerPortalTile`, `GetLayerPortalTransportType`, `GetLayerPortalDoorDirection`, `GetLayerPortalNextTile`, `IsLayerPortalShaftExit` are authoritative. |

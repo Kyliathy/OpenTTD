@@ -38,10 +38,10 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the pair model, door side and shaft side, drive-through traversal, the single neighbour function and the no-wormhole movement rule. This plan owns that contract; r2mlm8 and r2mlm9 only consume it. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 87-89 | `### AD-5 Distances are plane distances`: YAPF estimates must use plane coordinates or a portal makes the heuristic inconsistent. Group 3 enforces it in `OctileDistanceCost`. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants`, in particular I-3 (only the portal neighbour function crosses layers) and I-8 (every end has a reversed pair). |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 98-100 | `### AD-8 Cross-layer movement only through layer portals`: the pair model, door side and shaft side, drive-through traversal, the single neighbour function and the no-wormhole movement rule. This plan owns that contract; r2mlm8 and r2mlm9 only consume it. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 86-88 | `### AD-5 Distances are plane distances`: YAPF estimates must use plane coordinates or a portal makes the heuristic inconsistent. Group 3 enforces it in `OctileDistanceCost`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 118-127 | `## Cross-plan Invariants`, in particular I-3 (only the portal neighbour function crosses layers) and I-8 (every end has a reversed pair). |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract` of this plan: tile bits, geometry, neighbour mapping, relocation rule and command signature. The authoritative handoff to r2mlm8 and r2mlm9. |
 | [docs/zz-reach2/architecture/landscape/archi-landscape.md](../../architecture/landscape/archi-landscape.md) | 183-207 | `## Dispatch`: every tile type is one `TileTypeProcs` row in `_tile_type_procs`; slots after `Object` are `nullptr`. The new type fills slot 11 and must implement every proc that has no safe default. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 and r2mlm4: `MultiLayerMap::TileInLayer`, `GetRules`, `CheckLayerAllowsConstruction` (with `MapLayerConstruction::LayerPortal`). The portal code builds on these and adds no layer arithmetic of its own. |

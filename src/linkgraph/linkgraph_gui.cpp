@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file linkgraph_gui.cpp Implementation of linkgraph overlay GUI. */
+/** @file linkgraph_gui.cpp Implementation of linkgraph overlay GUI. @see docs/zz-reach2/architecture/linkgraph/archi-linkgraph.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
 #include "../window_gui.h"
@@ -80,6 +80,8 @@ void LinkGraphOverlay::RebuildCache()
 
 	for (const Station *sta : Station::Iterate()) {
 		if (sta->spread.IsEmpty()) continue;
+		//FD-8: a station on another layer has no place in this window.
+		if (!this->IsStationInLayer(sta)) continue;
 
 		Point pta = this->GetStationMiddle(sta);
 
@@ -106,6 +108,7 @@ void LinkGraphOverlay::RebuildCache()
 				/* Show links between stations of selected companies or "neutral" ones like oilrigs. */
 				if (stb->owner != OWNER_NONE && sta->owner != OWNER_NONE && !this->company_mask.Test(stb->owner)) continue;
 				if (stb->spread.IsEmpty()) continue;
+				if (!this->IsStationInLayer(stb)) continue;
 
 				if (!this->IsLinkVisible(pta, this->GetStationMiddle(stb), &dpi)) continue;
 
@@ -282,12 +285,12 @@ void LinkGraphOverlay::DrawLinks(const DrawPixelInfo *dpi) const
 	for (const auto &i : this->cached_links) {
 		if (!Station::IsValidID(i.first)) continue;
 		const Station *from = Station::Get(i.first);
-		//The main view draws a link only when both stations share the layer on screen. The smallmap filters in GetStationMiddle.
-		if (this->window->viewport != nullptr && GetTileLayer(from->xy) != this->window->viewport->layer) continue;
+		//FD-8: a link is drawn only when both stations are on the shown layer. The cache may predate a layer change.
+		if (!this->IsStationInLayer(from)) continue;
 		Point pta = this->GetStationMiddle(from);
 		for (const auto &j : i.second) {
 			if (!Station::IsValidID(j.first)) continue;
-			if (this->window->viewport != nullptr && GetTileLayer(Station::Get(j.first)->xy) != this->window->viewport->layer) continue;
+			if (!this->IsStationInLayer(Station::Get(j.first))) continue;
 			Point ptb = this->GetStationMiddle(Station::Get(j.first));
 			if (!this->IsLinkVisible(pta, ptb, dpi, width + 2)) continue;
 			this->DrawContent(pta, ptb, j.second);
@@ -368,16 +371,18 @@ bool LinkGraphOverlay::ShowTooltip(Point pt, TooltipCloseCondition close_cond)
 {
 	for (auto i(this->cached_links.crbegin()); i != this->cached_links.crend(); ++i) {
 		if (!Station::IsValidID(i->first)) continue;
-		Point pta = this->GetStationMiddle(Station::Get(i->first));
-		//A station the smallmap is not showing has no line to measure.
-		if (pta.x <= INT32_MIN / 4) continue;
+		const Station *sta = Station::Get(i->first);
+		//FD-8: a station on another layer has no line to measure.
+		if (!this->IsStationInLayer(sta)) continue;
+		Point pta = this->GetStationMiddle(sta);
 		for (auto j(i->second.crbegin()); j != i->second.crend(); ++j) {
 			if (!Station::IsValidID(j->first)) continue;
 			if (i->first == j->first) continue;
 
 			/* Check the distance from the cursor to the line defined by the two stations. */
-			Point ptb = this->GetStationMiddle(Station::Get(j->first));
-			if (ptb.x <= INT32_MIN / 4) continue;
+			const Station *stb = Station::Get(j->first);
+			if (!this->IsStationInLayer(stb)) continue;
+			Point ptb = this->GetStationMiddle(stb);
 			float dist = std::abs((int64_t)(ptb.x - pta.x) * (int64_t)(pta.y - pt.y) - (int64_t)(pta.x - pt.x) * (int64_t)(ptb.y - pta.y)) /
 				std::sqrt((int64_t)(ptb.x - pta.x) * (int64_t)(ptb.x - pta.x) + (int64_t)(ptb.y - pta.y) * (int64_t)(ptb.y - pta.y));
 			const auto &link = j->second;
@@ -430,6 +435,28 @@ Point LinkGraphOverlay::GetStationMiddle(const Station *st) const
 		/* assume this is a smallmap */
 		return GetSmallMapStationMiddle(this->window, st);
 	}
+}
+
+/**
+ * Layer of the window this overlay draws into.
+ * FD-8: a viewport shows its own layer, and a smallmap shows the layer chosen on it.
+ * @return The layer whose stations and links are shown.
+ */
+MapLayer LinkGraphOverlay::GetLayer() const
+{
+	if (this->window->viewport != nullptr) return this->window->viewport->layer;
+	/* assume this is a smallmap */
+	return GetSmallMapLayer(this->window);
+}
+
+/**
+ * Whether a station is on the layer this overlay shows.
+ * @param st Station to test.
+ * @return True when the station sign is on the shown layer.
+ */
+bool LinkGraphOverlay::IsStationInLayer(const Station *st) const
+{
+	return GetTileLayer(st->xy) == this->GetLayer();
 }
 
 /**

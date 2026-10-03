@@ -6,7 +6,7 @@
  */
 
 /**
- * @file tunnelbridge_cmd.cpp This file deals with tunnels and bridges (non-gui stuff).
+ * @file tunnelbridge_cmd.cpp This file deals with tunnels and bridges (non-gui stuff). @see docs/zz-reach2/architecture/landscape/tunnelbridge-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  * @todo separate this file into two.
  */
 
@@ -311,6 +311,8 @@ static CommandCost CheckBuildAbove(TileIndex tile, DoCommandFlags flags, Axis ax
  */
 CommandCost CmdBuildBridge(DoCommandFlags flags, TileIndex tile_end, TileIndex tile_start, TransportType transport_type, BridgeType bridge_type, RailType railtype, RoadType roadtype)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile_start, tile_end); layer.Failed()) return layer;
 	CompanyID company = _current_company;
 
 	for (TileIndex t : {tile_start, tile_end}) {

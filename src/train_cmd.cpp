@@ -3420,7 +3420,8 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 
 				/* A shaft exit is relocated onto the pair. DiagdirBetweenTiles cannot see across layers. */
 				DiagDirection moving = DirToDiagDir(v->GetMovingDirection());
-				if (IsLayerPortalShaftExit(gp.old_tile, moving)) {
+				bool shaft_step = IsLayerPortalShaftExit(gp.old_tile, moving);
+				if (shaft_step) {
 					TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y);
 					gp.new_tile = GetLayerPortalPairTile(gp.old_tile);
 					enterdir = moving;
@@ -3432,7 +3433,9 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 
 				/* Get the status of the tracks in the new tile and mask
 				 * away the bits that aren't reachable. */
-				TrackStatus ts = GetTileTrackStatus(gp.new_tile, TransportType::Rail, RoadTramType::Invalid, ReverseDiagDir(enterdir));
+				//FD-4: the pair is entered through its shaft, a side its track status refuses, so that query has no side.
+				DiagDirection side = shaft_step ? DiagDirection::Invalid : ReverseDiagDir(enterdir);
+				TrackStatus ts = GetTileTrackStatus(gp.new_tile, TransportType::Rail, RoadTramType::Invalid, side);
 				TrackdirBits reachable_trackdirs = DiagdirReachesTrackdirs(enterdir);
 
 				TrackdirBits trackdirbits = ts.trackdirs & reachable_trackdirs;
@@ -4017,9 +4020,11 @@ static bool TrainCheckIfLineEnds(Train *moving_front, bool reverse)
 	DiagDirection dir = VehicleExitDir(moving_front->GetMovingDirection(), moving_front->track);
 	/* Calculate next tile. A shaft exit continues on the pair instead of ending the line. */
 	TileIndex tile = GetLayerPortalNextTile(moving_front->tile, dir);
+	//FD-4: the pair is entered through its shaft, a side its track status refuses, so that query has no side.
+	DiagDirection side = IsLayerPortalShaftExit(moving_front->tile, dir) ? DiagDirection::Invalid : ReverseDiagDir(dir);
 
 	/* Determine the track status on the next tile */
-	TrackStatus ts = GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid, ReverseDiagDir(dir));
+	TrackStatus ts = GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid, side);
 	TrackdirBits reachable_trackdirs = DiagdirReachesTrackdirs(dir);
 
 	TrackdirBits trackdirbits = ts.trackdirs & reachable_trackdirs;

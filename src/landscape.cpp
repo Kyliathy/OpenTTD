@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file landscape.cpp Functions related to the landscape (slopes etc.). */
+/** @file landscape.cpp Functions related to the landscape (slopes etc.). @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 /** @defgroup SnowLineGroup Snowline functions and data structures */
 
@@ -331,6 +331,7 @@ int GetSlopePixelZ(int x, int y, bool ground_vehicle)
  *
  * @param x World X coordinate in tile "units", may be outside the map.
  * @param y World Y coordinate in tile "units", may be outside the map.
+ * @param layer Layer whose band and edge heights are used.
  * @return World Z coordinate at tile ground level, including slopes and foundations.
  */
 int GetSlopePixelZOutsideMap(int x, int y, MapLayer layer)
@@ -340,7 +341,11 @@ int GetSlopePixelZOutsideMap(int x, int y, MapLayer layer)
 	if (IsInsideBS(x, 0, Map::SizeX() * TILE_SIZE) && IsInsideBS(y, y_base, Map::SizeY() * TILE_SIZE)) {
 		return GetSlopePixelZ(x, y, false);
 	} else {
-		return _tile_type_procs[TileType::Void]->get_slope_pixel_z_proc(INVALID_TILE, x, y, false);
+		//L-1: past this layer's band, the edge heights of this layer decide. The unsigned arithmetic is the one the Void proc uses.
+		uint ux = static_cast<uint>(x);
+		uint uy = static_cast<uint>(y);
+		auto [tileh, z] = GetTilePixelSlopeOutsideMap(ux >> 4, uy >> 4, layer);
+		return z + GetPartialPixelZ(ux & 0xF, uy & 0xF, tileh);
 	}
 }
 
@@ -761,6 +766,8 @@ CommandCost CmdLandscapeClear(DoCommandFlags flags, TileIndex tile)
  */
 std::tuple<CommandCost, Money> CmdClearArea(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, start_tile); layer.Failed()) return { layer, 0 };
 	if (start_tile >= Map::Size()) return { CMD_ERROR, 0 };
 
 	Money money = GetAvailableMoneyForCommand();

@@ -38,9 +38,9 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-75 | `### AD-2 Stacked-plane addressing`: world coordinates are stacked, so a layer is a band of the world Y axis and a viewport shows a layer by looking at that band. Every drawing and picking change in this plan follows from it. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 95-97 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state; nothing in this plan may be read by commands or ticks (I-4). |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 65-74 | `### AD-2 Stacked-plane addressing`: world coordinates are stacked, so a layer is a band of the world Y axis and a viewport shows a layer by looking at that band. Every drawing and picking change in this plan follows from it. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 94-96 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state; nothing in this plan may be read by commands or ticks (I-4). |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | 15-58 | `## Tile to screen` and `## What one draw collects`: `RemapCoords`, the row/column scan in `ViewportAddLandscape`, and the order landscape, vehicles, signs, text effects, sort, draw. The band test, the filters and the layer passed through `_vd` all hang off this pipeline. |
 | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | 147-153 | `## Invariants`: a viewport reads the map and emits sprites, and never mutates tiles, vehicles or companies. Holds for every task here. |
 | [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | Live definitions; no fixed range | Produced by r2mlm1 Group 2 and bound to the controller by r2mlm2 Group 5. `SetViewportLayer` and `CycleMainViewportLayer` are the only entry points for switching; Group 1 replaces the interim body of `SetViewportLayer`. |
@@ -236,7 +236,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [r2mlm4-layer-world-lifecycle-and-savegame.md](r2mlm4-layer-world-lifecycle-and-savegame.md) | 147-147 | Task 4.8 of r2mlm4 and the gating matrix recorded beneath it during execution (the list grows below this line): the commands, kinds and allowed layers verified in task 8.4. Read only that task's list. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 2006-2186 | `MainToolbarWindow`: the icon and tooltip refresh added by r2mlm1 Group 5, now reflecting real switching. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by master task 1.8; rendering changes must not alter saved surface data. |
+| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`); rendering changes must not alter saved surface data. |
 
 ### Group 8 - Button finish and verification
 

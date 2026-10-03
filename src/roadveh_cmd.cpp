@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file roadveh_cmd.cpp Handling of road vehicles. */
+/** @file roadveh_cmd.cpp Handling of road vehicles. @see docs/zz-reach2/architecture/vehicles/road-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -635,15 +635,22 @@ static void StartRoadVehSound(const RoadVehicle *v)
 	}
 }
 
+/** Search state of RoadVehFindCloseTo: the point and heading searched from, and the closest blocker found so far. */
 struct RoadVehFindData {
-	int x;
-	int y;
-	const Vehicle *veh;
-	Vehicle *best;
-	uint best_diff;
-	Direction dir;
+	int x; ///< World X the searching vehicle is about to occupy.
+	int y; ///< World Y the searching vehicle is about to occupy.
+	int z; ///< Height the searching vehicle has at (x, y).
+	const Vehicle *veh; ///< The searching vehicle.
+	Vehicle *best; ///< Closest blocking vehicle found so far.
+	uint best_diff; ///< Manhattan distance of #best, UINT_MAX while none is found.
+	Direction dir; ///< Heading the searching vehicle will have at (x, y).
 };
 
+/**
+ * Test one vehicle as a blocker for a road vehicle search, and keep it when it is the closest so far.
+ * @param v Vehicle to test.
+ * @param rvf Search state, updated when v blocks.
+ */
 static void FindClosestBlockingRoadVeh(Vehicle *v, RoadVehFindData *rvf)
 {
 	static constexpr DirectionIndexArray<int8_t> dist_x{-4, -8, -4, -1, 4, 8, 4, 1};
@@ -656,7 +663,7 @@ static void FindClosestBlockingRoadVeh(Vehicle *v, RoadVehFindData *rvf)
 	if (v->type != VehicleType::Road || v->IsInDepot() || rvf->veh->First() == v->First()) return;
 
 	/* Not close when at a different height or when going in a different direction. */
-	if (abs(v->z_pos - rvf->veh->z_pos) >= 6 || v->direction != rvf->dir) return;
+	if (abs(v->z_pos - rvf->z) >= 6 || v->direction != rvf->dir) return;
 
 	/* We 'return' the closest vehicle, in distance and then VehicleID as tie-breaker. */
 	uint diff = abs(x_diff) + abs(y_diff);
@@ -667,12 +674,22 @@ static void FindClosestBlockingRoadVeh(Vehicle *v, RoadVehFindData *rvf)
 		return diff < dist && diff >= 0;
 	};
 
+	//A vehicle blocks only when it sits just ahead on both axes, within the reach of its heading; one beside or behind lets the searcher pass.
 	if (IsCloseOnAxis(dist_x[v->direction], x_diff) && IsCloseOnAxis(dist_y[v->direction], y_diff)) {
 		rvf->best = v;
 		rvf->best_diff = diff;
 	}
 }
 
+/**
+ * Find the road vehicle that blocks a road vehicle from moving to a point.
+ * @param v Road vehicle that wants to move.
+ * @param x World X it wants to occupy.
+ * @param y World Y it wants to occupy.
+ * @param dir Heading it will have there.
+ * @param update_blocked_ctr Whether a found blocker counts towards the drive-through fallback.
+ * @return The blocking vehicle, or nullptr when the way is free or the fallback lets v drive through.
+ */
 static RoadVehicle *RoadVehFindCloseTo(RoadVehicle *v, int x, int y, Direction dir, bool update_blocked_ctr = true)
 {
 	RoadVehFindData rvf;
@@ -682,6 +699,8 @@ static RoadVehicle *RoadVehFindCloseTo(RoadVehicle *v, int x, int y, Direction d
 
 	rvf.x = x;
 	rvf.y = y;
+	//M-10: a shaft step lands on the pair, whose height may differ. Look for blockers at the height the vehicle will have there.
+	rvf.z = GetTileLayer(TileVirtXY(x, y)) != GetTileLayer(v->tile) ? GetSlopePixelZ(x, y, true) : v->z_pos;
 	rvf.dir = dir;
 	rvf.veh = v;
 	rvf.best_diff = UINT_MAX;
@@ -938,6 +957,11 @@ static Trackdir RoadFindPathToDest(RoadVehicle *v, TileIndex tile, DiagDirection
 				}
 			}
 		}
+	} else if (IsLayerPortalTile(tile)) {
+		//FD-4: an end is entered through its door, out of the shaft from its pair, or by finishing a turn on the end itself. Any other entry comes from behind on the same layer; it gets no trackdir, so the vehicle turns around instead of driving through the end.
+		bool through_door = enterdir == GetLayerPortalShaftDirection(tile);
+		bool from_pair = v->tile == GetLayerPortalPairTile(tile);
+		if (!through_door && !from_pair && v->tile != tile) ts.trackdirs.Reset();
 	}
 	/* The above lookups should be moved to GetTileTrackStatus in the
 	 * future, but that requires more changes to the pathfinder and other
@@ -1235,12 +1259,6 @@ bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev)
 			v->cur_speed = 0;
 			return false;
 		}
-		//An elevator is a drive-through. A U-turn on it is refused and the vehicle waits.
-		if (IsReversingRoadTrackdir(dir) && (IsLayerPortalTile(v->tile) || IsLayerPortalTile(tile))) {
-			v->cur_speed = 0;
-			return false;
-		}
-
 again:
 		uint start_frame = RVC_DEFAULT_START_FRAME;
 		if (IsReversingRoadTrackdir(dir)) {

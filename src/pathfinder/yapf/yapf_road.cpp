@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_road.cpp The road pathfinding. */
+/** @file yapf_road.cpp The road pathfinding. @see docs/zz-reach2/architecture/pathfinder/archi-pathfinder-road.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../../stdafx.h"
 #include "yapf.hpp"
@@ -36,6 +36,9 @@ protected:
 
 	int SlopeCost(TileIndex tile, TileIndex next_tile, Trackdir)
 	{
+		//L-5: an elevator ride changes the layer, and the heights of two layers are not a slope.
+		if (GetTileLayer(tile) != GetTileLayer(next_tile)) return 0;
+
 		/* height of the center of the current tile */
 		int x1 = TileX(tile) * TILE_SIZE;
 		int y1 = TileY(tile) * TILE_SIZE;

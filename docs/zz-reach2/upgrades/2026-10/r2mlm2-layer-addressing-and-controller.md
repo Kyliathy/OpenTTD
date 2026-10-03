@@ -38,11 +38,11 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-81 | `### AD-2 Stacked-plane addressing` and `### AD-3 Two controllers`: the tile formula, stacked `TileY`, the new primitives `TilePlaneY` / `GetTileLayer` / `TileXYL`, and the split between `Map` (storage, plane geometry) and `MultiLayerMap` (layer semantics). This plan implements both; every signature here must match. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 87-89 | `### AD-5 Distances are plane distances`: the `Distance*` functions ignore the layer; same-layer needs are explicit. Group 3 implements it. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 111-113 | `### AD-11 Behaviour-neutral staging`: live games stay at one layer during this plan; three layers are exercised only in unit tests. Every default argument introduced here keeps `layer_count == 1`. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants` I-1 to I-5: the properties the unit tests in Group 6 assert. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: comment style, naming, file rules, build and test commands. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 65-80 | `### AD-2 Stacked-plane addressing` and `### AD-3 Two controllers`: the tile formula, stacked `TileY`, the new primitives `TilePlaneY` / `GetTileLayer` / `TileXYL`, and the split between `Map` (storage, plane geometry) and `MultiLayerMap` (layer semantics). This plan implements both; every signature here must match. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 86-88 | `### AD-5 Distances are plane distances`: the `Distance*` functions ignore the layer; same-layer needs are explicit. Group 3 implements it. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 110-112 | `### AD-11 Behaviour-neutral staging`: live games stay at one layer during this plan; three layers are exercised only in unit tests. Every default argument introduced here keeps `layer_count == 1`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 118-127 | `## Cross-plan Invariants` I-1 to I-5: the properties the unit tests in Group 6 assert. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: comment style, naming, file rules, build and test commands. |
 | [src/map_func.h](../../../../src/map_func.h) | 198-432 | `struct Map` and the free functions `TileXY`, `TileDiffXY`, `TileVirtXY`, `TileX`, `TileY`. This is the code being extended; `TileY`, `TileXY` and `TileVirtXY` keep their formulas (stacked semantics), only documentation and the `Map` statics change. |
 
 ## Outcome and Boundaries
@@ -144,7 +144,7 @@ _Applies to Groups 6-7._
 | [src/tests/tilearea.cpp](../../../../src/tests/tilearea.cpp) | 1-60 | Catch2 test shape that allocates a map directly with `Map::Allocate` and checks `TileX` / `TileY`; the new test file follows it. |
 | [src/tests/CMakeLists.txt](../../../../src/tests/CMakeLists.txt) | 1-23 | `add_test_files`: where `map_layer.cpp` is registered. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by Group 4. Every `MultiLayerMap` member named in `## Outcome and Boundaries` must exist before Group 6 starts; if one is missing, finish Group 4 first. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by master task 1.8. Reference for the neutrality check in task 7.3. |
+| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for the neutrality check in task 7.3. |
 
 ### Group 6 - Unit tests
 
@@ -162,7 +162,7 @@ _Applies to Groups 6-7._
 {{SIMPLE}}
 - [ ] 7.1 Build both configurations with no new warnings; run `ctest` and confirm all baseline tests plus the new ones pass.
 - [ ] 7.2 Start, save and reload a new game in a Debug build; confirm no assert fires (the new `TileAdd` layer assert included).
-- [ ] 7.3 Regenerate the master's four baseline saves with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan.
+- [ ] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan.
 
 ## Consult on Demand
 

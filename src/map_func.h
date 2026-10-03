@@ -442,7 +442,7 @@ inline TileIndexDiff TileDiffXY(int x, int y)
 	return TileIndex{(y >> 4 << Map::LogX()) + (x >> 4)};
 }
 
-TileIndex TileVirtXYClampedToMap(int x, int y);
+TileIndex TileVirtXYClampedToMap(int x, int y, MapLayer layer = MapLayer::Surface);
 
 /**
  * Get the X component of a tile

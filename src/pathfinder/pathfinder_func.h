@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file pathfinder_func.h General functions related to pathfinders. */
+/** @file pathfinder_func.h General functions related to pathfinders. @see docs/zz-reach2/architecture/pathfinder/archi-pathfinder.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef PATHFINDER_FUNC_H
 #define PATHFINDER_FUNC_H
@@ -31,7 +31,8 @@ inline TileIndex CalcClosestStationTile(StationID station, TileIndex tile, Stati
 	if (ta.IsEmpty()) return st->xy;
 
 	uint minx = TileX(ta.tile);  // topmost corner of station
-	uint miny = TileY(ta.tile);
+	//L-4: the station area lives in one layer, so its rows are counted inside that plane.
+	uint miny = TilePlaneY(ta.tile);
 	uint maxx = minx + ta.w - 1; // lowermost corner of station
 	uint maxy = miny + ta.h - 1;
 
@@ -40,10 +41,10 @@ inline TileIndex CalcClosestStationTile(StationID station, TileIndex tile, Stati
 	uint x = ClampU(TileX(tile), minx, maxx);
 
 	/* same for y coordinate, see above comment */
-	uint y = ClampU(TileY(tile), miny, maxy);
+	uint y = ClampU(TilePlaneY(tile), miny, maxy);
 
 	/* return the tile of our target coordinates */
-	return TileXY(x, y);
+	return TileXYL(x, y, GetTileLayer(ta.tile));
 }
 
 /**

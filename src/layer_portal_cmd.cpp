@@ -19,6 +19,7 @@
 #include "company_gui.h"
 #include "road_cmd.h"
 #include "road_func.h"
+#include "road_internal.h"
 #include "rail.h"
 #include "signal_func.h"
 #include "vehicle_func.h"
@@ -69,6 +70,34 @@ void TranslateIntoLayerPortalPair(TileIndex portal, int &x, int &y)
 	x -= step.x * static_cast<int>(TILE_SIZE);
 	y -= step.y * static_cast<int>(TILE_SIZE);
 	assert(TileVirtXY(x, y) == GetLayerPortalPairTile(portal));
+}
+
+/**
+ * Distance of a point from the door edge of a portal end, measured along the shaft heading.
+ * @param shaft Shaft direction of the end.
+ * @param x World X of the point.
+ * @param y World Y of the point.
+ * @return 0 at the door edge, TILE_SIZE - 1 at the shaft edge.
+ */
+static uint8_t GetLayerPortalDepth(DiagDirection shaft, int x, int y)
+{
+	uint8_t pos = static_cast<uint8_t>((DiagDirToAxis(shaft) == Axis::X ? x : y) & TILE_UNIT_MASK);
+	//NE and NW head towards smaller coordinates, so their door edge is the high end of the tile.
+	if (shaft == DiagDirection::NE || shaft == DiagDirection::NW) return static_cast<uint8_t>(TILE_SIZE - 1 - pos);
+	return pos;
+}
+
+/**
+ * Whether a vehicle at a point on a portal end is inside the shaft, so it is not drawn.
+ * The point alone decides, so a turn or a reversal on the end keeps the state right.
+ * @param shaft Shaft direction of the end.
+ * @param x World X of the point.
+ * @param y World Y of the point.
+ * @return True from the tunnel visibility frame of that shaft to the shaft edge.
+ */
+bool IsHiddenInLayerPortal(DiagDirection shaft, int x, int y)
+{
+	return GetLayerPortalDepth(shaft, x, y) >= _tunnel_visibility_frame[shaft];
 }
 
 /**
@@ -134,62 +163,79 @@ static TrackStatus GetTileTrackStatus_LayerPortal(TileIndex tile, TransportType 
 {
 	TransportType transport = GetLayerPortalTransportType(tile);
 	if (transport != mode) return {};
+	//A road end answers only the road kind it carries. Elevators carry road and never tram, so a tram query finds nothing.
 	if (transport == TransportType::Road && !HasTileRoadType(tile, sub_mode)) return {};
-	//The axis is open in both directions. A query from a perpendicular side finds nothing.
-	if (side != DiagDirection::Invalid && side != GetLayerPortalDoorDirection(tile) && side != GetLayerPortalShaftDirection(tile)) return {};
+	//FD-4: on its own layer an end is reached only through its door. The shaft side answers nothing; a step through the shaft asks with no side.
+	if (side != DiagDirection::Invalid && side != GetLayerPortalDoorDirection(tile)) return {};
 	TrackdirBits trackdirs = TrackBitsToTrackdirBits(DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)));
 	return {trackdirs, {}};
 }
 
 /**
- * Move infrastructure for both ends from one owner to another.
- * Only the lower tile index does this, so the pair is not counted twice.
+ * Move the infrastructure pieces of a portal pair from one owner to another.
+ * FD-6, the rule AfterLoadCompanyStats counts by: rail pieces belong to the tile owner, road pieces to the road owner,
+ * which is always the tile owner. Each end counts GetLayerPortalPieceCount pieces, and the lower tile index counts the pair.
  * @param tile The end whose owner change is being processed.
  * @param pair The other end.
- * @param old_owner Previous owner.
- * @param new_owner New owner, or INVALID_OWNER when the company is gone.
+ * @param old_owner Owner that loses the pieces.
+ * @param new_owner Owner that gains the pieces, or INVALID_OWNER when the pieces are dropped.
  */
 static void TransferPortalInfrastructure(TileIndex tile, TileIndex pair, Owner old_owner, Owner new_owner)
 {
+	//The higher end is skipped, so the pair moves once.
 	if (tile > pair) return;
 	TransportType transport = GetLayerPortalTransportType(tile);
-	uint pieces = LAYER_PORTAL_TRACKBIT_FACTOR(transport) * 2;
-	if (!Company::IsValidID(old_owner)) return;
+	uint pieces = GetLayerPortalPieceCount(transport) * 2;
 	if (transport == TransportType::Rail) {
 		RailType rt = GetRailType(tile);
-		Company::Get(old_owner)->infrastructure.rail[rt] -= pieces;
-		if (Company::IsValidID(new_owner)) Company::Get(new_owner)->infrastructure.rail[rt] += pieces;
+		//An owner that is not a company has no counters to change.
+		if (Company *from = Company::GetIfValid(old_owner); from != nullptr) {
+			from->infrastructure.rail[rt] -= pieces;
+			DirtyCompanyInfrastructureWindows(old_owner);
+		}
+		if (Company *to = Company::GetIfValid(new_owner); to != nullptr) {
+			to->infrastructure.rail[rt] += pieces;
+			DirtyCompanyInfrastructureWindows(new_owner);
+		}
 	} else {
+		//UpdateCompanyRoadInfrastructure skips an owner that is not a company and dirties the window itself.
 		RoadType rt = GetRoadTypeRoad(tile);
 		UpdateCompanyRoadInfrastructure(rt, old_owner, -static_cast<int>(pieces));
-		if (Company::IsValidID(new_owner)) UpdateCompanyRoadInfrastructure(rt, new_owner, static_cast<int>(pieces));
+		UpdateCompanyRoadInfrastructure(rt, new_owner, static_cast<int>(pieces));
 	}
-	DirtyCompanyInfrastructureWindows(old_owner);
-	if (Company::IsValidID(new_owner)) DirtyCompanyInfrastructureWindows(new_owner);
 }
 
 /** @copydoc ChangeTileOwnerProc */
 static void ChangeTileOwner_LayerPortal(TileIndex tile, Owner old_owner, Owner new_owner)
 {
-	TileIndex pair = GetLayerPortalPairTile(tile);
-	TransferPortalInfrastructure(tile, pair, old_owner, new_owner);
-
-	if (GetLayerPortalTransportType(tile) == TransportType::Road && GetRoadOwner(tile, RoadTramType::Road) == old_owner) {
-		SetRoadOwner(tile, RoadTramType::Road, new_owner == INVALID_OWNER ? OWNER_NONE : new_owner);
-	}
+	//H-2: this proc runs for every tile of the map, so an end that old_owner does not own is left alone.
 	if (!IsTileOwner(tile, old_owner)) return;
 
-	//A rail pair is removed together. A road pair keeps both ends and drops the owner.
+	TileIndex pair = GetLayerPortalPairTile(tile);
+	TransportType transport = GetLayerPortalTransportType(tile);
 	if (new_owner == INVALID_OWNER) {
-		if (GetLayerPortalTransportType(tile) == TransportType::Rail) {
+		//A rail pair is removed together, by the lower end. ClearTile_LayerPortal subtracts its pieces, so nothing is transferred first.
+		//The higher end of a rail pair is a Clear tile by the time the map walk reaches it, so its own proc never runs.
+		if (transport == TransportType::Rail) {
 			if (tile < pair) {
 				[[maybe_unused]] CommandCost ret = Command<Commands::LandscapeClear>::Do({DoCommandFlag::Execute, DoCommandFlag::Bankrupt}, tile);
 				assert(ret.Succeeded());
 			}
-		} else {
-			SetTileOwner(tile, OWNER_NONE);
+			return;
 		}
+		//M-3: a road pair stays and becomes ownerless. The lower end drops the pieces of both ends.
+		TransferPortalInfrastructure(tile, pair, old_owner, INVALID_OWNER);
+		SetRoadOwner(tile, RoadTramType::Road, OWNER_NONE);
+		SetRoadOwner(tile, RoadTramType::Tram, OWNER_NONE);
+		SetTileOwner(tile, OWNER_NONE);
 		return;
+	}
+
+	TransferPortalInfrastructure(tile, pair, old_owner, new_owner);
+	//The road owners follow the tile owner, as MakeRoadLayerPortal set them.
+	if (transport == TransportType::Road) {
+		SetRoadOwner(tile, RoadTramType::Road, new_owner);
+		SetRoadOwner(tile, RoadTramType::Tram, new_owner);
 	}
 	SetTileOwner(tile, new_owner);
 }
@@ -209,9 +255,6 @@ static CommandCost CheckBuildAbove_LayerPortal(TileIndex, DoCommandFlags, Axis, 
 /** @copydoc VehicleEnterTileProc */
 static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex tile, int x, int y)
 {
-	int z = GetSlopePixelZ(x, y, true) - v->z_pos;
-	if (abs(z) > 2) return VehicleEnterTileState::CannotEnter;
-
 	TransportType transport = GetLayerPortalTransportType(tile);
 	//Each end accepts only its own transport. A road elevator refuses trams.
 	if (transport == TransportType::Rail && v->type != VehicleType::Train) return VehicleEnterTileState::CannotEnter;
@@ -222,27 +265,27 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 
 	const DiagDirection shaft = GetLayerPortalShaftDirection(tile);
 	const DiagDirection vdir = DirToDiagDir(v->GetMovingDirection());
-	uint8_t pos = (DiagDirToAxis(vdir) == Axis::X ? x : y) & TILE_UNIT_MASK;
-	uint8_t frame = (vdir == DiagDirection::NE || vdir == DiagDirection::NW) ? TILE_SIZE - 1 - pos : pos;
 
-	//Steam engines play the tunnel sound as they enter the mouth. The track stays the axis track, never a wormhole.
-	if (transport == TransportType::Rail && v->type == VehicleType::Train && vdir == shaft && v->IsMovingFront() && frame == 1) {
+	//FD-1: heading into the shaft, the vehicle came through the door at this end's height. Heading out, it came through the shaft, and the controller sets its new height right after this call.
+	if (vdir == shaft && abs(GetSlopePixelZ(x, y, true) - v->z_pos) > 2) return VehicleEnterTileState::CannotEnter;
+
+	//Steam engines play the tunnel sound one step past the door, once per train: only the moving front of a train heading into the shaft triggers it. The track stays the axis track, never a wormhole.
+	if (transport == TransportType::Rail && vdir == shaft && v->IsMovingFront() && GetLayerPortalDepth(shaft, x, y) == 1) {
 		Train *t = Train::From(v);
+		//A NewGRF tunnel sound replaces the built-in one; without it only steam engines are heard, as in a tunnel.
 		if (!PlayVehicleSound(t, VehicleSoundEvent::Tunnel) && RailVehInfo(t->engine_type)->engclass == EngineClass::Steam) {
 			SndPlayVehicleFx(SND_05_TRAIN_THROUGH_TUNNEL, v);
 		}
 	}
 
-	//Heading down the shaft: hide at the door frame. Heading out: show again past that frame.
-	if (vdir == shaft && frame == _tunnel_visibility_frame[shaft]) {
-		//Road works is the mechanical stand-in for the elevator ride.
+	//FD-3: the point decides visibility. Only the change from shown to hidden plays the elevator sound.
+	bool hidden = IsHiddenInLayerPortal(shaft, x, y);
+	if (hidden && !v->vehstatus.Test(VehState::Hidden)) {
+		//Road works is the mechanical stand-in for the elevator ride. Only the front of a road vehicle plays it, so an articulated bus is heard once.
 		if (transport == TransportType::Road && v->IsFrontEngine()) SndPlayTileFx(SND_21_ROAD_WORKS, tile);
 		v->vehstatus.Set(VehState::Hidden);
-		return {};
-	}
-	if (vdir == ReverseDiagDir(shaft) && frame == TILE_SIZE - _tunnel_visibility_frame[shaft] && z == 0) {
+	} else if (!hidden && v->vehstatus.Test(VehState::Hidden)) {
 		v->vehstatus.Reset(VehState::Hidden);
-		return {};
 	}
 	return {};
 }
@@ -266,32 +309,41 @@ static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 	if (flags.Test(DoCommandFlag::Auto)) return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
 
 	TileIndex pair = GetLayerPortalPairTile(tile);
-	CommandCost ownership = CheckTileOwnership(tile);
-	if (ownership.Failed()) return ownership;
+	TransportType transport = GetLayerPortalTransportType(tile);
+	//FD-6: a road end follows the road removal rules, so anyone may remove an ownerless elevator. A rail end needs its owner.
+	if (transport == TransportType::Road) {
+		RoadBits axis_road = AxisToRoadBits(DiagDirToAxis(GetLayerPortalShaftDirection(tile)));
+		CommandCost ownership = CheckAllowRemoveRoad(tile, axis_road, GetRoadOwner(tile, RoadTramType::Road), RoadTramType::Road, flags, false);
+		if (ownership.Failed()) return ownership;
+	} else {
+		CommandCost ownership = CheckTileOwnership(tile);
+		if (ownership.Failed()) return ownership;
+	}
 
 	CommandCost blocked = EnsureNoVehicleOnGround(tile);
 	if (blocked.Failed()) return blocked;
 	blocked = EnsureNoVehicleOnGround(pair);
 	if (blocked.Failed()) return blocked;
 
-	//M-2: a train may have reserved through either end, so both ends are checked.
-	if (GetLayerPortalTransportType(tile) == TransportType::Rail && (HasLayerPortalReservation(tile) || HasLayerPortalReservation(pair))) {
+	//M-2: only rail ends hold path reservations, and a train may have reserved through either end of the pair.
+	//Removing the pair under a reserved path would leave that train driving onto track that is gone, so both ends block the removal.
+	if (transport == TransportType::Rail && (HasLayerPortalReservation(tile) || HasLayerPortalReservation(pair))) {
 		return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
 	}
 
 	if (flags.Test(DoCommandFlag::Execute)) {
 		Owner owner = GetTileOwner(tile);
-		TransportType transport = GetLayerPortalTransportType(tile);
-		RailType railtype = transport == TransportType::Rail ? GetRailType(tile) : INVALID_RAILTYPE;
-		RoadType roadtype = transport == TransportType::Road ? GetRoadTypeRoad(tile) : INVALID_ROADTYPE;
 		DiagDirection shaft = GetLayerPortalShaftDirection(tile);
-		if (Company::IsValidID(owner)) {
-			if (transport == TransportType::Rail) {
-				Company::Get(owner)->infrastructure.rail[railtype] -= LAYER_PORTAL_TRACKBIT_FACTOR(transport) * 2;
-			} else {
-				UpdateCompanyRoadInfrastructure(roadtype, owner, -static_cast<int>(LAYER_PORTAL_TRACKBIT_FACTOR(transport) * 2));
+		//FD-6: rail pieces belong to the tile owner and road pieces to the road owner, the rule AfterLoadCompanyStats counts by.
+		uint pieces = GetLayerPortalPieceCount(transport) * 2;
+		if (transport == TransportType::Rail) {
+			if (Company *c = Company::GetIfValid(owner); c != nullptr) {
+				c->infrastructure.rail[GetRailType(tile)] -= pieces;
+				DirtyCompanyInfrastructureWindows(owner);
 			}
-			DirtyCompanyInfrastructureWindows(owner);
+		} else {
+			//UpdateCompanyRoadInfrastructure skips an owner that is not a company.
+			UpdateCompanyRoadInfrastructure(GetRoadTypeRoad(tile), GetRoadOwner(tile, RoadTramType::Road), -static_cast<int>(pieces));
 		}
 		DoClearSquare(tile);
 		DoClearSquare(pair);
@@ -318,7 +370,7 @@ static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 static CommandCost CheckPortalEnd(TileIndex tile, DiagDirection shaft_dir)
 {
 	if (!IsValidTile(tile) || !IsInnerTile(tile)) return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
-	if (GetTileSlope(tile) != SLOPE_FLAT) return CommandCost(STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND);
+	if (GetTileSlope(tile) != SLOPE_FLAT) return CommandCost(STR_ERROR_FLAT_LAND_REQUIRED);
 	if (IsBridgeAbove(tile)) return CommandCost(STR_ERROR_MUST_DEMOLISH_BRIDGE_FIRST);
 	if (CommandCost layer = CheckLayerAllowsConstruction(tile, MapLayerConstruction::LayerPortal); layer.Failed()) return layer;
 	//The door needs a neighbour that is still inside the map, so a road or track can arrive.
@@ -375,11 +427,11 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 		if (transport_type == TransportType::Rail) {
 			MakeRailLayerPortal(tile, _current_company, shaft_dir, target_layer, railtype);
 			MakeRailLayerPortal(pair, _current_company, pair_shaft, GetTileLayer(tile), railtype);
-			Company::Get(_current_company)->infrastructure.rail[railtype] += LAYER_PORTAL_TRACKBIT_FACTOR(transport_type) * 2;
+			Company::Get(_current_company)->infrastructure.rail[railtype] += GetLayerPortalPieceCount(transport_type) * 2;
 		} else {
 			MakeRoadLayerPortal(tile, _current_company, shaft_dir, target_layer, roadtype);
 			MakeRoadLayerPortal(pair, _current_company, pair_shaft, GetTileLayer(tile), roadtype);
-			UpdateCompanyRoadInfrastructure(roadtype, _current_company, static_cast<int>(LAYER_PORTAL_TRACKBIT_FACTOR(transport_type) * 2));
+			UpdateCompanyRoadInfrastructure(roadtype, _current_company, static_cast<int>(GetLayerPortalPieceCount(transport_type) * 2));
 		}
 		DirtyCompanyInfrastructureWindows(_current_company);
 		MarkTileDirtyByTile(tile);

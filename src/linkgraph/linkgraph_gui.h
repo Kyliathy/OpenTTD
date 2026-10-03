@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file linkgraph_gui.h Declaration of linkgraph overlay GUI. */
+/** @file linkgraph_gui.h Declaration of linkgraph overlay GUI. @see docs/zz-reach2/architecture/linkgraph/archi-linkgraph.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef LINKGRAPH_GUI_H
 #define LINKGRAPH_GUI_H
@@ -90,6 +90,8 @@ protected:
 	bool dirty;                        ///< Set if overlay should be rebuilt.
 
 	Point GetStationMiddle(const Station *st) const;
+	MapLayer GetLayer() const;
+	bool IsStationInLayer(const Station *st) const;
 
 	void AddLinks(const Station *sta, const Station *stb);
 	void DrawLinks(const DrawPixelInfo *dpi) const;

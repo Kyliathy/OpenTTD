@@ -415,6 +415,8 @@ STR_TOOLBAR_TOOLTIP_SHOW_SOUND_MUSIC_WINDOW                     :{BLACK}Open sou
 STR_TOOLBAR_TOOLTIP_SHOW_LAST_MESSAGE_NEWS                      :{BLACK}Open last message/news report, messages history or delete all messages
 STR_TOOLBAR_TOOLTIP_LAND_BLOCK_INFORMATION                      :{BLACK}Open land information, screenshot menu, OpenTTD credits, or developer tools
 STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR                              :{BLACK}Switch toolbars
+
+# Tooltips of the map layer button that name the shown layer
 STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Switch the main view between the surface, underground and space maps. Now showing: {STRING}
 STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE                            :{BLACK}This game has only one map layer
 
@@ -788,6 +790,7 @@ STR_HIGHSCORE_PRESIDENT_OF_COMPANY_ACHIEVES_STATUS              :{BIG_FONT}{WHIT
 
 # Smallmap window
 STR_SMALLMAP_CAPTION                                            :{WHITE}Map - {STRING}
+STR_SMALLMAP_CAPTION_WITH_LAYER                                 :{WHITE}Map - {STRING} - {STRING}
 
 ###length 7
 STR_SMALLMAP_TYPE_CONTOURS                                      :Contours
@@ -984,6 +987,7 @@ STR_NEWS_EXCLUSIVE_RIGHTS_DESCRIPTION_MINUTES                   :{BIG_FONT}{BLAC
 
 # Extra view window
 STR_EXTRA_VIEWPORT_TITLE                                        :{WHITE}Viewport {COMMA}
+STR_EXTRA_VIEWPORT_TITLE_WITH_LAYER                             :{WHITE}Viewport {COMMA} - {STRING}
 STR_EXTRA_VIEW_MOVE_VIEW_TO_MAIN                                :{BLACK}Change viewport
 STR_EXTRA_VIEW_MOVE_VIEW_TO_MAIN_TOOLTIP                        :{BLACK}Copy the location of the main view to this viewport
 STR_EXTRA_VIEW_MOVE_MAIN_TO_VIEW                                :{BLACK}Change main view
@@ -5413,7 +5417,6 @@ STR_ERROR_SITE_UNSUITABLE_FOR_TUNNEL                            :site unsuitable
 STR_ERROR_MUST_DEMOLISH_TUNNEL_FIRST                            :must demolish tunnel first
 STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST                        :must remove layer portal first
 STR_ERROR_CAN_T_BUILD_LAYER_PORTAL                              :Can't build layer portal here...
-STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND                          :{WHITE}...land must be flat
 STR_ERROR_ANOTHER_TUNNEL_IN_THE_WAY                             :another tunnel in the way
 STR_ERROR_TUNNEL_THROUGH_MAP_BORDER                             :tunnel would end out of the map
 STR_ERROR_UNABLE_TO_EXCAVATE_LAND                               :unable to excavate land for other end of tunnel

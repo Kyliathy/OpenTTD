@@ -38,8 +38,8 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 107-109 | `### AD-10 Graphics`: sprites go into OpenTTD's extra GRF as Action 5 type `0x1C`, mapped to `SPR_MAP_LAYER_BASE`, generated with `GenerateImage` and quantised by a repeatable script; consumers keep stand-ins until the constants exist. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: no `r2` prefix on created files, helper scripts in `docs/zz-reach2/upgrades/2026-10/tools/`, no file moves or deletes (copy generated images, never move them). |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 106-108 | `### AD-10 Graphics`: sprites go into OpenTTD's extra GRF as Action 5 type `0x1C`, mapped to `SPR_MAP_LAYER_BASE`, generated with `GenerateImage` and quantised by a repeatable script; consumers keep stand-ins until the constants exist. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: no `r2` prefix on created files, helper scripts in `docs/zz-reach2/upgrades/2026-10/tools/`, no file moves or deletes (copy generated images, never move them). |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 56-76 | `## Sprite Contract` of this plan: the 44 sprites, their order, sizes, offsets and constant names. Every group produces or consumes exactly this list; the order is the Action 5 order and must not change once constants are published. |
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 370-381 | The bridge-deck block and `SPR_NEWGRFS_BASE`: the newest Action 5 block, which the new block follows, and the base that must move behind it. |
 | [docs/zz-reach2/architecture/basesets/archi-basesets.md](../../architecture/basesets/archi-basesets.md) | 31-58 | `### Graphics`: the `extra` file is a NewGRF loaded at `SPR_OPENTTD_BASE`; sprites a base set does not supply are counted from `OPENTTD.GRF`. Explains why every new sprite must exist in `openttd.grf`. |
@@ -51,7 +51,7 @@
 - Repeatable tooling in `docs/zz-reach2/upgrades/2026-10/tools/`: `make_sprite_template.py` and `sprite_quantize.py`; raw AI outputs and prompts kept in `docs/zz-reach2/upgrades/2026-10/assets/`.
 - The stand-ins in r2mlm1, r2mlm5, r2mlm8 and r2mlm9 are switched to the constants by those plans' swap tasks, or by Group 7 when those plans are already done.
 
-This plan does not change gameplay code beyond constant definitions and the Action 5 table. It can run any time after r2mlm1.
+This plan does not change gameplay code beyond constant definitions and the Action 5 table. It can run any time after r2mlm1. Groups 3 and 4 need a harness that can generate images; see their Area block.
 
 ## Sprite Contract
 
@@ -126,6 +126,8 @@ Prompt template: "Isometric 2:1 pixel art in the style of Transport Tycoon Delux
 ### Area Mandatory Reading - AI generation
 
 _Applies to Groups 3-4._
+
+**Harness.** These groups need a harness that can generate images from a prompt and reference images. Every image so far came from Cursor's `GenerateImage` tool. The Claude Code sessions used so far have no such tool, so run Groups 3 and 4 in a harness that has one, and stop them anywhere else. The other groups need no such tool, though Groups 6 and 7 wait for the finished images.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |

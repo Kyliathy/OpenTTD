@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_kdtree.h Declarations for accessing the k-d tree of stations. */
+/** @file station_kdtree.h Declarations for accessing the k-d tree of stations. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef STATION_KDTREE_H
 #define STATION_KDTREE_H
@@ -44,21 +44,12 @@ void ForAllStationsRadius(TileIndex center, uint radius, Func func)
 	x2 = (uint16_t)std::min<int>(TileX(center) + radius + 1, Map::SizeX());
 	//C6: the tree stores stacked Y, so the box is this layer's band, expressed through TileXYL.
 	y1 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_start), layer)));
-	if (y_end == static_cast<int>(Map::SizeY())) {
-		uint next = to_underlying(layer) + 1;
-		//The exclusive end is the next layer's first row, or the end of storage for the last layer.
-		y2 = (next < Map::LayerCount())
-			? static_cast<uint16_t>(TileY(MultiLayerMap::GetLayerBase(static_cast<MapLayer>(next))))
-			: static_cast<uint16_t>(Map::Size() >> Map::LogX());
-	} else {
-		y2 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_end), layer)));
-	}
+	//The exclusive end row. At the band's end it is the next layer's first row, or the end of storage for the last layer.
+	y2 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_end), layer)));
 
+	//The box holds only rows of this layer, so every station found has its sign in this layer.
 	_station_kdtree.FindContained(x1, y1, x2, y2, [&](StationID id) {
-		Station *st = Station::Get(id);
-		//A station sign in another layer is not inside this search.
-		if (GetTileLayer(st->xy) != layer) return;
-		func(st);
+		func(Station::Get(id));
 	});
 }
 

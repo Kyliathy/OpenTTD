@@ -38,8 +38,8 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants` I-1 to I-8: the acceptance criteria. Every result recorded in this plan names the invariant it evidences. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: build, test and digest commands; documentation goes under `docs/`, never into source directories. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 118-127 | `## Cross-plan Invariants` I-1 to I-8: the acceptance criteria. Every result recorded in this plan names the invariant it evidences. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: build, test and digest commands; documentation goes under `docs/`, never into source directories. |
 | [docs/zz-reach2/architecture/desync/archi-desync.md](../../architecture/desync/archi-desync.md) | 368-376 | `## Invariants`: same command stream, same RNG draws, no GUI-only state in the simulation. The multiplayer tests check exactly these with layers in play. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 431-442 | `## Invariants a change must not break`: older saves keep loading, version enum order, chunk order. The savegame matrix checks them. |
 
@@ -81,7 +81,7 @@ _Applies to Group 2._
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 290-322 | `## Load sequence`: `DoLoad`, `LoadCheck`, old TTO / TTD files through `LoadOldSaveGame`, then `AfterLoadGame`. Each matrix row exercises one path. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by master task 1.8. Reference for I-6. |
+| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6. |
 
 ### Group 2 - Savegame matrix
 
@@ -93,6 +93,7 @@ _Applies to Group 2._
 - [ ] 2.5 Scenario editor: build underground roads in a scenario, save the scenario, start a new game from it; underground content is present.
 - [ ] 2.6 Load dialog preview of a layered save shows correct map size and no error.
 - [ ] 2.7 4096x4096 three-layer game: record save size and save and load time against a one-layer baseline of the same size.
+- [ ] 2.8 Combined traffic: in one game, run a bus line and a train line that both cross layers for two in-game years at fast forward in a Debug build, then save, reload and run one more year. No vehicle is lost or stuck and no assert fires (I-3, I-7). This was master-plan task 7.3 until 2026-10-03.
 
 ### Area Mandatory Reading - Performance and regression
 
@@ -127,7 +128,7 @@ _Applies to Groups 5-6._
 | [docs/zz-reach2/architecture/README.md](../../architecture/README.md) | 7-30 | `## Subsystems` table and `## Still being written`: the index row for the new page. |
 | [docs/zz-reach2/architecture/landscape/archi-landscape.md](../../architecture/landscape/archi-landscape.md) | 24-133 | `## Two arrays, ten logical fields` to `## From a coordinate to a TileIndex`: the statements about array size, `TileXY` and `TileY` that now need the layer note, and the tile-type table that gains `LayerPortal`. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 90-117 | `## Chunk stream`: the `MAPS` description that gains the `layers` field. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 60-117 | `## Architecture Decisions`: the source for the new page; the page describes the delivered code, not the plan. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 59-116 | `## Architecture Decisions`: the source for the new page; the page describes the delivered code, not the plan. |
 
 ### Group 5 - Architecture documentation
 
@@ -143,7 +144,7 @@ _Applies to Groups 5-6._
 {{SIMPLE}}
 - [x] 6.1 Grep `src/` for files whose names start with `r2` and for `.md` files; there must be none. No source name starts with `r2`. The only Markdown under `src/` is the pre-existing `src/3rdparty/monocypher/` licence set.
 - [x] 6.2 Grep `src/` for `Map::PlaneSize()` added to or subtracted from a tile index outside `src/map_func.h`, `src/map.cpp`, `src/map_layer.*`, `src/saveload/map_sl.cpp` and `src/saveload/oldloader_sl.cpp` (AD-3, I-3); there must be none. The remaining hits are counts, comparisons, the iterator end inside `map_layer.h`, and the identity check in `src/tests/map_layer.cpp`.
-- [ ] 6.3 Record the evidence for each invariant I-1 to I-8 (test name, digest, log or manual run) under this task, for master task 8.2.
+- [ ] 6.3 Record the evidence for each invariant I-1 to I-8 (test name, digest, log or manual run) under this task.
 
 | Invariant | Evidence so far | Still needs a run |
 | --- | --- | --- |

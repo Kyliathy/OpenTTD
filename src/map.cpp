@@ -92,23 +92,19 @@
 
 /**
  * Get a tile from the virtual XY-coordinate.
- * Coordinates outside of the map are clamped to the map edge.
+ * Coordinates outside of one layer's band are clamped to that layer's edge.
  * @param x The virtual x coordinate of the tile.
- * @param y The virtual y coordinate of the tile.
- * @return The TileIndex calculated by the coordinate, clamped to the map bounds.
+ * @param y The virtual y coordinate of the tile, in the stacked world space of all layers.
+ * @param layer Layer the result is clamped to. Aircraft fly over the surface, so their callers keep the default.
+ * @return The TileIndex calculated by the coordinate, clamped to the bounds of that layer.
  */
-TileIndex TileVirtXYClampedToMap(int x, int y)
+TileIndex TileVirtXYClampedToMap(int x, int y, MapLayer layer)
 {
-	//World Y is stacked the same way as TileY, one band of Map::SizeY() per allocated layer.
-	int stacked = y / static_cast<int>(TILE_SIZE);
-	int max_stacked = static_cast<int>(Map::SizeY() * Map::LayerCount() - 1);
-	if (stacked < 0) stacked = 0;
-	if (stacked > max_stacked) stacked = max_stacked;
-
-	MapLayer layer = static_cast<MapLayer>(static_cast<uint>(stacked) >> Map::LogY());
-	uint plane_y = static_cast<uint>(stacked) & Map::MaxY();
-	uint tile_x = static_cast<uint>(Clamp<int>(x / static_cast<int>(TILE_SIZE), 0, Map::MaxX()));
-	return TileXYL(tile_x, plane_y, layer);
+	//L-6: world Y is stacked, one band of Map::SizeY() rows per layer. Only the asked layer's band is a valid result.
+	int band_top = static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY());
+	int plane_y = Clamp<int>(y / static_cast<int>(TILE_SIZE) - band_top, 0, static_cast<int>(Map::MaxY()));
+	int tile_x = Clamp<int>(x / static_cast<int>(TILE_SIZE), 0, static_cast<int>(Map::MaxX()));
+	return TileXYL(static_cast<uint>(tile_x), static_cast<uint>(plane_y), layer);
 }
 
 #ifdef _DEBUG

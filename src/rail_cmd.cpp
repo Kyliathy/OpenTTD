@@ -898,6 +898,8 @@ static CommandCost ValidateAutoDrag(Trackdir *trackdir, TileIndex start, TileInd
  */
 static CommandCost CmdRailTrackHelper(DoCommandFlags flags, TileIndex tile, TileIndex end_tile, RailType railtype, Track track, bool remove, bool auto_remove_signals, bool fail_on_obstacle)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, end_tile); layer.Failed()) return layer;
 	CommandCost total_cost(ExpensesType::Construction);
 
 	if ((!remove && !ValParamRailType(railtype)) || !ValParamTrackOrientation(track)) return CMD_ERROR;
@@ -1303,6 +1305,8 @@ static bool AdvanceSignalAutoFill(TileIndex &tile, Trackdir &trackdir, bool remo
  */
 static CommandCost CmdSignalTrackHelper(DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, SignalType sigtype, SignalVariant sigvar, bool mode, bool remove, bool autofill, bool minimise_gaps, int signal_density)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, end_tile); layer.Failed()) return layer;
 	CommandCost total_cost(ExpensesType::Construction);
 
 	if (end_tile >= Map::Size() || !ValParamTrackOrientation(track)) return CMD_ERROR;
@@ -1592,6 +1596,8 @@ CommandCost CmdRemoveSignalTrack(DoCommandFlags flags, TileIndex tile, TileIndex
  */
 CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_start, RailType totype, bool diagonal)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, area_start); layer.Failed()) return layer;
 	TileIndex area_end = tile;
 
 	if (!ValParamRailType(totype)) return CMD_ERROR;
@@ -1802,7 +1808,7 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 							vehicles_affected.push_back(v);
 						}
 					}
-					uint num_pieces = LAYER_PORTAL_TRACKBIT_FACTOR(TransportType::Rail) * 2;
+					uint num_pieces = GetLayerPortalPieceCount(TransportType::Rail) * 2;
 					Company *c = Company::Get(GetTileOwner(cur_tile));
 					c->infrastructure.rail[GetRailType(cur_tile)] -= num_pieces;
 					c->infrastructure.rail[totype] += num_pieces;

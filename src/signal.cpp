@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file signal.cpp Functions related to rail signals updating. */
+/** @file signal.cpp Functions related to rail signals updating. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "debug.h"
@@ -403,25 +403,18 @@ static SigFlags ExploreSegment(Owner owner)
 			case TileType::LayerPortal: {
 				if (GetTileOwner(tile) != owner) continue;
 				if (GetLayerPortalTransportType(tile) != TransportType::Rail) continue;
-				//A train on either end blocks the block.
-				if (!flags.Test(SigFlag::Train) && HasVehicleOnTile(tile, IsTrainAndNotInDepot)) flags.Set(SigFlag::Train);
+				//FD-5: the door is the only side an end shares with its own layer. The shaft side leads nowhere on this layer.
+				if (enterdir != GetLayerPortalDoorDirection(tile)) continue;
 				TileIndex pair = GetLayerPortalPairTile(tile);
-				if (!flags.Test(SigFlag::Train) && HasVehicleOnTile(pair, IsTrainAndNotInDepot)) flags.Set(SigFlag::Train);
-				if (enterdir == GetLayerPortalDoorDirection(tile)) {
-					//Through the door, then on into the pair by its shaft.
-					tile = pair;
-					enterdir = GetLayerPortalShaftDirection(pair);
-					exitdir = ReverseDiagDir(enterdir);
-				} else if (enterdir == GetLayerPortalShaftDirection(tile)) {
-					//Through the shaft and out of the door onto the next tile.
-					exitdir = GetLayerPortalDoorDirection(tile);
-					tile += TileOffsByDiagDir(exitdir);
-					enterdir = ReverseDiagDir(exitdir);
-				} else {
-					continue;
-				}
-				}
+				//A train on either end occupies the block. The ends are only searched until a train is found.
+				if (!flags.Test(SigFlag::Train) && (HasVehicleOnTile(tile, IsTrainAndNotInDepot) || HasVehicleOnTile(pair, IsTrainAndNotInDepot))) flags.Set(SigFlag::Train);
+				//Cross the pair as one straight piece and leave by the pair's door.
+				oldtile = pair;
+				exitdir = GetLayerPortalDoorDirection(pair);
+				tile = TileAddByDiagDir(pair, exitdir);
+				enterdir = ReverseDiagDir(exitdir);
 				break;
+			}
 
 			default:
 				continue; // continue the while() loop
@@ -528,11 +521,14 @@ static SigSegState UpdateSignalsInBuffer(Owner owner)
 		 * train entering/leaving block, train leaving depot...
 		 */
 		switch (GetTileType(tile)) {
-			case TileType::LayerPortal:
+			case TileType::LayerPortal: {
 				assert(GetLayerPortalTransportType(tile) == TransportType::Rail);
-				_tbdset.Add(tile, GetLayerPortalDoorDirection(tile));
-				_tbdset.Add(GetLayerPortalPairTile(tile), GetLayerPortalShaftDirection(GetLayerPortalPairTile(tile)));
+				//FD-5: start at the door and walk both ways from it, like a plain rail tile. The pair is reached through the door entry.
+				DiagDirection door = GetLayerPortalDoorDirection(tile);
+				_tbdset.Add(tile, door);
+				_tbdset.Add(TileAddByDiagDir(tile, door), ReverseDiagDir(door));
 				break;
+			}
 
 			case TileType::TunnelBridge:
 				/* 'optimization assert' - do not try to update signals when it is not needed */

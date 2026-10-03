@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file terraform_cmd.cpp Commands related to terraforming. */
+/** @file terraform_cmd.cpp Commands related to terraforming. @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "command_func.h"
@@ -329,6 +329,8 @@ std::tuple<CommandCost, Money, TileIndex> CmdTerraformLand(DoCommandFlags flags,
  */
 std::tuple<CommandCost, Money, TileIndex> CmdLevelLand(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal, LevelMode lm)
 {
+	//FD-10: an area or a drag stays in one layer.
+	if (CommandCost layer = CheckTilesShareLayer(tile, start_tile); layer.Failed()) return { layer, 0, INVALID_TILE };
 	if (start_tile >= Map::Size()) return { CMD_ERROR, 0, INVALID_TILE };
 
 	//Both corners of a level drag must allow terraforming.
