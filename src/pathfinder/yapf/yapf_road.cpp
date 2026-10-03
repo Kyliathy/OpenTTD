@@ -11,8 +11,12 @@
 #include "yapf.hpp"
 #include "yapf_node_road.hpp"
 #include "../../roadstop_base.h"
+#include "../../layer_portal_map.h"
 
 #include "../../safeguards.h"
+
+/** Waiting 370 ticks costs about ten Tiles at the default bus's top speed; D-4 adds no setting. */
+static constexpr int LAYER_ELEVATOR_WAIT_COST = 10 * YAPF_TILE_LENGTH;
 
 
 template <class Types>
@@ -157,8 +161,12 @@ public:
 
 			/* if we skipped some tunnel tiles, add their cost */
 			segment_cost += follower_local.tiles_skipped * YAPF_TILE_LENGTH;
-			//One penalty for each elevator the segment passes through.
-			if (follower_local.is_portal) segment_cost += _settings_game.pf.yapf.road_layer_portal_penalty;
+			//Every portal has one penalty. Elevators also cost the distance a bus could cover during the ride.
+			if (follower_local.is_portal) {
+				segment_cost += _settings_game.pf.yapf.road_layer_portal_penalty;
+				//The end being left identifies the same kind as its pair.
+				if (GetLayerPortalKind(tile) == LayerPortalKind::RoadElevator) segment_cost += LAYER_ELEVATOR_WAIT_COST;
+			}
 			tiles += follower_local.tiles_skipped + 1;
 
 			/* add hilly terrain penalty */

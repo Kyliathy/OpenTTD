@@ -1,4 +1,4 @@
-# R2MLM Master Plan - Multi-Layered Map (Surface, Underground, Space)
+# R2MLM Master Plan - Multi-Layered Map (Surface, Underground, Deep Underground, Outer Space)
 
 This plan summarises the multi-layered map epic. It holds no tasks: every task lives in the plan that owns it, listed in `## Plan Index`. Its Architecture Decisions and Cross-plan Invariants are the canonical authority every plan consumes. A plan's acceptance checks test it against them, not against the plan's own restatement. Where a plan contradicts an AD, the AD wins unless the user approves a change.
 
@@ -6,20 +6,20 @@ Until 2026-10-03 this file also held checkpoint tasks. Group 1 (toolchain and ba
 
 ## Outcome
 
-OpenTTD gains two extra maps that sit under and above the existing land map. The player switches the view between them with one toolbar button placed right next to the map button. Buses ride elevators between the surface and the underground. Trains drive into a special tunnel, built with new graphics, and continue on tracks the player builds underground. Every layer is simulated every tick, saved, loaded, and kept in sync in multiplayer.
+OpenTTD gains three extra maps that sit under and above the existing land map. The player chooses a layer from the toolbar button next to the map button. Road tunnels connect Surface and Underground; road elevators connect either to Deep Underground. Trains drive through a special tunnel onto tracks the player builds underground. Every layer is simulated every tick, saved, loaded, and kept in sync in multiplayer.
 
 ## Key Points
 
-1. **Layer button.** A new button in the main toolbar, immediately to the right of the map button, cycles the main view through Surface, Underground and Space, and back to Surface. Its icon and tooltip show the layer being viewed. The scenario editor toolbar gets the same button.
-2. **Independent maps under a multi-layered map controller.** The Underground and Space maps are complete, independent maps with their own terrain, rules and drawing. A new controller, `MultiLayerMap`, sits above the existing `Map` controller, owns the set of layers, and is the API that switches which map a view shows.
-3. **Buses take elevators.** A road elevator joins a surface road to an underground road. Buses drive into it, ride, and drive out on the other layer, and the road pathfinder routes through it.
+1. **Layer button.** The main toolbar button immediately to the right of the map button opens Surface, Underground, Deep Underground and Outer Space in that display order. The scenario editor, extra viewport and smallmap buttons use the same dropdown for their own views. Each button shows its view's icon; `N` still cycles the main view.
+2. **Independent maps under a multi-layered map controller.** Underground, Deep Underground and Space are complete, independent maps with their own terrain, rules and drawing. `MultiLayerMap` sits above the existing `Map` controller, owns the set of layers, and provides layer semantics.
+3. **Buses take tunnels and elevators.** Road tunnels join Surface to Underground at normal speed. Road elevators join either upper layer to Deep Underground; buses stop hidden for 370 game ticks and leave from standstill. The road pathfinder routes through both kinds and charges elevators for their wait.
 4. **Trains take a special tunnel.** A rail layer portal, drawn with a new graphical asset, carries trains from surface track to underground track. The player continues building track, stations, depots and signals underground.
 5. **Graphical assets.** Layer icons, underground and space ground, elevators and portals are generated with AI image calls and packed into OpenTTD's own extra GRF.
 6. **Acceptance.** Savegames, multiplayer determinism, performance and documentation are verified for the whole epic.
 
 ## Plan Index
 
-Status: `[X]` every task box of the plan is checked, `[~]` some are, `[ ]` none is yet. Counted on 2026-10-03. Whoever checks a plan's last task sets its box here to `[X]`.
+Status: `[X]` every required task is complete and each authorised skip is recorded, `[~]` work remains, `[ ]` none is yet. Task marker `[s]` means explicitly skipped under the goal's human-operator/gap allowance, never a passing test. Counted on 2026-10-04; runtime and human-review boxes remain open. Whoever checks a plan's last task sets its box here to `[X]`.
 
 | Status | Plan | Point | Delivers | Depends on |
 | --- | --- | --- | --- | --- |
@@ -34,8 +34,8 @@ Status: `[X]` every task box of the plan is checked, `[~]` some are, `[ ]` none 
 | [~] | [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) | 4 | Rail portals: placement GUI, train traversal, reservations, signals, underground track building | r2mlm7 |
 | [~] | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 6 | Multiplayer, savegame matrix, combined traffic run, performance, architecture documentation | r2mlm8, r2mlm9, r2mlm13 |
 | [~] | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 1 | A Subsidies entry in the Towns menu whenever the Subsidies button is off screen in a split toolbar (review finding L-2) | r2mlm1 |
-| [ ] | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 1, 3 | Deep Underground as a fourth layer (savegame 370), road tunnels to the Underground, timed road elevators to Deep Underground, layer dropdowns on all four layer buttons; stand-in art | r2rvm2, r2mlm6, Group 7 (art) of r2mlm8 and r2mlm9 |
-| [ ] | [r2mlm13-layer-art-review-and-new-sprites.md](r2mlm13-layer-art-review-and-new-sprites.md) | 5 | In-game review of the layer art, regenerated sprites, the Deep Underground and road tunnel sprites, extended sprite and capture tools | r2mlm12; **Groups 6 to 8 need an image-generation harness** |
+| [~] | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 1, 3 | Deep Underground as a fourth layer (savegame 370), road tunnels to the Underground, timed road elevators to Deep Underground, layer dropdowns on all four layer buttons; stand-in art | r2rvm2, r2mlm6, Group 7 (art) of r2mlm8 and r2mlm9 |
+| [~] | [r2mlm13-layer-art-review-and-new-sprites.md](r2mlm13-layer-art-review-and-new-sprites.md) | 5 | In-game review of the layer art, regenerated sprites, the Deep Underground and road tunnel sprites, extended sprite and capture tools | r2mlm12; **Groups 6 to 8 need an image-generation harness** |
 
 The review plans check the epic's code against this plan and fix what they find. They belong to no point.
 
@@ -48,21 +48,27 @@ Order:
 
 - r2mlm1, r2mlm2, r2mlm3, r2mlm4, r2mlm5 and r2mlm7 run in that order. r2mlm8 and r2mlm9 may run in either order after r2mlm7.
 - r2mlm6 and r2mlm11 may run any time after r2mlm1. Art from r2mlm6 is optional for r2mlm1 to r2mlm11: each consumer has a stand-in and an explicit swap task.
-- r2mlm12 (planned 2026-10-03) starts only after r2rvm2, r2mlm6 and the Group 7 art of r2mlm8 and r2mlm9 are done. r2mlm13 was split from it the same day and runs after it. r2mlm10 runs last, after r2mlm13.
+- r2mlm12 coding was delivered by 2026-10-04 with stand-in art, under the coding-stage override below. Its runtime and human checks remain open. r2mlm13 follows it for art review and extension; its pipeline preparation is delivered. r2mlm10 runs last, after final art acceptance.
 
 ## Execution Notes
 
 - **Coding and test staging, 2026-10-03.** The user requested completing code and generated assets now, with in-game testing postponed until they provide a representative save. Runtime, scenario and human-review boxes stay open. Earlier plans remain partial while those checks are pending; completed code and build tasks are checked with their evidence. Coding for later plans may be staged after their code/art prerequisites exist, without claiming the pending runtime or human-review prerequisites passed.
 
-- **Image generation.** r2mlm6 Groups 3 and 4 and r2mlm13 Groups 6 to 8 make sprites with an AI image tool. They need a harness that can generate images from a prompt and reference images, such as Cursor with its `GenerateImage` tool. The Claude Code sessions used so far have no such tool, so those groups run in a harness that has one. Every other group runs anywhere. Both plans say this where those groups start.
+- **Pause, 2026-10-04.** At the user's request, finish r2mlm13 Group 2 and pause with compilable Debug and RelWithDebInfo builds. Resume with capture tooling (Group 3) and the user's representative savegame. Do not launch the game during this coding stage.
+
+- **Goal resumed, 2026-10-04.** The active goal now authorises continuing code, generated art and automation past human-operator tasks and gates. Each affected group records exactly which operator work was skipped; a skip is never evidence of a passing runtime or art review. Missing gallery saves do not block capture-tool implementation, offline asset checks or integration. The previous goal turn made progress: it delivered the extended sprite pipeline and verified both build configurations. Unit checks can run without the user's save. Keep acceptance evidence separate from skipped operator work.
+
+- **Paused again at the user's request, 2026-10-04.** Automatic goal continuation resumed after the earlier pause; the user requested another pause to create the savegame. Both targets build in Debug and RelWithDebInfo with zero compiler warnings, and both configurations pass 110/110 unit cases (`build/build-capture-*.log`, `build/ctest-capture-*.log`). The integrated graphics remain the 44-sprite set. R2MLM13 Group 3 capture tooling is delivered; Group 6 has three new raw candidates, not yet fitted, reviewed or wired. Resume from Group 6 after the user resumes the goal; use the representative save for the pending runtime/art work.
+
+- **Image generation.** r2mlm6 Groups 3 and 4 and r2mlm13 Groups 6 to 8 make sprites with an AI image tool. They need a harness that can generate images from a prompt and reference images, such as Cursor with its `GenerateImage` tool. This Codex harness successfully generated r2mlm6's assets with reference-image support. The 44-sprite set is integrated; r2mlm13's new candidates and final picks still await its review workflow. Every other group runs anywhere. Both plans say this where those groups start.
 - **Groups that need the user.** r2rvm2 Group 17 and r2mlm12 Group 10 are scenario runs with the user. r2mlm13 tasks 5.4 and 8.2 ask the user to judge and approve the art. r2rvm2 Group 18 and r2mlm12 task 11.7 ask the user for decisions.
 - **Running the game.** Tell the user before starting `openttd.exe`. Start it from `build/` with a `-c` config in `build/`. Screenshots are PrintWindow captures of the game window, and input is posted to the game window only, never sent through the user's mouse or keyboard. `tools/ottd_window.ps1` does both.
 
 ## Architecture Decisions
 
-### AD-1 Layer vocabulary (owner: r2mlm1)
+### AD-1 Layer vocabulary (owner: r2mlm1) (amended by r2mlm12, 2026-10-03)
 
-`enum class MapLayer : uint8_t { Surface = 0, Underground = 1, Space = 2, End, Invalid = 0xFF }` lives in the new `src/map_layer_type.h`, with `MAX_MAP_LAYERS = to_underlying(MapLayer::End)`. The numeric values are the stacking order and are implicit in every saved `TileIndex`, so they are never reordered. Display names, tooltips and toolbar icons per layer live in `src/map_layer_gui.cpp` (`GetMapLayerName`, `GetMapLayerIcon`).
+`enum class MapLayer : uint8_t { Surface = 0, Underground = 1, Space = 2, DeepUnderground = 3, End, Invalid = 0xFF }` lives in `src/map_layer_type.h`, with `MAX_MAP_LAYERS = to_underlying(MapLayer::End)` (4). The numeric values are the storage order and are implicit in every saved `TileIndex`, so they are never reordered. Deep Underground is appended to preserve version-369 saves. Display order is Surface, Underground, Deep Underground, Outer Space, defined separately in `src/map_layer_gui.cpp` alongside `GetMapLayerName`, `GetMapLayerIcon` and `BuildMapLayerDropDown`.
 
 ### AD-2 Stacked-plane addressing (owner: r2mlm2)
 
@@ -83,7 +89,7 @@ Rejected alternatives: swapping an "active layer" tile array during the tick (ev
 
 ### AD-4 Independent layers (owners: r2mlm4, r2mlm5)
 
-Each layer is an independent map: own void fence, own `MapLayerRules` (allowed construction, terraform, water, trees, towns, industries, climate, flat base height, ground style), own plane initialiser, own ground drawing, own smallmap view and own viewport band. Surface generation is unchanged: for the same seed it produces a bit-identical surface plane. Initialising Underground and Space never calls `Random()`.
+Each layer is an independent map: own void fence, own `MapLayerRules` (allowed construction, terraform, water, trees, towns, industries, climate, flat base height, ground style), own plane initialiser, own ground drawing, own smallmap view and own viewport band. Surface generation is unchanged: for the same seed it produces a bit-identical surface plane. Initialising any non-surface layer never calls `Random()`.
 
 ### AD-5 Distances are plane distances (owners: r2mlm2, r2mlm3)
 
@@ -95,15 +101,15 @@ Each layer is an independent map: own void fence, own `MapLayerRules` (allowed c
 
 ### AD-7 Viewing a layer is view state (owners: r2mlm1, r2mlm5)
 
-`Viewport::layer` selects which band a viewport draws and picks. It is client state: commands and tick code never read it (desync invariant 3). The toolbar button cycles the main viewport through `MultiLayerMap::GetLayerCount()` layers.
+`Viewport::layer` selects which band a viewport draws and picks. It is client state: commands and tick code never read it (desync invariant 3). Each layer button chooses its view's layer; `N` cycles the main viewport through allocated layers in display order.
 
-### AD-8 Cross-layer movement only through layer portals (owner: r2mlm7)
+### AD-8 Cross-layer movement only through layer portals (owner: r2mlm7) (amended by r2mlm12, 2026-10-03)
 
-The new `TileType::LayerPortal` (value 11) is a pair of tiles at the same plane (x, y) in two adjacent layers, built and removed together by `Commands::BuildLayerPortal`. Each end has one door side and one shaft side, and the pair's shaft direction is the reverse of this end's. Leaving an end through its shaft side enters the pair through its shaft side, so a vehicle keeps its heading (drive-through). `GetLayerPortalNextTile(tile, exitdir)` is the single neighbour function used by followers, vehicle controllers and the signal walk. Traversal is a tile-edge relocation without wormhole state; visibility toggles at door frames like tunnel mouths. The bus elevator (r2mlm8) is a road portal; the special train tunnel (r2mlm9) is a rail portal.
+`TileType::LayerPortal` (value 11) is a pair of tiles at the same plane (x, y), built and removed together by `Commands::BuildLayerPortal`. `MultiLayerMap::IsPortalPairAllowed` permits rail and road tunnels between Surface and Underground, and road elevators between Deep Underground and either upper layer. Numeric layer adjacency is irrelevant. `GetLayerPortalKind` derives these three kinds from transport and layers; no kind bit is stored. Each end has one door side and one shaft side, and the pair's shaft direction is reversed. Leaving through the shaft enters the pair through its shaft, preserving heading. `GetLayerPortalNextTile(tile, exitdir)` is the single neighbour function used by followers, vehicle controllers and the signal walk. Traversal is a tile-edge relocation without wormhole state; visibility toggles at door frames. Tunnels keep normal speed; road elevators stop for 370 ticks before committing that step.
 
 ### AD-9 Savegame (owner: r2mlm4)
 
-`SaveLoadVersion::MapLayers` is inserted immediately before `MaxVersion`. `MAPS` gains a `layers` field. The RIFF planes `MAPT` to `MAP8` store every layer in `TileIndex` order. Files without the field load as one surface plane, and `AfterLoadGame` initialises the missing planes. `LayerPortal` tiles only exist in files at or after `MapLayers`.
+`SaveLoadVersion::MapLayers` (369) adds the `MAPS` `layers` field. The RIFF planes `MAPT` to `MAP8` store every layer in `TileIndex` order. Files without the field load as one surface plane, and `AfterLoadGame` initialises missing planes. `LayerPortal` tiles only exist at or after version 369. `SaveLoadVersion::DeepUnderground` (370) saves `RoadVehicle::elevator_wait` and permits four stored layers; older files claiming four layers are rejected.
 
 ### AD-10 Graphics (owner: r2mlm6)
 
@@ -113,9 +119,9 @@ New sprites live in OpenTTD's extra GRF (`media/baseset/openttd`) as Action 5 ty
 
 r2mlm2 and r2mlm3 keep live games at `Map::LayerCount() == 1` and exercise three layers only in unit tests. r2mlm4 switches new games and loaded games to `MAX_MAP_LAYERS`. Each earlier plan can therefore merge without changing gameplay.
 
-### AD-12 Version-1 scope
+### AD-12 Version-1 scope (amended by r2mlm12, 2026-10-03)
 
-In scope: the three layers; switching the view; road elevators (road, not tram); rail portals; building rail, road, stations, depots and signals underground. Out of scope (see `## Deferred Points`): construction in Space; trams, ships and aircraft crossing layers; towns, houses, industries, trees or water off the surface; catchment for underground stations; script API and NewGRF layer awareness.
+In scope: four layers; choosing the view; road tunnels and rail portals between Surface and Underground; road elevators from either upper layer to Deep Underground; rail, road, stations, depots and signals in Underground. Deep Underground permits roads, road stops, road depots, signs and elevators, with no trains or rail construction. Out of scope (see `## Deferred Points`): construction in Space beyond signs; trams, ships and aircraft crossing layers; towns, houses, industries, trees or water off Surface; underground station catchment; script API and NewGRF layer awareness.
 
 ## Cross-plan Invariants
 
@@ -139,6 +145,9 @@ These were considered and deliberately left out of the 2026-10 plans. A later ep
 - Trams through elevators, ships and aircraft across layers.
 - Script API (`ScriptMapLayer`) and NewGRF variables that expose the layer.
 - Changing the layer count of an existing game beyond the `AfterLoadGame` upgrade.
+- A rail elevator and trains in Deep Underground.
+- A rule for the Underground tile beneath a Surface-to-Deep elevator; currently that independent tile remains untouched.
+- A setting for the 370-tick elevator wait and its pathfinder cost (currently about 10 tiles).
 
 ## Engineering Conventions
 

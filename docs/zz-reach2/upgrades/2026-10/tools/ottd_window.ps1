@@ -3,6 +3,8 @@ Drive an OpenTTD window for screen checks without touching the user's mouse or s
 Written for docs/zz-reach2/upgrades/2026-10/r2rvm-review-map.md (### Commands used by every group, window capture)
 and used by the in-game art reviews of docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md.
 Dot-source it, then call Start-Ottd, Save-OttdShot, Send-OttdHover, Send-OttdClick, Send-OttdKey and Stop-Ottd.
+Art tools also use Get-OttdBitmap, Get-OttdCentre, Save-OttdCrop, Save-OttdBurst,
+Switch-OttdConsole and Invoke-OttdConsole (r2mlm13 Group 3).
 Captures use PrintWindow on the game window only, never a copy of the screen, and input is posted to the
 game window, never sent through the real mouse or keyboard.
 #>
@@ -15,6 +17,7 @@ public static class OttdWin {
 	[StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left, Top, Right, Bottom; }
 	[StructLayout(LayoutKind.Sequential)] public struct POINT { public int X, Y; }
 	[DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
+	[DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr hWnd, out RECT rect);
 	[DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr hWnd, ref POINT p);
 	[DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdc, uint flags);
 	[DllImport("user32.dll")] public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr w, IntPtr l);
@@ -32,6 +35,19 @@ function Get-Ottd([string]$Build) {
 }
 
 <#
+.SYNOPSIS Quote one native Windows argument so paths with spaces remain a single argument.
+.PARAMETER Value Argument value, passed directly to the executable.
+.OUTPUTS Windows command-line representation.
+#>
+function ConvertTo-OttdArgument([string]$Value) {
+	if ($Value.Length -gt 0 -and $Value -notmatch '[\s"]') { return $Value }
+	#Double backslashes before quotes and at the closing quote, following native argv parsing.
+	$escaped = [regex]::Replace($Value, '(\\*)"', '$1$1\"')
+	$escaped = [regex]::Replace($escaped, '(\\+)$', '$1$1')
+	return '"' + $escaped + '"'
+}
+
+<#
 .SYNOPSIS Start the game and wait until its window has drawn.
 .PARAMETER Build Build folder, used as working and config folder.
 .PARAMETER Config Debug or RelWithDebInfo.
@@ -40,12 +56,14 @@ function Get-Ottd([string]$Build) {
 .OUTPUTS The process.
 #>
 function Start-Ottd([string]$Build, [string]$Config, [string[]]$Arguments, [int]$Settle = 12) {
-	$p = Start-Process -FilePath "$Build\$Config\openttd.exe" -ArgumentList $Arguments -WorkingDirectory $Build -PassThru
+	$quotedArguments = @($Arguments | ForEach-Object { ConvertTo-OttdArgument $_ })
+	$p = Start-Process -FilePath "$Build\$Config\openttd.exe" -ArgumentList $quotedArguments -WorkingDirectory $Build -PassThru
 	$deadline = (Get-Date).AddSeconds(60)
 	#The main window handle appears once the video driver has created the window.
 	while ((Get-Date) -lt $deadline -and -not $p.HasExited) { $p.Refresh(); if ($p.MainWindowHandle -ne [IntPtr]::Zero) { break }; Start-Sleep -Milliseconds 500 }
 	Start-Sleep -Seconds $Settle
 	$p.Refresh()
+	if ($p.HasExited -or $p.MainWindowHandle -eq [IntPtr]::Zero) { throw 'The game exited or did not create its window.' }
 	return $p
 }
 
@@ -56,20 +74,54 @@ function Start-Ottd([string]$Build, [string]$Config, [string[]]$Arguments, [int]
 .OUTPUTS The offset of the client area inside the capture, as "x,y".
 #>
 function Save-OttdShot($Process, [string]$Path) {
+	$capture = Get-OttdBitmap $Process
+	try { $capture.Bitmap.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png) }
+	finally { $capture.Bitmap.Dispose() }
+	return "$($capture.ClientX),$($capture.ClientY)"
+}
+
+<#
+.SYNOPSIS Measure the game window and its client area in capture pixels.
+.PARAMETER Process The game process.
+.OUTPUTS Window size, client size and client offset.
+#>
+function Get-OttdGeometry($Process) {
+	$Process.Refresh()
 	$h = $Process.MainWindowHandle
+	if ($Process.HasExited -or $h -eq [IntPtr]::Zero) { throw 'The game has no live window to capture.' }
 	$r = New-Object OttdWin+RECT
-	[void][OttdWin]::GetWindowRect($h, [ref]$r)
+	$client = New-Object OttdWin+RECT
 	$o = New-Object OttdWin+POINT
-	[void][OttdWin]::ClientToScreen($h, [ref]$o)
-	$bmp = New-Object System.Drawing.Bitmap ($r.Right - $r.Left), ($r.Bottom - $r.Top)
+	#Measure actual client bounds rather than guessing border widths across DPI settings.
+	if (-not [OttdWin]::GetWindowRect($h, [ref]$r) -or -not [OttdWin]::GetClientRect($h, [ref]$client) -or -not [OttdWin]::ClientToScreen($h, [ref]$o)) { throw 'Could not measure the game window.' }
+	return [pscustomobject]@{
+		Handle = $h; Width = $r.Right - $r.Left; Height = $r.Bottom - $r.Top
+		ClientX = $o.X - $r.Left; ClientY = $o.Y - $r.Top
+		ClientWidth = $client.Right - $client.Left; ClientHeight = $client.Bottom - $client.Top
+	}
+}
+
+<#
+.SYNOPSIS Capture the game with PrintWindow; the caller owns and disposes the bitmap.
+.PARAMETER Process The game process.
+.OUTPUTS Bitmap and client geometry.
+#>
+function Get-OttdBitmap($Process) {
+	$geometry = Get-OttdGeometry $Process
+	$bmp = New-Object System.Drawing.Bitmap $geometry.Width, $geometry.Height
 	$g = [System.Drawing.Graphics]::FromImage($bmp)
-	$hdc = $g.GetHdc()
-	#Flag 2 (PW_RENDERFULLCONTENT) renders the window itself, not the screen above it.
-	[void][OttdWin]::PrintWindow($h, $hdc, 2)
-	$g.ReleaseHdc($hdc)
-	$bmp.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
-	$g.Dispose(); $bmp.Dispose()
-	return "$($o.X - $r.Left),$($o.Y - $r.Top)"
+	try {
+		$hdc = $g.GetHdc()
+		try {
+			#PW_RENDERFULLCONTENT paints only the game window, even behind other windows.
+			if (-not [OttdWin]::PrintWindow($geometry.Handle, $hdc, 2)) { throw 'PrintWindow failed.' }
+		} finally { $g.ReleaseHdc($hdc) }
+	} catch { $bmp.Dispose(); throw }
+	finally { $g.Dispose() }
+	return [pscustomobject]@{
+		Bitmap = $bmp; ClientX = $geometry.ClientX; ClientY = $geometry.ClientY
+		ClientWidth = $geometry.ClientWidth; ClientHeight = $geometry.ClientHeight
+	}
 }
 
 <#
@@ -120,6 +172,95 @@ function Send-OttdKey($Process, [int]$VirtualKey, [int]$Char = 0) {
 	if ($Char -ne 0) { [void][OttdWin]::PostMessage($h, 0x0102, [IntPtr]$Char, [IntPtr]1) }
 	Start-Sleep -Milliseconds 100
 	[void][OttdWin]::PostMessage($h, 0x0101, [IntPtr]$VirtualKey, [IntPtr]0xC0000001)
+}
+
+<#
+.SYNOPSIS Open or close the in-game console with the key's layout-independent scan code.
+.PARAMETER Process The game process.
+#>
+function Switch-OttdConsole($Process) {
+	$h = $Process.MainWindowHandle
+	#Scan code 41 identifies the console key; TranslateMessage supplies its character when needed.
+	[void][OttdWin]::PostMessage($h, 0x0100, [IntPtr]0xC0, [IntPtr](1 -bor (41 -shl 16)))
+	Start-Sleep -Milliseconds 100
+	[void][OttdWin]::PostMessage($h, 0x0101, [IntPtr]0xC0, [IntPtr](0xC0000001 -bor (41 -shl 16)))
+}
+
+<#
+.SYNOPSIS Run one console command, closing the console after Return.
+.PARAMETER Process The game process.
+.PARAMETER Command Console command, without line breaks.
+#>
+function Invoke-OttdConsole($Process, [string]$Command) {
+	if ($Command -match '[\r\n]') { throw 'A console command must occupy one line.' }
+	Switch-OttdConsole $Process
+	Start-Sleep -Milliseconds 300
+	#Typed characters go only to the game's edit box, never to the user's keyboard.
+	foreach ($character in $Command.ToCharArray()) { [void][OttdWin]::PostMessage($Process.MainWindowHandle, 0x0102, [IntPtr][int]$character, [IntPtr]1) }
+	Send-OttdKey $Process 0x0D 0
+	Start-Sleep -Milliseconds 300
+	Switch-OttdConsole $Process
+	Start-Sleep -Milliseconds 500
+}
+
+<#
+.SYNOPSIS Find the client centre in capture coordinates and in client coordinates.
+.PARAMETER Process The game process.
+.OUTPUTS X/Y for crops; ClientX/ClientY for mouse messages.
+#>
+function Get-OttdCentre($Process) {
+	$geometry = Get-OttdGeometry $Process
+	$clientX = [int][Math]::Floor($geometry.ClientWidth / 2)
+	$clientY = [int][Math]::Floor($geometry.ClientHeight / 2)
+	return [pscustomobject]@{ X = $geometry.ClientX + $clientX; Y = $geometry.ClientY + $clientY; ClientX = $clientX; ClientY = $clientY }
+}
+
+<#
+.SYNOPSIS Save a rectangle of the PrintWindow capture.
+.PARAMETER Process The game process.
+.PARAMETER Path Destination PNG.
+.PARAMETER Left Capture-coordinate left edge.
+.PARAMETER Top Capture-coordinate top edge.
+.PARAMETER Width Crop width.
+.PARAMETER Height Crop height.
+#>
+function Save-OttdCrop($Process, [string]$Path, [int]$Left, [int]$Top, [int]$Width, [int]$Height) {
+	$capture = Get-OttdBitmap $Process
+	try {
+		#A clipped crop would mislabel a scene and hide a vehicle at the edge.
+		if ($Left -lt 0 -or $Top -lt 0 -or $Width -le 0 -or $Height -le 0 -or $Left + $Width -gt $capture.Bitmap.Width -or $Top + $Height -gt $capture.Bitmap.Height) { throw 'The requested crop leaves the game window.' }
+		$rect = New-Object System.Drawing.Rectangle $Left, $Top, $Width, $Height
+		$cropped = $capture.Bitmap.Clone($rect, $capture.Bitmap.PixelFormat)
+		try { $cropped.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png) }
+		finally { $cropped.Dispose() }
+	} finally { $capture.Bitmap.Dispose() }
+}
+
+<#
+.SYNOPSIS Capture a timed burst; intervals are measured from each frame's start.
+.PARAMETER Process The game process.
+.PARAMETER Folder Destination folder.
+.PARAMETER Seconds Duration in seconds.
+.PARAMETER IntervalMs Time between frames, in milliseconds.
+.PARAMETER Left Capture-coordinate left edge.
+.PARAMETER Top Capture-coordinate top edge.
+.PARAMETER Width Crop width.
+.PARAMETER Height Crop height.
+.OUTPUTS Number of frames written.
+#>
+function Save-OttdBurst($Process, [string]$Folder, [double]$Seconds, [int]$IntervalMs, [int]$Left, [int]$Top, [int]$Width, [int]$Height) {
+	if ($Seconds -le 0 -or $IntervalMs -le 0) { throw 'Burst duration and interval must be positive.' }
+	[void][System.IO.Directory]::CreateDirectory($Folder)
+	$watch = [System.Diagnostics.Stopwatch]::StartNew()
+	$count = 0
+	while ($watch.Elapsed.TotalSeconds -lt $Seconds) {
+		$frameStart = $watch.Elapsed.TotalMilliseconds
+		Save-OttdCrop $Process (Join-Path $Folder ('frame-{0:D4}.png' -f $count)) $Left $Top $Width $Height
+		$count++
+		$delay = [int][Math]::Ceiling($frameStart + $IntervalMs - $watch.Elapsed.TotalMilliseconds)
+		if ($delay -gt 0) { Start-Sleep -Milliseconds $delay }
+	}
+	return $count
 }
 
 <#

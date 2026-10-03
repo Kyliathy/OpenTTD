@@ -865,6 +865,7 @@ public:
 		SaveLoad::Variable<VarFileType::U8>("overtaking_ctr", SLE_OBJECT_ADDRESS(RoadVehicle, overtaking_ctr)),
 		SaveLoad::Variable<VarFileType::U16>("crashed_ctr", SLE_OBJECT_ADDRESS(RoadVehicle, crashed_ctr)),
 		SaveLoad::Variable<VarFileType::U8>("reverse_ctr", SLE_OBJECT_ADDRESS(RoadVehicle, reverse_ctr)),
+		SaveLoad::Variable<VarFileType::U16>("elevator_wait", SLE_OBJECT_ADDRESS(RoadVehicle, elevator_wait), SaveLoadVersion::DeepUnderground),
 		SaveLoad::Vector<VarFileType::U8>("path.td", SLE_GLOBAL_ADDRESS(rv_path_td), SaveLoadVersion::RoadvehPathCache, SaveLoadVersion::PathCacheFormat),
 		SaveLoad::Vector<VarFileType::U32>("path.tile", SLE_GLOBAL_ADDRESS(rv_path_tile), SaveLoadVersion::RoadvehPathCache, SaveLoadVersion::PathCacheFormat),
 		SaveLoad::StructList<SlVehicleRoadVehPath>("path", SaveLoadVersion::PathCacheFormat),

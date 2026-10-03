@@ -1422,7 +1422,7 @@ _Applies to Groups 17-18._
 - [ ] 17.8 S7 (M-2, M-8), with the user:
   - remove a portal;
   - try to remove a rail portal while a train has reserved through its far end;
-  - convert road on one elevator end.
+  - convert road on one elevator end. The base game has one road type, so the game needs `build/newgrf/test_road_type.grf` (road type "Test road", label TSRD), written by `tools/make_test_road_type_grf.py` and added in NewGRF Settings before the game starts.
 
   Pass: removal charges money, the reserved removal is refused, and both ends change road type.
 

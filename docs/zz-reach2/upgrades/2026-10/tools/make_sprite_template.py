@@ -2,6 +2,7 @@
 
 Guides are RGB PNGs on magenta #FF00FF. The diamond's top point is the
 tile's north corner, which is the sprite anchor.
+@see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
 """
 
 import os
@@ -31,6 +32,7 @@ REFERENCES = [
     ("media/baseset/openttd/tunnel_portals.png", 5, 88, 35, 33, "tunnel_portal.png"),
     ("media/baseset/openttd/roadstops.png", 34, 8, 13, 23, "road_stop.png"),
     ("media/baseset/openttd/tramtracks_bare_depot.png", 80, 0, 62, 64, "depot_building.png"),
+    ("media/baseset/openttd/openttdgui_convert_road.png", 0, 0, 56, 32, "toolbar_icon_and_cursor.png"),
 ]
 
 

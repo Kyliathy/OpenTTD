@@ -259,7 +259,7 @@ Coding baseline: `build/build-layer-art-Debug.log` builds both targets without c
   - a rail portal and a road portal end on Surface and on Underground, at normal zoom;
   - the Underground and Space floors.
 - [ ] 1.5 List the captures of task 1.4 under this task, one line each, with what it shows. r2mlm13 Groups 4, 5 and 10 compare its captures with them.
-- [ ] 1.6 Confirm `tools/ottd_window.ps1` defines `Start-Ottd`, `Save-OttdShot`, `Send-OttdHover`, `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`, and record any function a later task needs that it lacks.
+- [x] 1.6 Confirm `tools/ottd_window.ps1` defines `Start-Ottd`, `Save-OttdShot`, `Send-OttdHover`, `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`, and record any function a later task needs that it lacks.
 
 ### Area Mandatory Reading - Layer vocabulary, rules and savegame
 
@@ -276,46 +276,48 @@ _Applies to Groups 2-3._
 
 ### Group 2 - Deep Underground in the vocabulary, rules and savegame
 
+Code delivered. Task 2.5 needed only its comment updated: the existing non-surface initialiser already fills Deep Underground with rock and preserves RNG state. Task 2.6 keeps `PAL_NONE` for the integrated r2mlm6 Space art. Task 2.8 found only historical references in `saveload.h` (version 369) and `map_sl.cpp` (pre-370 checks); these remain accurate and were retained. No `MapLayerConstruction::Depot` call remains.
+
 {{MEDIUM}}
-- [ ] 2.1 `src/map_layer_type.h`:
+- [x] 2.1 `src/map_layer_type.h`:
   - insert `DeepUnderground = 3, ///< The map below the Underground. Appended after Space so no saved TileIndex changes meaning (r2mlm12 D-1).` before `End`;
   - change the `MAX_MAP_LAYERS` comment to "How many real layers exist: four since r2mlm12 D-1 (AD-1 as amended)" and the `static_assert` to `== 4`;
   - give the file header its `@see` line for this plan and `archi-map-layers.md`.
-- [ ] 2.2 `src/map_layer.h`: add `DeepBedrock, ///< Dark rock of Deep Underground. Drawn with a stand-in until SPR_MAP_LAYER_DEEP_FLOOR exists (r2mlm13 Group 9).` to `MapLayerGround`, after `Vacuum`.
-- [ ] 2.3 D-2: replace `MapLayerConstruction::Depot` with `TrainDepot, ///< Train depot.` and `RoadDepot, ///< Road depot.`:
+- [x] 2.2 `src/map_layer.h`: add `DeepBedrock, ///< Dark rock of Deep Underground. Drawn with a stand-in until SPR_MAP_LAYER_DEEP_FLOOR exists (r2mlm13 Group 9).` to `MapLayerGround`, after `Vacuum`.
+- [x] 2.3 D-2: replace `MapLayerConstruction::Depot` with `TrainDepot, ///< Train depot.` and `RoadDepot, ///< Road depot.`:
   - in `CmdBuildTrainDepot`, use `TrainDepot`;
   - in `CmdBuildRoadDepot`, use `RoadDepot`;
   - in `UndergroundConstructions`, set both.
 
   `grep -rn "MapLayerConstruction::Depot\b" src` must print nothing afterwards.
-- [ ] 2.4 `src/map_layer.cpp`:
+- [x] 2.4 `src/map_layer.cpp`:
   - add `static MapLayerConstructions DeepUndergroundConstructions()` after `UndergroundConstructions`. Its Javadoc says D-2 allows road, road stops, road depots, signs and portals, and no rail. It sets `Road`, `RoadStop`, `RoadDepot`, `Sign` and `LayerPortal`;
   - append the row `{ DeepUndergroundConstructions(), MapLayerGround::DeepBedrock, 0, false, false, false },`;
   - reword the table's comment to name all four layers;
   - add `static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);` below the table.
-- [ ] 2.5 In `MultiLayerMap::InitialiseLayer`, confirm the non-surface branch serves Deep Underground unchanged: rock fill, `rules.base_height`, freeform edges, and the `Random()` asserts. Reword its comment from "Underground and Space" to "Every layer other than the Surface". Record "no code change" or the change made.
-- [ ] 2.6 `src/clear_cmd.cpp`:
+- [x] 2.5 In `MultiLayerMap::InitialiseLayer`, confirm the non-surface branch serves Deep Underground unchanged: rock fill, `rules.base_height`, freeform edges, and the `Random()` asserts. Reword its comment from "Underground and Space" to "Every layer other than the Surface". Record "no code change" or the change made.
+- [x] 2.6 `src/clear_cmd.cpp`:
   - in `GetLayerGroundSprite`, add `case MapLayerGround::DeepBedrock:` returning `SPR_FLAT_ROCKY_LAND_1`, with the comment `//Stand-in for SPR_MAP_LAYER_DEEP_FLOOR until r2mlm13 Group 9. Drawn grey so Deep Underground does not look like Underground.`;
-  - in `DrawTile_Clear`, choose `PALETTE_TO_GREY` for `DeepBedrock`, keep `PALETTE_ALL_BLACK` for `Vacuum`, and comment the choice;
+  - in `DrawTile_Clear`, choose `PALETTE_TO_GREY` for `DeepBedrock`, keep `PAL_NONE` for the real r2mlm6 `Vacuum` sprites (the old all-black stand-in palette would erase their stars), and comment the choice;
   - add the file's `@see` header line if it is missing.
-- [ ] 2.7 Savegame (D-1):
+- [x] 2.7 Savegame (D-1):
   - in `src/saveload/saveload.h`, append `DeepUnderground, ///< Saveload version: 370\n Map stores Deep Underground; road vehicles store their elevator wait.` after `MapLayers`;
   - in `src/saveload/map_sl.cpp`, after each `IsStorableLayerCount` check in `Load` and `LoadCheck`, add `if (IsSavegameVersionBefore(SaveLoadVersion::DeepUnderground) && _map_layers > 3) SlErrorCorrupt("Invalid map layer count");`, with the comment `//Before Deep Underground a file holds at most Surface, Underground and Space.`;
   - change the RIFF note to "A 4096 by 4096 map of four layers still fits."
-- [ ] 2.8 Run `grep -rn "MAX_MAP_LAYERS == 3\|three layers\|Surface, Underground and Space" src --include=*.cpp --include=*.h`, excluding `src/tests`. Fix each comment that now states a wrong count. Under this task, record every line found and whether it changed.
+- [x] 2.8 Run `grep -rn "MAX_MAP_LAYERS == 3\|three layers\|Surface, Underground and Space" src --include=*.cpp --include=*.h`, excluding `src/tests`. Fix each comment that now states a wrong count. Under this task, record every line found and whether it changed.
 
 ### Group 3 - Layer tests
 
 {{SIMPLE}}
-- [ ] 3.1 `src/tests/map_layer.cpp`: add `MapLayer::DeepUnderground` to every `{MapLayer::Surface, MapLayer::Underground, MapLayer::Space}` loop, and give those tests `Map::Allocate(64, 64, MAX_MAP_LAYERS)`. In `Map::Allocate layer count`, keep the existing check for three layers and add one for four.
-- [ ] 3.2 In `Storable layer counts`, check that 4 is storable and 5 is not.
-- [ ] 3.3 Add the test case `Deep Underground rules`:
+- [x] 3.1 `src/tests/map_layer.cpp`: add `MapLayer::DeepUnderground` to every `{MapLayer::Surface, MapLayer::Underground, MapLayer::Space}` loop, and give those tests `Map::Allocate(64, 64, MAX_MAP_LAYERS)`. In `Map::Allocate layer count`, keep the existing check for three layers and add one for four.
+- [x] 3.2 In `Storable layer counts`, check that 4 is storable and 5 is not.
+- [x] 3.3 Add the test case `Deep Underground rules`:
   - `GetRules(MapLayer::DeepUnderground).ground == MapLayerGround::DeepBedrock`;
   - `Road`, `RoadStop`, `RoadDepot`, `Sign` and `LayerPortal` are allowed;
   - `Rail`, `RailStation`, `TrainDepot` and `Signal` are refused;
   - Underground still allows `TrainDepot` and `RoadDepot`.
-- [ ] 3.4 Add the test case `InitialiseLayer deep underground ground and fence`, in the style of the underground case: inner tiles are rock clear tiles at height 0, the last row and column are void, and `_random` is unchanged.
-- [ ] 3.5 Build Debug and run the unit tests. Every baseline test of task 1.2 and the new cases must pass. Record the result.
+- [x] 3.4 Add the test case `InitialiseLayer deep underground ground and fence`, in the style of the underground case: inner tiles are rock clear tiles at height 0, the last row and column are void, and `_random` is unchanged.
+- [x] 3.5 Build Debug and run the unit tests. Every baseline test of task 1.2 and the new cases must pass. Record the result.
 - [ ] 3.6 With the RelWithDebInfo build and `tools/run_dedicated.sh`, load `build/save/fd9_upgraded_1234_8x8.sav` (version 369, three layers) and save it as `deep_upgraded_1234_8x8`. Then compare both saves with `tools/savegame_plane_digest.py --tiles 65536`:
   - the surface digests are identical;
   - `MAPT` is four planes long (262144 at 8x8);
@@ -341,7 +343,7 @@ _Applies to Groups 4-5._
 ### Group 4 - Portal kinds and pairing
 
 {{HARD}}
-- [ ] 4.1 D-3, in `src/map_layer.h` after `MapLayerRules`: add `enum class LayerPortalKind : uint8_t` with `RailTunnel`, `RoadTunnel` and `RoadElevator`. Give it a Javadoc header and a `///<` comment on each value. Replace the inline `GetPortalTargetLayer(MapLayer from)` with:
+- [x] 4.1 D-3, in `src/map_layer.h` after `MapLayerRules`: add `enum class LayerPortalKind : uint8_t` with `RailTunnel`, `RoadTunnel` and `RoadElevator`. Give it a Javadoc header and a `///<` comment on each value. Replace the inline `GetPortalTargetLayer(MapLayer from)` with:
   ```cpp
   	/**
   	 * Whether a portal of one kind may join two layers.
@@ -398,7 +400,7 @@ _Applies to Groups 4-5._
   	NOT_REACHED();
   }
   ```
-- [ ] 4.2 In `src/layer_portal_map.h`, after `GetLayerPortalPairTile`, add (the header already includes `map_layer.h`):
+- [x] 4.2 In `src/layer_portal_map.h`, after `GetLayerPortalPairTile`, add (the header already includes `map_layer.h`):
   ```cpp
   /**
    * Kind of a portal end, derived from its transport and its two layers (r2mlm12 D-3). It is never stored.
@@ -413,18 +415,18 @@ _Applies to Groups 4-5._
   	return LayerPortalKind::RoadTunnel;
   }
   ```
-- [ ] 4.3 In `CmdBuildLayerPortal`, replace the `expected_target` block. Derive `LayerPortalKind kind`:
+- [x] 4.3 In `CmdBuildLayerPortal`, replace the `expected_target` block. Derive `LayerPortalKind kind`:
   - `RailTunnel` for rail;
   - `RoadElevator` when the tile's layer or `target_layer` is Deep Underground;
   - otherwise `RoadTunnel`.
 
   Then return `CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL)` unless `MultiLayerMap::IsValidLayer(target_layer) && MultiLayerMap::IsPortalPairAllowed(kind, GetTileLayer(tile), target_layer)`. The comment says this keeps r2rvm task 6.4: an invalid target is refused before `TileInLayer`.
-- [ ] 4.4 Strings in `src/lang/english.txt`:
+- [x] 4.4 Strings in `src/lang/english.txt`:
   - change the text of `STR_LAI_LAYER_PORTAL_ROAD` to `Road tunnel to the {STRING}`;
   - add `STR_LAI_LAYER_PORTAL_ROAD_ELEVATOR :Road elevator to the {STRING}` after it.
 
   `GetTileDesc_LayerPortal` picks the string by `GetLayerPortalKind`.
-- [ ] 4.5 In `DrawTile_LayerPortal`, branch on `GetLayerPortalKind`:
+- [x] 4.5 In `DrawTile_LayerPortal`, branch on `GetLayerPortalKind`:
   - `RailTunnel` keeps the r2mlm9 art;
   - `RoadElevator` keeps the r2mlm8 art, with the Surface end on the surface set and every other end on the underground set (D-6);
   - `RoadTunnel` draws the vanilla road tunnel entrance as the stand-in. `DrawRoadOverlays` is declared in `road_func.h`, which the file already includes:
@@ -454,43 +456,45 @@ _Applies to Groups 4-5._
   	}
   ```
   - ASSUMPTION: this was already built previously (the gate's r2mlm8 and r2mlm9 Group 7 art inside `DrawTile_LayerPortal`). If not, re-assess at runtime. If that art already has a bounds table, reuse its style for the stand-in table.
-- [ ] 4.6 `src/rail_gui.cpp`: the portal placement becomes `MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, MapLayer::Invalid)`. Behaviour is unchanged.
-- [ ] 4.7 `src/tests/map_layer.cpp`:
+- [x] 4.6 `src/rail_gui.cpp`: the portal placement becomes `MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, MapLayer::Invalid)`. Behaviour is unchanged.
+- [x] 4.7 `src/tests/map_layer.cpp`:
   - rewrite the two `GetPortalTargetLayer` checks of `Layer portal neighbour mapping and relocation` to the new signature;
   - add the test case `Layer portal kinds and pairs`:
     - the allowed matrix over all 16 ordered layer pairs and three kinds;
     - `GetPortalTargetLayer` for every kind and layer, including an elevator from Deep Underground with each upper layer;
     - `GetLayerPortalKind` on road ends made for Surface and Underground (tunnel), Underground and Deep (elevator), and Surface and Deep (elevator);
     - `TranslateIntoLayerPortalPair` from a Surface end into a Deep Underground pair, which crosses three bands of world Y.
-- [ ] 4.8 Build Debug and run the unit tests, then record the result. Run `grep -rn "GetPortalTargetLayer(" src`: every call must take three arguments.
+- [x] 4.8 Build Debug and run the unit tests, then record the result. Run `grep -rn "GetPortalTargetLayer(" src`: every call must take three arguments.
 
 ### Group 5 - Road tunnel button and road portal picker
 
+2026-10-04 verification correction: the first fresh unit run found `WWT_TEXT should not have a colour` in the new upper-end row. Its label now uses `Colours::Invalid`. Debug and RelWithDebInfo builds pass with zero compiler warnings (`build/build-capture-*.log`); all 110 Debug unit cases pass (`build/ctest-capture-Debug.log`). Operator screenshots remain separate from this evidence.
+
 {{MEDIUM}}
-- [ ] 5.1 `src/widgets/road_widget.h`:
+- [x] 5.1 `src/widgets/road_widget.h`:
   - add `WID_ROT_LAYER_TUNNEL, ///< Build road tunnel to another map layer.` before `WID_ROT_LAYER_ELEVATOR`;
   - add `WID_BREL_UPPER_SEL, ///< Selection that shows the upper-end row only for elevators.`, `WID_BREL_UPPER_SURFACE, ///< Elevator from Deep Underground goes up to the Surface.` and `WID_BREL_UPPER_UNDERGROUND, ///< Elevator from Deep Underground goes up to the Underground.` to `BuildRoadElevatorWidgets`.
-- [ ] 5.2 In both road toolbars of `src/road_gui.cpp` (game and scenario editor), insert before the elevator button: `NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL), SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),`. The comment names the stand-in sprite and r2mlm13 Group 9.
-- [ ] 5.3 In `OnInvalidateData` and `OnInit`, give `WID_ROT_LAYER_TUNNEL` the same enabled rule as the elevator: road types only, `can_build`, and more than one layer. Extend the existing comments.
-- [ ] 5.4 Wire the button:
+- [x] 5.2 In both road toolbars of `src/road_gui.cpp` (game and scenario editor), insert before the elevator button: `NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL), SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),`. The comment names the stand-in sprite and r2mlm13 Group 9.
+- [x] 5.3 In `OnInvalidateData` and `OnInit`, give `WID_ROT_LAYER_TUNNEL` the same enabled rule as the elevator: road types only, `can_build`, and more than one layer. Extend the existing comments.
+- [x] 5.4 Wire the button:
   - `GetCursorForWidget` returns `GetRoadTypeInfo(this->roadtype)->cursor.tunnel` (stand-in);
   - the highlight is `HT_RECT`;
   - `OnClick` opens `ShowRoadElevatorPicker(this, LayerPortalKind::RoadTunnel)`;
   - add the hotkey `Hotkey('U', "layer_tunnel", WID_ROT_LAYER_TUNNEL)` next to `layer_elevator`;
   - the elevator's `OnClick` passes `LayerPortalKind::RoadElevator`.
-- [ ] 5.5 Generalise `BuildRoadElevatorWindow` into the road portal picker:
+- [x] 5.5 Generalise `BuildRoadElevatorWindow` into the road portal picker:
   - its constructor takes `LayerPortalKind kind`, kept as a member;
   - the caption is `STR_BUILD_ROAD_LAYER_TUNNEL_CAPTION` for a tunnel, and `STR_BUILD_ROAD_ELEVATOR_CAPTION` otherwise;
   - the door buttons are unchanged;
   - an `NWID_SELECTION` (`WID_BREL_UPPER_SEL`) shows the row "Upper end: Surface | Underground" only for an elevator, backed by `static MapLayer _road_elevator_upper_layer = MapLayer::Underground;`.
 
   Update `ShowRoadElevatorPicker`'s declaration and Javadoc.
-- [ ] 5.6 `OnPlaceObject`:
+- [x] 5.6 `OnPlaceObject`:
   - `WID_ROT_LAYER_TUNNEL` posts `BuildLayerPortal` with `GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RoadTunnel, MapLayer::Invalid)`;
   - `WID_ROT_LAYER_ELEVATOR` posts it with `GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RoadElevator, _road_elevator_upper_layer)`.
 
   An invalid target is still posted, so the command answers it with its error message (a click in Space, or a tunnel from Deep Underground). The comment says why.
-- [ ] 5.7 `src/lang/english.txt`:
+- [x] 5.7 `src/lang/english.txt`:
   - add `STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL` ("Build a road tunnel between the surface and the underground");
   - add `STR_BUILD_ROAD_LAYER_TUNNEL_CAPTION` ("Road tunnel orientation");
   - add `STR_BUILD_ROAD_ELEVATOR_UPPER_SURFACE` and `_UNDERGROUND` (the layer names);
@@ -512,15 +516,17 @@ _Applies to Group 6._
 
 ### Group 6 - Elevator constants, state, speed and pathfinder cost
 
+Task 6.4 source values match the table below: MPS Regal Bus max speed 112 (`table/engines.h`), progress 84 (`Vehicle::GetAdvanceSpeed`), axial step 192 (`TILE_AXIAL_DISTANCE`), 16 steps per tile (`TILE_SIZE`). `370 * 84 / 192 / 16 = 10.1171875`, rounded to `10 * YAPF_TILE_LENGTH`. Task 6.6 call-site audit found drawing, land info, elevator sound, speed cap, shaft hold and YAPF cost, plus the accessor and unit cases. Commands derive their kind from transport and endpoints before validating the pair. Fresh unit execution now passes 110/110 in Debug (`build/ctest-capture-Debug.log`).
+
 {{MEDIUM}}
-- [ ] 6.1 `src/roadveh_cmd.cpp`:
+- [x] 6.1 `src/roadveh_cmd.cpp`:
   - after `LAYER_ELEVATOR_MAX_SPEED`, add `static constexpr uint16_t LAYER_ELEVATOR_WAIT_TICKS = 370;`. Its Javadoc says: user decision 2026-10-03; 10 seconds at 27 ms per tick, which is 5 game days; game ticks, so fast-forward shortens it like every other game delay, and real time would desync;
   - add `static_assert(LAYER_ELEVATOR_WAIT_TICKS * 2 < 1480, "An elevator queue advances once per ride; RoadVehFindCloseTo lets a vehicle blocked for 1480 ticks drive through.");`;
   - reword the comment of `LAYER_ELEVATOR_MAX_SPEED`: it is now the approach speed on an elevator tile.
-- [ ] 6.2 State (D-4):
+- [x] 6.2 State (D-4):
   - in `src/roadveh.h`, add `uint16_t elevator_wait = 0; ///< Elevator ride: 0 not riding, 1 ride over and the next shaft step crosses, above 1 the ticks left plus one (r2mlm12 D-4).` after `reverse_ctr`;
   - in `SlVehicleRoadVeh`, add `SaveLoad::Variable<VarFileType::U16>("elevator_wait", SLE_OBJECT_ADDRESS(RoadVehicle, elevator_wait), SaveLoadVersion::DeepUnderground),`.
-- [ ] 6.3 In `GetCurrentMaxSpeed`, replace the road-portal condition so the cap applies only to elevators:
+- [x] 6.3 In `GetCurrentMaxSpeed`, replace the road-portal condition so the cap applies only to elevators:
   ```cpp
   		//D-4: only an elevator is ridden slowly. A road tunnel is driven through at full speed; a rail end never holds a road vehicle.
   		if (IsLayerPortalTile(u->tile) && GetLayerPortalKind(u->tile) == LayerPortalKind::RoadElevator) {
@@ -528,7 +534,7 @@ _Applies to Group 6._
   		}
   ```
   - ASSUMPTION: this was already built previously (task 4.2, `GetLayerPortalKind`). If not, re-assess at runtime.
-- [ ] 6.4 Work out `LAYER_ELEVATOR_WAIT_COST` from the code: the distance a default bus covers at top speed during the wait. The values at planning time:
+- [x] 6.4 Work out `LAYER_ELEVATOR_WAIT_COST` from the code: the distance a default bus covers at top speed during the wait. The values at planning time:
 
   | Step | Source | Value |
   | --- | --- | --- |
@@ -539,7 +545,7 @@ _Applies to Group 6._
   | Tiles covered in 370 ticks | 370 * 84 / 192 / 16 | 10.1 |
 
   Re-read each source and copy the table, with the values found, under this task. The constant is the whole number of tiles times `YAPF_TILE_LENGTH`: `10 * YAPF_TILE_LENGTH` with the values above.
-- [ ] 6.5 In `src/pathfinder/yapf/yapf_road.cpp`, add the constant below the includes with a Javadoc block (the distance of task 6.4, and that no setting is added by D-4). Then change the portal line of the segment loop:
+- [x] 6.5 In `src/pathfinder/yapf/yapf_road.cpp`, add the constant below the includes with a Javadoc block (the distance of task 6.4, and that no setting is added by D-4). Then change the portal line of the segment loop:
   ```cpp
   			//One penalty for each portal the segment passes through. An elevator also costs the road a bus could cover during its wait (r2mlm12 D-4).
   			if (follower_local.is_portal) {
@@ -549,7 +555,7 @@ _Applies to Group 6._
   			}
   ```
   Add `#include "../../layer_portal_map.h"` if the file does not reach `GetLayerPortalKind` yet.
-- [ ] 6.6 Build Debug and run the unit tests, and record the result. Then run `grep -rn "GetLayerPortalKind(" src` and list the call sites under this task: the draw, land info and command code of Group 4, the speed cap and the pathfinder.
+- [x] 6.6 Build Debug and run the unit tests, and record the result. Then run `grep -rn "GetLayerPortalKind(" src` and list the call sites under this task: the draw, land info and command code of Group 4, the speed cap and the pathfinder.
 
 ### Area Mandatory Reading - Elevator ride
 
@@ -580,8 +586,10 @@ The ride starts at tick T. Ticks T+1 to T+370 count from 371 down to 1, and from
 
 ### Group 7 - Elevator ride
 
+Task 7.5 static review: blocked exits and turns match the sole reset at the `RDE_NEXT_TILE` commit in `IndividualRoadVehicleController`; turn commands match the `elevator_wait != 0` refusal; stopped/breakdown cases match the early returns before the countdown in `RoadVehController` and the speed-under-5 breakdown guard. Followers match the unchanged blocker lookup, which includes hidden buses; articulated parts share their front's controller and no counter. Save/load matches the version-370 U16 vehicle field; demolition matches `EnsureNoVehicleOnGround` at both ends. The version-369 row was corrected to D-3's road-tunnel migration. Runtime queueing and articulated behaviour remain unverified until Group 10. The commit additionally sets speed to 0, fulfilling D-4's departure from standstill. Mechanical sound is now limited to elevators.
+
 {{HARD}}
-- [ ] 7.1 The hold. In the `RDE_NEXT_TILE` branch, directly before `TileIndex tile = GetLayerPortalNextTile(v->tile, diagdir);`, insert:
+- [x] 7.1 The hold. In the `RDE_NEXT_TILE` branch, directly before `TileIndex tile = GetLayerPortalNextTile(v->tile, diagdir);`, insert:
   ```cpp
   		//D-4: an elevator ride holds the front at the shaft edge until RoadVehController has counted the wait down to 1.
   		//Only the front waits; articulated parts follow it, and a road tunnel is crossed without stopping.
@@ -593,7 +601,7 @@ The ride starts at tick T. Ticks T+1 to T+370 count from 371 down to 1, and from
   		}
   ```
   - ASSUMPTION: this was already built previously (task 6.1 `LAYER_ELEVATOR_WAIT_TICKS`, task 6.2 `elevator_wait`, task 4.2 `GetLayerPortalKind`). If not, re-assess at runtime.
-- [ ] 7.2 The reset. At the end of the same branch, replace its closing `return true;` (the line after `RoadZPosAffectSpeed(v, v->UpdateInclination(true, true));`) with:
+- [x] 7.2 The reset. At the end of the same branch, replace its closing `return true;` (the line after `RoadZPosAffectSpeed(v, v->UpdateInclination(true, true));`) with:
   ```cpp
   		//D-4: a ride ends only once the front has really moved. A step refused above, for example by a vehicle on the pair, keeps the counter at 1,
   		//so the bus waits for the road and never rides twice. The counter is 0 on every other step, so this costs nothing there.
@@ -601,7 +609,7 @@ The ride starts at tick T. Ticks T+1 to T+370 count from 371 down to 1, and from
   		return true;
   ```
   The front lands on the pair at its entry edge heading away from the pair's shaft, so the next step cannot start another ride at once.
-- [ ] 7.3 The countdown. In `RoadVehController`, after the `VehState::Stopped` block, insert:
+- [x] 7.3 The countdown. In `RoadVehController`, after the `VehState::Stopped` block, insert:
   ```cpp
   	//D-4: a bus riding an elevator stays hidden at the shaft edge until its wait is over. Orders and movement resume afterwards.
   	if (v->elevator_wait > 1) {
@@ -611,12 +619,12 @@ The ride starts at tick T. Ticks T+1 to T+370 count from 371 down to 1, and from
   		return true;
   	}
   ```
-- [ ] 7.4 Turning around. In `CmdTurnRoadVeh`, extend the refusal list after `v->state == RVSB_WORMHOLE ||` with:
+- [x] 7.4 Turning around. In `CmdTurnRoadVeh`, extend the refusal list after `v->state == RVSB_WORMHOLE ||` with:
   ```cpp
   			//D-4: a bus riding an elevator cannot turn, as a bus inside a tunnel cannot. Its reverse_ctr would run out during the ride.
   			v->elevator_wait != 0 ||
   ```
-- [ ] 7.5 Review the cases below against the code of tasks 7.1 to 7.4. For each row, record "matches" with the line that gives it, or the fix made. Fix only this group's code.
+- [x] 7.5 Review the cases below against the code of tasks 7.1 to 7.4. For each row, record "matches" with the line that gives it, or the fix made. Fix only this group's code.
 
   | Case | Expected |
   | --- | --- |
@@ -629,8 +637,8 @@ The ride starts at tick T. Ticks T+1 to T+370 count from 371 down to 1, and from
   | Articulated bus | Parts stop where they are; the rear may stay visible in the door during the ride. If parts split, use Consult on Demand |
   | Save and load during the ride | `elevator_wait` is saved (6.2), so the ride resumes with the ticks left |
   | Removing the elevator during the ride | Refused by `EnsureNoVehicleOnGround` on both ends in `ClearTile_LayerPortal` |
-  | A version-369 save with a bus at a shaft edge | `elevator_wait` loads as 0, so its next step starts a full ride |
-- [ ] 7.6 Build Debug and run the unit tests, and record the result. Riding, queueing and save-during-ride are checked in Group 10, because no unit test drives the road vehicle controller.
+  | A version-369 save with a bus at a shaft edge | `elevator_wait` loads as 0. Its Surface/Underground road portal is a road tunnel (D-3), so it crosses without a wait; version 369 cannot contain a Deep Underground elevator |
+- [x] 7.6 Build Debug and run the unit tests, and record the result. Riding, queueing and save-during-ride are checked in Group 10, because no unit test drives the road vehicle controller.
 
 ### Area Mandatory Reading - Layer dropdowns
 
@@ -645,36 +653,40 @@ _Applies to Group 8._
 | [src/lang/english.txt](../../../../src/lang/english.txt) | 391, 420-421, 431, 490-492 | The layer tooltips (inside and after the `###length 32` toolbar block, whose 32 strings stay in widget order) and `STR_MAP_LAYER_SURFACE`, `_UNDERGROUND` and `_SPACE`. |
 | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 47-66, 101-104 | `## Outcome and Boundaries` and the Towns-menu reading rows: r2mlm11 edits the same file's Towns menu, and this group must not touch it, the arrangements or `_toolbar_mode`. |
 
+Context has compacted 1 times while executing this group.
+
 ### Group 8 - Layer dropdowns
 
+Code delivered. Both targets compile in Debug and RelWithDebInfo with zero compiler warnings (`build/build-deep-Debug.log`, `build/build-deep-RelWithDebInfo.log`). Tests for the stable storage values, display order and skipping unallocated layers have been added and compile; they pass in the fresh 110/110 Debug run (`build/ctest-capture-Debug.log`). All combined build/unit/runtime boxes stay open until their remaining checks are performed.
+
 {{MEDIUM}}
-- [ ] 8.1 In `src/map_layer_gui.cpp`, add `static constexpr MapLayer _map_layer_display_order[] = {MapLayer::Surface, MapLayer::Underground, MapLayer::DeepUnderground, MapLayer::Space};`, with a comment that display order is not storage order (D-1). Rewrite `GetNextMapLayer` to step through that order, wrap to the Surface, and skip layers past `layer_count`. Keep its signature and update its Javadoc.
-- [ ] 8.2 Add `DeepUnderground` cases:
+- [x] 8.1 In `src/map_layer_gui.cpp`, add `static constexpr MapLayer _map_layer_display_order[] = {MapLayer::Surface, MapLayer::Underground, MapLayer::DeepUnderground, MapLayer::Space};`, with a comment that display order is not storage order (D-1). Rewrite `GetNextMapLayer` to step through that order, wrap to the Surface, and skip layers past `layer_count`. Keep its signature and update its Javadoc.
+- [x] 8.2 Add `DeepUnderground` cases:
   - `GetMapLayerName` returns `STR_MAP_LAYER_DEEP_UNDERGROUND`;
   - `GetMapLayerIcon` returns the Underground icon as the stand-in, with a comment naming r2mlm13 Group 9.
 
   Add `DropDownList BuildMapLayerDropDown();` to `src/map_layer_gui.h`, and define it in the `.cpp` with a Javadoc block: one `MakeDropDownListIconItem(GetMapLayerIcon(layer), PAL_NONE, GetMapLayerName(layer), to_underlying(layer))` per valid layer in display order, with a comment on the skip of unallocated layers.
-- [ ] 8.3 `src/lang/english.txt`:
+- [x] 8.3 `src/lang/english.txt`:
   - add `STR_MAP_LAYER_DEEP_UNDERGROUND :Deep Underground` after `STR_MAP_LAYER_UNDERGROUND`;
   - change `STR_MAP_LAYER_SPACE` to `Outer Space`;
   - reword `STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER`, `STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT` and `STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP` to "Choose the map layer the main view shows: surface, underground, deep underground or outer space", the second ending in "Now showing: {STRING}";
   - keep the order of the `###length 32` block.
-- [ ] 8.4 Main toolbar in `src/toolbar_gui.cpp`:
+- [x] 8.4 Main toolbar in `src/toolbar_gui.cpp`:
   - `ToolbarMapLayerClick` keeps the disabled check, then calls `PopupMainToolbarMenu(w, widget, BuildMapLayerDropDown(), to_underlying(GetMainWindow()->viewport->layer))`;
   - add `static CallBackFunction MenuClickMapLayer(int index)` with a Javadoc block, which calls `SetViewportLayer(GetMainWindow(), static_cast<MapLayer>(index))` and returns `CallBackFunction::None`;
   - put it in slot 5 of `_menu_clicked_procs`;
   - change the `_toolbar_button_sprites` row to `WWT_IMGBTN`;
   - the `MTHK_CYCLE_MAP_LAYER` case calls `CycleMainViewportLayer()` behind the same disabled check, so `N` still cycles.
-- [ ] 8.5 Scenario editor:
+- [x] 8.5 Scenario editor:
   - put `MenuClickMapLayer` in slot 9 of `_scen_toolbar_dropdown_procs`;
   - make the `WID_TE_MAP_LAYER` widget `WWT_IMGBTN`;
   - give `MainToolbarEditorHotkeys::CycleMapLayer` the cycling behaviour of `N` instead of the widget click, with a comment;
   - update the Javadoc of `ToolbarMapLayerClick` ("Open the layer dropdown").
-- [ ] 8.6 Extra viewport in `src/viewport_gui.cpp`:
+- [x] 8.6 Extra viewport in `src/viewport_gui.cpp`:
   - `WID_EV_MAP_LAYER` becomes `WWT_IMGBTN`;
   - its `OnClick` case calls `ShowDropDownList(this, BuildMapLayerDropDown(), to_underlying(this->viewport->layer), WID_EV_MAP_LAYER)`;
   - add `void OnDropdownSelect(WidgetID widget, int index, int) override` with a Javadoc block. For `WID_EV_MAP_LAYER` it calls `SetViewportLayer(this, static_cast<MapLayer>(index))` and sets the button sprite.
-- [ ] 8.7 Smallmap in `src/smallmap_gui.cpp`:
+- [x] 8.7 Smallmap in `src/smallmap_gui.cpp`:
   - the `WID_SM_MAP_LAYER` row becomes `WWT_IMGBTN`;
   - its click shows the dropdown with `this->layer` selected;
   - `OnDropdownSelect` sets `this->layer` and the sprite, then calls `this->overlay->SetDirty()` and `this->SetDirty()` (r2rvm2 FD-8);
@@ -749,8 +761,10 @@ _Applies to Group 11._
 
 ### Group 11 - Plan records
 
+Code documentation has been updated for four layers and three portal kinds. Task 11.2 is partial: the master row is `[~]`, because savegame, runtime and human checks are still open; the order note records coding delivery, not acceptance. Task 11.7 remains a user decision: r2rvm2 task 18.2 has no recorded answer yet. Task 11.8 symbol spellings were checked against the tree.
+
 {{SIMPLE}}
-- [ ] 11.1 In the master plan, amend:
+- [x] 11.1 In the master plan, amend:
   - AD-1: four layers, `DeepUnderground = 3` appended, display order separate from storage order (D-1);
   - AD-8: pairs by `MultiLayerMap::IsPortalPairAllowed`, three derived kinds (D-3);
   - AD-12: four layers; road elevators to Deep Underground; no trains in Deep Underground.
@@ -760,22 +774,22 @@ _Applies to Group 11._
   - in `## Key Points`, reword point 1 (the dropdown with four layers) and point 3 (road tunnels to the Underground, elevators down to Deep Underground);
   - in `## Plan Index`, set this plan's Status cell to `[X]`, recount the boxes of the other rows that changed since 2026-10-03, and correct this plan's Delivers cell if what was built differs;
   - in its `Order:` list, replace the sentence "r2mlm12 (planned 2026-10-03) starts only after r2rvm2, r2mlm6 and the Group 7 art of r2mlm8 and r2mlm9 are done." with "r2mlm12 was done on <date>, with stand-in art."
-- [ ] 11.3 In the master plan `## Deferred Points`, add:
+- [x] 11.3 In the master plan `## Deferred Points`, add:
   - a rail elevator and trains in Deep Underground;
   - a rule for the Underground tile under a Surface-to-Deep elevator (D-3);
   - a setting for the elevator wait and its pathfinder cost (D-4).
-- [ ] 11.4 In r2mlm7 `## Portal Contract`:
+- [x] 11.4 In r2mlm7 `## Portal Contract`:
   - rewrite the Pair bullet: allowed pairs per kind, as in D-3, with a link to this plan;
   - in the Tile bits bullet, note that bits 6..5 hold every layer value up to Deep Underground (3).
-- [ ] 11.5 In `archi-map-layers.md`:
+- [x] 11.5 In `archi-map-layers.md`:
   - update `## What a layer is` (four layers, display order);
   - update `## Portals` (three kinds; the road tunnel driven through; the elevator wait, its saved state, and the reset at the commit);
   - update `## Savegame` (version 370, `elevator_wait`, the four-layer count check);
   - add the new symbols to `## Code map`;
   - keep the invariants.
-- [ ] 11.6 In r2mlm10, add r2mlm12 to the entry gate. Change "three layers" to "four layers" in tasks 2.2, 2.3 and 2.7. In tasks 1.2 and 1.3, add a road tunnel and an elevator ride with its wait.
+- [x] 11.6 In r2mlm10, add r2mlm12 to the entry gate. Change "three layers" to "four layers" in tasks 2.2, 2.3 and 2.7. In tasks 1.2 and 1.3, add a road tunnel and an elevator ride with its wait.
 - [ ] 11.7 Show the user r2rvm2 task 18.2's recorded answer on the memory of three planes, explain that four planes cost a third more, and ask whether that is accepted. Record the answer under this task and, if a mitigation is wanted, in master plan `## Deferred Points`.
-- [ ] 11.8 Re-read every Markdown edit of Group 11 against the code. Every symbol named must exist with that spelling, and no other document is changed.
+- [x] 11.8 Re-read every Markdown edit of Group 11 against the code. Every symbol named must exist with that spelling, and no other document is changed.
 
 ## Consult on Demand
 

@@ -16,11 +16,16 @@
 #include "landscape.h"
 #include "vehicle_base.h"
 #include "linkgraph/linkgraph_gui.h"
+#include "dropdown_func.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
 
 #include "safeguards.h"
+
+/** Display order is separate from the immutable storage order (r2mlm12 D-1). */
+static constexpr MapLayer _map_layer_display_order[] = {MapLayer::Surface, MapLayer::Underground, MapLayer::DeepUnderground, MapLayer::Space};
+static_assert(std::size(_map_layer_display_order) == MAX_MAP_LAYERS);
 
 /**
  * Player-facing name of one map layer.
@@ -33,6 +38,7 @@ StringID GetMapLayerName(MapLayer layer)
 		case MapLayer::Surface: return STR_MAP_LAYER_SURFACE;
 		case MapLayer::Underground: return STR_MAP_LAYER_UNDERGROUND;
 		case MapLayer::Space: return STR_MAP_LAYER_SPACE;
+		case MapLayer::DeepUnderground: return STR_MAP_LAYER_DEEP_UNDERGROUND;
 		default: NOT_REACHED();
 	}
 }
@@ -48,12 +54,14 @@ SpriteID GetMapLayerIcon(MapLayer layer)
 		case MapLayer::Surface: return SPR_IMG_MAP_LAYER_SURFACE;
 		case MapLayer::Underground: return SPR_IMG_MAP_LAYER_UNDERGROUND;
 		case MapLayer::Space: return SPR_IMG_MAP_LAYER_SPACE;
+		//Underground icon is the stand-in until r2mlm13 Group 9.
+		case MapLayer::DeepUnderground: return SPR_IMG_MAP_LAYER_UNDERGROUND;
 		default: NOT_REACHED();
 	}
 }
 
 /**
- * Layer that follows this one in the cycle.
+ * Layer that follows this one in GUI display order, skipping unallocated Layers.
  * @param layer Layer currently shown.
  * @param layer_count How many layers the cycle includes.
  * @return The next layer, wrapping to the surface after the last one.
@@ -63,10 +71,31 @@ MapLayer GetNextMapLayer(MapLayer layer, uint layer_count)
 	//One layer has nowhere to go.
 	if (layer_count <= 1) return MapLayer::Surface;
 
-	uint next = to_underlying(layer) + 1;
-	//Past the last live layer, the cycle returns to the surface.
-	if (next >= layer_count) return MapLayer::Surface;
-	return static_cast<MapLayer>(next);
+	auto current = std::find(std::begin(_map_layer_display_order), std::end(_map_layer_display_order), layer);
+	size_t start = current == std::end(_map_layer_display_order) ? std::size(_map_layer_display_order) - 1
+		: static_cast<size_t>(std::distance(std::begin(_map_layer_display_order), current));
+	//One walk through display order wraps to Surface while skipping Layers this Map has not allocated.
+	for (size_t step = 1; step <= std::size(_map_layer_display_order); ++step) {
+		MapLayer next = _map_layer_display_order[(start + step) % std::size(_map_layer_display_order)];
+		if (to_underlying(next) < layer_count) return next;
+	}
+	return MapLayer::Surface;
+}
+
+/**
+ * Build the shared Layer selector in GUI display order.
+ * @return One icon/name entry per allocated Layer, with its stable MapLayer value.
+ */
+DropDownList BuildMapLayerDropDown()
+{
+	DropDownList list;
+	//Storage values identify entries; the GUI order places Deep Underground before Outer Space.
+	for (MapLayer layer : _map_layer_display_order) {
+		//A partially allocated Map must not offer a Layer its views cannot show.
+		if (!MultiLayerMap::IsValidLayer(layer)) continue;
+		list.push_back(MakeDropDownListIconItem(GetMapLayerIcon(layer), PAL_NONE, GetMapLayerName(layer), layer));
+	}
+	return list;
 }
 
 /**

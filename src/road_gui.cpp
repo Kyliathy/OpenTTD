@@ -55,7 +55,12 @@
 
 static void ShowRVStationPicker(Window *parent, RoadStopType rs);
 static void ShowRoadDepotPicker(Window *parent);
-static void ShowRoadElevatorPicker(Window *parent);
+/**
+ * Open the orientation picker for a road tunnel or elevator.
+ * @param parent Road toolbar owning the placement.
+ * @param kind Kind of road portal being placed.
+ */
+static void ShowRoadElevatorPicker(Window *parent, LayerPortalKind kind);
 static void ShowBuildRoadWaypointPicker(Window *parent);
 
 static bool _remove_button_clicked;
@@ -71,6 +76,7 @@ static RoadType _cur_roadtype;
 static DiagDirection _road_depot_orientation;
 /** Door direction chosen in the road elevator picker. */
 static DiagDirection _road_elevator_door_direction = DiagDirection::NE;
+static MapLayer _road_elevator_upper_layer = MapLayer::Underground; ///< Upper end chosen when building an elevator from Deep Underground.
 
 struct RoadWaypointPickerSelection {
 	RoadStopClassID sel_class; ///< Selected road waypoint class.
@@ -421,10 +427,11 @@ struct BuildRoadToolbarWindow : Window {
 			CloseWindowById(WindowClass::BuildWaypoint, TransportType::Road);
 		}
 
-		//The elevator exists only on the road toolbar. FD-7 and L-12: it needs layers and the same vehicle gate as the depot and the stops.
+		//Road tunnels and elevators exist only on the road toolbar. FD-7 and L-12: both need Layers and the depot/stop vehicle gate.
 		if (RoadTypeIsRoad(this->roadtype)) {
 			bool enabled = can_build && MultiLayerMap::GetLayerCount() > 1;
 			this->SetWidgetDisabledState(WID_ROT_LAYER_ELEVATOR, !enabled);
+			this->SetWidgetDisabledState(WID_ROT_LAYER_TUNNEL, !enabled);
 		}
 
 		if (_game_mode != GameMode::Editor) {
@@ -455,10 +462,11 @@ struct BuildRoadToolbarWindow : Window {
 		}
 		this->GetWidget<NWidgetCore>(WID_ROT_CONVERT_ROAD)->SetSprite(rti->gui_sprites.convert_road);
 		this->GetWidget<NWidgetCore>(WID_ROT_BUILD_TUNNEL)->SetSprite(rti->gui_sprites.build_tunnel);
-		//The elevator exists only on the road toolbar. FD-7: it needs layers; OnInvalidateData adds the vehicle gate.
+		//Road tunnels and elevators exist only on the road toolbar and need both live Layers and available vehicles.
 		if (RoadTypeIsRoad(this->roadtype)) {
-			bool enabled = MultiLayerMap::GetLayerCount() > 1;
+			bool enabled = CanBuildVehicleInfrastructure(VehicleType::Road, GetRoadTramType(this->roadtype)) && MultiLayerMap::GetLayerCount() > 1;
 			this->SetWidgetDisabledState(WID_ROT_LAYER_ELEVATOR, !enabled);
+			this->SetWidgetDisabledState(WID_ROT_LAYER_TUNNEL, !enabled);
 		}
 	}
 
@@ -563,6 +571,8 @@ struct BuildRoadToolbarWindow : Window {
 			case WID_ROT_TRUCK_STATION: return SPR_CURSOR_TRUCK_STATION;
 			case WID_ROT_BUILD_BRIDGE: return SPR_CURSOR_BRIDGE;
 			case WID_ROT_BUILD_TUNNEL: return GetRoadTypeInfo(this->roadtype)->cursor.tunnel;
+			//Vanilla tunnel cursor is the stand-in until r2mlm13 Group 9.
+			case WID_ROT_LAYER_TUNNEL: return GetRoadTypeInfo(this->roadtype)->cursor.tunnel;
 			case WID_ROT_LAYER_ELEVATOR: return SPR_CURSOR_ROAD_ELEVATOR;
 			case WID_ROT_CONVERT_ROAD: return GetRoadTypeInfo(this->roadtype)->cursor.convert_road;
 			default: NOT_REACHED();
@@ -587,6 +597,7 @@ struct BuildRoadToolbarWindow : Window {
 			case WID_ROT_TRUCK_STATION: return HT_RECT;
 			case WID_ROT_BUILD_BRIDGE: return HT_RECT;
 			case WID_ROT_BUILD_TUNNEL: return HT_SPECIAL;
+			case WID_ROT_LAYER_TUNNEL: return HT_RECT;
 			case WID_ROT_LAYER_ELEVATOR: return HT_RECT;
 			case WID_ROT_CONVERT_ROAD: return HT_RECT | HT_DIAGONAL;
 			default: NOT_REACHED();
@@ -611,9 +622,10 @@ struct BuildRoadToolbarWindow : Window {
 				}
 				break;
 
+			case WID_ROT_LAYER_TUNNEL:
 			case WID_ROT_LAYER_ELEVATOR:
 				if (started) {
-					ShowRoadElevatorPicker(this);
+					ShowRoadElevatorPicker(this, widget == WID_ROT_LAYER_TUNNEL ? LayerPortalKind::RoadTunnel : LayerPortalKind::RoadElevator);
 				}
 				break;
 
@@ -723,9 +735,11 @@ struct BuildRoadToolbarWindow : Window {
 						tile, _cur_roadtype, _road_depot_orientation);
 				break;
 
+			case WID_ROT_LAYER_TUNNEL:
 			case WID_ROT_LAYER_ELEVATOR: {
-				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place an elevator. The command refuses a layer without a pair.
-				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile));
+				//FD-7: derive the target from the clicked Tile. Posting an invalid target lets the command explain unsupported Layers.
+				LayerPortalKind kind = this->last_started_action == WID_ROT_LAYER_TUNNEL ? LayerPortalKind::RoadTunnel : LayerPortalKind::RoadElevator;
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), kind, _road_elevator_upper_layer);
 				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
 						tile, TransportType::Road, target, ReverseDiagDir(_road_elevator_door_direction), INVALID_RAILTYPE, _cur_roadtype);
 				break;
@@ -980,6 +994,7 @@ struct BuildRoadToolbarWindow : Window {
 		Hotkey('B', "bridge", WID_ROT_BUILD_BRIDGE),
 		Hotkey('T', "tunnel", WID_ROT_BUILD_TUNNEL),
 		Hotkey('E', "layer_elevator", WID_ROT_LAYER_ELEVATOR),
+		Hotkey('U', "layer_tunnel", WID_ROT_LAYER_TUNNEL),
 		Hotkey('R', "remove", WID_ROT_REMOVE),
 		Hotkey('C', "convert", WID_ROT_CONVERT_ROAD),
 		Hotkey(WKC_L_BRACKET, "prev_roadtype", to_underlying(SpecialListHotkeys::PreviousItem)),
@@ -1040,6 +1055,9 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_widgets =
 						SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_BRIDGE, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
+		//Vanilla road tunnel button is the stand-in until r2mlm13 Group 9.
+		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
@@ -1156,6 +1174,9 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_scen_widg
 						SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_BRIDGE, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
+		//Vanilla road tunnel button is the stand-in until r2mlm13 Group 9.
+		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
@@ -1315,16 +1336,21 @@ static void ShowRoadDepotPicker(Window *parent)
 	new BuildRoadDepotWindow(_build_road_depot_desc, parent);
 }
 
-/** Picker for the door a road elevator faces on the viewed layer. */
+/** Picker for the door of a road portal and the upper destination of a Deep Underground elevator. */
 struct BuildRoadElevatorWindow : public PickerWindowBase {
+	LayerPortalKind kind; ///< Road portal kind whose orientation this picker selects.
 	/**
 	 * Open the elevator door picker.
 	 * @param desc Window description.
 	 * @param parent Road toolbar that owns the placement.
+	 * @param kind Kind of road portal being placed.
 	 */
-	BuildRoadElevatorWindow(WindowDesc &desc, Window *parent) : PickerWindowBase(desc, parent)
+	BuildRoadElevatorWindow(WindowDesc &desc, Window *parent, LayerPortalKind kind) : PickerWindowBase(desc, parent), kind(kind)
 	{
 		this->CreateNestedTree();
+		this->GetWidget<NWidgetCore>(WID_BREL_CAPTION)->SetString(kind == LayerPortalKind::RoadTunnel ? STR_BUILD_ROAD_LAYER_TUNNEL_CAPTION : STR_BUILD_ROAD_ELEVATOR_CAPTION);
+		this->GetWidget<NWidgetStacked>(WID_BREL_UPPER_SEL)->SetDisplayedPlane(kind == LayerPortalKind::RoadElevator ? 0 : SZSP_NONE);
+		this->LowerWidget(_road_elevator_upper_layer == MapLayer::Surface ? WID_BREL_UPPER_SURFACE : WID_BREL_UPPER_UNDERGROUND);
 		this->LowerWidget(WID_BREL_DOOR_NE + _road_elevator_door_direction);
 		this->FinishInitNested(TransportType::Road);
 	}
@@ -1345,7 +1371,7 @@ struct BuildRoadElevatorWindow : public PickerWindowBase {
 	}
 
 	/**
-	 * Draw one door direction with the depot stand-in.
+	 * Draw one door direction with the depot stand-in until r2mlm13 Group 9.
 	 * @param r Widget rectangle.
 	 * @param widget Widget to draw.
 	 */
@@ -1371,6 +1397,14 @@ struct BuildRoadElevatorWindow : public PickerWindowBase {
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		switch (widget) {
+			case WID_BREL_UPPER_SURFACE:
+			case WID_BREL_UPPER_UNDERGROUND:
+				_road_elevator_upper_layer = widget == WID_BREL_UPPER_SURFACE ? MapLayer::Surface : MapLayer::Underground;
+				this->SetWidgetLoweredState(WID_BREL_UPPER_SURFACE, _road_elevator_upper_layer == MapLayer::Surface);
+				this->SetWidgetLoweredState(WID_BREL_UPPER_UNDERGROUND, _road_elevator_upper_layer == MapLayer::Underground);
+				SndClickBeep();
+				this->SetDirty();
+				break;
 			case WID_BREL_DOOR_NW:
 			case WID_BREL_DOOR_NE:
 			case WID_BREL_DOOR_SW:
@@ -1404,6 +1438,13 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_elevator_
 				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BREL_DOOR_SE), SetFill(0, 0), SetToolTip(STR_BUILD_ROAD_ELEVATOR_SELECT_TOOLTIP),
 			EndContainer(),
 		EndContainer(),
+		NWidget(NWID_SELECTION, Colours::Invalid, WID_BREL_UPPER_SEL),
+			NWidget(NWID_HORIZONTAL), SetPadding(WidgetDimensions::unscaled.picker), SetPIP(0, WidgetDimensions::unscaled.hsep_normal, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_BUILD_ROAD_ELEVATOR_UPPER_END, STR_NULL),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BREL_UPPER_SURFACE), SetStringTip(STR_BUILD_ROAD_ELEVATOR_UPPER_SURFACE, STR_BUILD_ROAD_ELEVATOR_UPPER_TOOLTIP),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BREL_UPPER_UNDERGROUND), SetStringTip(STR_BUILD_ROAD_ELEVATOR_UPPER_UNDERGROUND, STR_BUILD_ROAD_ELEVATOR_UPPER_TOOLTIP),
+			EndContainer(),
+		EndContainer(),
 	EndContainer(),
 };
 
@@ -1416,12 +1457,13 @@ static WindowDesc _build_road_elevator_desc(
 );
 
 /**
- * Open the road elevator door picker.
+ * Open the orientation and upper-destination picker for a road portal.
  * @param parent Road toolbar.
+ * @param kind Kind of road portal being placed.
  */
-static void ShowRoadElevatorPicker(Window *parent)
+static void ShowRoadElevatorPicker(Window *parent, LayerPortalKind kind)
 {
-	new BuildRoadElevatorWindow(_build_road_elevator_desc, parent);
+	new BuildRoadElevatorWindow(_build_road_elevator_desc, parent, kind);
 }
 
 template <RoadStopType roadstoptype>

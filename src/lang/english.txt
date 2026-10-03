@@ -388,7 +388,7 @@ STR_TOOLBAR_TOOLTIP_FORWARD                                     :{BLACK}Fast for
 STR_TOOLBAR_TOOLTIP_OPTIONS                                     :{BLACK}Options and settings
 STR_TOOLBAR_TOOLTIP_SAVE_GAME_ABANDON_GAME                      :{BLACK}Save, load or abandon game, exit program
 STR_TOOLBAR_TOOLTIP_DISPLAY_MAP                                 :{BLACK}Open map, extra viewport, cargo flow or list of signs
-STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Switch the main view between the surface, underground and space maps
+STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
 STR_TOOLBAR_TOOLTIP_DISPLAY_TOWN_DIRECTORY                      :{BLACK}Open town directory or found town
 STR_TOOLBAR_TOOLTIP_DISPLAY_SUBSIDIES                           :{BLACK}Open subsidy list
 STR_TOOLBAR_TOOLTIP_DISPLAY_LIST_OF_COMPANY_STATIONS            :{BLACK}Open list of company's stations
@@ -417,7 +417,7 @@ STR_TOOLBAR_TOOLTIP_LAND_BLOCK_INFORMATION                      :{BLACK}Open lan
 STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR                              :{BLACK}Switch toolbars
 
 # Tooltips of the map layer button that name the shown layer
-STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Switch the main view between the surface, underground and space maps. Now showing: {STRING}
+STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space. Now showing: {STRING}
 STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE                            :{BLACK}This game has only one map layer
 
 # Extra tooltips for the scenario editor toolbar
@@ -428,7 +428,7 @@ STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_BACKWARD_TOOLTIP    :{BLACK}Move the
 STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_FORWARD_TOOLTIP     :{BLACK}Move the starting date forward 1 year
 STR_SCENEDIT_TOOLBAR_SET_DATE_TOOLTIP                           :{BLACK}Click to enter the starting year
 STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP         :{BLACK}Open map, extra viewport, sign list, or town or industry directory
-STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Switch the main view between the surface, underground and space maps
+STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
 STR_SCENEDIT_TOOLBAR_LANDSCAPE_GENERATION_TOOLTIP               :{BLACK}Open landscaping menu or generate a new world
 STR_SCENEDIT_TOOLBAR_TOWN_GENERATION_TOOLTIP                    :{BLACK}Build or generate towns
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP                :{BLACK}Build or generate industries
@@ -489,7 +489,9 @@ STR_MAP_MENU_SIGN_LIST                                          :Sign list
 # Map layers
 STR_MAP_LAYER_SURFACE                                           :Surface
 STR_MAP_LAYER_UNDERGROUND                                       :Underground
-STR_MAP_LAYER_SPACE                                             :Space
+STR_MAP_LAYER_DEEP_UNDERGROUND                                  :Deep Underground
+STR_MAP_LAYER_SPACE                                             :Outer Space
+STR_MAP_LAYER_CHOOSE_VIEW                                       :{BLACK}Choose which map layer this view shows
 
 # Town menu
 STR_TOWN_MENU_TOWN_DIRECTORY                                    :Town directory
@@ -3019,8 +3021,14 @@ STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_ONE_WAY_ROAD                    :{BLACK}Activate
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE                      :{BLACK}Build road bridge. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_TRAMWAY_BRIDGE                   :{BLACK}Build tramway bridge. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL                      :{BLACK}Build road tunnel. Also press Shift to show cost estimate only
-STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR                    :{BLACK}Build a road elevator to the other map layer
+STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR                    :{BLACK}Build a road elevator down to the deep underground
+STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL                      :{BLACK}Build a road tunnel between the surface and the underground
+STR_BUILD_ROAD_LAYER_TUNNEL_CAPTION                              :Road tunnel orientation
 STR_BUILD_ROAD_ELEVATOR_CAPTION                                  :Road elevator orientation
+STR_BUILD_ROAD_ELEVATOR_UPPER_END                                :Upper end:
+STR_BUILD_ROAD_ELEVATOR_UPPER_SURFACE                            :Surface
+STR_BUILD_ROAD_ELEVATOR_UPPER_UNDERGROUND                        :Underground
+STR_BUILD_ROAD_ELEVATOR_UPPER_TOOLTIP                            :{BLACK}Layer an elevator built in the deep underground goes up to
 STR_BUILD_ROAD_ELEVATOR_SELECT_TOOLTIP                           :{BLACK}Select the door direction. The door on the other layer faces the opposite way
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_TRAMWAY_TUNNEL                   :{BLACK}Build tramway tunnel. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR_ROAD           :{BLACK}Toggle build/remove for road construction
@@ -3320,7 +3328,8 @@ STR_LAI_WATER_DESCRIPTION_COAST_ROCKS                           :Coast or riverb
 STR_LAI_TUNNEL_DESCRIPTION_RAILROAD                             :Railway tunnel
 STR_LAI_TUNNEL_DESCRIPTION_ROAD                                 :Road tunnel
 STR_LAI_LAYER_PORTAL_RAIL                                       :Railway layer portal to the {STRING}
-STR_LAI_LAYER_PORTAL_ROAD                                       :Road layer portal to the {STRING}
+STR_LAI_LAYER_PORTAL_ROAD                                       :Road tunnel to the {STRING}
+STR_LAI_LAYER_PORTAL_ROAD_ELEVATOR                              :Road elevator to the {STRING}
 
 STR_LAI_BRIDGE_DESCRIPTION_RAIL_SUSPENSION_STEEL                :Steel suspension rail bridge
 STR_LAI_BRIDGE_DESCRIPTION_RAIL_GIRDER_STEEL                    :Steel girder rail bridge

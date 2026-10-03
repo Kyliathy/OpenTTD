@@ -15,6 +15,7 @@
 #include "window_func.h"
 #include "map_layer_gui.h"
 #include "map_layer.h"
+#include "dropdown_func.h"
 
 #include "widgets/viewport_widget.h"
 
@@ -38,7 +39,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_extra_viewport_widge
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_ZOOM_IN), SetSpriteTip(SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN),
 		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_ZOOM_OUT), SetSpriteTip(SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT),
-		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_MAP_LAYER), SetSpriteTip(SPR_IMG_PLANTTREES, STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER),
+		NWidget(WWT_IMGBTN, Colours::Grey, WID_EV_MAP_LAYER), SetSpriteTip(SPR_IMG_MAP_LAYER_SURFACE, STR_MAP_LAYER_CHOOSE_VIEW),
 		NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_EV_MAIN_TO_VIEW), SetFill(1, 1), SetResize(1, 0),
 										SetStringTip(STR_EXTRA_VIEW_MOVE_MAIN_TO_VIEW, STR_EXTRA_VIEW_MOVE_MAIN_TO_VIEW_TOOLTIP),
@@ -88,10 +89,7 @@ public:
 			case WID_EV_ZOOM_OUT: DoZoomInOutWindow(ZOOM_OUT, this); break;
 
 			case WID_EV_MAP_LAYER: {
-				MapLayer next = GetNextMapLayer(this->viewport->layer, MultiLayerMap::GetLayerCount());
-				SetViewportLayer(this, next);
-				this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
-				this->SetDirty();
+				ShowDropDownList(this, BuildMapLayerDropDown(), to_underlying(this->viewport->layer), WID_EV_MAP_LAYER);
 				break;
 			}
 
@@ -120,6 +118,20 @@ public:
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Switch only this extra viewport to the Layer chosen in its dropdown.
+	 * @param widget Button owning the dropdown.
+	 * @param index Stable MapLayer value selected.
+	 * @param click_mode Unused dropdown click mode.
+	 */
+	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int click_mode) override
+	{
+		if (widget != WID_EV_MAP_LAYER) return;
+		SetViewportLayer(this, static_cast<MapLayer>(index));
+		this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
+		this->SetDirty();
 	}
 
 	void OnResize() override

@@ -380,6 +380,8 @@ CommandCost CmdTurnRoadVeh(DoCommandFlags flags, VehicleID veh_id)
 			v->breakdown_ctr != 0 ||
 			v->overtaking != 0 ||
 			v->state == RVSB_WORMHOLE ||
+			//A riding bus cannot turn: its reverse counter would expire before the elevator ride ends.
+			v->elevator_wait != 0 ||
 			v->IsInDepot() ||
 			v->current_order.IsType(OT_LOADING)) {
 		return CMD_ERROR;
@@ -465,11 +467,18 @@ void RoadVehicle::UpdateDeltaXY()
 }
 
 /**
- * Speed cap while any part is inside a road elevator.
- * Road speeds are in the same units as GetCurrentMaxSpeed. 32 is slow enough
- * that crossing the one elevator tile takes about two seconds instead of a flash.
+ * Approach speed cap while any part is on a road elevator Tile.
+ * Road speeds use GetCurrentMaxSpeed units. 32 provides a slow approach;
+ * the actual elevator ride stops the front engine for LAYER_ELEVATOR_WAIT_TICKS.
  */
 static constexpr uint16_t LAYER_ELEVATOR_MAX_SPEED = 32;
+
+/**
+ * User decision 2026-10-03: 370 game ticks, about ten seconds at 27 ms per tick (five game days).
+ * Fast-forward shortens the ride like every game delay; a real-time wait would desync.
+ */
+static constexpr uint16_t LAYER_ELEVATOR_WAIT_TICKS = 370;
+static_assert(LAYER_ELEVATOR_WAIT_TICKS * 2 < 1480, "An elevator queue advances once per ride; RoadVehFindCloseTo permits driving through after 1480 blocked ticks.");
 
 /**
  * Calculates the maximum speed of the vehicle under its current conditions.
@@ -490,8 +499,8 @@ inline int RoadVehicle::GetCurrentMaxSpeed() const
 			}
 		}
 
-		//A road portal is the elevator ride. The cap keeps that crossing near two seconds.
-		if (IsLayerPortalTile(u->tile) && GetLayerPortalTransportType(u->tile) == TransportType::Road) {
+		//Only an elevator has a slow approach. Road tunnels are crossed at normal speed.
+		if (IsLayerPortalTile(u->tile) && GetLayerPortalKind(u->tile) == LayerPortalKind::RoadElevator) {
 			max_speed = std::min(max_speed, static_cast<int>(LAYER_ELEVATOR_MAX_SPEED));
 		}
 
@@ -1246,6 +1255,13 @@ bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev)
 
 	if (rd.x & RDE_NEXT_TILE) {
 		DiagDirection diagdir = static_cast<DiagDirection>(rd.x & 3);
+		//An elevator holds only the front at its shaft edge; articulated parts follow, and road tunnels never wait.
+		if (v->IsFrontEngine() && IsLayerPortalShaftExit(v->tile, diagdir) && GetLayerPortalKind(v->tile) == LayerPortalKind::RoadElevator && v->elevator_wait != 1) {
+			//The first arrival starts the ride. Only a committed step may reset it to idle.
+			if (v->elevator_wait == 0) v->elevator_wait = LAYER_ELEVATOR_WAIT_TICKS + 1;
+			v->cur_speed = 0;
+			return false;
+		}
 		//A shaft exit continues on the pair tile. Every other step stays on this layer.
 		TileIndex tile = GetLayerPortalNextTile(v->tile, diagdir);
 		Trackdir dir;
@@ -1401,6 +1417,12 @@ again:
 		v->y_pos = y;
 		v->UpdatePosition();
 		RoadZPosAffectSpeed(v, v->UpdateInclination(true, true));
+		//A refused step keeps the ready counter at 1, so a blocked pair cannot trigger a second ride.
+		if (v->IsFrontEngine()) {
+			//An elevator releases its vehicle from standstill once the crossing or turn actually commits.
+			if (v->elevator_wait == 1) v->cur_speed = 0;
+			v->elevator_wait = 0;
+		}
 		return true;
 	}
 
@@ -1619,6 +1641,11 @@ again:
 	return true;
 }
 
+/**
+ * Advance a front road vehicle, pausing an elevator ride while stopped or broken down.
+ * @param v Front vehicle to control.
+ * @return Whether the vehicle remains active this tick.
+ */
 static bool RoadVehController(RoadVehicle *v)
 {
 	/* decrease counters */
@@ -1633,6 +1660,13 @@ static bool RoadVehController(RoadVehicle *v)
 	/* road vehicle has broken down? */
 	if (v->HandleBreakdown()) return true;
 	if (v->vehstatus.Test(VehState::Stopped)) {
+		v->SetLastSpeed();
+		return true;
+	}
+	//Stopped vehicles and approach breakdowns pause the ride; orders and movement resume after the countdown.
+	if (v->elevator_wait > 1) {
+		v->elevator_wait--;
+		v->cur_speed = 0;
 		v->SetLastSpeed();
 		return true;
 	}

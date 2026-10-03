@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_map.h Map accessors for a pair of tiles that connect two layers. */
+/** @file layer_portal_map.h Map accessors for a pair of tiles that connect two layers. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef LAYER_PORTAL_MAP_H
 #define LAYER_PORTAL_MAP_H

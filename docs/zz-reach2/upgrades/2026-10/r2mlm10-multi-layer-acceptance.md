@@ -57,7 +57,7 @@ This plan writes no gameplay code. A defect found here is fixed in the plan that
 
 _Applies to Group 1._
 
-Entry gate. r2mlm8 and r2mlm9 must have every Completion Condition met (check their `## Completion Conditions` against the tree and their task boxes). If either is incomplete, stop Groups 1, 2 and 4; Groups 3 and 5 may start on the parts already delivered. Do not mark an invariant as evidenced from a run that lacks elevators or portals, and do not change gameplay code from this plan to make a test pass.
+Entry gate. r2mlm8, r2mlm9, r2mlm12 and r2mlm13 must have every Completion Condition met (check their `## Completion Conditions` against the tree and their task boxes). If any is incomplete, stop Groups 1, 2 and 4; Groups 3 and 5 may start on the parts already delivered. Do not mark an invariant as evidenced from a run that lacks road tunnels, timed elevators or rail portals, and do not change gameplay code from this plan to make a test pass. The user's successful earlier play session predates the fourth-layer and timed-elevator changes; final acceptance remains pending.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
@@ -69,8 +69,8 @@ Entry gate. r2mlm8 and r2mlm9 must have every Completion Condition met (check th
 
 {{MEDIUM}}
 - [ ] 1.1 Start a dedicated server from `build/` (`openttd.exe -D -d desync=2`) on a 512x512 map and connect one GUI client on the same machine; record the commands used.
-- [ ] 1.2 From the client, build an underground bus network with two elevators and an underground rail loop with two portals; run vehicles for two in-game years at normal speed.
-- [ ] 1.3 Join a second client mid-game while vehicles are inside elevators and portals; confirm it loads and stays in sync.
+- [ ] 1.2 From the client, build a bus network with a Surface/Underground road tunnel and two timed elevators to Deep Underground, and an underground rail loop with two rail portals; run vehicles for two in-game years at normal speed. Check the stopped 370-tick elevator ride.
+- [ ] 1.3 Join a second client mid-game while vehicles are inside road tunnels and rail portals and a bus is waiting in an elevator; confirm it loads, resumes the saved wait and stays in sync.
 - [ ] 1.4 Switch layers rapidly on one client only; confirm no desync (I-4).
 - [ ] 1.5 Collect the server and client desync logs and confirm there is no desync or cache-check message; attach the log locations under this task.
 
@@ -87,12 +87,12 @@ _Applies to Group 2._
 
 {{MEDIUM}}
 - [ ] 2.1 New game with underground and portal content: save, load, save; all plane digests identical (I-7).
-- [ ] 2.2 Each pre-epic baseline save: load, play one month, save, load; three layers present and the surface digest equals the baseline (I-6, I-7).
-- [ ] 2.3 A TTO save copied from `!kit/TT/`: load, confirm three layers, play one month.
+- [ ] 2.2 Each pre-epic baseline save: load, play one month, save, load; four layers present and the surface digest equals the baseline (I-6, I-7).
+- [ ] 2.3 A TTO save copied from `!kit/TT/`: load, confirm four layers, play one month.
 - [ ] 2.4 Autosave during traffic through portals: load the autosave and continue.
 - [ ] 2.5 Scenario editor: build underground roads in a scenario, save the scenario, start a new game from it; underground content is present.
 - [ ] 2.6 Load dialog preview of a layered save shows correct map size and no error.
-- [ ] 2.7 4096x4096 three-layer game: record save size and save and load time against a one-layer baseline of the same size.
+- [ ] 2.7 4096x4096 four-layer game: record save size and save and load time against a one-layer baseline of the same size.
 - [ ] 2.8 Combined traffic: in one game, run a bus line and a train line that both cross layers for two in-game years at fast forward in a Debug build, then save, reload and run one more year. No vehicle is lost or stuck and no assert fires (I-3, I-7). This was master-plan task 7.3 until 2026-10-03.
 
 ### Area Mandatory Reading - Performance and regression

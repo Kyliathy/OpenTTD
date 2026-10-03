@@ -111,6 +111,7 @@ struct RoadVehicle final : public GroundVehicle<RoadVehicle, VehicleType::Road> 
 	uint8_t overtaking_ctr = 0; ///< The length of the current overtake attempt.
 	uint16_t crashed_ctr = 0; ///< Animation counter when the vehicle has crashed. @see RoadVehIsCrashed
 	uint8_t reverse_ctr = 0;
+	uint16_t elevator_wait = 0; ///< Elevator ride: 0 idle, 1 ready to cross, above 1 remaining ticks plus one (r2mlm12 D-4).
 
 	RoadType roadtype = INVALID_ROADTYPE; ///< NOSAVE: Roadtype of this vehicle.
 	VehicleID disaster_vehicle = VehicleID::Invalid(); ///< NOSAVE: Disaster vehicle targetting this vehicle.

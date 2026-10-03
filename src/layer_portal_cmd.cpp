@@ -320,7 +320,7 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 	bool hidden = IsHiddenInLayerPortal(shaft, x, y);
 	if (hidden && !v->vehstatus.Test(VehState::Hidden)) {
 		//Road works is the mechanical stand-in for the elevator ride. Only the front of a road vehicle plays it, so an articulated bus is heard once.
-		if (transport == TransportType::Road && v->IsFrontEngine()) SndPlayTileFx(SND_21_ROAD_WORKS, tile);
+		if (GetLayerPortalKind(tile) == LayerPortalKind::RoadElevator && v->IsFrontEngine()) SndPlayTileFx(SND_21_ROAD_WORKS, tile);
 		v->vehstatus.Set(VehState::Hidden);
 	} else if (!hidden && v->vehstatus.Test(VehState::Hidden)) {
 		v->vehstatus.Reset(VehState::Hidden);

@@ -13,6 +13,7 @@
 #include "map_layer_type.h"
 #include "gfx_type.h"
 #include "strings_type.h"
+#include "dropdown_type.h"
 
 struct Window;
 struct Vehicle;
@@ -27,17 +28,23 @@ StringID GetMapLayerName(MapLayer layer);
 /**
  * Toolbar icon for one map layer.
  * @param layer Layer whose icon is needed.
- * @return Stand-in sprite until the layer art exists.
+ * @return Generated icon, with the Deep Underground stand-in until r2mlm13 Group 9.
  */
 SpriteID GetMapLayerIcon(MapLayer layer);
 
 /**
- * Layer that follows this one in the cycle.
+ * Layer that follows this one in GUI display order, skipping unallocated Layers.
  * @param layer Layer currently shown.
  * @param layer_count How many layers the cycle includes.
  * @return The next layer, wrapping to the surface after the last one.
  */
 MapLayer GetNextMapLayer(MapLayer layer, uint layer_count);
+
+/**
+ * Build the shared Layer selector in GUI display order.
+ * @return One icon/name entry for each allocated Layer, with its stable MapLayer value.
+ */
+DropDownList BuildMapLayerDropDown();
 
 /**
  * Layer that owns a stacked world Y.

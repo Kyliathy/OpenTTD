@@ -34,6 +34,7 @@
 #include "timer/timer_window.h"
 #include "smallmap_gui.h"
 #include "core/enum_type.hpp"
+#include "dropdown_func.h"
 
 #include "widgets/smallmap_widget.h"
 
@@ -1787,11 +1788,7 @@ public:
 				break;
 
 			case WID_SM_MAP_LAYER: {
-				this->layer = GetNextMapLayer(this->layer, MultiLayerMap::GetLayerCount());
-				this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
-				//FD-8: the link overlay cached the stations of the old layer.
-				this->overlay->SetDirty();
-				this->SetDirty();
+				ShowDropDownList(this, BuildMapLayerDropDown(), to_underlying(this->layer), WID_SM_MAP_LAYER);
 				break;
 			}
 
@@ -1911,6 +1908,22 @@ public:
 		this->SetDirty();
 	}
 
+	/**
+	 * Switch only the smallmap to its selected Layer and refresh its link overlay.
+	 * @param widget Button owning the dropdown.
+	 * @param index Stable MapLayer value selected.
+	 * @param click_mode Unused dropdown click mode.
+	 */
+	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int click_mode) override
+	{
+		if (widget != WID_SM_MAP_LAYER) return;
+		this->layer = static_cast<MapLayer>(index);
+		this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+		//FD-8: the link overlay cached stations belonging to the previous Layer.
+		this->overlay->SetDirty();
+		this->SetDirty();
+	}
+
 	bool OnRightClick(Point, WidgetID widget) override
 	{
 		if (widget != WID_SM_MAP || _scrolling_viewport) return false;
@@ -1976,7 +1989,7 @@ class NWidgetSmallmapButtons : public NWidgetContainer {
 		{WID_SM_ZOOM_IN, WWT_PUSHIMGBTN, SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN},
 		{WID_SM_ZOOM_OUT, WWT_PUSHIMGBTN, SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT},
 		{WID_SM_CENTERMAP, WWT_PUSHIMGBTN, SPR_IMG_SMALLMAP, STR_SMALLMAP_CENTER_TOOLTIP},
-		{WID_SM_MAP_LAYER, WWT_PUSHIMGBTN, SPR_IMG_PLANTTREES, STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER},
+		{WID_SM_MAP_LAYER, WWT_IMGBTN, SPR_IMG_MAP_LAYER_SURFACE, STR_MAP_LAYER_CHOOSE_VIEW},
 		{WID_SM_TOGGLETOWNNAME, WWT_IMGBTN, SPR_IMG_TOWN, STR_SMALLMAP_TOOLTIP_TOGGLE_TOWN_NAMES_ON_OFF},
 		{INVALID_WIDGET, WWT_PANEL, SPR_EMPTY, STR_NULL}, // Resizable spacer between top and bottom halves.
 		{WID_SM_BLANK, WWT_IMGBTN, SPR_EMPTY, STR_NULL}, // Optional spacer in 2-column layout only.

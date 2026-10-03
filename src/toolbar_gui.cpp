@@ -910,7 +910,7 @@ static CallBackFunction ToolbarZoomOutClick(Window *w)
 }
 
 /**
- * Cycle the map layer shown by the main viewport.
+ * Open the dropdown for the Map Layer shown by the main viewport.
  * @param w Toolbar that was clicked.
  * @return #CallBackFunction::None
  */
@@ -918,12 +918,22 @@ static CallBackFunction ToolbarMapLayerClick(Window *w)
 {
 	//The editor toolbar and the game toolbar use different widget ids for the same button.
 	WidgetID widget = (_game_mode == GameMode::Editor) ? (WidgetID)WID_TE_MAP_LAYER : (WidgetID)WID_TN_MAP_LAYER;
-	//A single-layer game has nothing to cycle to (AD-11).
+	//A single-Layer game has no other Layer to choose (AD-11).
 	if (w->IsWidgetDisabled(widget)) return CallBackFunction::None;
 
-	CycleMainViewportLayer();
-	w->HandleButtonClick(widget);
+	PopupMainToolbarMenu(w, widget, BuildMapLayerDropDown(), to_underlying(GetMainWindow()->viewport->layer));
 	SndClickBeep();
+	return CallBackFunction::None;
+}
+
+/**
+ * Show the Layer selected from either main-toolbar dropdown.
+ * @param index Stable MapLayer value selected by the menu.
+ * @return #CallBackFunction::None.
+ */
+static CallBackFunction MenuClickMapLayer(int index)
+{
+	SetViewportLayer(GetMainWindow(), static_cast<MapLayer>(index));
 	return CallBackFunction::None;
 }
 
@@ -1409,7 +1419,7 @@ static MenuClickedProc * const _menu_clicked_procs[] = {
 	MenuClickSettings,    // 2
 	MenuClickSaveLoad,    // 3
 	MenuClickMap,         // 4
-	nullptr,              // 5
+	MenuClickMapLayer,    //5
 	MenuClickTown,        // 6
 	MenuClickSubsidies,   // 7
 	MenuClickStations,    // 8
@@ -2154,7 +2164,13 @@ struct MainToolbarWindow : Window {
 			case MTHK_SAVEGAME: MenuClickSaveLoad(); break;
 			case MTHK_LOADGAME: ShowSaveLoadDialog(AbstractFileType::Savegame, SaveLoadOperation::Load); break;
 			case MTHK_SMALLMAP: ShowSmallMap(); break;
-			case MTHK_CYCLE_MAP_LAYER: ToolbarMapLayerClick(this); break;
+			case MTHK_CYCLE_MAP_LAYER:
+				//N keeps cycling in display order even though the button now opens a menu.
+				if (!this->IsWidgetDisabled(WID_TN_MAP_LAYER)) {
+					CycleMainViewportLayer();
+					SndClickBeep();
+				}
+				break;
 			case MTHK_TOWNDIRECTORY: ShowTownDirectory(); break;
 			case MTHK_SUBSIDIES: ShowSubsidiesList(); break;
 			case MTHK_STATIONS: ShowCompanyStations(_local_company); break;
@@ -2313,7 +2329,7 @@ static constexpr std::tuple<WidgetID, WidgetType, SpriteID> _toolbar_button_spri
 	{WID_TN_SETTINGS,     WWT_IMGBTN,     SPR_IMG_SETTINGS},
 	{WID_TN_SAVE,         WWT_IMGBTN_2,   SPR_IMG_SAVE},
 	{WID_TN_SMALL_MAP,    WWT_IMGBTN,     SPR_IMG_SMALLMAP},
-	{WID_TN_MAP_LAYER,    WWT_PUSHIMGBTN, SPR_IMG_MAP_LAYER_SURFACE},
+	{WID_TN_MAP_LAYER,    WWT_IMGBTN,     SPR_IMG_MAP_LAYER_SURFACE},
 	{WID_TN_TOWNS,        WWT_IMGBTN,     SPR_IMG_TOWN},
 	{WID_TN_SUBSIDIES,    WWT_IMGBTN,     SPR_IMG_SUBSIDIES},
 	{WID_TN_STATIONS,     WWT_IMGBTN,     SPR_IMG_COMPANY_LIST},
@@ -2408,7 +2424,7 @@ static MenuClickedProc * const _scen_toolbar_dropdown_procs[] = {
 	nullptr,              // 6
 	nullptr,              // 7
 	MenuClickMap,         // 8
-	nullptr,              // 9
+	MenuClickMapLayer,    //9
 	nullptr,              // 10
 	nullptr,              // 11
 	nullptr,              // 12
@@ -2588,8 +2604,15 @@ struct ScenarioEditorToolbarWindow : Window {
 			}
 			if (cbf != CallBackFunction::None) _last_started_action = cbf;
 		} else {
-			//Widget-valued hotkeys, including the map layer button, click that widget.
-			this->OnClick({}, hotkey, 0);
+			//The Layer hotkey keeps cycling; other widget-valued hotkeys click their widget.
+			if (hotkey == to_underlying(MainToolbarEditorHotkeys::CycleMapLayer)) {
+				if (!this->IsWidgetDisabled(WID_TE_MAP_LAYER)) {
+					CycleMainViewportLayer();
+					SndClickBeep();
+				}
+			} else {
+				this->OnClick({}, hotkey, 0);
+			}
 		}
 		return EventState::Handled;
 	}
@@ -2710,7 +2733,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_toolb_scen_inner_wid
 	EndContainer(),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_IMGBTN, Colours::Grey, WID_TE_SMALL_MAP), SetSpriteTip(SPR_IMG_SMALLMAP, STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP),
-	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_MAP_LAYER), SetSpriteTip(SPR_IMG_MAP_LAYER_SURFACE, STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP),
+	NWidget(WWT_IMGBTN, Colours::Grey, WID_TE_MAP_LAYER), SetSpriteTip(SPR_IMG_MAP_LAYER_SURFACE, STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_IN), SetSpriteTip(SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_OUT), SetSpriteTip(SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT),

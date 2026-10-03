@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file road_widget.h Types related to the road widgets. */
+/** @file road_widget.h Types related to the road widgets. @see docs/zz-reach2/upgrades/2026-10/r2mlm12-deep-underground-tunnels-and-elevators.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef WIDGETS_ROAD_WIDGET_H
 #define WIDGETS_ROAD_WIDGET_H
@@ -25,6 +25,7 @@ enum RoadToolbarWidgets : WidgetID {
 	WID_ROT_ONE_WAY,        ///< Build one-way road.
 	WID_ROT_BUILD_BRIDGE,   ///< Build bridge.
 	WID_ROT_BUILD_TUNNEL,   ///< Build tunnel.
+	WID_ROT_LAYER_TUNNEL,   ///< Build road tunnel to another Map Layer.
 	WID_ROT_LAYER_ELEVATOR, ///< Build road elevator to another map layer.
 	WID_ROT_REMOVE,         ///< Remove road.
 	WID_ROT_CONVERT_ROAD,   ///< Convert road.
@@ -47,6 +48,9 @@ enum BuildRoadElevatorWidgets : WidgetID {
 	WID_BREL_DOOR_SE,  ///< Door facing SE.
 	WID_BREL_DOOR_SW,  ///< Door facing SW.
 	WID_BREL_DOOR_NW,  ///< Door facing NW.
+	WID_BREL_UPPER_SEL, ///< Selection that shows the upper-end row only for elevators.
+	WID_BREL_UPPER_SURFACE, ///< Elevator from Deep Underground goes up to Surface.
+	WID_BREL_UPPER_UNDERGROUND, ///< Elevator from Deep Underground goes up to Underground.
 };
 
 /** Widgets of the #BuildRoadStationWindow class. */

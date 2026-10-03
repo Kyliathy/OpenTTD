@@ -24,6 +24,8 @@
 #include "../road.h"
 #include "../tile_cmd.h"
 #include "../track_func.h"
+#include "../core/random_func.hpp"
+#include "../map_layer_gui.h"
 
 #include "../safeguards.h"
 
@@ -365,8 +367,78 @@ TEST_CASE("Layer portal neighbour mapping and relocation")
 	CHECK(GetLayerPortalTransportType(surface) == TransportType::Road);
 	CHECK(GetRoadTypeRoad(surface) == ROADTYPE_ROAD);
 	CHECK(GetRoadTypeTram(surface) == INVALID_ROADTYPE);
-	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Surface) == MapLayer::Underground);
-	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Space) == MapLayer::Invalid);
+	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Surface, LayerPortalKind::RailTunnel, MapLayer::Invalid) == MapLayer::Underground);
+	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::Space, LayerPortalKind::RoadTunnel, MapLayer::Invalid) == MapLayer::Invalid);
+}
+
+/** The portal-kind contract permits exactly its specified Layer pairs and handles three-band relocation. */
+TEST_CASE("Layer portal kinds and pairs")
+{
+	Map::Allocate(64, 64, MAX_MAP_LAYERS);
+	ResetRoadTypes();
+	const MapLayer layers[] = {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground};
+	//Exercise every ordered pair, including same-Layer and Outer Space refusals.
+	for (MapLayer a : layers) {
+		for (MapLayer b : layers) {
+			bool tunnel = (a == MapLayer::Surface && b == MapLayer::Underground) || (a == MapLayer::Underground && b == MapLayer::Surface);
+			bool elevator = (a == MapLayer::DeepUnderground && (b == MapLayer::Surface || b == MapLayer::Underground))
+				|| (b == MapLayer::DeepUnderground && (a == MapLayer::Surface || a == MapLayer::Underground));
+			CHECK(MultiLayerMap::IsPortalPairAllowed(LayerPortalKind::RailTunnel, a, b) == tunnel);
+			CHECK(MultiLayerMap::IsPortalPairAllowed(LayerPortalKind::RoadTunnel, a, b) == tunnel);
+			CHECK(MultiLayerMap::IsPortalPairAllowed(LayerPortalKind::RoadElevator, a, b) == elevator);
+		}
+		MapLayer tunnel_target = a == MapLayer::Surface ? MapLayer::Underground : a == MapLayer::Underground ? MapLayer::Surface : MapLayer::Invalid;
+		CHECK(MultiLayerMap::GetPortalTargetLayer(a, LayerPortalKind::RailTunnel, MapLayer::Invalid) == tunnel_target);
+		CHECK(MultiLayerMap::GetPortalTargetLayer(a, LayerPortalKind::RoadTunnel, MapLayer::Invalid) == tunnel_target);
+		MapLayer elevator_target = a == MapLayer::Surface || a == MapLayer::Underground ? MapLayer::DeepUnderground : MapLayer::Invalid;
+		CHECK(MultiLayerMap::GetPortalTargetLayer(a, LayerPortalKind::RoadElevator, MapLayer::Invalid) == elevator_target);
+	}
+	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::DeepUnderground, LayerPortalKind::RoadElevator, MapLayer::Surface) == MapLayer::Surface);
+	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::DeepUnderground, LayerPortalKind::RoadElevator, MapLayer::Underground) == MapLayer::Underground);
+	CHECK(MultiLayerMap::GetPortalTargetLayer(MapLayer::DeepUnderground, LayerPortalKind::RoadElevator, MapLayer::Space) == MapLayer::Invalid);
+	TileIndex surface = TileXYL(10, 10, MapLayer::Surface);
+	TileIndex underground = TileXYL(10, 10, MapLayer::Underground);
+	TileIndex deep = TileXYL(10, 10, MapLayer::DeepUnderground);
+	MakeRoadLayerPortal(surface, OWNER_NONE, DiagDirection::SE, MapLayer::Underground, ROADTYPE_ROAD);
+	MakeRoadLayerPortal(underground, OWNER_NONE, DiagDirection::NW, MapLayer::Surface, ROADTYPE_ROAD);
+	CHECK(GetLayerPortalKind(surface) == LayerPortalKind::RoadTunnel);
+	CHECK(GetLayerPortalKind(underground) == LayerPortalKind::RoadTunnel);
+	MakeRoadLayerPortal(underground, OWNER_NONE, DiagDirection::SE, MapLayer::DeepUnderground, ROADTYPE_ROAD);
+	MakeRoadLayerPortal(deep, OWNER_NONE, DiagDirection::NW, MapLayer::Underground, ROADTYPE_ROAD);
+	CHECK(GetLayerPortalKind(underground) == LayerPortalKind::RoadElevator);
+	CHECK(GetLayerPortalKind(deep) == LayerPortalKind::RoadElevator);
+	MakeRoadLayerPortal(surface, OWNER_NONE, DiagDirection::SE, MapLayer::DeepUnderground, ROADTYPE_ROAD);
+	MakeRoadLayerPortal(deep, OWNER_NONE, DiagDirection::NW, MapLayer::Surface, ROADTYPE_ROAD);
+	CHECK(GetLayerPortalKind(surface) == LayerPortalKind::RoadElevator);
+	//Every heading must relocate across the three storage bands while retaining its in-Tile offset.
+	for (DiagDirection shaft : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
+		MakeRoadLayerPortal(surface, OWNER_NONE, shaft, MapLayer::DeepUnderground, ROADTYPE_ROAD);
+		MakeRoadLayerPortal(deep, OWNER_NONE, ReverseDiagDir(shaft), MapLayer::Surface, ROADTYPE_ROAD);
+		TileIndexDiffC step = TileIndexDiffCByDiagDir(shaft);
+		int x = (static_cast<int>(TileX(surface)) + step.x) * static_cast<int>(TILE_SIZE) + 4;
+		int y = (static_cast<int>(TileY(surface)) + step.y) * static_cast<int>(TILE_SIZE) + 4;
+		TranslateIntoLayerPortalPair(surface, x, y);
+		CHECK(TileVirtXY(x, y) == deep);
+		CHECK(x % TILE_SIZE == 4);
+		CHECK(y % TILE_SIZE == 4);
+	}
+	MakeRailLayerPortal(surface, OWNER_NONE, DiagDirection::SE, MapLayer::Underground, RAILTYPE_RAIL);
+	CHECK(GetLayerPortalKind(surface) == LayerPortalKind::RailTunnel);
+}
+
+/** GUI cycling follows physical presentation order without changing saved storage values. */
+TEST_CASE("Map Layer display order and allocated cycling")
+{
+	CHECK(to_underlying(MapLayer::Space) == 2);
+	CHECK(to_underlying(MapLayer::DeepUnderground) == 3);
+	CHECK(GetNextMapLayer(MapLayer::Surface, 4) == MapLayer::Underground);
+	CHECK(GetNextMapLayer(MapLayer::Underground, 4) == MapLayer::DeepUnderground);
+	CHECK(GetNextMapLayer(MapLayer::DeepUnderground, 4) == MapLayer::Space);
+	CHECK(GetNextMapLayer(MapLayer::Space, 4) == MapLayer::Surface);
+	CHECK(GetNextMapLayer(MapLayer::Underground, 3) == MapLayer::Space);
+	CHECK(GetNextMapLayer(MapLayer::Underground, 2) == MapLayer::Surface);
+	CHECK(GetNextMapLayer(MapLayer::Surface, 1) == MapLayer::Surface);
+	CHECK(GetNextMapLayer(MapLayer::Invalid, 4) == MapLayer::Surface);
 }
 
 /**
