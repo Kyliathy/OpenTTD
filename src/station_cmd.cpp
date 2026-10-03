@@ -40,6 +40,7 @@
 #include "animated_tile_func.h"
 #include "elrail_func.h"
 #include "station_base.h"
+#include "map_layer.h"
 #include "station_func.h"
 #include "station_kdtree.h"
 #include "roadstop_base.h"
@@ -1431,6 +1432,9 @@ CommandCost CmdBuildRailStation(DoCommandFlags flags, TileIndex tile_org, RailTy
 
 	if (!ValParamRailType(rt) || !IsValidAxis(axis)) return CMD_ERROR;
 
+	//This layer may refuse a rail station before the footprint is priced.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile_org, MapLayerConstruction::RailStation); layer_cost.Failed()) return layer_cost;
+
 	/* Check if the given station class is valid */
 	if (spec_class.base() >= StationClass::GetClassCount()) return CMD_ERROR;
 	const StationClass *cls = StationClass::Get(spec_class);
@@ -2061,6 +2065,9 @@ CommandCost CmdBuildRoadStop(DoCommandFlags flags, TileIndex tile, uint8_t width
 		DiagDirection ddir, RoadType rt, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent)
 {
 	if (!ValParamRoadType(rt) || !IsValidDiagDirection(ddir) || stop_type >= RoadStopType::End) return CMD_ERROR;
+
+	//This layer may refuse a road stop before the footprint is priced.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::RoadStop); layer_cost.Failed()) return layer_cost;
 	bool reuse = (station_to_join != NEW_STATION);
 	if (!reuse) station_to_join = StationID::Invalid();
 	bool distant_join = (station_to_join != StationID::Invalid());
@@ -2627,6 +2634,9 @@ CommandCost CmdBuildAirport(DoCommandFlags flags, TileIndex tile, uint8_t airpor
 
 	if (airport_type >= NUM_AIRPORTS) return CMD_ERROR;
 
+	//Airports exist only where the layer allows them.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Airport); layer_cost.Failed()) return layer_cost;
+
 	CommandCost ret = CheckIfAuthorityAllowsNewStation(tile, flags);
 	if (ret.Failed()) return ret;
 
@@ -2891,6 +2901,9 @@ CommandCost CmdBuildDock(DoCommandFlags flags, TileIndex tile, StationID station
 	bool distant_join = (station_to_join != StationID::Invalid());
 
 	if (distant_join && (!_settings_game.station.distant_join_stations || !Station::IsValidID(station_to_join))) return CMD_ERROR;
+
+	//Docks exist only where the layer allows them.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Dock); layer_cost.Failed()) return layer_cost;
 
 	DiagDirection direction = GetInclinedSlopeDirection(GetTileSlope(tile));
 	if (direction == DiagDirection::Invalid) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
@@ -3744,6 +3757,8 @@ static void TileLoop_Station(TileIndex tile)
 			break;
 
 		case StationType::RoadWaypoint: {
+			//Snow, desert and town paving are surface climate. The animation still runs.
+			if (MultiLayerMap::GetRules(tile).has_climate) {
 			switch (_settings_game.game_creation.landscape) {
 				case LandscapeType::Arctic:
 					if (IsRoadWaypointOnSnowOrDesert(tile) != (GetTileZ(tile) > GetSnowLine())) {
@@ -3775,6 +3790,7 @@ static void TileLoop_Station(TileIndex tile)
 			if (new_rs != cur_rs) {
 				SetRoadWaypointRoadside(tile, cur_rs == Roadside::Barren ? new_rs : Roadside::Barren);
 				MarkTileDirtyByTile(tile);
+			}
 			}
 
 			TriggerRoadStopAnimation(st, tile, StationAnimationTrigger::TileLoop);
@@ -4679,7 +4695,9 @@ void UpdateStationDockingTiles(Station *st)
 	if (area->tile == INVALID_TILE) return;
 
 	int x = TileX(area->tile);
-	int y = TileY(area->tile);
+	//C6: docking tiles are searched in the station's layer.
+	int y = TilePlaneY(area->tile);
+	MapLayer layer = GetTileLayer(area->tile);
 
 	/* Expand the area by a tile on each side while
 	 * making sure that we remain inside the map. */
@@ -4689,7 +4707,7 @@ void UpdateStationDockingTiles(Station *st)
 	int y2 = std::min<int>(y + area->h + 1, Map::SizeY());
 	int y1 = std::max<int>(y - 1, 0);
 
-	TileArea ta(TileXY(x1, y1), TileXY(x2 - 1, y2 - 1));
+	TileArea ta(TileXYL(x1, y1, layer), TileXYL(x2 - 1, y2 - 1, layer));
 	for (TileIndex tile : ta) {
 		if (IsValidTile(tile) && IsPossibleDockingTile(tile)) CheckForDockingTile(tile);
 	}

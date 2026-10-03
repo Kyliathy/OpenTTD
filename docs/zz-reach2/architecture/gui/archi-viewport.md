@@ -151,3 +151,4 @@ flowchart TD
 - Sort order is a function of the parent bounding boxes collected for this rectangle. It is recomputed every `ViewportDoDraw` by `_vp_sprite_sorter`. Ground sprites stay in row-scan order and are drawn before the sorted parents.
 - Zoom changes the virtual rectangle and which sprite mip the blitter reads. World coordinates and the simulation stay in tile space.
 - `scrollpos_*` is the view shown this frame. `dest_scrollpos_*` is where `UpdateViewportPosition` is moving it. Following a vehicle overwrites the destination from the vehicle's world position.
+- `Viewport::layer` selects one band of the stacked map. Drawing, picking, and labels use that band. Changing it is view state: commands and ticks do not read it. `SetViewportLayer` shifts the scroll by one band so the same plane position stays on screen.

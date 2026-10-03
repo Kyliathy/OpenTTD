@@ -12,6 +12,7 @@
 #include "viewport_func.h"
 #include "slope_func.h"
 #include "water.h"
+#include "map_layer.h"
 
 #include "table/strings.h"
 #include "table/sprites.h"
@@ -22,7 +23,9 @@
 static void DrawTile_Void(TileInfo *ti)
 {
 	/* If freeform edges are off, draw infinite water off the edges of the map. */
-	if (!_settings_game.construction.freeform_edges) {
+	//A non-surface fence, and the surround of a non-surface view, is always the black bare land.
+	bool non_surface = _viewport_draw_layer != MapLayer::Surface || (ti->tile != INVALID_TILE && GetTileLayer(ti->tile) != MapLayer::Surface);
+	if (!_settings_game.construction.freeform_edges && !non_surface) {
 		DrawGroundSprite(SPR_FLAT_WATER_TILE + SlopeToSpriteOffset(ti->tileh), PAL_NONE);
 	} else {
 		DrawGroundSprite(SPR_FLAT_BARE_LAND + SlopeToSpriteOffset(ti->tileh), PALETTE_ALL_BLACK);
@@ -30,11 +33,13 @@ static void DrawTile_Void(TileInfo *ti)
 }
 
 /** @copydoc GetSlopePixelZProc */
-static int GetSlopePixelZ_Void([[maybe_unused]] TileIndex tile, uint x, uint y, [[maybe_unused]] bool ground_vehicle)
+static int GetSlopePixelZ_Void(TileIndex tile, uint x, uint y, [[maybe_unused]] bool ground_vehicle)
 {
 	/* This function may be called on tiles outside the map, don't assume
 	 * that 'tile' is a valid tile index. See GetSlopePixelZOutsideMap. */
-	auto [tileh, z] = GetTilePixelSlopeOutsideMap(x >> 4, y >> 4);
+	//A real void tile uses its own layer. A coordinate past the map uses the layer being drawn.
+	MapLayer layer = (tile != INVALID_TILE) ? GetTileLayer(tile) : _viewport_draw_layer;
+	auto [tileh, z] = GetTilePixelSlopeOutsideMap(x >> 4, y >> 4, layer);
 
 	return z + GetPartialPixelZ(x & 0xF, y & 0xF, tileh);
 }
@@ -50,6 +55,8 @@ static void GetTileDesc_Void([[maybe_unused]] TileIndex tile, TileDesc &td)
 static void TileLoop_Void(TileIndex tile)
 {
 	/* Floods adjacent edge tile to prevent maps without water. */
+	//Only the surface has flowing water. An underground void fence must not flood its neighbour.
+	if (!MultiLayerMap::GetRules(tile).has_water_flow) return;
 	TileLoop_Water(tile);
 }
 

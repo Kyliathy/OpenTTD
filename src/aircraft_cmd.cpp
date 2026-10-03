@@ -544,6 +544,7 @@ void SetAircraftPosition(Aircraft *v, int x, int y, int z)
 
 	Aircraft *u = v->Next();
 
+	//C3: aircraft stay on the surface, so the clamp is one plane (AD-12).
 	int safe_x = Clamp(x, 0, Map::MaxX() * TILE_SIZE);
 	int safe_y = Clamp(y - 1, 0, Map::MaxY() * TILE_SIZE);
 	u->x_pos = x;

@@ -13,6 +13,7 @@
 #include "core/kdtree.hpp"
 #include "station_base.h"
 #include "map_func.h"
+#include "map_layer.h"
 
 struct Kdtree_StationXYFunc {
 	inline uint16_t operator()(StationID stid, int dim)
@@ -33,14 +34,31 @@ extern StationKdtree _station_kdtree;
 template <typename Func>
 void ForAllStationsRadius(TileIndex center, uint radius, Func func)
 {
+	MapLayer layer = GetTileLayer(center);
+	int plane_y = static_cast<int>(TilePlaneY(center));
+	int y_start = std::max<int>(0, plane_y - static_cast<int>(radius));
+	int y_end = std::min<int>(static_cast<int>(Map::SizeY()), plane_y + static_cast<int>(radius) + 1);
+
 	uint16_t x1, y1, x2, y2;
 	x1 = (uint16_t)std::max<int>(0, TileX(center) - radius);
 	x2 = (uint16_t)std::min<int>(TileX(center) + radius + 1, Map::SizeX());
-	y1 = (uint16_t)std::max<int>(0, TileY(center) - radius);
-	y2 = (uint16_t)std::min<int>(TileY(center) + radius + 1, Map::SizeY());
+	//C6: the tree stores stacked Y, so the box is this layer's band, expressed through TileXYL.
+	y1 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_start), layer)));
+	if (y_end == static_cast<int>(Map::SizeY())) {
+		uint next = to_underlying(layer) + 1;
+		//The exclusive end is the next layer's first row, or the end of storage for the last layer.
+		y2 = (next < Map::LayerCount())
+			? static_cast<uint16_t>(TileY(MultiLayerMap::GetLayerBase(static_cast<MapLayer>(next))))
+			: static_cast<uint16_t>(Map::Size() >> Map::LogX());
+	} else {
+		y2 = static_cast<uint16_t>(TileY(TileXYL(0, static_cast<uint>(y_end), layer)));
+	}
 
 	_station_kdtree.FindContained(x1, y1, x2, y2, [&](StationID id) {
-		func(Station::Get(id));
+		Station *st = Station::Get(id);
+		//A station sign in another layer is not inside this search.
+		if (GetTileLayer(st->xy) != layer) return;
+		func(st);
 	});
 }
 

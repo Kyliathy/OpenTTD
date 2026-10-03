@@ -254,6 +254,9 @@ add_files(
     landscape.h
     landscape_cmd.h
     landscape_type.h
+    layer_portal_cmd.cpp
+    layer_portal_cmd.h
+    layer_portal_map.h
     language.h
     league_base.h
     league_cmd.h
@@ -266,6 +269,11 @@ add_files(
     main_gui.cpp
     map.cpp
     map_func.h
+    map_layer.cpp
+    map_layer.h
+    map_layer_gui.cpp
+    map_layer_gui.h
+    map_layer_type.h
     map_type.h
     misc.cpp
     misc_cmd.cpp

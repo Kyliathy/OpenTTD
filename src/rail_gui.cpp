@@ -28,6 +28,8 @@
 #include "dropdown_type.h"
 #include "dropdown_func.h"
 #include "tunnelbridge.h"
+#include "layer_portal_cmd.h"
+#include "map_layer.h"
 #include "tilehighlight_func.h"
 #include "core/geometry_func.hpp"
 #include "hotkeys.h"
@@ -77,6 +79,7 @@ static StationPickerSelection _station_gui; ///< Settings of the station picker.
 
 static void HandleStationPlacement(TileIndex start, TileIndex end);
 static void ShowBuildTrainDepotPicker(Window *parent);
+static void ShowBuildRailLayerPortalPicker(Window *parent);
 static void ShowBuildWaypointPicker(Window *parent);
 static Window *ShowStationBuilder(Window *parent);
 static void ShowSignalBuilder(Window *parent);
@@ -468,7 +471,7 @@ struct BuildRailToolbarWindow : Window {
 	static inline const std::initializer_list<WidgetID> can_build_widgets = {
 		WID_RAT_BUILD_NS, WID_RAT_BUILD_X, WID_RAT_BUILD_EW, WID_RAT_BUILD_Y, WID_RAT_AUTORAIL,
 		WID_RAT_BUILD_DEPOT, WID_RAT_BUILD_WAYPOINT, WID_RAT_BUILD_STATION, WID_RAT_BUILD_SIGNALS,
-		WID_RAT_BUILD_BRIDGE, WID_RAT_BUILD_TUNNEL, WID_RAT_CONVERT_RAIL,
+		WID_RAT_BUILD_BRIDGE, WID_RAT_BUILD_TUNNEL, WID_RAT_BUILD_LAYER_PORTAL, WID_RAT_CONVERT_RAIL,
 	};
 
 	void OnInvalidateData([[maybe_unused]] int data = 0, [[maybe_unused]] bool gui_scope = true) override
@@ -493,6 +496,8 @@ struct BuildRailToolbarWindow : Window {
 
 		bool can_build = CanBuildVehicleInfrastructure(VehicleType::Train);
 		for (const WidgetID widget : can_build_widgets) this->SetWidgetDisabledState(widget, !can_build);
+		bool portal_ok = can_build && MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+		this->SetWidgetDisabledState(WID_RAT_BUILD_LAYER_PORTAL, !portal_ok);
 		if (!can_build) {
 			CloseWindowById(WindowClass::BuildSignal, TransportType::Rail);
 			CloseWindowById(WindowClass::BuildStation, TransportType::Rail);
@@ -525,6 +530,8 @@ struct BuildRailToolbarWindow : Window {
 		this->GetWidget<NWidgetCore>(WID_RAT_BUILD_DEPOT)->SetSprite(rti->gui_sprites.build_depot);
 		this->GetWidget<NWidgetCore>(WID_RAT_CONVERT_RAIL)->SetSprite(rti->gui_sprites.convert_rail);
 		this->GetWidget<NWidgetCore>(WID_RAT_BUILD_TUNNEL)->SetSprite(rti->gui_sprites.build_tunnel);
+		bool portal_ok = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer) != MapLayer::Invalid;
+		this->SetWidgetDisabledState(WID_RAT_BUILD_LAYER_PORTAL, !portal_ok);
 	}
 
 	/**
@@ -600,6 +607,7 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_SIGNALS: return ANIMCURSOR_BUILDSIGNALS;
 			case WID_RAT_BUILD_BRIDGE: return SPR_CURSOR_BRIDGE;
 			case WID_RAT_BUILD_TUNNEL: return GetRailTypeInfo(_cur_railtype)->cursor.tunnel;
+			case WID_RAT_BUILD_LAYER_PORTAL: return GetRailTypeInfo(_cur_railtype)->cursor.tunnel;
 			case WID_RAT_CONVERT_RAIL: return GetRailTypeInfo(_cur_railtype)->cursor.convert;
 			default: NOT_REACHED();
 		}
@@ -625,6 +633,7 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_SIGNALS: return HT_RECT;
 			case WID_RAT_BUILD_BRIDGE: return HT_RECT;
 			case WID_RAT_BUILD_TUNNEL: return HT_SPECIAL;
+			case WID_RAT_BUILD_LAYER_PORTAL: return HT_RECT;
 			case WID_RAT_CONVERT_RAIL: return HT_RECT | HT_DIAGONAL;
 			default: NOT_REACHED();
 		}
@@ -650,6 +659,12 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_DEPOT:
 				if (started) {
 					ShowBuildTrainDepotPicker(this);
+				}
+				break;
+
+			case WID_RAT_BUILD_LAYER_PORTAL:
+				if (started) {
+					ShowBuildRailLayerPortalPicker(this);
 				}
 				break;
 
@@ -734,6 +749,14 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_TUNNEL:
 				Command<Commands::BuildTunnel>::Post(STR_ERROR_CAN_T_BUILD_TUNNEL_HERE, CcBuildRailTunnel, tile, TransportType::Rail, _cur_railtype, INVALID_ROADTYPE);
 				break;
+
+			case WID_RAT_BUILD_LAYER_PORTAL: {
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetMainWindow()->viewport->layer);
+				if (target == MapLayer::Invalid) break;
+				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
+						tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE);
+				break;
+			}
 
 			case WID_RAT_CONVERT_RAIL:
 				VpStartPlaceSizing(tile, VPM_X_AND_Y, DDSP_CONVERT_RAIL);
@@ -904,6 +927,7 @@ struct BuildRailToolbarWindow : Window {
 		Hotkey('S', "signal", WID_RAT_BUILD_SIGNALS),
 		Hotkey('B', "bridge", WID_RAT_BUILD_BRIDGE),
 		Hotkey('T', "tunnel", WID_RAT_BUILD_TUNNEL),
+		Hotkey('P', "layer_portal", WID_RAT_BUILD_LAYER_PORTAL),
 		Hotkey('R', "remove", WID_RAT_REMOVE),
 		Hotkey('C', "convert", WID_RAT_CONVERT_RAIL),
 		Hotkey(WKC_L_BRACKET, "prev_railtype", to_underlying(SpecialListHotkeys::PreviousItem)),
@@ -947,6 +971,8 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_widgets =
 						SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_BRIDGE, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_BRIDGE),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_TUNNEL_RAIL, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_TUNNEL),
+		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_BUILD_LAYER_PORTAL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_TUNNEL_RAIL, STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_REMOVE),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_REMOVE, STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_RAT_CONVERT_RAIL),
@@ -1863,6 +1889,113 @@ static WindowDesc _build_depot_desc(
 static void ShowBuildTrainDepotPicker(Window *parent)
 {
 	new BuildRailDepotWindow(_build_depot_desc, parent);
+}
+
+/** Mouth direction chosen in the rail portal picker. */
+static DiagDirection _rail_portal_mouth_direction = DiagDirection::NE;
+
+/** Picker for the mouth a rail portal faces on the viewed layer. */
+struct BuildRailLayerPortalWindow : public PickerWindowBase {
+	/**
+	 * Open the mouth picker.
+	 * @param desc Window description.
+	 * @param parent Rail toolbar that owns the placement.
+	 */
+	BuildRailLayerPortalWindow(WindowDesc &desc, Window *parent) : PickerWindowBase(desc, parent)
+	{
+		this->InitNested(TransportType::Rail);
+		this->LowerWidget(WID_BRLP_MOUTH_NE + _rail_portal_mouth_direction);
+	}
+
+	/**
+	 * Size one mouth button.
+	 * @param widget Widget being sized.
+	 * @param size Size to fill.
+	 * @param padding Unused padding.
+	 * @param fill Unused fill.
+	 * @param resize Unused resize.
+	 */
+	void UpdateWidgetSize(WidgetID widget, Dimension &size, [[maybe_unused]] const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
+	{
+		if (!IsInsideMM(widget, WID_BRLP_MOUTH_NE, WID_BRLP_MOUTH_NW + 1)) return;
+		size.width = ScaleGUITrad(64) + WidgetDimensions::scaled.fullbevel.Horizontal();
+		size.height = ScaleGUITrad(48) + WidgetDimensions::scaled.fullbevel.Vertical();
+	}
+
+	/**
+	 * Draw one mouth direction with the depot stand-in.
+	 * @param r Widget rectangle.
+	 * @param widget Widget to draw.
+	 */
+	void DrawWidget(const Rect &r, WidgetID widget) const override
+	{
+		if (!IsInsideMM(widget, WID_BRLP_MOUTH_NE, WID_BRLP_MOUTH_NW + 1)) return;
+		DrawPixelInfo tmp_dpi;
+		Rect ir = r.Shrink(WidgetDimensions::scaled.bevel);
+		if (FillDrawPixelInfo(&tmp_dpi, ir)) {
+			AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
+			int x = (ir.Width() - ScaleSpriteTrad(64)) / 2 + ScaleSpriteTrad(31);
+			int y = (ir.Height() + ScaleSpriteTrad(48)) / 2 - ScaleSpriteTrad(31);
+			DrawTrainDepotSprite(x, y, static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE + to_underlying(DiagDirection::NE)), _cur_railtype);
+		}
+	}
+
+	/**
+	 * Remember the chosen mouth direction.
+	 * @param pt Unused click position.
+	 * @param widget Button that was clicked.
+	 * @param click_count Unused click count.
+	 */
+	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
+	{
+		switch (widget) {
+			case WID_BRLP_MOUTH_NE:
+			case WID_BRLP_MOUTH_SE:
+			case WID_BRLP_MOUTH_SW:
+			case WID_BRLP_MOUTH_NW:
+				this->RaiseWidget(WID_BRLP_MOUTH_NE + _rail_portal_mouth_direction);
+				_rail_portal_mouth_direction = static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE);
+				this->LowerWidget(WID_BRLP_MOUTH_NE + _rail_portal_mouth_direction);
+				SndClickBeep();
+				this->SetDirty();
+				break;
+		}
+	}
+};
+
+static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_portal_widgets = {
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_CLOSEBOX, Colours::DarkGreen),
+		NWidget(WWT_CAPTION, Colours::DarkGreen), SetStringTip(STR_BUILD_RAIL_LAYER_PORTAL_CAPTION, STR_TOOLTIP_WINDOW_TITLE_DRAG_THIS),
+	EndContainer(),
+	NWidget(WWT_PANEL, Colours::DarkGreen),
+		NWidget(NWID_HORIZONTAL_LTR), SetPIP(0, WidgetDimensions::unscaled.hsep_normal, 0), SetPIPRatio(1, 0, 1), SetPadding(WidgetDimensions::unscaled.picker),
+			NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_normal, 0),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_NW), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_SW), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
+			EndContainer(),
+			NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_normal, 0),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_NE), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_SE), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
+			EndContainer(),
+		EndContainer(),
+	EndContainer(),
+};
+
+static WindowDesc _build_rail_portal_desc(
+	WindowPosition::Automatic, "build_rail_layer_portal", 0, 0,
+	WindowClass::BuildDepot, WindowClass::BuildToolbar,
+	WindowDefaultFlag::Construction,
+	_nested_build_rail_portal_widgets
+);
+
+/**
+ * Open the rail portal mouth picker.
+ * @param parent Rail toolbar.
+ */
+static void ShowBuildRailLayerPortalPicker(Window *parent)
+{
+	new BuildRailLayerPortalWindow(_build_rail_portal_desc, parent);
 }
 
 class WaypointPickerCallbacks : public PickerCallbacksNewGRFClass<StationClass> {

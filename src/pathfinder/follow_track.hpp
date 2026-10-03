@@ -17,6 +17,7 @@
 #include "../train.h"
 #include "../tunnelbridge.h"
 #include "../tunnelbridge_map.h"
+#include "../layer_portal_map.h"
 #include "../depot_map.h"
 #include "pathfinder_func.h"
 
@@ -47,6 +48,7 @@ struct CFollowTrackT {
 	bool is_tunnel; ///< last turn passed tunnel
 	bool is_bridge; ///< last turn passed bridge ramp
 	bool is_station; ///< last turn passed station
+	bool is_portal; ///< last turn passed through a layer portal shaft
 	int tiles_skipped; ///< number of skipped tunnel or station tiles
 	ErrorCode err;
 	RailTypes railtypes;
@@ -84,6 +86,7 @@ struct CFollowTrackT {
 		this->is_station = false;
 		this->is_bridge = false;
 		this->is_tunnel = false;
+		this->is_portal = false;
 		this->tiles_skipped = 0;
 		this->err = ErrorCode::None;
 		this->railtypes = railtype_override;
@@ -213,7 +216,16 @@ protected:
 		this->is_station = false;
 		this->is_bridge = false;
 		this->is_tunnel = false;
+		this->is_portal = false;
 		this->tiles_skipped = 0;
+
+		//A shaft exit enters the pair tile. The heading does not change.
+		if (IsLayerPortalShaftExit(this->old_tile, this->exitdir)) {
+			this->is_portal = true;
+			this->new_tile = GetLayerPortalPairTile(this->old_tile);
+			this->tiles_skipped = 0;
+			return;
+		}
 
 		/* extra handling for tunnels and bridges in our direction */
 		if (IsTileType(this->old_tile, TileType::TunnelBridge)) {
@@ -368,6 +380,22 @@ protected:
 			}
 		}
 
+		//A portal is entered through its door, or through the shaft when this step already crossed a pair.
+		if (IsLayerPortalTile(this->new_tile)) {
+			if (GetLayerPortalTransportType(this->new_tile) != TT()) {
+				this->err = ErrorCode::NoWay;
+				return false;
+			}
+			if (this->IsTram()) {
+				this->err = ErrorCode::NoWay;
+				return false;
+			}
+			if (!this->is_portal && this->exitdir != GetLayerPortalShaftDirection(this->new_tile)) {
+				this->err = ErrorCode::NoWay;
+				return false;
+			}
+		}
+
 		/* tunnel holes and bridge ramps can be entered only from proper direction */
 		if (IsTileType(this->new_tile, TileType::TunnelBridge)) {
 			if (IsTunnel(this->new_tile)) {
@@ -424,6 +452,7 @@ protected:
 				this->is_tunnel = false;
 				this->is_bridge = false;
 				this->is_station = false;
+				this->is_portal = false;
 				return true;
 			}
 		}
@@ -439,6 +468,7 @@ protected:
 			this->is_tunnel = false;
 			this->is_bridge = false;
 			this->is_station = false;
+			this->is_portal = false;
 			return true;
 		}
 

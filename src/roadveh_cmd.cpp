@@ -21,6 +21,7 @@
 #include "pathfinder/yapf/yapf.h"
 #include "strings_func.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "script/api/script_event_types.hpp"
 #include "timer/timer_game_calendar.h"
 #include "timer/timer_game_economy.h"
@@ -464,6 +465,13 @@ void RoadVehicle::UpdateDeltaXY()
 }
 
 /**
+ * Speed cap while any part is inside a road elevator.
+ * Road speeds are in the same units as GetCurrentMaxSpeed. 32 is slow enough
+ * that crossing the one elevator tile takes about two seconds instead of a flash.
+ */
+static constexpr uint16_t LAYER_ELEVATOR_MAX_SPEED = 32;
+
+/**
  * Calculates the maximum speed of the vehicle under its current conditions.
  * @return Maximum speed of the vehicle.
  */
@@ -480,6 +488,11 @@ inline int RoadVehicle::GetCurrentMaxSpeed() const
 			} else if (!IsDiagonalDirection(u->direction)) {
 				max_speed = this->gcache.cached_max_track_speed * 3 / 4;
 			}
+		}
+
+		//A road portal is the elevator ride. The cap keeps that crossing near two seconds.
+		if (IsLayerPortalTile(u->tile) && GetLayerPortalTransportType(u->tile) == TransportType::Road) {
+			max_speed = std::min(max_speed, static_cast<int>(LAYER_ELEVATOR_MAX_SPEED));
 		}
 
 		/* Vehicle is on the middle part of a bridge. */
@@ -799,6 +812,8 @@ static bool CheckRoadBlockedForOvertaking(OvertakeData *od)
 	TrackStatus ts = GetTileTrackStatus(od->tile, TransportType::Road, GetRoadTramType(od->v->roadtype));
 	TrackBits trackbits = TrackdirBitsToTrackBits(ts.trackdirs);
 	Tile next_tile = od->tile + TileOffsByDiagDir(DirToDiagDir(od->v->direction));
+	//Overtaking never starts on an elevator or into one.
+	if (IsLayerPortalTile(od->tile) || IsLayerPortalTile(next_tile)) return true;
 
 	/* Track does not continue along overtaking direction. */
 	if (!ts.trackdirs.Test(od->trackdir)) return true;
@@ -1200,7 +1215,8 @@ bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev)
 
 	if (rd.x & RDE_NEXT_TILE) {
 		DiagDirection diagdir = static_cast<DiagDirection>(rd.x & 3);
-		TileIndex tile = v->tile + TileOffsByDiagDir(diagdir);
+		//A shaft exit continues on the pair tile. Every other step stays on this layer.
+		TileIndex tile = GetLayerPortalNextTile(v->tile, diagdir);
 		Trackdir dir;
 
 		if (v->IsFrontEngine()) {
@@ -1216,6 +1232,11 @@ bool IndividualRoadVehicleController(RoadVehicle *v, const RoadVehicle *prev)
 
 		if (dir == Trackdir::Invalid) {
 			if (!v->IsFrontEngine()) FatalError("Disconnecting road vehicle.");
+			v->cur_speed = 0;
+			return false;
+		}
+		//An elevator is a drive-through. A U-turn on it is refused and the vehicle waits.
+		if (IsReversingRoadTrackdir(dir) && (IsLayerPortalTile(v->tile) || IsLayerPortalTile(tile))) {
 			v->cur_speed = 0;
 			return false;
 		}

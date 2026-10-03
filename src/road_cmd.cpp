@@ -14,12 +14,14 @@
 #include "tilearea_type.h"
 #include "viewport_func.h"
 #include "command_func.h"
+#include "map_layer.h"
 #include "company_func.h"
 #include "pathfinder/yapf/yapf_cache.h"
 #include "depot_base.h"
 #include "newgrf.h"
 #include "autoslope.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "strings_func.h"
 #include "vehicle_func.h"
 #include "sound_func.h"
@@ -346,6 +348,11 @@ static CommandCost RemoveRoad(TileIndex tile, DoCommandFlags flags, RoadBits pie
 			break;
 		}
 
+		case TileType::LayerPortal:
+			//Removing the road removes the whole pair.
+			if (GetLayerPortalTransportType(tile) != TransportType::Road) return CMD_ERROR;
+			return Command<Commands::LandscapeClear>::Do(flags, tile);
+
 		default:
 			return CMD_ERROR;
 	}
@@ -611,6 +618,10 @@ CommandCost CmdBuildRoad(DoCommandFlags flags, TileIndex tile, RoadBits pieces, 
 	/* Road pieces are max 4 bitset values (NE, NW, SE, SW) and town can only be non-zero
 	 * if a non-company is building the road */
 	if ((Company::IsValidID(company) && town_id != TownID::Invalid()) || (company == OWNER_TOWN && !Town::IsValidID(town_id)) || (company == OWNER_DEITY && town_id != TownID::Invalid())) return CMD_ERROR;
+
+	//Road and tram are different layer permissions.
+	MapLayerConstruction road_kind = GetRoadTramType(rt) == RoadTramType::Tram ? MapLayerConstruction::Tram : MapLayerConstruction::Road;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, road_kind); layer_cost.Failed()) return layer_cost;
 	if (company != OWNER_TOWN) {
 		const Town *town = CalcClosestTownFromTile(tile);
 		town_id = (town != nullptr) ? town->index : TownID::Invalid();
@@ -789,6 +800,10 @@ CommandCost CmdBuildRoad(DoCommandFlags flags, TileIndex tile, RoadBits pieces, 
 			if (HasTileRoadType(tile, rtt)) return CommandCost(STR_ERROR_ALREADY_BUILT);
 			break;
 		}
+
+		case TileType::LayerPortal:
+			//Road bits are not built on the elevator. The neighbour connects to the door.
+			return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
 
 		case TileType::TunnelBridge: {
 			if (GetTunnelBridgeTransportType(tile) != TransportType::Road) goto do_clear;
@@ -1138,6 +1153,12 @@ std::tuple<CommandCost, Money> CmdRemoveLongRoad(DoCommandFlags flags, TileIndex
 CommandCost CmdBuildRoadDepot(DoCommandFlags flags, TileIndex tile, RoadType rt, DiagDirection dir)
 {
 	if (!ValParamRoadType(rt) || !IsValidDiagDirection(dir)) return CMD_ERROR;
+
+	//A road depot needs the depot permission. A tram depot also needs the tram permission.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Depot); layer_cost.Failed()) return layer_cost;
+	if (GetRoadTramType(rt) == RoadTramType::Tram) {
+		if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Tram); layer_cost.Failed()) return layer_cost;
+	}
 
 	CommandCost cost(ExpensesType::Construction);
 
@@ -2019,6 +2040,15 @@ static_assert(lengthof(_town_road_types_2) == NUM_HOUSE_ZONES);
 /** @copydoc TileLoopProc */
 static void TileLoop_Road(TileIndex tile)
 {
+	//Towns do not pave or start road works off the surface. The roadside stays barren.
+	if (!MultiLayerMap::GetRules(tile).has_climate) {
+		if (!IsRoadDepot(tile) && GetRoadside(tile) != Roadside::Barren) {
+			SetRoadside(tile, Roadside::Barren);
+			MarkTileDirtyByTile(tile);
+		}
+		return;
+	}
+
 	switch (_settings_game.game_creation.landscape) {
 		case LandscapeType::Arctic: {
 			/* Roads use the snow level of their maximum height minus one, unless flat. */
@@ -2517,6 +2547,10 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 			case TileType::TunnelBridge:
 				if (GetTunnelBridgeTransportType(cur_tile) != TransportType::Road) continue;
 				break;
+			case TileType::LayerPortal:
+				//Both ends are visited. Each end keeps its own road type bits.
+				if (GetLayerPortalTransportType(cur_tile) != TransportType::Road) continue;
+				break;
 			default: continue;
 		}
 
@@ -2566,6 +2600,8 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				num_pieces *= ROAD_STOP_TRACKBIT_FACTOR;
 			} else if (tt == TileType::Road && IsRoadDepot(cur_tile)) {
 				num_pieces *= ROAD_DEPOT_TRACKBIT_FACTOR;
+			} else if (tt == TileType::LayerPortal) {
+				num_pieces = LAYER_PORTAL_TRACKBIT_FACTOR(TransportType::Road);
 			}
 
 			found_convertible_road = true;

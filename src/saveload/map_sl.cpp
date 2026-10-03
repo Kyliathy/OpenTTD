@@ -21,11 +21,26 @@
 
 static uint32_t _map_dim_x;
 static uint32_t _map_dim_y;
+static uint8_t _map_layers;
+
+/** How many layers the file actually stored. Plane loaders must not read past that. */
+uint8_t _map_file_layers = 1;
 
 static const SaveLoad _map_desc[] = {
 	SaveLoad::Variable<VarFileType::U32>("dim_x", SLE_GLOBAL_ADDRESS(_map_dim_x), SaveLoadVersion::MultipleRoadStops),
 	SaveLoad::Variable<VarFileType::U32>("dim_y", SLE_GLOBAL_ADDRESS(_map_dim_y), SaveLoadVersion::MultipleRoadStops),
+	SaveLoad::Variable<VarFileType::U8>("layers", SLE_GLOBAL_ADDRESS(_map_layers), SaveLoadVersion::MapLayers),
 };
+
+/**
+ * Tiles the open file stored.
+ * A RIFF length is 28 bits. A 4096 by 4096 map of three layers still fits.
+ * @return Plane size times the file's layer count.
+ */
+static uint MapFileTileCount()
+{
+	return Map::PlaneSize() * _map_file_layers;
+}
 
 struct MAPSChunkHandler : ChunkHandler {
 	MAPSChunkHandler() : ChunkHandler("MAPS", ChunkType::Table) {}
@@ -36,6 +51,7 @@ struct MAPSChunkHandler : ChunkHandler {
 
 		_map_dim_x = Map::SizeX();
 		_map_dim_y = Map::SizeY();
+		_map_layers = static_cast<uint8_t>(Map::LayerCount());
 
 		SlSetArrayIndex(0);
 		SlGlobList(_map_desc);
@@ -45,23 +61,30 @@ struct MAPSChunkHandler : ChunkHandler {
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_map_desc, _map_sl_compat);
 
+		//Files written before MapLayers have no layers field, so they are one surface plane.
+		_map_layers = 1;
+		_map_file_layers = 1;
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;
 		SlGlobList(slt);
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() != -1) SlErrorCorrupt("Too many MAPS entries");
 
-		Map::Allocate(_map_dim_x, _map_dim_y);
+		_map_file_layers = _map_layers;
+		//The live world always has every layer. Missing planes are filled in AfterLoadGame.
+		Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS);
 	}
 
 	void LoadCheck(size_t) const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_map_desc, _map_sl_compat);
 
+		_map_layers = 1;
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;
 		SlGlobList(slt);
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() != -1) SlErrorCorrupt("Too many MAPS entries");
 
 		_load_check_data.map_size_x = _map_dim_x;
 		_load_check_data.map_size_y = _map_dim_y;
+		_load_check_data.map_layers = _map_layers;
 	}
 };
 
@@ -73,7 +96,7 @@ struct MAPTChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -100,7 +123,7 @@ struct MAPHChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -127,7 +150,7 @@ struct MAPOChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -154,7 +177,7 @@ struct MAP2ChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint16_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy(buf.data(), MAP_SL_BUF_SIZE,
@@ -184,7 +207,7 @@ struct M3LOChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -211,7 +234,7 @@ struct M3HIChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -238,7 +261,7 @@ struct MAP5ChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -264,7 +287,7 @@ struct MAPEChunkHandler : ChunkHandler {
 
 	void Load() const override
 	{
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		if (IsSavegameVersionBefore(SaveLoadVersion::BridgeWormhole)) {
 			/* Since this loads 4 tiles per read byte, amend the buffer size to suit. */
@@ -306,7 +329,7 @@ struct MAP7ChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint8_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U8>(buf);
@@ -333,7 +356,7 @@ struct MAP8ChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		std::array<uint16_t, MAP_SL_BUF_SIZE> buf;
-		uint size = Map::Size();
+		uint size = MapFileTileCount();
 
 		for (TileIndex i{}; i != size;) {
 			SlCopy<VarFileType::U16>(buf);

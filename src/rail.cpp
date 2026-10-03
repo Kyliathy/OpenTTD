@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "station_map.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "timer/timer_game_calendar.h"
 #include "company_func.h"
 #include "company_base.h"
@@ -53,6 +54,10 @@ RailType GetTileRailType(Tile tile)
 
 		case TileType::TunnelBridge:
 			if (GetTunnelBridgeTransportType(tile) == TransportType::Rail) return GetRailType(tile);
+			break;
+
+		case TileType::LayerPortal:
+			if (GetLayerPortalTransportType(tile) == TransportType::Rail) return GetRailType(tile);
 			break;
 
 		default:

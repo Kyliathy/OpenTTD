@@ -59,6 +59,7 @@
 #include "train.h"
 #include "rail_gui.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "tunnelbridge.h"
 #include "elrail_func.h"
 #include "company_base.h"
@@ -97,6 +98,12 @@ static TrackBits GetRailTrackBitsUniversal(TileIndex t, DiagDirections *override
 					return {};
 			}
 			break;
+
+		case TileType::LayerPortal:
+			//Power checks see the axis. Wires are not drawn; the draw switch has no portal case.
+			if (GetLayerPortalTransportType(t) != TransportType::Rail) return {};
+			if (!HasRailCatenary(GetRailType(t))) return {};
+			return DiagDirToDiagTrack(GetLayerPortalShaftDirection(t));
 
 		case TileType::TunnelBridge:
 			if (GetTunnelBridgeTransportType(t) != TransportType::Rail) return {};
@@ -570,6 +577,10 @@ void DrawRailCatenary(const TileInfo *ti)
 		case TileType::Road:
 		case TileType::Station:
 			break;
+
+		case TileType::LayerPortal:
+			//Power uses the portal's rail type. Wires and pylons are not drawn on the mouth.
+			return;
 
 		default: return;
 	}

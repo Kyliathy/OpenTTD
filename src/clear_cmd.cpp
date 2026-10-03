@@ -13,6 +13,7 @@
 #include "clear_map.h"
 #include "economy_func.h"
 #include "landscape.h"
+#include "map_layer.h"
 #include "genworld.h"
 #include "slope_func.h"
 #include "viewport_func.h"
@@ -138,9 +139,38 @@ static void DrawClearLandFence(const TileInfo *ti)
 	EndSpriteCombine();
 }
 
+/**
+ * Stand-in ground sprite for a layer whose own art is not in the baseset yet.
+ * @param ground Ground kind from the layer rules.
+ * @return Sprite to draw. Natural ground is not drawn here.
+ */
+static SpriteID GetLayerGroundSprite(MapLayerGround ground)
+{
+	switch (ground) {
+		case MapLayerGround::Bedrock:
+			//Stand-in for SPR_MAP_LAYER_UNDERGROUND_FLOOR until that sprite is published.
+			return SPR_FLAT_ROCKY_LAND_1;
+
+		case MapLayerGround::Vacuum:
+			//Stand-in for SPR_MAP_LAYER_SPACE_FLOOR. Space stays a uniform black vacuum, the same black used past the map edge, so it does not look like a fence.
+			return SPR_FLAT_BARE_LAND;
+
+		default:
+			NOT_REACHED();
+	}
+}
+
 /** @copydoc DrawTileProc */
 static void DrawTile_Clear(TileInfo *ti)
 {
+	//Bedrock and vacuum replace the climate sprites. Natural ground keeps the grass, snow and desert drawing below.
+	MapLayerGround ground_kind = MultiLayerMap::GetRules(ti->tile).ground;
+	if (ground_kind != MapLayerGround::Natural) {
+		PaletteID palette = (ground_kind == MapLayerGround::Vacuum) ? PALETTE_ALL_BLACK : PAL_NONE;
+		DrawGroundSprite(GetLayerGroundSprite(ground_kind), palette);
+		return;
+	}
+
 	if (IsSnowTile(ti->tile)) {
 		uint8_t density = GetClearDensity(ti->tile);
 		DrawGroundSprite(_clear_land_sprites_snow_desert[density] + SlopeToSpriteOffset(ti->tileh), PAL_NONE);
@@ -292,6 +322,9 @@ static void TileLoopClearDesert(TileIndex tile)
 /** @copydoc TileLoopProc */
 static void TileLoop_Clear(TileIndex tile)
 {
+	//No climate, growth or ambient sound off the surface. Bedrock stays rock.
+	if (!MultiLayerMap::GetRules(tile).has_climate) return;
+
 	AmbientSoundEffect(tile);
 
 	switch (_settings_game.game_creation.landscape) {
@@ -450,7 +483,7 @@ void GenerateClearTile()
 
 	SetGeneratingWorldProgress(GenWorldProgress::RoughAndRocks, gi + i);
 
-	/* Add rough tiles. */
+	/* Add rough tiles. C2: RandomTileSeed stays on the surface, and ScaleBySize above is one plane. */
 	do {
 		uint32_t r = Random();
 		IncreaseGeneratingWorldProgress(GenWorldProgress::RoughAndRocks);

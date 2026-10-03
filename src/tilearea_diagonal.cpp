@@ -123,8 +123,8 @@ DiagonalTileArea::iterator &DiagonalTileArea::iterator::operator++()
 		/* And convert the coordinates back once we've gone to the next tile. */
 		uint x = this->base_x + (this->a_cur - this->b_cur) / 2;
 		uint y = this->base_y + (this->b_cur + this->a_cur) / 2;
-		/* Prevent wrapping around the map's borders. */
-		this->tile = x >= Map::SizeX() || y >= Map::SizeY() ? INVALID_TILE : TileXY(x, y);
+		/* Prevent wrapping around the map's borders. C6: the border is this layer's edge. */
+		this->tile = x >= Map::SizeX() || y >= Map::SizeY() ? INVALID_TILE : TileXYL(x, y, this->layer);
 	} while (this->tile > Map::Size() && this->b_max != this->b_cur);
 
 	if (this->b_max == this->b_cur) this->tile = INVALID_TILE;

@@ -27,6 +27,7 @@ enum SmallMapWidgets : WidgetID {
 	WID_SM_VEGETATION,     ///< Button to select the vegetation view.
 	WID_SM_OWNERS,         ///< Button to select the owners view.
 	WID_SM_CENTERMAP,      ///< Button to move smallmap center to main window center.
+	WID_SM_MAP_LAYER,      ///< Cycle the layer this smallmap shows.
 	WID_SM_TOGGLETOWNNAME, ///< Toggle button to display town names.
 	WID_SM_SELECT_BUTTONS, ///< Selection widget for the buttons present in some smallmap modes.
 	WID_SM_ENABLE_ALL,     ///< Button to enable display of all legend entries.

@@ -11,6 +11,7 @@
 #include "script_tilelist.hpp"
 #include "script_industry.hpp"
 #include "../../industry.h"
+#include "../../map_layer.h"
 #include "../../station_base.h"
 #include "../../station_func.h"
 
@@ -111,12 +112,14 @@ static void FillIndustryCatchment(const Industry *i, SQInteger radius, BitmapTil
 		if (!::IsTileType(cur_tile, TileType::Industry) || ::GetIndustryIndex(cur_tile) != i->index) continue;
 
 		int tx = TileX(cur_tile);
-		int ty = TileY(cur_tile);
+		//C9: catchment is measured inside the industry's layer, which is the surface.
+		int ty = TilePlaneY(cur_tile);
+		MapLayer layer = GetTileLayer(cur_tile);
 		for (int y = -radius; y <= radius; y++) {
 			if (ty + y < 0 || ty + y > (int)Map::MaxY()) continue;
 			for (int x = -radius; x <= radius; x++) {
 				if (tx + x < 0 || tx + x > (int)Map::MaxX()) continue;
-				TileIndex tile = TileXY(tx + x, ty + y);
+				TileIndex tile = TileXYL(tx + x, ty + y, layer);
 				if (!IsValidTile(tile)) continue;
 				if (::IsTileType(tile, TileType::Industry) && ::GetIndustryIndex(tile) == i->index) continue;
 				bta.Add(tile);

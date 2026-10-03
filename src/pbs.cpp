@@ -41,6 +41,10 @@ TrackBits GetReservedTrackbits(TileIndex t)
 			if (GetTunnelBridgeTransportType(t) == TransportType::Rail) return GetTunnelBridgeReservationTrackBits(t);
 			break;
 
+		case TileType::LayerPortal:
+			if (GetLayerPortalTransportType(t) == TransportType::Rail) return GetLayerPortalReservationTrackBits(t);
+			break;
+
 		default:
 			break;
 	}
@@ -130,6 +134,13 @@ bool TryReserveRailTrack(TileIndex tile, Track t, bool trigger_stations)
 			}
 			break;
 
+		case TileType::LayerPortal:
+			if (GetLayerPortalTransportType(tile) == TransportType::Rail && GetLayerPortalReservationTrackBits(tile).None()) {
+				SetLayerPortalReservation(tile, true);
+				return true;
+			}
+			break;
+
 		default:
 			break;
 	}
@@ -179,6 +190,10 @@ void UnreserveRailTrack(TileIndex tile, Track t)
 
 		case TileType::TunnelBridge:
 			if (GetTunnelBridgeTransportType(tile) == TransportType::Rail) SetTunnelBridgeReservation(tile, false);
+			break;
+
+		case TileType::LayerPortal:
+			if (GetLayerPortalTransportType(tile) == TransportType::Rail) SetLayerPortalReservation(tile, false);
 			break;
 
 		default:
@@ -326,6 +341,10 @@ PBSTileInfo FollowTrainReservation(const Train *consist, Vehicle **train_on_res)
 				if (ftoti.best != nullptr) *train_on_res = ftoti.best->First();
 			}
 		}
+		if (*train_on_res == nullptr && IsLayerPortalTile(ftoti.res.tile)) {
+			CheckTrainsOnTrack(ftoti, GetLayerPortalPairTile(ftoti.res.tile));
+			if (ftoti.best != nullptr) *train_on_res = ftoti.best->First();
+		}
 		if (*train_on_res == nullptr && IsTileType(ftoti.res.tile, TileType::TunnelBridge)) {
 			/* The target tile is a bridge/tunnel, also check the other end tile. */
 			CheckTrainsOnTrack(ftoti, GetOtherTunnelBridgeEnd(ftoti.res.tile));
@@ -372,7 +391,12 @@ Train *GetTrainForReservation(TileIndex tile, Track track)
 			}
 		}
 
-		/* Special case for bridges/tunnels: check the other end as well. */
+		if (IsLayerPortalTile(ftoti.res.tile)) {
+			CheckTrainsOnTrack(ftoti, GetLayerPortalPairTile(ftoti.res.tile));
+			if (ftoti.best != nullptr) return ftoti.best;
+		}
+
+		/* Special case for bridges/tunnels: check the other end as well. Portal tiles are not tunnels. */
 		if (IsTileType(ftoti.res.tile, TileType::TunnelBridge)) {
 			CheckTrainsOnTrack(ftoti, GetOtherTunnelBridgeEnd(ftoti.res.tile));
 			if (ftoti.best != nullptr) return ftoti.best;
@@ -394,6 +418,9 @@ Train *GetTrainForReservation(TileIndex tile, Track track)
  */
 bool IsSafeWaitingPosition(const Train *v, TileIndex tile, Trackdir trackdir, bool include_line_end, bool forbid_90deg)
 {
+	//A portal is a crossing, not a place to wait.
+	if (IsLayerPortalTile(tile)) return false;
+
 	if (IsRailDepotTile(tile)) return true;
 
 	/* For non-pbs signals, stop on the signal tile. */

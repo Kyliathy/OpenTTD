@@ -16,6 +16,7 @@ enum ExtraViewportWidgets : WidgetID {
 	WID_EV_VIEWPORT,     ///< The viewport.
 	WID_EV_ZOOM_IN,      ///< Zoom in.
 	WID_EV_ZOOM_OUT,     ///< Zoom out.
+	WID_EV_MAP_LAYER,    ///< Cycle the layer this extra viewport shows.
 	WID_EV_MAIN_TO_VIEW, ///< Center the view of this viewport on the main view.
 	WID_EV_VIEW_TO_MAIN, ///< Center the main view on the view of this viewport.
 };

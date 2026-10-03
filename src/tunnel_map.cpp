@@ -68,5 +68,5 @@ bool IsTunnelInWayDir(TileIndex tile, int z, DiagDirection dir)
 bool IsTunnelInWay(TileIndex tile, int z)
 {
 	return IsTunnelInWayDir(tile, z, (TileX(tile) > (Map::MaxX() / 2)) ? DiagDirection::NE : DiagDirection::SW) ||
-			IsTunnelInWayDir(tile, z, (TileY(tile) > (Map::MaxY() / 2)) ? DiagDirection::NW : DiagDirection::SE);
+			IsTunnelInWayDir(tile, z, (TilePlaneY(tile) > (Map::MaxY() / 2)) ? DiagDirection::NW : DiagDirection::SE); //C3
 }

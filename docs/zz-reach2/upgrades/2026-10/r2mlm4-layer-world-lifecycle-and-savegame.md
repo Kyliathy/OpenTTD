@@ -42,7 +42,7 @@
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 91-93 | `### AD-6 Every layer is simulated`: the shared LFSR cursor is applied to every plane; climate and flooding only where the rules allow. Governs Group 3. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 103-105 | `### AD-9 Savegame`: `SaveLoadVersion::MapLayers`, the `layers` field, all planes in the RIFF chunks, `AfterLoadGame` upgrade of older files. Governs Group 5. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 111-128 | `### AD-11`, `### AD-12` and `## Cross-plan Invariants`: this plan is where live games switch to three layers; I-6 (surface identical) and I-7 (round-trip and upgrade) are its acceptance tests. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 431-442 | `## Invariants a change must not break`: big-endian chunk stream, version enum order, older versions keep loading, `MAPS` before the RIFF planes. Constrains every savegame task and the decision to add a field rather than a new chunk. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 Group 4: `MultiLayerMap` core. This plan adds `GetRules` and `InitialiseLayer` to the same struct; it must not duplicate any existing member. |
 
@@ -79,23 +79,23 @@ Entry gate. `src/map_layer.h` must export `MultiLayerMap::GetLayerBase`, `Iterat
 ### Group 1 - Layer rules
 
 {{MEDIUM}}
-- [ ] 1.1 Add `enum class MapLayerGround : uint8_t { Natural, Bedrock, Vacuum }` to `src/map_layer.h` with `///<` comments explaining how each is drawn (r2mlm5).
-- [ ] 1.2 Add `enum class MapLayerConstruction : uint8_t` with Rail, Road, Tram, RailStation, RoadStop, Depot, Signal, Bridge, Tunnel, Airport, Dock, Water, Terraform, Trees, Object, Town, Industry, House, Sign, LayerPortal, and `using MapLayerConstructions = EnumBitSet<MapLayerConstruction, uint32_t>`.
-- [ ] 1.3 Add `struct MapLayerRules` with `allowed`, `ground`, `base_height`, `has_climate`, `has_water_flow` and `has_ambient_sound`, each documented.
-- [ ] 1.4 Define the static rules table in `src/map_layer.cpp` for the three layers exactly as `## Outcome and Boundaries` lists, with a comment per row.
-- [ ] 1.5 Add `MultiLayerMap::GetRules(MapLayer)` and `MultiLayerMap::GetRules(TileIndex)`.
-- [ ] 1.6 Add strings `STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER :{WHITE}... not possible in the {STRING} layer` and use the layer name from `GetMapLayerName`.
-- [ ] 1.7 Implement `CheckLayerAllowsConstruction(TileIndex tile, MapLayerConstruction kind)` returning an empty `CommandCost` or the error above; Javadoc both parameters.
+- [x] 1.1 Add `enum class MapLayerGround : uint8_t { Natural, Bedrock, Vacuum }` to `src/map_layer.h` with `///<` comments explaining how each is drawn (r2mlm5).
+- [x] 1.2 Add `enum class MapLayerConstruction : uint8_t` with Rail, Road, Tram, RailStation, RoadStop, Depot, Signal, Bridge, Tunnel, Airport, Dock, Water, Terraform, Trees, Object, Town, Industry, House, Sign, LayerPortal, and `using MapLayerConstructions = EnumBitSet<MapLayerConstruction, uint32_t>`.
+- [x] 1.3 Add `struct MapLayerRules` with `allowed`, `ground`, `base_height`, `has_climate`, `has_water_flow` and `has_ambient_sound`, each documented.
+- [x] 1.4 Define the static rules table in `src/map_layer.cpp` for the three layers exactly as `## Outcome and Boundaries` lists, with a comment per row.
+- [x] 1.5 Add `MultiLayerMap::GetRules(MapLayer)` and `MultiLayerMap::GetRules(TileIndex)`.
+- [x] 1.6 Add strings `STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER :{WHITE}... not possible in the {STRING} layer` and use the layer name from `GetMapLayerName`.
+- [x] 1.7 Implement `CheckLayerAllowsConstruction(TileIndex tile, MapLayerConstruction kind)` returning an empty `CommandCost` or the error above; Javadoc both parameters.
 
 ### Group 2 - Plane initialisers
 
 {{MEDIUM}}
-- [ ] 2.1 Implement `MultiLayerMap::InitialiseLayer(MapLayer layer)`: for Surface, run the existing body of `InitializeLandscape` on the surface plane; for other layers, fill inner tiles with `MakeClear(t, ClearGround::Rocks, 3)` at `base_height`, `TropicZone::Normal`, no bridge, then void the plane's south edges and, with `freeform_edges`, its north edges.
-- [ ] 2.2 Make `InitializeLandscape` call `InitialiseLayer` for every allocated layer and keep its Javadoc story (now per layer).
-- [ ] 2.3 Make `DoClearSquare` restore the layer default: `ClearGround::Grass` on the surface, `ClearGround::Rocks` density 3 elsewhere, with a comment.
-- [ ] 2.4 In Debug builds, assert in `InitialiseLayer` for non-surface layers that `_random` state is unchanged across the call (AD-4).
-- [ ] 2.5 Confirm in `_GenerateWorld`, at the r2mlm3 marker, that no generator writes outside the surface; replace the marker with a comment stating that non-surface planes come from `InitializeLandscape`.
-- [ ] 2.6 Add unit tests: after `Map::Allocate(64, 64, 3)` and `InitialiseLayer(MapLayer::Underground)`, every inner tile is clear rocks at the base height and each edge is void, with both `freeform_edges` values.
+- [x] 2.1 Implement `MultiLayerMap::InitialiseLayer(MapLayer layer)`: for Surface, run the existing body of `InitializeLandscape` on the surface plane; for other layers, fill inner tiles with `MakeClear(t, ClearGround::Rocks, 3)` at `base_height`, `TropicZone::Normal`, no bridge, then void the plane's south edges and, with `freeform_edges`, its north edges.
+- [x] 2.2 Make `InitializeLandscape` call `InitialiseLayer` for every allocated layer and keep its Javadoc story (now per layer).
+- [x] 2.3 Make `DoClearSquare` restore the layer default: `ClearGround::Grass` on the surface, `ClearGround::Rocks` density 3 elsewhere, with a comment.
+- [x] 2.4 In Debug builds, assert in `InitialiseLayer` for non-surface layers that `_random` state is unchanged across the call (AD-4).
+- [x] 2.5 Confirm in `_GenerateWorld`, at the r2mlm3 marker, that no generator writes outside the surface; replace the marker with a comment stating that non-surface planes come from `InitializeLandscape`.
+- [x] 2.6 Add unit tests: after `Map::Allocate(64, 64, 3)` and `InitialiseLayer(MapLayer::Underground)`, every inner tile is clear rocks at the base height and each edge is void, with both `freeform_edges` values.
 
 ### Area Mandatory Reading - Per-layer simulation
 
@@ -114,12 +114,12 @@ _Applies to Group 3._
 ### Group 3 - Per-layer simulation
 
 {{HARD}}
-- [ ] 3.1 Rewrite `RunTileLoop` to apply the same LFSR steps to every allocated plane by adding `MultiLayerMap::GetLayerBase(layer)`, including the separate tile-0 update per plane; keep one `_cur_tileloop_tile` (plane-local) and port every existing comment.
-- [ ] 3.2 `TileLoop_Clear`: skip ambient sound, climate passes and growth when the layer has no climate.
-- [ ] 3.3 `TileLoop_Rail` and `TileLoop_Road`: force barren ground off the surface and skip town and climate effects, with comments.
-- [ ] 3.4 `TileLoop_Void`, `TileLoop_Water` and `DoFloodTile`: return early off the surface (`has_water_flow`).
-- [ ] 3.5 `TileLoop_Station`: skip climate ground changes off the surface.
-- [ ] 3.6 Add Debug asserts that `TileLoop_Trees`, the house tile loop and `TileLoop_Industry` only ever see surface tiles.
+- [x] 3.1 Rewrite `RunTileLoop` to apply the same LFSR steps to every allocated plane by adding `MultiLayerMap::GetLayerBase(layer)`, including the separate tile-0 update per plane; keep one `_cur_tileloop_tile` (plane-local) and port every existing comment.
+- [x] 3.2 `TileLoop_Clear`: skip ambient sound, climate passes and growth when the layer has no climate.
+- [x] 3.3 `TileLoop_Rail` and `TileLoop_Road`: force barren ground off the surface and skip town and climate effects, with comments.
+- [x] 3.4 `TileLoop_Void`, `TileLoop_Water` and `DoFloodTile`: return early off the surface (`has_water_flow`).
+- [x] 3.5 `TileLoop_Station`: skip climate ground changes off the surface.
+- [x] 3.6 Add Debug asserts that `TileLoop_Trees`, the house tile loop and `TileLoop_Industry` only ever see surface tiles.
 - [ ] 3.7 Measure `PerformanceElement::GameLoopLandscape` with the framerate window on a 1024x1024 three-layer game before and after; record both numbers here.
 
 ### Area Mandatory Reading - Construction gating
@@ -137,14 +137,35 @@ _Applies to Group 4._
 ### Group 4 - Construction gating
 
 {{MEDIUM}}
-- [ ] 4.1 Gate `CmdTerraformLand` and `CmdLevelLand` with `MapLayerConstruction::Terraform`.
-- [ ] 4.2 Gate `CmdBuildSingleRail`, `CmdBuildTrainDepot`, `CmdBuildSingleSignal` and `CmdBuildRailWaypoint` with Rail, Depot, Signal and RailStation respectively.
-- [ ] 4.3 Gate `CmdBuildRailStation` (RailStation), `CmdBuildRoadStop` and `CmdBuildRoadWaypoint` (RoadStop), `CmdBuildAirport` (Airport) and `CmdBuildDock` (Dock).
-- [ ] 4.4 Gate `CmdBuildRoad` (Road or Tram by road type) and `CmdBuildRoadDepot` (Depot, plus Tram for tram depots).
-- [ ] 4.5 Gate `CmdBuildBridge` and `CmdBuildTunnel` on both end tiles.
-- [ ] 4.6 Gate `CmdBuildCanal`, `CmdBuildLock`, `CmdBuildShipDepot`, `CmdBuildBuoy` (Water or Dock), `CmdPlantTree` (Trees) and `CmdBuildObject` (Object).
-- [ ] 4.7 Gate `CmdBuildIndustry`, `CmdFoundTown`, `CmdPlaceHouse` and `CmdPlaceHouseArea` (Industry, Town, House).
-- [ ] 4.8 Record the gating matrix (command, `MapLayerConstruction` kind, allowed layers) as a list under this task. The in-game check that every gated command shows the layer error needs the Underground view and runs in r2mlm5 task 8.4.
+- [x] 4.1 Gate `CmdTerraformLand` and `CmdLevelLand` with `MapLayerConstruction::Terraform`.
+- [x] 4.2 Gate `CmdBuildSingleRail`, `CmdBuildTrainDepot`, `CmdBuildSingleSignal` and `CmdBuildRailWaypoint` with Rail, Depot, Signal and RailStation respectively.
+- [x] 4.3 Gate `CmdBuildRailStation` (RailStation), `CmdBuildRoadStop` and `CmdBuildRoadWaypoint` (RoadStop), `CmdBuildAirport` (Airport) and `CmdBuildDock` (Dock).
+- [x] 4.4 Gate `CmdBuildRoad` (Road or Tram by road type) and `CmdBuildRoadDepot` (Depot, plus Tram for tram depots).
+- [x] 4.5 Gate `CmdBuildBridge` and `CmdBuildTunnel` on both end tiles.
+- [x] 4.6 Gate `CmdBuildCanal`, `CmdBuildLock`, `CmdBuildShipDepot`, `CmdBuildBuoy` (Water or Dock), `CmdPlantTree` (Trees) and `CmdBuildObject` (Object).
+- [x] 4.7 Gate `CmdBuildIndustry`, `CmdFoundTown`, `CmdPlaceHouse` and `CmdPlaceHouseArea` (Industry, Town, House).
+- [x] 4.8 Record the gating matrix (command, `MapLayerConstruction` kind, allowed layers) as a list under this task. The in-game check that every gated command shows the layer error needs the Underground view and runs in r2mlm5 task 8.4.
+
+Surface allows every kind. Underground allows Rail, Road, RailStation, RoadStop, Depot, Signal, Sign and LayerPortal. Space allows Sign. Signs are not gated, so they can be placed on every layer.
+
+- `CmdTerraformLand`, `CmdLevelLand`: Terraform. Surface.
+- `CmdBuildSingleRail`: Rail. Surface, Underground.
+- `CmdBuildTrainDepot`: Depot. Surface, Underground.
+- `CmdBuildSingleSignal`: Signal. Surface, Underground.
+- `CmdBuildRailWaypoint`, `CmdBuildRailStation`: RailStation. Surface, Underground.
+- `CmdBuildRoadStop`, `CmdBuildRoadWaypoint`: RoadStop. Surface, Underground.
+- `CmdBuildAirport`: Airport. Surface.
+- `CmdBuildDock`, `CmdBuildBuoy`: Dock. Surface.
+- `CmdBuildRoad`: Road, or Tram when the road type is a tram. Road: Surface, Underground. Tram: Surface.
+- `CmdBuildRoadDepot`: Depot, and also Tram for a tram depot. Road depot: Surface, Underground. Tram depot: Surface.
+- `CmdBuildBridge`: Bridge, both ends. Surface.
+- `CmdBuildTunnel`: Tunnel, both ends. Surface.
+- `CmdBuildCanal`, `CmdBuildLock`, `CmdBuildShipDepot`: Water. Surface.
+- `CmdPlantTree`: Trees. Surface.
+- `CmdBuildObject`: Object. Surface.
+- `CmdBuildIndustry`: Industry. Surface.
+- `CmdFoundTown`: Town. Surface.
+- `CmdPlaceHouse`, `CmdPlaceHouseArea`: House. Surface.
 
 ### Area Mandatory Reading - Savegame
 
@@ -162,13 +183,13 @@ _Applies to Group 5._
 ### Group 5 - Savegame
 
 {{HARD}}
-- [ ] 5.1 Insert `MapLayers, ///< Saveload version: 369 ...\n Map stores Surface, Underground and Space layers.` immediately before `MaxVersion` in `SaveLoadVersion`.
-- [ ] 5.2 Add `static uint8_t _map_layers` and a `SaveLoad::Variable<VarFileType::U8>("layers", SLE_GLOBAL_ADDRESS(_map_layers), SaveLoadVersion::MapLayers)` row to `_map_desc`; `Save` writes `Map::LayerCount()`, `Load` defaults `_map_layers` to 1 before reading.
-- [ ] 5.3 In `MAPSChunkHandler::Load`, allocate `Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS)` and keep the file's layer count in a file-scope `_map_file_layers` used by the plane loaders.
-- [ ] 5.4 Change every plane loader (`MAPT` to `MAP8`, including the `MAP2` 8-bit and `MAPE` packed variants) to read `Map::PlaneSize() * _map_file_layers` tiles, and every saver to write `Map::Size()` tiles; comment the 28-bit length limit.
-- [ ] 5.5 In `MAPSChunkHandler::LoadCheck`, fill a new `LoadCheckData::map_layers` member (default 1).
-- [ ] 5.6 At the start of `AfterLoadGame`, before the first tile loop, initialise every layer index at or above the file's layer count with `MultiLayerMap::InitialiseLayer`, with a comment explaining the ordering constraint.
-- [ ] 5.7 Make the old TTO / TTD loader allocate `MAX_MAP_LAYERS` (its reads are surface-only since r2mlm3) and rely on the same `AfterLoadGame` initialisation.
+- [x] 5.1 Insert `MapLayers, ///< Saveload version: 369 ...\n Map stores Surface, Underground and Space layers.` immediately before `MaxVersion` in `SaveLoadVersion`.
+- [x] 5.2 Add `static uint8_t _map_layers` and a `SaveLoad::Variable<VarFileType::U8>("layers", SLE_GLOBAL_ADDRESS(_map_layers), SaveLoadVersion::MapLayers)` row to `_map_desc`; `Save` writes `Map::LayerCount()`, `Load` defaults `_map_layers` to 1 before reading.
+- [x] 5.3 In `MAPSChunkHandler::Load`, allocate `Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS)` and keep the file's layer count in a file-scope `_map_file_layers` used by the plane loaders.
+- [x] 5.4 Change every plane loader (`MAPT` to `MAP8`, including the `MAP2` 8-bit and `MAPE` packed variants) to read `Map::PlaneSize() * _map_file_layers` tiles, and every saver to write `Map::Size()` tiles; comment the 28-bit length limit.
+- [x] 5.5 In `MAPSChunkHandler::LoadCheck`, fill a new `LoadCheckData::map_layers` member (default 1).
+- [x] 5.6 At the start of `AfterLoadGame`, before the first tile loop, initialise every layer index at or above the file's layer count with `MultiLayerMap::InitialiseLayer`, with a comment explaining the ordering constraint.
+- [x] 5.7 Make the old TTO / TTD loader allocate `MAX_MAP_LAYERS` (its reads are surface-only since r2mlm3) and rely on the same `AfterLoadGame` initialisation.
 - [ ] 5.8 Build and run a round trip: new game, save, load, save again; digest every plane of both saves and confirm they are identical.
 
 ### Area Mandatory Reading - Going live and verification
@@ -185,8 +206,8 @@ _Applies to Groups 6-7._
 ### Group 6 - Three live layers
 
 {{MEDIUM}}
-- [ ] 6.1 Change `InitializeGame` to allocate `MAX_MAP_LAYERS`, with a comment referencing AD-11.
-- [ ] 6.2 Log the allocated tile memory (bytes of both arrays) at `Facility::Map` debug level in `Map::Allocate`.
+- [x] 6.1 Change `InitializeGame` to allocate `MAX_MAP_LAYERS`, with a comment referencing AD-11.
+- [x] 6.2 Log the allocated tile memory (bytes of both arrays) at `Facility::Map` debug level in `Map::Allocate`.
 - [ ] 6.3 Start a new game, a scenario-editor flat world and a heightmap world; confirm three layers are allocated and the surface looks unchanged.
 - [ ] 6.4 Confirm the layer button is now enabled (r2mlm2 task 5.3 logic) and still only changes its icon (rendering arrives in r2mlm5).
 - [ ] 6.5 Run a 512x512 game for one in-game year with `-d desync=2` in a Debug build; confirm no cache-check messages.

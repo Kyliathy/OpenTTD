@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "command_func.h"
+#include "map_layer.h"
 #include "tilearea_type.h"
 #include "tunnel_map.h"
 #include "bridge_map.h"
@@ -171,6 +172,9 @@ static std::tuple<CommandCost, TileIndex> TerraformTileHeight(TerraformerState *
  */
 std::tuple<CommandCost, Money, TileIndex> CmdTerraformLand(DoCommandFlags flags, TileIndex tile, Slope slope, bool dir_up)
 {
+	//Raising land is refused before any corner is priced.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Terraform); layer_cost.Failed()) return { layer_cost, 0, INVALID_TILE };
+
 	CommandCost total_cost(ExpensesType::Construction);
 	int direction = (dir_up ? 1 : -1);
 	TerraformerState ts;
@@ -326,6 +330,10 @@ std::tuple<CommandCost, Money, TileIndex> CmdTerraformLand(DoCommandFlags flags,
 std::tuple<CommandCost, Money, TileIndex> CmdLevelLand(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal, LevelMode lm)
 {
 	if (start_tile >= Map::Size()) return { CMD_ERROR, 0, INVALID_TILE };
+
+	//Both corners of a level drag must allow terraforming.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Terraform); layer_cost.Failed()) return { layer_cost, 0, INVALID_TILE };
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::Terraform); layer_cost.Failed()) return { layer_cost, 0, INVALID_TILE };
 
 	/* remember level height */
 	uint oldh = TileHeight(start_tile);

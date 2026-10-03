@@ -223,6 +223,9 @@ CommandCost CmdBuildObject(DoCommandFlags flags, TileIndex tile, ObjectType type
 	if (spec->flags.Test(ObjectFlag::OnlyInGame) && (_generating_world || _game_mode != GameMode::Normal || _current_company > MAX_COMPANIES)) return CMD_ERROR;
 	if (view >= spec->views) return CMD_ERROR;
 
+	//Objects are refused on a layer that does not list them.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Object); layer_cost.Failed()) return layer_cost;
+
 	if (!Object::CanAllocateItem()) return CommandCost(STR_ERROR_TOO_MANY_OBJECTS);
 	if (Town::GetNumItems() == 0) return CommandCost(STR_ERROR_MUST_FOUND_TOWN_FIRST);
 
@@ -255,7 +258,8 @@ CommandCost CmdBuildObject(DoCommandFlags flags, TileIndex tile, ObjectType type
 					if (o != OWNER_NONE && o != OWNER_WATER) cost.AddCost(CheckOwnership(o, t));
 
 					/* If freeform edges are disabled, don't allow building on edge tiles. */
-					if (!_settings_game.construction.freeform_edges && (!IsInsideMM(TileX(t), 1, Map::MaxX() - 1) || !IsInsideMM(TileY(t), 1, Map::MaxY() - 1))) {
+					//C3: the forbidden edge is the edge of this tile's layer.
+					if (!_settings_game.construction.freeform_edges && (!IsInsideMM(TileX(t), 1, Map::MaxX() - 1) || !IsInsideMM(TilePlaneY(t), 1, Map::MaxY() - 1))) {
 						return CommandCost(STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP);
 					}
 
@@ -837,10 +841,11 @@ static bool TryBuildCoastLighthouse()
 	TileIndex tile;
 	switch (dir) {
 		default:
-		case DiagDirection::NE: tile = TileXY(maxx - 1, r % maxy); break;
-		case DiagDirection::SE: tile = TileXY(r % maxx, 1); break;
-		case DiagDirection::SW: tile = TileXY(1, r % maxy); break;
-		case DiagDirection::NW: tile = TileXY(r % maxx, maxy - 1); break;
+		//C2: lighthouses are placed on the surface coast.
+		case DiagDirection::NE: tile = TileXYL(maxx - 1, r % maxy, MapLayer::Surface); break;
+		case DiagDirection::SE: tile = TileXYL(r % maxx, 1, MapLayer::Surface); break;
+		case DiagDirection::SW: tile = TileXYL(1, r % maxy, MapLayer::Surface); break;
+		case DiagDirection::NW: tile = TileXYL(r % maxx, maxy - 1, MapLayer::Surface); break;
 	}
 
 	/* Now walk inwards until we find a valid tile, or hit the other edge of the map. */
@@ -869,7 +874,7 @@ static void BuildCoastLighthouses(uint16_t amount)
  */
 static bool TryBuildTransmitter()
 {
-	TileIndex tile = RandomTile();
+	TileIndex tile = RandomTile(); //C2: transmitters sit on the surface.
 	int h;
 	if (IsTileType(tile, TileType::Clear) && IsTileFlat(tile, &h) && h >= 4 && !IsBridgeAbove(tile)) {
 		for (auto t : SpiralTileSequence(tile, 9)) {
@@ -893,12 +898,13 @@ void GenerateObjects()
 	uint num_water_tiles = 0;
 	if (_settings_game.construction.freeform_edges) {
 		for (uint x = 0; x < Map::MaxX(); x++) {
-			if (IsTileType(TileXY(x, 1), TileType::Water)) num_water_tiles++;
-			if (IsTileType(TileXY(x, Map::MaxY() - 1), TileType::Water)) num_water_tiles++;
+			if (IsTileType(TileXYL(x, 1, MapLayer::Surface), TileType::Water)) num_water_tiles++;
+			if (IsTileType(TileXYL(x, Map::MaxY() - 1, MapLayer::Surface), TileType::Water)) num_water_tiles++;
 		}
+		//C2: the coast count is the surface border.
 		for (uint y = 1; y < Map::MaxY() - 1; y++) {
-			if (IsTileType(TileXY(1, y), TileType::Water)) num_water_tiles++;
-			if (IsTileType(TileXY(Map::MaxX() - 1, y), TileType::Water)) num_water_tiles++;
+			if (IsTileType(TileXYL(1, y, MapLayer::Surface), TileType::Water)) num_water_tiles++;
+			if (IsTileType(TileXYL(Map::MaxX() - 1, y, MapLayer::Surface), TileType::Water)) num_water_tiles++;
 		}
 	}
 

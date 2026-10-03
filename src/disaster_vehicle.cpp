@@ -28,6 +28,7 @@
 #include "aircraft.h"
 #include "disaster_vehicle.h"
 #include "industry.h"
+#include "map_layer.h"
 #include "station_base.h"
 #include "command_func.h"
 #include "news_func.h"
@@ -422,7 +423,8 @@ static bool DisasterTick_Ufo(DisasterVehicle *ufo)
 
 static void DestructIndustry(Industry *i)
 {
-	for (const auto tile : Map::Iterate()) {
+	//C2: industries exist on the surface, so the explosion only walks that plane.
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		if (i->TileBelongsToIndustry(tile)) {
 			ResetIndustryConstructionStage(tile);
 			MarkTileDirtyByTile(tile);
@@ -781,7 +783,7 @@ static void Disaster_Small_Ufo_Init()
 
 	int x = TileX(RandomTile()) * TILE_SIZE + TILE_SIZE / 2;
 	DisasterVehicle *v = DisasterVehicle::Create(x, 0, Direction::SE, ST_SMALL_UFO);
-	v->dest_tile = TileXY(Map::SizeX() / 2, Map::SizeY() / 2);
+	v->dest_tile = TileXYL(Map::SizeX() / 2, Map::SizeY() / 2, MapLayer::Surface); //C2
 
 	/* Allocate shadow */
 	DisasterVehicle *u = DisasterVehicle::Create(x, 0, Direction::SE, ST_SMALL_UFO_SHADOW);
@@ -852,7 +854,7 @@ static void Disaster_Big_Ufo_Init()
 	int y = Map::MaxX() * TILE_SIZE - 1;
 
 	DisasterVehicle *v = DisasterVehicle::Create(x, y, Direction::NW, ST_BIG_UFO);
-	v->dest_tile = TileXY(Map::SizeX() / 2, Map::SizeY() / 2);
+	v->dest_tile = TileXYL(Map::SizeX() / 2, Map::SizeY() / 2, MapLayer::Surface); //C2
 
 	/* Allocate shadow */
 	DisasterVehicle *u = DisasterVehicle::Create(x, y, Direction::NW, ST_BIG_UFO_SHADOW);

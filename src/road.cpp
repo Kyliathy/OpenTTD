@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "rail_map.h"
 #include "road_map.h"
+#include "layer_portal_map.h"
 #include "water_map.h"
 #include "genworld.h"
 #include "company_func.h"
@@ -78,6 +79,7 @@ RoadBits CleanUpRoadBits(const TileIndex tile, RoadBits org_rb)
 
 					/* The conditionally connective ones */
 					case TileType::TunnelBridge:
+					case TileType::LayerPortal:
 					case TileType::Station:
 					case TileType::Road:
 						if (IsNormalRoadTile(neighbour_tile)) {

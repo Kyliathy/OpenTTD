@@ -10,17 +10,20 @@
 #include "../../stdafx.h"
 #include "script_map.hpp"
 #include "../../tile_map.h"
+#include "../../map_layer.h"
 
 #include "../../safeguards.h"
 
 /* static */ bool ScriptMap::IsValidTile(TileIndex t)
 {
-	return ::IsValidTile(t);
+	//C9: scripts see the surface plane, which is the map they have always seen.
+	return ::IsValidTile(t) && MultiLayerMap::IsTileInLayer(t, MapLayer::Surface);
 }
 
 /* static */ SQInteger ScriptMap::GetMapSize()
 {
-	return ::Map::Size();
+	//C9: the script-visible map is one plane.
+	return ::Map::PlaneSize();
 }
 
 /* static */ SQInteger ScriptMap::GetMapSizeX()
@@ -42,7 +45,7 @@
 /* static */ SQInteger ScriptMap::GetTileY(TileIndex t)
 {
 	if (!::IsValidTile(t)) return -1;
-	return ::TileY(t);
+	return ::TilePlaneY(t);
 }
 
 /* static */ TileIndex ScriptMap::GetTileIndex(SQInteger x, SQInteger y)

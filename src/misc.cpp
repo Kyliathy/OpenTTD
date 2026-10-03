@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "landscape.h"
+#include "map_layer.h"
 #include "news_func.h"
 #include "ai/ai.hpp"
 #include "script/script_gui.h"
@@ -95,7 +96,8 @@ void InitializeGame(uint size_x, uint size_y, bool reset_date, bool reset_settin
 	 * related to the new game we're about to start/load. */
 	UnInitWindowSystem();
 
-	Map::Allocate(size_x, size_y);
+	//AD-11: from this plan on, a live game stores every layer.
+	Map::Allocate(size_x, size_y, MAX_MAP_LAYERS);
 
 	_pause_mode = {};
 	_game_speed = 100;

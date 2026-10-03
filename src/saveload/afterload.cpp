@@ -9,6 +9,7 @@
 
 #include "../stdafx.h"
 #include "../void_map.h"
+#include "../layer_portal_map.h"
 #include "../signs_base.h"
 #include "../depot_base.h"
 #include "../network/network.h"
@@ -17,6 +18,7 @@
 #include "../viewport_kdtree.h"
 #include "../industry.h"
 #include "../clear_map.h"
+#include "../map_layer.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -101,7 +103,8 @@ void SetWaterClassDependingOnSurroundings(Tile t, bool include_invalid_water_cla
 	/* Mark tile dirty in all cases */
 	MarkTileDirtyByTile(t);
 
-	if (TileX(t) == 0 || TileY(t) == 0 || TileX(t) == Map::MaxX() - 1 || TileY(t) == Map::MaxY() - 1) {
+	//C3: the sea border is the edge of this tile's layer.
+	if (TileX(t) == 0 || TilePlaneY(t) == 0 || TileX(t) == Map::MaxX() - 1 || TilePlaneY(t) == Map::MaxY() - 1) {
 		/* tiles at map borders are always WaterClass::Sea */
 		SetWaterClass(t, WaterClass::Sea);
 		return;
@@ -203,8 +206,9 @@ static void UpdateCurrencies()
  */
 static void UpdateVoidTiles()
 {
-	for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, Map::MaxY()));
-	for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(Map::MaxX(), y));
+	//C2: old saves are one surface plane, so the missing void fence is the surface edge.
+	for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXYL(x, Map::MaxY(), MapLayer::Surface));
+	for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXYL(Map::MaxX(), y, MapLayer::Surface));
 }
 
 static inline RailType UpdateRailType(RailType rt, RailType min)
@@ -514,6 +518,7 @@ static void CheckGroundVehiclesAtCorrectZ()
 			 * Either the vehicle is not actually on the given tile, i.e. it is
 			 * in the wormhole of a bridge or a tunnel, or the Z-coordinate must
 			 * be the same as when it would be recalculated right now.
+			 * A layer portal keeps the vehicle on its tile, so this check applies there too.
 			 */
 			assert(v->tile != TileVirtXY(v->x_pos, v->y_pos) || v->z_pos == GetSlopePixelZ(v->x_pos, v->y_pos, true));
 		}
@@ -562,6 +567,12 @@ bool AfterLoadGame()
 	extern TileIndex _cur_tileloop_tile; // From landscape.cpp.
 	/* The LFSR used in RunTileLoop iteration cannot have a zeroed state, make it non-zeroed. */
 	if (_cur_tileloop_tile == 0) _cur_tileloop_tile = TileIndex{1};
+
+	//Settings such as freeform edges are loaded after the map chunks, so the missing planes are filled here, before any tile loop reads them.
+	extern uint8_t _map_file_layers;
+	for (uint layer_index = _map_file_layers; layer_index < Map::LayerCount(); ++layer_index) {
+		MultiLayerMap::InitialiseLayer(static_cast<MapLayer>(layer_index));
+	}
 
 	if (IsSavegameVersionBefore(SaveLoadVersion::Gamelog)) _gamelog.Oldver();
 
@@ -1924,7 +1935,7 @@ bool AfterLoadGame()
 		for (const auto t : Map::Iterate()) {
 			/* skip oil rigs at borders! */
 			if ((IsTileType(t, TileType::Water) || IsBuoyTile(t)) &&
-					(TileX(t) == 0 || TileY(t) == 0 || TileX(t) == Map::MaxX() - 1 || TileY(t) == Map::MaxY() - 1)) {
+					(TileX(t) == 0 || TilePlaneY(t) == 0 || TileX(t) == Map::MaxX() - 1 || TilePlaneY(t) == Map::MaxY() - 1)) { //C3
 				/* Some version 86 savegames have wrong water class at map borders (under buoy, or after removing buoy).
 				 * This conversion has to be done before buoys with invalid owner are removed. */
 				SetWaterClass(t, WaterClass::Sea);
@@ -2042,6 +2053,10 @@ bool AfterLoadGame()
 
 				case TileType::TunnelBridge: // Clear PBS reservation on tunnels/bridges
 					if (GetTunnelBridgeTransportType(t) == TransportType::Rail) SetTunnelBridgeReservation(t, false);
+					break;
+
+				case TileType::LayerPortal:
+					if (GetLayerPortalTransportType(t) == TransportType::Rail) SetLayerPortalReservation(t, false);
 					break;
 
 				default: break;

@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "station_map.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "vehicle_func.h"
 #include "viewport_func.h"
 #include "train.h"
@@ -399,6 +400,29 @@ static SigFlags ExploreSegment(Owner owner)
 				}
 				break;
 
+			case TileType::LayerPortal: {
+				if (GetTileOwner(tile) != owner) continue;
+				if (GetLayerPortalTransportType(tile) != TransportType::Rail) continue;
+				//A train on either end blocks the block.
+				if (!flags.Test(SigFlag::Train) && HasVehicleOnTile(tile, IsTrainAndNotInDepot)) flags.Set(SigFlag::Train);
+				TileIndex pair = GetLayerPortalPairTile(tile);
+				if (!flags.Test(SigFlag::Train) && HasVehicleOnTile(pair, IsTrainAndNotInDepot)) flags.Set(SigFlag::Train);
+				if (enterdir == GetLayerPortalDoorDirection(tile)) {
+					//Through the door, then on into the pair by its shaft.
+					tile = pair;
+					enterdir = GetLayerPortalShaftDirection(pair);
+					exitdir = ReverseDiagDir(enterdir);
+				} else if (enterdir == GetLayerPortalShaftDirection(tile)) {
+					//Through the shaft and out of the door onto the next tile.
+					exitdir = GetLayerPortalDoorDirection(tile);
+					tile += TileOffsByDiagDir(exitdir);
+					enterdir = ReverseDiagDir(exitdir);
+				} else {
+					continue;
+				}
+				}
+				break;
+
 			default:
 				continue; // continue the while() loop
 		}
@@ -504,6 +528,12 @@ static SigSegState UpdateSignalsInBuffer(Owner owner)
 		 * train entering/leaving block, train leaving depot...
 		 */
 		switch (GetTileType(tile)) {
+			case TileType::LayerPortal:
+				assert(GetLayerPortalTransportType(tile) == TransportType::Rail);
+				_tbdset.Add(tile, GetLayerPortalDoorDirection(tile));
+				_tbdset.Add(GetLayerPortalPairTile(tile), GetLayerPortalShaftDirection(GetLayerPortalPairTile(tile)));
+				break;
+
 			case TileType::TunnelBridge:
 				/* 'optimization assert' - do not try to update signals when it is not needed */
 				assert(GetTunnelBridgeTransportType(tile) == TransportType::Rail);

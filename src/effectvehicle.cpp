@@ -620,6 +620,7 @@ EffectVehicle *CreateEffectVehicle(int x, int y, int z, EffectVehicleType type)
  */
 EffectVehicle *CreateEffectVehicleAbove(int x, int y, int z, EffectVehicleType type)
 {
+	//C3: an effect is clamped to one plane. Callers on the surface already pass a coordinate inside it.
 	int safe_x = Clamp(x, 0, Map::MaxX() * TILE_SIZE);
 	int safe_y = Clamp(y, 0, Map::MaxY() * TILE_SIZE);
 	return CreateEffectVehicle(x, y, GetSlopePixelZ(safe_x, safe_y) + z, type);

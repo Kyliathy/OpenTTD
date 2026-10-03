@@ -80,6 +80,7 @@
 #include "company_func.h"
 #include "waypoint_func.h"
 #include "window_func.h"
+#include "map_layer_gui.h"
 #include "tilehighlight_func.h"
 #include "window_gui.h"
 #include "linkgraph/linkgraph_gui.h"
@@ -185,7 +186,12 @@ struct ViewportDrawer {
 	EnumIndexArray<int, FoundationPart, FoundationPart::End> foundation; ///< Foundation sprites (index into parent_sprites_to_draw).
 	EnumIndexArray<int, FoundationPart, FoundationPart::End> last_foundation_child; ///< Tail of ChildSprite list of the foundations. (index into child_screen_sprites_to_draw)
 	EnumIndexArray<Point, FoundationPart, FoundationPart::End> foundation_offset; ///< Pixel offset for ground sprites on the foundations.
+
+	MapLayer layer = MapLayer::Surface; ///< Layer this frame is drawing.
 };
+
+/** Layer the current viewport draw is showing. Off-map fences read this. */
+MapLayer _viewport_draw_layer = MapLayer::Surface;
 
 static bool MarkViewportDirty(const Viewport &vp, int left, int top, int right, int bottom);
 
@@ -241,11 +247,16 @@ void InitializeWindowViewport(Window *w, int x, int y,
 		vp->follow_vehicle = std::get<VehicleID>(focus);
 		veh = Vehicle::Get(vp->follow_vehicle)->GetMovingFront();
 		pt = MapXYZToViewport(*vp, veh->x_pos, veh->y_pos, veh->z_pos);
+		//The view opens on the layer the vehicle occupies.
+		vp->layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);
 	} else {
 		TileIndex tile = std::get<TileIndex>(focus);
 		if (tile == INVALID_TILE) {
 			/* No tile? Use center of main viewport. */
 			const Window *mw = GetMainWindow();
+
+			//An extra view opened without a tile keeps the layer already on screen.
+			vp->layer = mw->viewport->layer;
 
 			/* center on same place as main window (zoom is maximum, no adjustment needed) */
 			pt.x = mw->viewport->scrollpos_x + mw->viewport->virtual_width / 2;
@@ -256,6 +267,7 @@ void InitializeWindowViewport(Window *w, int x, int y,
 			x = TileX(tile) * TILE_SIZE;
 			y = TileY(tile) * TILE_SIZE;
 			pt = MapXYZToViewport(*vp, x, y, GetSlopePixelZ(x, y));
+			vp->layer = GetTileLayer(tile);
 		}
 		vp->follow_vehicle = VehicleID::Invalid();
 	}
@@ -437,7 +449,7 @@ Point TranslateXYToTileCoord(const Viewport &vp, int x, int y, bool clamp_to_map
 
 	return InverseRemapCoords2(
 			ScaleByZoom(x - vp.left, vp.zoom) + vp.virtual_left,
-			ScaleByZoom(y - vp.top, vp.zoom) + vp.virtual_top, clamp_to_map);
+			ScaleByZoom(y - vp.top, vp.zoom) + vp.virtual_top, clamp_to_map, nullptr, vp.layer);
 }
 
 /* When used for zooming, check area below current coordinates (x,y)
@@ -1201,7 +1213,7 @@ draw_inner:
 static int GetViewportY(Point tile)
 {
 	/* Each increment in X or Y direction moves down by half a tile, i.e. TILE_PIXELS / 2. */
-	return (tile.y * (int)(TILE_PIXELS / 2) + tile.x * (int)(TILE_PIXELS / 2) - TilePixelHeightOutsideMap(tile.x, tile.y)) << ZOOM_BASE_SHIFT;
+	return (tile.y * (int)(TILE_PIXELS / 2) + tile.x * (int)(TILE_PIXELS / 2) - TilePixelHeightOutsideMap(tile.x, tile.y, _vd.layer)) << ZOOM_BASE_SHIFT;
 }
 
 /**
@@ -1255,7 +1267,9 @@ static void ViewportAddLandscape()
 			_cur_ti.x = tilecoord.x * TILE_SIZE;
 			_cur_ti.y = tilecoord.y * TILE_SIZE;
 
-			if (IsInsideBS(tilecoord.x, 0, Map::SizeX()) && IsInsideBS(tilecoord.y, 0, Map::SizeY())) {
+			//A tile is on this view's map only when its stacked Y lies in the layer's band.
+			int band_y = static_cast<int>(to_underlying(_vd.layer)) * static_cast<int>(Map::SizeY());
+			if (IsInsideBS(tilecoord.x, 0, Map::SizeX()) && IsInsideBS(tilecoord.y, band_y, Map::SizeY())) {
 				/* This includes the south border at Map::MaxX / Map::MaxY. When terraforming we still draw tile selections there. */
 				_cur_ti.tile = TileXY(tilecoord.x, tilecoord.y);
 				tile_type = GetTileType(_cur_ti.tile);
@@ -1269,7 +1283,7 @@ static void ViewportAddLandscape()
 				std::tie(_cur_ti.tileh, _cur_ti.z) = GetTilePixelSlope(_cur_ti.tile);
 			} else {
 				/* We are outside the map => paint black. */
-				std::tie(_cur_ti.tileh, _cur_ti.z) = GetTilePixelSlopeOutsideMap(tilecoord.x, tilecoord.y);
+				std::tie(_cur_ti.tileh, _cur_ti.z) = GetTilePixelSlopeOutsideMap(tilecoord.x, tilecoord.y, _vd.layer);
 			}
 
 			int viewport_y = GetViewportY(tilecoord);
@@ -1288,7 +1302,8 @@ static void ViewportAddLandscape()
 				/* Is tile with buildings visible? */
 				if (min_visible_height < MAX_TILE_EXTENT_TOP) tile_visible = true;
 
-				if (IsBridgeAbove(_cur_ti.tile)) {
+				//Bridges exist only on the surface (AD-12). Other layers do not extend the row scan for them.
+				if (_vd.layer == MapLayer::Surface && IsBridgeAbove(_cur_ti.tile)) {
 					/* Is the bridge visible? */
 					TileIndex bridge_tile = GetNorthernBridgeEnd(_cur_ti.tile);
 					int bridge_height = ZOOM_BASE * (GetBridgePixelHeight(bridge_tile) - TilePixelHeight(_cur_ti.tile));
@@ -1297,11 +1312,12 @@ static void ViewportAddLandscape()
 
 				/* Would a higher bridge on a more southern tile be visible?
 				 * If yes, we need to loop over more rows to possibly find one. */
-				if (min_visible_height < potential_bridge_height + MAX_TILE_EXTENT_TOP) last_row = false;
+				if (_vd.layer == MapLayer::Surface && min_visible_height < potential_bridge_height + MAX_TILE_EXTENT_TOP) last_row = false;
 			} else {
 				/* Outside of map. If we are on the north border of the map, there may still be a bridge visible,
 				 * so we need to loop over more rows to possibly find one. */
-				if ((tilecoord.x <= 0 || tilecoord.y <= 0) && min_visible_height < potential_bridge_height + MAX_TILE_EXTENT_TOP) last_row = false;
+				int band_north = static_cast<int>(to_underlying(_vd.layer)) * static_cast<int>(Map::SizeY());
+				if (_vd.layer == MapLayer::Surface && (tilecoord.x <= 0 || tilecoord.y <= band_north) && min_visible_height < potential_bridge_height + MAX_TILE_EXTENT_TOP) last_row = false;
 			}
 
 			if (tile_visible) {
@@ -1467,6 +1483,8 @@ static void ViewportAddKdtreeSigns(DrawPixelInfo *dpi)
 			case ViewportSignKdtreeItem::VKI_STATION: {
 				if (!show_stations) break;
 				const BaseStation *st = BaseStation::Get(std::get<StationID>(item.id));
+				//Labels from another layer stay with that layer.
+				if (GetTileLayer(st->xy) != _vd.layer) break;
 
 				/* If no facilities are present the station is a ghost station. */
 				StationFacilities facilities = st->facilities;
@@ -1484,6 +1502,7 @@ static void ViewportAddKdtreeSigns(DrawPixelInfo *dpi)
 			case ViewportSignKdtreeItem::VKI_WAYPOINT: {
 				if (!show_waypoints) break;
 				const BaseStation *st = BaseStation::Get(std::get<StationID>(item.id));
+				if (GetTileLayer(st->xy) != _vd.layer) break;
 
 				/* Don't draw if station is owned by another company and competitor station names are hidden. Stations owned by none are never ignored. */
 				if (!show_competitors && _local_company != st->owner && st->owner != OWNER_NONE) break;
@@ -1494,12 +1513,15 @@ static void ViewportAddKdtreeSigns(DrawPixelInfo *dpi)
 
 			case ViewportSignKdtreeItem::VKI_TOWN:
 				if (!show_towns) break;
+				//Towns stand on the surface.
+				if (_vd.layer != MapLayer::Surface) break;
 				towns.push_back(Town::Get(std::get<TownID>(item.id)));
 				break;
 
 			case ViewportSignKdtreeItem::VKI_SIGN: {
 				if (!show_signs) break;
 				const Sign *si = Sign::Get(std::get<SignID>(item.id));
+				if (GetLayerOfWorldY(si->y) != _vd.layer) break;
 
 				/* Don't draw if sign is owned by another company and competitor signs should be hidden.
 				 * Note: It is intentional that also signs owned by OWNER_NONE are hidden. Bankrupt
@@ -1813,6 +1835,8 @@ static void ViewportDrawStrings(ZoomLevel zoom, const StringSpriteToDrawVector *
 
 void ViewportDoDraw(const Viewport &vp, int left, int top, int right, int bottom)
 {
+	_vd.layer = vp.layer;
+	_viewport_draw_layer = vp.layer;
 	_vd.dpi.zoom = vp.zoom;
 	int mask = ScaleByZoom(-1, vp.zoom);
 
@@ -1938,7 +1962,7 @@ static inline void ClampViewportToMap(const Viewport &vp, int *scroll_x, int *sc
 
 	/* Find nearest tile that is within borders of the map. */
 	bool clamped;
-	pt = InverseRemapCoords2(pt.x, pt.y, true, &clamped);
+	pt = InverseRemapCoords2(pt.x, pt.y, true, &clamped, vp.layer);
 
 	if (clamped) {
 		/* Convert back to viewport coordinates and remove centering. */
@@ -1995,6 +2019,13 @@ void UpdateViewportPosition(Window *w, uint32_t delta_ms)
 	if (vp.follow_vehicle != VehicleID::Invalid()) {
 		const Vehicle *veh = Vehicle::Get(vp.follow_vehicle)->GetMovingFront();
 		Point pt = MapXYZToViewport(vp, veh->x_pos, veh->y_pos, veh->z_pos);
+
+		//Following a vehicle also follows its layer. The scroll above is already in that band.
+		MapLayer vehicle_layer = (veh->tile == INVALID_TILE) ? GetLayerOfWorldY(veh->y_pos) : GetTileLayer(veh->tile);
+		if (vp.layer != vehicle_layer) {
+			vp.layer = vehicle_layer;
+			if (w == GetMainWindow()) InvalidateWindowData(WindowClass::MainToolbar, 0);
+		}
 
 		vp.scrollpos_x = pt.x;
 		vp.scrollpos_y = pt.y;
@@ -2145,6 +2176,18 @@ void MarkTileDirtyByTile(TileIndex tile, int bridge_level_offset, int tile_heigh
  *
  * @ingroup dirty
  */
+/**
+ * World Y where the main viewport's layer begins.
+ * The selection highlight lives in that view.
+ * @return Pixel Y of the north edge of the band.
+ */
+static int MainViewportBandY()
+{
+	const Window *main = GetMainWindow();
+	MapLayer layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
+	return static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+}
+
 static void SetSelectionTilesDirty()
 {
 	int x_size = _thd.size.x;
@@ -2167,11 +2210,13 @@ static void SetSelectionTilesDirty()
 		assert(x_size >= 0);
 		assert(y_size >= 0);
 
+		int band_y = MainViewportBandY();
+		int y_limit = band_y + static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE) - static_cast<int>(TILE_SIZE);
 		int x_end = Clamp(x_start + x_size, 0, Map::SizeX() * TILE_SIZE - TILE_SIZE);
-		int y_end = Clamp(y_start + y_size, 0, Map::SizeY() * TILE_SIZE - TILE_SIZE);
+		int y_end = Clamp(y_start + y_size, band_y, y_limit);
 
 		x_start = Clamp(x_start, 0, Map::SizeX() * TILE_SIZE - TILE_SIZE);
-		y_start = Clamp(y_start, 0, Map::SizeY() * TILE_SIZE - TILE_SIZE);
+		y_start = Clamp(y_start, band_y, y_limit);
 
 		/* make sure everything is multiple of TILE_SIZE */
 		assert((x_end | y_end | x_start | y_start) % TILE_SIZE == 0);
@@ -2247,7 +2292,8 @@ static void SetSelectionTilesDirty()
 				uint x = (_thd.pos.x + (a + b) / 2) / TILE_SIZE;
 				uint y = (_thd.pos.y + (a - b) / 2) / TILE_SIZE;
 
-				if (x < Map::MaxX() && y < Map::MaxY()) {
+				int plane_y = static_cast<int>(y) - MainViewportBandY() / static_cast<int>(TILE_SIZE);
+				if (x < Map::MaxX() && plane_y >= 0 && plane_y < static_cast<int>(Map::MaxY())) {
 					MarkTileDirtyByTile(TileXY(x, y));
 				}
 			}
@@ -2315,6 +2361,7 @@ static bool CheckClickOnViewportSign(const Viewport &vp, int x, int y)
 			case ViewportSignKdtreeItem::VKI_STATION: {
 				if (!show_stations) break;
 				st = BaseStation::Get(std::get<StationID>(item.id));
+				if (GetTileLayer(st->xy) != vp.layer) break;
 				if (!show_competitors && _local_company != st->owner && st->owner != OWNER_NONE) break;
 
 				StationFacilities facilities = st->facilities;
@@ -2328,12 +2375,13 @@ static bool CheckClickOnViewportSign(const Viewport &vp, int x, int y)
 			case ViewportSignKdtreeItem::VKI_WAYPOINT:
 				if (!show_waypoints) break;
 				st = BaseStation::Get(std::get<StationID>(item.id));
+				if (GetTileLayer(st->xy) != vp.layer) break;
 				if (!show_competitors && _local_company != st->owner && st->owner != OWNER_NONE) break;
 				if (CheckClickOnViewportSign(vp, x, y, &st->sign)) last_st = st;
 				break;
 
 			case ViewportSignKdtreeItem::VKI_TOWN:
-				if (!show_towns) break;
+				if (!show_towns || vp.layer != MapLayer::Surface) break;
 				t = Town::Get(std::get<TownID>(item.id));
 				if (CheckClickOnViewportSign(vp, x, y, &t->cache.sign)) last_t = t;
 				break;
@@ -2341,6 +2389,7 @@ static bool CheckClickOnViewportSign(const Viewport &vp, int x, int y)
 			case ViewportSignKdtreeItem::VKI_SIGN:
 				if (!show_signs) break;
 				si = Sign::Get(std::get<SignID>(item.id));
+				if (GetLayerOfWorldY(si->y) != vp.layer) break;
 				if (!show_competitors && _local_company != si->owner && si->owner != OWNER_DEITY) break;
 				if (CheckClickOnViewportSign(vp, x, y, &si->sign)) last_si = si;
 				break;
@@ -2548,13 +2597,23 @@ void RebuildViewportOverlay(Window *w)
  */
 bool ScrollWindowTo(int x, int y, int z, Window *w, bool instant)
 {
+	//An absolute world point names its own layer. Do not also translate the scroll.
+	if (w->viewport != nullptr) {
+		MapLayer layer = GetLayerOfWorldY(y);
+		if (w->viewport->layer != layer) {
+			w->viewport->layer = layer;
+			if (w == GetMainWindow()) InvalidateWindowData(WindowClass::MainToolbar, 0);
+		}
+	}
+
 	/* The slope cannot be acquired outside of the map, so make sure we are always within the map. */
 	if (z == -1) {
+		int max_y = static_cast<int>(Map::SizeY() * Map::LayerCount()) * static_cast<int>(TILE_SIZE) - 1;
 		if ( x >= 0 && x <= (int)Map::SizeX() * (int)TILE_SIZE - 1
-				&& y >= 0 && y <= (int)Map::SizeY() * (int)TILE_SIZE - 1) {
+				&& y >= 0 && y <= max_y) {
 			z = GetSlopePixelZ(x, y);
 		} else {
-			z = TileHeightOutsideMap(x / (int)TILE_SIZE, y / (int)TILE_SIZE);
+			z = TileHeightOutsideMap(x / (int)TILE_SIZE, y / (int)TILE_SIZE, GetLayerOfWorldY(y));
 		}
 	}
 
@@ -3146,8 +3205,8 @@ static void CalcRaildirsDrawstyle(int x, int y, int method)
 					CheckUnderflow(x, y, 1);
 					CheckUnderflow(y, x, 1);
 					CheckOverflow(x, y, (Map::MaxX() - 1) * TILE_SIZE, 1);
-					CheckOverflow(y, x, (Map::MaxY() - 1) * TILE_SIZE, 1);
-					assert(x >= 0 && y >= 0 && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= (int)(Map::MaxY() * TILE_SIZE));
+					CheckOverflow(y, x, MainViewportBandY() + (Map::MaxY() - 1) * TILE_SIZE, 1);
+					assert(x >= 0 && y >= MainViewportBandY() && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= MainViewportBandY() + (int)(Map::MaxY() * TILE_SIZE));
 				}
 				break;
 
@@ -3181,8 +3240,8 @@ static void CalcRaildirsDrawstyle(int x, int y, int method)
 					CheckUnderflow(x, y, -1);
 					CheckUnderflow(y, x, -1);
 					CheckOverflow(x, y, (Map::MaxX() - 1) * TILE_SIZE, -1);
-					CheckOverflow(y, x, (Map::MaxY() - 1) * TILE_SIZE, -1);
-					assert(x >= 0 && y >= 0 && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= (int)(Map::MaxY() * TILE_SIZE));
+					CheckOverflow(y, x, MainViewportBandY() + (Map::MaxY() - 1) * TILE_SIZE, -1);
+					assert(x >= 0 && y >= MainViewportBandY() && x <= (int)(Map::MaxX() * TILE_SIZE) && y <= MainViewportBandY() + (int)(Map::MaxY() * TILE_SIZE));
 				}
 				break;
 
@@ -3598,7 +3657,9 @@ Point GetViewportStationMiddle(const Viewport &vp, const Station *st)
 {
 	int x = TileX(st->xy) * TILE_SIZE;
 	int y = TileY(st->xy) * TILE_SIZE;
-	int z = GetSlopePixelZ(Clamp(x, 0, Map::SizeX() * TILE_SIZE - 1), Clamp(y, 0, Map::SizeY() * TILE_SIZE - 1));
+	MapLayer station_layer = GetTileLayer(st->xy);
+	int station_band = static_cast<int>(to_underlying(station_layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+	int z = GetSlopePixelZ(Clamp(x, 0, Map::SizeX() * TILE_SIZE - 1), Clamp(y, station_band, station_band + Map::SizeY() * TILE_SIZE - 1));
 
 	Point p = RemapCoords(x, y, z);
 	p.x = UnScaleByZoom(p.x - vp.virtual_left, vp.zoom) + vp.left;

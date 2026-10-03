@@ -12,6 +12,7 @@
 
 #include "core/geometry_type.hpp"
 #include "tile_cmd.h"
+#include "map_layer_type.h"
 
 static const uint SNOW_LINE_MONTHS = 12; ///< Number of months in the snow line table.
 static const uint SNOW_LINE_DAYS   = 32; ///< Number of days in each month in the snow line table.
@@ -40,7 +41,7 @@ std::tuple<Slope, int> GetFoundationSlope(TileIndex tile);
 
 uint GetPartialPixelZ(int x, int y, Slope corners);
 int GetSlopePixelZ(int x, int y, bool ground_vehicle = false);
-int GetSlopePixelZOutsideMap(int x, int y);
+int GetSlopePixelZOutsideMap(int x, int y, MapLayer layer = MapLayer::Surface);
 std::tuple<int, int> GetSlopePixelZOnEdge(Slope tileh, DiagDirection edge, int z);
 
 /**
@@ -114,7 +115,7 @@ inline Point InverseRemapCoords(int x, int y)
 	return pt;
 }
 
-Point InverseRemapCoords2(int x, int y, bool clamp_to_map = false, bool *clamped = nullptr);
+Point InverseRemapCoords2(int x, int y, bool clamp_to_map = false, bool *clamped = nullptr, MapLayer layer = MapLayer::Surface);
 
 uint ApplyFoundationToSlope(Foundation f, Slope &s);
 /**

@@ -227,7 +227,8 @@ void SndPlayTileFx(SoundID sound, TileIndex tile)
 {
 	/* emits sound from center of the tile */
 	int x = std::min(Map::MaxX() - 1, TileX(tile)) * TILE_SIZE + TILE_SIZE / 2;
-	int y = std::min(Map::MaxY() - 1, TileY(tile)) * TILE_SIZE - TILE_SIZE / 2;
+	//C3: the pan is the tile's row inside its own layer.
+	int y = std::min(Map::MaxY() - 1, TilePlaneY(tile)) * TILE_SIZE - TILE_SIZE / 2;
 	int z = (y < 0 ? 0 : GetSlopePixelZ(x, y));
 	Point pt = RemapCoords(x, y, z);
 	y += 2 * TILE_SIZE;

@@ -53,7 +53,8 @@ public:
 	 */
 	TileIndex operator*() const
 	{
-		return TileXY(this->x, this->y);
+		//C6: the spiral stays in the layer it started in.
+		return TileXYL(this->x, this->y, this->layer);
 	}
 
 	/**
@@ -77,7 +78,8 @@ private:
 	DiagDirection dir; ///< The current spiral direction.
 	uint position; ///< The current position along an edge.
 	uint x; ///< The current tile X-coordinate.
-	uint y; ///< The current tile Y-coordinate.
+	uint y; ///< The current plane Y-coordinate.
+	MapLayer layer; ///< Layer the spiral walks.
 
 	void SkipOutsideMap();
 	void InitPosition();

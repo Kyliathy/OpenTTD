@@ -296,6 +296,8 @@ TileIndex GetWaterRegionCenterTile(const WaterRegionDesc &water_region)
  */
 WaterRegionDesc GetWaterRegionInfo(TileIndex tile)
 {
+	//Ships are surface-only, so a tile off the surface has no water region (AD-12).
+	if (GetTileLayer(tile) != MapLayer::Surface) return WaterRegionDesc{0, 0};
 	return WaterRegionDesc{ GetWaterRegionX(tile), GetWaterRegionY(tile) };
 }
 
@@ -306,6 +308,8 @@ WaterRegionDesc GetWaterRegionInfo(TileIndex tile)
  */
 WaterRegionPatchDesc GetWaterRegionPatchInfo(TileIndex tile)
 {
+	//Ships are surface-only, so a tile off the surface has no water patch (AD-12).
+	if (GetTileLayer(tile) != MapLayer::Surface) return WaterRegionPatchDesc{0, 0, INVALID_WATER_REGION_PATCH};
 	const WaterRegion region = GetUpdatedWaterRegion(tile);
 	return WaterRegionPatchDesc{ GetWaterRegionX(tile), GetWaterRegionY(tile), region.GetLabel(tile) };
 }
@@ -316,6 +320,8 @@ WaterRegionPatchDesc GetWaterRegionPatchInfo(TileIndex tile)
  */
 void InvalidateWaterRegion(TileIndex tile)
 {
+	//Ships are surface-only, so a tile off the surface has no water region (AD-12).
+	if (GetTileLayer(tile) != MapLayer::Surface) return;
 	if (!IsValidTile(tile)) return;
 
 	auto invalidate_region = [](TileIndex tile) {
@@ -431,5 +437,7 @@ void AllocateWaterRegions()
 
 void PrintWaterRegionDebugInfo(TileIndex tile)
 {
+	//Ships are surface-only, so a tile off the surface has no water region (AD-12).
+	if (GetTileLayer(tile) != MapLayer::Surface) return;
 	GetUpdatedWaterRegion(tile).PrintDebugInfo();
 }

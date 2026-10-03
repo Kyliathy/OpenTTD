@@ -399,6 +399,8 @@ no_entry_cost: // jump here at the beginning if the node has no parent (it is th
 
 			/* If we skipped some tunnel/bridge/station tiles, add their base cost */
 			segment_cost += YAPF_TILE_LENGTH * follower->tiles_skipped;
+			//Charged once, when the walk leaves through the shaft onto the other layer.
+			if (follower->is_portal) segment_cost += Yapf().PfGetSettings().rail_layer_portal_penalty;
 
 			/* Slope cost. */
 			segment_cost += Yapf().SlopeCost(cur.tile, cur.td);

@@ -39,7 +39,7 @@
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the special train tunnel is a rail portal; trains keep their heading and are relocated at the shaft edge without wormhole state. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract`: pair, directions, neighbour mapping, relocation, visibility, tile bits and command signature. This plan adds rail-specific behaviour and must not redefine any of it. |
 | [docs/zz-reach2/architecture/vehicles/trains.md](../../architecture/vehicles/trains.md) | 7-46 | `## Tick`, `## Speed` and `## One step`: `TrainLocoHandler` passes, `TrainCheckIfLineEnds`, `TrainController` per-part stepping, `ChooseTrainTrack`, reservation and `CheckCompatibleRail`. Every traversal change hooks into this step. |
 | [docs/zz-reach2/architecture/vehicles/archi-vehicles.md](../../architecture/vehicles/archi-vehicles.md) | 225-228 | `## Invariants`: deterministic motion, commands mutate and ticks simulate. Traversal across layers must not depend on view state or anything outside the simulation. |
@@ -76,22 +76,22 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 ### Group 1 - Portal tile behaviour
 
 {{MEDIUM}}
-- [ ] 1.1 In the rail branch of `DrawTile_LayerPortal`, draw the stand-in: axis track of `GetRailType(tile)` on barren ground plus the rail depot building with its opening on the mouth side.
-- [ ] 1.2 Make `CmdBuildSingleRail` refuse track on a portal tile (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`) and accept building the neighbour's axis track that connects to the mouth.
-- [ ] 1.3 Make `CmdRemoveSingleRail` on a portal tile fail with the same message (portals are removed with the demolish tool).
-- [ ] 1.4 Make `CmdBuildSingleSignal` and the signal-drag commands refuse portal tiles and stop a signal drag at a portal.
-- [ ] 1.5 Make `CmdConvertRail` convert both ends of a portal together, with the compatibility and vehicle checks used for tunnels.
-- [ ] 1.6 Confirm electric engines draw power on portal tiles through `HasPowerOnRail` with the portal's rail type, and that no catenary or pylons are drawn on portal tiles.
+- [x] 1.1 In the rail branch of `DrawTile_LayerPortal`, draw the stand-in: axis track of `GetRailType(tile)` on barren ground plus the rail depot building with its opening on the mouth side.
+- [x] 1.2 Make `CmdBuildSingleRail` refuse track on a portal tile (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`) and accept building the neighbour's axis track that connects to the mouth.
+- [x] 1.3 Make `CmdRemoveSingleRail` on a portal tile fail with the same message (portals are removed with the demolish tool).
+- [x] 1.4 Make `CmdBuildSingleSignal` and the signal-drag commands refuse portal tiles and stop a signal drag at a portal.
+- [x] 1.5 Make `CmdConvertRail` convert both ends of a portal together, with the compatibility and vehicle checks used for tunnels.
+- [x] 1.6 Confirm electric engines draw power on portal tiles through `HasPowerOnRail` with the portal's rail type, and that no catenary or pylons are drawn on portal tiles.
 
 ### Group 2 - Placement GUI
 
 {{MEDIUM}}
-- [ ] 2.1 Add `WID_RAT_BUILD_LAYER_PORTAL, ///< Build a rail portal to another map layer.` after `WID_RAT_BUILD_TUNNEL`, and add the button to `_nested_build_rail_widgets` with `SPR_IMG_TUNNEL_RAIL` as stand-in sprite and `STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL`.
-- [ ] 2.2 Add `static DiagDirection _rail_portal_mouth_direction` and `BuildRailLayerPortalWindow`, cloned from `BuildRailDepotWindow` with its own widget enum and `WindowDesc` (unique ini key), showing the four mouth directions and the hint that the underground mouth faces the opposite way.
-- [ ] 2.3 Return the rail type's tunnel cursor (stand-in) and `HT_RECT` for the button in `GetCursorForWidget` and `GetHighLightStyleForWidget`.
-- [ ] 2.4 In `OnClick`, open the picker; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE)`.
-- [ ] 2.5 Take `target` from `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer and disable the button when it is `MapLayer::Invalid`; refresh when the layer changes.
-- [ ] 2.6 Add a free hotkey named `layer_portal` to the rail toolbar hotkeys.
+- [x] 2.1 Add `WID_RAT_BUILD_LAYER_PORTAL, ///< Build a rail portal to another map layer.` after `WID_RAT_BUILD_TUNNEL`, and add the button to `_nested_build_rail_widgets` with `SPR_IMG_TUNNEL_RAIL` as stand-in sprite and `STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL`.
+- [x] 2.2 Add `static DiagDirection _rail_portal_mouth_direction` and `BuildRailLayerPortalWindow`, cloned from `BuildRailDepotWindow` with its own widget enum and `WindowDesc` (unique ini key), showing the four mouth directions and the hint that the underground mouth faces the opposite way.
+- [x] 2.3 Return the rail type's tunnel cursor (stand-in) and `HT_RECT` for the button in `GetCursorForWidget` and `GetHighLightStyleForWidget`.
+- [x] 2.4 In `OnClick`, open the picker; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE)`.
+- [x] 2.5 Take `target` from `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer and disable the button when it is `MapLayer::Invalid`; refresh when the layer changes.
+- [x] 2.6 Add a free hotkey named `layer_portal` to the rail toolbar hotkeys.
 - [ ] 2.7 Build and place a portal; confirm both ends appear, cost is charged once, removing either end removes both, and the infrastructure window counts both ends.
 
 ### Area Mandatory Reading - Train traversal
@@ -109,12 +109,12 @@ _Applies to Group 3._
 ### Group 3 - Train traversal
 
 {{HARD}}
-- [ ] 3.1 In the new-tile path of `TrainController`, when `IsLayerPortalShaftExit(gp.old_tile, DirToDiagDir(v->GetMovingDirection()))`, call `TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y)`, set `gp.new_tile = GetLayerPortalPairTile(gp.old_tile)` and `enterdir` to the movement direction instead of `DiagdirBetweenTiles`; port the existing comments.
-- [ ] 3.2 In the wagon-follow branch, compute the exit direction towards `prev->tile` with a portal-aware helper (the movement direction when the two tiles are a portal pair) instead of `DiagdirBetweenTiles`.
-- [ ] 3.3 In `TrainCheckIfLineEnds` and `TrainApproachingCrossingTile`, replace `moving_front->tile + TileOffsByDiagDir(dir)` with `GetLayerPortalNextTile(moving_front->tile, dir)`.
-- [ ] 3.4 Review the remaining `TileAddByDiagDir` look-aheads in `train_cmd.cpp` (lines 2216, 2459, 2896, 2998, 3477) and switch each one that can start on a portal tile to `GetLayerPortalNextTile`; record each decision as a `//` comment.
-- [ ] 3.5 In the train branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames for every part and play the tunnel sound for steam engines like the tunnel code; never set `Track::Wormhole`.
-- [ ] 3.6 After relocation, update each part's Z position and inclination while hidden, and confirm `CheckGroundVehiclesAtCorrectZ` accepts trains on portal tiles after loading.
+- [x] 3.1 In the new-tile path of `TrainController`, when `IsLayerPortalShaftExit(gp.old_tile, DirToDiagDir(v->GetMovingDirection()))`, call `TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y)`, set `gp.new_tile = GetLayerPortalPairTile(gp.old_tile)` and `enterdir` to the movement direction instead of `DiagdirBetweenTiles`; port the existing comments.
+- [x] 3.2 In the wagon-follow branch, compute the exit direction towards `prev->tile` with a portal-aware helper (the movement direction when the two tiles are a portal pair) instead of `DiagdirBetweenTiles`.
+- [x] 3.3 In `TrainCheckIfLineEnds` and `TrainApproachingCrossingTile`, replace `moving_front->tile + TileOffsByDiagDir(dir)` with `GetLayerPortalNextTile(moving_front->tile, dir)`.
+- [x] 3.4 Review the remaining `TileAddByDiagDir` look-aheads in `train_cmd.cpp` (lines 2216, 2459, 2896, 2998, 3477) and switch each one that can start on a portal tile to `GetLayerPortalNextTile`; record each decision as a `//` comment.
+- [x] 3.5 In the train branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames for every part and play the tunnel sound for steam engines like the tunnel code; never set `Track::Wormhole`.
+- [x] 3.6 After relocation, update each part's Z position and inclination while hidden, and confirm `CheckGroundVehiclesAtCorrectZ` accepts trains on portal tiles after loading.
 - [ ] 3.7 Reverse a train while it straddles the two layers (front underground, rear on the surface); confirm `AdvanceWagonsBeforeSwap` / `AfterSwap` keep the consist connected and no `Disconnecting train` fatal error occurs.
 
 ### Area Mandatory Reading - Reservations and signals
@@ -133,12 +133,12 @@ _Applies to Group 4._
 ### Group 4 - Reservations and signals
 
 {{HARD}}
-- [ ] 4.1 Confirm `ExtendTrainReservation` and `TryPathReserve` reserve through a portal and set the portal reservation bit on both ends.
-- [ ] 4.2 Make `ClearPathReservation` use `GetLayerPortalNextTile` when the cleared tile is a portal end.
-- [ ] 4.3 Make the tunnel and bridge skips in `FollowReservation` and `GetTrainForReservation` ignore portal tiles, and confirm `FollowTrainReservation` finds the end of a reservation that crosses layers.
+- [x] 4.1 Confirm `ExtendTrainReservation` and `TryPathReserve` reserve through a portal and set the portal reservation bit on both ends.
+- [x] 4.2 Make `ClearPathReservation` use `GetLayerPortalNextTile` when the cleared tile is a portal end.
+- [x] 4.3 Make the tunnel and bridge skips in `FollowReservation` and `GetTrainForReservation` ignore portal tiles, and confirm `FollowTrainReservation` finds the end of a reservation that crosses layers.
 - [ ] 4.4 Confirm a train standing on the underground end occupies the signal block that contains the surface end (and the reverse), using block signals on both sides.
 - [ ] 4.5 Confirm path signals in front of a portal let a train through only when the path across the portal is free.
-- [ ] 4.6 In TrainController, make the signal-update side passed to `AddSideToSignalBuffer` correct for a part that just crossed a portal.
+- [x] 4.6 In TrainController, make the signal-update side passed to `AddSideToSignalBuffer` correct for a part that just crossed a portal.
 
 ### Area Mandatory Reading - Rail pathfinding
 
@@ -155,8 +155,8 @@ _Applies to Group 5._
 ### Group 5 - Rail pathfinding
 
 {{HARD}}
-- [ ] 5.1 Add `pf.yapf.rail_layer_portal_penalty` once per traversal in the segment cost walk, with a comment explaining it is charged on leaving the shaft side.
-- [ ] 5.2 Confirm segment caching across portals: a segment may span both layers; `YapfNotifyTrackLayoutChange` is called on portal build and removal (r2mlm7 tasks 6.6 and 7.3).
+- [x] 5.1 Add `pf.yapf.rail_layer_portal_penalty` once per traversal in the segment cost walk, with a comment explaining it is charged on leaving the shaft side.
+- [x] 5.2 Confirm segment caching across portals: a segment may span both layers; `YapfNotifyTrackLayoutChange` is called on portal build and removal (r2mlm7 tasks 6.6 and 7.3).
 - [ ] 5.3 Run a Debug build with `-d desync=2` (which runs the cached and uncached searches side by side) on a network of two portals for one in-game year; confirm no mismatch warning.
 - [ ] 5.4 Confirm `YapfTrainFindNearestDepot` and `YapfTrainFindNearestSafeTile` work through portals, and that a portal tile is never chosen as a safe waiting position.
 - [ ] 5.5 Confirm `YapfTrainCheckReverse` does not reverse trains in front of a portal mouth.
@@ -179,6 +179,8 @@ _Applies to Groups 6-7._
 - [ ] 6.3 Buy a train in the underground depot, give it orders to a surface station through a portal, and confirm it loads, unloads and pays by plane distance.
 - [ ] 6.4 Confirm servicing, "go to depot" and autoreplace across layers.
 - [ ] 6.5 Confirm the vehicle view follows a train into the Underground layer and back, and that the train's location button switches the main view.
+
+The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stays skipped and the depot stand-in remains.
 
 ### Group 7 - Portal art
 

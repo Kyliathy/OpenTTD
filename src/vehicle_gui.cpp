@@ -16,6 +16,8 @@
 #include "vehicle_gui.h"
 #include "vehicle_gui_base.h"
 #include "viewport_func.h"
+#include "texteff.hpp"
+#include "map_layer_gui.h"
 #include "newgrf_text.h"
 #include "newgrf_debug.h"
 #include "roadveh.h"
@@ -2969,7 +2971,7 @@ void CcStartStopVehicle(Commands, const CommandCost &result, VehicleID veh_id, b
 	StringID msg = v->vehstatus.Test(VehState::Stopped) ? STR_VEHICLE_COMMAND_STOPPED : STR_VEHICLE_COMMAND_STARTED;
 	const Vehicle *moving_front = v->GetMovingFront();
 	Point pt = RemapCoords(moving_front->x_pos, moving_front->y_pos, moving_front->z_pos);
-	AddTextEffect(GetEncodedString(msg), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising);
+	AddTextEffect(GetEncodedString(msg), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising, GetLayerOfWorldY(moving_front->y_pos));
 }
 
 /**

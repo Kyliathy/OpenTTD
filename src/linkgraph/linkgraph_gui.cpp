@@ -14,6 +14,7 @@
 #include "../company_gui.h"
 #include "../timer/timer_game_tick.h"
 #include "../viewport_func.h"
+#include "../map_func.h"
 #include "../zoom_func.h"
 #include "../smallmap_gui.h"
 #include "../core/geometry_func.hpp"
@@ -280,9 +281,13 @@ void LinkGraphOverlay::DrawLinks(const DrawPixelInfo *dpi) const
 	int width = ScaleGUITrad(this->scale);
 	for (const auto &i : this->cached_links) {
 		if (!Station::IsValidID(i.first)) continue;
-		Point pta = this->GetStationMiddle(Station::Get(i.first));
+		const Station *from = Station::Get(i.first);
+		//The main view draws a link only when both stations share the layer on screen. The smallmap filters in GetStationMiddle.
+		if (this->window->viewport != nullptr && GetTileLayer(from->xy) != this->window->viewport->layer) continue;
+		Point pta = this->GetStationMiddle(from);
 		for (const auto &j : i.second) {
 			if (!Station::IsValidID(j.first)) continue;
+			if (this->window->viewport != nullptr && GetTileLayer(Station::Get(j.first)->xy) != this->window->viewport->layer) continue;
 			Point ptb = this->GetStationMiddle(Station::Get(j.first));
 			if (!this->IsLinkVisible(pta, ptb, dpi, width + 2)) continue;
 			this->DrawContent(pta, ptb, j.second);
@@ -364,12 +369,15 @@ bool LinkGraphOverlay::ShowTooltip(Point pt, TooltipCloseCondition close_cond)
 	for (auto i(this->cached_links.crbegin()); i != this->cached_links.crend(); ++i) {
 		if (!Station::IsValidID(i->first)) continue;
 		Point pta = this->GetStationMiddle(Station::Get(i->first));
+		//A station the smallmap is not showing has no line to measure.
+		if (pta.x <= INT32_MIN / 4) continue;
 		for (auto j(i->second.crbegin()); j != i->second.crend(); ++j) {
 			if (!Station::IsValidID(j->first)) continue;
 			if (i->first == j->first) continue;
 
 			/* Check the distance from the cursor to the line defined by the two stations. */
 			Point ptb = this->GetStationMiddle(Station::Get(j->first));
+			if (ptb.x <= INT32_MIN / 4) continue;
 			float dist = std::abs((int64_t)(ptb.x - pta.x) * (int64_t)(pta.y - pt.y) - (int64_t)(pta.x - pt.x) * (int64_t)(ptb.y - pta.y)) /
 				std::sqrt((int64_t)(ptb.x - pta.x) * (int64_t)(ptb.x - pta.x) + (int64_t)(ptb.y - pta.y) * (int64_t)(ptb.y - pta.y));
 			const auto &link = j->second;

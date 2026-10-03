@@ -13,6 +13,7 @@
 #include "core/math_func.hpp"
 #include "tile_type.h"
 #include "map_type.h"
+#include "map_layer_type.h"
 #include "direction_func.h"
 
 /**
@@ -222,17 +223,25 @@ private:
 		bool empty() { return false; }
 	};
 
-	static uint log_x;     ///< 2^_map_log_x == _map_size_x
-	static uint log_y;     ///< 2^_map_log_y == _map_size_y
-	static uint size_x;    ///< Size of the map along the X
-	static uint size_y;    ///< Size of the map along the Y
-	static uint size;      ///< The number of tiles on the map
-	static uint tile_mask; ///< _map_size - 1 (to mask the mapsize)
+	static uint log_x;       ///< 2^_map_log_x == _map_size_x
+	static uint log_y;       ///< 2^_map_log_y == _map_size_y
+	static uint size_x;      ///< Size of one layer along X.
+	static uint size_y;      ///< Size of one layer along Y.
+	static uint size;        ///< Tile count of every layer together.
+	static uint plane_size;  ///< Tile count of one layer.
+	static uint plane_mask;  ///< plane_size - 1. Masks a tile index down to one layer.
+	static uint layer_count; ///< How many layers Allocate stored.
 
-	static uint initial_land_count; ///< Initial number of land tiles on the map.
+	static uint initial_land_count; ///< Initial number of land tiles on the surface.
 
 public:
-	static void Allocate(uint size_x, uint size_y);
+	/**
+	 * (Re)allocates a map with the given dimension.
+	 * @param size_x Width of one layer along the NE/SW edge.
+	 * @param size_y Height of one layer along the SE/NW edge.
+	 * @param layer_count How many layers to store. Live games stay at 1 until a later plan.
+	 */
+	static void Allocate(uint size_x, uint size_y, uint layer_count = 1);
 	static void CountLandTiles();
 
 	/**
@@ -265,8 +274,9 @@ public:
 	}
 
 	/**
-	 * Get the size of the map along the Y
-	 * @return the number of tiles along the Y of the map
+	 * Get the size of one layer along the Y.
+	 * The stacked map is Map::LayerCount() times this tall.
+	 * @return the number of tiles along the Y of one layer
 	 */
 	static inline uint SizeY()
 	{
@@ -274,12 +284,32 @@ public:
 	}
 
 	/**
-	 * Get the size of the map
-	 * @return the number of tiles of the map
+	 * Tile count of every allocated layer.
+	 * This is the storage bound used by IsValidTile and Map::Iterate().
+	 * One layer is Map::PlaneSize().
+	 * @return the number of tiles stored for all layers
 	 */
 	[[debug_inline]] static inline uint Size()
 	{
 		return Map::size;
+	}
+
+	/**
+	 * Tile count of one layer.
+	 * @return SizeX() * SizeY()
+	 */
+	[[debug_inline]] static inline uint PlaneSize()
+	{
+		return Map::plane_size;
+	}
+
+	/**
+	 * How many layers the current map stores.
+	 * @return The layer count passed to Allocate. One for a live game in this plan.
+	 */
+	[[debug_inline]] static inline uint LayerCount()
+	{
+		return Map::layer_count;
 	}
 
 	/**
@@ -292,8 +322,8 @@ public:
 	}
 
 	/**
-	 * Gets the maximum Y coordinate within the map, including TileType::Void
-	 * @return the maximum Y coordinate
+	 * Gets the maximum Y coordinate within one layer, including TileType::Void.
+	 * @return the maximum plane Y coordinate
 	 */
 	static inline uint MaxY()
 	{
@@ -301,25 +331,27 @@ public:
 	}
 
 	/**
-	 * Scales the given value by the number of water tiles.
+	 * Scales the given value by the proportion of the surface that is land.
+	 * Land is a surface concept, so the divisor is one plane, not every layer.
 	 * @param n the value to scale
 	 * @return the scaled size
 	 */
 	static inline uint ScaleByLandProportion(uint n)
 	{
 		/* Use 64-bit arithmetic to avoid overflow. */
-		return static_cast<uint>(static_cast<uint64_t>(n) * Map::initial_land_count / Map::size);
+		return static_cast<uint>(static_cast<uint64_t>(n) * Map::initial_land_count / Map::plane_size);
 	}
 
 	/**
-	 * 'Wraps' the given "tile" so it is within the map.
-	 * It does this by masking the 'high' bits of.
-	 * @param tile the tile to 'wrap'.
-	 * @return The wrapped tile.
+	 * Bring a tile index back into one layer.
+	 * The low bits are the position inside a plane; the layer itself is replaced.
+	 * @param tile Tile whose plane position is kept.
+	 * @param layer Layer that should own the result.
+	 * @return That position inside the requested layer.
 	 */
-	static inline TileIndex WrapToMap(TileIndex tile)
+	static inline TileIndex WrapToLayer(TileIndex tile, MapLayer layer)
 	{
-		return TileIndex{tile.base() & Map::tile_mask};
+		return TileIndex{(static_cast<uint>(to_underlying(layer)) << (Map::LogX() + Map::LogY())) + (tile.base() & Map::plane_mask)};
 	}
 
 	/**
@@ -360,7 +392,8 @@ public:
 	}
 
 	/**
-	 * Returns an iterable ensemble of all Tiles
+	 * Returns an iterable ensemble of every stored tile.
+	 * The range covers all layers. One layer is MultiLayerMap::IterateLayer.
 	 * @return an iterable ensemble of all Tiles
 	 */
 	static IterateWrapper Iterate() { return IterateWrapper(); }
@@ -422,13 +455,46 @@ TileIndex TileVirtXYClampedToMap(int x, int y);
 }
 
 /**
- * Get the Y component of a tile
+ * Get the Y component of a tile.
+ * The value is stacked: layer * Map::SizeY() + the row inside that layer.
  * @param tile the tile to get the Y component of
- * @return the Y component
+ * @return the stacked Y component
  */
 [[debug_inline]] static inline uint TileY(TileIndex tile)
 {
 	return tile.base() >> Map::LogX();
+}
+
+/**
+ * Row of a tile inside its own layer.
+ * @param tile Tile to read.
+ * @return Plane Y, in the range 0 .. Map::SizeY() - 1.
+ */
+[[debug_inline]] static inline uint TilePlaneY(TileIndex tile)
+{
+	return TileY(tile) & Map::MaxY();
+}
+
+/**
+ * Layer that stores a tile.
+ * @param tile Tile to read.
+ * @return Layer taken from the bits above one plane.
+ */
+[[debug_inline]] static inline MapLayer GetTileLayer(TileIndex tile)
+{
+	return static_cast<MapLayer>(tile.base() >> (Map::LogX() + Map::LogY()));
+}
+
+/**
+ * Build a tile from coordinates inside one layer.
+ * @param x Column inside the layer.
+ * @param plane_y Row inside the layer.
+ * @param layer Layer that owns the tile.
+ * @return Tile index of that position.
+ */
+[[debug_inline]] static inline TileIndex TileXYL(uint x, uint plane_y, MapLayer layer)
+{
+	return TileIndex{(static_cast<uint>(to_underlying(layer)) << (Map::LogX() + Map::LogY())) + (plane_y << Map::LogX()) + x};
 }
 
 /**
@@ -519,10 +585,11 @@ inline TileIndexDiffC TileIndexDiffCByDir(Direction dir)
 inline TileIndex AddTileIndexDiffCWrap(TileIndex tile, TileIndexDiffC diff)
 {
 	int x = TileX(tile) + diff.x;
-	int y = TileY(tile) + diff.y;
+	//Y is measured inside the tile's layer, so the result cannot step into another one.
+	int y = TilePlaneY(tile) + diff.y;
 	/* Negative value will become big positive value after cast */
 	if ((uint)x >= Map::SizeX() || (uint)y >= Map::SizeY()) return INVALID_TILE;
-	return TileXY(x, y);
+	return TileXYL(static_cast<uint>(x), static_cast<uint>(y), GetTileLayer(tile));
 }
 
 /**
@@ -534,19 +601,22 @@ inline TileIndex AddTileIndexDiffCWrap(TileIndex tile, TileIndexDiffC diff)
  */
 inline TileIndexDiffC TileIndexToTileIndexDiffC(TileIndex tile_a, TileIndex tile_b)
 {
+	//A coordinate diff is a plane offset. Tiles on different layers have no such offset.
+	assert(GetTileLayer(tile_a) == GetTileLayer(tile_b));
+
 	TileIndexDiffC difference;
 
 	difference.x = TileX(tile_a) - TileX(tile_b);
-	difference.y = TileY(tile_a) - TileY(tile_b);
+	difference.y = TilePlaneY(tile_a) - TilePlaneY(tile_b);
 
 	return difference;
 }
 
-/* Functions to calculate distances */
-uint DistanceManhattan(TileIndex, TileIndex); ///< also known as L1-Norm. Is the shortest distance one could go over diagonal tracks (or roads)
-uint DistanceSquare(TileIndex, TileIndex); ///< Euclidean- or L2-Norm squared
-uint DistanceMax(TileIndex, TileIndex); ///< also known as L-Infinity-Norm
-uint DistanceMaxPlusManhattan(TileIndex, TileIndex); ///< Max + Manhattan
+/* Functions to calculate distances. Each one ignores the layer: a portal is vertical, so a layer offset is not travel distance. */
+uint DistanceManhattan(TileIndex, TileIndex); ///< also known as L1-Norm. Is the shortest distance one could go over diagonal tracks (or roads). Ignores the layer: a portal is vertical.
+uint DistanceSquare(TileIndex, TileIndex); ///< Euclidean- or L2-Norm squared. Ignores the layer: a portal is vertical.
+uint DistanceMax(TileIndex, TileIndex); ///< also known as L-Infinity-Norm. Ignores the layer: a portal is vertical.
+uint DistanceMaxPlusManhattan(TileIndex, TileIndex); ///< Max + Manhattan. Ignores the layer: a portal is vertical.
 uint DistanceFromEdge(TileIndex); ///< shortest distance from any edge of the map
 uint DistanceFromEdgeDir(TileIndex, DiagDirection); ///< distance from the map edge in given direction
 
@@ -626,8 +696,11 @@ inline TileIndex TileAddByDiagDir(TileIndex tile, DiagDirection dir)
  */
 inline DiagDirection DiagdirBetweenTiles(TileIndex tile_from, TileIndex tile_to)
 {
+	//A portal is vertical, so tiles on different layers are not on a map diagonal.
+	if (GetTileLayer(tile_from) != GetTileLayer(tile_to)) return DiagDirection::Invalid;
+
 	int dx = (int)TileX(tile_to) - (int)TileX(tile_from);
-	int dy = (int)TileY(tile_to) - (int)TileY(tile_from);
+	int dy = (int)TilePlaneY(tile_to) - (int)TilePlaneY(tile_from);
 	if (dx == 0) {
 		if (dy == 0) return DiagDirection::Invalid;
 		return (dy < 0 ? DiagDirection::NW : DiagDirection::SE);
@@ -638,20 +711,21 @@ inline DiagDirection DiagdirBetweenTiles(TileIndex tile_from, TileIndex tile_to)
 }
 
 /**
- * Get a random tile out of a given seed.
+ * Get a random surface tile out of a given seed.
+ * The result is always on the surface. A specific layer uses MultiLayerMap::RandomTileInLayer.
  * @param r the random 'seed'
- * @return a valid tile
+ * @return a surface tile
  */
 inline TileIndex RandomTileSeed(uint32_t r)
 {
-	return Map::WrapToMap(TileIndex{r});
+	return Map::WrapToLayer(TileIndex{r}, MapLayer::Surface);
 }
 
 /**
- * Get a valid random tile.
+ * Get a valid random surface tile.
  * @note a define so 'random' gets inserted in the place where it is actually
  *       called, thus making the random traces more explicit.
- * @return a valid tile
+ * @return a surface tile
  */
 #define RandomTile() RandomTileSeed(Random())
 

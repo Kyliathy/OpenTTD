@@ -11,6 +11,7 @@
 #include "texteff.hpp"
 #include "transparency.h"
 #include "viewport_func.h"
+#include "window_func.h"
 #include "settings_type.h"
 #include "command_type.h"
 #include "timer/timer.h"
@@ -21,6 +22,7 @@
 /** Container for all information about a text effect */
 struct TextEffect : public ViewportSign {
 	TextEffectMode mode; ///< Type of text effect.
+	MapLayer layer = MapLayer::Surface; ///< Layer the text belongs to.
 	uint8_t duration; ///< How long the text effect should stay, in ticks (applies only when mode == TextEffectMode::Rising)
 	EncodedString msg; ///< Encoded message for text effect.
 
@@ -38,8 +40,13 @@ struct TextEffect : public ViewportSign {
 static std::vector<TextEffect> _text_effects; ///< Text effects are stored there
 
 /* Text Effects */
-TextEffectID AddTextEffect(EncodedString &&msg, int center, int y, uint8_t duration, TextEffectMode mode)
+TextEffectID AddTextEffect(EncodedString &&msg, int center, int y, uint8_t duration, TextEffectMode mode, MapLayer layer)
 {
+	//No layer was named, so the text belongs to whatever the main view is showing.
+	if (layer == MapLayer::Invalid) {
+		const Window *main = GetMainWindow();
+		layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
+	}
 	if (_game_mode == GameMode::Menu) return INVALID_TE_ID;
 
 	auto it = std::ranges::find_if(_text_effects, [](const TextEffect &te) { return !te.IsValid(); });
@@ -55,6 +62,7 @@ TextEffectID AddTextEffect(EncodedString &&msg, int center, int y, uint8_t durat
 	te.msg = std::move(msg);
 	te.duration = duration;
 	te.mode = mode;
+	te.layer = layer;
 
 	/* Make sure we only dirty the new area */
 	te.width_normal = 0;
@@ -124,6 +132,8 @@ void DrawTextEffects(DrawPixelInfo *dpi)
 
 	for (const TextEffect &te : _text_effects) {
 		if (!te.IsValid()) continue;
+		//Floating text stays with the layer it was spawned on.
+		if (te.layer != _viewport_draw_layer) continue;
 
 		if (te.mode == TextEffectMode::Rising || _settings_client.gui.loading_indicators) {
 			std::string *str = ViewportAddString(dpi, &te, flags, Colours::Invalid);

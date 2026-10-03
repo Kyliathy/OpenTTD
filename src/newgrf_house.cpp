@@ -395,7 +395,8 @@ static uint32_t GetDistanceFromNearbyHouse(uint8_t parameter, TileIndex start_ti
 			/* Extract tile offset. */
 			int8_t x_offs = GB(this->ro.GetRegister(0x100), 0, 8);
 			int8_t y_offs = GB(this->ro.GetRegister(0x100), 8, 8);
-			TileIndex testtile = Map::WrapToMap(this->tile + TileDiffXY(x_offs, y_offs));
+			//C9: a nearby house tile wraps inside this house's layer.
+			TileIndex testtile = Map::WrapToLayer(this->tile + TileDiffXY(x_offs, y_offs), GetTileLayer(this->tile));
 
 			StationFinder stations(TileArea(testtile, 1, 1));
 

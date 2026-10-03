@@ -46,7 +46,8 @@ public:
 	private:
 		TileIndex tile; ///< The current tile.
 		uint base_x; ///< The base tile x coordinate from where the iterating happens.
-		uint base_y; ///< The base tile y coordinate from where the iterating happens.
+		uint base_y; ///< The base tile plane Y from where the iterating happens.
+		MapLayer layer; ///< Layer the area belongs to.
 		int a_cur; ///< The current (rotated) x coordinate of the iteration.
 		int b_cur; ///< The current (rotated) y coordinate of the iteration.
 		int a_max; ///< The (rotated) x coordinate of the end of the iteration.
@@ -63,7 +64,7 @@ public:
 		 * Construct the iterator.
 		 * @param ta Area, i.e. begin point and (diagonal) width/height of to-be-iterated area.
 		 */
-		explicit iterator(const DiagonalTileArea &ta) : tile(ta.tile), base_x(TileX(ta.tile)), base_y(TileY(ta.tile)), a_cur(0), b_cur(0), a_max(ta.a), b_max(ta.b) {}
+		explicit iterator(const DiagonalTileArea &ta) : tile(ta.tile), base_x(TileX(ta.tile)), base_y(TilePlaneY(ta.tile)), layer(GetTileLayer(ta.tile)), a_cur(0), b_cur(0), a_max(ta.a), b_max(ta.b) {}
 
 		/**
 		 * Compare with other iterator.

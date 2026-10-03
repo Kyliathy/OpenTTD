@@ -55,14 +55,16 @@ static std::tuple<Slope, int> GetTileSlopeGivenHeight(int hnorth, int hwest, int
 std::tuple<Slope, int> GetTileSlopeZ(TileIndex tile)
 {
 	uint x1 = TileX(tile);
-	uint y1 = TileY(tile);
+	//C3: the south neighbour is the next row of this layer, not the first row of the layer below.
+	uint y1 = TilePlaneY(tile);
+	MapLayer layer = GetTileLayer(tile);
 	uint x2 = std::min(x1 + 1, Map::MaxX());
 	uint y2 = std::min(y1 + 1, Map::MaxY());
 
-	int hnorth = TileHeight(tile);           // Height of the North corner.
-	int hwest  = TileHeight(TileXY(x2, y1)); // Height of the West corner.
-	int heast  = TileHeight(TileXY(x1, y2)); // Height of the East corner.
-	int hsouth = TileHeight(TileXY(x2, y2)); // Height of the South corner.
+	int hnorth = TileHeight(tile);                 // Height of the North corner.
+	int hwest  = TileHeight(TileXYL(x2, y1, layer)); // Height of the West corner.
+	int heast  = TileHeight(TileXYL(x1, y2, layer)); // Height of the East corner.
+	int hsouth = TileHeight(TileXYL(x2, y2, layer)); // Height of the South corner.
 
 	return GetTileSlopeGivenHeight(hnorth, hwest, heast, hsouth);
 }
@@ -74,12 +76,12 @@ std::tuple<Slope, int> GetTileSlopeZ(TileIndex tile)
  * @param y Y coordinate of the tile to compute slope of, may be outside the map.
  * @return Slope of the tile, except for the HALFTILE part, and the z height of the tile.
  */
-std::tuple<Slope, int> GetTilePixelSlopeOutsideMap(int x, int y)
+std::tuple<Slope, int> GetTilePixelSlopeOutsideMap(int x, int y, MapLayer layer)
 {
-	int hnorth = TileHeightOutsideMap(x,     y);     // N corner.
-	int hwest  = TileHeightOutsideMap(x + 1, y);     // W corner.
-	int heast  = TileHeightOutsideMap(x,     y + 1); // E corner.
-	int hsouth = TileHeightOutsideMap(x + 1, y + 1); // S corner.
+	int hnorth = TileHeightOutsideMap(x,     y,     layer); // N corner.
+	int hwest  = TileHeightOutsideMap(x + 1, y,     layer); // W corner.
+	int heast  = TileHeightOutsideMap(x,     y + 1, layer); // E corner.
+	int hsouth = TileHeightOutsideMap(x + 1, y + 1, layer); // S corner.
 
 	auto [slope, h] = GetTileSlopeGivenHeight(hnorth, hwest, heast, hsouth);
 	return {slope, h * TILE_HEIGHT};
@@ -94,14 +96,16 @@ std::tuple<Slope, int> GetTilePixelSlopeOutsideMap(int x, int y)
 bool IsTileFlat(TileIndex tile, int *h)
 {
 	uint x1 = TileX(tile);
-	uint y1 = TileY(tile);
+	//C3: flatness is judged against corners in this layer.
+	uint y1 = TilePlaneY(tile);
+	MapLayer layer = GetTileLayer(tile);
 	uint x2 = std::min(x1 + 1, Map::MaxX());
 	uint y2 = std::min(y1 + 1, Map::MaxY());
 
 	uint z = TileHeight(tile);
-	if (TileHeight(TileXY(x2, y1)) != z) return false;
-	if (TileHeight(TileXY(x1, y2)) != z) return false;
-	if (TileHeight(TileXY(x2, y2)) != z) return false;
+	if (TileHeight(TileXYL(x2, y1, layer)) != z) return false;
+	if (TileHeight(TileXYL(x1, y2, layer)) != z) return false;
+	if (TileHeight(TileXYL(x2, y2, layer)) != z) return false;
 
 	if (h != nullptr) *h = z;
 	return true;
@@ -115,15 +119,17 @@ bool IsTileFlat(TileIndex tile, int *h)
 int GetTileZ(TileIndex tile)
 {
 	uint x1 = TileX(tile);
-	uint y1 = TileY(tile);
+	//C3: the lowest corner is still a corner of this layer.
+	uint y1 = TilePlaneY(tile);
+	MapLayer layer = GetTileLayer(tile);
 	uint x2 = std::min(x1 + 1, Map::MaxX());
 	uint y2 = std::min(y1 + 1, Map::MaxY());
 
 	return std::min({
-		TileHeight(tile),           // N corner
-		TileHeight(TileXY(x2, y1)), // W corner
-		TileHeight(TileXY(x1, y2)), // E corner
-		TileHeight(TileXY(x2, y2)), // S corner
+		TileHeight(tile),                   // N corner
+		TileHeight(TileXYL(x2, y1, layer)), // W corner
+		TileHeight(TileXYL(x1, y2, layer)), // E corner
+		TileHeight(TileXYL(x2, y2, layer)), // S corner
 	});
 }
 
@@ -135,14 +141,16 @@ int GetTileZ(TileIndex tile)
 int GetTileMaxZ(TileIndex t)
 {
 	uint x1 = TileX(t);
-	uint y1 = TileY(t);
+	//C3: the highest corner is still a corner of this layer.
+	uint y1 = TilePlaneY(t);
+	MapLayer layer = GetTileLayer(t);
 	uint x2 = std::min(x1 + 1, Map::MaxX());
 	uint y2 = std::min(y1 + 1, Map::MaxY());
 
 	return std::max({
-		TileHeight(t),              // N corner
-		TileHeight(TileXY(x2, y1)), // W corner
-		TileHeight(TileXY(x1, y2)), // E corner
-		TileHeight(TileXY(x2, y2)), // S corner
+		TileHeight(t),                      // N corner
+		TileHeight(TileXYL(x2, y1, layer)), // W corner
+		TileHeight(TileXYL(x1, y2, layer)), // E corner
+		TileHeight(TileXYL(x2, y2, layer)), // S corner
 	});
 }

@@ -25,6 +25,7 @@
 #include "window_func.h"
 #include "tile_map.h"
 #include "landscape.h"
+#include "map_layer.h"
 #include "video/video_driver.hpp"
 #include "smallmap_gui.h"
 #include "screenshot_type.h"
@@ -207,6 +208,7 @@ static Viewport SetupScreenshotViewport(ScreenshotType t, uint32_t width = 0, ui
 			assert(width == 0 && height == 0);
 
 			Window *w = GetMainWindow();
+			vp.layer = w->viewport->layer;
 			vp.virtual_left   = w->viewport->virtual_left;
 			vp.virtual_top    = w->viewport->virtual_top;
 			vp.virtual_width  = w->viewport->virtual_width;
@@ -226,8 +228,11 @@ static Viewport SetupScreenshotViewport(ScreenshotType t, uint32_t width = 0, ui
 			/* Determine world coordinates of screenshot */
 			vp.zoom = ZoomLevel::WorldScreenshot;
 
-			TileIndex north_tile = _settings_game.construction.freeform_edges ? TileXY(1, 1) : TileXY(0, 0);
-			TileIndex south_tile{Map::Size() - 1};
+			//A world shot covers the layer the main view is showing, one plane, not every stacked layer.
+			MapLayer layer = GetMainWindow()->viewport->layer;
+			vp.layer = layer;
+			TileIndex north_tile = _settings_game.construction.freeform_edges ? TileXYL(1, 1, layer) : TileXYL(0, 0, layer);
+			TileIndex south_tile = TileXYL(Map::MaxX(), Map::MaxY(), layer);
 
 			/* We need to account for a hill or high building at tile 0,0. */
 			int extra_height_top = TilePixelHeight(north_tile) + 150;
@@ -251,6 +256,7 @@ static Viewport SetupScreenshotViewport(ScreenshotType t, uint32_t width = 0, ui
 			vp.zoom = (t == SC_ZOOMEDIN) ? _settings_client.gui.zoom_min : ZoomLevel::Viewport;
 
 			Window *w = GetMainWindow();
+			vp.layer = w->viewport->layer;
 			vp.virtual_left   = w->viewport->virtual_left;
 			vp.virtual_top    = w->viewport->virtual_top;
 
@@ -306,6 +312,7 @@ static void HeightmapCallback(void *buffer, uint y, uint, uint n)
 {
 	uint8_t *buf = (uint8_t *)buffer;
 	while (n > 0) {
+		//Each row is one surface tile. Underground and space heights are not part of a heightmap.
 		TileIndex ti = TileXY(Map::MaxX(), y);
 		for (uint x = Map::MaxX(); true; x--) {
 			*buf = 256 * TileHeight(ti) / (1 + _heightmap_highest_peak);
@@ -337,7 +344,8 @@ bool MakeHeightmapScreenshot(std::string_view filename)
 	}
 
 	_heightmap_highest_peak = 0;
-	for (const auto tile : Map::Iterate()) {
+	//Height comes from the surface. The other layers are flat bedrock and vacuum.
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		uint h = TileHeight(tile);
 		_heightmap_highest_peak = std::max(h, _heightmap_highest_peak);
 	}
@@ -490,7 +498,8 @@ static void MinimapScreenCallback(void *buf, uint y, uint pitch, uint n)
 		uint row = y + (int)(i / pitch);
 		uint col = (Map::SizeX() - 1) - (i % pitch);
 
-		TileIndex tile = TileXY(col, row);
+		//The minimap is one surface plane. col and row are plane coordinates.
+		TileIndex tile = TileXYL(col, row, MapLayer::Surface);
 		uint8_t val = GetSmallMapOwnerPixels(tile, GetTileType(tile), IncludeHeightmap::Never) & 0xFF;
 
 		uint32_t colour_buf = 0;

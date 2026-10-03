@@ -13,6 +13,9 @@
 #include "industry.h"
 #include "station_map.h"
 #include "landscape.h"
+#include "map_layer_gui.h"
+#include "map_layer.h"
+#include "layer_portal_map.h"
 #include "tree_map.h"
 #include "viewport_func.h"
 #include "town.h"
@@ -378,6 +381,7 @@ static const EnumIndexArray<AndOr, TileType, TileType::MaxSize> _smallmap_contou
 	AndOr(MKCOLOUR_XXXX(PC_DARK_RED), MKCOLOUR_0000), // TileType::Industry
 	AndOr(MKCOLOUR_0000, MKCOLOUR_FFFF), // TileType::TunnelBridge
 	AndOr(MKCOLOUR_0XX0(PC_DARK_RED), MKCOLOUR_F00F), // TileType::Object
+	AndOr(MKCOLOUR_0000, MKCOLOUR_FFFF), // TileType::LayerPortal
 };
 
 /** Colour masks for "Vehicles", "Industry", and "Vegetation" modes. */
@@ -393,6 +397,7 @@ static const EnumIndexArray<AndOr, TileType, TileType::MaxSize> _smallmap_vehicl
 	AndOr(MKCOLOUR_XXXX(PC_DARK_RED), MKCOLOUR_0000), // TileType::Industry
 	AndOr(MKCOLOUR_0000, MKCOLOUR_FFFF), // TileType::TunnelBridge
 	AndOr(MKCOLOUR_0XX0(PC_DARK_RED), MKCOLOUR_F00F), // TileType::Object
+	AndOr(MKCOLOUR_0000, MKCOLOUR_FFFF), // TileType::LayerPortal
 };
 
 /** Mapping of tile type to importance of the tile (higher number means more interesting to show). */
@@ -408,6 +413,7 @@ static const EnumIndexArray<uint8_t, TileType, TileType::MaxSize> _tiletype_impo
 	6, // TileType::Industry
 	8, // TileType::TunnelBridge
 	2, // TileType::Object
+	8, // TileType::LayerPortal
 };
 
 /**
@@ -655,6 +661,7 @@ protected:
 	int32_t scroll_y = 0; ///< Vertical world coordinate of the base tile left of the top-left corner of the smallmap display.
 	int32_t subscroll = 0; ///< Number of pixels (0..3) between the right end of the base tile and the pixel at the top-left corner of the smallmap display.
 	int zoom = 0; ///< Zoom level. Bigger number means more zoom-out (further away).
+	MapLayer layer = MapLayer::Surface; ///< Layer this smallmap is showing.
 
 	std::unique_ptr<LinkGraphOverlay> overlay{};
 
@@ -884,9 +891,14 @@ protected:
 	{
 		/* Find main viewport. */
 		const Viewport &vp = *GetMainWindow()->viewport;
+		//The rectangle is the main view. It is drawn only when that view shows this layer.
+		if (vp.layer != this->layer) return;
 
-		Point upper_left_smallmap_coord  = InverseRemapCoords2(vp.virtual_left, vp.virtual_top);
-		Point lower_right_smallmap_coord = InverseRemapCoords2(vp.virtual_left + vp.virtual_width - 1, vp.virtual_top + vp.virtual_height - 1);
+		Point upper_left_smallmap_coord  = InverseRemapCoords2(vp.virtual_left, vp.virtual_top, false, nullptr, this->layer);
+		Point lower_right_smallmap_coord = InverseRemapCoords2(vp.virtual_left + vp.virtual_width - 1, vp.virtual_top + vp.virtual_height - 1, false, nullptr, this->layer);
+		int band = static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+		upper_left_smallmap_coord.y -= band;
+		lower_right_smallmap_coord.y -= band;
 
 		Point upper_left = this->RemapTile(upper_left_smallmap_coord.x / (int)TILE_SIZE, upper_left_smallmap_coord.y / (int)TILE_SIZE);
 		upper_left.x -= this->subscroll;
@@ -921,6 +933,7 @@ protected:
 
 		do {
 			/* Check if the tile (xc,yc) is within the map range */
+			//xc and yc are plane coordinates. The tile is built in the layer this map shows.
 			if (xc >= Map::MaxX() || yc >= Map::MaxY()) continue;
 
 			/* Check if the dst pointer points to a pixel inside the screen buffer */
@@ -932,9 +945,9 @@ protected:
 			if (min_xy == 1 && (xc == 0 || yc == 0)) {
 				if (this->zoom == 1) continue; // The tile area is empty, don't draw anything.
 
-				ta = TileArea(TileXY(std::max(min_xy, xc), std::max(min_xy, yc)), this->zoom - (xc == 0), this->zoom - (yc == 0));
+				ta = TileArea(TileXYL(std::max(min_xy, xc), std::max(min_xy, yc), this->layer), this->zoom - (xc == 0), this->zoom - (yc == 0));
 			} else {
-				ta = TileArea(TileXY(xc, yc), this->zoom, this->zoom);
+				ta = TileArea(TileXYL(xc, yc, this->layer), this->zoom, this->zoom);
 			}
 			ta.ClampToMap(); // Clamp to map boundaries (may contain TileType::Void tiles!).
 
@@ -959,9 +972,12 @@ protected:
 		for (const Vehicle *v : Vehicle::Iterate()) {
 			if (v->type == VehicleType::Effect) continue;
 			if (v->vehstatus.Any({VehState::Hidden, VehState::Unclickable})) continue;
+			MapLayer vehicle_layer = (v->tile == INVALID_TILE) ? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
+			if (vehicle_layer != this->layer) continue;
 
-			/* Remap into flat coordinates. */
-			Point pt = this->RemapTile(v->x_pos / (int)TILE_SIZE, v->y_pos / (int)TILE_SIZE);
+			/* Remap into flat coordinates inside this layer. */
+			int plane_y = v->y_pos / static_cast<int>(TILE_SIZE) - static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY());
+			Point pt = this->RemapTile(v->x_pos / (int)TILE_SIZE, plane_y);
 
 			int y = pt.y - dpi->top;
 			if (!IsInsideMM(y, 0, dpi->height)) continue; // y is out of bounds.
@@ -995,6 +1011,8 @@ protected:
 	 */
 	void DrawTowns(const DrawPixelInfo *dpi, const int vertical_padding) const
 	{
+		//Towns exist only on the surface.
+		if (this->layer != MapLayer::Surface) return;
 		for (const Town *t : Town::Iterate()) {
 			/* Remap the town coordinate */
 			Point pt = this->RemapTile(TileX(t->xy), TileY(t->xy));
@@ -1020,6 +1038,7 @@ protected:
 	void DrawIndustryNames(const DrawPixelInfo *dpi, const int vertical_padding) const
 	{
 		if (this->map_type != SmallMapType::Industries) return;
+		if (this->layer != MapLayer::Surface) return;
 
 		for (const Industry *i : Industry::Iterate()) {
 			const LegendAndColour &tbl = _legend_from_industries[_industry_to_list_pos[i->type]];
@@ -1337,6 +1356,13 @@ protected:
 			TileType ttype = GetTileType(ti);
 
 			switch (ttype) {
+				case TileType::LayerPortal: {
+					//Routes and owners use the rail or road colour of the transport on the end.
+					TransportType tt = GetLayerPortalTransportType(ti);
+					ttype = (tt == TransportType::Rail) ? TileType::Railway : TileType::Road;
+					break;
+				}
+
 				case TileType::TunnelBridge: {
 					TransportType tt = GetTunnelBridgeTransportType(ti);
 
@@ -1463,6 +1489,8 @@ public:
 	SmallMapWindow(WindowDesc &desc, int window_number) : Window(desc)
 	{
 		_smallmap_industry_highlight = IT_INVALID;
+		const Window *main = GetMainWindow();
+		this->layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
 		this->overlay = std::make_unique<LinkGraphOverlay>(this, WID_SM_MAP, CargoTypes{}, this->GetOverlayCompanyMask(), 1);
 		this->CreateNestedTree();
 		this->LowerWidget(WID_SM_CONTOUR + to_underlying(this->map_type));
@@ -1476,6 +1504,7 @@ public:
 
 		this->SetupWidgetData();
 		this->FinishInitNested(window_number);
+		this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
 
 		this->SetZoomLevel(ZoomLevelChange::Init, nullptr);
 		this->SmallMapCenterOnCurrentPos();
@@ -1487,8 +1516,11 @@ public:
 	 */
 	void SmallMapCenterOnCurrentPos()
 	{
-		const Viewport &vp = *GetMainWindow()->viewport;
-		Point viewport_center = InverseRemapCoords2(vp.virtual_left + vp.virtual_width / 2, vp.virtual_top + vp.virtual_height / 2);
+		Window *main = GetMainWindow();
+		SetViewportLayer(main, this->layer);
+		const Viewport &vp = *main->viewport;
+		Point viewport_center = InverseRemapCoords2(vp.virtual_left + vp.virtual_width / 2, vp.virtual_top + vp.virtual_height / 2, false, nullptr, this->layer);
+		viewport_center.y -= static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
 
 		int sub;
 		const NWidgetBase *wid = this->GetWidget<NWidgetBase>(WID_SM_MAP);
@@ -1505,8 +1537,10 @@ public:
 	 */
 	Point GetStationMiddle(const Station *st) const
 	{
+		//A station in another layer has no place on this smallmap.
+		if (GetTileLayer(st->xy) != this->layer) return {INT32_MIN / 2, INT32_MIN / 2};
 		TileIndex tile = st->spread.GetCentreTile();
-		Point ret = this->RemapTile(TileX(tile), TileY(tile));
+		Point ret = this->RemapTile(TileX(tile), TilePlaneY(tile));
 
 		/* Same magic 3 as in DrawVehicles; that's where I got it from.
 		 * No idea what it is, but without it the result looks bad.
@@ -1525,7 +1559,7 @@ public:
 	{
 		switch (widget) {
 			case WID_SM_CAPTION:
-				return GetString(STR_SMALLMAP_CAPTION, STR_SMALLMAP_TYPE_CONTOURS + to_underlying(this->map_type));
+				return GetString(STR_SMALLMAP_CAPTION, STR_SMALLMAP_TYPE_CONTOURS + to_underlying(this->map_type)) + " - " + GetString(GetMapLayerName(this->layer));
 
 			default:
 				return this->Window::GetWidgetString(widget, stringid);
@@ -1712,7 +1746,9 @@ public:
 				Window *w = GetMainWindow();
 				int sub;
 				pt = this->PixelToTile(pt.x - wid->pos_x, pt.y - wid->pos_y, &sub);
-				ScrollWindowTo(this->scroll_x + pt.x * TILE_SIZE, this->scroll_y + pt.y * TILE_SIZE, -1, w);
+				int world_y = this->scroll_y + pt.y * TILE_SIZE + static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+				SetViewportLayer(w, this->layer);
+				ScrollWindowTo(this->scroll_x + pt.x * TILE_SIZE, world_y, -1, w);
 
 				this->SetDirty();
 				break;
@@ -1737,6 +1773,13 @@ public:
 				this->SwitchMapType(static_cast<SmallMapType>(widget - WID_SM_CONTOUR));
 				SndClickBeep();
 				break;
+
+			case WID_SM_MAP_LAYER: {
+				this->layer = GetNextMapLayer(this->layer, MultiLayerMap::GetLayerCount());
+				this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+				this->SetDirty();
+				break;
+			}
 
 			case WID_SM_CENTERMAP: // Center the smallmap again
 				this->SmallMapCenterOnCurrentPos();
@@ -1919,6 +1962,7 @@ class NWidgetSmallmapButtons : public NWidgetContainer {
 		{WID_SM_ZOOM_IN, WWT_PUSHIMGBTN, SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN},
 		{WID_SM_ZOOM_OUT, WWT_PUSHIMGBTN, SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT},
 		{WID_SM_CENTERMAP, WWT_PUSHIMGBTN, SPR_IMG_SMALLMAP, STR_SMALLMAP_CENTER_TOOLTIP},
+		{WID_SM_MAP_LAYER, WWT_PUSHIMGBTN, SPR_IMG_PLANTTREES, STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER},
 		{WID_SM_TOGGLETOWNNAME, WWT_IMGBTN, SPR_IMG_TOWN, STR_SMALLMAP_TOOLTIP_TOGGLE_TOWN_NAMES_ON_OFF},
 		{INVALID_WIDGET, WWT_PANEL, SPR_EMPTY, STR_NULL}, // Resizable spacer between top and bottom halves.
 		{WID_SM_BLANK, WWT_IMGBTN, SPR_EMPTY, STR_NULL}, // Optional spacer in 2-column layout only.

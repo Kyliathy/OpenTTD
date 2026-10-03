@@ -14,6 +14,8 @@
 #include "spritecache.h"
 #include "timetable.h"
 #include "viewport_func.h"
+#include "map_layer_gui.h"
+#include "map_func.h"
 #include "news_func.h"
 #include "command_func.h"
 #include "company_func.h"
@@ -1185,6 +1187,13 @@ void ViewportAddVehicles(DrawPixelInfo *dpi)
 			const Vehicle *v = _vehicle_viewport_hash[x + y]; // already masked & 0xFFF
 
 			while (v != nullptr) {
+				//A vehicle in another layer must not appear in this band.
+				MapLayer vehicle_layer = (v->type == VehicleType::Effect || v->type == VehicleType::Disaster || v->tile == INVALID_TILE)
+					? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
+				if (vehicle_layer != _viewport_draw_layer) {
+					v = v->hash_viewport_next;
+					continue;
+				}
 
 				if (!v->vehstatus.Test(VehState::Hidden) &&
 					l <= v->coord.right + xb &&
@@ -1268,6 +1277,13 @@ Vehicle *CheckClickOnVehicle(const Viewport &vp, int x, int y)
 			Vehicle *v = _vehicle_viewport_hash[hx + hy]; // already masked & 0xFFF
 
 			while (v != nullptr) {
+				MapLayer vehicle_layer = (v->type == VehicleType::Effect || v->type == VehicleType::Disaster || v->tile == INVALID_TILE)
+					? GetLayerOfWorldY(v->y_pos) : GetTileLayer(v->tile);
+				//A click must not select a vehicle drawn in another layer.
+				if (vehicle_layer != vp.layer) {
+					v = v->hash_viewport_next;
+					continue;
+				}
 				if (!v->vehstatus.Any({VehState::Hidden, VehState::Unclickable}) &&
 					x >= v->coord.left && x <= v->coord.right &&
 					y >= v->coord.top && y <= v->coord.bottom) {

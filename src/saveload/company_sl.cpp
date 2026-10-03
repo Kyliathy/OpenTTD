@@ -18,6 +18,8 @@
 #include "../company_manager_face.h"
 #include "../fios.h"
 #include "../tunnelbridge_map.h"
+#include "../layer_portal_map.h"
+#include "../layer_portal_cmd.h"
 #include "../tunnelbridge.h"
 #include "../station_base.h"
 #include "../strings_func.h"
@@ -227,6 +229,22 @@ void AfterLoadCompanyStats()
 					if (c != nullptr) c->infrastructure.water++;
 				}
 				break;
+
+			case TileType::LayerPortal: {
+				TileIndex other_end = GetLayerPortalPairTile(tile);
+				if (tile < other_end) {
+					uint pieces = LAYER_PORTAL_TRACKBIT_FACTOR(GetLayerPortalTransportType(tile));
+					if (GetLayerPortalTransportType(tile) == TransportType::Rail) {
+						c = Company::GetIfValid(GetTileOwner(tile));
+						if (c != nullptr) c->infrastructure.rail[GetRailType(tile)] += pieces * 2;
+					} else {
+						RoadType rt = GetRoadTypeRoad(tile);
+						c = Company::GetIfValid(GetRoadOwner(tile, RoadTramType::Road));
+						if (c != nullptr && rt != INVALID_ROADTYPE) c->infrastructure.road[rt] += pieces * 2;
+					}
+				}
+				break;
+			}
 
 			case TileType::TunnelBridge: {
 				/* Only count the tunnel/bridge if we're on the northern end tile. */

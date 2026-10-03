@@ -219,7 +219,7 @@ bool GUIPlaceProcDragXY(ViewportDragDropSelectionProcess proc, TileIndex start_t
 		/* When end_tile is TileType::Void, the error tile will not be visible to the
 		 * user. This happens when terraforming at the southern border. */
 		if (TileX(end_tile) == Map::MaxX()) end_tile += TileDiffXY(-1, 0);
-		if (TileY(end_tile) == Map::MaxY()) end_tile += TileDiffXY(0, -1);
+		if (TilePlaneY(end_tile) == Map::MaxY()) end_tile += TileDiffXY(0, -1);
 	}
 
 	switch (proc) {
@@ -385,7 +385,7 @@ struct TerraformToolbarWindow : Window {
 						/* When end_tile is TileType::Void, the error tile will not be visible to the
 						 * user. This happens when terraforming at the southern border. */
 						if (TileX(end_tile) == Map::MaxX()) end_tile += TileDiffXY(-1, 0);
-						if (TileY(end_tile) == Map::MaxY()) end_tile += TileDiffXY(0, -1);
+						if (TilePlaneY(end_tile) == Map::MaxY()) end_tile += TileDiffXY(0, -1);
 					}
 					Command<Commands::BuildObjectArea>::Post(STR_ERROR_CAN_T_PURCHASE_THIS_LAND, CcPlaySound_CONSTRUCTION_RAIL,
 						end_tile, start_tile, OBJECT_OWNED_LAND, 0, _ctrl_pressed);

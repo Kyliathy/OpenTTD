@@ -41,7 +41,7 @@
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the pair model, door side and shaft side, drive-through traversal, the single neighbour function and the no-wormhole movement rule. This plan owns that contract; r2mlm8 and r2mlm9 only consume it. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 87-89 | `### AD-5 Distances are plane distances`: YAPF estimates must use plane coordinates or a portal makes the heuristic inconsistent. Group 3 enforces it in `OctileDistanceCost`. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants`, in particular I-3 (only the portal neighbour function crosses layers) and I-8 (every end has a reversed pair). |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract` of this plan: tile bits, geometry, neighbour mapping, relocation rule and command signature. The authoritative handoff to r2mlm8 and r2mlm9. |
 | [docs/zz-reach2/architecture/landscape/archi-landscape.md](../../architecture/landscape/archi-landscape.md) | 183-207 | `## Dispatch`: every tile type is one `TileTypeProcs` row in `_tile_type_procs`; slots after `Object` are `nullptr`. The new type fills slot 11 and must implement every proc that has no safe default. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 and r2mlm4: `MultiLayerMap::TileInLayer`, `GetRules`, `CheckLayerAllowsConstruction` (with `MapLayerConstruction::LayerPortal`). The portal code builds on these and adds no layer arithmetic of its own. |
@@ -77,6 +77,22 @@ Filled by tasks 4.8 and 5.7. One row per `switch` over `GetTileType` (or `case T
 
 | File:line | Function | Handling | Done |
 | --- | --- | --- | --- |
+| src/rail.cpp | GetTileRailType | Rail portal ends return their rail type. | yes |
+| src/road_map.cpp | MayHaveRoad, GetAnyRoadBits | Road portal ends expose the door bit, or the axis when asked for a straight entrance. | yes |
+| src/pbs.cpp | GetReservedTrackbits, TryReserveRailTrack, UnreserveRailTrack | Rail portal reservation accessors. | yes |
+| src/signal.cpp | ExploreSegment and the second update | Door continues onto the pair through its shaft; shaft continues out of the door. | yes |
+| src/elrail.cpp | GetRailTrackBitsUniversal | Axis track is reported for power. No catenary is drawn. | yes |
+| src/road.cpp | neighbour connective test | A portal door connects like a tunnel mouth. | yes |
+| src/rail_cmd.cpp | signal drag, autofill, convert | Portal ends are one rail tile and convert as a pair. | yes |
+| src/road_cmd.cpp | remove, build, convert | Building on the tile is refused. Removing clears the pair. Convert visits both ends. | yes |
+| src/town_cmd.cpp | town delete and road growth | Towns neither own nor grow into portals. | yes |
+| src/water_cmd.cpp | docking and flood | Portals are not water. | yes |
+| src/newgrf_commons.cpp | GetNearbyTileInformation | Reported as Railway or Road. | yes |
+| src/newgrf_railtype.cpp, newgrf_roadtype.cpp | label conversion | Rail and road types on portal ends are converted. | yes |
+| src/smallmap_gui.cpp | colours and importance | Remapped to the rail or road colour. | yes |
+| src/saveload/company_sl.cpp | AfterLoadCompanyStats | Both ends counted from the lower tile. | yes |
+| src/saveload/afterload.cpp | PBS reservation clear | Rail portal reservations are cleared with the other rail reservations. | yes |
+| src/saveload/oldloader_sl.cpp and the other afterload tunnel fixups | old-save rewrites | Those switches run on files from before MapLayers, so a portal tile cannot appear. They keep their existing default. | yes |
 
 ## Implementation Tasks
 
@@ -97,12 +113,12 @@ Entry gate. `src/map_layer.h` must export `MultiLayerMap::TileInLayer`, `MapLaye
 ### Group 1 - Tile type and accessors
 
 {{MEDIUM}}
-- [ ] 1.1 Insert `LayerPortal, ///< Entry or exit of a pair of tiles connecting two map layers.` before `End` in `enum class TileType`.
-- [ ] 1.2 Create `src/layer_portal_map.h` with the licence header and include guard, including `tile_map.h`, `map_layer.h`, `rail_map.h` and `road_map.h`.
-- [ ] 1.3 Implement `IsLayerPortalTile`, `GetLayerPortalTransportType`, `GetLayerPortalShaftDirection`, `GetLayerPortalDoorDirection` and `GetLayerPortalTargetLayer` with asserts on the tile type and Javadoc that cites the contract bits.
-- [ ] 1.4 Implement `GetLayerPortalPairTile` with `MultiLayerMap::TileInLayer` and a Debug assert that the pair is a portal with the reversed shaft direction (I-8).
-- [ ] 1.5 Implement `HasLayerPortalReservation`, `SetLayerPortalReservation` and `GetLayerPortalReservationTrackBits`, asserting the rail transport type.
-- [ ] 1.6 Implement `MakeRailLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RailType rt)` and `MakeRoadLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RoadType road_rt)`, initialising every byte as the tunnel constructors do.
+- [x] 1.1 Insert `LayerPortal, ///< Entry or exit of a pair of tiles connecting two map layers.` before `End` in `enum class TileType`.
+- [x] 1.2 Create `src/layer_portal_map.h` with the licence header and include guard, including `tile_map.h`, `map_layer.h`, `rail_map.h` and `road_map.h`.
+- [x] 1.3 Implement `IsLayerPortalTile`, `GetLayerPortalTransportType`, `GetLayerPortalShaftDirection`, `GetLayerPortalDoorDirection` and `GetLayerPortalTargetLayer` with asserts on the tile type and Javadoc that cites the contract bits.
+- [x] 1.4 Implement `GetLayerPortalPairTile` with `MultiLayerMap::TileInLayer` and a Debug assert that the pair is a portal with the reversed shaft direction (I-8).
+- [x] 1.5 Implement `HasLayerPortalReservation`, `SetLayerPortalReservation` and `GetLayerPortalReservationTrackBits`, asserting the rail transport type.
+- [x] 1.6 Implement `MakeRailLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RailType rt)` and `MakeRoadLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RoadType road_rt)`, initialising every byte as the tunnel constructors do.
 - [ ] 1.7 Register `layer_portal_map.h` in `src/CMakeLists.txt` and build.
 
 ### Area Mandatory Reading - Tile procs
@@ -121,13 +137,13 @@ _Applies to Group 2._
 ### Group 2 - Tile procs
 
 {{HARD}}
-- [ ] 2.1 Create `src/layer_portal_cmd.cpp` and register it; define `_tile_type_layer_portal_procs` with every proc listed in `## Outcome and Boundaries`, and add it to slot 11 of `_tile_type_procs` and to the `extern` list in `src/landscape.cpp`.
-- [ ] 2.2 Implement `DrawTile_LayerPortal` with stand-ins: the rail depot layout for rail ends and the road depot layout for road ends, door on `GetLayerPortalDoorDirection`, axis track or road on barren ground; leave a comment naming the r2mlm8 and r2mlm9 art swap tasks.
-- [ ] 2.3 Implement `GetSlopePixelZ_LayerPortal` (flat tile), `GetTileDesc_LayerPortal` (new strings `STR_LAI_LAYER_PORTAL_RAIL` and `STR_LAI_LAYER_PORTAL_ROAD` with the target layer name) and an empty `TileLoop_LayerPortal`.
-- [ ] 2.4 Implement `GetTileTrackStatus_LayerPortal`: axis trackdirs in both directions for the matching transport (and road sub-type), nothing otherwise, with the reservation bit reported for rail.
-- [ ] 2.5 Implement `ChangeTileOwner_LayerPortal` updating both ends and the infrastructure counts (see Group 7 for the factor).
-- [ ] 2.6 Implement the terraform proc and the build-above proc as refusals (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`), and the foundation proc as none.
-- [ ] 2.7 Implement `VehicleEnterTile_LayerPortal` with the generic visibility rule of the contract: compute the frame like `VehicleEnterTile_TunnelBridge`, hide on the shaft-bound door frame, show on the door-bound frame, return `{}` otherwise; leave vehicle-type specifics to r2mlm8 and r2mlm9.
+- [x] 2.1 Create `src/layer_portal_cmd.cpp` and register it; define `_tile_type_layer_portal_procs` with every proc listed in `## Outcome and Boundaries`, and add it to slot 11 of `_tile_type_procs` and to the `extern` list in `src/landscape.cpp`.
+- [x] 2.2 Implement `DrawTile_LayerPortal` with stand-ins: the rail depot layout for rail ends and the road depot layout for road ends, door on `GetLayerPortalDoorDirection`, axis track or road on barren ground; leave a comment naming the r2mlm8 and r2mlm9 art swap tasks.
+- [x] 2.3 Implement `GetSlopePixelZ_LayerPortal` (flat tile), `GetTileDesc_LayerPortal` (new strings `STR_LAI_LAYER_PORTAL_RAIL` and `STR_LAI_LAYER_PORTAL_ROAD` with the target layer name) and an empty `TileLoop_LayerPortal`.
+- [x] 2.4 Implement `GetTileTrackStatus_LayerPortal`: axis trackdirs in both directions for the matching transport (and road sub-type), nothing otherwise, with the reservation bit reported for rail.
+- [x] 2.5 Implement `ChangeTileOwner_LayerPortal` updating both ends and the infrastructure counts (see Group 7 for the factor).
+- [x] 2.6 Implement the terraform proc and the build-above proc as refusals (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`), and the foundation proc as none.
+- [x] 2.7 Implement `VehicleEnterTile_LayerPortal` with the generic visibility rule of the contract: compute the frame like `VehicleEnterTile_TunnelBridge`, hide on the shaft-bound door frame, show on the door-bound frame, return `{}` otherwise; leave vehicle-type specifics to r2mlm8 and r2mlm9.
 - [ ] 2.8 Build both configurations; confirm `ctest` still passes.
 
 ### Area Mandatory Reading - Neighbour contract and follower
@@ -146,13 +162,13 @@ _Applies to Group 3._
 ### Group 3 - Neighbour contract and follower
 
 {{HARD}}
-- [ ] 3.1 Implement `IsLayerPortalShaftExit(TileIndex tile, DiagDirection exitdir)` and `GetLayerPortalNextTile(TileIndex tile, DiagDirection exitdir)` in `src/layer_portal_map.h` exactly as the contract states, with Javadoc that cites I-3.
-- [ ] 3.2 Implement `TranslateIntoLayerPortalPair(TileIndex portal, int &x, int &y)` in `src/layer_portal_cmd.cpp` (declared in `layer_portal_cmd.h`) following the contract's relocation rule, with an assert that the result lies on the pair tile.
-- [ ] 3.3 Add `bool is_portal` to `CFollowTrackT`, reset it in `Init` and in every place that resets `is_tunnel`.
-- [ ] 3.4 In `FollowTileExit`, add the portal branch before the normal step: when `IsLayerPortalShaftExit(old_tile, exitdir)`, set `is_portal`, `new_tile = GetLayerPortalPairTile(old_tile)` and `tiles_skipped = 0`.
-- [ ] 3.5 In `CanEnterNewTile`, refuse entering a portal from a side other than its door unless `is_portal` is set, and refuse when the end's transport type does not match the follower's.
-- [ ] 3.6 Change `OctileDistanceCost` to use `TilePlaneY` for both tiles, with a comment citing the consistency check.
-- [ ] 3.7 Add unit tests: for a hand-made pair in a 64x64x3 map, `GetLayerPortalNextTile` maps every shaft exit to the pair and every other exit to the plain neighbour, in both layers and all four directions; `TranslateIntoLayerPortalPair` lands on the pair's entry edge.
+- [x] 3.1 Implement `IsLayerPortalShaftExit(TileIndex tile, DiagDirection exitdir)` and `GetLayerPortalNextTile(TileIndex tile, DiagDirection exitdir)` in `src/layer_portal_map.h` exactly as the contract states, with Javadoc that cites I-3.
+- [x] 3.2 Implement `TranslateIntoLayerPortalPair(TileIndex portal, int &x, int &y)` in `src/layer_portal_cmd.cpp` (declared in `layer_portal_cmd.h`) following the contract's relocation rule, with an assert that the result lies on the pair tile.
+- [x] 3.3 Add `bool is_portal` to `CFollowTrackT`, reset it in `Init` and in every place that resets `is_tunnel`.
+- [x] 3.4 In `FollowTileExit`, add the portal branch before the normal step: when `IsLayerPortalShaftExit(old_tile, exitdir)`, set `is_portal`, `new_tile = GetLayerPortalPairTile(old_tile)` and `tiles_skipped = 0`.
+- [x] 3.5 In `CanEnterNewTile`, refuse entering a portal from a side other than its door unless `is_portal` is set, and refuse when the end's transport type does not match the follower's.
+- [x] 3.6 Change `OctileDistanceCost` to use `TilePlaneY` for both tiles, with a comment citing the consistency check.
+- [x] 3.7 Add unit tests: for a hand-made pair in a 64x64x3 map, `GetLayerPortalNextTile` maps every shaft exit to the pair and every other exit to the plain neighbour, in both layers and all four directions; `TranslateIntoLayerPortalPair` lands on the pair's entry edge.
 
 ### Area Mandatory Reading - Rail and road core integration
 
@@ -169,14 +185,14 @@ _Applies to Group 4._
 ### Group 4 - Rail and road core integration
 
 {{HARD}}
-- [ ] 4.1 `GetTileRailType`: return the rail type for rail portal ends.
-- [ ] 4.2 `MayHaveRoad`: true for road portal ends; confirm `GetRoadTypeRoad`, `GetRoadOwner` and `HasTileRoadType` work through the mirrored bits.
-- [ ] 4.3 `GetAnyRoadBits`: return the door-side road bit for road portal ends (both bits on the axis when `straight_tunnel_bridge_entrance` is set), with a comment.
-- [ ] 4.4 `GetReservedTrackbits`, `TryReserveRailTrack`, `UnreserveRailTrack`: add rail portal cases using the portal reservation accessors.
-- [ ] 4.5 `ExploreSegment`: add the portal case: entering through the door continues on the pair entered through its shaft side; entering through the shaft continues through the door to the next tile; detect trains on both ends.
-- [ ] 4.6 The second `TunnelBridge` case in `src/signal.cpp` and both cases in `src/elrail.cpp`: add portal handling (no catenary drawn on portal ends; track bits reported for power checks).
-- [ ] 4.7 `src/road.cpp`: add the portal case next to the tunnel case.
-- [ ] 4.8 Fill `## Tile-type Switch Ledger` with every `case TileType::TunnelBridge` site found by grep, and mark the ones handled in this group.
+- [x] 4.1 `GetTileRailType`: return the rail type for rail portal ends.
+- [x] 4.2 `MayHaveRoad`: true for road portal ends; confirm `GetRoadTypeRoad`, `GetRoadOwner` and `HasTileRoadType` work through the mirrored bits.
+- [x] 4.3 `GetAnyRoadBits`: return the door-side road bit for road portal ends (both bits on the axis when `straight_tunnel_bridge_entrance` is set), with a comment.
+- [x] 4.4 `GetReservedTrackbits`, `TryReserveRailTrack`, `UnreserveRailTrack`: add rail portal cases using the portal reservation accessors.
+- [x] 4.5 `ExploreSegment`: add the portal case: entering through the door continues on the pair entered through its shaft side; entering through the shaft continues through the door to the next tile; detect trains on both ends.
+- [x] 4.6 The second `TunnelBridge` case in `src/signal.cpp` and both cases in `src/elrail.cpp`: add portal handling (no catenary drawn on portal ends; track bits reported for power checks).
+- [x] 4.7 `src/road.cpp`: add the portal case next to the tunnel case.
+- [x] 4.8 Fill `## Tile-type Switch Ledger` with every `case TileType::TunnelBridge` site found by grep, and mark the ones handled in this group.
 
 ### Area Mandatory Reading - Remaining tile-type switches
 
@@ -191,13 +207,13 @@ _Applies to Group 5._
 ### Group 5 - Remaining tile-type switches
 
 {{MEDIUM}}
-- [ ] 5.1 `src/rail_cmd.cpp` (four cases) and `src/road_cmd.cpp` (four cases): add portal handling or an explicit `//not applicable to layer portals` comment per case.
-- [ ] 5.2 `src/town_cmd.cpp` (two cases): towns never grow into, connect to or demolish portals; add the case with that comment.
-- [ ] 5.3 `src/water_cmd.cpp` (two cases): portals are never flooded and never count as water.
-- [ ] 5.4 `src/newgrf_commons.cpp`, `src/newgrf_railtype.cpp`, `src/newgrf_roadtype.cpp`: report portals as their transport's base type and resolve rail and road type sprites for them.
-- [ ] 5.5 `src/smallmap_gui.cpp`: give slot 11 an importance and draw portals in the rail or road colour of the routes and owners map types.
-- [ ] 5.6 `src/saveload/company_sl.cpp`: count portal ends in `AfterLoadCompanyStats`; `src/saveload/afterload.cpp` and `oldloader_sl.cpp` cases: confirm portals cannot exist in files before `SaveLoadVersion::MapLayers` and add a Debug assert.
-- [ ] 5.7 Grep for remaining `switch (GetTileType(` statements with a `default: NOT_REACHED()`; add a portal case to each one reachable for a portal tile and record it in the ledger.
+- [x] 5.1 `src/rail_cmd.cpp` (four cases) and `src/road_cmd.cpp` (four cases): add portal handling or an explicit `//not applicable to layer portals` comment per case.
+- [x] 5.2 `src/town_cmd.cpp` (two cases): towns never grow into, connect to or demolish portals; add the case with that comment.
+- [x] 5.3 `src/water_cmd.cpp` (two cases): portals are never flooded and never count as water.
+- [x] 5.4 `src/newgrf_commons.cpp`, `src/newgrf_railtype.cpp`, `src/newgrf_roadtype.cpp`: report portals as their transport's base type and resolve rail and road type sprites for them.
+- [x] 5.5 `src/smallmap_gui.cpp`: give slot 11 an importance and draw portals in the rail or road colour of the routes and owners map types.
+- [x] 5.6 `src/saveload/company_sl.cpp`: count portal ends in `AfterLoadCompanyStats`; `src/saveload/afterload.cpp` and `oldloader_sl.cpp` cases: confirm portals cannot exist in files before `SaveLoadVersion::MapLayers` and add a Debug assert.
+- [x] 5.7 Grep for remaining `switch (GetTileType(` statements with a `default: NOT_REACHED()`; add a portal case to each one reachable for a portal tile and record it in the ledger.
 - [ ] 5.8 Mark every ledger row done and build.
 
 ### Area Mandatory Reading - Build and remove command
@@ -216,22 +232,22 @@ _Applies to Groups 6-7._
 ### Group 6 - Build command
 
 {{MEDIUM}}
-- [ ] 6.1 Add `BuildLayerPortal, ///< build a pair of layer portal tiles` after `BuildTunnel` in `Commands`.
-- [ ] 6.2 Create `src/layer_portal_cmd.h` declaring `CmdBuildLayerPortal` with the contract signature, `DEF_CMD_TRAIT(Commands::BuildLayerPortal, CmdBuildLayerPortal, CommandFlags({CommandFlag::Auto, CommandFlag::NoWater}), CommandType::LandscapeConstruction)` and `CommandCallback CcBuildLayerPortal`; include it in `src/command.cpp`.
-- [ ] 6.3 Validate parameters: transport Rail or Road, valid and available rail type or road (not tram) type, valid shaft direction, valid target layer adjacent to the tile's layer, and Surface / Underground only in version 1.
-- [ ] 6.4 Validate both ends: inner tiles, flat, no bridge above, `CheckLayerAllowsConstruction(..., MapLayerConstruction::LayerPortal)`, and a door-side neighbour that is an inner tile.
-- [ ] 6.5 Clear both ends with `Command<Commands::LandscapeClear>::Do` and add the costs; add a portal price of `_price[Price::BuildTunnel] * 4` per pair and document the choice.
-- [ ] 6.6 On execute, make both ends with the contract's shaft directions, update infrastructure, mark both tiles dirty, and for rail ends add the sides to the signal buffer and call `YapfNotifyTrackLayoutChange`.
-- [ ] 6.7 Implement `CcBuildLayerPortal` playing the construction sound at the clicked tile; add strings `STR_ERROR_CAN_T_BUILD_LAYER_PORTAL` and `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND`.
-- [ ] 6.8 Add `MultiLayerMap::GetPortalTargetLayer(MapLayer from)` (Surface to Underground, Underground to Surface, `MapLayer::Invalid` otherwise) as the single version-1 pairing rule, used by task 6.3 and by the placement GUIs of r2mlm8 and r2mlm9.
+- [x] 6.1 Add `BuildLayerPortal, ///< build a pair of layer portal tiles` after `BuildTunnel` in `Commands`.
+- [x] 6.2 Create `src/layer_portal_cmd.h` declaring `CmdBuildLayerPortal` with the contract signature, `DEF_CMD_TRAIT(Commands::BuildLayerPortal, CmdBuildLayerPortal, CommandFlags({CommandFlag::Auto, CommandFlag::NoWater}), CommandType::LandscapeConstruction)` and `CommandCallback CcBuildLayerPortal`; include it in `src/command.cpp`.
+- [x] 6.3 Validate parameters: transport Rail or Road, valid and available rail type or road (not tram) type, valid shaft direction, valid target layer adjacent to the tile's layer, and Surface / Underground only in version 1.
+- [x] 6.4 Validate both ends: inner tiles, flat, no bridge above, `CheckLayerAllowsConstruction(..., MapLayerConstruction::LayerPortal)`, and a door-side neighbour that is an inner tile.
+- [x] 6.5 Clear both ends with `Command<Commands::LandscapeClear>::Do` and add the costs; add a portal price of `_price[Price::BuildTunnel] * 4` per pair and document the choice.
+- [x] 6.6 On execute, make both ends with the contract's shaft directions, update infrastructure, mark both tiles dirty, and for rail ends add the sides to the signal buffer and call `YapfNotifyTrackLayoutChange`.
+- [x] 6.7 Implement `CcBuildLayerPortal` playing the construction sound at the clicked tile; add strings `STR_ERROR_CAN_T_BUILD_LAYER_PORTAL` and `STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND`.
+- [x] 6.8 Add `MultiLayerMap::GetPortalTargetLayer(MapLayer from)` (Surface to Underground, Underground to Surface, `MapLayer::Invalid` otherwise) as the single version-1 pairing rule, used by task 6.3 and by the placement GUIs of r2mlm8 and r2mlm9.
 
 ### Group 7 - Removal, ownership and infrastructure
 
 {{MEDIUM}}
-- [ ] 7.1 Define `LAYER_PORTAL_TRACKBIT_FACTOR` (1 rail piece per rail end, 2 road pieces per road end, matching depots) with a comment.
-- [ ] 7.2 Implement `ClearTile_LayerPortal`: refuse with `DoCommandFlag::Auto`, check ownership, `EnsureNoVehicleOnGround` on both ends, refuse a reserved rail portal, then clear both ends with `DoClearSquare`, update infrastructure and refund `_price[Price::ClearTunnel] * 4`.
-- [ ] 7.3 For rail ends, add both sides to the signal buffer and call `YapfNotifyTrackLayoutChange` on removal.
-- [ ] 7.4 Confirm `ChangeTileOwner_LayerPortal` handles company bankruptcy and merging (both ends move together or both are removed).
+- [x] 7.1 Define `LAYER_PORTAL_TRACKBIT_FACTOR` (1 rail piece per rail end, 2 road pieces per road end, matching depots) with a comment.
+- [x] 7.2 Implement `ClearTile_LayerPortal`: refuse with `DoCommandFlag::Auto`, check ownership, `EnsureNoVehicleOnGround` on both ends, refuse a reserved rail portal, then clear both ends with `DoClearSquare`, update infrastructure and refund `_price[Price::ClearTunnel] * 4`.
+- [x] 7.3 For rail ends, add both sides to the signal buffer and call `YapfNotifyTrackLayoutChange` on removal.
+- [x] 7.4 Confirm `ChangeTileOwner_LayerPortal` handles company bankruptcy and merging (both ends move together or both are removed).
 - [ ] 7.5 Confirm `AfterLoadCompanyStats` and the live counters agree after build, removal and owner change (compare the infrastructure window before and after a save and load).
 
 ### Area Mandatory Reading - Pathfinder settings and verification
@@ -247,13 +263,13 @@ _Applies to Group 8._
 ### Group 8 - Pathfinder penalty settings and verification
 
 {{SIMPLE}}
-- [ ] 8.1 Add `rail_layer_portal_penalty` and `road_layer_portal_penalty` to `YAPFSettings` with `///<` comments.
-- [ ] 8.2 Add both `[SDT_VAR]` entries with `from = SaveLoadVersion::MapLayers`, default `4 * YAPF_TILE_LENGTH`, range 0 to 1000000, `cat = SC_EXPERT`, and their help strings.
+- [x] 8.1 Add `rail_layer_portal_penalty` and `road_layer_portal_penalty` to `YAPFSettings` with `///<` comments.
+- [x] 8.2 Add both `[SDT_VAR]` entries with `from = SaveLoadVersion::MapLayers`, default `4 * YAPF_TILE_LENGTH`, range 0 to 1000000, `cat = SC_EXPERT`, and their help strings.
 - [ ] 8.3 Build and confirm both appear in the advanced settings window under pathfinding.
-- [ ] 8.4 Add accessor round-trip tests for both `Make*LayerPortal` functions and an I-8 test that a pair built by the same code as `CmdBuildLayerPortal`'s execute step has reversed shaft directions.
+- [x] 8.4 Add accessor round-trip tests for both `Make*LayerPortal` functions and an I-8 test that a pair built by the same code as `CmdBuildLayerPortal`'s execute step has reversed shaft directions.
 - [ ] 8.5 Build both configurations without new warnings; run `ctest`.
-- [ ] 8.6 Grep that no code outside `src/layer_portal_*` and `src/pathfinder/follow_track.hpp` calls `GetLayerPortalPairTile` for movement (I-3); signal and reservation code may call `GetLayerPortalNextTile`.
-- [ ] 8.7 Confirm the `## Tile-type Switch Ledger` has no open row.
+- [x] 8.6 Grep that no code outside `src/layer_portal_*` and `src/pathfinder/follow_track.hpp` calls `GetLayerPortalPairTile` for movement (I-3); signal and reservation code may call `GetLayerPortalNextTile`.
+- [x] 8.7 Confirm the `## Tile-type Switch Ledger` has no open row.
 
 ## Consult on Demand
 

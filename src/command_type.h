@@ -212,6 +212,7 @@ enum class Commands : uint8_t {
 	BuildObject, ///< build an object
 	BuildObjectArea, ///< build an area of objects
 	BuildTunnel, ///< build a tunnel
+	BuildLayerPortal, ///< build a pair of layer portal tiles
 
 	RemoveFromRailStation, ///< remove a (rectangle of) tiles from a rail station
 	ConvertRail, ///< convert a rail type

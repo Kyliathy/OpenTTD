@@ -360,9 +360,10 @@ static void GreyscaleToMapHeights(uint img_width, uint img_height, std::span<con
 		col_pad = (1 + width - ((img_width * img_scale) / num_div)) / 2;
 	}
 
+	//C2: a heightmap paints the surface. The north void fence is that plane's edge.
 	if (_settings_game.construction.freeform_edges) {
-		for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, 0));
-		for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(0, y));
+		for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXYL(x, 0, MapLayer::Surface));
+		for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXYL(0, y, MapLayer::Surface));
 	}
 
 	/* Form the landscape */
@@ -370,8 +371,8 @@ static void GreyscaleToMapHeights(uint img_width, uint img_height, std::span<con
 		for (col = 0; col < width; col++) {
 			switch (_settings_game.game_creation.heightmap_rotation) {
 				default: NOT_REACHED();
-				case HM_COUNTER_CLOCKWISE: tile = TileXY(col, row); break;
-				case HM_CLOCKWISE:         tile = TileXY(row, col); break;
+				case HM_COUNTER_CLOCKWISE: tile = TileXYL(col, row, MapLayer::Surface); break;
+				case HM_CLOCKWISE:         tile = TileXYL(row, col, MapLayer::Surface); break;
 			}
 
 			/* Check if current tile is within the 1-pixel map edge or padding regions */
@@ -426,7 +427,7 @@ void FixSlopes()
 	uint8_t current_height;
 	uint8_t max_height = _settings_game.construction.map_height_limit;
 
-	/* Adjust height difference to maximum one horizontal/vertical change. */
+	/* Adjust height difference to maximum one horizontal/vertical change. C2: slopes are fixed on the surface. */
 	width   = Map::SizeX();
 	height  = Map::SizeY();
 
@@ -436,16 +437,16 @@ void FixSlopes()
 			current_height = MAX_TILE_HEIGHT;
 			if (col != 0) {
 				/* Find lowest tile; either the top or left one */
-				current_height = TileHeight(TileXY(col - 1, row)); // top edge
+				current_height = TileHeight(TileXYL(col - 1, row, MapLayer::Surface)); // top edge
 			}
 			if (row != 0) {
-				if (TileHeight(TileXY(col, row - 1)) < current_height) {
-					current_height = TileHeight(TileXY(col, row - 1)); // left edge
+				if (TileHeight(TileXYL(col, row - 1, MapLayer::Surface)) < current_height) {
+					current_height = TileHeight(TileXYL(col, row - 1, MapLayer::Surface)); // left edge
 				}
 			}
 
 			/* Does the height differ more than one? */
-			TileIndex tile = TileXY(col, row);
+			TileIndex tile = TileXYL(col, row, MapLayer::Surface);
 			if (TileHeight(tile) >= (uint)current_height + 2) {
 				/* Then change the height to be no more than one */
 				SetTileHeight(tile, current_height + 1);
@@ -464,17 +465,17 @@ void FixSlopes()
 			current_height = MAX_TILE_HEIGHT;
 			if ((uint)col != width - 1) {
 				/* Find lowest tile; either the bottom and right one */
-				current_height = TileHeight(TileXY(col + 1, row)); // bottom edge
+				current_height = TileHeight(TileXYL(col + 1, row, MapLayer::Surface)); // bottom edge
 			}
 
 			if ((uint)row != height - 1) {
-				if (TileHeight(TileXY(col, row + 1)) < current_height) {
-					current_height = TileHeight(TileXY(col, row + 1)); // right edge
+				if (TileHeight(TileXYL(col, row + 1, MapLayer::Surface)) < current_height) {
+					current_height = TileHeight(TileXYL(col, row + 1, MapLayer::Surface)); // right edge
 				}
 			}
 
 			/* Does the height differ more than one? */
-			TileIndex tile = TileXY(col, row);
+			TileIndex tile = TileXYL(col, row, MapLayer::Surface);
 			if (TileHeight(tile) >= (uint)current_height + 2) {
 				/* Then change the height to be no more than one */
 				SetTileHeight(tile, current_height + 1);
@@ -561,10 +562,11 @@ bool LoadHeightmap(DetailedFileType dft, std::string_view filename)
  */
 void FlatEmptyWorld(uint8_t tile_height)
 {
+	//C2: an empty scenario is a flat surface. Other layers stay untouched.
 	int edge_distance = _settings_game.construction.freeform_edges ? 0 : 2;
 	for (uint row = edge_distance; row < Map::SizeY() - edge_distance; row++) {
 		for (uint col = edge_distance; col < Map::SizeX() - edge_distance; col++) {
-			SetTileHeight(TileXY(col, row), tile_height);
+			SetTileHeight(TileXYL(col, row, MapLayer::Surface), tile_height);
 		}
 	}
 

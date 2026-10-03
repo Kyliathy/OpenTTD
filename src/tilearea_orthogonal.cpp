@@ -118,14 +118,16 @@ bool OrthogonalTileArea::Contains(TileIndex tile) const
 OrthogonalTileArea &OrthogonalTileArea::Expand(int rad)
 {
 	int x = TileX(this->tile);
-	int y = TileY(this->tile);
+	//C6: grow inside the area's layer. A stacked Y would clamp an underground area onto the surface.
+	int y = TilePlaneY(this->tile);
+	MapLayer layer = GetTileLayer(this->tile);
 
 	int sx = std::max<int>(x - rad, 0);
 	int sy = std::max<int>(y - rad, 0);
 	int ex = std::min<int>(x + this->w + rad, Map::SizeX());
 	int ey = std::min<int>(y + this->h + rad, Map::SizeY());
 
-	this->tile = TileXY(sx, sy);
+	this->tile = TileXYL(sx, sy, layer);
 	this->w = ex - sx;
 	this->h = ey - sy;
 	return *this;
@@ -137,6 +139,7 @@ OrthogonalTileArea &OrthogonalTileArea::Expand(int rad)
 void OrthogonalTileArea::ClampToMap()
 {
 	assert(this->tile < Map::Size());
+	//C6: the south edge of the area is the south edge of its layer.
 	this->w = std::min<int>(this->w, Map::SizeX() - TileX(this->tile));
-	this->h = std::min<int>(this->h, Map::SizeY() - TileY(this->tile));
+	this->h = std::min<int>(this->h, Map::SizeY() - TilePlaneY(this->tile));
 }

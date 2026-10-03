@@ -42,7 +42,7 @@
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 87-89 | `### AD-5 Distances are plane distances`: the `Distance*` functions ignore the layer; same-layer needs are explicit. Group 3 implements it. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 111-113 | `### AD-11 Behaviour-neutral staging`: live games stay at one layer during this plan; three layers are exercised only in unit tests. Every default argument introduced here keeps `layer_count == 1`. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants` I-1 to I-5: the properties the unit tests in Group 6 assert. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`: comment style, naming, file rules, build and test commands. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: comment style, naming, file rules, build and test commands. |
 | [src/map_func.h](../../../../src/map_func.h) | 198-432 | `struct Map` and the free functions `TileXY`, `TileDiffXY`, `TileVirtXY`, `TileX`, `TileY`. This is the code being extended; `TileY`, `TileXY` and `TileVirtXY` keep their formulas (stacked semantics), only documentation and the `Map` statics change. |
 
 ## Outcome and Boundaries
@@ -77,33 +77,33 @@ Entry gate. `src/map_layer_type.h` must export `enum class MapLayer` and `MAX_MA
 ### Group 1 - Map storage and plane geometry
 
 {{MEDIUM}}
-- [ ] 1.1 Add private statics `Map::layer_count` and `Map::plane_size` and a `Map::plane_mask` (`plane_size - 1`), define them in `src/map.cpp` with `///<` comments, and keep `Map::size` as the tile count of all layers.
-- [ ] 1.2 Change `Map::Allocate` to `Allocate(uint size_x, uint size_y, uint layer_count = 1)`: validate `1 <= layer_count <= MAX_MAP_LAYERS` with `FatalError`, set the plane statics, set `size = plane_size * layer_count`, and allocate both tile arrays with `size` elements. Update the Javadoc and the debug log line to include the layer count.
-- [ ] 1.3 Add `Map::PlaneSize()` and `Map::LayerCount()` accessors with Javadoc; update the Javadoc of `Map::Size()`, `Map::SizeY()`, `Map::MaxY()` and `Map::Iterate()` to state whether they are per plane or all layers (AD-3).
-- [ ] 1.4 Add to `src/map_func.h` (including `map_layer_type.h`) the inline primitives `TilePlaneY`, `GetTileLayer` and `TileXYL`, each with Javadoc; `GetTileLayer` uses `tile.base() >> (Map::LogX() + Map::LogY())`.
-- [ ] 1.5 Add `Map::WrapToLayer(TileIndex tile, MapLayer layer)` returning the layer base plus `tile & plane_mask`; reimplement `Map::WrapToMap` as `WrapToLayer(tile, MapLayer::Surface)` and mark it `@deprecated` with a pointer to r2mlm3.
-- [ ] 1.6 Make `RandomTileSeed` use `Map::WrapToLayer(TileIndex{r}, MapLayer::Surface)` and document that `RandomTile()` always yields a surface tile.
-- [ ] 1.7 Make `Map::ScaleByLandProportion` divide by `plane_size`, and make `Map::CountLandTiles` count only the surface plane, with comments explaining that land is a surface concept.
-- [ ] 1.8 Change the debug `TileAdd` asserts to check the stacked Y bound and add `assert(GetTileLayer(result) == GetTileLayer(tile))`, so any offset arithmetic that crosses layers fails loudly in Debug builds (I-2, I-3). Build both configurations.
+- [x] 1.1 Add private statics `Map::layer_count` and `Map::plane_size` and a `Map::plane_mask` (`plane_size - 1`), define them in `src/map.cpp` with `///<` comments, and keep `Map::size` as the tile count of all layers.
+- [x] 1.2 Change `Map::Allocate` to `Allocate(uint size_x, uint size_y, uint layer_count = 1)`: validate `1 <= layer_count <= MAX_MAP_LAYERS` with `FatalError`, set the plane statics, set `size = plane_size * layer_count`, and allocate both tile arrays with `size` elements. Update the Javadoc and the debug log line to include the layer count.
+- [x] 1.3 Add `Map::PlaneSize()` and `Map::LayerCount()` accessors with Javadoc; update the Javadoc of `Map::Size()`, `Map::SizeY()`, `Map::MaxY()` and `Map::Iterate()` to state whether they are per plane or all layers (AD-3).
+- [x] 1.4 Add to `src/map_func.h` (including `map_layer_type.h`) the inline primitives `TilePlaneY`, `GetTileLayer` and `TileXYL`, each with Javadoc; `GetTileLayer` uses `tile.base() >> (Map::LogX() + Map::LogY())`.
+- [x] 1.5 Add `Map::WrapToLayer(TileIndex tile, MapLayer layer)` returning the layer base plus `tile & plane_mask`; reimplement `Map::WrapToMap` as `WrapToLayer(tile, MapLayer::Surface)` and mark it `@deprecated` with a pointer to r2mlm3. The old `tile_mask` member is gone. It was the whole-map bit mask, and a three-layer size is not a power of two, so wrapping uses `plane_mask`. The `@deprecated` mark is the Javadoc tag only, so the three remaining callers do not warn before r2mlm3 moves them.
+- [x] 1.6 Make `RandomTileSeed` use `Map::WrapToLayer(TileIndex{r}, MapLayer::Surface)` and document that `RandomTile()` always yields a surface tile.
+- [x] 1.7 Make `Map::ScaleByLandProportion` divide by `plane_size`, and make `Map::CountLandTiles` count only the surface plane, with comments explaining that land is a surface concept.
+- [ ] 1.8 Change the debug `TileAdd` asserts to check the stacked Y bound and add `assert(GetTileLayer(result) == GetTileLayer(tile))`, so any offset arithmetic that crosses layers fails loudly in Debug builds (I-2, I-3). Build both configurations. The asserts are in the code. The build waits on the toolchain.
 
 ### Group 2 - Plane-correct edge and wrap predicates
 
 {{MEDIUM}}
-- [ ] 2.1 Rewrite `IsInnerTile` to use `TilePlaneY(tile)` and update the Javadoc of `IsInnerTile` and `SetTileType` to say the void fence exists in every layer.
-- [ ] 2.2 Document in `IsValidTile` and `GetTileType` that `Map::Size()` covers all layers; keep the code unchanged.
-- [ ] 2.3 Rewrite `TileAddWrap` to compute in plane coordinates and rebuild the result with `TileXYL(x, y, GetTileLayer(tile))`.
-- [ ] 2.4 Rewrite `AddTileIndexDiffCWrap` the same way, bounding `y` by `Map::SizeY()` in the plane.
-- [ ] 2.5 Make `TileIndexToTileIndexDiffC` assert both tiles share a layer, and make `DiagdirBetweenTiles` return `DiagDirection::Invalid` when the layers differ; comment both.
-- [ ] 2.6 Rewrite `DistanceFromEdge` and `DistanceFromEdgeDir` with `TilePlaneY`.
-- [ ] 2.7 Rewrite `TileVirtXYClampedToMap` to derive the layer from the stacked world Y (clamped to the allocated layers), then clamp X and plane Y inside that layer.
-- [ ] 2.8 Rewrite `GetClosestWaterDistance` to walk plane coordinates and build candidate tiles with `TileXYL` in the origin tile's layer; its no-land fallback iterates only the origin layer.
+- [x] 2.1 Rewrite `IsInnerTile` to use `TilePlaneY(tile)` and update the Javadoc of `IsInnerTile` and `SetTileType` to say the void fence exists in every layer.
+- [x] 2.2 Document in `IsValidTile` and `GetTileType` that `Map::Size()` covers all layers; keep the code unchanged.
+- [x] 2.3 Rewrite `TileAddWrap` to compute in plane coordinates and rebuild the result with `TileXYL(x, y, GetTileLayer(tile))`.
+- [x] 2.4 Rewrite `AddTileIndexDiffCWrap` the same way, bounding `y` by `Map::SizeY()` in the plane.
+- [x] 2.5 Make `TileIndexToTileIndexDiffC` assert both tiles share a layer, and make `DiagdirBetweenTiles` return `DiagDirection::Invalid` when the layers differ; comment both.
+- [x] 2.6 Rewrite `DistanceFromEdge` and `DistanceFromEdgeDir` with `TilePlaneY`.
+- [x] 2.7 Rewrite `TileVirtXYClampedToMap` to derive the layer from the stacked world Y (clamped to the allocated layers), then clamp X and plane Y inside that layer.
+- [x] 2.8 Rewrite `GetClosestWaterDistance` to walk plane coordinates and build candidate tiles with `TileXYL` in the origin tile's layer; its no-land fallback iterates only the origin layer.
 
 ### Group 3 - Plane distances
 
 {{SIMPLE}}
-- [ ] 3.1 Rewrite `DistanceManhattan`, `DistanceSquare`, `DistanceMax` and `DistanceMaxPlusManhattan` to use `TilePlaneY`.
-- [ ] 3.2 Extend each Javadoc with one sentence stating the distance ignores the layer and why (portals are vertical; AD-5).
-- [ ] 3.3 Add the same note to the declarations in `src/map_func.h`.
+- [x] 3.1 Rewrite `DistanceManhattan`, `DistanceSquare`, `DistanceMax` and `DistanceMaxPlusManhattan` to use `TilePlaneY`.
+- [x] 3.2 Extend each Javadoc with one sentence stating the distance ignores the layer and why (portals are vertical; AD-5).
+- [x] 3.3 Add the same note to the declarations in `src/map_func.h`.
 - [ ] 3.4 Build both configurations and run the existing `tilearea` tests.
 
 ### Area Mandatory Reading - Controller and view wiring
@@ -120,19 +120,19 @@ _Applies to Groups 4-5._
 ### Group 4 - MultiLayerMap controller core
 
 {{MEDIUM}}
-- [ ] 4.1 Create `src/map_layer.h` with a Javadoc block on `struct MultiLayerMap` that tells the AD-3 story: `Map` owns storage, `MultiLayerMap` owns layer meaning, and gameplay never adds `Map::PlaneSize()` by hand.
-- [ ] 4.2 Implement `GetLayerCount()` (forwards `Map::LayerCount()`), `IsValidLayer(MapLayer)` and `GetLayerBase(MapLayer)` with asserts on invalid layers.
-- [ ] 4.3 Implement `IsTileInLayer(TileIndex, MapLayer)`, `TileInLayer(TileIndex, MapLayer)` (same plane x and y in the target layer) and `ProjectToSurface(TileIndex)`.
-- [ ] 4.4 Implement `IterateLayer(MapLayer)` returning an iterable over exactly one plane, reusing the `Map::Iterator` shape.
-- [ ] 4.5 Implement `RandomTileInLayer(MapLayer layer, uint32_t r)` on top of `Map::WrapToLayer`, documenting that callers pass `Random()` so RNG traces stay at the call site.
-- [ ] 4.6 Create `src/map_layer.cpp` for any non-inline member (at least the layer-count validation helper) and register both files in `src/CMakeLists.txt`.
+- [x] 4.1 Create `src/map_layer.h` with a Javadoc block on `struct MultiLayerMap` that tells the AD-3 story: `Map` owns storage, `MultiLayerMap` owns layer meaning, and gameplay never adds `Map::PlaneSize()` by hand.
+- [x] 4.2 Implement `GetLayerCount()` (forwards `Map::LayerCount()`), `IsValidLayer(MapLayer)` and `GetLayerBase(MapLayer)` with asserts on invalid layers.
+- [x] 4.3 Implement `IsTileInLayer(TileIndex, MapLayer)`, `TileInLayer(TileIndex, MapLayer)` (same plane x and y in the target layer) and `ProjectToSurface(TileIndex)`.
+- [x] 4.4 Implement `IterateLayer(MapLayer)` returning an iterable over exactly one plane, reusing the `Map::Iterator` shape.
+- [x] 4.5 Implement `RandomTileInLayer(MapLayer layer, uint32_t r)` on top of `Map::WrapToLayer`, documenting that callers pass `Random()` so RNG traces stay at the call site.
+- [x] 4.6 Create `src/map_layer.cpp` for any non-inline member (at least the layer-count validation helper) and register both files in `src/CMakeLists.txt`.
 
 ### Group 5 - View cycling bound to the controller
 
 {{SIMPLE}}
-- [ ] 5.1 Change `CycleMainViewportLayer` to wrap at `MultiLayerMap::GetLayerCount()` and update its comment (AD-7).
-- [ ] 5.2 Make `SetViewportLayer` assert `MultiLayerMap::IsValidLayer(layer)` and fall back to `MapLayer::Surface` in release builds.
-- [ ] 5.3 Disable `WID_TN_MAP_LAYER` and `WID_TE_MAP_LAYER` when `MultiLayerMap::GetLayerCount() == 1`, refreshed in the same `OnInvalidateData` that updates the icon, and add a disabled-state tooltip string `STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE :{BLACK}This game has only one map layer`.
+- [x] 5.1 Change `CycleMainViewportLayer` to wrap at `MultiLayerMap::GetLayerCount()` and update its comment (AD-7).
+- [x] 5.2 Make `SetViewportLayer` assert `MultiLayerMap::IsValidLayer(layer)` and fall back to `MapLayer::Surface` in release builds.
+- [x] 5.3 Disable `WID_TN_MAP_LAYER` and `WID_TE_MAP_LAYER` when `MultiLayerMap::GetLayerCount() == 1`, refreshed in the same `OnInvalidateData` that updates the icon, and add a disabled-state tooltip string `STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE :{BLACK}This game has only one map layer`.
 - [ ] 5.4 Build and confirm the button shows as disabled in a normal game (one layer, AD-11).
 
 ### Area Mandatory Reading - Tests and neutrality
@@ -149,13 +149,13 @@ _Applies to Groups 6-7._
 ### Group 6 - Unit tests
 
 {{SIMPLE}}
-- [ ] 6.1 Create `src/tests/map_layer.cpp` and register it; each `TEST_CASE` gets a one-line comment stating the invariant it guards.
-- [ ] 6.2 Test that `Map::Allocate(64, 64, 3)` yields `Size() == 3 * PlaneSize()` and `LayerCount() == 3`, and that `Map::Allocate(64, 64)` keeps `Size() == PlaneSize()`.
-- [ ] 6.3 Test I-1 by round-tripping `TileXYL(x, y, layer)` through `TileX`, `TilePlaneY`, `GetTileLayer` for corners and centres of all three layers, and check `TileY` is stacked.
-- [ ] 6.4 Test the per-layer void fence with `freeform_edges` off and on: `IsInnerTile` is false exactly on each plane's edge rows and columns.
-- [ ] 6.5 Test I-2: for every inner tile of a 64x64x3 map and every `DiagDirection` and `Direction`, the one-step neighbour has the same `GetTileLayer`.
-- [ ] 6.6 Test that the four distance functions return 0 for `TileInLayer(t, other)` and plane values otherwise, and that `DiagdirBetweenTiles` across layers is `DiagDirection::Invalid`.
-- [ ] 6.7 Test that `IterateLayer` yields exactly `PlaneSize()` tiles all in that layer, and that `RandomTileInLayer` and `RandomTileSeed` stay in their layer for 10 000 seeds.
+- [x] 6.1 Create `src/tests/map_layer.cpp` and register it; each `TEST_CASE` gets a one-line comment stating the invariant it guards.
+- [x] 6.2 Test that `Map::Allocate(64, 64, 3)` yields `Size() == 3 * PlaneSize()` and `LayerCount() == 3`, and that `Map::Allocate(64, 64)` keeps `Size() == PlaneSize()`.
+- [x] 6.3 Test I-1 by round-tripping `TileXYL(x, y, layer)` through `TileX`, `TilePlaneY`, `GetTileLayer` for corners and centres of all three layers, and check `TileY` is stacked.
+- [x] 6.4 Test the per-layer void fence with `freeform_edges` off and on: `IsInnerTile` is false exactly on each plane's edge rows and columns.
+- [x] 6.5 Test I-2: for every inner tile of a 64x64x3 map and every `DiagDirection` and `Direction`, the one-step neighbour has the same `GetTileLayer`. A step that leaves the plane is the original off-map step from the north or west border, and Debug `TileAdd` already rejects it, so the test takes every step that stays on the plane. With freeform edges on, that is every direction from every inner tile.
+- [x] 6.6 Test that the four distance functions return 0 for `TileInLayer(t, other)` and plane values otherwise, and that `DiagdirBetweenTiles` across layers is `DiagDirection::Invalid`.
+- [x] 6.7 Test that `IterateLayer` yields exactly `PlaneSize()` tiles all in that layer, and that `RandomTileInLayer` and `RandomTileSeed` stay in their layer for 10 000 seeds.
 
 ### Group 7 - Behaviour neutrality
 

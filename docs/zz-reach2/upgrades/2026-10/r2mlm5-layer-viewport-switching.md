@@ -40,7 +40,7 @@
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 66-75 | `### AD-2 Stacked-plane addressing`: world coordinates are stacked, so a layer is a band of the world Y axis and a viewport shows a layer by looking at that band. Every drawing and picking change in this plan follows from it. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 95-97 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state; nothing in this plan may be read by commands or ticks (I-4). |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | 15-58 | `## Tile to screen` and `## What one draw collects`: `RemapCoords`, the row/column scan in `ViewportAddLandscape`, and the order landscape, vehicles, signs, text effects, sort, draw. The band test, the filters and the layer passed through `_vd` all hang off this pipeline. |
 | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | 147-153 | `## Invariants`: a viewport reads the map and emits sprites, and never mutates tiles, vehicles or companies. Holds for every task here. |
 | [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | Live definitions; no fixed range | Produced by r2mlm1 Group 2 and bound to the controller by r2mlm2 Group 5. `SetViewportLayer` and `CycleMainViewportLayer` are the only entry points for switching; Group 1 replaces the interim body of `SetViewportLayer`. |
@@ -79,11 +79,11 @@ Entry gate. Live games must allocate three layers (`InitializeGame` passes `MAX_
 ### Group 1 - Switching core
 
 {{MEDIUM}}
-- [ ] 1.1 Add `MapLayer GetLayerOfWorldY(int y)` to `src/map_layer_gui.cpp` (clamped to the allocated layers) with Javadoc.
-- [ ] 1.2 Replace the interim body of `SetViewportLayer`: translate `scrollpos_*` and `dest_scrollpos_*` by `RemapCoords(0, (new - old) * Map::SizeY() * TILE_SIZE, 0)`, cancel `follow_vehicle` when the vehicle is in another layer, set `layer`, mark the window dirty, invalidate the toolbar.
-- [ ] 1.3 In `InitializeWindowViewport`, take the layer from `GetTileLayer(tile)` for a tile focus and from the vehicle's tile for a vehicle focus; keep the r2mlm1 copy of the main layer for `INVALID_TILE`.
-- [ ] 1.4 In the follow-vehicle branch of `UpdateViewportPosition`, update `vp.layer` from the followed vehicle's tile and invalidate the toolbar when the window is the main window.
-- [ ] 1.5 In `ScrollWindowTo`, set the viewport layer from `GetLayerOfWorldY(y)` before computing the destination, without the band translation.
+- [x] 1.1 Add `MapLayer GetLayerOfWorldY(int y)` to `src/map_layer_gui.cpp` (clamped to the allocated layers) with Javadoc.
+- [x] 1.2 Replace the interim body of `SetViewportLayer`: translate `scrollpos_*` and `dest_scrollpos_*` by `RemapCoords(0, (new - old) * Map::SizeY() * TILE_SIZE, 0)`, cancel `follow_vehicle` when the vehicle is in another layer, set `layer`, mark the window dirty, invalidate the toolbar.
+- [x] 1.3 In `InitializeWindowViewport`, take the layer from `GetTileLayer(tile)` for a tile focus and from the vehicle's tile for a vehicle focus; keep the r2mlm1 copy of the main layer for `INVALID_TILE`.
+- [x] 1.4 In the follow-vehicle branch of `UpdateViewportPosition`, update `vp.layer` from the followed vehicle's tile and invalidate the toolbar when the window is the main window.
+- [x] 1.5 In `ScrollWindowTo`, set the viewport layer from `GetLayerOfWorldY(y)` before computing the destination, without the band translation.
 - [ ] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band).
 
 ### Area Mandatory Reading - Band drawing
@@ -104,12 +104,12 @@ _Applies to Group 2._
 ### Group 2 - Band drawing
 
 {{HARD}}
-- [ ] 2.1 Add `MapLayer layer` to `ViewportDrawer` and set it from `vp.layer` at the top of `ViewportDoDraw`.
-- [ ] 2.2 Give `TileHeightOutsideMap` and `TilePixelHeightOutsideMap` a `MapLayer layer` parameter (default `MapLayer::Surface`) that clamps Y into that layer's band; update their Javadoc.
-- [ ] 2.3 Give `GetTilePixelSlopeOutsideMap` and `GetSlopePixelZOutsideMap` the same parameter and pass it through.
-- [ ] 2.4 In `GetViewportY` and `ViewportAddLandscape`, treat a tile as inside the map only when its stacked Y lies in `_vd.layer`'s band; pass `_vd.layer` to every outside-map helper; port the existing comments.
-- [ ] 2.5 Keep the bridge visibility logic working for surface viewports and skip it for other layers (no bridges off the surface, AD-12), with a comment.
-- [ ] 2.6 Make `DrawTile_Void` draw the black bare-land fence for every non-surface layer regardless of `freeform_edges`.
+- [x] 2.1 Add `MapLayer layer` to `ViewportDrawer` and set it from `vp.layer` at the top of `ViewportDoDraw`.
+- [x] 2.2 Give `TileHeightOutsideMap` and `TilePixelHeightOutsideMap` a `MapLayer layer` parameter (default `MapLayer::Surface`) that clamps Y into that layer's band; update their Javadoc.
+- [x] 2.3 Give `GetTilePixelSlopeOutsideMap` and `GetSlopePixelZOutsideMap` the same parameter and pass it through.
+- [x] 2.4 In `GetViewportY` and `ViewportAddLandscape`, treat a tile as inside the map only when its stacked Y lies in `_vd.layer`'s band; pass `_vd.layer` to every outside-map helper; port the existing comments.
+- [x] 2.5 Keep the bridge visibility logic working for surface viewports and skip it for other layers (no bridges off the surface, AD-12), with a comment.
+- [x] 2.6 Make `DrawTile_Void` draw the black bare-land fence for every non-surface layer regardless of `freeform_edges`.
 - [ ] 2.7 Build, start a game, switch to Underground and Space, scroll to every map edge and confirm only the layer's own band is drawn with a black surround.
 
 ### Area Mandatory Reading - Clamping and picking
@@ -129,13 +129,13 @@ _Applies to Group 3._
 ### Group 3 - Clamping and picking
 
 {{MEDIUM}}
-- [ ] 3.1 Add a `MapLayer layer` parameter (default `MapLayer::Surface`) to `InverseRemapCoords2` and clamp into that band; update the Javadoc and every caller that has a viewport at hand.
-- [ ] 3.2 Pass `vp.layer` from `TranslateXYToTileCoord` and `ClampViewportToMap`.
-- [ ] 3.3 Convert the bounds in `SetSelectionTilesDirty` to the band of the main viewport's layer (the selection lives in the viewport that owns `_thd`).
-- [ ] 3.4 Convert the `CheckOverflow` bounds and asserts in `CalcRaildirsDrawstyle` to band bounds.
-- [ ] 3.5 Convert `GetViewportStationMiddle` and the bounds test in `ScrollWindowTo` to band or stacked bounds as appropriate.
-- [ ] 3.6 Convert both edge fix-ups in `src/terraform_gui.cpp` to `TilePlaneY`.
-- [ ] 3.7 Mark every C7 row of the r2mlm3 ledger in `viewport.cpp` and `terraform_gui.cpp` as `migrated`.
+- [x] 3.1 Add a `MapLayer layer` parameter (default `MapLayer::Surface`) to `InverseRemapCoords2` and clamp into that band; update the Javadoc and every caller that has a viewport at hand.
+- [x] 3.2 Pass `vp.layer` from `TranslateXYToTileCoord` and `ClampViewportToMap`.
+- [x] 3.3 Convert the bounds in `SetSelectionTilesDirty` to the band of the main viewport's layer (the selection lives in the viewport that owns `_thd`).
+- [x] 3.4 Convert the `CheckOverflow` bounds and asserts in `CalcRaildirsDrawstyle` to band bounds.
+- [x] 3.5 Convert `GetViewportStationMiddle` and the bounds test in `ScrollWindowTo` to band or stacked bounds as appropriate.
+- [x] 3.6 Convert both edge fix-ups in `src/terraform_gui.cpp` to `TilePlaneY`.
+- [x] 3.7 Mark every C7 row of the r2mlm3 ledger in `viewport.cpp` and `terraform_gui.cpp` as `migrated`.
 
 ### Area Mandatory Reading - Filtering other layers
 
@@ -151,14 +151,16 @@ _Applies to Group 4._
 | [src/texteff.cpp](../../../../src/texteff.cpp) | 22-64 | `struct TextEffect` and `AddTextEffect`: floating text has only screen coordinates, so it needs a stored layer to be filtered. |
 | [src/texteff.cpp](../../../../src/texteff.cpp) | 116-135 | `DrawTextEffects`: where the filter is applied. |
 
+Context has compacted 1 times while executing this group.
+
 ### Group 4 - Filtering other layers
 
 {{MEDIUM}}
-- [ ] 4.1 In `ViewportAddVehicles`, skip vehicles whose layer (from `v->tile`, or `TileVirtXY` of the position for effect and disaster vehicles) differs from `_vd.layer`.
-- [ ] 4.2 In `CheckClickOnVehicle`, skip vehicles of other layers than `vp.layer`.
-- [ ] 4.3 In `ViewportAddKdtreeSigns` and `CheckClickOnViewportSign`, derive each label's tile (station `xy`, town `xy`, sign position) and skip other layers.
-- [ ] 4.4 Store a `MapLayer` in `TextEffect`, set it in `AddTextEffect` from a new parameter defaulting to the main viewport layer, pass the tile's layer from the cost-animation callers, and filter in `DrawTextEffects`.
-- [ ] 4.5 Filter the link-graph overlay so links are drawn only when both stations are in the viewport's layer.
+- [x] 4.1 In `ViewportAddVehicles`, skip vehicles whose layer (from `v->tile`, or `TileVirtXY` of the position for effect and disaster vehicles) differs from `_vd.layer`.
+- [x] 4.2 In `CheckClickOnVehicle`, skip vehicles of other layers than `vp.layer`.
+- [x] 4.3 In `ViewportAddKdtreeSigns` and `CheckClickOnViewportSign`, derive each label's tile (station `xy`, town `xy`, sign position) and skip other layers.
+- [x] 4.4 Store a `MapLayer` in `TextEffect`, set it in `AddTextEffect` from a new parameter defaulting to the main viewport layer, pass the tile's layer from the cost-animation callers, and filter in `DrawTextEffects`.
+- [x] 4.5 Filter the link-graph overlay so links are drawn only when both stations are in the viewport's layer.
 - [ ] 4.6 Build and confirm in a game with a sign placed underground that it shows only in the Underground view and cannot be clicked from the surface.
 
 ### Area Mandatory Reading - Layer ground
@@ -174,11 +176,11 @@ _Applies to Group 5._
 ### Group 5 - Layer ground
 
 {{MEDIUM}}
-- [ ] 5.1 In `DrawTile_Clear`, branch on `MultiLayerMap::GetRules(ti->tile).ground` before the `ClearGround` switch: Bedrock and Vacuum draw their flat sprite and return; Natural keeps today's code unchanged.
-- [ ] 5.2 Add `static SpriteID GetLayerGroundSprite(MapLayerGround ground)` in `src/clear_cmd.cpp` returning the stand-ins, with a comment naming the r2mlm6 constants that replace them.
-- [ ] 5.3 If `SPR_MAP_LAYER_UNDERGROUND_FLOOR` exists (grep `src/table/sprites.h`), use it with a `TileHash`-based variant pick; otherwise keep the stand-in and leave the task for r2mlm6 task 7.2.
+- [x] 5.1 In `DrawTile_Clear`, branch on `MultiLayerMap::GetRules(ti->tile).ground` before the `ClearGround` switch: Bedrock and Vacuum draw their flat sprite and return; Natural keeps today's code unchanged.
+- [x] 5.2 Add `static SpriteID GetLayerGroundSprite(MapLayerGround ground)` in `src/clear_cmd.cpp` returning the stand-ins, with a comment naming the r2mlm6 constants that replace them.
+- [x] 5.3 If `SPR_MAP_LAYER_UNDERGROUND_FLOOR` exists (grep `src/table/sprites.h`), use it with a `TileHash`-based variant pick; otherwise keep the stand-in and leave the task for r2mlm6 task 7.2.
 - [ ] 5.4 Confirm visually that underground rail and road tiles draw on bare ground (forced by r2mlm4 task 3.3) and that no snow or desert appears off the surface in arctic and tropic games.
-- [ ] 5.5 Confirm Space draws as uniform black vacuum, distinct from the off-map fence by a one-pixel grid line or not at all; record the choice.
+- [ ] 5.5 Confirm Space draws as uniform black vacuum, distinct from the off-map fence by a one-pixel grid line or not at all; record the choice. The code choice is the same black as the off-map fence (`SPR_FLAT_BARE_LAND` with `PALETTE_ALL_BLACK`) and no extra grid. Seeing it still waits on a build.
 
 ### Area Mandatory Reading - Smallmap per layer
 
@@ -197,13 +199,13 @@ _Applies to Group 6._
 ### Group 6 - Smallmap per layer
 
 {{MEDIUM}}
-- [ ] 6.1 Add `MapLayer layer` to `SmallMapWindow`, initialised from the main viewport's layer, and include the layer name in the caption.
-- [ ] 6.2 Add `WID_SM_MAP_LAYER` (push image button using `GetMapLayerIcon`) next to `WID_SM_CENTERMAP`, cycling `this->layer` with `GetNextMapLayer` and forcing a refresh.
-- [ ] 6.3 Make `DrawSmallMapColumn`, `GetTileColours` and `SetNewScroll` work in plane coordinates and build tiles with `TileXYL(x, y, this->layer)`.
-- [ ] 6.4 Filter `DrawVehicles` by layer; draw towns and industry names only for the surface.
-- [ ] 6.5 Draw the main viewport rectangle in `DrawMapIndicators` only when the main viewport shows `this->layer`.
-- [ ] 6.6 Make map clicks and `SmallMapCenterOnCurrentPos` switch the main viewport to `this->layer` (via `SetViewportLayer`) and scroll with the stacked world Y.
-- [ ] 6.7 Mark the `smallmap_gui.cpp` C7 ledger rows `migrated`.
+- [x] 6.1 Add `MapLayer layer` to `SmallMapWindow`, initialised from the main viewport's layer, and include the layer name in the caption.
+- [x] 6.2 Add `WID_SM_MAP_LAYER` (push image button using `GetMapLayerIcon`) next to `WID_SM_CENTERMAP`, cycling `this->layer` with `GetNextMapLayer` and forcing a refresh.
+- [x] 6.3 Make `DrawSmallMapColumn`, `GetTileColours` and `SetNewScroll` work in plane coordinates and build tiles with `TileXYL(x, y, this->layer)`.
+- [x] 6.4 Filter `DrawVehicles` by layer; draw towns and industry names only for the surface.
+- [x] 6.5 Draw the main viewport rectangle in `DrawMapIndicators` only when the main viewport shows `this->layer`.
+- [x] 6.6 Make map clicks and `SmallMapCenterOnCurrentPos` switch the main viewport to `this->layer` (via `SetViewportLayer`) and scroll with the stacked world Y.
+- [x] 6.7 Mark the `smallmap_gui.cpp` C7 ledger rows `migrated`.
 
 ### Area Mandatory Reading - Extra viewports, land info and screenshots
 
@@ -220,11 +222,11 @@ _Applies to Group 7._
 
 {{SIMPLE}}
 - [ ] 7.1 Confirm extra viewports opened from the map menu, the hotkey and vehicle windows start in the right layer.
-- [ ] 7.2 Add `WID_EV_MAP_LAYER` to the extra viewport window, cycling its own layer with `SetViewportLayer`.
-- [ ] 7.3 Add a `STR_LAND_AREA_INFORMATION_MAP_LAYER :{BLACK}Layer: {LTBLUE}{STRING}` line to `LandInfoWindow`.
-- [ ] 7.4 Make the world screenshot cover the main viewport's band and set the screenshot viewport's `layer`.
-- [ ] 7.5 Make the heightmap and minimap screenshots iterate the surface plane only.
-- [ ] 7.6 Mark the `screenshot.cpp` C7 ledger rows `migrated`.
+- [x] 7.2 Add `WID_EV_MAP_LAYER` to the extra viewport window, cycling its own layer with `SetViewportLayer`.
+- [x] 7.3 Add a `STR_LAND_AREA_INFORMATION_MAP_LAYER :{BLACK}Layer: {LTBLUE}{STRING}` line to `LandInfoWindow`.
+- [x] 7.4 Make the world screenshot cover the main viewport's band and set the screenshot viewport's `layer`.
+- [x] 7.5 Make the heightmap and minimap screenshots iterate the surface plane only.
+- [x] 7.6 Mark the `screenshot.cpp` C7 ledger rows `migrated`.
 
 ### Area Mandatory Reading - Button finish and verification
 
@@ -239,7 +241,7 @@ _Applies to Group 8._
 ### Group 8 - Button finish and verification
 
 {{SIMPLE}}
-- [ ] 8.1 Use `SPR_IMG_MAP_LAYER_SURFACE`, `SPR_IMG_MAP_LAYER_UNDERGROUND` and `SPR_IMG_MAP_LAYER_SPACE` in `GetMapLayerIcon` if they exist in `src/table/sprites.h`; otherwise keep the stand-ins.
+- [x] 8.1 Use `SPR_IMG_MAP_LAYER_SURFACE`, `SPR_IMG_MAP_LAYER_UNDERGROUND` and `SPR_IMG_MAP_LAYER_SPACE` in `GetMapLayerIcon` if they exist in `src/table/sprites.h`; otherwise keep the stand-ins.
 - [ ] 8.2 Build both configurations without new warnings; run `ctest`.
 - [ ] 8.3 Cycle the layer in a new game: each layer draws only itself, the plane position is kept, and the icon and tooltip follow.
 - [ ] 8.4 In the Underground view, build road, rail, a bus stop, a rail station and a depot; confirm they appear only underground. Try every forbidden command from the r2mlm4 task 4.8 matrix in Underground and Space and confirm the layer error.

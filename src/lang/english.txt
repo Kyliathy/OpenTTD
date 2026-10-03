@@ -382,12 +382,13 @@ STR_GOTO_ORDER_VIEW                                             :{BLACK}Orders
 STR_GOTO_ORDER_VIEW_TOOLTIP                                     :{BLACK}Open the order view
 
 # Tooltips for the main toolbar
-###length 31
+###length 32
 STR_TOOLBAR_TOOLTIP_PAUSE_GAME                                  :{BLACK}Pause game
 STR_TOOLBAR_TOOLTIP_FORWARD                                     :{BLACK}Fast forward the game
 STR_TOOLBAR_TOOLTIP_OPTIONS                                     :{BLACK}Options and settings
 STR_TOOLBAR_TOOLTIP_SAVE_GAME_ABANDON_GAME                      :{BLACK}Save, load or abandon game, exit program
 STR_TOOLBAR_TOOLTIP_DISPLAY_MAP                                 :{BLACK}Open map, extra viewport, cargo flow or list of signs
+STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Switch the main view between the surface, underground and space maps
 STR_TOOLBAR_TOOLTIP_DISPLAY_TOWN_DIRECTORY                      :{BLACK}Open town directory or found town
 STR_TOOLBAR_TOOLTIP_DISPLAY_SUBSIDIES                           :{BLACK}Open subsidy list
 STR_TOOLBAR_TOOLTIP_DISPLAY_LIST_OF_COMPANY_STATIONS            :{BLACK}Open list of company's stations
@@ -414,6 +415,8 @@ STR_TOOLBAR_TOOLTIP_SHOW_SOUND_MUSIC_WINDOW                     :{BLACK}Open sou
 STR_TOOLBAR_TOOLTIP_SHOW_LAST_MESSAGE_NEWS                      :{BLACK}Open last message/news report, messages history or delete all messages
 STR_TOOLBAR_TOOLTIP_LAND_BLOCK_INFORMATION                      :{BLACK}Open land information, screenshot menu, OpenTTD credits, or developer tools
 STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR                              :{BLACK}Switch toolbars
+STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Switch the main view between the surface, underground and space maps. Now showing: {STRING}
+STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE                            :{BLACK}This game has only one map layer
 
 # Extra tooltips for the scenario editor toolbar
 STR_SCENEDIT_TOOLBAR_SAVE_SCENARIO_LOAD_SCENARIO_TOOLTIP        :{BLACK}Save scenario, load scenario, abandon scenario editor, exit
@@ -423,6 +426,7 @@ STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_BACKWARD_TOOLTIP    :{BLACK}Move the
 STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_FORWARD_TOOLTIP     :{BLACK}Move the starting date forward 1 year
 STR_SCENEDIT_TOOLBAR_SET_DATE_TOOLTIP                           :{BLACK}Click to enter the starting year
 STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP         :{BLACK}Open map, extra viewport, sign list, or town or industry directory
+STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Switch the main view between the surface, underground and space maps
 STR_SCENEDIT_TOOLBAR_LANDSCAPE_GENERATION_TOOLTIP               :{BLACK}Open landscaping menu or generate a new world
 STR_SCENEDIT_TOOLBAR_TOWN_GENERATION_TOOLTIP                    :{BLACK}Build or generate towns
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP                :{BLACK}Build or generate industries
@@ -479,6 +483,11 @@ STR_MAP_MENU_MAP_OF_WORLD                                       :Map of world
 STR_MAP_MENU_EXTRA_VIEWPORT                                     :Extra viewport
 STR_MAP_MENU_LINGRAPH_LEGEND                                    :Cargo flow legend
 STR_MAP_MENU_SIGN_LIST                                          :Sign list
+
+# Map layers
+STR_MAP_LAYER_SURFACE                                           :Surface
+STR_MAP_LAYER_UNDERGROUND                                       :Underground
+STR_MAP_LAYER_SPACE                                             :Space
 
 # Town menu
 STR_TOWN_MENU_TOWN_DIRECTORY                                    :Town directory
@@ -1413,6 +1422,10 @@ STR_CONFIG_SETTING_PERCENTAGE                                   :{COMMA}%
 STR_CONFIG_SETTING_ROAD_VEHICLE_SLOPE_STEEPNESS                 :Slope steepness for road vehicles: {STRING2}
 STR_CONFIG_SETTING_ROAD_VEHICLE_SLOPE_STEEPNESS_HELPTEXT        :Steepness of a sloped tile for a road vehicle. Higher values make it more difficult to climb a hill
 
+STR_CONFIG_SETTING_YAPF_RAIL_LAYER_PORTAL_PENALTY               :Rail layer portal penalty: {STRING2}
+STR_CONFIG_SETTING_YAPF_RAIL_LAYER_PORTAL_PENALTY_HELPTEXT      :Extra pathfinding cost for a train that passes through a layer portal
+STR_CONFIG_SETTING_YAPF_ROAD_LAYER_PORTAL_PENALTY               :Road layer portal penalty: {STRING2}
+STR_CONFIG_SETTING_YAPF_ROAD_LAYER_PORTAL_PENALTY_HELPTEXT      :Extra pathfinding cost for a road vehicle that passes through a layer portal
 STR_CONFIG_SETTING_FORBID_90_DEG                                :Forbid trains from making 90° turns: {STRING2}
 STR_CONFIG_SETTING_FORBID_90_DEG_HELPTEXT                       :90 degree turns occur when a horizontal track is directly followed by a vertical track piece on the adjacent tile, thus making the train turn by 90 degree when traversing the tile edge instead of the usual 45 degrees for other track combinations
 
@@ -2843,6 +2856,9 @@ STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_STATION                 :{BLACK}Build ra
 STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_SIGNALS                 :{BLACK}Build signal on railway. Ctrl+Click to build the alternate signal style{}Click+Drag to fill the selected section of rail with signals at the chosen spacing. Ctrl+Click+Drag to fill signals up to the next junction, station, or signal. Also press Shift to show cost estimate only
 STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_BRIDGE                  :{BLACK}Build railway bridge. Also press Shift to show cost estimate only
 STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_TUNNEL                  :{BLACK}Build railway tunnel. Also press Shift to show cost estimate only
+STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL                      :{BLACK}Build a rail portal to the other map layer
+STR_BUILD_RAIL_LAYER_PORTAL_CAPTION                              :Rail portal orientation
+STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP                              :{BLACK}Select the mouth direction. The mouth on the other layer faces the opposite way
 STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR                :{BLACK}Toggle build/remove for railway track, signals, waypoints and stations. Ctrl+Click to also remove the rail of waypoints and stations
 STR_RAIL_TOOLBAR_TOOLTIP_CONVERT_RAIL                           :{BLACK}Convert/Upgrade the type of rail. Also press Shift to show cost estimate only
 
@@ -2999,6 +3015,9 @@ STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_ONE_WAY_ROAD                    :{BLACK}Activate
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE                      :{BLACK}Build road bridge. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_TRAMWAY_BRIDGE                   :{BLACK}Build tramway bridge. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL                      :{BLACK}Build road tunnel. Also press Shift to show cost estimate only
+STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR                    :{BLACK}Build a road elevator to the other map layer
+STR_BUILD_ROAD_ELEVATOR_CAPTION                                  :Road elevator orientation
+STR_BUILD_ROAD_ELEVATOR_SELECT_TOOLTIP                           :{BLACK}Select the door direction. The door on the other layer faces the opposite way
 STR_ROAD_TOOLBAR_TOOLTIP_BUILD_TRAMWAY_TUNNEL                   :{BLACK}Build tramway tunnel. Also press Shift to show cost estimate only
 STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR_ROAD           :{BLACK}Toggle build/remove for road construction
 STR_ROAD_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR_TRAMWAYS       :{BLACK}Toggle build/remove for tramway construction
@@ -3205,6 +3224,7 @@ STR_LAND_AREA_INFORMATION_RAIL_OWNER                            :{BLACK}Railway 
 STR_LAND_AREA_INFORMATION_LOCAL_AUTHORITY                       :{BLACK}Local authority: {LTBLUE}{STRING1}
 STR_LAND_AREA_INFORMATION_LOCAL_AUTHORITY_NONE                  :None
 STR_LAND_AREA_INFORMATION_LANDINFO_COORDS                       :{BLACK}Coordinates: {LTBLUE}{NUM} x {NUM} x {NUM}
+STR_LAND_AREA_INFORMATION_MAP_LAYER                             :{BLACK}Layer: {LTBLUE}{STRING}
 STR_LAND_AREA_INFORMATION_LANDINFO_INDEX                        :{BLACK}Tile index: {LTBLUE}{NUM} ({HEX})
 STR_LAND_AREA_INFORMATION_BUILD_DATE                            :{BLACK}Built/renovated: {LTBLUE}{DATE_LONG}
 STR_LAND_AREA_INFORMATION_STATION_CLASS                         :{BLACK}Station class: {LTBLUE}{STRING}
@@ -3295,6 +3315,8 @@ STR_LAI_WATER_DESCRIPTION_COAST_ROCKS                           :Coast or riverb
 
 STR_LAI_TUNNEL_DESCRIPTION_RAILROAD                             :Railway tunnel
 STR_LAI_TUNNEL_DESCRIPTION_ROAD                                 :Road tunnel
+STR_LAI_LAYER_PORTAL_RAIL                                       :Railway layer portal to the {STRING}
+STR_LAI_LAYER_PORTAL_ROAD                                       :Road layer portal to the {STRING}
 
 STR_LAI_BRIDGE_DESCRIPTION_RAIL_SUSPENSION_STEEL                :Steel suspension rail bridge
 STR_LAI_BRIDGE_DESCRIPTION_RAIL_GIRDER_STEEL                    :Steel girder rail bridge
@@ -5123,6 +5145,7 @@ STR_ERROR_MESSAGE_CAPTION_OTHER_COMPANY                         :{YELLOW}Message
 # Generic construction errors
 STR_ERROR_OFF_EDGE_OF_MAP                                       :off edge of map
 STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP                              :too close to edge of map
+STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER                              :{WHITE}... not possible in the {STRING} layer
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
 STR_ERROR_FLAT_LAND_REQUIRED                                    :flat land required
 STR_ERROR_LAND_SLOPED_IN_WRONG_DIRECTION                        :land sloped in wrong direction
@@ -5388,6 +5411,9 @@ STR_ERROR_BRIDGE_TOO_LOW_FOR_OBJECT                             :bridge is {HEIG
 STR_ERROR_CAN_T_BUILD_TUNNEL_HERE                               :Can't build tunnel here...
 STR_ERROR_SITE_UNSUITABLE_FOR_TUNNEL                            :site unsuitable for tunnel entrance
 STR_ERROR_MUST_DEMOLISH_TUNNEL_FIRST                            :must demolish tunnel first
+STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST                        :must remove layer portal first
+STR_ERROR_CAN_T_BUILD_LAYER_PORTAL                              :Can't build layer portal here...
+STR_ERROR_LAYER_PORTAL_NEEDS_FLAT_LAND                          :{WHITE}...land must be flat
 STR_ERROR_ANOTHER_TUNNEL_IN_THE_WAY                             :another tunnel in the way
 STR_ERROR_TUNNEL_THROUGH_MAP_BORDER                             :tunnel would end out of the map
 STR_ERROR_UNABLE_TO_EXCAVATE_LAND                               :unable to excavate land for other end of tunnel

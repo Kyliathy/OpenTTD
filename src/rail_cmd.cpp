@@ -12,6 +12,7 @@
 #include "tilearea_type.h"
 #include "viewport_func.h"
 #include "command_func.h"
+#include "map_layer.h"
 #include "depot_base.h"
 #include "pathfinder/yapf/yapf_cache.h"
 #include "newgrf_debug.h"
@@ -20,6 +21,7 @@
 #include "autoslope.h"
 #include "water.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "vehicle_func.h"
 #include "tunnelbridge.h"
 #include "elrail_func.h"
@@ -428,10 +430,17 @@ CommandCost CmdBuildSingleRail(DoCommandFlags flags, TileIndex tile, RailType ra
 
 	if (!ValParamRailType(railtype) || !ValParamTrackOrientation(track)) return CMD_ERROR;
 
+	//This layer may refuse track before any cost is counted.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Rail); layer_cost.Failed()) return layer_cost;
+
 	Slope tileh = GetTileSlope(tile);
 	TrackBits trackbit = track;
 
 	switch (GetTileType(tile)) {
+		case TileType::LayerPortal:
+			//Track is not laid on the portal. The neighbour's axis track connects to the mouth.
+			return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
+
 		case TileType::Railway: {
 			CommandCost ret = CheckTileOwnership(tile);
 			if (ret.Failed()) return ret;
@@ -627,6 +636,10 @@ CommandCost CmdRemoveSingleRail(DoCommandFlags flags, TileIndex tile, Track trac
 	Train *v = nullptr;
 
 	switch (GetTileType(tile)) {
+		case TileType::LayerPortal:
+			//A portal is removed with the demolish tool, not the rail remover.
+			return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
+
 		case TileType::Road: {
 			if (!IsLevelCrossing(tile) || GetCrossingRailTrack(tile) != track) return CommandCost(STR_ERROR_THERE_IS_NO_RAILROAD_TRACK);
 
@@ -972,6 +985,9 @@ CommandCost CmdBuildTrainDepot(DoCommandFlags flags, TileIndex tile, RailType ra
 	/* check railtype and valid direction for depot (0 through 3), 4 in total */
 	if (!ValParamRailType(railtype) || !IsValidDiagDirection(dir)) return CMD_ERROR;
 
+	//This layer may refuse a train depot before any cost is counted.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Depot); layer_cost.Failed()) return layer_cost;
+
 	Slope tileh = GetTileSlope(tile);
 
 	CommandCost cost(ExpensesType::Construction);
@@ -1072,7 +1088,13 @@ CommandCost CmdBuildSingleSignal(DoCommandFlags flags, TileIndex tile, Track tra
 	if (sigtype >= SignalType::End || sigvar >= SignalVariant::End) return CMD_ERROR;
 	if (cycle_start > cycle_stop || cycle_stop >= SignalType::End) return CMD_ERROR;
 
+	//This layer may refuse a signal before the track is inspected.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Signal); layer_cost.Failed()) return layer_cost;
+
 	if (ctrl_pressed) sigvar = (sigvar == SignalVariant::Electric ? SignalVariant::Semaphore : SignalVariant::Electric);
+
+	//Signals are not built on a portal. A signal drag stops when it reaches one.
+	if (IsLayerPortalTile(tile)) return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
 
 	/* You can only build signals on plain rail tiles, and the selected track must exist */
 	if (!ValParamTrackOrientation(track) || !IsPlainRailTile(tile) ||
@@ -1254,6 +1276,10 @@ static bool AdvanceSignalAutoFill(TileIndex &tile, Trackdir &trackdir, bool remo
 			break;
 		}
 
+		case TileType::LayerPortal:
+			//A signal drag stops at the mouth. Signals are not placed on the portal.
+			return false;
+
 		default: return false;
 	}
 	return true;
@@ -1404,6 +1430,11 @@ static CommandCost CmdSignalTrackHelper(DoCommandFlags flags, TileIndex tile, Ti
 					break;
 
 				case TileType::Road:
+					signal_ctr += TILE_AXIAL_DISTANCE;
+					break;
+
+				case TileType::LayerPortal:
+					//A portal end is one tile. The pair is visited on its own.
 					signal_ctr += TILE_AXIAL_DISTANCE;
 					break;
 
@@ -1592,6 +1623,9 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 			case TileType::TunnelBridge:
 				if (GetTunnelBridgeTransportType(cur_tile) != TransportType::Rail) continue;
 				break;
+			case TileType::LayerPortal:
+				if (GetLayerPortalTransportType(cur_tile) != TransportType::Rail) continue;
+				break;
 			default: continue;
 		}
 
@@ -1742,6 +1776,45 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 				found_convertible_track = true;
 				cost.AddCost((GetTunnelBridgeLength(cur_tile, endtile) + 2) * RailConvertCost(type, totype));
+				break;
+			}
+
+			case TileType::LayerPortal: {
+				if (GetLayerPortalTransportType(cur_tile) != TransportType::Rail) continue;
+				TileIndex endtile = GetLayerPortalPairTile(cur_tile);
+				//Convert the pair once, from the lower tile, so test and execute stay in step.
+				if (endtile < cur_tile && tilearea.Contains(endtile)) continue;
+				if (!IsCompatibleRail(GetRailType(cur_tile), totype)) {
+					ret = EnsureNoVehicleOnGround(cur_tile);
+					if (ret.Succeeded()) ret = EnsureNoVehicleOnGround(endtile);
+					if (ret.Failed()) {
+						error = std::move(ret);
+						continue;
+					}
+				}
+				if (flags.Test(DoCommandFlag::Execute)) {
+					Track track = DiagDirToDiagTrack(GetLayerPortalShaftDirection(cur_tile));
+					if (HasLayerPortalReservation(cur_tile)) {
+						Train *v = GetTrainForReservation(cur_tile, track);
+						if (v != nullptr && !HasPowerOnRail(v->railtypes, totype)) {
+							FreeTrainTrackReservation(v);
+							vehicles_affected.push_back(v);
+						}
+					}
+					uint num_pieces = LAYER_PORTAL_TRACKBIT_FACTOR(TransportType::Rail) * 2;
+					Company *c = Company::Get(GetTileOwner(cur_tile));
+					c->infrastructure.rail[GetRailType(cur_tile)] -= num_pieces;
+					c->infrastructure.rail[totype] += num_pieces;
+					DirtyCompanyInfrastructureWindows(c->index);
+					SetRailType(cur_tile, totype);
+					SetRailType(endtile, totype);
+					MarkTileDirtyByTile(cur_tile);
+					MarkTileDirtyByTile(endtile);
+					YapfNotifyTrackLayoutChange(cur_tile, track);
+					YapfNotifyTrackLayoutChange(endtile, track);
+				}
+				found_convertible_track = true;
+				cost.AddCost(RailConvertCost(type, totype) * 2);
 				break;
 			}
 
@@ -2655,6 +2728,15 @@ static Foundation GetFoundation_Rail(TileIndex tile, Slope tileh)
 /** @copydoc TileLoopProc */
 static void TileLoop_Rail(TileIndex tile)
 {
+	//Off the surface the ground stays barren. Snow, desert and fences are climate.
+	if (!MultiLayerMap::GetRules(tile).has_climate) {
+		if (GetRailGroundType(tile) != RailGroundType::Barren) {
+			SetRailGroundType(tile, RailGroundType::Barren);
+			MarkTileDirtyByTile(tile);
+		}
+		return;
+	}
+
 	RailGroundType old_ground = GetRailGroundType(tile);
 	RailGroundType new_ground;
 

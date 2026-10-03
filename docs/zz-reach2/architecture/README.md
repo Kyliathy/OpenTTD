@@ -10,6 +10,7 @@ The older notes in `docs/` (savegame format, landscape HTML, multiplayer, link g
 | --- | --- | --- | --- |
 | `savegame/` | [archi-savegame.md](savegame/archi-savegame.md) | | `docs/savegame_format.md` |
 | `landscape/` | [archi-landscape.md](landscape/archi-landscape.md) | Per-tile notes: clear, rail, road, water, house, station, industry, tree, tunnelbridge, object | `docs/landscape.html`, `landscape_grid.html`, `landscape_externals.html` |
+| `map-layers/` | [archi-map-layers.md](map-layers/archi-map-layers.md) | | |
 | `desync/` | [archi-desync.md](desync/archi-desync.md) | | `docs/desync.md`, `docs/debugging_desyncs.md` |
 | `game-coordinator/` | [archi-game-coordinator.md](game-coordinator/archi-game-coordinator.md) | [archi-stun-turn.md](game-coordinator/archi-stun-turn.md) | `docs/game_coordinator.md` |
 | `linkgraph/` | [archi-linkgraph.md](linkgraph/archi-linkgraph.md) | [jobs.md](linkgraph/jobs.md), [demands.md](linkgraph/demands.md), [solver.md](linkgraph/solver.md) | `docs/linkgraph.md` |

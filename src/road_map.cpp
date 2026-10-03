@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "station_map.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 
 #include "safeguards.h"
 
@@ -29,6 +30,9 @@ bool MayHaveRoad(Tile t)
 
 		case TileType::TunnelBridge:
 			return GetTunnelBridgeTransportType(t) == TransportType::Road;
+
+		case TileType::LayerPortal:
+			return GetLayerPortalTransportType(t) == TransportType::Road;
 
 		default:
 			return false;
@@ -74,6 +78,13 @@ RoadBits GetAnyRoadBits(Tile tile, RoadTramType rtt, bool straight_tunnel_bridge
 			return straight_tunnel_bridge_entrance ?
 					AxisToRoadBits(DiagDirToAxis(GetTunnelBridgeDirection(tile))) :
 					DiagDirToRoadBits(ReverseDiagDir(GetTunnelBridgeDirection(tile)));
+
+		case TileType::LayerPortal:
+			assert(GetLayerPortalTransportType(tile) == TransportType::Road);
+			//The door is the connection neighbours build toward. The straight flag reports the whole axis, as a tunnel entrance does.
+			return straight_tunnel_bridge_entrance ?
+					AxisToRoadBits(DiagDirToAxis(GetLayerPortalShaftDirection(tile))) :
+					DiagDirToRoadBits(GetLayerPortalDoorDirection(tile));
 
 		default: return {};
 	}

@@ -11,6 +11,7 @@
 #define VIEWPORT_TYPE_H
 
 #include "core/enum_type.hpp"
+#include "map_layer_type.h"
 #include "zoom_type.h"
 
 class LinkGraphOverlay;
@@ -42,6 +43,7 @@ struct Viewport {
 	int virtual_height;  ///< height << zoom
 
 	ZoomLevel zoom; ///< The zoom level of the viewport.
+	MapLayer layer = MapLayer::Surface; ///< Map layer shown by this viewport. View state only, never read by the simulation.
 	std::shared_ptr<LinkGraphOverlay> overlay;
 };
 

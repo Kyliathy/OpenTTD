@@ -38,6 +38,7 @@
 #include "table/strings.h"
 #include "../table/engines.h"
 #include "../table/townname.h"
+#include "../map_layer.h"
 
 #include "../safeguards.h"
 
@@ -53,7 +54,8 @@ void FixOldMapArray()
 
 static void FixTTDMapArray()
 {
-	for (auto tile : Map::Iterate()) {
+	//C2: an old save holds one surface plane.
+	for (auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		switch (GetTileType(tile)) {
 			case TileType::Station:
 				tile.m4() = 0; // We do not understand this TTDP station mapping (yet)
@@ -212,7 +214,8 @@ void FixOldVehicles(LoadgameState &ls)
 
 static bool FixTTOMapArray()
 {
-	for (auto tile : Map::Iterate()) {
+	//C2: an old save holds one surface plane.
+	for (auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		TileType tt = GetTileType(tile);
 		if (to_underlying(tt) == 11) {
 			/* TTO has a different way of storing monorail.
@@ -548,19 +551,21 @@ static void ReadTTDPatchFlags(LoadgameState &ls)
 	}
 
 	/* Check if we have a modern TTDPatch savegame (has extra data all around) */
-	Tile ttdp2_header_first(Map::Size() - 3);
-	Tile ttdp2_header_second(Map::Size() - 2);
+	//C4: the TTDPatch header sits at the end of the surface plane.
+	Tile ttdp2_header_first(Map::PlaneSize() - 3);
+	Tile ttdp2_header_second(Map::PlaneSize() - 2);
 	if (ttdp2_header_first.m3() == 'T' && ttdp2_header_first.m4() == 'T' &&
 		ttdp2_header_second.m3() == 'D' && ttdp2_header_second.m4() == 'p') {
 		_savegame_type = SavegameType::TTDP2;
 	}
 
-	Tile extra_chunk_tile = Tile(_savegame_type == SavegameType::TTDP2 ? Map::Size() - 1 : 1);
+	Tile extra_chunk_tile = Tile(_savegame_type == SavegameType::TTDP2 ? Map::PlaneSize() - 1 : 1);
 	_old_extra_chunk_nums = extra_chunk_tile.m3() | extra_chunk_tile.m4() << 8;
 
 	/* Clean the misused places */
 	for (TileIndex i{}; i < 9; i++) ClearOldMap3(i);
-	for (TileIndex i = TileXY(0, Map::MaxY()); i < Map::Size(); i++) ClearOldMap3(i);
+	//C3: clear the misused south edge of the surface, and stop at the end of that plane.
+	for (TileIndex i = TileXYL(0, Map::MaxY(), MapLayer::Surface); i < TileIndex{Map::PlaneSize()}; i++) ClearOldMap3(i);
 
 	if (_savegame_type == SavegameType::TTDP2) Debug(Facility::Oldloader, Severity::Warning, "Found TTDPatch game");
 
@@ -1527,23 +1532,26 @@ static bool LoadOldGameDifficulty(LoadgameState &ls, int)
 static bool LoadOldMapPart1(LoadgameState &ls, int)
 {
 	if (_savegame_type == SavegameType::TTO) {
-		Map::Allocate(OLD_MAP_SIZE, OLD_MAP_SIZE);
+		//The file holds one plane. AfterLoadGame fills Underground and Space.
+		extern uint8_t _map_file_layers;
+		_map_file_layers = 1;
+		Map::Allocate(OLD_MAP_SIZE, OLD_MAP_SIZE, MAX_MAP_LAYERS);
 	}
 
-	for (auto t : Map::Iterate()) {
+	for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface) /* C2: the file stores one surface plane. */) {
 		t.m1() = ReadByte(ls);
 	}
-	for (auto t : Map::Iterate()) {
+	for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface) /* C2: the file stores one surface plane. */) {
 		t.m2() = ReadByte(ls);
 	}
 
 	if (_savegame_type != SavegameType::TTO) {
 		/* old map3 is split into to m3 and m4 */
-		for (auto t : Map::Iterate()) {
+		for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface) /* C2: the file stores one surface plane. */) {
 			t.m3() = ReadByte(ls);
 			t.m4() = ReadByte(ls);
 		}
-		auto range = Map::Iterate();
+		auto range = MultiLayerMap::IterateLayer(MapLayer::Surface);
 		for (auto it = range.begin(); it != range.end(); /* nothing. */) {
 			uint8_t b = ReadByte(ls);
 			for (int i = 0; i < 8; i += 2, ++it) (*it).m6() = GB(b, i, 2);
@@ -1555,10 +1563,10 @@ static bool LoadOldMapPart1(LoadgameState &ls, int)
 
 static bool LoadOldMapPart2(LoadgameState &ls, int)
 {
-	for (auto t : Map::Iterate()) {
+	for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface) /* C2: the file stores one surface plane. */) {
 		t.type() = ReadByte(ls);
 	}
-	for (auto t : Map::Iterate()) {
+	for (auto t : MultiLayerMap::IterateLayer(MapLayer::Surface) /* C2: the file stores one surface plane. */) {
 		t.m5() = ReadByte(ls);
 	}
 

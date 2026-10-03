@@ -39,7 +39,7 @@
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 119-128 | `## Cross-plan Invariants` I-1 to I-8: the acceptance criteria. Every result recorded in this plan names the invariant it evidences. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`: build, test and digest commands; documentation goes under `docs/`, never into source directories. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`: build, test and digest commands; documentation goes under `docs/`, never into source directories. |
 | [docs/zz-reach2/architecture/desync/archi-desync.md](../../architecture/desync/archi-desync.md) | 368-376 | `## Invariants`: same command stream, same RNG draws, no GUI-only state in the simulation. The multiplayer tests check exactly these with layers in play. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 431-442 | `## Invariants a change must not break`: older saves keep loading, version enum order, chunk order. The savegame matrix checks them. |
 
@@ -132,19 +132,30 @@ _Applies to Groups 5-6._
 ### Group 5 - Architecture documentation
 
 {{SIMPLE}}
-- [ ] 5.1 Write `docs/zz-reach2/architecture/map-layers/archi-map-layers.md` in the style of the existing pages: what a layer is, stacked addressing, `Map` versus `MultiLayerMap`, rules, initialisation, tile loop, viewport bands, portals, savegame, a code map and invariants, all checked against the final code.
-- [ ] 5.2 Add the page to the `## Subsystems` table in `docs/zz-reach2/architecture/README.md`.
-- [ ] 5.3 Update `archi-landscape.md`: array size covers all layers, `TileY` is stacked, the void fence exists per layer, `TileType::LayerPortal` is value 11 with a link to the new page.
-- [ ] 5.4 Update `archi-savegame.md`: `MAPS` has a `layers` field from `SaveLoadVersion::MapLayers`, and the RIFF planes hold all layers.
-- [ ] 5.5 Update `archi-viewport.md` with one paragraph on the viewport layer band and filtering.
+- [x] 5.1 Write `docs/zz-reach2/architecture/map-layers/archi-map-layers.md` in the style of the existing pages: what a layer is, stacked addressing, `Map` versus `MultiLayerMap`, rules, initialisation, tile loop, viewport bands, portals, savegame, a code map and invariants, all checked against the final code.
+- [x] 5.2 Add the page to the `## Subsystems` table in `docs/zz-reach2/architecture/README.md`.
+- [x] 5.3 Update `archi-landscape.md`: array size covers all layers, `TileY` is stacked, the void fence exists per layer, `TileType::LayerPortal` is value 11 with a link to the new page.
+- [x] 5.4 Update `archi-savegame.md`: `MAPS` has a `layers` field from `SaveLoadVersion::MapLayers`, and the RIFF planes hold all layers.
+- [x] 5.5 Update `archi-viewport.md` with one paragraph on the viewport layer band and filtering.
 
 ### Group 6 - Closure
 
 {{SIMPLE}}
-- [ ] 6.1 Grep `src/` for files whose names start with `r2` and for `.md` files; there must be none.
-- [ ] 6.2 Grep `src/` for `Map::PlaneSize()` added to or subtracted from a tile index outside `src/map_func.h`, `src/map.cpp`, `src/map_layer.*`, `src/saveload/map_sl.cpp` and `src/saveload/oldloader_sl.cpp` (AD-3, I-3); there must be none.
+- [x] 6.1 Grep `src/` for files whose names start with `r2` and for `.md` files; there must be none. No source name starts with `r2`. The only Markdown under `src/` is the pre-existing `src/3rdparty/monocypher/` licence set.
+- [x] 6.2 Grep `src/` for `Map::PlaneSize()` added to or subtracted from a tile index outside `src/map_func.h`, `src/map.cpp`, `src/map_layer.*`, `src/saveload/map_sl.cpp` and `src/saveload/oldloader_sl.cpp` (AD-3, I-3); there must be none. The remaining hits are counts, comparisons, the iterator end inside `map_layer.h`, and the identity check in `src/tests/map_layer.cpp`.
 - [ ] 6.3 Record the evidence for each invariant I-1 to I-8 (test name, digest, log or manual run) under this task, for master task 8.2.
-- [ ] 6.4 Copy every open issue found in this plan into the master plan's `## Deferred Points`.
+
+| Invariant | Evidence so far | Still needs a run |
+| --- | --- | --- |
+| I-1 | `src/tests/map_layer.cpp` identity check | `ctest` |
+| I-2 | neighbour tests in the same file | `ctest` |
+| I-3 | `GetLayerPortalNextTile` is the shaft step; follower, trains, and road vehicles call it | a game with traffic |
+| I-4 | `Viewport::layer` is only read from view code | layer switching in multiplayer |
+| I-5 | `Map::Size()` is storage; plane queries use `PlaneSize` and `TilePlaneY` | |
+| I-6 | non-surface init does not call `Random()` | surface digests of the baseline saves |
+| I-7 | `SaveLoadVersion::MapLayers` and `AfterLoadGame` fill missing planes | save and load |
+| I-8 | portal pair test in `src/tests/map_layer.cpp` | `ctest` |
+- [x] 6.4 Copy every open issue found in this plan into the master plan's `## Deferred Points`. No new product defect came out of a run, because the multiplayer, save, and performance runs have not been executed. The existing deferred list (Space construction, trams, ships, aircraft, catchment, script API) still stands.
 
 ## Consult on Demand
 

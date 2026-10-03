@@ -10,6 +10,7 @@
 #include "stdafx.h"
 
 #include "command_func.h"
+#include "map_layer.h"
 #include "landscape.h"
 #include "town.h"
 #include "waypoint_base.h"
@@ -226,6 +227,9 @@ CommandCost CmdBuildRailWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
 	if ((axis == Axis::X ? width : height) != 1) return CMD_ERROR;
 	if (count == 0 || count > _settings_game.station.station_spread) return CMD_ERROR;
 
+	//A rail waypoint is a rail station for the layer rules.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::RailStation); layer_cost.Failed()) return layer_cost;
+
 	bool reuse = (station_to_join != NEW_STATION);
 	if (!reuse) station_to_join = StationID::Invalid();
 	bool distant_join = (station_to_join != StationID::Invalid());
@@ -380,6 +384,9 @@ CommandCost CmdBuildRoadWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
 	if ((axis == Axis::X ? width : height) != 1) return CMD_ERROR;
 	if (count == 0 || count > _settings_game.station.station_spread) return CMD_ERROR;
 
+	//A road waypoint is a road stop for the layer rules.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::RoadStop); layer_cost.Failed()) return layer_cost;
+
 	bool reuse = (station_to_join != NEW_STATION);
 	if (!reuse) station_to_join = StationID::Invalid();
 	bool distant_join = (station_to_join != StationID::Invalid());
@@ -497,6 +504,9 @@ CommandCost CmdBuildRoadWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
  */
 CommandCost CmdBuildBuoy(DoCommandFlags flags, TileIndex tile)
 {
+	//A buoy is a dock for the layer rules.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Dock); layer_cost.Failed()) return layer_cost;
+
 	if (!HasTileWaterGround(tile)) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
 	if (CommandCost ret = IsBuoyBridgeAboveOk(tile); ret.Failed()) return ret;
 

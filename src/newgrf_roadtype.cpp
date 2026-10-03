@@ -16,6 +16,7 @@
 #include "depot_base.h"
 #include "town.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 
 #include "safeguards.h"
 
@@ -260,6 +261,12 @@ void ConvertRoadTypes()
 				if (GetTunnelBridgeTransportType(t) == TransportType::Road) {
 					if (RoadType rt = GetRoadTypeRoad(t); rt != INVALID_ROADTYPE) SetRoadTypeRoad(t, roadtype_conversion_map[rt]);
 					if (RoadType rt = GetRoadTypeTram(t); rt != INVALID_ROADTYPE) SetRoadTypeTram(t, roadtype_conversion_map[rt]);
+				}
+				break;
+
+			case TileType::LayerPortal:
+				if (GetLayerPortalTransportType(t) == TransportType::Road) {
+					if (RoadType rt = GetRoadTypeRoad(t); rt != INVALID_ROADTYPE) SetRoadTypeRoad(t, roadtype_conversion_map[rt]);
 				}
 				break;
 

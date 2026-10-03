@@ -19,6 +19,7 @@
 #include "depot_base.h"
 #include "depot_func.h"
 #include "water.h"
+#include "map_layer.h"
 #include "industry_map.h"
 #include "newgrf_canal.h"
 #include "strings_func.h"
@@ -30,6 +31,7 @@
 #include "aircraft.h"
 #include "effectvehicle_func.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "station_base.h"
 #include "ai/ai.hpp"
 #include "game/game.hpp"
@@ -115,6 +117,9 @@ void ClearNeighbourNonFloodingStates(TileIndex tile)
  */
 CommandCost CmdBuildShipDepot(DoCommandFlags flags, TileIndex tile, Axis axis)
 {
+	//A ship depot is water construction.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Water); layer_cost.Failed()) return layer_cost;
+
 	if (!IsValidAxis(axis)) return CMD_ERROR;
 	TileIndex tile2 = tile + TileOffsByAxis(axis);
 
@@ -195,6 +200,10 @@ bool IsPossibleDockingTile(Tile t)
 		case TileType::Station:
 		case TileType::TunnelBridge:
 			return TrackdirBitsToTrackBits(GetTileTrackStatus(t, TransportType::Water, RoadTramType::Invalid).trackdirs).Any();
+
+		case TileType::LayerPortal:
+			//A portal is never a docking tile.
+			return false;
 
 		default:
 			return false;
@@ -467,13 +476,17 @@ static CommandCost RemoveLock(TileIndex tile, DoCommandFlags flags)
  */
 CommandCost CmdBuildLock(DoCommandFlags flags, TileIndex tile)
 {
+	//A lock is water construction.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Water); layer_cost.Failed()) return layer_cost;
+
 	DiagDirection dir = GetInclinedSlopeDirection(GetTileSlope(tile));
 	if (dir == DiagDirection::Invalid) return CommandCost(STR_ERROR_LAND_SLOPED_IN_WRONG_DIRECTION);
 
 	TileIndex lower_tile = TileAddByDiagDir(tile, ReverseDiagDir(dir));
 
 	/* If freeform edges are disabled, don't allow building on edge tiles. */
-	if (!_settings_game.construction.freeform_edges && (!IsInsideMM(TileX(lower_tile), 1, Map::MaxX() - 1) || !IsInsideMM(TileY(lower_tile), 1, Map::MaxY() - 1))) {
+	//C3: a lock may not sit on the void fence of its own layer.
+	if (!_settings_game.construction.freeform_edges && (!IsInsideMM(TileX(lower_tile), 1, Map::MaxX() - 1) || !IsInsideMM(TilePlaneY(lower_tile), 1, Map::MaxY() - 1))) {
 		return CommandCost(STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP);
 	}
 
@@ -507,6 +520,10 @@ void MakeRiverAndModifyDesertZoneAround(TileIndex tile)
 CommandCost CmdBuildCanal(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, WaterClass wc, bool diagonal)
 {
 	if (start_tile >= Map::Size() || !IsValidWaterClass(wc)) return CMD_ERROR;
+
+	//Both ends of a canal drag must allow water.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Water); layer_cost.Failed()) return layer_cost;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::Water); layer_cost.Failed()) return layer_cost;
 
 	/* Outside of the editor you can only build canals, not oceans */
 	if (wc != WaterClass::Canal && _game_mode != GameMode::Editor) return CMD_ERROR;
@@ -592,8 +609,9 @@ static CommandCost ClearTile_Water(TileIndex tile, DoCommandFlags flags)
 
 			Money base_cost = IsCanal(tile) ? _price[Price::ClearCanal] : _price[Price::ClearWater];
 			/* Make sure freeform edges are allowed or it's not an edge tile. */
+			//C3: clearing water on the void fence of this layer is refused.
 			if (!_settings_game.construction.freeform_edges && (!IsInsideMM(TileX(tile), 1, Map::MaxX() - 1) ||
-					!IsInsideMM(TileY(tile), 1, Map::MaxY() - 1))) {
+					!IsInsideMM(TilePlaneY(tile), 1, Map::MaxY() - 1))) {
 				return CommandCost(STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP);
 			}
 
@@ -743,6 +761,8 @@ bool IsWateredTile(TileIndex tile, Direction from)
 		case TileType::Object: return IsTileOnWater(tile);
 
 		case TileType::TunnelBridge: return GetTunnelBridgeTransportType(tile) == TransportType::Water && ReverseDiagDir(GetTunnelBridgeDirection(tile)) == DirToDiagDir(from);
+
+		case TileType::LayerPortal: return false; //portals are never flooded and never count as water
 
 		case TileType::Void: return true; // consider map border as water, esp. for rivers
 
@@ -1208,6 +1228,9 @@ FloodingBehaviour GetFloodingBehaviour(TileIndex tile)
  */
 static void DoFloodTile(TileIndex target)
 {
+	//A non-surface tile is never a flood target.
+	if (!MultiLayerMap::GetRules(target).has_water_flow) return;
+
 	assert(!IsTileType(target, TileType::Water));
 
 	bool flooded = false; // Will be set to true if something is changed.
@@ -1327,6 +1350,9 @@ static void DoDryUp(TileIndex tile)
  */
 void TileLoop_Water(TileIndex tile)
 {
+	//Flooding is a surface climate. Other layers have no water flow.
+	if (!MultiLayerMap::GetRules(tile).has_water_flow) return;
+
 	if (IsTileType(tile, TileType::Water)) {
 		AmbientSoundEffect(tile);
 		if (IsNonFloodingWaterTile(tile)) return;
@@ -1382,7 +1408,8 @@ void TileLoop_Water(TileIndex tile)
 
 void ConvertGroundTilesIntoWaterTiles()
 {
-	for (const auto tile : Map::Iterate()) {
+	//C2: sea and shore are generated on the surface.
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		auto [slope, z] = GetTileSlopeZ(tile);
 		if (IsTileType(tile, TileType::Clear) && z == 0) {
 			/* Make both water for tiles at level 0

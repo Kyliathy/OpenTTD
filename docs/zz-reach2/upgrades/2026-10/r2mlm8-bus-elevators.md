@@ -40,7 +40,7 @@
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 99-101 | `### AD-8 Cross-layer movement only through layer portals`: the bus elevator is a road portal; vehicles keep their heading and are relocated at the shaft edge without wormhole state. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 115-117 | `### AD-12 Version-1 scope`: road elevators carry road vehicles only (no trams); Space has no construction. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 157-174 | `## Engineering Conventions` and `## Build and Test Commands`. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 158-177 | `## Engineering Conventions` and `## Build and Test Commands`. |
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 63-72 | `## Portal Contract`: pair, directions, neighbour mapping, relocation, visibility, tile bits and the command signature. This plan adds road-specific behaviour on top and must not redefine any of it. |
 | [docs/zz-reach2/architecture/vehicles/road-vehicles.md](../../architecture/vehicles/road-vehicles.md) | 7-44 | `## Tick` and `## One step`: the road controller loop, `IndividualRoadVehicleController`, frame tables, `VehicleEnterTile` refusals and `RoadFindPathToDest`. Every traversal change hooks into this step. |
 | [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | Live definitions; no fixed range | Produced by r2mlm7 Groups 1 and 3: `IsLayerPortalTile`, `GetLayerPortalTransportType`, `GetLayerPortalDoorDirection`, `GetLayerPortalNextTile`, `IsLayerPortalShaftExit` are authoritative. |
@@ -77,21 +77,21 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 ### Group 1 - Elevator tile behaviour
 
 {{MEDIUM}}
-- [ ] 1.1 In the road branch of `DrawTile_LayerPortal`, draw the stand-in with the road depot layout and the road type overlays of `GetRoadTypeRoad(tile)`, door on `GetLayerPortalDoorDirection`.
-- [ ] 1.2 Make `CmdBuildRoad` accept building the neighbour's road bit towards an elevator door and refuse building road bits on the elevator tile itself (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`).
-- [ ] 1.3 Make road drawing of a neighbouring tile treat the elevator door as a connection (road ends do not show a dead-end stub).
-- [ ] 1.4 Make `CmdConvertRoad` convert both ends of a road elevator together, checking compatibility like road depots.
-- [ ] 1.5 Confirm `VehicleEnterTile_LayerPortal` refuses trams on road portals (`VehicleEnterTileState::CannotEnter`) and `CanEnterNewTile` (r2mlm7 task 3.5) keeps trams out of the pathfinder.
+- [x] 1.1 In the road branch of `DrawTile_LayerPortal`, draw the stand-in with the road depot layout and the road type overlays of `GetRoadTypeRoad(tile)`, door on `GetLayerPortalDoorDirection`.
+- [x] 1.2 Make `CmdBuildRoad` accept building the neighbour's road bit towards an elevator door and refuse building road bits on the elevator tile itself (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`).
+- [x] 1.3 Make road drawing of a neighbouring tile treat the elevator door as a connection (road ends do not show a dead-end stub).
+- [x] 1.4 Make `CmdConvertRoad` convert both ends of a road elevator together, checking compatibility like road depots.
+- [x] 1.5 Confirm `VehicleEnterTile_LayerPortal` refuses trams on road portals (`VehicleEnterTileState::CannotEnter`) and `CanEnterNewTile` (r2mlm7 task 3.5) keeps trams out of the pathfinder.
 
 ### Group 2 - Placement GUI
 
 {{MEDIUM}}
-- [ ] 2.1 Add `WID_ROT_LAYER_ELEVATOR, ///< Build road elevator to another map layer.` after `WID_ROT_BUILD_TUNNEL`, and add the button to `_nested_build_road_widgets` with `SPR_IMG_ROAD_DEPOT` as stand-in sprite and `STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR`.
-- [ ] 2.2 Add `static DiagDirection _road_elevator_door_direction` and `BuildRoadElevatorWindow` (cloned from `BuildRoadDepotWindow`, its own widget enum and `WindowDesc` with a unique ini key) showing four door directions and the "door on the other layer faces the opposite way" hint.
-- [ ] 2.3 In `GetCursorForWidget` and `GetHighLightStyleForWidget`, return the road type's depot cursor (stand-in) and `HT_RECT` for the elevator button.
-- [ ] 2.4 In `OnClick`, open the elevator picker like the depot button; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Road, target, ReverseDiagDir(_road_elevator_door_direction), INVALID_RAILTYPE, _cur_roadtype)`.
-- [ ] 2.5 Compute `target` as `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer (r2mlm7 task 6.8); disable the button when that returns `MapLayer::Invalid` (Space, or a one-layer game), refreshed when the layer changes.
-- [ ] 2.6 Add a free hotkey (check `road_hotkeys`) named `layer_elevator`.
+- [x] 2.1 Add `WID_ROT_LAYER_ELEVATOR, ///< Build road elevator to another map layer.` after `WID_ROT_BUILD_TUNNEL`, and add the button to `_nested_build_road_widgets` with `SPR_IMG_ROAD_DEPOT` as stand-in sprite and `STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR`.
+- [x] 2.2 Add `static DiagDirection _road_elevator_door_direction` and `BuildRoadElevatorWindow` (cloned from `BuildRoadDepotWindow`, its own widget enum and `WindowDesc` with a unique ini key) showing four door directions and the "door on the other layer faces the opposite way" hint.
+- [x] 2.3 In `GetCursorForWidget` and `GetHighLightStyleForWidget`, return the road type's depot cursor (stand-in) and `HT_RECT` for the elevator button.
+- [x] 2.4 In `OnClick`, open the elevator picker like the depot button; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Road, target, ReverseDiagDir(_road_elevator_door_direction), INVALID_RAILTYPE, _cur_roadtype)`.
+- [x] 2.5 Compute `target` as `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer (r2mlm7 task 6.8); disable the button when that returns `MapLayer::Invalid` (Space, or a one-layer game), refreshed when the layer changes.
+- [x] 2.6 Add a free hotkey (check `road_hotkeys`) named `layer_elevator`.
 - [ ] 2.7 Build and place an elevator on the surface; confirm both ends appear, the cost is charged once, and removing either end removes both.
 
 ### Area Mandatory Reading - Road vehicle traversal
@@ -110,20 +110,20 @@ _Applies to Groups 3-4._
 ### Group 3 - Road vehicle traversal
 
 {{HARD}}
-- [ ] 3.1 In the `RDE_NEXT_TILE` block, replace `v->tile + TileOffsByDiagDir(diagdir)` with `GetLayerPortalNextTile(v->tile, diagdir)` and keep the rest of the block unchanged; the frame table then positions the vehicle on the pair tile's entry edge.
-- [ ] 3.2 Pass the same portal-aware tile to `FollowPreviousRoadVehicle` for articulated parts.
-- [ ] 3.3 Forbid U-turns on elevator tiles: a reversing trackdir on a portal tile is never chosen; if the front cannot continue it waits (`cur_speed = 0`).
-- [ ] 3.4 Refuse overtaking on and into elevator tiles in `CheckRoadBlockedForOvertaking`.
-- [ ] 3.5 In the road branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames and assert `frame` stays in sync with the frame table, mirroring the tunnel code.
-- [ ] 3.6 After the relocation, update the Z position and inclination of each part with `UpdateInclination(true, true)` while hidden, so no visible jump occurs.
+- [x] 3.1 In the `RDE_NEXT_TILE` block, replace `v->tile + TileOffsByDiagDir(diagdir)` with `GetLayerPortalNextTile(v->tile, diagdir)` and keep the rest of the block unchanged; the frame table then positions the vehicle on the pair tile's entry edge.
+- [x] 3.2 Pass the same portal-aware tile to `FollowPreviousRoadVehicle` for articulated parts.
+- [x] 3.3 Forbid U-turns on elevator tiles: a reversing trackdir on a portal tile is never chosen; if the front cannot continue it waits (`cur_speed = 0`).
+- [x] 3.4 Refuse overtaking on and into elevator tiles in `CheckRoadBlockedForOvertaking`.
+- [x] 3.5 In the road branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames and assert `frame` stays in sync with the frame table, mirroring the tunnel code.
+- [x] 3.6 After the relocation, update the Z position and inclination of each part with `UpdateInclination(true, true)` while hidden, so no visible jump occurs.
 - [ ] 3.7 Confirm `RoadVehFindCloseTo` (vehicle ahead detection) works across the relocation: a bus waiting in the shaft blocks the next one on the same layer side.
 
 ### Group 4 - The elevator ride
 
 {{MEDIUM}}
-- [ ] 4.1 Add `static constexpr uint16_t LAYER_ELEVATOR_MAX_SPEED` with a comment explaining the chosen value (slow enough that a ride lasts about two seconds at normal speed).
-- [ ] 4.2 Cap `RoadVehicle::GetCurrentMaxSpeed` at that value while any part of the vehicle is on a road portal tile.
-- [ ] 4.3 Play an existing mechanical sound when the front part becomes hidden in an elevator; pick a sound id from `src/sound_type.h` and record the choice.
+- [x] 4.1 Add `static constexpr uint16_t LAYER_ELEVATOR_MAX_SPEED` with a comment explaining the chosen value (slow enough that a ride lasts about two seconds at normal speed).
+- [x] 4.2 Cap `RoadVehicle::GetCurrentMaxSpeed` at that value while any part of the vehicle is on a road portal tile.
+- [x] 4.3 Play an existing mechanical sound when the front part becomes hidden in an elevator; pick a sound id from `src/sound_type.h` and record the choice. The sound is `SND_21_ROAD_WORKS`.
 - [ ] 4.4 Confirm breakdowns, stop orders and the player stop button behave while a bus is inside, and that a bus stopped inside stays hidden and resumes correctly.
 - [ ] 4.5 Save and load while a bus is half way through an elevator (front underground, rear on the surface); confirm it continues without a jump.
 
@@ -142,7 +142,7 @@ _Applies to Group 5._
 ### Group 5 - Road pathfinding
 
 {{HARD}}
-- [ ] 5.1 Add `pf.yapf.road_layer_portal_penalty` once per elevator traversal in `PfCalcCost` (when the segment passes from one end to its pair), with a comment.
+- [x] 5.1 Add `pf.yapf.road_layer_portal_penalty` once per elevator traversal in `PfCalcCost` (when the segment passes from one end to its pair), with a comment.
 - [ ] 5.2 Confirm `RoadFindPathToDest` path-cache entries that end on the pair tile are accepted (the cached tile is the pair, not the plain neighbour).
 - [ ] 5.3 Confirm the estimate assert holds on routes through elevators in a Debug build (no `NOT_REACHED`, no assert).
 - [ ] 5.4 Confirm `FindClosestRoadDepot` and automatic servicing find a depot on the other layer within `maximum_go_to_depot_penalty`.
@@ -167,6 +167,8 @@ _Applies to Groups 6-7._
 - [ ] 6.3 Give a bus orders between a surface stop and an underground stop; confirm it loads, unloads and pays by plane distance.
 - [ ] 6.4 Confirm buying, selling, servicing and autoreplace in an underground depot.
 - [ ] 6.5 Confirm the vehicle view follows a bus into the Underground layer and back, and that "location" buttons switch the main view's layer.
+
+The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stays skipped and the depot stand-in remains.
 
 ### Group 7 - Elevator art
 

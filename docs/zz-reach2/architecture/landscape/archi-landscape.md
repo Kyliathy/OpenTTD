@@ -57,7 +57,7 @@ flowchart TB
   T --> ext
 ```
 
-`Map::Allocate` (`src/map.cpp` lines 36–59) creates both arrays with `Map::Size()` elements. `Map::IsInitialized` (`src/map_func.h` lines 357–359) is true once `base_tiles` is non-null.
+`Map::Allocate` (`src/map.cpp`) creates both arrays with `Map::Size()` elements. That count is every layer: `SizeX * SizeY * LayerCount`. `Map::IsInitialized` (`src/map_func.h`) is true once `base_tiles` is non-null.
 
 The `type` byte is three independent fields:
 
@@ -84,10 +84,11 @@ The `type` byte is three independent fields:
 | 8 | `Industry` | One tile of an industry |
 | 9 | `TunnelBridge` | Tunnel mouth or bridge ramp |
 | 10 | `Object` | Transmitter, owned land, and other objects |
-| 11 | `End` | End marker, not a tile |
+| 11 | `LayerPortal` | One end of a pair of tiles that connect two map layers. See [archi-map-layers.md](../map-layers/archi-map-layers.md) |
+| 12 | `End` | End marker, not a tile |
 | 16 | `MaxSize` | `1 << TILE_TYPE_BITS` |
 
-`_tile_type_procs` (`src/landscape.cpp` lines 71–89) has one `TileTypeProcs` pointer per value up to `MaxSize`. Slots 0 through 10 point at the per-family tables. The five slots after `Object` are `nullptr`.
+`_tile_type_procs` (`src/landscape.cpp`) has one `TileTypeProcs` pointer per value up to `MaxSize`. Slots 0 through 11 point at the per-family tables, including `LayerPortal`. The four slots after that are `nullptr`.
 
 ## Tile, TileIndex, and world scale
 
@@ -143,7 +144,7 @@ Limits are in `src/map_type.h` lines 37–40:
 | `MIN_MAP_SIZE` | 64 |
 | `MAX_MAP_SIZE` | 4096 |
 
-Each axis is chosen independently inside that range, and both must be powers of two. `Map::Allocate` (`src/map.cpp` lines 38–45) calls `FatalError("Invalid map size")` otherwise. A 4096×4096 map is `2^24` tiles, which still fits in a `uint32_t` `TileIndex`. `INVALID_TILE` stays outside that range.
+Each axis is chosen independently inside that range, and both must be powers of two. `Map::Allocate` (`src/map.cpp` lines 38–45) calls `FatalError("Invalid map size")` otherwise. A 4096×4096 plane is `2^24` tiles. Three layers make `3 * 2^24` tiles, which still fits in a `uint32_t` `TileIndex`. `INVALID_TILE` stays outside that range. `TileY` is the stacked row across those layers. `TilePlaneY` is the row inside one plane. The void fence is repeated on every layer. Details are in [archi-map-layers.md](../map-layers/archi-map-layers.md).
 
 `TileType::Void` is the border that stops algorithms from wrapping. `SetTileType` (`src/tile_map.h` lines 131–138) asserts that void tiles are exactly the non-inner tiles. `IsInnerTile` (lines 109–117) requires `x < MaxX` and `y < MaxY`. When `construction.freeform_edges` is set, it also requires `x > 0` and `y > 0`. So:
 

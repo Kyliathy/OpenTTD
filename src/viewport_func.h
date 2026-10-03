@@ -20,6 +20,9 @@
 
 static const int TILE_HEIGHT_STEP = 50; ///< One Z unit tile height difference is displayed as 50m.
 
+/** Layer the current viewport draw is showing. Off-map fences read this. */
+extern MapLayer _viewport_draw_layer;
+
 void SetSelectionRed(bool);
 
 void InitializeWindowViewport(Window *w, int x, int y, int width, int height, std::variant<TileIndex, VehicleID> focus, ZoomLevel zoom);

@@ -18,6 +18,7 @@
 #include "command_func.h"
 #include "viewport_func.h"
 #include "industry.h"
+#include "map_layer.h"
 #include "town.h"
 #include "cargo_type.h"
 #include "cheat_type.h"
@@ -617,8 +618,8 @@ public:
 
 		for (Industry *industry : Industry::Iterate()) delete industry;
 
-		/* Clear farmland. */
-		for (const auto tile : Map::Iterate()) {
+		/* Clear farmland. C2: fields are a surface ground type. */
+		for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 			if (IsTileType(tile, TileType::Clear) && GetClearGround(tile) == ClearGround::Fields) {
 				MakeClear(tile, ClearGround::Grass, 3);
 			}

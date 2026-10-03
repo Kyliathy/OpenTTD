@@ -154,6 +154,8 @@ public:
 
 			/* if we skipped some tunnel tiles, add their cost */
 			segment_cost += follower_local.tiles_skipped * YAPF_TILE_LENGTH;
+			//One penalty for each elevator the segment passes through.
+			if (follower_local.is_portal) segment_cost += _settings_game.pf.yapf.road_layer_portal_penalty;
 			tiles += follower_local.tiles_skipped + 1;
 
 			/* add hilly terrain penalty */

@@ -26,6 +26,7 @@ enum RailToolbarWidgets : WidgetID {
 	WID_RAT_BUILD_SIGNALS,  ///< Build signals.
 	WID_RAT_BUILD_BRIDGE,   ///< Build a bridge.
 	WID_RAT_BUILD_TUNNEL,   ///< Build a tunnel.
+	WID_RAT_BUILD_LAYER_PORTAL, ///< Build a rail portal to another map layer.
 	WID_RAT_REMOVE,         ///< Bulldozer to remove rail.
 	WID_RAT_CONVERT_RAIL,   ///< Convert other rail to this type.
 };
@@ -92,6 +93,15 @@ enum BuildRailDepotWidgets : WidgetID {
 	WID_BRAD_DEPOT_SE, ///< Build a depot with the entrance in the south east.
 	WID_BRAD_DEPOT_SW, ///< Build a depot with the entrance in the south west.
 	WID_BRAD_DEPOT_NW, ///< Build a depot with the entrance in the north west.
+};
+
+/** Widgets of the #BuildRailLayerPortalWindow class. */
+enum BuildRailLayerPortalWidgets : WidgetID {
+	WID_BRLP_CAPTION, ///< Caption of the window.
+	WID_BRLP_MOUTH_NE, ///< Mouth facing north east.
+	WID_BRLP_MOUTH_SE, ///< Mouth facing south east.
+	WID_BRLP_MOUTH_SW, ///< Mouth facing south west.
+	WID_BRLP_MOUTH_NW, ///< Mouth facing north west.
 };
 
 /** Widgets of the #BuildRailWaypointWindow class. */

@@ -186,7 +186,8 @@ public:
 
 		/* We reserve 4 nodes (patches) per water region. The vast majority of water regions have 1 or 2 regions so this should be a pretty
 		 * safe limit. We cap the limit at 65536 which is at a region size of 16x16 is equivalent to one node per region for a 4096x4096 map. */
-		const int node_limit = std::min(static_cast<int>(Map::Size() * NODES_PER_REGION) / WATER_REGION_NUMBER_OF_TILES, MAX_NUMBER_OF_NODES);
+		//C4: ship nodes cover one plane. Ships do not leave the surface.
+		const int node_limit = std::min(static_cast<int>(Map::PlaneSize() * NODES_PER_REGION) / WATER_REGION_NUMBER_OF_TILES, MAX_NUMBER_OF_NODES);
 		YapfShipRegions pf(node_limit);
 		pf.SetDestination(start_water_region_patch);
 

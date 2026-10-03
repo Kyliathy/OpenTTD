@@ -11,29 +11,33 @@
 #include "debug.h"
 #include "water_map.h"
 #include "error_func.h"
+#include "map_layer.h"
 #include "pathfinder/water_regions.h"
 
 #include "safeguards.h"
 
-/* static */ uint Map::log_x;     ///< 2^_map_log_x == _map_size_x
-/* static */ uint Map::log_y;     ///< 2^_map_log_y == _map_size_y
-/* static */ uint Map::size_x;    ///< Size of the map along the X
-/* static */ uint Map::size_y;    ///< Size of the map along the Y
-/* static */ uint Map::size;      ///< The number of tiles on the map
-/* static */ uint Map::tile_mask; ///< _map_size - 1 (to mask the mapsize)
+/* static */ uint Map::log_x;       ///< 2^_map_log_x == _map_size_x
+/* static */ uint Map::log_y;       ///< 2^_map_log_y == _map_size_y
+/* static */ uint Map::size_x;      ///< Size of one layer along X.
+/* static */ uint Map::size_y;      ///< Size of one layer along Y.
+/* static */ uint Map::size;        ///< Tile count of every layer together.
+/* static */ uint Map::plane_size;  ///< Tile count of one layer.
+/* static */ uint Map::plane_mask;  ///< plane_size - 1. Masks a tile index down to one layer.
+/* static */ uint Map::layer_count; ///< How many layers Allocate stored.
 
-/* static */ uint Map::initial_land_count; ///< Initial number of land tiles on the map.
+/* static */ uint Map::initial_land_count; ///< Initial number of land tiles on the surface.
 
 /* static */ std::unique_ptr<Tile::TileBase[]> Tile::base_tiles; ///< Base tiles of the map
 /* static */ std::unique_ptr<Tile::TileExtended[]> Tile::extended_tiles; ///< Extended tiles of the map
 
 
 /**
- * (Re)allocates a map with the given dimension
- * @param size_x the width of the map along the NE/SW edge
- * @param size_y the 'height' of the map along the SE/NW edge
+ * (Re)allocates a map with the given dimension.
+ * @param size_x the width of one layer along the NE/SW edge
+ * @param size_y the 'height' of one layer along the SE/NW edge
+ * @param layer_count how many layers to store
  */
-/* static */ void Map::Allocate(uint size_x, uint size_y)
+/* static */ void Map::Allocate(uint size_x, uint size_y, uint layer_count)
 {
 	/* Make sure that the map size is within the limits and that
 	 * size of both axes is a power of 2. */
@@ -44,33 +48,46 @@
 		FatalError("Invalid map size");
 	}
 
-	Debug(Facility::Map, Severity::Error, "Allocating map of size {}x{}", size_x, size_y);
+	//One layer for a live game. Tests may ask for every layer this build knows.
+	MultiLayerMap::ValidateLayerCount(layer_count);
+
+	Debug(Facility::Map, Severity::Error, "Allocating map of size {}x{}x{}", size_x, size_y, layer_count);
 
 	Map::log_x = FindFirstBit(size_x);
 	Map::log_y = FindFirstBit(size_y);
 	Map::size_x = size_x;
 	Map::size_y = size_y;
-	Map::size = size_x * size_y;
-	Map::tile_mask = Map::size - 1;
+	Map::layer_count = layer_count;
+	Map::plane_size = size_x * size_y;
+	Map::plane_mask = Map::plane_size - 1;
+	//Every layer is a full plane stacked on the previous one.
+	Map::size = Map::plane_size * layer_count;
 
 	Tile::base_tiles = std::make_unique<Tile::TileBase[]>(Map::size);
 	Tile::extended_tiles = std::make_unique<Tile::TileExtended[]>(Map::size);
 
+	uint64_t tile_bytes = static_cast<uint64_t>(Map::size) * (sizeof(Tile::TileBase) + sizeof(Tile::TileExtended));
+	Debug(Facility::Map, Severity::Debug1, "Map tile storage is {} bytes", tile_bytes);
+
 	AllocateWaterRegions();
 }
 
+/**
+ * Count the surface tiles that start as land, for later land-proportion scaling.
+ */
 /* static */ void Map::CountLandTiles()
 {
-	/* Count number of tiles that are land. */
+	/* Land is a surface concept. Underground and space are not part of this proportion. */
 	Map::initial_land_count = 0;
-	for (const auto tile : Map::Iterate()) {
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		Map::initial_land_count += IsWaterTile(tile) ? 0 : 1;
 	}
 
 	/* Compensate for default values being set for (or users are most familiar with) at least
 	 * very low sea level. Dividing by 12 adds roughly 8%. */
 	Map::initial_land_count += Map::initial_land_count / 12;
-	Map::initial_land_count = std::min(Map::initial_land_count, Map::size);
+	//The cap is one plane: the count above never looked at another layer.
+	Map::initial_land_count = std::min(Map::initial_land_count, Map::plane_size);
 }
 
 /**
@@ -82,7 +99,16 @@
  */
 TileIndex TileVirtXYClampedToMap(int x, int y)
 {
-	return TileIndex{(static_cast<uint>(Clamp<int>(y / static_cast<int>(TILE_SIZE), 0, Map::MaxY())) << Map::LogX()) + static_cast<uint>(Clamp<int>(x / static_cast<int>(TILE_SIZE), 0, Map::MaxX()))};
+	//World Y is stacked the same way as TileY, one band of Map::SizeY() per allocated layer.
+	int stacked = y / static_cast<int>(TILE_SIZE);
+	int max_stacked = static_cast<int>(Map::SizeY() * Map::LayerCount() - 1);
+	if (stacked < 0) stacked = 0;
+	if (stacked > max_stacked) stacked = max_stacked;
+
+	MapLayer layer = static_cast<MapLayer>(static_cast<uint>(stacked) >> Map::LogY());
+	uint plane_y = static_cast<uint>(stacked) & Map::MaxY();
+	uint tile_x = static_cast<uint>(Clamp<int>(x / static_cast<int>(TILE_SIZE), 0, Map::MaxX()));
+	return TileXYL(tile_x, plane_y, layer);
 }
 
 #ifdef _DEBUG
@@ -95,11 +121,15 @@ TileIndex TileAdd(TileIndex tile, TileIndexDiff offset)
 	uint32_t x = TileX(tile) + dx;
 	uint32_t y = TileY(tile) + dy;
 
+	//Stacked Y runs through every allocated layer, not just one plane.
 	assert(x < Map::SizeX());
-	assert(y < Map::SizeY());
-	assert(TileXY(x, y) == Map::WrapToMap(tile + offset));
+	assert(y < Map::SizeY() * Map::LayerCount());
+	TileIndex result = TileXY(x, y);
+	//A plain offset must stay in the tile's layer. Crossing layers is a portal's job (I-2, I-3).
+	assert(GetTileLayer(result) == GetTileLayer(tile));
+	assert(result == Map::WrapToLayer(tile + offset, GetTileLayer(tile)));
 
-	return TileXY(x, y);
+	return result;
 }
 #endif
 
@@ -119,7 +149,8 @@ TileIndex TileAdd(TileIndex tile, TileIndexDiff offset)
 TileIndex TileAddWrap(TileIndex tile, int addx, int addy)
 {
 	uint x = TileX(tile) + addx;
-	uint y = TileY(tile) + addy;
+	//Stay inside this tile's layer. The stacked Y would walk into the next plane.
+	uint y = TilePlaneY(tile) + addy;
 
 	/* Disallow void tiles at the north border. */
 	if ((x == 0 || y == 0) && _settings_game.construction.freeform_edges) return INVALID_TILE;
@@ -127,7 +158,7 @@ TileIndex TileAddWrap(TileIndex tile, int addx, int addy)
 	/* Are we about to wrap? */
 	if (x >= Map::MaxX() || y >= Map::MaxY()) return INVALID_TILE;
 
-	return TileXY(x, y);
+	return TileXYL(x, y, GetTileLayer(tile));
 }
 
 /** 'Lookup table' for tile offsets given an Axis */
@@ -160,7 +191,8 @@ extern const DirectionIndexArray<TileIndexDiffC> _tileoffs_by_dir{{{
  * Gets the Manhattan distance between the two given tiles.
  * The Manhattan distance is the sum of the delta of both the
  * X and Y component.
- * Also known as L1-Norm
+ * Also known as L1-Norm.
+ * The layer is ignored: a portal is vertical, so a layer offset is not travel distance.
  * @param t0 the start tile
  * @param t1 the end tile
  * @return the distance
@@ -168,7 +200,7 @@ extern const DirectionIndexArray<TileIndexDiffC> _tileoffs_by_dir{{{
 uint DistanceManhattan(TileIndex t0, TileIndex t1)
 {
 	const uint dx = Delta(TileX(t0), TileX(t1));
-	const uint dy = Delta(TileY(t0), TileY(t1));
+	const uint dy = Delta(TilePlaneY(t0), TilePlaneY(t1));
 	return dx + dy;
 }
 
@@ -178,6 +210,7 @@ uint DistanceManhattan(TileIndex t0, TileIndex t1)
  * The 'Square' distance is the square of the shortest (straight line)
  * distance between the two tiles.
  * Also known as Euclidean- or L2-Norm squared.
+ * The layer is ignored: a portal is vertical, so a layer offset is not travel distance.
  * @param t0 the start tile
  * @param t1 the end tile
  * @return the distance
@@ -185,7 +218,7 @@ uint DistanceManhattan(TileIndex t0, TileIndex t1)
 uint DistanceSquare(TileIndex t0, TileIndex t1)
 {
 	const int dx = TileX(t0) - TileX(t1);
-	const int dy = TileY(t0) - TileY(t1);
+	const int dy = TilePlaneY(t0) - TilePlaneY(t1);
 	return dx * dx + dy * dy;
 }
 
@@ -193,6 +226,7 @@ uint DistanceSquare(TileIndex t0, TileIndex t1)
 /**
  * Gets the biggest distance component (x or y) between the two given tiles.
  * Also known as L-Infinity-Norm.
+ * The layer is ignored: a portal is vertical, so a layer offset is not travel distance.
  * @param t0 the start tile
  * @param t1 the end tile
  * @return the distance
@@ -200,7 +234,7 @@ uint DistanceSquare(TileIndex t0, TileIndex t1)
 uint DistanceMax(TileIndex t0, TileIndex t1)
 {
 	const uint dx = Delta(TileX(t0), TileX(t1));
-	const uint dy = Delta(TileY(t0), TileY(t1));
+	const uint dy = Delta(TilePlaneY(t0), TilePlaneY(t1));
 	return std::max(dx, dy);
 }
 
@@ -209,6 +243,7 @@ uint DistanceMax(TileIndex t0, TileIndex t1)
  * Gets the biggest distance component (x or y) between the two given tiles
  * plus the Manhattan distance, i.e. two times the biggest distance component
  * and once the smallest component.
+ * The layer is ignored: a portal is vertical, so a layer offset is not travel distance.
  * @param t0 the start tile
  * @param t1 the end tile
  * @return the distance
@@ -216,7 +251,7 @@ uint DistanceMax(TileIndex t0, TileIndex t1)
 uint DistanceMaxPlusManhattan(TileIndex t0, TileIndex t1)
 {
 	const uint dx = Delta(TileX(t0), TileX(t1));
-	const uint dy = Delta(TileY(t0), TileY(t1));
+	const uint dy = Delta(TilePlaneY(t0), TilePlaneY(t1));
 	return dx > dy ? 2 * dx + dy : 2 * dy + dx;
 }
 
@@ -228,7 +263,7 @@ uint DistanceMaxPlusManhattan(TileIndex t0, TileIndex t1)
 uint DistanceFromEdge(TileIndex tile)
 {
 	const uint xl = TileX(tile);
-	const uint yl = TileY(tile);
+	const uint yl = TilePlaneY(tile);
 	const uint xh = Map::SizeX() - 1 - xl;
 	const uint yh = Map::SizeY() - 1 - yl;
 	const uint minl = std::min(xl, yl);
@@ -246,9 +281,9 @@ uint DistanceFromEdgeDir(TileIndex tile, DiagDirection dir)
 {
 	switch (dir) {
 		case DiagDirection::NE: return             TileX(tile) - (_settings_game.construction.freeform_edges ? 1 : 0);
-		case DiagDirection::NW: return             TileY(tile) - (_settings_game.construction.freeform_edges ? 1 : 0);
+		case DiagDirection::NW: return       TilePlaneY(tile) - (_settings_game.construction.freeform_edges ? 1 : 0);
 		case DiagDirection::SW: return Map::MaxX() - TileX(tile) - 1;
-		case DiagDirection::SE: return Map::MaxY() - TileY(tile) - 1;
+		case DiagDirection::SE: return Map::MaxY() - TilePlaneY(tile) - 1;
 		default: NOT_REACHED();
 	}
 }
@@ -266,7 +301,9 @@ uint GetClosestWaterDistance(TileIndex tile, bool water)
 	uint max_dist = water ? 0x7F : 0x200;
 
 	int x = TileX(tile);
-	int y = TileY(tile);
+	//The spiral walks this tile's layer. A stacked Y would search the wrong plane.
+	int y = TilePlaneY(tile);
+	MapLayer layer = GetTileLayer(tile);
 
 	uint max_x = Map::MaxX();
 	uint max_y = Map::MaxY();
@@ -289,7 +326,7 @@ uint GetClosestWaterDistance(TileIndex tile, bool water)
 			for (uint a = 0; a < dist; a++) {
 				/* TileType::Void tiles are not checked (interval is [min; max) for IsInsideMM())*/
 				if (IsInsideMM(x, min_xy, max_x) && IsInsideMM(y, min_xy, max_y)) {
-					TileIndex t = TileXY(x, y);
+					TileIndex t = TileXYL(static_cast<uint>(x), static_cast<uint>(y), layer);
 					if (HasTileWaterGround(t) == water) return dist;
 				}
 				x += dx;
@@ -299,8 +336,8 @@ uint GetClosestWaterDistance(TileIndex tile, bool water)
 	}
 
 	if (!water) {
-		/* no land found - is this a water-only map? */
-		for (const auto t : Map::Iterate()) {
+		/* no land found - is this a water-only map? Only the tile's own layer counts. */
+		for (const auto t : MultiLayerMap::IterateLayer(layer)) {
 			if (!IsTileType(t, TileType::Void) && !IsTileType(t, TileType::Water)) return 0x1FF;
 		}
 	}

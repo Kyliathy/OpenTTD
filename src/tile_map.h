@@ -34,14 +34,18 @@
 
 /**
  * Returns the height of a tile, also for tiles outside the map (virtual "black" tiles).
+ * Y is a stacked tile coordinate. It is clamped into the given layer's band.
  *
  * @param x X coordinate of the tile, may be outside the map.
- * @param y Y coordinate of the tile, may be outside the map.
+ * @param y Stacked Y coordinate of the tile, may be outside the map.
+ * @param layer Layer whose band the height is read from.
  * @return The height in the same unit as TileHeight.
  */
-inline uint TileHeightOutsideMap(int x, int y)
+inline uint TileHeightOutsideMap(int x, int y, MapLayer layer = MapLayer::Surface)
 {
-	return TileHeight(TileXY(Clamp(x, 0, Map::MaxX()), Clamp(y, 0, Map::MaxY())));
+	int band = static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY());
+	int plane_y = Clamp(y - band, 0, static_cast<int>(Map::MaxY()));
+	return TileHeight(TileXYL(static_cast<uint>(Clamp(x, 0, static_cast<int>(Map::MaxX()))), static_cast<uint>(plane_y), layer));
 }
 
 /**
@@ -78,16 +82,18 @@ inline uint TilePixelHeight(Tile tile)
  * Returns the height of a tile in pixels, also for tiles outside the map (virtual "black" tiles).
  *
  * @param x X coordinate of the tile, may be outside the map.
- * @param y Y coordinate of the tile, may be outside the map.
+ * @param y Stacked Y coordinate of the tile, may be outside the map.
+ * @param layer Layer whose band the height is read from.
  * @return The height in pixels in the same unit as TilePixelHeight.
  */
-inline uint TilePixelHeightOutsideMap(int x, int y)
+inline uint TilePixelHeightOutsideMap(int x, int y, MapLayer layer = MapLayer::Surface)
 {
-	return TileHeightOutsideMap(x, y) * TILE_HEIGHT;
+	return TileHeightOutsideMap(x, y, layer) * TILE_HEIGHT;
 }
 
 /**
  * Get the tiletype of a given tile.
+ * Map::Size() covers every allocated layer, so a tile on any layer is in range.
  *
  * @param tile The tile to get the TileType
  * @return The tiletype of the tile
@@ -100,10 +106,12 @@ inline uint TilePixelHeightOutsideMap(int x, int y)
 }
 
 /**
- * Check if a tile is within the map (not a border)
+ * Check if a tile is inside its layer (not on that layer's void fence).
+ * Every layer has the same fence: the south-west column and the south-east row,
+ * plus the north edges when freeform edges are on.
  *
  * @param tile The tile to check
- * @return Whether the tile is in the interior of the map
+ * @return Whether the tile is in the interior of its layer
  * @pre tile < Map::Size()
  */
 inline bool IsInnerTile(Tile tile)
@@ -111,7 +119,8 @@ inline bool IsInnerTile(Tile tile)
 	assert(tile < Map::Size());
 
 	uint x = TileX(tile);
-	uint y = TileY(tile);
+	//The fence is per plane. Stacked Y would treat another layer's row as this layer's edge.
+	uint y = TilePlaneY(tile);
 
 	return x < Map::MaxX() && y < Map::MaxY() && ((x > 0 && y > 0) || !_settings_game.construction.freeform_edges);
 }
@@ -120,8 +129,9 @@ inline bool IsInnerTile(Tile tile)
  * Set the type of a tile
  *
  * This functions sets the type of a tile. If the type
- * TileType::Void is selected the tile must be at the south-west or
- * south-east edges of the map and vice versa.
+ * TileType::Void is selected the tile must be on that layer's void fence
+ * and vice versa. The fence is the south-west column and the south-east row
+ * of every layer, plus the north edges when freeform edges are on.
  *
  * @param tile The tile to save the new type
  * @param type The type to save
@@ -153,7 +163,8 @@ inline void SetTileType(Tile tile, TileType type)
 }
 
 /**
- * Checks if a tile is valid
+ * Checks if a tile is valid.
+ * Map::Size() covers every allocated layer, so a tile on any layer can be valid.
  *
  * @param tile The tile to check
  * @return True if the tile is on the map and not one of TileType::Void.
@@ -292,7 +303,7 @@ inline std::tuple<Slope, int> GetTilePixelSlope(TileIndex tile)
 	return {s, h * TILE_HEIGHT};
 }
 
-std::tuple<Slope, int> GetTilePixelSlopeOutsideMap(int x, int y);
+std::tuple<Slope, int> GetTilePixelSlopeOutsideMap(int x, int y, MapLayer layer = MapLayer::Surface);
 
 /**
  * Get bottom height of the tile

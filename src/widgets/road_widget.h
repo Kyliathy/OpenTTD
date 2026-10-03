@@ -25,6 +25,7 @@ enum RoadToolbarWidgets : WidgetID {
 	WID_ROT_ONE_WAY,        ///< Build one-way road.
 	WID_ROT_BUILD_BRIDGE,   ///< Build bridge.
 	WID_ROT_BUILD_TUNNEL,   ///< Build tunnel.
+	WID_ROT_LAYER_ELEVATOR, ///< Build road elevator to another map layer.
 	WID_ROT_REMOVE,         ///< Remove road.
 	WID_ROT_CONVERT_ROAD,   ///< Convert road.
 };
@@ -37,6 +38,15 @@ enum BuildRoadDepotWidgets : WidgetID {
 	WID_BROD_DEPOT_SE,  ///< Depot with SE entry.
 	WID_BROD_DEPOT_SW,  ///< Depot with SW entry.
 	WID_BROD_DEPOT_NW,  ///< Depot with NW entry.
+};
+
+/** Widgets of the #BuildRoadElevatorWindow class. */
+enum BuildRoadElevatorWidgets : WidgetID {
+	WID_BREL_CAPTION,  ///< Caption of the window.
+	WID_BREL_DOOR_NE,  ///< Door facing NE.
+	WID_BREL_DOOR_SE,  ///< Door facing SE.
+	WID_BREL_DOOR_SW,  ///< Door facing SW.
+	WID_BREL_DOOR_NW,  ///< Door facing NW.
 };
 
 /** Widgets of the #BuildRoadStationWindow class. */

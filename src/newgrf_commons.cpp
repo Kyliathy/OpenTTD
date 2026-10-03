@@ -18,6 +18,7 @@
 #include "station_map.h"
 #include "tree_map.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "newgrf_object.h"
 #include "genworld.h"
 #include "newgrf_spritegroup.h"
@@ -415,7 +416,8 @@ TileIndex GetNearbyTile(uint8_t parameter, TileIndex tile, bool signed_offsets, 
 	if (axis == Axis::Y) std::swap(x, y);
 
 	/* Make sure we never roam outside of the map, better wrap in that case */
-	return Map::WrapToMap(tile + TileDiffXY(x, y));
+	//C9: the wrap stays in the origin tile's layer.
+	return Map::WrapToLayer(tile + TileDiffXY(x, y), GetTileLayer(tile));
 }
 
 /**
@@ -434,6 +436,9 @@ uint32_t GetNearbyTileInformation(TileIndex tile, bool grf_version8)
 
 	/* Fake tile type for road waypoints */
 	if (IsRoadWaypointTile(tile)) tile_type = TileType::Road;
+
+	//A portal is reported as its transport so a NewGRF never sees tile type 11.
+	if (IsLayerPortalTile(tile)) tile_type = GetLayerPortalTransportType(tile) == TransportType::Rail ? TileType::Railway : TileType::Road;
 
 	auto [tileh, z] = GetTilePixelSlope(tile);
 	/* Return 0 if the tile is a land tile */

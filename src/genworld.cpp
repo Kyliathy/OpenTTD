@@ -126,9 +126,10 @@ static void _GenerateWorld()
 			SetGeneratingWorldProgress(GenWorldProgress::Objects, 1);
 
 			/* Make sure the tiles at the north border are void tiles if needed. */
+			//C2: an empty scenario voids the surface edge only.
 			if (_settings_game.construction.freeform_edges) {
-				for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, 0));
-				for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(0, y));
+				for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXYL(x, 0, MapLayer::Surface));
+				for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXYL(0, y, MapLayer::Surface));
 			}
 
 			/* Make the map the height of the setting */
@@ -144,6 +145,7 @@ static void _GenerateWorld()
 			Map::CountLandTiles();
 
 			/* Only generate towns, tree and industries in newgame mode. */
+			//Non-surface planes already come from InitializeLandscape. The generators below write the surface only.
 			if (_game_mode != GameMode::Editor) {
 				if (!GenerateTowns(_settings_game.economy.town_layout)) {
 					HandleGeneratingWorldAbortion();
@@ -371,11 +373,13 @@ static TileIndex TranslateCoordinates(float x, float y)
 	switch (_settings_game.game_creation.heightmap_rotation) {
 		case HM_CLOCKWISE:
 			/* Tile coordinates align with what we expect. */
-			return TileXY(x * Map::MaxX(), y * Map::MaxY());
+			//C2: imported town positions are surface tiles.
+			return TileXYL(static_cast<uint>(x * Map::MaxX()), static_cast<uint>(y * Map::MaxY()), MapLayer::Surface);
 
 		case HM_COUNTER_CLOCKWISE:
 			/* Tile coordinates are rotated and must be adjusted. */
-			return TileXY((1 - y) * Map::MaxX(), x * Map::MaxY());
+			//C2: imported town positions are surface tiles.
+			return TileXYL(static_cast<uint>((1 - y) * Map::MaxX()), static_cast<uint>(x * Map::MaxY()), MapLayer::Surface);
 
 		default:
 			NOT_REACHED();

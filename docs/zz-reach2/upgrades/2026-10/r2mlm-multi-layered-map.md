@@ -141,8 +141,9 @@ In scope: the three layers; switching the view; road elevators (road, not tram);
 | [r2mlm8-bus-elevators.md](r2mlm8-bus-elevators.md) | 3 | Road elevators: placement GUI, road vehicle traversal, pathfinding, underground bus routes | r2mlm7 |
 | [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) | 4 | Rail portals: placement GUI, train traversal, reservations, signals, underground track building | r2mlm7 |
 | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 6 | Multiplayer, savegame matrix, performance, architecture documentation | r2mlm8, r2mlm9 |
+| [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 1 | A Subsidies entry in the Towns menu whenever the Subsidies button is off screen in a split toolbar (review finding L-2) | r2mlm1 |
 
-r2mlm8 and r2mlm9 may run in either order after r2mlm7. Art from r2mlm6 is optional for every plan: each consumer has a stand-in and an explicit swap task.
+r2mlm8 and r2mlm9 may run in either order after r2mlm7. r2mlm11 may run any time after r2mlm1. Art from r2mlm6 is optional for every plan: each consumer has a stand-in and an explicit swap task.
 
 ## Deferred Points
 
@@ -166,8 +167,10 @@ These were considered and deliberately left out of the 2026-10 plans. A later ep
 
 Group 1 verifies and, if needed, corrects these. Every sub-plan reuses them.
 
-- CMake: `C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` (not on `PATH`; call it by full path or prepend its folder to `PATH` in the session).
-- Configure: `cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static`
+- Toolchain: Visual Studio Build Tools 2022 (17.14, MSVC 14.44, Windows SDK 10.0.26100.0, ATL component `Microsoft.VisualStudio.Component.VC.ATL` for the vcpkg `breakpad` port), Git 2.56 (vcpkg needs a Git newer than 2.33). Visual Studio Community is not used: its install on this machine is incomplete and has no vcpkg, so `CMAKE_GENERATOR_INSTANCE` pins the Build Tools instance.
+- CMake 3.31.6-msvc6: `C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe` (not on `PATH`; call it by full path or prepend its folder to `PATH` in the session).
+- vcpkg 2026-09-26, a standalone clone (as in `COMPILING.md`) at `D:\Codez\Tools\vcpkg` (upstream `dd6ff8e6b0`, 2026-10-03, bootstrapped with `bootstrap-vcpkg.bat -disableMetrics`). The configure builds the dependencies from `vcpkg.json`. Do not use the vcpkg bundled with Build Tools (`BuildTools\VC\vcpkg`, 2025-04-01): its helper scripts download an MSYS2 runtime that no longer exists (see the task 1.2 notes). When changing the toolchain file of an existing `build/`, add `--fresh`.
+- Configure: `cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_GENERATOR_INSTANCE="C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools" -DCMAKE_TOOLCHAIN_FILE="D:/Codez/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static`
 - Build: `cmake --build build --config RelWithDebInfo --target openttd openttd_test` (use `--config Debug` when asserts are needed).
 - Unit tests: `ctest --test-dir build -C RelWithDebInfo --output-on-failure`
 - Run: from `build/`, `.\RelWithDebInfo\openttd.exe`. Base graphics come from the TTD files copied into `build/baseset/` by task 1.5.
@@ -191,11 +194,19 @@ _Applies to Group 1._
 Establish a reproducible build and the pre-epic reference data that later plans compare against.
 
 {{MEDIUM}}
-- [ ] 1.1 Confirm the Visual Studio 2022 bundled CMake and vcpkg paths listed in `## Build and Test Commands`; if either is missing, stop and ask the user to install the Visual Studio "C++ CMake tools" / vcpkg components. Record the CMake and vcpkg versions in that section.
-- [ ] 1.2 Configure `build/` with the static triplet. If vcpkg fails, record the error verbatim in this task and fix the environment; never edit `vcpkg.json` to work around it.
+- [x] 1.1 Confirm the Visual Studio 2022 bundled CMake and vcpkg paths listed in `## Build and Test Commands`; if either is missing, stop and ask the user to install the Visual Studio "C++ CMake tools" / vcpkg components. Record the CMake and vcpkg versions in that section.
+  - 2026-10-03: The original Community paths had no vcpkg. The user installed Build Tools 2022 with CMake and vcpkg and declined Community, so the section now points at Build Tools.
+- [x] 1.2 Configure `build/` with the static triplet. If vcpkg fails, record the error verbatim in this task and fix the environment; never edit `vcpkg.json` to work around it.
+  - 2026-10-03 pre-check (`vcpkg install --dry-run --triplet x64-windows-static`) failed with `breakpad does not exist`, `liblzma does not exist`, and the same line for every port. Cause: Git 2.33.1 rejects `git checkout-index --ignore-skip-worktree-bits` (`error: unknown option 'ignore-skip-worktree-bits'`), so vcpkg extracts an empty versions tree. Fix: upgrade Git for Windows (winget `Git.Git`), then re-run the configure.
+  - 2026-10-03, after the user upgraded to Git 2.56.0: the dry run resolves 13 packages. That is the 7 manifest ports plus `atl`, `libdisasm`, `libogg`, `opus`, `vcpkg-cmake` and `vcpkg-cmake-config`. The `atl` port, required by breakpad, fails if `atlbase.h` is not in `INCLUDE`, and the MSVC 14.44 toolset of Build Tools has no ATL. Fix: add the Build Tools component `Microsoft.VisualStudio.Component.VC.ATL` ("C++ ATL for latest v143 build tools").
+  - 2026-10-03, after ATL was installed: the configure built `vcpkg-cmake-config`, `vcpkg-cmake`, `libdisasm`, `atl` and `breakpad`, then failed on `liblzma`. Verbatim: `error: https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst: failed: status code 404` (all six mirrors), `CMake Error at scripts/cmake/vcpkg_download_distfile.cmake:136 (message): Download failed, halting portfile.`, `error: building liblzma:x64-windows-static failed with: BUILD_FAILED`.
+    - Cause: the bundled vcpkg (2025-04-01) uses its own helper scripts, while the ports come from the June 2026 baseline. Its `vcpkg_acquire_msys.cmake` pins `msys2-runtime-3.5.4-2`, which MSYS2 has removed. `vcpkg_fixup_pkgconfig` in the liblzma port needs it to fetch pkg-config.
+    - The scripts at the baseline pin `msys2-runtime-3.6.5-1` and current vcpkg pins `3.6.10-4`, and both still download. A vcpkg newer than the bundled one fixes it.
+  - 2026-10-03, done: with the standalone vcpkg from `## Build and Test Commands` and `--fresh`, the configure finished (exit 0) in 9 minutes (log `build/configure-2.log`). All 13 vcpkg packages built. CMake found ZLIB, LibLZMA, LZO, PNG, OpusFile, Ogg, Opus, Soxr, `unofficial-breakpad`, XAudio2, OpenGL and editbin. GRFCodec was not found, as intended for the baseline. The working tree already held epic source changes at this point; the pre-epic reference comes from r2rvm Group 1.
 - [ ] 1.3 Build `openttd` and `openttd_test` in RelWithDebInfo and in Debug; record the warning count of each as the baseline.
 - [ ] 1.4 Run `ctest` and record the list of passing tests in this task as the baseline.
-- [ ] 1.5 Copy (never move) `!kit/TTD/*.grf` and `!kit/TTD/sample.cat` into `build/baseset/`, start `.\RelWithDebInfo\openttd.exe` from `build/`, and confirm the title screen appears without a missing-graphics warning.
+- [ ] 1.5 Copy (never move) into `build/baseset/`: `trg1.grf`, `trgc.grf`, `trgh.grf`, `trgi.grf`, `sample.cat` and `gm.cat` from `!kit/TTD/`, and `trgt.grf` from `!kit/TT/`. Then start `.\RelWithDebInfo\openttd.exe` from `build/`, and confirm the title screen appears without a missing-graphics warning.
+  - On 2026-10-03 these seven files matched the MD5s in `media/baseset/orig_dos.obg`, `orig_dos.obs` and `orig_dos.obm`. `!kit/TTD/trgt.grf` does not match (MD5 `fcde1d7e…`, expected `e30e8a39…`), and `CheckExternalFiles` would report it as corrupt. `gm.cat` adds the original music.
 - [ ] 1.6 Create `build/baseline.cfg` with `map_x = 8`, `map_y = 8` under `[game_creation]`, and `build/scripts/on_dedicated.scr` containing `save baseline_<seed>` then `quit`; run `.\RelWithDebInfo\openttd.exe -D -x -c baseline.cfg -G <seed>` for seeds 1234 and 98765, then repeat with `map_x = 9`, `map_y = 10`. Record where the saves were written.
 - [ ] 1.7 Write `docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py`: read the 8-byte header, decompress `OTTX` (lzma), `OTTZ` (zlib) or `OTTN`, walk chunk ids, skip non-RIFF chunks by gamma lengths until gamma 0, and print the SHA-256 of each `MAPT` to `MAP8` payload, plus an optional `--tiles N` argument that hashes only the first N tiles of each chunk (N bytes for 8-bit planes, 2N for `MAP2` and `MAP8`), so the surface plane of a layered save can be compared with a one-layer save.
 - [ ] 1.8 Run the digest script on the four baseline saves and store the output in `docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt`. This file is the reference for I-6.
@@ -207,6 +218,7 @@ _Applies to Groups 2-4._
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm1-layer-toolbar-button.md](r2mlm1-layer-toolbar-button.md) | 199-205 | `## Completion Conditions` of r2mlm1: the button, the `MapLayer` vocabulary and the interim cycling behaviour that Group 2 accepts. |
+| [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 187-192 | `## Completion Conditions` of r2mlm11: the Towns menu offers Subsidies whenever the Subsidies button is off screen, and r2mlm1's arrangements stay unchanged; accepted in Group 2. |
 | [r2mlm2-layer-addressing-and-controller.md](r2mlm2-layer-addressing-and-controller.md) | 188-193 | `## Completion Conditions` of r2mlm2: addressing primitives, `MultiLayerMap` core and unit tests accepted in Group 3. |
 | [r2mlm3-layer-call-site-migration.md](r2mlm3-layer-call-site-migration.md) | 245-250 | `## Completion Conditions` of r2mlm3: every call site ledgered and the surface digest unchanged; accepted in Group 3. |
 | [r2mlm4-layer-world-lifecycle-and-savegame.md](r2mlm4-layer-world-lifecycle-and-savegame.md) | 227-233 | `## Completion Conditions` of r2mlm4: three live layers, rules, initialisers, savegame upgrade; accepted in Group 4. |
@@ -220,6 +232,8 @@ _Applies to Groups 2-4._
 - [ ] 2.2 Verify the button sits immediately right of the map button in the full-width toolbar and in every split arrangement, and in the scenario editor toolbar.
 - [ ] 2.3 Verify AD-1: `MapLayer` values and `MAX_MAP_LAYERS` match this plan exactly.
 - [ ] 2.4 Mark r2mlm1 as done in `## Plan Index` (append "done" to its Delivers cell).
+- [ ] 2.5 Execute [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) to its Completion Conditions, then confirm it left `arrange14` to `arrange20`, `arrange_all` and their `static_assert`s unchanged, apart from the two reworded comments (r2mlm1 owns the layout).
+- [ ] 2.6 Mark r2mlm11 as done in `## Plan Index`.
 
 ### Group 3 - Point 2 checkpoint A: addressing and call sites
 

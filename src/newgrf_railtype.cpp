@@ -16,6 +16,7 @@
 #include "depot_base.h"
 #include "town.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 
 #include "safeguards.h"
 
@@ -230,6 +231,12 @@ void ConvertRailTypes()
 
 			case TileType::TunnelBridge:
 				if (GetTunnelBridgeTransportType(t) == TransportType::Rail) {
+					SetRailType(t, railtype_conversion_map[GetRailType(t)]);
+				}
+				break;
+
+			case TileType::LayerPortal:
+				if (GetLayerPortalTransportType(t) == TransportType::Rail) {
 					SetRailType(t, railtype_conversion_map[GetRailType(t)]);
 				}
 				break;

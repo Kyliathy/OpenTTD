@@ -53,6 +53,8 @@
 #include "goal_gui.h"
 #include "story_base.h"
 #include "toolbar_gui.h"
+#include "map_layer_gui.h"
+#include "map_layer.h"
 #include "framerate_type.h"
 #include "screenshot_gui.h"
 #include "misc_cmd.h"
@@ -883,6 +885,44 @@ static CallBackFunction ToolbarZoomOutClick(Window *w)
 	return CallBackFunction::None;
 }
 
+/**
+ * Cycle the map layer shown by the main viewport.
+ * @param w Toolbar that was clicked.
+ * @return #CallBackFunction::None
+ */
+static CallBackFunction ToolbarMapLayerClick(Window *w)
+{
+	//The editor toolbar and the game toolbar use different widget ids for the same button.
+	WidgetID widget = (_game_mode == GameMode::Editor) ? (WidgetID)WID_TE_MAP_LAYER : (WidgetID)WID_TN_MAP_LAYER;
+	//A single-layer game has nothing to cycle to (AD-11).
+	if (w->IsWidgetDisabled(widget)) return CallBackFunction::None;
+
+	CycleMainViewportLayer();
+	w->HandleButtonClick(widget);
+	SndClickBeep();
+	return CallBackFunction::None;
+}
+
+/**
+ * Show the icon of the layer the main viewport is viewing.
+ * @param w Toolbar that owns the button.
+ * @param widget Layer button of that toolbar.
+ */
+static void UpdateMapLayerButtonSprite(Window *w, WidgetID widget)
+{
+	//One allocated layer, or no map yet, has nothing to cycle to (AD-11).
+	bool single = MultiLayerMap::GetLayerCount() <= 1;
+	w->SetWidgetDisabledState(widget, single);
+	StringID enabled_tooltip = (widget == WID_TE_MAP_LAYER) ? STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP : STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER;
+	w->GetWidget<NWidgetCore>(widget)->SetToolTip(single ? STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE : enabled_tooltip);
+
+	const Viewport *vp = GetMainWindow()->viewport.get();
+	//The toolbar can refresh before the main viewport exists.
+	if (vp == nullptr) return;
+	w->GetWidget<NWidgetCore>(widget)->SetSprite(GetMapLayerIcon(vp->layer));
+	w->SetWidgetDirty(widget);
+}
+
 /* --- Rail button menu --- */
 
 static std::string _railtype_filter; ///< Persistent filter text for railtype dropdown menu.
@@ -1345,32 +1385,36 @@ static MenuClickedProc * const _menu_clicked_procs[] = {
 	MenuClickSettings,    // 2
 	MenuClickSaveLoad,    // 3
 	MenuClickMap,         // 4
-	MenuClickTown,        // 5
-	MenuClickSubsidies,   // 6
-	MenuClickStations,    // 7
-	MenuClickFinances,    // 8
-	MenuClickCompany,     // 9
-	MenuClickStory,       // 10
-	MenuClickGoal,        // 11
-	MenuClickGraphsOrLeague, // 12
+	nullptr,              // 5
+	MenuClickTown,        // 6
+	MenuClickSubsidies,   // 7
+	MenuClickStations,    // 8
+	MenuClickFinances,    // 9
+	MenuClickCompany,     // 10
+	MenuClickStory,       // 11
+	MenuClickGoal,        // 12
 	MenuClickGraphsOrLeague, // 13
-	MenuClickIndustry,    // 14
-	MenuClickShowTrains,  // 15
-	MenuClickShowRoad,    // 16
-	MenuClickShowShips,   // 17
-	MenuClickShowAir,     // 18
-	MenuClickMap,         // 19
-	nullptr,                 // 20
-	MenuClickBuildRail,   // 21
-	MenuClickBuildRoad,   // 22
-	MenuClickBuildTram,   // 23
-	MenuClickBuildWater,  // 24
-	MenuClickBuildAir,    // 25
-	MenuClickForest,      // 26
-	MenuClickMusicWindow, // 27
-	MenuClickNewspaper,   // 28
-	MenuClickHelp,        // 29
+	MenuClickGraphsOrLeague, // 14
+	MenuClickIndustry,    // 15
+	MenuClickShowTrains,  // 16
+	MenuClickShowRoad,    // 17
+	MenuClickShowShips,   // 18
+	MenuClickShowAir,     // 19
+	MenuClickMap,         // 20
+	nullptr,              // 21
+	MenuClickBuildRail,   // 22
+	MenuClickBuildRoad,   // 23
+	MenuClickBuildTram,   // 24
+	MenuClickBuildWater,  // 25
+	MenuClickBuildAir,    // 26
+	MenuClickForest,      // 27
+	MenuClickMusicWindow, // 28
+	MenuClickNewspaper,   // 29
+	MenuClickHelp,        // 30
 };
+
+//The dropdown list stops before the toolbar-switch button, which has no menu.
+static_assert(std::size(_menu_clicked_procs) == static_cast<size_t>(WID_TN_SWITCH_BAR));
 
 /** Full blown container to make it behave exactly as we want :) */
 class NWidgetToolbarContainer : public NWidgetContainer {
@@ -1550,8 +1594,9 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SETTINGS,
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
-			WID_TN_SUBSIDIES,
+			//WID_TN_SUBSIDIES is left out so this row stays 14 buttons.
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -1562,10 +1607,12 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_HELP,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange14) == 2 * 14);
 		static const WidgetID arrange15[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TRAINS,
 			WID_TN_ROADVEHS,
 			WID_TN_SHIPS,
@@ -1582,9 +1629,10 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_PAUSE,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_SAVE,
 			WID_TN_TOWNS,
-			WID_TN_SUBSIDIES,
+			//WID_TN_SUBSIDIES is left out so this row stays 15 buttons.
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -1595,11 +1643,13 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_HELP,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange15) == 2 * 15);
 		static const WidgetID arrange16[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TRAINS,
 			WID_TN_ROADVEHS,
 			WID_TN_SHIPS,
@@ -1630,11 +1680,13 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_ZOOM_OUT,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange16) == 2 * 16);
 		static const WidgetID arrange17[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_SUBSIDIES,
 			WID_TN_TRAINS,
 			WID_TN_ROADVEHS,
@@ -1650,9 +1702,10 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SWITCH_BAR,
 			/* lower toolbar */
 			WID_TN_PAUSE,
-			WID_TN_FAST_FORWARD,
+			//WID_TN_FAST_FORWARD stays on the upper row.
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_SUBSIDIES,
 			WID_TN_TOWNS,
 			WID_TN_STATIONS,
@@ -1667,11 +1720,13 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_ZOOM_OUT,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange17) == 2 * 17);
 		static const WidgetID arrange18[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
 			WID_TN_SUBSIDIES,
 			WID_TN_STATIONS,
@@ -1688,9 +1743,10 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SWITCH_BAR,
 			/* lower toolbar */
 			WID_TN_PAUSE,
-			WID_TN_FAST_FORWARD,
+			//WID_TN_FAST_FORWARD stays on the upper row.
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
 			WID_TN_SUBSIDIES,
 			WID_TN_STATIONS,
@@ -1706,11 +1762,13 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_ZOOM_OUT,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange18) == 2 * 18);
 		static const WidgetID arrange19[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
 			WID_TN_SUBSIDIES,
 			WID_TN_TRAINS,
@@ -1728,9 +1786,10 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SWITCH_BAR,
 			/* lower toolbar */
 			WID_TN_PAUSE,
-			WID_TN_FAST_FORWARD,
+			//WID_TN_FAST_FORWARD stays on the upper row.
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -1747,11 +1806,13 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_ZOOM_OUT,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange19) == 2 * 19);
 		static const WidgetID arrange20[] = {
-			WID_TN_PAUSE,
+			//WID_TN_PAUSE stays on the lower row.
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
 			WID_TN_SUBSIDIES,
 			WID_TN_TRAINS,
@@ -1770,9 +1831,10 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_SWITCH_BAR,
 			/* lower toolbar */
 			WID_TN_PAUSE,
-			WID_TN_FAST_FORWARD,
+			//WID_TN_FAST_FORWARD stays on the upper row.
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_STATIONS,
 			WID_TN_FINANCES,
 			WID_TN_COMPANIES,
@@ -1790,12 +1852,14 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_ZOOM_OUT,
 			WID_TN_SWITCH_BAR,
 		};
+		static_assert(std::size(arrange20) == 2 * 20);
 		static const WidgetID arrange_all[] = {
 			WID_TN_PAUSE,
 			WID_TN_FAST_FORWARD,
 			WID_TN_SETTINGS,
 			WID_TN_SAVE,
 			WID_TN_SMALL_MAP,
+			WID_TN_MAP_LAYER,
 			WID_TN_TOWNS,
 			WID_TN_SUBSIDIES,
 			WID_TN_STATIONS,
@@ -1871,6 +1935,7 @@ class NWidgetScenarioToolbarContainer : public NWidgetToolbarContainer {
 			WID_TE_SPACER,
 			WID_TE_DATE_PANEL,
 			WID_TE_SMALL_MAP,
+			WID_TE_MAP_LAYER,
 			WID_TE_ZOOM_IN,
 			WID_TE_ZOOM_OUT,
 			WID_TE_LAND_GENERATE,
@@ -1891,6 +1956,7 @@ class NWidgetScenarioToolbarContainer : public NWidgetToolbarContainer {
 			WID_TE_SAVE,
 			WID_TE_DATE_PANEL,
 			WID_TE_SMALL_MAP,
+			WID_TE_MAP_LAYER,
 			WID_TE_ZOOM_IN,
 			WID_TE_ZOOM_OUT,
 			WID_TE_LAND_GENERATE,
@@ -1907,6 +1973,7 @@ class NWidgetScenarioToolbarContainer : public NWidgetToolbarContainer {
 		static const WidgetID arrange_switch[] = {
 			WID_TE_DATE_PANEL,
 			WID_TE_SMALL_MAP,
+			WID_TE_MAP_LAYER,
 			WID_TE_LAND_GENERATE,
 			WID_TE_TOWN_GENERATE,
 			WID_TE_INDUSTRY,
@@ -1923,6 +1990,7 @@ class NWidgetScenarioToolbarContainer : public NWidgetToolbarContainer {
 			WID_TE_SAVE,
 			WID_TE_DATE_PANEL,
 			WID_TE_SMALL_MAP,
+			WID_TE_MAP_LAYER,
 			WID_TE_ZOOM_IN,
 			WID_TE_ZOOM_OUT,
 			WID_TE_MUSIC_SOUND,
@@ -1974,6 +2042,7 @@ static ToolbarButtonProc * const _toolbar_button_procs[] = {
 	ToolbarOptionsClick,
 	ToolbarSaveClick,
 	ToolbarMapClick,
+	ToolbarMapLayerClick,
 	ToolbarTownClick,
 	ToolbarSubsidiesClick,
 	ToolbarStationsClick,
@@ -2002,6 +2071,9 @@ static ToolbarButtonProc * const _toolbar_button_procs[] = {
 	ToolbarSwitchClick,
 };
 
+//One click handler per toolbar widget, including the switch button.
+static_assert(std::size(_toolbar_button_procs) == static_cast<size_t>(WID_TN_END));
+
 /** Main toolbar. */
 struct MainToolbarWindow : Window {
 	MainToolbarWindow(WindowDesc &desc) : Window(desc)
@@ -2010,6 +2082,7 @@ struct MainToolbarWindow : Window {
 
 		_last_started_action = CallBackFunction::None;
 		this->flags.Reset(WindowFlag::WhiteBorder);
+		UpdateMapLayerButtonSprite(this, WID_TN_MAP_LAYER);
 		this->SetWidgetDisabledState(WID_TN_PAUSE, _networking && !_network_server); // if not server, disable pause button
 		this->SetWidgetDisabledState(WID_TN_FAST_FORWARD, _networking); // if networking, disable fast-forward button
 		PositionMainToolbar(this);
@@ -2057,6 +2130,7 @@ struct MainToolbarWindow : Window {
 			case MTHK_SAVEGAME: MenuClickSaveLoad(); break;
 			case MTHK_LOADGAME: ShowSaveLoadDialog(AbstractFileType::Savegame, SaveLoadOperation::Load); break;
 			case MTHK_SMALLMAP: ShowSmallMap(); break;
+			case MTHK_CYCLE_MAP_LAYER: ToolbarMapLayerClick(this); break;
 			case MTHK_TOWNDIRECTORY: ShowTownDirectory(); break;
 			case MTHK_SUBSIDIES: ShowSubsidiesList(); break;
 			case MTHK_STATIONS: ShowCompanyStations(_local_company); break;
@@ -2139,6 +2213,27 @@ struct MainToolbarWindow : Window {
 	{
 		if (!gui_scope) return;
 		HandleZoomMessage(this, *GetMainWindow()->viewport, WID_TN_ZOOM_IN, WID_TN_ZOOM_OUT);
+		UpdateMapLayerButtonSprite(this, WID_TN_MAP_LAYER);
+	}
+
+	/**
+	 * A widget was hovered long enough to show its tooltip.
+	 * @param pt Mouse position.
+	 * @param widget Widget under the cursor.
+	 * @param close_cond How the tooltip closes.
+	 * @return True when this window drew the tooltip itself.
+	 */
+	bool OnTooltip([[maybe_unused]] Point pt, WidgetID widget, TooltipCloseCondition close_cond) override
+	{
+		//Only the layer button names the layer currently in view.
+		if (widget != WID_TN_MAP_LAYER) return false;
+		//A disabled button uses the single-layer tooltip set on the widget.
+		if (this->IsWidgetDisabled(widget)) return false;
+
+		const Viewport *vp = GetMainWindow()->viewport.get();
+		if (vp == nullptr) return false;
+		GuiShowTooltips(this, GetEncodedString(STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT, GetMapLayerName(vp->layer)), close_cond);
+		return true;
 	}
 
 	static inline HotkeyList hotkeys{"maintoolbar", {
@@ -2148,6 +2243,8 @@ struct MainToolbarWindow : Window {
 		Hotkey(WKC_F3, "saveload", MTHK_SAVEGAME),
 		Hotkey(0, "load_game", MTHK_LOADGAME),
 		Hotkey({WKC_F4, 'M'}, "smallmap", MTHK_SMALLMAP),
+		//N is free. L is terraform, M is the small map and V opens an extra view.
+		Hotkey('N', "cycle_map_layer", MTHK_CYCLE_MAP_LAYER),
 		Hotkey(WKC_F5, "town_list", MTHK_TOWNDIRECTORY),
 		Hotkey(WKC_F6, "subsidies", MTHK_SUBSIDIES),
 		Hotkey(WKC_F7, "station_list", MTHK_STATIONS),
@@ -2192,6 +2289,7 @@ static constexpr std::tuple<WidgetID, WidgetType, SpriteID> _toolbar_button_spri
 	{WID_TN_SETTINGS,     WWT_IMGBTN,     SPR_IMG_SETTINGS},
 	{WID_TN_SAVE,         WWT_IMGBTN_2,   SPR_IMG_SAVE},
 	{WID_TN_SMALL_MAP,    WWT_IMGBTN,     SPR_IMG_SMALLMAP},
+	{WID_TN_MAP_LAYER,    WWT_PUSHIMGBTN, SPR_IMG_PLANTTREES},
 	{WID_TN_TOWNS,        WWT_IMGBTN,     SPR_IMG_TOWN},
 	{WID_TN_SUBSIDIES,    WWT_IMGBTN,     SPR_IMG_SUBSIDIES},
 	{WID_TN_STATIONS,     WWT_IMGBTN,     SPR_IMG_COMPANY_LIST},
@@ -2289,17 +2387,18 @@ static MenuClickedProc * const _scen_toolbar_dropdown_procs[] = {
 	nullptr,              // 9
 	nullptr,              // 10
 	nullptr,              // 11
-	ToolbarScenGenTown,   // 12
-	nullptr,              // 13
-	ToolbarScenBuildRoad, // 14
-	ToolbarScenBuildTram, // 15
-	nullptr,              // 16
+	nullptr,              // 12
+	ToolbarScenGenTown,   // 13
+	nullptr,              // 14
+	ToolbarScenBuildRoad, // 15
+	ToolbarScenBuildTram, // 16
 	nullptr,              // 17
 	nullptr,              // 18
 	nullptr,              // 19
-	MenuClickMusicWindow, // 20
-	MenuClickHelp,        // 21
-	nullptr,              // 22
+	nullptr,              // 20
+	MenuClickMusicWindow, // 21
+	MenuClickHelp,        // 22
+	nullptr,              // 23
 };
 
 static ToolbarButtonProc * const _scen_toolbar_button_procs[] = {
@@ -2312,6 +2411,7 @@ static ToolbarButtonProc * const _scen_toolbar_button_procs[] = {
 	ToolbarScenDateBackward,
 	ToolbarScenDateForward,
 	ToolbarScenMapTownDir,
+	ToolbarMapLayerClick,
 	ToolbarZoomInClick,
 	ToolbarZoomOutClick,
 	ToolbarScenGenLand,
@@ -2343,6 +2443,7 @@ enum class MainToolbarEditorHotkeys : int32_t {
 	BuildWater = WID_TE_WATER, ///< Open window for building locks, canals, rivers and aqueducts.
 	BuildTrees = WID_TE_TREES, ///< Open tree selection window.
 	Sign = WID_TE_SIGNS, ///< Toggle sign creation tool.
+	CycleMapLayer = WID_TE_MAP_LAYER, ///< Cycle the map layer shown by the main viewport.
 	Settings = 1 << SPECIAL_HOTKEY_BIT, ///< Open game options window.
 	SaveGame, ///< Open save scenario window.
 	Music, ///< Open sound end music window.
@@ -2366,6 +2467,7 @@ struct ScenarioEditorToolbarWindow : Window {
 
 		_last_started_action = CallBackFunction::None;
 		this->flags.Reset(WindowFlag::WhiteBorder);
+		UpdateMapLayerButtonSprite(this, WID_TE_MAP_LAYER);
 		PositionMainToolbar(this);
 		DoZoomInOutWindow(ZOOM_NONE, this);
 	}
@@ -2462,6 +2564,7 @@ struct ScenarioEditorToolbarWindow : Window {
 			}
 			if (cbf != CallBackFunction::None) _last_started_action = cbf;
 		} else {
+			//Widget-valued hotkeys, including the map layer button, click that widget.
 			this->OnClick({}, hotkey, 0);
 		}
 		return EventState::Handled;
@@ -2516,6 +2619,7 @@ struct ScenarioEditorToolbarWindow : Window {
 	{
 		if (!gui_scope) return;
 		HandleZoomMessage(this, *GetMainWindow()->viewport, WID_TE_ZOOM_IN, WID_TE_ZOOM_OUT);
+		UpdateMapLayerButtonSprite(this, WID_TE_MAP_LAYER);
 	}
 
 	void OnQueryTextFinished(std::optional<std::string> str) override
@@ -2560,6 +2664,7 @@ struct ScenarioEditorToolbarWindow : Window {
 		Hotkey({WKC_NUM_MINUS, WKC_MINUS, WKC_SHIFT | WKC_MINUS, WKC_SHIFT | WKC_F6}, "zoomout", MainToolbarEditorHotkeys::ZoomOut),
 		Hotkey('L', "terraform", MainToolbarEditorHotkeys::Terraform),
 		Hotkey('M', "smallmap", MainToolbarEditorHotkeys::SmallMap),
+		Hotkey(0, "cycle_map_layer", MainToolbarEditorHotkeys::CycleMapLayer),
 		Hotkey('V', "extra_viewport", MainToolbarEditorHotkeys::ExtraViewport),
 	}};
 };
@@ -2581,6 +2686,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_toolb_scen_inner_wid
 	EndContainer(),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_IMGBTN, Colours::Grey, WID_TE_SMALL_MAP), SetSpriteTip(SPR_IMG_SMALLMAP, STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP),
+	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_MAP_LAYER), SetSpriteTip(SPR_IMG_PLANTTREES, STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP),
 	NWidget(NWID_SPACER),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_IN), SetSpriteTip(SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN),
 	NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_TE_ZOOM_OUT), SetSpriteTip(SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT),

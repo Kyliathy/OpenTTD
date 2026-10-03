@@ -14,6 +14,7 @@
 #include "bridge.h"
 #include "viewport_func.h"
 #include "command_func.h"
+#include "map_layer.h"
 #include "town.h"
 #include "train.h"
 #include "ship.h"
@@ -317,6 +318,8 @@ CommandCost CmdBuildBridge(DoCommandFlags flags, TileIndex tile_end, TileIndex t
 		/* User cannot modify height of tiles with one coordinate equal to zero, they are always at the sea level, and you can't build bridge in the sea.
 		 * Furthermore, they are void tiles unless map is infinite water. If we don't return for them here, we will still fail as their slope is invalid. */
 		if (TileX(t) == 0 || TileY(t) == 0) return CommandCost(transport_type == TransportType::Water ? STR_ERROR_BRIDGE_THROUGH_MAP_BORDER : STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP);
+		//Both ends must sit on a layer that allows bridges.
+		if (CommandCost layer_cost = CheckLayerAllowsConstruction(t, MapLayerConstruction::Bridge); layer_cost.Failed()) return layer_cost;
 	}
 
 	/* type of bridge */
@@ -658,6 +661,9 @@ CommandCost CmdBuildTunnel(DoCommandFlags flags, TileIndex start_tile, Transport
 		default: return CMD_ERROR;
 	}
 
+	//The entrance must sit on a layer that allows tunnels. The far end is checked once it is known.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::Tunnel); layer_cost.Failed()) return layer_cost;
+
 	if (company == OWNER_DEITY) {
 		if (transport_type != TransportType::Road) return CMD_ERROR;
 		const Town *town = CalcClosestTownFromTile(start_tile);
@@ -724,6 +730,9 @@ CommandCost CmdBuildTunnel(DoCommandFlags flags, TileIndex start_tile, Transport
 		cost.AddCost(_price[Price::BuildTunnel]);
 		cost.AddCost(cost.GetCost() >> tiles_coef); // add a multiplier for longer tunnels
 	}
+
+	//The far mouth is a second tile and must allow tunnels too.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(end_tile, MapLayerConstruction::Tunnel); layer_cost.Failed()) return layer_cost;
 
 	/* Add the cost of the entrance */
 	cost.AddCost(_price[Price::BuildTunnel]);

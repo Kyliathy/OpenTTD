@@ -76,6 +76,7 @@ void LoadCheckData::Clear()
 	this->error_msg.clear();
 
 	this->map_size_x = this->map_size_y = 256; // Default for old savegames which do not store mapsize.
+	this->map_layers = 1; // Old files are one surface plane.
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};
 	this->starting_year = {};

@@ -36,6 +36,7 @@
 #include "newgrf_text.h"
 #include "autoslope.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
 #include "strings_func.h"
 #include "window_func.h"
 #include "string_func.h"
@@ -45,6 +46,7 @@
 #include "subsidy_func.h"
 #include "core/pool_func.hpp"
 #include "town.h"
+#include "map_layer.h"
 #include "town_kdtree.h"
 #include "townname_func.h"
 #include "core/random_func.hpp"
@@ -149,6 +151,10 @@ Town::~Town()
 
 			case TileType::TunnelBridge:
 				assert(!TestTownOwnsBridge(tile, this));
+				break;
+
+			case TileType::LayerPortal:
+				//Towns never own or demolish a layer portal.
 				break;
 
 			default:
@@ -579,6 +585,9 @@ static void TownGenerateCargoBinomial(Town *t, TownProductionEffect tpe, uint8_t
 /** @copydoc TileLoopProc */
 static void TileLoop_Town(TileIndex tile)
 {
+	//Houses exist only on the surface. A later plan must not let this loop see another layer.
+	assert(GetTileLayer(tile) == MapLayer::Surface);
+
 	HouseID house_id = GetHouseType(tile);
 
 	/* NewHouseTileLoop returns false if Callback 21 succeeded, i.e. the house
@@ -1738,6 +1747,10 @@ static bool CanFollowRoad(TileIndex tile, DiagDirection dir, TownExpandModes mod
 			case TileType::TunnelBridge:
 				return GetTunnelBridgeTransportType(target_tile) == TransportType::Road;
 
+			case TileType::LayerPortal:
+				//Towns never grow a road into a portal.
+				return false;
+
 			case TileType::House:
 			case TileType::Industry:
 			case TileType::Object:
@@ -2171,6 +2184,9 @@ std::tuple<CommandCost, Money, TownID> CmdFoundTown(DoCommandFlags flags, TileIn
 	if (size >= TownSize::End) return { CMD_ERROR, 0, TownID::Invalid() };
 	if (layout >= TownLayout::End) return { CMD_ERROR, 0, TownID::Invalid() };
 
+	//Towns are founded on a layer that allows them.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Town); layer_cost.Failed()) return { layer_cost, 0, TownID::Invalid() };
+
 	/* Some things are allowed only in the scenario editor and for game scripts. */
 	if (_game_mode != GameMode::Editor && _current_company != OWNER_DEITY) {
 		if (_settings_game.economy.found_town == TownFounding::Forbidden) return { CMD_ERROR, 0, TownID::Invalid() };
@@ -2513,7 +2529,9 @@ Town *TryGenerateNamedTownAroundTile(TileIndex target_tile, TownSize size, bool 
  */
 HouseZone GetTownRadiusGroup(const Town *t, TileIndex tile)
 {
-	uint dist = DistanceSquare(tile, t->xy);
+	//C5: a town zone is a surface distance.
+	TileIndex surface = MultiLayerMap::ProjectToSurface(tile);
+	uint dist = DistanceSquare(surface, t->xy);
 
 	if (t->fund_buildings_months != 0 && dist <= 25) return HouseZone::TownCentre;
 
@@ -2959,6 +2977,9 @@ CommandCost CmdPlaceHouse(DoCommandFlags flags, TileIndex tile, HouseID house, b
 	const HouseSpec *hs = HouseSpec::Get(house);
 	if (!hs->enabled) return CMD_ERROR;
 
+	//Houses are a surface construction.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::House); layer_cost.Failed()) return layer_cost;
+
 	int maxz = GetTileMaxZ(tile);
 
 	/* Check each tile of a multi-tile house. */
@@ -3019,6 +3040,10 @@ CommandCost CmdPlaceHouse(DoCommandFlags flags, TileIndex tile, HouseID house, b
 CommandCost CmdPlaceHouseArea(DoCommandFlags flags, TileIndex tile, TileIndex start_tile, HouseID house, bool is_protected, bool replace, bool diagonal)
 {
 	if (start_tile >= Map::Size()) return CMD_ERROR;
+
+	//Both corners of a house area must allow houses.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::House); layer_cost.Failed()) return layer_cost;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::House); layer_cost.Failed()) return layer_cost;
 
 	if (_game_mode != GameMode::Editor && _settings_game.economy.place_houses == PlaceHouses::Forbidden) return CMD_ERROR;
 
@@ -3999,9 +4024,11 @@ Town *CalcClosestTownFromTile(TileIndex tile, uint threshold)
 {
 	if (Town::GetNumItems() == 0) return nullptr;
 
-	TownID tid = _town_kdtree.FindNearest(TileX(tile), TileY(tile));
+	//C5: towns stand on the surface, so the search starts from the tile above or below.
+	TileIndex surface = MultiLayerMap::ProjectToSurface(tile);
+	TownID tid = _town_kdtree.FindNearest(TileX(surface), TileY(surface));
 	Town *town = Town::Get(tid);
-	if (DistanceManhattan(tile, town->xy) < threshold) return town;
+	if (DistanceManhattan(surface, town->xy) < threshold) return town;
 	return nullptr;
 }
 
@@ -4032,7 +4059,8 @@ Town *ClosestTownFromTile(TileIndex tile, uint threshold)
 				assert(Town::IsValidID(tid));
 				Town *town = Town::Get(tid);
 
-				if (DistanceManhattan(tile, town->xy) >= threshold) town = nullptr;
+				//C5: the rating distance is measured on the surface.
+				if (DistanceManhattan(MultiLayerMap::ProjectToSurface(tile), town->xy) >= threshold) town = nullptr;
 
 				return town;
 			}
@@ -4219,8 +4247,8 @@ static const IntervalTimer<TimerGameEconomy> _economy_towns_monthly({TimerGameEc
 
 static const IntervalTimer<TimerGameEconomy> _economy_towns_yearly({TimerGameEconomy::Trigger::Year, TimerGameEconomy::Priority::Town}, [](auto)
 {
-	/* Increment house ages */
-	for (const auto t : Map::Iterate()) {
+	/* Increment house ages. C2: houses are surface buildings. */
+	for (const auto t : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		if (!IsTileType(t, TileType::House)) continue;
 		IncrementHouseAge(t);
 	}

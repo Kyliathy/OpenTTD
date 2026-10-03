@@ -26,7 +26,7 @@ SpiralTileIterator::SpiralTileIterator(TileIndex center, uint diameter) : max_ra
 		this->position = 0;
 
 		this->x = TileX(center);
-		this->y = TileY(center);
+		this->y = TilePlaneY(center);
 	} else {
 		this->extent.fill(0);
 		this->dir = DiagDirection::Begin;
@@ -34,8 +34,10 @@ SpiralTileIterator::SpiralTileIterator(TileIndex center, uint diameter) : max_ra
 
 		/* Start with the west corner of the center 2x2 rect */
 		this->x = TileX(center) + 1;
-		this->y = TileY(center);
+		this->y = TilePlaneY(center);
 	}
+	//C6: later rings are measured inside this layer.
+	this->layer = GetTileLayer(center);
 	this->SkipOutsideMap();
 }
 
@@ -43,7 +45,7 @@ SpiralTileIterator::SpiralTileIterator(TileIndex center, uint diameter) : max_ra
 SpiralTileIterator::SpiralTileIterator(TileIndex start_north, uint radius, uint w, uint h) :
 	max_radius(radius), extent{w, h, w, h}, cur_radius(0), dir(DiagDirection::Begin),
 	/* first tile is the west corner */
-	x(TileX(start_north) + w + 1), y(TileY(start_north))
+	x(TileX(start_north) + w + 1), y(TilePlaneY(start_north)), layer(GetTileLayer(start_north))
 {
 	assert(max_radius > 0);
 	this->InitPosition();
@@ -55,6 +57,7 @@ SpiralTileIterator::SpiralTileIterator(TileIndex start_north, uint radius, uint 
  */
 void SpiralTileIterator::SkipOutsideMap()
 {
+	//C6: a plane Y past this layer is off the map, even when a lower layer still has tiles there.
 	while (!this->IsEnd() && (this->x >= Map::SizeX() || this->y >= Map::SizeY())) this->Increment();
 }
 

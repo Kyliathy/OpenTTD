@@ -44,6 +44,7 @@ struct LoadCheckData {
 
 	uint32_t map_size_x = 0;
 	uint32_t map_size_y = 0;
+	uint8_t map_layers = 1; ///< Layers stored in the file. Old files are one surface plane.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

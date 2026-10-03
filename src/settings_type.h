@@ -557,6 +557,8 @@ struct YAPFSettings {
 	uint32_t rail_longer_platform_penalty; ///< penalty for longer station platform than train
 	uint32_t rail_longer_platform_per_tile_penalty; ///< penalty for longer station platform than train (per tile)
 	uint32_t rail_shorter_platform_penalty; ///< penalty for shorter station platform than train
+	uint32_t rail_layer_portal_penalty; ///< penalty for passing through a rail layer portal
+	uint32_t road_layer_portal_penalty; ///< penalty for passing through a road layer portal
 	uint32_t rail_shorter_platform_per_tile_penalty; ///< penalty for shorter station platform than train (per tile)
 	uint32_t ship_curve45_penalty; ///< penalty for 45-deg curve for ships
 	uint32_t ship_curve90_penalty; ///< penalty for 90-deg curve for ships

@@ -13,6 +13,8 @@
 #include "strings_func.h"
 #include "zoom_func.h"
 #include "window_func.h"
+#include "map_layer_gui.h"
+#include "map_layer.h"
 
 #include "widgets/viewport_widget.h"
 
@@ -36,6 +38,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_extra_viewport_widge
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_ZOOM_IN), SetSpriteTip(SPR_IMG_ZOOMIN, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_IN),
 		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_ZOOM_OUT), SetSpriteTip(SPR_IMG_ZOOMOUT, STR_TOOLBAR_TOOLTIP_ZOOM_THE_VIEW_OUT),
+		NWidget(WWT_PUSHIMGBTN, Colours::Grey, WID_EV_MAP_LAYER), SetSpriteTip(SPR_IMG_PLANTTREES, STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER),
 		NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_EV_MAIN_TO_VIEW), SetFill(1, 1), SetResize(1, 0),
 										SetStringTip(STR_EXTRA_VIEW_MOVE_MAIN_TO_VIEW, STR_EXTRA_VIEW_MOVE_MAIN_TO_VIEW_TOOLTIP),
@@ -58,6 +61,7 @@ public:
 
 		NWidgetViewport *nvp = this->GetWidget<NWidgetViewport>(WID_EV_VIEWPORT);
 		nvp->InitializeViewport(this, tile, ScaleZoomGUI(ZoomLevel::Viewport));
+		this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
 		if (_settings_client.gui.zoom_min == viewport->zoom) this->DisableWidget(WID_EV_ZOOM_IN);
 	}
 
@@ -66,7 +70,7 @@ public:
 		switch (widget) {
 			case WID_EV_CAPTION:
 				/* set the number in the title bar */
-				return GetString(STR_EXTRA_VIEWPORT_TITLE, this->window_number + 1);
+				return GetString(STR_EXTRA_VIEWPORT_TITLE, this->window_number + 1) + " - " + GetString(GetMapLayerName(this->viewport->layer));
 
 			default:
 				return this->Window::GetWidgetString(widget, stringid);
@@ -79,8 +83,17 @@ public:
 			case WID_EV_ZOOM_IN: DoZoomInOutWindow(ZOOM_IN,  this); break;
 			case WID_EV_ZOOM_OUT: DoZoomInOutWindow(ZOOM_OUT, this); break;
 
+			case WID_EV_MAP_LAYER: {
+				MapLayer next = GetNextMapLayer(this->viewport->layer, MultiLayerMap::GetLayerCount());
+				SetViewportLayer(this, next);
+				this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
+				this->SetDirty();
+				break;
+			}
+
 			case WID_EV_MAIN_TO_VIEW: { // location button (move main view to same spot as this view) 'Paste Location'
 				Window *w = GetMainWindow();
+				SetViewportLayer(w, this->viewport->layer);
 				int x = this->viewport->scrollpos_x; // Where is the main looking at
 				int y = this->viewport->scrollpos_y;
 
@@ -93,6 +106,8 @@ public:
 
 			case WID_EV_VIEW_TO_MAIN: { // inverse location button (move this view to same spot as main view) 'Copy Location'
 				const Window *w = GetMainWindow();
+				SetViewportLayer(this, w->viewport->layer);
+				this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
 				int x = w->viewport->scrollpos_x;
 				int y = w->viewport->scrollpos_y;
 

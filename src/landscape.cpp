@@ -20,6 +20,7 @@
 #include "viewport_func.h"
 #include "command_func.h"
 #include "landscape.h"
+#include "map_layer.h"
 #include "void_map.h"
 #include "tgp.h"
 #include "genworld.h"
@@ -61,7 +62,8 @@ extern const TileTypeProcs
 	_tile_type_void_procs,
 	_tile_type_industry_procs,
 	_tile_type_tunnelbridge_procs,
-	_tile_type_object_procs;
+	_tile_type_object_procs,
+	_tile_type_layer_portal_procs;
 
 /**
  * Tile callback functions for each type of tile.
@@ -80,8 +82,8 @@ const EnumIndexArray<const TileTypeProcs *, TileType, TileType::MaxSize> _tile_t
 	&_tile_type_industry_procs, // Callback functions for TileType::Industry tiles
 	&_tile_type_tunnelbridge_procs, // Callback functions for TileType::TunnelBridge tiles
 	&_tile_type_object_procs, // Callback functions for TileType::Object tiles
+	&_tile_type_layer_portal_procs, // Callback functions for TileType::LayerPortal tiles
 	/* Explicitly initialize invalid elements to make sure that they are nullptr. */
-	nullptr,
 	nullptr,
 	nullptr,
 	nullptr,
@@ -115,12 +117,13 @@ static std::unique_ptr<SnowLine> _snow_line;
  * @param y Y viewport 2D coordinate.
  * @param clamp_to_map Clamp the coordinate outside of the map to the closest, non-void tile within the map.
  * @param[out] clamped Whether coordinates were clamped.
+ * @param layer Layer band the coordinate is clamped into.
  * @return 3D world coordinate of point visible at the given screen coordinate (3D perspective).
  *
  * @note Inverse of #RemapCoords2 function. Smaller values may get rounded.
  * @see InverseRemapCoords
  */
-Point InverseRemapCoords2(int x, int y, bool clamp_to_map, bool *clamped)
+Point InverseRemapCoords2(int x, int y, bool clamp_to_map, bool *clamped, MapLayer layer)
 {
 	if (clamped != nullptr) *clamped = false; // Not clamping yet.
 
@@ -130,7 +133,10 @@ Point InverseRemapCoords2(int x, int y, bool clamp_to_map, bool *clamped)
 
 	const uint min_coord = _settings_game.construction.freeform_edges ? TILE_SIZE : 0;
 	const uint max_x = Map::MaxX() * TILE_SIZE - 1;
-	const uint max_y = Map::MaxY() * TILE_SIZE - 1;
+	//The clamp stays inside one layer's band. Stacked Y of that band starts at y_base.
+	const int y_base = static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+	const uint max_y = static_cast<uint>(y_base) + Map::MaxY() * TILE_SIZE - 1;
+	const uint min_y = static_cast<uint>(y_base) + min_coord;
 
 	if (clamp_to_map) {
 		/* Bring the coordinates near to a valid range. At the top we allow a number
@@ -139,7 +145,7 @@ Point InverseRemapCoords2(int x, int y, bool clamp_to_map, bool *clamped)
 		int extra_tiles = CeilDiv(_settings_game.construction.map_height_limit * TILE_HEIGHT, TILE_PIXELS);
 		Point old_pt = pt;
 		pt.x = Clamp(pt.x, -extra_tiles * TILE_SIZE, max_x);
-		pt.y = Clamp(pt.y, -extra_tiles * TILE_SIZE, max_y);
+		pt.y = Clamp(pt.y, y_base - extra_tiles * TILE_SIZE, max_y);
 		if (clamped != nullptr) *clamped = (pt.x != old_pt.x) || (pt.y != old_pt.y);
 	}
 
@@ -150,13 +156,13 @@ Point InverseRemapCoords2(int x, int y, bool clamp_to_map, bool *clamped)
 	 * So give it a z-malus of 4 in the first iterations. */
 	int z = 0;
 	if (clamp_to_map) {
-		for (int i = 0; i < 5; i++) z = GetSlopePixelZ(Clamp(pt.x + std::max(z, 4) - 4, min_coord, max_x), Clamp(pt.y + std::max(z, 4) - 4, min_coord, max_y)) / 2;
-		for (int m = 3; m > 0; m--) z = GetSlopePixelZ(Clamp(pt.x + std::max(z, m) - m, min_coord, max_x), Clamp(pt.y + std::max(z, m) - m, min_coord, max_y)) / 2;
-		for (int i = 0; i < 5; i++) z = GetSlopePixelZ(Clamp(pt.x + z,             min_coord, max_x), Clamp(pt.y + z,             min_coord, max_y)) / 2;
+		for (int i = 0; i < 5; i++) z = GetSlopePixelZ(Clamp(pt.x + std::max(z, 4) - 4, min_coord, max_x), Clamp(pt.y + std::max(z, 4) - 4, min_y, max_y)) / 2;
+		for (int m = 3; m > 0; m--) z = GetSlopePixelZ(Clamp(pt.x + std::max(z, m) - m, min_coord, max_x), Clamp(pt.y + std::max(z, m) - m, min_y, max_y)) / 2;
+		for (int i = 0; i < 5; i++) z = GetSlopePixelZ(Clamp(pt.x + z,             min_coord, max_x), Clamp(pt.y + z,             min_y, max_y)) / 2;
 	} else {
-		for (int i = 0; i < 5; i++) z = GetSlopePixelZOutsideMap(pt.x + std::max(z, 4) - 4, pt.y + std::max(z, 4) - 4) / 2;
-		for (int m = 3; m > 0; m--) z = GetSlopePixelZOutsideMap(pt.x + std::max(z, m) - m, pt.y + std::max(z, m) - m) / 2;
-		for (int i = 0; i < 5; i++) z = GetSlopePixelZOutsideMap(pt.x + z,             pt.y + z            ) / 2;
+		for (int i = 0; i < 5; i++) z = GetSlopePixelZOutsideMap(pt.x + std::max(z, 4) - 4, pt.y + std::max(z, 4) - 4, layer) / 2;
+		for (int m = 3; m > 0; m--) z = GetSlopePixelZOutsideMap(pt.x + std::max(z, m) - m, pt.y + std::max(z, m) - m, layer) / 2;
+		for (int i = 0; i < 5; i++) z = GetSlopePixelZOutsideMap(pt.x + z,             pt.y + z,             layer) / 2;
 	}
 
 	pt.x += z;
@@ -327,9 +333,11 @@ int GetSlopePixelZ(int x, int y, bool ground_vehicle)
  * @param y World Y coordinate in tile "units", may be outside the map.
  * @return World Z coordinate at tile ground level, including slopes and foundations.
  */
-int GetSlopePixelZOutsideMap(int x, int y)
+int GetSlopePixelZOutsideMap(int x, int y, MapLayer layer)
 {
-	if (IsInsideBS(x, 0, Map::SizeX() * TILE_SIZE) && IsInsideBS(y, 0, Map::SizeY() * TILE_SIZE)) {
+	int y_base = static_cast<int>(to_underlying(layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+	//Inside this layer's band the real slope is used. Outside it, the void fence supplies the height.
+	if (IsInsideBS(x, 0, Map::SizeX() * TILE_SIZE) && IsInsideBS(y, y_base, Map::SizeY() * TILE_SIZE)) {
 		return GetSlopePixelZ(x, y, false);
 	} else {
 		return _tile_type_procs[TileType::Void]->get_slope_pixel_z_proc(INVALID_TILE, x, y, false);
@@ -548,7 +556,12 @@ void DoClearSquare(TileIndex tile)
 	if (MayAnimateTile(tile)) DeleteAnimatedTile(tile, true);
 
 	bool remove = IsDockingTile(tile);
-	MakeClear(tile, ClearGround::Grass, _generating_world ? 3 : 0);
+	//Demolition restores this layer's ground. Only the surface grows grass.
+	if (GetTileLayer(tile) == MapLayer::Surface) {
+		MakeClear(tile, ClearGround::Grass, _generating_world ? 3 : 0);
+	} else {
+		MakeClear(tile, ClearGround::Rocks, 3);
+	}
 	MarkTileDirtyByTile(tile);
 	if (remove) RemoveDockingTile(tile);
 
@@ -827,13 +840,23 @@ void RunTileLoop()
 	assert(tile != 0);
 
 	/* Manually update tile 0 every TILE_UPDATE_FREQUENCY ticks - the LFSR never iterates over it itself.  */
+	//The same plane-local cursor is applied to every layer, so tile 0 of each plane is updated together.
 	if (TimerGameTick::counter % TILE_UPDATE_FREQUENCY == 0) {
-		_tile_type_procs[GetTileType(0)]->tile_loop_proc(TileIndex{});
+		for (uint layer_index = 0; layer_index < Map::LayerCount(); ++layer_index) {
+			MapLayer layer = static_cast<MapLayer>(layer_index);
+			TileIndex origin = MultiLayerMap::GetLayerBase(layer);
+			_tile_type_procs[GetTileType(origin)]->tile_loop_proc(origin);
+		}
 		count--;
 	}
 
 	while (count--) {
-		_tile_type_procs[GetTileType(tile)]->tile_loop_proc(tile);
+		//One LFSR step visits the same plane position on every allocated layer.
+		for (uint layer_index = 0; layer_index < Map::LayerCount(); ++layer_index) {
+			MapLayer layer = static_cast<MapLayer>(layer_index);
+			TileIndex on_layer = MultiLayerMap::TileInLayer(tile, layer);
+			_tile_type_procs[GetTileType(on_layer)]->tile_loop_proc(on_layer);
+		}
 
 		/* Get the next tile in sequence using a Galois LFSR. */
 		tile = TileIndex{(tile.base() >> 1) ^ (-(int32_t)(tile.base() & 1) & feedback)};
@@ -842,19 +865,15 @@ void RunTileLoop()
 	_cur_tileloop_tile = tile;
 }
 
+/**
+ * Fill every allocated layer with its default ground and void fence.
+ * The surface stays the historical grass map. Other layers are flat and do not use Random().
+ */
 void InitializeLandscape()
 {
-	for (uint y = _settings_game.construction.freeform_edges ? 1 : 0; y < Map::MaxY(); y++) {
-		for (uint x = _settings_game.construction.freeform_edges ? 1 : 0; x < Map::MaxX(); x++) {
-			MakeClear(TileXY(x, y), ClearGround::Grass, 3);
-			SetTileHeight(TileXY(x, y), 0);
-			SetTropicZone(TileXY(x, y), TropicZone::Normal);
-			ClearBridgeMiddle(TileXY(x, y));
-		}
+	for (uint layer_index = 0; layer_index < Map::LayerCount(); ++layer_index) {
+		MultiLayerMap::InitialiseLayer(static_cast<MapLayer>(layer_index));
 	}
-
-	for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, Map::MaxY()));
-	for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(Map::MaxX(), y));
 }
 
 static const uint8_t _genterrain_tbl_1[5] = { 10, 22, 33, 37, 4  };
@@ -895,7 +914,8 @@ static void GenerateTerrain(int type, uint flag)
 		switch (flag & 3) {
 			default: NOT_REACHED();
 			case 0:
-				if (xw + yw > Map::Size() - bias) return;
+				//C4: the template regions are fractions of one plane.
+				if (xw + yw > Map::PlaneSize() - bias) return;
 				break;
 
 			case 1:
@@ -903,7 +923,8 @@ static void GenerateTerrain(int type, uint flag)
 				break;
 
 			case 2:
-				if (xw + yw < Map::Size() + bias) return;
+				//C4: the template regions are fractions of one plane.
+				if (xw + yw < Map::PlaneSize() + bias) return;
 				break;
 
 			case 3:
@@ -916,7 +937,8 @@ static void GenerateTerrain(int type, uint flag)
 	if (x + w >= Map::MaxX()) return;
 	if (y + h >= Map::MaxY()) return;
 
-	TileIndex tile = TileXY(x, y);
+	//C2: terrain templates raise the surface only.
+	TileIndex tile = TileXYL(x, y, MapLayer::Surface);
 
 	/* Get the template and overlay in a particular direction over the map's height from the given
 	 * origin point (tile), and update the map's height everywhere where the height from the template
@@ -984,9 +1006,10 @@ static void GenerateTerrain(int type, uint flag)
 
 static void CreateDesertOrRainForest(uint desert_tropic_line)
 {
-	uint update_freq = Map::Size() / 4;
+	//C2: desert and rainforest are surface climates. Progress follows one plane.
+	uint update_freq = Map::PlaneSize() / 4;
 
-	for (const auto tile : Map::Iterate()) {
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		if ((tile % update_freq) == 0) IncreaseGeneratingWorldProgress(GenWorldProgress::Landscape);
 
 		if (!IsValidTile(tile)) continue;
@@ -1006,7 +1029,7 @@ static void CreateDesertOrRainForest(uint desert_tropic_line)
 		RunTileLoop();
 	}
 
-	for (const auto tile : Map::Iterate()) {
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		if ((tile % update_freq) == 0) IncreaseGeneratingWorldProgress(GenWorldProgress::Landscape);
 
 		if (!IsValidTile(tile)) continue;
@@ -1537,8 +1560,8 @@ static uint CalculateCoverageLine(uint coverage, uint edge_multiplier)
 	/* Histogram of how many neighbour tiles are lower than the tiles of the height level. */
 	std::array<int, MAX_TILE_HEIGHT + 1> edge_histogram = {};
 
-	/* Build a histogram of the map height. */
-	for (const auto tile : Map::Iterate()) {
+	/* Build a histogram of the surface height. C2: snow and desert lines describe the surface. */
+	for (const auto tile : MultiLayerMap::IterateLayer(MapLayer::Surface)) {
 		uint h = TileHeight(tile);
 		histogram[h]++;
 
@@ -1553,8 +1576,8 @@ static uint CalculateCoverageLine(uint coverage, uint edge_multiplier)
 		}
 	}
 
-	/* The amount of land we have is the map size minus the first (sea) layer. */
-	uint land_tiles = Map::Size() - histogram[0];
+	/* The amount of land we have is one plane minus the sea-level tiles. */
+	uint land_tiles = Map::PlaneSize() - histogram[0];
 	int best_score = land_tiles;
 
 	/* Our goal is the coverage amount of the land-mass. */
@@ -1637,8 +1660,9 @@ bool GenerateLandscape(uint8_t mode)
 	} else {
 		SetGeneratingWorldProgress(GenWorldProgress::Landscape, steps + GLS_ORIGINAL);
 		if (_settings_game.construction.freeform_edges) {
-			for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, 0));
-			for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(0, y));
+			//C2: the north void fence is a surface edge. The same rule is applied per layer when those layers are generated.
+			for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXYL(x, 0, MapLayer::Surface));
+			for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXYL(0, y, MapLayer::Surface));
 		}
 		switch (_settings_game.game_creation.landscape) {
 			case LandscapeType::Arctic: {

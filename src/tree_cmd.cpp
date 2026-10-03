@@ -15,6 +15,7 @@
 #include "tree_map.h"
 #include "viewport_func.h"
 #include "command_func.h"
+#include "map_layer.h"
 #include "town.h"
 #include "genworld.h"
 #include "clear_func.h"
@@ -309,6 +310,7 @@ static void PlaceTreeGroups(uint num_groups)
 	std::array<Point, GROVE_SEGMENTS> grove;
 
 	do {
+		//C2: tree groups are planted on the surface.
 		TileIndex center_tile = RandomTile();
 
 		CreateRandomStarShapedPolygon(GROVE_RADIUS, grove);
@@ -520,6 +522,10 @@ CommandCost CmdPlantTree(DoCommandFlags flags, TileIndex tile, TileIndex start_t
 	CommandCost cost(ExpensesType::Other);
 
 	if (start_tile >= Map::Size()) return CMD_ERROR;
+
+	//Both corners of a tree drag must allow trees.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Trees); layer_cost.Failed()) return layer_cost;
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(start_tile, MapLayerConstruction::Trees); layer_cost.Failed()) return layer_cost;
 	/* Check the tree type within the current climate */
 	if (tree_to_plant != TREE_INVALID && !IsInsideBS(tree_to_plant, _tree_base_by_landscape[to_underlying(_settings_game.game_creation.landscape)], _tree_count_by_landscape[to_underlying(_settings_game.game_creation.landscape)])) return CMD_ERROR;
 
@@ -849,6 +855,9 @@ static bool TreesOnTileCanSpread(TileIndex tile)
 /** @copydoc TileLoopProc */
 static void TileLoop_Trees(TileIndex tile)
 {
+	//Trees exist only on the surface. A later plan must not let this loop see another layer.
+	assert(GetTileLayer(tile) == MapLayer::Surface);
+
 	if (GetTreeGround(tile) == TreeGround::Shore) {
 		TileLoop_Water(tile);
 	} else {

@@ -40,6 +40,8 @@
 #include "train.h"
 #include "train_cmd.h"
 #include "tunnelbridge_map.h"
+#include "layer_portal_map.h"
+#include "layer_portal_cmd.h"
 #include "misc_cmd.h"
 #include "script/api/script_event_types.hpp"
 #include "timer/timer_game_calendar.h"
@@ -2213,7 +2215,9 @@ static TrainForceProceeding DetermineNextTrainForceProceeding(const Train *t)
 	if (!t->flags.Test(VehicleRailFlag::Stuck)) return t->IsChainInDepot() ? TFP_STUCK : TFP_SIGNAL;
 
 	const Train *moving_front = t->GetMovingFront();
-	TileIndex next_tile = TileAddByDiagDir(moving_front->tile, TrackdirToExitdir(moving_front->GetVehicleTrackdir()));
+	//A portal step continues on the pair. A same-layer neighbour would look like a dead end.
+	DiagDirection exit_dir = TrackdirToExitdir(moving_front->GetVehicleTrackdir());
+	TileIndex next_tile = GetLayerPortalNextTile(moving_front->tile, exit_dir);
 	if (next_tile == INVALID_TILE || !IsTileType(next_tile, TileType::Railway) || !HasSignals(next_tile)) return TFP_STUCK;
 	TrackBits new_tracks = DiagdirReachesTracks(TrackdirToExitdir(moving_front->GetVehicleTrackdir())) & GetTrackBits(next_tile);
 	return new_tracks.Any() && HasSignalOnTrack(next_tile, FindFirstTrack(new_tracks)) ? TFP_SIGNAL : TFP_STUCK;
@@ -2455,7 +2459,14 @@ static void ClearPathReservation(const Train *v, TileIndex tile, Trackdir track_
 				}
 			}
 		}
+	} else if (IsLayerPortalTile(tile)) {
+		//This end is freed now. The pair, reached through the shaft, is freed when the train leaves that end.
+		UnreserveRailTrack(tile, TrackdirToTrack(track_dir));
+		if (IsLayerPortalShaftExit(tile, dir)) {
+			[[maybe_unused]] TileIndex pair = GetLayerPortalNextTile(tile, dir);
+		}
 	} else if (IsRailStationTile(tile)) {
+		//Station tiles are never portals, so the next platform tile stays a same-layer neighbour.
 		TileIndex new_tile = TileAddByDiagDir(tile, dir);
 		/* If the new tile is not a further tile of the same station, we
 		 * clear the reservation for the whole platform. */
@@ -2893,7 +2904,8 @@ static Track ChooseTrainTrack(Train *consist, TileIndex tile, DiagDirection ente
 	while (!IsSafeWaitingPosition(consist, res_dest.tile, res_dest.trackdir, true, _settings_game.pf.forbid_90_deg)) {
 		/* Extend reservation until we have found a safe position. */
 		DiagDirection exitdir = TrackdirToExitdir(res_dest.trackdir);
-		TileIndex next_tile = TileAddByDiagDir(res_dest.tile, exitdir);
+		//Extending a reservation off a portal continues on the pair.
+		TileIndex next_tile = GetLayerPortalNextTile(res_dest.tile, exitdir);
 		TrackBits reachable = TrackdirBitsToTrackBits(GetTileTrackStatus(next_tile, TransportType::Rail, RoadTramType::Invalid).trackdirs) & DiagdirReachesTracks(exitdir);
 		if (Rail90DegTurnDisallowed(GetTileRailType(res_dest.tile), GetTileRailType(next_tile))) {
 			reachable.Reset(TrackCrossesTracks(TrackdirToTrack(res_dest.trackdir)));
@@ -2964,6 +2976,7 @@ bool TryPathReserve(Train *consist, bool mark_as_stuck, bool first_tile_okay)
 			return false;
 		} else {
 			/* Depot not reserved, but the next tile might be. */
+			//A depot exit is not a portal, so the tile in front stays the plain neighbour.
 			TileIndex next_tile = TileAddByDiagDir(moving_front->tile, GetRailDepotDirection(moving_front->tile));
 			if (HasReservedTracks(next_tile, DiagdirReachesTracks(GetRailDepotDirection(moving_front->tile)))) return false;
 		}
@@ -2995,7 +3008,8 @@ bool TryPathReserve(Train *consist, bool mark_as_stuck, bool first_tile_okay)
 	}
 
 	DiagDirection exitdir = TrackdirToExitdir(origin.trackdir);
-	TileIndex new_tile = TileAddByDiagDir(origin.tile, exitdir);
+	//The first reserved step off a portal is the pair, not the same-layer neighbour.
+	TileIndex new_tile = GetLayerPortalNextTile(origin.tile, exitdir);
 	TrackBits reachable = TrackdirBitsToTrackBits(GetTileTrackStatus(new_tile, TransportType::Rail, RoadTramType::Invalid).trackdirs & DiagdirReachesTrackdirs(exitdir));
 
 	if (Rail90DegTurnDisallowed(GetTileRailType(origin.tile), GetTileRailType(new_tile))) reachable.Reset(TrackCrossesTracks(TrackdirToTrack(origin.trackdir)));
@@ -3407,8 +3421,16 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 			} else {
 				/* A new tile is about to be entered. */
 
-				/* Determine what direction we're entering the new tile from */
-				enterdir = DiagdirBetweenTiles(gp.old_tile, gp.new_tile);
+				/* A shaft exit is relocated onto the pair. DiagdirBetweenTiles cannot see across layers. */
+				DiagDirection moving = DirToDiagDir(v->GetMovingDirection());
+				if (IsLayerPortalShaftExit(gp.old_tile, moving)) {
+					TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y);
+					gp.new_tile = GetLayerPortalPairTile(gp.old_tile);
+					enterdir = moving;
+				} else {
+					/* Determine what direction we're entering the new tile from */
+					enterdir = DiagdirBetweenTiles(gp.old_tile, gp.new_tile);
+				}
 				assert(IsValidDiagDirection(enterdir));
 
 				/* Get the status of the tracks in the new tile and mask
@@ -3474,6 +3496,7 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 							first->progress = 255; // make sure that every bit of acceleration will hit the signal again, so speed stays 0.
 							if (!_settings_game.pf.reverse_at_signals || ++first->wait_counter < _settings_game.pf.wait_twoway_signal * Ticks::DAY_TICKS * 2) {
 								DiagDirection exitdir = TrackdirToExitdir(i);
+								//The tile in front of this signal is plain rail, so the look-ahead stays in the layer.
 								TileIndex o_tile = TileAddByDiagDir(gp.new_tile, exitdir);
 
 								exitdir = ReverseDiagDir(exitdir);
@@ -3532,7 +3555,14 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 							{{{{},           Track::Right, Track::X,     Track::Upper}}},
 							{{{Track::Right, {},           Track::Lower, Track::Y    }}}
 						}}};
-						DiagDirection exitdir = DiagdirBetweenTiles(gp.new_tile, prev->tile);
+						DiagDirection exitdir;
+						//The tile ahead of a wagon may be the pair. That step keeps the wagon's heading.
+						if ((IsLayerPortalTile(gp.new_tile) && GetLayerPortalPairTile(gp.new_tile) == prev->tile) ||
+								(IsLayerPortalTile(prev->tile) && GetLayerPortalPairTile(prev->tile) == gp.new_tile)) {
+							exitdir = DirToDiagDir(v->GetMovingDirection());
+						} else {
+							exitdir = DiagdirBetweenTiles(gp.new_tile, prev->tile);
+						}
 						assert(IsValidDiagDirection(exitdir));
 						chosen_track = _connecting_track[enterdir][exitdir];
 					}
@@ -3950,7 +3980,7 @@ static TileIndex TrainApproachingCrossingTile(const Train *moving_front)
 	if (!TrainCanLeaveTile(moving_front)) return INVALID_TILE;
 
 	DiagDirection dir = VehicleExitDir(moving_front->GetMovingDirection(), moving_front->track);
-	TileIndex tile = moving_front->tile + TileOffsByDiagDir(dir);
+	TileIndex tile = GetLayerPortalNextTile(moving_front->tile, dir);
 
 	/* not a crossing || wrong axis || unusable rail (wrong type or owner) */
 	if (!IsLevelCrossingTile(tile) || DiagDirToAxis(dir) == GetCrossingRoadAxis(tile) ||
@@ -3988,8 +4018,8 @@ static bool TrainCheckIfLineEnds(Train *moving_front, bool reverse)
 
 	/* Determine the non-diagonal direction in which we will exit this tile */
 	DiagDirection dir = VehicleExitDir(moving_front->GetMovingDirection(), moving_front->track);
-	/* Calculate next tile */
-	TileIndex tile = moving_front->tile + TileOffsByDiagDir(dir);
+	/* Calculate next tile. A shaft exit continues on the pair instead of ending the line. */
+	TileIndex tile = GetLayerPortalNextTile(moving_front->tile, dir);
 
 	/* Determine the track status on the next tile */
 	TrackStatus ts = GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid, ReverseDiagDir(dir));

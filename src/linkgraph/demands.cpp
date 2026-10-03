@@ -267,6 +267,7 @@ void DemandCalculator::CalcDemand(LinkGraphJob &job, Tscaler scaler)
  * @param job Job to calculate the demands for.
  */
 DemandCalculator::DemandCalculator(LinkGraphJob &job) :
+	//C4: cargo payment uses the plane diagonal. Plane distances make a layer offset irrelevant.
 	base_distance(IntSqrt(DistanceMaxPlusManhattan(TileXY(0,0), TileXY(Map::MaxX(), Map::MaxY()))))
 {
 	const LinkGraphSettings &settings = job.Settings();

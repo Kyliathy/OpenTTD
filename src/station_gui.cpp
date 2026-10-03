@@ -19,6 +19,7 @@
 #include "cargotype.h"
 #include "station_func.h"
 #include "station_gui.h"
+#include "map_layer.h"
 #include "strings_func.h"
 #include "string_func.h"
 #include "window_func.h"
@@ -131,11 +132,13 @@ void FindStationsAroundSelection()
 
 	/* Extended area by one tile */
 	uint x = TileX(location.tile);
-	uint y = TileY(location.tile);
+	//C6: the join search stays in the highlighted tile's layer.
+	uint y = TilePlaneY(location.tile);
+	MapLayer layer = GetTileLayer(location.tile);
 
 	/* Waypoints can only be built on existing rail/road tiles, so don't extend area if not highlighting a rail tile. */
 	int max_c = T::IsWaypoint() && !T::IsAcceptableWaypointTile(location.tile) ? 0 : 1;
-	TileArea ta(TileXY(std::max<int>(0, x - max_c), std::max<int>(0, y - max_c)), TileXY(std::min<int>(Map::MaxX(), x + location.w + max_c), std::min<int>(Map::MaxY(), y + location.h + max_c)));
+	TileArea ta(TileXYL(static_cast<uint>(std::max<int>(0, static_cast<int>(x) - max_c)), static_cast<uint>(std::max<int>(0, static_cast<int>(y) - max_c)), layer), TileXYL(static_cast<uint>(std::min<int>(Map::MaxX(), static_cast<int>(x) + location.w + max_c)), static_cast<uint>(std::min<int>(Map::MaxY(), static_cast<int>(y) + location.h + max_c)), layer));
 
 	typename T::StationType *adjacent = nullptr;
 

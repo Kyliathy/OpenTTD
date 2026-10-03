@@ -21,6 +21,7 @@
 #include "station_base.h"
 #include "waypoint_base.h"
 #include "texteff.hpp"
+#include "map_layer_gui.h"
 #include "strings_func.h"
 #include "window_func.h"
 #include "querystring_gui.h"
@@ -179,7 +180,8 @@ public:
 		}
 
 		/* Location */
-		this->landinfo_data.push_back(GetString(STR_LAND_AREA_INFORMATION_LANDINFO_COORDS, TileX(this->tile), TileY(this->tile), GetTileZ(this->tile)));
+		this->landinfo_data.push_back(GetString(STR_LAND_AREA_INFORMATION_MAP_LAYER, GetMapLayerName(GetTileLayer(this->tile))));
+		this->landinfo_data.push_back(GetString(STR_LAND_AREA_INFORMATION_LANDINFO_COORDS, TileX(this->tile), TilePlaneY(this->tile), GetTileZ(this->tile)));
 
 		/* Tile index */
 		this->landinfo_data.push_back(GetString(STR_LAND_AREA_INFORMATION_LANDINFO_INDEX, this->tile, this->tile));
@@ -516,7 +518,7 @@ void ShowCostOrIncomeAnimation(int x, int y, int z, Money cost)
 		cost = -cost;
 		msg = STR_INCOME_FLOAT_INCOME;
 	}
-	AddTextEffect(GetEncodedString(msg, cost), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising);
+	AddTextEffect(GetEncodedString(msg, cost), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising, GetLayerOfWorldY(y));
 }
 
 /**
@@ -532,14 +534,14 @@ void ShowFeederIncomeAnimation(int x, int y, int z, Money transfer, Money income
 	Point pt = RemapCoords(x, y, z);
 
 	if (income == 0) {
-		AddTextEffect(GetEncodedString(STR_FEEDER, transfer), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising);
+		AddTextEffect(GetEncodedString(STR_FEEDER, transfer), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising, GetLayerOfWorldY(y));
 	} else {
 		StringID msg = STR_FEEDER_COST;
 		if (income < 0) {
 			income = -income;
 			msg = STR_FEEDER_INCOME;
 		}
-		AddTextEffect(GetEncodedString(msg, transfer, income), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising);
+		AddTextEffect(GetEncodedString(msg, transfer, income), pt.x, pt.y, Ticks::DAY_TICKS, TextEffectMode::Rising, GetLayerOfWorldY(y));
 	}
 }
 
@@ -558,7 +560,7 @@ TextEffectID ShowFillingPercent(int x, int y, int z, uint8_t percent, StringID s
 
 	assert(string != STR_NULL);
 
-	return AddTextEffect(GetEncodedString(string, percent), pt.x, pt.y, 0, TextEffectMode::Static);
+	return AddTextEffect(GetEncodedString(string, percent), pt.x, pt.y, 0, TextEffectMode::Static, GetLayerOfWorldY(y));
 }
 
 /**

@@ -838,6 +838,9 @@ static void TileLoopIndustry_BubbleGenerator(TileIndex tile)
 /** @copydoc TileLoopProc */
 static void TileLoop_Industry(TileIndex tile)
 {
+	//Industries exist only on the surface. A later plan must not let this loop see another layer.
+	assert(GetTileLayer(tile) == MapLayer::Surface);
+
 	if (IsTileOnWater(tile)) TileLoop_Water(tile);
 
 	/* Normally this doesn't happen, but if an industry NewGRF is removed
@@ -1029,8 +1032,10 @@ static void SetupFarmFieldFence(TileIndex tile, int size, uint8_t type, DiagDire
 	TileIndexDiff diff = TileOffsByAxis(OtherAxis(DiagDirToAxis(side)));
 	TileIndexDiff neighbour_diff = TileOffsByDiagDir(side);
 
+	//C2: a farm fence that walks off the map wraps inside the field's layer.
+	MapLayer layer = GetTileLayer(tile);
 	do {
-		tile = Map::WrapToMap(tile);
+		tile = Map::WrapToLayer(tile, layer);
 
 		if (IsTileType(tile, TileType::Clear) && IsClearGround(tile, ClearGround::Fields)) {
 			TileIndex neighbour = tile + neighbour_diff;
@@ -1591,7 +1596,8 @@ static CommandCost CheckIfIndustryIsAllowed(TileIndex tile, IndustryType type, c
 static bool CheckCanTerraformSurroundingTiles(TileIndex tile, uint height, int internal)
 {
 	/* Check if we don't leave the map */
-	if (TileX(tile) == 0 || TileY(tile) == 0 || GetTileType(tile) == TileType::Void) return false;
+	//C3: the north edge that must not be terraformed is this tile's layer, not the surface.
+	if (TileX(tile) == 0 || TilePlaneY(tile) == 0 || GetTileType(tile) == TileType::Void) return false;
 
 	TileArea ta(tile - TileDiffXY(1, 1), 2, 2);
 	for (TileIndex tile_walk : ta) {
@@ -1606,7 +1612,7 @@ static bool CheckCanTerraformSurroundingTiles(TileIndex tile, uint height, int i
 		 *  has to be correct too (in level, or almost in level)
 		 *  else you get a chain-reaction of terraforming. */
 		if (internal == 0 && curh != height) {
-			if (TileX(tile_walk) == 0 || TileY(tile_walk) == 0 || !CheckCanTerraformSurroundingTiles(tile_walk + TileDiffXY(-1, -1), height, internal + 1)) {
+			if (TileX(tile_walk) == 0 || TilePlaneY(tile_walk) == 0 || !CheckCanTerraformSurroundingTiles(tile_walk + TileDiffXY(-1, -1), height, internal + 1)) {
 				return false;
 			}
 		}
@@ -1638,7 +1644,8 @@ static bool CheckIfCanLevelIndustryPlatform(TileIndex tile, DoCommandFlags flags
 	/* Remember level height */
 	uint h = TileHeight(tile);
 
-	if (TileX(tile) <= _settings_game.construction.industry_platform + 1U || TileY(tile) <= _settings_game.construction.industry_platform + 1U) return false;
+	//C3: the footprint must fit inside this layer.
+	if (TileX(tile) <= _settings_game.construction.industry_platform + 1U || TilePlaneY(tile) <= _settings_game.construction.industry_platform + 1U) return false;
 	/* Check that all tiles in area and surrounding are clear
 	 * this determines that there are no obstructing items */
 
@@ -1647,7 +1654,7 @@ static bool CheckIfCanLevelIndustryPlatform(TileIndex tile, DoCommandFlags flags
 	TileArea ta(tile + TileDiffXY(-_settings_game.construction.industry_platform, -_settings_game.construction.industry_platform),
 			max_x + 2 + 2 * _settings_game.construction.industry_platform, max_y + 2 + 2 * _settings_game.construction.industry_platform);
 
-	if (TileX(ta.tile) + ta.w >= Map::MaxX() || TileY(ta.tile) + ta.h >= Map::MaxY()) return false;
+	if (TileX(ta.tile) + ta.w >= Map::MaxX() || TilePlaneY(ta.tile) + ta.h >= Map::MaxY()) return false;
 
 	/* _current_company is OWNER_NONE for randomly generated industries and in editor, or the company who funded or prospected the industry.
 	 * Perform terraforming as OWNER_TOWN to disable autoslope and town ratings. */
@@ -2073,6 +2080,9 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 	/* Check if the to-be built/founded industry is available for this climate. */
 	if (!indspec->enabled || indspec->layouts.empty()) return CMD_ERROR;
 
+	//Industries are a surface construction.
+	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Industry); layer_cost.Failed()) return layer_cost;
+
 	/* If the setting for raw-material industries is not on, you cannot build raw-material industries.
 	 * Raw material industries are industries that do not accept cargo (at least for now) */
 	if (_game_mode != GameMode::Editor && _current_company != OWNER_DEITY && _settings_game.construction.raw_industry_construction == 0 && indspec->IsRawIndustry()) {
@@ -2106,7 +2116,7 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 					/* We should not have more than one Random() in a function call
 					 * because parameter evaluation order is not guaranteed in the c++ standard
 					 */
-					tile = RandomTile();
+					tile = RandomTile(); //C2: prospecting picks a surface tile.
 					/* Start with a random layout */
 					size_t layout = RandomRange((uint32_t)num_layouts);
 					/* Check now each layout, starting with the random one */

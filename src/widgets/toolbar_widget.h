@@ -17,6 +17,7 @@ enum ToolbarNormalWidgets : WidgetID {
 	WID_TN_SETTINGS,      ///< Settings menu.
 	WID_TN_SAVE,          ///< Save menu.
 	WID_TN_SMALL_MAP,     ///< Small map menu.
+	WID_TN_MAP_LAYER,     ///< Cycle the map layer shown by the main viewport.
 	WID_TN_TOWNS,         ///< Town menu.
 	WID_TN_SUBSIDIES,     ///< Subsidy menu.
 	WID_TN_STATIONS,      ///< Station menu.
@@ -59,6 +60,7 @@ enum ToolbarEditorWidgets : WidgetID {
 	WID_TE_DATE_BACKWARD, ///< Reduce the date of the scenario.
 	WID_TE_DATE_FORWARD,  ///< Increase the date of the scenario.
 	WID_TE_SMALL_MAP,     ///< Small map menu.
+	WID_TE_MAP_LAYER,     ///< Cycle the map layer shown by the main viewport.
 	WID_TE_ZOOM_IN,       ///< Zoom in the main viewport.
 	WID_TE_ZOOM_OUT,      ///< Zoom out the main viewport.
 	WID_TE_LAND_GENERATE, ///< Land generation.

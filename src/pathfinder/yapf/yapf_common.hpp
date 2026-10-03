@@ -12,6 +12,7 @@
 
 #include "../../tile_type.h"
 #include "../../track_type.h"
+#include "../../map_func.h"
 
 /** YAPF origin provider base class - used when origin is one tile / multiple trackdirs */
 template <class Types>
@@ -117,10 +118,11 @@ inline int OctileDistanceCost(TileIndex start_tile, Trackdir start_td, TileIndex
 
 	const DiagDirection exitdir = TrackdirToExitdir(start_td);
 
+	//Plane Y keeps the estimate consistent across a portal. A stacked Y would overestimate and trip the closed-node check.
 	const int x1 = 2 * TileX(start_tile) + dg_dir_to_x_offs[static_cast<int>(exitdir)];
-	const int y1 = 2 * TileY(start_tile) + dg_dir_to_y_offs[static_cast<int>(exitdir)];
+	const int y1 = 2 * TilePlaneY(start_tile) + dg_dir_to_y_offs[static_cast<int>(exitdir)];
 	const int x2 = 2 * TileX(destination_tile);
-	const int y2 = 2 * TileY(destination_tile);
+	const int y2 = 2 * TilePlaneY(destination_tile);
 	const int dx = abs(x1 - x2);
 	const int dy = abs(y1 - y2);
 	const int dmin = std::min(dx, dy);

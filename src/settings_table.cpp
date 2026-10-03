@@ -496,25 +496,25 @@ static bool CheckFreeformEdges(int32_t &new_value)
 		}
 	} else {
 		for (uint i = 0; i < Map::MaxX(); i++) {
-			if (TileHeight(TileXY(i, 1)) != 0) {
+			if (TileHeight(TileXYL(i, 1, MapLayer::Surface)) != 0) { //C2
 				ShowErrorMessage(GetEncodedString(STR_CONFIG_SETTING_EDGES_NOT_WATER), {}, WarningLevel::Error);
 				return false;
 			}
 		}
 		for (uint i = 1; i < Map::MaxX(); i++) {
-			if (!IsTileType(TileXY(i, Map::MaxY() - 1), TileType::Water) || TileHeight(TileXY(1, Map::MaxY())) != 0) {
+			if (!IsTileType(TileXYL(i, Map::MaxY() - 1, MapLayer::Surface), TileType::Water) || TileHeight(TileXYL(1, Map::MaxY(), MapLayer::Surface)) != 0) {
 				ShowErrorMessage(GetEncodedString(STR_CONFIG_SETTING_EDGES_NOT_WATER), {}, WarningLevel::Error);
 				return false;
 			}
 		}
 		for (uint i = 0; i < Map::MaxY(); i++) {
-			if (TileHeight(TileXY(1, i)) != 0) {
+			if (TileHeight(TileXYL(1, i, MapLayer::Surface)) != 0) {
 				ShowErrorMessage(GetEncodedString(STR_CONFIG_SETTING_EDGES_NOT_WATER), {}, WarningLevel::Error);
 				return false;
 			}
 		}
 		for (uint i = 1; i < Map::MaxY(); i++) {
-			if (!IsTileType(TileXY(Map::MaxX() - 1, i), TileType::Water) || TileHeight(TileXY(Map::MaxX(), i)) != 0) {
+			if (!IsTileType(TileXYL(Map::MaxX() - 1, i, MapLayer::Surface), TileType::Water) || TileHeight(TileXYL(Map::MaxX(), i, MapLayer::Surface)) != 0) {
 				ShowErrorMessage(GetEncodedString(STR_CONFIG_SETTING_EDGES_NOT_WATER), {}, WarningLevel::Error);
 				return false;
 			}
@@ -528,17 +528,18 @@ static void UpdateFreeformEdges(int32_t new_value)
 	if (_game_mode == GameMode::Menu) return;
 
 	if (new_value != 0) {
-		for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXY(x, 0));
-		for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXY(0, y));
+		//C2: freeform edges void the surface border.
+		for (uint x = 0; x < Map::SizeX(); x++) MakeVoid(TileXYL(x, 0, MapLayer::Surface));
+		for (uint y = 0; y < Map::SizeY(); y++) MakeVoid(TileXYL(0, y, MapLayer::Surface));
 	} else {
 		/* Make tiles at the border water again. */
 		for (uint i = 0; i < Map::MaxX(); i++) {
-			SetTileHeight(TileXY(i, 0), 0);
-			SetTileType(TileXY(i, 0), TileType::Water);
+			SetTileHeight(TileXYL(i, 0, MapLayer::Surface), 0);
+			SetTileType(TileXYL(i, 0, MapLayer::Surface), TileType::Water);
 		}
 		for (uint i = 0; i < Map::MaxY(); i++) {
-			SetTileHeight(TileXY(0, i), 0);
-			SetTileType(TileXY(0, i), TileType::Water);
+			SetTileHeight(TileXYL(0, i, MapLayer::Surface), 0);
+			SetTileType(TileXYL(0, i, MapLayer::Surface), TileType::Water);
 		}
 	}
 	MarkWholeScreenDirty();
