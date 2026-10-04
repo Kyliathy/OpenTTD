@@ -2,6 +2,8 @@
 
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
 
+Updated against the current fork on 2026-10-04, including save versions 369/370, four-layer map storage, road elevator waiting and camera normalization. [Map-layer architecture](../map-layers/archi-map-layers.md) explains the gameplay and addressing rules. [Save-game working notes](../save-game.md) list the retained inspection/automation helpers, example commands and corrected test saves.
+
 A save is a small uncompressed header, a compressed blob, and inside that blob a sequence of tagged chunks. Multi-byte integers in the OpenTTD blob are big-endian on every host. Each gameplay feature has a `*_sl.cpp` description of its fields. Saves written by an older OpenTTD are read by the same description, gated on `SaveLoadVersion`, and then repaired in memory by `AfterLoadGame`. A save newer than this binary is rejected.
 
 There is a second, separate loader for the original Transport Tycoon games. It is not this container. It is covered below because `SaveOrLoad` still sends those files through `AfterLoadGame`.
@@ -74,7 +76,7 @@ The four bytes after the tag are one big-endian `uint32_t`, not a free-standing 
 
 `SaveFileToDisk` shifts `SAVEGAME_VERSION` left by 16, so a current save stores minor 0 and a zero low byte. The minor is still loaded. `IsSavegameVersionBefore(major, minor)` compares it when the major matches and the caller passes a non-zero minor. That matters below `SaveLoadVersion::RemoveMinorVersion` (the header comment records that as saveload version 18). The comment in `DetermineSaveLoadFormat` says the minor is no longer saved as a meaningful value, and that the four historical cases that still need it cannot simply be deleted. `IsSavegameVersionBefore` with the default minor argument ignores `_sl_minor_version`.
 
-`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). The enumerator immediately before `MaxVersion` is `DoubleEndedShips`, whose comment records saveload version 368. Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. The comment on `SaveLoadVersion` says the list must not be reordered: existing numeric values are the numbers already stored in files.
+`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). The enumerator immediately before `MaxVersion` is now `DeepUnderground`, saveload version 370. It follows `MapLayers` (369) and `DoubleEndedShips` (368). Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. The comment on `SaveLoadVersion` says the list must not be reordered: existing numeric values are the numbers already stored in files.
 
 `DetermineSaveLoadFormat` then rejects two ranges:
 
@@ -100,7 +102,9 @@ Each live chunk is:
 
 `SlFindChunkHandler` looks the id up in the global handler list. An id with no handler is `SlErrorCorrupt("Unknown chunk type")`. The loader does not skip unknown chunks. A new chunk id has to ship in the same binary that will read it, or it has to stay out of files that older binaries must open. Older binaries also reject the file earlier if the version word was bumped.
 
-Dispatch is by id, so a chunk does not have to sit at a fixed file offset. Some `Load` implementations still assume an earlier chunk in that file has already run. `MAPSChunkHandler::Load` calls `Map::Allocate`. From `SaveLoadVersion::MapLayers` the `MAPS` table includes a `layers` field. Older files omit it and load as one plane; `AfterLoadGame` then initialises the missing layers. The map-plane handlers then copy every allocated tile, which is `Map::Size()` and therefore every layer. `SlSaveChunks` writes handlers in the order `ChunkHandlers()` concatenates them, and `map_sl.cpp` lists `MAPS` before `MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAPE`, `MAP7`, `MAP8`. A new save keeps that order because the table does. An old save keeps whatever order that binary wrote. Reordering the master table changes every new file and will break a `Load` that assumes the historical predecessor has already executed.
+Dispatch is by id, so a chunk does not have to sit at a fixed file offset. Some `Load` implementations still assume an earlier chunk in that file has already run. `MAPSChunkHandler::Load` records how many planes the file contains, then calls `Map::Allocate` for all four current layers. Map-plane loaders consume only the stored tiles, using `MapFileTileCount()`; `AfterLoadGame` initializes missing planes. Writers use `Map::Size()` and save every allocated tile. The distinction is necessary when a one-plane or three-plane file loads into a four-plane world. The field and upgrade rules are detailed below.
+
+`SlSaveChunks` writes handlers in the order `ChunkHandlers()` concatenates them, and `map_sl.cpp` lists `MAPS` before `MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAPE`, `MAP7`, `MAP8`. A new save keeps that order because the table does. An old save keeps whatever order that binary wrote. Reordering the master table changes every new file and will break a `Load` that assumes the historical predecessor has already executed.
 
 `ChunkType::ReadOnly` is never passed to `SlSaveChunk`'s writer (`SlSaveChunk` returns immediately). The handler stays registered so an old file that still contains the id can load. `WaterRegionChunkHandler` (`"WRGN"`) is the documented case: the comment in `water_regions_sl.cpp` says the data is unused and the handler exists so old saves do not fail the unknown-chunk check. Its `Load` reads a table header and calls `SlSkipArray`.
 
@@ -174,7 +178,7 @@ flowchart TD
 
 The low 24 bits are the low 24 bits of the length. Bits 24–27 of that word are zero. Bits 28–31 are length bits 24–27. On disk the first byte is that top byte, so its low nibble is the chunk type (`Riff` is 0) and its high nibble is the top of the length. `SlLoadChunk` rebuilds it as `(SlReadByte() << 16) | ((m >> 4) << 24)` plus `SlReadUint16()`. `SlSetLength` asserts the length is below `1 << 28`.
 
-`Load` must consume exactly those bytes. `SlLoadChunk` compares the reader position with `start + length` and otherwise raises `"Invalid chunk size in RIFF"`. Map planes do this by calling `SlSetLength` with `Map::Size()` or `Map::Size() * sizeof(uint16_t)`, then `SlCopy` of the tile bytes. `MAP2ChunkHandler::Load` still accepts a `uint8_t` file type when `IsSavegameVersionBefore(SaveLoadVersion::BigMap)`.
+`Load` must consume exactly those bytes. `SlLoadChunk` compares the reader position with `start + length` and otherwise raises `"Invalid chunk size in RIFF"`. Map-plane writers call `SlSetLength` with `Map::Size()` or `Map::Size() * sizeof(uint16_t)`, then `SlCopy` of the tile bytes. Their loaders use `MapFileTileCount()` to read the file's planes rather than all allocated planes. `MAP2ChunkHandler::Load` still accepts a `uint8_t` file type when `IsSavegameVersionBefore(SaveLoadVersion::BigMap)`.
 
 ### Array and sparse array
 
@@ -246,6 +250,34 @@ Field lines are the `SaveLoad::Variable`, `String`, `Array`, `Vector`, `Struct`,
 A handler that saves pointers overrides `FixPointers`. Pointers are not pointers in the file. `ReferenceToInt` writes `poolIndex + 1`, and 0 means null. `IntToReference` runs only when `_sl.action` is `SaveLoadAction::Ptrs`, subtracts one, and calls `Pool::Get`. `SlFixPointers` sets that action and calls every handler, after every chunk has been read, so the target pool already exists. During `SaveLoadAction::Load`, a reference field holds an integer. Code in `Load` that dereferences it is using an index as an address. On a hard error mid-load, `SlError` calls `SlNullPointers`, which runs `FixPointers` under `SaveLoadAction::Null` so those index-shaped values become null before pools are cleared.
 
 `SaveLoadAction` is the phase flag inside `SaveLoadParams`: `Load`, `Save`, `Ptrs`, `Null`, `LoadCheck`.
+
+## Layered maps and road elevator state
+
+The map field table `_map_desc` stores `dim_x` and `dim_y` as `U32`, and adds `layers` as `U8` from `SaveLoadVersion::MapLayers`. Dimensions describe one horizontal plane, not the stacked world height. The current writer records `Map::LayerCount()`, normally four.
+
+| File version | Layer representation | Current load behavior |
+| --- | --- | --- |
+| Before 369 (`MapLayers`) | No `layers` field; one Surface plane. | Read the Surface data and initialize missing Underground, Space and Deep Underground planes. |
+| 369 (`MapLayers`) | Explicit count, at most three planes: Surface, Underground and Space. | Preserve stored planes and initialize missing planes, including Deep Underground. |
+| 370 (`DeepUnderground`) | Explicit count, up to four planes; road vehicles can store `elevator_wait`. | Preserve stored planes and road elevator counters; initialize any absent planes. |
+
+Layer IDs and tile storage order remain Surface 0, Underground 1, Space 2, Deep Underground 3. The dropdown's display order puts Deep Underground before Outer Space, but never changes saved indices. Tiles, vehicle tile references and world Y coordinates retain the existing stacked addressing. Portal kind is derived from transport and endpoint layers; no extra saved portal-kind field was added.
+
+The ten RIFF map chunks concatenate all stored layers in ascending `TileIndex` order. `MAP2` and `MAP8` store two bytes per tile in current files; the other eight store one byte per tile. If `P = dim_x * dim_y` and the file contains `L` planes, their current payload sizes are `2 * P * L` and `P * L` respectively. Each chunk remains below the RIFF 28-bit length limit for four 4096 x 4096 planes. Historical width/layout gates still apply to older files.
+
+`MAPSChunkHandler::Load` defaults the count to one before reading its fields, validates 1..4, and rejects a file before version 370 claiming four layers with `"Invalid map layer count"`. It sets `_map_file_layers` and allocates `MAX_MAP_LAYERS`. `MapFileTileCount()` returns `Map::PlaneSize() * _map_file_layers`, preventing reads beyond the planes actually present. `Map::Allocate` validates dimensions on a real load. `LoadCheck` validates the layer count and version restriction too, and records dimensions/count in `_load_check_data` without allocating the live map or running afterload.
+
+At the start of `AfterLoadGame`, missing planes are filled with `MultiLayerMap::InitialiseLayer`, after settings such as freeform edges are available and before tile loops can read them. Legacy single-plane map conversions then operate on Surface. This initialization does not consume simulation random numbers. The original Transport Tycoon loader also records one stored plane and enters the same missing-plane initialization path.
+
+In `vehicle_sl.cpp`, `SlVehicleRoadVeh::description` adds `SaveLoad::Variable<VarFileType::U16>("elevator_wait", ...)` from version 370 inside the road-vehicle body of `VEHS`. The two-byte counter is big-endian like other `U16` fields. Zero means no active ride, values above one count remaining simulation ticks, and one means ready to cross while an occupied exit may still block movement. The counter resumes after loading rather than starting a new ride. Older files omit it and retain the road vehicle's zero default; existing Surface/Underground road portals derive as tunnels rather than timed elevators.
+
+## Saved camera and selected layer
+
+The `VIEW` chunk in `misc_sl.cpp` continues to store camera coordinates and zoom through the existing fields. The selected viewport layer is client state and has no saved field. Loading starts the main view on Surface.
+
+`SaveViewportBeforeSaveGame` subtracts the isometric projection of `layer * Map::SizeY() * TILE_SIZE` from the main camera's stacked scroll coordinates. This stores the same plane position in Surface coordinates even when saving from Underground, Deep Underground or Space. `ResetViewportAfterLoadGame` restores that position and zoom, subject to zoom limits. A headless save with no main camera retains `INT_MAX` coordinate sentinels and `ZoomLevel::End`.
+
+The normalization corrects the values written to existing `VIEW` fields; it added no field and required no version bump. It does not alter map chunks, simulation state or portal waits, and does not retroactively repair camera offsets saved by earlier builds. Verification records for non-Surface camera saves and paused map-chunk round trips are linked from [map-layer architecture](../map-layers/archi-map-layers.md).
 
 ## Compat headers
 
@@ -355,6 +387,7 @@ The first byte of that blob is a presence flag: `SaveEmpty` writes 0, a successf
 The function is a long sequence of `IsSavegameVersionBefore` / `IsSavegameVersionBeforeOrAt` blocks, then work that runs for every version. Early examples, all in this function:
 
 - A zero `_cur_tileloop_tile` is forced off zero because the tile-loop LFSR cannot have an all-zero state.
+- Missing map planes are initialized using `_map_file_layers` after settings are loaded. Version-gated single-plane map conversions operate on Surface.
 - Pause flags are collapsed for saves before `SaveLoadVersion::PauseModes`. A dedicated server whose file is paused with `PauseMode::Error` refuses the load.
 - Saves before `SaveLoadVersion::MaxBridgeMapHeight` unpack height from the old map type bits.
 - Saves before `SaveLoadVersion::ReplaceCustomNameArray` copy names out of the old string-id table via `CopyFromOldName`, then `ResetOldNames` drops that table.
@@ -403,14 +436,18 @@ Use the smallest mechanism that keeps old files readable.
 | `src/saveload/compat/*_sl_compat.h` | Pre-`TableChunks` field order for `SlCompatTableHeader` |
 | `src/saveload/*_sl.cpp` | One feature's `SaveLoad` table and `ChunkHandler` |
 | `src/saveload/company_sl.cpp` | `PLYR`, the dense table pattern, versioned `money` |
-| `src/saveload/vehicle_sl.cpp` | `VEHS`, `ChunkType::SparseTable`, `SaveByte` type tag |
-| `src/saveload/map_sl.cpp` | `MAPS` table plus RIFF map planes |
+| `src/saveload/vehicle_sl.cpp` | `VEHS`, `ChunkType::SparseTable`, `SaveByte` type tag and road `elevator_wait` |
+| `src/saveload/map_sl.cpp` | `MAPS` dimensions/layer count, `MapFileTileCount` and RIFF map planes |
+| `src/saveload/misc_sl.cpp` | `VIEW`, camera normalization and restoration |
+| `src/map_layer_type.h`, `src/map_layer.h`, `src/map_layer.cpp` | Stable layer IDs, count validation and missing-plane initialization |
 | `src/saveload/ai_sl.cpp`, `game_sl.cpp` | `AIPL` and `GSDT`, then the script blob |
 | `src/saveload/water_regions_sl.cpp` | `WRGN`, `ChunkType::ReadOnly` kept so old files load |
 | `src/script/script_instance.hpp`, `script_instance.cpp` | `SQSaveLoadType` tree inside the script chunks |
 | `src/core/endian_func.hpp` | `TO_BE32` for the version word and the modern LZO block header |
 | `src/core/label_type.hpp` | Four-byte `ChunkId`; `Empty()` is four zero bytes |
 | `docs/savegame_format.md` | 2021 field note. Stale where the next section says so |
+| [save-game.md](../save-game.md) | Retained inspection/capture helpers, commands and corrected local test saves |
+| [archi-map-layers.md](../map-layers/archi-map-layers.md) | Layer addressing, portals, view state and validation evidence |
 
 ## Where `docs/savegame_format.md` is stale
 
@@ -418,7 +455,7 @@ Checked against `src/saveload/saveload.cpp`, `saveload.h`, `map_sl.cpp`, and `sr
 
 The note says bytes `[6..7]` "can be ignored, and were only used in really old savegames." `DetermineSaveLoadFormat` still loads bits 15–8 of the version word into `_sl_minor_version`. `IsSavegameVersionBefore(major, minor)` still reads it for saves at major versions before `RemoveMinorVersion`. Current saves write that byte as 0, because the stored word is `SAVEGAME_VERSION << 16`. Byte 7 is the low byte of that word and is written as 0. The orientation paragraph in `docs/zz-reach2/architecture/initial-inventory.md` (section 10) says the header is a 4-byte tag, a 2-byte version, then the compressed blob. The code writes four version bytes before the compressed payload.
 
-The note says that from version 295, `ChunkType::Riff` is only used for MAP-chunks of per-tile bits. `map_sl.cpp` uses `ChunkType::Riff` for `MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAPE`, `MAP7`, and `MAP8`. `MAPS` is `ChunkType::Table` and holds `dim_x` / `dim_y`, not a tile plane. No other current handler constructs `ChunkType::Riff`. "Only map planes" matches the code. "MAP-chunks" as a group does not, because `MAPS` is a table.
+The note says that from version 295, `ChunkType::Riff` is only used for MAP-chunks of per-tile bits. `map_sl.cpp` uses `ChunkType::Riff` for `MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAPE`, `MAP7`, and `MAP8`. `MAPS` is `ChunkType::Table` and holds `dim_x`, `dim_y` and, from version 369, `layers`, not a tile plane. No other current handler constructs `ChunkType::Riff`. "Only map planes" matches the code. "MAP-chunks" as a group does not, because `MAPS` is a table.
 
 The note says `ChunkType::Array` and `ChunkType::SparseArray` are "no longer in use" since version 295. No current `ChunkHandler` is constructed with those types. `SlLoadChunk` and `SlSaveChunk` still implement them, which is how older files load. The gamma diagrams, the `0x10` length bit, the depth-first struct headers, and the `VarFileType` numbers 1–11 match `SlWriteSimpleGamma` and `GetSavegameFileType`. The note's `SLE_FILE_*` macro names are not the names in `saveload.h`; the stored numbers are the `VarFileType` enumerators.
 
@@ -437,6 +474,9 @@ The inventory's sentence that each subsystem has a `*_sl.cpp` writer and a `comp
 - Gamma layout stays compatible with `SlReadSimpleGamma`, including the 32-bit ceiling and the stored-length-plus-one convention. Gamma 0 still terminates an array-like chunk.
 - Chunk ids that already exist in saves keep a handler. Unknown ids stay fatal. `ChunkType::ReadOnly` is how a chunk stops being written without becoming unknown.
 - `ChunkHandlers()` order for a new save still satisfies loaders that assume an earlier chunk has run, in particular `MAPS` before the RIFF map planes. Load itself selects handlers by id.
+- Map-plane reads use the file's validated count through `MapFileTileCount()`, while writes use every allocated tile. Missing planes are initialized after settings load; storage layer IDs are never reordered to match menu order.
+- Road elevator waits remain a version-370 `U16` simulation counter in `VEHS`; loading must preserve an in-progress or exit-blocked ride.
+- Camera saves normalize existing `VIEW` coordinates to Surface; the selected client layer does not become simulation data.
 - Table header type bytes stay `VarFileType` in the low nibble and `HAS_FIELD_LENGTH_BIT` where `GetSavegameFileType` sets it. A type change under an existing key is a version bump plus a second `SaveLoad` row. Pre-295 chunks keep a `SaveLoadCompat` list whose names exist in the live table.
 - References stay `pool index + 1`, with 0 as null, and are resolved only in `SlFixPointers` after every chunk has loaded.
 - `AfterLoadGame` remains the pass that turns an older memory image into a current one, including saves that arrived through `LoadOldSaveGame` at `SaveLoadVersion::MinVersion`. Script startup stays after that conversion (`StartScripts`).

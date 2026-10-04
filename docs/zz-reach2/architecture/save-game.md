@@ -1,3 +1,42 @@
+# Save-game working notes
+
+## Retained helpers and test saves (2026-10-04)
+
+The supplied-save inspection code and the corrected saves are retained. The platform and path-signal changes were made through the running game's construction tools and saved normally; there is no binary save-editing/replay script for those changes. The helpers below inspect saves, compare map data, control the game window and capture evidence. The format itself is documented in [savegame/archi-savegame.md](savegame/archi-savegame.md), and current layer behavior in [map-layers/archi-map-layers.md](map-layers/archi-map-layers.md).
+
+| Helper | Use |
+| --- | --- |
+| [inspect_layer_save.py](../upgrades/2026-10/tools/inspect_layer_save.py) | Reusable read-only version of the supplied-save diagnostic: record summaries, per-layer tile counts, rail/station fields and portal coordinates. Explicit dimensions replace the prototype's fixed 256 x 256/four-layer assumptions. |
+| [savegame_plane_digest.py](../upgrades/2026-10/tools/savegame_plane_digest.py) | Read/decompress saves, hash all ten map chunks, hash only a Surface prefix, or enumerate portal ends. Supports lzma, zlib and uncompressed containers. |
+| [ottd_window.ps1](../upgrades/2026-10/tools/ottd_window.ps1) | PrintWindow screenshots, game-window clicks/keys, console commands and timed image bursts. |
+| [capture_art.ps1](../upgrades/2026-10/tools/capture_art.ps1) | Read portal positions from a save and orchestrate static, toolbar and traffic captures. |
+| [run_game_logged.sh](../upgrades/2026-10/tools/run_game_logged.sh) | Launch a selected game build and retain debug output. |
+| [Original diagnostic prototype](../../../build/inspect_review_save.py) | The original save-specific inspection script, left in `build/`; also exports raw record bytes into the review folder. Use the reusable tool for routine inspection. |
+
+From the repository root, these commands only read the selected save and print results:
+
+```powershell
+python -B docs/zz-reach2/upgrades/2026-10/tools/inspect_layer_save.py build/save/makinpr2-connected.sav --size-x 256 --size-y 256
+python -B docs/zz-reach2/upgrades/2026-10/tools/inspect_layer_save.py build/save/makinpr2-final-verification.sav --size-x 256 --size-y 256 --summary-only
+python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py build/save/makinpr2-connected.sav
+python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py build/save/makinpr2-connected.sav --portals --size-x 256 --size-y 256
+```
+
+Tile layer values use storage order: Surface 0, Underground 1, Outer Space 2, Deep Underground 3. The inventory displays station tile IDs/fields, not decoded station names or a semantic dump of vehicle/order tables. Array/table record summaries include format/header records and are not object counts. Neither inspector writes a modified save.
+
+| Save | Role |
+| --- | --- |
+| [makinpr2.sav](../../../build/save/makinpr2.sav) | Original supplied 256 x 256, four-plane game, preserved unchanged. |
+| [makinpr2-connected.sav](../../../build/save/makinpr2-connected.sav) | Reusable connected-platform/path-signal fixture. Surface station 0 has connected platforms at `(92..94,198)`; Underground station 1 at `(80..83,198)`. Path signals are at Surface `(91,198)` and Underground `(85,198)`. |
+| [makinpr2-final-verification.sav](../../../build/save/makinpr2-final-verification.sav) | Paused save from the final successful cross-layer train smoke run, using the corrected layout. |
+| [makinpr2-connected-graphics-tested.sav](../../../build/save/makinpr2-connected-graphics-tested.sav) | Earlier traffic state from the portal graphics checks. |
+
+The original save's SHA256 is `090f204f01cbbbd87cc5c1ae488fd06597bf079e2a8a7959d97e44dc1db4e30a`. Helpers under the plans' `tools/` directory are repository source artifacts; saves, logs, captures and the old diagnostic prototype remain local artifacts under `build/`. They are not bundled with the game or protected from removal of the build directory. The [art-review plan](../upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md) and [final review](../upgrades/2026-10/r2rvm2-review-map-2.md) record the fixture diagnosis and verification evidence.
+
+## Historical S7 preparation notes
+
+The notes below predate Deep Underground and the final verification. Their old Surface/Underground elevator setup and build-status remarks describe that earlier stage; use the current layer architecture and retained fixtures above for today's implementation.
+
 Yes, I can load save games directly. Building the scenario layouts by posting clicks would be slow and error-prone, so you build the S7 layout once, save it, and I load it to run the checks.
 
 What I can do with a save

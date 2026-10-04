@@ -2,6 +2,8 @@
 
 These pages describe OpenTTD's subsystems for someone who is going to change them. Each directory is one subsystem. The primary page is `archi-<name>.md`. Companion pages sit beside it when a mechanism is large enough to stand alone.
 
+Start with [@archi-ttd-level0.md](@archi-ttd-level0.md) for the game overview, the current four-layer fork and links to every architecture file. The [map-layer page](map-layers/archi-map-layers.md) records cross-subsystem changes made after the original inventory.
+
 The older notes in `docs/` (savegame format, landscape HTML, multiplayer, link graph, and the rest) are the starting point. These pages keep the facts that still match the tree and replace the ones that do not, with the current functions, types, and file paths. `initial-inventory.md` is the short map of the whole program: build, patterns, and where each layer lives.
 
 ## Subsystems
@@ -16,6 +18,7 @@ The older notes in `docs/` (savegame format, landscape HTML, multiplayer, link g
 | `linkgraph/` | [archi-linkgraph.md](linkgraph/archi-linkgraph.md) | [jobs.md](linkgraph/jobs.md), [demands.md](linkgraph/demands.md), [solver.md](linkgraph/solver.md) | `docs/linkgraph.md` |
 | `towns/` | [archi-towns.md](towns/archi-towns.md) | [town-growth.md](towns/town-growth.md), [town-import.md](towns/town-import.md) | `docs/importing_town_data.md` |
 | `basesets/` | [archi-basesets.md](basesets/archi-basesets.md) | [obg.md](basesets/obg.md), [obs.md](basesets/obs.md), [obm.md](basesets/obm.md) | `docs/obg_format.txt`, `obs_format.txt`, `obm_format.txt` |
+| `files/` | [archi-files.md](files/archi-files.md) | | `docs/directory_structure.md` |
 | `commands/` | [archi-commands.md](commands/archi-commands.md) | | |
 | `game-loop/` | [archi-game-loop.md](game-loop/archi-game-loop.md) | | |
 | `economy/` | [archi-economy.md](economy/archi-economy.md) | [archi-cargo-payment.md](economy/archi-cargo-payment.md), [archi-subsidies.md](economy/archi-subsidies.md) | |
@@ -32,4 +35,4 @@ The older notes in `docs/` (savegame format, landscape HTML, multiplayer, link g
 
 ## Still being written
 
-These subsystems do not have a directory yet: multiplayer, companies, strings, fonts, data files and `openttd.cfg`, stations. Their older notes are `docs/multiplayer.md`, `docs/company_colour_indexes.html`, `docs/eints.md`, `docs/compiling_lang_files.md`, `docs/fonts.md`, and `docs/directory_structure.md`.
+These subsystems do not have a directory yet: multiplayer, companies, strings, fonts and stations. Their older notes include `docs/multiplayer.md`, `docs/company_colour_indexes.html`, `docs/eints.md`, `docs/compiling_lang_files.md` and `docs/fonts.md`.
