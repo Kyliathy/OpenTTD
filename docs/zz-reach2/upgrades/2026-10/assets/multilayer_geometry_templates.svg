@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660">
+<!-- Owner: r2mlvs13-graphics-and-asset-pipeline.md; M0 placement template, not final sprite art. -->
+<rect width="960" height="660" fill="#eff2f3"/>
+<g font-family="monospace" font-size="12" fill="#223344">
+<text x="20" y="20">M0 geometry only: engine directions, 64x48 vehicle canvas, anchor (-32,-32)</text>
+<g id="tbm-N" transform="translate(60,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="0" y1="9" x2="0" y2="-9" stroke="#246b83" stroke-width="10"/>
+<circle cx="0" cy="-9" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">N</text></g>
+<g id="tbm-NE" transform="translate(172,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="-14" y1="7" x2="14" y2="-7" stroke="#246b83" stroke-width="10"/>
+<circle cx="14" cy="-7" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">NE</text></g>
+<g id="tbm-E" transform="translate(284,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="-20" y1="0" x2="20" y2="0" stroke="#246b83" stroke-width="10"/>
+<circle cx="20" cy="0" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">E</text></g>
+<g id="tbm-SE" transform="translate(396,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="-14" y1="-7" x2="14" y2="7" stroke="#246b83" stroke-width="10"/>
+<circle cx="14" cy="7" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">SE</text></g>
+<g id="tbm-S" transform="translate(508,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="0" y1="-9" x2="0" y2="9" stroke="#246b83" stroke-width="10"/>
+<circle cx="0" cy="9" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">S</text></g>
+<g id="tbm-SW" transform="translate(620,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="14" y1="-7" x2="-14" y2="7" stroke="#246b83" stroke-width="10"/>
+<circle cx="-14" cy="7" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">SW</text></g>
+<g id="tbm-W" transform="translate(732,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="20" y1="0" x2="-20" y2="0" stroke="#246b83" stroke-width="10"/>
+<circle cx="-20" cy="0" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">W</text></g>
+<g id="tbm-NW" transform="translate(844,80)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#6c7a80"/>
+<line x1="14" y1="7" x2="-14" y2="-7" stroke="#246b83" stroke-width="10"/>
+<circle cx="-14" cy="-7" r="7" fill="#df8a2a"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-12" y="38">NW</text></g>
+<text x="20" y="155">Legal bends: SW -> W -> NW, advancing map centers (0,0),(1,0),(2,-1),(2,-2)</text>
+<path id="bend-0" d="M200,193 l54,27 l-54,27 l-54,-27 Z" fill="none" stroke="#23818a"/>
+<path id="bend-1" d="M182,202 l54,27 l-54,27 l-54,-27 Z" fill="none" stroke="#23818a"/>
+<path id="bend-2" d="M146,202 l54,27 l-54,27 l-54,-27 Z" fill="none" stroke="#23818a"/>
+<path id="bend-3" d="M128,193 l54,27 l-54,27 l-54,-27 Z" fill="none" stroke="#23818a"/>
+<g id="mine-3x3" transform="translate(420,225)">
+<path d="M0,-48 L96,0 L0,48 L-96,0 Z" fill="#ced8cc" stroke="#456"/>
+<path d="M-32,-32 L32,-32 L32,16 L-32,16 Z" fill="#adb7c0" stroke="#456"/>
+<text x="-65" y="72">Mine 3x3 / states</text></g>
+<g id="rocket-deploy-recover" transform="translate(650,225)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#789"/>
+<path d="M0,-28 L12,-12 L12,12 L-12,12 L-12,-12 Z" fill="#bac6d1" stroke="#456"/>
+<text x="-70" y="72">Deploy/recovery anchor</text></g>
+<g id="module-back-vehicle-front" transform="translate(835,225)">
+<path id="module-back" d="M-32,-28 L32,-28 L32,16 L-32,16 Z" fill="#aebac4" stroke="#456"/>
+<rect id="docked-vehicle" x="-25" y="-4" width="50" height="12" fill="#df8a2a"/>
+<path id="module-front" d="M-32,2 L-20,2 L-20,16 L-32,16 Z M20,2 L32,2 L32,16 L20,16 Z" fill="#67818a"/>
+<text x="-65" y="72">Craft behind front</text></g>
+<g id="mine-state-construction" transform="translate(80,440)">
+<rect x="-31" y="-33" width="64" height="64" fill="none" stroke="#789"/>
+<path d="M-24,-20 H24 V16 H-24 Z" fill="#b6c0c8" stroke="#456"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-40" y="52">construction</text></g>
+<path d="M58,422 l44,30 M58,432 l32,20" stroke="#eff2f3"/>
+<g id="mine-state-working" transform="translate(200,440)">
+<rect x="-31" y="-33" width="64" height="64" fill="none" stroke="#789"/>
+<path d="M-24,-20 H24 V16 H-24 Z" fill="#b6c0c8" stroke="#456"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-40" y="52">working</text></g>
+<circle cx="218" cy="426" r="4" fill="#df8a2a"/>
+<g id="mine-state-blocked" transform="translate(320,440)">
+<rect x="-31" y="-33" width="64" height="64" fill="none" stroke="#789"/>
+<path d="M-24,-20 H24 V16 H-24 Z" fill="#b6c0c8" stroke="#456"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-40" y="52">blocked</text></g>
+<path d="M314,434 l12,12 M326,434 l-12,12" stroke="#a33" stroke-width="2"/>
+<g id="mine-state-depleted" transform="translate(440,440)">
+<rect x="-31" y="-33" width="64" height="64" fill="none" stroke="#789"/>
+<path d="M-24,-20 H24 V16 H-24 Z" fill="#7b858d" stroke="#456"/>
+<path d="M-3,0 H3 M0,-3 V3" stroke="#000"/>
+<text x="-40" y="52">depleted</text></g>
+<g id="rocket-recovery-pose" transform="translate(650,440)">
+<rect x="-32" y="-32" width="64" height="48" fill="none" stroke="#789"/>
+<path d="M0,-28 L12,-12 L12,12 L-12,12 L-12,-12 Z" fill="#aebac4" stroke="#456"/>
+<path d="M-20,14 H20" stroke="#456"/><text x="-40" y="52">Recovery</text></g>
+<g id="module-vehicle-in-front" transform="translate(835,440)">
+<path d="M-32,-28 H32 V16 H-32 Z" fill="#aebac4" stroke="#456"/>
+<path d="M-32,2 H-20 V16 H-32 Z M20,2 H32 V16 H20 Z" fill="#67818a"/>
+<rect x="-25" y="-4" width="50" height="12" fill="#df8a2a"/>
+<text x="-65" y="52">Craft in front</text></g>
+<text x="20" y="580">Per-tile building canvas 64x64, anchor (-31,-33); ground canvas 64x31, anchor (-31,0)</text>
+<text x="20" y="605">Template colors communicate geometry only. Runtime swept-consist/animation/occlusion acceptance is pending.</text>
+</g></svg>

@@ -7,6 +7,7 @@
 
 /**
  * @file saveload.cpp All actions handling saving and loading goes on in this file.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
  *
  * The general actions are as follows for saving a game (loading is analogous):
  * <ol>
@@ -43,6 +44,7 @@
 #include "../gamelog.h"
 #include "../string_func.h"
 #include "../fios.h"
+#include "../multilayer_content.h"
 #include "../error.h"
 #include "../strings_type.h"
 #include "../newgrf_railtype.h"
@@ -220,12 +222,18 @@ struct SaveLoadParams {
 
 static SaveLoadParams _sl; ///< Parameters used for/at saveload.
 
+/**
+ * Read the stable handler registry, including the uniquely versioned MLMD scaffold.
+ * @return Ordered legacy/feature handlers; no existing chunk identity or order is reinterpreted.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ */
 static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 {
 	/* These define the chunks */
 	extern const ChunkHandlerTable _gamelog_chunk_handlers;
 	extern const ChunkHandlerTable _map_chunk_handlers;
 	extern const ChunkHandlerTable _misc_chunk_handlers;
+	extern const ChunkHandlerTable _multilayer_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
 	extern const ChunkHandlerTable _setting_chunk_handlers;
@@ -265,6 +273,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_gamelog_chunk_handlers,
 		_map_chunk_handlers,
 		_misc_chunk_handlers,
+		_multilayer_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
 		_setting_chunk_handlers,
@@ -303,6 +312,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	static std::vector<ChunkHandlerRef> _chunk_handlers;
 
 	if (_chunk_handlers.empty()) {
+		// Stable table/row order preserves legacy handlers while adding each feature's one serialization owner.
 		for (auto &chunk_handler_table : _chunk_handler_tables) {
 			for (auto &chunk_handler : chunk_handler_table) {
 				_chunk_handlers.push_back(chunk_handler);
@@ -3281,6 +3291,18 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 	if (load_check) {
 		/* The only part from AfterLoadGame() we need */
 		_load_check_data.grf_compatibility = IsGoodGRFConfigList(_load_check_data.grfconfig);
+		// New-format previews require metadata and exact profile content; legacy absence retains existing preview rules.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::MultiLayerMetadata)) {
+			if (_load_check_data.multilayer_schema_version == 0) SlErrorCorrupt("Missing required multilayer metadata chunk");
+		}
+		const auto *profile = GetMultiLayerContentProfile(static_cast<MultiLayerGameplayProfileID>(_load_check_data.gameplay_profile_id));
+		if (profile == nullptr) SlErrorCorrupt("Unsupported multilayer preview profile");
+		if (profile->required_content != nullptr) {
+			const auto package_error = CheckMultiLayerContentPackageIdentity(*profile->required_content, _load_check_data.grfconfig, false);
+			if (package_error == MultiLayerContentIdentityError::MissingPackage) SlErrorCorrupt("Required Multilayer content package is missing");
+			if (package_error == MultiLayerContentIdentityError::InactivePackage) SlErrorCorrupt("Required Multilayer content package is missing");
+			if (package_error != MultiLayerContentIdentityError::None) SlErrorCorrupt("Required Multilayer content package differs from its saved identity/version");
+		}
 	} else {
 		_gamelog.StartAction(GamelogActionType::Load);
 

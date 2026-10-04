@@ -11,6 +11,7 @@
 
 
 # This file is part of OpenTTD.
+# Profile controls: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
 # OpenTTD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
 # OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
@@ -3457,6 +3458,11 @@ STR_SAVELOAD_OSKTITLE                                           :{BLACK}Enter a 
 
 # World generation
 STR_MAPGEN_WORLD_GENERATION_CAPTION                             :{WHITE}World Generation
+STR_MAPGEN_GAMEPLAY_PROFILE                                     :{BLACK}Gameplay profile:
+STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP                             :{BLACK}Choose Classic or the first-party Temperate Multilayer Industry economy
+STR_CONFIG_SETTING_GAMEPLAY_PROFILE                             :Gameplay profile: {STRING}
+STR_GAMEPLAY_PROFILE_CLASSIC                                    :Classic
+STR_GAMEPLAY_PROFILE_MULTILAYER_INDUSTRY                         :Multilayer Industry
 STR_MAPGEN_MAPSIZE                                              :{BLACK}Map size:
 STR_MAPGEN_MAPSIZE_TOOLTIP                                      :{BLACK}Select the size of the map in tiles. The number of available tiles will be slightly smaller
 STR_MAPGEN_BY                                                   :{BLACK}*

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file saveload.h Functions/types related to saving and loading games. */
+/** @file saveload.h Functions/types related to saving and loading games. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
 
 #ifndef SAVELOAD_H
 #define SAVELOAD_H
@@ -427,6 +427,7 @@ enum class SaveLoadVersion : uint16_t {
 
 	MapLayers, ///< Saveload version: 369\n Map stores Surface, Underground and Space layers.
 	DeepUnderground, ///< Saveload version: 370\n Map stores Deep Underground; road vehicles store their elevator wait.
+	MultiLayerMetadata, ///< Saveload version: 371\n Explicit profile/schema/content identity, legacy/editor policy and feature seed roots. See r2mlvs14-savegame-determinism-and-lifecycle.md.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

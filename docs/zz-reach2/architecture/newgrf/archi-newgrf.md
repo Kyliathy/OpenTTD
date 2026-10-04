@@ -4,7 +4,7 @@ NewGRF is the GRF container OpenTTD uses to replace and extend vehicles, industr
 
 There is no `Action` enum. Each action is a `uint8_t` and a `GrfActionHandler<TAction>` specialization. The legal values are the template arguments in `InvokeGrfActionHandler::funcs` (`src/newgrf.cpp` lines 1230–1233): `0x00` through `0x14`, in that order. Callback identifiers are the `CallbackID` enum in `src/newgrf_callbacks.h`.
 
-Companion notes: [features.md](features.md), [sprite-groups.md](sprite-groups.md), [callbacks.md](callbacks.md).
+Companion notes: [features.md](features.md), [sprite-groups.md](sprite-groups.md), [callbacks.md](callbacks.md). [R2MLVS1](../../upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md) owns the first-party profile contract and its [activation evidence](../../upgrades/2026-10/r2mlvs1-a-content-contract.md).
 
 ## What a loaded GRF becomes
 
@@ -50,7 +50,7 @@ Pseudo-sprites larger than 1 MiB disable the GRF (lines 1349–1353). A read pas
 
 | Stage | Role |
 | --- | --- |
-| `FileScan` | Action `0x08` only: GRF version, GRFID, name (`ScanInfo` in `src/newgrf/newgrf_act8.cpp`). `FillGRFDetails` runs this (`src/newgrf_config.cpp` line 299). |
+| `FileScan` | Action `0x14` metadata, then Action `0x08` GRF version, GRFID and name (`StaticGRFInfo` and `ScanInfo`). Action `0x08` stops scanning, so required version metadata must precede it. `FillGRFDetails` runs this (`src/newgrf_config.cpp`). |
 | `SafetyScan` | Static GRFs. Action `0x00` / `0x03` / `0x0F` / `0x11` that are not on the safe list call `GRFUnsafe` and set `GRFConfigFlag::Unsafe`. |
 | `LabelScan` | Action `0x10` records goto labels (`DefineGotoLabel`). `InitNewGRFFile` creates the `GRFFile`. |
 | `Init` | Parameters (Action `0x0D`), sounds, names, errors, and Action `0x09` skips. Action `0x07` does nothing in this stage. |
@@ -64,7 +64,7 @@ Pseudo-sprites larger than 1 MiB disable the GRF (lines 1349–1353). A read pas
 
 ```mermaid
 flowchart TD
-  scan["FillGRFDetails: FileScan of Action 0x08"] --> safety["SafetyScan when the GRF is static"]
+  scan["FillGRFDetails: Action 0x14 metadata, then 0x08 identity"] --> safety["SafetyScan when the GRF is static"]
   gfx["GfxLoadSprites → LoadSpriteTables"] --> load["LoadNewGRF"]
   load --> reset["ResetNewGRFData clears feature tables and _spritegroup_pool"]
   reset --> stages["LabelScan, then Init, Reserve, Activation"]
@@ -82,6 +82,14 @@ flowchart TD
   a3 --> after
   after --> tables["Engines, cargo, houses, industries, objects, airports, rail and road types"]
 ```
+
+## First-party Multilayer content boundary
+
+The selected Temperate Multilayer Industry profile uses bundled NewGRF definitions through this loader. `media/multilayer/cargo_catalogue.json` is the source for nineteen additional cargo meanings; `build_content.py` generates the MLVI/version-1 cargo package and a matching compiled identity/label/form manifest. CMake builds it and installs it in the game's `newgrf` directory. Classic keeps its existing definitions. The current package supplies cargos; later plans supply actual vehicle/industry/graphics definitions and engine-owned behavior.
+
+`PrepareMultiLayerProfileContent` resolves the candidate package and refuses unsupported climates or external industry sets before world activation. `ActivateMultiLayerProfile` validates its activated definitions. `CheckMultiLayerContentPackageIdentity` requires the exact GRFID, MD5 and package version, rejecting compatible substitutions; `CheckMultiLayerContentIdentity` also counts required labels across actual `CargoSpec` slots because `BuildCargoLabelMap` silently keeps the first duplicate. Consumers resolve stable labels rather than using the package's current slots. Temperate has eleven active baseline cargos plus nineteen additions: thirty active cargos in a thirty-one-slot envelope preserving original slots 0..11, within `NUM_CARGO = 64`.
+
+Save version 371 records this profile/identity separately from ordinary `NGRF` mappings. Preview and preactivation checks do not publish live policy; actual loading checks exact package identity before sprites and cargo uniqueness afterward. Legacy files retain their existing content rules. The two-route ore/processor/vehicle spike is opt-in (`OPTION_MULTILAYER_LOADER_PROBE`, default OFF); its native registration is excluded from normal builds. [Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) distinguishes tested definitions/contracts from pending runtime/art acceptance.
 
 ## Action dispatch
 

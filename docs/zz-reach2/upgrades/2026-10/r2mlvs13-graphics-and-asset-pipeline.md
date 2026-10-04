@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 380-409 | Complete Map Layer sprite constants and `SPR_NEWGRFS_BASE` bound the published block; preserve 0..65 and resolve any accepted live extension before allocating new IDs. |
 
-Status: proposed; no new images generated during planning. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`; integration follows each consumer. Final art is required for milestone acceptance.
+Status: Groups 1-8 M0 contract completed; final source generation/packing/runtime art remain pending. Evidence: [sprite contract and geometry](r2mlvs13-a-sprite-contract.md). Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`; integration follows each consumer. Final art is required for milestone acceptance.
 
 ## Outcome and Boundaries
 
@@ -112,57 +112,57 @@ logical asset ID + direction + state + frame
 ### Group 1 - Art and runtime contract
 
 {{SIMPLE}}
-- [ ] 1.1 Inventory reusable existing assets and new requirements.
+- [X] 1.1 Inventory reusable existing assets and new requirements.
 
 ### Group 2 - Art and runtime contract
 
 {{MEDIUM}}
-- [ ] 2.1 Preserve offsets 0..65 of the current layer block; append core terrain/UI assets or allocate a new documented block. Content-package sprites follow the package's stable IDs.
+- [X] 2.1 Preserve offsets 0..65 of the current layer block; append core terrain/UI assets or allocate a new documented block. Content-package sprites follow the package's stable IDs.
 
 ### Group 3 - Define a verifiable sprite manifest schema
 
 {{HARD}}
-- [ ] 3.1 Define one manifest record per asset/state family with stable asset ID, consumer, direction/frame/state counts, native dimensions, footprint, anchor and bounds. Distinguish logical asset ID from packed sprite offset.
-- [ ] 3.2 Add transparency, company-color/animation palette policy, back/front parts, source/provenance and packed-output hash fields. Declare which fields are mandatory versus not applicable for icons/terrain/vehicles.
-- [ ] 3.3 Write schema/coverage examples for one vehicle and one multi-tile building; define uniqueness, complete direction/state coverage and missing-source errors before filling the catalogue.
-- [ ] 3.4 Resolve live sprite block size and any already-approved extension against code and packing inputs. Preserve offsets 0..65; never silently occupy a reserved/claimed later offset.
+- [X] 3.1 Define one manifest record per asset/state family with stable asset ID, consumer, direction/frame/state counts, native dimensions, footprint, anchor and bounds. Distinguish logical asset ID from packed sprite offset.
+- [X] 3.2 Add transparency, company-color/animation palette policy, back/front parts, source/provenance and packed-output hash fields. Declare which fields are mandatory versus not applicable for icons/terrain/vehicles.
+- [X] 3.3 Write schema/coverage examples for one vehicle and one multi-tile building; define uniqueness, complete direction/state coverage and missing-source errors before filling the catalogue.
+- [X] 3.4 Resolve live sprite block size and any already-approved extension against code and packing inputs. Preserve offsets 0..65; never silently occupy a reserved/claimed later offset.
 
 ### Group 4 - Set measurable art rules and reference ownership
 
 {{MEDIUM}}
-- [ ] 4.1 Publish a compact style sheet: isometric TTD scale, one light direction, readable native-resolution silhouettes, consistent ground contact/shadows and distinct depth/resource colors.
-- [ ] 4.2 Specify native-scale readability checks for empty/loaded/blocked/working states. Identify silhouette and accent features that distinguish each of the five tube models without relying only on color.
-- [ ] 4.3 List the reference assets, their actual reuse rights and intended use. Keep first-party/generated originals and pinned provenance separate from third-party ETI imagery with unresolved terms.
+- [X] 4.1 Publish a compact style sheet: isometric TTD scale, one light direction, readable native-resolution silhouettes, consistent ground contact/shadows and distinct depth/resource colors.
+- [X] 4.2 Specify native-scale readability checks for empty/loaded/blocked/working states. Identify silhouette and accent features that distinguish each of the five tube models without relying only on color.
+- [X] 4.3 List the reference assets, their actual reuse rights and intended use. Keep first-party/generated originals and pinned provenance separate from third-party ETI imagery with unresolved terms.
 
 ### Group 5 - Art and runtime contract
 
 {{MEDIUM}}
-- [ ] 5.1 Freeze 8bpp DOS palette/index-0 transparency for the first deliverable, normal-zoom authored sprites and engine scaling.
-- [ ] 5.2 Specify handling of reserved animation/company colors; optional 32bpp/high-zoom art is later work.
+- [X] 5.1 Freeze 8bpp DOS palette/index-0 transparency for the first deliverable, normal-zoom authored sprites and engine scaling.
+- [X] 5.2 Specify handling of reserved animation/company colors; optional 32bpp/high-zoom art is later work.
 
 ### Group 6 - Validate representative geometry before family generation
 
 {{HARD}}
-- [ ] 6.1 Prepare exact tile/vehicle placement templates from live sprite anchors and direction conventions. Label each view using the engine orientation, not a generic 2D rotation.
-- [ ] 6.2 Produce one representative TBM directional/boring test with fixed cutter/support alignment; compare straight and two legal 45-degree bend poses against its swept gameplay footprint.
-- [ ] 6.3 Produce one mine layout/state test and one rocket deployment/recovery test, checking anchor, bounding box, tile joins and native-size readability.
-- [ ] 6.4 Produce one module docking foreground/back test with a vehicle behind/in front. Validate with exact placement templates for M0; full runtime occlusion awaits the owning feature.
-- [ ] 6.5 Record accepted geometry and corrections for each representative before generating its family. A contact sheet validates schema/layout only, not runtime animation or occlusion.
+- [X] 6.1 Prepare exact tile/vehicle placement templates from live sprite anchors and direction conventions. Label each view using the engine orientation, not a generic 2D rotation.
+- [X] 6.2 Produce one representative TBM directional/boring test with fixed cutter/support alignment; compare straight and two legal 45-degree bend poses against its swept gameplay footprint.
+- [X] 6.3 Produce one mine layout/state test and one rocket deployment/recovery test, checking anchor, bounding box, tile joins and native-size readability.
+- [X] 6.4 Produce one module docking foreground/back test with a vehicle behind/in front. Validate with exact placement templates for M0; full runtime occlusion awaits the owning feature.
+- [X] 6.5 Record accepted geometry and corrections for each representative before generating its family. A contact sheet validates schema/layout only, not runtime animation or occlusion.
 
 ### Group 7 - Complete all family coverage contracts
 
 {{MEDIUM}}
-- [ ] 7.1 Expand the manifest to all ten mines, conventional underground fleet, portals/exchange/service facilities and Surface receiver functions from the frozen draft catalogue.
-- [ ] 7.2 Add distinct Mole-70, Crate-75, Cistern-80, Shield-85 and Forge-05 direction/load/service matrices plus tube guideway/junction/terminal visibility rules.
-- [ ] 7.3 Add geothermal collector, both powerhouses, smelter, battery works, Mantle Forge, utility/riser and heat-starved states at their dates.
-- [ ] 7.4 Add every Space fleet/module/asteroid/mirror state and separate Surface collection versus orbital-drop overlays; fill exact counts/anchors/foreground parts before batch authoring.
+- [X] 7.1 Expand the manifest to all ten mines, conventional underground fleet, portals/exchange/service facilities and Surface receiver functions from the frozen draft catalogue.
+- [X] 7.2 Add distinct Mole-70, Crate-75, Cistern-80, Shield-85 and Forge-05 direction/load/service matrices plus tube guideway/junction/terminal visibility rules.
+- [X] 7.3 Add geothermal collector, both powerhouses, smelter, battery works, Mantle Forge, utility/riser and heat-starved states at their dates.
+- [X] 7.4 Add every Space fleet/module/asteroid/mirror state and separate Surface collection versus orbital-drop overlays; fill exact counts/anchors/foreground parts before batch authoring.
 
 ### Group 8 - Publish the Sprite Contract Handoff
 
 {{MEDIUM}}
-- [ ] 8.1 Publish `assets/multilayer_sprite_manifest.json` with exact `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source` and the additional validated schema fields. Keep it repository-local and link from consumer plans.
-- [ ] 8.2 Run schema, duplicate-ID, coverage-count and source/geometry-template checks. Mark planned source assets as undelivered explicitly rather than pointing to nonexistent final files.
-- [ ] 8.3 Record the M0 Sprite Contract Handoff as dimensions/directions/state requirements plus representative template evidence. Actual family generation, packing and runtime acceptance remain pending in later groups.
+- [X] 8.1 Publish `assets/multilayer_sprite_manifest.json` with exact `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source` and the additional validated schema fields. Keep it repository-local and link from consumer plans.
+- [X] 8.2 Run schema, duplicate-ID, coverage-count and source/geometry-template checks. Mark planned source assets as undelivered explicitly rather than pointing to nonexistent final files.
+- [X] 8.3 Record the M0 Sprite Contract Handoff as dimensions/directions/state requirements plus representative template evidence. Actual family generation, packing and runtime acceptance remain pending in later groups.
 
 ### Area Mandatory Reading - Source generation and reproducible conversion
 

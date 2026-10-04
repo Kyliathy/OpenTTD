@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file genworld_widget.h Types related to the genworld widgets. */
+/** @file genworld_widget.h Types related to the genworld widgets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #ifndef WIDGETS_GENWORLD_WIDGET_H
 #define WIDGETS_GENWORLD_WIDGET_H
@@ -67,6 +67,7 @@ enum GenerateLandscapeWidgets : WidgetID {
 
 	WID_GL_CLIMATE_SEL_LABEL,           ///< NWID_SELECTION for snow or desert coverage label
 	WID_GL_CLIMATE_SEL_SELECTOR,        ///< NWID_SELECTION for snow or desert coverage selector
+	WID_GL_PROFILE_PULLDOWN,            ///< Appended explicit profile selector, preserving all original widget IDs.
 };
 
 /** Widgets of the #CreateScenarioWindow class. */

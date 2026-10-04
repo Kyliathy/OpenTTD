@@ -100,6 +100,12 @@ The ten map chunks (`MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAP
 
 `MAPSChunkHandler` validates layer counts in both load and load-preview paths, rejects counts outside 1..4, and rejects a pre-370 file claiming four layers. On a real load, `Map::Allocate` validates dimensions; preview records the file's dimensions and layer count without allocating the live map. General chunk/reference conversion is documented in [savegame architecture](../savegame/archi-savegame.md); the view-camera correction above changes only existing camera metadata.
 
+## Gameplay-profile foundation (R2MLVS1)
+
+[R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) adds explicit Classic/Multilayer selection and saved profile metadata in version 371. The shared policy owner is `multilayer_content.cpp`; legacy files without metadata retain Classic and their existing content behavior. Layer storage IDs, addressing and the 66-sprite native block remain unchanged. Metadata acceptance checks exact first-party content and cargo meanings before dependent gameplay fixups, with independent nonmutating preview fields; see [savegame architecture](../savegame/archi-savegame.md).
+
+`CheckDeepLayerAvailability` publishes a game-calendar boundary of 1 January 1980 for the new profile, with explicit saved editor override and legacy policy. Feature commands must consume that predicate when their construction/operation paths are implemented. This foundation does not yet enforce the new gate throughout old commands or install solid geology, TBMs, Deep rail, tube networks or orbital movement. Those behaviors and final art remain in the owning [R2MLVS feature plans](../../upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md).
+
 ## Code map
 
 Paths below are relative to the repository root.

@@ -19,6 +19,7 @@
 #include "../industry.h"
 #include "../clear_map.h"
 #include "../map_layer.h"
+#include "../multilayer_state.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -714,6 +715,17 @@ bool AfterLoadGame()
 
 	/* Check if all NewGRFs are present, we are very strict in MP mode */
 	GRFListCompatibility gcf_res = IsGoodGRFConfigList(_grfconfig);
+	// Explicit profiles require exact resolved content before ordinary network compatibility or sprite/cargo activation; legacy saves retain existing rules.
+	if (const auto *metadata = GetPendingMultiLayerStateSchema()) {
+		const auto *profile = GetMultiLayerContentProfile(metadata->profile.id);
+		if (profile == nullptr) SlErrorCorrupt("Unsupported multilayer profile identity");
+		if (profile->required_content != nullptr) {
+			const auto package_error = CheckMultiLayerContentPackageIdentity(*profile->required_content, _grfconfig, false);
+			if (package_error == MultiLayerContentIdentityError::MissingPackage) SlErrorCorrupt("Required Multilayer content package is missing");
+			if (package_error == MultiLayerContentIdentityError::InactivePackage) SlErrorCorrupt("Required Multilayer content package is missing");
+			if (package_error != MultiLayerContentIdentityError::None) SlErrorCorrupt("Required Multilayer content package differs from its saved identity/version");
+		}
+	}
 	for (const auto &c : _grfconfig) {
 		if (c->status == GRFStatus::NotFound) {
 			_gamelog.GRFRemove(c->ident.grfid);
@@ -809,6 +821,12 @@ bool AfterLoadGame()
 
 	/* Load the sprites */
 	GfxLoadSprites();
+	// Exact profile content/cargo validation precedes engine/industry gameplay fixups; absent old metadata preserves Classic.
+	if (!IsSavegameVersionBefore(SaveLoadVersion::MultiLayerMetadata)) {
+		if (GetPendingMultiLayerStateSchema() == nullptr) SlErrorCorrupt("Missing required multilayer metadata chunk");
+	}
+	const auto multilayer_error = AcceptLoadedMultiLayerStateSchema(_settings_game.game_creation.landscape, _grfconfig);
+	if (multilayer_error != MultiLayerProfileError::None) SlErrorCorrupt(fmt::format("Multilayer profile refused: {}", GetMultiLayerProfileErrorMessage(multilayer_error)));
 	LoadStringWidthTable();
 
 	/* Copy temporary data to Engine pool */

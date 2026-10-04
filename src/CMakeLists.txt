@@ -1,3 +1,10 @@
+# Source registration for R2MLVS1; see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
+option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
+if(OPTION_MULTILAYER_LOADER_PROBE)
+    # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
+    set_source_files_properties(newgrf.cpp PROPERTIES COMPILE_DEFINITIONS "$<$<CONFIG:Debug>:WITH_MULTILAYER_LOADER_PROBE>")
+endif()
+
 add_subdirectory(script)
 add_subdirectory(settingsgen)
 add_subdirectory(strgen)
@@ -274,6 +281,20 @@ add_files(
     map_layer_gui.cpp
     map_layer_gui.h
     map_layer_type.h
+    multilayer_content.cpp
+    multilayer_content.h
+    multilayer_state.cpp
+    multilayer_state.h
+    multilayer_vehicle_catalogue.cpp
+    multilayer_utility.cpp
+    multilayer_utility.h
+    solar_power.h
+    multilayer_content_identity.cpp
+    multilayer_content_identity.h
+    multilayer_recipe.cpp
+    multilayer_recipe.h
+    multilayer_bootstrap.cpp
+    multilayer_bootstrap.h
     map_type.h
     misc.cpp
     misc_cmd.cpp

@@ -5,9 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file misc.cpp Misc functions that shouldn't be here. @see docs/zz-reach2/architecture/game-loop/archi-game-loop.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file misc.cpp Misc functions that shouldn't be here. @see docs/zz-reach2/architecture/game-loop/archi-game-loop.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #include "stdafx.h"
+#include "multilayer_content.h"
+#include "multilayer_state.h"
 #include "landscape.h"
 #include "map_layer.h"
 #include "news_func.h"
@@ -91,8 +93,18 @@ void GenerateSavegameId()
 	_game_session_stats.savegame_id = GenerateUid("OpenTTD Savegame ID");
 }
 
+/**
+ * Initialize a candidate world without inheriting an unrelated accepted profile.
+ * @param size_x Width of each map plane in tiles.
+ * @param size_y Height of each map plane in tiles.
+ * @param reset_date Initialize calendar/economy dates rather than retaining loaded values.
+ * @param reset_settings Copy pending new-game settings into the candidate settings.
+ */
 void InitializeGame(uint size_x, uint size_y, bool reset_date, bool reset_settings)
 {
+	// A legacy save without profile metadata retains Classic behavior; new worlds activate after loading content.
+	ResetMultiLayerProfileSelection();
+	ResetMultiLayerStateSchema();
 	/* Make sure there isn't any window that can influence anything
 	 * related to the new game we're about to start/load. */
 	UnInitWindowSystem();

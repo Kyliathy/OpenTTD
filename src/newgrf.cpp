@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf.cpp Base of all NewGRF support. */
+/** @file newgrf.cpp Base of all NewGRF support. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -1751,6 +1751,90 @@ static void AfterLoadGRFs()
 	_grm_sprites.clear();
 }
 
+#ifdef WITH_MULTILAYER_LOADER_PROBE
+/**
+ * Register the isolated built-in candidate for the content-delivery experiment.
+ * The repository-local dedicated harness sets OTTD_MULTILAYER_LOADER_PROBE=native
+ * only for this experiment. The explicit OPTION_MULTILAYER_LOADER_PROBE build
+ * option enables this hook in Debug builds; normal builds omit it entirely.
+ * This is not a gameplay profile or a production activation API.
+ * Original slots and definitions are retained, using the existing engine mapping.
+ */
+static void InstallNativeMultilayerLoaderProbe()
+{
+	const char *mode = std::getenv("OTTD_MULTILAYER_LOADER_PROBE");
+	if (mode == nullptr) return;
+	if (std::string_view{mode} != "native") return;
+	if (_settings_game.game_creation.landscape != LandscapeType::Temperate) return;
+
+	CargoType ore = CargoType{12};
+	*CargoSpec::Get(ore) = *CargoSpec::Get(GetCargoTypeByLabel(CT_IRON_ORE));
+	CargoSpec::Get(ore)->label = CT_COPPER_ORE;
+	CargoSpec::Get(ore)->bitnum = 12;
+	CargoSpec::Get(ore)->sprite = SPR_CARGO_COPPER_ORE;
+	_cargo_mask.Set(ore);
+	BuildCargoLabelMap();
+
+	IndustrySpec &processor = _industry_specs[NEW_INDUSTRYOFFSET];
+	processor = _industry_specs[8]; // The isolated experiment copies the stock steel-mill layout.
+	processor.accepts_cargo.fill(INVALID_CARGO);
+	processor.accepts_cargo_label.fill(CT_INVALID);
+	processor.accepts_cargo[0] = ore;
+	processor.accepts_cargo[1] = GetCargoTypeByLabel(CT_COAL);
+	processor.produced_cargo.fill(INVALID_CARGO);
+	processor.produced_cargo[0] = GetCargoTypeByLabel(CT_STEEL);
+	processor.appear_creation[0] = 0;
+	processor.appear_ingame[0] = 0;
+	processor.conflicting[0] = processor.conflicting[1] = processor.conflicting[2] = IT_INVALID;
+
+	constexpr uint16_t local_id = 116;
+	EngineID id = _engine_mngr.GetID(VehicleType::Train, local_id, INVALID_GRFID);
+	Engine *carrier;
+	if (id == EngineID::Invalid()) {
+		// The pool requires a checked allocation before appending a definition; original slots stay intact.
+		assert(Engine::CanAllocateItem());
+		carrier = Engine::Create(VehicleType::Train, local_id);
+		_engine_mngr.SetID(VehicleType::Train, local_id, INVALID_GRFID, 0, carrier->index);
+	} else {
+		carrier = Engine::Get(id);
+	}
+	carrier->info = Engine::Get(EngineID{0})->info;
+	carrier->VehInfo<RailVehicleInfo>() = Engine::Get(EngineID{0})->VehInfo<RailVehicleInfo>();
+	carrier->info.cargo_label = CT_COPPER_ORE;
+	carrier->info.cargo_type = ore;
+	carrier->VehInfo<RailVehicleInfo>().capacity = 32;
+	_gted.resize(Engine::GetPoolSize());
+	_gted[carrier->index].railtypelabels = {RAILTYPE_LABEL_RAIL};
+}
+
+/**
+ * Emit loaded candidate identities and real base-sprite availability for the spike.
+ * The harness compares these diagnostics after new-world and saved-world loading.
+ * This reports definition loading only; production and original art remain separate
+ * feature obligations. No packets, money, world tiles, or random state are changed.
+ */
+static void ReportMultilayerLoaderProbe()
+{
+	if (std::getenv("OTTD_MULTILAYER_LOADER_PROBE") == nullptr) return;
+	CargoType ore = GetCargoTypeByLabel(CT_COPPER_ORE);
+	Debug(Facility::Misc, Severity::Info, "MLVS_PROBE cargo CORE slot={} sprite={}", ore, ore == INVALID_CARGO ? false : SpriteExists(CargoSpec::Get(ore)->sprite));
+	if (ore == INVALID_CARGO) return;
+	// Compare the registered processor's two inputs and output independently of its mapped global slot.
+	// NewGRF industry mappings may reuse climate-disabled original slots, so inspect the complete registry.
+	for (IndustryType type = 0; type < NUM_INDUSTRYTYPES; ++type) {
+		const IndustrySpec *processor = GetIndustrySpec(type);
+		if (!processor->enabled) continue;
+		if (processor->accepts_cargo[0] != ore) continue;
+		Debug(Facility::Misc, Severity::Info, "MLVS_PROBE processor type={} inputs={},{} output={} layouts={}", type, processor->accepts_cargo[0], processor->accepts_cargo[1], processor->produced_cargo[0], processor->layouts.size());
+	}
+	// Locate the extra carrier by its cargo meaning, retaining the original 256 engine identities.
+	for (const Engine *carrier : Engine::IterateType(VehicleType::Train)) {
+		if (carrier->grf_prop.local_id != 116) continue;
+		Debug(Facility::Misc, Severity::Info, "MLVS_PROBE carrier id={} local={} cargo={} capacity={} image={}", carrier->index, carrier->grf_prop.local_id, carrier->info.cargo_type, carrier->VehInfo<RailVehicleInfo>().capacity, carrier->VehInfo<RailVehicleInfo>().image_index);
+	}
+}
+#endif
+
 /**
  * Load all the NewGRFs.
  * @param load_index The offset for the first sprite to add.
@@ -1877,7 +1961,13 @@ void LoadNewGRF(SpriteID load_index, uint num_baseset)
 	_cur_gps.ClearDataForNextFile();
 
 	/* Call any functions that should be run after GRFs have been loaded. */
+#ifdef WITH_MULTILAYER_LOADER_PROBE
+	InstallNativeMultilayerLoaderProbe();
+#endif
 	AfterLoadGRFs();
+#ifdef WITH_MULTILAYER_LOADER_PROBE
+	ReportMultilayerLoaderProbe();
+#endif
 }
 
 /**

@@ -1,3 +1,4 @@
+# Metadata scaffold: docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md.
 add_subdirectory(compat)
 
 add_files(
@@ -23,6 +24,7 @@ add_files(
     linkgraph_sl.cpp
     map_sl.cpp
     misc_sl.cpp
+    multilayer_sl.cpp
     newgrf_sl.cpp
     newgrf_sl.h
     object_sl.cpp

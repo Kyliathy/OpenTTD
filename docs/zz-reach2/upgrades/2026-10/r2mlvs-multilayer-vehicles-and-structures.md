@@ -1,6 +1,6 @@
 # R2MLVS Master Plan - Multilayer Vehicles and Structures
 
-Planning baseline: 2026-10-04. **Status: proposed; implementation has not started.**
+Planning baseline: 2026-10-04. **Status: implementation started with r2mlvs1; no milestone is complete.** Execution evidence and completed task checkboxes live in the child plan.
 
 This epic turns the four existing layers into a connected transport economy: excavate access, remove spoil, exploit underground deposits, lift equipment into orbit, mine moving asteroids, and use orbital infrastructure to improve production on Earth. It follows [R2MLM](r2mlm-multi-layered-map.md), the [level 0 architecture](../../architecture/@archi-ttd-level0.md), and the [map-layer architecture](../../architecture/map-layers/archi-map-layers.md).
 
@@ -145,7 +145,7 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
-| [ ] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
+| [X] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
 | [ ] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | Solid rock, deposits, surveys, excavation state and construction guards | 1 Content Freeze; 14 Schema Foundation Handoff |
 | [ ] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Sealed entrances, commissioning access and Underground/Deep rail connections | 2 |
 | [ ] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Boring train, work orders, support track, spoil generation and costs | 3; wagon contract from 1 |
@@ -156,9 +156,9 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 | [ ] | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) | Waterside airport-menu facility, launch queues, rockets and descent cargo | 8; cargo definitions from 1 |
 | [ ] | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) | Moving deposits, rendezvous, attachment, extraction and return missions | 9 |
 | [ ] | [r2mlvs11-orbital-stations-and-manufacturing.md](r2mlvs11-orbital-stations-and-manufacturing.md) | Delivered module construction, assembly docks, larger robots and processing | 9, 10; recipes from 6 |
-| [ ] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | ETI Feasibility Handoff uses 1 Draft Content; Useful Power Handoff after 1 Content Freeze; mirrors after 9 |
-| [ ] | [r2mlvs13-graphics-and-asset-pipeline.md](r2mlvs13-graphics-and-asset-pipeline.md) | Sprite manifest, generated art, repeatable packing and in-game review | Sprite Contract Handoff uses 1 Draft Content; integration follows consumers |
-| [ ] | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Schema Foundation Handoff uses 1 Draft Content; final audit after feature plans |
+| [~] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | ETI Feasibility Handoff uses 1 Draft Content; Useful Power Handoff after 1 Content Freeze; mirrors after 9 |
+| [~] | [r2mlvs13-graphics-and-asset-pipeline.md](r2mlvs13-graphics-and-asset-pipeline.md) | Sprite manifest, generated art, repeatable packing and in-game review | Sprite Contract Handoff uses 1 Draft Content; integration follows consumers |
+| [~] | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Schema Foundation Handoff uses 1 Draft Content; final audit after feature plans |
 | [ ] | [r2mlvs15-integrated-acceptance-and-balance.md](r2mlvs15-integrated-acceptance-and-balance.md) | Playable scenarios, balance, performance, regression and documentation | all required groups of 1..14, 16, 17 |
 | [ ] | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) | Excavated tube networks, terminals, power/service and five original cargo vehicles | 2..5; contracts from 1; 12 Useful Power Handoff; UI integration with 7 |
 | [ ] | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) | Deep vents, shared heat budgets, power export and future direct-heat factories | 2, 3, 6; utility schema from 1 and runtime Useful Power Handoff from 12 |
@@ -189,7 +189,7 @@ Inspected entry points: `src/map_layer.h`, `src/map_layer.cpp`, `src/map_layer_g
 
 New games may select **Multilayer Industry**. The profile supplies all required cargos, industries, vehicles and graphics with the game; it must work without an external industry set. It starts with a supported Temperate economy, with other climates requiring an explicit tested mapping. Classic games remain selectable. Existing saves retain their prior gameplay/content configuration by default; no silent cargo-table replacement or newly solid rock over existing infrastructure.
 
-Engine code owns excavation, jobs, moving objects, cross-layer transfer, wagon exchange and construction validation. A versioned first-party content package supplies definitions, recipes and art. r2mlvs1 chooses built-in tables versus a bundled NewGRF after a loader spike; these behaviors cannot be delivered by an ordinary NewGRF alone. Missing required content causes a clear load failure rather than substitution of cargo meaning. External industry sets are supported through named compatibility profiles, not arbitrary load order.
+Engine code owns excavation, jobs, moving objects, cross-layer transfer, wagon exchange and construction validation. A versioned first-party content package supplies definitions, recipes and art. **Execution decision, r2mlvs1 Group 3:** bundled NewGRF definitions use the existing staged loader and saved identity mappings; engine-owned behavior remains native. Group 4 delivers the first-party cargo-definition package and exact activation manifest; gameplay/vehicle/industry/art families remain with their feature owners. Missing required content causes a clear refusal rather than substitution of cargo meaning. External industry sets require named tested compatibility profiles, not arbitrary load order.
 
 ### AD-2 - Excavation is persistent world state (owners: 2, 4, 14)
 
@@ -385,6 +385,16 @@ Milestones are engineering deliveries, not calendar eras: M2's tube/geothermal a
 - **I-15 - Tube separation:** tubes require excavated ground, compatible capsules and power; they never commission TBMs or replace mandatory spoil-wagon hauling.
 - **I-16 - Launch collection:** a 20-tile circular orbital drop requires an explicit target/descent; Surface hub membership neither duplicates packets nor grants cross-layer catchment.
 - **I-17 - Thermal accounting:** finite vent output is allocated once across heat/electric uses; geothermal energy cannot receive a solar mirror multiplier or duplicate grid credit.
+
+## Plan 1 M0 execution decisions
+
+Plan 1 is complete. Index marks for Plans 12/13/14 indicate only the prerequisite native feasibility/draft solar, sprite contract and Schema Foundation handoffs delivered for M0; all remaining feature tasks stay unchecked. M0 Content Freeze does not imply M1 or runtime feature acceptance.
+
+Plan 1's [Content Freeze record](r2mlvs1-g-content-freeze.md) owns the compiled numerical/ownership tables and evidence. Native MLVI is selected, with 30 active cargos, 64/283 industry/tile envelopes and 275 logical designs. ETI v14 is unsupported for this profile; its pinned source/terms failures and unexecuted runtime checks remain explicit. Its first-party fallback is the shipped cargo package and tested native utility/effect contract; operational Useful Power is still Plan 12 work after Content Freeze.
+
+Bootstrap adds bounded paid Surface procurement, including Electronics/Batteries from 1965 for the 1970 tube; purchased company supplies earn no freight income. Rock yields bounded local construction aggregate with a maximum replacement value and paid residue/disposal, instead of unrestricted profitable Goods. Two pod shells and a service preload are included in first-probe supplies. The station nucleus is a Surface-preassembled kit preceding heavy-robot assembly. These choices fit the budgets and close self-dependent build paths.
+
+Schema Foundation allocates MLMD/save version 371 after verified 369/370 preservation. Exact content is checked before activation and cargo meanings afterwards; old chunk absence remains Classic, and saved editor policy is explicit. SolarMirrorID names a deployed solar-owned object and adds no routed engine design. Sprite M0 freezes 141 families/58,059 planned sprites, protects 0..73 and proposes core 74..167 without activation. Actual feature pools, source art, operating utility and whole-world network/performance acceptance remain unfinished.
 
 ## Decisions to revisit during implementation
 

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file genworld_gui.cpp GUI to configure and show progress during map generation. */
+/** @file genworld_gui.cpp GUI to configure and show progress during map generation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #include "stdafx.h"
 #include "heightmap.h"
@@ -85,6 +85,11 @@ static constexpr std::initializer_list<NWidgetPart> _nested_generate_landscape_w
 				NWidget(WWT_IMGBTN_2, Colours::Orange, WID_GL_ARCTIC), SetSpriteTip(SPR_SELECT_SUB_ARCTIC, STR_INTRO_TOOLTIP_SUB_ARCTIC_LANDSCAPE),
 				NWidget(WWT_IMGBTN_2, Colours::Orange, WID_GL_TROPICAL), SetSpriteTip(SPR_SELECT_SUB_TROPICAL, STR_INTRO_TOOLTIP_SUB_TROPICAL_LANDSCAPE),
 				NWidget(WWT_IMGBTN_2, Colours::Orange, WID_GL_TOYLAND), SetSpriteTip(SPR_SELECT_TOYLAND, STR_INTRO_TOOLTIP_TOYLAND_LANDSCAPE),
+			EndContainer(),
+
+			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_GAMEPLAY_PROFILE, STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP),
+				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_PROFILE_PULLDOWN), SetToolTip(STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP), SetFill(1, 1),
 			EndContainer(),
 
 			/* Generation options. */
@@ -222,6 +227,10 @@ static constexpr std::initializer_list<NWidgetPart> _nested_heightmap_load_widge
 				/* Heightmap name label. */
 				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_HEIGHTMAP_NAME, STR_MAPGEN_HEIGHTMAP_NAME_TOOLTIP),
 				NWidget(WWT_TEXT, Colours::Invalid, WID_GL_HEIGHTMAP_NAME_TEXT), SetTextStyle(TextColour::Orange), SetToolTip(STR_MAPGEN_HEIGHTMAP_NAME_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_GAMEPLAY_PROFILE, STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP),
+				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_PROFILE_PULLDOWN), SetToolTip(STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP), SetFill(1, 1),
 			EndContainer(),
 
 			/* Generation options. */
@@ -392,11 +401,13 @@ static const StringID _smoothness[]  = {STR_CONFIG_SETTING_ROUGHNESS_OF_TERRAIN_
 static const StringID _rotation[]    = {STR_CONFIG_SETTING_HEIGHTMAP_ROTATION_COUNTER_CLOCKWISE, STR_CONFIG_SETTING_HEIGHTMAP_ROTATION_CLOCKWISE};
 static const StringID _num_towns[]   = {STR_NUM_VERY_LOW, STR_NUM_LOW, STR_NUM_NORMAL, STR_NUM_HIGH, STR_NUM_CUSTOM};
 static const StringID _num_inds[]    = {STR_FUNDING_ONLY, STR_MINIMAL, STR_NUM_VERY_LOW, STR_NUM_LOW, STR_NUM_NORMAL, STR_NUM_HIGH, STR_NUM_CUSTOM};
+static const StringID _gameplay_profile_names[] = {STR_GAMEPLAY_PROFILE_CLASSIC, STR_GAMEPLAY_PROFILE_MULTILAYER_INDUSTRY}; ///< Stable selector order, independent of runtime cargo slots.
 static const StringID _variety[]     = {STR_VARIETY_NONE, STR_VARIETY_VERY_LOW, STR_VARIETY_LOW, STR_VARIETY_MEDIUM, STR_VARIETY_HIGH, STR_VARIETY_VERY_HIGH};
 static const StringID _average_height[] = {STR_CONFIG_SETTING_AVERAGE_HEIGHT_AUTO, STR_CONFIG_SETTING_AVERAGE_HEIGHT_LOWLANDS, STR_CONFIG_SETTING_AVERAGE_HEIGHT_NORMAL, STR_CONFIG_SETTING_AVERAGE_HEIGHT_PLATEAUS};
 
 static_assert(std::size(_num_inds) == to_underlying(IndustryDensity::End));
 
+/** Configure a candidate new world; profile selection remains pending until its content validates. */
 struct GenerateLandscapeWindow : public Window {
 	WidgetID widget_id{};
 	uint x = 0;
@@ -404,6 +415,11 @@ struct GenerateLandscapeWindow : public Window {
 	EncodedString name{};
 	GenerateLandscapeWindowMode mode{};
 
+	/**
+	 * Build the generator controls without changing the accepted world's profile.
+	 * @param desc Window/widget layout for random generation or heightmap loading.
+	 * @param number Generation window mode identifier.
+	 */
 	GenerateLandscapeWindow(WindowDesc &desc, WindowNumber number = 0) : Window(desc)
 	{
 		this->InitNested(number);
@@ -429,9 +445,16 @@ struct GenerateLandscapeWindow : public Window {
 	}
 
 
+	/**
+	 * Format current pending generation settings for the requested control.
+	 * @param widget Control requesting its displayed value.
+	 * @param stringid Default string supplied by the widget layout.
+	 * @return Localized displayed value.
+	 */
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
 		switch (widget) {
+			case WID_GL_PROFILE_PULLDOWN: return GetString(_gameplay_profile_names[_settings_newgame.game_creation.gameplay_profile]);
 			case WID_GL_START_DATE_TEXT:      return GetString(STR_JUST_DATE_LONG, TimerGameCalendar::ConvertYMDToDate(_settings_newgame.game_creation.starting_year, 0, 1));
 			case WID_GL_MAPSIZE_X_PULLDOWN:   return GetString(STR_JUST_INT, 1LL << _settings_newgame.game_creation.map_x);
 			case WID_GL_MAPSIZE_Y_PULLDOWN:   return GetString(STR_JUST_INT, 1LL << _settings_newgame.game_creation.map_y);
@@ -570,6 +593,14 @@ struct GenerateLandscapeWindow : public Window {
 
 	}
 
+	/**
+	 * Size a control for every supported value, preventing longer profile names from clipping.
+	 * @param widget Control being measured.
+	 * @param size Minimum size updated to fit its content.
+	 * @param padding Layout padding; unused here.
+	 * @param fill Requested fill behavior; unused here.
+	 * @param resize Requested resize behavior; unused here.
+	 */
 	void UpdateWidgetSize(WidgetID widget, Dimension &size, [[maybe_unused]] const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
 	{
 		Dimension d{0, (uint)GetCharacterHeight(FontSize::Normal)};
@@ -631,6 +662,7 @@ struct GenerateLandscapeWindow : public Window {
 			case WID_GL_AVERAGE_HEIGHT_PULLDOWN: strs = _variety; break;
 			case WID_GL_VARIETY_PULLDOWN:    strs = _variety; break;
 			case WID_GL_HEIGHTMAP_ROTATION_PULLDOWN: strs = _rotation; break;
+			case WID_GL_PROFILE_PULLDOWN: strs = _gameplay_profile_names; break;
 			case WID_GL_BORDERS_PULLDOWN:    strs = _borders; break;
 			case WID_GL_WATER_NE:
 			case WID_GL_WATER_NW:
@@ -652,6 +684,12 @@ struct GenerateLandscapeWindow : public Window {
 		size = maxdim(size, d);
 	}
 
+	/**
+	 * Handle a generator control, keeping profile changes in the pending settings.
+	 * @param pt Pointer position; unused by these controls.
+	 * @param widget Clicked control.
+	 * @param click_count Click multiplicity; unused here.
+	 */
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		switch (widget) {
@@ -681,6 +719,9 @@ struct GenerateLandscapeWindow : public Window {
 
 			case WID_GL_INDUSTRY_PULLDOWN: // Number of industries
 				ShowDropDownMenu(this, _num_inds, to_underlying(_settings_newgame.difficulty.industry_density), WID_GL_INDUSTRY_PULLDOWN, 0, 0);
+				break;
+			case WID_GL_PROFILE_PULLDOWN:
+				ShowDropDownMenu(this, _gameplay_profile_names, _settings_newgame.game_creation.gameplay_profile, WID_GL_PROFILE_PULLDOWN, 0, 0);
 				break;
 
 			case WID_GL_GENERATE_BUTTON: { // Generate
@@ -870,9 +911,16 @@ struct GenerateLandscapeWindow : public Window {
 		}
 	}
 
-	void OnDropdownSelect(WidgetID widget, int index, int) override
+	/**
+	 * Update pending world settings after a dropdown selection.
+	 * @param widget Dropdown whose value changed.
+	 * @param index Selected item identity, constrained by the dropdown's entries.
+	 * @param button Unused dropdown callback button argument.
+	 */
+	void OnDropdownSelect(WidgetID widget, int index, int /* button */) override
 	{
 		switch (widget) {
+			case WID_GL_PROFILE_PULLDOWN: _settings_newgame.game_creation.gameplay_profile = index; break;
 			case WID_GL_MAPSIZE_X_PULLDOWN:     _settings_newgame.game_creation.map_x = index; break;
 			case WID_GL_MAPSIZE_Y_PULLDOWN:     _settings_newgame.game_creation.map_y = index; break;
 			case WID_GL_RIVER_PULLDOWN:         _settings_newgame.game_creation.amount_of_rivers = index; break;

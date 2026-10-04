@@ -1,0 +1,48 @@
+R2MLVS1 Group 4: dedicated profile activation and four refusal cases
+{
+  "classic": {
+    "PASS": 0,
+    "COAL": 1,
+    "MAIL": 2,
+    "OIL_": 3,
+    "LVST": 4,
+    "GOOD": 5,
+    "GRAI": 6,
+    "WOOD": 7,
+    "IORE": 8,
+    "STEL": 9,
+    "VALU": 10
+  },
+  "multilayer": {
+    "PASS": 0,
+    "COAL": 1,
+    "MAIL": 2,
+    "OIL_": 3,
+    "LVST": 4,
+    "GOOD": 5,
+    "GRAI": 6,
+    "WOOD": 7,
+    "IORE": 8,
+    "STEL": 9,
+    "VALU": 10,
+    "CORE": 12,
+    "BAUX": 13,
+    "SALT": 14,
+    "LITH": 15,
+    "NORE": 16,
+    "COBT": 17,
+    "RARE": 18,
+    "URAN": 19,
+    "ERTH": 20,
+    "ROCK": 21,
+    "RFMT": 22,
+    "CHEM": 23,
+    "BATY": 24,
+    "ELEC": 25,
+    "PROP": 26,
+    "SCMP": 27,
+    "RBPT": 28,
+    "SMIK": 29,
+    "WICE": 30
+  }
+}

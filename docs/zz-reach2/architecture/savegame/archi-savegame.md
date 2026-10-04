@@ -2,7 +2,7 @@
 
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
 
-Updated against the current fork on 2026-10-04, including save versions 369/370, four-layer map storage, road elevator waiting and camera normalization. [Map-layer architecture](../map-layers/archi-map-layers.md) explains the gameplay and addressing rules. [Save-game working notes](../save-game.md) list the retained inspection/automation helpers, example commands and corrected test saves.
+Updated against the current fork on 2026-10-04, including save versions 369/370/371, four-layer map storage, road elevator waiting, camera normalization and explicit gameplay-profile metadata. [Map-layer architecture](../map-layers/archi-map-layers.md) explains the gameplay and addressing rules. [Save-game working notes](../save-game.md) list the retained inspection/automation helpers, example commands and corrected test saves. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) and [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) own the new metadata contract and evidence.
 
 A save is a small uncompressed header, a compressed blob, and inside that blob a sequence of tagged chunks. Multi-byte integers in the OpenTTD blob are big-endian on every host. Each gameplay feature has a `*_sl.cpp` description of its fields. Saves written by an older OpenTTD are read by the same description, gated on `SaveLoadVersion`, and then repaired in memory by `AfterLoadGame`. A save newer than this binary is rejected.
 
@@ -76,7 +76,7 @@ The four bytes after the tag are one big-endian `uint32_t`, not a free-standing 
 
 `SaveFileToDisk` shifts `SAVEGAME_VERSION` left by 16, so a current save stores minor 0 and a zero low byte. The minor is still loaded. `IsSavegameVersionBefore(major, minor)` compares it when the major matches and the caller passes a non-zero minor. That matters below `SaveLoadVersion::RemoveMinorVersion` (the header comment records that as saveload version 18). The comment in `DetermineSaveLoadFormat` says the minor is no longer saved as a meaningful value, and that the four historical cases that still need it cannot simply be deleted. `IsSavegameVersionBefore` with the default minor argument ignores `_sl_minor_version`.
 
-`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). The enumerator immediately before `MaxVersion` is now `DeepUnderground`, saveload version 370. It follows `MapLayers` (369) and `DoubleEndedShips` (368). Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. The comment on `SaveLoadVersion` says the list must not be reordered: existing numeric values are the numbers already stored in files.
+`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). The enumerator immediately before `MaxVersion` is now `MultiLayerMetadata`, saveload version 371. It follows `DeepUnderground` (370), `MapLayers` (369) and `DoubleEndedShips` (368). Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. The comment on `SaveLoadVersion` says the list must not be reordered: existing numeric values are the numbers already stored in files.
 
 `DetermineSaveLoadFormat` then rejects two ranges:
 
@@ -88,6 +88,14 @@ Every other major version from `MinVersion` up to `SAVEGAME_VERSION` is accepted
 While saving, `_sl_version` is set to `SAVEGAME_VERSION`. While loading, it is the file's major version. `SlIsObjectValidInSavegame` keeps a `SaveLoad` field when `version_from <= _sl_version < version_to`. Both ends are `SaveLoadVersion` enumerators. `version_from` is inclusive and `version_to` is exclusive. `SaveLoadVersion::MaxVersion` as `version_to` means "still saved". `SlIsObjectCurrentlyValid` is the same test against `SAVEGAME_VERSION`, used when the question is "does the current writer still emit this field?"
 
 `IsSavegameVersionBeforeOrAt` is the hook for a repair that does not need a new enumerator. The comment on it says to use it when existing saves contain data that new saves will not corrupt again, and a version bump would be ceremony.
+
+## Gameplay-profile metadata (371)
+
+`src/saveload/multilayer_sl.cpp` owns the `MLMD` table: exactly one row and ten mandatory fields. Schema revision 1 stores profile ID/version, checked legacy/editor policy bits, exact required GRFID/MD5/package version, feature flags and two independent seed roots. The fixed row has 50 scalar/array bytes plus the MD5 array-length byte. Profile version, package version and save schema version are separate compatibility boundaries. Unsupported feature flags currently refuse; no future feature pool is represented by these metadata fields.
+
+`InitializeGame` clears load staging and initializes Classic/legacy policy. `Load` parses a validated snapshot; it does not publish that policy. `AfterLoadGame` checks exact resolved content before ordinary network compatibility and sprite activation, then validates the activated cargo registry and accepts the saved policy before engine/industry fixups. A version-371 file without metadata refuses. Older files without it retain Classic and their original content configuration, even when the pending new-game selector is Multilayer. Unknown policy bits, schema/profile versions, missing packages and compatible-but-different packages refuse explicitly. Every registered `FixPointers` handler runs even when its chunk was absent, so `MLMD` permits absent staging there and enforces new-version presence at acceptance.
+
+Preview records schema/profile fields only in `_load_check_data` and checks the resolved package identity without touching live policy, cargo slots, seed roots or staging. The live profile has one owner in `multilayer_content.cpp`; saved snapshots are transport. `multilayer_state.cpp` supplies read-only reference hooks and an explicit ordered integer digest for desync diagnostics. Feature owners must extend descriptors, references, deletion rules and digest records when their actual state exists. Current fixtures cover metadata/editor round trips, exact-content/corrupt-metadata refusal and supplied Surface/369/370 saves; feature-phase saves and multiplayer acceptance remain future work.
 
 ## Chunk stream
 

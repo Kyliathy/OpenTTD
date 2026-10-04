@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file fios.h Declarations for savegames operations. */
+/** @file fios.h Declarations for savegames operations. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
 
 #ifndef FIOS_H
 #define FIOS_H
@@ -35,7 +35,7 @@ enum class DirectoryCreateResult : uint8_t {
 using CompanyPropertiesMap = std::map<uint, std::unique_ptr<CompanyProperties>>;
 
 /**
- * Container for loading in mode SL_LOAD_CHECK.
+ * Read-only save preview container; explicit metadata is transport, never live gameplay authority.
  */
 struct LoadCheckData {
 	bool checkable = false; ///< True if the savegame could be checked by SL_LOAD_CHECK. (Old savegames are not checkable.)
@@ -45,6 +45,9 @@ struct LoadCheckData {
 	uint32_t map_size_x = 0;
 	uint32_t map_size_y = 0;
 	uint8_t map_layers = 1; ///< Layers stored in the file. Old files are one surface plane.
+	uint16_t multilayer_schema_version = 0; ///< Zero denotes legacy chunk absence in this preview only.
+	uint8_t gameplay_profile_id = 0; ///< Saved profile identity for exact preview content validation.
+	uint16_t gameplay_profile_version = 0; ///< Saved immutable profile revision.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.
@@ -57,6 +60,7 @@ struct LoadCheckData {
 
 	Gamelog gamelog{}; ///< Gamelog actions
 
+	/** Initialize independent preview fields without changing current world policy. */
 	LoadCheckData() {}
 
 	/**
@@ -65,6 +69,7 @@ struct LoadCheckData {
 	 */
 	bool HasErrors()
 	{
+		// Only an actually checked file can supply a preview error; an untouched preview is not a failed load.
 		return this->checkable && this->error != INVALID_STRING_ID;
 	}
 
@@ -74,6 +79,7 @@ struct LoadCheckData {
 	 */
 	bool HasNewGrfs()
 	{
+		// Offer content actions only for a valid checked preview with a real saved configuration.
 		return this->checkable && this->error == INVALID_STRING_ID && !this->grfconfig.empty();
 	}
 

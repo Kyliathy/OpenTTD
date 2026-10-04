@@ -5,9 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file genworld.cpp Functions to generate a map. */
+/** @file genworld.cpp Functions to generate a map. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #include "stdafx.h"
+#include "multilayer_content.h"
 #include "landscape.h"
 #include "company_func.h"
 #include "town_cmd.h"
@@ -284,11 +285,29 @@ void HandleGeneratingWorldAbortion()
 }
 
 /**
- * Generate a world.
- * @param mode The mode of world generation (see GenWorldMode).
- * @param size_x The X-size of the map.
- * @param size_y The Y-size of the map.
- * @param reset_settings Whether to reset the game configuration (used for restart)
+ * Refuse a profile before generation enters its exception-managed simulation pass.
+ * @param error Specific preparation or activated-definition failure.
+ */
+static void RefuseMultiLayerProfileCandidate(MultiLayerProfileError error)
+{
+	std::string message{GetMultiLayerProfileErrorMessage(error)};
+	Debug(Facility::Misc, Severity::Critical, "{}", message);
+	CleanupGeneration();
+	if (_network_dedicated) {
+		// A dedicated process must stop instead of serving an unvalidated or silently substituted economy.
+		_exit_game = true;
+		return;
+	}
+	SwitchToMode(SwitchMode::Menu);
+	ShowErrorMessage(GetEncodedString(STR_JUST_RAW_STRING, std::move(message)), {}, WarningLevel::Critical);
+}
+
+/**
+ * Generate a candidate world with a profile validated at the definition-loading boundary.
+ * @param mode Empty editor world, generated landscape, or heightmap.
+ * @param size_x Width of each map plane in tiles.
+ * @param size_y Height of each map plane in tiles.
+ * @param reset_settings Whether to copy pending settings before validating the candidate.
  */
 void GenerateWorld(GenWorldMode mode, uint size_x, uint size_y, bool reset_settings)
 {
@@ -304,7 +323,12 @@ void GenerateWorld(GenWorldMode mode, uint size_x, uint size_y, bool reset_setti
 	/* This disables some commands and stuff */
 	SetLocalCompany(COMPANY_SPECTATOR);
 
+	const auto previous_profile = GetCurrentMultiLayerProfileSelection().id;
 	InitializeGame(GenWorldInfo::size_x, GenWorldInfo::size_y, true, reset_settings);
+	if (!reset_settings) {
+		// Restart follows the previously accepted world's policy, not a pending new-game selector retained during save loading.
+		_settings_game.game_creation.gameplay_profile = to_underlying(previous_profile);
+	}
 	PrepareGenerateWorldProgress();
 
 	if (_settings_game.construction.map_height_limit == 0) {
@@ -325,8 +349,27 @@ void GenerateWorld(GenWorldMode mode, uint size_x, uint size_y, bool reset_setti
 
 	if (_settings_game.game_creation.generation_seed == GENERATE_NEW_SEED) _settings_game.game_creation.generation_seed = InteractiveRandom();
 
+	const auto profile_id = static_cast<MultiLayerGameplayProfileID>(_settings_game.game_creation.gameplay_profile);
+	if (_game_mode != GameMode::Menu) {
+		// Settings and selected GRFs have resolved; prepare definitions without publishing a gameplay policy.
+		auto error = PrepareMultiLayerProfileContent(profile_id, _settings_game.game_creation.landscape, _grfconfig);
+		if (error != MultiLayerProfileError::None) {
+			RefuseMultiLayerProfileCandidate(error);
+			return;
+		}
+	}
+
 	/* Load the right landscape stuff, and the NewGRFs! */
 	GfxLoadSprites();
+	if (_game_mode != GameMode::Menu) {
+		// Publish Multilayer policy only after activated definitions pass the exact identity/label checks.
+		auto error = ActivateMultiLayerProfile(profile_id, _settings_game.game_creation.landscape, _grfconfig);
+		if (error != MultiLayerProfileError::None) {
+			RefuseMultiLayerProfileCandidate(error);
+			return;
+		}
+		Debug(Facility::Misc, Severity::Info, "MLVS_PROFILE id={} version={}", to_underlying(profile_id), GetCurrentMultiLayerProfileSelection().version);
+	}
 	SetCurrentRailTypeLabelList();
 	SetCurrentRoadTypeLabelList();
 	InitializeBuildingCounts();

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settings_type.h Types related to global configuration settings. */
+/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #ifndef SETTINGS_TYPE_H
 #define SETTINGS_TYPE_H
@@ -441,8 +441,9 @@ struct NetworkSettings {
 	bool AdminAuthenticationConfigured() const { return !this->admin_password.empty() || !this->admin_authorized_keys.empty(); }
 };
 
-/** Settings related to the creation of games. */
+/** Pending world-creation settings; profile policy is published only after content activation validates. */
 struct GameCreationSettings {
+	uint8_t gameplay_profile = 0; ///< New-world selector only; saved profile identity/version use MultiLayerProfileSelection.
 	uint32_t generation_seed; ///< noise seed for world generation
 	TimerGameCalendar::Year starting_year; ///< starting date
 	TimerGameCalendar::Year ending_year; ///< scoring end date

@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/newgrf_industries.h](../../../../src/newgrf_industries.h) | 70-89 | `IndustryAvailabilityCallType`, `IndustryProductionCallback`, `MapNewGRFIndustryType` and callback declarations define availability/GRFID mapping; no translated-name or cargo-label-only adapter. |
 
-Status: proposed implementation; initial source investigation completed on 2026-10-04. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`; orbital mirrors depend on r2mlvs9. No third-party content was installed, copied into the game or executed during planning.
+Status: initial M0 native-fallback decision and draft solar contract delivered; whole feature plan remains unfinished. [Execution evidence](r2mlvs12-a-eti-feasibility.md) reproduces the pinned source/hash precheck. ETI runtime tasks remain unchecked; no adapter is approved. Operational Useful Power follows Plan 1 Content Freeze. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -99,10 +99,12 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 **M0 staging.** This area consumes Draft Content and publishes ETI Feasibility. Its isolated load/production tests answer whether the pinned option is usable; they do not require Content Freeze, operational mirrors or a completed native grid. Preserve the investigation record as dated evidence and record any later runtime differences explicitly.
 
+**Execution disposition, 2026-10-04.** The required redistribution/meaning/authority precheck rejects the pinned ETI option. Task 5.1 explicitly permits a completed native-fallback decision without claiming ETI passed. Publish that decision and independent Group 6 draft contracts for M0; retain unexecuted startup/production/GS/save tasks unchecked for a future adapter effort. This staging follows the master's Draft Content -> producer M0 handoffs -> Content Freeze order and does not authorize later runtime work before its gates.
+
 ### Group 1 - Prepare the pinned ETI feasibility fixture
 
 {{MEDIUM}}
-- [ ] 1.1 Reproduce the recorded revision/content metadata in a repository-local fixture and retain hashes. Verify distribution terms for each proposed reused file; absent terms preserve the original-content route without contacting the author.
+- [X] 1.1 Reproduce the recorded revision/content metadata in a repository-local fixture and retain hashes. Verify distribution terms for each proposed reused file; absent terms preserve the original-content route without contacting the author.
 - [ ] 1.2 Start pinned ETI with its companion GS using isolated content/config paths and record startup/API errors. The draft r2mlvs1 mapping is sufficient for this feasibility run; final Content Freeze is its consumer.
 - [ ] 1.3 Verify actual Power/Uranium labels, solar layout/year/base output and selected profile slots 32/33. Check native profile collisions and load order before interpreting production results.
 
@@ -116,27 +118,29 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 ### Group 3 - Resolve ETI cargo and power authority
 
 {{HARD}}
-- [ ] 3.1 Resolve duplicate Uranium definitions and required cargo labels by explicit profile mapping; refuse unsupported replacement sets before activating an existing save.
+- [X] 3.1 Resolve duplicate Uranium definitions and required cargo labels by explicit profile mapping; refuse unsupported replacement sets before activating an existing save.
 - [ ] 3.2 Trace `POWR` generation, transport/refit/payment and grid credit. Decide the supported nontransported-utility adapter so the same energy cannot earn freight and grid rewards.
 - [ ] 3.3 Test a Surface-only generator filter and script timing across economy/calendar modes. Select exactly one town-growth authority and document unsupported simultaneous GS control.
-- [ ] 3.4 Publish the feasibility result with a native fallback decision when any required mapping/authority/distribution condition fails. Never patch an unrelated industry merely because it emits a matching label.
+- [X] 3.4 Publish the feasibility result with a native fallback decision when any required mapping/authority/distribution condition fails. Never patch an unrelated industry merely because it emits a matching label.
 
 ### Group 4 - Reproducible ETI feasibility decision
 
 {{SIMPLE}}
-- [ ] 4.1 Record the delivery decision: original native profile, supported separately installed ETI profile, or licensed bundled adaptation.
+- [X] 4.1 Record the delivery decision: original native profile, supported separately installed ETI profile, or licensed bundled adaptation.
 
 ### Group 5 - Reproducible ETI feasibility decision
 
 {{MEDIUM}}
-- [ ] 5.1 Freeze compatible revision/hash, scope and failure message. A fallback is a completed decision, not a claim ETI passed.
+- [X] 5.1 Freeze compatible revision/hash, scope and failure message. A fallback is a completed decision, not a claim ETI passed.
 
 ### Group 6 - Publish draft solar contracts for M0
 
 {{HARD}}
-- [ ] 6.1 Publish `src/solar_power.h` declarations `SolarGenerationAccount`, `MirrorAssignment`, `ComputeMirrorSolarOutput`, with solar identity, baseline/effective units, fractional remainder and invalid-target policy.
-- [ ] 6.2 Record that ETI Feasibility Handoff publishes draft signatures and the tested feasibility/native-fallback decision only. Operational grid/mirror implementation follows Content Freeze; declarations must not gate M0 on later Space behavior.
-- [ ] 6.3 Register any new source and compile a contract fixture. Keep `UtilityPowerAccount` schema owned by r2mlvs1; the next area implements its single runtime accounting authority.
+- [X] 6.1 Publish `src/solar_power.h` declarations `SolarGenerationAccount`, `MirrorAssignment`, `ComputeMirrorSolarOutput`, with solar identity, baseline/effective units, fractional remainder and invalid-target policy.
+- [X] 6.2 Record that ETI Feasibility Handoff publishes draft signatures and the tested feasibility/native-fallback decision only. Operational grid/mirror implementation follows Content Freeze; declarations must not gate M0 on later Space behavior.
+- [X] 6.3 Register any new source and compile a contract fixture. Keep `UtilityPowerAccount` schema owned by r2mlvs1; the next area implements its single runtime accounting authority.
+
+M0 evidence: [pinned investigation/native refusal decision](r2mlvs12-a-eti-feasibility.md), [draft solar header](../../../../src/solar_power.h). `[solar-power-contract]` verifies types/defaults/signature and actual `RE01` candidate refusal; operational augmentation is deliberately still undeveloped. ETI startup/production/save/GS tests above remain unchecked and no adapter/redistribution is approved.
 
 ### Area Mandatory Reading - Native useful-power ledger and consumers
 

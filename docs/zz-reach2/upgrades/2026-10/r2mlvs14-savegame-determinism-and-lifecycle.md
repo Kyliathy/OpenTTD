@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/saveload/saveload.h](../../../../src/saveload/saveload.h) | 447-518 | `ChunkType`, `ChunkId`, `ChunkHandler` and handler aliases define save/load/fixup/preview ownership; every feature persists its own authoritative fields through this boundary. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`, before new world-state implementation. Remaining groups accompany feature plans and audit their integrated result; this is not a final-stage serialization patch.
+Status: Groups 1-6 initial M0 Schema Foundation delivered, including metadata/editor/legacy round trips, reference hooks and canonical diagnostics. [Schema evidence](r2mlvs14-a-schema-foundation.md) records the focused validation. Later feature-phase save/network acceptance and the full plan remain unfinished. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -105,41 +105,43 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 ### Group 1 - Schema and migration foundation
 
 {{MEDIUM}}
-- [ ] 1.1 Assign each state field one owner and representation.
-- [ ] 1.2 Define stable typed references, valid ranges, limits, optional/invalid semantics and reference removal hooks before producers write data.
+- [X] 1.1 Assign each state field one owner and representation.
+- [X] 1.2 Define stable typed references, valid ranges, limits, optional/invalid semantics and reference removal hooks before producers write data.
 
 ### Group 2 - Reserve schema identities and implement metadata scaffolding
 
 {{HARD}}
-- [ ] 2.1 Inspect the current SaveLoadVersion and all registered chunk IDs, then allocate unique symbolic revisions/IDs. Preserve historical layer and vehicle meanings; never assume numeric 371 is still available.
-- [ ] 2.2 Define feature/profile metadata fields, size limits, required content identity and preview behavior from r2mlvs1 Draft Content. Implement an empty-compatible scaffold that can validate metadata without depending on feature pools not yet built.
-- [ ] 2.3 Add load/preview/fixup registration for the scaffold and legacy missing-chunk defaults. Identify the earliest supported point to reject missing/incompatible content before unsafe feature activation.
-- [ ] 2.4 Test empty new-profile metadata and old Surface/369/370 saves with unchanged legacy rules. Publish schema shape to Content Freeze; later feature records remain their owners responsibility.
+- [X] 2.1 Inspect the current SaveLoadVersion and all registered chunk IDs, then allocate unique symbolic revisions/IDs. Preserve historical layer and vehicle meanings; never assume numeric 371 is still available.
+- [X] 2.2 Define feature/profile metadata fields, size limits, required content identity and preview behavior from r2mlvs1 Draft Content. Implement an empty-compatible scaffold that can validate metadata without depending on feature pools not yet built.
+- [X] 2.3 Add load/preview/fixup registration for the scaffold and legacy missing-chunk defaults. Identify the earliest supported point to reject missing/incompatible content before unsafe feature activation.
+- [X] 2.4 Test empty new-profile metadata and old Surface/369/370 saves with unchanged legacy rules. Publish schema shape to Content Freeze; later feature records remain their owners responsibility.
 
 ### Group 3 - Schema and migration foundation
 
 {{MEDIUM}}
-- [ ] 3.1 Define legacy load policy for Surface-only saves, versions 369/370 and existing content sets: preserve legacy free underground building and working portals under their saved compatibility mode. New profile generation starts solid; loading old infrastructure must not bury it.
-- [ ] 3.2 Keep an existing-world conversion tool out of initial scope unless separately designed with cargo/content compatibility and excavation reconstruction. Never auto-enable the new economy by merely changing a setting on load.
+- [X] 3.1 Define legacy load policy for Surface-only saves, versions 369/370 and existing content sets: preserve legacy free underground building and working portals under their saved compatibility mode. New profile generation starts solid; loading old infrastructure must not bury it.
+- [X] 3.2 Keep an existing-world conversion tool out of initial scope unless separately designed with cargo/content compatibility and excavation reconstruction. Never auto-enable the new economy by merely changing a setting on load.
 
 ### Group 4 - Specify command encoding and canonical state digests
 
 {{HARD}}
-- [ ] 4.1 Define typed wire fields for feature commands, enum validity, coordinate bounds and optional references. Preserve existing command/save meanings and reject malformed input before mutation.
-- [ ] 4.2 Define canonical digest order by feature kind and stable ID, then explicit integer fields: reserves, packet owner/quantity, job phase/progress, RNG state, fixed-point positions, leases and accounting remainders.
-- [ ] 4.3 Exclude pointers, padding, unordered iteration and derived visual/cache state. Give absent/empty records unambiguous encoding and include profile/schema version.
-- [ ] 4.4 Add a small digest fixture that changes one authoritative field at a time and ignores a presentation-only change; publish the extension points without pretending later feature state already exists.
+- [X] 4.1 Define typed wire fields for feature commands, enum validity, coordinate bounds and optional references. Preserve existing command/save meanings and reject malformed input before mutation.
+- [X] 4.2 Define canonical digest order by feature kind and stable ID, then explicit integer fields: reserves, packet owner/quantity, job phase/progress, RNG state, fixed-point positions, leases and accounting remainders.
+- [X] 4.3 Exclude pointers, padding, unordered iteration and derived visual/cache state. Give absent/empty records unambiguous encoding and include profile/schema version.
+- [X] 4.4 Add a small digest fixture that changes one authoritative field at a time and ignores a presentation-only change; publish the extension points without pretending later feature state already exists.
 
 ### Group 5 - Schema and migration foundation
 
 {{MEDIUM}}
-- [ ] 5.1 Add these fields to desync diagnostics.
-- [ ] 5.2 Include the 1980 Deep policy and later model/factory dates in profile/version compatibility. Calendar availability is derived from the simulation calendar and saved policy, never local wall time. Explicit legacy/editor exceptions must not leak into ordinary new games.
+- [X] 5.1 Add these fields to desync diagnostics.
+- [X] 5.2 Include the 1980 Deep policy and later model/factory dates in profile/version compatibility. Calendar availability is derived from the simulation calendar and saved policy, never local wall time. Explicit legacy/editor exceptions must not leak into ordinary new games.
 
 ### Group 6 - Schema and migration foundation
 
 {{HARD}}
-- [ ] 6.1 Publish `src/multilayer_state.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+- [X] 6.1 Publish `src/multilayer_state.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+
+M0 Foundation evidence: [schema/ownership, actual migration and digest record](r2mlvs14-a-schema-foundation.md). Groups 1-6 are complete; later feature/lifecycle/network audits remain unchecked. This handoff does not claim future feature pools or whole-world desync acceptance.
 
 ### Area Mandatory Reading - Feature persistence integration
 

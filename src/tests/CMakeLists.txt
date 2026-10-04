@@ -1,3 +1,4 @@
+# Focused content fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
@@ -7,6 +8,13 @@ add_test_files(
     history_func.cpp
     landscape_partial_pixel_z.cpp
     map_layer.cpp
+    multilayer_content.cpp
+    multilayer_content_identity.cpp
+    multilayer_recipe.cpp
+    multilayer_bootstrap.cpp
+    multilayer_utility.cpp
+    solar_power_contract.cpp
+    multilayer_state.cpp
     math_func.cpp
     mock_environment.h
     mock_fontcache.h

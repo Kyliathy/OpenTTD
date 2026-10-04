@@ -1,0 +1,29 @@
+{
+  "_comment": "First-party cargo definitions and profile identity for docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md; see docs/zz-reach2/architecture/newgrf/archi-newgrf.md. Runtime cargo slots remain owned by CargoSpec, not this source catalogue.",
+  "profile_id": 1,
+  "profile_version": 1,
+  "package_id": "MLVI",
+  "package_version": 1,
+  "baseline_labels": ["PASS", "COAL", "MAIL", "OIL_", "LVST", "GOOD", "GRAI", "WOOD", "IORE", "STEL", "VALU"],
+  "cargoes": [
+    {"label": "CORE", "name": "Copper Ore", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 5120},
+    {"label": "BAUX", "name": "Bauxite", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 5120},
+    {"label": "SALT", "name": "Salt", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 4778},
+    {"label": "LITH", "name": "Lithium Ore", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 5916},
+    {"label": "NORE", "name": "Nickel Ore", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 5688},
+    {"label": "COBT", "name": "Cobalt Ore", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 5916},
+    {"label": "RARE", "name": "Rare Earth concentrate", "unit": "tonnes", "form": "covered_granules", "classes": ["Bulk", "Covered", "NonPotable"], "payment": 7509},
+    {"label": "URAN", "name": "Uranium Ore", "unit": "tonnes", "form": "sealed_drums", "classes": ["PieceGoods", "Covered", "Hazardous", "NonPotable"], "payment": 7509},
+    {"label": "ERTH", "name": "Earth", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 0},
+    {"label": "ROCK", "name": "Rock", "unit": "tonnes", "form": "dry_bulk", "classes": ["Bulk", "NonPotable"], "payment": 0},
+    {"label": "RFMT", "name": "Refined Metals", "unit": "tonnes", "form": "ingots", "classes": ["PieceGoods"], "payment": 5688},
+    {"label": "CHEM", "name": "Chemicals", "unit": "kilolitres", "form": "liquid", "classes": ["Liquid", "Hazardous", "NonPotable"], "payment": 6144},
+    {"label": "BATY", "name": "Batteries", "unit": "tonnes", "form": "packaged", "classes": ["PieceGoods", "Covered"], "payment": 6144},
+    {"label": "ELEC", "name": "Electronics", "unit": "tonnes", "form": "packaged", "classes": ["PieceGoods", "Covered"], "payment": 7509},
+    {"label": "PROP", "name": "Propellant", "unit": "kilolitres", "form": "liquid", "classes": ["Liquid", "Hazardous", "NonPotable"], "payment": 6144},
+    {"label": "SCMP", "name": "Station Components", "unit": "tonnes", "form": "packaged", "classes": ["PieceGoods", "Oversized"], "payment": 7509},
+    {"label": "RBPT", "name": "Robotics Parts", "unit": "tonnes", "form": "packaged", "classes": ["PieceGoods", "Covered"], "payment": 7509},
+    {"label": "SMIK", "name": "Solar Mirror Kits", "unit": "tonnes", "form": "packaged", "classes": ["PieceGoods", "Covered"], "payment": 7509},
+    {"label": "WICE", "name": "Water Ice", "unit": "tonnes", "form": "frozen_bulk", "classes": ["Bulk", "Refrigerated", "Potable"], "payment": 4778}
+  ]
+}

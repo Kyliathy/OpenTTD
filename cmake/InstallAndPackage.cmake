@@ -1,3 +1,4 @@
+# First-party content delivery: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
 include(GNUInstallDirs)
 
 # If requested, use FHS layout; otherwise fall back to a flat layout.
@@ -22,6 +23,11 @@ install(TARGETS openttd
             DESTINATION ${BINARY_DESTINATION_DIR}
             COMPONENT Runtime
         )
+
+# Install the exact generated package alongside the game's ordinary NewGRF discovery directory.
+install(FILES "${CMAKE_BINARY_DIR}/newgrf/multilayer_industry.grf"
+        DESTINATION "${DATA_DESTINATION_DIR}/newgrf"
+        COMPONENT Runtime)
 
 if (NOT EMSCRIPTEN)
     # Emscripten embeds these files in openttd.data.

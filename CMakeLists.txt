@@ -1,3 +1,4 @@
+# First-party content distribution: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT BINARY_NAME)
@@ -381,6 +382,8 @@ if(EMSCRIPTEN)
     # the more languages you add the slower downloading becomes, we decided to
     # only ship the English language.
     target_link_libraries(WASM::WASM INTERFACE "--preload-file ${CMAKE_BINARY_DIR}/baseset@/baseset")
+    # Browser worlds need the same pinned package as native installations before profile activation.
+    target_link_libraries(WASM::WASM INTERFACE "--preload-file ${CMAKE_BINARY_DIR}/newgrf/multilayer_industry.grf@/newgrf/multilayer_industry.grf")
     target_link_libraries(WASM::WASM INTERFACE "--preload-file ${CMAKE_BINARY_DIR}/lang/english.lng@/lang/english.lng")
     target_link_libraries(WASM::WASM INTERFACE "--preload-file ${CMAKE_SOURCE_DIR}/bin/ai@/ai")
     target_link_libraries(WASM::WASM INTERFACE "--preload-file ${CMAKE_SOURCE_DIR}/bin/game@/game")
