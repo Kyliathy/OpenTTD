@@ -8,6 +8,84 @@ This master owns scope, proposed architecture decisions, cross-plan invariants, 
 
 Scope expanded on 2026-10-04: launch-center collection hubs and 20-tile orbital drops, Deep access from 1980, geothermal energy and later geothermal manufacturing, general-purpose TBM clearing with 45-degree turns, and underground tubes with five original vehicle designs. The 20-tile orbital radius, TBM turn limit and minimum five vehicles are requirements; the Surface collection radius, exact unlock date, model dates and futuristic recipes below are proposed defaults. Existing plan numbers remain stable; the new feature owners are r2mlvs16 and r2mlvs17.
 
+## Additions at a glance
+
+These tables summarize the planned additions by layer. Resources are listed where they originate or are produced; they may be transported to other layers. Shared vehicles/facilities are listed with all their operating layers, rather than counted as separate designs. Existing cargos or infrastructure reused by a new system are identified as such. Dates are proposed game-calendar introductions; **all Deep Underground operations require the 1980 unlock**, even when a shared vehicle model appeared earlier.
+
+### Resources by layer
+
+| Source / production layer | Resources or outputs | Where they come from / what they support |
+| --- | --- | --- |
+| Surface | Refined Metals, Chemicals | Metal refineries and chemical works process materials brought up from the mines. |
+| Surface | Batteries, Electronics, Propellant | Manufacturing inputs for tube freight, spacecraft, robots and orbital infrastructure. |
+| Surface | Station Components, Robotics Parts, Solar Mirror Kits | Manufactured payloads for rockets, station assembly, robots and mirrors. |
+| Surface | Useful electrical power | Solar farms and nuclear generation; mirrors increase eligible solar output by 300%. Electricity is a utility, not ordinary paid freight. |
+| Underground | **Coal, Iron Ore, Copper Ore, Bauxite, Salt** | Five mine resources. Coal/Iron Ore reuse compatible existing cargos; their underground sources are new. |
+| Underground | Earth, Rock | TBM excavation spoil, loaded into real wagons for Surface haulage and disposal/processing. |
+| Deep Underground | **Lithium Ore, Nickel Ore, Cobalt Ore, Rare Earth concentrate, Uranium** | Five additional mine resources, accessible from 1980. |
+| Deep Underground | Earth, Rock | Deep TBM spoil; the same cargo types as Underground, not two additional resources. |
+| Deep Underground | **Geothermal heat and electrical power** | Vent fields supply a shared thermal budget for generators and direct-heat industry. Heat is not a freight cargo; electricity can be exported through explicit utilities. |
+| Deep Underground | Steel / Refined Metals (2010), Batteries (2030), Station Components / Robotics Parts (2045) | Later geothermal smelting, battery works and Mantle Forge outputs. Reuse the same product cargos as the Surface economy, including existing Steel. |
+| Outer Space | **Nickel, Water Ice, Rare Earth concentrate** | Metallic, carbonaceous and rich asteroids respectively. Nickel maps to the compatible terrestrial Nickel Ore cargo; Rare Earth cargo is also shared with Deep mines. |
+| Outer Space | Refined Metals, Propellant; planned Electronics inputs | Orbital processing converts mined materials into useful return cargo or local supplies; exact recipes are finalized by r2mlvs1/11. |
+
+### Vehicles by layer
+
+| Operating layer(s) | New vehicle / model | Role and proposed availability |
+| --- | --- | --- |
+| Surface and Underground | **Standard TBM** | Commissioned through a rail portal; clears corridors or arbitrary connected areas, turning at most 45 degrees per advancing segment. |
+| Surface, Underground and Deep Underground | **Deep-rated TBM** | Reaches Deep through Underground rail access; handles harder excavation from 1980. |
+| Surface, Underground and Deep Underground | **Spoil hauler locomotive** | Collects the TBM's actual loaded wagons and returns them to the originating Surface station. Deep routes require 1980. |
+| Surface, Underground and Deep Underground | **Earth hopper; Rock hopper** | Two detachable wagon types, with separate cargo identities and visible empty/loaded states. |
+| Surface, Underground and Deep Underground | **Underground freight locomotive and mineral wagons** | Carry mine output through conventional rail portals to Surface consumers; Deep operation requires compatible equipment and 1980 access. |
+| Surface, Underground and Deep Underground | **Mine truck; sealed mineral carrier** | Road freight between mines, terminals and Surface receivers, using permitted tunnels/elevators and depth capabilities. |
+| Underground and Deep Underground only | **Mole-70 Bulk Capsule** | Tube vehicle for ores, Rock and Earth outside the mandatory TBM wagon leg; introduced 1970, Deep use from 1980. |
+| Underground and Deep Underground only | **Crate-75 Container Capsule** | Tube vehicle for Goods, Batteries, Electronics and Solar Mirror Kits; introduced 1975, Deep use from 1980. |
+| Underground and Deep Underground only | **Cistern-80 Fluid Capsule** | Tube vehicle for liquid Chemicals, Propellant and compatible liquids; introduced 1980. |
+| Underground and Deep Underground only | **Shield-85 Mineral Capsule** | Tube vehicle for Uranium and other designated sealed mineral loads; introduced 1985. |
+| Underground and Deep Underground only | **Forge-05 Heavy Capsule** | Tube vehicle for Steel, Refined Metals, Station Components and Robotics Parts; introduced 2005. |
+| Surface <-> Outer Space | **Cargo rocket** | Launches probes, components and mirror kits from a waterside Space Launch Center; delivers payloads and returns for recovery/service. |
+| Outer Space | **Small mining probe** | Rocket-deployed robot that attaches to moving asteroids, mines, and releases cargo within its center's 20-tile drop radius. |
+| Outer Space -> Surface | **Cargo return pod** | Saved descent/delivery unit carrying released cargo into launch-center storage; not an independently routed freight fleet. |
+| Outer Space | **Heavy mining robot** | Larger station-assembled miner with increased capacity and extraction capability. |
+| Outer Space | **Orbital hauler** | Moves materials and products between compatible orbital facilities and return services. |
+
+The five tube capsules are original, distinct designs with their own stats, silhouettes and directional/load graphics. Their networks stay within one layer; cargo transfers to conventional rail/road vehicles for inter-layer transport. A probe carried inside a rocket is payload, not a Surface-operating vehicle. Solar mirrors are listed below as deployed orbital structures.
+
+### Buildings and infrastructure by layer
+
+| Build layer(s) | New building / facility / infrastructure | Purpose and proposed availability |
+| --- | --- | --- |
+| Surface | **Space Launch Center** | Waterside facility built through Airport controls, with launch pad, assembly/service buildings, recovery area and cargo storage. |
+| Surface | **Launch-center collection hub and station links** | Proposed 20-tile Surface collection area serving existing train and lorry stations through bounded cargo handling; separate from the required orbital drop radius. |
+| Surface | **Earth reclamation/disposal site; Rock crusher/disposal site** | Real, capacity-limited receivers for excavation spoil; disposal costs money and crushing can supply construction. |
+| Surface | **Metal refinery; Chemical works** | Turn underground minerals into industrial materials and chemicals. |
+| Surface | **Battery works; Electronics works; Component/robotics/mirror-kit manufacture** | Supply Batteries, Electronics, Station Components, Robotics Parts and Solar Mirror Kits; exact plant/recipe splits follow r2mlvs1/6. |
+| Surface | **Solar farm; Nuclear plant; useful-power grid connections** | Useful electrical generation, mirror-supported solar output and a receiver for mined Uranium. Native content or a tested ETI profile supplies the agreed definitions. |
+| Surface / Underground portal approaches | **Rail-portal TBM commissioning bay** | Purchases/assembles a TBM at an eligible rail entrance and supports the initial spoil exchange; extends the existing rail-portal system. |
+| Surface <-> Underground | **Sealed tunnel entrances and commissioning states** | Existing layer tunnels gain blocked far-side faces that require TBM excavation before normal use. |
+| Underground <-> Deep Underground | **Deep rail portal** | New rail connection, available from 1980; Surface-to-Deep rail travel goes via Underground. Existing road elevators remain an alternative after the same unlock. |
+| Underground | **Coal mine; Iron mine; Copper mine; Bauxite mine; Salt mine** | Five distinct mines with excavated machinery/loading footprints and finite deposits. |
+| Deep Underground | **Lithium mine; Nickel mine; Cobalt mine; Rare-earth mine; Uranium mine** | Five distinct deeper mines, from 1980. |
+| Underground and Deep Underground | **TBM exchange bay** | Controlled facility where the secondary locomotive takes the loaded wagons and the TBM receives empties. |
+| Underground and Deep Underground | **Mine loader; underground rail freight station; road mine terminal** | Loading and interchange facilities for the underground freight economy. |
+| Underground and Deep Underground | **Train and road service depots** | Service compatible underground fleets; ordinary depots cannot commission new TBMs. |
+| Underground and Deep Underground | **Transport tubes, junctions and tube terminals** | Dedicated powered capsule networks, constructed only after TBM clearance; first model from 1970, Deep networks from 1980. |
+| Underground and Deep Underground | **Tube service depot; rail/road freight interchange; power connection** | Purchase/service capsules, transfer cargo to conventional transport and bootstrap power from paid external service. |
+| Deep Underground | **Vent Collector; Vent-Tap Powerhouse — 1980** | Capture a vent's bounded heat output and generate useful electricity. Vent fields themselves are natural resources, not buildings. |
+| Deep Underground | **Magma-Loop Power Station — 2000** | Advanced geothermal electricity generation with improved conversion and higher investment/service costs. |
+| Deep Underground | **Geothermal Smelter — 2010** | Uses direct vent heat and transported ores to make Steel or Refined Metals. |
+| Deep Underground | **Lithothermal Battery Works — 2030** | Uses heat, Lithium/Cobalt and Chemicals to manufacture Batteries. |
+| Deep Underground | **Mantle Forge — 2045** | Uses heat, Refined Metals and Electronics to produce Station Components or Robotics Parts. |
+| Deep Underground; connected portal endpoints toward Surface | **Heat/electric utility conduits and electrical risers** | Connect geothermal consumers and export metered electricity through commissioned inter-layer portals; heat stays in Deep Underground. |
+| Outer Space | **Station Core** | Rocket-delivered anchor with initial assembly/service capability; unlocks further module construction. |
+| Outer Space | **Dock module; Storage module; Utility module** | Cargo/vehicle docking, bounded storage and station power/service capacity. |
+| Outer Space | **Assembly module** | Builds heavy mining robots and orbital haulers from delivered parts and components. |
+| Outer Space | **Processor module** | Converts asteroid materials into useful orbital supplies or cargo for Earth. |
+| Outer Space | **Solar mirror** | Launched, deployed and maintained structure that gives an eligible Surface solar farm a non-stacking +300% output bonus. |
+
+Tube and geothermal details are expanded in [r2mlvs16](r2mlvs16-underground-transport-tubes.md) and [r2mlvs17](r2mlvs17-geothermal-energy-and-industry.md). The [resource and content catalogue](#resource-and-content-catalogue) below maps individual mined resources to their consumers; architecture decisions define the placement, transport and accounting rules behind this overview.
+
 ## Outcome
 
 The player starts with an ordinary Surface transport company. A rail tunnel creates a sealed underground entrance. A commissioned Tunnel Boring Machine enters it, cuts rock, and loads Earth and Rock into real wagons. A second locomotive collects those wagons, returns them to the project's originating Surface station, and supplies empties. The TBM turns in steps of at most 45 degrees and can clear connected areas for any underground use, including large chambers and transport tubes. Excavated corridors and chambers then support roads, railways, tube networks, stations, depots and mines. Deep Underground opens from 1980, with harder deposits, geothermal vents and progressively more advanced heat-powered industries.
@@ -68,26 +146,26 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
 | [ ] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
-| [ ] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | Solid rock, deposits, surveys, excavation state and construction guards | 1; 14 Group 1 |
+| [ ] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | Solid rock, deposits, surveys, excavation state and construction guards | 1 Content Freeze; 14 Schema Foundation Handoff |
 | [ ] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Sealed entrances, commissioning access and Underground/Deep rail connections | 2 |
 | [ ] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Boring train, work orders, support track, spoil generation and costs | 3; wagon contract from 1 |
 | [ ] | [r2mlvs5-spoil-wagons-and-haulage.md](r2mlvs5-spoil-wagons-and-haulage.md) | Actual wagon exchange, secondary locomotives, origin stations and disposal | 4 |
-| [ ] | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) | Ten mines, Surface consumers and connected production chains | 2, 5 |
+| [ ] | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) | Ten mines, Surface consumers and connected production chains | 2, 5; 12 Useful Power Handoff for power consumers |
 | [ ] | [r2mlvs7-underground-construction-and-fleet.md](r2mlvs7-underground-construction-and-fleet.md) | Layer toolbars, underground stations, freight vehicles and service facilities | 3, 5, 6 |
-| [ ] | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) | Space simulation, orbital vehicle model, occupancy and construction controls | 1; 14 Group 1 |
+| [ ] | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) | Space simulation, orbital vehicle model, occupancy and construction controls | 1 Content Freeze; 14 Schema Foundation Handoff |
 | [ ] | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) | Waterside airport-menu facility, launch queues, rockets and descent cargo | 8; cargo definitions from 1 |
 | [ ] | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) | Moving deposits, rendezvous, attachment, extraction and return missions | 9 |
 | [ ] | [r2mlvs11-orbital-stations-and-manufacturing.md](r2mlvs11-orbital-stations-and-manufacturing.md) | Delivered module construction, assembly docks, larger robots and processing | 9, 10; recipes from 6 |
-| [ ] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | Group 1 uses 1 Groups 1/2 drafts; mirror implementation after 9 |
-| [ ] | [r2mlvs13-graphics-and-asset-pipeline.md](r2mlvs13-graphics-and-asset-pipeline.md) | Sprite manifest, generated art, repeatable packing and in-game review | Group 1 uses 1 Groups 1/2 drafts; integration follows consumers |
-| [ ] | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Group 1 uses 1 Groups 1/2 drafts; final audit after feature plans |
+| [ ] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | ETI Feasibility Handoff uses 1 Draft Content; Useful Power Handoff after 1 Content Freeze; mirrors after 9 |
+| [ ] | [r2mlvs13-graphics-and-asset-pipeline.md](r2mlvs13-graphics-and-asset-pipeline.md) | Sprite manifest, generated art, repeatable packing and in-game review | Sprite Contract Handoff uses 1 Draft Content; integration follows consumers |
+| [ ] | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Schema Foundation Handoff uses 1 Draft Content; final audit after feature plans |
 | [ ] | [r2mlvs15-integrated-acceptance-and-balance.md](r2mlvs15-integrated-acceptance-and-balance.md) | Playable scenarios, balance, performance, regression and documentation | all required groups of 1..14, 16, 17 |
-| [ ] | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) | Excavated tube networks, terminals, power/service and five original cargo vehicles | 2..5; contracts from 1; UI integration with 7 |
-| [ ] | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) | Deep vents, shared heat budgets, power export and future direct-heat factories | 2, 3, 6; useful-power contract from 1 |
+| [ ] | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) | Excavated tube networks, terminals, power/service and five original cargo vehicles | 2..5; contracts from 1; 12 Useful Power Handoff; UI integration with 7 |
+| [ ] | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) | Deep vents, shared heat budgets, power export and future direct-heat factories | 2, 3, 6; utility schema from 1 and runtime Useful Power Handoff from 12 |
 
 Dependencies describe availability of the required code/contracts, not a requirement to close every acceptance task before starting a consumer. For example, r2mlvs4's combined haulage acceptance uses r2mlvs5; the TBM controller must exist before haulage implementation, but its final acceptance waits for that integration. This staging never marks unfinished checks complete.
 
-M0 order is explicit: draft r2mlvs1 Groups 1/2 -> resolve r2mlvs12 Group 1, r2mlvs13 Group 1 and r2mlvs14 Group 1 -> freeze r2mlvs1 Group 3. These early groups consume draft definitions and do not depend on r2mlvs1's final closure. r2mlvs13/14 then accompany feature development; a feature owns its serialization and tests alongside its implementation, and r2mlvs14 audits the combined result. Engineering concurrency here does not request delegated agent work.
+M0 order is explicit: r2mlvs1 Draft Content Handoff -> r2mlvs12 ETI Feasibility Handoff, r2mlvs13 Sprite Contract Handoff and r2mlvs14 Schema Foundation Handoff -> r2mlvs1 Content Freeze Handoff. These checkpoints are defined under each child's `Public Handoff Contract`; they consume draft definitions and do not depend on r2mlvs1's final closure. r2mlvs13/14 then accompany feature development; a feature owns its serialization and tests alongside its implementation, and r2mlvs14 audits the combined result. Engineering concurrency here does not request delegated agent work. After Content Freeze, r2mlvs12 publishes its tested Useful Power Handoff independently of rockets/mirrors; mines, tubes and geothermal consumers use that single runtime ledger and its public consume/release/export operations. r2mlvs6 publishes the shared inventory-view recipe executor for Surface, orbital and geothermal processing.
 
 ## Existing implementation and required changes
 
@@ -338,3 +416,7 @@ Honor the workspace instructions: writes remain within the repository or explici
 Use existing OpenTTD naming and build registration. Preserve the prior epic's code-comment conventions when implementing this fork; new source/test/tool filenames do not start with `r2`, and Markdown stays in documentation directories. Reuse the build commands in [R2MLM](r2mlm-multi-layered-map.md#build-and-test-commands), verifying the current toolchain when work starts. Editing plans alone does not require a game build.
 
 Each feature adds meaningful tests for its state transitions, refusal paths and persistence. Run focused checks as it lands; r2mlvs15 runs the integrated Debug/RelWithDebInfo, save, multiplayer, art and performance scenarios. Record exact commands, content versions and artifacts. Historical 111/115 test counts are baseline evidence, not promised counts for this epic. Skipped checks remain explicitly unverified; final acceptance cannot reuse the predecessor's skips as passes.
+
+Planning-format conversion, 2026-10-04: the seventeen indexed implementation plans now use the supplied execution protocol, chronological difficulty batches of at most eight tasks, thin Global Mandatory Reading, scoped Area Mandatory Reading with producer gates, Consult on Demand and Planning Provenance. Named handoffs above replace obsolete references to the drafts' three topic groups. The master remains the scope/index authority; implementation tasks remain only in their owning child plans, with Completion Conditions last.
+
+Planning deepening, 2026-10-04: all seventeen child plans were reviewed sequentially against their mandatory reading and live code. Complex work and overloaded hard groups are decomposed into bounded implementation steps, with proposed code/flow sketches, explicit earlier-producer assumptions, refreshed reading scopes and chronological numbering. Art authoring is split by model or small family; all implementation and acceptance tasks remain pending.

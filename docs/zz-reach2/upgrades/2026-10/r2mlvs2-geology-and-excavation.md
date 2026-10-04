@@ -1,38 +1,322 @@
 # R2MLVS2 - Geology and Excavation
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs1 and r2mlvs14 Group 1.
+## Global Mandatory Reading
 
-## Outcome and reading
+> **Execution protocol**
+>
+> - Read this Global Mandatory Reading section before the first task and again
+>   after every context compaction.
+> - Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
+> - A referenced heading or exported symbol is authoritative. Global navigation
+>   hints and Area line ranges are for navigation only; if they drift, relocate
+>   the named section or symbol rather than expanding to the whole file.
+> - Mandatory reading is non-transitive. Do not preload a linked file's own
+>   Mandatory Reading, Consult on Demand, or Planning Provenance entries unless
+>   this plan names them directly for the current area.
+> - Do not read Consult on Demand or Planning Provenance merely because those
+>   sources are listed. Use a Consult on Demand source only when its trigger
+>   occurs.
+> - No created source file, test file or JSON file should start with same prefix as a planning MD file (such as r2). Only MD files can have that prefix. No MD file should be created anywhere in source directories unless specifically asked.
+> - After EVERY CONTEXT COMPACTION, you must add a note above the task group
+>   which is currently in execution. The note will say: "Context has compacted
+>   X times while executing this group.". If the compaction occurs before any
+>   meaningful work was done (this can happen when there is a lot of baggage
+>   from the previous compaction), then and ONLY then you can skip this step.
+> - When exceeding 3 context compactions, YOU MUST ask yourself if you're not 
+>   chewing more than we can handle :). Heck, plans change! :). In such a case, 
+>   the way out is to split the group on the spot,
+>   in the plan, into more groups, 
+>   by appending B, C, D as a suffixes to those groups (splitting sub-groups 
+>   themselves is also allowed). When you do this, create Local Mandatory
+>   Reading areas so you can optimize your context only for the
+>   ACTUAL task at hand.
+>   Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
 
-Replace visual bedrock with persistent solid/excavated terrain and finite resource deposits. Read master AD-2, AD-7 and I-1..5/I-9; [map layers](../../architecture/map-layers/archi-map-layers.md), [landscape](../../architecture/landscape/archi-landscape.md), `src/map_layer.cpp`, `src/clear_cmd.cpp`, `src/landscape.cpp` and `src/genworld.cpp`. Consult construction command implementations for each guarded action.
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 194-202 | `AD-2` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains persistent excavation/deposit ownership and no ordinary construction bypass; a consumer must not redefine it locally. |
+| [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
+| [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | `IsPortalPairAllowed`, `GetPortalTargetLayer`, `CheckLayerAllowsConstruction`, `CheckTilesShareLayer` define live connection/construction authority; new profile checks must preserve legacy behavior. |
 
-## Group 1 - Storage and deterministic geology
+Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs1 and r2mlvs14 `Schema Foundation Handoff`.
 
-- [ ] 1.1 Choose a compact excavation-state encoding and sparse deposit/job records. Document tile-bit ownership versus auxiliary storage; estimate maximum-map memory before committing. Two bits over two 4096x4096 rock planes cost 8 MiB before metadata; an extra byte costs 32 MiB. Measure the actual design.
-- [ ] 1.2 Define finite deposits by layer, resource, shape, reserve, hardness and stable ID. Avoid one heavyweight object per ore tile; specify deterministic overlap and claim rules.
-- [ ] 1.3 Generate five resource types per underground layer using separate saved feature seeds. Validate placement, accessible mine footprints and minimum map size. Do not change Surface RNG consumption.
-- [ ] 1.4 Add save/load descriptors and feature-disabled defaults alongside the data. Defer neither job progress nor generated reserves until the final save audit.
-- [ ] 1.5 Specify survey visibility and pricing. The initial survey overlay may expose deposit locations for planning; revealed information does not excavate tiles or spawn productive mines. Save any information that affects company gameplay.
-- [ ] 1.6 Generate persistent Deep geothermal vent fields with a bounded thermal capacity and usable surrounding plant/utility footprints, in addition to all five Deep mineral types. Read master AD-16 and r2mlvs17's vent contract; survey discovery or TBM clearing alone neither generates power nor duplicates vent capacity.
+## Outcome and Boundaries
 
-## Group 2 - Excavation and construction contracts
+Replace visual bedrock with persistent solid/excavated terrain and finite resource deposits.
 
-- [ ] 2.1 Implement a common full-footprint excavation check used by rails, roads, tubes, terminals, stops, stations, depots, signals, industries, geothermal plants/utilities, objects and portal approaches. Treat the portal work pocket as an explicit restricted exception. Deep operations additionally obey the 1980 calendar gate.
-- [ ] 2.2 Guard demolition/auto-clear, area tools, conversion, terraform, editor operations and script entry points. Editor terrain painting, if provided, is an explicit editor feature with no accidental gameplay bypass.
-- [ ] 2.3 Implement reserve/claim/advance/cancel transitions for connected excavation jobs. A job cannot consume the same rock as another TBM; cancellation preserves completed excavation and paid work.
-- [ ] 2.4 Define one atomic cut operation with excavation progress, support requirements, material yield and resource accounting. The vehicle controller calls it; UI rendering never advances it.
-- [ ] 2.5 Support user-defined area outlines, branch cuts and multi-tile chambers for any underground use, including tubes and geothermal factories. Expand them into reachable passes under the TBM's maximum 45-degree turn rule, validating swept footprint, turn space, return route and spoil capacity. Do not restrict clearing to a future permanent rail alignment or predesignated mine footprint.
-- [ ] 2.6 Demolition leaves excavated ground. Resource-bearing cut material is accounted as reserve consumption or retained seam according to the content contract; it must not be extracted again by a later mine.
+## Public Handoff Contract
 
-## Group 3 - Presentation and validation
+Proposed public owner: `src/excavation.h`. Publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
 
-- [ ] 3.1 Add solid faces, cavity floor, edges/corners, survey overlay, job footprint and progress display through r2mlvs13 assets. Solid rock and a dark open chamber must be visually distinguishable.
-- [ ] 3.2 Test all construction families on solid, active and excavated footprints, including one blocked tile in a larger footprint and a placement through an extra viewport.
-- [ ] 3.3 Test two competing jobs, partial progress, cancellation, insufficient capacity/funds and save/reload without reserve duplication.
-- [ ] 3.4 Verify deterministic generation on square/rectangular maps, all ten guaranteed deposits, void edges and minimum-size failure. Compare feature-disabled Surface digests with the prior baseline.
-- [ ] 3.5 Measure memory and active-job tick work on representative large maps; retain results for r2mlvs15.
-- [ ] 3.6 Verify vent generation does not replace any required mineral type or pre-excavate a plant. Test area clearing with diagonal turns, irregular outlines and occupied boundaries; reject illegal corner cuts and pre-1980 Deep jobs without terrain/RNG mutation.
+## Implementation Tasks
 
-## Completion conditions
+Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
+
+Groups are chronological and contain consecutive tasks of one difficulty. Each difficulty batch has at most eight tasks; area reading changes only when the implementation boundary or source of truth changes.
+
+### Area Mandatory Reading - Storage and deterministic geology
+
+_Applies to Groups 1-7._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/multilayer_state.h`: `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-7. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/map_func.h](../../../../src/map_func.h) | 29-53 | `TileBase` and `TileExtended` are the complete packed storage layouts. New excavation bits require an explicit ownership budget; do not allocate heavyweight objects per tile. |
+| [src/core/random_func.hpp](../../../../src/core/random_func.hpp) | 24-43 | `Randomizer` and simulation versus interactive state constrain feature-seed generation: preserve Surface simulation RNG and exclude presentation randomness. |
+| [src/map_layer.cpp](../../../../src/map_layer.cpp) | 201-239 | `MultiLayerMap::InitialiseLayer` is the complete delivered per-layer initializer; new-profile rock/geology must retain legacy initialization and Surface seed behavior. |
+| `src/multilayer_content.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/multilayer_state.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md) | 310-316 | `AD-16` fixes vent identity and bounded thermal output; geology publishes source capacity while r2mlvs17 later owns allocation and plants. |
+| [src/clear_map.h](../../../../src/clear_map.h) | 247-265 | Complete `MakeClear` overwrites tile metadata; the persistent cavity store must survive all tile-type conversions. |
+| [src/landscape.cpp](../../../../src/landscape.cpp) | 558-575 | Complete `DoClearSquare` reconstructs clear ground after demolition; constrains storage independence from infrastructure. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Storage sketch (proposed).** Terrain occupancy, geology and jobs have different lifetimes. A tile becoming `Industry` must not erase its cavity or the deposit reserve beneath it. A sparse job owns progress; the packed array answers buildability.
+
+```text
+rock-state[rock-layer, plane-tile] -> Solid / Excavating / Excavated
+deposit-ID -> shape + cargo meaning + remaining reserve + hardness
+job-ID -> claimed route + completed cursor + unfinished work
+vent-ID -> Deep footprint + bounded thermal rate
+```
+
+The Schema Foundation is assumed delivered by the entry gate; concrete geology/job chunks are implemented here, not presumed to exist in that foundation. Vent generation consumes the master's geological requirements and does not depend on a working geothermal plant.
+
+### Group 1 - Choose excavation storage with a measured budget
+
+{{HARD}}
+- [ ] 1.1 List which state must survive Clear-to-Rail/Industry/Station tile conversion and demolition. Choose a separate packed rock-plane state array unless a proven tile-bit ownership scheme survives every conversion; do not borrow generic m-fields without that proof.
+- [ ] 1.2 Prototype indexing through `MultiLayerMap` layer/local-coordinate helpers; encode Solid, Excavating and Excavated with a rejected/reserved fourth bit pattern. Check Surface, Space and void tiles cannot address rock-plane storage.
+- [ ] 1.3 Measure packed state, sparse records and lookup index separately on representative maximum maps. Two bits over two 4096x4096 planes cost 8 MiB; a byte costs 32 MiB before records. Record allocation/reset costs and select the measured layout.
+
+### Group 2 - Represent deposits and deterministic claims
+
+{{HARD}}
+- [ ] 2.1 Define a typed deposit ID and compact record containing layer, cargo label reference, bounded shape/span list, initial/remaining reserve and hardness. Keep deposit identity separate from its future mine and visible survey information.
+- [ ] 2.2 Choose a deterministic tile-to-deposit lookup with bounded per-query cost, such as chunk buckets over compact spans; specify stable ordering and reject/resolve intersecting deposits without iteration-order dependence.
+- [ ] 2.3 Define claim ownership and overlap rules for mines and excavation jobs. Specify how a cut through ore debits recoverable reserve or leaves retained seam according to the content contract; never leave ore claimable twice.
+- [ ] 2.4 Add a small deposit fixture covering intersecting shapes, invalid IDs, depleted reserve and deletion/reclaim. Check serialized authority versus rebuilt lookup index explicitly.
+
+### Group 3 - Generate guaranteed deposits without Surface RNG changes
+
+{{HARD}}
+- [ ] 3.1 Derive and save versioned geology seeds independently of `_random`; use a local deterministic generator and fixed layer/resource traversal order. Record generator version with the generated state.
+- [ ] 3.2 Place one mandatory deposit of each of the five resource types on each rock layer first. Reserve enough in-bounds space for an excavatable mine/loading approach; reject unsupported tiny maps before partial world activation.
+- [ ] 3.3 Add optional deposits only after guaranteed placements, with bounded retries and deterministic fallback locations. Validate rectangular maps and both void-fence policies.
+- [ ] 3.4 Compare `_random` state and feature-disabled Surface digest before/after geology generation; separately record the enabled-profile fixture where new Surface industries are intentional.
+
+### Group 4 - Persist geology authority before consumers
+
+{{HARD}}
+- [ ] 4.1 Using the earlier Schema Foundation Handoff, serialize packed state, deposits, reserve balances, seed/version and company survey visibility. Rebuild spatial indices after load rather than saving addresses.
+- [ ] 4.2 Define absent-chunk legacy defaults without making existing infrastructure solid. Add round trips for partially depleted deposits, invalid references and truncated/out-of-bounds state.
+- [ ] 4.3 Extend descriptors when `ExcavationJob` fields are finalized in the next area; require its active-progress round trip there before TBM consumers start. Do not treat the foundation fixture as finished job persistence.
+
+### Group 5 - Storage and deterministic geology
+
+{{MEDIUM}}
+- [ ] 5.1 Specify survey visibility and pricing. The initial survey overlay may expose deposit locations for planning; revealed information does not excavate tiles or spawn productive mines. Save any information that affects company gameplay.
+
+### Group 6 - Add vent geology independently of mineral reserves
+
+{{HARD}}
+- [ ] 6.1 Define `GeothermalVentField` with stable typed ID, Deep location/shape, thermal-rate capacity and generation version. It has no freight inventory and is not one of the five mineral types.
+- [ ] 6.2 Place at least one vent after mandatory minerals using a separate deterministic feature stream or explicitly versioned substream. Check enough surrounding solid-but-excavatable ground remains for the proposed 1980 plant and utility footprint.
+- [ ] 6.3 Define overlap of vent influence and mineral deposits without deleting either identity. Clearing vent tiles preserves the vent; survey visibility reveals it but neither allocates heat nor spawns a plant.
+- [ ] 6.4 Save and round-trip vent identity/capacity; add a tiny-map failure fixture and a repeated-generation comparison. Publish this geological contract to r2mlvs17 before its heat consumers exist.
+
+### Group 7 - Publish geology and cut interfaces
+
+{{HARD}}
+- [ ] 7.1 Publish `src/excavation.h` exports `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`; declare invalid IDs, read-only lookup and command/simulation ownership.
+- [ ] 7.2 Specify the cut request/result and job fields now; implement their behavior in the next area. Keep wagon mutation with r2mlvs4/5 through an explicit validated material/capacity contract, not a private vehicle lookup in geology.
+- [ ] 7.3 Register new source files in CMake and compile a public-header fixture. Identify which exports have behavior tests already and which still require the following groups before downstream mutation is allowed; update every consumer if the public location changes.
+
+### Area Mandatory Reading - Construction guards and excavation job ownership
+
+_Applies to Groups 8-10._
+
+**Entry gate.** r2mlvs2 Groups 1-7 supply excavation/deposit/job types and storage; r2mlvs1 supplies profile/Deep availability. This area implements the declared footprint/job behaviors before later cutting consumers use them.
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Verify the named prior public exports and their type/behavior fixtures with the current source before dependent work. A declaration alone is insufficient for runtime mutation. If missing, stop the dependent implementation and passing claims in Groups 8-10; independent characterization, test design and source verification may continue. Do not copy private stores, invent substitute IDs/inventory/energy or treat historical planning prose as delivered code.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/landscape_cmd.h](../../../../src/landscape_cmd.h) | 15-19 | `CmdLandscapeClear`, `CmdClearArea` and their traits include `NoTest` area clear; enforce excavation even through auto-clear without assuming every command has a harmless estimate. |
+| [src/clear_cmd.cpp](../../../../src/clear_cmd.cpp) | 31-64 | `ClearTile_Clear` is the complete delivered ordinary clear path, which currently removes rock. Guard solid terrain here and at full-footprint constructors rather than only hiding GUI tools. |
+| [src/command.cpp](../../../../src/command.cpp) | 301-328 | `CommandHelperBase::InternalExecuteValidateTestAndPrepExec` defines refusal/estimate before execution; no validation phase may consume inventory, RNG or funds. |
+| `src/excavation.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) Groups 1-7, ending with Group 7's public-contract task, publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [src/landscape.cpp](../../../../src/landscape.cpp) | 759-817 | `CmdClearArea` performs per-tile work and may partially succeed; guard refused solid tiles without promising whole-area rollback. |
+
+Keep existing partial-area command semantics: refuse each solid mutation without promising unrelated legal tiles roll back. A portal work pocket is a restricted capability, not generally cleared terrain.
+
+### Group 8 - Implement one full-footprint construction predicate
+
+{{HARD}}
+- [ ] 8.1 Implement `CheckExcavatedFootprint` over all footprint/approach tiles with layer validity, full excavation and the canonical Deep availability predicate. Return a stable failure tile/reason without changing tiles or RNG.
+- [ ] 8.2 Define the portal work pocket as a capability-scoped exception usable only by the assigned commissioning TBM; ordinary footprint checks cannot treat that pocket as cleared ground.
+- [ ] 8.3 Wire rail/road track, signals, depots and station constructors to the predicate before their first tile mutation. Add one mixed solid/cleared footprint refusal per family.
+- [ ] 8.4 Wire existing industries, objects and portal approaches; publish the same guard for later tube/geothermal/utility constructors rather than requiring those future implementations here.
+
+### Group 9 - Close clearing and area-tool bypasses
+
+{{HARD}}
+- [ ] 9.1 Guard `ClearTile_Clear` and auto-clear paths so payment cannot excavate solid terrain. Ensure removing existing infrastructure leaves cavity state intact.
+- [ ] 9.2 Audit area construction, conversion and terraforming entry points, including commands marked `NoTest`. Preflight each atomic footprint; preserve documented partial-area command behavior while forbidding any solid tile mutation.
+- [ ] 9.3 Exercise command/API paths independently of toolbar visibility, including script calls and extra-view coordinates. Keep editor terrain painting behind the saved explicit override and test normal gameplay cannot inherit it.
+
+### Group 10 - Implement excavation job reservations
+
+{{HARD}}
+- [ ] 10.1 Define reserve, advance, pause and cancel states with one owner per active cut. Validate a connected route and claim the work footprint deterministically; conflicting jobs refuse before modifying either claim.
+- [ ] 10.2 Cancel only unfinished reservations; keep completed cavities, paid work and generated materials. Make invalid owner/removed support produce a recoverable pause reason.
+- [ ] 10.3 Add descriptors for job route, cursor, partial work and claims, then rebuild lookup caches on load. Test two competing jobs and reload during partial progress before publishing behavioral readiness.
+
+### Area Mandatory Reading - Atomic cuts and bounded area route planning
+
+_Applies to Groups 11-15._
+
+**Entry gate.** The preceding Groups 8-10 must provide tested `CheckExcavatedFootprint` and job reserve/pause/cancel behavior in `src/excavation.h`; Group 7 declared the cut contract that this area now implements.
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Verify the named prior public exports and their type/behavior fixtures with the current source before dependent work. A declaration alone is insufficient for runtime mutation. If missing, stop the dependent implementation and passing claims in Groups 11-15; independent characterization, test design and source verification may continue. Do not copy private stores, invent substitute IDs/inventory/energy or treat historical planning prose as delivered code.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| `src/excavation.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) Groups 1-7, ending with Group 7's public-contract task, publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. For this area, Groups 8-10 additionally implement footprint checking and job ownership; cut behavior is produced here. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [src/command.cpp](../../../../src/command.cpp) | 301-328 | Complete command validation/estimate boundary prevents cut proposals from mutating terrain, inventory, money or RNG. |
+| [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md) | 222-232 | Complete `AD-5` supplies advancing 45-degree geometry, charged support, arbitrary final use and safe backed retreat. |
+
+**Cut/route sketch (proposed).** Profile cutter dimensions and yields already exist; r2mlvs4's actual train controller is a later consumer and is not a prerequisite for pure geometry tests.
+
+```text
+prepare(job, next_cut, support, material_sink, funds) -> validated cut or pause
+estimate -> price/reason without claims, inventory, RNG or money mutation
+execute -> revalidate all participants -> commit the complete cut once
+```
+
+```mermaid
+flowchart LR
+    Outline[Canonical outline] --> Pass[Legal advancing pass]
+    Pass --> Sweep[Full swept footprint]
+    Sweep --> Retreat[Supported retreat]
+    Retreat --> Capacity[Earth and Rock capacity]
+    Capacity --> Reserve[Reserve accepted route]
+    Reserve --> Cut[Commit one cut]
+```
+
+### Group 11 - Prepare and commit one cut transaction
+
+{{HARD}}
+- [ ] 11.1 Specify a pure cut preflight over job identity, target rock, claim ownership, legal support, spoil yields/capacity and cost. Snapshot every field needed by the commit and compute with checked integers.
+- [ ] 11.2 Implement `CommitExcavationCut` as the geometry/reserve part of a coordinated transaction: revalidate the cut and its material sink before irreversible writes, then commit excavation/support, reserve debit, Earth/Rock additions and charge once. The owning TBM controller supplies the material/funds participant through the public contract.
+- [ ] 11.3 Define resource-bearing cuts in the result ledger so later mines see the reduced reserve. Include no-progress/paused outcomes that leave all quantities unchanged.
+- [ ] 11.4 Test estimate versus execute, last-unit reserve, full wagon sink and insufficient cash with state digests before/after; failed preparation must leave no temporary rail or partial cargo.
+
+### Group 12 - Normalize arbitrary clearing outlines
+
+{{MEDIUM}}
+- [ ] 12.1 Convert user corridors/branches/chambers to a canonical layer-local target tile set. Reject empty, disconnected, out-of-bounds and wrong-layer outlines with the first failing location.
+- [ ] 12.2 Separate requested final floor area from temporary approach/turn/support space. Preview any extra required space and its cost; require it in the accepted job so the planner never silently excavates outside authorization.
+- [ ] 12.3 Keep final land use out of geometry acceptance: road, rail, tube, mine and empty chamber use the same reachable-clearing domain.
+
+### Group 13 - Plan legal advancing passes with bounded search
+
+{{HARD}}
+- [ ] 13.1 Represent a planning node as cutter position, one of eight headings and the minimum consist/support history needed for collision checks. Expand only forward straight/left-45/right-45 segments; no stationary rotation edges.
+- [ ] 13.2 Implement a bounded deterministic search for a single target pass with stable neighbor/tie order. Check diagonal swept tiles and the full cutter/consist envelope, not only endpoint centers.
+- [ ] 13.3 Build area coverage by selecting remaining targets in stable order and joining legal passes. Cap work per planning command and total search; return a visible partial/proposed route or refusal requiring a revised outline rather than an unbounded solver.
+- [ ] 13.4 Supply geometric tests for straight, two-bend 90-degree, irregular chamber, too-tight corner and impossible turn space. r2mlvs4 owns movement execution against this route contract.
+
+### Group 14 - Validate retreat and spoil capacity before reserving work
+
+{{HARD}}
+- [ ] 14.1 For each route prefix, verify a supported reverse path to the current exchange point or commissioning pocket. Backing along the path does not create a backward cut or change the cutter heading.
+- [ ] 14.2 Accumulate Earth and Rock independently against the proposed wagon capacities until the next exchange. Split passes at safe exchange returns; refuse a first cut or pocket exit whose load cannot be recovered.
+- [ ] 14.3 Check planned support removal/replacement leaves a retreat route after cutter and hauler withdrawal, so a cleared tube corridor can later replace temporary rail.
+- [ ] 14.4 Freeze the validated pass/return/capacity result as the job input and revalidate at execution when ownership/obstructions change. Test refusal leaves excavation, claims and RNG unchanged.
+
+### Group 15 - Excavation and construction contracts
+
+{{MEDIUM}}
+- [ ] 15.1 Demolition leaves excavated ground. Resource-bearing cut material is accounted as reserve consumption or retained seam according to the content contract; it must not be extracted again by a later mine.
+
+### Area Mandatory Reading - Presentation and validation
+
+_Applies to Groups 16-19._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/excavation.h`: `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 16-19. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/tests/map_layer.cpp](../../../../src/tests/map_layer.cpp) | 293-322 | Complete Deep initialization test checks fence/terrain and unchanged RNG; new geology must preserve feature-disabled behavior. |
+| [src/tests/map_layer.cpp](../../../../src/tests/map_layer.cpp) | 162-183 | Complete `Plane distances ignore the layer` test fixes projected geometry but grants no cross-layer transfer authority. |
+| [src/cargopacket.h](../../../../src/cargopacket.h) | 458-489 | `VehicleCargoList::Append`, `AgeCargo`, `Stage`, `Return`, `Unload`, `Shift` move accountable packets; exchange/descent/processing must not clone packet age or feeder shares. |
+| `src/excavation.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) Groups 1-7, ending with Group 7's public-contract task, publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [Sprite Contract and delivery owner](r2mlvs13-graphics-and-asset-pipeline.md#public-handoff-contract) | Live definitions; no fixed range | `Sprite Contract Handoff` defines manifest fields `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source`; the matching authoring/conversion/runtime groups deliver actual assets. Verify the requested family and packed loading fixture before graphics integration; template/manifest publication alone is not final art. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Art integration gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. The solid-face/cavity/overlay rendering task consumes r2mlvs13's delivered excavation assets and `assets/multilayer_sprite_manifest.json` entries. Verify their asset IDs, directions/frames and packed loading fixture before integrating them; if absent, stop that art task and keep geology/state tests independent. A temporary visualization is not final graphics acceptance.
+
+**Scoped graphics gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Final graphics tasks in this area require the corresponding r2mlvs13 manifest entries, delivered sprites and packed loading fixture. Verify them before binding/review; if absent, stop only those art tasks and their acceptance claims, continue independent code/state tests, and never count placeholders as finished assets.
+
+### Group 16 - Presentation and validation
+
+{{MEDIUM}}
+- [ ] 16.1 Add solid faces, cavity floor, edges/corners, survey overlay, job footprint and progress display through r2mlvs13 assets. Solid rock and a dark open chamber must be visually distinguishable.
+- [ ] 16.2 Test all construction families on solid, active and excavated footprints, including one blocked tile in a larger footprint and a placement through an extra viewport.
+
+### Group 17 - Presentation and validation
+
+{{HARD}}
+- [ ] 17.1 Test two competing jobs, partial progress, cancellation, insufficient capacity/funds and save/reload without reserve duplication.
+- [ ] 17.2 Verify deterministic generation on square/rectangular maps, all ten guaranteed deposits, void edges and minimum-size failure.
+
+### Group 18 - Presentation and validation
+
+{{MEDIUM}}
+- [ ] 18.1 Compare feature-disabled Surface digests with the prior baseline.
+- [ ] 18.2 Measure memory and active-job tick work on representative large maps; retain results for r2mlvs15.
+- [ ] 18.3 Verify vent generation does not replace any required mineral type or pre-excavate a plant.
+- [ ] 18.4 Test area clearing with diagonal turns, irregular outlines and occupied boundaries; reject illegal corner cuts and pre-1980 Deep jobs without terrain/RNG mutation.
+
+### Group 19 - Presentation and validation
+
+{{SIMPLE}}
+- [ ] 19.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
+- [ ] 19.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+
+## Consult on Demand
+
+| Trigger | File name | Start at | Expand only when | Consultation purpose |
+| --- | --- | --- | --- | --- |
+| A constructor or area-clear command bypasses the solid-rock guard | [../../../../src/landscape.cpp](../../../../src/landscape.cpp) | `CmdLandscapeClear` and `CmdClearArea` | The single-tile guard passes but nested/area execution still mutates solid terrain | Trace auto-clear, NoTest and command execution ordering; patch the canonical excavation guard rather than a menu-only refusal. |
+| A required public export is absent and its owner/location is disputed | [r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | `Requirements and ownership` and `Plan Index` | The named producer confirms an intentional contract/ownership change | Find the responsible producer and reconcile its public handoff with direct consumers; the hub cannot substitute for missing implementation. |
+| Current behavior contradicts a historical subsystem description | [../../architecture/map-layers/archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md) | `Invariants` and the relevant named source in `Code map` | The live symbol and executable test do not explain the difference | Locate layer addressing or lifecycle rationale. Live code/tests govern delivered behavior; this architecture page does not prove future interfaces exist. |
+
+## Planning Provenance
+
+This is not an execution reading queue. Do not preload it after context compaction. It is non-transitive; ranges record planning use, not runtime authority.
+
+| File name | Sections or Line Ranges used while planning | Planning contribution |
+| --- | --- | --- |
+| [docs/zz-reach2/architecture/initial-inventory.md](../../architecture/initial-inventory.md) | 185-220 | `Command as the only world mutation`, `Pool-indexed game objects`, `Tile map as a packed array` and `File-suffix modules` oriented command/pool/header ownership and source registration. This historical inventory is a location survey, not authority for current layer behavior. |
+| [docs/zz-reach2/architecture/@archi-ttd-level0.md](../../architecture/@archi-ttd-level0.md) | 24-63 | `How the program fits together` and `Source and runtime boundaries` located shared simulation, data/presentation, CMake targets and subsystem handoffs used to choose the live reading sources. |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 119-140 | `Requirements and ownership` assigned this plan's feature responsibilities; it shaped the decomposition without making every sibling plan a mandatory reading dependency. |
+| [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | The inspected live boundary helped separate characterization, public-contract production, implementation and acceptance batches. It materially constrained persistent excavation/deposit ownership and no ordinary construction bypass; this entry records planning influence rather than an additional reading obligation. |
+| [User planning-format instructions](<C:/Users/Axonn/.codex/attachments/cd59b20a-3a96-4d54-b4bd-1e8f37639e7d/Pasted text.txt>) | `Global Mandatory Reading`, `Area Mandatory Reading`, `Consult on Demand`, `Planning Provenance`, `Final validation` | Supplies the exact protocol, chronological difficulty batches of at most eight tasks, reading gates and validation format. |
+| [src/clear_map.h](../../../../src/clear_map.h) | 247-265 | Deeper planning pass, 2026-10-04: Tile reconstruction overwrites metadata, motivating independent persistent cavity storage and guarded type transitions. |
+
+## Completion Conditions
 
 Every ordinary building/traversal path respects solid rock. Excavation changes only through its authoritative transaction, conserves yields and resumes from saves. All required deposits can support an excavated mine and transport access; simply revealing or clearing a tile cannot create free production.

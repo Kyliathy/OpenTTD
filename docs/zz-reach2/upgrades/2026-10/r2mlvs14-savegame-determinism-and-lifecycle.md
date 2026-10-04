@@ -1,10 +1,52 @@
 # R2MLVS14 - Savegame, Determinism and Lifecycle
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Group 1 uses draft definitions from r2mlvs1 Groups 1/2 and feeds its Group 3 closure, before new world-state implementation. Remaining groups accompany feature plans and audit their integrated result; this is not a final-stage serialization patch.
+## Global Mandatory Reading
 
-## Outcome and reading
+> **Execution protocol**
+>
+> - Read this Global Mandatory Reading section before the first task and again
+>   after every context compaction.
+> - Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
+> - A referenced heading or exported symbol is authoritative. Global navigation
+>   hints and Area line ranges are for navigation only; if they drift, relocate
+>   the named section or symbol rather than expanding to the whole file.
+> - Mandatory reading is non-transitive. Do not preload a linked file's own
+>   Mandatory Reading, Consult on Demand, or Planning Provenance entries unless
+>   this plan names them directly for the current area.
+> - Do not read Consult on Demand or Planning Provenance merely because those
+>   sources are listed. Use a Consult on Demand source only when its trigger
+>   occurs.
+> - No created source file, test file or JSON file should start with same prefix as a planning MD file (such as r2). Only MD files can have that prefix. No MD file should be created anywhere in source directories unless specifically asked.
+> - After EVERY CONTEXT COMPACTION, you must add a note above the task group
+>   which is currently in execution. The note will say: "Context has compacted
+>   X times while executing this group.". If the compaction occurs before any
+>   meaningful work was done (this can happen when there is a lot of baggage
+>   from the previous compaction), then and ONLY then you can skip this step.
+> - When exceeding 3 context compactions, YOU MUST ask yourself if you're not 
+>   chewing more than we can handle :). Heck, plans change! :). In such a case, 
+>   the way out is to split the group on the spot,
+>   in the plan, into more groups, 
+>   by appending B, C, D as a suffixes to those groups (splitting sub-groups 
+>   themselves is also allowed). When you do this, create Local Mandatory
+>   Reading areas so you can optimize your context only for the
+>   ACTUAL task at hand.
+>   Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
 
-The complete economy survives saves, multiplayer joins and entity removal without corruption, duplication or dependence on the visible layer. Read master AD-1/14 and all invariants; [savegame](../../architecture/savegame/archi-savegame.md), [desync](../../architecture/desync/archi-desync.md), [commands](../../architecture/commands/archi-commands.md), [game loop](../../architecture/game-loop/archi-game-loop.md), `src/saveload/saveload.h`, `src/saveload/map_sl.cpp`, `src/saveload/vehicle_sl.cpp` and `src/saveload/afterload.cpp`.
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 296-300 | `AD-14` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains feature-owned serialization, old-save compatibility and deterministic lifecycle repair; a consumer must not redefine it locally. |
+| [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
+| [src/saveload/saveload.h](../../../../src/saveload/saveload.h) | 447-518 | `ChunkType`, `ChunkId`, `ChunkHandler` and handler aliases define save/load/fixup/preview ownership; every feature persists its own authoritative fields through this boundary. |
+
+Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`, before new world-state implementation. Remaining groups accompany feature plans and audit their integrated result; this is not a final-stage serialization patch.
+
+## Outcome and Boundaries
+
+The complete economy survives saves, multiplayer joins and entity removal without corruption, duplication or dependence on the visible layer.
 
 ## State ownership register
 
@@ -27,34 +69,295 @@ The complete economy survives saves, multiplayer joins and entity removal withou
 
 Ordinary cargo packet/vehicle/station persistence should be reused where possible. Do not save a second independent count of the same physical cargo without a strict ownership/consistency rule.
 
-## Group 1 - Schema and migration foundation
+## Public Handoff Contract
 
-- [ ] 1.1 Assign each state field one owner and representation. Define stable typed references, valid ranges, limits, optional/invalid semantics and reference removal hooks before producers write data.
-- [ ] 1.2 Reserve symbolic save-version changes and unique chunk names only after checking the current tree; numeric 371 is not assumed free forever. Keep layers 0/1/2/3 and established saved enum meanings unchanged.
-- [ ] 1.3 Implement feature/profile metadata and an empty-compatible schema scaffold with load/preview validation. Missing required content produces a specific error before unsafe object restoration.
-- [ ] 1.4 Define legacy load policy for Surface-only saves, versions 369/370 and existing content sets: preserve legacy free underground building and working portals under their saved compatibility mode. New profile generation starts solid; loading old infrastructure must not bury it.
-- [ ] 1.5 Keep an existing-world conversion tool out of initial scope unless separately designed with cargo/content compatibility and excavation reconstruction. Never auto-enable the new economy by merely changing a setting on load.
-- [ ] 1.6 Define command serialization and deterministic state hashing for jobs/space entities, feature RNGs, fixed-point motion, tick-based waits and production remainders. Add these fields to desync diagnostics.
-- [ ] 1.7 Include the 1980 Deep policy and later model/factory dates in profile/version compatibility. Calendar availability is derived from the simulation calendar and saved policy, never local wall time. Explicit legacy/editor exceptions must not leak into ordinary new games.
+Proposed public owner: `src/multilayer_state.h`. Publish `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
 
-## Group 2 - Feature persistence integration
+`Schema Foundation Handoff`: the first reading area publishes empty-compatible profile/schema/version rules and reference validation exports before new world-state implementation. Feature plans add their own descriptors as they land. Final feature/network audits do not block this initial checkpoint.
 
-- [ ] 2.1 Require each feature plan to deliver its state descriptors, after-load reference fixups and meaningful mid-action fixture alongside implementation. Collect a matrix of states covered, not just idle save samples.
-- [ ] 2.2 Restore cross-references in a documented order: maps/profile -> entities/vehicles/stations -> references/cargo ownership -> validated consist/mission links -> derived caches. Reject malformed/impossible states without partial gameplay mutation.
-- [ ] 2.3 Bound pools, arrays, inventories, map metadata and counters; test invalid IDs, duplicate ownership, integer overflow, bad coordinates and cyclic module/assignment references.
-- [ ] 2.4 Verify estimate/execute semantics for portal construction, excavation, wagon swaps, launch/deployment, construction consumption and mirror assignment. Failed estimates or retries cannot consume RNG, inventory or funds.
-- [ ] 2.5 Verify saves during TBM cuts, straddling consists, queue waits, probe attachment, ascent/descent, partial modules and partial solar periods resume at the same simulation result.
-- [ ] 2.6 Round-trip TBM 45-degree heading/pass transitions, off-center drops at the 20-tile boundary, hub handling packets, all five tube models and geothermal heat allocations/direct-processing inputs. Include these in command/network hashes and validate unique packet/energy ownership after load.
+## Implementation Tasks
 
-## Group 3 - Entity lifecycle and multiplayer
+Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
 
-- [ ] 3.1 Write a lifecycle policy table for sale, removal, closure, bankruptcy, takeover, cancellation, service exhaustion and target ID reuse for every cross-reference. Prefer clear refusal for unsafe removal; implemented evacuation/reassignment must be deterministic and conserve packets.
-- [ ] 3.2 Exercise lost origin station, destroyed/removed exchange bay, mine depletion, launch center removal, asteroid deletion, module dependency removal and solar-farm replacement. No stale ID can silently bind to a newly allocated object.
-- [ ] 3.3 Run host/client identical-command scenarios with different selected layers/viewports and rendering settings. Compare synchronized state hashes over complete underground and orbital loops.
-- [ ] 3.4 Join a multiplayer game while excavation, wagon waiting, probe mining, descent and assembly are active. Verify the joining snapshot and subsequent hashes; single-player command replay is not a substitute for join testing.
-- [ ] 3.5 Check dedicated/headless play, pause/speed changes, supported economy time modes and bounded updates. GUI-less worlds must progress identically.
-- [ ] 3.6 Stress collection-member extension/unlink/ownership changes during handling, overlapping launch zones, loss of tube power/depot/interchange, vent claim reuse and broken electrical risers. Replay across the 1979/1980 calendar boundary and later introductions; no command retry may bypass a date, radius, turn or heat-capacity rule.
+Groups are chronological and contain consecutive tasks of one difficulty. Each difficulty batch has at most eight tasks; area reading changes only when the implementation boundary or source of truth changes.
 
-## Completion conditions
+### Area Mandatory Reading - Schema and migration foundation
+
+_Applies to Groups 1-6._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-6. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/saveload/map_sl.cpp](../../../../src/saveload/map_sl.cpp) | 30-100 | `_map_desc`, `MapFileTileCount`, `MAPSChunkHandler` distinguish stored layer count from live allocation and validate corrupt/missing planes. |
+| [src/saveload/vehicle_sl.cpp](../../../../src/saveload/vehicle_sl.cpp) | 1119-1196 | `VEHSChunkHandler` and registration construct the vehicle class from saved type before member loading; protect old enum meanings and validate new references. |
+| [src/command.cpp](../../../../src/command.cpp) | 301-328 | `CommandHelperBase::InternalExecuteValidateTestAndPrepExec` defines refusal/estimate before execution; no validation phase may consume inventory, RNG or funds. |
+| `src/multilayer_content.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | 223-314 | Complete `ChunkHandlers` registry fixes handler order and registration; allocate new IDs without changing legacy meanings. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Foundation scope.** The first area consumes Draft Content and publishes schema/digest contracts for Content Freeze. It does not require completed feature pools, new vehicle kinds or the final runtime grid. Feature owners add concrete descriptors and focused mid-action tests as those implementations land.
+
+### Group 1 - Schema and migration foundation
+
+{{MEDIUM}}
+- [ ] 1.1 Assign each state field one owner and representation.
+- [ ] 1.2 Define stable typed references, valid ranges, limits, optional/invalid semantics and reference removal hooks before producers write data.
+
+### Group 2 - Reserve schema identities and implement metadata scaffolding
+
+{{HARD}}
+- [ ] 2.1 Inspect the current SaveLoadVersion and all registered chunk IDs, then allocate unique symbolic revisions/IDs. Preserve historical layer and vehicle meanings; never assume numeric 371 is still available.
+- [ ] 2.2 Define feature/profile metadata fields, size limits, required content identity and preview behavior from r2mlvs1 Draft Content. Implement an empty-compatible scaffold that can validate metadata without depending on feature pools not yet built.
+- [ ] 2.3 Add load/preview/fixup registration for the scaffold and legacy missing-chunk defaults. Identify the earliest supported point to reject missing/incompatible content before unsafe feature activation.
+- [ ] 2.4 Test empty new-profile metadata and old Surface/369/370 saves with unchanged legacy rules. Publish schema shape to Content Freeze; later feature records remain their owners responsibility.
+
+### Group 3 - Schema and migration foundation
+
+{{MEDIUM}}
+- [ ] 3.1 Define legacy load policy for Surface-only saves, versions 369/370 and existing content sets: preserve legacy free underground building and working portals under their saved compatibility mode. New profile generation starts solid; loading old infrastructure must not bury it.
+- [ ] 3.2 Keep an existing-world conversion tool out of initial scope unless separately designed with cargo/content compatibility and excavation reconstruction. Never auto-enable the new economy by merely changing a setting on load.
+
+### Group 4 - Specify command encoding and canonical state digests
+
+{{HARD}}
+- [ ] 4.1 Define typed wire fields for feature commands, enum validity, coordinate bounds and optional references. Preserve existing command/save meanings and reject malformed input before mutation.
+- [ ] 4.2 Define canonical digest order by feature kind and stable ID, then explicit integer fields: reserves, packet owner/quantity, job phase/progress, RNG state, fixed-point positions, leases and accounting remainders.
+- [ ] 4.3 Exclude pointers, padding, unordered iteration and derived visual/cache state. Give absent/empty records unambiguous encoding and include profile/schema version.
+- [ ] 4.4 Add a small digest fixture that changes one authoritative field at a time and ignores a presentation-only change; publish the extension points without pretending later feature state already exists.
+
+### Group 5 - Schema and migration foundation
+
+{{MEDIUM}}
+- [ ] 5.1 Add these fields to desync diagnostics.
+- [ ] 5.2 Include the 1980 Deep policy and later model/factory dates in profile/version compatibility. Calendar availability is derived from the simulation calendar and saved policy, never local wall time. Explicit legacy/editor exceptions must not leak into ordinary new games.
+
+### Group 6 - Schema and migration foundation
+
+{{HARD}}
+- [ ] 6.1 Publish `src/multilayer_state.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+
+### Area Mandatory Reading - Feature persistence integration
+
+_Applies to Groups 7-14._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_state.h`: `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 7-14. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+**Scoped integration gates.** The following producer dependencies apply only to the named implementation/test families. Verify each required public export and its focused producer test before those integrations; absent late producers do not block already independent features.
+
+- `src/excavation.h` is required for the r2mlvs2 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/layer_portal_cmd.h` is required for the r2mlvs3 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/tbm.h` is required for the r2mlvs4 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/tbm_exchange.h` is required for the r2mlvs5 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/multilayer_industry.h` is required for the r2mlvs6 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/space.h` is required for the r2mlvs8 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/launch_center.h` is required for the r2mlvs9 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/asteroid.h` is required for the r2mlvs10 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/orbital_station.h` is required for the r2mlvs11 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/solar_power.h` is required for the r2mlvs12 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/transport_tube.h` is required for the r2mlvs16 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/geothermal.h` is required for the r2mlvs17 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+
+Do not emulate an absent producer with copied private state, fake inventories/energy, local IDs or a second registry/grid. A final combined closure/gallery/round-trip still waits for every required family; an independent passing case is not a pass for the missing integration.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/industry.h](../../../../src/industry.h) | 75-106 | `ProducedCargo`, `AcceptedCargo`, `ProducedCargoes`, `AcceptedCargoes` expose bounded inventory and economy-time history; conserve materials and avoid narrow-counter overflow. |
+| [src/cargopacket.h](../../../../src/cargopacket.h) | 458-489 | `VehicleCargoList::Append`, `AgeCargo`, `Stage`, `Return`, `Unload`, `Shift` move accountable packets; exchange/descent/processing must not clone packet age or feeder shares. |
+| [src/network/network_command.cpp](../../../../src/network/network_command.cpp) | 256-288 | `NetworkExecuteLocalCommandQueue` executes agreed frame order/company authority; all jobs use deterministic simulation time. |
+| `src/multilayer_state.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/excavation.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) Groups 1-7, ending with Group 7's public-contract task, publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs2 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| [src/layer_portal_cmd.h](../../../../src/layer_portal_cmd.h) | Live definitions; no fixed range | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) Groups 1-7, ending with Group 7's public-contract task, publish `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs3 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/tbm.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) Groups 1-5, ending with Group 5's public-contract task, publish `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute`, `AdvanceTBMWork`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs4 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/tbm_exchange.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs5-spoil-wagons-and-haulage.md](r2mlvs5-spoil-wagons-and-haulage.md) Groups 1-5, ending with Group 5's public-contract task, publish `TBMExchangeAssignment`, `ValidateTBMWagonExchange`, `ExecuteTBMWagonExchange`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs5 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/multilayer_industry.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) Groups 1-6, ending with Group 6's public-contract task, publish `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs6 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/space.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) Groups 1-7, ending with Group 7's public-contract task, publish `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs8 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/launch_center.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) Groups 1-7, ending with Group 7's public-contract task, publish `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs9 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/asteroid.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) Groups 1-7, ending with Group 7's public-contract task, publish `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs10 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/orbital_station.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs11-orbital-stations-and-manufacturing.md](r2mlvs11-orbital-stations-and-manufacturing.md) Groups 1-6, ending with Group 6's public-contract task, publish `OrbitalModule`, `OrbitalConstructionJob`, `ReserveOrbitalConstructionInputs`, `CommitOrbitalConstructionStep`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs11 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/solar_power.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) Groups 1-6, ending with Group 6's public-contract task, publish `SolarGenerationAccount`, `MirrorAssignment`, `ComputeMirrorSolarOutput`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs12 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/transport_tube.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) Groups 1-8, ending with Group 8's public-contract task, publish `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs16 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/geothermal.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) Groups 1-7, ending with Group 7's public-contract task, publish `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the r2mlvs17 feature-specific descriptors/fixups/round-trips; other delivered features may be persisted/validated independently, and combined claims wait for all required producers in Groups 7-14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | 2366-2400 | Complete `SlLoadChunks`, `SlLoadCheckChunks`, `SlFixPointers` show file-order reads versus registry-order fixups; validate at the appropriate phase. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | 317-363 | Complete `SlNullPointers` and `SlError` define partial-load cleanup; new fixups must tolerate Null action and absent pools. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | 3202-3298 | Complete `DoLoad` mutates the in-progress load world and reports reinitialization on failure; do not promise restoration of the prior live world. |
+| `src/utility_power.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs12](r2mlvs12-solar-farms-mirrors-and-eti.md) `Useful Power Handoff`, produced by its native-ledger, atomic-mutation and consumer-effect groups, supplies `PublishUtilityGeneration`, `AllocateUtilityPower`, `GetUtilityAllocation`, `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation`, `CommitUtilityMutation`. Verify its allocation, consume/release/layer-transfer, effect and save/retry fixtures before dependent power mutations; no private account writes or duplicate grid. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Load-validation sketch.** The live loader determines when these phases can run; the sketch describes dependencies, not permission to arbitrarily reorder legacy chunks.
+
+```mermaid
+flowchart LR
+    Meta[Read and validate metadata and bounds] --> Records[Load authoritative records]
+    Records --> Fix[Resolve typed references]
+    Fix --> Own[Validate unique ownership and links]
+    Own --> Caches[Rebuild derived caches]
+    Caches --> Resume[Resume simulation]
+    Meta --> Fail[Existing load error and cleanup path]
+    Own --> Fail
+```
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Each feature family supplies its own descriptors, public validator and mid-action fixture before that family's audit. Verify the actual producer tests; missing tube/geothermal or orbital code stops its dependent subscenario only. Do not invent absent records or claim combined save compatibility from an empty schema fixture.
+
+**Utility persistence gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Audit the r2mlvs12 ledger only after its live descriptors and tests exist: source epochs/lineage, grant balances, mutation sequence, consume/release/transfer state and fixed-scale remainders. Preserve recipe inventory-owner discriminants and completed-but-awaiting-materialization jobs too. Missing producers stop only their subscenarios; never reconstruct consumed energy from caches.
+
+### Group 7 - Feature persistence integration
+
+{{MEDIUM}}
+- [ ] 7.1 Require each feature plan to deliver its state descriptors, after-load reference fixups and meaningful mid-action fixture alongside implementation.
+
+### Group 8 - Feature persistence integration
+
+{{SIMPLE}}
+- [ ] 8.1 Collect a matrix of states covered, not just idle save samples.
+
+### Group 9 - Validate feature metadata before activating loaded records
+
+{{HARD}}
+- [ ] 9.1 Map the live chunk-loading/AfterLoad sequence and insert profile/map metadata validation before new feature code depends on it. Respect existing chunk order and pointer-fixup phases rather than calling runtime APIs on unresolved IDs.
+- [ ] 9.2 Bound each new pool/array/shape/inventory length and validate raw numeric coordinates, enums and counters before allocation/use. Reject missing required content and impossible layer/feature combinations.
+- [ ] 9.3 Use the loader existing failure cleanup/error path for an invalid in-progress world. Do not resume gameplay with partially validated records or promise restoration of the previous running world unless the loader actually supports it.
+
+### Group 10 - Resolve references and unique inventory ownership
+
+{{HARD}}
+- [ ] 10.1 After all required objects load, resolve deposit/job, TBM/set/head and center/mission/module references through typed public validators. Check saved incarnation/deletion policy against pool ID reuse.
+- [ ] 10.2 Implement new fixup handlers for the loader Null action too: partial-load cleanup must not dereference absent pools or replay normal reference validation on uninitialized records.
+- [ ] 10.3 Construct a temporary ownership audit for each packet/inventory reservation: exactly one authoritative container owns the quantity and capacity reservations do not duplicate it.
+- [ ] 10.4 Validate consist links, attachment leases, module dependencies and job references for duplicate ownership, invalid IDs and forbidden cycles. Reject or apply only the documented legacy repair; do not silently drop cargo.
+- [ ] 10.5 Test one corrupt reference class at a time, including two heads claiming a wagon and two jobs claiming an input packet.
+
+### Group 11 - Rebuild only derived caches after validation
+
+{{HARD}}
+- [ ] 11.1 Rebuild geology/spatial buckets, path/approach reservations and utility connectivity from validated authoritative fields in stable order.
+- [ ] 11.2 Verify cache reconstruction cannot change cargo, reserves, consumed milestones or source generation totals. Saved active grants/leases remain authority where their contract says so.
+- [ ] 11.3 Run one next-tick comparison per feature family after reload and a repeat load; pointer layout, render state and hash insertion order cannot change decisions.
+
+### Group 12 - Feature persistence integration
+
+{{MEDIUM}}
+- [ ] 12.1 Verify estimate/execute semantics for portal construction, excavation, wagon swaps, launch/deployment, construction consumption and mirror assignment. Failed estimates or retries cannot consume RNG, inventory or funds.
+- [ ] 12.2 Verify saves during TBM cuts, straddling consists, queue waits, probe attachment, ascent/descent, partial modules and partial solar periods resume at the same simulation result.
+
+### Group 13 - Round-trip ground geometry and real wagon ownership
+
+{{HARD}}
+- [ ] 13.1 Save during a TBM 45-degree bend/partial pass, a full-wagon pause and a spanning-layer hauler. Compare heading, route cursor, support, actual wagon IDs and Earth/Rock quantities.
+- [ ] 13.2 Verify loaded failure/cancellation states preserve supported retreat and the required Surface origin cycle. Include these fields in the canonical digest.
+- [ ] 13.3 After tube delivery, round-trip all five capsule models with layer-local routes, power/service state and interchange cargo; retain the conventional mandatory spoil leg.
+
+### Group 14 - Round-trip descent, handling and energy ownership
+
+{{HARD}}
+- [ ] 14.1 Save off-center at the 20-tile drop boundary and during Surface handling with a pending member change. Verify release position, target incarnation, packet age/provenance and capacity reservations.
+- [ ] 14.2 After geothermal delivery, save shared heat allocation, electrical export and direct-processing inputs/remainders. Compare one owner per thermal/electric unit and no second grid credit.
+- [ ] 14.3 Compare normalized hashes and next-step ledgers for each independent delivered family. Full combined round-trip closure waits for every producer; a missing late family does not invalidate independent evidence.
+
+### Area Mandatory Reading - Entity lifecycle and multiplayer
+
+_Applies to Groups 15-22._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_state.h`: `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 15-22. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/network/network_server.cpp](../../../../src/network/network_server.cpp) | 670-687 | `ServerNetworkGameSocketHandler::SendSync` compares RNG seeds, not a full gameplay checksum; validate orbital/geology/cargo ledgers in addition to a no-desync result. |
+| [src/timer/timer_game_calendar.h](../../../../src/timer/timer_game_calendar.h) | 15-39 | `TimerGameCalendar` technology-clock contract and date conversions govern 1980/model/factory introductions; economic/realtime scheduling cannot unlock a technology. |
+| [src/tests/map_layer.cpp](../../../../src/tests/map_layer.cpp) | 293-322 | Complete Deep initialization test checks fence/terrain and unchanged RNG; new geology must preserve feature-disabled behavior. |
+| `src/multilayer_state.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [src/network/network_client.cpp](../../../../src/network/network_client.cpp) | 847-909 | Complete `ReceiveServerMapDone` loads the actual joining snapshot; real join evidence must include post-load and subsequent matching-frame digests. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Digest discipline.** Compare explicit serialized-style fields in a canonical stable order, not raw struct memory or only network RNG seeds. Keep failure fixtures narrow first, then combine them. A lifecycle policy row is complete only with an implemented hook and a test showing the post-event resource owner.
+
+### Group 15 - Define lifecycle policy by reference family
+
+{{HARD}}
+- [ ] 15.1 For ground references, table sale/removal/cancellation/takeover effects on deposits, jobs, TBMs, wagon sets, bays and Surface origin stations. State refusal versus evacuation, fields changed and cargo owner after each event.
+- [ ] 15.2 For orbital references, table center/body/module/farm/mirror/vehicle loss and ID reuse; specify reservation release and recoverable mission state before generic destructors truncate inventory.
+- [ ] 15.3 For tube/utility references, table depot/interchange/power-link loss, vent claim changes and accounting grant cancellation. Distinguish derived disconnected networks from saved consumed resources.
+- [ ] 15.4 Require each feature owner to implement/test its table rows via public lifecycle hooks. This audit records missing coverage instead of duplicating private repair code.
+
+### Group 16 - Entity lifecycle and multiplayer
+
+{{MEDIUM}}
+- [ ] 16.1 Exercise lost origin station, destroyed/removed exchange bay, mine depletion, launch center removal, asteroid deletion, module dependency removal and solar-farm replacement. No stale ID can silently bind to a newly allocated object.
+- [ ] 16.2 Run host/client identical-command scenarios with different selected layers/viewports and rendering settings.
+
+### Group 17 - Compare complete host and client simulation traces
+
+{{HARD}}
+- [ ] 17.1 Run underground and orbital loops on a real host/client pair with identical commands and different selected layers/render settings. Collect canonical feature digests at agreed simulation ticks.
+- [ ] 17.2 On divergence, narrow to the first feature/field mismatch and reproduce the responsible command/transition. RNG-only sync success is insufficient evidence for new inventories and positions.
+- [ ] 17.3 Retain host/client logs, content hashes, seeds and normalized ledger outputs for the acceptance owner.
+
+### Group 18 - Join while independent feature jobs are active
+
+{{HARD}}
+- [ ] 18.1 Prepare a host snapshot with active excavation and wagon waiting, then join a fresh client and compare reconstructed references, next-tick state and subsequent digests.
+- [ ] 18.2 Repeat with probe mining, cargo descent and partial module assembly; then add delivered tube/geothermal jobs. Keep each subscenario independent so a failure has a bounded state surface.
+- [ ] 18.3 Run the final combined join after all families pass independently. Single-player replay is useful diagnosis but cannot substitute for actual snapshot transfer and join.
+
+### Group 19 - Entity lifecycle and multiplayer
+
+{{MEDIUM}}
+- [ ] 19.1 Verify the joining snapshot and subsequent hashes; single-player command replay is not a substitute for join testing.
+- [ ] 19.2 Check dedicated/headless play, pause/speed changes, supported economy time modes and bounded updates. GUI-less worlds must progress identically.
+
+### Group 20 - Stress launch collection lifecycle with queued work
+
+{{HARD}}
+- [ ] 20.1 Replay member extension beyond range, unlink, station deletion and ownership changes while handling/descent is active, including overlapping launch zones.
+- [ ] 20.2 Compare retained packet owners, reservations and explicit target selection after every command/retry; no deleted/reused station inherits a mission.
+- [ ] 20.3 Test the exact 20-tile boundary with moved craft and reordered queued commands; execution uses current validated position.
+
+### Group 21 - Stress tube and geothermal lifecycle across technology dates
+
+{{HARD}}
+- [ ] 21.1 Remove tube power/depot/interchange support through allowed/refused commands and verify cargo recovery plus deterministic network invalidation.
+- [ ] 21.2 Exercise vent claim reuse and broken electrical risers during allocation/direct-processing; preserve already consumed heat and cancel only uncommitted grants.
+- [ ] 21.3 Replay immediately before/on 1980 and later model/factory introductions in calendar time. Changing economic speed or retrying commands cannot bypass availability, TBM turn or heat-capacity rules.
+
+### Group 22 - Entity lifecycle and multiplayer
+
+{{SIMPLE}}
+- [ ] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
+- [ ] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+
+## Consult on Demand
+
+| Trigger | File name | Start at | Expand only when | Consultation purpose |
+| --- | --- | --- | --- | --- |
+| A new chunk loads valid values but references remain invalid | [../../architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | `AfterLoadGame` | The feature-owned descriptor and pointer-fixup pass cannot explain the failure | Trace repair ordering and derived-cache rebuild; the architecture does not permit silently accepting malformed canonical state. |
+| A required public export is absent and its owner/location is disputed | [r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | `Requirements and ownership` and `Plan Index` | The named producer confirms an intentional contract/ownership change | Find the responsible producer and reconcile its public handoff with direct consumers; the hub cannot substitute for missing implementation. |
+| Current behavior contradicts a historical subsystem description | [../../architecture/map-layers/archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md) | `Invariants` and the relevant named source in `Code map` | The live symbol and executable test do not explain the difference | Locate layer addressing or lifecycle rationale. Live code/tests govern delivered behavior; this architecture page does not prove future interfaces exist. |
+
+## Planning Provenance
+
+This is not an execution reading queue. Do not preload it after context compaction. It is non-transitive; ranges record planning use, not runtime authority.
+
+| File name | Sections or Line Ranges used while planning | Planning contribution |
+| --- | --- | --- |
+| [docs/zz-reach2/architecture/initial-inventory.md](../../architecture/initial-inventory.md) | 185-220 | `Command as the only world mutation`, `Pool-indexed game objects`, `Tile map as a packed array` and `File-suffix modules` oriented command/pool/header ownership and source registration. This historical inventory is a location survey, not authority for current layer behavior. |
+| [docs/zz-reach2/architecture/@archi-ttd-level0.md](../../architecture/@archi-ttd-level0.md) | 24-63 | `How the program fits together` and `Source and runtime boundaries` located shared simulation, data/presentation, CMake targets and subsystem handoffs used to choose the live reading sources. |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 119-140 | `Requirements and ownership` assigned this plan's feature responsibilities; it shaped the decomposition without making every sibling plan a mandatory reading dependency. |
+| [src/saveload/saveload.h](../../../../src/saveload/saveload.h) | 447-518 | The inspected live boundary helped separate characterization, public-contract production, implementation and acceptance batches. It materially constrained feature-owned serialization, old-save compatibility and deterministic lifecycle repair; this entry records planning influence rather than an additional reading obligation. |
+| [User planning-format instructions](<C:/Users/Axonn/.codex/attachments/cd59b20a-3a96-4d54-b4bd-1e8f37639e7d/Pasted text.txt>) | `Global Mandatory Reading`, `Area Mandatory Reading`, `Consult on Demand`, `Planning Provenance`, `Final validation` | Supplies the exact protocol, chronological difficulty batches of at most eight tasks, reading gates and validation format. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | 2366-2400; 3202-3298 | Deeper planning pass, 2026-10-04: Actual load/fixup ordering and failure cleanup constrained phased validation without promising world rollback. |
+
+## Completion Conditions
 
 Every long-running activity has tested authoritative persistence and safe reference lifecycle. Old supported worlds keep working with their original economy. Multiplayer replay and mid-activity joins agree across views, and no save/reference/action failure creates duplicate cargo, mineral reserves, wagons or power.
