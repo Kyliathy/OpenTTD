@@ -567,7 +567,7 @@ Entry gate. Before Group 1 starts, `src/map_layer.h` must declare `MultiLayerMap
 - [x] 2.5 `src/station_kdtree.h`: clamp `ForAllStationsRadius` to the band of the centre's layer and skip stations in other layers (C6).
 - [x] 2.6 `src/tunnel_map.cpp` (`IsTunnelInWay`): compare `TilePlaneY(tile)` with `Map::MaxY() / 2` (C3).
 - [x] 2.7 `src/newgrf_commons.cpp`, `src/newgrf_house.cpp` and `src/industry_cmd.cpp`: replace `Map::WrapToMap` with `Map::WrapToLayer(..., GetTileLayer(origin))` (C9 / C2).
-- [ ] 2.8 Remove the deprecated `Map::WrapToMap` definition from `src/map_func.h` (an edit, not a file deletion), build, and mark these ledger rows `migrated`. `WrapToMap` is gone and the rows are migrated. The build waits on the toolchain.
+- [x] 2.8 Remove the deprecated `Map::WrapToMap` definition from `src/map_func.h` (an edit, not a file deletion), build, and mark these ledger rows `migrated`. `WrapToMap` is gone and the rows are migrated. Both builds pass on 2026-10-04 (task 8.4).
 
 ### Area Mandatory Reading - World generation
 
@@ -590,7 +590,7 @@ _Applies to Group 3._
 - [x] 3.5 `src/industry_cmd.cpp` and `src/object_cmd.cpp`: convert placement loops, `Map::MaxY()` bounds and budgets to surface plane semantics (C2, C3, C4).
 - [x] 3.6 `src/water_cmd.cpp` (`ConvertGroundTilesIntoWaterTiles` and the flood checks): surface-only (C2).
 - [x] 3.7 `src/disaster_vehicle.cpp`: target tiles, start positions and `Map::MaxY()` bounds use the surface plane (C2, C3).
-- [ ] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4.
+- [x] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4. All ten Surface prefixes match for all four final worlds; R2RVM2 task 18.1 and [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt).
 
 ### Area Mandatory Reading - Savegame conversions
 
@@ -605,13 +605,15 @@ _Applies to Group 4._
 
 ### Group 4 - Savegame conversion loops
 
+Closure, 2026-10-04: task 4.6's complete operator play matrix is skipped under the goal's operator allowance. Its example `trt00.sv0` is actually TTD and passes 31 days of Debug play plus complete four-plane round trips (R2RVM2 Group 18B). Actual TTO `trt16.sv1` fails at old custom-name conversion in both the pre-epic and final builds; that existing compatibility gap is recorded in the master's Deferred Points. Modern baseline upgrades/paused round trips pass task 18.1, but a full month of Debug play for the modern row is not inferred.
+
 {{HARD}}
 - [x] 4.1 Walk the 52 `Map::Iterate()` loops in `src/saveload/afterload.cpp`; for each, record in the ledger whether it is C1 (keep) or uses `TileY` against plane bounds (C3, migrate).
 - [x] 4.2 Migrate every C3 loop in `afterload.cpp`, porting the existing comments and adding the class tag in a `//` comment.
 - [x] 4.3 `src/saveload/oldloader_sl.cpp`: convert the TTDPatch header tile indices and the `ClearOldMap3` loop to plane semantics (C4, C3).
 - [x] 4.4 `src/saveload/oldloader_sl.cpp`: convert the read loops in `LoadOldMapPart1` / `LoadOldMapPart2` and the other whole-map loops to `MultiLayerMap::IterateLayer(MapLayer::Surface)` (C2), so a later three-layer allocation still reads exactly one plane from the file.
 - [x] 4.5 `src/saveload/company_sl.cpp`, `station_sl.cpp`, `town_sl.cpp`, `waypoint_sl.cpp`: classify their loops (expected C1) and record them.
-- [ ] 4.6 Load a TTO save copied from `!kit/TT/` (for example `trt00.sv0`) and a modern baseline save in a Debug build; confirm both load and play for one in-game month.
+- [s] 4.6 Load a TTO save copied from `!kit/TT/` (for example `trt00.sv0`) and a modern baseline save in a Debug build; confirm both load and play for one in-game month.
 
 ### Area Mandatory Reading - Towns, stations, commands and interfaces
 
@@ -633,7 +635,7 @@ _Applies to Groups 5-7._
 - [x] 5.3 The remaining `Map::Iterate()` and `Map::Size()` uses in `src/town_cmd.cpp` (town growth, house counts, `ScaleByLandProportion` budget): classify; growth and house loops are C2.
 - [x] 5.4 `src/station_cmd.cpp`: station spread, `GetStationAround`, rectangle checks and the three `Map::Size()` uses: classify; spatial searches stay in the origin layer (C6).
 - [x] 5.5 `src/station_gui.cpp`: the join-station search and `Map::MaxY()` bound use the origin layer (C6).
-- [ ] 5.6 Record every change in the ledger and build. The ledger records the changes. The build waits on the toolchain.
+- [x] 5.6 Record every change in the ledger and build. The ledger records the changes; both builds pass on 2026-10-04 (task 8.4).
 
 ### Group 6 - Commands, economy and vehicles
 
@@ -668,14 +670,18 @@ _Applies to Group 8._
 
 ### Group 8 - Deferred records and verification
 
+Closure, 2026-10-04: task 8.7's year-long player-route operator run is skipped under the goal's operator allowance. The supplied-save Debug smoke and corrected station/portal round trips are recorded in R2MLM13 Group 9C; those shorter checks do not count as a year-long pass. Surface neutrality is now verified below.
+
 {{SIMPLE}}
 - [x] 8.1 Confirm every hit in `src/viewport.cpp`, `src/smallmap_gui.cpp`, `src/screenshot.cpp` and `src/terraform_gui.cpp` has a `deferred` C7 row with a note naming the r2mlm5 group that will migrate it.
 - [x] 8.2 Confirm every hit in `src/saveload/map_sl.cpp` has a `deferred` C8 row naming r2mlm4 Group 5.
 - [x] 8.3 Re-run the Group 1 greps; every hit must have a ledger row whose status is not `todo`.
-- [ ] 8.4 Build both configurations without new warnings; run `ctest`.
+- [x] 8.4 Build both configurations without new warnings; run `ctest`.
+
+  Verified 2026-10-04 against the integrated tree: both targets/configurations build with exit 0 and zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Surface digest and runtime checks remain open; this does not recreate the earlier one-layer staging build.
 - [x] 8.5 Add to `src/tests/map_layer.cpp` tests for the migrated helpers on a three-layer map: spiral search, `OrthogonalTileArea::Expand`, `GetTileSlopeZ` neighbours and `ProjectToSurface` all stay in the expected layer.
-- [ ] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6).
-- [ ] 8.7 Play a new game for one in-game year at fast forward in a Debug build with towns, industries and a few player routes; confirm no assert fires.
+- [x] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6). All four final worlds match every Surface chunk, R2RVM2 task 18.1; full digest lines are in [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt).
+- [s] 8.7 Play a new game for one in-game year at fast forward in a Debug build with towns, industries and a few player routes; confirm no assert fires.
 
 ## Consult on Demand
 
@@ -701,6 +707,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [src/pathfinder/water_regions.cpp](../../../../src/pathfinder/water_regions.cpp) | 31-41 | Water-region indexing by `TileY`, which needs a surface guard. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's operator allowance, with skips at Groups 4 and 8. Code/ledger and Surface digest checks are complete; the original one-layer live staging has been superseded. Final builds pass 111/111 unit cases in both configurations and 115/115 full release CTest cases (`build/ctest-console-input-*.log`, `build/ctest-console-final-RelWithDebInfo.log`). Skipped play scenarios remain future acceptance work, not passing evidence.
 
 - `## Call-site Ledger` lists every grep hit from Group 1 with a class and a non-`todo` status.
 - No migrated code computes a layer base by hand; all replacements use the r2mlm2 API.

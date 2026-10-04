@@ -11,12 +11,14 @@
 #define MAP_LAYER_GUI_H
 
 #include "map_layer_type.h"
+#include "direction_type.h"
 #include "gfx_type.h"
 #include "strings_type.h"
 #include "dropdown_type.h"
 
 struct Window;
 struct Vehicle;
+enum class LayerPortalKind : uint8_t;
 
 /**
  * Player-facing name of one map layer.
@@ -28,9 +30,18 @@ StringID GetMapLayerName(MapLayer layer);
 /**
  * Toolbar icon for one map layer.
  * @param layer Layer whose icon is needed.
- * @return Generated icon, with the Deep Underground stand-in until r2mlm13 Group 9.
+ * @return Generated toolbar icon.
  */
 SpriteID GetMapLayerIcon(MapLayer layer);
+
+/**
+ * Draw generated portal art in an orientation picker for the main view's Layer.
+ * @param x Tile north-corner X in the current GUI drawing region.
+ * @param y Tile north-corner Y in the current GUI drawing region.
+ * @param kind Kind of portal being placed.
+ * @param door Door direction selected by the preview button.
+ */
+void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door);
 
 /**
  * Layer that follows this one in GUI display order, skipping unallocated Layers.

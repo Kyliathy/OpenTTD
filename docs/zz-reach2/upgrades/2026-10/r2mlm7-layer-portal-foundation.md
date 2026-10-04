@@ -65,10 +65,10 @@ Left to the transport plans: placement GUI, vehicle controller relocation and vi
 - **Pair.** A portal is two tiles: `A` at plane (x, y) in layer `L` and `B = MultiLayerMap::TileInLayer(A, T)` in target layer `T`. [r2mlm12 D-3](r2mlm12-deep-underground-tunnels-and-elevators.md#d-3-three-portal-kinds-derived-and-never-stored) replaces numeric adjacency with `MultiLayerMap::IsPortalPairAllowed`: rail and road tunnels pair Surface with Underground; road elevators pair Deep Underground with Surface or Underground. Kind is derived from transport and layers, never stored.
 - **Directions.** `GetLayerPortalShaftDirection(A) = d` is the heading of a vehicle that goes down the shaft from `A`. `GetLayerPortalShaftDirection(B) = ReverseDiagDir(d)`. The door of each end faces the reverse of its shaft direction. So on the surface the door faces `ReverseDiagDir(d)`, underground it faces `d`.
 - **Neighbour mapping.** `GetLayerPortalNextTile(t, exitdir)` returns `GetLayerPortalPairTile(t)` when `t` is a portal and `exitdir == GetLayerPortalShaftDirection(t)`; otherwise `TileAddByDiagDir(t, exitdir)`. A vehicle heading `d` therefore passes `A - d`, `A`, `B`, `B + d` and keeps heading `d`.
-- **Relocation.** A vehicle that steps across the shaft edge of `A` is placed on the entry edge of `B` at the same in-tile offset across the axis: `TranslateIntoLayerPortalPair(A, x, y)` adds the layer offset `(T - L) * Map::SizeY() * TILE_SIZE` to `y` and moves the position back one tile along the heading. No wormhole state is used.
-- **Visibility.** On `A` a vehicle heading into the shaft is hidden when it reaches the door visibility frame; on `B` it is shown again when it passes the door frame heading out. Frames reuse `_tunnel_visibility_frame`.
+- **Relocation.** A vehicle that steps across the shaft edge of `A` is placed on the entry edge of `B` at the same in-tile offset across the axis: `TranslateIntoLayerPortalPair(A, x, y)` adds the layer offset `(T - L) * Map::SizeY() * TILE_SIZE` to `y` and moves the position back one tile along the heading. Ends may have different heights; entry through the pair's shaft skips the approach-height test, and the controller recalculates height at the destination. No wormhole state is used (FD-1).
+- **Visibility.** `IsHiddenInLayerPortal(shaft, x, y)` derives visibility from depth along the shaft, measured from the door edge, on every enter-tile call. At or beyond `_tunnel_visibility_frame[shaft]` the vehicle is hidden. This applies when entering, leaving, reversing or turning; heading alone never decides visibility (FD-3).
 - **Tile bits.** `m5` bits 1..0 shaft direction, bits 3..2 `TransportType` (Rail or Road), bit 4 rail reservation, bits 6..5 target layer (all values through Deep Underground, 3). `m1` bits 4..0 owner. Rail: `m8` bits 5..0 rail type. Road: `m4` bits 5..0 road type, `m7` bits 4..0 road owner, `m8` bits 11..6 tram type (always `INVALID_ROADTYPE` in version 1). These positions mirror tunnel tiles so the existing rail-type and road-type accessors work unchanged.
-- **Track and road bits.** An end offers the axis track (or axis road) in both directions. Only the door side connects to a neighbour for building and drawing purposes.
+- **Track and road bits.** An end offers its axis track (or axis road) to a door-side or direction-unspecified track-status query. A shaft-side query returns no connection to a plain neighbour. A controller crossing from the pair explicitly queries the destination without a direction; followers use `GetLayerPortalNextTile` for the shaft step. Building and drawing connect only through the door (FD-4).
 - **Command.** `CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportType transport_type, MapLayer target_layer, DiagDirection shaft_dir, RailType railtype, RoadType roadtype)` builds both ends or fails without side effects. Removing either end removes both.
 
 ## Tile-type Switch Ledger
@@ -119,7 +119,7 @@ Entry gate. `src/map_layer.h` must export `MultiLayerMap::TileInLayer`, `MapLaye
 - [x] 1.4 Implement `GetLayerPortalPairTile` with `MultiLayerMap::TileInLayer` and a Debug assert that the pair is a portal with the reversed shaft direction (I-8).
 - [x] 1.5 Implement `HasLayerPortalReservation`, `SetLayerPortalReservation` and `GetLayerPortalReservationTrackBits`, asserting the rail transport type.
 - [x] 1.6 Implement `MakeRailLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RailType rt)` and `MakeRoadLayerPortal(Tile t, Owner o, DiagDirection shaft_dir, MapLayer target, RoadType road_rt)`, initialising every byte as the tunnel constructors do.
-- [ ] 1.7 Register `layer_portal_map.h` in `src/CMakeLists.txt` and build.
+- [x] 1.7 Register `layer_portal_map.h` in `src/CMakeLists.txt` and build. Registration confirmed; both builds pass (task 8.5).
 
 ### Area Mandatory Reading - Tile procs
 
@@ -144,7 +144,7 @@ _Applies to Group 2._
 - [x] 2.5 Implement `ChangeTileOwner_LayerPortal` updating both ends and the infrastructure counts (see Group 7 for the factor).
 - [x] 2.6 Implement the terraform proc and the build-above proc as refusals (`STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST`), and the foundation proc as none.
 - [x] 2.7 Implement `VehicleEnterTile_LayerPortal` with the generic visibility rule of the contract: compute the frame like `VehicleEnterTile_TunnelBridge`, hide on the shaft-bound door frame, show on the door-bound frame, return `{}` otherwise; leave vehicle-type specifics to r2mlm8 and r2mlm9.
-- [ ] 2.8 Build both configurations; confirm `ctest` still passes.
+- [x] 2.8 Build both configurations; confirm `ctest` still passes. Verified 2026-10-04, 110/110 in each configuration (task 8.5).
 
 ### Area Mandatory Reading - Neighbour contract and follower
 
@@ -214,7 +214,7 @@ _Applies to Group 5._
 - [x] 5.5 `src/smallmap_gui.cpp`: give slot 11 an importance and draw portals in the rail or road colour of the routes and owners map types.
 - [x] 5.6 `src/saveload/company_sl.cpp`: count portal ends in `AfterLoadCompanyStats`; `src/saveload/afterload.cpp` and `oldloader_sl.cpp` cases: confirm portals cannot exist in files before `SaveLoadVersion::MapLayers` and add a Debug assert.
 - [x] 5.7 Grep for remaining `switch (GetTileType(` statements with a `default: NOT_REACHED()`; add a portal case to each one reachable for a portal tile and record it in the ledger.
-- [ ] 5.8 Mark every ledger row done and build.
+- [x] 5.8 Mark every ledger row done and build. Every switch-ledger row is marked `yes`; both builds pass (task 8.5).
 
 ### Area Mandatory Reading - Build and remove command
 
@@ -243,12 +243,14 @@ _Applies to Groups 6-7._
 
 ### Group 7 - Removal, ownership and infrastructure
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The build/removal/owner-change infrastructure-window comparison is skipped. No complete ownership/runtime counter pass is inferred from code or unit checks. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
 - [x] 7.1 Define `LAYER_PORTAL_TRACKBIT_FACTOR` (1 rail piece per rail end, 2 road pieces per road end, matching depots) with a comment.
 - [x] 7.2 Implement `ClearTile_LayerPortal`: refuse with `DoCommandFlag::Auto`, check ownership, `EnsureNoVehicleOnGround` on both ends, refuse a reserved rail portal, then clear both ends with `DoClearSquare`, update infrastructure and refund `_price[Price::ClearTunnel] * 4`.
 - [x] 7.3 For rail ends, add both sides to the signal buffer and call `YapfNotifyTrackLayoutChange` on removal.
 - [x] 7.4 Confirm `ChangeTileOwner_LayerPortal` handles company bankruptcy and merging (both ends move together or both are removed).
-- [ ] 7.5 Confirm `AfterLoadCompanyStats` and the live counters agree after build, removal and owner change (compare the infrastructure window before and after a save and load).
+- [s] 7.5 Confirm `AfterLoadCompanyStats` and the live counters agree after build, removal and owner change (compare the infrastructure window before and after a save and load).
 
 ### Area Mandatory Reading - Pathfinder settings and verification
 
@@ -262,12 +264,16 @@ _Applies to Group 8._
 
 ### Group 8 - Pathfinder penalty settings and verification
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The advanced-settings-window operator check is skipped. Both settings and generated help strings are delivered and built; window visibility is not claimed from a build. Each skipped row is marked `[s]`, never a passing test.
+
 {{SIMPLE}}
 - [x] 8.1 Add `rail_layer_portal_penalty` and `road_layer_portal_penalty` to `YAPFSettings` with `///<` comments.
 - [x] 8.2 Add both `[SDT_VAR]` entries with `from = SaveLoadVersion::MapLayers`, default `4 * YAPF_TILE_LENGTH`, range 0 to 1000000, `cat = SC_EXPERT`, and their help strings.
-- [ ] 8.3 Build and confirm both appear in the advanced settings window under pathfinding.
+- [s] 8.3 Build and confirm both appear in the advanced settings window under pathfinding.
 - [x] 8.4 Add accessor round-trip tests for both `Make*LayerPortal` functions and an I-8 test that a pair built by the same code as `CmdBuildLayerPortal`'s execute step has reversed shaft directions.
-- [ ] 8.5 Build both configurations without new warnings; run `ctest`.
+- [x] 8.5 Build both configurations without new warnings; run `ctest`.
+
+  Verified 2026-10-04: both targets/configurations build with exit 0, zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Infrastructure agreement and settings-window checks remain runtime tasks, not inferred from these unit results.
 - [x] 8.6 Grep that no code outside `src/layer_portal_*` and `src/pathfinder/follow_track.hpp` calls `GetLayerPortalPairTile` for movement (I-3); signal and reservation code may call `GetLayerPortalNextTile`.
 - [x] 8.7 Confirm the `## Tile-type Switch Ledger` has no open row.
 
@@ -295,6 +301,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [docs/zz-reach2/architecture/pathfinder/archi-pathfinder.md](../../architecture/pathfinder/archi-pathfinder.md) | 178-246 | Heuristic consistency requirement behind task 3.6. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 with the operator skips recorded in each affected group above. Coding and automated checks are delivered: zero compiler warnings, 111/111 unit cases in both configurations and 115/115 full release CTest cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`, `build/ctest-console-final-RelWithDebInfo.log`). The original full runtime criteria below remain future validation criteria; closure under the goal allowance does not mean skipped scenarios passed.
 
 - `TileType::LayerPortal` exists with a complete proc table, and every reachable tile-type switch handles it.
 - `CmdBuildLayerPortal` builds and removes pairs atomically with correct costs, ownership and infrastructure.

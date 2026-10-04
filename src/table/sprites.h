@@ -6,7 +6,7 @@
  */
 
 /**
- * @file sprites.h This file contains all sprite-related enums and defines.
+ * @file sprites.h This file contains all sprite-related enums and defines. @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  *
  * These consist mainly of the sprite numbers and a bunch of masks and macros
  * to handle sprites and to get rid of all the magic numbers in the code.
@@ -380,9 +380,10 @@ static const SpriteID SPR_BRIDGE_DECKS_ROAD = SPR_BRIDGE_DECKS_BASE + 18;
 /** @{
  * Map Layer sprites, in the stable Action 5 type 0x1C contract order.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  */
 static constexpr SpriteID SPR_MAP_LAYER_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT; ///< First Map Layer sprite.
-static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = 44; ///< Sprites in the original Map Layer graphics contract.
+static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = 66; ///< Original 44 sprites plus Deep Underground and road tunnel art.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SURFACE = SPR_MAP_LAYER_BASE + 0; ///< Surface toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_UNDERGROUND = SPR_MAP_LAYER_BASE + 1; ///< Underground toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SPACE = SPR_MAP_LAYER_BASE + 2; ///< Space toolbar icon.
@@ -396,6 +397,12 @@ static constexpr SpriteID SPR_MAP_LAYER_ROAD_ELEVATOR_SURFACE = SPR_MAP_LAYER_BA
 static constexpr SpriteID SPR_MAP_LAYER_ROAD_ELEVATOR_UNDERGROUND = SPR_MAP_LAYER_BASE + 20; ///< Underground elevator back/front pairs in NE, SE, SW, NW order.
 static constexpr SpriteID SPR_MAP_LAYER_RAIL_PORTAL_SURFACE = SPR_MAP_LAYER_BASE + 28; ///< Surface rail portal back/front pairs in NE, SE, SW, NW order.
 static constexpr SpriteID SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND = SPR_MAP_LAYER_BASE + 36; ///< Underground rail portal back/front pairs in NE, SE, SW, NW order.
+static constexpr SpriteID SPR_IMG_MAP_LAYER_DEEP_UNDERGROUND = SPR_MAP_LAYER_BASE + 44; ///< Deep Underground toolbar icon.
+static constexpr SpriteID SPR_IMG_BUILD_ROAD_LAYER_TUNNEL = SPR_MAP_LAYER_BASE + 45; ///< Road Layer tunnel toolbar icon.
+static constexpr SpriteID SPR_CURSOR_ROAD_LAYER_TUNNEL = SPR_MAP_LAYER_BASE + 46; ///< Road Layer tunnel placement cursor.
+static constexpr SpriteID SPR_MAP_LAYER_DEEP_FLOOR = SPR_MAP_LAYER_BASE + 47; ///< Three Deep Underground basalt floor variants.
+static constexpr SpriteID SPR_MAP_LAYER_ROAD_TUNNEL_SURFACE = SPR_MAP_LAYER_BASE + 50; ///< Surface road tunnel, + door * 2 + part.
+static constexpr SpriteID SPR_MAP_LAYER_ROAD_TUNNEL_UNDERGROUND = SPR_MAP_LAYER_BASE + 58; ///< Underground road tunnel, + door * 2 + part.
 /** @} */
 
 /** From where can we start putting NewGRFs. */

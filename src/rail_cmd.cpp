@@ -1586,7 +1586,8 @@ CommandCost CmdRemoveSignalTrack(DoCommandFlags flags, TileIndex tile, TileIndex
 
 /**
  * Convert one rail type to the other. You can convert normal rail to
- * monorail/maglev easily or vice-versa.
+ * monorail/maglev easily or vice-versa. Layer portal ends convert as one pair,
+ * including both ends' infrastructure, reservations and affected trains.
  * @param flags operation to perform
  * @param tile end tile of rail conversion drag
  * @param area_start start tile of drag
@@ -1651,9 +1652,8 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 		std::vector<Train *> vehicles_affected;
 
-		/* Vehicle on the tile when not converting Rail <-> ElRail
-		 * Tunnels and bridges have special check later */
-		if (tt != TileType::TunnelBridge) {
+		//Tunnels, bridges and layer portals handle their whole pair below, before changing either end's rail type.
+		if (tt != TileType::TunnelBridge && tt != TileType::LayerPortal) {
 			if (!IsCompatibleRail(type, totype)) {
 				ret = IsPlainRailTile(cur_tile) ? EnsureNoTrainOnTrackBits(cur_tile, GetTrackBits(cur_tile)) : EnsureNoVehicleOnGround(cur_tile);
 				if (ret.Failed()) {
@@ -1801,11 +1801,16 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				}
 				if (flags.Test(DoCommandFlag::Execute)) {
 					Track track = DiagDirToDiagTrack(GetLayerPortalShaftDirection(cur_tile));
-					if (HasLayerPortalReservation(cur_tile)) {
-						Train *v = GetTrainForReservation(cur_tile, track);
-						if (v != nullptr && !HasPowerOnRail(v->railtypes, totype)) {
-							FreeTrainTrackReservation(v);
-							vehicles_affected.push_back(v);
+					//Either end may hold the reservation of a train that loses power on the new rail type.
+					for (TileIndex end : {cur_tile, endtile}) {
+						if (HasLayerPortalReservation(end)) {
+							Train *v = GetTrainForReservation(end, track);
+							//Losing power invalidates that train's path through the converted pair.
+							if (v != nullptr && !HasPowerOnRail(v->railtypes, totype)) {
+								FreeTrainTrackReservation(v);
+								vehicles_affected.push_back(v);
+								include(affected_trains, v->First());
+							}
 						}
 					}
 					uint num_pieces = GetLayerPortalPieceCount(TransportType::Rail) * 2;
@@ -1815,6 +1820,12 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 					DirtyCompanyInfrastructureWindows(c->index);
 					SetRailType(cur_tile, totype);
 					SetRailType(endtile, totype);
+					//L-13: trains standing on either end need the same power/speed refresh as trains on a tunnel.
+					for (TileIndex end : {cur_tile, endtile}) {
+						for (Vehicle *v : VehiclesOnTile(end)) {
+							if (v->type == VehicleType::Train) include(affected_trains, Train::From(v)->First());
+						}
+					}
 					MarkTileDirtyByTile(cur_tile);
 					MarkTileDirtyByTile(endtile);
 					YapfNotifyTrackLayoutChange(cur_tile, track);

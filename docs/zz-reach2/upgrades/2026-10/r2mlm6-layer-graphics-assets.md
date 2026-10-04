@@ -73,7 +73,7 @@ All sprites are 8bpp, DOS palette, index 0 transparent, zoom `normal`. Direction
 | 28-35 | `SPR_MAP_LAYER_RAIL_PORTAL_SURFACE` (+dir * 2 + part) | 64 x 48, 64 x 48 | -31, -17 | Surface descent portal: track ramp into a tunnel mouth, mouth on `dir` |
 | 36-43 | `SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND` (+dir * 2 + part) | 64 x 48, 64 x 48 | -31, -17 | Underground emergence portal: lit tunnel mouth in rock, mouth on `dir` |
 
-`part` is 0 for back and 1 for front. `MAP_LAYER_SPRITE_COUNT = 44`. Sizes are upper bounds; the quantise script crops transparent margins and adjusts `rel x` / `rel y` so the anchor stays at the tile's north corner.
+`part` is 0 for back and 1 for front. The original contract had `MAP_LAYER_SPRITE_COUNT = 44`; the live count is now 66. Sizes are upper bounds; the quantise script crops transparent margins and adjusts `rel x` / `rel y` so the anchor stays at the tile's north corner. r2mlm13 extends this contract to offset 65 and extends the tools of Groups 2 and 5; see its `## Sprite Contract Extension` and its Group 2.
 
 ## Implementation Tasks
 
@@ -144,7 +144,9 @@ _Applies to Groups 3-4._
 - [x] 3.2 Generate the two build-toolbar icons and two cursors (offsets 3 to 6) in the same way.
 - [x] 3.3 Generate the bedrock floor (offsets 7 to 9) as one 3-variant sheet on the tile-diamond guide.
 - [x] 3.4 Generate the vacuum floor (offsets 10 to 11) as one 2-variant sheet.
-- [ ] 3.5 Review every image at game size (downscale preview with the quantise script in dry-run mode once Group 5 exists, or a plain Pillow resize now); regenerate any icon that is unreadable at 20 x 20.
+- [x] 3.5 Review every image at game size (downscale preview with the quantise script in dry-run mode once Group 5 exists, or a plain Pillow resize now); regenerate any icon that is unreadable at 20 x 20.
+
+  Offline review completed 2026-10-04 against the actual quantised manifest: the selected Space/elevator `_v2` icons resolve the first-pass readability problems, and both cursors use the tool picture. The four-layer 1x/4x comparison is `r2mlm13-c-compare-44.png`; the retained-original-set board is `r2mlm13-d-replaced.png`. Original floors were viewed at contract size and 4x. This closes the downscale review, not the separate in-game art checks.
 - [x] 3.6 Record every prompt, the reference images used and the chosen output file under this task, so the art can be regenerated.
 
 Raw files are in `docs/zz-reach2/upgrades/2026-10/assets/raw/`. GenerateImage wrote JPEG; each file was copied to PNG there. The shared prompt is the Group 2 template. Chosen files:
@@ -161,9 +163,11 @@ Raw files are in `docs/zz-reach2/upgrades/2026-10/assets/raw/`. GenerateImage wr
 | 7-9 | `underground_floor_sheet.png` | `guide_ground.png` |
 | 10-11 | `space_floor_sheet.png` | `guide_ground.png` |
 
-A 4x quantise of the icons is `docs/zz-reach2/upgrades/2026-10/assets/icon_preview.png`. The rail cursor came back as a mouse pointer, and the space and elevator icons shrink below a readable 20 x 20, so task 3.5 stays open.
+A first-pass 4x quantise of the icons is `docs/zz-reach2/upgrades/2026-10/assets/icon_preview.png`. At that stage the rail cursor came back as a mouse pointer, and the Space and elevator icons were unreadable at 20 x 20. The selected replacements in the Group 3 introduction supersede those first-pass files; task 3.5 now records the completed offline review.
 
 ### Group 4 - AI generation: elevators and portals
+
+Closure, 2026-10-04: task 4.7's complete native-tile/vehicle-gap visual operator check is skipped under the goal's allowance. All sixteen directional pairs are generated and integrated. R2MLM13 Groups 9B/9C repair their fronts and record actual supplied-save captures, but the save lacks some elevator orientations, so no complete native-composite matrix pass is inferred. Raw attempts and chosen prompts remain retained.
 
 2026-10-03: all sixteen directional pairs are generated as aligned two-panel assets, supplying 32 separate contract sprites. Selected files are `assets/raw/<family>_<direction>_pair_v4.png`, where families are `elevator_surface`, `elevator_underground`, `rail_portal_surface` and `rail_portal_underground`, and directions are `ne`, `se`, `sw`, `nw`. The left/right source panels share their canvas and anchor. Exact prompts and guide paths: [assets/directional-prompts-v4.md](assets/directional-prompts-v4.md); guides are reproduced with `tools/make_portal_guides.py`. Each direction was generated independently to preserve top-left lighting. Earlier raw attempts are retained. Task 4.7 is pending the representative save and visual checks.
 
@@ -174,10 +178,10 @@ A 4x quantise of the icons is `docs/zz-reach2/upgrades/2026-10/assets/icon_previ
 - [x] 4.4 Generate the surface rail descent portal (track ramp into a tunnel mouth) for NE, back and front, using `tunnel_portals.png` as the scale reference.
 - [x] 4.5 Derive the other three surface portal directions as in task 4.2.
 - [x] 4.6 Generate the underground emergence portal (lit mouth in rock) for all four directions.
-- [ ] 4.7 Composite each back and front pair over a road tile and a rail tile at game size and confirm a vehicle-sized gap exists between them; regenerate pairs that overlap wrongly.
+- [s] 4.7 Composite each back and front pair over a road tile and a rail tile at game size and confirm a vehicle-sized gap exists between them; regenerate pairs that overlap wrongly.
 - [x] 4.8 Record prompts and chosen files under this task.
 
-Only the northeast surface pair is staged. Both used the Group 2 template plus the named subject.
+Early draft, before the sixteen `_pair_v4` sets recorded above: only the northeast Surface pair was staged. Both used the Group 2 template plus the named subject.
 
 | File | Reference |
 | --- | --- |
@@ -186,7 +190,7 @@ Only the northeast surface pair is staged. Both used the Group 2 template plus t
 | `rail_portal_surface_ne_back.png` | `guide_portal.png`, `reference/tunnel_portal.png` |
 | `rail_portal_surface_ne_front.png` | `guide_portal.png`, `reference/tunnel_portal.png` |
 
-The back images still contain the front door or the whole portal, so the split is not usable yet. The other directions are not generated.
+Those early back images contained the front door or the whole portal, so that draft split was unusable and the other directions were not yet generated. The sixteen aligned `_pair_v4` sets in the current Group 4 record supersede this draft. Task 4.7's complete vehicle-gap operator check is explicitly skipped in the closure note above, with the supplied-save repairs/captures recorded separately.
 
 ### Area Mandatory Reading - Quantisation and GRF integration
 
@@ -219,8 +223,10 @@ _Applies to Groups 5-6._
 - [x] 6.2 Append `#include "map_layers.nfo"` to `openttd.nfo` after `bridge_decks.nfo`, and add `map_layers.nfo` and `map_layers.png` to `media/baseset/openttd/CMakeLists.txt`.
 - [x] 6.3 Append `/* 0x1C */ { Action5BlockType::AllowOffset, SPR_MAP_LAYER_BASE, 1, MAP_LAYER_SPRITE_COUNT, "Map layer graphics" },` to `_action5_types`.
 - [x] 6.4 In `src/table/sprites.h`, add the `SPR_MAP_LAYER_BASE` block after the bridge decks with `MAP_LAYER_SPRITE_COUNT` and every named constant from the contract, each with a `///<` comment, and change `SPR_NEWGRFS_BASE` to follow it.
-- [x] 6.5 Build; confirm `openttd.grf` and `openttd.grf.hash` are regenerated and that the build copies them into `build/baseset/`.
-- [ ] 6.6 Start the game and confirm no missing-extra-graphics warning and no "unimplemented Action 5 type" message in the `grf` debug output (`-d grf=2`).
+- [x] 6.5 Build; confirm `openttd.grf` and `openttd.grf.hash` are regenerated and that the build copies the GRF into `build/baseset/`. The source hash remains alongside the source GRF; the existing CMake pipeline does not copy `openttd.grf.hash` into the build folder.
+- [x] 6.6 Start the game and confirm no missing-extra-graphics warning and no "unimplemented Action 5 type" message in the `grf` debug output (`-d grf=2`).
+
+  2026-10-04: current Debug build loads `build/save/makinpr2.sav`. `build/makinpr2-review/game.log` reports offsets 0..65 of Action 5 type `0x1C` at SpriteID `0x188B`; no missing-extra-graphics dialog or unimplemented-type message. The unrelated original baseset message about loading shore sprites is expected fallback output.
 
 ### Area Mandatory Reading - Wiring and acceptance
 
@@ -234,11 +240,13 @@ _Applies to Group 7._
 
 ### Group 7 - Wiring and acceptance
 
+Closure, 2026-10-04: operator tasks 7.3 and 7.4 (sprite aligner, every GUI scale and both blitters) are skipped under the goal's allowance. The integrated 66-sprite set loads in Debug with all Action 5 offsets and no missing-extra-sprite warning; R2MLM13 records the actual game captures and remaining gallery gaps. Quantiser anchors, original 44-row replay and GRF hashes are verified, but are not substitutes for the skipped UI/blitter matrix or human art approval.
+
 {{SIMPLE}}
 - [x] 7.1 Unless r2mlm5 task 8.1 already did it, switch `GetMapLayerIcon` to `SPR_IMG_MAP_LAYER_SURFACE`, `_UNDERGROUND` and `_SPACE`, and switch the toolbar sprite rows from the stand-in.
 - [x] 7.2 Switch `GetLayerGroundSprite` to `SPR_MAP_LAYER_UNDERGROUND_FLOOR` and `SPR_MAP_LAYER_SPACE_FLOOR` with a `TileHash` variant pick (only if r2mlm5 Group 5 is done).
-- [ ] 7.3 Open the NewGRF sprite aligner (`-d grf` debug tools) on each new sprite and confirm offsets anchor at the tile's north corner; fix offsets in the manifest, not in the NFO by hand.
-- [ ] 7.4 Take screenshots of the toolbar at every GUI scale and of each ground layer, with the 8bpp and a 32bpp blitter, and link them under this task.
+- [s] 7.3 Open the NewGRF sprite aligner (`-d grf` debug tools) on each new sprite and confirm offsets anchor at the tile's north corner; fix offsets in the manifest, not in the NFO by hand.
+- [s] 7.4 Take screenshots of the toolbar at every GUI scale and of each ground layer, with the 8bpp and a 32bpp blitter, and link them under this task.
 - [x] 7.5 Add a note line under the Group 7 heading of r2mlm8 and of r2mlm9 stating that the elevator and portal constants are available, so those art-swap groups are unblocked.
 
 ## Consult on Demand
@@ -265,6 +273,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | Local environment check | Python 3.10 present, Pillow and GRF tools absent | Added the toolchain group and the entry gate. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's operator allowance, with explicit skips in Groups 4 and 7. Generated art, prompts, repeatable quantisation and GRF integration are delivered; R2MLM13 extends the live set to 66 and records the foreground repairs. The original 44-row replay remains byte-identical. Build/unit evidence is the final zero-warning builds, 111/111 cases in both configurations and 115/115 full release CTest cases. No human art approval or complete GUI-scale/blitter matrix pass is claimed.
 
 - `map_layers.png` and `map_layers.nfo` contain all 44 contract sprites in contract order, and `openttd.grf` was regenerated from them by GRFCodec.
 - `_action5_types` has the `0x1C` row and `src/table/sprites.h` defines every contract constant, with `SPR_NEWGRFS_BASE` after the block.

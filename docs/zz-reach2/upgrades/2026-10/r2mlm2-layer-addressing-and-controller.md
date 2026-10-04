@@ -84,7 +84,7 @@ Entry gate. `src/map_layer_type.h` must export `enum class MapLayer` and `MAX_MA
 - [x] 1.5 Add `Map::WrapToLayer(TileIndex tile, MapLayer layer)` returning the layer base plus `tile & plane_mask`; reimplement `Map::WrapToMap` as `WrapToLayer(tile, MapLayer::Surface)` and mark it `@deprecated` with a pointer to r2mlm3. The old `tile_mask` member is gone. It was the whole-map bit mask, and a three-layer size is not a power of two, so wrapping uses `plane_mask`. The `@deprecated` mark is the Javadoc tag only, so the three remaining callers do not warn before r2mlm3 moves them.
 - [x] 1.6 Make `RandomTileSeed` use `Map::WrapToLayer(TileIndex{r}, MapLayer::Surface)` and document that `RandomTile()` always yields a surface tile.
 - [x] 1.7 Make `Map::ScaleByLandProportion` divide by `plane_size`, and make `Map::CountLandTiles` count only the surface plane, with comments explaining that land is a surface concept.
-- [ ] 1.8 Change the debug `TileAdd` asserts to check the stacked Y bound and add `assert(GetTileLayer(result) == GetTileLayer(tile))`, so any offset arithmetic that crosses layers fails loudly in Debug builds (I-2, I-3). Build both configurations. The asserts are in the code. The build waits on the toolchain.
+- [x] 1.8 Change the debug `TileAdd` asserts to check the stacked Y bound and add `assert(GetTileLayer(result) == GetTileLayer(tile))`, so any offset arithmetic that crosses layers fails loudly in Debug builds (I-2, I-3). Build both configurations. Confirmed in `src/map.cpp`; both builds pass on 2026-10-04 (evidence under task 7.1).
 
 ### Group 2 - Plane-correct edge and wrap predicates
 
@@ -104,7 +104,7 @@ Entry gate. `src/map_layer_type.h` must export `enum class MapLayer` and `MAX_MA
 - [x] 3.1 Rewrite `DistanceManhattan`, `DistanceSquare`, `DistanceMax` and `DistanceMaxPlusManhattan` to use `TilePlaneY`.
 - [x] 3.2 Extend each Javadoc with one sentence stating the distance ignores the layer and why (portals are vertical; AD-5).
 - [x] 3.3 Add the same note to the declarations in `src/map_func.h`.
-- [ ] 3.4 Build both configurations and run the existing `tilearea` tests.
+- [x] 3.4 Build both configurations and run the existing `tilearea` tests. All existing `SpiralTileSequence` cases pass in both complete unit runs (task 7.1).
 
 ### Area Mandatory Reading - Controller and view wiring
 
@@ -129,11 +129,13 @@ _Applies to Groups 4-5._
 
 ### Group 5 - View cycling bound to the controller
 
+Closure, 2026-10-04: task 5.4's one-layer staging UI check is skipped under the goal's operator allowance; R2MLM4/R2MLM12 now create four-layer games. The one-layer allocation remains covered by the unit suite, and final controls are verified by R2MLM1 Group 7. No historical disabled-button UI pass is inferred.
+
 {{SIMPLE}}
 - [x] 5.1 Change `CycleMainViewportLayer` to wrap at `MultiLayerMap::GetLayerCount()` and update its comment (AD-7).
 - [x] 5.2 Make `SetViewportLayer` assert `MultiLayerMap::IsValidLayer(layer)` and fall back to `MapLayer::Surface` in release builds.
 - [x] 5.3 Disable `WID_TN_MAP_LAYER` and `WID_TE_MAP_LAYER` when `MultiLayerMap::GetLayerCount() == 1`, refreshed in the same `OnInvalidateData` that updates the icon, and add a disabled-state tooltip string `STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE :{BLACK}This game has only one map layer`.
-- [ ] 5.4 Build and confirm the button shows as disabled in a normal game (one layer, AD-11).
+- [s] 5.4 Build and confirm the button shows as disabled in a normal game (one layer, AD-11).
 
 ### Area Mandatory Reading - Tests and neutrality
 
@@ -160,9 +162,11 @@ _Applies to Groups 6-7._
 ### Group 7 - Behaviour neutrality
 
 {{SIMPLE}}
-- [ ] 7.1 Build both configurations with no new warnings; run `ctest` and confirm all baseline tests plus the new ones pass.
-- [ ] 7.2 Start, save and reload a new game in a Debug build; confirm no assert fires (the new `TileAdd` layer assert included).
-- [ ] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan.
+- [x] 7.1 Build both configurations with no new warnings; run `ctest` and confirm all baseline tests plus the new ones pass.
+
+  Verified 2026-10-04: `openttd` and `openttd_test` build in Debug and RelWithDebInfo, exit 0, zero distinct compiler warnings. Both configurations pass 110/110 unit cases, including layered addressing and `tilearea`: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. This validates the current integrated tree; the earlier one-layer staging scenario is superseded and is not claimed as a fresh runtime pass.
+- [x] 7.2 Start, save and reload a new game in a Debug build; confirm no assert fires (the new `TileAdd` layer assert included). R2MLM1 Group 7B records actual new-game saves/reloads from all three non-surface layers, normal exit and unchanged complete map chunks.
+- [x] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan. Final Surface prefixes match all ten baseline chunks for both seeds and both sizes; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt), R2RVM2 task 18.1. The final games contain four planes; no claim is made that their entire payload equals a one-plane file.
 
 ## Consult on Demand
 
@@ -186,6 +190,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [docs/zz-reach2/architecture/pathfinder/archi-pathfinder.md](../../architecture/pathfinder/archi-pathfinder.md) | 238 | The octile heuristic paragraph; one of the reasons distances are plane distances. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 with the explicit Group 5 operator skip. AD-11's one-layer live staging is superseded by R2MLM4/R2MLM12; the primitives, one-layer default allocation and Surface neutrality remain verified in the integrated build. Final builds pass 111/111 unit cases in both configurations and 115/115 full release CTest cases (`build/ctest-console-input-*.log`, `build/ctest-console-final-RelWithDebInfo.log`).
 
 - All symbols listed in `## Outcome and Boundaries` exist with Javadoc and the documented semantics.
 - `src/tests/map_layer.cpp` passes and covers I-1 to I-5 on a three-layer allocation.

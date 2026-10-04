@@ -113,6 +113,8 @@ _Applies to Group 3._
 
 ### Group 3 - Per-layer simulation
 
+Closure, 2026-10-04: task 3.7's framerate-window comparison is an operator measurement and is skipped under the goal's allowance. No timing number or memory/performance acceptance is inferred; the cost decision remains in the master's Deferred Points.
+
 {{HARD}}
 - [x] 3.1 Rewrite `RunTileLoop` to apply the same LFSR steps to every allocated plane by adding `MultiLayerMap::GetLayerBase(layer)`, including the separate tile-0 update per plane; keep one `_cur_tileloop_tile` (plane-local) and port every existing comment.
 - [x] 3.2 `TileLoop_Clear`: skip ambient sound, climate passes and growth when the layer has no climate.
@@ -120,7 +122,7 @@ _Applies to Group 3._
 - [x] 3.4 `TileLoop_Void`, `TileLoop_Water` and `DoFloodTile`: return early off the surface (`has_water_flow`).
 - [x] 3.5 `TileLoop_Station`: skip climate ground changes off the surface.
 - [x] 3.6 Add Debug asserts that `TileLoop_Trees`, the house tile loop and `TileLoop_Industry` only ever see surface tiles.
-- [ ] 3.7 Measure `PerformanceElement::GameLoopLandscape` with the framerate window on a 1024x1024 three-layer game before and after; record both numbers here.
+- [s] 3.7 Measure `PerformanceElement::GameLoopLandscape` with the framerate window on a 1024x1024 three-layer game before and after; record both numbers here.
 
 ### Area Mandatory Reading - Construction gating
 
@@ -190,7 +192,7 @@ _Applies to Group 5._
 - [x] 5.5 In `MAPSChunkHandler::LoadCheck`, fill a new `LoadCheckData::map_layers` member (default 1).
 - [x] 5.6 At the start of `AfterLoadGame`, before the first tile loop, initialise every layer index at or above the file's layer count with `MultiLayerMap::InitialiseLayer`, with a comment explaining the ordering constraint.
 - [x] 5.7 Make the old TTO / TTD loader allocate `MAX_MAP_LAYERS` (its reads are surface-only since r2mlm3) and rely on the same `AfterLoadGame` initialisation.
-- [ ] 5.8 Build and run a round trip: new game, save, load, save again; digest every plane of both saves and confirm they are identical.
+- [x] 5.8 Build and run a round trip: new game, save, load, save again; digest every plane of both saves and confirm they are identical. R2MLM1 Group 7B records three actual Debug new-game round trips, one from each non-surface view, preserving all ten complete map chunks across four 256x256 planes. Results: `build/toolbar-review/camera-roundtrip-results.txt`.
 
 ### Area Mandatory Reading - Going live and verification
 
@@ -205,22 +207,28 @@ _Applies to Groups 6-7._
 
 ### Group 6 - Three live layers
 
+Closure, 2026-10-04: operator tasks 6.3..6.6 are skipped under the goal's allowance. The intermediate three-layer/icon-only state is superseded by four-layer rendering; current new-game/editor views are exercised in R2MLM1 Group 7, but heightmap creation, a year of 512x512 play and the large-map memory/approval gate are not claimed as passes. The full-plane cost decision remains open.
+
 {{MEDIUM}}
 - [x] 6.1 Change `InitializeGame` to allocate `MAX_MAP_LAYERS`, with a comment referencing AD-11.
 - [x] 6.2 Log the allocated tile memory (bytes of both arrays) at `Facility::Map` debug level in `Map::Allocate`.
-- [ ] 6.3 Start a new game, a scenario-editor flat world and a heightmap world; confirm three layers are allocated and the surface looks unchanged.
-- [ ] 6.4 Confirm the layer button is now enabled (r2mlm2 task 5.3 logic) and still only changes its icon (rendering arrives in r2mlm5).
-- [ ] 6.5 Run a 512x512 game for one in-game year with `-d desync=2` in a Debug build; confirm no cache-check messages.
-- [ ] 6.6 Allocate a 4096x4096 three-layer map once and record peak memory here; if it exceeds 1.5 GiB, ask the user before continuing.
+- [s] 6.3 Start a new game, a scenario-editor flat world and a heightmap world; confirm three layers are allocated and the surface looks unchanged.
+- [s] 6.4 Confirm the layer button is now enabled (r2mlm2 task 5.3 logic) and still only changes its icon (rendering arrives in r2mlm5).
+- [s] 6.5 Run a 512x512 game for one in-game year with `-d desync=2` in a Debug build; confirm no cache-check messages.
+- [s] 6.6 Allocate a 4096x4096 three-layer map once and record peak memory here; if it exceeds 1.5 GiB, ask the user before continuing.
 
 ### Group 7 - Verification
 
+Closure, 2026-10-04: operator rows 7.3..7.5 are skipped under the goal's allowance. All four version-368 baseline saves do upgrade and round-trip all four planes without map changes (R2RVM2 task 18.1); their full month of play and the load-dialog UI are not claimed. TTD `trt00.sv0` passes a Debug month and four-plane round trip, while actual TTO custom-name conversion fails in both baseline and final builds (Group 18B), so no TTO pass is inferred.
+
 {{SIMPLE}}
-- [ ] 7.1 Build both configurations without new warnings; run `ctest` including the new rule and initialiser tests.
-- [ ] 7.2 Regenerate the four baseline saves and compare the surface-plane digests (`--tiles` = one plane) with `baseline-digests.txt` (I-6).
-- [ ] 7.3 Load each pre-epic baseline save, confirm three layers exist after load, play one in-game month, save, reload, and confirm all plane digests are stable (I-7).
-- [ ] 7.4 Load a TTO save copied from `!kit/TT/` and confirm it gains Underground and Space and plays for one month.
-- [ ] 7.5 Open the load dialog on a new save and confirm the preview still shows the map size correctly.
+- [x] 7.1 Build both configurations without new warnings; run `ctest` including the new rule and initialiser tests.
+
+  Verified 2026-10-04: both targets build in Debug and RelWithDebInfo, exit 0, zero compiler warnings; both runs pass 110/110 unit cases, including layer rules/initialisers. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. The current tree has four layers after r2mlm12; the old three-layer runtime checks need their corresponding four-layer acceptance runs and remain open.
+- [x] 7.2 Regenerate the four baseline saves and compare the surface-plane digests (`--tiles` = one plane) with `baseline-digests.txt` (I-6). All ten Surface prefixes match for all four final worlds; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt).
+- [s] 7.3 Load each pre-epic baseline save, confirm three layers exist after load, play one in-game month, save, reload, and confirm all plane digests are stable (I-7).
+- [s] 7.4 Load a TTO save copied from `!kit/TT/` and confirm it gains Underground and Space and plays for one month.
+- [s] 7.5 Open the load dialog on a new save and confirm the preview still shows the map size correctly.
 
 ## Consult on Demand
 
@@ -246,6 +254,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | Repository grep of command procs (`CmdBuild*`, `CmdPlantTree`, `CmdFoundTown`, `CmdPlaceHouse`, `CmdTerraformLand`) | Declarations in `*_cmd.h` | The gating list in Group 4. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's operator allowance, with the skipped measurements/play/UI gates recorded at Groups 3, 6 and 7. The delivered lifecycle and format are now the four-layer version-370 contract in the master plan. Builds have zero compiler warnings, both unit suites pass 111/111 and full release CTest passes 115/115. Original unskipped runtime criteria below remain future acceptance criteria.
 
 - New games, editor worlds, loaded saves and TTO saves all have three layers.
 - Underground and Space are flat rocks with their own void fences, initialised without `Random()`.

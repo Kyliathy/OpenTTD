@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file misc_sl.cpp Saving and loading of things that didn't fit anywhere else. */
+/** @file misc_sl.cpp Saving and loading of things that didn't fit anywhere else. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md */
 
 #include "../stdafx.h"
 
@@ -19,6 +19,8 @@
 #include "../window_gui.h"
 #include "../window_func.h"
 #include "../viewport_func.h"
+#include "../map_func.h"
+#include "../landscape.h"
 #include "../gfx_func.h"
 #include "../core/random_func.hpp"
 #include "../fios.h"
@@ -38,19 +40,27 @@ int _saved_scrollpos_y;
 ZoomLevel _saved_scrollpos_zoom;
 /** @} */
 
+/**
+ * Save the main camera in Surface coordinates so loading preserves its plane position.
+ * The viewed layer is client state and is not saved; loading starts on Surface.
+ */
 void SaveViewportBeforeSaveGame()
 {
-	/* Don't use GetMainWindow() in case the window does not exist. */
+	//Do not use GetMainWindow() when a headless game may have no window.
 	const Window *w = FindWindowById(WindowClass::MainWindow, 0);
 	if (w == nullptr || w->viewport == nullptr) {
-		/* Ensure saved position is clearly invalid. */
+		//Keep the saved position clearly invalid when there is no main camera.
 		_saved_scrollpos_x = INT_MAX;
 		_saved_scrollpos_y = INT_MAX;
 		_saved_scrollpos_zoom = ZoomLevel::End;
 	} else {
-		_saved_scrollpos_x = w->viewport->scrollpos_x;
-		_saved_scrollpos_y = w->viewport->scrollpos_y;
-		_saved_scrollpos_zoom = w->viewport->zoom;
+		const ViewportData &vp = *w->viewport;
+		//Strip the same projected band offset SetViewportLayer adds when selecting a non-surface layer.
+		int world_y = static_cast<int>(to_underlying(vp.layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+		Point band = RemapCoords(0, world_y, 0);
+		_saved_scrollpos_x = vp.scrollpos_x - band.x;
+		_saved_scrollpos_y = vp.scrollpos_y - band.y;
+		_saved_scrollpos_zoom = vp.zoom;
 	}
 }
 

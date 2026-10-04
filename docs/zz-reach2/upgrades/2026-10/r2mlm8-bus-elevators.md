@@ -85,6 +85,8 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 
 ### Group 2 - Placement GUI
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The complete placement/cost/removal operator check is skipped. The representative save contains elevator pairs, but that does not verify every command accounting action. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
 - [x] 2.1 Add `WID_ROT_LAYER_ELEVATOR, ///< Build road elevator to another map layer.` after `WID_ROT_BUILD_TUNNEL`, and add the button to `_nested_build_road_widgets` with `SPR_IMG_ROAD_DEPOT` as stand-in sprite and `STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR`.
 - [x] 2.2 Add `static DiagDirection _road_elevator_door_direction` and `BuildRoadElevatorWindow` (cloned from `BuildRoadDepotWindow`, its own widget enum and `WindowDesc` with a unique ini key) showing four door directions and the "door on the other layer faces the opposite way" hint.
@@ -92,7 +94,7 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 - [x] 2.4 In `OnClick`, open the elevator picker like the depot button; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Road, target, ReverseDiagDir(_road_elevator_door_direction), INVALID_RAILTYPE, _cur_roadtype)`.
 - [x] 2.5 Compute `target` as `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer (r2mlm7 task 6.8); disable the button when that returns `MapLayer::Invalid` (Space, or a one-layer game), refreshed when the layer changes.
 - [x] 2.6 Add a free hotkey (check `road_hotkeys`) named `layer_elevator`.
-- [ ] 2.7 Build and place an elevator on the surface; confirm both ends appear, the cost is charged once, and removing either end removes both.
+- [s] 2.7 Build and place an elevator on the surface; confirm both ends appear, the cost is charged once, and removing either end removes both.
 
 ### Area Mandatory Reading - Road vehicle traversal
 
@@ -109,6 +111,8 @@ _Applies to Groups 3-4._
 
 ### Group 3 - Road vehicle traversal
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The shaft-blocking/queue operator run is skipped; no vehicle-ahead pass is inferred from controller implementation. Each skipped row is marked `[s]`, never a passing test.
+
 {{HARD}}
 - [x] 3.1 In the `RDE_NEXT_TILE` block, replace `v->tile + TileOffsByDiagDir(diagdir)` with `GetLayerPortalNextTile(v->tile, diagdir)` and keep the rest of the block unchanged; the frame table then positions the vehicle on the pair tile's entry edge.
 - [x] 3.2 Pass the same portal-aware tile to `FollowPreviousRoadVehicle` for articulated parts.
@@ -116,16 +120,18 @@ _Applies to Groups 3-4._
 - [x] 3.4 Refuse overtaking on and into elevator tiles in `CheckRoadBlockedForOvertaking`.
 - [x] 3.5 In the road branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames and assert `frame` stays in sync with the frame table, mirroring the tunnel code.
 - [x] 3.6 After the relocation, update the Z position and inclination of each part with `UpdateInclination(true, true)` while hidden, so no visible jump occurs.
-- [ ] 3.7 Confirm `RoadVehFindCloseTo` (vehicle ahead detection) works across the relocation: a bus waiting in the shaft blocks the next one on the same layer side.
+- [s] 3.7 Confirm `RoadVehFindCloseTo` (vehicle ahead detection) works across the relocation: a bus waiting in the shaft blocks the next one on the same layer side.
 
 ### Group 4 - The elevator ride
+
+Closure, 2026-10-04, under the goal's explicit operator allowance: Stop/breakdown and articulated save-in-shaft operator checks are skipped. R2MLM12 also supersedes the original capped-speed ride with a saved 370-tick wait. Each skipped row is marked `[s]`, never a passing test.
 
 {{MEDIUM}}
 - [x] 4.1 Add `static constexpr uint16_t LAYER_ELEVATOR_MAX_SPEED` with a comment explaining the chosen value (slow enough that a ride lasts about two seconds at normal speed).
 - [x] 4.2 Cap `RoadVehicle::GetCurrentMaxSpeed` at that value while any part of the vehicle is on a road portal tile.
 - [x] 4.3 Play an existing mechanical sound when the front part becomes hidden in an elevator; pick a sound id from `src/sound_type.h` and record the choice. The sound is `SND_21_ROAD_WORKS`.
-- [ ] 4.4 Confirm breakdowns, stop orders and the player stop button behave while a bus is inside, and that a bus stopped inside stays hidden and resumes correctly.
-- [ ] 4.5 Save and load while a bus is half way through an elevator (front underground, rear on the surface); confirm it continues without a jump.
+- [s] 4.4 Confirm breakdowns, stop orders and the player stop button behave while a bus is inside, and that a bus stopped inside stays hidden and resumes correctly.
+- [s] 4.5 Save and load while a bus is half way through an elevator (front underground, rear on the surface); confirm it continues without a jump.
 
 ### Area Mandatory Reading - Road pathfinding
 
@@ -141,12 +147,14 @@ _Applies to Group 5._
 
 ### Group 5 - Road pathfinding
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The path-cache, route-estimate, cross-layer servicing and lost-vehicle operator matrix is skipped; code integration and unit results do not pass these live vehicle checks. Each skipped row is marked `[s]`, never a passing test.
+
 {{HARD}}
 - [x] 5.1 Add `pf.yapf.road_layer_portal_penalty` once per elevator traversal in `PfCalcCost` (when the segment passes from one end to its pair), with a comment.
-- [ ] 5.2 Confirm `RoadFindPathToDest` path-cache entries that end on the pair tile are accepted (the cached tile is the pair, not the plain neighbour).
-- [ ] 5.3 Confirm the estimate assert holds on routes through elevators in a Debug build (no `NOT_REACHED`, no assert).
-- [ ] 5.4 Confirm `FindClosestRoadDepot` and automatic servicing find a depot on the other layer within `maximum_go_to_depot_penalty`.
-- [ ] 5.5 Confirm `RoadVehicle::SetDestTile` and lost-vehicle news behave when the destination is on the other layer and no elevator exists (the bus is reported lost, it does not crash).
+- [s] 5.2 Confirm `RoadFindPathToDest` path-cache entries that end on the pair tile are accepted (the cached tile is the pair, not the plain neighbour).
+- [s] 5.3 Confirm the estimate assert holds on routes through elevators in a Debug build (no `NOT_REACHED`, no assert).
+- [s] 5.4 Confirm `FindClosestRoadDepot` and automatic servicing find a depot on the other layer within `maximum_go_to_depot_penalty`.
+- [s] 5.5 Confirm `RoadVehicle::SetDestTile` and lost-vehicle news behave when the destination is on the other layer and no elevator exists (the bus is reported lost, it does not crash).
 - [x] 5.6 Add a Debug-only consistency check in `RoadFindPathToDest` that the chosen next tile equals `GetLayerPortalNextTile` of the current tile and exit direction.
 
 ### Area Mandatory Reading - Underground network and art
@@ -161,23 +169,27 @@ _Applies to Groups 6-7._
 
 ### Group 6 - Underground bus network
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The underground road-building, station naming/cargo/payment, depot/autoreplace and vehicle-follow operator matrix is skipped. The supplied save contains buses/roads; no complete matrix pass is inferred. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
-- [ ] 6.1 Build underground roads, a drive-through and a bay bus stop and a road depot in the Underground view; confirm each command succeeds and the land info shows the Underground layer.
-- [ ] 6.2 Confirm an underground station takes its name and town from the town above (r2mlm3 projection) and appears in the station list.
-- [ ] 6.3 Give a bus orders between a surface stop and an underground stop; confirm it loads, unloads and pays by plane distance.
-- [ ] 6.4 Confirm buying, selling, servicing and autoreplace in an underground depot.
-- [ ] 6.5 Confirm the vehicle view follows a bus into the Underground layer and back, and that "location" buttons switch the main view's layer.
+- [s] 6.1 Build underground roads, a drive-through and a bay bus stop and a road depot in the Underground view; confirm each command succeeds and the land info shows the Underground layer.
+- [s] 6.2 Confirm an underground station takes its name and town from the town above (r2mlm3 projection) and appears in the station list.
+- [s] 6.3 Give a bus orders between a surface stop and an underground stop; confirm it loads, unloads and pays by plane distance.
+- [s] 6.4 Confirm buying, selling, servicing and autoreplace in an underground depot.
+- [s] 6.5 Confirm the vehicle view follows a bus into the Underground layer and back, and that "location" buttons switch the main view's layer.
 
 The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stays skipped and the depot stand-in remains.
 
 ### Group 7 - Elevator art
+
+Closure, 2026-10-04, under the goal's explicit operator allowance: The every-direction bus visibility operator run is skipped. R2MLM13 repairs foreground coverage and records static elevator captures, without claiming a complete bus-entering matrix. Each skipped row is marked `[s]`, never a passing test.
 
 2026-10-03: r2mlm6 publishes the elevator constants and all four directional back/front pairs. Drawing and toolbar/cursor swaps are implemented and build in Debug. Visibility checks wait for the user's representative save.
 
 {{SIMPLE}}
 - [x] 7.1 Draw the elevator back part as a ground child sprite and the front part as a parent sprite with a bounding box that lets vehicles pass beneath, for both ends, using the contract offsets.
 - [x] 7.2 Switch the toolbar button sprite to `SPR_IMG_BUILD_ROAD_ELEVATOR` and the cursor to `SPR_CURSOR_ROAD_ELEVATOR`.
-- [ ] 7.3 Check the visibility frames against the new art (the bus disappears behind the door frame, not in front of it) and adjust only the frame constants if needed.
+- [s] 7.3 Check the visibility frames against the new art (the bus disappears behind the door frame, not in front of it) and adjust only the frame constants if needed.
 
 ### Area Mandatory Reading - Verification
 
@@ -190,12 +202,16 @@ _Applies to Group 8._
 
 ### Group 8 - Verification
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The year-long bus run, occupied removal, bankruptcy and traffic-save operator scenarios are skipped. Paused complete-map round trips pass R2RVM2 task 18.1 and R2MLM1 Group 7B, but do not cover these scenarios. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
-- [ ] 8.1 Scenario: surface town road, elevator, underground road loop with a bus stop and a depot, back up through a second elevator; run three buses for one in-game year at fast forward in a Debug build; no assert, no lost vehicle.
-- [ ] 8.2 Try to remove an elevator while a bus is inside; confirm the refusal message and that nothing changes.
-- [ ] 8.3 Let the owning company go bankrupt in a test game (cheat money to negative); confirm both elevator ends are removed or transferred and no vehicle remains hidden.
-- [ ] 8.4 Save and reload the scenario at several moments and compare all plane digests before and after reload.
-- [ ] 8.5 Build both configurations without new warnings; run `ctest`.
+- [s] 8.1 Scenario: surface town road, elevator, underground road loop with a bus stop and a depot, back up through a second elevator; run three buses for one in-game year at fast forward in a Debug build; no assert, no lost vehicle.
+- [s] 8.2 Try to remove an elevator while a bus is inside; confirm the refusal message and that nothing changes.
+- [s] 8.3 Let the owning company go bankrupt in a test game (cheat money to negative); confirm both elevator ends are removed or transferred and no vehicle remains hidden.
+- [s] 8.4 Save and reload the scenario at several moments and compare all plane digests before and after reload.
+- [x] 8.5 Build both configurations without new warnings; run `ctest`.
+
+  Verified 2026-10-04: both targets/configurations build with exit 0, zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. The former Surface/Underground elevator behavior is superseded by r2mlm12's road tunnels and timed Deep Underground elevators; those runtime cases remain pending.
 
 ## Consult on Demand
 
@@ -220,6 +236,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | User request | "simple buses that can take an elevator and go underground" | Scope: road only, drive-through elevator, ride as a speed cap instead of a new vehicle state. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 with the operator skips recorded in each affected group above. Coding and automated checks are delivered: zero compiler warnings, 111/111 unit cases in both configurations and 115/115 full release CTest cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`, `build/ctest-console-final-RelWithDebInfo.log`). The original full runtime criteria below remain future validation criteria; closure under the goal allowance does not mean skipped scenarios passed.
 
 - The road toolbar builds road elevators between Surface and Underground with a chosen door direction.
 - Buses and lorries cross layers through elevators, hidden while riding, without visual jumps, asserts or lost vehicles.

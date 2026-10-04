@@ -20,6 +20,7 @@ public static class OttdWin {
 	[DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr hWnd, out RECT rect);
 	[DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr hWnd, ref POINT p);
 	[DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdc, uint flags);
+	[DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hWnd, IntPtr after, int x, int y, int width, int height, uint flags);
 	[DllImport("user32.dll")] public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr w, IntPtr l);
 }
 '@
@@ -125,6 +126,25 @@ function Get-OttdBitmap($Process) {
 }
 
 <#
+.SYNOPSIS Resize only the game client area without moving, focusing or raising its window.
+.PARAMETER Process The game process owned by this check.
+.PARAMETER Width Requested client width in capture pixels.
+.PARAMETER Height Requested client height in capture pixels.
+.OUTPUTS Measured geometry after the resize.
+#>
+function Resize-Ottd($Process, [int]$Width, [int]$Height) {
+	$geometry = Get-OttdGeometry $Process
+	$windowWidth = $Width + $geometry.Width - $geometry.ClientWidth
+	$windowHeight = $Height + $geometry.Height - $geometry.ClientHeight
+	#Preserve position, z-order and focus while letting the driver handle its ordinary resize path.
+	if (-not [OttdWin]::SetWindowPos($geometry.Handle, [IntPtr]::Zero, 0, 0, $windowWidth, $windowHeight, 0x16)) { throw 'Could not resize the game window.' }
+	Start-Sleep -Milliseconds 500
+	$actual = Get-OttdGeometry $Process
+	if ($actual.ClientWidth -ne $Width -or $actual.ClientHeight -ne $Height) { throw 'The game did not accept the requested client size.' }
+	return $actual
+}
+
+<#
 .SYNOPSIS Pack client coordinates into a mouse message parameter.
 .PARAMETER X Client X.
 .PARAMETER Y Client Y.
@@ -152,8 +172,8 @@ function Send-OttdHover($Process, [int]$X, [int]$Y) {
 #>
 function Send-OttdClick($Process, [int]$X, [int]$Y) {
 	$lp = Get-OttdPoint $X $Y
+	#Queue movement and press together; a delayed press can use an intervening real mouse position.
 	[void][OttdWin]::PostMessage($Process.MainWindowHandle, 0x0200, [IntPtr]0, $lp)
-	Start-Sleep -Milliseconds 200
 	[void][OttdWin]::PostMessage($Process.MainWindowHandle, 0x0201, [IntPtr]1, $lp)
 	Start-Sleep -Milliseconds 100
 	[void][OttdWin]::PostMessage($Process.MainWindowHandle, 0x0202, [IntPtr]0, $lp)

@@ -39,7 +39,7 @@
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 61-63 | `### AD-1 Layer vocabulary`: the exact `MapLayer` enumerators, `MAX_MAP_LAYERS`, and the rule that names and icons live in `src/map_layer_gui.cpp`. This plan is the owner of that vocabulary; later plans consume it unchanged, so the values written here are final. |
-| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 94-96 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state and never read by commands or ticks. Constrains every task here: the button changes view state only, posts no command, and nothing in this plan is saved. |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 94-96 | `### AD-7 Viewing a layer is view state`: `Viewport::layer` is client state and never read by commands or ticks. The button changes view state only and posts no command. Group 7B normalises existing saved camera coordinates without persisting a layer field. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: the user's comment style (`//comment`, Javadoc on every function and parameter), file naming, the no-move/no-delete rule, and the exact build and test commands used for verification. |
 | [src/widgets/toolbar_widget.h](../../../../src/widgets/toolbar_widget.h) | 13-49 | `enum ToolbarNormalWidgets`: its order is the index of `_toolbar_button_procs`, `_menu_clicked_procs` and `_toolbar_button_sprites`, and the offset of each tooltip from `STR_TOOLBAR_TOOLTIP_PAUSE_GAME`. Inserting `WID_TN_MAP_LAYER` shifts every later index, so all parallel arrays and the tooltip block change in the same group. |
 | [docs/zz-reach2/architecture/gui/archi-gui.md](../../architecture/gui/archi-gui.md) | 217-223 | `## Invariants`: `OnPaint` and `DrawWidget` only draw, the GUI changes the world only through commands, widget indices name nested-tree nodes. Decides that the button's icon is updated from `OnInvalidateData`, never from `OnPaint`. |
@@ -123,18 +123,22 @@ _Applies to Groups 3-5._
 - [x] 4.1 Insert `WID_TN_MAP_LAYER` directly after `WID_TN_SMALL_MAP` in `arrange_all`.
 - [x] 4.2 In each of `arrange14` to `arrange20`, insert `WID_TN_MAP_LAYER` directly after every `WID_TN_SMALL_MAP` entry.
 - [x] 4.3 Restore exactly N entries per row in each split array by removing one entry from the affected row, choosing in this order: a button that appears in both rows (never `WID_TN_SWITCH_BAR`), then `WID_TN_SUBSIDIES`, then `WID_TN_LEAGUE`, `WID_TN_STORY`, `WID_TN_GOAL`; record each removal as a comment on the row.
-  - Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11. Runtime checks are pending.
+  - Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11. Lower-page menu checks passed on 2026-10-04; the upper pages have no Towns button. R2MLM11 Group 2 records that test-plan mismatch and the working F6 fallback.
 - [x] 4.4 Add a `static_assert` per split array that its length is `2 * N`, so a future insertion cannot unbalance the rows.
-- [ ] 4.5 Build, start the game, and resize the window through every split width (14 to 20 buttons) plus full width; confirm the layer button always sits immediately right of the map button and no row overflows.
+- [x] 4.5 Build, start the game, and resize the window through every split width (14 to 20 buttons) plus full width; confirm the layer button always sits immediately right of the map button and no row overflows.
+
+  Verified 2026-10-04 in Debug with Interface size 250%: client widths 728, 780, 832, 884, 936, 988 and 1040 pixels select arrangements 14..20; 1750 pixels shows the full row. Both pages were captured at every split width. Wherever the Small map button is present, the Layer button follows it directly. All buttons fit the main-toolbar rows. Evidence: [toolbar-width-review.png](toolbar-width-review.png), original captures `build/toolbar-review/{14..20}-{upper,lower}.png` and `full-visible.png`, log `build/toolbar-review/game.log`.
 
 ### Group 5 - Button behaviour, icon and hotkey
+
+Closure, 2026-10-04: task 5.5's operator check of the intermediate three-layer, icon-only build is skipped under the goal's operator allowance. R2MLM5 replaces that behaviour with real map switching and R2MLM12 replaces button cycling with a four-layer dropdown; the final build cannot exhibit the old behaviour. Current controls are checked in Group 7. No historical runtime pass is inferred.
 
 {{MEDIUM}}
 - [x] 5.1 Implement `static CallBackFunction ToolbarMapLayerClick(Window *w)` with a Javadoc block: call `CycleMainViewportLayer()`, then `w->HandleButtonClick` with `WID_TE_MAP_LAYER` in the editor and `WID_TN_MAP_LAYER` otherwise, play `SndClickBeep()`, return `CallBackFunction::None`.
 - [x] 5.2 In `MainToolbarWindow::OnInvalidateData`, set the button sprite with `this->GetWidget<NWidgetCore>(WID_TN_MAP_LAYER)->SetSprite(GetMapLayerIcon(GetMainWindow()->viewport->layer))` and mark the widget dirty; set it once in the constructor as well.
 - [x] 5.3 Override `MainToolbarWindow::OnTooltip` for `WID_TN_MAP_LAYER` only, showing a new `STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT :{BLACK}Switch the main view between the surface, underground and space maps. Now showing: {STRING}` with the current layer name; return `false` for every other widget.
 - [x] 5.4 Append `MTHK_CYCLE_MAP_LAYER` to `MainToolbarHotkeys`, handle it in `OnHotkey` by calling `ToolbarMapLayerClick(this)`, and add `Hotkey(0, "cycle_map_layer", MTHK_CYCLE_MAP_LAYER)`; if a free single key exists after grepping every `HotkeyList` in `src/`, bind it and record the choice here. Bound to N. L is terraform, M is the small map, and V opens an extra view. The editor hotkey stays unbound, as task 6.5 says.
-- [ ] 5.5 Build, start a new game, click the button three times and use the hotkey; confirm the icon and tooltip go Surface, Underground, Space, Surface and that nothing else on screen changes (interim behaviour).
+- [s] 5.5 Build, start a new game, click the button three times and use the hotkey; confirm the icon and tooltip go Surface, Underground, Space, Surface and that nothing else on screen changes (interim behaviour).
 
 ### Area Mandatory Reading - Scenario editor toolbar
 
@@ -165,16 +169,44 @@ _Applies to Group 7._
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [src/tests/test_window_desc.cpp](../../../../src/tests/test_window_desc.cpp) | 79-99 | `WindowDesc - NWidgetParts properly closed` and `WindowDesc - NWidgetPart validity`: the unit tests that catch a malformed editor part list after task 6.3. |
-| [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | Live definitions; no fixed range | Produced by Group 2. `CycleMainViewportLayer` and `SetViewportLayer` are the authoritative behaviour being verified; the interim body must still be in place. |
+| [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | Live definitions; no fixed range | Produced by Group 2. `CycleMainViewportLayer` and `SetViewportLayer` are the authoritative behaviour being verified. R2MLM5 and R2MLM12 supersede the interim body and three-layer controls. |
 
 ### Group 7 - Verification
 
 {{SIMPLE}}
 - [x] 7.1 Build RelWithDebInfo and Debug with no new warnings compared with the warning baseline in master plan `## Baseline Data`. Both builds succeeded on 2026-10-03 with zero compiler warnings (`build/verify-Debug.log`, `build/verify-RelWithDebInfo.log`).
 - [x] 7.2 Run `ctest`; all baseline tests pass, including the `WindowDesc` tests. Existing Debug evidence: `build/ctest-Debug.log`, 106/106 passed, including both `WindowDesc` cases. No runtime checks are inferred from this result.
-- [ ] 7.3 In a Debug build, cycle the layer in a new game and in the scenario editor; confirm no assert fires and the button stays next to the map button.
-- [ ] 7.4 Save and reload a game while viewing Underground; confirm the game loads and the view starts on Surface (the layer is not saved, AD-7).
-- [x] 7.5 Grep `src/` for `->layer` and `.layer` uses added by this plan; confirm none is reachable from command or tick code (I-4). Every read is in `map_layer_gui.cpp`, `viewport.cpp` `InitializeWindowViewport`, or the toolbar icon and tooltip.
+- [x] 7.3 In a Debug build, cycle the layer in a new game and in the scenario editor; confirm no assert fires and the button stays next to the map button.
+
+  Verified 2026-10-04: `N` cycles the new game's main view through Surface, Underground, Deep Underground and Space. The editor dropdown selects all four layers in that display order. Its Layer button follows Small map in the full, no-title-panel and both split arrangements (client widths 1750, 1400 and 728 pixels at 250%). The editor hotkey remains unbound. Evidence: [scenario-layer-review.png](scenario-layer-review.png), `build/toolbar-review/editor-{full,no-title,split-upper,split-lower}.png`, `game.log` and `editor.log`; both game runs exit normally with no assertion.
+- [x] 7.4 Save and reload a game while viewing Underground; confirm the game loads and the view starts on Surface (the layer is not saved, AD-7). Group 7B fixes the camera band and verifies this for all three non-surface layers.
+- [x] 7.5 Grep `src/` for `->layer` and `.layer` uses added by this plan; confirm none is reachable from command or tick code (I-4). GUI reads are in the view helpers, viewport initialisation, toolbar icon/tooltip and, following Group 7B, `SaveViewportBeforeSaveGame` to normalise saved camera coordinates. The latter serialises GUI metadata only; it does not select any map data or simulation behaviour.
+
+### Area Mandatory Reading - Saved camera position
+
+_Applies to Group 7B._
+
+| File name | Authoritative symbols | Purpose |
+| --- | --- | --- |
+| [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | AD-2, AD-7 | World coordinates include the layer band; viewport layer is client state and does not persist in a save. |
+| [src/saveload/misc_sl.cpp](../../../../src/saveload/misc_sl.cpp) | `SaveViewportBeforeSaveGame`, `ResetViewportAfterLoadGame` | The VIEW chunk keeps camera coordinates but reload creates a Surface viewport. |
+| [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | `SetViewportLayer` | Authoritative projection of a layer's world-Y offset into scroll coordinates. |
+| [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | `## Invariants a change must not break` | Preserve existing chunk fields and old-save loading; the correction affects GUI coordinates only. |
+
+Context has compacted 1 times while executing this group.
+
+### Group 7B - Preserve plane camera position across save/load
+
+Added 2026-10-04 from task 7.4's Debug run. Saving on Underground stores its stacked camera offset, then loading creates a Surface viewport and clamps those coordinates near the map edge. The layer correctly resets, but the intended plane position is lost. Store VIEW coordinates projected into the Surface band without saving a layer field.
+
+{{SIMPLE}}
+- [x] 7B.1 Correct `SaveViewportBeforeSaveGame` to subtract the current layer's projected band offset; retain the headless sentinel and zoom handling.
+- [x] 7B.2 Build both configurations and run appropriate checks. Save paused games from each non-surface layer, reload on Surface and confirm the same plane position; compare all map-plane digests across a paused round trip.
+- [x] 7B.3 Record captures and logs, then reconcile task 7.4 and the master plan. The VIEW schema and savegame version remain unchanged.
+
+  Verified 2026-10-04: both configurations build with zero compiler warnings and pass 110/110 unit cases (`build/build-camera-save-{Debug,RelWithDebInfo}.log`, `build/ctest-camera-save-{Debug,RelWithDebInfo}.log`). Actual Debug saves from Underground, Deep Underground and Space reload onto Surface at the intended plane position. All three store the same VIEW record `fffffd2800002fe801` (x=-728, y=12264, zoom=1). Each paused load/save round trip preserves all ten map chunks byte for byte across four 256x256 planes; results are in `build/toolbar-review/camera-roundtrip-results.txt`. The portal/station fixture also preserves all ten chunks (`portals-roundtrip-a.txt`, `portals-roundtrip-b.txt`).
+
+  Evidence: [camera-save-review.png](camera-save-review.png), original `build/toolbar-review/camera-{underground,deep,space}-{saving,loaded}.png`, fixtures `build/save/camera-<layer>-{repaired,roundtrip}.sav`, `build/save/portals-camera-roundtrip-{a,b}.sav`, and `build/toolbar-review/camera-fixed.log`. Existing VIEW fields and version 370 are retained. Surface saves are unchanged by the zero-band subtraction; previously written non-surface camera offsets are not retroactively repaired. The original `makinpr2.sav` is preserved.
 
 ## Consult on Demand
 
@@ -202,5 +234,5 @@ This table records what shaped the plan. It is not an execution reading queue, i
 - `MapLayer` and `MAX_MAP_LAYERS` exist in `src/map_layer_type.h` exactly as AD-1 states.
 - `Viewport::layer` exists, defaults to Surface, and is never read by command or tick code.
 - The main toolbar and the scenario editor toolbar show the layer button immediately right of the map button at every toolbar width.
-- Clicking the button or pressing its hotkey cycles the icon and tooltip through Surface, Underground and Space; the drawn map does not change yet.
+- The interim icon-only cycle is superseded by R2MLM5 and AD-1/AD-7 as amended by R2MLM12: the button selects a layer from the four-layer dropdown, and `N` cycles the main view in display order. Group 5 records the skipped historical operator check; Group 7 verifies the final controls.
 - Both configurations build without new warnings and all baseline tests pass.

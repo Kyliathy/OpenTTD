@@ -3423,7 +3423,7 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 				bool shaft_step = IsLayerPortalShaftExit(gp.old_tile, moving);
 				if (shaft_step) {
 					TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y);
-					gp.new_tile = GetLayerPortalPairTile(gp.old_tile);
+					gp.new_tile = GetLayerPortalNextTile(gp.old_tile, moving);
 					enterdir = moving;
 				} else {
 					/* Determine what direction we're entering the new tile from */

@@ -73,6 +73,53 @@ for family, base in (("elevator_surface", 12), ("elevator_underground", 20),
             MANIFEST.append((base + direction * 2 + part,
                              RAW + f"{family}_{name}_pair_v4.png", (part, 2, "aligned")))
 
+#Keep the original rows replayable through this same pipeline after extending the live contract.
+LEGACY_MANIFEST = tuple(MANIFEST)
+#Far-facing solid walls and roofs must cover an entering vehicle, not just the separately generated door frame.
+#Select the whole AI-generated back panel for those eight live fronts; the legacy replay retains its original panels.
+for base in (12, 20, 28, 36):
+    for door in (0, 3):
+        offset = base + door * 2 + 1
+        _offset, path, _box = MANIFEST[offset]
+        MANIFEST[offset] = (offset, path, (0, 2, "aligned"), {"part": "front", "door": door})
+#Near fronts keep their existing frame and cover solid roof/wall pixels from the same generated back.
+for base in (12, 20, 28, 36):
+    for door in (1, 2):
+        offset = base + door * 2 + 1
+        _offset, path, _box = MANIFEST[offset]
+        MANIFEST[offset] = (offset, path, (0, 2, "aligned"),
+                            {"part": "front", "door": door, "depth": 1,
+                             "full_span": True, "frame_panel": (1, 2, "aligned")})
+MANIFEST.extend([
+    (44, RAW + "layer_icon_deep_underground.png", (74, 109, 1105, 1105)),
+    (45, RAW + "build_icon_road_tunnel.png", (56, 70, 1139, 1139)),
+    (46, RAW + "build_icon_road_tunnel.png", (78, 93, 1094, 1094)),
+    (47, RAW + "deep_floor_sheet_v3.png", (11, 288, 582, 282), {"project_ground": True}),
+    (48, RAW + "deep_floor_sheet_v3.png", (609, 288, 582, 282), {"project_ground": True}),
+    (49, RAW + "deep_floor_sheet_v3.png", (1207, 286, 583, 284), {"project_ground": True}),
+])
+#Every direction has its own top-left-lit source. Back/front share a box and a tile anchor.
+for base, entries in (
+    (50, (
+        ("road_tunnel_surface_door_ne.png", (192, 64, 1065, 798)),
+        ("road_tunnel_surface_door_se.png", (350, 224, 749, 561)),
+        ("road_tunnel_surface_door_sw_v2.png", (349, 222, 749, 561)),
+        ("road_tunnel_surface_door_nw.png", (193, 65, 1066, 799)),
+    )),
+    (58, (
+        ("road_tunnel_underground_door_ne.png", (228, 120, 992, 744)),
+        ("road_tunnel_underground_door_se.png", (228, 188, 982, 736)),
+        ("road_tunnel_underground_door_sw.png", (229, 178, 989, 741)),
+        ("road_tunnel_underground_door_nw.png", (229, 120, 992, 744)),
+    )),
+):
+    for door, (name, box) in enumerate(entries):
+        for part in range(2):
+            options = {"part": "front" if part else "back", "door": door}
+            if part and door in (1, 2):
+                options["depth"] = 10
+            MANIFEST.append((base + door * 2 + part, RAW + name, box, options))
+
 
 def load_palette(path):
     """Read the DOS palette and the forbidden index ranges.
@@ -223,7 +270,7 @@ def quantise_file(path, box, dest_w, dest_h, rel_x, rel_y, palette, forbidden, o
     @param rel_y Contract y offset.
     @param palette DOS palette.
     @param forbidden Indices to skip.
-    @param options Optional mirror, part, door and depth. Legacy rows retain their pixels.
+    @param options Optional mirror, part, door, depth, full_span, frame_panel and project_ground. Legacy rows retain their pixels.
     @return Indices, width, height, rel x and rel y.
     """
     options = options or {}
@@ -238,27 +285,70 @@ def quantise_file(path, box, dest_w, dest_h, rel_x, rel_y, palette, forbidden, o
     source = crop_source(source, box)
     if options.get("mirror", False):
         source = ImageOps.mirror(source)
-    scaled = source.resize((dest_w, dest_h), Image.Resampling.BOX)
+    projected_ground = options.get("project_ground", False)
+    if projected_ground:
+        if (dest_w, dest_h) != (64, 31):
+            raise ValueError("project_ground requires the 64x31 floor contract")
+        scaled = project_ground(source)
+        #Flat tiles omit their zero-area north/south tips; the first drawn row is one below the north corner.
+        rel_y += 1
+    else:
+        scaled = source.resize((dest_w, dest_h), Image.Resampling.BOX)
     #Floor sprites occupy exactly the tile diamond, with no slab sides off tile.
-    if (dest_w, dest_h) == (64, 31):
+    if (dest_w, dest_h) == (64, 31) and not projected_ground:
         mask = Image.new("L", (64, 31), 0)
         ImageDraw.Draw(mask).polygon(((31, 0), (63, 15), (31, 30), (0, 15)), fill=255)
         scaled.putalpha(ImageChops.multiply(scaled.getchannel("A"), mask))
     cache = {}
     indices = []
     for red, green, blue, alpha in scaled.get_flattened_data():
-        colour = (red, green, blue) if alpha >= 128 else None
+        #Ground edge pixels have fractional area coverage but must meet their neighbouring tile without transparent seams.
+        colour = (red, green, blue) if alpha >= (1 if projected_ground else 128) else None
         if colour not in cache:
             cache[colour] = nearest(colour, palette, forbidden)
         indices.append(cache[colour])
     #The mirrored front uses its own door mask, so SE keeps the SW picture's depth.
     if options.get("part") == "front":
-        keep = front_mask(options["door"], options.get("depth", 1), dest_w, dest_h, (-rel_x, -rel_y))
+        keep = front_mask(options["door"], options.get("depth", 1), dest_w, dest_h, (-rel_x, -rel_y),
+                          options.get("full_span", False))
         indices = [value if (index % dest_w, index // dest_w) in keep else 0
                    for index, value in enumerate(indices)]
+        if "frame_panel" in options:
+            frame, frame_w, frame_h, frame_x, frame_y = quantise_file(
+                path, options["frame_panel"], dest_w, dest_h, rel_x, rel_y, palette, forbidden,
+                {"mirror": options.get("mirror", False)})
+            #Retain the generated jambs at their shared anchor; the masked back supplies the solid housing coverage.
+            for row in range(frame_h):
+                for column in range(frame_w):
+                    value = frame[row * frame_w + column]
+                    if value:
+                        x, y = column + frame_x - rel_x, row + frame_y - rel_y
+                        indices[y * dest_w + x] = value
     elif options.get("part", "back") != "back":
         raise ValueError("part must be back or front")
     return crop_and_shift(indices, dest_w, dest_h, rel_x, rel_y)
+
+
+def project_ground(source):
+    """Resample a flat floor to the native 2:1 tile footprint without transparent seams.
+
+    A 16-unit tile spans 64 columns and 32 projected rows. Its half-pixel north
+    corner has no area at row 0 or 32; rows 1..31 form the 64x31 real sprite.
+    This is opt-in so the original 44 sprites still rebuild byte for byte.
+    @param source Keyed RGBA floor variant, cropped to its source diamond.
+    @return RGBA floor covering projected rows 1..31; its north-corner offset gains 1.
+    """
+    scaled = source.resize((64, 33), Image.Resampling.BOX)
+    mask = Image.new("L", scaled.size, 0)
+    draw = ImageDraw.Draw(mask)
+    #At each row the diamond widens by four pixels, then narrows symmetrically after its widest row.
+    for y in range(1, 32):
+        radius = 2 * min(y, 32 - y)
+        left = max(0, math.ceil(31.5 - radius))
+        right = min(63, math.floor(31.5 + radius))
+        draw.line((left, y, right, y), fill=255)
+    scaled.putalpha(ImageChops.multiply(scaled.getchannel("A"), mask))
+    return scaled.crop((0, 1, 64, 32))
 
 
 def crop_source(source, box):
@@ -370,7 +460,7 @@ def tile_to_sprite(x, y, anchor):
     return anchor[0] + 0.5 + 2 * (y - x), anchor[1] + x + y
 
 
-def front_mask(door, depth, width, height, anchor):
+def front_mask(door, depth, width, height, anchor, full_span=False):
     """Keep the mouth wall for near doors, or the entire building for far doors.
 
     @param door Door index NE=0, SE=1, SW=2, NW=3.
@@ -378,6 +468,7 @@ def front_mask(door, depth, width, height, anchor):
     @param width Contract width.
     @param height Contract height.
     @param anchor North corner in the contract canvas.
+    @param full_span Extend the cut plane across the canvas to retain solid walls beyond the mouth width.
     @return Set of contract pixel coordinates to keep.
     """
     if door not in range(4):
@@ -394,7 +485,8 @@ def front_mask(door, depth, width, height, anchor):
     keep = set()
     #Pixel centres are integer coordinates around the half-pixel north corner.
     #Rounding both endpoints inward keeps SE and SW masks exact mirrors.
-    for column in range(max(0, math.ceil(left_x)), min(width, math.floor(right_x) + 1)):
+    columns = range(width) if full_span else range(max(0, math.ceil(left_x)), min(width, math.floor(right_x) + 1))
+    for column in columns:
         line_row = left_y + (right_y - left_y) * (column - left_x) / max(1.0, right_x - left_x)
         keep.update((column, row) for row in range(max(0, min(height, int(line_row) + 1))))
     return keep
@@ -441,7 +533,7 @@ def fit_box(path, offset, region=None):
 
 
 def candidate(spec, offset):
-    """Parse raw[@x,y,w,h][@mirror], fitting a box when it is omitted.
+    """Parse raw[@x,y,w,h][@mirror][@project-ground], fitting a box when it is omitted.
 
     @param spec Candidate argument.
     @param offset Contract offset.
@@ -452,6 +544,8 @@ def candidate(spec, offset):
     for suffix in suffixes:
         if suffix == "mirror":
             options["mirror"] = True
+        elif suffix == "project-ground":
+            options["project_ground"] = True
         else:
             box = tuple(int(value) for value in suffix.split(","))
             if len(box) != 4:
@@ -651,7 +745,9 @@ def main(argv):
     parser.add_argument("--write-nfo", action="store_true")
     parser.add_argument("--preview", action="store_true")
     parser.add_argument("--out", default=SHEET)
-    parser.add_argument("--manifest", help="Candidate JSON rows; publishing still requires the C++ count")
+    manifest_args = parser.add_mutually_exclusive_group()
+    manifest_args.add_argument("--manifest", help="Candidate JSON rows; publishing still requires the C++ count")
+    manifest_args.add_argument("--legacy44", action="store_true", help="Replay the original 44 rows into a scratch --out")
     parser.add_argument("--fit", nargs="+", metavar="ARG")
     parser.add_argument("--compare", nargs="+", metavar="ARG")
     parser.add_argument("--composite", nargs=5, metavar="ARG")
@@ -677,7 +773,9 @@ def main(argv):
         offset, door, depth, out, raw = args.composite
         composite(int(offset), int(door), int(depth), out, raw, palette, forbidden)
         return
-    manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8")) if args.manifest else MANIFEST
+    manifest = LEGACY_MANIFEST if args.legacy44 else MANIFEST
+    if args.manifest:
+        manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     integrated = Path(args.out).resolve() == Path(SHEET).resolve()
     count = integrated_count() if integrated else len(manifest)
     offsets = [row[0] for row in manifest]
@@ -698,7 +796,7 @@ def main(argv):
     sys.stdout.write("\n".join(lines) + "\n")
     if args.write_nfo and not args.dry_run:
         header = Path("media/baseset/openttd/bridge_decks.nfo").read_text(encoding="utf-8").splitlines()[:5]
-        header += ["// @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md",
+        header += ["//@see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md, docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md",
                    '   -1 * 0 0C "Map layer graphics"',
                    "//NFORenum 6.2.0 predates this fork's Action 5 type 1C; suppress only that feature diagnostic.",
                    "//@@WARNING DISABLE 44", f"   -1 * 3 05 1C \\b {count} //MAP_LAYER_SPRITE_COUNT",

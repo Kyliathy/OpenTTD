@@ -84,7 +84,7 @@ Entry gate. Live games must allocate three layers (`InitializeGame` passes `MAX_
 - [x] 1.3 In `InitializeWindowViewport`, take the layer from `GetTileLayer(tile)` for a tile focus and from the vehicle's tile for a vehicle focus; keep the r2mlm1 copy of the main layer for `INVALID_TILE`.
 - [x] 1.4 In the follow-vehicle branch of `UpdateViewportPosition`, update `vp.layer` from the followed vehicle's tile and invalidate the toolbar when the window is the main window.
 - [x] 1.5 In `ScrollWindowTo`, set the viewport layer from `GetLayerOfWorldY(y)` before computing the destination, without the band translation.
-- [ ] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band).
+- [x] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band). R2MLM1 Group 7B verifies all three band translations with identical saved plane camera coordinates and actual Surface reload captures; [camera-save-review.png](camera-save-review.png).
 
 ### Area Mandatory Reading - Band drawing
 
@@ -103,6 +103,8 @@ _Applies to Group 2._
 
 ### Group 2 - Band drawing
 
+Closure, 2026-10-04: task 2.7's every-edge visual operator sweep is skipped under the goal's allowance. Current per-layer views and floor captures exist, but they do not prove all map-edge cases.
+
 {{HARD}}
 - [x] 2.1 Add `MapLayer layer` to `ViewportDrawer` and set it from `vp.layer` at the top of `ViewportDoDraw`.
 - [x] 2.2 Give `TileHeightOutsideMap` and `TilePixelHeightOutsideMap` a `MapLayer layer` parameter (default `MapLayer::Surface`) that clamps Y into that layer's band; update their Javadoc.
@@ -110,7 +112,7 @@ _Applies to Group 2._
 - [x] 2.4 In `GetViewportY` and `ViewportAddLandscape`, treat a tile as inside the map only when its stacked Y lies in `_vd.layer`'s band; pass `_vd.layer` to every outside-map helper; port the existing comments.
 - [x] 2.5 Keep the bridge visibility logic working for surface viewports and skip it for other layers (no bridges off the surface, AD-12), with a comment.
 - [x] 2.6 Make `DrawTile_Void` draw the black bare-land fence for every non-surface layer regardless of `freeform_edges`.
-- [ ] 2.7 Build, start a game, switch to Underground and Space, scroll to every map edge and confirm only the layer's own band is drawn with a black surround.
+- [s] 2.7 Build, start a game, switch to Underground and Space, scroll to every map edge and confirm only the layer's own band is drawn with a black surround.
 
 ### Area Mandatory Reading - Clamping and picking
 
@@ -155,13 +157,15 @@ Context has compacted 1 times while executing this group.
 
 ### Group 4 - Filtering other layers
 
+Closure, 2026-10-04: task 4.6's sign-display/hit-test operator check is skipped under the goal's allowance. No click-isolation pass is inferred from the filter implementation.
+
 {{MEDIUM}}
 - [x] 4.1 In `ViewportAddVehicles`, skip vehicles whose layer (from `v->tile`, or `TileVirtXY` of the position for effect and disaster vehicles) differs from `_vd.layer`.
 - [x] 4.2 In `CheckClickOnVehicle`, skip vehicles of other layers than `vp.layer`.
 - [x] 4.3 In `ViewportAddKdtreeSigns` and `CheckClickOnViewportSign`, derive each label's tile (station `xy`, town `xy`, sign position) and skip other layers.
 - [x] 4.4 Store a `MapLayer` in `TextEffect`, set it in `AddTextEffect` from a new parameter defaulting to the main viewport layer, pass the tile's layer from the cost-animation callers, and filter in `DrawTextEffects`.
 - [x] 4.5 Filter the link-graph overlay so links are drawn only when both stations are in the viewport's layer.
-- [ ] 4.6 Build and confirm in a game with a sign placed underground that it shows only in the Underground view and cannot be clicked from the surface.
+- [s] 4.6 Build and confirm in a game with a sign placed underground that it shows only in the Underground view and cannot be clicked from the surface.
 
 ### Area Mandatory Reading - Layer ground
 
@@ -175,12 +179,14 @@ _Applies to Group 5._
 
 ### Group 5 - Layer ground
 
+Closure, 2026-10-04: visual operator tasks 5.4 and 5.5 are skipped under the goal's allowance. The multi-climate sweep is not performed. The old uniform-black stand-in is superseded by R2MLM6/R2MLM13's sparse-star Space floor (AD-10); current editor captures show that floor, without claiming the obsolete stand-in check passed.
+
 {{MEDIUM}}
 - [x] 5.1 In `DrawTile_Clear`, branch on `MultiLayerMap::GetRules(ti->tile).ground` before the `ClearGround` switch: Bedrock and Vacuum draw their flat sprite and return; Natural keeps today's code unchanged.
 - [x] 5.2 Add `static SpriteID GetLayerGroundSprite(MapLayerGround ground)` in `src/clear_cmd.cpp` returning the stand-ins, with a comment naming the r2mlm6 constants that replace them.
 - [x] 5.3 If `SPR_MAP_LAYER_UNDERGROUND_FLOOR` exists (grep `src/table/sprites.h`), use it with a `TileHash`-based variant pick; otherwise keep the stand-in and leave the task for r2mlm6 task 7.2.
-- [ ] 5.4 Confirm visually that underground rail and road tiles draw on bare ground (forced by r2mlm4 task 3.3) and that no snow or desert appears off the surface in arctic and tropic games.
-- [ ] 5.5 Confirm Space draws as uniform black vacuum, distinct from the off-map fence by a one-pixel grid line or not at all; record the choice. The code choice is the same black as the off-map fence (`SPR_FLAT_BARE_LAND` with `PALETTE_ALL_BLACK`) and no extra grid. Seeing it still waits on a build.
+- [s] 5.4 Confirm visually that underground rail and road tiles draw on bare ground (forced by r2mlm4 task 3.3) and that no snow or desert appears off the surface in arctic and tropic games.
+- [s] 5.5 Confirm Space draws as uniform black vacuum, distinct from the off-map fence by a one-pixel grid line or not at all; record the choice. The code choice is the same black as the off-map fence (`SPR_FLAT_BARE_LAND` with `PALETTE_ALL_BLACK`) and no extra grid. Seeing it still waits on a build.
 
 ### Area Mandatory Reading - Smallmap per layer
 
@@ -220,8 +226,10 @@ _Applies to Group 7._
 
 ### Group 7 - Extra viewports, land info and screenshots
 
+Closure, 2026-10-04: task 7.1's complete operator matrix of extra-view opening paths is skipped under the goal's allowance. The hotkey/caption smoke in R2RVM2 task 16.6 passes, but it does not cover all menu and vehicle-window paths.
+
 {{SIMPLE}}
-- [ ] 7.1 Confirm extra viewports opened from the map menu, the hotkey and vehicle windows start in the right layer.
+- [s] 7.1 Confirm extra viewports opened from the map menu, the hotkey and vehicle windows start in the right layer.
 - [x] 7.2 Add `WID_EV_MAP_LAYER` to the extra viewport window, cycling its own layer with `SetViewportLayer`.
 - [x] 7.3 Add a `STR_LAND_AREA_INFORMATION_MAP_LAYER :{BLACK}Layer: {LTBLUE}{STRING}` line to `LandInfoWindow`.
 - [x] 7.4 Make the world screenshot cover the main viewport's band and set the screenshot viewport's `layer`.
@@ -240,13 +248,17 @@ _Applies to Group 8._
 
 ### Group 8 - Button finish and verification
 
+Closure, 2026-10-04: operator tasks 8.3..8.5 are skipped under the goal's allowance for the full tooltip, construction/refusal and news/list matrices. Current four-layer switching and camera translation pass R2MLM1 Group 7, and the supplied-save station/signal diagnosis is in R2MLM13 Group 9C; those subsets do not pass the complete matrices here. Surface neutrality is verified below.
+
 {{SIMPLE}}
 - [x] 8.1 Use `SPR_IMG_MAP_LAYER_SURFACE`, `SPR_IMG_MAP_LAYER_UNDERGROUND` and `SPR_IMG_MAP_LAYER_SPACE` in `GetMapLayerIcon` if they exist in `src/table/sprites.h`; otherwise keep the stand-ins.
-- [ ] 8.2 Build both configurations without new warnings; run `ctest`.
-- [ ] 8.3 Cycle the layer in a new game: each layer draws only itself, the plane position is kept, and the icon and tooltip follow.
-- [ ] 8.4 In the Underground view, build road, rail, a bus stop, a rail station and a depot; confirm they appear only underground. Try every forbidden command from the r2mlm4 task 4.8 matrix in Underground and Space and confirm the layer error.
-- [ ] 8.5 Open a news item or the station list for an underground station and confirm the main view jumps to the Underground layer.
-- [ ] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match.
+- [x] 8.2 Build both configurations without new warnings; run `ctest`.
+
+  Verified 2026-10-04: both targets/configurations build, exit 0, zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Visual and savegame checks remain open for the representative save.
+- [s] 8.3 Cycle the layer in a new game: each layer draws only itself, the plane position is kept, and the icon and tooltip follow.
+- [s] 8.4 In the Underground view, build road, rail, a bus stop, a rail station and a depot; confirm they appear only underground. Try every forbidden command from the r2mlm4 task 4.8 matrix in Underground and Space and confirm the layer error.
+- [s] 8.5 Open a news item or the station list for an underground station and confirm the main view jumps to the Underground layer.
+- [x] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match. Every Surface chunk matches for both seeds/sizes; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt), R2RVM2 task 18.1.
 
 ## Consult on Demand
 
@@ -271,6 +283,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [src/void_cmd.cpp](../../../../src/void_cmd.cpp), [src/clear_cmd.cpp](../../../../src/clear_cmd.cpp) | 21-30, 141-187 | Fence and ground drawing behind Groups 2 and 5. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's operator allowance, with explicit skips at Groups 2, 4, 5, 7 and 8. Code, current band/camera checks and Surface digest checks are delivered. Final builds have zero compiler warnings, both unit suites pass 111/111 and full release CTest passes 115/115. The original full visual/runtime criteria below remain future validation criteria.
 
 - The layer button switches the main view between three visibly different maps at the same plane position.
 - No sprite, label, text effect or click from another layer leaks into a view.

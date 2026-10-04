@@ -142,37 +142,43 @@ The portal layer (r2mlm7 to r2mlm9) is where most of the defects are:
 
 Tasks 1.1 to 7.5 are in this file; tasks from 8.1 on are in [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md).
 
+Updated 2026-10-04: `Fixed` records the implemented correction and its named task. User scenarios S1..S7 and final save/multiplayer evidence remain pending in r2rvm2 Group 17 and r2mlm10; a code-fix status does not mark those scenarios passed.
+
 | ID | Severity | Finding | Fixed by | Status |
 | --- | --- | --- | --- | --- |
-| C-1 | Critical | Portals cannot be crossed unless the surface end is at height 0 | 8.1, 8.2; verified 17.2 | Open |
-| H-1 | High | Rail portal removal reads cleared bits and updates the wrong sides | 6.1; verified 17.5 | Open |
-| H-2 | High | Owner change moves other companies' portal infrastructure; double subtraction on bankruptcy | 11.2, 11.3, 11.7; verified 17.6 | Open |
-| H-3 | High | Savegame layer count is trusted (heap overflow) | 6.5, 6.6, 6.7 | Open |
-| H-4 | High | Road vehicles freeze instead of turning around at elevators | 9.4; verified 17.3 | Open |
-| H-5 | High | A portal can be entered from behind | 8.3, 9.1, 9.2, 9.3, 10.1; verified 17.4 | Open |
-| M-1 | Medium | Signal update starting on a portal walks one direction only | 10.2; verified 17.5 | Open |
-| M-2 | Medium | Wrong removal price sign; far-end reservation ignored | 6.2, 6.3; verified 17.8 | Open |
-| M-3 | Medium | Ownerless road elevators cannot be removed | 11.3, 11.4; verified 17.6 | Open |
-| M-4 | Medium | `_map_file_layers` stale for original TTD saves | 7.1 | Open |
-| M-5 | Medium | Extra-viewport building uses the main viewport's layer | 13.3, 13.4, 13.5; verified 17.7 | Open |
-| M-6 | Medium | Smallmap draws stray cross-layer link lines | 12.5, 12.6, 12.7; verified 17.7 | Open |
-| M-7 | Medium | Smallmap pushes its layer onto the main view | 7.4; verified 17.7 | Open |
-| M-8 | Medium | Road conversion converts one elevator end only | 11.5, 11.6; verified 17.8 | Open |
+| C-1 | Critical | Portals cannot be crossed unless the surface end is at height 0 | 8.1, 8.2; verified 17.2 | Fixed (tasks 8.1, 8.2) |
+| H-1 | High | Rail portal removal reads cleared bits and updates the wrong sides | 6.1; verified 17.5 | Fixed (task 6.1) |
+| H-2 | High | Owner change moves other companies' portal infrastructure; double subtraction on bankruptcy | 11.2, 11.3, 11.7; verified 17.6 | Fixed (tasks 11.2, 11.3) |
+| H-3 | High | Savegame layer count is trusted (heap overflow) | 6.5, 6.6, 6.7 | Fixed (tasks 6.5..6.7) |
+| H-4 | High | Road vehicles freeze instead of turning around at elevators | 9.4; verified 17.3 | Fixed (task 9.4) |
+| H-5 | High | A portal can be entered from behind | 8.3, 9.1, 9.2, 9.3, 10.1; verified 17.4 | Fixed (tasks 8.3, 9.1..9.3, 10.1) |
+| H-6 | High | Extra viewport caption reads a null viewport during widget sizing | 16.6 | Fixed (task 16.6) |
+| H-7 | High | Empty dedicated-console input asserts before a pending load | 18B.1, 18B.2 | Fixed (task 18B.1) |
+| M-1 | Medium | Signal update starting on a portal walks one direction only | 10.2; verified 17.5 | Fixed (task 10.2) |
+| M-2 | Medium | Wrong removal price sign; far-end reservation ignored | 6.2, 6.3; verified 17.8 | Fixed (tasks 6.2, 6.3) |
+| M-3 | Medium | Ownerless road elevators cannot be removed | 11.3, 11.4; verified 17.6 | Fixed (tasks 11.3, 11.4) |
+| M-4 | Medium | `_map_file_layers` stale for original TTD saves | 7.1 | Fixed (task 7.1) |
+| M-5 | Medium | Extra-viewport building uses the main viewport's layer | 13.3, 13.4, 13.5; verified 17.7 | Fixed (tasks 13.3..13.5) |
+| M-6 | Medium | Smallmap draws stray cross-layer link lines | 12.5, 12.6, 12.7; verified 17.7 | Fixed (tasks 12.5..12.7) |
+| M-7 | Medium | Smallmap pushes its layer onto the main view | 7.4; verified 17.7 | Fixed (task 7.4) |
+| M-8 | Medium | Road conversion converts one elevator end only | 11.5, 11.6; verified 17.8 | Fixed (tasks 11.5, 11.6) |
 | M-9 | Medium | Three full planes stored and ticked in every game (plan level) | 18.2 (decision) | Open |
-| M-10 | Medium | Road vehicles stepping through the shaft miss a vehicle waiting on the pair | 9.5; verified 17.3 | Open |
-| M-11 | Medium | A portal command on Space passes `MapLayer::Invalid` to `TileInLayer` | 6.4; verified 17.7 | Open |
-| L-1 | Low | `GetSlopePixelZOutsideMap` drops its layer | 13.6, 13.7 | Open |
+| M-10 | Medium | Road vehicles stepping through the shaft miss a vehicle waiting on the pair | 9.5; verified 17.3 | Fixed (task 9.5) |
+| M-11 | Medium | A portal command on Space passes `MapLayer::Invalid` to `TileInLayer` | 6.4; verified 17.7 | Fixed (task 6.4) |
+| M-12 | Medium | Rail portal conversion changes the clicked end before pair validation/accounting | 18.8; scenario pending | Fixed (task 18.8) |
+| L-1 | Low | `GetSlopePixelZOutsideMap` drops its layer | 13.6, 13.7 | Fixed (tasks 13.6, 13.7) |
 | L-2 | Low | Split toolbars lose Subsidies | r2mlm11 (Subsidies); 18.3 (Pause and Fast-forward decision) | Open |
-| L-3 | Low | String hygiene | 16.1 to 16.4 | Open |
-| L-4 | Low | `CalcClosestStationTile` clamps stacked Y | 14.1 | Open |
-| L-5 | Low | Road YAPF slope penalty across an elevator | 14.2 | Open |
-| L-6 | Low | `TileVirtXYClampedToMap` clamps into lower layers | 12.2, 14.3 | Open |
-| L-7 | Low | Dead code in `ClearPathReservation` | 7.2 | Open |
-| L-8 | Low | Stale comments | 7.3 | Open |
-| L-9 | Low | Two-tile commands accept cross-layer pairs | 15.1 to 15.7 | Open |
-| L-10 | Low | Conversions run over freshly created planes | 14.4, 14.5, 14.6 | Open |
-| L-11 | Low | Style nits (macro-case function, kd-tree special case, reservation drawing, AD-3 wording) | 11.1, 16.5; rest 18.5 | Open |
-| L-12 | Low | Road elevator button skips `can_build` gating | 13.2 | Open |
+| L-3 | Low | String hygiene | 16.1 to 16.4 | Fixed (tasks 16.1..16.4) |
+| L-4 | Low | `CalcClosestStationTile` clamps stacked Y | 14.1 | Fixed (task 14.1) |
+| L-5 | Low | Road YAPF slope penalty across an elevator | 14.2 | Fixed (task 14.2) |
+| L-6 | Low | `TileVirtXYClampedToMap` clamps into lower layers | 12.2, 14.3 | Fixed (tasks 12.2, 14.3) |
+| L-7 | Low | Dead code in `ClearPathReservation` | 7.2 | Fixed (task 7.2) |
+| L-8 | Low | Stale comments | 7.3 | Fixed (task 7.3) |
+| L-9 | Low | Two-tile commands accept cross-layer pairs | 15.1 to 15.7 | Fixed (tasks 15.1..15.7) |
+| L-10 | Low | Conversions run over freshly created planes | 14.4, 14.5, 14.6 | Fixed (tasks 14.4..14.6) |
+| L-11 | Low | Style nits (macro-case function, kd-tree special case, reservation drawing, AD-3 wording) | 11.1, 16.5; rest 18.5 | Fixed (tasks 11.1, 16.5, 18.5; r2mlm9 Group 7) |
+| L-12 | Low | Road elevator button skips `can_build` gating | 13.2 | Fixed (task 13.2) |
+| L-13 | Low | Rail portal conversion misses the far end's affected trains | 18.8; scenario pending | Fixed (task 18.8) |
 
 ### Critical findings
 
@@ -249,6 +255,14 @@ Tasks 1.1 to 7.5 are in this file; tasks from 8.1 on are in [r2rvm2-review-map-2
   - `RoadFindPathToDest` returns the single reachable trackdir without pathfinding, so road vehicles do the same.
   - The signal walk treats such an entry as "came up the shaft".
 - **Fix:** FD-4 and FD-5, tasks 8.3, 9.1 to 9.3 and 10.1.
+
+#### H-6 Extra viewport caption reads a null viewport during sizing
+
+Found and fixed in r2rvm2 task 16.6 on 2026-10-03. `InitNested` requests `ExtraViewportWindow::GetWidgetString` before `InitializeViewport` creates the viewport. Reading `this->viewport->layer` crashed the game when opening an extra viewport. The caption now uses Surface while the pointer is null, then the viewport's own layer. The second Debug run and its caption screenshots passed in that task.
+
+#### H-7 Empty console input asserts before loading
+
+Found and fixed on 2026-10-04 in R2RVM2 Group 18B during legacy-save verification. `IConsoleCmdExec` read `command_string[0]` before checking length. Redirected Windows dedicated-console input can be empty, causing MSVC's `string_view subscript out of range` assertion before a pending load runs. The entry point now treats empty input as a no-op before the comment check. Its new regression case covers default and non-null empty views and comment input. Both configurations build and pass 111/111 unit cases; the corrected Debug legacy TTD load and round trip exit normally. This input defect is independent of map-layer storage.
 
 ### Medium findings
 
@@ -347,6 +361,10 @@ Tasks 1.1 to 7.5 are in this file; tasks from 8.1 on are in [r2rvm2-review-map-2
   - FD-7 takes the target layer from the clicked tile. After task 13.3 an ordinary click on a Space tile would send it, so task 6.4 must land first.
 - **Fix:** FD-7, task 6.4.
 
+#### M-12 Rail portal conversion mutates one end before pair handling
+
+Found and fixed on 2026-10-04 in r2rvm2 task 18.8. `CmdConvertRail` admitted `LayerPortal` to its ordinary single-tile branch before reaching the pair case. Execution moved one end's infrastructure piece and changed its type; the pair branch then read the new type for validation and counters. This could disagree with the test pass and leave the far end's infrastructure in the old type. Portal pairs now bypass that branch and validate both ends before changing either. The pair branch moves both ends' pieces once, handles reservations on either end and refreshes affected consists. Both builds and unit suites pass; the infrastructure/conversion scenario is pending the representative save.
+
 ### Low findings
 
 #### L-1 `GetSlopePixelZOutsideMap` drops its `layer` argument
@@ -403,6 +421,10 @@ Rail and road drags, canal, area clear and house area. The void fence and the pe
 #### L-12 The road elevator button skips the `can_build` gate
 
 [road_gui.cpp:422-425](../../../../src/road_gui.cpp#L422-L425).
+
+#### L-13 Rail portal conversion misses affected trains on the far end
+
+Recorded by r2rvm2 task 11.7, fixed by task 18.8 on 2026-10-04. `CmdConvertRail`'s pair branch changed both ends' rail types without collecting trains from both ends for `ConsistChanged(CCF_TRACK)`. Trains on the far end could retain the old power or speed limit. The fixed branch collects and deduplicates front consists on both ends, including reservation owners that lose power. Debug and RelWithDebInfo each build and pass 110/110 unit cases; actual conversion with trains remains a savegame scenario.
 
 ### Conformance with the master plan
 

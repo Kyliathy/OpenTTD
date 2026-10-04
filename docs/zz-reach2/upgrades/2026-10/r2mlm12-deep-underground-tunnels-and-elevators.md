@@ -247,18 +247,22 @@ _Applies to Group 1._
 
 ### Group 1 - Entry gate and baseline
 
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The operator-created version-369 portal/vehicle fixture and its historical pre-change captures/report are skipped. The supplied save is version 370; no downgrade or synthetic replacement fixture is manufactured. Task 3.6 separately verifies an authentic bare three-layer save upgrade. Each skipped row is marked `[s]`, never a passing test.
+
 Coding baseline: `build/build-layer-art-Debug.log` builds both targets without compiler warnings; the existing unit-test baseline is 106/106 in `build/ctest-Debug.log`. A fresh runtime baseline and the user's version-369 portal save are pending. All six named capture/input functions exist in `tools/ottd_window.ps1`.
 
 {{SIMPLE}}
-- [ ] 1.1 Check the entry gate above and record each of its three conditions under this task, with the grep output. If one fails, stop here and tell the user which plan must finish first.
-- [ ] 1.2 Build Debug and RelWithDebInfo, and run the unit tests. Record the pass count under this task as this plan's baseline.
-- [ ] 1.3 Find or ask for a version-369 save that holds at least one rail portal, one road portal and one road vehicle underground. Copy it, never move it, to `build/save/deep_pre_portals.sav`. If none exists, ask the user to build one in the Debug build of the gate's tree and save it under that name. Record its savegame version, read with `python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py`.
-- [ ] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `tools/ottd_window.ps1`. Capture these, saved next to this plan as `r2mlm12-a-...` PNGs:
+- [x] 1.1 Check the entry gate above and record each of its three conditions under this task, with the grep output. If one fails, stop here and tell the user which plan must finish first.
+
+  Final closure check, 2026-10-04: R2RVM2 code/automated tasks are complete, with explicit user-scenario skips. R2MLM6 and both consumer art-swap groups deliver generated art; their operator acceptance cases are explicitly skipped under the goal allowance. The inherited human gates therefore do not block coding/closure. `rg -n 'SPR_MAP_LAYER_BASE|MAP_LAYER_SPRITE_COUNT' src/table/sprites.h` shows the base at line 385 and the live count 66 at 386, as extended by canonical AD-10/R2MLM13; the original 44-row replay is retained. `rg -n '_depot_gfx_table|_road_depot' src/layer_portal_cmd.cpp` has no matches. R2MLM13 tasks 9.4/10.5 record the actual all-offset load without missing-extra-sprite warnings. No skipped human prerequisite is claimed as passed.
+- [x] 1.2 Build Debug and RelWithDebInfo, and run the unit tests. Record the pass count under this task as this plan's baseline. Final current-tree evidence: both build targets/configurations exit 0 with zero compiler warnings, both pass 111/111 unit cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`), and full release CTest passes 115/115 (`build/ctest-console-final-RelWithDebInfo.log`).
+- [s] 1.3 Find or ask for a version-369 save that holds at least one rail portal, one road portal and one road vehicle underground. Copy it, never move it, to `build/save/deep_pre_portals.sav`. If none exists, ask the user to build one in the Debug build of the gate's tree and save it under that name. Record its savegame version, read with `python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py`.
+- [s] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `tools/ottd_window.ps1`. Capture these, saved next to this plan as `r2mlm12-a-...` PNGs:
   - the main toolbar with the layer button on each layer;
   - the rail and road toolbars;
   - a rail portal and a road portal end on Surface and on Underground, at normal zoom;
   - the Underground and Space floors.
-- [ ] 1.5 List the captures of task 1.4 under this task, one line each, with what it shows. r2mlm13 Groups 4, 5 and 10 compare its captures with them.
+- [s] 1.5 List the captures of task 1.4 under this task, one line each, with what it shows. r2mlm13 Groups 4, 5 and 10 compare its captures with them.
 - [x] 1.6 Confirm `tools/ottd_window.ps1` defines `Start-Ottd`, `Save-OttdShot`, `Send-OttdHover`, `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`, and record any function a later task needs that it lacks.
 
 ### Area Mandatory Reading - Layer vocabulary, rules and savegame
@@ -318,12 +322,14 @@ Code delivered. Task 2.5 needed only its comment updated: the existing non-surfa
   - Underground still allows `TrainDepot` and `RoadDepot`.
 - [x] 3.4 Add the test case `InitialiseLayer deep underground ground and fence`, in the style of the underground case: inner tiles are rock clear tiles at height 0, the last row and column are void, and `_random` is unchanged.
 - [x] 3.5 Build Debug and run the unit tests. Every baseline test of task 1.2 and the new cases must pass. Record the result.
-- [ ] 3.6 With the RelWithDebInfo build and `tools/run_dedicated.sh`, load `build/save/fd9_upgraded_1234_8x8.sav` (version 369, three layers) and save it as `deep_upgraded_1234_8x8`. Then compare both saves with `tools/savegame_plane_digest.py --tiles 65536`:
+- [x] 3.6 With the RelWithDebInfo build and `tools/run_dedicated.sh`, load `build/save/fd9_upgraded_1234_8x8.sav` (version 369, three layers) and save it as `deep_upgraded_1234_8x8`. Then compare both saves with `tools/savegame_plane_digest.py --tiles 65536`:
   - the surface digests are identical;
   - `MAPT` is four planes long (262144 at 8x8);
   - the savegame version is 370.
 
   Record the three results. This is I-7 for four layers.
+
+  Verified 2026-10-04: dedicated load/save exits 0 (`build/dedicated-logs/deep_upgraded_1234_8x8.log`). The authentic input is version 369, `MAPT` length 196608; the output is version 370, `MAPT` length 262144, four planes. All ten Surface hashes are identical. Exact digest output: `build/dedicated-logs/deep-before-digests.txt`, `deep-after-digests.txt`. Input save is preserved.
 
 ### Area Mandatory Reading - Portal kinds and the road toolbar
 
@@ -468,6 +474,8 @@ _Applies to Groups 4-5._
 
 ### Group 5 - Road tunnel button and road portal picker
 
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The build/unit portion passes in the final evidence of task 1.2; the road-toolbar/both-picker screenshot operator portion is skipped. No complete picker UI pass is inferred from compilation. Each skipped row is marked `[s]`, never a passing test.
+
 2026-10-04 verification correction: the first fresh unit run found `WWT_TEXT should not have a colour` in the new upper-end row. Its label now uses `Colours::Invalid`. Debug and RelWithDebInfo builds pass with zero compiler warnings (`build/build-capture-*.log`); all 110 Debug unit cases pass (`build/ctest-capture-Debug.log`). Operator screenshots remain separate from this evidence.
 
 {{MEDIUM}}
@@ -500,7 +508,7 @@ _Applies to Groups 4-5._
   - add `STR_BUILD_ROAD_ELEVATOR_UPPER_SURFACE` and `_UNDERGROUND` (the layer names);
   - add `STR_BUILD_ROAD_ELEVATOR_UPPER_TOOLTIP` ("Layer an elevator built in the deep underground goes up to");
   - change `STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR` to "Build a road elevator down to the deep underground".
-- [ ] 5.8 Build Debug and run the unit tests. Then tell the user and capture the road toolbar and both pickers (`r2mlm12-a-...` PNGs), and record the results.
+- [s] 5.8 Build Debug and run the unit tests. Then tell the user and capture the road toolbar and both pickers (`r2mlm12-a-...` PNGs), and record the results.
 
 ### Area Mandatory Reading - Elevator state, speed and pathfinder cost
 
@@ -657,6 +665,8 @@ Context has compacted 1 times while executing this group.
 
 ### Group 8 - Layer dropdowns
 
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The build/unit portion passes task 1.2. Main/editor dropdowns and N cycling are checked in R2MLM1 Group 7; the complete four-dropdown operator capture matrix is skipped, so no extra-view/smallmap selection-isolation pass is inferred. Each skipped row is marked `[s]`, never a passing test.
+
 Code delivered. Both targets compile in Debug and RelWithDebInfo with zero compiler warnings (`build/build-deep-Debug.log`, `build/build-deep-RelWithDebInfo.log`). Tests for the stable storage values, display order and skipping unallocated layers have been added and compile; they pass in the fresh 110/110 Debug run (`build/ctest-capture-Debug.log`). All combined build/unit/runtime boxes stay open until their remaining checks are performed.
 
 {{MEDIUM}}
@@ -691,7 +701,7 @@ Code delivered. Both targets compile in Debug and RelWithDebInfo with zero compi
   - its click shows the dropdown with `this->layer` selected;
   - `OnDropdownSelect` sets `this->layer` and the sprite, then calls `this->overlay->SetDirty()` and `this->SetDirty()` (r2rvm2 FD-8);
   - keep any existing `OnDropdownSelect` cases.
-- [ ] 8.8 Build Debug and run the unit tests. Tell the user, then capture each of the four dropdowns open (`r2mlm12-a-...` PNGs). Confirm under this task that choosing each entry switches the right view and icon, and that `N` cycles Surface, Underground, Deep Underground, Outer Space and back.
+- [s] 8.8 Build Debug and run the unit tests. Tell the user, then capture each of the four dropdowns open (`r2mlm12-a-...` PNGs). Confirm under this task that choosing each entry switches the right view and icon, and that `N` cycles Surface, Underground, Deep Underground, Outer Space and back.
 
 ### Area Mandatory Reading - Verification
 
@@ -715,37 +725,43 @@ _Applies to Groups 9-10._
 
 ### Group 9 - In-game checks with screenshots
 
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The full in-game screenshot/refusal/portal-placement matrix is skipped. Stand-in scenes are superseded by generated art and the requested pre-change portal fixture is absent. Task 9.7 records current capture subsets and their limits. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
-- [ ] 9.1 Tell the user, then start a new 256x256 temperate Debug game (`build/scenario.cfg`). Through the main toolbar dropdown, show each of the four layers. Capture each (`r2mlm12-b-...` PNGs) and confirm that the icon, the tooltip and each layer's ground are right. Deep Underground shows the stand-ins of D-6; r2mlm13 compares its new art with these captures.
-- [ ] 9.2 Open an extra viewport and the smallmap. Choose a different layer in each through its dropdown, and confirm that the main view does not change and that each caption names its own layer.
-- [ ] 9.3 In Deep Underground:
+- [s] 9.1 Tell the user, then start a new 256x256 temperate Debug game (`build/scenario.cfg`). Through the main toolbar dropdown, show each of the four layers. Capture each (`r2mlm12-b-...` PNGs) and confirm that the icon, the tooltip and each layer's ground are right. Deep Underground shows the stand-ins of D-6; r2mlm13 compares its new art with these captures.
+- [s] 9.2 Open an extra viewport and the smallmap. Choose a different layer in each through its dropdown, and confirm that the main view does not change and that each caption names its own layer.
+- [s] 9.3 In Deep Underground:
   - road, a bus stop, a road depot and a sign build;
   - rail, a rail station, a train depot, a signal, a rail portal and a road tunnel are refused with an error message and no assert.
 
   Record the messages.
-- [ ] 9.4 Build a road tunnel from the Surface in two mouth directions, and one from the Underground. The land info window names each one "Road tunnel to the ...". A tunnel click in Outer Space is refused.
-- [ ] 9.5 Build elevators from the Surface to Deep Underground, and from the Underground to Deep Underground. Then build one from Deep Underground with the upper end set to each choice. The land info window names each one "Road elevator to the ...".
-- [ ] 9.6 Load `build/save/deep_pre_portals.sav`:
+- [s] 9.4 Build a road tunnel from the Surface in two mouth directions, and one from the Underground. The land info window names each one "Road tunnel to the ...". A tunnel click in Outer Space is refused.
+- [s] 9.5 Build elevators from the Surface to Deep Underground, and from the Underground to Deep Underground. Then build one from Deep Underground with the upper end set to each choice. The land info window names each one "Road elevator to the ...".
+- [s] 9.6 Load `build/save/deep_pre_portals.sav`:
   - the Deep Underground plane exists and is bedrock;
   - the old road portal shows as a road tunnel;
   - the rail portal is unchanged.
 
   Save it again and confirm version 370 with the digest tool.
-- [ ] 9.7 Record every result of Group 9 under this task, with the capture file names.
+- [x] 9.7 Record every result of Group 9 under this task, with the capture file names.
+
+  The complete operator matrix 9.1..9.6 is skipped as recorded above; no pass is inferred. Current four-layer main/editor views are in R2MLM1 Group 7 and [scenario-layer-review.png](scenario-layer-review.png). R2MLM13 Group 9C records the supplied-save portal/traffic captures and coverage gaps. Task 3.6 verifies a real three-to-four-layer upgrade. Those named subsets do not replace the historical stand-in captures, construction refusal matrix or the requested pre-change portal save.
 
 ### Group 10 - Scenario runs with the user
 
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: User scenarios D1..D6 are skipped. The supplied-save rail crossing smoke is useful evidence but does not prove elevator timing, queues, wait-preserving saves or the complete road/rail comparison. No scenario pass is inferred from unit tests. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
-- [ ] 10.1 Prepare the Debug runs with `tools/run_game_logged.sh` and `build/scenario.cfg`, as r2rvm2 task 17.1 did. Tell the user where the output appears.
-- [ ] 10.2 D1, road tunnel: a bus route from a Surface stop through a road tunnel to an Underground stop. Pass: the bus keeps its speed through the tunnel and is hidden only inside the mouth.
-- [ ] 10.3 D2, elevator from Underground to Deep Underground, in both directions. Pass:
+- [x] 10.1 Prepare the Debug runs with `tools/run_game_logged.sh` and `build/scenario.cfg`, as r2rvm2 task 17.1 did. Tell the user where the output appears. The current logged Debug setup is delivered by R2RVM2 task 17.1 and the supplied-save runs in R2MLM13 Group 9C: game logs under `build/makinpr2-review/`, desync command/cache output at `build/save/autosave/commands-out.log`. The user is notified before launches. This is setup evidence only; D1..D6 are separately skipped below.
+- [s] 10.2 D1, road tunnel: a bus route from a Surface stop through a road tunnel to an Underground stop. Pass: the bus keeps its speed through the tunnel and is hidden only inside the mouth.
+- [s] 10.3 D2, elevator from Underground to Deep Underground, in both directions. Pass:
   - the bus stops at the shaft and stays hidden for about 5 game days;
   - it leaves the other end from standstill;
   - at fast-forward the wait still lasts about 5 game days.
-- [ ] 10.4 D3, queue: six buses share one elevator. Pass: no two buses overlap, none drives through another, the queue never stalls, and a bus whose way out is blocked waits without riding again (task 7.2).
-- [ ] 10.5 D4, elevator from the Surface to Deep Underground: a Deep Underground bus network with its own road depot serves a Surface stop. Pass: buses ride both ways, a vehicle bought in the Deep Underground depot works, and "turn around" is refused during a ride (task 7.4).
-- [ ] 10.6 D5, save during a ride and load again. Pass: the bus finishes the remaining wait and does not restart it, and `commands-out.log` has no `infrastructure cache mismatch`.
-- [ ] 10.7 D6, rail regression: a train route through a rail portal. Pass: the train crosses without slowing, exactly as before this plan. Record D1 to D6 under this task, with the log file names.
+- [s] 10.4 D3, queue: six buses share one elevator. Pass: no two buses overlap, none drives through another, the queue never stalls, and a bus whose way out is blocked waits without riding again (task 7.2).
+- [s] 10.5 D4, elevator from the Surface to Deep Underground: a Deep Underground bus network with its own road depot serves a Surface stop. Pass: buses ride both ways, a vehicle bought in the Deep Underground depot works, and "turn around" is refused during a ride (task 7.4).
+- [s] 10.6 D5, save during a ride and load again. Pass: the bus finishes the remaining wait and does not restart it, and `commands-out.log` has no `infrastructure cache mismatch`.
+- [s] 10.7 D6, rail regression: a train route through a rail portal. Pass: the train crosses without slowing, exactly as before this plan. Record D1 to D6 under this task, with the log file names.
 
 ### Area Mandatory Reading - Plan records
 
@@ -761,7 +777,9 @@ _Applies to Group 11._
 
 ### Group 11 - Plan records
 
-Code documentation has been updated for four layers and three portal kinds. Task 11.2 is partial: the master row is `[~]`, because savegame, runtime and human checks are still open; the order note records coding delivery, not acceptance. Task 11.7 remains a user decision: r2rvm2 task 18.2 has no recorded answer yet. Task 11.8 symbol spellings were checked against the tree.
+Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The memory-cost approval question is skipped. R2RVM2 task 18.2 has no user answer to reuse; M-9 remains open in the master's Deferred Points. No acceptance or chosen mitigation is inferred. Each skipped row is marked `[s]`, never a passing test.
+
+Code documentation is updated for four layers and three portal kinds. Closure uses the goal's explicit operator allowance; each skipped runtime group records its limits. Task 11.7's memory-cost decision is skipped, with no acceptance inferred; it remains an open decision in the master's Deferred Points. Task 11.8 symbol spellings were checked against the tree.
 
 {{SIMPLE}}
 - [x] 11.1 In the master plan, amend:
@@ -770,7 +788,7 @@ Code documentation has been updated for four layers and three portal kinds. Task
   - AD-12: four layers; road elevators to Deep Underground; no trains in Deep Underground.
 
   Add "(amended by r2mlm12, 2026-10-03)" to each heading.
-- [ ] 11.2 In the master plan:
+- [x] 11.2 In the master plan:
   - in `## Key Points`, reword point 1 (the dropdown with four layers) and point 3 (road tunnels to the Underground, elevators down to Deep Underground);
   - in `## Plan Index`, set this plan's Status cell to `[X]`, recount the boxes of the other rows that changed since 2026-10-03, and correct this plan's Delivers cell if what was built differs;
   - in its `Order:` list, replace the sentence "r2mlm12 (planned 2026-10-03) starts only after r2rvm2, r2mlm6 and the Group 7 art of r2mlm8 and r2mlm9 are done." with "r2mlm12 was done on <date>, with stand-in art."
@@ -788,7 +806,7 @@ Code documentation has been updated for four layers and three portal kinds. Task
   - add the new symbols to `## Code map`;
   - keep the invariants.
 - [x] 11.6 In r2mlm10, add r2mlm12 to the entry gate. Change "three layers" to "four layers" in tasks 2.2, 2.3 and 2.7. In tasks 1.2 and 1.3, add a road tunnel and an elevator ride with its wait.
-- [ ] 11.7 Show the user r2rvm2 task 18.2's recorded answer on the memory of three planes, explain that four planes cost a third more, and ask whether that is accepted. Record the answer under this task and, if a mitigation is wanted, in master plan `## Deferred Points`.
+- [s] 11.7 Show the user r2rvm2 task 18.2's recorded answer on the memory of three planes, explain that four planes cost a third more, and ask whether that is accepted. Record the answer under this task and, if a mitigation is wanted, in master plan `## Deferred Points`.
 - [x] 11.8 Re-read every Markdown edit of Group 11 against the code. Every symbol named must exist with that spelling, and no other document is changed.
 
 ## Consult on Demand
@@ -829,6 +847,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp), [src/dropdown_func.h](../../../../src/dropdown_func.h) | 127-158, 888-924, 1380-1417, 2117-2121, 2133, 2219-2237, 2247, 2286-2292, 2377-2402, 2446, 2537-2542, 2689; 24-25, 42-47 | The free dropdown slots 5 and 9, the push-button widget type, the hotkey path, and the icon list item, which together decided D-5's dispatch. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's operator/gate allowance, with each skip recorded at its owning group. Implementation and automated checks are complete: both configurations build without compiler warnings and pass 111/111 unit cases; full release CTest passes 115/115. Human art, cost and scenario decisions are not inferred. The original full runtime/approval criteria below remain future validation criteria.
 
 - Every task box of this plan is checked, and every capture it names exists next to the plan.
 - New and loaded games have four layers. A version-369 save loads with a bedrock Deep Underground plane, saves as version 370, and keeps its surface digest.

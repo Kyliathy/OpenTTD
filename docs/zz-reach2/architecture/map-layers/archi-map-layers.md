@@ -28,6 +28,8 @@ Every layer uses the same plane size. Layer `L` occupies tiles `[L * PlaneSize, 
 
 The main toolbar, scenario editor, extra viewport and smallmap layer buttons open `BuildMapLayerDropDown`, showing allocated layers in display order. Each choice affects that button's view and icon. Hotkey `N` cycles the main view in the same order. Buttons are disabled in a single-layer game.
 
+`SaveViewportBeforeSaveGame` removes the main view's projected band offset before serialising VIEW camera coordinates. Loading starts on Surface at the same plane position and zoom; the selected layer is not stored. This GUI metadata does not affect map-plane serialization, commands or ticks. Existing VIEW fields and savegame versions are unchanged.
+
 ## Portals
 
 `TileType::LayerPortal` is value 11. A portal is two tiles at the same plane `(x, y)`, built and removed together by `Commands::BuildLayerPortal`. `LayerPortalKind` has three derived kinds: `RailTunnel` and `RoadTunnel` pair Surface with Underground; `RoadElevator` pairs Deep Underground with Surface or Underground. `MultiLayerMap::IsPortalPairAllowed` validates pairs; `GetPortalTargetLayer(from, kind, elevator_upper)` chooses a placement target. `GetLayerPortalKind(tile)` derives the kind from transport and layers without a saved kind bit. A Surface-to-Deep pair leaves the intermediate Underground tile untouched.
@@ -36,7 +38,7 @@ Each end has a shaft direction and a door that faces the opposite way. The other
 
 Road tunnels and rail portals are driven through at normal speed. A road elevator caps approach speed, then stops the front vehicle hidden at the shaft edge for `LAYER_ELEVATOR_WAIT_TICKS` (370 game ticks). `RoadVehicle::elevator_wait` is 0 while idle, above 1 while counting down, and 1 while ready to cross. Only a committed crossing or turn resets it to 0; a blocked pair keeps it ready without another ride. Stopping the bus or an approach breakdown pauses the countdown. Articulated parts follow their front. `CmdTurnRoadVeh` refuses during a ride. YAPF adds the portal penalty for both road kinds and `LAYER_ELEVATOR_WAIT_COST` (10 tile costs) for an elevator.
 
-Trams are refused. Signals are not placed on a portal tile. Rail reservations use `m5` bit 4, the same bit as a rail tunnel. Elevator housings on Underground and Deep Underground share art; Deep Underground floor/icon and road tunnel art have marked stand-ins pending r2mlm13 approval.
+Trams are refused. Signals are not placed on a portal tile. Rail reservations use `m5` bit 4, the same bit as a rail tunnel. Elevator housings on Underground and Deep Underground share art. The generated 66-sprite development set supplies all four layer icons, the Deep Underground floor and road tunnel art; runtime visual acceptance remains pending. Road tunnel backs draw as ground and cut fronts sort over vehicles using vanilla tunnel bounding boxes and separator boxes.
 
 ## Savegame
 
@@ -49,8 +51,13 @@ Trams are refused. Signals are not placed on a portal tile. Rail reservations us
 | Layer enum | `src/map_layer_type.h` |
 | Rules, pairing, plane iteration | `src/map_layer.h`, `src/map_layer.cpp` |
 | Names, icons, dropdown, display-order cycle | `src/map_layer_gui.cpp`: `BuildMapLayerDropDown`, `GetNextMapLayer`, `SetViewportLayer` |
+| Generated orientation previews | `src/map_layer_gui.cpp`: `DrawLayerPortalPreview`, used by the road and rail pickers |
+| Layer sprite contract (Action 5 type `0x1C`, 66 sprites) | `src/table/sprites.h`: `SPR_MAP_LAYER_BASE`, `MAP_LAYER_SPRITE_COUNT`, `SPR_IMG_MAP_LAYER_DEEP_UNDERGROUND`, `SPR_IMG_BUILD_ROAD_LAYER_TUNNEL`, `SPR_CURSOR_ROAD_LAYER_TUNNEL`, `SPR_MAP_LAYER_DEEP_FLOOR`, `SPR_MAP_LAYER_ROAD_TUNNEL_SURFACE`, `SPR_MAP_LAYER_ROAD_TUNNEL_UNDERGROUND` |
+| Deep floor variants | `src/clear_cmd.cpp`: `GetLayerGroundSprite`, `DrawTile_Clear` |
 | Portal accessors | `src/layer_portal_map.h` |
 | Build, draw, clear, enter-tile | `src/layer_portal_cmd.cpp` |
+| Road tunnel back/front and sort separators | `src/layer_portal_cmd.cpp`: `DrawTile_LayerPortal`, `_road_tunnel_front_bounds`, `_road_tunnel_rear_sep`, `_road_tunnel_front_sep` |
+| Rail/elevator solid foreground and shared frame anchors | `src/layer_portal_cmd.cpp`: `_layer_portal_front_bounds`; `sprite_quantize.py`: `front_mask`, `full_span`, `frame_panel` |
 | Road tunnel/elevator buttons and upper-end picker | `src/road_gui.cpp` |
 | Elevator wait controller and constants | `src/roadveh_cmd.cpp`: `RoadVehController`, `IndividualRoadVehicleController`, `LAYER_ELEVATOR_WAIT_TICKS` |
 | Elevator path cost | `src/pathfinder/yapf/yapf_road.cpp`: `LAYER_ELEVATOR_WAIT_COST` |

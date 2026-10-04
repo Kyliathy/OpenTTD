@@ -30,6 +30,7 @@
 #include "tunnelbridge.h"
 #include "layer_portal_cmd.h"
 #include "map_layer.h"
+#include "map_layer_gui.h"
 #include "tilehighlight_func.h"
 #include "core/geometry_func.hpp"
 #include "hotkeys.h"
@@ -1923,7 +1924,7 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	}
 
 	/**
-	 * Draw one mouth direction with the depot stand-in.
+	 * Draw the generated rail portal art for one mouth direction.
 	 * @param r Widget rectangle.
 	 * @param widget Widget to draw.
 	 */
@@ -1936,7 +1937,7 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 			AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
 			int x = (ir.Width() - ScaleSpriteTrad(64)) / 2 + ScaleSpriteTrad(31);
 			int y = (ir.Height() + ScaleSpriteTrad(48)) / 2 - ScaleSpriteTrad(31);
-			DrawTrainDepotSprite(x, y, static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE + to_underlying(DiagDirection::NE)), _cur_railtype);
+			DrawLayerPortalPreview(x, y, LayerPortalKind::RailTunnel, static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE));
 		}
 	}
 

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file console.cpp Handling of the in-game console. */
+/** @file console.cpp Handling of the in-game console. @see docs/zz-reach2/upgrades/2026-10/r2rvm2-review-map-2.md */
 
 #include "stdafx.h"
 #include "core/string_builder.hpp"
@@ -271,7 +271,8 @@ static void IConsoleAliasExec(const IConsoleAlias *alias, std::span<std::string>
  */
 void IConsoleCmdExec(std::string_view command_string, const uint recurse_count)
 {
-	if (command_string[0] == '#') return; // comments
+	//Empty console input and comment lines execute no command; check length before reading the first byte.
+	if (command_string.empty() || command_string[0] == '#') return;
 
 	Debug(Facility::Console, Severity::Info, "Executing cmdline: '{}'", command_string);
 

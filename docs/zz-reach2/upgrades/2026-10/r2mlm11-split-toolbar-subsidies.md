@@ -69,7 +69,7 @@ Out of scope:
 
 ### D-1 The Towns menu stands in for the Subsidies button
 
-The entry joins the list built by `ToolbarTownClick` and is handled by the existing `MenuClickTown`. `MainToolbarWindow::OnDropdownSelect` already reaches it through `_menu_clicked_procs[WID_TN_TOWNS]`. No widget, array slot or string is added. The Towns button appears in every split arrangement from 14 to 20 buttons and is never disabled. The Subsidies button's own menu has a single entry, so nothing else needs a new place.
+The entry joins the list built by `ToolbarTownClick` and is handled by the existing `MenuClickTown`. `MainToolbarWindow::OnDropdownSelect` already reaches it through `_menu_clicked_procs[WID_TN_TOWNS]`. No widget, array slot or string is added. The Towns button appears in every split arrangement from 14 to 20 buttons and is never disabled, but some arrangements show it on only one page. The Subsidies button's own menu has a single entry, so nothing else needs a new place.
 
 Rejected:
 
@@ -107,7 +107,7 @@ _Applies to Group 1._
 
 ### Group 1 - Towns menu entry
 
-Implemented 2026-10-03. In-game width checks stay pending until the user's save arrives.
+Implemented 2026-10-03. In-game width checks were completed on 2026-10-04 with the qualifications recorded in Group 2.
 
 {{SIMPLE}}
 - [x] 1.1 Add `static bool IsToolbarButtonShown(const Window *w, WidgetID widget)` directly after the second `PopupMainToolbarMenu` overload. Body: `return w->GetWidget<NWidgetBase>(widget)->current_x != 0;`. Its Javadoc block (`@param w`, `@param widget`, `@return`) states the contract: `NWidgetToolbarContainer::AssignSizePosition` gives every button outside the current arrangement page a width of 0.
@@ -138,15 +138,21 @@ _Applies to Group 2._
 
 ### Group 2 - Build and split-width checks
 
+Runtime closure, 2026-10-04: the lower-page menu checks at widths 14 and 15, visible-button checks at 16 and full width, and F6 checks pass. The upper pages at widths 14..17 contain no Towns button; their requested menu clicks cannot be performed in the approved, unchanged layouts. Tasks 2.3, 2.5 and 2.6 are marked skipped under the goal's operator allowance for those unreachable upper-page checks, with the successful parts recorded below. No upper-page menu pass is inferred and no layout change is introduced.
+
 {{SIMPLE}}
 - [x] 2.1 Build `openttd` and `openttd_test` in Debug with the master-plan command. `src/toolbar_gui.cpp` must add no warning.
-- [ ] 2.2 Run `ctest --test-dir build -C Debug --output-on-failure`. Every test that passed before this plan still passes.
-- [ ] 2.3 Start a new game from the Debug build. Raise Interface size and narrow the window (or use `-r`) until the toolbar splits at 14 buttons per page; the upper page starts Pause, Fast-forward, Trains. Without pressing the switch button, open the Towns menu: it ends with "Subsidies", and clicking it opens the subsidies list. This is the case D-2 exists for.
-- [ ] 2.4 Press the switch button, confirm the lower page has no Subsidies button, and repeat the Towns menu check.
-- [ ] 2.5 Widen the window to 15 buttons per page (the upper page starts Fast-forward, Small map, Map layer, Trains) and repeat the Towns menu check on both pages.
-- [ ] 2.6 Widen to 16 buttons per page. On the upper page, which has no Subsidies button, the Towns menu lists Subsidies. Switch to the lower page, where the Subsidies button shows, and confirm the Towns menu no longer lists it.
-- [ ] 2.7 Widen until the toolbar is a single row: the Towns menu has no Subsidies entry, and the Subsidies button and F6 both open the list. Then narrow back to 14 buttons and confirm F6 still opens the list.
-- [ ] 2.8 Confirm no assert fired during tasks 2.3 to 2.7. Under this task, record the interface size and the window widths used for 14, 15 and 16 buttons per page.
+- [x] 2.2 Run `ctest --test-dir build -C Debug --output-on-failure`. Every test that passed before this plan still passes.
+
+  Debug and RelWithDebInfo each pass 110/110 unit cases on 2026-10-04. Both targets build with exit 0 and zero compiler warnings. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. The four `regression_` cases use their separate acceptance workflow and are excluded from these unit runs.
+- [s] 2.3 Start a new game from the Debug build. Raise Interface size and narrow the window (or use `-r`) until the toolbar splits at 14 buttons per page; the upper page starts Pause, Fast-forward, Trains. Without pressing the switch button, open the Towns menu: it ends with "Subsidies", and clicking it opens the subsidies list. This is the case D-2 exists for. The actual upper page has no Towns button; see the group note.
+- [x] 2.4 Press the switch button, confirm the lower page has no Subsidies button, and repeat the Towns menu check. The menu ends with Subsidies and selecting it opens the list (`14-lower-towns.png`, `14-subsidies.png`).
+- [s] 2.5 Widen the window to 15 buttons per page (the upper page starts Fast-forward, Small map, Map layer, Trains) and repeat the Towns menu check on both pages. The lower-page menu and selection pass (`15-lower-towns.png`, `15-subsidies.png`); the upper-page menu is unreachable.
+- [s] 2.6 Widen to 16 buttons per page. On the upper page, which has no Subsidies button, the Towns menu lists Subsidies. Switch to the lower page, where the Subsidies button shows, and confirm the Towns menu no longer lists it. The lower-page menu contains only Town directory while Subsidies is visible (`16-lower-towns.png`); the upper-page menu is unreachable.
+- [x] 2.7 Widen until the toolbar is a single row: the Towns menu has no Subsidies entry, and the Subsidies button and F6 both open the list. Then narrow back to 14 buttons and confirm F6 still opens the list. Evidence: `full-towns.png`, `full-subsidies.png`, `full-f6.png`, `14-upper-f6.png`.
+- [x] 2.8 Confirm no assert fired during tasks 2.3 to 2.7. Under this task, record the interface size and the window widths used for 14, 15 and 16 buttons per page.
+
+  Debug new-game run, seed 4242, Interface size 250%, client height 600 pixels: widths 728, 780 and 832 select 14, 15 and 16 buttons; 1750 shows a single row. Both pages of 17..20 were captured at widths 884, 936, 988 and 1040. [toolbar-width-review.png](toolbar-width-review.png) shows all arrangements; [subsidies-menu-review.png](subsidies-menu-review.png) shows the actual menus and lists. Originals are in `build/toolbar-review/`, alongside `game.log`; the run exits normally with no assertion. Menu presence follows actual widget visibility. F6 remains available when neither Subsidies nor Towns is on the current page.
 
 ### Area Mandatory Reading - Plan records
 
@@ -160,10 +166,12 @@ _Applies to Group 3._
 
 ### Group 3 - Plan records
 
-2026-10-03: Group 1 is implemented. The cross-reference records describe code delivery; Group 2's runtime checks remain open.
+2026-10-04: code, build/unit checks and the executable Group 2 runtime cases are delivered. The unreachable upper-page operator cases have explicit skips. Cross-references record those limits; the Pause/Fast-forward decision remains separate.
 
 {{SIMPLE}}
-- [ ] 3.1 In r2rvm2, under the task named in the first row above, add the note "2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) Groups 1 and 2." Leave the task unchecked: its Pause and Fast-forward half is still open.
+- [x] 3.1 In r2rvm2, under the task named in the first row above, add the note "2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) Groups 1 and 2." Leave the task unchecked: its Pause and Fast-forward half is still open.
+
+  Recorded under r2rvm2 task 18.3 with an explicit qualification: Group 1 coding, Group 2 build/unit checks and the lower-page/full-width runtime cases pass. Unreachable upper-page menu cases are skipped rather than counted as passes. The Pause/Fast-forward decision remains open.
 - [x] 3.2 In r2rvm `#### L-2 Split toolbars lose Subsidies`, add the line `- **Fix:** the Subsidies half by [r2mlm11](r2mlm11-split-toolbar-subsidies.md) (Towns menu entry); the Pause and Fast-forward half stays open.`
 - [x] 3.3 Under r2mlm1 task 4.3, add the note "Subsidies, dropped from `arrange14` and `arrange15`, is offered by the Towns menu since r2mlm11."
 

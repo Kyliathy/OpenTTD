@@ -3,11 +3,11 @@
 // OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
 //
-// @see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md
+//@see docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md, docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
    -1 * 0 0C "Map layer graphics"
 //NFORenum 6.2.0 predates this fork's Action 5 type 1C; suppress only that feature diagnostic.
 //@@WARNING DISABLE 44
-   -1 * 3 05 1C \b 44 //MAP_LAYER_SPRITE_COUNT
+   -1 * 3 05 1C \b 66 //MAP_LAYER_SPRITE_COUNT
 //@@WARNING ENABLE 44
 
    -1 sprites/map_layers.png 8bpp    0    0  20  20    0    0 normal
@@ -23,34 +23,56 @@
    -1 sprites/map_layers.png 8bpp  368    0  64  31  -31    0 normal
    -1 sprites/map_layers.png 8bpp  434    0  64  31  -31    0 normal
    -1 sprites/map_layers.png 8bpp  500    0  64  53  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  566    0  34  38   -1  -22 normal
-   -1 sprites/map_layers.png 8bpp  602    0  64  52  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  668    0  34  37   -1   -8 normal
-   -1 sprites/map_layers.png 8bpp  704    0  64  53  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  770    0  32  38  -31   -7 normal
-   -1 sprites/map_layers.png 8bpp  804    0  64  53  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  870    0  32  38  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  904    0  64  53  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp  970    0  34  38   -1  -22 normal
-   -1 sprites/map_layers.png 8bpp 1006    0  63  52  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp 1071    0  34  38   -1   -8 normal
-   -1 sprites/map_layers.png 8bpp 1107    0  64  53  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp 1173    0  32  39  -31   -8 normal
-   -1 sprites/map_layers.png 8bpp 1207    0  64  52  -31  -22 normal
-   -1 sprites/map_layers.png 8bpp 1273    0  32  39  -31  -23 normal
-   -1 sprites/map_layers.png 8bpp 1307    0  64  45  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1373    0  34  31   -1  -15 normal
-   -1 sprites/map_layers.png 8bpp 1409    0  63  44  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1474    0  34  30   -1    1 normal
-   -1 sprites/map_layers.png 8bpp 1510    0  64  44  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1576    0  29  29  -31    0 normal
-   -1 sprites/map_layers.png 8bpp 1607    0  64  45  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1673    0  32  30  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1707    0  64  44  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1773    0  34  31   -1  -15 normal
-   -1 sprites/map_layers.png 8bpp 1809    0  64  45  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 1875    0  34  31   -1    0 normal
-   -1 sprites/map_layers.png 8bpp 1911    0  63  44  -30  -14 normal
-   -1 sprites/map_layers.png 8bpp 1976    0  33  30  -31    0 normal
-   -1 sprites/map_layers.png 8bpp 2011    0  64  44  -31  -14 normal
-   -1 sprites/map_layers.png 8bpp 2077    0  32  30  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp  566    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  632    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  698    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  764    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  830    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  896    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp  962    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1028    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1094    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1160    0  63  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1225    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1291    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1357    0  64  53  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1423    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1489    0  64  52  -31  -22 normal
+   -1 sprites/map_layers.png 8bpp 1555    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1621    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1687    0  63  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1752    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1818    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1884    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 1950    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2016    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2082    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2148    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2214    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2280    0  64  45  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2346    0  63  44  -30  -14 normal
+   -1 sprites/map_layers.png 8bpp 2411    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2477    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2543    0  64  44  -31  -14 normal
+   -1 sprites/map_layers.png 8bpp 2609    0  18  16    1    2 normal
+   -1 sprites/map_layers.png 8bpp 2629    0  18  16    1    2 normal
+   -1 sprites/map_layers.png 8bpp 2649    0  30  26    1    3 normal
+   -1 sprites/map_layers.png 8bpp 2681    0  64  31  -31    1 normal
+   -1 sprites/map_layers.png 8bpp 2747    0  64  31  -31    1 normal
+   -1 sprites/map_layers.png 8bpp 2813    0  64  31  -31    1 normal
+   -1 sprites/map_layers.png 8bpp 2879    0  63  38  -31   -7 normal
+   -1 sprites/map_layers.png 8bpp 2944    0  63  38  -31   -7 normal
+   -1 sprites/map_layers.png 8bpp 3009    0  64  35  -31   -4 normal
+   -1 sprites/map_layers.png 8bpp 3075    0  32  26  -19   -4 normal
+   -1 sprites/map_layers.png 8bpp 3109    0  64  35  -31   -4 normal
+   -1 sprites/map_layers.png 8bpp 3175    0  32  26  -11   -4 normal
+   -1 sprites/map_layers.png 8bpp 3209    0  64  38  -31   -7 normal
+   -1 sprites/map_layers.png 8bpp 3275    0  64  38  -31   -7 normal
+   -1 sprites/map_layers.png 8bpp 3341    0  64  35  -31   -4 normal
+   -1 sprites/map_layers.png 8bpp 3407    0  64  35  -31   -4 normal
+   -1 sprites/map_layers.png 8bpp 3473    0  64  42  -31  -11 normal
+   -1 sprites/map_layers.png 8bpp 3539    0  32  32  -19  -11 normal
+   -1 sprites/map_layers.png 8bpp 3573    0  64  41  -31  -10 normal
+   -1 sprites/map_layers.png 8bpp 3639    0  32  32  -11  -10 normal
+   -1 sprites/map_layers.png 8bpp 3673    0  64  35  -31   -4 normal
+   -1 sprites/map_layers.png 8bpp 3739    0  64  35  -31   -4 normal

@@ -1376,6 +1376,10 @@ _Applies to Groups 17-18._
 
 ### Group 17 - Scenario runs with the user
 
+Closure, 2026-10-04: operator tasks 17.2..17.8, explicitly requiring runs with the user, are skipped under the goal's operator allowance. No scenario is marked passed from code or unit-test results. The existing setup record remains valid; future full scenario validation must use the current four-layer build and generated art.
+
+Update, 2026-10-04: the user supplied `build/save/makinpr2.sav`. Logged Debug smoke runs and graphics checks now run with `desync=2`; both quit normally without an assert or infrastructure cache mismatch. R2MLM13 Group 9C records connected-platform/path-signal round trips and the original save's disconnected stations. These shorter checks do not complete S1's year/save-in-shaft requirements or the other scenarios below.
+
 {{MEDIUM}}
 - [x] 17.1 Prepare the Debug runs: the baseset in `build/baseset/` (task 5.1), a 256x256 temperate game, and the desync cache check enabled (`-d desync=2`, or the level found through Consult on Demand). Tell the user where the debug output appears.
   - 2026-10-03, done. Entry gate: Groups 1 to 7 and 8 to 16 are all checked (0 open boxes), and the latest Debug build passed 106 of 106 (task 16.6).
@@ -1387,39 +1391,39 @@ _Applies to Groups 17-18._
     - At desync 1 or more, the game also saves `dmp_cmds_*.sav` into `build/save/autosave/`: once at world creation, then every 32 game days.
     - An assert opens the "Fatal Application Failure" dialog and writes `crash*.json.log`, `.dmp`, `.sav` and `.png` into `build/`.
   - Smoke run: seed 4242. The window drew a 256x256 temperate world, and the log got 359 lines. `commands-out.log` recorded `new_map` and the dumps. The run was stopped by force (exit 127); a normal quit exits 0.
-- [ ] 17.2 S1 (C-1, FD-1, FD-3), with the user:
+- [s] 17.2 S1 (C-1, FD-1, FD-3), with the user:
   - build a rail portal whose surface end is at height 3 or more, with a surface station and an underground station;
   - run one train for one in-game year at fast forward;
   - save while the train is in the shaft, reload, and run one more month.
 
   Pass: the train crosses both ways, is hidden only inside the shaft frames, and no assert fires.
-- [ ] 17.3 S2 (H-4, M-10, FD-1, FD-2, FD-3), with the user:
+- [s] 17.3 S2 (H-4, M-10, FD-1, FD-2, FD-3), with the user:
   - build a road elevator whose surface end is at height 2 or more;
   - send a bus through it while the underground door has no road;
   - then connect road and a stop underground, and run four or more buses so that they queue back through the elevator.
 
   Pass: the bus turns around underground, returns visible and never freezes. After the connection the buses pass through, no two buses overlap at the shaft, and the queue never stalls.
-- [ ] 17.4 S3 (H-5, FD-4, FD-5), with the user: lay rail and road up to the shaft side of a portal, connected to the network.
+- [s] 17.4 S3 (H-5, FD-4, FD-5), with the user: lay rail and road up to the shaft side of a portal, connected to the network.
 
   Pass: no vehicle enters a portal from its shaft side, and the signal block behind the shaft stays independent of the portal block.
-- [ ] 17.5 S4 (M-1, H-1, FD-5), with the user:
+- [s] 17.5 S4 (M-1, H-1, FD-5), with the user:
   - put block signals beside both doors and let a train cross;
   - then remove the portal while those signals are in place.
 
   Pass: both blocks free after the train leaves; the removal raises no assert and the neighbouring signals update.
-- [ ] 17.6 S5 (H-2, M-3, FD-6), with the user:
+- [s] 17.6 S5 (H-2, M-3, FD-6), with the user:
   - start a local multiplayer server, and use the change-company cheat to build rail and road portals for two companies;
   - run `reset_company` on one of them.
 
   Pass: no `infrastructure cache mismatch` in the debug output, the other company's infrastructure window is unchanged, and the ownerless road elevator can be removed. If a company buy-out can be arranged, repeat it as a merger and record the result.
-- [ ] 17.7 S6 (M-5, M-6, M-7, M-11, FD-7, FD-8), with the user:
+- [s] 17.7 S6 (M-5, M-6, M-7, M-11, FD-7, FD-8), with the user:
   - with the main view on Surface, open an extra viewport on Underground and build a rail portal and a diagonal rail drag there;
   - switch the extra viewport to Space and click a tile with the rail portal tool;
   - show the cargo-flow overlay on the smallmap for a cross-layer route;
   - with the smallmap on Surface, click an underground station in the station list twice.
 
   Pass: builds land in the viewed layer, the Space click is refused with an error message and no assert, no stray link line appears, and the main view stays on Underground.
-- [ ] 17.8 S7 (M-2, M-8), with the user:
+- [s] 17.8 S7 (M-2, M-8), with the user:
   - remove a portal;
   - try to remove a rail portal while a train has reserved through its far end;
   - convert road on one elevator end. The base game has one road type, so the game needs `build/newgrf/test_road_type.grf` (road type "Test road", label TSRD), written by `tools/make_test_road_type_grf.py` and added in NewGRF Settings before the game starts.
@@ -1428,14 +1432,54 @@ _Applies to Groups 17-18._
 
 ### Group 18 - Closure and hand-off
 
+Closure, 2026-10-04: Group 17's user scenarios and decisions 18.2/18.3 are skipped under the goal's operator allowance. No memory-cost acceptance or toolbar-layout decision is inferred. M-9 and the Pause/Fast-forward half of L-2 remain open product decisions in the master Deferred Points. Task 18.1 now has the final four-layer digest evidence, and Group 18B fixes the empty-input assertion found during legacy checks. Coding, builds and automated checks are delivered; closure under the allowance does not mean the skipped scenarios passed.
+
 {{SIMPLE}}
-- [ ] 18.1 Build RelWithDebInfo, then repeat tasks 5.3 to 5.5 of [r2rvm-review-map.md](r2rvm-review-map.md) on the final build with the save prefix `final_`. Record the I-6 and I-7 evidence (the digest lines) under this task.
-- [ ] 18.2 M-9: ask the user whether the cost of three full planes (memory and tick time) is accepted for version 1, and record the answer. If it is not, add the chosen mitigation to master plan `## Deferred Points`; it is not implemented here.
-- [ ] 18.3 L-2: the Subsidies half belongs to r2mlm11. Ask the user whether the Pause and Fast-forward half (these buttons appear in one row only for 15 to 20 buttons) is accepted or deferred, and record the answer. If the user wants a change, apply it in `toolbar_gui.cpp` keeping the `static_assert`s, then build Debug.
-- [ ] 18.4 Rewrite the Relocation, Visibility, and Track and road bits bullets of r2mlm7 `## Portal Contract` per FD-1, FD-3 and FD-4. Ask the user before adding any sentence to master-plan AD-8.
-- [ ] 18.5 Fill the Status column of `### Severity index` in [r2rvm-review-map.md](r2rvm-review-map.md) with `Fixed (task x.y)`, `Deferred (user, date)` or `Open` for every row. That includes the L-11 reservation-drawing nit, which waits for the r2mlm9 art swap. Add a row for L-13, found in task 11.7 (`CmdConvertRail` portal case skips `affected_trains`), and add its `####` entry at the end of `### Low findings`. Add a row for H-6, found and fixed in task 16.6 (the extra viewport caption read a null viewport), with `Fixed (task 16.6)` and a `####` entry at the end of `### High findings`.
-- [ ] 18.6 Copy every `Open` or `Deferred` finding, with its ID, to master plan `## Deferred Points`.
-- [ ] 18.7 Add a note under the entry gate of r2mlm10 (`### Area Mandatory Reading - Multiplayer`) that the r2rvm fixes are in and r2mlm10 may start. Do not check r2mlm10 tasks this plan did not execute.
+- [x] 18.1 Build RelWithDebInfo, then repeat tasks 5.3 to 5.5 of [r2rvm-review-map.md](r2rvm-review-map.md) on the final build with the save prefix `final_`. Record the I-6 and I-7 evidence (the digest lines) under this task.
+
+  Verified 2026-10-04 with the four-layer version-370 build. Seeds 1234 and 98765 at 256x256 and 512x1024 regenerate bit-identical Surface planes (all ten map chunks) against the original version-368 reference. Loading each pre-epic save, saving `final_upgraded_`, loading that copy and saving `final_roundtrip_` preserves all ten complete four-layer chunks byte for byte, and both Surface prefixes match the corresponding `baseline_reload_` reference. All twelve dedicated runs exit 0. The baseline directory is read only throughout; generated files and logs are under this repository's `build/`. Exact Surface and complete-map digests are in [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt). Logs: `build/dedicated-logs/final_{1234,98765}_{8x8,9x10}.log`, `final_upgraded_*.log`, `final_roundtrip_*.log`. Build: `build/build-camera-save-RelWithDebInfo.log`, no compiler warnings. These checks evidence I-6 and paused map round trips for I-7; they do not pass the pending traffic/scenario matrix.
+- [s] 18.2 M-9: ask the user whether the cost of three full planes (memory and tick time) is accepted for version 1, and record the answer. If it is not, add the chosen mitigation to master plan `## Deferred Points`; it is not implemented here.
+- [s] 18.3 L-2: the Subsidies half belongs to r2mlm11. Ask the user whether the Pause and Fast-forward half (these buttons appear in one row only for 15 to 20 buttons) is accepted or deferred, and record the answer. If the user wants a change, apply it in `toolbar_gui.cpp` keeping the `static_assert`s, then build Debug.
+
+  2026-10-03: the user chose a Subsidies entry in the Towns menu instead of changing `arrange14` and `arrange15`. Delivered by [r2mlm11](r2mlm11-split-toolbar-subsidies.md): coding, build/unit checks and lower-page/full-width runtime checks pass. Its unreachable upper-page Towns-menu cases are explicitly skipped. The Pause/Fast-forward decision is still open.
+- [x] 18.4 Rewrite the Relocation, Visibility, and Track and road bits bullets of r2mlm7 `## Portal Contract` per FD-1, FD-3 and FD-4. Ask the user before adding any sentence to master-plan AD-8.
+
+  Updated those three contract bullets to match `TranslateIntoLayerPortalPair`, `IsHiddenInLayerPortal` and the door-only track-status query. No AD-8 sentence is added by this task.
+- [x] 18.5 Fill the Status column of `### Severity index` in [r2rvm-review-map.md](r2rvm-review-map.md) with `Fixed (task x.y)`, `Deferred (user, date)` or `Open` for every row. That includes the L-11 reservation-drawing nit, which waits for the r2mlm9 art swap. Add a row for L-13, found in task 11.7 (`CmdConvertRail` portal case skips `affected_trains`), and add its `####` entry at the end of `### Low findings`. Add a row for H-6, found and fixed in task 16.6 (the extra viewport caption read a null viewport), with `Fixed (task 16.6)` and a `####` entry at the end of `### High findings`.
+
+  Fixed-code statuses are recorded separately from pending scenarios. H-6 and L-13 are added, plus M-12 for the additional pair-accounting fault found with L-13. L-11: renamed helper and k-d tree fixes are delivered; reservation tint is in `DrawTile_LayerPortal`, and `TryReserveRailTrack`/`UnreserveRailTrack` dirty the tile when reservation display is on. AD-3 now names `RunTileLoop` as the loop implementation. M-9 and the Pause/Fast-forward half of L-2 remain Open.
+- [x] 18.6 Copy every `Open` or `Deferred` finding, with its ID, to master plan `## Deferred Points`.
+- [x] 18.7 Add a note under the entry gate of r2mlm10 (`### Area Mandatory Reading - Multiplayer`) that the r2rvm fixes are in and r2mlm10 may start. Do not check r2mlm10 tasks this plan did not execute.
+
+- [x] 18.8 Fix L-13 in `CmdConvertRail`: leave portal pairs out of the ordinary single-tile conversion branch; validate and convert both ends once, release incompatible reservations from either end, and add trains on either end to `affected_trains` for `ConsistChanged(CCF_TRACK)`. Build both configurations and run the unit suite; keep actual rail conversion/infrastructure checks in the deferred savegame scenario.
+
+  Implemented 2026-10-04. The audit also found that the ordinary branch changed the clicked end's rail type and one-piece counter before the pair branch read them. Portal-specific accounting now sees the original type, moves exactly two ends' pieces, and checks the far end before mutation. Affected consists are deduplicated with `include`; reservation owners losing power are refreshed too. This is code evidence, not a conversion scenario pass.
+
+  Validation: both targets build in Debug and RelWithDebInfo, exit 0, zero distinct compiler warnings; each configuration passes 110/110 unit cases. Logs: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. These unit cases do not exercise the vehicle/infrastructure conversion scenario; run that with the representative save.
+
+### Area Mandatory Reading - Empty console input during headless loading
+
+_Applies to Group 18B._
+
+| File name | Authoritative symbols | Purpose |
+| --- | --- | --- |
+| [src/console.cpp](../../../../src/console.cpp) | `IConsoleCmdExec` | The first comment check indexes a string view before checking whether it is empty. |
+| [src/video/dedicated_v.cpp](../../../../src/video/dedicated_v.cpp) | `CheckForConsoleInput`, `DedicatedHandleKeyInput`, `MainLoop` | Windows redirected input can deliver an empty line before the pending load is processed. |
+| [src/tests/CMakeLists.txt](../../../../src/tests/CMakeLists.txt) | `add_test_files` | Register a small console-input regression test. |
+
+### Group 18B - Empty console commands do not abort loading
+
+Added 2026-10-04 during final legacy-save verification. The Debug Windows dedicated run receives an empty console command and hits MSVC's `string_view subscript out of range` assertion before its pending legacy load runs. `IConsoleCmdExec` indexes `command_string[0]` before checking length. Empty input must be a no-op, including an empty non-null view. This corrects input handling only; it does not change command or simulation semantics.
+
+{{SIMPLE}}
+- [x] 18B.1 Guard empty input before indexing the console command; preserve the existing comment-line behaviour. Add a regression case for both default and non-null empty views.
+- [x] 18B.2 Build both configurations, run the unit checks and repeat the legacy load. Record actual loader and round-trip evidence; do not infer a legacy pass from modern saves.
+
+  Both configurations build with zero compiler warnings and pass 111/111 unit cases, including `Console - empty commands are ignored`: `build/build-console-input-{Debug,RelWithDebInfo}.log`, `build/ctest-console-input-{Debug,RelWithDebInfo}.log`. The final full RelWithDebInfo run passes 115/115 (111 unit plus four regression cases, 24.00 s) in `build/ctest-console-final-RelWithDebInfo.log`. Original failed-input log retained at `build/dedicated-logs/legacy-empty-command-failure.log`. With the guard, both dedicated old-file runs exit 0 and all ten complete map chunks are identical across four 256x256 planes (`final_legacy_loaded.log`, `final_legacy_roundtrip.log`, `legacy-roundtrip-results.txt`).
+
+  File-type correction: the plan's example `!kit/TT/trt00.sv0` is a TTD scenario, not TTO. It additionally plays 31 calendar days (712223 to 712254) in Debug and its played save round-trips all ten map chunks (`final-legacy-month.log`, `final_legacy_month_roundtrip.log`, saves `final_legacy_{preplay,month,month_roundtrip}.sav`). The null-driver helper uses synchronous saves; an initial attempt with async saves plus diagnostic dumps asserted during overlapping saves, retained in `legacy-null-save-overlap-failure.log` and `build/crash20261004022927.*`. No save-loop code is changed by this group.
+
+  Actual TTO files `trt16.sv1` and `trt17.sv1` reach the TTO loader but fail at custom-name conversion. The same `Incorrect conversion of custom name string` failure occurs for `trt16.sv1` in the pre-epic executable, copied into `build/legacy-baseline/` for a read-only-baseline comparison. Logs are `final_tto-month.log`, `final_tto17-month.log`, and `tto-baseline-trt16.log`. The baseline directory is unchanged. This pre-existing TTO conversion defect is recorded in the master's Deferred Points, not counted as a layered-save success.
 
 ## Consult on Demand
 
@@ -1487,6 +1531,8 @@ This table records what shaped this plan:
 | [src/console_cmds.cpp](../../../../src/console_cmds.cpp) | 1091-1134 | `reset_company` as the server-side trigger for the bankruptcy path in S5. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 under the goal's explicit operator-skip allowance: all code and automated tasks are complete; Groups 17 and 18 record the skipped user scenarios and decisions. The original full-acceptance criteria below remain the reference for future scenario runs, and are not all claimed as passed.
 
 - Every task of Groups 8 to 18 is checked, and every row of `### Severity index` in [r2rvm-review-map.md](r2rvm-review-map.md) reads `Fixed (task x.y)` or a user-approved `Deferred`.
 - The epic tree builds in Debug and RelWithDebInfo. The unit tests pass, including the new test cases of tasks 8.4 and 15.1.

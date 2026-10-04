@@ -17,6 +17,7 @@
 #include "road_cmd.h"
 #include "layer_portal_cmd.h"
 #include "map_layer.h"
+#include "map_layer_gui.h"
 #include "station_func.h"
 #include "waypoint_func.h"
 #include "window_func.h"
@@ -571,8 +572,7 @@ struct BuildRoadToolbarWindow : Window {
 			case WID_ROT_TRUCK_STATION: return SPR_CURSOR_TRUCK_STATION;
 			case WID_ROT_BUILD_BRIDGE: return SPR_CURSOR_BRIDGE;
 			case WID_ROT_BUILD_TUNNEL: return GetRoadTypeInfo(this->roadtype)->cursor.tunnel;
-			//Vanilla tunnel cursor is the stand-in until r2mlm13 Group 9.
-			case WID_ROT_LAYER_TUNNEL: return GetRoadTypeInfo(this->roadtype)->cursor.tunnel;
+			case WID_ROT_LAYER_TUNNEL: return SPR_CURSOR_ROAD_LAYER_TUNNEL;
 			case WID_ROT_LAYER_ELEVATOR: return SPR_CURSOR_ROAD_ELEVATOR;
 			case WID_ROT_CONVERT_ROAD: return GetRoadTypeInfo(this->roadtype)->cursor.convert_road;
 			default: NOT_REACHED();
@@ -1055,9 +1055,8 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_widgets =
 						SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_BRIDGE, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
-		//Vanilla road tunnel button is the stand-in until r2mlm13 Group 9.
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL),
-						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_LAYER_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
@@ -1174,9 +1173,8 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_road_scen_widg
 						SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_BRIDGE, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_BRIDGE),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_BUILD_TUNNEL),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_ROAD_TUNNEL),
-		//Vanilla road tunnel button is the stand-in until r2mlm13 Group 9.
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_TUNNEL),
-						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_ROAD_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
+						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_LAYER_TUNNEL, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_TUNNEL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_LAYER_ELEVATOR),
 						SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_BUILD_ROAD_ELEVATOR, STR_ROAD_TOOLBAR_TOOLTIP_BUILD_LAYER_ELEVATOR),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_ROT_REMOVE),
@@ -1367,11 +1365,12 @@ struct BuildRoadElevatorWindow : public PickerWindowBase {
 	{
 		if (!IsInsideMM(widget, WID_BREL_DOOR_NE, WID_BREL_DOOR_NW + 1)) return;
 		size.width = ScaleGUITrad(64) + WidgetDimensions::scaled.fullbevel.Horizontal();
-		size.height = ScaleGUITrad(48) + WidgetDimensions::scaled.fullbevel.Vertical();
+		//Elevator art has a taller contract than tunnel art, so the preview must reserve its full height.
+		size.height = ScaleGUITrad(this->kind == LayerPortalKind::RoadElevator ? 64 : 48) + WidgetDimensions::scaled.fullbevel.Vertical();
 	}
 
 	/**
-	 * Draw one door direction with the depot stand-in until r2mlm13 Group 9.
+	 * Draw the generated tunnel or elevator art for one door direction.
 	 * @param r Widget rectangle.
 	 * @param widget Widget to draw.
 	 */
@@ -1383,8 +1382,9 @@ struct BuildRoadElevatorWindow : public PickerWindowBase {
 		if (FillDrawPixelInfo(&tmp_dpi, ir)) {
 			AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
 			int x = (ir.Width() - ScaleSpriteTrad(64)) / 2 + ScaleSpriteTrad(31);
-			int y = (ir.Height() + ScaleSpriteTrad(48)) / 2 - ScaleSpriteTrad(31);
-			DrawRoadDepotSprite(x, y, static_cast<DiagDirection>(widget - WID_BREL_DOOR_NE + to_underlying(DiagDirection::NE)), _cur_roadtype);
+			int sprite_height = this->kind == LayerPortalKind::RoadElevator ? 64 : 48;
+			int y = (ir.Height() + ScaleSpriteTrad(sprite_height)) / 2 - ScaleSpriteTrad(31);
+			DrawLayerPortalPreview(x, y, this->kind, static_cast<DiagDirection>(widget - WID_BREL_DOOR_NE));
 		}
 	}
 

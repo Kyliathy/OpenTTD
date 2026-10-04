@@ -91,38 +91,56 @@ bool IsHiddenInLayerPortal(DiagDirection shaft, int x, int y)
 	return GetLayerPortalDepth(shaft, x, y) >= _tunnel_visibility_frame[shaft];
 }
 
-/** Front-part layouts replace depot tile layouts, retaining each door edge for vehicle sorting. */
+/** Far fronts cover solid roofs/walls over the whole footprint; near door frames retain their edge sorting. */
 static constexpr DiagDirectionIndexArray<SpriteBounds> _layer_portal_front_bounds{{{
-	{{0, 0, 0}, {1, 16, 20}, {}},
+	{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}},
 	{{0, 15, 0}, {16, 1, 20}, {0, -15, 0}},
 	{{15, 0, 0}, {1, 16, 20}, {-15, 0, 0}},
-	{{0, 0, 0}, {16, 1, 20}, {}},
+	{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}},
 }}};
 
-/** Vanilla tunnel roof bounds, anchored at tile point 15,15; stand-in until r2mlm13 Group 9. */
-static constexpr DiagDirectionIndexArray<SpriteBounds> _road_tunnel_stand_in_roof_bounds{{{
-	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {TILE_SIZE - 1, TILE_SIZE - 2, -BB_Z_SEPARATOR}},
-	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {TILE_SIZE - 2, TILE_SIZE - 1, -BB_Z_SEPARATOR}},
-	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {TILE_SIZE - 1, TILE_SIZE - 2, -BB_Z_SEPARATOR}},
-	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {TILE_SIZE - 2, TILE_SIZE - 1, -BB_Z_SEPARATOR}},
+/** Vanilla tunnel roof bounds with north-corner sprite offsets, as used by its catenary (r2mlm13 D-1). */
+static constexpr DiagDirectionIndexArray<SpriteBounds> _road_tunnel_front_bounds{{{
+	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {0, -1, -BB_Z_SEPARATOR}},
+	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {-1, 0, -BB_Z_SEPARATOR}},
+	{{0, 1, BB_Z_SEPARATOR}, {TILE_SIZE, TILE_SIZE - 1, 1}, {0, -1, -BB_Z_SEPARATOR}},
+	{{1, 0, BB_Z_SEPARATOR}, {TILE_SIZE - 1, TILE_SIZE, 1}, {-1, 0, -BB_Z_SEPARATOR}},
+}}};
+
+/** Vanilla rear separator boxes keep tunnel roofs sorted apart from neighbouring vehicles. */
+static constexpr DiagDirectionIndexArray<SpriteBounds> _road_tunnel_rear_sep{{{
+	{{}, {TILE_SIZE, 1, TILE_HEIGHT}, {}},
+	{{}, {1, TILE_SIZE, TILE_HEIGHT}, {}},
+	{{}, {TILE_SIZE, 1, TILE_HEIGHT}, {}},
+	{{}, {1, TILE_SIZE, TILE_HEIGHT}, {}},
+}}};
+
+/** Vanilla front separator boxes keep the mouth's roof sorted apart from its road approach. */
+static constexpr DiagDirectionIndexArray<SpriteBounds> _road_tunnel_front_sep{{{
+	{{0, TILE_SIZE - 1, 0}, {TILE_SIZE, 1, TILE_HEIGHT}, {}},
+	{{TILE_SIZE - 1, 0, 0}, {1, TILE_SIZE, TILE_HEIGHT}, {}},
+	{{0, TILE_SIZE - 1, 0}, {TILE_SIZE, 1, TILE_HEIGHT}, {}},
+	{{TILE_SIZE - 1, 0, 0}, {1, TILE_SIZE, TILE_HEIGHT}, {}},
 }}};
 
 /**
- * Draw a portal end using the aligned generated back/front pair.
- * Back parts are ground sprites; front door frames sort at their physical door edge.
- * Rail and road surfaces retain the end's transport type, including NewGRF overlays.
+ * Draw a portal end using generated back/front sprites.
+ * Road tunnels cut both parts from one whole picture. Rail/elevator near fronts combine aligned frames with cut roof/wall coverage;
+ * their far fronts reuse the whole back picture so vehicles cannot show through solid walls and roofs.
+ * Rail and elevator road surfaces retain their type overlays; tunnel backs include the paved approach.
  * @param ti Tile to draw.
  */
 static void DrawTile_LayerPortal(TileInfo *ti)
 {
-	//Stand-in until r2mlm13 Group 9: vanilla road tunnel entrances preserve their shaft-direction indexing.
+	//A whole back draws under vehicles; its mouth/front sorts over them with vanilla tunnel separator boxes.
 	if (GetLayerPortalKind(ti->tile) == LayerPortalKind::RoadTunnel) {
 		DiagDirection shaft = GetLayerPortalShaftDirection(ti->tile);
-		SpriteID image = SPR_TUNNEL_ENTRY_REAR_ROAD + to_underlying(shaft) * 2;
-		DrawGroundSprite(image, PAL_NONE);
-		uint offset = DiagDirToAxis(shaft) == Axis::X ? 1 : 0;
-		DrawRoadOverlays(ti, PAL_NONE, GetRoadTypeInfo(GetRoadTypeRoad(ti->tile)), nullptr, offset, offset);
-		AddSortableSpriteToDraw(image + 1, PAL_NONE, *ti, _road_tunnel_stand_in_roof_bounds[shaft], false);
+		SpriteID base = GetTileLayer(ti->tile) == MapLayer::Surface ? SPR_MAP_LAYER_ROAD_TUNNEL_SURFACE : SPR_MAP_LAYER_ROAD_TUNNEL_UNDERGROUND;
+		SpriteID back = base + to_underlying(GetLayerPortalDoorDirection(ti->tile)) * 2;
+		DrawGroundSprite(back, PAL_NONE);
+		AddSortableSpriteToDraw(back + 1, PAL_NONE, *ti, _road_tunnel_front_bounds[shaft], false);
+		AddSortableSpriteToDraw(SPR_EMPTY_BOUNDING_BOX, PAL_NONE, *ti, _road_tunnel_rear_sep[shaft]);
+		AddSortableSpriteToDraw(SPR_EMPTY_BOUNDING_BOX, PAL_NONE, *ti, _road_tunnel_front_sep[shaft]);
 		return;
 	}
 	DiagDirection door = GetLayerPortalDoorDirection(ti->tile);

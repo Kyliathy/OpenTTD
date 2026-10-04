@@ -85,6 +85,8 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 
 ### Group 2 - Placement GUI
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The complete placement/cost/removal/infrastructure-window operator check is skipped. Existing pairs and the command implementation are not a runtime accounting pass. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
 - [x] 2.1 Add `WID_RAT_BUILD_LAYER_PORTAL, ///< Build a rail portal to another map layer.` after `WID_RAT_BUILD_TUNNEL`, and add the button to `_nested_build_rail_widgets` with `SPR_IMG_TUNNEL_RAIL` as stand-in sprite and `STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL`.
 - [x] 2.2 Add `static DiagDirection _rail_portal_mouth_direction` and `BuildRailLayerPortalWindow`, cloned from `BuildRailDepotWindow` with its own widget enum and `WindowDesc` (unique ini key), showing the four mouth directions and the hint that the underground mouth faces the opposite way.
@@ -92,7 +94,7 @@ Entry gate. r2mlm7 must be complete: `Commands::BuildLayerPortal`, `GetLayerPort
 - [x] 2.4 In `OnClick`, open the picker; in `OnPlaceObject`, post `Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal, tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE)`.
 - [x] 2.5 Take `target` from `MultiLayerMap::GetPortalTargetLayer` of the main viewport's layer and disable the button when it is `MapLayer::Invalid`; refresh when the layer changes.
 - [x] 2.6 Add a free hotkey named `layer_portal` to the rail toolbar hotkeys.
-- [ ] 2.7 Build and place a portal; confirm both ends appear, cost is charged once, removing either end removes both, and the infrastructure window counts both ends.
+- [s] 2.7 Build and place a portal; confirm both ends appear, cost is charged once, removing either end removes both, and the infrastructure window counts both ends.
 
 ### Area Mandatory Reading - Train traversal
 
@@ -108,14 +110,21 @@ _Applies to Group 3._
 
 ### Group 3 - Train traversal
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The straddling-consist reversal operator run is skipped; the supplied-save round trips do not include a reversal at that exact position. Each skipped row is marked `[s]`, never a passing test.
+
 {{HARD}}
-- [x] 3.1 In the new-tile path of `TrainController`, when `IsLayerPortalShaftExit(gp.old_tile, DirToDiagDir(v->GetMovingDirection()))`, call `TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y)`, set `gp.new_tile = GetLayerPortalPairTile(gp.old_tile)` and `enterdir` to the movement direction instead of `DiagdirBetweenTiles`; port the existing comments.
+- [x] 3.1 In the new-tile path of `TrainController`, when `IsLayerPortalShaftExit(gp.old_tile, DirToDiagDir(v->GetMovingDirection()))`, call `TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y)`, set `gp.new_tile` through `GetLayerPortalNextTile(gp.old_tile, moving)` and `enterdir` to the movement direction instead of `DiagdirBetweenTiles`; port the existing comments. Final closure audit routes this tile step through the shared neighbour helper (I-3), which returns the same pair for the guarded shaft direction.
 - [x] 3.2 In the wagon-follow branch, compute the exit direction towards `prev->tile` with a portal-aware helper (the movement direction when the two tiles are a portal pair) instead of `DiagdirBetweenTiles`.
 - [x] 3.3 In `TrainCheckIfLineEnds` and `TrainApproachingCrossingTile`, replace `moving_front->tile + TileOffsByDiagDir(dir)` with `GetLayerPortalNextTile(moving_front->tile, dir)`.
 - [x] 3.4 Review the remaining `TileAddByDiagDir` look-aheads in `train_cmd.cpp` (lines 2216, 2459, 2896, 2998, 3477) and switch each one that can start on a portal tile to `GetLayerPortalNextTile`; record each decision as a `//` comment.
 - [x] 3.5 In the train branch of `VehicleEnterTile_LayerPortal`, apply the contract's hide and show frames for every part and play the tunnel sound for steam engines like the tunnel code; never set `Track::Wormhole`.
 - [x] 3.6 After relocation, update each part's Z position and inclination while hidden, and confirm `CheckGroundVehiclesAtCorrectZ` accepts trains on portal tiles after loading.
-- [ ] 3.7 Reverse a train while it straddles the two layers (front underground, rear on the surface); confirm `AdvanceWagonsBeforeSwap` / `AfterSwap` keep the consist connected and no `Disconnecting train` fatal error occurs.
+- [s] 3.7 Reverse a train while it straddles the two layers (front underground, rear on the surface); confirm `AdvanceWagonsBeforeSwap` / `AfterSwap` keep the consist connected and no `Disconnecting train` fatal error occurs.
+- [x] 3.8 Final invariant audit: route the movement tile through `GetLayerPortalNextTile` using the already validated `moving` direction; build both configurations and run the existing portal mapping tests and appropriate regression checks. The result must remain the same pair for every shaft direction.
+
+  Verified 2026-10-04: both targets/configurations build with zero compiler warnings (`build/build-neighbour-closure-{Debug,RelWithDebInfo}.log`). Debug passes 111/111 unit cases, including the portal neighbour/relocation tests; full RelWithDebInfo CTest passes 115/115, including all four regression suites (`build/ctest-neighbour-closure-{Debug,RelWithDebInfo}.log`, 12.06 s / 21.79 s). The helper receives `moving`, the direction already checked by `IsLayerPortalShaftExit`, so it returns the same pair for every shaft orientation. Remaining pair-getter calls in these controllers compare connectivity, not movement destinations.
+
+  A final logged Debug run of `makinpr2-connected-graphics-tested.sav` captures 48 frames over 24 seconds: the train emerges onto the Surface, stops at the connected station, enters the portal and comes back. [train-neighbour-smoke.png](train-neighbour-smoke.png) shows selected authentic frames. `build/makinpr2-review/game-final-neighbour.log` exits 0 with no assertion/disconnected-consist error; the desync command log reports no infrastructure/cache mismatch. The normal save/quit writes `build/save/makinpr2-final-verification.sav`. A news message says Road Vehicle #2 has too few orders; the bus order schedule is not changed by this train check. This smoke does not pass the skipped multi-year or reversal/occupied-path matrices.
 
 ### Area Mandatory Reading - Reservations and signals
 
@@ -132,12 +141,14 @@ _Applies to Group 4._
 
 ### Group 4 - Reservations and signals
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The occupied block/path-signal operator matrix is skipped. R2MLM13 Group 9C successfully places path signals and runs the connected train across layers, but does not test an occupied path/block on both ends. Each skipped row is marked `[s]`, never a passing test.
+
 {{HARD}}
 - [x] 4.1 Confirm `ExtendTrainReservation` and `TryPathReserve` reserve through a portal and set the portal reservation bit on both ends.
 - [x] 4.2 Make `ClearPathReservation` use `GetLayerPortalNextTile` when the cleared tile is a portal end.
 - [x] 4.3 Make the tunnel and bridge skips in `FollowReservation` and `GetTrainForReservation` ignore portal tiles, and confirm `FollowTrainReservation` finds the end of a reservation that crosses layers.
-- [ ] 4.4 Confirm a train standing on the underground end occupies the signal block that contains the surface end (and the reverse), using block signals on both sides.
-- [ ] 4.5 Confirm path signals in front of a portal let a train through only when the path across the portal is free.
+- [s] 4.4 Confirm a train standing on the underground end occupies the signal block that contains the surface end (and the reverse), using block signals on both sides.
+- [s] 4.5 Confirm path signals in front of a portal let a train through only when the path across the portal is free.
 - [x] 4.6 In TrainController, make the signal-update side passed to `AddSideToSignalBuffer` correct for a part that just crossed a portal.
 
 ### Area Mandatory Reading - Rail pathfinding
@@ -154,12 +165,14 @@ _Applies to Group 5._
 
 ### Group 5 - Rail pathfinding
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The year-long cached/uncached search, nearest-depot/safe-wait and reversal operator matrix is skipped. Short supplied-save Debug smoke is recorded separately, with no year-long claim. Each skipped row is marked `[s]`, never a passing test.
+
 {{HARD}}
 - [x] 5.1 Add `pf.yapf.rail_layer_portal_penalty` once per traversal in the segment cost walk, with a comment explaining it is charged on leaving the shaft side.
 - [x] 5.2 Confirm segment caching across portals: a segment may span both layers; `YapfNotifyTrackLayoutChange` is called on portal build and removal (r2mlm7 tasks 6.6 and 7.3).
-- [ ] 5.3 Run a Debug build with `-d desync=2` (which runs the cached and uncached searches side by side) on a network of two portals for one in-game year; confirm no mismatch warning.
-- [ ] 5.4 Confirm `YapfTrainFindNearestDepot` and `YapfTrainFindNearestSafeTile` work through portals, and that a portal tile is never chosen as a safe waiting position.
-- [ ] 5.5 Confirm `YapfTrainCheckReverse` does not reverse trains in front of a portal mouth.
+- [s] 5.3 Run a Debug build with `-d desync=2` (which runs the cached and uncached searches side by side) on a network of two portals for one in-game year; confirm no mismatch warning.
+- [s] 5.4 Confirm `YapfTrainFindNearestDepot` and `YapfTrainFindNearestSafeTile` work through portals, and that a portal tile is never chosen as a safe waiting position.
+- [s] 5.5 Confirm `YapfTrainCheckReverse` does not reverse trains in front of a portal mouth.
 
 ### Area Mandatory Reading - Underground track building and art
 
@@ -173,24 +186,28 @@ _Applies to Groups 6-7._
 
 ### Group 6 - Underground track building
 
-{{MEDIUM}}
-- [ ] 6.1 In the Underground view, build plain track, diagonal track, autorail, signals, a waypoint, a rail station and a train depot; confirm each succeeds and appears only underground.
-- [ ] 6.2 Confirm the underground rail station takes its name and town from the town above and shows in the station list.
-- [ ] 6.3 Buy a train in the underground depot, give it orders to a surface station through a portal, and confirm it loads, unloads and pays by plane distance.
-- [ ] 6.4 Confirm servicing, "go to depot" and autoreplace across layers.
-- [ ] 6.5 Confirm the vehicle view follows a train into the Underground layer and back, and that the train's location button switches the main view.
+Closure, 2026-10-04, under the goal's explicit operator allowance: The complete underground construction, naming/payment, servicing/autoreplace and vehicle-follow operator matrix is skipped. Group 9C of R2MLM13 proves connected platforms and station stops in the supplied game; it does not pass every row here. Each skipped row is marked `[s]`, never a passing test.
 
-The r2mlm6 sprite constants are not in `src/table/sprites.h`, so this group stays skipped and the depot stand-in remains.
+{{MEDIUM}}
+- [s] 6.1 In the Underground view, build plain track, diagonal track, autorail, signals, a waypoint, a rail station and a train depot; confirm each succeeds and appears only underground.
+- [s] 6.2 Confirm the underground rail station takes its name and town from the town above and shows in the station list.
+- [s] 6.3 Buy a train in the underground depot, give it orders to a surface station through a portal, and confirm it loads, unloads and pays by plane distance.
+- [s] 6.4 Confirm servicing, "go to depot" and autoreplace across layers.
+- [s] 6.5 Confirm the vehicle view follows a train into the Underground layer and back, and that the train's location button switches the main view.
+
+The R2MLM6 sprite constants and art are now integrated; the obsolete missing-constants note is superseded by Group 7's delivery record.
 
 ### Group 7 - Portal art
+
+Closure, 2026-10-04, under the goal's explicit operator allowance: The every-direction entering-train and monorail/maglev operator checks are skipped. R2MLM13 records all existing rail-end static captures and a Surface-SW traffic burst after the front repair; that subset is not the full matrix. Each skipped row is marked `[s]`, never a passing test.
 
 2026-10-03: r2mlm6 publishes the portal constants and all four directional back/front pairs. Drawing and toolbar/cursor swaps are implemented and build in Debug. Rail-type sprites and reservation tint are retained. Visibility and monorail/maglev runtime checks wait for the user's representative save.
 
 {{SIMPLE}}
 - [x] 7.1 Draw the portal back part as a ground child sprite and the front part (the mouth arch) as a parent sprite with a bounding box that lets the train pass beneath, for both ends, using the contract offsets.
 - [x] 7.2 Switch the toolbar sprite to `SPR_IMG_BUILD_RAIL_LAYER_PORTAL` and the cursor to `SPR_CURSOR_RAIL_LAYER_PORTAL`.
-- [ ] 7.3 Check that the train disappears inside the mouth (not in front of it) for each direction and adjust only the visibility frames if needed.
-- [ ] 7.4 Check monorail and maglev portals: the track drawn on the portal tile uses the portal's rail type sprites.
+- [s] 7.3 Check that the train disappears inside the mouth (not in front of it) for each direction and adjust only the visibility frames if needed.
+- [s] 7.4 Check monorail and maglev portals: the track drawn on the portal tile uses the portal's rail type sprites.
 
 ### Area Mandatory Reading - Verification
 
@@ -203,13 +220,17 @@ _Applies to Group 8._
 
 ### Group 8 - Verification
 
+Closure, 2026-10-04, under the goal's explicit operator allowance: The multi-train two-year run, straddling save, occupied/reserved removal, conversion and year-long cache operator scenarios are skipped. Rail-pair conversion/accounting code is fixed by R2RVM2 task 18.8 and tested at build/unit level, without a conversion-scenario pass. Each skipped row is marked `[s]`, never a passing test.
+
 {{MEDIUM}}
-- [ ] 8.1 Scenario: surface main line with a station, a portal down, an underground loop with a station, block and path signals, a second portal back up; run four trains of different lengths for two in-game years at fast forward in a Debug build; no assert, no stuck or lost train.
-- [ ] 8.2 Save and reload while a long train straddles both layers; confirm it continues and every plane digest is stable across a second save.
-- [ ] 8.3 Try removing a portal with a train on it and with a reservation through it; confirm both are refused and nothing changes.
-- [ ] 8.4 Convert the portal's rail type with trains present and absent; confirm the tunnel-like rules apply.
-- [ ] 8.5 Run the scenario with `-d desync=2` for one in-game year; confirm no cache-check or YAPF cache mismatch messages.
-- [ ] 8.6 Build both configurations without new warnings; run `ctest`.
+- [s] 8.1 Scenario: surface main line with a station, a portal down, an underground loop with a station, block and path signals, a second portal back up; run four trains of different lengths for two in-game years at fast forward in a Debug build; no assert, no stuck or lost train.
+- [s] 8.2 Save and reload while a long train straddles both layers; confirm it continues and every plane digest is stable across a second save.
+- [s] 8.3 Try removing a portal with a train on it and with a reservation through it; confirm both are refused and nothing changes.
+- [s] 8.4 Convert the portal's rail type with trains present and absent; confirm the tunnel-like rules apply.
+- [s] 8.5 Run the scenario with `-d desync=2` for one in-game year; confirm no cache-check or YAPF cache mismatch messages.
+- [x] 8.6 Build both configurations without new warnings; run `ctest`.
+
+  Verified 2026-10-04: both targets/configurations build with exit 0, zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Rail conversion now also includes the r2rvm2 task 18.8 pair-accounting/consist fixes. Vehicle traversal, conversion and visual checks remain pending the representative save.
 
 ## Consult on Demand
 
@@ -234,6 +255,8 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | User request | "trains which should enter a special tunnel, represented by a new graphical asset ... where the player can continue building tracks" | Scope: a dedicated rail portal with its own art, drive-through, and full track building underground. |
 
 ## Completion Conditions
+
+Closed 2026-10-04 with the operator skips recorded in each affected group above. Coding and automated checks are delivered: zero compiler warnings, 111/111 unit cases in both configurations and 115/115 full release CTest cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`, `build/ctest-console-final-RelWithDebInfo.log`). The original full runtime criteria below remain future validation criteria; closure under the goal allowance does not mean skipped scenarios passed.
 
 - The rail toolbar builds rail portals between Surface and Underground for any rail type, with a chosen mouth direction.
 - Trains of any length cross layers through portals, hidden inside the mouth, with correct reservations, signals and pathfinding, and survive save, load and reversal mid-portal.

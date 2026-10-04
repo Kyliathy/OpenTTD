@@ -17,6 +17,7 @@
 #include "vehicle_base.h"
 #include "linkgraph/linkgraph_gui.h"
 #include "dropdown_func.h"
+#include "gfx_func.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -54,10 +55,32 @@ SpriteID GetMapLayerIcon(MapLayer layer)
 		case MapLayer::Surface: return SPR_IMG_MAP_LAYER_SURFACE;
 		case MapLayer::Underground: return SPR_IMG_MAP_LAYER_UNDERGROUND;
 		case MapLayer::Space: return SPR_IMG_MAP_LAYER_SPACE;
-		//Underground icon is the stand-in until r2mlm13 Group 9.
-		case MapLayer::DeepUnderground: return SPR_IMG_MAP_LAYER_UNDERGROUND;
+		case MapLayer::DeepUnderground: return SPR_IMG_MAP_LAYER_DEEP_UNDERGROUND;
 		default: NOT_REACHED();
 	}
+}
+
+/**
+ * Draw generated portal art in an orientation picker for the main view's Layer.
+ * Placement still derives its Layer from the clicked Tile, including clicks in extra viewports (FD-7).
+ * @param x Tile north-corner X in the current GUI drawing region.
+ * @param y Tile north-corner Y in the current GUI drawing region.
+ * @param kind Kind of portal being placed.
+ * @param door Door direction selected by the preview button.
+ */
+void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door)
+{
+	bool surface = GetMainWindow()->viewport->layer == MapLayer::Surface;
+	SpriteID base;
+	switch (kind) {
+		case LayerPortalKind::RailTunnel: base = surface ? SPR_MAP_LAYER_RAIL_PORTAL_SURFACE : SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND; break;
+		case LayerPortalKind::RoadTunnel: base = surface ? SPR_MAP_LAYER_ROAD_TUNNEL_SURFACE : SPR_MAP_LAYER_ROAD_TUNNEL_UNDERGROUND; break;
+		case LayerPortalKind::RoadElevator: base = surface ? SPR_MAP_LAYER_ROAD_ELEVATOR_SURFACE : SPR_MAP_LAYER_ROAD_ELEVATOR_UNDERGROUND; break;
+		default: NOT_REACHED();
+	}
+	SpriteID back = base + to_underlying(door) * 2;
+	DrawSprite(back, PAL_NONE, x, y);
+	DrawSprite(back + 1, PAL_NONE, x, y);
 }
 
 /**

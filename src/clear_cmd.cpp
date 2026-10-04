@@ -157,8 +157,8 @@ static SpriteID GetLayerGroundSprite(MapLayerGround ground, TileIndex tile)
 			//Sparse stars distinguish vacuum from the black off-map fence.
 			return SPR_MAP_LAYER_SPACE_FLOOR + hash % 2;
 		case MapLayerGround::DeepBedrock:
-			//Stand-in for SPR_MAP_LAYER_DEEP_FLOOR until r2mlm13 Group 9. Grey distinguishes Deep Underground from Underground.
-			return SPR_FLAT_ROCKY_LAND_1;
+			//Three dark basalt variants keep the deep floor distinct without using simulation RNG.
+			return SPR_MAP_LAYER_DEEP_FLOOR + hash % 3;
 
 		default:
 			NOT_REACHED();
@@ -171,9 +171,8 @@ static void DrawTile_Clear(TileInfo *ti)
 	//Bedrock and vacuum replace the climate sprites. Natural ground keeps the grass, snow and desert drawing below.
 	MapLayerGround ground_kind = MultiLayerMap::GetRules(ti->tile).ground;
 	if (ground_kind != MapLayerGround::Natural) {
-		//Deep Underground uses a grey stand-in; the existing generated Space art retains its visible stars.
-		PaletteID palette = ground_kind == MapLayerGround::DeepBedrock ? PALETTE_TO_GREY : PAL_NONE;
-		DrawGroundSprite(GetLayerGroundSprite(ground_kind, ti->tile), palette);
+		//Each generated floor retains its native colours, including deep blue basalt and Space stars.
+		DrawGroundSprite(GetLayerGroundSprite(ground_kind, ti->tile), PAL_NONE);
 		return;
 	}
 

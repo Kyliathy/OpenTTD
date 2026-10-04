@@ -21,7 +21,7 @@ enum class MapLayerGround : uint8_t {
 	Natural, ///< Grass, snow and desert, drawn by the existing landscape.
 	Bedrock, ///< Flat rock. r2mlm5 draws this as the underground ground.
 	Vacuum, ///< Empty space. r2mlm5 draws this as the space ground.
-	DeepBedrock, ///< Dark Deep Underground rock; stand-in until SPR_MAP_LAYER_DEEP_FLOOR exists (r2mlm13 Group 9).
+	DeepBedrock, ///< Dark Deep Underground basalt, drawn with SPR_MAP_LAYER_DEEP_FLOOR variants.
 };
 
 /**
