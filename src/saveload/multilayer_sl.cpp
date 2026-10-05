@@ -91,6 +91,11 @@ struct MLMDChunkHandler : ChunkHandler {
 		schema.feature_flags = wire.feature_flags;
 		schema.geology_seed = wire.geology_seed;
 		schema.orbital_seed = wire.orbital_seed;
+		// Feature bits require their versioned descriptor family; old metadata cannot request chunks its format never owned.
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation) && schema.feature_flags != 0) SlErrorCorrupt("Unexpected geology feature in old save version");
+		// Earlier geology-only wire formats cannot request a later job descriptor family.
+		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationJobs) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) != 0) SlErrorCorrupt("Unexpected excavation jobs in old save version");
+		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationPasses) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0) SlErrorCorrupt("Unexpected excavation pass in old save version"); // Older formats cannot request a descriptor family they never owned.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}
@@ -104,6 +109,8 @@ struct MLMDChunkHandler : ChunkHandler {
 	/** Recheck metadata after ordinary pointer fixups, without inventing or repairing future feature references. */
 	void FixPointers() const override
 	{
+		// Cleanup's pointer-nulling phase must not revalidate or repair feature transport from a failed candidate.
+		if (!SlIsFixingPointers()) return;
 		const auto *schema = GetPendingMultiLayerStateSchema();
 		// OpenTTD dispatches every registered fixup even when its chunk was absent. Legacy absence is valid; new-version presence is checked before activation.
 		if (schema == nullptr) return;
@@ -120,6 +127,7 @@ struct MLMDChunkHandler : ChunkHandler {
 		_load_check_data.multilayer_schema_version = schema.schema_version;
 		_load_check_data.gameplay_profile_id = to_underlying(schema.profile.id);
 		_load_check_data.gameplay_profile_version = schema.profile.version;
+		_load_check_data.multilayer_feature_flags = schema.feature_flags;
 	}
 };
 

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "core/flatset_type.hpp"
@@ -41,6 +41,7 @@
 #include "elrail_func.h"
 #include "station_base.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "station_func.h"
 #include "station_kdtree.h"
 #include "roadstop_base.h"
@@ -1464,6 +1465,8 @@ CommandCost CmdBuildRailStation(DoCommandFlags flags, TileIndex tile_org, RailTy
 
 	/* these values are those that will be stored in train_tile and station_platforms */
 	TileArea new_location(tile_org, w_org, h_org);
+	// Check every platform and approach before station allocation or the first automatic clear.
+	if (CommandCost ground = CheckExcavationConstructionArea(tile_org, w_org, h_org, axis == Axis::X ? DiagDirection::NE : DiagDirection::NW, true); ground.Failed()) return ground;
 	ret = CheckStationSpread({}, new_location);
 	if (ret.Failed()) return ret;
 
@@ -2097,6 +2100,8 @@ CommandCost CmdBuildRoadStop(DoCommandFlags flags, TileIndex tile, uint8_t width
 	if (!IsValidTile(tile) || TileAddWrap(tile, width - 1, length - 1) == INVALID_TILE) return CMD_ERROR;
 
 	TileArea roadstop_area(tile, width, length);
+	// A legal first tile cannot authorize clearing a partly solid stop or its entrances.
+	if (CommandCost ground = CheckExcavationConstructionArea(tile, width, length, ddir, is_drive_through); ground.Failed()) return ground;
 	if (CommandCost ret = CheckStationSpread({}, roadstop_area); ret.Failed()) return ret;
 
 	if (distant_join && (!_settings_game.station.distant_join_stations || !Station::IsValidID(station_to_join))) return CMD_ERROR;
@@ -2656,6 +2661,7 @@ CommandCost CmdBuildAirport(DoCommandFlags flags, TileIndex tile, uint8_t airpor
 	int h = as->size_y;
 	if (rotation == Direction::E || rotation == Direction::W) std::swap(w, h);
 	TileArea airport_area = TileArea(tile, w, h);
+	if (CommandCost ground = CheckExcavationConstructionArea(tile, w, h); ground.Failed()) return ground;
 
 	ret = CheckStationSpread({}, airport_area);
 	if (ret.Failed()) return ret;
@@ -2914,6 +2920,9 @@ CommandCost CmdBuildDock(DoCommandFlags flags, TileIndex tile, StationID station
 	DiagDirection direction = GetInclinedSlopeDirection(GetTileSlope(tile));
 	if (direction == DiagDirection::Invalid) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
 	direction = ReverseDiagDir(direction);
+	// Check both dock tiles and the water approach together before clearing the land end.
+	const auto approach_offset = TileIndexDiffCByDiagDir(direction);
+	if (CommandCost ground = CheckExcavationConstruction(std::array{tile, TileAddWrap(tile, approach_offset.x, approach_offset.y), TileAddWrap(tile, 2 * approach_offset.x, 2 * approach_offset.y)}); ground.Failed()) return ground;
 
 	/* Docks cannot be placed on rapids */
 	if (HasTileWaterGround(tile)) return CommandCost(STR_ERROR_SITE_UNSUITABLE);

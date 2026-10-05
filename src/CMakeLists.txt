@@ -1,4 +1,4 @@
-# Source registration for R2MLVS1; see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
+# Source registration for R2MLVS1/2; see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -281,6 +281,20 @@ add_files(
     map_layer_gui.cpp
     map_layer_gui.h
     map_layer_type.h
+    excavation.cpp
+    excavation_guard.cpp
+    excavation_jobs.cpp
+    excavation_cut.cpp
+    excavation_outline.cpp
+    excavation_route.cpp
+    excavation_pass.cpp
+    excavation.h
+    geology.cpp
+    geology_digest.cpp
+    geology_generation.cpp
+    geology_state.cpp
+    geothermal_geology.cpp
+    excavation_state.h
     multilayer_content.cpp
     multilayer_content.h
     multilayer_state.cpp

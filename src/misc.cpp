@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "multilayer_content.h"
 #include "multilayer_state.h"
+#include "excavation.h"
 #include "landscape.h"
 #include "map_layer.h"
 #include "news_func.h"
@@ -105,6 +106,7 @@ void InitializeGame(uint size_x, uint size_y, bool reset_date, bool reset_settin
 	// A legacy save without profile metadata retains Classic behavior; new worlds activate after loading content.
 	ResetMultiLayerProfileSelection();
 	ResetMultiLayerStateSchema();
+	ResetGeologyWorldState();
 	/* Make sure there isn't any window that can influence anything
 	 * related to the new game we're about to start/load. */
 	UnInitWindowSystem();

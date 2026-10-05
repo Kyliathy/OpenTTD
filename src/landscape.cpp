@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file landscape.cpp Functions related to the landscape (slopes etc.). @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file landscape.cpp Functions related to the landscape (slopes etc.). @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 /** @defgroup SnowLineGroup Snowline functions and data structures */
 
@@ -21,6 +21,7 @@
 #include "command_func.h"
 #include "landscape.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "void_map.h"
 #include "tgp.h"
 #include "genworld.h"
@@ -555,6 +556,10 @@ void DrawFoundation(TileInfo *ti, Foundation f)
 	}
 }
 
+/**
+ * Restore ordinary tile metadata after validated demolition, preserving independent geological state.
+ * @param tile Explicit world tile already accepted by the owning construction/removal command.
+ */
 void DoClearSquare(TileIndex tile)
 {
 	/* If the tile can have animation and we clear it, delete it from the animated tile list. */
@@ -705,6 +710,8 @@ bool IsMapSurroundedByWater()
  */
 CommandCost CmdLandscapeClear(DoCommandFlags flags, TileIndex tile)
 {
+	// Guard direct/API clearing before limits, object-clear caches or tile callbacks can mutate solid ground.
+	if (CommandCost ground = CheckExcavationConstruction(std::array{tile}); ground.Failed()) return ground;
 	CommandCost cost(ExpensesType::Construction);
 	bool do_clear = false;
 	/* Test for stuff which results in water when cleared. Then add the cost to also clear the water. */
@@ -814,6 +821,27 @@ std::tuple<CommandCost, Money> CmdClearArea(DoCommandFlags flags, TileIndex tile
 	}
 
 	return { had_success ? cost : last_error, 0 };
+}
+
+/**
+ * Validate the whole bounded scenario rectangle before changing independent rock state.
+ * @param flags Estimate or execute; both require saved override and actual editor mode.
+ * @param tile First explicit world corner.
+ * @param end_tile Opposite same-layer corner.
+ * @param excavated Desired solid/open floor, never an active job state.
+ * @return Empty editor cost or unchanged refusal.
+ */
+CommandCost CmdPaintExcavationTerrain(DoCommandFlags flags, TileIndex tile, TileIndex end_tile, bool excavated)
+{
+	if (CommandCost layer = CheckTilesShareLayer(tile, end_tile); layer.Failed()) return layer;
+	std::vector<TileIndex> footprint;
+	const TileArea area(tile, end_tile);
+	if (static_cast<uint32_t>(area.w) * area.h > 65536) return CMD_ERROR;
+	footprint.reserve(static_cast<size_t>(area.w) * area.h);
+	// Canonical area order gives a stable first refusal and keeps painting atomic across both corners.
+	for (TileIndex member : area) footprint.push_back(member);
+	const auto result = PaintExcavationTerrain(footprint, excavated, flags.Test(DoCommandFlag::Execute));
+	return result.error == ExcavationError::None ? CommandCost{} : CMD_ERROR;
 }
 
 

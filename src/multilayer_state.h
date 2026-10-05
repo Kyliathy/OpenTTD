@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_state.h Empty-compatible metadata and feature-owned reference validation foundation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file multilayer_state.h Versioned metadata and feature-owned geology/job/pass reference validation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md; r2mlvs2-geology-and-excavation.md */
 
 #ifndef MULTILAYER_STATE_H
 #define MULTILAYER_STATE_H
@@ -12,6 +12,10 @@
 #include "multilayer_content.h"
 
 static constexpr uint16_t MULTILAYER_STATE_SCHEMA_VERSION = 1; ///< Explicit metadata schema, independent of content package/profile versions.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOLOGY = 1; ///< Delivered rock/deposit descriptors; exact chunks required from save version 372.
+static constexpr uint32_t MULTILAYER_FEATURE_VENTS = 2; ///< Delivered independent natural capacity; allocation/plant behavior remains with its owner.
+static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_JOBS = 4; ///< Saved sparse jobs/retired-ID cursor, requiring the complete version-373 job family.
+static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_PASSES = 8; ///< Frozen backing/capacity inputs require the version-374 pass family and actual jobs.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -19,7 +23,7 @@ struct MultiLayerStateSchema {
 	MultiLayerProfileSelection profile; ///< Explicit saved policy; absent chunk remains Classic/legacy.
 	GRFIdentifier required_content{}; ///< Exact package identity; empty for Classic, pinned for Multilayer.
 	uint32_t content_version = 0; ///< Exact definition version, separate from schema/profile version.
-	uint32_t feature_flags = 0; ///< M0 has no delivered feature payloads; nonzero bits refuse until their owner extends the schema.
+	uint32_t feature_flags = 0; ///< Only delivered geology/vent bits are accepted; later feature owners extend their own descriptors/references.
 	uint64_t geology_seed = 0; ///< Saved feature seed root; zero until its producer initializes it, without drawing Surface RNG.
 	uint64_t orbital_seed = 0; ///< Separate saved orbital seed root.
 };
@@ -53,6 +57,13 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema();
 void ResetMultiLayerStateSchema();
 
 /**
+ * Publish geology's completed generation seed through the one metadata seed owner.
+ * @param seed Versioned geology root derived without a Surface RNG draw; called only after successful candidate generation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md
+ */
+void SetMultiLayerGeologySeed(uint64_t seed);
+
+/**
  * Stage one structurally validated save row until activated content can be checked.
  * @param schema Candidate read by the save handler; this does not publish gameplay policy.
  */
@@ -76,6 +87,7 @@ MultiLayerProfileError AcceptLoadedMultiLayerStateSchema(LandscapeType landscape
 enum class MultiLayerCanonicalKind : uint8_t {
 	Deposit = 1, ExcavationJob, Portal, TBMProject, Exchange, IndustryInventory, OrbitalBody,
 	SpaceMission, LaunchHandling, StationConstruction, Solar, Utility, Tube, Geothermal,
+	GeologyRoot, ///< Appended aggregate over actual packed/seam/vent/job authority; existing diagnostic kind IDs stay unchanged.
 	End,
 };
 

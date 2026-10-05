@@ -1,9 +1,24 @@
-# Focused content fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
+# Focused content/geology fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs2-geology-and-excavation.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
     console.cpp
     enum_over_optimisation.cpp
+    excavation_storage.cpp
+    excavation_contract.cpp
+    excavation_guard.cpp
+    excavation_clearing.cpp
+    excavation_jobs.cpp
+    excavation_cut.cpp
+    excavation_outline.cpp
+    excavation_route.cpp
+    excavation_pass.cpp
+    excavation_budget.cpp
+    excavation_fixture.h
+    geology_deposits.cpp
+    geology_generation.cpp
+    geology_state.cpp
+    geothermal_geology.cpp
     flatset_type.cpp
     history_func.cpp
     landscape_partial_pixel_z.cpp

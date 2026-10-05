@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "multilayer_content.h"
+#include "excavation.h"
 #include "landscape.h"
 #include "company_func.h"
 #include "town_cmd.h"
@@ -158,6 +159,16 @@ static void _GenerateWorld()
 			}
 		}
 
+		// All rock planes/fences are initialized; publish complete geology before any company, vehicle or script can consume it.
+		if (_game_mode != GameMode::Menu) {
+			const auto geology_error = GenerateWorldGeology(_settings_game.game_creation.generation_seed);
+			if (geology_error != GeologyError::None) {
+				Debug(Facility::Misc, Severity::Critical, "Geology generation refused: insufficient valid mineral/vent workspace ({})", to_underlying(geology_error));
+				HandleGeneratingWorldAbortion();
+				return;
+			}
+		}
+
 		/* These are probably pointless when inside the scenario editor. */
 		SetGeneratingWorldProgress(GenWorldProgress::GameInit, 3);
 		StartupCompanies();
@@ -285,12 +296,12 @@ void HandleGeneratingWorldAbortion()
 }
 
 /**
- * Refuse a profile before generation enters its exception-managed simulation pass.
- * @param error Specific preparation or activated-definition failure.
+ * Refuse an invalid profile/geological budget before the exception-managed simulation pass.
+ * @param reason Specific candidate-content or geometry failure presented to the player/server.
  */
-static void RefuseMultiLayerProfileCandidate(MultiLayerProfileError error)
+static void RefuseGenerationCandidate(std::string_view reason)
 {
-	std::string message{GetMultiLayerProfileErrorMessage(error)};
+	std::string message{reason};
 	Debug(Facility::Misc, Severity::Critical, "{}", message);
 	CleanupGeneration();
 	if (_network_dedicated) {
@@ -351,10 +362,17 @@ void GenerateWorld(GenWorldMode mode, uint size_x, uint size_y, bool reset_setti
 
 	const auto profile_id = static_cast<MultiLayerGameplayProfileID>(_settings_game.game_creation.gameplay_profile);
 	if (_game_mode != GameMode::Menu) {
+		// Mandatory deposits, mining approaches and the independent vent must fit before publishing the profile.
+		if (profile_id == MultiLayerGameplayProfileID::MultilayerIndustry) {
+			if (!CheckGeologyGenerationSize(size_x, size_y)) {
+				RefuseGenerationCandidate("Multilayer geology needs at least a 64 by 64 map for every required mineral and vent workspace.");
+				return;
+			}
+		}
 		// Settings and selected GRFs have resolved; prepare definitions without publishing a gameplay policy.
 		auto error = PrepareMultiLayerProfileContent(profile_id, _settings_game.game_creation.landscape, _grfconfig);
 		if (error != MultiLayerProfileError::None) {
-			RefuseMultiLayerProfileCandidate(error);
+			RefuseGenerationCandidate(GetMultiLayerProfileErrorMessage(error));
 			return;
 		}
 	}
@@ -365,7 +383,7 @@ void GenerateWorld(GenWorldMode mode, uint size_x, uint size_y, bool reset_setti
 		// Publish Multilayer policy only after activated definitions pass the exact identity/label checks.
 		auto error = ActivateMultiLayerProfile(profile_id, _settings_game.game_creation.landscape, _grfconfig);
 		if (error != MultiLayerProfileError::None) {
-			RefuseMultiLayerProfileCandidate(error);
+			RefuseGenerationCandidate(GetMultiLayerProfileErrorMessage(error));
 			return;
 		}
 		Debug(Facility::Misc, Severity::Info, "MLVS_PROFILE id={} version={}", to_underlying(profile_id), GetCurrentMultiLayerProfileSelection().version);

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "misc/history_type.hpp"
@@ -49,6 +49,7 @@
 #include "terraform_cmd.h"
 #include "map_func.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "script/api/script_event_types.hpp"
 #include "timer/timer.h"
 #include "timer/timer_game_calendar.h"
@@ -494,6 +495,12 @@ static void GetTileDesc_Industry(TileIndex tile, TileDesc &td)
 static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 {
 	Industry *i = Industry::GetByTile(tile);
+	std::vector<TileIndex> footprint;
+	// Industry demolition removes every owned foundation, while empty layout holes retain independent geology.
+	for (TileIndex member : i->location) {
+		if (i->TileBelongsToIndustry(member)) footprint.push_back(member);
+	}
+	if (CommandCost ground = CheckExcavationConstruction(footprint); ground.Failed()) return ground;
 	const IndustrySpec *indspec = GetIndustrySpec(i->type);
 
 	/* water can destroy industries
@@ -2014,6 +2021,10 @@ static CommandCost CreateNewIndustryHelper(TileIndex tile, IndustryType type, Do
 	const IndustryTileLayout &layout = indspec->layouts[layout_index];
 
 	*ip = nullptr;
+	std::vector<TileIndex> geological_footprint;
+	// Check every layout foundation/check tile before callbacks, levelling or creation can change the map.
+	for (const auto &entry : layout) geological_footprint.push_back(TileAddWrap(tile, entry.ti.x, entry.ti.y));
+	if (CommandCost ground = CheckExcavationConstruction(geological_footprint); ground.Failed()) return ground;
 
 	/* 1. Cheap: Built-in checks on industry level. */
 	CommandCost ret = CheckIfFarEnoughFromConflictingIndustry(tile, type);

@@ -1,0 +1,4 @@
+R2MLVS2 Group 10B: new/active/repeated/geology-only predecessor and four targeted job failures passed.
+All eight geological/job chunks remained byte-exact through two actual active-progress reloads.
+Partial work remained 77, cursor 0, revision 2; competing/orphan/missing/dangling references refused.
+Original startup/config/predecessor bytes preserved. Actual TBM/wagon controller remains Plans 3/4/5.

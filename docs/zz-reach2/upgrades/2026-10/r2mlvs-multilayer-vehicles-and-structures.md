@@ -146,7 +146,7 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
 | [X] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
-| [ ] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | Solid rock, deposits, surveys, excavation state and construction guards | 1 Content Freeze; 14 Schema Foundation Handoff |
+| [~] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | Geology/jobs/cuts/planning/guards and validation delivered; 16.1 awaits Plan 13 packed art | 1 Content Freeze; 14 Schema Foundation Handoff; final excavation art from 13 |
 | [ ] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Sealed entrances, commissioning access and Underground/Deep rail connections | 2 |
 | [ ] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Boring train, work orders, support track, spoil generation and costs | 3; wagon contract from 1 |
 | [ ] | [r2mlvs5-spoil-wagons-and-haulage.md](r2mlvs5-spoil-wagons-and-haulage.md) | Actual wagon exchange, secondary locomotives, origin stations and disposal | 4 |

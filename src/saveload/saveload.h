@@ -428,6 +428,9 @@ enum class SaveLoadVersion : uint16_t {
 	MapLayers, ///< Saveload version: 369\n Map stores Surface, Underground and Space layers.
 	DeepUnderground, ///< Saveload version: 370\n Map stores Deep Underground; road vehicles store their elevator wait.
 	MultiLayerMetadata, ///< Saveload version: 371\n Explicit profile/schema/content identity, legacy/editor policy and feature seed roots. See r2mlvs14-savegame-determinism-and-lifecycle.md.
+	GeologyExcavation, ///< Saveload version: 372\n Independent packed rock/deposit/span authority and future excavation jobs. See r2mlvs2-geology-and-excavation.md.
+	ExcavationJobs, ///< Saveload version: 373\n Bounded sparse job/route/cell descriptors with rebuilt exclusive active claims. See r2mlvs2-geology-and-excavation.md.
+	ExcavationPasses, ///< Saveload version: 374\n Frozen independent wagon limits and complete-prefix backing/exchange input. See r2mlvs2-geology-and-excavation.md.
 
 	MaxVersion, ///< Highest possible saveload version.
 };
@@ -1292,6 +1295,12 @@ size_t SlGetStructListLength(size_t limit);
 
 void SlAutolength(AutolengthProc *proc, int arg);
 size_t SlGetFieldLength();
+/**
+ * Distinguish real loaded-reference validation from failure cleanup invoking the same handlers.
+ * @return True only during ordinary pointer fixup, false during pointer nulling/load/save/preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md
+ */
+bool SlIsFixingPointers();
 void SlSetLength(size_t length);
 size_t SlCalcObjMemberLength(const void *object, const SaveLoad &sld);
 size_t SlCalcObjLength(const void *object, const SaveLoadTable &slt);

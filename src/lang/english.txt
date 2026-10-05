@@ -11,7 +11,7 @@
 
 
 # This file is part of OpenTTD.
-# Profile controls: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
+# Profile/construction controls: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs2-geology-and-excavation.md.
 # OpenTTD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
 # OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
@@ -5165,6 +5165,9 @@ STR_ERROR_MESSAGE_CAPTION_OTHER_COMPANY                         :{YELLOW}Message
 STR_ERROR_OFF_EDGE_OF_MAP                                       :off edge of map
 STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP                              :too close to edge of map
 STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER                              :{WHITE}... not possible in the {STRING} layer
+STR_ERROR_EXCAVATION_SOLID_ROCK                                 :{WHITE}Excavate the complete footprint and approaches first
+STR_ERROR_EXCAVATION_ACTIVE_CUT                                 :{WHITE}This footprint is reserved for excavation
+STR_ERROR_EXCAVATION_DEEP_LOCKED                                :{WHITE}Deep Underground construction requires 1980 or later
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
 STR_ERROR_FLAT_LAND_REQUIRED                                    :flat land required
 STR_ERROR_LAND_SLOPED_IN_WRONG_DIRECTION                        :land sloped in wrong direction

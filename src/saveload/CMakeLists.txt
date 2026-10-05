@@ -1,4 +1,4 @@
-# Metadata scaffold: docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md.
+# Metadata/geology/job transport: docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md and r2mlvs2-geology-and-excavation.md.
 add_subdirectory(compat)
 
 add_files(
@@ -15,6 +15,8 @@ add_files(
     economy_sl.cpp
     engine_sl.cpp
     game_sl.cpp
+    geology_sl.cpp
+    excavation_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp
     group_sl.cpp

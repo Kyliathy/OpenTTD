@@ -1,0 +1,1549 @@
+[2026-10-05 01:17:36] dbg: [misc:3] D:\Codez\Sandbox\OpenTTD\build\ added as search path
+[2026-10-05 01:17:36] dbg: [misc:3] D:\Codez\Sandbox\OpenTTD\build\Debug\ added as search path
+[2026-10-05 01:17:36] dbg: [misc:1] D:\Codez\Sandbox\OpenTTD\build\ found as config directory
+[2026-10-05 01:17:36] dbg: [misc:1] D:\Codez\Sandbox\OpenTTD\build\ found as personal directory
+[2026-10-05 01:17:36] dbg: [misc:3] D:\Codez\Sandbox\OpenTTD\build\content_download\ added as search path
+[2026-10-05 01:17:36] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:36] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:36] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_dos.obg for base graphics set
+[2026-10-05 01:17:36] dbg: [misc:1] Adding original_dos ([1]) as base graphics set
+[2026-10-05 01:17:36] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_dos_de.obg for base graphics set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_dos_de.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   MD5 checksum mismatch for: TRGT.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Not adding original_dos_de (0) as base graphics set (duplicate, fewer valid files)
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg for base graphics set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: TRG1R.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: TRGIR.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: TRGCR.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: TRGHR.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base graphicsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obg
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: TRGTR.GRF
+[2026-10-05 01:17:37] dbg: [misc:1] Adding original_windows ([0]) as base graphics set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading blitter...
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\no_sound.obs for base sounds set
+[2026-10-05 01:17:37] dbg: [misc:1] Adding NoSound ([2]) as base sounds set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_dos.obs for base sounds set
+[2026-10-05 01:17:37] dbg: [misc:1] Adding original_dos ([0]) as base sounds set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obs for base sounds set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base soundsset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obs
+[2026-10-05 01:17:37] dbg: [misc:1]   MD5 checksum mismatch for: SAMPLE.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Not adding original_windows (0) as base sounds set (duplicate, fewer valid files)
+[2026-10-05 01:17:37] dbg: [grf:1] Using the original_dos base graphics set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\no_music.obm for base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Adding NoMusic ([0]) as base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_dos.obm for base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Adding original_dos ([1]) as base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm for base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_tto.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM-TTO.CAT
+[2026-10-05 01:17:37] dbg: [misc:1] Adding original_tto ([1]) as base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Checking D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm for base music set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT00.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT02.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT06.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT03.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT12.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT08.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT13.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT14.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT10.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT04.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT01.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT05.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT15.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT11.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT16.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT09.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT18.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT19.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT21.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT17.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT20.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Loading base musicset details failed: D:\Codez\Sandbox\OpenTTD\build\baseset\orig_win.obm
+[2026-10-05 01:17:37] dbg: [misc:1]   File is missing: GM_TT07.GM
+[2026-10-05 01:17:37] dbg: [misc:1] Adding original_windows ([1]) as base music set
+[2026-10-05 01:17:37] dbg: [grf:1] Using the original_dos base graphics set
+[2026-10-05 01:17:37] dbg: [misc:1] Loading sound effects...
+[2026-10-05 01:17:37] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:37] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:37] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:37] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:223] GRFComment: Missing shore tile graphics for the temperate climate
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:236] GRFComment: Missing shore tile graphics for the sub-arctic climate
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:249] GRFComment: Missing shore tile graphics for the sub-tropical climate
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:262] GRFComment: Missing shore tile graphics for the toyland climate
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Skipping 241 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:11] GraphicsNew: Replacing sprites 0 to 255 of 2CC colour maps (type 0x0A) at SpriteID 0x1630
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:269] GraphicsNew: Replacing sprites 0 to 239 of Signal graphics (type 0x04) at SpriteID 0x13E0
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Skipping 241 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:754] GraphicsNew: Replacing sprites 0 to 47 of Rail catenary graphics (type 0x05) at SpriteID 0x1600
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:805] GraphicsNew: Replacing sprites 0 to 89 of Foundation graphics (type 0x06) at SpriteID 0x1525
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1173] GraphicsNew: Replacing sprites 0 to 64 of Canal graphics (type 0x08) at SpriteID 0x14D0
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1240] GraphicsNew: Replacing sprites 0 to 17 of One way road graphics (type 0x09) at SpriteID 0x17D9
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1260] GraphicsNew: Replacing sprites 0 to 118 of Tramway graphics (type 0x0B) at SpriteID 0x1762
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1381] GraphicsNew: Replacing sprites 0 to 11 of Sloped rail track (type 0x0F) at SpriteID 0x1519
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1395] GraphicsNew: Replacing sprites 0 to 14 of Airport graphics (type 0x10) at SpriteID 0x1742
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1425] GraphicsNew: Replacing sprites 0 to 7 of Road stop graphics (type 0x11) at SpriteID 0x175A
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1436] GraphicsNew: Replacing sprites 0 to 7 of Aqueduct graphics (type 0x12) at SpriteID 0x1511
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1456] GraphicsNew: Replacing sprites 0 to 54 of Autorail graphics (type 0x13) at SpriteID 0x15C9
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1513] GraphicsNew: Replacing sprites 0 to 191 of OpenTTD GUI graphics (type 0x15) at SpriteID 0x1320
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1707] GraphicsNew: Replacing sprites 0 to 8 of Airport preview graphics (type 0x16) at SpriteID 0x1751
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2724] GraphicsNew: Replacing sprites 0 to 15 of Railtype tunnel base (type 0x17) at SpriteID 0x17EB
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2762] GraphicsNew: Replacing sprites 0 to 0 of Palette (type 0x18) at SpriteID 0x17FC
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2765] GraphicsNew: Replacing sprites 0 to 3 of Road waypoints (type 0x19) at SpriteID 0x17FD
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2772] GraphicsNew: Replacing sprites 0 to 113 of Overlay rocks (type 0x1A) at SpriteID 0x1801
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2930] GraphicsNew: Replacing sprites 0 to 23 of Bridge decks (type 0x1B) at SpriteID 0x1873
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [OPENTTD.GRF:2982] GraphicsNew: Replacing sprites 0 to 65 of Map layer graphics (type 0x1C) at SpriteID 0x188B
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:11] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 65
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:14] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 134
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:17] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 138
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:19] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 160
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:21] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 162
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:26] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 167
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:33] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 174
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:37] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 179
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:43] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 187
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:47] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 191
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:49] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 193
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:55] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 199
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:57] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 202
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:61] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 206
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:66] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 211
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:72] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 219
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:76] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 223
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:79] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 290
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:81] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 381
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:83] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 384
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:86] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 393
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:88] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 415
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:90] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 425
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:92] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 447
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:95] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 514
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:97] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 577
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:99] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 582
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:106] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 592
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:108] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 594
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:113] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 604
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:115] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 608
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:117] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 610
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:125] SpriteReplace: [Set 0] Changing 24 sprites, beginning with 618
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:150] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 645
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:152] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 648
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:154] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 658
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:157] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 663
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:159] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 665
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:162] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 672
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:223] GRFComment: Missing shore tile graphics for the temperate climate
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:224] GraphicsNew: Loading 10 missing shore sprites from extra grf.
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:276] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3207
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:277] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3209
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:278] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3591
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:279] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3593
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:281] SpriteReplace: [Set 0] Changing 40 sprites, beginning with 3524
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:322] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3229
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:323] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3231
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:324] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3233
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:325] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3235
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:327] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3421
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:328] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3423
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:329] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3425
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:330] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3427
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:332] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3613
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:333] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3615
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:334] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3617
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:335] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3619
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:341] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4330
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:342] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4332
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:345] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4370
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:346] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4372
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:365] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4404
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:369] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 1100
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:402] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4607
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:407] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2565
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:412] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2525
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:429] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2559
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:436] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2569
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:438] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2574
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:441] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2580
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:444] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2586
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:447] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2592
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:449] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2600
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:477] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2118
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:484] SpriteReplace: [Set 0] Changing 10 sprites, beginning with 2125
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:495] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2136
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:500] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 2173
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:515] SpriteReplace: [Set 0] Changing 9 sprites, beginning with 2636
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:558] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 1567
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:559] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4571
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:561] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4470
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:562] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4582
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:564] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4478
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:566] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4577
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1547] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 732
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1548] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 738
+[2026-10-05 01:17:37] dbg: [grf:2] [ORIG_EXTRA.GRF:1549] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 742
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GLOG
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAPS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAPT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAPH
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAPO
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAP2
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk M3LO
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk M3HI
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAP5
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAPE
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAP7
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MAP8
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk DATE
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk VIEW
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk MLMD
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GEOS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GDEP
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GSPN
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GVNT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk EXJS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk XJOB
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk XJRT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk XJTL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CHTS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk PATS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk VEHS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk DEPT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk BKOR
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ORDL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk INDY
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk IIDS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk TIDS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk IBLD
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ITBL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CAPY
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ECMY
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk SUBS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CMDL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CMPU
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GOAL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk STPE
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk STPA
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk LEAE
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk LEAT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk EIDS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ENGN
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk HIDS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CITY
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk SIGN
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk STNN
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ROAD
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk PLYR
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk AIPL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GSTR
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GSDT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ANIT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk NGRF
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk GRPS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk CAPA
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ERNW
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk RAIL
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ROTT
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk LGRP
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk LGRJ
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk LGRS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk ATID
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk APID
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk OBID
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk OBJS
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk PSAC
+[2026-10-05 01:17:37] dbg: [sl:2] Saving chunk SRND
+[2026-10-05 01:17:37] dbg: [sl:1] Loading savegame version 4
+[2026-10-05 01:17:37] dbg: [misc:1] Loading sound effects...
+[2026-10-05 01:17:37] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:37] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk MAPT
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk MAP2
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk M3LO
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk M3HI
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk MAPO
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk MAP5
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk MAPE
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk NAME
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk DATE
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk VIEW
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk OPTS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk CHTS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk VEHS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk ORDR
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk DEPT
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk CHKP
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk INDY
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk SUBS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk ECMY
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk ENGN
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk ENGS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk CITY
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk SIGN
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk STNS
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk PLYR
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk ANIT
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk PRIC
+[2026-10-05 01:17:37] dbg: [sl:2] Loading chunk CAPR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GLOG
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAPS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAPT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAPH
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAPO
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAP2
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for M3LO
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for M3HI
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAP5
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAPE
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAP7
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MAP8
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for DATE
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for VIEW
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for MLMD
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GEOS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GDEP
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GSPN
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GVNT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for EXJS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for XJOB
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for XJRT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for XJTL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for NAME
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CHTS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for OPTS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for PATS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for VEHS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CHKP
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for DEPT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for BKOR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ORDR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ORDL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for INDY
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for IIDS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for TIDS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for IBLD
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ITBL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CAPY
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for PRIC
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CAPR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ECMY
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for SUBS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CMDL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CMPU
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GOAL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for STPE
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for STPA
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for LEAE
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for LEAT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for EIDS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ENGN
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ENGS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for HIDS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CITY
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for SIGN
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for STNS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for STNN
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ROAD
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for PLYR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for AIPL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GSTR
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GSDT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ANIT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for NGRF
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for GRPS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for CAPA
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ERNW
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for RAIL
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ROTT
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for LGRP
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for LGRJ
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for LGRS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for ATID
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for APID
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for OBID
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for OBJS
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for PSAC
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for WRGN
+[2026-10-05 01:17:37] dbg: [sl:3] Fixing pointers for SRND
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:37] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:38] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:223] GRFComment: Missing shore tile graphics for the temperate climate
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:236] GRFComment: Missing shore tile graphics for the sub-arctic climate
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:249] GRFComment: Missing shore tile graphics for the sub-tropical climate
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:262] GRFComment: Missing shore tile graphics for the toyland climate
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:38] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Skipping 241 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:11] GraphicsNew: Replacing sprites 0 to 255 of 2CC colour maps (type 0x0A) at SpriteID 0x1630
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:269] GraphicsNew: Replacing sprites 0 to 239 of Signal graphics (type 0x04) at SpriteID 0x13E0
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Skipping 241 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:754] GraphicsNew: Replacing sprites 0 to 47 of Rail catenary graphics (type 0x05) at SpriteID 0x1600
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:897] GraphicsNew: Replacing sprites 0 to 89 of Foundation graphics (type 0x06) at SpriteID 0x1525
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1173] GraphicsNew: Replacing sprites 0 to 64 of Canal graphics (type 0x08) at SpriteID 0x14D0
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1240] GraphicsNew: Replacing sprites 0 to 17 of One way road graphics (type 0x09) at SpriteID 0x17D9
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1260] GraphicsNew: Replacing sprites 0 to 118 of Tramway graphics (type 0x0B) at SpriteID 0x1762
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1381] GraphicsNew: Replacing sprites 0 to 11 of Sloped rail track (type 0x0F) at SpriteID 0x1519
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1395] GraphicsNew: Replacing sprites 0 to 14 of Airport graphics (type 0x10) at SpriteID 0x1742
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1413] GraphicsNew: Replacing sprites 13 to 14 of Airport graphics (type 0x10) at SpriteID 0x174F
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1425] GraphicsNew: Replacing sprites 0 to 7 of Road stop graphics (type 0x11) at SpriteID 0x175A
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1446] GraphicsNew: Replacing sprites 0 to 7 of Aqueduct graphics (type 0x12) at SpriteID 0x1511
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1456] GraphicsNew: Replacing sprites 0 to 54 of Autorail graphics (type 0x13) at SpriteID 0x15C9
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1513] GraphicsNew: Replacing sprites 0 to 191 of OpenTTD GUI graphics (type 0x15) at SpriteID 0x1320
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1707] GraphicsNew: Replacing sprites 0 to 8 of Airport preview graphics (type 0x16) at SpriteID 0x1751
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2724] GraphicsNew: Replacing sprites 0 to 15 of Railtype tunnel base (type 0x17) at SpriteID 0x17EB
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2742] GraphicsNew: Replacing sprites 0 to 7 of Railtype tunnel base (type 0x17) at SpriteID 0x17EB
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2762] GraphicsNew: Replacing sprites 0 to 0 of Palette (type 0x18) at SpriteID 0x17FC
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2765] GraphicsNew: Replacing sprites 0 to 3 of Road waypoints (type 0x19) at SpriteID 0x17FD
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2772] GraphicsNew: Replacing sprites 0 to 113 of Overlay rocks (type 0x1A) at SpriteID 0x1801
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2930] GraphicsNew: Replacing sprites 0 to 23 of Bridge decks (type 0x1B) at SpriteID 0x1873
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [OPENTTD.GRF:2982] GraphicsNew: Replacing sprites 0 to 65 of Map layer graphics (type 0x1C) at SpriteID 0x188B
+[2026-10-05 01:17:38] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:11] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 65
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:14] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 134
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:17] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 138
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:19] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 160
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:21] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 162
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:26] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 167
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:33] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 174
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:37] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 179
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:43] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 187
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:47] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 191
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:49] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 193
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:55] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 199
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:57] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 202
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:61] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 206
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:66] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 211
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:72] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 219
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:76] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 223
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:79] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 290
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:81] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 381
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:83] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 384
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:86] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 393
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:88] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 415
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:90] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 425
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:92] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 447
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:95] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 514
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:97] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 577
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:99] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 582
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:106] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 592
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:108] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 594
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:113] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 604
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:115] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 608
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:117] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 610
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:125] SpriteReplace: [Set 0] Changing 24 sprites, beginning with 618
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:150] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 645
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:152] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 648
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:154] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 658
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:157] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 663
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:159] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 665
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:162] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 672
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:236] GRFComment: Missing shore tile graphics for the sub-arctic climate
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:237] GraphicsNew: Loading 10 missing shore sprites from extra grf.
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:276] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3207
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:277] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3209
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:278] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3591
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:279] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3593
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:281] SpriteReplace: [Set 0] Changing 40 sprites, beginning with 3524
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:322] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3229
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:323] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3231
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:324] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3233
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:325] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3235
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:327] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3421
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:328] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3423
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:329] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3425
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:330] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3427
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:332] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3613
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:333] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3615
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:334] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3617
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:335] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3619
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:341] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4330
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:342] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4332
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:345] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4370
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:346] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4372
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:365] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4404
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:376] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 1100
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:400] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 1125
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:402] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4607
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:407] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2565
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:412] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2525
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:429] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2559
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:436] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2569
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:438] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2574
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:441] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2580
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:444] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2586
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:447] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2592
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:449] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2600
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:477] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2118
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:484] SpriteReplace: [Set 0] Changing 10 sprites, beginning with 2125
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:495] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2136
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:500] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 2173
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:509] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2173
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:526] SpriteReplace: [Set 0] Changing 9 sprites, beginning with 2636
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:558] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 1567
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:559] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4571
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:561] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4470
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:562] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4582
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:564] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4478
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:566] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4577
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1547] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 732
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1548] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 738
+[2026-10-05 01:17:38] dbg: [grf:2] [ORIG_EXTRA.GRF:1549] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 742
+[2026-10-05 01:17:38] dbg: [misc:4] MLVS_METADATA absent profile=0 version=0 legacy=true
+[2026-10-05 01:17:38] dbg: [misc:4] MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0 vents=0
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:39] dbg: [grf:1] Scanning for NewGRFs
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'multilayer_industry.grf'
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'test_road_type.grf'
+[2026-10-05 01:17:39] dbg: [grf:1] Scan complete, found 2 files
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'test_road_type.grf'
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+OpenTTD Game Console Revision 7 - 20261004-mlm-mlv-m55b5876607
+------------------------------------
+use "help" for more information.
+
+[2026-10-05 01:17:39] dbg: [net:1] No "client_name" has been set, using "Unnamed Client" instead. Please set this now using the "name <new name>" command
+[2026-10-05 01:17:39] dbg: [net:1] No "server_name" has been set, using "Unnamed Server" instead. Please set this now using the "server_name <new name>" command
+[2026-10-05 01:17:39] dbg: [sl:1] Loading savegame version 373
+[2026-10-05 01:17:39] dbg: [misc:1] Loading sound effects...
+[2026-10-05 01:17:39] dbg: [misc:2] Scanning for tars
+[2026-10-05 01:17:39] dbg: [misc:2] Scan complete, found 0 files
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GLOG
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAPS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAPT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAPH
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAPO
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAP2
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk M3LO
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk M3HI
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAP5
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAPE
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAP7
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MAP8
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk DATE
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk VIEW
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk MLMD
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GEOS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GDEP
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GSPN
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GVNT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk EXJS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk XJOB
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk XJRT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk XJTL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CHTS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk PATS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk VEHS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk DEPT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk BKOR
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ORDL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk INDY
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk IIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk TIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk IBLD
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ITBL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CAPY
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ECMY
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk SUBS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CMDL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CMPU
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GOAL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk STPE
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk STPA
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk LEAE
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk LEAT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk EIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ENGN
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk HIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CITY
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk SIGN
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk STNN
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ROAD
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk PLYR
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk AIPL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GSTR
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GSDT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ANIT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk NGRF
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk GRPS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk CAPA
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ERNW
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk RAIL
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ROTT
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk LGRP
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk LGRJ
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk LGRS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk ATID
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk APID
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk OBID
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk OBJS
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk PSAC
+[2026-10-05 01:17:39] dbg: [sl:2] Loading chunk SRND
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GLOG
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAPS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAPT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAPH
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAPO
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAP2
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for M3LO
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for M3HI
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAP5
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAPE
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAP7
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MAP8
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for DATE
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for VIEW
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for MLMD
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GEOS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GDEP
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GSPN
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GVNT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for EXJS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for XJOB
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for XJRT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for XJTL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for NAME
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CHTS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for OPTS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for PATS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for VEHS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CHKP
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for DEPT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for BKOR
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ORDR
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ORDL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for INDY
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for IIDS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for TIDS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for IBLD
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ITBL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CAPY
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for PRIC
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CAPR
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ECMY
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for SUBS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CMDL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CMPU
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GOAL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for STPE
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for STPA
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for LEAE
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for LEAT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for EIDS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ENGN
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ENGS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for HIDS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CITY
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for SIGN
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for STNS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for STNN
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ROAD
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for PLYR
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for AIPL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GSTR
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GSDT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ANIT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for NGRF
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for GRPS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for CAPA
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ERNW
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for RAIL
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ROTT
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for LGRP
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for LGRJ
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for LGRS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for ATID
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for APID
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for OBID
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for OBJS
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for PSAC
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for WRGN
+[2026-10-05 01:17:39] dbg: [sl:3] Fixing pointers for SRND
+[2026-10-05 01:17:39] dbg: [grf:1] Loading GRF 4D4C5649 from multilayer_industry.grf
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'multilayer_industry.grf'
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:223] GRFComment: Missing shore tile graphics for the temperate climate
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:236] GRFComment: Missing shore tile graphics for the sub-arctic climate
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:249] GRFComment: Missing shore tile graphics for the sub-tropical climate
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:262] GRFComment: Missing shore tile graphics for the toyland climate
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'multilayer_industry.grf'
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set 4D4C5649 - Multilayer Industry (palette: Windows, version: 1)
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'multilayer_industry.grf'
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set 4D4C5649 - Multilayer Industry (palette: Windows, version: 1)
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'OPENTTD.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FFFFFFFE - OpenTTD's default and fallback extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:10] GRFComment: 2CC map
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:11] GraphicsNew: Replacing sprites 0 to 255 of 2CC colour maps (type 0x0A) at SpriteID 0x1630
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:268] GRFComment: Pre-signal, semaphore, and PBS graphics by Michael Blunck
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:269] GraphicsNew: Replacing sprites 0 to 239 of Signal graphics (type 0x04) at SpriteID 0x13E0
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:510] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:511] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:512] GraphicsNew: Replacing sprites 0 to 239 of Signal graphics (type 0x04) at SpriteID 0x13E0
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:753] GRFComment: Electrified rail by Michael Blunck
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:754] GraphicsNew: Replacing sprites 0 to 47 of Rail catenary graphics (type 0x05) at SpriteID 0x1600
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:803] GRFComment: Foundations. Non-halftile ones by Marcin Grzegorczyk
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:804] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:805] GraphicsNew: Replacing sprites 0 to 89 of Foundation graphics (type 0x06) at SpriteID 0x1525
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:896] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:988] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1080] SkipIf: Skipping 91 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1172] GRFComment: Canal graphics by George
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1173] GraphicsNew: Replacing sprites 0 to 64 of Canal graphics (type 0x08) at SpriteID 0x14D0
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1239] GRFComment: One way road graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1240] GraphicsNew: Replacing sprites 0 to 17 of One way road graphics (type 0x09) at SpriteID 0x17D9
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1259] GRFComment: Tram track graphics by PikkaBird
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1260] GraphicsNew: Replacing sprites 0 to 118 of Tramway graphics (type 0x0B) at SpriteID 0x1762
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1380] GRFComment: Sloped tracks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1381] GraphicsNew: Replacing sprites 0 to 11 of Sloped rail track (type 0x0F) at SpriteID 0x1519
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1394] GRFComment: Extra airport graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1395] GraphicsNew: Replacing sprites 0 to 14 of Airport graphics (type 0x10) at SpriteID 0x1742
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1411] GRFComment: Climate specific sprites by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1412] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1416] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1420] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1424] GRFComment: Road stop graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1425] GraphicsNew: Replacing sprites 0 to 7 of Road stop graphics (type 0x11) at SpriteID 0x175A
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1434] GRFComment: Aqueduct graphics by Jonathan G. Rennison / PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1435] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1436] GraphicsNew: Replacing sprites 0 to 7 of Aqueduct graphics (type 0x12) at SpriteID 0x1511
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1445] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1455] GRFComment: Autorail graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1456] GraphicsNew: Replacing sprites 0 to 54 of Autorail graphics (type 0x13) at SpriteID 0x15C9
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1512] GRFComment: OpenTTD GUI graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1513] GraphicsNew: Replacing sprites 0 to 191 of OpenTTD GUI graphics (type 0x15) at SpriteID 0x1320
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1706] GRFComment: Airport previews
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1707] GraphicsNew: Replacing sprites 0 to 8 of Airport preview graphics (type 0x16) at SpriteID 0x1751
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:1717] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2475] GRFComment: Monospaced characters (Liberation Mono)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2704] GRFComment: Tunnel portal overlays for railtypes by Snail (Jacopo Coletto)
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2705] SkipIf: Skipping 17 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2723] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2724] GraphicsNew: Replacing sprites 0 to 15 of Railtype tunnel base (type 0x17) at SpriteID 0x17EB
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2741] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2751] SkipIf: Skipping 9 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2761] GRFComment: All black palette
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2762] GraphicsNew: Replacing sprites 0 to 0 of Palette (type 0x18) at SpriteID 0x17FC
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2764] GRFComment: Road waypoints
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2765] GraphicsNew: Replacing sprites 0 to 3 of Road waypoints (type 0x19) at SpriteID 0x17FD
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2770] GRFComment: Overlay rocks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2771] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2772] GraphicsNew: Replacing sprites 0 to 113 of Overlay rocks (type 0x1A) at SpriteID 0x1801
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2887] SkipIf: Skipping 40 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2928] GRFComment: Bridge decks
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2929] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2930] GraphicsNew: Replacing sprites 0 to 23 of Bridge decks (type 0x1B) at SpriteID 0x1873
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2955] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2981] GRFComment: Map layer graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [OPENTTD.GRF:2982] GraphicsNew: Replacing sprites 0 to 65 of Map layer graphics (type 0x1C) at SpriteID 0x188B
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'ORIG_EXTRA.GRF'
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:3] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:4] SkipIf: Skipping 3 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set FF4F5454 - Original baseset extra graphics (palette: DOS, version: 0)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:10] GRFComment: Font characters by PaulC, Bilbo and Jasper Vries
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:11] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 65
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:14] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 134
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:17] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 138
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:19] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 160
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:21] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 162
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:26] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 167
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:33] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 174
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:37] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 179
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:43] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 187
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:47] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 191
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:49] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 193
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:55] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 199
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:57] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 202
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:61] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 206
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:66] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 211
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:72] SpriteReplace: [Set 0] Changing 3 sprites, beginning with 219
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:76] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 223
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:79] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 290
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:81] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 381
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:83] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 384
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:86] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 393
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:88] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 415
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:90] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 425
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:92] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 447
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:95] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 514
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:97] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 577
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:99] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 582
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:106] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 592
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:108] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 594
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:113] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 604
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:115] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 608
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:117] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 610
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:125] SpriteReplace: [Set 0] Changing 24 sprites, beginning with 618
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:150] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 645
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:152] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 648
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:154] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 658
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:157] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 663
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:159] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 665
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:162] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 672
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:222] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:223] GRFComment: Missing shore tile graphics for the temperate climate
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:224] GraphicsNew: Loading 10 missing shore sprites from extra grf.
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:235] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:248] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:261] SkipIf: Skipping 12 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:274] GRFComment: Fix bugs in the original graphics. By Addi and PaulC.
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:275] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:276] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3207
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:277] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3209
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:278] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3591
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:279] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3593
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:281] SpriteReplace: [Set 0] Changing 40 sprites, beginning with 3524
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:322] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3229
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:323] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3231
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:324] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3233
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:325] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3235
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:327] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3421
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:328] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3423
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:329] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3425
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:330] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3427
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:332] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 3613
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:333] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 3615
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:334] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 3617
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:335] SpriteReplace: [Set 3] Changing 1 sprites, beginning with 3619
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:337] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:340] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:341] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4330
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:342] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4332
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:345] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4370
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:346] SpriteReplace: [Set 1] Changing 2 sprites, beginning with 4372
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:349] SkipIf: Skipping 15 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:365] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4404
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:368] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:369] SpriteReplace: [Set 0] Changing 5 sprites, beginning with 1100
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:375] SkipIf: Skipping 6 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:382] SkipIf: Skipping 16 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:399] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:402] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4607
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:406] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:407] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2565
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:412] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2525
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:417] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:428] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:429] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2559
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:436] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2569
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:438] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2574
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:441] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2580
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:444] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 2586
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:447] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2592
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:449] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 2600
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:451] SkipIf: Skipping 25 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:477] SpriteReplace: [Set 0] Changing 6 sprites, beginning with 2118
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:484] SpriteReplace: [Set 0] Changing 10 sprites, beginning with 2125
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:495] SpriteReplace: [Set 0] Changing 4 sprites, beginning with 2136
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:500] SpriteReplace: [Set 0] Changing 7 sprites, beginning with 2173
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:508] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:511] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:514] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:515] SpriteReplace: [Set 0] Changing 9 sprites, beginning with 2636
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:525] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:536] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:547] SkipIf: Skipping 10 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:558] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 1567
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:559] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4571
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:561] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 4470
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:562] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4582
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:564] SpriteReplace: [Set 0] Changing 2 sprites, beginning with 4478
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:566] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 4577
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:572] GRFComment: Climate specific airport sprite by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:573] SkipIf: Skipping 2 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:576] GRFComment: Extra canal graphics by PaulC
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:606] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:637] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:653] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:655] GRFComment: Rapid graphics
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:754] GRFComment: Toyland rapid graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:780] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:782] GRFComment: Temperate river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:908] SkipIf: Not skipping sprites, test was false
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:910] GRFComment: Arctic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1162] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1164] GRFComment: Tropic river graphics by andythenorth (Andrew Parkhouse)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1416] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1418] GRFComment: Toyland river graphics by zephyris (Richard Wheeler)
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1544] SkipIf: Skipping 1 sprites, test was true
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1546] GRFComment: Fix alignment of button icons.
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1547] SpriteReplace: [Set 0] Changing 1 sprites, beginning with 732
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1548] SpriteReplace: [Set 1] Changing 1 sprites, beginning with 738
+[2026-10-05 01:17:39] dbg: [grf:2] [ORIG_EXTRA.GRF:1549] SpriteReplace: [Set 2] Changing 1 sprites, beginning with 742
+[2026-10-05 01:17:39] dbg: [grf:2] LoadNewGRFFile: Reading NewGRF-file 'multilayer_industry.grf'
+[2026-10-05 01:17:39] dbg: [grf:1] GRFInfo: Loaded GRFv8 set 4D4C5649 - Multilayer Industry (palette: Windows, version: 1)
+[2026-10-05 01:17:39] dbg: [misc:4] MLVS_METADATA schema=1 profile=1 version=1 legacy=false editor=false features=7 geology_seed=1113461650216427336 orbital_seed=0
+[2026-10-05 01:17:39] dbg: [misc:4] MLVS_GEOLOGY_LOADED generator=1 deposits=10 packed_bytes=2048 vents=1
+[2026-10-05 01:17:39] dbg: [misc:4] MLVS_EXCAVATION_JOB id=0 state=3 cursor=0 partial=78 revision=2
+[2026-10-05 01:17:39] dbg: [misc:5] Repositioning Main Toolbar...
+[2026-10-05 01:17:39] dbg: [misc:5] Repositioning statusbar...
+  Cargo classes:
+    p = passenger
+    m = mail
+    x = express
+    a = armoured
+    b = bulk
+    g = piece goods
+    l = liquid
+    r = refrigerated
+    h = hazardous
+    c = covered/sheltered
+    o = oversized
+    d = powderized
+    n = not pourable
+    e = potable
+    i = non-potable
+    S = special
+  00 Bit:  0, Label: PASS, Callback mask: 0x00, Cargo class: p---------------, GRF: 00000000, Passengers
+  01 Bit:  1, Label: COAL, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 00000000, Coal
+  02 Bit:  2, Label: MAIL, Callback mask: 0x00, Cargo class: -m--------------, GRF: 00000000, Mail
+  03 Bit:  3, Label: OIL_, Callback mask: 0x00, Cargo class: ------l-------i-, GRF: 00000000, Oil
+  04 Bit:  4, Label: LVST, Callback mask: 0x00, Cargo class: -----g--------i-, GRF: 00000000, Livestock
+  05 Bit:  5, Label: GOOD, Callback mask: 0x00, Cargo class: --x-------------, GRF: 00000000, Goods
+  06 Bit:  6, Label: GRAI, Callback mask: 0x00, Cargo class: ----b--------e--, GRF: 00000000, Grain
+  07 Bit:  7, Label: WOOD, Callback mask: 0x00, Cargo class: -----g----------, GRF: 00000000, Wood
+  08 Bit:  8, Label: IORE, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 00000000, Iron Ore
+  09 Bit:  9, Label: STEL, Callback mask: 0x00, Cargo class: -----g----------, GRF: 00000000, Steel
+  10 Bit: 10, Label: VALU, Callback mask: 0x00, Cargo class: ---a------------, GRF: 00000000, Valuables
+  12 Bit: 12, Label: CORE, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Copper Ore
+  13 Bit: 13, Label: BAUX, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Bauxite
+  14 Bit: 14, Label: SALT, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Salt
+  15 Bit: 15, Label: LITH, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Lithium Ore
+  16 Bit: 16, Label: NORE, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Nickel Ore
+  17 Bit: 17, Label: COBT, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Cobalt Ore
+  18 Bit: 18, Label: RARE, Callback mask: 0x00, Cargo class: ----b----c----i-, GRF: 4D4C5649, Rare Earth concentrate
+  19 Bit: 19, Label: URAN, Callback mask: 0x00, Cargo class: -----g--hc----i-, GRF: 4D4C5649, Uranium Ore
+  20 Bit: 20, Label: ERTH, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Earth
+  21 Bit: 21, Label: ROCK, Callback mask: 0x00, Cargo class: ----b---------i-, GRF: 4D4C5649, Rock
+  22 Bit: 22, Label: RFMT, Callback mask: 0x00, Cargo class: -----g----------, GRF: 4D4C5649, Refined Metals
+  23 Bit: 23, Label: CHEM, Callback mask: 0x00, Cargo class: ------l-h-----i-, GRF: 4D4C5649, Chemicals
+  24 Bit: 24, Label: BATY, Callback mask: 0x00, Cargo class: -----g---c------, GRF: 4D4C5649, Batteries
+  25 Bit: 25, Label: ELEC, Callback mask: 0x00, Cargo class: -----g---c------, GRF: 4D4C5649, Electronics
+  26 Bit: 26, Label: PROP, Callback mask: 0x00, Cargo class: ------l-h-----i-, GRF: 4D4C5649, Propellant
+  27 Bit: 27, Label: SCMP, Callback mask: 0x00, Cargo class: -----g----o-----, GRF: 4D4C5649, Station Components
+  28 Bit: 28, Label: RBPT, Callback mask: 0x00, Cargo class: -----g---c------, GRF: 4D4C5649, Robotics Parts
+  29 Bit: 29, Label: SMIK, Callback mask: 0x00, Cargo class: -----g---c------, GRF: 4D4C5649, Solar Mirror Kits
+  30 Bit: 30, Label: WICE, Callback mask: 0x00, Cargo class: ----b--r-----e--, GRF: 4D4C5649, Water Ice
+  GRF: 4D4C5649 = multilayer_industry.grf
+Saving map...
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GLOG
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAPS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAPT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAPH
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAPO
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAP2
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk M3LO
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk M3HI
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAP5
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAPE
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAP7
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MAP8
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk DATE
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk VIEW
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk MLMD
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GEOS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GDEP
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GSPN
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GVNT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk EXJS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk XJOB
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk XJRT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk XJTL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CHTS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk PATS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk VEHS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk DEPT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk BKOR
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ORDL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk INDY
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk IIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk TIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk IBLD
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ITBL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CAPY
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ECMY
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk SUBS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CMDL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CMPU
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GOAL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk STPE
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk STPA
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk LEAE
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk LEAT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk EIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ENGN
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk HIDS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CITY
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk SIGN
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk STNN
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ROAD
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk PLYR
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk AIPL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GSTR
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GSDT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ANIT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk NGRF
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk GRPS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk CAPA
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ERNW
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk RAIL
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ROTT
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk LGRP
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk LGRJ
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk LGRS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk ATID
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk APID
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk OBID
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk OBJS
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk PSAC
+[2026-10-05 01:17:39] dbg: [sl:2] Saving chunk SRND
+Map successfully saved to 'D:/Codez/Sandbox/OpenTTD/docs/zz-reach2/upgrades/2026-10/r2mlvs2-q-changed-partial.sav'.

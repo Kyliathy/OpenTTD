@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file road_cmd.cpp Commands related to road tiles. @see docs/zz-reach2/architecture/landscape/road-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file road_cmd.cpp Commands related to road tiles. @see docs/zz-reach2/architecture/landscape/road-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -15,6 +15,7 @@
 #include "viewport_func.h"
 #include "command_func.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "company_func.h"
 #include "pathfinder/yapf/yapf_cache.h"
 #include "depot_base.h"
@@ -1161,6 +1162,7 @@ CommandCost CmdBuildRoadDepot(DoCommandFlags flags, TileIndex tile, RoadType rt,
 
 	//A road depot needs the depot permission. A tram depot also needs the tram permission.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::RoadDepot); layer_cost.Failed()) return layer_cost;
+	if (CommandCost ground = CheckExcavationConstructionEntrance(tile, dir); ground.Failed()) return ground;
 	if (GetRoadTramType(rt) == RoadTramType::Tram) {
 		if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Tram); layer_cost.Failed()) return layer_cost;
 	}
@@ -2532,6 +2534,11 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 	auto tilearea = CreateOrthoDiagonalArea(area_end, area_start, diagonal);
 	for (TileIndex cur_tile : tilearea) {
+		// Preserve per-tile area conversion while refusing all mutation of solid or actively claimed ground.
+		if (CommandCost ground = CheckExcavationConstruction(std::array{cur_tile}); ground.Failed()) {
+			error = std::move(ground);
+			continue;
+		}
 		/* Is road present on tile? */
 		if (!MayHaveRoad(cur_tile)) continue;
 
@@ -2585,6 +2592,11 @@ CommandCost CmdConvertRoad(DoCommandFlags flags, TileIndex tile, TileIndex area_
 		//M-8: an elevator converts as one pair, like a tunnel. Its ends are on different layers, so a drag normally holds only one.
 		if (tt == TileType::LayerPortal) {
 			TileIndex endtile = GetLayerPortalPairTile(cur_tile);
+			// A portal conversion is atomic across both layers, including the unclicked end's excavation/date policy.
+			if (CommandCost ground = CheckExcavationConstruction(std::array{endtile}); ground.Failed()) {
+				error = std::move(ground);
+				continue;
+			}
 			//Should a drag area ever hold both ends, the pair converts once, from the lower tile, so the test run and the execute run charge the same.
 			if (endtile < cur_tile && tilearea.Contains(endtile)) continue;
 			if (!HasPowerOnRoad(from_type, to_type)) {

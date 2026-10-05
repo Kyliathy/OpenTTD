@@ -1,0 +1,4 @@
+R2MLVS2 Group 4: six actual geological/older loads and five corrupt/missing/reference refusals passed.
+Partial balance, survey information, cavity and all three owner chunks survived two reloads exactly.
+Original source/config/startup/older-save SHA256 preserved. Job transport belongs to Group 10.
+Six earlier accepted-load boundaries verified from retained evidence; five refusals executed in this run.

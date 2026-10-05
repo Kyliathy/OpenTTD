@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail_cmd.cpp Handling of rail tiles. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file rail_cmd.cpp Handling of rail tiles. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -13,6 +13,7 @@
 #include "viewport_func.h"
 #include "command_func.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "depot_base.h"
 #include "pathfinder/yapf/yapf_cache.h"
 #include "newgrf_debug.h"
@@ -990,6 +991,7 @@ CommandCost CmdBuildTrainDepot(DoCommandFlags flags, TileIndex tile, RailType ra
 
 	//This layer may refuse a train depot before any cost is counted.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::TrainDepot); layer_cost.Failed()) return layer_cost;
+	if (CommandCost ground = CheckExcavationConstructionEntrance(tile, dir); ground.Failed()) return ground;
 
 	Slope tileh = GetTileSlope(tile);
 
@@ -1612,6 +1614,11 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 	auto tilearea = CreateOrthoDiagonalArea(area_end, area_start, diagonal);
 	for (TileIndex cur_tile : tilearea) {
+		// Area conversion keeps partial success, but an individual solid/active cell cannot be modified.
+		if (CommandCost ground = CheckExcavationConstruction(std::array{cur_tile}); ground.Failed()) {
+			error = std::move(ground);
+			continue;
+		}
 		TileType tt = GetTileType(cur_tile);
 
 		/* Check if there is any track on tile */
@@ -1789,6 +1796,11 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 			case TileType::LayerPortal: {
 				if (GetLayerPortalTransportType(cur_tile) != TransportType::Rail) continue;
 				TileIndex endtile = GetLayerPortalPairTile(cur_tile);
+				// The remote end changes in the same operation and needs its own explicit layer/date validation.
+				if (CommandCost ground = CheckExcavationConstruction(std::array{endtile}); ground.Failed()) {
+					error = std::move(ground);
+					continue;
+				}
 				//Convert the pair once, from the lower tile, so test and execute stay in step.
 				if (endtile < cur_tile && tilearea.Contains(endtile)) continue;
 				if (!IsCompatibleRail(GetRailType(cur_tile), totype)) {

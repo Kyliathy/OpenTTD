@@ -5,12 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file waypoint_cmd.cpp %Command Handling for waypoints. */
+/** @file waypoint_cmd.cpp %Command Handling for waypoints. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 
 #include "command_func.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "landscape.h"
 #include "town.h"
 #include "waypoint_base.h"
@@ -237,6 +238,8 @@ CommandCost CmdBuildRailWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
 	if (distant_join && (!_settings_game.station.distant_join_stations || !Waypoint::IsValidID(station_to_join))) return CMD_ERROR;
 
 	TileArea new_location(start_tile, width, height);
+	// All waypoint floors and through approaches must pass before changing existing track or station records.
+	if (CommandCost ground = CheckExcavationConstructionArea(start_tile, width, height, axis == Axis::X ? DiagDirection::NE : DiagDirection::NW, true); ground.Failed()) return ground;
 	if (CommandCost ret = CheckStationSpread({}, new_location); ret.Failed()) return ret;
 
 	/* only AddCost for non-existing waypoints */
@@ -394,6 +397,7 @@ CommandCost CmdBuildRoadWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
 	if (distant_join && (!_settings_game.station.distant_join_stations || !Waypoint::IsValidID(station_to_join))) return CMD_ERROR;
 
 	TileArea roadstop_area(start_tile, width, height);
+	if (CommandCost ground = CheckExcavationConstructionArea(start_tile, width, height, axis == Axis::X ? DiagDirection::NE : DiagDirection::NW, true); ground.Failed()) return ground;
 	if (CommandCost ret = CheckStationSpread({}, roadstop_area); ret.Failed()) return ret;
 
 	/* Total road stop cost. */

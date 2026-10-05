@@ -2,7 +2,7 @@
 
 A live game has four map planes in one `TileIndex` space. `Map` owns tile storage and geometry; `MultiLayerMap` owns layer meaning, initialization, construction rules and portal pairing. A viewport's `layer` selects which plane it draws. Commands and simulation ticks use world tiles, independently of that client selection.
 
-This page describes the delivered implementation on 2026-10-04, including Deep Underground, layer dropdowns, the 66-sprite graphics set and the final review fixes. The [level 0 overview](../@archi-ttd-level0.md) places it in the whole game. The [multi-layer epic](../../upgrades/2026-10/r2mlm-multi-layered-map.md) owns the canonical architecture decisions, invariants, plan index and acceptance records.
+This page describes the delivered layer implementation and the tested [R2MLVS2 geology/excavation contracts](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) as of 2026-10-05. The existing graphics set contains 66 sprites; new excavation art remains pending. The [level 0 overview](../@archi-ttd-level0.md) places it in the whole game. The [multi-layer epic](../../upgrades/2026-10/r2mlm-multi-layered-map.md) owns the canonical layer decisions, invariants, plan index and acceptance records.
 
 ## Layers and rules
 
@@ -104,7 +104,17 @@ The ten map chunks (`MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAP
 
 [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) adds explicit Classic/Multilayer selection and saved profile metadata in version 371. The shared policy owner is `multilayer_content.cpp`; legacy files without metadata retain Classic and their existing content behavior. Layer storage IDs, addressing and the 66-sprite native block remain unchanged. Metadata acceptance checks exact first-party content and cargo meanings before dependent gameplay fixups, with independent nonmutating preview fields; see [savegame architecture](../savegame/archi-savegame.md).
 
-`CheckDeepLayerAvailability` publishes a game-calendar boundary of 1 January 1980 for the new profile, with explicit saved editor override and legacy policy. Feature commands must consume that predicate when their construction/operation paths are implemented. This foundation does not yet enforce the new gate throughout old commands or install solid geology, TBMs, Deep rail, tube networks or orbital movement. Those behaviors and final art remain in the owning [R2MLVS feature plans](../../upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md).
+`CheckDeepLayerAvailability` publishes a game-calendar boundary of 1 January 1980 for the new profile, with explicit saved editor override and legacy policy. R2MLVS2 uses it in excavation construction, job reservation/work and cut checks. Actual TBMs, Deep rail, tube networks, orbital movement and final excavation art remain in the owning [R2MLVS feature plans](../../upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md).
+
+## Geology and excavation (R2MLVS2)
+
+The explicit Multilayer Industry profile generates independent two-bit Solid/Excavating/Excavated terrain for both rock planes, finite mineral seams and a separate bounded geothermal field. `Map` retains infrastructure/geometry ownership. Clearing a road, rail or building leaves the geological cavity and remaining reserve unchanged. Classic and predecessor saves without geology retain their historical open-floor policy.
+
+`excavation.h` owns typed deposit/job/vent IDs, canonical geometry and public guard/transaction contracts. Ordinary construction checks complete foundations and approaches before writes; viewport selection grants no exception. Job claims are reconstructed from bounded unfinished routes. A pure planner expands actual straight/left-45/right-45 advances with full cutter/consist sweeps and deterministic operation limits. Requested floor and explicitly authorized extra work remain separate.
+
+Reservations freeze supported backing and independent Earth/Rock capacity limits. Complete cuts revalidate job/claims/terrain and the external material/funds participant, then commit once. Destroyed recoverable ore is debited from the sole finite reserve separately from spoil cargo. Actual train controllers, wagon cargo, commissioning pockets and exchange hardware belong to Plans 3/4/5; these geological contracts do not implement those producers. Save versions 372/373/374 add geology, sparse jobs and frozen passes respectively. Rendering acceptance remains unchecked until Plan 13 delivers source sprites and packed loading evidence.
+
+Measured Debug evidence: maximum 4096-square rock state uses 8 MiB; representative 512-square through 1024-square maps retain 128 actual geometry jobs. 8,192 synchronized work calls took about 8.8 ms in the retained run, without planning/save/render scans. Timings describe that build and host, rather than runtime thresholds. [Execution notes and evidence](../../upgrades/2026-10/r2mlvs2-b-execution-notes.md) record exact commands, field digests and remaining boundaries.
 
 ## Code map
 

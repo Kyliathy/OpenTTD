@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file object_cmd.cpp Handling of object tiles. @see docs/zz-reach2/architecture/landscape/object-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file object_cmd.cpp Handling of object tiles. @see docs/zz-reach2/architecture/landscape/object-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -40,6 +40,7 @@
 #include "object_cmd.h"
 #include "landscape_cmd.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "pathfinder/water_regions.h"
 
 #include "table/strings.h"
@@ -233,6 +234,8 @@ CommandCost CmdBuildObject(DoCommandFlags flags, TileIndex tile, ObjectType type
 	int size_x = GB(spec->size, HasBit(view, 0) ? 4 : 0, 4);
 	int size_y = GB(spec->size, HasBit(view, 0) ? 0 : 4, 4);
 	TileArea ta(tile, size_x, size_y);
+	// Check the rotated envelope before owned-land clearing or object callbacks can execute.
+	if (CommandCost ground = CheckExcavationConstructionArea(tile, size_x, size_y); ground.Failed()) return ground;
 	for (TileIndex t : ta) {
 		if (!IsValidTile(t)) return CommandCost(STR_ERROR_TOO_CLOSE_TO_EDGE_OF_MAP); // Might be off the map
 	}
@@ -555,6 +558,8 @@ static CommandCost ClearTile_Object(TileIndex tile, DoCommandFlags flags)
 	/* Get to the northern most tile. */
 	Object *o = Object::GetByTile(tile);
 	TileArea ta = o->location;
+	// Removing one member removes the entire object, so automatic clearing must validate its complete footprint.
+	if (CommandCost ground = CheckExcavationConstructionArea(ta.tile, ta.w, ta.h); ground.Failed()) return ground;
 
 	ObjectType type = o->type;
 	const ObjectSpec *spec = ObjectSpec::Get(type);

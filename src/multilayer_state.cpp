@@ -9,11 +9,12 @@
 #include "stdafx.h"
 #include "multilayer_state.h"
 #include "debug.h"
+#include "excavation.h"
 
 #include "safeguards.h"
 
 static std::optional<MultiLayerStateSchema> _pending_multilayer_schema; ///< Unaccepted load transport, never gameplay authority.
-static uint64_t _multilayer_geology_seed = 0; ///< Metadata-owned feature seed root, unused until geology implementation.
+static uint64_t _multilayer_geology_seed = 0; ///< Metadata-owned root published by completed geology generation.
 static uint64_t _multilayer_orbital_seed = 0; ///< Metadata-owned orbital seed root, unused until Space implementation.
 
 /**
@@ -28,7 +29,13 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	const auto *profile = GetMultiLayerContentProfile(schema.profile.id);
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
-	if (schema.feature_flags != 0) return MultiLayerStateError::UnsupportedFeatures;
+	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	// Natural vent geometry depends on the delivered rock-plane owner; a standalone bit cannot fabricate a usable thermal field.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_VENTS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
+	// Job claims and retired IDs belong to active geological authority, never an independent hidden work/cargo owner.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) == 0) return MultiLayerStateError::UnsupportedFeatures; // A return/capacity proof belongs to an actual job; metadata cannot invent standalone work.
 	if (schema.profile.id == MultiLayerGameplayProfileID::Classic) {
 		if (!schema.profile.legacy) return MultiLayerStateError::InvalidPolicy;
 		if (!schema.required_content.grfid.Empty()) return MultiLayerStateError::ChangedContent;
@@ -63,6 +70,13 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	schema.profile = GetCurrentMultiLayerProfileSelection();
 	schema.geology_seed = _multilayer_geology_seed;
 	schema.orbital_seed = _multilayer_orbital_seed;
+	if (GetGeologyWorldState().generator_version != 0) schema.feature_flags |= MULTILAYER_FEATURE_GEOLOGY;
+	if (!GetGeologyWorldState().vents.empty()) schema.feature_flags |= MULTILAYER_FEATURE_VENTS;
+	if (GetGeologyWorldState().next_job_id != 0) schema.feature_flags |= MULTILAYER_FEATURE_EXCAVATION_JOBS;
+	// Only actual retained validated input enables the new family; old unvalidated paused jobs remain recoverable.
+	for (const auto &job : GetGeologyWorldState().jobs) {
+		if (job.pass_terms) schema.feature_flags |= MULTILAYER_FEATURE_EXCAVATION_PASSES;
+	}
 	const auto *profile = GetMultiLayerContentProfile(schema.profile.id);
 	// Classic preserves arbitrary legacy content; only the explicit profile pins the required first-party manifest.
 	if (profile != nullptr && profile->required_content != nullptr) {
@@ -78,6 +92,16 @@ void ResetMultiLayerStateSchema()
 	_pending_multilayer_schema.reset();
 	_multilayer_geology_seed = 0;
 	_multilayer_orbital_seed = 0;
+}
+
+/**
+ * Publish the completed geological candidate's root without introducing another mutable seed authority.
+ * @param seed Independently derived synchronized geology seed.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md
+ */
+void SetMultiLayerGeologySeed(uint64_t seed)
+{
+	_multilayer_geology_seed = seed;
 }
 
 /**
@@ -117,7 +141,6 @@ MultiLayerProfileError AcceptLoadedMultiLayerStateSchema(LandscapeType landscape
 	_multilayer_geology_seed = schema.geology_seed;
 	_multilayer_orbital_seed = schema.orbital_seed;
 	Debug(Facility::Misc, Severity::Info, "MLVS_METADATA schema={} profile={} version={} legacy={} editor={} features={} geology_seed={} orbital_seed={}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.feature_flags, schema.geology_seed, schema.orbital_seed);
-	LogMultiLayerStateDiagnostics(schema);
 	_pending_multilayer_schema.reset();
 	return MultiLayerProfileError::None;
 }
@@ -213,7 +236,15 @@ std::optional<uint64_t> ComputeMultiLayerStateDigest(const MultiLayerStateSchema
  */
 void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 {
-	const auto digest = ComputeMultiLayerStateDigest(schema);
+	std::optional<uint64_t> digest;
+	if (GetGeologyWorldState().generator_version != 0) {
+		// Only published geological authority participates; the compact owner digest includes every saved field without per-tile view allocations.
+		const std::array fields = {MultiLayerCanonicalField{1, 8, ComputeGeologyStateDigest(GetGeologyWorldState())}};
+		const std::array records = {MultiLayerCanonicalRecord{MultiLayerCanonicalKind::GeologyRoot, 0, fields}};
+		digest = ComputeMultiLayerStateDigest(schema, records);
+	} else {
+		digest = ComputeMultiLayerStateDigest(schema);
+	}
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);
 }

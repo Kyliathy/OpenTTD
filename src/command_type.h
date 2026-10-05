@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file command_type.h Types related to commands. */
+/** @file command_type.h Types related to commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #ifndef COMMAND_TYPE_H
 #define COMMAND_TYPE_H
@@ -380,6 +380,7 @@ enum class Commands : uint8_t {
 	UpdateLeagueTableElementData, ///< update the data fields of a league table element
 	UpdateLeagueTableElementScore, ///< update the score of a league table element
 	RemoveLeagueTableElement, ///< remove a league table element
+	PaintExcavationTerrain, ///< explicit saved-override scenario terrain painting; append preserves existing command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

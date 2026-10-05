@@ -5,10 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer.cpp The multi-layered map controller. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file map_layer.cpp The multi-layered map controller. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "map_layer_gui.h"
 #include "error_func.h"
 #include "clear_map.h"
@@ -256,7 +257,7 @@ CommandCost CheckLayerAllowsConstruction(TileIndex tile, MapLayerConstruction ki
 		}
 		return error;
 	}
-	return {};
+	return CheckExcavationConstruction(std::array{tile});
 }
 
 /**

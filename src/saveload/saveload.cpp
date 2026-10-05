@@ -45,6 +45,8 @@
 #include "../string_func.h"
 #include "../fios.h"
 #include "../multilayer_content.h"
+#include "../multilayer_state.h"
+#include "../excavation_state.h"
 #include "../error.h"
 #include "../strings_type.h"
 #include "../newgrf_railtype.h"
@@ -223,6 +225,16 @@ struct SaveLoadParams {
 static SaveLoadParams _sl; ///< Parameters used for/at saveload.
 
 /**
+ * Allow scalar feature-reference validators to skip cleanup's synthetic current-version/nulling pass.
+ * @return True only while actual loaded references are being fixed before gameplay resumes.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md
+ */
+bool SlIsFixingPointers()
+{
+	return _sl.action == SaveLoadAction::Ptrs;
+}
+
+/**
  * Read the stable handler registry, including the uniquely versioned MLMD scaffold.
  * @return Ordered legacy/feature handlers; no existing chunk identity or order is reinterpreted.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
@@ -234,6 +246,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _map_chunk_handlers;
 	extern const ChunkHandlerTable _misc_chunk_handlers;
 	extern const ChunkHandlerTable _multilayer_chunk_handlers;
+	extern const ChunkHandlerTable _geology_chunk_handlers;
+	extern const ChunkHandlerTable _excavation_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
 	extern const ChunkHandlerTable _setting_chunk_handlers;
@@ -274,6 +288,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_map_chunk_handlers,
 		_misc_chunk_handlers,
 		_multilayer_chunk_handlers,
+		_geology_chunk_handlers,
+		_excavation_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
 		_setting_chunk_handlers,
@@ -3291,6 +3307,21 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 	if (load_check) {
 		/* The only part from AfterLoadGame() we need */
 		_load_check_data.grf_compatibility = IsGoodGRFConfigList(_load_check_data.grfconfig);
+		ValidateExcavationLoadPreview();
+		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {
+			if (!_load_check_data.geology_header_present || !_load_check_data.geology_deposits_present || !_load_check_data.geology_spans_present) SlErrorCorrupt("Missing required geology preview chunks");
+		}
+		if (_load_check_data.geology_header_present) {
+			const bool vents_required = (_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_VENTS) != 0;
+			// Explicit natural-source metadata requires a real bounded family; older geology-only absence stays valid.
+			if (vents_required && !_load_check_data.geology_vents_present) SlErrorCorrupt("Missing required geothermal preview fields");
+			if (vents_required != (_load_check_data.geology_vent_rows != 0)) SlErrorCorrupt("Geothermal preview feature mismatch");
+			// Header/row cardinalities and feature identity must agree before a preview reports a loadable geological world.
+			if (_load_check_data.geology_deposit_rows != _load_check_data.geology_expected_deposits || _load_check_data.geology_span_rows != _load_check_data.geology_expected_spans) SlErrorCorrupt("Inconsistent geology preview records");
+			const bool required = (_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_GEOLOGY) != 0;
+			if (required != (_load_check_data.geology_generator_version != 0)) SlErrorCorrupt("Geology preview feature mismatch");
+		}
 		// New-format previews require metadata and exact profile content; legacy absence retains existing preview rules.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::MultiLayerMetadata)) {
 			if (_load_check_data.multilayer_schema_version == 0) SlErrorCorrupt("Missing required multilayer metadata chunk");

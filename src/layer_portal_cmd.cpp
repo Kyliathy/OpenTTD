@@ -5,11 +5,12 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
+#include "excavation.h"
 #include "command_func.h"
 #include "landscape.h"
 #include "landscape_cmd.h"
@@ -432,7 +433,7 @@ static CommandCost CheckPortalEnd(TileIndex tile, DiagDirection shaft_dir)
 	//The door needs a neighbour that is still inside the map, so a road or track can arrive.
 	TileIndex door_neighbour = TileAddByDiagDir(tile, ReverseDiagDir(shaft_dir));
 	if (!IsInnerTile(door_neighbour)) return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
-	return CommandCost();
+	return CheckExcavationConstruction(std::array{tile, door_neighbour});
 }
 
 /**

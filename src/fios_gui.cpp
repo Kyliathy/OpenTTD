@@ -80,6 +80,18 @@ void LoadCheckData::Clear()
 	this->multilayer_schema_version = 0;
 	this->gameplay_profile_id = 0;
 	this->gameplay_profile_version = 0;
+	this->multilayer_feature_flags = 0;
+	this->geology_header_present = this->geology_deposits_present = this->geology_spans_present = false;
+	this->geology_generator_version = 0;
+	this->geology_expected_deposits = this->geology_expected_spans = 0;
+	this->geology_deposit_rows = this->geology_span_rows = 0;
+	this->geology_vents_present = false;
+	this->geology_vent_rows = 0;
+	this->excavation_present.fill(false);
+	this->excavation_header.fill(0);
+	this->excavation_pass_present = false;
+	this->excavation_pass_rows = 0;
+	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};
 	this->starting_year = {};

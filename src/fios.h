@@ -48,6 +48,22 @@ struct LoadCheckData {
 	uint16_t multilayer_schema_version = 0; ///< Zero denotes legacy chunk absence in this preview only.
 	uint8_t gameplay_profile_id = 0; ///< Saved profile identity for exact preview content validation.
 	uint16_t gameplay_profile_version = 0; ///< Saved immutable profile revision.
+	uint32_t multilayer_feature_flags = 0; ///< Independent preview feature requirements, never live metadata.
+	bool geology_header_present = false; ///< New-version feature transport presence.
+	bool geology_deposits_present = false; ///< Bounded scalar table presence.
+	bool geology_spans_present = false; ///< Compact shape table presence.
+	uint16_t geology_generator_version = 0; ///< Zero denotes inactive legacy terrain.
+	uint32_t geology_expected_deposits = 0; ///< Header cardinality, validated against rows.
+	uint32_t geology_expected_spans = 0; ///< Header shape-row bound.
+	uint32_t geology_deposit_rows = 0; ///< Actual independent preview count.
+	uint32_t geology_span_rows = 0; ///< Actual independent preview span count.
+	bool geology_vents_present = false; ///< Independent natural-source family presence.
+	uint32_t geology_vent_rows = 0; ///< Bounded natural-source count; no heat grant is implied.
+	std::array<bool, 4> excavation_present{}; ///< Independent header/job/route/cell preview presence.
+	std::array<uint32_t, 4> excavation_header{}; ///< Saved next-ID/job/route/cell cardinalities, never live progress.
+	std::array<uint32_t, 3> excavation_rows{}; ///< Actual bounded job/route/cell preview counts.
+	bool excavation_pass_present = false; ///< Independent version-374 return/capacity transport presence.
+	uint32_t excavation_pass_rows = 0; ///< Bounded copied pass count, never live input.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

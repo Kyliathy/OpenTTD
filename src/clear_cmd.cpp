@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file clear_cmd.cpp Commands related to clear tiles. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md */
+/** @file clear_cmd.cpp Commands related to clear tiles. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
 #include "bridge.h"
@@ -14,6 +14,7 @@
 #include "economy_func.h"
 #include "landscape.h"
 #include "map_layer.h"
+#include "excavation.h"
 #include "genworld.h"
 #include "slope_func.h"
 #include "viewport_func.h"
@@ -28,9 +29,15 @@
 
 #include "safeguards.h"
 
-/** @copydoc ClearTileProc */
+/**
+ * Clear ordinary ground without converting paid bulldozing into excavation.
+ * @param tile Explicit ground tile whose independent cavity state must already allow construction.
+ * @param flags Estimate/execute and ordinary landscape policy flags.
+ * @return Existing clearing cost or unchanged geological refusal.
+ */
 static CommandCost ClearTile_Clear(TileIndex tile, DoCommandFlags flags)
 {
+	if (CommandCost ground = CheckExcavationConstruction(std::array{tile}); ground.Failed()) return ground;
 	static constexpr EnumIndexArray<Price, ClearGround, ClearGround::MaxSize> clear_price_table{
 		Price::ClearGrass, // Base price for clearing grass.
 		Price::ClearRough, // Base price for clearing rough land.
