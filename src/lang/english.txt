@@ -2878,7 +2878,99 @@ STR_PORTAL_CONNECT_TOOLTIP                                    :{BLACK}Connect an
 STR_PORTAL_SEAL                                               :{BLACK}Seal
 STR_PORTAL_SEAL_TOOLTIP                                       :{BLACK}Close an empty shaft to ordinary traffic and safely release its reservations
 STR_PORTAL_COMMISSION                                         :{BLACK}Commission TBM
-STR_PORTAL_COMMISSION_TOOLTIP                                 :{BLACK}Buy a boring machine with two Earth and two Rock hoppers at this rail portal, to bore a straight corridor of six cells out of its door; the spoil goes to your nearest Surface railway station
+STR_PORTAL_COMMISSION_TOOLTIP                                   :{BLACK}Buy a boring machine with two Earth and two Rock hoppers at this rail portal, to bore the corridor set below straight out of its far door. The spoil goes to the nearest of your Surface railway stations with an Earth and a Rock receiver in its catchment
+STR_PORTAL_CORRIDOR                                             :{BLACK}Corridor: {NUM} cell{P "" s} straight out of the door
+STR_PORTAL_CORRIDOR_TOOLTIP                                     :{BLACK}Length of the corridor the next boring machine digs, from the far end of the portal
+STR_PORTAL_CORRIDOR_DECREASE_TOOLTIP                            :{BLACK}Shorter corridor. Ctrl+Click for five cells less
+STR_PORTAL_CORRIDOR_INCREASE_TOOLTIP                            :{BLACK}Longer corridor. Ctrl+Click for five cells more
+STR_PORTAL_PROJECT_NONE                                         :{BLACK}No boring project here
+STR_PORTAL_PROJECT_PROGRESS                                     :{BLACK}Boring machine: {STRING}, {NUM} of {NUM} cut{P "" s} done
+STR_PORTAL_PROJECT_HOLD                                         :{BLACK}Held: {STRING}
+STR_PORTAL_PROJECT_NO_HOLD                                      :{BLACK}Held: nothing
+STR_PORTAL_PROJECT_DUG                                          :{BLACK}Dug so far: {NUM} t Earth, {NUM} t Rock
+STR_PORTAL_HAULER_NONE                                          :{BLACK}Hauler: none. A hauler is any train of yours with {NUM} empty Earth and {NUM} empty Rock hoppers and an order to {STATION}
+STR_PORTAL_HAULER                                               :{BLACK}Hauler: {VEHICLE}, {STRING}
+STR_PORTAL_HAULER_WAITING                                       :{BLACK}Hauler: {VEHICLE}, {STRING}, waiting: {STRING}
+STR_PORTAL_NEXT                                                 :{BLACK}Next: {STRING}
+STR_PORTAL_PHASE_COMMISSIONING                                  :waiting in the portal
+STR_PORTAL_PHASE_TRAVEL                                         :driving to the face
+STR_PORTAL_PHASE_BORE                                           :boring
+STR_PORTAL_PHASE_ADVANCE                                        :moving onto its new track
+STR_PORTAL_PHASE_RETURN                                         :backing into the portal to swap its hoppers
+STR_PORTAL_PHASE_WAIT                                           :waiting in the portal for empty hoppers
+STR_PORTAL_PHASE_RESUME                                         :going back to work
+STR_PORTAL_PHASE_COMPLETED                                      :finished
+STR_PORTAL_PHASE_CANCELLED                                      :cancelled
+STR_PORTAL_HOLD_STOPPED                                         :the machine is stopped
+STR_PORTAL_HOLD_BREAKDOWN                                       :the machine has broken down
+STR_PORTAL_HOLD_SERVICING                                       :the machine is being serviced
+STR_PORTAL_HOLD_MISSING_PROJECT                                 :the project record is damaged
+STR_PORTAL_HOLD_MISSING_CUTTER                                  :the machine is gone
+STR_PORTAL_HOLD_MISSING_ORIGIN                                  :the origin station is gone
+STR_PORTAL_HOLD_MISSING_PORTAL                                  :the portal is gone
+STR_PORTAL_HOLD_MISSING_EXCHANGE                                :the exchange bay is gone
+STR_PORTAL_HOLD_INVALID_CONSIST                                 :the machine's train was changed
+STR_PORTAL_HOLD_LOCKED_MODEL                                    :this machine is not available here yet
+STR_PORTAL_HOLD_MISSING_SUPPORT                                 :its temporary track is missing
+STR_PORTAL_HOLD_EARTH_FULL                                      :the Earth hoppers are full
+STR_PORTAL_HOLD_ROCK_FULL                                       :the Rock hoppers are full
+STR_PORTAL_HOLD_FUNDS                                           :not enough money to go on boring
+STR_PORTAL_HOLD_OBSTRUCTION                                     :something is in the way
+STR_PORTAL_HOLD_ALLOCATION                                      :too many vehicles or projects
+STR_PORTAL_HOLD_PAUSED                                          :paused
+STR_PORTAL_HOLD_ILLEGAL_TURN                                    :the route turns too sharply
+STR_PORTAL_HOLD_LOGISTICS                                       :the spoil is not being delivered
+STR_PORTAL_HAULER_RETURN_EMPTIES                                :bringing empty hoppers
+STR_PORTAL_HAULER_AWAIT_EXCHANGE                                :waiting in the portal for the swap
+STR_PORTAL_HAULER_COLLECT_LOADED                                :taking the full hoppers
+STR_PORTAL_HAULER_VISIT_ORIGIN                                  :taking the spoil to the origin
+STR_PORTAL_HAULER_DISPOSE                                       :unloading at the origin
+STR_PORTAL_WAIT_STOPPED                                         :it is stopped
+STR_PORTAL_WAIT_CRASHED                                         :it has crashed
+STR_PORTAL_WAIT_LOST_PROJECT                                    :its project is gone
+STR_PORTAL_WAIT_LOST_ORIGIN                                     :the origin station is gone
+STR_PORTAL_WAIT_WRONG_WAGONS                                    :its hoppers were changed
+STR_PORTAL_WAIT_NO_EMPTIES                                      :it lacks empty hoppers for the next load
+STR_PORTAL_WAIT_OCCUPIED_BAY                                    :another hauler's turn
+STR_PORTAL_WAIT_SATURATED                                       :the receivers are full for now
+STR_PORTAL_WAIT_BLOCKED_LINE                                    :no route on its orders
+STR_PORTAL_STEP_COMMISSION                                      :commission a boring machine to dig the far side
+STR_PORTAL_STEP_START_MACHINE                                   :start the machine
+STR_PORTAL_STEP_WORKING                                         :nothing, the machine is working
+STR_PORTAL_STEP_RESUME                                          :resume the project
+STR_PORTAL_STEP_ASSIGN_HAULER                                   :assign a hauler before the hoppers fill
+STR_PORTAL_STEP_FIX_HOLD                                        :remove the hold or the hauler's wait shown above
+STR_PORTAL_STEP_DELIVER_LAST                                    :wait while the hauler delivers the last load
+STR_PORTAL_STEP_WAIT_FOR_HAULER                                 :wait until the hauler has left the portal
+STR_PORTAL_STEP_RELEASE_HAULER                                  :release the hauler
+STR_PORTAL_STEP_STOP_MACHINE                                    :stop the machine
+STR_PORTAL_STEP_RETIRE                                          :retire the project
+STR_PORTAL_STEP_SELL_MACHINE                                    :sell the machine standing in the portal
+STR_PORTAL_STEP_CONVERT_TRACK                                   :make the temporary track permanent
+STR_PORTAL_STEP_CONNECT                                         :connect the pair for ordinary trains
+STR_PORTAL_STEP_CONNECTED                                       :nothing, ordinary trains can use the pair
+STR_PORTAL_SHOW_MACHINE                                         :{BLACK}Machine
+STR_PORTAL_SHOW_MACHINE_TOOLTIP                                 :{BLACK}Open the boring machine's vehicle window
+STR_PORTAL_START_MACHINE                                        :{BLACK}Start
+STR_PORTAL_STOP_MACHINE                                         :{BLACK}Stop
+STR_PORTAL_START_STOP_TOOLTIP                                   :{BLACK}Start or stop the boring machine
+STR_PORTAL_PAUSE                                                :{BLACK}Pause
+STR_PORTAL_RESUME                                               :{BLACK}Resume
+STR_PORTAL_PAUSE_TOOLTIP                                        :{BLACK}Hold the project where it is, or let it go on
+STR_PORTAL_CANCEL                                               :{BLACK}Cancel
+STR_PORTAL_CANCEL_TOOLTIP                                       :{BLACK}Stop boring for good: the machine backs into the portal and hands its spoil to the hauler. Dug ground stays dug
+STR_PORTAL_CANCEL_QUERY_CAPTION                                 :{WHITE}Cancel boring project
+STR_PORTAL_CANCEL_QUERY_TEXT                                    :{YELLOW}The machine stops digging for good and comes back to the portal. Dug ground stays dug. Cancel the project?
+STR_PORTAL_RETIRE                                               :{BLACK}Retire
+STR_PORTAL_RETIRE_TOOLTIP                                       :{BLACK}End a finished project once its machine stands stopped and empty in the portal and no hauler serves it. The portal is sealed again and the machine becomes an ordinary train
+STR_PORTAL_ASSIGN_HAULER                                        :{BLACK}Assign hauler
+STR_PORTAL_ASSIGN_HAULER_TOOLTIP                                :{BLACK}Then click one of your trains, in the main view, a depot or a vehicle list. It fetches the full hoppers from the portal and brings empties
+STR_PORTAL_RELEASE_HAULER                                       :{BLACK}Release hauler
+STR_PORTAL_RELEASE_HAULER_TOOLTIP                               :{BLACK}End the hauler's service; its wagons and cargo stay as they are
+STR_PORTAL_SELL_MACHINE                                         :{BLACK}Sell machine
+STR_PORTAL_SELL_MACHINE_TOOLTIP                                 :{BLACK}Sell the withdrawn train standing in the portal
+STR_PORTAL_CONVERT_TRACK                                        :{BLACK}Make track permanent
+STR_PORTAL_CONVERT_TRACK_TOOLTIP                                :{BLACK}Turn the boring machine's released temporary track into ordinary rail, for its conversion price
 STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR                :{BLACK}Toggle build/remove for railway track, signals, waypoints and stations. Ctrl+Click to also remove the rail of waypoints and stations
 STR_RAIL_TOOLBAR_TOOLTIP_CONVERT_RAIL                           :{BLACK}Convert/Upgrade the type of rail. Also press Shift to show cost estimate only
 
@@ -5199,6 +5291,17 @@ STR_ERROR_TBM_COMMISSION_FUNDS                                  :{WHITE}Not enou
 STR_ERROR_TBM_COMMISSION_RECEIVER                               :{WHITE}The spoil needs your Surface railway station, with receivers for both Earth and Rock in its catchment
 STR_ERROR_TBM_COMMISSION_LIMIT                                  :{WHITE}Too many boring projects
 STR_ERROR_TBM_COMMISSION_FAILED                                 :{WHITE}The boring machine could not be assembled; nothing was bought
+STR_ERROR_TBM_HAULER_PROJECT                                    :{WHITE}This boring project is finished or not yours
+STR_ERROR_TBM_HAULER_ORIGIN                                     :{WHITE}The project's origin station is gone
+STR_ERROR_TBM_HAULER_BAY                                        :{WHITE}The project has no usable exchange bay
+STR_ERROR_TBM_HAULER_TRAIN                                      :{WHITE}Choose one of your ordinary trains, not a boring machine
+STR_ERROR_TBM_HAULER_RESERVED                                   :{WHITE}This train or one of its hoppers already serves a boring project
+STR_ERROR_TBM_HAULER_WAGONS                                     :{WHITE}This train no longer carries every hopper of its set
+STR_ERROR_TBM_HAULER_NOT_ASSIGNED                               :{WHITE}This train is not a hauler of a boring project
+STR_ERROR_TBM_PROJECT_CANT_PAUSE                                :{WHITE}The project is already paused or finished
+STR_ERROR_TBM_PROJECT_NOT_PAUSED                                :{WHITE}The project is not paused
+STR_ERROR_TBM_PROJECT_FINISHED                                  :{WHITE}The project is already finished
+STR_ERROR_TBM_PROJECT_CANT_RETIRE                               :{WHITE}Only a finished project retires, once its machine stands stopped and empty in the portal and no hauler serves it
 STR_INDUSTRY_NAME_EARTH_RECLAMATION_SITE                        :Earth Reclamation Site
 STR_INDUSTRY_NAME_ROCK_CRUSHER                                  :Rock Crusher
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
@@ -5469,6 +5572,10 @@ STR_ERROR_MUST_DEMOLISH_TUNNEL_FIRST                            :must demolish t
 STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST                        :must remove layer portal first
 STR_ERROR_CAN_T_BUILD_LAYER_PORTAL                              :Can't build layer portal here...
 STR_ERROR_CAN_T_COMMISSION_TBM                                  :Can't commission boring machine...
+STR_ERROR_CAN_T_ASSIGN_TBM_HAULER                               :Can't assign hauler...
+STR_ERROR_CAN_T_RELEASE_TBM_HAULER                              :Can't release hauler...
+STR_ERROR_CAN_T_CONTROL_TBM_PROJECT                             :Can't change boring project...
+STR_ERROR_CAN_T_CONVERT_TBM_SUPPORT                             :Can't make track permanent...
 STR_ERROR_ANOTHER_TUNNEL_IN_THE_WAY                             :another tunnel in the way
 STR_ERROR_TUNNEL_THROUGH_MAP_BORDER                             :tunnel would end out of the map
 STR_ERROR_UNABLE_TO_EXCAVATE_LAND                               :unable to excavate land for other end of tunnel

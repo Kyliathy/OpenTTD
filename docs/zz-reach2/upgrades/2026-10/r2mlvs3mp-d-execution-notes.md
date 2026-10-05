@@ -519,3 +519,33 @@ Design: [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). Steps 1 and 2 are built; 
   cuts, which overflow one load, so a single run goes commission, cut, fill, exchange, delivery, empty return and
   resumed boring. `[tbm-loop]` passes (4 cases, 248,664 assertions), and all 111 tags pass on build 17
   ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).
+
+### Master 7.9 - Playable from the portal window (2026-10-05)
+
+The user asked for a game they can play. Only the commissioning button reached the TBM from the GUI, so a project
+stalled at its first exchange. Plan 5 13.4, Plan 4 16.3 and master 7.9 were added for the missing controls.
+- `src/tbm_controls.h/.cpp`: `GetTBMPairControls` lists what a company can do at a pair, using the commands' own
+  estimates run as that company, and names the next step of the project's life.
+- `src/layer_portal_gui.cpp`: the portal window gets a corridor length, a project panel and nine buttons. A train is
+  picked as hauler by clicking it, as the depot's clone tool picks one. Cancel asks first.
+- Named refusals in `CmdAssignTBMHauler`, `CmdReleaseTBMHauler` and `CmdControlTBMProject`, with new English strings.
+- Product fixes:
+  - A finished project's hauler is admitted at its bay only while part of it stands there, and may then always
+    leave. Before this, the hauler's empty return after the last delivery steered it back into the bay, where it
+    could not leave.
+  - A cutter with a project is exempt from automatic servicing, and its bay services it on every entry. Before this,
+    the daily service check would give an overdue cutter a depot order, which the controller holds as Servicing
+    forever. This was found by reading the code; the tests never ran the daily steps.
+- Runs:
+  - [Build 1](r2mlvs3mp-l-controls-build1.log) failed. Commands whose first argument is no tile take no location in
+    `Post`, and `UpdateWidgetSize` takes the size before the padding.
+  - Run 1 ([output](r2mlvs3mp-l-controls-run1.txt)): everything passed except my own expectation that Connect is
+    refused on a Connected pair. It is accepted as a no-op, so the test now checks the state.
+  - Run 2 ([output](r2mlvs3mp-l-controls-run2.txt)) and the first [burst](r2mlvs3mp-l-controls-burst1-all.txt): all
+    112 tags pass.
+  - Runs 3-4 ([output](r2mlvs3mp-l-controls-run3.txt), [daily](r2mlvs3mp-l-controls-run4-daily.txt)) cover the
+    servicing fix, then the controls test with the game's daily train steps, a 150-day service interval and every
+    train overdue.
+  - Final [burst](r2mlvs3mp-l-controls-burst2-all.txt): all 112 tags pass.
+- Games rebuilt with all of it: Debug at 22:54 and RelWithDebInfo at 22:51. A headless run of the RelWithDebInfo
+  build with the Multilayer Industry profile loaded the package and generated the rock layers.

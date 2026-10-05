@@ -300,6 +300,8 @@ add_files(
     tbm_area.cpp
     tbm_commission.cpp
     tbm_cmd.h
+    tbm_controls.h
+    tbm_controls.cpp
     tbm_exchange.h
     tbm_exchange.cpp
     spoil_receiver.h

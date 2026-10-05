@@ -104,13 +104,15 @@ Group 3 status (2026-10-05): all seven child scopes passed the [milestone burst]
 - [ ] 4.3 Execute [Plan 4 Group 11](r2mlvs4-tunnel-boring-machines.md#group-11---exercise-area-coverage-and-turning-as-a-separate-behavior): straight/two-bend/irregular coverage, tight-turn/obstruction refusal and saved safe backing.
 - [X] 4.4 Execute [Plan 4 Group 12](r2mlvs4-tunnel-boring-machines.md#group-12---accrue-active-and-idle-costs-without-tick-duplication): saved state-duration charging, nonzero idle cost, insufficient funds and bankruptcy protection.
 - [X] 4.5 Execute [Plan 4 Group 13](r2mlvs4-tunnel-boring-machines.md#group-13---boring-and-accounting): actual backing preserves cutter-facing authority and cannot bore backwards.
-- [ ] 4.6 Execute [Plan 4 Group 14](r2mlvs4-tunnel-boring-machines.md#group-14---separate-work-reservations-from-ordinary-freight): project corridor/retreat claims, movement/force-proceed enforcement and safe release with occupied tails.
+- [X] 4.6 Execute [Plan 4 Group 14](r2mlvs4-tunnel-boring-machines.md#group-14---separate-work-reservations-from-ordinary-freight): project corridor/retreat claims, movement/force-proceed enforcement and safe release with occupied tails.
 - [X] 4.7 Execute the shared removal/replacement and existing-road/rail cases of [Plan 4 Group 15](r2mlvs4-tunnel-boring-machines.md#group-15---boring-and-accounting). Keep real tube/plant construction acceptance pending until Group 10; do not complete the whole task from a hypothetical footprint.
 
-Group 4 status (2026-10-05): all seven child scopes passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt), so 4.1, 4.2, 4.4, 4.5 and 4.7 are checked. 4.3 (Plan 4 11.3, reversing along real support) and 4.6 (Plan 4 14.3, release with an occupied tail) stay unchecked. Not delivered:
+Group 4 status (2026-10-05): all seven child scopes passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt), so 4.1, 4.2, 4.4, 4.5 and 4.7 are checked. 4.3 (Plan 4 11.3, reversing along real support) and 4.6 (Plan 4 14.3, release with an occupied tail) stayed unchecked. Not delivered:
 - real backing in the pocket (Plan 4 Group 13), which needs 7.3;
 - the cancellation and portal-tail cases of Plan 4 Group 14, which need 6.3 and 7.3;
 - tube and plant reuse (Plan 4 Group 15), which needs Group 10.
+
+Later in Group 7B (2026-10-05), 4.6 is checked. Plan 4 14.3 passes by real movement: cancellation with the tail across the portal, a blocked retreat, and a waiting freight train. 4.3 stays open for Plan 4 11.3's reload during a bend.
 
 The milestone fixed two code defects (validator order in `GetLiveTBMJob`; reversal of a consist on its portal site) and five test setups; see the [milestone notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-4-2026-10-05) and [Group 4 notes](r2mlvs3mp-d-execution-notes.md#group-4---geometry-accounting-and-protected-retreat-verified).
 
@@ -234,12 +236,12 @@ Read the milestone results first. In live source, inspect only these owners:
 Read Plan 3 Groups 15-16 and Plan 4 Groups 13-14 and 19 for the scopes they name. A controller-owned move must stay
 visible/hidden independent and keep each part's reservation; ordinary trains keep their refusals.
 
-Context has compacted 2 times while executing this group.
+Context has compacted 3 times while executing this group.
 
 ### Group 7B - Drive the consist and close the playable loop
 
-Group 7B status (2026-10-05): in progress. The design is [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). All 111
-project tags pass on build 17 ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).
+Group 7B status (2026-10-05): in progress. The design is [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). All 112
+project tags pass after 7.9 ([burst](r2mlvs3mp-l-controls-burst2-all.txt)).
 - Steps 1 and 2 are built and pass: the magazine at the pair key, admitted track for the project's own trains, face
   travel and the backing return, and hauler steering in the pathfinder.
 - The build-and-test runs found three test-setup gaps (zero settings, an unindexed town, a missing pool check) and
@@ -253,6 +255,11 @@ project tags pass on build 17 ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).
   - Plan 4 19.1: visible/hidden equivalence, by audit.
   - Plan 5 13.1: a loop commissioned by command, with a mid-route exchange after which boring resumes.
   - Plan 5 13.3: the replay of that loop.
+- 7.9 is checked (Plan 5 13.4, Plan 4 16.3). The portal window plays a project's whole life: commission with a
+  corridor length, start, assign and release the hauler, pause, cancel, retire, sell, convert the track and connect.
+  [r2mlvs-how-to.md](r2mlvs-how-to.md) walks a player through it. It also brought two product fixes:
+  - a finished project no longer draws its hauler back into the bay;
+  - a working cutter is never sent to a depot for service; its bay services it instead.
 - 7.1 and 7.7 stay open for the recurring underground-bay exchange and the wait-state reloads (Plan 5 13.2).
 - 7.4 is not started: the occupied saves.
 - Details are in the [notes](r2mlvs3mp-d-execution-notes.md#group-7b---movement-in-progress).
@@ -261,6 +268,7 @@ project tags pass on build 17 ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).
 - [X] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
 - [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop): commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
 - [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
+- [X] 7.9 Close the loop from visible controls (added 2026-10-05 at the user's request, so that the game can be played): execute [Plan 5 task 13.4](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop) and [Plan 4 task 16.3](r2mlvs4-tunnel-boring-machines.md#group-16---expose-controller-state-and-integrate-matching-assets). Commission, start, assign and release the hauler, pause, cancel, retire, sell, convert and connect, all from the portal window, with stand-in visuals. Update [r2mlvs-how-to.md](r2mlvs-how-to.md).
 - [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
 
 ### Group 8 - Deliver and review the complete M1 asset slice

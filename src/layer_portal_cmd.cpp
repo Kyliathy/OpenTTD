@@ -409,6 +409,8 @@ static std::optional<VehicleEnterTileStates> RunLayerPortalMagazine(Train *part,
 		}
 		consist->cur_speed = 0;
 		consist->subspeed = 0;
+		// The bay services the boring machine at every visit, as a depot would; it never goes to one.
+		if (GetTBMProjectForCutter(consist->index) != nullptr) VehicleServiceInDepot(consist);
 	}
 	return VehicleEnterTileState::EnteredWormhole;
 }

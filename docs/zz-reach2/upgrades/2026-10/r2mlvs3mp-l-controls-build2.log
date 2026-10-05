@@ -1,0 +1,43 @@
+MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  -- Version string: 20261005-mlm-mlv-m6e7b97f078
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  layer_portal_gui.cpp
+  openttd_lib.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\openttd_lib.dir\Debug\openttd_lib.lib
+  excavation_clearing.cpp
+  excavation_guard.cpp
+  excavation_pass.cpp
+  portal_build.cpp
+  portal_recovery.cpp
+  spoil_receiver_accounting.cpp
+  spoil_receiver_definition.cpp
+  spoil_receiver_delivery.cpp
+  spoil_receiver_intake.cpp
+  spoil_receiver_leg.cpp
+  spoil_receiver_load.cpp
+  spoil_receiver_stall.cpp
+  string_func.cpp
+  tbm_commission.cpp
+  tbm_conservation.cpp
+  tbm_exchange_acceptance.cpp
+  tbm_exchange_bay.cpp
+  tbm_exchange_commit.cpp
+  tbm_exchange_consumer.cpp
+  tbm_exchange_lifecycle.cpp
+  tbm_exchange_load.cpp
+  tbm_exchange_origin.cpp
+  tbm_exchange_proposal.cpp
+  tbm_hauler_cycle.cpp
+  tbm_movement.cpp
+  tbm_recovery.cpp
+  tbm_reuse.cpp
+  tbm_support.cpp
+  tbm_wagon_sets.cpp
+  openttd_test.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\Debug\openttd_test.exe

@@ -32,6 +32,7 @@
 #include "timer/timer_game_tick.h"
 #include "timer/timer_game_calendar.h"
 #include "core/backup_type.hpp"
+#include "table/strings.h"
 
 #include "safeguards.h"
 
@@ -542,8 +543,17 @@ CommandCost CmdSetTBMProjectOrigin(DoCommandFlags flags, TBMProjectID project, S
  */
 CommandCost CmdControlTBMProject(DoCommandFlags flags, TBMProjectID project, TBMProjectAction action)
 {
-	if (ControlTBMProject(project, action, flags.Test(DoCommandFlag::Execute)) != TBMProjectError::None) return CMD_ERROR;
-	return CommandCost();
+	const TBMProjectError error = ControlTBMProject(project, action, flags.Test(DoCommandFlag::Execute));
+	if (error == TBMProjectError::None) return CommandCost();
+	if (error != TBMProjectError::Unavailable) return CMD_ERROR; // A missing or foreign project is no player choice.
+	// An action refused in the project's current state names what it waits for.
+	switch (action) {
+		case TBMProjectAction::Pause: return CommandCost(STR_ERROR_TBM_PROJECT_CANT_PAUSE);
+		case TBMProjectAction::Resume: return CommandCost(STR_ERROR_TBM_PROJECT_NOT_PAUSED);
+		case TBMProjectAction::Cancel: return CommandCost(STR_ERROR_TBM_PROJECT_FINISHED);
+		case TBMProjectAction::Retire: return CommandCost(STR_ERROR_TBM_PROJECT_CANT_RETIRE);
+		default: return CMD_ERROR;
+	}
 }
 
 /**

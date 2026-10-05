@@ -171,6 +171,13 @@ static constexpr size_t MAX_TBM_EXCHANGE_ASSIGNMENTS = MAX_TBM_PROJECTS * 4;
 static constexpr size_t MAX_TBM_WAGON_SETS = MAX_TBM_EXCHANGE_ASSIGNMENTS * 2;
 
 /**
+ * Whether a project takes a hauler at all, whichever train it would be: the project side of AssignTBMHauler.
+ * @param project Project to serve.
+ * @return None, InvalidProject (missing, foreign to the actor or finished), MissingOrigin or InvalidBay.
+ */
+TBMExchangeError CheckTBMProjectTakesHauler(TBMProjectID project);
+
+/**
  * Assign a hauler to a project and register its empty spoil units as the set it brings (ReturnEmpties), or adopt the
  * one unowned set its wagons already form, resuming that set's cycle (recovery after a release).
  * @param project Live, unfinished project of the actor's company with its Surface origin station and a valid bay.
@@ -359,16 +366,19 @@ bool IsTBMHaulerHeld(const Train &front);
 
 /**
  * Whether an assigned hauler may use the magazine of its Source bay at a portal key (R2MLVS3MP-M decision 3).
- * It is admitted in every phase, so it can always leave the bay it stands in; it never reaches the rock end.
+ * While its project is unfinished it is admitted in every phase, so it can always leave the bay it stands in. Once
+ * the project is finished it is admitted only while a part of it still stands on the key, so it can take the last
+ * load out but is never drawn back in. It never reaches the rock end.
  * @param front Front engine of the train.
  * @param tile Portal key.
- * @return True when the train's assignment names this tile as its project's Source bay.
+ * @return True when the train's assignment names this tile as its project's Source bay, under the rule above.
  */
 bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile);
 
 /**
  * Whether a project train standing wholly in its magazine may leave it now (R2MLVS3MP-M decision 2): the cutter only
- * to travel to its face, a hauler once it has no exchange to wait for. Any other train stays put.
+ * to travel to its face, a hauler once it has no exchange to wait for, or at any time once its project is finished.
+ * Any other train stays put.
  * @param front Front engine.
  * @return Whether it may start to leave.
  */

@@ -296,6 +296,8 @@ bool Vehicle::NeedsServicing() const
  */
 bool Vehicle::NeedsAutomaticServicing() const
 {
+	// A working boring machine is serviced in its portal bay at every visit; no depot order may divert its controller.
+	if (this->type == VehicleType::Train && GetTBMProjectForCutter(this->index) != nullptr) return false;
 	if (this->HasDepotOrder()) return false;
 	if (this->current_order.IsType(OT_LOADING)) return false;
 	if (this->current_order.IsType(OT_GOTO_DEPOT) && !this->current_order.GetDepotOrderType().Test(OrderDepotTypeFlag::Service)) return false;

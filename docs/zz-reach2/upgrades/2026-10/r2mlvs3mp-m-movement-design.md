@@ -52,6 +52,14 @@ D (the rock end, the job's anchor), exit heading H (D's door), and the straddlin
 | Plan 4 (`tbm_*`) | AdvanceSupport stops holding the train. ReturnForExchange reverses the consist once. A query names the magazine exit side for a train. |
 | Plan 5 (`tbm_exchange.*`) | Which haulers are admitted at a bay, and the steering query. |
 
+## Changes after the design (master 7.9)
+
+- Decision 3, admission: once the project is finished, its hauler is admitted at the bay only while a part of it
+  still stands on the key. It can take the last load out, but its empty return never brings it back in.
+- Decision 2, leaving: a hauler of a finished project may leave the magazine whatever its phase.
+- Servicing: a cutter with a project never gets an automatic depot order. Its bay services it whenever it backs in,
+  so the game's daily service check cannot hold it as Servicing far from any depot.
+
 ## Saves
 
 No saved field is added. A train half out of the magazine is saved like a train half out of a depot: some parts in

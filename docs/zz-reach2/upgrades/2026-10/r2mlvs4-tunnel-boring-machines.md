@@ -419,6 +419,30 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 {{MEDIUM}}
 - [ ] 16.1 Display face, pass progress, hardness, both spoil capacities, active/idle cost and one precise blocked reason from controller queries.
 - [ ] 16.2 Integrate idle/boring/reversing/servicing graphics and sound events from r2mlvs13 after manifest/asset verification. Animation must consume state and never trigger work.
+- [X] 16.3 Give the player a project's controls in the portal window (added 2026-10-05, R2MLVS3MP master 7.9), with stand-in visuals until 16.2 and master Group 8 deliver the art:
+  - the corridor length to commission;
+  - show the machine, start/stop it, pause/resume, cancel (confirmed) and retire, through `CmdControlTBMProject` with named refusals;
+  - sell the withdrawn machine, and convert the released temporary track;
+  - the phase, cut progress, hold reason, the spoil dug so far, and the next step the player should take.
+
+  What the window offers comes from one tested query, so it never offers a step the commands refuse. 16.1's full display stays open.
+
+Group 16 status (2026-10-05, R2MLVS3MP master 7.9): 16.3 passes with all 112 project tags
+([burst](r2mlvs3mp-l-controls-burst2-all.txt)); 16.1 and 16.2 stay open for the full display and the art.
+- `GetTBMPairControls` (`src/tbm_controls.cpp`) derives each offered control from the commands' own estimates, run
+  as the asking company. It also derives the next step of the project's life, from commission to connected.
+- The portal window (`src/layer_portal_gui.cpp`) has:
+  - a corridor length from 2 to 60 cells for commissioning;
+  - an origin choice that prefers a station with both receivers;
+  - a project panel: phase and cuts, hold, Earth and Rock dug, the hauler, and the next step;
+  - buttons: Machine, Start/Stop, Pause/Resume, Cancel (confirmed), Retire, Assign hauler, Release hauler, Sell
+    machine and Make track permanent.
+- `CmdControlTBMProject` names why an action is refused in the project's state.
+- Found by reading the code while making the game playable: the game's daily service check would give an overdue
+  cutter a depot order. The controller holds such a cutter as Servicing, and it can never reach a depot, so a long
+  project would stall. The tests never met it, because they ran no daily steps. A cutter with a project is now exempt
+  from automatic servicing, and its bay services it whenever it backs in. `[tbm-movement]` checks both rules, and
+  `[tbm-controls]` runs the daily steps with every train overdue.
 
 ### Group 17 - Implement recoverable cancellation and reassignment
 

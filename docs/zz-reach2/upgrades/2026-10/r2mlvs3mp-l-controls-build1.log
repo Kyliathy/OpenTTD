@@ -1,0 +1,397 @@
+CMake is re-running because D:/Codez/Sandbox/OpenTTD/build/src/CMakeFiles/generate.stamp is out-of-date.
+  the file 'D:/Codez/Sandbox/OpenTTD/src/CMakeLists.txt'
+  is newer than 'D:/Codez/Sandbox/OpenTTD/build/src/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.19045.
+-- Finding editbin.exe
+-- Finding editbin.exe - found
+-- Option Package Dependencies - OFF
+-- Option Dedicated - OFF
+-- Option Install FHS - OFF
+-- Option Use assert - ON
+-- Option Use NSIS - OFF
+-- Option Survey Key - NOT USED
+-- PNG found -- -DWITH_PNG -- PNG::PNG
+-- ZLIB found -- -DWITH_ZLIB -- ZLIB::ZLIB
+-- LIBLZMA found -- -DWITH_LIBLZMA -- LibLZMA::LibLZMA
+-- LZO found -- -DWITH_LZO -- D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/include D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/include -- optimized;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/lib/lzo2.lib;debug;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/debug/lib/lzo2.lib optimized;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/lib/lzo2.lib;debug;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/debug/lib/lzo2.lib
+-- unofficial-breakpad found -- -DWITH_UNOFFICIAL_BREAKPAD -- unofficial::breakpad::libbreakpad_client
+-- OpusFile found -- -DWITH_OPUSFILE -- OpusFile::opusfile
+-- Soxr found -- -DWITH_SOXR -- Soxr::soxr
+-- OpenGL found -- -DWITH_OPENGL -- OpenGL::GL
+-- SSE found -- -DWITH_SSE --   --  
+CMake Warning (dev) at cmake/InstallAndPackage.cmake:28 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  CMakeLists.txt:476 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at cmake/InstallAndPackage.cmake:65 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  CMakeLists.txt:476 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done (5.7s)
+-- Generating done (4.8s)
+-- Build files have been written to: D:/Codez/Sandbox/OpenTTD/build
+MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  Generating table/strings.h
+  Compiling language afrikaans
+  -- Version string: 20261005-mlm-mlv-m6e7b97f078
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  Compiling language arabic_egypt
+  Compiling language basque
+  Compiling language belarusian
+  Compiling language brazilian_portuguese
+  Compiling language bulgarian
+  Compiling language catalan
+  Compiling language chuvash
+  Compiling language croatian
+  Compiling language czech
+  Compiling language danish
+  Compiling language dutch
+  Compiling language english
+  Compiling language english_AU
+  Compiling language english_US
+  Compiling language esperanto
+  Compiling language estonian
+  Compiling language faroese
+  Compiling language finnish
+  Compiling language french
+  Compiling language frisian
+  Compiling language gaelic
+  Compiling language galician
+  Compiling language german
+  Compiling language greek
+  Compiling language hebrew
+  Compiling language hindi
+  Compiling language hungarian
+  Compiling language icelandic
+  Compiling language ido
+  Compiling language indonesian
+  Compiling language irish
+  Compiling language italian
+  Compiling language japanese
+  Compiling language korean
+  Compiling language latin
+  Compiling language latvian
+  Compiling language lithuanian
+  Compiling language luxembourgish
+  Compiling language macedonian
+  Compiling language malay
+  Compiling language maltese
+  Compiling language maori
+  Compiling language marathi
+  Compiling language norwegian_bokmal
+  Compiling language norwegian_nynorsk
+  Compiling language persian
+  Compiling language polish
+  Compiling language portuguese
+  Compiling language romanian
+  Compiling language russian
+  Compiling language serbian
+  Compiling language simplified_chinese
+  Compiling language slovak
+  Compiling language slovenian
+  Compiling language spanish
+  Compiling language spanish_MX
+  Compiling language swedish
+  Compiling language tamil
+  Compiling language thai
+  Compiling language traditional_chinese
+  Compiling language turkish
+  Compiling language ukrainian
+  Compiling language urdu
+  Compiling language vietnamese
+  Compiling language welsh
+  script_admin.cpp
+  script_basestation.cpp
+  script_bridge.cpp
+  script_cargo.cpp
+  script_company.cpp
+  script_engine.cpp
+  script_event_types.cpp
+  script_group.cpp
+  script_industry.cpp
+  script_sign.cpp
+  script_text.cpp
+  script_town.cpp
+  script_vehicle.cpp
+  script_config.cpp
+  script_gui.cpp
+  ai_gui.cpp
+  ai_instance.cpp
+  game_gui.cpp
+  game_instance.cpp
+  game_text.cpp
+  linkgraph_gui.cpp
+  midifile.cpp
+  network_game_info.cpp
+  tcp_content.cpp
+  tcp_game.cpp
+  network.cpp
+  network_admin.cpp
+  network_chat_gui.cpp
+  network_client.cpp
+  network_command.cpp
+  network_content.cpp
+  network_content_gui.cpp
+  network_coordinator.cpp
+  network_gui.cpp
+  network_server.cpp
+  newgrf_act0_globalvar.cpp
+  newgrf_act0_houses.cpp
+  newgrf_act0_industries.cpp
+  newgrf_act0.cpp
+  newgrf_act2.cpp
+  newgrf_act4.cpp
+  newgrf_act8.cpp
+  newgrf_actb.cpp
+  newgrf_actd.cpp
+  newgrf_acte.cpp
+  newgrf_actf.cpp
+  newgrf_act13.cpp
+  newgrf_stringmapping.cpp
+  win32.cpp
+  yapf_rail.cpp
+  afterload.cpp
+  company_sl.cpp
+  tbm_exchange_sl.cpp
+  oldloader.cpp
+  oldloader_sl.cpp
+  saveload.cpp
+  station_sl.cpp
+  strings_sl.cpp
+  waypoint_sl.cpp
+  grf.cpp
+  aircraft_cmd.cpp
+  aircraft_gui.cpp
+  airport.cpp
+  airport_gui.cpp
+  articulated_vehicles.cpp
+  autoreplace_cmd.cpp
+  autoreplace_gui.cpp
+  bootstrap_gui.cpp
+  bridge_gui.cpp
+  build_vehicle_gui.cpp
+  cargotype.cpp
+  cheat_gui.cpp
+  clear_cmd.cpp
+  command.cpp
+  company_cmd.cpp
+  company_gui.cpp
+  console.cpp
+  console_cmds.cpp
+  console_gui.cpp
+  currency.cpp
+  date_gui.cpp
+  debug.cpp
+  depot_cmd.cpp
+  depot_gui.cpp
+  disaster_vehicle.cpp
+  dock_gui.cpp
+  driver.cpp
+  dropdown.cpp
+  economy.cpp
+  engine.cpp
+  engine_gui.cpp
+  error_gui.cpp
+  fios.cpp
+  fios_gui.cpp
+  framerate_gui.cpp
+  genworld.cpp
+  genworld_gui.cpp
+  goal_gui.cpp
+  graph_gui.cpp
+  group_cmd.cpp
+  group_gui.cpp
+  heightmap.cpp
+  help_gui.cpp
+  highscore.cpp
+  highscore_gui.cpp
+  industry_cmd.cpp
+  industry_gui.cpp
+  intro_gui.cpp
+  landscape.cpp
+  layer_portal_cmd.cpp
+  layer_portal_work.cpp
+  layer_portal_gui.cpp
+  league_gui.cpp
+  main_gui.cpp
+  map_layer.cpp
+  map_layer_gui.cpp
+  excavation_guard.cpp
+  tbm_engine.cpp
+  tbm_commission.cpp
+  tbm_controls.cpp
+  tbm_exchange.cpp
+  spoil_receiver.cpp
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(287,7): error C3668: 'LayerPortalWindow::UpdateWidgetSize': method with override specifier 'override' did not override any base class methods [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+  
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(269,41): error C2661: 'CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post': no overloaded function takes 4 arguments [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(230,14):
+      could be 'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(269,41):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)': could not deduce template argument for 'Tcallback *' from 'TileIndex'
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(210,21):
+      or       'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(269,41):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)': expects 3 arguments - 4 provided
+      D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(269,41):
+      while trying to match the argument list '(const StringID, TileIndex, TBMProjectID, TBMProjectAction)'
+  
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(426,70): error C2661: 'CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post': no overloaded function takes 4 arguments [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(230,14):
+      could be 'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(426,70):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)': could not deduce template argument for 'Tcallback *' from 'TileIndex'
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(210,21):
+      or       'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(426,70):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)': expects 3 arguments - 4 provided
+      D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(426,70):
+      while trying to match the argument list '(const StringID, TileIndex, const TBMProjectID, TBMProjectAction)'
+  
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(434,70): error C2661: 'CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post': no overloaded function takes 4 arguments [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(230,14):
+      could be 'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(434,70):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(StringID,Tcallback *,TBMProjectID,TBMProjectAction)': could not deduce template argument for 'Tcallback *' from 'TileIndex'
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(210,21):
+      or       'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(434,70):
+          'bool CommandHelper<Commands::ControlTBMProject,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,TBMProjectAction),true>::Post(Tcallback *,TBMProjectID,TBMProjectAction)': expects 3 arguments - 4 provided
+      D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(434,70):
+      while trying to match the argument list '(const StringID, TileIndex, const TBMProjectID, TBMProjectAction)'
+  
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(448,68): error C2661: 'CommandHelper<Commands::ReleaseTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,VehicleID),true>::Post': no overloaded function takes 3 arguments [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(230,14):
+      could be 'bool CommandHelper<Commands::ReleaseTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,VehicleID),true>::Post(StringID,Tcallback *,VehicleID)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(448,68):
+          'bool CommandHelper<Commands::ReleaseTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,VehicleID),true>::Post(StringID,Tcallback *,VehicleID)': could not deduce template argument for 'Tcallback *' from 'TileIndex'
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(210,21):
+      or       'bool CommandHelper<Commands::ReleaseTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,VehicleID),true>::Post(Tcallback *,VehicleID)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(448,68):
+          'bool CommandHelper<Commands::ReleaseTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,VehicleID),true>::Post(Tcallback *,VehicleID)': expects 2 arguments - 3 provided
+      D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(448,68):
+      while trying to match the argument list '(const StringID, TileIndex, const VehicleID)'
+  
+D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(487,43): error C2661: 'CommandHelper<Commands::AssignTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,VehicleID),true>::Post': no overloaded function takes 4 arguments [D:\Codez\Sandbox\OpenTTD\build\openttd_lib.vcxproj]
+  (compiling source file '../src/layer_portal_gui.cpp')
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(230,14):
+      could be 'bool CommandHelper<Commands::AssignTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,VehicleID),true>::Post(StringID,Tcallback *,TBMProjectID,VehicleID)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(487,43):
+          'bool CommandHelper<Commands::AssignTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,VehicleID),true>::Post(StringID,Tcallback *,TBMProjectID,VehicleID)': could not deduce template argument for 'Tcallback *' from 'const TileIndex'
+      D:\Codez\Sandbox\OpenTTD\src\command_func.h(210,21):
+      or       'bool CommandHelper<Commands::AssignTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,VehicleID),true>::Post(Tcallback *,TBMProjectID,VehicleID)'
+          D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(487,43):
+          'bool CommandHelper<Commands::AssignTBMHauler,CommandCost (__cdecl *)(DoCommandFlags,TBMProjectID,VehicleID),true>::Post(Tcallback *,TBMProjectID,VehicleID)': expects 3 arguments - 4 provided
+      D:\Codez\Sandbox\OpenTTD\src\layer_portal_gui.cpp(487,43):
+      while trying to match the argument list '(const StringID, const TileIndex, TBMProjectID, const Tindex)'
+          with
+          [
+              Tindex=VehicleID
+          ]
+  
+  tbm_project.cpp
+  tbm_support.cpp
+  tbm_work.cpp
+  multilayer_content.cpp
+  multilayer_state.cpp
+  misc_cmd.cpp
+  misc_gui.cpp
+  music_gui.cpp
+  newgrf.cpp
+  newgrf_airport.cpp
+  newgrf_airporttiles.cpp
+  newgrf_badge.cpp
+  newgrf_badge_config.cpp
+  newgrf_badge_gui.cpp
+  newgrf_commons.cpp
+  newgrf_debug_gui.cpp
+  newgrf_gui.cpp
+  newgrf_industries.cpp
+  newgrf_industrytiles.cpp
+  newgrf_object.cpp
+  newgrf_roadstop.cpp
+  newgrf_station.cpp
+  newgrf_text.cpp
+  newgrf_townname.cpp
+  news_gui.cpp
+  object_cmd.cpp
+  object_gui.cpp
+  openttd.cpp
+  order_backup.cpp
+  order_cmd.cpp
+  order_gui.cpp
+  osk_gui.cpp
+  picker_gui.cpp
+  rail_cmd.cpp
+  rail_gui.cpp
+  road_cmd.cpp
+  road_gui.cpp
+  roadveh_cmd.cpp
+  roadveh_gui.cpp
+  screenshot_gui.cpp
+  screenshot.cpp
+  settingentry_gui.cpp
+  settings.cpp
+  settings_gui.cpp
+  settings_table.cpp
+  ship_cmd.cpp
+  ship_gui.cpp
+  signs.cpp
+  signs_cmd.cpp
+  signs_gui.cpp
+  smallmap_gui.cpp
+  station.cpp
+  station_cmd.cpp
+  station_gui.cpp
+  statusbar_gui.cpp
+  story_gui.cpp
+  strings.cpp
+  subsidy.cpp
+  subsidy_gui.cpp
+  terraform_cmd.cpp
+  terraform_gui.cpp
+  textfile_gui.cpp
+  timetable_cmd.cpp
+  timetable_gui.cpp
+  toolbar_gui.cpp
+  town_cmd.cpp
+  town_gui.cpp
+  train_cmd.cpp
+  train_gui.cpp
+  transparency_gui.cpp
+  tree_cmd.cpp
+  tree_gui.cpp
+  tunnelbridge_cmd.cpp
+  vehicle.cpp
+  vehicle_cmd.cpp
+  vehicle_gui.cpp
+  viewport.cpp
+  viewport_gui.cpp
+  void_cmd.cpp
+  water_cmd.cpp
+  waypoint_cmd.cpp
+  waypoint_gui.cpp
+  widget.cpp
+  window.cpp

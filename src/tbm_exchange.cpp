@@ -199,13 +199,20 @@ static bool IsTBMOriginStation(const TBMProject &project)
 	return origin != nullptr && origin->owner == project.company && IsValidTile(origin->xy) && GetTileLayer(origin->xy) == MapLayer::Surface && origin->facilities.Test(StationFacility::Train);
 }
 
-TBMExchangeError AssignTBMHauler(TBMProjectID project_id, VehicleID hauler_id, bool execute)
+TBMExchangeError CheckTBMProjectTakesHauler(TBMProjectID project_id)
 {
 	const TBMProject *project = GetTBMProject(project_id);
 	if (project == nullptr || project->company != _current_company || IsTBMProjectFinished(project->phase)) return TBMExchangeError::InvalidProject;
 	if (!IsTBMOriginStation(*project)) return TBMExchangeError::MissingOrigin; // Every loaded leg must have its Surface station.
+	if (GetTBMExchangeBay(*project).error != TBMExchangeError::None) return TBMExchangeError::InvalidBay;
+	return TBMExchangeError::None;
+}
+
+TBMExchangeError AssignTBMHauler(TBMProjectID project_id, VehicleID hauler_id, bool execute)
+{
+	if (const auto error = CheckTBMProjectTakesHauler(project_id); error != TBMExchangeError::None) return error;
+	const TBMProject *project = GetTBMProject(project_id);
 	const auto bay = GetTBMExchangeBay(*project);
-	if (bay.error != TBMExchangeError::None) return TBMExchangeError::InvalidBay;
 	Train *hauler = Train::GetIfValid(hauler_id);
 	// The hauler is a separate whole company train; no cutter, of this or another project, can haul spoil.
 	if (hauler == nullptr || !hauler->IsFrontEngine() || hauler->owner != project->company || hauler->vehstatus.Test(VehState::Crashed)) return TBMExchangeError::InvalidHauler;
@@ -752,7 +759,13 @@ bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
 	// Only a Source bay is a magazine; a depot bay is a genuine depot with the ordinary rules.
 	if (project == nullptr || front.owner != project->company) return false;
 	const TBMExchangeBay bay = ResolveTBMExchangeBay(*project, tile);
-	return bay.error == TBMExchangeError::None && bay.kind == TBMExchangeBayKind::Source;
+	if (bay.error != TBMExchangeError::None || bay.kind != TBMExchangeBayKind::Source) return false;
+	if (!IsTBMProjectFinished(project->phase)) return true;
+	// A finished project has no exchange left: the hauler may only finish leaving, never come back for one.
+	for (const Train *part = front.First(); part != nullptr; part = part->Next()) {
+		if (part->tile == tile) return true;
+	}
+	return false;
 }
 
 bool MayTBMTrainLeaveMagazine(const Train &front)
@@ -760,9 +773,12 @@ bool MayTBMTrainLeaveMagazine(const Train &front)
 	if (const TBMProject *project = GetTBMProjectForCutter(front.index); project != nullptr) {
 		return project->phase == TBMPhase::TravelToFace && project->blocked == TBMBlockedReason::None; // Off to the face.
 	}
-	// A hauler waits in the bay while it returns empties or awaits its exchange; afterwards it takes the load out.
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
-	return assignment != nullptr && assignment->phase != TBMHaulerPhase::ReturnEmpties && assignment->phase != TBMHaulerPhase::AwaitExchange;
+	if (assignment == nullptr) return false;
+	// A finished project has no exchange to wait for, so its hauler leaves whatever its phase.
+	if (const TBMProject *project = GetTBMProject(assignment->project); project != nullptr && IsTBMProjectFinished(project->phase)) return true;
+	// A hauler waits in the bay while it returns empties or awaits its exchange; afterwards it takes the load out.
+	return assignment->phase != TBMHaulerPhase::ReturnEmpties && assignment->phase != TBMHaulerPhase::AwaitExchange;
 }
 
 bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next)
@@ -1067,13 +1083,22 @@ void ReleaseTBMExchangeBay(TileIndex tile)
 
 CommandCost CmdAssignTBMHauler(DoCommandFlags flags, TBMProjectID project, VehicleID hauler)
 {
-	if (AssignTBMHauler(project, hauler, flags.Test(DoCommandFlag::Execute)) != TBMExchangeError::None) return CMD_ERROR;
-	return CommandCost();
+	// Each refusal names what the player must change: the project, the chosen train or the store bound.
+	switch (AssignTBMHauler(project, hauler, flags.Test(DoCommandFlag::Execute))) {
+		case TBMExchangeError::None: return CommandCost();
+		case TBMExchangeError::InvalidProject: return CommandCost(STR_ERROR_TBM_HAULER_PROJECT);
+		case TBMExchangeError::MissingOrigin: return CommandCost(STR_ERROR_TBM_HAULER_ORIGIN);
+		case TBMExchangeError::InvalidBay: return CommandCost(STR_ERROR_TBM_HAULER_BAY);
+		case TBMExchangeError::InvalidHauler: return CommandCost(STR_ERROR_TBM_HAULER_TRAIN);
+		case TBMExchangeError::Reserved: return CommandCost(STR_ERROR_TBM_HAULER_RESERVED);
+		case TBMExchangeError::WrongWagons: return CommandCost(STR_ERROR_TBM_HAULER_WAGONS);
+		default: return CommandCost(STR_ERROR_TBM_COMMISSION_LIMIT);
+	}
 }
 
 CommandCost CmdReleaseTBMHauler(DoCommandFlags flags, VehicleID hauler)
 {
-	if (ReleaseTBMHauler(hauler, flags.Test(DoCommandFlag::Execute)) != TBMExchangeError::None) return CMD_ERROR;
+	if (ReleaseTBMHauler(hauler, flags.Test(DoCommandFlag::Execute)) != TBMExchangeError::None) return CommandCost(STR_ERROR_TBM_HAULER_NOT_ASSIGNED);
 	return CommandCost();
 }
 

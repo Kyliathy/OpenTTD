@@ -27,6 +27,9 @@
 #include "../track_func.h"
 #include "../signal_func.h"
 #include "../town_kdtree.h"
+#include "../tbm_controls.h"
+#include "../table/strings.h"
+#include "../timer/timer_game_economy.h"
 
 #include "../safeguards.h"
 
@@ -192,8 +195,13 @@ TEST_CASE("A started cutter drives to its face, works its route and backs into i
 
 		// An exchange breakpoint backs the consist along its support and through the shaft into the magazine.
 		REQUIRE(rig.Project().phase == TBMPhase::ReturnForExchange);
+		// However overdue its service, a working machine never asks for a depot; its bay services it instead.
+		const TimerGameEconomy::Date today = TimerGameEconomy::date;
+		rig.front->date_of_last_service = today - 1000;
+		CHECK_FALSE(rig.front->NeedsAutomaticServicing());
 		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::WaitForEmpties; });
 		CHECK(rig.IsWhollyInMagazine());
+		CHECK(rig.front->date_of_last_service == today);
 		CHECK_FALSE(rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards));
 		CHECK(rig.front->cur_speed == 0);
 		// It backed in, so it still faces its face, ready to leave head first. The saved heading is the last committed
@@ -542,13 +550,15 @@ public:
 	std::string trace; ///< One line per transition: phases, wagon IDs and the Earth/Rock ledger, with its tick.
 	std::string journal; ///< Every change of both trains' state and the hauler's tile, for a stalled loop.
 	std::vector<uint16_t> exchanged_at; ///< The job's cut cursor at each completed exchange, in order.
+	bool daily = false; ///< Also run every train's daily step once per game day, as the date timer does in a game.
 	uint ticks = 0; ///< Ticks run.
 
 	/**
 	 * Build the line and the hauler, give the loop its commissioned project, and start both trains.
 	 * @param start The rig's project on its straight route or its bend, or one commissioned through the player's command.
+	 * @param player Leave the machine stopped and the hauler unassigned and stopped, for the player's controls.
 	 */
-	explicit SourceLoop(LoopStart start = LoopStart::Straight) : rig(LoopTurns(start)), town(*rig.town)
+	explicit SourceLoop(LoopStart start = LoopStart::Straight, bool player = false) : rig(LoopTurns(start)), town(*rig.town)
 	{
 		_random.SetSeed(0x7B3D);
 		this->earth = this->rig.BuildReceiver(SpoilReceiverKind::Earth, 15, 22);
@@ -593,6 +603,7 @@ public:
 		// The cutter consist starts as commissioning leaves it: stopped, wholly in its magazine.
 		REQUIRE(this->Project().phase == TBMPhase::Commissioning);
 		REQUIRE(IsTrainStoppedAtPortalSite(*this->cutter));
+		if (player) return; // The player's controls take the remaining steps.
 		REQUIRE(AssignTBMHauler(this->project, this->hauler->index, true) == TBMExchangeError::None);
 		for (const Train *train : {this->cutter, this->hauler}) {
 			REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, train->index, true).Succeeded());
@@ -601,6 +612,19 @@ public:
 
 	/** Restore the caller's random state. */
 	~SourceLoop() { _random = this->saved_random; }
+
+	/**
+	 * Run every train's daily economy and calendar step, as the game's date timer does once per day: service visits,
+	 * breakdown checks, order checks, running costs and age.
+	 */
+	static void RunTrainDays()
+	{
+		for (Train *train : Train::Iterate()) {
+			if (!train->IsFrontEngine()) continue;
+			train->OnNewEconomyDay();
+			train->OnNewCalendarDay();
+		}
+	}
 
 	/**
 	 * Commission at the second pair with the player's command: two Earth and two Rock hoppers, the origin with its
@@ -713,6 +737,7 @@ public:
 			AdvanceSpoilReceiver(*this->earth);
 			AdvanceSpoilReceiver(*this->rock);
 			CallVehicleTicks();
+			if (this->daily && this->ticks % Ticks::DAY_TICKS == 0) RunTrainDays();
 			REQUIRE_FALSE(this->cutter->vehstatus.Test(VehState::Crashed));
 			REQUIRE_FALSE(this->hauler->vehstatus.Test(VehState::Crashed));
 			// The hauler never passes the cutter: it never reaches the rock end of the pair.
@@ -816,4 +841,144 @@ TEST_CASE("The source loop replays the same trace from the same fixture", "[tbm-
 	again.Run();
 	REQUIRE_FALSE(first.empty());
 	CHECK(again.trace == first);
+}
+
+/**
+ * The whole life of a project played only through the portal window's controls (R2MLVS3MP master 7.9). Every step the
+ * controls name is taken with the command the window posts. Nothing is offered before it is accepted, every refusal
+ * names its reason, and a finished project never draws its hauler back into the portal.
+ */
+TEST_CASE("A project's whole life can be played from the portal window's controls", "[tbm-controls]")
+{
+	SourceLoop loop(LoopStart::Command, true);
+	const CompanyID company = _current_company;
+	const TBMProjectID project = loop.project;
+	// The game's daily steps run too, with a real service interval and every train already overdue for service.
+	loop.daily = true;
+	AutoRestoreBackup service_interval(Company::Get(company)->settings.vehicle.servint_trains, uint16_t{150});
+	for (Train *train : Train::Iterate()) train->date_of_last_service = TimerGameEconomy::date - 1000;
+	/** @return The pair's controls, as the window sees them now. */
+	const auto controls = [&loop, company]() { return GetTBMPairControls(loop.source, company); };
+	/**
+	 * Run the receivers and the game's vehicle step until the controls name a step; no train may crash.
+	 * @param step Step to wait for.
+	 * @param limit Most ticks to run.
+	 */
+	const auto run_until = [&loop, &controls](TBMPlayerStep step, uint limit) {
+		uint ticks = 0;
+		while (controls().step != step && ticks < limit) {
+			AdvanceSpoilReceiver(*loop.earth);
+			AdvanceSpoilReceiver(*loop.rock);
+			CallVehicleTicks();
+			if (++loop.ticks % Ticks::DAY_TICKS == 0) SourceLoop::RunTrainDays();
+			REQUIRE_FALSE(loop.cutter->vehstatus.Test(VehState::Crashed));
+			REQUIRE_FALSE(loop.hauler->vehstatus.Test(VehState::Crashed));
+			++ticks;
+		}
+		INFO("after " << ticks << " ticks, step " << to_underlying(controls().step) << ": " << DescribeProject(loop.Project()));
+		REQUIRE(controls().step == step);
+	};
+
+	// Commissioned: the machine stands stopped in its portal, and the controls say so and what a hauler needs.
+	TBMPairControls c = controls();
+	REQUIRE(c.project.has_value());
+	CHECK(c.project->id == project);
+	CHECK(c.step == TBMPlayerStep::StartMachine);
+	CHECK(c.cuts_done == 0);
+	CHECK(c.cuts_total == loop.Job().route.size());
+	CHECK(c.earth_hoppers == 2);
+	CHECK(c.rock_hoppers == 2);
+	CHECK(c.assign);
+	CHECK(c.cancel);
+	CHECK_FALSE(c.retire);
+	CHECK_FALSE(c.release);
+	CHECK(c.convertible.empty());
+	CHECK(c.sellable == VehicleID::Invalid());
+	// The refusals name their reasons: the machine can't haul its own spoil, an unfinished project can't retire, and
+	// a train that serves no project can't be released.
+	CHECK(Command<Commands::AssignTBMHauler>::Do(DoCommandFlag::Execute, project, loop.cutter->index).GetErrorMessage() == STR_ERROR_TBM_HAULER_TRAIN);
+	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Retire).GetErrorMessage() == STR_ERROR_TBM_PROJECT_CANT_RETIRE);
+	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Resume).GetErrorMessage() == STR_ERROR_TBM_PROJECT_NOT_PAUSED);
+	CHECK(Command<Commands::ReleaseTBMHauler>::Do(DoCommandFlag::Execute, loop.hauler->index).GetErrorMessage() == STR_ERROR_TBM_HAULER_NOT_ASSIGNED);
+
+	// Start: the machine goes to work, and asks for a hauler once its hoppers need emptying.
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, loop.cutter->index, false).Succeeded());
+	run_until(TBMPlayerStep::Working, 10);
+	run_until(TBMPlayerStep::AssignHauler, 20000);
+	c = controls();
+	CHECK(c.wait == TBMLogisticsWait::NoHauler);
+	CHECK(c.cuts_done != 0);
+	CHECK(c.earth_t != 0);
+	CHECK(c.rock_t != 0);
+
+	// Pause and resume through the controls; a paused project asks to be resumed.
+	REQUIRE(c.pause);
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Pause).Succeeded());
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::Resume);
+	CHECK(c.resume);
+	CHECK_FALSE(c.pause);
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Resume).Succeeded());
+
+	// Assign the hauler, as the window does for the clicked train, and start it; the loop then runs by itself.
+	REQUIRE(Command<Commands::AssignTBMHauler>::Do(DoCommandFlag::Execute, project, loop.hauler->index).Succeeded());
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, loop.hauler->index, false).Succeeded());
+	c = controls();
+	REQUIRE(c.hauler.has_value());
+	CHECK(c.hauler->hauler == loop.hauler->index);
+	loop.Run();
+	CheckDelivered(loop);
+	// Overdue all along, the machine was never sent to a depot; its bay serviced it at every visit.
+	CHECK_FALSE(loop.cutter->current_order.IsType(OT_GOTO_DEPOT));
+	CHECK(loop.cutter->date_of_last_service == TimerGameEconomy::date);
+
+	// Delivered: the finished project never draws its hauler back into the portal, and offers its release.
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::ReleaseHauler);
+	CHECK(c.release);
+	CHECK_FALSE(c.assign);
+	CHECK_FALSE(c.cancel);
+	CHECK_FALSE(IsTBMHaulerAdmittedAtBay(*loop.hauler, loop.source));
+	CHECK(MayTBMTrainLeaveMagazine(*loop.hauler));
+	for (uint tick = 0; tick < 3000; ++tick) {
+		AdvanceSpoilReceiver(*loop.earth);
+		AdvanceSpoilReceiver(*loop.rock);
+		CallVehicleTicks();
+		if (++loop.ticks % Ticks::DAY_TICKS == 0) SourceLoop::RunTrainDays();
+		for (const Train *part = loop.hauler; part != nullptr; part = part->Next()) REQUIRE(part->tile != loop.source);
+	}
+	REQUIRE(Command<Commands::ReleaseTBMHauler>::Do(DoCommandFlag::Execute, loop.hauler->index).Succeeded());
+
+	// The released temporary track is offered for conversion, then the machine is stopped and the project retired.
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::ConvertTrack);
+	REQUIRE_FALSE(c.convertible.empty());
+	for (const TileIndex tile : c.convertible) REQUIRE(Command<Commands::ConvertTBMSupport>::Do(DoCommandFlag::Execute, tile).Succeeded());
+	c = controls();
+	CHECK(c.convertible.empty());
+	CHECK(c.step == TBMPlayerStep::StopMachine);
+	CHECK_FALSE(c.retire);
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, loop.cutter->index, false).Succeeded());
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::Retire);
+	REQUIRE(c.retire);
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Retire).Succeeded());
+
+	// Retired: the machine still stands in the portal, now an ordinary train to sell.
+	c = controls();
+	CHECK_FALSE(c.project.has_value());
+	CHECK(c.step == TBMPlayerStep::SellMachine);
+	REQUIRE(c.sellable == loop.cutter->index);
+	REQUIRE(Command<Commands::SellVehicle>::Do(DoCommandFlag::Execute, c.sellable, true, false, ClientID::Invalid).Succeeded());
+	loop.cutter = nullptr;
+
+	// Both approaches are dug and built, so the pair connects for ordinary trains.
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::Connect);
+	REQUIRE(c.connect);
+	REQUIRE(Command<Commands::ChangeLayerPortalConnection>::Do(DoCommandFlag::Execute, loop.source, true).Succeeded());
+	UpdateSignalsInBuffer();
+	c = controls();
+	CHECK(c.step == TBMPlayerStep::Connected);
+	CHECK(GetLayerPortalWorkState(loop.source) == LayerPortalWorkState::Connected);
 }

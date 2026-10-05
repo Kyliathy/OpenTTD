@@ -323,6 +323,7 @@ Group 12 status (2026-10-05): implemented and verified at the milestone.
 - [X] 13.1 Run commission -> cut -> fill -> real wagon exchange -> secondary train to Surface origin -> bounded disposal -> empty return -> boring resumes. Record each wagon ID and separate Earth/Rock ledger at every transition.
 - [ ] 13.2 Save/reload at each logistics wait state and with the hauler spanning layers. Resume to the same next exchange and compare packet age, quantities, assignment cycle and cost.
 - [X] 13.3 Replay the same commands from the same fixture and compare the normalized state/ledger trace, not only RNG synchronization. Retain evidence for r2mlvs15; blocked art/network review remains explicitly pending.
+- [X] 13.4 Expose the hauler to the player (added 2026-10-05, R2MLVS3MP master 7.9). Assign a hauler to a project by clicking one of the player's trains, and release it, through `CmdAssignTBMHauler`/`CmdReleaseTBMHauler`, which name their refusal. Show the hauler's phase and wait reason, and say what it needs: one empty hopper per cutter hopper of each kind, and an order to the origin. A finished project no longer draws its hauler back into the bay, and a hauler can always leave a finished project's bay, so the last delivery cannot strand it. Test the whole loop driven only through the controls the window offers.
 
 Group 13 status (2026-10-05, R2MLVS3MP master 7.1): 13.1 and 13.3 pass by real movement, with all 111 project tags
 ([burst](r2mlvs3mp-l-movement-burst3-all.txt)). The tests are `[tbm-loop]` in `src/tests/tbm_movement.cpp`. Both
@@ -344,6 +345,16 @@ trains drive themselves through the game's vehicle step, and the hauler has one 
   are kept for r2mlvs15 ([commissioned and bend](r2mlvs3mp-l-movement-run17-loops.txt),
   [straight route](r2mlvs3mp-l-movement-run10-loop.txt)). Art and network review remain pending.
 - 13.2 stays open: the saves at each wait state and with the hauler spanning layers belong to master 7.4.
+- 13.4 (master 7.9), `[tbm-controls]` in `src/tests/tbm_movement.cpp`, passes with all 112 project tags
+  ([burst](r2mlvs3mp-l-controls-burst2-all.txt)):
+  - The portal window assigns the clicked train and releases it. The commands name their refusals (finished
+    project, lost origin or bay, the machine itself, a reserved train or hopper, a train that is no hauler).
+  - The window shows the hauler's phase and wait, or what a hauler needs.
+  - `IsTBMHaulerAdmittedAtBay` admits the hauler of a finished project only while a part of it still stands on the
+    key, so after the last delivery it is never drawn back in. `MayTBMTrainLeaveMagazine` lets it leave a finished
+    project's bay in any phase. Release is offered only once the hauler is outside the bay.
+  - The test plays a commissioned project's whole life through the window's controls. The game's daily train
+    steps run as well, with a real service interval and every train overdue.
 
 ### Group 14 - Lifecycle and acceptance
 
