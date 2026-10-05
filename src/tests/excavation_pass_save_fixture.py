@@ -106,7 +106,7 @@ def main():
                           "gameplay_profile = multilayer_industry\n"
                           "[network]\nserver_advertise = false\nserver_bind_addresses = 127.0.0.1\n", encoding="utf-8")
         created = run_case("native", ["-G", "1234"], "MLVS_GEOLOGY generator=1", prefix=PREFIX)
-        assert read_stream(created)[0] in (374, 375)
+        assert read_stream(created)[0] in (374, 375, 376, 377, 378)
         active = variant(created, "active", frozen_pass, prefix=PREFIX)
         expected = "MLVS_EXCAVATION_JOB id=0 state=3 cursor=0 partial=77 revision=2"
         loaded = run_case("active", ["-g", active.as_posix()], expected, prefix=PREFIX)

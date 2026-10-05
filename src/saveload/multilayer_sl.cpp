@@ -97,6 +97,9 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationJobs) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) != 0) SlErrorCorrupt("Unexpected excavation jobs in old save version");
 		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationPasses) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0) SlErrorCorrupt("Unexpected excavation pass in old save version"); // Older formats cannot request a descriptor family they never owned.
 		if (IsSavegameVersionBefore(SaveLoadVersion::LayerPortalWork) && (schema.feature_flags & MULTILAYER_FEATURE_PORTAL_WORK) != 0) SlErrorCorrupt("Unexpected portal work in old save version"); // Explicit work records require their actual versioned descriptor family.
+		if (IsSavegameVersionBefore(SaveLoadVersion::TBMProjects) && (schema.feature_flags & MULTILAYER_FEATURE_TBM_PROJECTS) != 0) SlErrorCorrupt("Unexpected TBM projects in old save version"); // Typed projects require their versioned descriptor family.
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpoilReceivers) && (schema.feature_flags & MULTILAYER_FEATURE_SPOIL_RECEIVERS) != 0) SlErrorCorrupt("Unexpected spoil receivers in old save version"); // Receiver state requires its versioned descriptor family.
+		if (IsSavegameVersionBefore(SaveLoadVersion::TBMExchange) && (schema.feature_flags & MULTILAYER_FEATURE_TBM_EXCHANGE) != 0) SlErrorCorrupt("Unexpected TBM exchange in old save version"); // Assignments and sets require their versioned descriptor family.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}

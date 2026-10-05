@@ -47,6 +47,7 @@
 #include "road_cmd.h"
 #include "landscape_cmd.h"
 #include "rail_cmd.h"
+#include "tbm.h"
 
 #include "table/strings.h"
 #include "table/roadtypes.h"
@@ -737,6 +738,9 @@ CommandCost CmdBuildRoad(DoCommandFlags flags, TileIndex tile, RoadBits pieces, 
 				CommandCost ret = CheckTileOwnership(tile);
 				if (ret.Failed()) return ret;
 			}
+
+			// Temporary TBM support never becomes a level crossing; it is converted or removed first (r2mlvs4 Group 15).
+			if (GetTBMSupportTile(tile) != nullptr) return CommandCost(STR_ERROR_TBM_SUPPORT_CONVERT_FIRST);
 
 			if (GetRailTileType(tile) != RailTileType::Normal) goto do_clear;
 

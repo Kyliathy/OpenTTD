@@ -382,6 +382,14 @@ enum class Commands : uint8_t {
 	RemoveLeagueTableElement, ///< remove a league table element
 	PaintExcavationTerrain, ///< explicit saved-override scenario terrain painting; append preserves existing command identities
 	ChangeLayerPortalConnection, ///< validated empty-pair connection/sealing; append preserves existing command identities
+	ControlTBMProject, ///< pause/resume a typed TBM project; append preserves existing command identities
+	ConvertTBMSupport, ///< convert released temporary TBM support into permanent track; append preserves existing command identities
+	AssignTBMHauler, ///< reserve a hauler and bay for a TBM project; append preserves existing command identities
+	ReleaseTBMHauler, ///< end a TBM project's hauler assignment; append preserves existing command identities
+	SetTBMExchangeBay, ///< move a TBM project's exchange to a validated bay; append preserves existing command identities
+	ExchangeTBMWagons, ///< atomic loaded-for-empty wagon exchange at a TBM bay; append preserves existing command identities
+	SetTBMProjectOrigin, ///< replace a TBM project's Surface origin station; append preserves existing command identities
+	SetSpoilReceiverMode, ///< choose crushing or surplus disposal at a Rock crusher; append preserves existing command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

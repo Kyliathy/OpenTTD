@@ -36,6 +36,7 @@
 #include "object_map.h"
 #include "rail_cmd.h"
 #include "landscape_cmd.h"
+#include "tbm.h"
 
 #include "table/strings.h"
 #include "table/railtypes.h"
@@ -446,6 +447,8 @@ CommandCost CmdBuildSingleRail(DoCommandFlags flags, TileIndex tile, RailType ra
 		case TileType::Railway: {
 			CommandCost ret = CheckTileOwnership(tile);
 			if (ret.Failed()) return ret;
+			// Temporary support of an unfinished boring project takes no extra pieces (r2mlvs4 Group 9).
+			if (CommandCost support = CheckTBMSupportChange(tile, flags); support.Failed()) return support;
 
 			if (!IsPlainRail(tile)) return Command<Commands::LandscapeClear>::Do(flags, tile); // just get appropriate error message
 
@@ -683,6 +686,8 @@ CommandCost CmdRemoveSingleRail(DoCommandFlags flags, TileIndex tile, Track trac
 				CommandCost ret = CheckTileOwnership(tile);
 				if (ret.Failed()) return ret;
 			}
+			// Support under an unfinished boring project may not be removed, so the cutter is never stranded (r2mlvs4 Group 9).
+			if (CommandCost support = CheckTBMSupportChange(tile, flags); support.Failed()) return support;
 
 			CommandCost ret = EnsureNoTrainOnTrack(tile, track);
 			if (ret.Failed()) return ret;
@@ -705,6 +710,7 @@ CommandCost CmdRemoveSingleRail(DoCommandFlags flags, TileIndex tile, Track trac
 				}
 
 				owner = GetTileOwner(tile);
+				ReleaseTBMSupportPiece(tile, track); // Released support loses the metadata of each removed piece.
 
 				/* Subtract old infrastructure count. */
 				uint pieces = present.Count();
@@ -1111,6 +1117,8 @@ CommandCost CmdBuildSingleSignal(DoCommandFlags flags, TileIndex tile, Track tra
 
 	CommandCost ret = CheckTileOwnership(tile);
 	if (ret.Failed()) return ret;
+	// Temporary support of an unfinished boring project carries no signals (r2mlvs4 Group 9).
+	if (CommandCost support = CheckTBMSupportChange(tile, flags); support.Failed()) return support;
 
 	/* See if this is a valid track combination for signals (no overlap) */
 	if (TracksOverlap(GetTrackBits(tile))) return CommandCost(STR_ERROR_NO_SUITABLE_RAILROAD_TRACK);
@@ -1621,6 +1629,8 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 		} else {
 			if (CommandCost ground = CheckExcavationConstruction(std::array{cur_tile}); ground.Failed()) { error = std::move(ground); continue; }
 		}
+		// Temporary support of an unfinished boring project keeps its rail type (r2mlvs4 Group 9).
+		if (CommandCost support = CheckTBMSupportChange(cur_tile, flags); support.Failed()) { error = std::move(support); continue; }
 		TileType tt = GetTileType(cur_tile);
 
 		/* Check if there is any track on tile */
@@ -3082,6 +3092,7 @@ static void ChangeTileOwner_Rail(TileIndex tile, Owner old_owner, Owner new_owne
 			Company::Get(old_owner)->infrastructure.signal -= num_sigs;
 			Company::Get(new_owner)->infrastructure.signal += num_sigs;
 		}
+		ChangeTBMSupportOwner(tile, new_owner); // Support metadata follows its track.
 
 		SetTileOwner(tile, new_owner);
 	} else {
@@ -3139,6 +3150,14 @@ int TicksToLeaveDepot(const Train *v)
 /** @copydoc VehicleEnterTileProc */
 static VehicleEnterTileStates VehicleEnterTile_Rail(Vehicle *v, TileIndex tile, int x, int y)
 {
+	/* Temporary TBM support refuses a train unless it may carry every part; the moving front decides for the whole
+	 * train, so neither a route nor force-proceed can take ordinary freight into a work corridor (r2mlvs4 Group 14). */
+	if (v->type == VehicleType::Train && v == v->GetMovingFront() && GetTBMSupportTile(tile) != nullptr) {
+		for (const Train *part = Train::From(v)->First(); part != nullptr; part = part->Next()) {
+			if (!MayTBMSupportCarry(*part, tile)) return VehicleEnterTileState::CannotEnter;
+		}
+	}
+
 	/* This routine applies only to trains in depot tiles. */
 	if (v->type != VehicleType::Train || !IsRailDepotTile(tile)) return {};
 

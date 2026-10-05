@@ -13,10 +13,43 @@ add_test_files(
     excavation_outline.cpp
     excavation_route.cpp
     excavation_pass.cpp
+    excavation_starter.cpp
     excavation_budget.cpp
     excavation_fixture.h
+    solid_starter_fixture.h
     tbm_model.cpp
     tbm_engine.cpp
+    tbm_fixture.h
+    tbm_acquisition.cpp
+    tbm_project.cpp
+    tbm_area.cpp
+    tbm_phase.cpp
+    tbm_consumer.cpp
+    portal_tbm_access.cpp
+    tbm_work.cpp
+    tbm_support.cpp
+    tbm_route.cpp
+    tbm_coverage.cpp
+    tbm_cost.cpp
+    tbm_corridor.cpp
+    tbm_reuse.cpp
+    tbm_exchange_fixture.h
+    tbm_exchange_bay.cpp
+    tbm_exchange_proposal.cpp
+    tbm_exchange_commit.cpp
+    tbm_exchange_origin.cpp
+    tbm_exchange_consumer.cpp
+    tbm_hauler_cycle.cpp
+    tbm_wagon_sets.cpp
+    spoil_receiver_fixture.h
+    spoil_receiver_definition.cpp
+    spoil_receiver_intake.cpp
+    spoil_receiver_leg.cpp
+    spoil_receiver_load.cpp
+    spoil_receiver_delivery.cpp
+    spoil_receiver_stall.cpp
+    spoil_receiver_accounting.cpp
+    tbm_exchange_load.cpp
     geology_deposits.cpp
     geology_generation.cpp
     geology_state.cpp
@@ -37,6 +70,7 @@ add_test_files(
     portal_date.cpp
     portal_lifecycle.cpp
     portal_work_state.cpp
+    portal_bootstrap.cpp
     math_func.cpp
     mock_environment.h
     mock_fontcache.h

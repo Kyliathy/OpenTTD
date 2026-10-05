@@ -17,6 +17,9 @@ static constexpr uint32_t MULTILAYER_FEATURE_VENTS = 2; ///< Delivered independe
 static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_JOBS = 4; ///< Saved sparse jobs/retired-ID cursor, requiring the complete version-373 job family.
 static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_PASSES = 8; ///< Frozen backing/capacity inputs require the version-374 pass family and actual jobs.
 static constexpr uint32_t MULTILAYER_FEATURE_PORTAL_WORK = 16; ///< Canonical native portal work records require version-375 descriptors; topology stays in the map.
+static constexpr uint32_t MULTILAYER_FEATURE_TBM_PROJECTS = 32; ///< Typed TBM projects (any ID ever allocated) require the version-376 project family.
+static constexpr uint32_t MULTILAYER_FEATURE_SPOIL_RECEIVERS = 64; ///< Live Earth/Rock spoil receivers require the version-377 receiver family.
+static constexpr uint32_t MULTILAYER_FEATURE_TBM_EXCHANGE = 128; ///< Hauler assignments/wagon sets (any ID ever allocated) require the version-378 exchange family.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {

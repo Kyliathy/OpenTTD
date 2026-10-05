@@ -55,19 +55,25 @@ Read the parent's Plan Index handoff-staging paragraph and AD-3/AD-5. Read Plan 
 ### Group 1 - Verify reusable foundations and reconcile dispatch
 
 {{MEDIUM}}
-- [ ] 1.1 Verify [Plan 1 Content Freeze](r2mlvs1-gameplay-contracts-and-content.md#public-handoff-contract), [Plan 2 Groups 1-14](r2mlvs2-geology-and-excavation.md#group-1---choose-excavation-storage-with-a-measured-budget), and [Plan 14 Groups 1-6](r2mlvs14-savegame-determinism-and-lifecycle.md#group-1---schema-and-migration-foundation). Reuse delivered storage/profile/schema; verify relevant exports and focused boundary evidence once.
-- [ ] 1.2 Verify completed scopes of [Plan 3 Groups 1-7](r2mlvs3-sealed-portals-and-deep-rail.md#group-1---portal-state-and-connection-matrix), [Group 10](r2mlvs3-sealed-portals-and-deep-rail.md#group-10---commissioning-and-bootstrap) and [Group 14](r2mlvs3-sealed-portals-and-deep-rail.md#group-14---controls-art-and-acceptance), plus [Plan 4 Group 1](r2mlvs4-tunnel-boring-machines.md#group-1---define-cutter-models-and-immutable-consist-roles) and its delivered [Group 2 prefixes](r2mlvs4-tunnel-boring-machines.md#group-2---commission-only-through-the-validated-rail-facility). Do not reinterpret the remaining role/commissioning refusals as success.
-- [ ] 1.3 Verify [Plan 13 Groups 1-8 Sprite Contract](r2mlvs13-graphics-and-asset-pipeline.md#group-8---publish-the-sprite-contract-handoff); templates/manifests are inputs to later art, not finished runtime assets.
-- [ ] 1.4 Reconcile scoped gates and task splits in [Plan 4 Groups 2-5](r2mlvs4-tunnel-boring-machines.md#group-2b---prepare-complete-acquisition-without-premature-activation), [Plan 14 Groups 7-15](r2mlvs14-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration) and [Plan 15 Groups 1-5](r2mlvs15-integrated-acceptance-and-balance.md#group-1---fixture-and-build-readiness) before their dependent work. Missing orbital producers must not block the ground runner/audit; missing required ground producers still must. Record exact scoped task IDs and public fields, not a blanket waiver of a child gate.
+- [X] 1.1 Verify [Plan 1 Content Freeze](r2mlvs1-gameplay-contracts-and-content.md#public-handoff-contract), [Plan 2 Groups 1-14](r2mlvs2-geology-and-excavation.md#group-1---choose-excavation-storage-with-a-measured-budget), and [Plan 14 Groups 1-6](r2mlvs14-savegame-determinism-and-lifecycle.md#group-1---schema-and-migration-foundation). Reuse delivered storage/profile/schema; verify relevant exports and focused boundary evidence once.
+- [X] 1.2 Verify completed scopes of [Plan 3 Groups 1-7](r2mlvs3-sealed-portals-and-deep-rail.md#group-1---portal-state-and-connection-matrix), [Group 10](r2mlvs3-sealed-portals-and-deep-rail.md#group-10---commissioning-and-bootstrap) and [Group 14](r2mlvs3-sealed-portals-and-deep-rail.md#group-14---controls-art-and-acceptance), plus [Plan 4 Group 1](r2mlvs4-tunnel-boring-machines.md#group-1---define-cutter-models-and-immutable-consist-roles) and its delivered [Group 2 prefixes](r2mlvs4-tunnel-boring-machines.md#group-2---commission-only-through-the-validated-rail-facility). Do not reinterpret the remaining role/commissioning refusals as success.
+- [X] 1.3 Verify [Plan 13 Groups 1-8 Sprite Contract](r2mlvs13-graphics-and-asset-pipeline.md#group-8---publish-the-sprite-contract-handoff); templates/manifests are inputs to later art, not finished runtime assets.
+- [X] 1.4 Reconcile scoped gates and task splits in [Plan 4 Groups 2-5](r2mlvs4-tunnel-boring-machines.md#group-2b---prepare-complete-acquisition-without-premature-activation), [Plan 14 Groups 7-15](r2mlvs14-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration) and [Plan 15 Groups 1-5](r2mlvs15-integrated-acceptance-and-balance.md#group-1---fixture-and-build-readiness) before their dependent work. Missing orbital producers must not block the ground runner/audit; missing required ground producers still must. Record exact scoped task IDs and public fields, not a blanket waiver of a child gate.
+
+Group 1 evidence (2026-10-05): focused Debug bursts pass Plan 1/14 (18 cases/715 assertions), Plan 2 (44/5,884) and Plans 3/4 (28/1,274); the sprite manifest validates 141 families. The first Plan 2 burst exposed a stale `excavation_guard.cpp` portal expectation that predates Plan 3's sealed housing; the test now asserts the pure sealed quote. Scoped splits and gates: [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md). Notes: [r2mlvs3mp-d](r2mlvs3mp-d-execution-notes.md).
+
+Context has compacted 1 times while executing this group.
 
 ### Group 2 - Reconcile the solid starter before dependent work
 
 {{HARD}}
-- [ ] 2.1 Execute [Plan 3 Group 8B](r2mlvs3-sealed-portals-and-deep-rail.md#group-8b---publish-the-narrow-solid-starter-geometry-contract): publish/test the narrow portal-issued source-support/destination-pocket proposal. It must be quotable before complete TBM acquisition.
-- [ ] 2.2 Execute [Plan 2 Group 14B](r2mlvs2-geology-and-excavation.md#group-14b---reconcile-canonical-planning-and-cuts-with-a-solid-commissioning-pocket): extend the one canonical planner/reservation/cut/serialization contract. Charge all newly solid swept starter cells and preserve the housing; never pre-clear a room or duplicate cursor/cargo authority.
-- [ ] 2.3 Execute [Plan 4 Group 2B](r2mlvs4-tunnel-boring-machines.md#group-2b---prepare-complete-acquisition-without-premature-activation): complete pure whole-consist preparation, bounded unpublished acquisition and rollback. Keep the production commissioning/start control guarded until Group 6 below.
+- [X] 2.1 Execute [Plan 3 Group 8B](r2mlvs3-sealed-portals-and-deep-rail.md#group-8b---publish-the-narrow-solid-starter-geometry-contract): publish/test the narrow portal-issued source-support/destination-pocket proposal. It must be quotable before complete TBM acquisition.
+- [X] 2.2 Execute [Plan 2 Group 14B](r2mlvs2-geology-and-excavation.md#group-14b---reconcile-canonical-planning-and-cuts-with-a-solid-commissioning-pocket): extend the one canonical planner/reservation/cut/serialization contract. Charge all newly solid swept starter cells and preserve the housing; never pre-clear a room or duplicate cursor/cargo authority.
+- [X] 2.3 Execute [Plan 4 Group 2B](r2mlvs4-tunnel-boring-machines.md#group-2b---prepare-complete-acquisition-without-premature-activation): complete pure whole-consist preparation, bounded unpublished acquisition and rollback. Keep the production commissioning/start control guarded until Group 6 below.
 
 Exit: all three producer/consumer signatures and their focused boundary tests agree. Geological participant fixtures prove the owner's transaction boundary; they do not replace the later actual-wagon proof.
+
+Group 2 status (2026-10-05): all three child groups passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt) after master Group 4, so 2.1-2.3 are checked. The burst fixed one code defect (the vehicle pool check in `BuildTBMConsistAtSite`) and three test expectations. Child evidence: Plan 3 Group 8B, Plan 2 Group 14B and Plan 4 Group 2B status paragraphs. Notes: [r2mlvs3mp-d](r2mlvs3mp-d-execution-notes.md#group-2---reconcile-the-solid-starter-verified) and the [milestone notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-4-2026-10-05).
 
 ### Area Mandatory Reading - Controller, cutting and haulage
 
@@ -75,27 +81,40 @@ _Applies to Groups 3-5._
 
 Read the executing Plan 4 or Plan 5 area's mandatory sources and Public Handoff Contract. Follow the new starter contract from Group 2; inspect the existing train tick/order/consist/cargo owners only for the active task. Plan 4 owns actual vehicle/material/funds participation, Plan 2 owns route/cursor/partial work/terrain, and Plan 5 owns actual wagon exchange, hauler cycle and bounded receivers. `AdvanceTBMWork` readiness must state which behavior is tested; Plan 5 cannot depend on a header-only claim.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 3 - Build the saved controller and actual cut participants
 
 {{HARD}}
-- [ ] 3.1 Execute [Plan 4 Group 3](r2mlvs4-tunnel-boring-machines.md#group-3---choose-the-project-command-and-order-representation): typed private project assignment, ordinary/shared travel orders and versioned command/save round trips.
-- [ ] 3.2 Execute [Plan 4 Group 4](r2mlvs4-tunnel-boring-machines.md#group-4---implement-saved-work-orders-and-state-transitions): canonical preview, guarded phases, resumable interruptions and TravelToFace/Bore-entry reload. Real stopped boundary consists may exercise foundations while the production purchase control remains guarded; unavailable exchange behavior stays blocked.
-- [ ] 3.3 Execute [Plan 4 Group 5](r2mlvs4-tunnel-boring-machines.md#group-5---publish-the-tbm-controller-boundary): publish the real assignment/role/state/route boundary, one tick call site and consumer fixture. Complete the declared work behavior through 3.5-3.7 before using it for live exchange/runtime claims.
-- [ ] 3.4 Execute [Plan 3 Group 5 task 5.3B](r2mlvs3-sealed-portals-and-deep-rail.md#group-5---expose-sealed-routing-without-losing-physical-pair-geometry): consume actual controller role/part authorization. Test restricted owned-consist entry/retreat and normal/unrelated follower refusal against real boundary consists; final playable entry comes in Group 7.
-- [ ] 3.5 Execute [Plan 4 Group 6](r2mlvs4-tunnel-boring-machines.md#group-6---advance-bounded-work-against-one-reserved-face): one claimed face, one saved work accumulator/tick and precise capacity/support/funds waits.
-- [ ] 3.6 Execute [Plan 4 Group 7](r2mlvs4-tunnel-boring-machines.md#group-7---join-geological-cuts-to-real-wagon-inventory-atomically): actual separate Earth/Rock packets, canonical work-site provenance, storage acquisition and one atomic paid cut; test exact fill, one-cargo fullness and pool/participant failure.
+- [X] 3.1 Execute [Plan 4 Group 3](r2mlvs4-tunnel-boring-machines.md#group-3---choose-the-project-command-and-order-representation): typed private project assignment, ordinary/shared travel orders and versioned command/save round trips.
+- [X] 3.2 Execute [Plan 4 Group 4](r2mlvs4-tunnel-boring-machines.md#group-4---implement-saved-work-orders-and-state-transitions): canonical preview, guarded phases, resumable interruptions and TravelToFace/Bore-entry reload. Real stopped boundary consists may exercise foundations while the production purchase control remains guarded; unavailable exchange behavior stays blocked.
+- [X] 3.3 Execute [Plan 4 Group 5](r2mlvs4-tunnel-boring-machines.md#group-5---publish-the-tbm-controller-boundary): publish the real assignment/role/state/route boundary, one tick call site and consumer fixture. Complete the declared work behavior through 3.5-3.7 before using it for live exchange/runtime claims.
+- [X] 3.4 Execute [Plan 3 Group 5 task 5.3B](r2mlvs3-sealed-portals-and-deep-rail.md#group-5---expose-sealed-routing-without-losing-physical-pair-geometry): consume actual controller role/part authorization. Test restricted owned-consist entry/retreat and normal/unrelated follower refusal against real boundary consists; final playable entry comes in Group 7.
+- [X] 3.5 Execute [Plan 4 Group 6](r2mlvs4-tunnel-boring-machines.md#group-6---advance-bounded-work-against-one-reserved-face): one claimed face, one saved work accumulator/tick and precise capacity/support/funds waits.
+- [X] 3.6 Execute [Plan 4 Group 7](r2mlvs4-tunnel-boring-machines.md#group-7---join-geological-cuts-to-real-wagon-inventory-atomically): actual separate Earth/Rock packets, canonical work-site provenance, storage acquisition and one atomic paid cut; test exact fill, one-cargo fullness and pool/participant failure.
 - [ ] 3.7 Execute [Plan 4 Group 8](r2mlvs4-tunnel-boring-machines.md#group-8---install-charged-support-and-preserve-retreat): paid temporary support metadata/placement and actual part positions/reservations, including the first solid-pocket segment. Finish the work-behavior producer tests promised by Group 5.
+
+Group 3 status (2026-10-05): all seven child scopes passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt), so 3.1-3.6 are checked. 3.7 stays unchecked because one part of it is not delivered: moving the parts onto new support and their reservations. It needs the first pocket entry (7.3) and Plan 4 Group 14 (4.6); until then a working cutter is held still. Child evidence is in the Plan 4 Groups 3-8 status paragraphs and the Plan 3 Group 5 status line. Notes: [r2mlvs3mp-d](r2mlvs3mp-d-execution-notes.md#group-3---saved-controller-and-cut-participants-verified).
 
 ### Group 4 - Finish geometry, accounting and protected retreat
 
 {{HARD}}
-- [ ] 4.1 Execute [Plan 4 Group 9](r2mlvs4-tunnel-boring-machines.md#group-9---boring-and-accounting): declared conversion/removal/traversal rules for actual temporary track.
-- [ ] 4.2 Execute [Plan 4 Group 10](r2mlvs4-tunnel-boring-machines.md#group-10---bind-canonical-area-passes-to-the-actual-train): bind actual consist dimensions/capacity to accepted canonical passes and charge every authorized extra cut.
+- [X] 4.1 Execute [Plan 4 Group 9](r2mlvs4-tunnel-boring-machines.md#group-9---boring-and-accounting): declared conversion/removal/traversal rules for actual temporary track.
+- [X] 4.2 Execute [Plan 4 Group 10](r2mlvs4-tunnel-boring-machines.md#group-10---bind-canonical-area-passes-to-the-actual-train): bind actual consist dimensions/capacity to accepted canonical passes and charge every authorized extra cut.
 - [ ] 4.3 Execute [Plan 4 Group 11](r2mlvs4-tunnel-boring-machines.md#group-11---exercise-area-coverage-and-turning-as-a-separate-behavior): straight/two-bend/irregular coverage, tight-turn/obstruction refusal and saved safe backing.
-- [ ] 4.4 Execute [Plan 4 Group 12](r2mlvs4-tunnel-boring-machines.md#group-12---accrue-active-and-idle-costs-without-tick-duplication): saved state-duration charging, nonzero idle cost, insufficient funds and bankruptcy protection.
-- [ ] 4.5 Execute [Plan 4 Group 13](r2mlvs4-tunnel-boring-machines.md#group-13---boring-and-accounting): actual backing preserves cutter-facing authority and cannot bore backwards.
+- [X] 4.4 Execute [Plan 4 Group 12](r2mlvs4-tunnel-boring-machines.md#group-12---accrue-active-and-idle-costs-without-tick-duplication): saved state-duration charging, nonzero idle cost, insufficient funds and bankruptcy protection.
+- [X] 4.5 Execute [Plan 4 Group 13](r2mlvs4-tunnel-boring-machines.md#group-13---boring-and-accounting): actual backing preserves cutter-facing authority and cannot bore backwards.
 - [ ] 4.6 Execute [Plan 4 Group 14](r2mlvs4-tunnel-boring-machines.md#group-14---separate-work-reservations-from-ordinary-freight): project corridor/retreat claims, movement/force-proceed enforcement and safe release with occupied tails.
-- [ ] 4.7 Execute the shared removal/replacement and existing-road/rail cases of [Plan 4 Group 15](r2mlvs4-tunnel-boring-machines.md#group-15---boring-and-accounting). Keep real tube/plant construction acceptance pending until Group 10; do not complete the whole task from a hypothetical footprint.
+- [X] 4.7 Execute the shared removal/replacement and existing-road/rail cases of [Plan 4 Group 15](r2mlvs4-tunnel-boring-machines.md#group-15---boring-and-accounting). Keep real tube/plant construction acceptance pending until Group 10; do not complete the whole task from a hypothetical footprint.
+
+Group 4 status (2026-10-05): all seven child scopes passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt), so 4.1, 4.2, 4.4, 4.5 and 4.7 are checked. 4.3 (Plan 4 11.3, reversing along real support) and 4.6 (Plan 4 14.3, release with an occupied tail) stay unchecked. Not delivered:
+- real backing in the pocket (Plan 4 Group 13), which needs 7.3;
+- the cancellation and portal-tail cases of Plan 4 Group 14, which need 6.3 and 7.3;
+- tube and plant reuse (Plan 4 Group 15), which needs Group 10.
+
+The milestone fixed two code defects (validator order in `GetLiveTBMJob`; reversal of a consist on its portal site) and five test setups; see the [milestone notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-4-2026-10-05) and [Group 4 notes](r2mlvs3mp-d-execution-notes.md#group-4---geometry-accounting-and-protected-retreat-verified).
+
+Context has compacted 1 times while executing this group.
 
 ### Group 5 - Supply actual exchange and disposal before enabling commissioning
 
@@ -109,11 +128,22 @@ Read the executing Plan 4 or Plan 5 area's mandatory sources and Public Handoff 
 - [ ] 5.7 Execute [Plan 5 Group 7](r2mlvs5-spoil-wagons-and-haulage.md#group-7---queue-wagon-sets-independently-of-train-heads): stable exclusive sets/queues and multi-hauler refusals.
 - [ ] 5.8 Execute [Plan 5 Group 8](r2mlvs5-spoil-wagons-and-haulage.md#group-8---enforce-the-surface-origin-leg-and-real-disposal), then [Group 9](r2mlvs5-spoil-wagons-and-haulage.md#group-9---account-for-spoil-delivery-and-expose-logistics-stalls): the minimal real Earth/Rock Surface sinks, exact intake/fees and controller pause/recovery. These sinks are owned by Plan 5 and must not wait for Plan 6 factories. Close the deferred 4.2/6.3 receiver/cycle cases.
 
+Group 5 status (2026-10-05): every scope of Plan 5 Groups 1-9 is implemented but not yet compiled or run, so 5.1-5.8 stay unchecked until the next milestone burst (end of master Group 7 or 8).
+- Designs: [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md) (bay, exchange, hauler cycle, wagon sets) and [r2mlvs3mp-i](r2mlvs3mp-i-receiver-design.md) (receivers, origin leg, persistence).
+- The deferred cases are closed in code: origin admission is satisfied by real receivers (4.2), and one complete cycle with real disposal is a test (6.3).
+- Not delivered here:
+  - saving assignments and wagon sets, and queue reload (Plan 5 Group 10, master 6.1);
+  - refusing ordinary moves, sales and refits of cutter parts in a depot bay (Plan 5 Group 11, master 6.2);
+  - either train driving itself into a bay (master Group 7).
+- The burst list and compile/runtime risks are in the [notes](r2mlvs3mp-d-execution-notes.md#group-5---exchange-and-disposal-in-progress-unbuilt).
+
 ### Area Mandatory Reading - Activation, occupied runtime and M1 art
 
 _Applies to Groups 6-8._
 
 Read Plan 3's acquisition/cancellation handoff, Plan 4 recovery and Plan 5 lifecycle/persistence scopes. Verify the public owners produced in Groups 2-5 and the relevant Plan 14 lifecycle rows. For art use only the selected Plan 13 authoring/conversion/runtime areas and matching manifest families; read the image-generation skill at actual raster authoring time. Structural/runtime prefixes are not final asset acceptance.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 6 - Persist and recover before completing live commissioning
 
@@ -126,6 +156,10 @@ Read Plan 3's acquisition/cancellation handoff, Plan 4 recovery and Plan 5 lifec
 - [ ] 6.6 Return to the remaining [Plan 4 Group 2](r2mlvs4-tunnel-boring-machines.md#group-2---commission-only-through-the-validated-rail-facility) and [Plan 3 Group 8](r2mlvs3-sealed-portals-and-deep-rail.md#group-8---build-portal-side-commissioning-validation). Complete legal Surface and accessible Underground-to-Deep commissioning, complete acquisition/payment/job/assignment publication, full rollback, service-only depots and actual purchase-control activation. Missing real route/receiver/recovery admission still refuses before allocation.
 
 Exit: a real funded first cutter can be commissioned and safely stopped/recovered from every implemented phase; its origin/source exchange already has actual empty-wagon and receiver capacity. No underground bay or free chamber is a startup prerequisite.
+
+Group 6 status (2026-10-05): 6.1 is implemented but not yet compiled or run, so it stays unchecked until the next milestone burst.
+- Assignments and wagon sets are saved from version 378 and validated after load.
+- Details are in the Plan 5 Group 10 status and the [notes](r2mlvs3mp-d-execution-notes.md#group-6---persist-and-recover-in-progress-unbuilt).
 
 ### Group 7 - Close the first playable ground loop and occupied saves
 

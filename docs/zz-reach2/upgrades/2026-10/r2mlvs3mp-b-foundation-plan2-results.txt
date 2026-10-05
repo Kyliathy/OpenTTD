@@ -1,0 +1,3 @@
+Plan 2 focused burst after stale portal assertion update (excavation_guard.cpp)
+All tests passed (5884 assertions in 44 test cases)
+

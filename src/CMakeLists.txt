@@ -263,6 +263,7 @@ add_files(
     landscape_type.h
     layer_portal_cmd.cpp
     layer_portal_work.cpp
+    layer_portal_bootstrap.cpp
     layer_portal_gui.cpp
     layer_portal_cmd.h
     layer_portal_map.h
@@ -290,10 +291,21 @@ add_files(
     excavation_outline.cpp
     excavation_route.cpp
     excavation_pass.cpp
+    excavation_starter.cpp
     excavation.h
     tbm.h
     tbm_model.cpp
     tbm_engine.cpp
+    tbm_acquisition.cpp
+    tbm_area.cpp
+    tbm_cmd.h
+    tbm_exchange.h
+    tbm_exchange.cpp
+    spoil_receiver.h
+    spoil_receiver.cpp
+    tbm_project.cpp
+    tbm_support.cpp
+    tbm_work.cpp
     geology.cpp
     geology_digest.cpp
     geology_generation.cpp

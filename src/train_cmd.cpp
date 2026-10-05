@@ -40,6 +40,7 @@
 #include "train.h"
 #include "train_cmd.h"
 #include "tbm.h"
+#include "tbm_exchange.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
 #include "layer_portal_cmd.h"
@@ -438,6 +439,11 @@ int Train::GetCurrentMaxSpeed() const
 		/* Vehicle is on the middle part of a bridge. */
 		if (u->track == Track::Wormhole && !u->vehstatus.Test(VehState::Hidden)) {
 			max_speed = std::min<int>(max_speed, GetBridgeSpec(GetBridgeType(u->tile))->speed);
+		}
+
+		/* Temporary TBM support track has its own speed limit (r2mlvs4 Group 9). */
+		if (const TBMSupportTile *support = GetTBMSupportTile(u->tile); support != nullptr) {
+			max_speed = std::min<int>(max_speed, support->max_speed);
 		}
 	}
 
@@ -1299,6 +1305,8 @@ static void NormaliseTrainHead(Train *head)
 	head->unitnumber = Company::Get(head->owner)->freeunits[head->type].UseID(GetFreeUnitNumber(VehicleType::Train));
 }
 
+static CommandCost MoveRailVehicleParts(DoCommandFlags flags, Train *src, Train *dst, bool move_chain, bool require_depot);
+
 /**
  * Move a rail vehicle around inside the depot.
  * @param flags type of operation
@@ -1340,6 +1348,23 @@ CommandCost CmdMoveRailVehicle(DoCommandFlags flags, VehicleID src_veh, VehicleI
 		dst = dst->GetFirstEnginePart();
 	}
 
+	return MoveRailVehicleParts(flags, src, dst, move_chain, true);
+}
+
+/**
+ * Rearrange stopped parts that share one construction site, after the caller's facility and ownership checks.
+ * Depot moves and validated portal assembly share this one rearrangement, validation and bookkeeping path.
+ * @param flags Command estimate/execute policy; DoCommandFlag::AutoReplace keeps its existing meaning.
+ * @param src First engine part of the vehicle to move.
+ * @param dst First engine part of the vehicle to move after, or nullptr for a new line.
+ * @param move_chain Move all vehicles following the source vehicle.
+ * @param require_depot Require both chains to be stopped inside a genuine depot (all ordinary moves).
+ * @return The cost of this operation or an error.
+ */
+static CommandCost MoveRailVehicleParts(DoCommandFlags flags, Train *src, Train *dst, bool move_chain, bool require_depot)
+{
+	CommandCost ret;
+
 	/* don't move the same vehicle.. */
 	if (src == dst) return CommandCost();
 
@@ -1363,11 +1388,18 @@ CommandCost CmdMoveRailVehicle(DoCommandFlags flags, VehicleID src_veh, VehicleI
 	/* When moving a multiheaded part to be place after itself, bail out. */
 	if (!move_chain && dst != nullptr && dst->IsRearDualheaded() && src == dst->other_multiheaded_part) return CommandCost();
 
-	/* Check if all vehicles in the source train are stopped inside a depot. */
-	if (!src_head->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
+	/* Ordinary moves need both chains stopped inside a genuine depot; validated portal assembly checks its own site. */
+	if (require_depot) {
+		/* Ordinary moves happen only in a genuine depot. A portal assembly site or exchange bay also keeps its parts on
+		 * Track::Depot, which IsStoppedInDepot accepts, but only its own restricted owner may rearrange it. */
+		if (!IsRailDepotTile(src_head->tile)) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
 
-	/* Check if all vehicles in the destination train are stopped inside a depot. */
-	if (dst_head != nullptr && !dst_head->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
+		/* Check if all vehicles in the source train are stopped inside a depot. */
+		if (!src_head->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
+
+		/* Check if all vehicles in the destination train are stopped inside a depot. */
+		if (dst_head != nullptr && !dst_head->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
+	}
 
 	/* First make a backup of the order of the trains. That way we can do
 	 * whatever we want with the order and later on easily revert. */
@@ -1491,6 +1523,164 @@ CommandCost CmdMoveRailVehicle(DoCommandFlags flags, VehicleID src_veh, VehicleI
 		RestoreTrainBackup(original_dst);
 	}
 
+	return CommandCost();
+}
+
+/**
+ * Prove that rebuilding a trial chain's capacities cannot truncate cargo. ConsistChanged(CCF_ARRANGE) recomputes every
+ * part's capacity with the head as first engine and truncates any surplus, so each part's capacity is determined the
+ * same way here and compared with its cargo. The first-engine cache and NewGRF caches are restored afterwards.
+ * @param head Front engine of the trial chain.
+ * @return Success, or the capacity-loss refusal.
+ */
+static CommandCost CheckArrangedCargoCapacity(Train *head)
+{
+	head->InvalidateNewGRFCache();
+	// Every part's capacity may depend on its new head, so every part is checked, not only the moved ones.
+	for (Train *part = head; part != nullptr; part = part->Next()) {
+		const EngineID saved_first_engine = part->gcache.first_engine;
+		part->gcache.first_engine = part == head ? EngineID::Invalid() : head->engine_type;
+		part->InvalidateNewGRFCache();
+		const uint capacity = Engine::Get(part->engine_type)->DetermineCapacity(part);
+		part->gcache.first_engine = saved_first_engine;
+		part->InvalidateNewGRFCache();
+		if (part->cargo.TotalCount() > capacity) return CommandCost(STR_ERROR_TBM_EXCHANGE_CAPACITY_LOSS);
+	}
+	head->InvalidateNewGRFCache();
+	return CommandCost();
+}
+
+/**
+ * Exchange whole wagon units between two stationary consists on one rearrangement tile, as one transaction.
+ * See the declaration in train_cmd.h for the contract; both heads stay heads, so no orders, unit numbers or names move.
+ * @param flags Execute keeps the result; any other flags only try it.
+ * @param first Front engine of the first consist.
+ * @param first_prefix Last part of the first consist's fixed prefix.
+ * @param to_first Unit heads now in the second consist, moved behind first_prefix in this order.
+ * @param second Front engine of the second consist.
+ * @param to_second Unit heads now in the first consist, moved behind the second head's own unit in this order.
+ * @return Success, or the first attachment, length or capacity refusal with both chains unchanged.
+ */
+CommandCost ExchangeRailWagonUnits(DoCommandFlags flags, Train *first, Train *first_prefix, std::span<Train *const> to_first, Train *second, std::span<Train *const> to_second)
+{
+	// Both heads must be distinct front engines on one tile, and the prefix must belong to the first consist.
+	if (first == nullptr || second == nullptr || first == second || first_prefix == nullptr || !first->IsFrontEngine() || !second->IsFrontEngine() || first->tile != second->tile || first_prefix->First() != first) return CMD_ERROR;
+	// Every moved part is a whole unit head of the other consist; articulated or rear dual-headed parts never move alone.
+	for (const Train *unit : to_first) {
+		if (unit == nullptr || unit->First() != second || unit == second || unit->IsArticulatedPart() || unit->IsRearDualheaded() || unit->IsEngine()) return CMD_ERROR;
+	}
+	for (const Train *unit : to_second) {
+		if (unit == nullptr || unit->First() != first || unit == first || unit->IsArticulatedPart() || unit->IsRearDualheaded() || unit->IsEngine()) return CMD_ERROR;
+	}
+
+	/* Back up both chains; every part is in exactly one list, so restoring both rebuilds both chains exactly. */
+	TrainList original_first;
+	TrainList original_second;
+	MakeTrainBackup(original_first, first);
+	MakeTrainBackup(original_second, second);
+
+	/* Trial: detach every moved unit, then couple each group behind its new consist's fixed part, in order. */
+	for (Train *unit : to_second) RemoveFromConsist(unit);
+	for (Train *unit : to_first) RemoveFromConsist(unit);
+	Train *after = first_prefix->GetLastEnginePart();
+	for (Train *unit : to_first) {
+		InsertInConsist(after, unit);
+		after = unit->GetLastEnginePart();
+	}
+	after = second->GetLastEnginePart();
+	for (Train *unit : to_second) {
+		InsertInConsist(after, unit);
+		after = unit->GetLastEnginePart();
+	}
+
+	CommandCost ret = CheckTrainAttachment(first);
+	if (ret.Succeeded()) ret = CheckTrainAttachment(second);
+	if (ret.Succeeded()) ret = CheckArrangedCargoCapacity(first);
+	if (ret.Succeeded()) ret = CheckArrangedCargoCapacity(second);
+	// An estimate, or any refusal, puts both chains back exactly as they were.
+	if (ret.Failed() || !flags.Test(DoCommandFlag::Execute)) {
+		RestoreTrainBackup(original_first);
+		RestoreTrainBackup(original_second);
+		return ret;
+	}
+
+	/* Commit: the fixed bookkeeping of an ordinary move. Heads do not change, and nothing below can fail. */
+	GroupStatistics::CountVehicle(first, -1);
+	GroupStatistics::CountVehicle(second, -1);
+	NormaliseSubtypes(first);
+	NormaliseSubtypes(second);
+	NormaliseTrainHead(first);
+	NormaliseTrainHead(second);
+	GroupStatistics::CountVehicle(first, 1);
+	GroupStatistics::CountVehicle(second, 1);
+	first->MarkDirty();
+	second->MarkDirty();
+	InvalidateWindowData(WindowClass::VehicleDepot, first->tile);
+	InvalidateWindowClassesData(WindowClass::TrainList, 0);
+	return CommandCost();
+}
+
+/**
+ * Assemble a whole cutter consist on a validated portal source site in one synchronous step.
+ * The site is validated once, while it is still empty; later parts would otherwise see the earlier ones as an
+ * obstruction. Each part uses the same site construction as BuildRailVehicleForTBM and gets the purchase bookkeeping
+ * of CmdBuildVehicle; each wagon is coupled through the shared rearrangement owner without the depot requirement.
+ * @param request Portal commissioning request; its source end is the assembly site.
+ * @param cutter Native cutter definition for the request's model.
+ * @param cutter_value Value recorded on the front engine (the model's machinery price).
+ * @param unit_number Prepared unit number; it must still be the company's next free one.
+ * @param wagons Hopper definitions in coupling order.
+ * @param[out] front Receives the stopped, hidden front engine, or nullptr on failure.
+ * @return Success, or a refusal after deleting every part this call built.
+ */
+CommandCost BuildTBMConsistAtSite(const LayerPortalCommissionRequest &request, const Engine *cutter, Money cutter_value, UnitID unit_number, std::span<const Engine *const> wagons, Train **front)
+{
+	if (front == nullptr) return CMD_ERROR;
+	*front = nullptr;
+	if (ValidateLayerPortalCommissioning(request).error != LayerPortalWorkError::None) return CMD_ERROR;
+	// Only the request's own live cutter design may head the consist; any other engine cannot inherit portal assembly.
+	if (cutter == nullptr || Engine::GetIfValid(cutter->index) != cutter || !IsTBMCutterEngine(cutter->index) || GetTBMEngineModel(cutter->index) != request.proposal.model_id) return CMD_ERROR;
+	uint parts = 1 + CountArticulatedParts(cutter->index);
+	// Every wagon must be a live native hopper; sum the whole pool demand before anything is allocated.
+	for (const Engine *wagon : wagons) {
+		if (wagon == nullptr || Engine::GetIfValid(wagon->index) != wagon) return CMD_ERROR;
+		const auto model = GetTBMEngineModel(wagon->index);
+		if (model != 2 && model != 3) return CMD_ERROR;
+		parts += 1 + CountArticulatedParts(wagon->index);
+	}
+	// The prepared unit number must still be the next free one and the pool must hold every part, so construction
+	// cannot stop halfway for capacity and the unit number matches what the preview showed.
+	if (unit_number == 0 || unit_number != GetFreeUnitNumber(VehicleType::Train) || !Vehicle::CanAllocateItem(parts)) return CMD_ERROR;
+	const auto direction = GetLayerPortalDoorDirection(request.portal);
+	Vehicle *built = nullptr;
+	CommandCost ret = BuildRailVehicleAtSite(DoCommandFlag::Execute, request.portal, cutter, &built, direction, true);
+	if (ret.Failed()) return ret;
+	if (built == nullptr) return CMD_ERROR;
+	Train *head = Train::From(built);
+	head->unitnumber = Company::Get(head->owner)->freeunits[VehicleType::Train].UseID(unit_number);
+	head->value = cutter_value;
+	GroupStatistics::CountEngine(head, 1);
+	GroupStatistics::CountVehicle(head, 1);
+	// Each hopper is built as a free wagon and coupled at once, so no loose part outlives one iteration.
+	for (const Engine *wagon : wagons) {
+		built = nullptr;
+		// Articulated assembly re-arms the pool check one part at a time, which spends the whole-consist arming above;
+		// each hopper re-arms its own demand, which cannot fail after the whole-consist check and nothing else allocated.
+		ret = Vehicle::CanAllocateItem(1 + CountArticulatedParts(wagon->index)) ? BuildRailVehicleAtSite(DoCommandFlag::Execute, request.portal, wagon, &built, direction, true) : CMD_ERROR;
+		if (ret.Succeeded() && built == nullptr) ret = CMD_ERROR;
+		if (ret.Succeeded()) {
+			built->value = wagon->GetCost();
+			GroupStatistics::CountEngine(built, 1);
+			ret = MoveRailVehicleParts(DoCommandFlag::Execute, Train::From(built), head->Last()->GetFirstEnginePart(), false, false);
+			if (ret.Failed()) delete built; // A refused coupling restores the free wagon, whose deletion undoes its engine count.
+		}
+		if (ret.Failed()) {
+			delete head; // Deleting the head deletes every coupled part and undoes its unit number and group counts.
+			return ret;
+		}
+	}
+	GroupStatistics::UpdateAutoreplace(head->owner);
+	*front = head;
 	return CommandCost();
 }
 
@@ -2075,9 +2265,11 @@ static bool IsWholeTrainInsideDepot(const Train *v)
 static void ReverseTrainDirection(Train *consist)
 {
 	Train *moving_front = consist->GetMovingFront();
-	if (IsRailDepotTile(moving_front->tile)) {
+	// A whole train held in a depot, or on a portal assembly site whose housing carries no track of its own, is off
+	// the network: reversing it there changes nothing and must not start a reservation follower from that tile.
+	if (IsRailDepotTile(moving_front->tile) || IsLayerPortalTile(moving_front->tile)) {
 		if (IsWholeTrainInsideDepot(consist)) return;
-		InvalidateWindowData(WindowClass::VehicleDepot, moving_front->tile);
+		if (IsRailDepotTile(moving_front->tile)) InvalidateWindowData(WindowClass::VehicleDepot, moving_front->tile);
 	}
 
 	/* Clear path reservation in front if train is not stuck. */
@@ -4120,6 +4312,14 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 	/* exit if train is stopped */
 	if (consist->vehstatus.Test(VehState::Stopped) && consist->cur_speed == 0) return true;
 
+	/* A cutter at work or waiting in its bay, or a hauler waiting there, holds still: their controllers own that
+	 * motion (r2mlvs4 Group 8, r2mlvs5 Group 6). */
+	if (IsTBMHoldingTrain(*consist) || IsTBMHaulerHeld(*consist)) {
+		consist->cur_speed = 0;
+		consist->subspeed = 0;
+		return true;
+	}
+
 	bool valid_order = !consist->current_order.IsType(OT_NOTHING) && consist->current_order.GetType() != OT_CONDITIONAL;
 	if (ProcessOrders(consist) && CheckReverseTrain(consist)) {
 		consist->wait_counter = 0;
@@ -4253,6 +4453,8 @@ Money Train::GetRunningCost() const
 	do {
 		const Engine *e = v->GetEngine();
 		if (e->VehInfo<RailVehicleInfo>().running_cost_class == Price::Invalid) continue;
+		// While it has a project, the cutter's machinery cost is the project's active and idle accrual (r2mlvs4 Group 12).
+		if (v == this && GetTBMProjectForCutter(this->index) != nullptr) continue;
 
 		uint cost_factor = GetVehicleProperty(v, PROP_TRAIN_RUNNING_COST_FACTOR, e->VehInfo<RailVehicleInfo>().running_cost);
 		if (cost_factor == 0) continue;
@@ -4280,6 +4482,12 @@ bool Train::Tick()
 		if (!this->vehstatus.Test(VehState::Stopped) || this->cur_speed > 0) this->running_ticks++;
 
 		this->current_order_time++;
+
+		// The one TBM controller call site: one step per front engine per tick, outside the doubled loco handler.
+		// The project store stays empty until commissioning publication (R2MLVS3MP Group 6) exists.
+		if (const TBMProject *project = GetTBMProjectForCutter(this->index); project != nullptr) AdvanceTBMWork(project->id);
+		// The hauler cycle has the same one call site per hauler front engine (r2mlvs5 Group 6).
+		if (const TBMExchangeAssignment *assignment = GetTBMExchangeAssignmentForHauler(this->index); assignment != nullptr) AdvanceTBMHauler(assignment->id);
 
 		if (!TrainLocoHandler(this, false)) return false;
 
@@ -4373,6 +4581,16 @@ void Train::OnNewEconomyDay()
 
 			SetWindowDirty(WindowClass::VehicleDetails, this->index);
 			SetWindowClassesDirty(WindowClass::TrainList);
+		}
+
+		/* A cutter's project charges its saved active and idle duration once per day (r2mlvs4 Group 12). */
+		if (const TBMProject *project = GetTBMProjectForCutter(this->index); project != nullptr) {
+			const Money charged = ChargeTBMProjectCosts(project->id);
+			if (charged != 0) {
+				this->profit_this_year -= charged;
+				SetWindowDirty(WindowClass::VehicleDetails, this->index);
+				SetWindowClassesDirty(WindowClass::TrainList);
+			}
 		}
 	}
 }

@@ -22,6 +22,9 @@
 #include "../multilayer_state.h"
 #include "../excavation_state.h"
 #include "../layer_portal_cmd.h"
+#include "../tbm.h"
+#include "../spoil_receiver.h"
+#include "../tbm_exchange.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -3471,6 +3474,12 @@ bool AfterLoadGame()
 
 	AfterLoadLabelMaps();
 	AfterLoadCompanyStats();
+	// Projects bind actual train chains, so they are validated only now that vehicles, geology and portal work are rebuilt.
+	if (!AcceptLoadedTBMProjects()) SlErrorCorrupt("Invalid TBM project authority");
+	// Assignments and sets name projects, haulers and wagons, so they are validated once the projects are accepted.
+	if (!AcceptLoadedTBMExchange()) SlErrorCorrupt("Invalid TBM exchange state");
+	// Receiver state sits beside its industry's own stock, so it is validated once the industries are rebuilt.
+	if (!AcceptLoadedSpoilReceivers()) SlErrorCorrupt("Invalid spoil receiver state");
 	AfterLoadStoryBook();
 
 	_gamelog.PrintDebug(Severity::Error);

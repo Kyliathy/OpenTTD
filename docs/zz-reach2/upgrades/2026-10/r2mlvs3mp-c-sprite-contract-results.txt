@@ -1,0 +1,1 @@
+M0 sprite contract: 141 families, 58059 required sprites; schema/refusal/template checks passed; final art pending

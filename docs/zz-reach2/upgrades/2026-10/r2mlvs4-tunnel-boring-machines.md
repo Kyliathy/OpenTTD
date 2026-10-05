@@ -50,7 +50,17 @@ Deliver a real train that bores connected rock, advances on paid support track a
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/tbm.h`. Publish `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute`, `AdvanceTBMWork`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Public owner: `src/tbm.h`. `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute` and `AdvanceTBMWork` exist in code since R2MLVS3MP Group 3 (2026-10-05); their focused tests are pending the milestone build. Consumers may also use `GetTBMProjectForCutter`, `GetTBMWorkState`, `InspectTBMConsist`, `GetTBMConsistRole` and `MeasureTBMConsist`. Since Groups 6-8, `AdvanceTBMWork` observes face arrival and runs paid cuts with real support and wagon space. The consist cannot yet drive into the pocket or onto new support (master Group 7, Group 14), and exchange completion comes from Group 4.2B with Plan 5. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+
+Acquisition and role contract (Group 2B, implemented 2026-10-05, focused tests pending the milestone build): `TBMConsistRequest`, `TBMAcquisitionError`, `TBMAcquisitionPlan`, `PrepareTBMAcquisition`, `TBMAcquisition`, `AcquireTBMConsist` and `GetTBMConsistRole` in `src/tbm.h`; site assembly through `BuildTBMConsistAtSite` in `src/train_cmd.h`. Preparation is pure. Acquisition holds stopped, hidden, unpublished parts and rolls them back unless released. It charges nothing and reserves no job; publication belongs to R2MLVS3MP Group 6.
+
+Face work, cut participant and support (Groups 6-8, implemented 2026-10-05, focused tests pending the milestone build):
+- Face work and its waits: `TBMFaceWork`, `AdvanceTBMFaceWork`, `IsTBMExchangeDue`, `CaptureTBMMaterial`, the spoil provenance contract, `TBMCutParticipant`, `IsTBMHoldingTrain` and `TBMPhaseInputs::work_wait`.
+- Support: `TBMSupportClass`, `TBMSupportTile`, `GetTBMSupportTile`, `CaptureTBMSupport`, `PrepareTBMSupport`, `PlaceTBMSupport`, `IsTBMSupportUsable` and `IsTBMSupportTraversable`.
+- Geology adds `EstimateExcavationCut`.
+- Plan 5 may consume the provenance contract, `IsTBMExchangeDue` and the support classes. Driving onto new support is still missing (see the Group 8 status).
+
+Project store and controls (Group 3, implemented 2026-10-05, focused tests pending the milestone build): `TBMProjectAction`, `TBMProjectError`, `GetTBMProject`, `GetTBMProjectForCutter`, `CaptureTBMProjects`, `GetNextTBMProjectID`, `ValidateTBMProject(s)`, `PublishTBMProject`, `ControlTBMProject`, `ComputeTBMProjectDigest` and the staged-load functions in `src/tbm.h`. The command `CmdControlTBMProject` is in `src/tbm_cmd.h` (appended `Commands::ControlTBMProject`). Save version 376 `TBMProjects` adds chunks `TBMH`/`TBMP` and feature bit `MULTILAYER_FEATURE_TBM_PROJECTS` (32). `PublishTBMProject` has no command trait; publication stays with R2MLVS3MP Group 6.
 
 ## Implementation Tasks
 
@@ -129,32 +139,66 @@ Final boundary follow-up: `r2mlvs4-k-final-results.txt` passes **8 cases/237 ass
 ### Group 2B - Prepare complete acquisition without premature activation
 
 {{HARD}}
-- [ ] 2B.1 Consume the tested Plan 3 Group 8B/Plan 2 Group 14B starter handoff. Prepare complete model/unit IDs, actual whole-consist capacity/dimensions, funds, source access and canonical route/retreat terms before allocating a part.
-- [ ] 2B.2 Factor bounded acquisition and full rollback using the existing engine/train owners. Acquire unpublished cutter/support/wagon parts and project/job capacity before irreversible writes; failure preserves existing vehicles, funds, terrain, packets, RNG and pair state.
-- [ ] 2B.3 Test estimate, legal construction preparation and failure at each acquisition boundary with actual pool-owned units. Publish the controller's immutable role/assignment contract for Groups 3-5; fixture construction is not a normal-game first-cut or disposal claim.
-- [ ] 2B.4 Keep production commissioning/start activation guarded until Groups 3-15, the required Plan 5 source exchange/receivers and Group 17 recovery are implemented and tested. Return to original 2.1/2.3/2.4 and Plan 3 Group 8 at R2MLVS3MP Group 6 to complete acquisition/publication/control activation together.
+- [X] 2B.1 Consume the tested Plan 3 Group 8B/Plan 2 Group 14B starter handoff. Prepare complete model/unit IDs, actual whole-consist capacity/dimensions, funds, source access and canonical route/retreat terms before allocating a part.
+- [X] 2B.2 Factor bounded acquisition and full rollback using the existing engine/train owners. Acquire unpublished cutter/support/wagon parts and project/job capacity before irreversible writes; failure preserves existing vehicles, funds, terrain, packets, RNG and pair state.
+- [X] 2B.3 Test estimate, legal construction preparation and failure at each acquisition boundary with actual pool-owned units. Publish the controller's immutable role/assignment contract for Groups 3-5; fixture construction is not a normal-game first-cut or disposal claim.
+- [X] 2B.4 Keep production commissioning/start activation guarded until Groups 3-15, the required Plan 5 source exchange/receivers and Group 17 recovery are implemented and tested. Return to original 2.1/2.3/2.4 and Plan 3 Group 8 at R2MLVS3MP Group 6 to complete acquisition/publication/control activation together.
+
+**R2MLVS3MP status, 2026-10-05.** 2B.1-2B.4 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05, so they are ticked. The burst found that articulated assembly re-arms the vehicle pool check one part at a time; `BuildTBMConsistAtSite` now re-arms it for each hopper.
+- 2B.1: `PrepareTBMAcquisition` (`src/tbm_acquisition.cpp`). It checks the portal proof, the cutter and both hopper definitions (both roles need at least one wagon) and the train-length setting. It also derives the planner history size, ceil(length/16)+1 within 3..16, and checks that the route replays exactly from the housing with that history. Then it quotes the pass and reservation at the actual capacities, and checks pool, unit number, per-part site estimates and funds. Nothing is allocated.
+- 2B.2: `AcquireTBMConsist` re-prepares and refuses `Stale` unless the plans are equal. It then calls `BuildTBMConsistAtSite`, verifies layout, length, parts and capacities, and hands the parts to a `TBMAcquisition` owner. Rollback deletes the chain (undoing unit number and group counts) and restores the random seeds. `BuildTBMConsistAtSite` validates the still-empty site once, because per-part revalidation would see the earlier parts as an obstruction. It couples each hopper through the factored `MoveRailVehicleParts`; `CmdMoveRailVehicle` behaviour is unchanged. `StopGlobalFollowVehicle` now returns early without a main window, so headless tests can delete rolled-back parts.
+- 2B.3: tests in `src/tests/tbm_acquisition.cpp` (`[tbm-acquisition]`); `TBMEngineFixture` moved to `src/tests/tbm_fixture.h`. The role contract is `GetTBMConsistRole`. These are fixture constructions, not a normal-game first cut or disposal claim.
+- 2B.4: `CommissionLayerPortalTBM` still reports `ControllerUnavailable`, and no command trait exposes acquisition.
 
 ### Group 3 - Choose the project command and order representation
 
 {{HARD}}
-- [ ] 3.1 Use a typed `TBMProject` assignment and commands for boring steps, alongside normal train orders for travel/service. Inspect the current 4-bit order type and 16-bit destination; never cast a project ID into a StationID or silently extend saved enum meanings.
-- [ ] 3.2 Define how the project UI edits/starts/cancels work and how shared train orders interact with its private project assignment. Cloning shared travel orders must not clone ownership of an active cut.
-- [ ] 3.3 Add command encoding and versioned project serialization through the existing command/schema contracts. Round-trip assignment and orders independently before implementing work phases.
+- [X] 3.1 Use a typed `TBMProject` assignment and commands for boring steps, alongside normal train orders for travel/service. Inspect the current 4-bit order type and 16-bit destination; never cast a project ID into a StationID or silently extend saved enum meanings.
+- [X] 3.2 Define how the project UI edits/starts/cancels work and how shared train orders interact with its private project assignment. Cloning shared travel orders must not clone ownership of an active cut.
+- [X] 3.3 Add command encoding and versioned project serialization through the existing command/schema contracts. Round-trip assignment and orders independently before implementing work phases.
+
+**R2MLVS3MP status, 2026-10-05.** 3.1-3.3 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is (`[tbm-project]`, `src/tests/tbm_project.cpp`).
+- 3.1: inspected `OrderType`/`Order`. `Order::type` packs a 4-bit type with non-stop flags into 8 bits, and `Order::dest` is a 16-bit destination, so a 32-bit project ID cannot live in an order. Projects are typed records in their own store (`src/tbm_project.cpp`), keyed by `TBMProjectID` and bound to exactly one cutter and one job. The cutter keeps ordinary orders for travel and servicing; no order meaning changes.
+- 3.2 (definition):
+  - Project UI actions go only through `CmdControlTBMProject`. Pause sets `TBMBlockedReason::Stopped` and keeps the phase. Resume clears only a player pause; the controller re-derives its own wait reasons. Cancel is refused until Group 17 delivers recoverable cancellation.
+  - Editing the area or route is Group 4.1 (preview, then acceptance through the geology owner).
+  - Travel orders are edited with the ordinary order commands. Sharing or copying them moves no project, because assignment is looked up by cutter, and `CmdCloneVehicle` already refuses cutters.
+- 3.3: the command arguments (typed ID plus one-byte action) use the ordinary command buffer. The save family stores every `TBMProject` field and the allocation cursor, never orders. Rows are structurally checked while reading and staged. They are validated against vehicles, geology and portal work only at the end of `AfterLoadGame`, after vehicle chains are rebuilt; a refusal fails the load. An explicitly invalid job, origin, portal or exchange loads only together with its matching blocked reason. Tests round-trip the command buffer, the staged store and orders separately. A binary save round trip with an actual commissioned consist needs the Group 6 publication path; it is scheduled with the Plan 14 ground audit (master 6.5).
+- Lifecycle obligation for master 6.2/6.3/6.6: before production publication is enabled, selling, replacing or transferring a cutter with a project, and company removal, must update or remove the project. Otherwise the next load would refuse it.
 
 ### Group 4 - Implement saved work orders and state transitions
 
 {{HARD}}
-- [ ] 4.1 Add Boring Project order data and area-outline selection. Consume the r2mlvs2 canonical route planner; preview generated passes, turn envelope, hardness, both spoil quantities and support cost before command acceptance.
+- [X] 4.1 Add Boring Project order data and area-outline selection. Consume the r2mlvs2 canonical route planner; preview generated passes, turn envelope, hardness, both spoil quantities and support cost before command acceptance.
 - [ ] 4.2 Implement Commissioning, TravelToFace, Bore, AdvanceSupport, ReturnForExchange, WaitForEmpties and Resume transitions one edge at a time, with explicit guards and one saved phase timer.
-- [ ] 4.3 Add Stopped/Blocked/Servicing as resumable conditions without losing the previous work phase. Separate cutter heading from the train reversal flag so retreat never implies a new cutting direction.
-- [ ] 4.4 Persist the order/project/heading/timer references and test reload at TravelToFace and Bore entry; reject a missing origin station/project with a recoverable reason.
+- [X] 4.2A Scoped split ([R2MLVS3MP 1.4](r2mlvs3mp-e-scoped-gates.md#plan-4-groups-2-5), executed at master 3.2): Commissioning, TravelToFace, Bore and AdvanceSupport edges plus the ReturnForExchange entry guard, with the one saved phase timer.
+- [ ] 4.2B Scoped split (master 5.5): ReturnForExchange completion, WaitForEmpties and Resume through the tested Plan 5 `ValidateTBMWagonExchange`/`ExecuteTBMWagonExchange`. Task 4.2 stays unchecked until 4.2A and 4.2B both pass.
+- [X] 4.3 Add Stopped/Blocked/Servicing as resumable conditions without losing the previous work phase. Separate cutter heading from the train reversal flag so retreat never implies a new cutting direction.
+- [X] 4.4 Persist the order/project/heading/timer references and test reload at TravelToFace and Bore entry; reject a missing origin station/project with a recoverable reason.
+
+**R2MLVS3MP status, 2026-10-05 (4.2B).** 4.2B is implemented at master 5.5 and not yet run: ReturnForExchange becomes WaitForEmpties once the consist is admitted at its bay (`TBMPhaseInputs::at_exchange`, from the Plan 5 `CheckTBMExchangeParticipant`). WaitForEmpties becomes Resume once no exchange is due, which only an executed `ExecuteTBMWagonExchange` makes true. Resume becomes TravelToFace, or Completed after the final return. `IsTBMExchangeLive` now accepts a Plan 5 depot bay as well as the source portal. Tests: `[tbm-exchange-consumer]`, `[tbm-exchange-origin]`, and the adjusted `[tbm-phase]` hold case. 4.2 stays unchecked until 4.2B passes at the next milestone.
+
+**R2MLVS3MP status, 2026-10-05.** 4.1, 4.2A, 4.3 and 4.4 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 4.2B (and so 4.2) stays with master 5.5. The focused burst is `[tbm-area]` in `src/tests/tbm_area.cpp` and `[tbm-phase]` in `src/tests/tbm_phase.cpp`.
+- 4.1: `PreviewTBMArea` (`src/tbm_area.cpp`) takes a normalized, authorized outline, a start pose and a consist. It plans through `PlanExcavationRoute` only, then reports the passes, the turn envelope (swept cells outside the requested floor), a hardness count of newly solid swept cells, the whole-route Earth/Rock/support/cost/work, and the frozen pass terms at the consist's real capacities. It also returns a ready job proposal and the prospective job ID. Nothing is reserved. A partial plan requests only the floor it covers. Hardness uses the new geology helper `GetExcavationCellHardness`, which `QuoteExcavationCells` and `PrepareExcavationCut` now share. Consist sizing is the shared `GetTBMConsistDimensions`, so preview and acquisition agree on planning points and capacities; the accepted preview proposal passes `PrepareTBMAcquisition` unchanged.
+- 4.2A: `StepTBMProjectPhase` (pure) and `AdvanceTBMProjectPhase` (store).
+  - Edges: Commissioning to TravelToFace; TravelToFace to Bore at the face; Bore to AdvanceSupport when the cut commits; AdvanceSupport back to Bore.
+  - ReturnForExchange is entered from Bore or AdvanceSupport only when an exchange is due and the job has frozen pass terms. Completion of ReturnForExchange is 4.2B.
+  - One saved phase timer restarts on each phase change. Active or idle ticks accrue once per step. The revision changes only when the phase, reason or a reference changes.
+- 4.3: a lost reference, a player pause (new `TBMBlockedReason::Paused`), a stopped, broken-down or servicing train each hold the current phase, and clearing the condition resumes that same phase. Pause is now distinct from `Stopped`, which mirrors the train. Heading is never read from the train, so reversing it changes nothing. `ObserveTBMPhaseInputs` reads only the train-side facts; Groups 6-8 will supply face, cut, support and exchange facts.
+- 4.4: projects reload unchanged at TravelToFace and at Bore entry. On load, `NormalizeTBMProjectReferences` clears IDs that resolve to nothing (so a reused ID cannot rebind) and turns the first lost reference into its recoverable reason. An origin that stops qualifying becomes `MissingOrigin`; a retired job becomes `MissingProject`; a dangling cutter becomes `MissingCutter` with no part list. Validation now accepts any non-live but resolvable reference only while blocked; malformed records still fail the load.
+- Lifecycle obligations for Group 17 / master 6.3: cancelling a job leaves a Commissioning pair pointing at the closed job, which portal load validation refuses. Cancellation must reconcile the pair, the job and the project together.
 
 ### Group 5 - Publish the TBM controller boundary
 
 {{HARD}}
-- [ ] 5.1 Publish `src/tbm.h` with `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute` and `AdvanceTBMWork`; describe owned fields and invalid references. `ValidateTBMAreaRoute` adapts the canonical geology planner to this actual consist, not a second planner.
-- [ ] 5.2 Specify exactly one simulation-tick call site per front engine and the command/estimate separation; identify work-controller behavior implemented in the next area versus already tested order/state behavior.
-- [ ] 5.3 Register source/build entries and compile a consumer fixture for r2mlvs5. If locations change, update all direct handoffs before claiming availability.
+- [X] 5.1 Publish `src/tbm.h` with `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute` and `AdvanceTBMWork`; describe owned fields and invalid references. `ValidateTBMAreaRoute` adapts the canonical geology planner to this actual consist, not a second planner.
+- [X] 5.2 Specify exactly one simulation-tick call site per front engine and the command/estimate separation; identify work-controller behavior implemented in the next area versus already tested order/state behavior.
+- [X] 5.3 Register source/build entries and compile a consumer fixture for r2mlvs5. If locations change, update all direct handoffs before claiming availability.
+
+**R2MLVS3MP status, 2026-10-05.** 5.1-5.3 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is (`[tbm-consumer]`, `src/tests/tbm_consumer.cpp`).
+- 5.1: the owned fields, invalid references and boundary are documented at the controller block in `src/tbm.h`. `GetTBMWorkState` projects face, cursor and partial work from the job without saving them twice. `ValidateTBMAreaRoute` runs the same preview body as `PreviewTBMArea`, with the train's measured length and capacities (`MeasureTBMConsist`); there is no second planner.
+- 5.2: `AdvanceTBMWork` has exactly one call site, `Train::Tick`, once per front engine per tick, outside the doubled loco handler. Commands record intent only, and estimates are pure. Already tested by Groups 3-4: assignment, references, phases, conditions, timer, reload. Next area (Groups 6-8): the work facts. Until those exist, a started project holds in TravelToFace. The store stays empty in production until master Group 6, so the call has no effect in live games yet.
+- 5.3: the sources are registered in `src/CMakeLists.txt`. The consumer fixture `src/tests/tbm_consumer.cpp` uses only the public header, as Plan 5 will. Locations did not change; Plan 5's `src/tbm.h` row now points here.
 
 ### Area Mandatory Reading - Boring and accounting
 
@@ -194,72 +238,138 @@ one simulation tick:
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. The canonical pass planner, cut proposal and footprint checks were implemented in r2mlvs2; the preceding TBM groups provide saved orders and consist roles. Verify them before binding the actual train. r2mlvs5 exchange is still a later integration; `WaitForEmpties` may remain blocked until its real producer exists.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 6 - Advance bounded work against one reserved face
 
 {{HARD}}
-- [ ] 6.1 Reserve the next face and supported retreat route through the r2mlvs2 job API. Check the assigned cutter, project and date; no other consist may advance that claim.
-- [ ] 6.2 Advance one saved fixed-point work accumulator once per front-engine simulation tick, using model/hardness speed and a bounded number of completed cuts per tick. Keep rendering and train movement substeps out of work timing.
-- [ ] 6.3 At a completed-work boundary, pause without consuming the completed-cut result if support, geometry, cash or either spoil type cannot fit. Publish a precise limiting reason and resume from the same cursor.
+- [X] 6.1 Reserve the next face and supported retreat route through the r2mlvs2 job API. Check the assigned cutter, project and date; no other consist may advance that claim.
+- [X] 6.2 Advance one saved fixed-point work accumulator once per front-engine simulation tick, using model/hardness speed and a bounded number of completed cuts per tick. Keep rendering and train movement substeps out of work timing.
+- [X] 6.3 At a completed-work boundary, pause without consuming the completed-cut result if support, geometry, cash or either spoil type cannot fit. Publish a precise limiting reason and resume from the same cursor.
+
+**R2MLVS3MP status, 2026-10-05.** 6.1-6.3 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is (`[tbm-work]`, `src/tests/tbm_work.cpp`).
+- 6.1: the face is the job's reserved `route[cursor]`; no new reservation is made. `TBMCutParticipant::IsSupported` (`src/tbm_work.cpp`) admits work only for the store's own project for this cutter, its job and company, and a job that is unbound or bound to this cutter. Every cell of the loaded return path must carry usable rail (`IsTBMSupportUsable`). The date check is `IsTBMCutterAvailable` (profile, introduction, Deep gate); a refusal is the `LockedModel` wait.
+- 6.2: `AdvanceTBMWork` (one call per front engine per tick, from `Train::Tick`) runs `AdvanceTBMFaceWork` only while the project is unblocked in Bore with no exchange due. Work per tick is the model rate with the saved `work_remainder`. Hardness enters through the cut's work requirement. Work is clipped to the cut's remaining requirement, and at most one cut commits per tick. The per-tick bound uses the new pure geology helper `EstimateExcavationCut` (`src/excavation.h`), which applies the same per-cell terms as `PrepareExcavationCut` to the unopened swept cells only. The full cut preparation runs only at the boundary.
+- 6.3: at the boundary the controller names `EarthFull`, `RockFull`, `MissingSupport` or `InsufficientFunds`, in the geology owner's order, from the estimate and the real snapshot. Other geology refusals map to precise reasons (`GetTBMWorkWait`). The phase holds through `TBMPhaseInputs::work_wait`, the work stays at the requirement and nothing is banked. The next tick retries from the same cursor.
 
 ### Group 7 - Join geological cuts to real wagon inventory atomically
 
 {{HARD}}
-- [ ] 7.1 Compute Earth and Rock yields from the canonical cut proposal and assign them to compatible attached wagon units in stable order. Validate each cargo capacity independently, with checked counts and a defined work-site source/age.
-- [ ] 7.2 Reject loading reservations or include them in `TotalCount` capacity; `Append` does not enforce capacity and may merge/delete its input packet pointer. Initialize work-face loading coordinates and canonical source/provenance before append. A project ID is not an IndustryID, and the required Surface destination is not automatically the packet first station.
-- [ ] 7.3 Acquire all required packet/support storage before terrain or cash changes. If packet allocation or a participant validation fails, release provisional resources and retain job/terrain/wagon state unchanged.
-- [ ] 7.4 Commit the r2mlvs2 cut, support installation, cargo packet insertion and work charge as one prepared operation; keep a single owning transaction boundary so neither controller nor geology debits reserve twice.
-- [ ] 7.5 Test exact-fill, Earth-full/Rock-free, Rock-full/Earth-free, pool exhaustion and save just before/after a cut. No infinite temporary hold or automatic Surface delivery is permitted.
+- [X] 7.1 Compute Earth and Rock yields from the canonical cut proposal and assign them to compatible attached wagon units in stable order. Validate each cargo capacity independently, with checked counts and a defined work-site source/age.
+- [X] 7.2 Reject loading reservations or include them in `TotalCount` capacity; `Append` does not enforce capacity and may merge/delete its input packet pointer. Initialize work-face loading coordinates and canonical source/provenance before append. A project ID is not an IndustryID, and the required Surface destination is not automatically the packet first station.
+- [X] 7.3 Acquire all required packet/support storage before terrain or cash changes. If packet allocation or a participant validation fails, release provisional resources and retain job/terrain/wagon state unchanged.
+- [X] 7.4 Commit the r2mlvs2 cut, support installation, cargo packet insertion and work charge as one prepared operation; keep a single owning transaction boundary so neither controller nor geology debits reserve twice.
+- [X] 7.5 Test exact-fill, Earth-full/Rock-free, Rock-full/Earth-free, pool exhaustion and save just before/after a cut. No infinite temporary hold or automatic Surface delivery is permitted.
+
+**R2MLVS3MP status, 2026-10-05.** 7.1-7.5 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is `[tbm-work]`.
+- 7.1: each spoil type fills the parts of its own role's wagon units, in chain order. Each capacity is checked independently, and no type borrows the other's space.
+- 7.2: a part with a loading reservation offers no space, so spoil is appended only as kept cargo to a quiet list. The packet capacity is checked before `Append`. Provenance is declared in `src/tbm.h`:
+  - the source is unknown (`Source::Invalid`), never a project or job ID;
+  - `source_xy` is the cut's cutter position;
+  - there is no first station;
+  - age and feeder share are zero.
+- 7.3: `TBMCutParticipant::Commit` re-prepares, then allocates every packet before any visible write. A refusal (`AllocationFailure`, a stale snapshot, or a support obstruction) returns before any write, so geology commits nothing. To test allocation refusal, the participant takes a packet budget; production passes no limit, and the pool capacity is always checked.
+- 7.4: there is one transaction, `CommitExcavationCut`, with this participant. Inside it the participant lays support, appends spoil and debits the work charge once, as a construction expense. Geology then opens the cells and debits the reserves once.
+- 7.5: covered by `src/tests/tbm_work.cpp`. Exact fill, Earth-full with Rock free and Rock-full with Earth free are tested by preloading one tonne too much and freeing it. Pool exhaustion uses a zero packet budget. Saves are reloaded through the staging boundary on both sides of the cut. Nothing is held anywhere except in the wagons; Surface delivery remains Plan 5's.
 
 ### Group 8 - Install charged support and preserve retreat
 
 {{HARD}}
-- [ ] 8.1 Define the temporary rail/support metadata and profile restrictions: owner, allowed cutter/support/hauler classes, speed and conversion price. Preserve excavation state beneath the rail.
-- [ ] 8.2 Prepare support placement as part of the cut transaction, using the validated swept footprint. Only this scoped operation may install support while the target is still a work tile; ordinary rail tools remain blocked.
+- [X] 8.1 Define the temporary rail/support metadata and profile restrictions: owner, allowed cutter/support/hauler classes, speed and conversion price. Preserve excavation state beneath the rail.
+- [X] 8.2 Prepare support placement as part of the cut transaction, using the validated swept footprint. Only this scoped operation may install support while the target is still a work tile; ordinary rail tools remain blocked.
 - [ ] 8.3 After commit, update train-part positions, track/reservation caches and the supported return path. Test a support-placement failure leaves the cut uncommitted and a legal turn does not clip trailing wagons.
+
+**R2MLVS3MP status, 2026-10-05.** 8.1 and 8.2 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 8.3 is only in part (no part movement onto new support or reservations), so it stays unticked. The focused bursts are `[tbm-support]` (`src/tests/tbm_support.cpp`) and `[tbm-work]`.
+- 8.1: `TBMSupportTile` (`src/tbm.h`, `src/tbm_support.cpp`) records the owner, the laying project, the laid pieces, the allowed classes (cutter, spoil wagon, hauler), the speed limit (`TBM_SUPPORT_MAX_SPEED`) and the conversion price (the rail type's build cost). It is saved in the new `TBMS` table of the version-376 TBM family; `TBMH` grows to 16 bytes with the support count. Load checks the metadata against real track. The track is an ordinary company railway tile; geology keeps the excavation state beneath it. Movement enforcement of the classes is Group 14.
+- 8.2: `PrepareTBMSupport` plans each cut's pieces along an edge-connected path through the cutter positions. A corner advance passes through one side cell, and the pieces alternate corners. The piece at the portal mouth is the axis track. Each piece already points at the next planned position, so track never changes under the train. Support lies only on flat clear cells that this cut opens or that are already open. A route that passes over its own support again reuses the piece or adds a junction piece; it never merges with or replaces other track. `PlaceTBMSupport` runs only inside the participant's commit. Ordinary rail tools still refuse claimed work cells through the existing excavation guard. Conversion and removal of laid support are Group 9.
+- 8.3 delivered:
+  - track caches: YAPF and the signal buffer are notified per piece;
+  - the supported return path: the retreat check in `IsSupported`;
+  - the tests named in 8.3: an obstruction found inside the transaction leaves the cut uncommitted, and through a 90-degree turn made of two 45-degree advances every piece and every planned trailing consist point lies in opened ground.
+- 8.3 not delivered: moving the parts onto new support, and its reservations. The consist cannot yet drive into the pocket (Plan 3 first entry, master 7.3), and project reservations are Group 14. Until then, a cutter in Bore or AdvanceSupport is held still by the ordinary train controller (`IsTBMHoldingTrain` in `TrainLocoHandler`). `support_advanced` is observed from the cutter's tile, so AdvanceSupport holds until that movement exists.
+- Lifecycle obligations: track removed by bankruptcy, by Group 9 removal or by other owners must update the registry (Groups 9, 15 and 17). A loaded row that no longer matches its track refuses the load.
 
 ### Group 9 - Boring and accounting
 
 {{MEDIUM}}
-- [ ] 9.1 Define track conversion/removal and traversal by the cutter/support consist.
+- [X] 9.1 Define track conversion/removal and traversal by the cutter/support consist.
+
+**R2MLVS3MP status, 2026-10-05.** 9.1 is implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is `[tbm-support]` (`src/tests/tbm_support.cpp`). The rules are declared at the Group 9 block in `src/tbm.h`.
+- In use: while the laying project exists and is unfinished, ordinary removal, bulldozing, adding pieces, signals and rail-type conversion refuse with `STR_ERROR_TBM_SUPPORT_IN_USE` (`CheckTBMSupportChange` in `src/rail_cmd.cpp`). Company removal (the `Bankrupt` flag) is the exception.
+- Released: removal drops each removed piece's metadata (`ReleaseTBMSupportPiece`) and leaves the cavity open. The new command `CmdConvertTBMSupport` (`Commands::ConvertTBMSupport`, `src/tbm_cmd.h`) keeps the track and removes its metadata and restriction, for the recorded conversion price. A merger moves the metadata owner with the track.
+- Traversal: `GetTBMSupportClass` gives the project's machinery the Cutter class and its wagons the SpoilWagon class. Plan 5 haulers will add the Hauler class. `MayTBMSupportCarry` admits only the owner's parts of an allowed class. `Train::GetCurrentMaxSpeed` applies the support speed limit now; the class check at movement is Group 14.
 
 ### Group 10 - Bind canonical area passes to the actual train
 
 {{HARD}}
-- [ ] 10.1 Call the already published r2mlvs2 outline/pass planner with this cutter/consist dimensions, support policy and separate spoil capacities. Store the accepted pass sequence and extra authorized turn-space cuts; do not duplicate route generation in the train controller.
-- [ ] 10.2 Check each advancing segment against the saved cutter heading: allow straight, left-45 and right-45 only. Require a different traversed segment; repeated stationary commands cannot accumulate rotation.
-- [ ] 10.3 Revalidate the complete cutter/support/wagon swept footprint before each advancing segment, including diagonal corner tiles, ownership changes and newly occupied boundaries.
-- [ ] 10.4 Charge all extra turn-space cuts as ordinary spoil-producing work through the same transaction. Reject 90/135/180-degree steps and disallow implicit excavation outside the previewed accepted area.
+- [X] 10.1 Call the already published r2mlvs2 outline/pass planner with this cutter/consist dimensions, support policy and separate spoil capacities. Store the accepted pass sequence and extra authorized turn-space cuts; do not duplicate route generation in the train controller.
+- [X] 10.2 Check each advancing segment against the saved cutter heading: allow straight, left-45 and right-45 only. Require a different traversed segment; repeated stationary commands cannot accumulate rotation.
+- [X] 10.3 Revalidate the complete cutter/support/wagon swept footprint before each advancing segment, including diagonal corner tiles, ownership changes and newly occupied boundaries.
+- [X] 10.4 Charge all extra turn-space cuts as ordinary spoil-producing work through the same transaction. Reject 90/135/180-degree steps and disallow implicit excavation outside the previewed accepted area.
+
+**R2MLVS3MP status, 2026-10-05.** 10.1-10.4 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is `[tbm-route]` (`src/tests/tbm_route.cpp`).
+- 10.1: the accepted pass sequence and the turn space are the job created from the canonical preview (`PreviewTBMArea` / `ValidateTBMAreaRoute` with the measured consist, then `ReserveExcavationJob`). The job's route and authorized cells are the stored acceptance, and the controller never generates a route. Accepting a new area for an existing project is reassignment, which is Group 17.
+- 10.2: `TBMProject::heading` is now set only by a committed advance (`TBMFaceWork::heading`). Before any work, the face step requires the cut to advance exactly one tile from the face along a heading no more than 45 degrees from the saved one; otherwise it waits with the new reason `IllegalTurn`. A stationary or repeated request cannot rotate the cutter.
+- 10.3: at each commit, geology revalidates the whole swept envelope (claims, ownership, infrastructure). The participant also refuses any vehicle other than the consist's own parts in the envelope, as an `Obstruction`.
+- 10.4: turn-space cells are swept cells, so the one cut transaction charges them like any other. Sharp steps are refused by the planner, by geology and by 10.2. Every swept cell must be authorized and claimed by the job, so there is no implicit excavation.
 
 ### Group 11 - Exercise area coverage and turning as a separate behavior
 
 {{HARD}}
-- [ ] 11.1 Run a straight pass, a 90-degree change made from two advancing bends and an irregular chamber against the same route implementation; compare completed target tiles with the accepted outline.
-- [ ] 11.2 Test too-tight U-turns, solid diagonal corners and an obstruction introduced after planning. Pause at the previous safe support position and retain a valid retreat.
+- [X] 11.1 Run a straight pass, a 90-degree change made from two advancing bends and an irregular chamber against the same route implementation; compare completed target tiles with the accepted outline.
+- [X] 11.2 Test too-tight U-turns, solid diagonal corners and an obstruction introduced after planning. Pause at the previous safe support position and retain a valid retreat.
 - [ ] 11.3 Verify reversing backs along existing support without changing cutter-facing authority or allowing backwards cuts. Reload during a bend and continue with the same pass cursor and spoil ledger.
+
+**R2MLVS3MP status, 2026-10-05.** 11.1-11.3 are written as tests and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 11.3 stays unticked: the consist is still on the source bay, where a reversal is a no-op (like a train wholly inside a depot), so reversing back along real support waits for consist movement in master Group 7. The focused burst is `[tbm-coverage]` (`src/tests/tbm_coverage.cpp`).
+- 11.1: straight, two-bend and irregular-chamber floors are previewed through the canonical planner, published as real projects and bored to completion. Each swept cell is charged once; requested cells are open, and unswept accepted cells stay solid.
+- 11.2: a U-turn inside a three-cell corridor refuses before anything is reserved. Corner advances cut both corner cells. A vehicle placed in the next envelope after planning pauses the cut at the previous position, with every retreat cell still supported.
+- 11.3: whole-train reversal keeps the saved heading, and the same forward cut continues. A reload halfway through a bend resumes the same cursor, partial work and ledger.
+- Support had to change for chamber routes that pass over their own support again. It now reuses the laid piece or adds a junction piece to the project's own support; other track still refuses.
+- Real backing along support needs the consist in the pocket, so that case waits for master Group 7. Until then reversal is tested at the source bay.
 
 ### Group 12 - Accrue active and idle costs without tick duplication
 
 {{HARD}}
-- [ ] 12.1 Choose saved per-state tick buckets or an accrued-money/remainder accumulator for active versus idle cost. Existing train running ticks omit fully stopped vehicles, so implement the specified nonzero idle charge explicitly.
-- [ ] 12.2 Charge recurring cost from accumulated state duration, independent of the final state at daily accounting. Debit per-cut support/work only in the cut transaction; never charge it again in `GetRunningCost`.
-- [ ] 12.3 On insufficient funds or bankruptcy, stop new cutting and preserve loaded wagons, paid cavities and safe retreat. Test a day containing active, blocked, stopped and servicing intervals plus a mid-day save/reload.
+- [X] 12.1 Choose saved per-state tick buckets or an accrued-money/remainder accumulator for active versus idle cost. Existing train running ticks omit fully stopped vehicles, so implement the specified nonzero idle charge explicitly.
+- [X] 12.2 Charge recurring cost from accumulated state duration, independent of the final state at daily accounting. Debit per-cut support/work only in the cut transaction; never charge it again in `GetRunningCost`.
+- [X] 12.3 On insufficient funds or bankruptcy, stop new cutting and preserve loaded wagons, paid cavities and safe retreat. Test a day containing active, blocked, stopped and servicing intervals plus a mid-day save/reload.
+
+**R2MLVS3MP status, 2026-10-05.** 12.1-12.3 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused burst is `[tbm-cost]` (`src/tests/tbm_cost.cpp`).
+- 12.1: the saved buckets are `active_ticks`/`idle_ticks`, filled one tick per controller step, and `cost_remainder` carries the fraction. Idle includes stopped, broken down, servicing, paused, work waits and lost references, so stopped time is charged at the nonzero idle rate.
+- 12.2: once per economy day, `Train::OnNewEconomyDay` calls `ChargeTBMProjectCosts`. It converts the buckets at the model's yearly rates, whatever the current state, debits train running cost and reduces the cutter's profit. While the cutter has a project, `Train::GetRunningCost` skips it; the native engines already define zero running cost. The per-cut charge is debited only inside the cut transaction.
+- 12.3: insufficient cash for a cut is the `InsufficientFunds` wait (Group 6). A company in bankruptcy (`months_of_bankruptcy`) gets the same wait before any work, and wagons, cavities and support are left untouched. The rates are the model's base values; inflation and balance belong to Plan 15.
 
 ### Group 13 - Boring and accounting
 
 {{MEDIUM}}
-- [ ] 13.1 Distinguish backing along completed support rail from changing the cutter's facing: retreat cannot enable backwards boring or bypass the 45-degree rule.
+- [X] 13.1 Distinguish backing along completed support rail from changing the cutter's facing: retreat cannot enable backwards boring or bypass the 45-degree rule.
+
+**R2MLVS3MP status, 2026-10-05.** 13.1 is implemented through Group 10's heading authority and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. The focused bursts are `[tbm-backing]` (`src/tests/tbm_route.cpp`) and the reversal case in `[tbm-coverage]`. The train's facing and reversal are train state only. The cutting heading changes only with a committed advance, and a backwards saved heading waits as `IllegalTurn`. After backing away, TravelToFace cannot become Bore until the cutter is back at the face. Real backing along support in the pocket waits for master Group 7.
 
 ### Group 14 - Separate work reservations from ordinary freight
 
 {{HARD}}
-- [ ] 14.1 Define the reserved work corridor and supported return path by project/consist identity. Integrate reservations with existing path reservation calls without exposing the solid work face as a generic rail edge.
-- [ ] 14.2 Refuse normal freight/force-proceed into the active pocket; permit only the assigned cutter and declared recovery movements. Apply the check to actual train parts at movement, not only order planning.
+- [X] 14.1 Define the reserved work corridor and supported return path by project/consist identity. Integrate reservations with existing path reservation calls without exposing the solid work face as a generic rail edge.
+- [X] 14.2 Refuse normal freight/force-proceed into the active pocket; permit only the assigned cutter and declared recovery movements. Apply the check to actual train parts at movement, not only order planning.
 - [ ] 14.3 Release claims in safe order after withdrawal, preserving any still-occupied support track. Test a waiting freight train, a blocked retreat and cancellation with the tail across a portal.
+
+**R2MLVS3MP status, 2026-10-05.** 14.1 and 14.2 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 14.3 is only in part (no release with an occupied tail), so it stays unticked. The focused burst is `[tbm-corridor]` (`src/tests/tbm_corridor.cpp`).
+- 14.1: `GetTBMWorkCorridor` is the project's retreat path plus every support tile it laid, identified by project. Path finding integrates through the shared track follower: `CFollowTrackT::CanEnterNewTile` does not follow support for a train with a part the support may not carry. The solid face is only a dead end of the support track, never a route edge. The pair housing stays sealed by the portal owner.
+- 14.2: `VehicleEnterTile_Rail` refuses the moving front of any train with a part the support may not carry. The check runs on actual train parts at movement, so force-proceed cannot bypass it. The project's own consist (machinery and wagons) is allowed; Plan 5 haulers will add their class.
+- 14.3 delivered: support is released only when its project ends (Group 9). Released support under a train is still not removable. `IsTBMCorridorOccupied` lets cancellation wait for withdrawal. The waiting-freight case is the route and entry refusal.
+- 14.3 not delivered: the cancellation sequence and the tail-across-a-portal case. They need Group 17 cancellation (master 6.3) and real pocket entry (master 7.3).
 
 ### Group 15 - Boring and accounting
 
 {{MEDIUM}}
 - [ ] 15.1 Allow cleared ground to become tubes, roads, terminals, mines, geothermal plants or open chambers after safe support-track removal/conversion. Final use need not contain rails. Never remove support under the TBM or strand it by completing a tube segment behind it. Deep cutting obeys the 1980 calendar gate.
+
+**R2MLVS3MP status, 2026-10-05.** The shared removal/replacement and existing road and rail cases (master 4.7) are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 15.1 stays unticked until real tube and plant construction (master Group 10). The focused burst is `[tbm-reuse]` (`src/tests/tbm_reuse.cpp`).
+- Support is never replaced in place: a level crossing or a waypoint on a support tile refuses with `STR_ERROR_TBM_SUPPORT_CONVERT_FIRST`. Station overbuild goes through rail removal and the Group 9 rules.
+- After release, removal leaves an open clear cell that takes ordinary roads or rails, and conversion leaves ordinary track that may become a crossing.
+- Removal under the cutter, or under any train, refuses (Groups 9 and 14).
+- Deep cutting obeys the 1980 gate through `IsTBMCutterAvailable` and the geology `LockedDeep` refusal.
+- Still pending, as master 4.7 says: tubes, terminals, mines, plants and the "never strand it behind a tube segment" check, which need the real tube and plant producers (master Group 10).
 
 ### Area Mandatory Reading - Recovery, presentation and acceptance
 
@@ -318,6 +428,8 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 
 {{SIMPLE}}
 - [ ] 20.1 Record time and full cost for a standard corridor and a harder Deep corridor. Hand the measurements to r2mlvs15 instead of declaring balance from nominal prices.
+
+**R2MLVS3MP note, 2026-10-05.** The solid starter charges the whole 3x3 pocket in cut 0 (12 cells, not 3). This supersedes the cleared-area assumption in [r2mlvs1-e](r2mlvs1-e-ground-and-space-budgets.md) line 32. Measure the larger first-cut cost and the minimum consist it implies (two Earth and two Rock hoppers on the soft-ground fixture site) ([r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md#capacity-consequence)).
 
 ### Group 21 - Recovery, presentation and acceptance
 

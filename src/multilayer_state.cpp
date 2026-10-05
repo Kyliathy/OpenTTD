@@ -11,6 +11,9 @@
 #include "debug.h"
 #include "excavation.h"
 #include "layer_portal_cmd.h"
+#include "tbm.h"
+#include "spoil_receiver.h"
+#include "tbm_exchange.h"
 
 #include "safeguards.h"
 
@@ -31,12 +34,15 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Natural vent geometry depends on the delivered rock-plane owner; a standalone bit cannot fabricate a usable thermal field.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_VENTS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Job claims and retired IDs belong to active geological authority, never an independent hidden work/cargo owner.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
-	if ((schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) == 0) return MultiLayerStateError::UnsupportedFeatures; // A return/capacity proof belongs to an actual job; metadata cannot invent standalone work.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) == 0) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TBM_PROJECTS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) == 0) return MultiLayerStateError::UnsupportedFeatures; // Every project was published with a real job, so its allocation history implies job history. // A return/capacity proof belongs to an actual job; metadata cannot invent standalone work.
+	// Every assignment and set was made for a real project, so exchange history implies project history.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TBM_EXCHANGE) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_TBM_PROJECTS) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	if (schema.profile.id == MultiLayerGameplayProfileID::Classic) {
 		if (!schema.profile.legacy) return MultiLayerStateError::InvalidPolicy;
 		if (!schema.required_content.grfid.Empty()) return MultiLayerStateError::ChangedContent;
@@ -74,6 +80,9 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (GetGeologyWorldState().generator_version != 0) schema.feature_flags |= MULTILAYER_FEATURE_GEOLOGY;
 	if (!GetGeologyWorldState().vents.empty()) schema.feature_flags |= MULTILAYER_FEATURE_VENTS;
 	if (GetGeologyWorldState().next_job_id != 0) schema.feature_flags |= MULTILAYER_FEATURE_EXCAVATION_JOBS;
+	if (GetNextTBMProjectID().base() != 0) schema.feature_flags |= MULTILAYER_FEATURE_TBM_PROJECTS; // Allocation history, like job IDs, survives retirement.
+	if (!CaptureSpoilReceivers().empty()) schema.feature_flags |= MULTILAYER_FEATURE_SPOIL_RECEIVERS; // Receivers live and die with their industries; no allocation history.
+	if (GetNextTBMExchangeAssignmentID() != 0 || GetNextTBMWagonSetID() != 0) schema.feature_flags |= MULTILAYER_FEATURE_TBM_EXCHANGE; // Identity cursors, like project IDs, survive release.
 	if (GetLayerPortalWorkPairCount() != 0) schema.feature_flags |= MULTILAYER_FEATURE_PORTAL_WORK; // Metadata/diagnostic queries read accepted owner cardinality without allocating a copied save transport.
 	// Only actual retained validated input enables the new family; old unvalidated paused jobs remain recoverable.
 	for (const auto &job : GetGeologyWorldState().jobs) {
@@ -246,6 +255,13 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 		records.push_back({MultiLayerCanonicalKind::GeologyRoot, 0, geology_fields});
 	}
 	if ((schema.feature_flags & MULTILAYER_FEATURE_PORTAL_WORK) != 0) records.push_back({MultiLayerCanonicalKind::PortalWorkRoot, 0, portal_fields});
+	const std::array project_fields = {MultiLayerCanonicalField{1, 8, ComputeTBMProjectDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TBM_PROJECTS) != 0) records.push_back({MultiLayerCanonicalKind::TBMProject, 0, project_fields});
+	const std::array receiver_fields = {MultiLayerCanonicalField{1, 8, ComputeSpoilReceiverDigest()}};
+	// Receiver side state uses the reserved industry-inventory kind; the stock itself is digested with it.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_SPOIL_RECEIVERS) != 0) records.push_back({MultiLayerCanonicalKind::IndustryInventory, 0, receiver_fields});
+	const std::array exchange_fields = {MultiLayerCanonicalField{1, 8, ComputeTBMExchangeDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TBM_EXCHANGE) != 0) records.push_back({MultiLayerCanonicalKind::Exchange, 0, exchange_fields});
 	const auto digest = ComputeMultiLayerStateDigest(schema, records);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);

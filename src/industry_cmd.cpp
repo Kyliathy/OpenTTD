@@ -56,6 +56,8 @@
 #include "timer/timer_game_economy.h"
 #include "timer/timer_game_tick.h"
 
+#include "spoil_receiver.h"
+
 #include "table/strings.h"
 #include "table/industry_land.h"
 #include "table/build_industry.h"
@@ -152,6 +154,8 @@ const IndustryTileSpec *GetIndustryTileSpec(IndustryGfx gfx)
 Industry::~Industry()
 {
 	if (CleaningPool()) return;
+
+	UnregisterSpoilReceiver(this->index); // A receiver's state goes with its industry (r2mlvs5 Group 8).
 
 	/* Industry can also be destroyed when not fully initialized.
 	 * This means that we do not have to clear tiles either.
@@ -1263,6 +1267,7 @@ void OnTick_Industry()
 
 	for (Industry *i : Industry::Iterate()) {
 		ProduceIndustryGoods(i);
+		AdvanceSpoilReceiver(*i); // A spoil receiver's interval intake and processing (r2mlvs5 Group 8); others are ignored.
 
 		if ((TimerGameTick::counter + i->index) % Ticks::DAY_TICKS == 0) {
 			for (auto &a : i->accepted) a.accumulated_waiting += a.waiting;
@@ -1993,6 +1998,7 @@ static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, 
 	if (GetIndustrySpec(i->type)->behaviour.Test(IndustryBehaviour::PlantOnBuild)) {
 		for (uint j = 0; j != 50; j++) PlantRandomFarmField(i);
 	}
+	RegisterSpoilReceiver(*i); // A receiver starts empty, crushing or disposing, at the start of an interval (r2mlvs5 Group 8).
 	InvalidateWindowData(WindowClass::IndustryDirectory, 0, IDIWD_FORCE_REBUILD);
 	SetWindowDirty(WindowClass::BuildIndustry, 0);
 
@@ -2094,6 +2100,8 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 
 	//Industries are a surface construction.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Industry); layer_cost.Failed()) return layer_cost;
+	// A spoil receiver ends the Surface leg; no below-ground dump may stand in for it, whatever later layers allow (r2mlvs5 8.4).
+	if (GetSpoilReceiverKind(it) != SpoilReceiverKind::End && GetTileLayer(tile) != MapLayer::Surface) return CMD_ERROR;
 
 	/* If the setting for raw-material industries is not on, you cannot build raw-material industries.
 	 * Raw material industries are industries that do not accept cargo (at least for now) */

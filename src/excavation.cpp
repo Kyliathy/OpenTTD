@@ -181,7 +181,11 @@ ExcavationJobResult ReserveExcavationJob(const ExcavationJob &proposal, bool exe
 		if (model.model_id != proposal.model_id) continue;
 		if (TimerGameCalendar::date < TimerGameCalendar::ConvertYMDToDate(model.introduction_year, 0, 1)) return {ExcavationError::InvalidPolicy};
 	}
-	if (_geology_world.terrain.Get(proposal.commissioning_anchor) != ExcavationState::Excavated) return {ExcavationError::MissingSupport, ExcavationJobID{UINT32_MAX}, proposal.commissioning_anchor};
+	// An unopened anchor is only acceptable as a portal-issued solid start whose Sealed pair is current; any other
+	// solid anchor would be a free commissioning room, so it keeps the original MissingSupport refusal.
+	const auto starter = ResolveExcavationStarter(proposal);
+	if (starter.error != ExcavationError::None) return {starter.error, ExcavationJobID{UINT32_MAX}, starter.failure_tile};
+	if (!starter.required && _geology_world.terrain.Get(proposal.commissioning_anchor) != ExcavationState::Excavated) return {ExcavationError::MissingSupport, ExcavationJobID{UINT32_MAX}, proposal.commissioning_anchor};
 	// Bound history and monotonic identities independently of the number of claimed rock cells.
 	if (_geology_world.jobs.size() >= MAX_EXCAVATION_JOBS || _geology_world.next_job_id == UINT32_MAX) return {ExcavationError::Limit};
 	std::set<TileIndex> footprint;
@@ -200,7 +204,10 @@ ExcavationJobResult ReserveExcavationJob(const ExcavationJob &proposal, bool exe
 			if (*terrain == ExcavationState::Excavating) return {ExcavationError::ActiveCut, ExcavationJobID{UINT32_MAX}, tile};
 			const auto type = GetTileType(tile);
 			if (type != TileType::Clear && type != TileType::Railway && type != TileType::LayerPortal) return {ExcavationError::Conflict, ExcavationJobID{UINT32_MAX}, tile}; // Known occupied structures cannot become a valid future sweep merely because the ground is open.
-			if (type != TileType::Clear && (*terrain != ExcavationState::Excavated || GetTileOwner(tile) != proposal.company)) return {ExcavationError::InvalidOwner, ExcavationJobID{UINT32_MAX}, tile}; // Only this company's existing open support can participate; solid infrastructure cannot be overwritten by a cut.
+			// The issuing housing is the one structure a solid start may sweep: its rock is reserved, opened and paid
+			// like any other cell, while its portal metadata stays untouched. Any other solid structure still refuses.
+			const bool housing = starter.required && tile == proposal.commissioning_anchor && GetTileOwner(tile) == proposal.company;
+			if (type != TileType::Clear && !housing && (*terrain != ExcavationState::Excavated || GetTileOwner(tile) != proposal.company)) return {ExcavationError::InvalidOwner, ExcavationJobID{UINT32_MAX}, tile}; // Only this company's existing open support can participate; solid infrastructure cannot be overwritten by a cut.
 			const auto *deposit = _geology_world.deposits.Get(_geology_world.deposits.Find(tile));
 			// A route may cross unclaimed/same-company ore; another company's seam must refuse before any claim change.
 			if (deposit != nullptr && deposit->claimant != CompanyID::Invalid() && deposit->claimant != proposal.company) return {ExcavationError::Conflict, ExcavationJobID{UINT32_MAX}, tile};

@@ -19,6 +19,7 @@
 #include "../tunnelbridge_map.h"
 #include "../layer_portal_map.h"
 #include "../depot_map.h"
+#include "../tbm.h"
 #include "pathfinder_func.h"
 
 /**
@@ -357,6 +358,18 @@ protected:
 			/* different owner */
 			this->err = ErrorCode::NoWay;
 			return false;
+		}
+
+		/* Temporary TBM support is no route for a train with a part it may not carry (r2mlvs4 Group 14). */
+		if constexpr (Ttr_type_ == TransportType::Rail) {
+			if (this->veh != nullptr && IsPlainRailTile(this->new_tile) && GetTBMSupportTile(this->new_tile) != nullptr) {
+				for (const Train *part = this->veh->First(); part != nullptr; part = part->Next()) {
+					if (!MayTBMSupportCarry(*part, this->new_tile)) {
+						this->err = ErrorCode::NoWay;
+						return false;
+					}
+				}
+			}
 		}
 
 		/* rail transport is possible only on compatible rail types */

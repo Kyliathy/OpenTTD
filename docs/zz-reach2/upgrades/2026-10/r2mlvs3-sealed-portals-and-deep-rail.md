@@ -53,6 +53,8 @@ New portal exits begin blocked; a controlled rail commissioning path admits a TB
 
 Delivered public owner: `src/layer_portal_cmd.h`. `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM` compile against the actual pair/geological/vehicle owners. Work admission and purchase return `ControllerUnavailable` until r2mlvs4/5 provide actual TBM role/consist and acquisition/exchange APIs; no substitute runtime mutation is authorized. Downstream plans consume this public contract rather than private pools or copied tables.
 
+Solid-starter proof (Group 8B, implemented 2026-10-05, focused tests pending the milestone build): `LayerPortalBootstrapProof`, `IssueLayerPortalBootstrap`, `RevalidateLayerPortalBootstrap`, `LayerPortalStarterIssuer` and `GetLayerPortalStarterIssuer` in `src/layer_portal_cmd.h` (`src/layer_portal_bootstrap.cpp`). The proof is pure and quotable before any TBM exists. Geology resolves the current issuer only through `GetLayerPortalStarterIssuer`. Rules: [r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md).
+
 ## Implementation Tasks
 
 Execution coordination: [R2MLVS3MP](r2mlvs3mp-master-plan.md) schedules this plan's remaining groups with their actual producers. It separates the early sealed-start geometry handoff from complete commissioning and returns here for runtime, tube/riser, graphics and persistence closure. Existing X marks remain historical delivered evidence; this scheduling amendment completes no implementation.
@@ -141,7 +143,8 @@ Execution refinement: Native endpoint sites must be prepared plain Clear ground;
 - [X] 5.1 Initialize portals into solid rock as Sealed. When approaches are already excavated, require a separate validated connection action; neither action grants excavation credit.
 - [X] 5.2 Make ordinary track-status and path/signal queries return no usable edge for Sealed/Commissioning pairs. Retain `GetLayerPortalNextTile` as the physical neighbor authority; do not break saved pair geometry to hide an edge.
 - [X] 5.3 Define `CheckLayerPortalWorkAccess` as a distinct vehicle/project-aware permission and recheck actual movement so cached paths, force-proceed and unrelated followers cannot admit ordinary traffic. Until the actual TBM role/consist owner exists, return `ControllerUnavailable` for an otherwise valid assignment.
-- [ ] 5.3B After r2mlvs4 publishes and tests actual TBM role/consist authorization, integrate successful assigned-TBM entry/retreat without exposing ordinary routing or allowing unrelated followers.
+- [X] 5.3B After r2mlvs4 publishes and tests actual TBM role/consist authorization, integrate successful assigned-TBM entry/retreat without exposing ordinary routing or allowing unrelated followers.
+  - R2MLVS3MP status, 2026-10-05: implemented; passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. `CheckLayerPortalWorkAccess` now grants Commissioning-pair admission only when a live TBM project (`GetTBMProjectForCutter`) owns the pair's cutter and job, the entering part has a `GetTBMConsistRole`, and the chain still matches its machinery (`InspectTBMConsist`). Without such a project it still returns `ControllerUnavailable`. Unrelated trains, followers and altered chains are refused, and ordinary track status stays hidden. Test: `src/tests/portal_tbm_access.cpp` (`[portal-tbm-access]`), run at the R2MLVS3MP milestone after master Group 4. Actual playable entry and retreat movement remain with master Group 7.
 - [X] 5.4 Drain/release ordinary reservations while old track status is still valid before hiding an edge: `UnreserveRailTrack` asserts the track exists. Then commit connectivity and notify both ends through signal/pathfinder invalidation. Test a cached follower and an unrelated actual train reference; occupied real TBM scenarios remain with 5.3B/15.2.
 
 ### Group 6 - Use the shared date gate on every Deep entry
@@ -209,10 +212,12 @@ Read master AD-3/AD-5 and R2MLVS3MP Group 2. In live source inspect `ValidateLay
 ### Group 8B - Publish the narrow solid-starter geometry contract
 
 {{HARD}}
-- [ ] 8B.1 Define a typed portal-issued bootstrap proposal/proof containing canonical pair/revision, owner, model/date, explicit source support, bounded destination pocket and origin reference. Freeze its validation and invalid-reference semantics with Plan 2 Group 14B and Plan 4 Group 2B before dependent code.
-- [ ] 8B.2 Implement pure issuance/revalidation from the actual accessible rail pair. Distinguish source-side physical support and restricted destination occupancy from excavated destination floor; preserve both housings, normal routing and packed rock.
-- [ ] 8B.3 Publish the exact public location/signatures and update direct geology/controller consumers. Quote issuance must work before full TBM acquisition; later assignment/publication must still resolve actual train/project references through their owners.
-- [ ] 8B.4 Test stale pair revision, foreign/blocked source, wrong facility/model/date and unchanged estimate/refusal state. Compile the Plan 2 consumer fixture; claim only this geometry contract, not a paid cut, live entry or exchange.
+- [X] 8B.1 Define a typed portal-issued bootstrap proposal/proof containing canonical pair/revision, owner, model/date, explicit source support, bounded destination pocket and origin reference. Freeze its validation and invalid-reference semantics with Plan 2 Group 14B and Plan 4 Group 2B before dependent code.
+- [X] 8B.2 Implement pure issuance/revalidation from the actual accessible rail pair. Distinguish source-side physical support and restricted destination occupancy from excavated destination floor; preserve both housings, normal routing and packed rock.
+- [X] 8B.3 Publish the exact public location/signatures and update direct geology/controller consumers. Quote issuance must work before full TBM acquisition; later assignment/publication must still resolve actual train/project references through their owners.
+- [X] 8B.4 Test stale pair revision, foreign/blocked source, wrong facility/model/date and unchanged estimate/refusal state. Compile the Plan 2 consumer fixture; claim only this geometry contract, not a paid cut, live entry or exchange.
+
+**R2MLVS3MP status, 2026-10-05.** 8B.1 is frozen in [r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md), with the typed proof in `src/layer_portal_cmd.h`. 8B.2-8B.4 are implemented in `src/layer_portal_bootstrap.cpp`, plus the shared pocket helper and load binding in `layer_portal_work.cpp`. They passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05 (`[portal-bootstrap]`, `src/tests/portal_bootstrap.cpp`). The burst corrected the test's door-cell check: the door cell D' touches the housing and lies inside the pocket. Claimed scope: the geometry/proof contract only, not a paid cut, live entry or exchange.
 
 ### Area Mandatory Reading - Commissioned pair and lifecycle integration
 

@@ -323,6 +323,8 @@ struct ExcavationCutGeometry {
 	Direction heading = Direction::Invalid; ///< Forward/left45/right45 only; route producer verifies it.
 	std::vector<TileIndex> swept_tiles; ///< Complete cutter/consist envelope, including diagonal corners.
 	std::vector<TileIndex> support_tiles; ///< Required backed retreat/support, separate from final requested floor.
+	/** @param other Segment to compare. @return Whether pose, heading and both envelopes match. */
+	bool operator==(const ExcavationCutGeometry &other) const = default;
 };
 
 /** Frozen geometric pass/return/capacity terms; these are planned limits, never another wagon inventory or progress cursor. */
@@ -332,6 +334,8 @@ struct ExcavationPassTerms {
 	std::vector<TileIndex> exchange_path; ///< Ordered supported backing from commissioning anchor to the actual exchange/pocket anchor.
 	std::vector<uint16_t> exchange_after; ///< Complete cut counts at which loaded backing/exchange is required; final return included.
 	uint64_t fingerprint = 0; ///< Static route/authorization/return/capacity proof, excluding mutable progress and stock.
+	/** @param other Terms to compare. @return Whether every frozen field matches. */
+	bool operator==(const ExcavationPassTerms &other) const = default;
 };
 
 /**
@@ -358,6 +362,8 @@ struct ExcavationJob {
 	uint64_t completed_rock_t = 0; ///< Historical committed statistic, not a hidden buffer.
 	Money completed_work_cost = 0; ///< Historical paid-cut total; actual cash remains with the company/controller.
 	std::optional<ExcavationPassTerms> pass_terms; ///< Frozen validated backing/capacity input; legacy absence cannot authorize a complete cut.
+	/** @param other Job to compare. @return Whether every authoritative field matches, for revalidating an unchanged proposal. */
+	bool operator==(const ExcavationJob &other) const = default;
 };
 
 /** Sole live geological authority; transient generation proposals use the same value layout before publication. */
@@ -579,6 +585,47 @@ struct ExcavationCommissioningPocket {
 bool CheckExcavationCommissioningPocket(const ExcavationCommissioningPocket &pocket, VehicleID actor, TileIndex tile);
 
 /**
+ * Derive the conservative 3x3 cutter envelope centred on one tile of its own plane.
+ * The portal pocket, the portal's source support and the solid-starter rules all use this one geometry.
+ * @param centre Explicit world tile, for example a commissioning anchor housing.
+ * @return Nine cells in ascending tile order, or empty when the envelope would wrap or leave the plane.
+ */
+std::vector<TileIndex> GetExcavationCutterEnvelope(TileIndex centre);
+
+/**
+ * Solid commissioning start, resolved through the issuing portal owner. Geometry and permission only:
+ * it never grants excavation credit, cleared floor or vehicle admission. It applies while the anchor
+ * housing's own rock cell is still unopened (Solid before reservation, Excavating until cut 0 commits).
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ */
+struct ExcavationStarterResult {
+	ExcavationError error = ExcavationError::None; ///< None when no solid start applies, or when its issuer is current.
+	TileIndex failure_tile = INVALID_TILE; ///< The anchor on refusal.
+	bool required = false; ///< True while the anchor cell is unopened, so cut 0 must open and pay for the whole pocket.
+	Direction exit_heading = Direction::Invalid; ///< Only legal first advancing heading: out through the housing door.
+	std::vector<TileIndex> pocket; ///< Restricted occupancy envelope that cut 0 must sweep; never initial floor.
+};
+
+/**
+ * Decide whether a job or proposal starts inside a solid portal pocket and, if so, revalidate its issuing pair.
+ * @param job Proposal with an invalid ID (its pair must still be Sealed and unassigned) or a published job
+ *            (its pair must be Commissioning exactly this job).
+ * @return No solid start, a current issuer with exit heading and pocket, or a stable refusal at the anchor.
+ *         Reads only; terrain, claims, pair state, funds and RNG are unchanged.
+ */
+ExcavationStarterResult ResolveExcavationStarter(const ExcavationJob &job);
+
+/**
+ * Check the first advancing segment of a solid start against its issuer's geometry.
+ * @param job Canonical route; route[0] must leave the housing.
+ * @param exit_heading Door heading supplied by the issuing portal.
+ * @param pocket Envelope from GetExcavationCutterEnvelope around the anchor.
+ * @return Success, or a stable refusal when route[0] does not face the door, misses a pocket cell
+ *         (which would leave that rock unpaid) or claims support outside the pocket.
+ */
+ExcavationFootprintResult CheckExcavationStarterGeometry(const ExcavationJob &job, Direction exit_heading, std::span<const TileIndex> pocket);
+
+/**
  * Adapt geological footprint refusal to the ordinary construction command boundary.
  * @param footprint Complete explicit footprint and approaches within one layer.
  * @return Empty command cost on success, otherwise the stable geological error message.
@@ -629,6 +676,16 @@ ExcavationCutResult CommitExcavationCut(const ExcavationCutRequest &request, Exc
  */
 ExcavationCutResult PrepareExcavationCut(const ExcavationCutRequest &request, const ExcavationMaterialSnapshot &material);
 
+/**
+ * Cheap, refusal-free estimate of the job's next cut: the same per-cell terms PrepareExcavationCut charges, summed over
+ * the cut's still-unopened swept cells. It lets a controller bound its per-tick work and name a precise material wait
+ * without running the full geometry validation every tick. Commit still prepares and validates the cut completely.
+ * @param id Exact job.
+ * @return New cells, both spoil quantities, support units, cost and total work ticks (reserve debits are not
+ *         estimated); InvalidJob or AlreadyCompleted when there is no next cut.
+ */
+ExcavationCutResult EstimateExcavationCut(ExcavationJobID id);
+
 /** Canonical immutable planning proposal; intended road/rail/tube/mine use is deliberately absent from geometry acceptance. */
 struct ExcavationOutline {
 	ExcavationError error = ExcavationError::None; ///< Complete geometry/technology refusal.
@@ -664,6 +721,14 @@ ExcavationOutline AuthorizeExcavationOutline(const ExcavationOutline &outline, s
  * @return Read-only whole-cell support/spoil/work estimate or zero-quantity refusal; no claim or inventory is created.
  */
 ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id);
+
+/**
+ * Cutting difficulty of one rock cell, by the same rule quotes and cuts use (deposit hardness, else layer default).
+ * @param geology Read-only geological owner.
+ * @param tile Rock-layer cell.
+ * @return The cell's hardness.
+ */
+GeologyHardness GetExcavationCellHardness(const GeologyWorldState &geology, TileIndex tile);
 
 /** Explicit planning pose and minimum consist history; points are geometry, never invented vehicle identities. */
 struct ExcavationPlanningPose {

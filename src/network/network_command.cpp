@@ -28,6 +28,7 @@
 #include "../industry_cmd.h"
 #include "../landscape_cmd.h"
 #include "../layer_portal_cmd.h"
+#include "../tbm_cmd.h"
 #include "../league_cmd.h"
 #include "../misc_cmd.h"
 #include "../news_cmd.h"

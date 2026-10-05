@@ -16,6 +16,7 @@
 #include "engine_func.h"
 #include "engine_base.h"
 #include "tbm.h"
+#include "spoil_receiver.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1751,6 +1752,8 @@ static void AfterLoadGRFs()
 	_gted.clear();
 	_grm_sprites.clear();
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
+	// The Surface spoil receivers are native industries in the same package scope (r2mlvs5 Group 8); the build list is sorted again to show them.
+	if (InitialiseSpoilReceiverDefinitions(_grfconfig)) SortIndustryTypes();
 }
 
 #ifdef WITH_MULTILAYER_LOADER_PROBE

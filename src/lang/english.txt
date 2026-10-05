@@ -5181,6 +5181,12 @@ STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER                              :{WHITE}... not 
 STR_ERROR_EXCAVATION_SOLID_ROCK                                 :{WHITE}Excavate the complete footprint and approaches first
 STR_ERROR_EXCAVATION_ACTIVE_CUT                                 :{WHITE}This footprint is reserved for excavation
 STR_ERROR_EXCAVATION_DEEP_LOCKED                                :{WHITE}Deep Underground construction requires 1980 or later
+STR_ERROR_TBM_SUPPORT_IN_USE                                    :{WHITE}This temporary support track is still in use by a boring project
+STR_ERROR_TBM_SUPPORT_NONE                                      :{WHITE}There is no temporary support track here
+STR_ERROR_TBM_SUPPORT_CONVERT_FIRST                             :{WHITE}Convert or remove the temporary support track first
+STR_ERROR_TBM_EXCHANGE_CAPACITY_LOSS                            :{WHITE}The exchanged wagons would hold less cargo than they carry
+STR_INDUSTRY_NAME_EARTH_RECLAMATION_SITE                        :Earth Reclamation Site
+STR_INDUSTRY_NAME_ROCK_CRUSHER                                  :Rock Crusher
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
 STR_ERROR_FLAT_LAND_REQUIRED                                    :flat land required
 STR_ERROR_LAND_SLOPED_IN_WRONG_DIRECTION                        :land sloped in wrong direction

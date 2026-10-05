@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_guard.cpp Complete-floor, approach, policy and commissioning refusal fixtures. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 8 */
+/** @file excavation_guard.cpp Complete-floor, approach, policy and commissioning refusal fixtures. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 8; sealed portal housing from r2mlvs3-sealed-portals-and-deep-rail.md, Group 4 */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -85,7 +85,10 @@ TEST_CASE("Construction families cannot use a cleared first cell to enter solid 
 	RoadStopClass::Reset();
 	CHECK(CmdBuildRailStation(DoCommandFlag::Execute, open, RAILTYPE_RAIL, Axis::X, 1, 2, STAT_CLASS_DFLT, 0, NEW_STATION, false).GetErrorMessage() == STR_ERROR_EXCAVATION_SOLID_ROCK);
 	CHECK(CmdBuildRoadStop(DoCommandFlag::Execute, open, 2, 1, RoadStopType::Bus, false, DiagDirection::SW, ROADTYPE_ROAD, ROADSTOP_CLASS_DFLT, 0, NEW_STATION, false).GetErrorMessage() == STR_ERROR_EXCAVATION_SOLID_ROCK);
-	CHECK(CmdBuildLayerPortal(DoCommandFlag::Execute, TileXYL(20, 20, MapLayer::Surface), TransportType::Rail, MapLayer::Underground, DiagDirection::NE, RAILTYPE_RAIL, ROADTYPE_ROAD).GetErrorMessage() == STR_ERROR_EXCAVATION_SOLID_ROCK);
+	// Plan 3 Group 4/5 supersedes the former portal refusal: a native rail pair may face this solid door only as a Sealed
+	// housing. The pure quote must succeed without opening rock; the packed/tile checks below prove no excavation credit.
+	CHECK(CmdBuildLayerPortal(DoCommandFlags{}, TileXYL(20, 20, MapLayer::Surface), TransportType::Rail, MapLayer::Underground, DiagDirection::NE, RAILTYPE_RAIL, ROADTYPE_ROAD).Succeeded());
+	CHECK(GetLayerPortalWorkPairCount() == 0);
 	CHECK(CheckExcavationConstructionArea(open, 2, 1).Failed());
 	CHECK(CheckExcavationConstructionArea(TileXYL(62, 20, MapLayer::Underground), 3, 1).Failed());
 	CHECK(CaptureGeologyState().packed == before.packed);

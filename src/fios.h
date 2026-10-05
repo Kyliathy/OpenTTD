@@ -66,6 +66,14 @@ struct LoadCheckData {
 	uint32_t excavation_pass_rows = 0; ///< Bounded copied pass count, never live input.
 	std::array<bool, 2> portal_work_present{}; ///< Independent native-work header/table preview presence.
 	uint32_t portal_work_expected = 0, portal_work_rows = 0; ///< Exact bounded copied row counts.
+	std::array<bool, 3> tbm_project_present{}; ///< Independent TBM project header, project table and support table preview presence.
+	uint32_t tbm_project_expected = 0, tbm_project_rows = 0, tbm_project_next = 0; ///< Exact copied project counts and allocation cursor.
+	uint32_t tbm_support_expected = 0, tbm_support_rows = 0; ///< Exact copied temporary support counts.
+	std::array<bool, 2> spoil_receiver_present{}; ///< Independent spoil receiver header and row table preview presence.
+	uint32_t spoil_receiver_expected = 0, spoil_receiver_rows = 0; ///< Exact copied spoil receiver counts.
+	std::array<bool, 4> tbm_exchange_present{}; ///< Independent exchange header, assignment, set and set-wagon table preview presence.
+	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
+	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

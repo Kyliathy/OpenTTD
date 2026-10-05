@@ -1,0 +1,100 @@
+CMake is re-running because D:/Codez/Sandbox/OpenTTD/build/src/CMakeFiles/generate.stamp is out-of-date.
+  the file 'D:/Codez/Sandbox/OpenTTD/src/CMakeLists.txt'
+  is newer than 'D:/Codez/Sandbox/OpenTTD/build/src/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.19045.
+-- Finding editbin.exe
+-- Finding editbin.exe - found
+-- Option Package Dependencies - OFF
+-- Option Dedicated - OFF
+-- Option Install FHS - OFF
+-- Option Use assert - ON
+-- Option Use NSIS - OFF
+-- Option Survey Key - NOT USED
+-- PNG found -- -DWITH_PNG -- PNG::PNG
+-- ZLIB found -- -DWITH_ZLIB -- ZLIB::ZLIB
+-- LIBLZMA found -- -DWITH_LIBLZMA -- LibLZMA::LibLZMA
+-- LZO found -- -DWITH_LZO -- D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/include D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/include -- optimized;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/lib/lzo2.lib;debug;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/debug/lib/lzo2.lib optimized;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/lib/lzo2.lib;debug;D:/Codez/Sandbox/OpenTTD/build/vcpkg_installed/x64-windows-static/debug/lib/lzo2.lib
+-- unofficial-breakpad found -- -DWITH_UNOFFICIAL_BREAKPAD -- unofficial::breakpad::libbreakpad_client
+-- OpusFile found -- -DWITH_OPUSFILE -- OpusFile::opusfile
+-- Soxr found -- -DWITH_SOXR -- Soxr::soxr
+-- OpenGL found -- -DWITH_OPENGL -- OpenGL::GL
+-- SSE found -- -DWITH_SSE --   --  
+CMake Warning (dev) at cmake/InstallAndPackage.cmake:28 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  CMakeLists.txt:476 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at cmake/InstallAndPackage.cmake:65 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  CMakeLists.txt:476 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done (5.7s)
+-- Generating done (4.7s)
+-- Build files have been written to: D:/Codez/Sandbox/OpenTTD/build
+MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  -- Version string: 20261005-mlm-mlv-m5f40e4d755
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  script_rail.cpp
+  script_road.cpp
+  network_command.cpp
+  afterload.cpp
+  company_sl.cpp
+  geology_sl.cpp
+  excavation_sl.cpp
+  layer_portal_work_sl.cpp
+  saveload.cpp
+  articulated_vehicles.cpp
+  autoreplace_cmd.cpp
+  clear_cmd.cpp
+  command.cpp
+  genworld.cpp
+  industry_cmd.cpp
+  landscape.cpp
+  layer_portal_cmd.cpp
+  layer_portal_work.cpp
+  layer_portal_bootstrap.cpp
+  layer_portal_gui.cpp
+  map_layer.cpp
+  excavation.cpp
+  excavation_guard.cpp
+  excavation_jobs.cpp
+  excavation_cut.cpp
+  excavation_outline.cpp
+  excavation_route.cpp
+  excavation_pass.cpp
+  excavation_starter.cpp
+  tbm_model.cpp
+  tbm_engine.cpp
+  geology.cpp
+  geology_digest.cpp
+  geology_generation.cpp
+  geology_state.cpp
+  geothermal_geology.cpp
+  multilayer_state.cpp
+  misc.cpp
+  newgrf.cpp
+  object_cmd.cpp
+  rail_cmd.cpp
+  rail_gui.cpp
+  road_cmd.cpp
+  road_gui.cpp
+  station_cmd.cpp
+  train_cmd.cpp
+  vehicle_cmd.cpp
+  waypoint_cmd.cpp

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_cmd.h Command that builds a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file layer_portal_cmd.h Command that builds a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef LAYER_PORTAL_CMD_H
 #define LAYER_PORTAL_CMD_H
@@ -68,7 +68,8 @@ LayerPortalWorkError CheckLayerPortalAvailability(TileIndex tile);
  * @param tile Actual endpoint being entered.
  * @param actor Actual entering vehicle; a follower cannot inherit company-wide permission.
  * @param project Actual expected geological project identity.
- * @return Complete permission or refusal; ControllerUnavailable remains until Plan 4 supplies actual TBM role/consist authorization.
+ * @return None for a part of the live TBM project that owns this pair's cutter and job (Plan 4 role contract);
+ *         ControllerUnavailable when no such project exists; otherwise a stable refusal.
  */
 LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor, ExcavationJobID project);
 
@@ -101,6 +102,61 @@ LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommission
  * @return None and a pair revision on valid source access; no vehicle/job identity is allocated.
  */
 LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCommissionRequest &request);
+
+/**
+ * Portal-issued bootstrap proof for a solid commissioning start (Plan 3 Group 8B).
+ * It describes geometry and references only: no excavation credit, vehicle admission, purchase or payment.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ */
+struct LayerPortalBootstrapProof {
+	LayerPortalWorkError error = LayerPortalWorkError::InvalidPair; ///< None only for a complete issued proof.
+	TileIndex pair_key = INVALID_TILE; ///< Canonical pair identity; also the accessible source endpoint.
+	uint64_t pair_revision = 0; ///< Sealed work-record revision captured at issue.
+	CompanyID company = CompanyID::Invalid(); ///< Actual owner of both housings and of the proposal.
+	uint16_t model_id = UINT16_MAX; ///< Logical cutter whose layer and introduction date were checked.
+	StationID origin = StationID::Invalid(); ///< Actual company-owned Surface railway origin.
+	TileIndex source = INVALID_TILE; ///< Accessible upper endpoint where the consist assembles.
+	std::vector<TileIndex> source_support; ///< Complete 3x3 source floor carrying the straddling consist and its retreat.
+	TileIndex destination = INVALID_TILE; ///< Solid rock-side housing; the job's commissioning anchor.
+	Direction exit_heading = Direction::Invalid; ///< Destination door heading; the only legal first cut heading.
+	std::vector<TileIndex> pocket; ///< Restricted 3x3 destination occupancy, still unopened until the first paid cut.
+	/** @param other Proof to compare. @return Whether every issued field matches. */
+	bool operator==(const LayerPortalBootstrapProof &other) const = default;
+};
+
+/**
+ * Issue the solid-start proof from the existing pure commissioning preflight.
+ * Works before any route, train or job exists, so commissioning can be quoted before acquisition.
+ * @param request Actual accessible upper rail pair and the unallocated geological proposal.
+ * @return Complete proof, or a proof carrying only the stable preflight refusal; nothing is mutated.
+ */
+LayerPortalBootstrapProof IssueLayerPortalBootstrap(const LayerPortalCommissionRequest &request);
+
+/**
+ * Revalidate an earlier proof immediately before acquisition.
+ * @param proof Proof issued earlier for this request.
+ * @param request The same pair and proposal, re-read against live state.
+ * @return None when a fresh issue equals the proof; otherwise the fresh refusal, or Conflict for a
+ *         changed revision, source, pocket, model or origin.
+ */
+LayerPortalWorkError RevalidateLayerPortalBootstrap(const LayerPortalBootstrapProof &proof, const LayerPortalCommissionRequest &request);
+
+/** Geology-facing projection of the pair that may issue a solid commissioning start. */
+struct LayerPortalStarterIssuer {
+	LayerPortalWorkError error = LayerPortalWorkError::InvalidPair; ///< None only for a current issuer.
+	TileIndex pair_key = INVALID_TILE; ///< Canonical issuing pair key.
+	Direction exit_heading = Direction::Invalid; ///< Destination door heading.
+};
+
+/**
+ * Resolve the current issuer of a solid start without reading or copying geology.
+ * @param anchor Rock-side destination housing named by the geological job.
+ * @param company Job owner, which must own the pair.
+ * @param job Invalid for an unpublished proposal (pair must be Sealed and unassigned);
+ *            otherwise the published job the pair must be Commissioning.
+ * @return Issuer key and exit heading, or a stable pair/owner/date/phase refusal.
+ */
+LayerPortalStarterIssuer GetLayerPortalStarterIssuer(TileIndex anchor, CompanyID company, ExcavationJobID job);
 
 /**
  * Connect or safely hide an empty pair without changing its physical topology or geology.

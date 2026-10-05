@@ -136,7 +136,7 @@ def resume_ownerless_migration():
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
         version, stream = read_stream(source)
-        assert version == 375
+        assert version in (375, 376, 377, 378)
         records = chunks(stream)
         metadata = geology_chunk(records, b"MLMD")
         row = bytearray(metadata["rows"][1])

@@ -35,6 +35,7 @@
 #include "company_gui.h"
 #include "waypoint_cmd.h"
 #include "landscape_cmd.h"
+#include "tbm.h"
 #include "station_layout_type.h"
 
 #include "table/strings.h"
@@ -167,6 +168,8 @@ static CommandCost IsValidTileForWaypoint(TileIndex tile, Axis axis, StationID *
 	}
 
 	if (GetAxisForNewRailWaypoint(tile) != axis) return CommandCost(STR_ERROR_NO_SUITABLE_RAILROAD_TRACK);
+	// Temporary TBM support never becomes a waypoint; it is converted or removed first (r2mlvs4 Group 15).
+	if (GetTBMSupportTile(tile) != nullptr) return CommandCost(STR_ERROR_TBM_SUPPORT_CONVERT_FIRST);
 
 	Owner owner = GetTileOwner(tile);
 	CommandCost ret = CheckOwnership(owner);

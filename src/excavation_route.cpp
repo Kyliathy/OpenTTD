@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_route.cpp Deterministic bounded advancing coverage with complete cutter/consist sweeps. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 13 */
+/** @file excavation_route.cpp Deterministic bounded advancing coverage with complete cutter/consist sweeps. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Groups 13 and 14B (solid start); docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "excavation.h"
@@ -96,6 +96,9 @@ ExcavationPlanningStep AdvanceExcavationPlanningPose(const ExcavationPlanningPos
 	return result;
 }
 
+static constexpr std::array<int, 1> STRAIGHT_ONLY = {0}; ///< Turn choices for a cutter leaving a straight portal housing.
+static constexpr std::array<int, 3> STRAIGHT_LEFT_RIGHT = {0, -1, 1}; ///< Stable straight, left-45, right-45 expansion order.
+
 /** Full bounded pose key; different trailing histories cannot share an endpoint-only collision result. */
 using PlanningKey = std::tuple<TileIndex, Direction, std::array<TileIndex, 16>>;
 
@@ -162,14 +165,15 @@ static ExcavationFootprintResult CheckPlanningCut(const ExcavationCutGeometry &c
  * @param cut Full accepted transition.
  * @param cleared Actual/open and previously proposed complete-cut cells.
  * @param previous Parent head, whose 3x3 body is already open at this step.
+ * @param parent_open False for the first edge of a solid start, whose parent body is the still-unopened pocket.
  * @return Canonical new cells; this virtual set never writes packed terrain.
  */
-static std::vector<TileIndex> NewPlanningCells(const ExcavationCutGeometry &cut, const std::set<TileIndex> &cleared, TileIndex previous)
+static std::vector<TileIndex> NewPlanningCells(const ExcavationCutGeometry &cut, const std::set<TileIndex> &cleared, TileIndex previous, bool parent_open = true)
 {
 	std::vector<TileIndex> fresh;
 	for (TileIndex tile : cut.swept_tiles) {
 		if (cleared.contains(tile)) continue;
-		if (DistanceMax(tile, previous) <= 1) continue; // Parent cutter occupancy is open after the preceding complete edge, including within a target search.
+		if (parent_open && DistanceMax(tile, previous) <= 1) continue; // Parent cutter occupancy is open after the preceding complete edge, including within a target search.
 		fresh.push_back(tile);
 	}
 	return fresh;
@@ -184,9 +188,10 @@ static std::vector<TileIndex> NewPlanningCells(const ExcavationCutGeometry &cut,
  * @param model_id Immutable cutter for hardness scoring.
  * @param limits Exact deterministic operation/depth/storage bounds.
  * @param result Whole-command proposal receiving a legal joined prefix and consumed budget.
+ * @param solid_start The start pose is inside an unopened portal pocket: its first edge must go straight out of the door.
  * @return True if this target is covered; false leaves a visible legal partial/refusal with no world mutation.
  */
-static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileIndex target, const ExcavationOutline &outline, const std::set<TileIndex> &cleared, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationRouteProposal &result)
+static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileIndex target, const ExcavationOutline &outline, const std::set<TileIndex> &cleared, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationRouteProposal &result, bool solid_start = false)
 {
 	std::vector<ExcavationPlanningNode> nodes;
 	nodes.reserve(limits.states);
@@ -207,16 +212,22 @@ static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileInde
 		if (best.at(KeyForPlanningPose(node.pose)) != node.cost) continue;
 		++result.expansions;
 		if (PlanningDistance(node.pose.position, target) < PlanningDistance(nodes[closest].pose.position, target)) closest = index;
-		if (PlanningDistance(node.pose.position, target) == 0) { found = index; break; }
+		// A cutter body covers its target once its 3x3 is open. The root of a solid start is still inside the unopened
+		// pocket, so even a pocket target needs the first real advance out of the door.
+		if (PlanningDistance(node.pose.position, target) == 0 && !(solid_start && index == 0)) { found = index; break; }
 		if (node.depth >= limits.depth || result.route.size() + node.depth >= limits.segments) { limited = true; continue; } // Bounded passes cannot grow another hidden unaccepted route.
+		// The root of a solid start sits in the straight housing track: it may only advance straight out of the door,
+		// and its unopened pocket is charged as new rock. Every other node keeps the normal straight/left/right choice.
+		const bool leaving_housing = solid_start && index == 0;
+		const std::span<const int> turns = leaving_housing ? std::span<const int>{STRAIGHT_ONLY} : std::span<const int>{STRAIGHT_LEFT_RIGHT};
 		// Forward straight is considered first, then exactly left45/right45; every edge advances a real tile.
-		for (int turn : {0, -1, 1}) {
+		for (int turn : turns) {
 			const auto heading = static_cast<Direction>((to_underlying(node.pose.heading) + turn + 8) % 8);
 			auto step = AdvanceExcavationPlanningPose(node.pose, heading);
 			if (step.error != ExcavationError::None) { failure = {step.error, step.failure_tile}; continue; }
 			const auto legal = CheckPlanningCut(step.cut, outline.authorized_tiles);
 			if (legal.error != ExcavationError::None) { failure = legal; continue; }
-			const auto cells = NewPlanningCells(step.cut, cleared, node.pose.position);
+			const auto cells = NewPlanningCells(step.cut, cleared, node.pose.position, !leaving_housing);
 			const auto quote = QuoteExcavationCells(cells, model_id);
 			if (quote.error != ExcavationError::None) { failure = {quote.error, quote.failure_tile}; continue; }
 			// Frozen active-rate/time plus lining cost gives hardness-sensitive conservative monetary scoring; it charges no account.
@@ -273,15 +284,33 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	if (GetTileLayer(start.position) != outline.layer) return {ExcavationError::MixedLayers, start.position};
 	const auto model_probe = QuoteExcavationCells(std::array{start.position}, model_id);
 	if (model_probe.error != ExcavationError::None) return {model_probe.error, model_probe.failure_tile};
+	// A start pose on an unopened portal housing is a solid start. Its issuer must be a current Sealed pair of this
+	// company; the cutter must face the door and the whole straddling consist must still be in the shaft.
+	ExcavationJob probe;
+	probe.commissioning_anchor = start.position;
+	probe.company = _current_company;
+	const auto starter = ResolveExcavationStarter(probe);
+	if (starter.error != ExcavationError::None) return {starter.error, starter.failure_tile};
+	if (starter.required) {
+		if (start.heading != starter.exit_heading) return {ExcavationError::IllegalTurn, start.position};
+		for (TileIndex point : start.history) {
+			if (point != start.position) return {ExcavationError::InvalidRoute, point};
+		}
+	}
 	const auto &geology = GetGeologyWorldState();
 	std::set<TileIndex> cleared;
 	// Actual open work cells form the initial virtual floor; no planning path may pre-excavate its future support in live storage.
 	for (TileIndex tile : work.requested_tiles) {
 		if (geology.terrain.Get(tile) == ExcavationState::Excavated) cleared.insert(tile);
 	}
+	// Open starts need open initial support. A solid start's support is its unopened pocket: those cells stay
+	// out of the virtual floor so the first edge charges them as new rock.
 	for (TileIndex tile : initial.cut.support_tiles) {
-		if (geology.terrain.Get(tile) != ExcavationState::Excavated) return {ExcavationError::MissingSupport, tile};
-		cleared.insert(tile);
+		if (geology.terrain.Get(tile) == ExcavationState::Excavated) {
+			cleared.insert(tile);
+			continue;
+		}
+		if (!starter.required || !std::binary_search(starter.pocket.begin(), starter.pocket.end(), tile)) return {ExcavationError::MissingSupport, tile};
 	}
 	ExcavationRouteProposal result;
 	result.end = start;
@@ -289,7 +318,8 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	for (TileIndex target : normalized.requested_tiles) {
 		if (cleared.contains(target)) continue;
 		const size_t before = result.route.size();
-		const bool reached = SearchExcavationTarget(result.end, target, work, cleared, model_id, limits, result);
+		// Only the very first edge of a solid start leaves the housing; later searches start from opened ground.
+		const bool reached = SearchExcavationTarget(result.end, target, work, cleared, model_id, limits, result, starter.required && result.route.empty());
 		for (size_t i = before; i < result.route.size(); ++i) {
 			std::vector<TileIndex> fresh;
 			for (TileIndex tile : result.route[i].swept_tiles) {

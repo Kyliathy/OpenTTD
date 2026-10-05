@@ -93,6 +93,14 @@ void LoadCheckData::Clear()
 	this->excavation_pass_rows = 0;
 	this->portal_work_present.fill(false);
 	this->portal_work_expected = this->portal_work_rows = 0;
+	this->tbm_project_present.fill(false);
+	this->tbm_project_expected = this->tbm_project_rows = this->tbm_project_next = 0;
+	this->tbm_support_expected = this->tbm_support_rows = 0;
+	this->spoil_receiver_present.fill(false);
+	this->spoil_receiver_expected = this->spoil_receiver_rows = 0;
+	this->tbm_exchange_present.fill(false);
+	this->tbm_exchange_header.fill(0);
+	this->tbm_exchange_rows.fill(0);
 	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};

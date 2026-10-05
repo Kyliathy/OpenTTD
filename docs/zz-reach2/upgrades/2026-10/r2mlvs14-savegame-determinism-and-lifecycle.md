@@ -213,6 +213,8 @@ flowchart LR
 
 **Utility persistence gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Audit the r2mlvs12 ledger only after its live descriptors and tests exist: source epochs/lineage, grant balances, mutation sequence, consume/release/transfer state and fixed-scale remainders. Preserve recipe inventory-owner discriminants and completed-but-awaiting-materialization jobs too. Missing producers stop only their subscenarios; never reconstruct consumed energy from caches.
 
+**R2MLVS3MP scoped split, 2026-10-05.** Tasks 7.1-15.4 that span feature families are split into named portions: `-G` ground (master 6.5, closed at 11.2), `-T` tube/utility/first generator and riser (master 9.5/11.2) and `-O` orbital or later direct-heat (pending here, outside that queue). The exact rows and their gating exports are in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#plan-14-groups-7-15). Record evidence against the portion label; a task is checked only when all its portions pass.
+
 ### Group 7 - Feature persistence integration
 
 {{MEDIUM}}

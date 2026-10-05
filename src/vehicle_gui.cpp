@@ -3547,9 +3547,16 @@ bool VehicleClicked(const GUIVehicleGroup &vehgroup)
 	return VehicleClicked(vehgroup.vehicles_begin, vehgroup.vehicles_end);
 }
 
+/**
+ * Stop the main view following a vehicle that is being deleted.
+ * Without a main window (headless unit tests deleting rolled-back TBM parts) nothing can follow it.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2B
+ * @param v Vehicle being deleted.
+ */
 void StopGlobalFollowVehicle(const Vehicle *v)
 {
-	Window *w = GetMainWindow();
+	Window *w = FindWindowById(WindowClass::MainWindow, 0);
+	if (w == nullptr) return;
 	if (w->viewport->follow_vehicle == v->index) {
 		const Vehicle *moving_front = v->GetMovingFront();
 		ScrollMainWindowTo(moving_front->x_pos, moving_front->y_pos, moving_front->z_pos, true); // lock the main view on the vehicle's last position

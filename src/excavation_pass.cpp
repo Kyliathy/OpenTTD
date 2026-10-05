@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_pass.cpp Complete-prefix backing, independent spoil batches and frozen job input. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 14 */
+/** @file excavation_pass.cpp Complete-prefix backing, independent spoil batches and frozen job input. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Groups 14 and 14B (solid start); docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "excavation.h"
@@ -72,6 +72,14 @@ ExcavationPassResult PrepareExcavationPass(const ExcavationJob &job, const Excav
 	const auto &geology = GetGeologyWorldState();
 	const auto geometry = ValidateExcavationJobGeometry(geology, job);
 	if (geometry.error != ExcavationError::None) return {geometry.error, geometry.failure_tile};
+	// A portal-issued solid start replaces the open 3x3 commissioning room: its issuer must be current and
+	// route[0] must leave through the door while sweeping (and so paying for) the whole unopened pocket.
+	const auto starter = ResolveExcavationStarter(job);
+	if (starter.error != ExcavationError::None) return {starter.error, starter.failure_tile};
+	if (starter.required) {
+		const auto first = CheckExcavationStarterGeometry(job, starter.exit_heading, starter.pocket);
+		if (first.error != ExcavationError::None) return {first.error, first.failure_tile};
+	}
 	ExcavationPassResult result;
 	result.terms = terms;
 	result.terms.exchange_after.clear();
@@ -81,25 +89,32 @@ ExcavationPassResult PrepareExcavationPass(const ExcavationJob &job, const Excav
 	std::set<TileIndex> cleared;
 	const auto layer = GetTileLayer(job.commissioning_anchor);
 	// Loaded withdrawal starts with the whole real cutter footprint open; a single open centre cannot substitute for a commissioning room.
+	// A solid start instead begins inside its unopened pocket: each such cell is charged by cut 0, so it may be
+	// Solid (paid) or already Excavated (free), but never another job's active cut.
 	for (int y = -1; y <= 1; ++y) {
 		for (int x = -1; x <= 1; ++x) {
 			const auto tile = TileAddWrap(job.commissioning_anchor, x, y);
-			if (geology.terrain.Get(tile) != ExcavationState::Excavated) return {ExcavationError::MissingSupport, tile};
+			const auto terrain = geology.terrain.Get(tile);
+			if (terrain == ExcavationState::Excavated) continue;
+			if (!starter.required) return {ExcavationError::MissingSupport, tile};
+			if (terrain != ExcavationState::Solid) return {ExcavationError::ActiveCut, tile};
 		}
 	}
 	// Initial support is actual open ground; passing later cuts cannot retroactively legalize a solid initial exchange path.
+	// The only exception is the issuing housing itself at the head of the path: a solid start backs into its shaft.
 	for (size_t i = 0; i < result.terms.exchange_path.size(); ++i) {
 		const auto tile = result.terms.exchange_path[i];
 		if (!IsValidTile(tile)) return {ExcavationError::InvalidTile, tile};
 		if (GetTileLayer(tile) != layer) return {ExcavationError::MixedLayers, tile};
 		if (i != 0 && DistanceMax(tile, result.terms.exchange_path[i - 1]) != 1) return {ExcavationError::InvalidRoute, tile}; // Unsupported gaps/repeated cells cannot be recovered by backing or cross-layer coordinate projection.
-		if (geology.terrain.Get(tile) != ExcavationState::Excavated) return {ExcavationError::MissingSupport, tile};
+		const bool open = geology.terrain.Get(tile) == ExcavationState::Excavated;
+		if (!open && !(starter.required && i == 0)) return {ExcavationError::MissingSupport, tile};
 		const auto claim = geology.job_claims.find(tile);
 		if (claim != geology.job_claims.end() && claim->second != job.id) return {ExcavationError::Conflict, tile}; // Another accepted job cannot supply this loaded backing approach.
 		const auto type = GetTileType(tile);
 		if (type != TileType::Clear && type != TileType::Railway && type != TileType::LayerPortal) return {ExcavationError::Conflict, tile}; // Known road/building obstructions must refuse before the reservation, rather than waiting for the first cut.
 		if (type != TileType::Clear && GetTileOwner(tile) != job.company) return {ExcavationError::InvalidOwner, tile}; // Owned support infrastructure cannot silently become a different company's excavation logistics.
-		cleared.insert(tile);
+		if (open) cleared.insert(tile); // The unopened housing is not free floor: cut 0 must still pay for its rock.
 	}
 	// Actual existing cavities can support later complete prefixes, but do not contribute a second spoil yield.
 	for (TileIndex tile : job.authorized_tiles) {
@@ -110,10 +125,13 @@ ExcavationPassResult PrepareExcavationPass(const ExcavationJob &job, const Excav
 	// Every prefix opens its whole sweep before backing; independently accumulate only its newly reserved ground.
 	for (size_t i = 0; i < job.route.size(); ++i) {
 		const auto &cut = job.route[i];
+		// The first segment of a solid start is backed by the issuing housing and shaft; its support lies inside the
+		// pocket (checked above) and is opened by this same cut. Every later segment needs real open support.
+		const bool starting = starter.required && i == 0;
 		for (TileIndex tile : cut.support_tiles) {
-			if (!cleared.contains(tile)) return {ExcavationError::MissingSupport, tile};
+			if (!cleared.contains(tile) && !starting) return {ExcavationError::MissingSupport, tile};
 		}
-		if (!cleared.contains(previous)) return {ExcavationError::MissingSupport, previous};
+		if (!cleared.contains(previous) && !starting) return {ExcavationError::MissingSupport, previous};
 		std::vector<TileIndex> fresh;
 		for (TileIndex tile : cut.swept_tiles) {
 			if (!cleared.contains(tile)) fresh.push_back(tile);

@@ -71,7 +71,7 @@ Proposed public owner: `docs/zz-reach2/upgrades/2026-10/tools/multilayer_accepta
 
 ## Implementation Tasks
 
-Ground execution scope: [R2MLVS3MP](r2mlvs3mp-master-plan.md) selects S1/S2, ground S8/S9, the related portal/tube/riser checks and ground art/economics/performance rows. Groups 1-5 must build the real acceptance runner for this explicitly selected family set without requiring all orbital producers listed in the shared entry gate. Each scenario requires its actual public producers, matching loaded assets and meaningful executable boundary tests; absent required producers block that scenario. Preserve the stricter complete producer set for combined S1..S12/whole-epic closure. A scoped ground pass does not complete a mixed-family task or this entire plan, and skipped/injected evidence never becomes bootstrap acceptance.
+Ground execution scope: [R2MLVS3MP](r2mlvs3mp-master-plan.md) selects S1/S2, ground S8/S9, the related portal/tube/riser checks and ground art/economics/performance rows. Groups 1-5 must build the real acceptance runner for this explicitly selected family set without requiring all orbital producers listed in the shared entry gate. Each scenario requires its actual public producers, matching loaded assets and meaningful executable boundary tests; absent required producers block that scenario. Preserve the stricter complete producer set for combined S1..S12/whole-epic closure. A scoped ground pass does not complete a mixed-family task or this entire plan, and skipped/injected evidence never becomes bootstrap acceptance. The named ground portions of Groups 1-5 (1.1-G, 2.2-G, 3.3-G, 4.1-G) and the family-neutral tasks are listed in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#plan-15-groups-1-5).
 
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
 
@@ -284,6 +284,8 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 {{HARD}}
 - [ ] 16.1 Create a ledger schema with time basis, initial investment, active/idle operating cost, support, haulage, disposal, accepted output and net balance. Record all quantities and bottlenecks from fixed seeded runs.
 - [ ] 16.2 Measure a standard corridor/chamber and a harder Deep project through several real wagon cycles. Separate one-time build cost from repeated operating expense and include receiver saturation delays.
+
+**R2MLVS3MP note, 2026-10-05.** The solid starter charges the whole 3x3 pocket in cut 0 (12 cells, not 3). This supersedes the cleared-area assumption in [r2mlvs1-e](r2mlvs1-e-ground-and-space-budgets.md) line 32. Measure the larger first-cut cost and the minimum consist it implies (two Earth and two Rock hoppers on the soft-ground fixture site) ([r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md#capacity-consequence)).
 - [ ] 16.3 Measure each mineral-family route from finite reserve through Surface processing and final useful output. Compare like-for-like distances/capacities and document missing consumers as failures.
 - [ ] 16.4 Calculate payback/sensitivity from observed complete loops, not nominal vehicle price. Send proposed numerical changes to r2mlvs1 with the specific failed balance objective.
 

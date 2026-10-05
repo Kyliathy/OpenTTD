@@ -60,6 +60,9 @@
 #include "timer/timer_game_calendar.h"
 #include "timer/timer_game_economy.h"
 
+#include "spoil_receiver.h"
+#include "tbm_exchange.h"
+
 #include "table/strings.h"
 #include "table/pricebase.h"
 
@@ -1059,6 +1062,11 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
 		include(_cargo_delivery_destinations, ind);
 
 		uint amount = std::min(num_pieces, 0xFFFFu - it->waiting);
+		// A spoil receiver admits only its bounded room and charges its fee for exactly that (r2mlvs5 Group 8.3).
+		if (GetSpoilReceiverKind(ind->type) != SpoilReceiverKind::End) {
+			amount = AdmitSpoilToReceiver(*ind, cargo_type, amount, company);
+			if (amount == 0) continue;
+		}
 		it->waiting += amount;
 		it->GetOrCreateHistory()[THIS_MONTH].accepted += amount;
 		it->last_accepted = TimerGameEconomy::date;
@@ -1142,6 +1150,9 @@ static void TriggerIndustryProduction(Industry *i)
 	IndustryCallbackMasks cbm = indspec->callback_mask;
 
 	i->was_cargo_delivered = true;
+
+	/* A spoil receiver keeps its stock for its own interval processing (r2mlvs5 Group 8.2). */
+	if (GetSpoilReceiverKind(i->type) != SpoilReceiverKind::End) return;
 
 	if (cbm.Test(IndustryCallbackMask::ProductionCargoArrival) || cbm.Test(IndustryCallbackMask::Production256Ticks)) {
 		if (cbm.Test(IndustryCallbackMask::ProductionCargoArrival)) {
@@ -1275,7 +1286,8 @@ void PrepareUnload(Vehicle *front_v)
 		Station *st = Station::Get(front_v->last_station_visited);
 		for (Vehicle *v = front_v; v != nullptr; v = v->Next()) {
 			const GoodsEntry *ge = &st->goods[v->cargo_type];
-			if (v->cargo_cap > 0 && v->cargo.TotalCount() > 0) {
+			// Spoil is not staged until its Surface origin leg is complete (r2mlvs5 Group 8.1); it then unloads as usual.
+			if (v->cargo_cap > 0 && v->cargo.TotalCount() > 0 && MayTBMSpoilLeaveVehicle(*front_v, *v, front_v->last_station_visited)) {
 				v->cargo.Stage(
 						ge->status.Test(GoodsEntry::State::Acceptance),
 						front_v->last_station_visited, next_station,
@@ -1690,6 +1702,23 @@ static void LoadUnloadVehicle(Vehicle *front)
 					 * at this station. Setting the unloaded means that we will get a
 					 * retry for loading in the next cycle. */
 					anything_unloaded = true;
+				}
+			}
+
+			/* Spoil is delivered only into its receivers' bounded room (r2mlvs5 Group 8.3). The rest is transferred on an
+			 * unload or transfer order, as unaccepted cargo is above, and otherwise stays aboard. */
+			if (const uint deliver = v->cargo.ActionCount(VehicleCargoList::MoveToAction::Deliver); deliver > 0) {
+				const uint room = GetSpoilReceiverRoomAt(*st, v->cargo_type);
+				if (room < deliver) {
+					const uint refused = deliver - room;
+					if (front->current_order.GetUnloadType() == OrderUnloadType::Transfer || front->current_order.GetUnloadType() == OrderUnloadType::Unload) {
+						v->cargo.Reassign<VehicleCargoList::MoveToAction::Deliver, VehicleCargoList::MoveToAction::Transfer>(refused);
+					} else {
+						const uint new_remaining = v->cargo.RemainingCount() + refused;
+						/* Return reserved cargo that the kept spoil now leaves no room for, as above. */
+						if (v->cargo_cap < new_remaining) v->cargo.Return(new_remaining - v->cargo_cap, &ge->GetOrCreateData().cargo, StationID::Invalid(), v->GetCargoTile());
+						v->cargo.Reassign<VehicleCargoList::MoveToAction::Deliver, VehicleCargoList::MoveToAction::Keep>(refused);
+					}
 				}
 			}
 

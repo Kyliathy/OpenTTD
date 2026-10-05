@@ -8,7 +8,7 @@
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
-#include "excavation_fixture.h"
+#include "tbm_fixture.h"
 #include "../tbm.h"
 #include "../train.h"
 #include "../train_cmd.h"
@@ -32,46 +32,6 @@
 #include "../script/api/script_vehicle.hpp"
 
 #include "../safeguards.h"
-
-/** Actual native definitions and physical portal owners, isolated without replacing gameplay engine/cargo registries. */
-class TBMEngineFixture {
-	decltype(_engine_mngr.mappings) original_mapping = _engine_mngr.mappings; ///< Preserve the caller's existing real EIDS configuration.
-public:
-	ExcavationFixture world; ///< Real accepted profile, company and cargo definitions.
-	GRFConfigList package; ///< Exact producer package transport for definition initialization.
-	Engine *stock = nullptr; ///< Actual original engine definition retained alongside appended native models.
-	Station *origin = nullptr; ///< Actual pool-owned Surface station reference.
-	LayerPortalCommissionRequest request; ///< Actual source-site request; no geological route or controller is fabricated.
-	/** Install real native engine definitions and sealed geometry through their public owners. */
-	TBMEngineFixture()
-	{
-		REQUIRE(Engine::GetNumItems() == 0); REQUIRE(Vehicle::GetNumItems() == 0); REQUIRE(Station::GetNumItems() == 0);
-		const auto &required = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content;
-		auto config = std::make_unique<GRFConfig>();
-		config->ident = required.package; config->version = required.version; config->status = GRFStatus::Activated;
-		package.push_back(std::move(config));
-		REQUIRE(Engine::CanAllocateItem());
-		stock = Engine::Create(VehicleType::Train, 0);
-		_engine_mngr.SetID(VehicleType::Train, 0, INVALID_GRFID, 0, stock->index);
-		REQUIRE(InitialiseTBMEngineDefinitions(package));
-		ResetLayerPortalWorkState(); ResetRailTypes();
-		request.portal = TileXYL(20, 20, MapLayer::Surface);
-		REQUIRE(CmdBuildLayerPortal(DoCommandFlag::Execute, request.portal, TransportType::Rail, MapLayer::Underground, DiagDirection::SE, RAILTYPE_RAIL, ROADTYPE_ROAD).Succeeded());
-		REQUIRE(Station::CanAllocateItem());
-		origin = Station::Create(TileXYL(18, 20, MapLayer::Surface));
-		origin->owner = _current_company; origin->facilities.Set(StationFacility::Train);
-		request.proposal.company = _current_company; request.proposal.origin = origin->index;
-		request.proposal.model_id = 0; request.proposal.commissioning_anchor = GetLayerPortalPairTile(request.portal);
-		request.proposal.pass_terms.emplace();
-	}
-	/** Release only fixture-owned pools before content/company teardown, restoring the actual mapping configuration. */
-	~TBMEngineFixture()
-	{
-		_vehicle_pool.CleanPool(); ResetVehicleHash();
-		_station_pool.CleanPool(); ResetLayerPortalWorkState();
-		_engine_pool.CleanPool(); _engine_mngr.mappings = std::move(original_mapping);
-	}
-};
 
 /** Use the actual script active-instance owner so script purchase reaches the real command kernel. */
 class TBMScriptScope : public ScriptObject {
@@ -145,27 +105,51 @@ TEST_CASE("Validated portal geometry constructs real cutter machinery without ch
 	CHECK(Vehicle::GetNumItems() == 2);
 }
 
-/** The canonical producer refuses solid starter support; this test characterizes the remaining integration gate without creating free floor. */
-TEST_CASE("Sealed TBM startup lacks a canonical paid initial-support handoff", "[tbm-sealed-start-gate]")
+/**
+ * Sealed startup through the delivered solid-starter contract (r2mlvs3mp-f). Historical evidence r2mlvs4-k recorded
+ * MissingSupport for this sideways step because no portal-issued start existed; it now refuses as an illegal turn,
+ * and the legal door exit refuses because one Earth and one Rock hopper cannot hold its twelve-cell first cut.
+ * Complete commissioning stays guarded: CommissionLayerPortalTBM still reports ControllerUnavailable.
+ */
+TEST_CASE("Sealed TBM startup needs the door heading and capacity for the whole pocket", "[tbm-sealed-start-gate]")
 {
 	TBMEngineFixture fixture;
-	auto proposal = fixture.request.proposal;
-	const ExcavationPlanningPose pose{proposal.commissioning_anchor, Direction::SW, {proposal.commissioning_anchor, proposal.commissioning_anchor, proposal.commissioning_anchor}};
-	const auto step = AdvanceExcavationPlanningPose(pose, pose.heading);
-	REQUIRE(step.error == ExcavationError::None);
-	proposal.requested_tiles = {step.next.position};
-	proposal.authorized_tiles = step.cut.swept_tiles; proposal.route = {step.cut};
+	const auto proof = IssueLayerPortalBootstrap(fixture.request);
+	REQUIRE(proof.error == LayerPortalWorkError::None);
+	const auto anchor = fixture.request.proposal.commissioning_anchor;
 	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto portal = ComputeLayerPortalWorkDigest();
 	const auto funds = Company::Get(_current_company)->money;
-	REQUIRE(ValidateLayerPortalCommissioning(fixture.request).error == LayerPortalWorkError::None);
-	REQUIRE(ValidateExcavationJobGeometry(GetGeologyWorldState(), proposal).error == ExcavationError::None);
-	CHECK(PrepareExcavationPass(proposal, *proposal.pass_terms).error == ExcavationError::MissingSupport);
-	const auto refused = ReserveExcavationJob(proposal, false);
-	CHECK(refused.error == ExcavationError::MissingSupport);
-	CHECK(refused.failure_tile == proposal.commissioning_anchor);
-	CHECK(ReserveExcavationJob(proposal, true).error == ExcavationError::MissingSupport);
-	CHECK(GetGeologyWorldState().terrain.Get(proposal.commissioning_anchor) == ExcavationState::Solid);
+	/**
+	 * Build a one-segment proposal by advancing straight from the housing.
+	 * @param heading Straight advance heading.
+	 * @return Proposal using the fixture's default single-hopper pass capacities.
+	 */
+	const auto first_segment = [&](Direction heading) {
+		auto proposal = fixture.request.proposal;
+		const ExcavationPlanningPose pose{anchor, heading, {anchor, anchor, anchor}};
+		const auto step = AdvanceExcavationPlanningPose(pose, heading);
+		REQUIRE(step.error == ExcavationError::None);
+		proposal.requested_tiles = {step.next.position};
+		proposal.authorized_tiles = step.cut.swept_tiles;
+		proposal.route = {step.cut};
+		return proposal;
+	};
+	// The housing track runs straight through the door; a sideways first cut is an illegal turn, not a free room.
+	const auto sideways = first_segment(Direction::SW);
+	REQUIRE(ValidateExcavationJobGeometry(GetGeologyWorldState(), sideways).error == ExcavationError::None);
+	CHECK(PrepareExcavationPass(sideways, *sideways.pass_terms).error == ExcavationError::IllegalTurn);
+	CHECK(ReserveExcavationJob(sideways, false).error == ExcavationError::IllegalTurn);
+	CHECK(ReserveExcavationJob(sideways, true).error == ExcavationError::IllegalTurn);
+	// Leaving through the door sweeps twelve unopened cells, whose Rock alone exceeds a single 128 t hopper.
+	const auto door = first_segment(proof.exit_heading);
+	CHECK(QuoteExcavationCells(door.route[0].swept_tiles, 0).rock_t > 128);
+	CHECK(PrepareExcavationPass(door, *door.pass_terms).error == ExcavationError::InsufficientCapacity);
+	const auto refused = ReserveExcavationJob(door, false);
+	CHECK(refused.error == ExcavationError::InsufficientCapacity);
+	CHECK(refused.failure_tile == door.route[0].cutter_position);
+	CHECK(ReserveExcavationJob(door, true).error == ExcavationError::InsufficientCapacity);
+	CHECK(GetGeologyWorldState().terrain.Get(anchor) == ExcavationState::Solid);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
 	CHECK(ComputeLayerPortalWorkDigest() == portal);
 	CHECK(Company::Get(_current_company)->money == funds);

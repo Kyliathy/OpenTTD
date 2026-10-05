@@ -78,7 +78,7 @@ def encode_chunk(chunk):
 def variant(source, name, mutation, prefix="r2mlvs2-g"):
     """Create one repository-owned variant without changing the supplied original source bytes.
 
-    @param source Actual native geological output in a delivered 372-through-374 format, produced by the owning fixture.
+    @param source Actual native geological output in a delivered 372-through-378 format, produced by the owning fixture.
     @param name Owning plan's lowercase evidence suffix.
     @param mutation Callable changing only targeted geological dictionaries; remove marks an omitted chunk.
     @param prefix Owning plan's chronological evidence prefix; defaults to the geological save group.
@@ -86,8 +86,8 @@ def variant(source, name, mutation, prefix="r2mlvs2-g"):
     """
     original = source.read_bytes()
     version, stream = read_stream(source)
-    if version not in (372, 373, 374, 375) or original[:4] != b"OTTX":
-        raise ValueError("fixture needs actual LZMA/version-372-through-375 output")
+    if version not in (372, 373, 374, 375, 376, 377, 378) or original[:4] != b"OTTX":
+        raise ValueError("fixture needs actual LZMA/version-372-through-378 output")
     records = chunks(stream)
     mutation(records)
     encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]

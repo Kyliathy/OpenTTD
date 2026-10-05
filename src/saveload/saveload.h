@@ -432,6 +432,9 @@ enum class SaveLoadVersion : uint16_t {
 	ExcavationJobs, ///< Saveload version: 373\n Bounded sparse job/route/cell descriptors with rebuilt exclusive active claims. See r2mlvs2-geology-and-excavation.md.
 	ExcavationPasses, ///< Saveload version: 374\n Frozen independent wagon limits and complete-prefix backing/exchange input. See r2mlvs2-geology-and-excavation.md.
 	LayerPortalWork, ///< Saveload version: 375\n Canonical pair work phase and actual project/cutter/origin references. See r2mlvs3-sealed-portals-and-deep-rail.md.
+	TBMProjects, ///< Saveload version: 376\n Typed TBM project assignment and allocation cursor; orders stay in their own chunks. See r2mlvs4-tunnel-boring-machines.md.
+	SpoilReceivers, ///< Saveload version: 377\n Native Earth/Rock spoil receiver side state beside the industries' own stock. See r2mlvs5-spoil-wagons-and-haulage.md.
+	TBMExchange, ///< Saveload version: 378\n Hauler assignments and wagon sets; wagon packets stay in their vehicles. See r2mlvs5-spoil-wagons-and-haulage.md.
 
 	MaxVersion, ///< Highest possible saveload version.
 };
