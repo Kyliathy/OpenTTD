@@ -431,6 +431,7 @@ enum class SaveLoadVersion : uint16_t {
 	GeologyExcavation, ///< Saveload version: 372\n Independent packed rock/deposit/span authority and future excavation jobs. See r2mlvs2-geology-and-excavation.md.
 	ExcavationJobs, ///< Saveload version: 373\n Bounded sparse job/route/cell descriptors with rebuilt exclusive active claims. See r2mlvs2-geology-and-excavation.md.
 	ExcavationPasses, ///< Saveload version: 374\n Frozen independent wagon limits and complete-prefix backing/exchange input. See r2mlvs2-geology-and-excavation.md.
+	LayerPortalWork, ///< Saveload version: 375\n Canonical pair work phase and actual project/cutter/origin references. See r2mlvs3-sealed-portals-and-deep-rail.md.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

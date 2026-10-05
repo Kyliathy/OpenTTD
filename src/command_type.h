@@ -381,6 +381,7 @@ enum class Commands : uint8_t {
 	UpdateLeagueTableElementScore, ///< update the score of a league table element
 	RemoveLeagueTableElement, ///< remove a league table element
 	PaintExcavationTerrain, ///< explicit saved-override scenario terrain painting; append preserves existing command identities
+	ChangeLayerPortalConnection, ///< validated empty-pair connection/sealing; append preserves existing command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

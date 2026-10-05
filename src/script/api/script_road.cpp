@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_road.cpp Implementation of ScriptRoad. */
+/** @file script_road.cpp Implementation of ScriptRoad. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #include "../../stdafx.h"
 #include "script_map.hpp"
@@ -13,6 +13,8 @@
 #include "script_cargo.hpp"
 #include "../../landscape_cmd.h"
 #include "../../road_cmd.h"
+#include "../../layer_portal_cmd.h"
+#include "../../layer_portal_map.h"
 #include "../../station_cmd.h"
 #include "../../strings_func.h"
 #include "../../newgrf_roadstop.h"
@@ -519,6 +521,27 @@ static bool NeighbourHasReachableRoad(::RoadType rt, TileIndex start_tile, DiagD
 
 	Axis axis = ::TileY(start) != ::TileY(end) ? Axis::Y : Axis::X;
 	return ScriptObject::Command<Commands::BuildRoadLong>::Do(end, start, ScriptObject::GetRoadType(), axis, one_way ? DisallowedRoadDirection::Northbound : DisallowedRoadDirections{}, (start < end) == !full, (start < end) != !full, true);
+}
+
+/** @copydoc ScriptRoad::BuildLayerPortal */
+/* static */ bool ScriptRoad::BuildLayerPortal(TileIndex tile, SQInteger target_layer, SQInteger shaft_direction)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, ::IsValidTile(tile));
+	EnforcePrecondition(false, target_layer >= 0 && target_layer < MAX_MAP_LAYERS); // Narrow script integers to immutable saved layer IDs before actual profile/date/pair validation.
+	EnforcePrecondition(false, shaft_direction >= 0 && shaft_direction <= 3); // Refuse nonphysical headings before any paired housing quote or mutation.
+	EnforcePrecondition(false, IsRoadTypeAvailable(GetCurrentRoadType()));
+	return ScriptObject::Command<Commands::BuildLayerPortal>::Do(tile, TransportType::Road, static_cast<MapLayer>(target_layer), static_cast<DiagDirection>(shaft_direction), INVALID_RAILTYPE, ScriptObject::GetRoadType());
+}
+
+/** @copydoc ScriptRoad::ConnectLayerPortal */
+/* static */ bool ScriptRoad::ConnectLayerPortal(TileIndex tile, bool connected)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, ::IsValidTile(tile));
+	EnforcePrecondition(false, IsLayerPortalTile(tile));
+	EnforcePrecondition(false, GetLayerPortalTransportType(tile) == TransportType::Road);
+	return ScriptObject::Command<Commands::ChangeLayerPortalConnection>::Do(tile, connected);
 }
 
 /* static */ bool ScriptRoad::BuildRoad(TileIndex start, TileIndex end)

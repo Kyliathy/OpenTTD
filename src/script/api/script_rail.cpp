@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_rail.cpp Implementation of ScriptRail. */
+/** @file script_rail.cpp Implementation of ScriptRail. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #include "../../stdafx.h"
 #include "script_rail.hpp"
@@ -19,6 +19,8 @@
 #include "../../newgrf_station.h"
 #include "../../strings_func.h"
 #include "../../rail_cmd.h"
+#include "../../layer_portal_cmd.h"
+#include "../../layer_portal_map.h"
 #include "../../station_cmd.h"
 #include "../../waypoint_cmd.h"
 
@@ -374,6 +376,27 @@ static Track SimulateDrag(TileIndex from, TileIndex tile, TileIndex *to)
 
 	Track track = SimulateDrag(from, tile, &to);
 	return ScriptObject::Command<Commands::BuildRailLong>::Do(to, tile, (::RailType)ScriptRail::GetCurrentRailType(), track, false, true);
+}
+
+/** @copydoc ScriptRail::BuildLayerPortal */
+/* static */ bool ScriptRail::BuildLayerPortal(TileIndex tile, SQInteger target_layer, SQInteger shaft_direction)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, ::IsValidTile(tile));
+	EnforcePrecondition(false, target_layer >= 0 && target_layer < MAX_MAP_LAYERS); // Script integers must fit the stable layer domain before the real profile/date/pair authority is queried.
+	EnforcePrecondition(false, shaft_direction >= 0 && shaft_direction <= 3); // Only the four physical door headings can enter the shared paired constructor.
+	EnforcePrecondition(false, IsRailTypeAvailable(GetCurrentRailType()));
+	return ScriptObject::Command<Commands::BuildLayerPortal>::Do(tile, TransportType::Rail, static_cast<MapLayer>(target_layer), static_cast<DiagDirection>(shaft_direction), static_cast<::RailType>(GetCurrentRailType()), INVALID_ROADTYPE);
+}
+
+/** @copydoc ScriptRail::ConnectLayerPortal */
+/* static */ bool ScriptRail::ConnectLayerPortal(TileIndex tile, bool connected)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, ::IsValidTile(tile));
+	EnforcePrecondition(false, IsLayerPortalTile(tile));
+	EnforcePrecondition(false, GetLayerPortalTransportType(tile) == TransportType::Rail);
+	return ScriptObject::Command<Commands::ChangeLayerPortalConnection>::Do(tile, connected);
 }
 
 /* static */ bool ScriptRail::RemoveRail(TileIndex from, TileIndex tile, TileIndex to)

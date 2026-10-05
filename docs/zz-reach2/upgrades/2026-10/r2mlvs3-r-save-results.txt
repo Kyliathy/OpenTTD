@@ -1,0 +1,4 @@
+@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.
+Five actual loads passed: unchanged original370, owned legacy rail/road/elevator plus repeat, ownerless Native road plus repeat.
+Legacy endpoints remain exact; Native work/geology chunks remain byte-exact. Supplied saves/startup/config retained.
+Original370 contains no portal tiles; owned version-370 portal topology is separate load evidence, not a claim of original fleet scenarios.

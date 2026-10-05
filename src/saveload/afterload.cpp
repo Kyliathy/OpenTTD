@@ -21,6 +21,7 @@
 #include "../map_layer.h"
 #include "../multilayer_state.h"
 #include "../excavation_state.h"
+#include "../layer_portal_cmd.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -830,6 +831,7 @@ bool AfterLoadGame()
 	if (multilayer_error != MultiLayerProfileError::None) SlErrorCorrupt(fmt::format("Multilayer profile refused: {}", GetMultiLayerProfileErrorMessage(multilayer_error)));
 	// Chunk fixups prepared all geological references before this point; accepted shared content now permits feature publication.
 	AcceptLoadedGeologyState();
+	AcceptLoadedLayerPortalWork();
 	// Diagnostics read accepted feature owners after profile/reference validation, so saved work/terrain differences cannot hide in metadata-only hashes.
 	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());
 	LoadStringWidthTable();

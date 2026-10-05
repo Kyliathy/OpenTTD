@@ -83,4 +83,10 @@ void SetViewportLayer(Window *w, MapLayer layer);
 /** Cycle the main viewport to the next map layer. */
 void CycleMainViewportLayer();
 
+/**
+ * Open native portal status and validated connection controls for either housing.
+ * @param tile Actual clicked endpoint; window identity derives from its canonical reciprocal pair.
+ */
+void ShowLayerPortalWindow(TileIndex tile);
+
 #endif /* MAP_LAYER_GUI_H */

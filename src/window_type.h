@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window_type.h Types related to windows. */
+/** @file window_type.h Types related to windows. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #ifndef WINDOW_TYPE_H
 #define WINDOW_TYPE_H
@@ -742,6 +742,8 @@ enum class WindowClass : uint16_t {
 	 *   - 0 = #HelpWindowWidgets
 	 */
 	Help,
+
+	LayerPortal, ///< Native pair status/connection controls; window number is the actual canonical pair tile. Appended to preserve existing classes.
 
 	Invalid = 0xFFFF, ///< Invalid window.
 };

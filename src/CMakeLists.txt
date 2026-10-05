@@ -262,6 +262,8 @@ add_files(
     landscape_cmd.h
     landscape_type.h
     layer_portal_cmd.cpp
+    layer_portal_work.cpp
+    layer_portal_gui.cpp
     layer_portal_cmd.h
     layer_portal_map.h
     language.h

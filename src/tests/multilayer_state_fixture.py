@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
 
 
-def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b"):
+def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False):
     """Run one repository-local dedicated boundary and retain its evidence.
 
     @param name Stable evidence suffix for this owned fixture.
@@ -24,21 +24,32 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b"):
     @param expected Metadata acceptance/refusal text required in the actual log.
     @param accepted Whether the candidate must reach startup/save; refusal must produce no save.
     @param prefix Owning plan's evidence prefix; all artifacts stay beside that plan.
+    @param single_player Use null-video nonnetworked mode and the actual start_ai command to create an owned company for portal fixtures; default preserves dedicated behavior.
     @return Saved output path; failure preserves supplied inputs through the caller's finally block.
     """
     script = AREA / f"{prefix}-{name}.scr"
     output = AREA / f"{prefix}-{name}.sav"
     log = AREA / f"{prefix}-{name}.log"
     output.unlink(missing_ok=True)
+    company_setup = "start_ai\n" if single_player and "-g" not in arguments else ""  # New null-video worlds need an actual owner; loaded worlds retain their saved company without creating another.
     script.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md, metadata fixture.\n"
-                      f'dump_info cargotypes\nsave "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
+                      f'dump_info cargotypes\n{company_setup}save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
     (ROOT / "build/scripts/game_start.scr").write_text(f'exec "{script.as_posix()}"\n', encoding="utf-8")
     env = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=3,grf=2,desync=5,script=2")
     env.pop("OTTD_MULTILAYER_LOADER_PROBE", None)
     command = ["C:/Program Files/Git/bin/bash.exe", (AREA / "tools/run_dedicated.sh").as_posix(),
                (ROOT / "build").as_posix(), "Debug", log.as_posix(), "-X", "-c", "grftest.cfg", *arguments]
     try:
-        subprocess.run(command, check=True, env=env, timeout=70)
+        if single_player:
+            # Null media suppresses automatic company creation. The nonnetworked start_ai command executes synchronously and supplies the actual owner.
+            console = ROOT / "build/Debug/openttd_console.exe"
+            game_arguments = arguments if "-g" in arguments else ["-g", *arguments]
+            with log.open("wb") as sink:
+                subprocess.run([str(console), "-v", "null", "-s", "null", "-m", "null", "-x", "-X", "-d", env["OTTD_DEBUG"],
+                                "-c", "grftest.cfg", *game_arguments], cwd=ROOT / "build", env=env, stdout=sink,
+                               stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=70)
+        else:
+            subprocess.run(command, check=True, env=env, timeout=70)
         evidence = log.read_text(encoding="utf-8", errors="replace")
         assert expected in evidence, (name, "required metadata evidence missing")
         assert output.is_file() == accepted, (name, "acceptance/save boundary differs")

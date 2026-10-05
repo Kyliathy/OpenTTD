@@ -1614,10 +1614,12 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 	auto tilearea = CreateOrthoDiagonalArea(area_end, area_start, diagonal);
 	for (TileIndex cur_tile : tilearea) {
-		// Area conversion keeps partial success, but an individual solid/active cell cannot be modified.
-		if (CommandCost ground = CheckExcavationConstruction(std::array{cur_tile}); ground.Failed()) {
-			error = std::move(ground);
-			continue;
+		// A safe empty native housing converts only metadata over retained rock; ordinary tracks still require excavated floor and never acquire a clearing bypass.
+		const bool native_portal = IsLayerPortalTile(cur_tile) && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
+		if (native_portal) {
+			if (CheckLayerPortalLifecycle(cur_tile) != LayerPortalWorkError::None || CheckLayerPortalAvailability(cur_tile) != LayerPortalWorkError::None) { error = CommandCost(STR_ERROR_TRAIN_IN_THE_WAY); continue; }
+		} else {
+			if (CommandCost ground = CheckExcavationConstruction(std::array{cur_tile}); ground.Failed()) { error = std::move(ground); continue; }
 		}
 		TileType tt = GetTileType(cur_tile);
 
@@ -1795,11 +1797,11 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 
 			case TileType::LayerPortal: {
 				if (GetLayerPortalTransportType(cur_tile) != TransportType::Rail) continue;
+				if (CheckLayerPortalLifecycle(cur_tile) != LayerPortalWorkError::None) { error = CommandCost(STR_ERROR_TRAIN_IN_THE_WAY); continue; } // Assigned/occupied native work cannot be converted behind its controller, even if the new rail would otherwise be compatible.
 				TileIndex endtile = GetLayerPortalPairTile(cur_tile);
-				// The remote end changes in the same operation and needs its own explicit layer/date validation.
-				if (CommandCost ground = CheckExcavationConstruction(std::array{endtile}); ground.Failed()) {
-					error = std::move(ground);
-					continue;
+				// Native empty housing permission covers the whole reciprocal metadata pair; legacy conversion retains its previous full floor guard.
+				if (!native_portal) {
+					if (CommandCost ground = CheckExcavationConstruction(std::array{endtile}); ground.Failed()) { error = std::move(ground); continue; }
 				}
 				//Convert the pair once, from the lower tile, so test and execute stay in step.
 				if (endtile < cur_tile && tilearea.Contains(endtile)) continue;
@@ -1813,6 +1815,7 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 				}
 				if (flags.Test(DoCommandFlag::Execute)) {
 					Track track = DiagDirToDiagTrack(GetLayerPortalShaftDirection(cur_tile));
+					if (native_portal && TransferLayerPortalWorkPair(cur_tile, GetTileOwner(cur_tile)) != LayerPortalWorkError::None) { error = CommandCost(STR_ERROR_TRAIN_IN_THE_WAY); continue; } // Conversion changes the validated commissioning site stamp before nonfallible paired type/accounting publication.
 					//Either end may hold the reservation of a train that loses power on the new rail type.
 					for (TileIndex end : {cur_tile, endtile}) {
 						if (HasLayerPortalReservation(end)) {

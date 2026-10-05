@@ -12,7 +12,7 @@ This page describes the delivered layer implementation and the tested [R2MLVS2 g
 | --- | --- | --- |
 | 1 | Surface / 0 | Ordinary generated terrain and the historical construction set, subject to normal command checks. |
 | 2 | Underground / 1 | Flat bedrock at height 0: rail, roads, rail stations/waypoints, road stops/waypoints, train/road depots, signals, signs and permitted portals. |
-| 3 | Deep Underground / 3 | Flat dark bedrock at height 0: roads, road stops/waypoints, road depots, signs and road elevators. No rail, rail stations, train depots, signals or layer tunnels. |
+| 3 | Deep Underground / 3 | Classic retains roads, road stops/waypoints, road depots, signs and elevators. Multilayer Industry additionally permits rail/stations/depots/signals and Underground/Deep rail portals, subject to actual excavation and the 1980 calendar gate. |
 | 4 | Outer Space / 2 | Flat vacuum at height 0 with a sparse-star floor; signs only. |
 
 `MapLayerRules` contains the allowed-construction bitset, ground kind (`Natural`, `Bedrock`, `Vacuum`, `DeepBedrock`), initial height and climate, water-flow and ambient-sound flags. `CheckLayerAllowsConstruction` rejects prohibited work with `STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER`. The non-Surface layers have no towns, houses, industries, planted trees, water, terraforming, ordinary bridges/tunnels or trams. Portal permission is also checked against its kind and both layers; allowing `LayerPortal` construction alone does not allow every destination.
@@ -53,7 +53,7 @@ Landscape, vehicles, signs, floating text and link-graph lines are filtered to t
 
 | `LayerPortalKind` | Allowed pair | Movement |
 | --- | --- | --- |
-| `RailTunnel` | Surface and Underground | Train crosses at normal speed. |
+| `RailTunnel` | Surface/Underground; Industry additionally Underground/Deep | Connected train passage at normal speed. Sealed/work edges remain unavailable to ordinary traffic. |
 | `RoadTunnel` | Surface and Underground | Road vehicle crosses at normal speed. |
 | `RoadElevator` | Deep Underground and either Surface or Underground | Road vehicle approaches at capped speed, then waits hidden before crossing. |
 
@@ -104,7 +104,7 @@ The ten map chunks (`MAPT`, `MAPH`, `MAPO`, `MAP2`, `M3LO`, `M3HI`, `MAP5`, `MAP
 
 [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) adds explicit Classic/Multilayer selection and saved profile metadata in version 371. The shared policy owner is `multilayer_content.cpp`; legacy files without metadata retain Classic and their existing content behavior. Layer storage IDs, addressing and the 66-sprite native block remain unchanged. Metadata acceptance checks exact first-party content and cargo meanings before dependent gameplay fixups, with independent nonmutating preview fields; see [savegame architecture](../savegame/archi-savegame.md).
 
-`CheckDeepLayerAvailability` publishes a game-calendar boundary of 1 January 1980 for the new profile, with explicit saved editor override and legacy policy. R2MLVS2 uses it in excavation construction, job reservation/work and cut checks. Actual TBMs, Deep rail, tube networks, orbital movement and final excavation art remain in the owning [R2MLVS feature plans](../../upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md).
+`CheckDeepLayerAvailability` publishes a game-calendar boundary of 1 January 1980 for the new profile, with explicit saved editor override and legacy policy. R2MLVS2 uses it in excavation construction, job reservation/work and cut checks. R2MLVS3 uses it for actual Deep rail/elevator build, connection, routing and movement. Actual TBMs, tube networks, orbital movement and final excavation/portal art remain in the owning [R2MLVS feature plans](../../upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Geology and excavation (R2MLVS2)
 
@@ -115,6 +115,18 @@ The explicit Multilayer Industry profile generates independent two-bit Solid/Exc
 Reservations freeze supported backing and independent Earth/Rock capacity limits. Complete cuts revalidate job/claims/terrain and the external material/funds participant, then commit once. Destroyed recoverable ore is debited from the sole finite reserve separately from spoil cargo. Actual train controllers, wagon cargo, commissioning pockets and exchange hardware belong to Plans 3/4/5; these geological contracts do not implement those producers. Save versions 372/373/374 add geology, sparse jobs and frozen passes respectively. Rendering acceptance remains unchecked until Plan 13 delivers source sprites and packed loading evidence.
 
 Measured Debug evidence: maximum 4096-square rock state uses 8 MiB; representative 512-square through 1024-square maps retain 128 actual geometry jobs. 8,192 synchronized work calls took about 8.8 ms in the retained run, without planning/save/render scans. Timings describe that build and host, rather than runtime thresholds. [Execution notes and evidence](../../upgrades/2026-10/r2mlvs2-b-execution-notes.md) record exact commands, field digests and remaining boundaries.
+
+## Sealed portal authority (R2MLVS3)
+
+[R2MLVS3](../../upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md) adds one bounded saved work record per Native physical pair in `layer_portal_work.cpp`, keyed by the lower actual endpoint. Sealed, Commissioning and Connected phases do not change reciprocal tile geometry. `GetLayerPortalNextTile` stays the physical neighbour authority; ordinary track/signal/follower queries and actual tile admission recheck phase and the shared date gate. Classic pairs retain implicit Connected compatibility.
+
+Native build proposals validate both prepared plain-ground ends and doors before mutation. A preallocated actual-owner node precedes both housing writes; infrastructure/accounting follows publication. Restricted far housing changes map metadata over retained Solid rock and grants no ordinary construction, excavation, reserve or spoil credit. A separate synchronized `CmdChangeLayerPortalConnection` requires both real excavated, owned compatible approaches and free endpoints. Sealing drains PBS reservations while the old track is still visible, then publishes phase and invalidates both ends. AI/GS rail/road build/connection APIs submit those same commands.
+
+Clicking either Native housing opens canonical status/date and Connect/Seal controls. Commissioning purchase remains disabled until the actual TBM controller is delivered. The public `CommissionLayerPortalTBM` validates the actual company, catalogue model/date/depth, source assembly floor, shaft reservations, separate proposed spoil capacities and Surface railway origin; it returns `ControllerUnavailable` before acquisition. `CheckLayerPortalWorkAccess` validates actual job/consist identity but cannot grant a TBM role merely from a train reference. First solid-pocket cuts, actual fleet entry/retreat, wagon exchange and occupied-project recovery remain Plans 4/5 work.
+
+Empty lifecycle operations preserve packed rock: remove both housings/one record, convert both rail types, or transfer both owners/counters once. Old-owner queued signals flush before transfer. Ownerless retained Native road housing is explicitly Sealed with an invalid company reference, validated separately from assigned/Connected ownership. Assigned/occupied/reserved projects refuse destructive changes until their real controller recovers them; actual occupied bankruptcy remains an integration gate. The existing 66 housing sprites remain; Plan 13's final state faces and Deep variants are still pending.
+
+Focused Debug evidence and actual loader artifacts are recorded in [execution notes](../../upgrades/2026-10/r2mlvs3-c-execution-notes.md). These tests are distinct from the historical full-regression results below. They do not establish fleet/art/network acceptance.
 
 ## Code map
 
@@ -133,6 +145,8 @@ Paths below are relative to the repository root.
 | Ground variants | `src/clear_cmd.cpp`: `GetLayerGroundSprite`, `DrawTile_Clear` |
 | Sprite IDs, Action 5 block and generated payload | `src/table/sprites.h`, `src/newgrf/newgrf_act5.cpp`, `media/baseset/openttd/map_layers.nfo`, `map_layers.png` |
 | Portal tile accessors and command interface | `src/layer_portal_map.h`, `src/layer_portal_cmd.h` |
+| Canonical saved work, commissioning validation and empty connection/lifecycle | `src/layer_portal_work.cpp`, `src/saveload/layer_portal_work_sl.cpp` |
+| Native status/connection controls | `src/layer_portal_gui.cpp` |
 | Build, clear, draw, track status, enter-tile, visibility and relocation | `src/layer_portal_cmd.cpp` |
 | Tunnel/elevator tools, upper-end picker and generated previews | `src/road_gui.cpp`, `src/rail_gui.cpp`, `src/map_layer_gui.cpp`: `DrawLayerPortalPreview` |
 | Train movement and both-end rail conversion refresh | `src/train_cmd.cpp`, `src/rail_cmd.cpp` |

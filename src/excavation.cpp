@@ -51,6 +51,12 @@ bool HasStagedGeologyState()
 	return _pending_geology.has_value();
 }
 
+/** @return Read-only actual validated candidate; consumers cannot mutate it or introduce another geological owner. */
+const GeologyWorldState *GetStagedGeologyWorldState()
+{
+	return _pending_geology ? &*_pending_geology : nullptr;
+}
+
 /** Accept the validated geological owner after shared profile acceptance; legacy absence retains empty terrain. */
 void AcceptLoadedGeologyState()
 {

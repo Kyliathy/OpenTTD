@@ -10,6 +10,7 @@
 #include "multilayer_state.h"
 #include "debug.h"
 #include "excavation.h"
+#include "layer_portal_cmd.h"
 
 #include "safeguards.h"
 
@@ -30,7 +31,7 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Natural vent geometry depends on the delivered rock-plane owner; a standalone bit cannot fabricate a usable thermal field.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_VENTS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Job claims and retired IDs belong to active geological authority, never an independent hidden work/cargo owner.
@@ -73,6 +74,7 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (GetGeologyWorldState().generator_version != 0) schema.feature_flags |= MULTILAYER_FEATURE_GEOLOGY;
 	if (!GetGeologyWorldState().vents.empty()) schema.feature_flags |= MULTILAYER_FEATURE_VENTS;
 	if (GetGeologyWorldState().next_job_id != 0) schema.feature_flags |= MULTILAYER_FEATURE_EXCAVATION_JOBS;
+	if (GetLayerPortalWorkPairCount() != 0) schema.feature_flags |= MULTILAYER_FEATURE_PORTAL_WORK; // Metadata/diagnostic queries read accepted owner cardinality without allocating a copied save transport.
 	// Only actual retained validated input enables the new family; old unvalidated paused jobs remain recoverable.
 	for (const auto &job : GetGeologyWorldState().jobs) {
 		if (job.pass_terms) schema.feature_flags |= MULTILAYER_FEATURE_EXCAVATION_PASSES;
@@ -236,15 +238,15 @@ std::optional<uint64_t> ComputeMultiLayerStateDigest(const MultiLayerStateSchema
  */
 void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 {
-	std::optional<uint64_t> digest;
+	const std::array geology_fields = {MultiLayerCanonicalField{1, 8, ComputeGeologyStateDigest(GetGeologyWorldState())}};
+	const std::array portal_fields = {MultiLayerCanonicalField{1, 8, ComputeLayerPortalWorkDigest()}};
+	std::vector<MultiLayerCanonicalRecord> records;
 	if (GetGeologyWorldState().generator_version != 0) {
 		// Only published geological authority participates; the compact owner digest includes every saved field without per-tile view allocations.
-		const std::array fields = {MultiLayerCanonicalField{1, 8, ComputeGeologyStateDigest(GetGeologyWorldState())}};
-		const std::array records = {MultiLayerCanonicalRecord{MultiLayerCanonicalKind::GeologyRoot, 0, fields}};
-		digest = ComputeMultiLayerStateDigest(schema, records);
-	} else {
-		digest = ComputeMultiLayerStateDigest(schema);
+		records.push_back({MultiLayerCanonicalKind::GeologyRoot, 0, geology_fields});
 	}
+	if ((schema.feature_flags & MULTILAYER_FEATURE_PORTAL_WORK) != 0) records.push_back({MultiLayerCanonicalKind::PortalWorkRoot, 0, portal_fields});
+	const auto digest = ComputeMultiLayerStateDigest(schema, records);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);
 }

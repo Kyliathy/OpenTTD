@@ -5,11 +5,12 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer.cpp The multi-layered map controller. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file map_layer.cpp The multi-layered map controller. @see docs/zz-reach2/upgrades/2026-10/r2mlm2-layer-addressing-and-controller.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #include "stdafx.h"
 #include "map_layer.h"
 #include "excavation.h"
+#include "multilayer_content.h"
 #include "map_layer_gui.h"
 #include "error_func.h"
 #include "clear_map.h"
@@ -94,6 +95,17 @@ static const MapLayerRules _map_layer_rules[] = {
 static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);
 
 /**
+ * Native Deep infrastructure consumes the existing Underground rail/road set with the Deep ground palette.
+ * Date and excavation remain operation checks, independently of this profile's structural permissions.
+ * @return Immutable new-profile rules; Classic retains its historical road-only row.
+ */
+static const MapLayerRules &GetNativeDeepRules()
+{
+	static const MapLayerRules rules{UndergroundConstructions(), MapLayerGround::DeepBedrock, 0, false, false, false};
+	return rules;
+}
+
+/**
  * Whether a portal kind may join two Layers in either order.
  * @param kind Kind of portal.
  * @param a Layer of one end.
@@ -102,10 +114,26 @@ static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);
  */
 /* static */ bool MultiLayerMap::IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b)
 {
+	return IsPortalPairAllowed(kind, a, b, GetCurrentMultiLayerProfileSelection().id);
+}
+
+/**
+ * Resolve the authoritative pair matrix for actual accepted or validated staged profile policy.
+ * @param kind Physical portal kind.
+ * @param a First layer.
+ * @param b Second layer.
+ * @param profile Explicit profile identity, independent of loader activation or viewport state.
+ * @return Supported topology; operation date/terrain checks remain separate.
+ */
+/* static */ bool MultiLayerMap::IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b, MultiLayerGameplayProfileID profile)
+{
 	//Pairs are unordered, so compare their stable storage values lower first.
 	if (a > b) std::swap(a, b);
 	switch (kind) {
 		case LayerPortalKind::RailTunnel:
+			// AD-4 adds only Underground/Deep rail for the explicit industry profile; Surface/Deep rail stays outside the connection matrix.
+			if (profile == MultiLayerGameplayProfileID::MultilayerIndustry && a == MapLayer::Underground && b == MapLayer::DeepUnderground) return true;
+			return a == MapLayer::Surface && b == MapLayer::Underground;
 		case LayerPortalKind::RoadTunnel:
 			return a == MapLayer::Surface && b == MapLayer::Underground;
 		case LayerPortalKind::RoadElevator:
@@ -125,6 +153,15 @@ static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);
 {
 	switch (kind) {
 		case LayerPortalKind::RailTunnel:
+			if (from == MapLayer::Surface) return MapLayer::Underground;
+			if (from == MapLayer::Underground) {
+				// Existing callers omit a selection and retain Surface; only an explicit eligible Deep choice adds the new descent.
+				if (elevator_upper == MapLayer::DeepUnderground && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) return MapLayer::DeepUnderground;
+				if (elevator_upper == MapLayer::Invalid || elevator_upper == MapLayer::Surface) return MapLayer::Surface;
+				return MapLayer::Invalid;
+			}
+			if (from == MapLayer::DeepUnderground && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) return MapLayer::Underground; // Deep rail returns through Underground; direct Surface ascent is deferred.
+			return MapLayer::Invalid;
 		case LayerPortalKind::RoadTunnel:
 			//Tunnels retain the original Surface and Underground pair in both directions.
 			if (from == MapLayer::Surface) return MapLayer::Underground;
@@ -159,6 +196,7 @@ static_assert(std::size(_map_layer_rules) == MAX_MAP_LAYERS);
 /* static */ const MapLayerRules &MultiLayerMap::GetRules(MapLayer layer)
 {
 	assert(MultiLayerMap::IsValidLayer(layer));
+	if (layer == MapLayer::DeepUnderground && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) return GetNativeDeepRules(); // Native rail permission is profile-specific; opening the camera cannot change legacy construction policy.
 	return _map_layer_rules[to_underlying(layer)];
 }
 

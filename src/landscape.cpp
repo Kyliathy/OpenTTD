@@ -22,6 +22,8 @@
 #include "landscape.h"
 #include "map_layer.h"
 #include "excavation.h"
+#include "layer_portal_cmd.h"
+#include "layer_portal_map.h"
 #include "void_map.h"
 #include "tgp.h"
 #include "genworld.h"
@@ -710,8 +712,12 @@ bool IsMapSurroundedByWater()
  */
 CommandCost CmdLandscapeClear(DoCommandFlags flags, TileIndex tile)
 {
-	// Guard direct/API clearing before limits, object-clear caches or tile callbacks can mutate solid ground.
-	if (CommandCost ground = CheckExcavationConstruction(std::array{tile}); ground.Failed()) return ground;
+	// Removing a validated empty portal housing changes only map metadata; every ordinary clearing action still requires excavated floor and cannot bore solid rock.
+	if (IsValidTile(tile) && IsLayerPortalTile(tile) && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
+		if (CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
+	} else {
+		if (CommandCost ground = CheckExcavationConstruction(std::array{tile}); ground.Failed()) return ground;
+	}
 	CommandCost cost(ExpensesType::Construction);
 	bool do_clear = false;
 	/* Test for stuff which results in water when cleared. Then add the cost to also clear the water. */

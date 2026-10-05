@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_rail.hpp Everything to query and build rails. */
+/** @file script_rail.hpp Everything to query and build rails. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #ifndef SCRIPT_RAIL_HPP
 #define SCRIPT_RAIL_HPP
@@ -435,6 +435,25 @@ public:
 	 * @return Whether the rail has been/can be build or not.
 	 */
 	static bool BuildRail(TileIndex from, TileIndex tile, TileIndex to);
+
+	/**
+	 * Build a sealed rail layer portal through the synchronized gameplay command.
+	 * @param tile Actual clicked endpoint, independent of the selected viewport.
+	 * @param target_layer Stable destination layer value: Surface=0, Underground=1, Deep=3; unsupported pairs refuse.
+	 * @param shaft_direction Stable diagonal shaft heading: NE=0, SE=1, SW=2, NW=3.
+	 * @return Whether the complete owner/date/floor/pair command succeeds; construction grants no excavation or ordinary traffic.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md
+	 */
+	static bool BuildLayerPortal(TileIndex tile, SQInteger target_layer, SQInteger shaft_direction);
+
+	/**
+	 * Change a safe empty rail pair's ordinary connection state through the synchronized command.
+	 * @param tile Either actual rail endpoint.
+	 * @param connected True connects real compatible excavated approaches; false seals an unoccupied pair.
+	 * @return Whether actual owner/date/occupancy/reservation validation accepts the whole pair unchanged or committed.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md
+	 */
+	static bool ConnectLayerPortal(TileIndex tile, bool connected);
 
 	/**
 	 * Remove a rail connection between two tiles.

@@ -1,0 +1,3 @@
+@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.
+Actual version-374 Native ownerless road migrated to one explicitly Sealed/unassigned record; all geological bytes unchanged.
+Original retained input/startup/config bytes preserved. No company or usable excavation/traffic authority was invented.

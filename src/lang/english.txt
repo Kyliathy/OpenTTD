@@ -2866,6 +2866,19 @@ STR_RAIL_TOOLBAR_TOOLTIP_BUILD_RAILROAD_TUNNEL                  :{BLACK}Build ra
 STR_RAIL_TOOLBAR_TOOLTIP_BUILD_LAYER_PORTAL                      :{BLACK}Build a rail portal to the other map layer
 STR_BUILD_RAIL_LAYER_PORTAL_CAPTION                              :Rail portal orientation
 STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP                              :{BLACK}Select the mouth direction. The mouth on the other layer faces the opposite way
+STR_BUILD_RAIL_LAYER_PORTAL_TARGET_LABEL                         :Underground destination:
+STR_BUILD_RAIL_LAYER_PORTAL_TARGET_TOOLTIP                       :{BLACK}Choose the destination for a rail portal placed in Underground
+STR_PORTAL_STATUS_CAPTION                                      :{WHITE}Layer portal
+STR_PORTAL_STATUS_TOOLTIP                                      :{BLACK}The paired shaft stays sealed until both approaches are excavated and connected. Commissioning admits only its assigned boring consist
+STR_PORTAL_STATE_SEALED                                        :{BLACK}Sealed: excavate and build both approaches
+STR_PORTAL_STATE_COMMISSIONING                                 :{BLACK}Commissioning: assigned TBM only
+STR_PORTAL_STATE_CONNECTED                                     :{BLACK}Connected: ordinary traffic permitted
+STR_PORTAL_CONNECT                                            :{BLACK}Connect
+STR_PORTAL_CONNECT_TOOLTIP                                    :{BLACK}Connect an empty shaft after both owned approaches are excavated and built
+STR_PORTAL_SEAL                                               :{BLACK}Seal
+STR_PORTAL_SEAL_TOOLTIP                                       :{BLACK}Close an empty shaft to ordinary traffic and safely release its reservations
+STR_PORTAL_COMMISSION                                         :{BLACK}Commission TBM
+STR_PORTAL_COMMISSION_TOOLTIP                                 :{BLACK}Assemble a compatible boring machine at this rail portal with a validated route and Earth/Rock wagons
 STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR                :{BLACK}Toggle build/remove for railway track, signals, waypoints and stations. Ctrl+Click to also remove the rail of waypoints and stations
 STR_RAIL_TOOLBAR_TOOLTIP_CONVERT_RAIL                           :{BLACK}Convert/Upgrade the type of rail. Also press Shift to show cost estimate only
 

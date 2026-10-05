@@ -86,8 +86,8 @@ def variant(source, name, mutation, prefix="r2mlvs2-g"):
     """
     original = source.read_bytes()
     version, stream = read_stream(source)
-    if version not in (372, 373, 374) or original[:4] != b"OTTX":
-        raise ValueError("fixture needs actual LZMA/version-372-through-374 output")
+    if version not in (372, 373, 374, 375) or original[:4] != b"OTTX":
+        raise ValueError("fixture needs actual LZMA/version-372-through-375 output")
     records = chunks(stream)
     mutation(records)
     encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]

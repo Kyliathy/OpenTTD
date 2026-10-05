@@ -64,6 +64,8 @@ struct LoadCheckData {
 	std::array<uint32_t, 3> excavation_rows{}; ///< Actual bounded job/route/cell preview counts.
 	bool excavation_pass_present = false; ///< Independent version-374 return/capacity transport presence.
 	uint32_t excavation_pass_rows = 0; ///< Bounded copied pass count, never live input.
+	std::array<bool, 2> portal_work_present{}; ///< Independent native-work header/table preview presence.
+	uint32_t portal_work_expected = 0, portal_work_rows = 0; ///< Exact bounded copied row counts.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

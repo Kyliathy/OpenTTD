@@ -13,6 +13,9 @@
 #include "map_func.h"
 #include "command_type.h"
 
+/** Stable content-profile identity, defined by multilayer_content.h rather than the map geometry owner. */
+enum class MultiLayerGameplayProfileID : uint8_t;
+
 /**
  * How the ground of a layer is drawn.
  * r2mlm5 paints Bedrock and Vacuum with stand-in sprites until the layer art exists.
@@ -280,7 +283,7 @@ struct MultiLayerMap {
 
 	/**
 	 * Whether a portal kind may join two Layers in either order.
-	 * Tunnels pair Surface with Underground; road elevators pair either upper Layer with Deep Underground.
+	 * Surface/Underground tunnels and existing road elevators retain legacy pairs; the industry profile additionally permits Underground/Deep rail.
 	 * @param kind Kind of portal.
 	 * @param a Layer of one end.
 	 * @param b Layer of the other end.
@@ -289,10 +292,20 @@ struct MultiLayerMap {
 	static bool IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b);
 
 	/**
+	 * Check the same pair matrix against a validated saved profile before activation.
+	 * @param kind Physical portal kind.
+	 * @param a First allocated layer.
+	 * @param b Second allocated layer.
+	 * @param profile Explicit accepted/staged content-profile identity.
+	 * @return Whether that profile supports this pair; date/occupancy remain operation checks.
+	 */
+	static bool IsPortalPairAllowed(LayerPortalKind kind, MapLayer a, MapLayer b, MultiLayerGameplayProfileID profile);
+
+	/**
 	 * The Layer a new portal connects to from its clicked Tile.
 	 * @param from Layer of the clicked Tile.
 	 * @param kind Kind of portal being built.
-	 * @param elevator_upper Upper destination selected when building from Deep Underground.
+	 * @param elevator_upper Elevator ascent destination, or the explicitly selected Surface/Deep destination for Underground rail. Invalid preserves the default Surface rail target.
 	 * @return Target Layer, or MapLayer::Invalid when this kind cannot start here.
 	 */
 	static MapLayer GetPortalTargetLayer(MapLayer from, LayerPortalKind kind, MapLayer elevator_upper);

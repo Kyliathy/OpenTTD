@@ -47,6 +47,9 @@ void StageLoadedGeologyState(GeologyWorldState state);
 /** @return Whether a valid feature candidate exists; required bit/chunk absence cannot silently become legacy terrain. */
 bool HasStagedGeologyState();
 
+/** @return Read-only fully validated geological load candidate for dependent typed-reference fixups; nullptr for legacy absence. */
+const GeologyWorldState *GetStagedGeologyWorldState();
+
 /** Publish staged geological authority only after the shared metadata/profile acceptance succeeds. */
 void AcceptLoadedGeologyState();
 

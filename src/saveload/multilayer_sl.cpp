@@ -96,6 +96,7 @@ struct MLMDChunkHandler : ChunkHandler {
 		// Earlier geology-only wire formats cannot request a later job descriptor family.
 		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationJobs) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_JOBS) != 0) SlErrorCorrupt("Unexpected excavation jobs in old save version");
 		if (IsSavegameVersionBefore(SaveLoadVersion::ExcavationPasses) && (schema.feature_flags & MULTILAYER_FEATURE_EXCAVATION_PASSES) != 0) SlErrorCorrupt("Unexpected excavation pass in old save version"); // Older formats cannot request a descriptor family they never owned.
+		if (IsSavegameVersionBefore(SaveLoadVersion::LayerPortalWork) && (schema.feature_flags & MULTILAYER_FEATURE_PORTAL_WORK) != 0) SlErrorCorrupt("Unexpected portal work in old save version"); // Explicit work records require their actual versioned descriptor family.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}

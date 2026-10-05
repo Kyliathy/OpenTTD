@@ -17,6 +17,7 @@ add_files(
     game_sl.cpp
     geology_sl.cpp
     excavation_sl.cpp
+    layer_portal_work_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp
     group_sl.cpp

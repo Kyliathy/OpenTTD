@@ -78,6 +78,7 @@ struct StationPickerSelection {
 	Axis axis; ///< Selected orientation of the station.
 };
 static StationPickerSelection _station_gui; ///< Settings of the station picker.
+static MapLayer _rail_portal_underground_target = MapLayer::Surface; ///< Client placement choice used only for an actual Underground click; never saved gameplay authority.
 
 
 static void HandleStationPlacement(TileIndex start, TileIndex end);
@@ -703,6 +704,11 @@ struct BuildRailToolbarWindow : Window {
 		return Window::OnHotkey(hotkey);
 	}
 
+	/**
+	 * Dispatch the selected rail construction tool using the actual clicked world tile.
+	 * @param pt Unused viewport click position; tile already identifies the authoritative layer.
+	 * @param tile Actual command target, including clicks through independent viewports.
+	 */
 	void OnPlaceObject([[maybe_unused]] Point pt, TileIndex tile) override
 	{
 		switch (this->last_user_action) {
@@ -756,7 +762,8 @@ struct BuildRailToolbarWindow : Window {
 
 			case WID_RAT_BUILD_LAYER_PORTAL: {
 				//FD-7: the other end's layer follows from the clicked tile, so any viewport can place a portal. The command refuses a layer without a pair.
-				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, MapLayer::Invalid);
+				const auto selection = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry ? _rail_portal_underground_target : MapLayer::Invalid;
+				MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, selection);
 				Command<Commands::BuildLayerPortal>::Post(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL, CcBuildLayerPortal,
 						tile, TransportType::Rail, target, ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE);
 				break;
@@ -1904,8 +1911,21 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	 */
 	BuildRailLayerPortalWindow(WindowDesc &desc, Window *parent) : PickerWindowBase(desc, parent)
 	{
-		this->InitNested(TransportType::Rail);
+		this->CreateNestedTree();
+		const bool native = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
+		if (!native) _rail_portal_underground_target = MapLayer::Surface;
+		this->GetWidget<NWidgetStacked>(WID_BRLP_TARGET_SEL)->SetDisplayedPlane(native ? 0 : SZSP_NONE);
+		this->LowerWidget(_rail_portal_underground_target == MapLayer::DeepUnderground ? WID_BRLP_TARGET_DEEP : WID_BRLP_TARGET_SURFACE);
+		this->SetWidgetDisabledState(WID_BRLP_TARGET_DEEP, !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date));
+		this->FinishInitNested(TransportType::Rail);
 		this->LowerWidget(WID_BRLP_MOUTH_NE + _rail_portal_mouth_direction);
+	}
+
+	/** Refresh the shared calendar lock while the picker remains open, then paint its actual widgets. */
+	void OnPaint() override
+	{
+		this->SetWidgetDisabledState(WID_BRLP_TARGET_DEEP, !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date));
+		this->DrawWidgets();
 	}
 
 	/**
@@ -1942,7 +1962,7 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	}
 
 	/**
-	 * Remember the chosen mouth direction.
+	 * Remember the chosen mouth direction or profile-specific Underground destination.
 	 * @param pt Unused click position.
 	 * @param widget Button that was clicked.
 	 * @param click_count Unused click count.
@@ -1950,6 +1970,16 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		switch (widget) {
+			case WID_BRLP_TARGET_SURFACE:
+			case WID_BRLP_TARGET_DEEP:
+				// This view choice applies only to later Underground clicks; the command still validates actual source/date/topology.
+				if (widget == WID_BRLP_TARGET_DEEP && !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date)) return;
+				this->RaiseWidget(WID_BRLP_TARGET_SURFACE);
+				this->RaiseWidget(WID_BRLP_TARGET_DEEP);
+				_rail_portal_underground_target = widget == WID_BRLP_TARGET_DEEP ? MapLayer::DeepUnderground : MapLayer::Surface;
+				this->LowerWidget(widget);
+				this->SetDirty();
+				break;
 			case WID_BRLP_MOUTH_NE:
 			case WID_BRLP_MOUTH_SE:
 			case WID_BRLP_MOUTH_SW:
@@ -1978,6 +2008,13 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_portal_wi
 			NWidget(NWID_VERTICAL), SetPIP(0, WidgetDimensions::unscaled.vsep_normal, 0),
 				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_NE), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
 				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_MOUTH_SE), SetToolTip(STR_BUILD_RAIL_LAYER_PORTAL_TOOLTIP),
+			EndContainer(),
+		EndContainer(),
+		NWidget(NWID_SELECTION, Colours::Invalid, WID_BRLP_TARGET_SEL),
+			NWidget(NWID_HORIZONTAL), SetPadding(WidgetDimensions::unscaled.picker), SetPIP(0, WidgetDimensions::unscaled.hsep_normal, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_BUILD_RAIL_LAYER_PORTAL_TARGET_LABEL, STR_NULL),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_TARGET_SURFACE), SetStringTip(STR_BUILD_ROAD_ELEVATOR_UPPER_SURFACE, STR_BUILD_RAIL_LAYER_PORTAL_TARGET_TOOLTIP),
+				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_TARGET_DEEP), SetStringTip(STR_MAP_LAYER_DEEP_UNDERGROUND, STR_BUILD_RAIL_LAYER_PORTAL_TARGET_TOOLTIP),
 			EndContainer(),
 		EndContainer(),
 	EndContainer(),

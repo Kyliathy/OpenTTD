@@ -16,6 +16,7 @@ static constexpr uint32_t MULTILAYER_FEATURE_GEOLOGY = 1; ///< Delivered rock/de
 static constexpr uint32_t MULTILAYER_FEATURE_VENTS = 2; ///< Delivered independent natural capacity; allocation/plant behavior remains with its owner.
 static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_JOBS = 4; ///< Saved sparse jobs/retired-ID cursor, requiring the complete version-373 job family.
 static constexpr uint32_t MULTILAYER_FEATURE_EXCAVATION_PASSES = 8; ///< Frozen backing/capacity inputs require the version-374 pass family and actual jobs.
+static constexpr uint32_t MULTILAYER_FEATURE_PORTAL_WORK = 16; ///< Canonical native portal work records require version-375 descriptors; topology stays in the map.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -88,6 +89,7 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	Deposit = 1, ExcavationJob, Portal, TBMProject, Exchange, IndustryInventory, OrbitalBody,
 	SpaceMission, LaunchHandling, StationConstruction, Solar, Utility, Tube, Geothermal,
 	GeologyRoot, ///< Appended aggregate over actual packed/seam/vent/job authority; existing diagnostic kind IDs stay unchanged.
+	PortalWorkRoot, ///< Appended pair phase/project/actor authority; physical endpoint fields remain in the ordinary map digest.
 	End,
 };
 

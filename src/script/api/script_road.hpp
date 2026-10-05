@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_road.hpp Everything to query and build roads. */
+/** @file script_road.hpp Everything to query and build roads. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #ifndef SCRIPT_ROAD_HPP
 #define SCRIPT_ROAD_HPP
@@ -328,6 +328,25 @@ public:
 	 * @return Whether the road has been/can be build or not.
 	 */
 	static bool BuildRoad(TileIndex start, TileIndex end);
+
+	/**
+	 * Build a sealed road layer tunnel/elevator through the synchronized gameplay command.
+	 * @param tile Actual clicked endpoint, independent of viewport selection.
+	 * @param target_layer Stable destination layer value: Surface=0, Underground=1, Deep=3; unsupported pairs refuse.
+	 * @param shaft_direction Stable diagonal heading: NE=0, SE=1, SW=2, NW=3.
+	 * @return Whether both owned housings can be built under the shared date/floor rules; road cannot commission a TBM or excavate.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md
+	 */
+	static bool BuildLayerPortal(TileIndex tile, SQInteger target_layer, SQInteger shaft_direction);
+
+	/**
+	 * Connect or seal an empty road layer pair through the synchronized gameplay command.
+	 * @param tile Either actual road endpoint.
+	 * @param connected True requires built owned excavated road approaches; false closes an unoccupied pair.
+	 * @return Whether the real owner/date/occupancy authority accepts the entire pair.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md
+	 */
+	static bool ConnectLayerPortal(TileIndex tile, bool connected);
 
 	/**
 	 * Builds a one-way road from the center of tile start to the center

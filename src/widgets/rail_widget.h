@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail_widget.h Types related to the rail widgets. */
+/** @file rail_widget.h Rail widget identities and profile-specific portal destination controls. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
 
 #ifndef WIDGETS_RAIL_WIDGET_H
 #define WIDGETS_RAIL_WIDGET_H
@@ -102,6 +102,9 @@ enum BuildRailLayerPortalWidgets : WidgetID {
 	WID_BRLP_MOUTH_SE, ///< Mouth facing south east.
 	WID_BRLP_MOUTH_SW, ///< Mouth facing south west.
 	WID_BRLP_MOUTH_NW, ///< Mouth facing north west.
+	WID_BRLP_TARGET_SEL, ///< Native-only Underground destination selector.
+	WID_BRLP_TARGET_SURFACE, ///< Existing Underground-to-Surface rail destination.
+	WID_BRLP_TARGET_DEEP, ///< Profile-specific Underground-to-Deep rail destination.
 };
 
 /** Widgets of the #BuildRailWaypointWindow class. */

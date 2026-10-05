@@ -11,6 +11,7 @@
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
 #include "excavation.h"
+#include "timer/timer_game_calendar.h"
 #include "command_func.h"
 #include "landscape.h"
 #include "landscape_cmd.h"
@@ -210,6 +211,18 @@ static void GetTileDesc_LayerPortal(TileIndex tile, TileDesc &td)
 	}
 }
 
+/**
+ * Open native status/connection controls without altering portal state.
+ * @param tile Actual clicked housing.
+ * @return True when native pair controls handled the click; Classic keeps its previous behavior.
+ */
+static bool ClickTile_LayerPortal(TileIndex tile)
+{
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return false;
+	ShowLayerPortalWindow(tile);
+	return true;
+}
+
 /** @copydoc TileLoopProc */
 static void TileLoop_LayerPortal(TileIndex)
 {
@@ -218,6 +231,8 @@ static void TileLoop_LayerPortal(TileIndex)
 /** @copydoc GetTileTrackStatusProc */
 static TrackStatus GetTileTrackStatus_LayerPortal(TileIndex tile, TransportType mode, RoadTramType sub_mode, DiagDirection side)
 {
+	if (CheckLayerPortalAvailability(tile) != LayerPortalWorkError::None) return {}; // Even a saved Connected Deep pair remains unavailable before the shared technology date.
+	if (GetLayerPortalWorkState(tile) != LayerPortalWorkState::Connected) return {}; // A saved shaft can remain physically paired while ordinary paths/signals see no open network edge.
 	TransportType transport = GetLayerPortalTransportType(tile);
 	if (transport != mode) return {};
 	//A road end answers only the road kind it carries. Elevators carry road and never tram, so a tram query finds nothing.
@@ -270,6 +285,26 @@ static void ChangeTileOwner_LayerPortal(TileIndex tile, Owner old_owner, Owner n
 
 	TileIndex pair = GetLayerPortalPairTile(tile);
 	TransportType transport = GetLayerPortalTransportType(tile);
+	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
+		if (CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return; // Assigned/occupied projects require the actual controller's recoverable lifecycle before ownership can change.
+		if (new_owner == INVALID_OWNER && transport == TransportType::Rail) {
+			[[maybe_unused]] const auto removed = Command<Commands::LandscapeClear>::Do({DoCommandFlag::Execute, DoCommandFlag::Bankrupt}, tile);
+			assert(removed.Succeeded());
+			return;
+		}
+		const Owner receiver = new_owner == INVALID_OWNER ? OWNER_NONE : new_owner;
+		UpdateSignalsInBuffer(); // Finish queued old-owner signals against old geometry before publishing the receiving company's pair and notifications.
+		if (TransferLayerPortalWorkPair(tile, receiver) != LayerPortalWorkError::None) return;
+		const auto lower = std::min(tile, pair), upper = std::max(tile, pair);
+		TransferPortalInfrastructure(lower, upper, old_owner, receiver);
+		// Native empty pairs transfer together; the later map-walk callback sees the already changed remote owner and skips a second accounting update.
+		for (TileIndex end : {lower, upper}) {
+			if (transport == TransportType::Road) { SetRoadOwner(end, RoadTramType::Road, receiver); SetRoadOwner(end, RoadTramType::Tram, OWNER_NONE); }
+			SetTileOwner(end, receiver);
+		}
+		NotifyLayerPortalRoutingChanged(lower);
+		return;
+	}
 	if (new_owner == INVALID_OWNER) {
 		//A rail pair is removed together, by the lower end. ClearTile_LayerPortal subtracts its pieces, so nothing is transferred first.
 		//The higher end of a rail pair is a Clear tile by the time the map walk reaches it, so its own proc never runs.
@@ -312,6 +347,12 @@ static CommandCost CheckBuildAbove_LayerPortal(TileIndex, DoCommandFlags, Axis, 
 /** @copydoc VehicleEnterTileProc */
 static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex tile, int x, int y)
 {
+	if (CheckLayerPortalAvailability(tile) != LayerPortalWorkError::None) return VehicleEnterTileState::CannotEnter; // Real vehicle admission rechecks both Deep endpoints independently of route caches and force-proceed.
+	if (GetLayerPortalWorkState(tile) != LayerPortalWorkState::Connected) {
+		const auto *work = GetLayerPortalWorkRecord(tile);
+		// Actual movement rechecks the entering part/project; cached paths, force-proceed and unrelated followers cannot bypass sealed authority.
+		if (work == nullptr || CheckLayerPortalWorkAccess(tile, v->index, work->project) != LayerPortalWorkError::None) return VehicleEnterTileState::CannotEnter;
+	}
 	TransportType transport = GetLayerPortalTransportType(tile);
 	//Each end accepts only its own transport. A road elevator refuses trams.
 	if (transport == TransportType::Rail && v->type != VehicleType::Train) return VehicleEnterTileState::CannotEnter;
@@ -360,10 +401,26 @@ static void NotifyRailPortalChanged(TileIndex tile, Owner owner)
 	YapfNotifyTrackLayoutChange(tile, DiagDirToDiagTrack(shaft));
 }
 
+/**
+ * Notify both endpoints only after committed phase/geometry publication.
+ * @param tile One actual endpoint of a valid reciprocal pair.
+ */
+void NotifyLayerPortalRoutingChanged(TileIndex tile)
+{
+	if (!GetLayerPortalPairKey(tile)) return;
+	const auto pair = GetLayerPortalPairTile(tile);
+	if (GetLayerPortalTransportType(tile) == TransportType::Rail) {
+		NotifyRailPortalChanged(tile, GetTileOwner(tile));
+		NotifyRailPortalChanged(pair, GetTileOwner(pair));
+	}
+	MarkTileDirtyByTile(tile); MarkTileDirtyByTile(pair);
+}
+
 /** @copydoc ClearTileProc */
 static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 {
 	if (flags.Test(DoCommandFlag::Auto)) return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
+	if (CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
 
 	TileIndex pair = GetLayerPortalPairTile(tile);
 	TransportType transport = GetLayerPortalTransportType(tile);
@@ -391,6 +448,7 @@ static CommandCost ClearTile_LayerPortal(TileIndex tile, DoCommandFlags flags)
 	if (flags.Test(DoCommandFlag::Execute)) {
 		Owner owner = GetTileOwner(tile);
 		DiagDirection shaft = GetLayerPortalShaftDirection(tile);
+		if (RetireLayerPortalWorkPair(tile) != LayerPortalWorkError::None) return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
 		//FD-6: rail pieces belong to the tile owner and road pieces to the road owner, the rule AfterLoadCompanyStats counts by.
 		uint pieces = GetLayerPortalPieceCount(transport) * 2;
 		if (transport == TransportType::Rail) {
@@ -436,6 +494,149 @@ static CommandCost CheckPortalEnd(TileIndex tile, DiagDirection shaft_dir)
 	return CheckExcavationConstruction(std::array{tile, door_neighbour});
 }
 
+/** Actual two-end proposal; ordinary access floor and restricted target housing remain separate domains. */
+struct NativePortalBuildProposal {
+	CommandCost cost{ExpensesType::Construction}; ///< Complete readonly clearing/housing quote.
+	TileIndex source = INVALID_TILE, target = INVALID_TILE; ///< Actual reciprocal physical endpoints.
+	bool target_solid = false; ///< Scoped metadata housing on persistent solid rock, never general excavation.
+	uint8_t clearing_count = 0; ///< Ordinary clear operations whose shared company budget must fit before either executes.
+};
+
+/**
+ * Validate a native pair completely without clearing, reserving, charging or touching RNG.
+ * @param tile Actual accessible source endpoint.
+ * @param pair Actual destination endpoint on its supported plane.
+ * @param shaft Source shaft direction; opposite end uses its reverse.
+ * @param transport Actual rail/road family.
+ * @param flags Caller command policy; Execute is removed for all quotes.
+ * @return Complete readonly proposal with cost/refusal.
+ */
+static NativePortalBuildProposal PrepareNativePortalBuild(TileIndex tile, TileIndex pair, DiagDirection shaft, TransportType transport, DoCommandFlags flags)
+{
+	NativePortalBuildProposal result;
+	result.source = tile; result.target = pair;
+	if (!Company::IsValidID(_current_company)) { result.cost = CMD_ERROR; return result; }
+	if ((GetTileLayer(tile) == MapLayer::DeepUnderground || GetTileLayer(pair) == MapLayer::DeepUnderground) && !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date)) { result.cost = CommandCost(STR_ERROR_EXCAVATION_DEEP_LOCKED); return result; } // Both build directions use the same saved calendar authority before any geometry/clearing quote.
+	// Native paired mutation supports prepared plain-ground end sites; existing infrastructure/objects must be explicitly cleared through their own safe commands first.
+	for (TileIndex end : {tile, pair}) {
+		if (!IsValidTile(end) || !IsInnerTile(end) || GetTileType(end) != TileType::Clear) { result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result; }
+		if (GetTileSlope(end) != SLOPE_FLAT) { result.cost = CommandCost(STR_ERROR_FLAT_LAND_REQUIRED); return result; }
+		if (IsBridgeAbove(end)) { result.cost = CommandCost(STR_ERROR_MUST_DEMOLISH_BRIDGE_FIRST); return result; }
+		if (!MultiLayerMap::GetRules(GetTileLayer(end)).allowed.Test(MapLayerConstruction::LayerPortal)) { result.cost = CommandCost(STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER); return result; }
+		if (CommandCost vehicle = EnsureNoVehicleOnGround(end); vehicle.Failed()) { result.cost = vehicle; return result; }
+	}
+	// Only inner endpoints can derive door neighbours safely; edge clicks must refuse before address arithmetic.
+	const auto source_step = TileIndexDiffCByDiagDir(ReverseDiagDir(shaft));
+	const auto target_step = TileIndexDiffCByDiagDir(shaft);
+	const auto source_door = TileAddWrap(tile, source_step.x, source_step.y);
+	const auto target_door = TileAddWrap(pair, target_step.x, target_step.y);
+	// Approaches must remain inner compatible floor without conflicting vehicles/owners; solid destination rock stays a sealed face.
+	for (TileIndex door : {source_door, target_door}) {
+		if (!IsValidTile(door) || !IsInnerTile(door)) { result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result; }
+		const auto type = GetTileType(door);
+		const bool compatible = type == TileType::Clear || (transport == TransportType::Rail && type == TileType::Railway) || (transport == TransportType::Road && type == TileType::Road);
+		if (!compatible || (type != TileType::Clear && GetTileOwner(door) != _current_company)) { result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result; }
+		if (CommandCost vehicle = EnsureNoVehicleOnGround(door); vehicle.Failed()) { result.cost = vehicle; return result; }
+	}
+	if (CommandCost access = CheckExcavationConstruction(std::array{tile, source_door}); access.Failed()) { result.cost = access; return result; }
+	const auto &geology = GetGeologyWorldState();
+	// Every target cell must be valid unclaimed geology; only solid Clear ground skips ordinary clearing and receives sealed housing metadata.
+	for (TileIndex cell : {pair, target_door}) {
+		if (geology.job_claims.contains(cell)) { result.cost = CommandCost(STR_ERROR_EXCAVATION_ACTIVE_CUT); return result; }
+		const auto terrain = geology.terrain.Get(cell);
+		if (terrain == ExcavationState::Excavating) { result.cost = CommandCost(STR_ERROR_EXCAVATION_ACTIVE_CUT); return result; }
+		if (terrain == ExcavationState::Solid) {
+			if (GetTileType(cell) != TileType::Clear) { result.cost = CommandCost(STR_ERROR_EXCAVATION_SOLID_ROCK); return result; }
+			if (cell == pair) result.target_solid = true;
+			continue;
+		}
+		if (CommandCost access = CheckExcavationConstruction(std::array{cell}); access.Failed()) { result.cost = access; return result; }
+	}
+	flags.Reset(DoCommandFlag::Execute);
+	const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, tile);
+	if (source_clear.Failed()) { result.cost = source_clear; return result; }
+	result.cost.AddCost(source_clear.GetCost()); ++result.clearing_count;
+	if (!result.target_solid) {
+		const auto target_clear = Command<Commands::LandscapeClear>::Do(flags, pair);
+		if (target_clear.Failed()) { result.cost = target_clear; return result; }
+		result.cost.AddCost(target_clear.GetCost()); ++result.clearing_count;
+	}
+	// A direct/API caller without Auto must fit the combined two-end clearing budget before either endpoint consumes its first allowance.
+	if (!flags.Any({DoCommandFlag::Auto, DoCommandFlag::Bankrupt}) && (Company::Get(_current_company)->clear_limit >> 16) < result.clearing_count) { result.cost = CommandCost(STR_ERROR_CLEARING_LIMIT_REACHED); return result; }
+	result.cost.AddCost(_price[Price::BuildTunnel] * 4);
+	if (GetLayerPortalWorkPairCount() >= MAX_LAYER_PORTAL_WORK_PAIRS) result.cost = CommandCost(STR_ERROR_TOO_MANY_OBJECTS);
+	return result;
+}
+
+/** Ephemeral public-map-field backup used only for rollback of the two prepared plain-ground endpoints. */
+struct PortalBuildTileBackup {
+	TileIndex tile; ///< Actual map address.
+	std::array<uint8_t, 8> bytes; ///< Exact public type/height/m1/m3/m4/m5/m6/m7 fields.
+	uint16_t m2, m8; ///< Exact public wider fields, never private tile-array copies.
+	/** @param index Actual prepared endpoint to restore if coordinated publication fails. */
+	explicit PortalBuildTileBackup(TileIndex index) : tile(index), bytes{Tile{index}.type(), Tile{index}.height(), Tile{index}.m1(), Tile{index}.m3(), Tile{index}.m4(), Tile{index}.m5(), Tile{index}.m6(), Tile{index}.m7()}, m2(Tile{index}.m2()), m8(Tile{index}.m8()) {}
+	/** Restore only this actual endpoint's public fields; no geological, actor or inventory owner is copied. */
+	void Restore() const noexcept
+	{
+		Tile t{tile};
+		t.type() = bytes[0]; t.height() = bytes[1]; t.m1() = bytes[2]; t.m3() = bytes[3]; t.m4() = bytes[4]; t.m5() = bytes[5]; t.m6() = bytes[6]; t.m7() = bytes[7];
+		t.m2() = m2; t.m8() = m8;
+	}
+};
+
+/**
+ * Execute a complete native housing proposal after preallocating actual pair-owner capacity.
+ * @param proposal Complete readonly source/target/clearing proposal.
+ * @param flags Actual estimate/execute policy.
+ * @param transport Actual rail/road housing family.
+ * @param shaft Actual source shaft direction.
+ * @param railtype Actual validated rail type.
+ * @param roadtype Actual validated road type.
+ * @return Complete quote or unchanged preparation/commit refusal.
+ */
+static CommandCost BuildNativePortalPair(const NativePortalBuildProposal &proposal, DoCommandFlags flags, TransportType transport, DiagDirection shaft, RailType railtype, RoadType roadtype)
+{
+	if (proposal.cost.Failed()) return proposal.cost;
+	if (!flags.Test(DoCommandFlag::Execute)) return proposal.cost;
+	auto capacity = PrepareLayerPortalWorkPair(std::min(proposal.source, proposal.target), _current_company);
+	if (!capacity.Ready()) return CommandCost(STR_ERROR_TOO_MANY_OBJECTS);
+	const PortalBuildTileBackup source_backup(proposal.source), target_backup(proposal.target);
+	const auto clearing_budget = Company::Get(_current_company)->clear_limit;
+	const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, proposal.source);
+	if (source_clear.Failed()) return source_clear;
+	if (!proposal.target_solid) {
+		const auto target_clear = Command<Commands::LandscapeClear>::Do(flags, proposal.target);
+		if (target_clear.Failed()) {
+			source_backup.Restore(); target_backup.Restore();
+			Company::Get(_current_company)->clear_limit = clearing_budget;
+			return target_clear;
+		}
+	}
+	if (transport == TransportType::Rail) {
+		MakeRailLayerPortal(proposal.source, _current_company, shaft, GetTileLayer(proposal.target), railtype);
+		MakeRailLayerPortal(proposal.target, _current_company, ReverseDiagDir(shaft), GetTileLayer(proposal.source), railtype);
+	} else {
+		MakeRoadLayerPortal(proposal.source, _current_company, shaft, GetTileLayer(proposal.target), roadtype);
+		MakeRoadLayerPortal(proposal.target, _current_company, ReverseDiagDir(shaft), GetTileLayer(proposal.source), roadtype);
+	}
+	if (!capacity.Publish()) {
+		source_backup.Restore(); target_backup.Restore();
+		Company::Get(_current_company)->clear_limit = clearing_budget;
+		return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
+	}
+	// Infrastructure and notifications follow both geometry and owner publication; a failed preparation leaves neither accounting nor a half-pair.
+	if (transport == TransportType::Rail) {
+		Company::Get(_current_company)->infrastructure.rail[railtype] += GetLayerPortalPieceCount(transport) * 2;
+		NotifyRailPortalChanged(proposal.source, _current_company);
+		NotifyRailPortalChanged(proposal.target, _current_company);
+	} else {
+		UpdateCompanyRoadInfrastructure(roadtype, _current_company, static_cast<int>(GetLayerPortalPieceCount(transport) * 2));
+	}
+	DirtyCompanyInfrastructureWindows(_current_company);
+	MarkTileDirtyByTile(proposal.source); MarkTileDirtyByTile(proposal.target);
+	return proposal.cost;
+}
+
 /**
  * Build both ends of a layer portal, or change nothing.
  * The price is four times a tunnel, chosen because a portal replaces a short tunnel between two layers.
@@ -470,6 +671,9 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 
 	TileIndex pair = MultiLayerMap::TileInLayer(tile, target_layer);
 	DiagDirection pair_shaft = ReverseDiagDir(shaft_dir);
+	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
+		return BuildNativePortalPair(PrepareNativePortalBuild(tile, pair, shaft_dir, transport_type, flags), flags, transport_type, shaft_dir, railtype, roadtype);
+	}
 	if (CommandCost end = CheckPortalEnd(tile, shaft_dir); end.Failed()) return end;
 	if (CommandCost end = CheckPortalEnd(pair, pair_shaft); end.Failed()) return end;
 
@@ -504,6 +708,26 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 }
 
 /**
+ * Adapt the canonical pair-state transaction to the existing synchronized command kernel.
+ * @param flags Actual estimate/execute policy.
+ * @param tile Actual endpoint.
+ * @param connected Requested ordinary connection state.
+ * @return Zero-cost success or a concrete unchanged refusal.
+ */
+CommandCost CmdChangeLayerPortalConnection(DoCommandFlags flags, TileIndex tile, bool connected)
+{
+	const auto result = ChangeLayerPortalConnection(tile, _current_company, connected, flags.Test(DoCommandFlag::Execute));
+	switch (result) {
+		case LayerPortalWorkError::None: return CommandCost(ExpensesType::Construction);
+		case LayerPortalWorkError::LockedDeep: return CommandCost(STR_ERROR_EXCAVATION_DEEP_LOCKED);
+		case LayerPortalWorkError::MissingExcavation: return CommandCost(STR_ERROR_EXCAVATION_SOLID_ROCK);
+		case LayerPortalWorkError::InvalidOwner: return CommandCost(STR_ERROR_AREA_IS_OWNED_BY_ANOTHER);
+		case LayerPortalWorkError::Conflict: return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);
+		default: return CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
+	}
+}
+
+/**
  * Play the construction sound at the clicked end.
  * @param cmd Command that finished.
  * @param result Result of the command.
@@ -526,6 +750,7 @@ extern const TileTypeProcs _tile_type_layer_portal_procs = {
 	.clear_tile_proc = ClearTile_LayerPortal,
 	.get_tile_desc_proc = GetTileDesc_LayerPortal,
 	.get_tile_track_status_proc = GetTileTrackStatus_LayerPortal,
+	.click_tile_proc = ClickTile_LayerPortal,
 	.tile_loop_proc = TileLoop_LayerPortal,
 	.change_tile_owner_proc = ChangeTileOwner_LayerPortal,
 	.vehicle_enter_tile_proc = VehicleEnterTile_LayerPortal,

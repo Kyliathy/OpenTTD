@@ -1353,6 +1353,15 @@ struct BuildRoadElevatorWindow : public PickerWindowBase {
 		this->FinishInitNested(TransportType::Road);
 	}
 
+	/** Refresh the elevator's door controls from the same saved calendar rule used by commands and actual movement. */
+	void OnPaint() override
+	{
+		// Every elevator choice reaches Deep; changing the upper destination or viewing the ascent side cannot make it available early.
+		const bool locked = this->kind == LayerPortalKind::RoadElevator && !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date);
+		for (WidgetID widget : {WID_BREL_DOOR_NE, WID_BREL_DOOR_SE, WID_BREL_DOOR_SW, WID_BREL_DOOR_NW}) this->SetWidgetDisabledState(widget, locked);
+		this->DrawWidgets();
+	}
+
 	/**
 	 * Size one door button.
 	 * @param widget Widget being sized.

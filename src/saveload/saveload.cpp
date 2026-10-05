@@ -47,6 +47,7 @@
 #include "../multilayer_content.h"
 #include "../multilayer_state.h"
 #include "../excavation_state.h"
+#include "../layer_portal_cmd.h"
 #include "../error.h"
 #include "../strings_type.h"
 #include "../newgrf_railtype.h"
@@ -248,6 +249,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _multilayer_chunk_handlers;
 	extern const ChunkHandlerTable _geology_chunk_handlers;
 	extern const ChunkHandlerTable _excavation_chunk_handlers;
+	extern const ChunkHandlerTable _portal_work_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
 	extern const ChunkHandlerTable _setting_chunk_handlers;
@@ -290,6 +292,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_multilayer_chunk_handlers,
 		_geology_chunk_handlers,
 		_excavation_chunk_handlers,
+		_portal_work_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
 		_setting_chunk_handlers,
@@ -3308,6 +3311,7 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		/* The only part from AfterLoadGame() we need */
 		_load_check_data.grf_compatibility = IsGoodGRFConfigList(_load_check_data.grfconfig);
 		ValidateExcavationLoadPreview();
+		ValidateLayerPortalWorkLoadPreview();
 		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {
 			if (!_load_check_data.geology_header_present || !_load_check_data.geology_deposits_present || !_load_check_data.geology_spans_present) SlErrorCorrupt("Missing required geology preview chunks");

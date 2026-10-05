@@ -30,6 +30,11 @@ add_test_files(
     multilayer_utility.cpp
     solar_power_contract.cpp
     multilayer_state.cpp
+    portal_profile.cpp
+    portal_build.cpp
+    portal_date.cpp
+    portal_lifecycle.cpp
+    portal_work_state.cpp
     math_func.cpp
     mock_environment.h
     mock_fontcache.h

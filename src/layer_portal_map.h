@@ -61,6 +61,17 @@ inline DiagDirection GetLayerPortalDoorDirection(Tile t)
 }
 
 /**
+ * Derive an endpoint's bounded same-layer approach without asserting on saved edge geometry.
+ * @param t Actual portal housing.
+ * @return Door neighbour, or INVALID_TILE when the approach leaves the usable plane.
+ */
+inline TileIndex GetLayerPortalDoorTile(Tile t)
+{
+	const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(t));
+	return TileAddWrap(t, step.x, step.y);
+}
+
+/**
  * Layer stored as the other end of this portal.
  * m5 bits 6..5.
  * @param t Portal end.

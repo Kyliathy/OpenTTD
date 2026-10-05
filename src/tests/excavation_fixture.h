@@ -17,6 +17,7 @@
 #include "../company_base.h"
 #include "../company_func.h"
 #include "../openttd.h"
+#include "../signal_func.h"
 
 /** Isolated native world with actual content activation; no fixture substitutes for gameplay cargo/terrain ownership. */
 class ExcavationFixture {
@@ -78,6 +79,7 @@ public:
 	/** Restore policy, registry, date, actor and RNG after this isolated focused world. */
 	~ExcavationFixture()
 	{
+		UpdateSignalsInBuffer(); // Direct command-body fixtures must finish queued signals while their actual map/company owners still exist, as the normal command kernel does.
 		ResetGeologyWorldState();
 		ResetMultiLayerProfileSelection();
 		// Restore the actual registry, then rebuild its derived label cache rather than copying private cache state.

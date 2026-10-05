@@ -91,6 +91,8 @@ void LoadCheckData::Clear()
 	this->excavation_header.fill(0);
 	this->excavation_pass_present = false;
 	this->excavation_pass_rows = 0;
+	this->portal_work_present.fill(false);
+	this->portal_work_expected = this->portal_work_rows = 0;
 	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};
