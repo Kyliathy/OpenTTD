@@ -1,0 +1,65 @@
+Layer view audit for Plan 4 19.1 / master 7.7 (2026-10-05).
+Question: can progress differ with the layer shown or hidden? The layer view is Viewport::layer (viewport_type.h:46, 'View state only, never read by the simulation').
+Every read of the viewport layer or of GetVehicleDisplayLayer outside the tests:
+./linkgraph/linkgraph_gui.cpp:447:	if (this->window->viewport != nullptr) return this->window->viewport->layer;
+./map_layer_gui.cpp:73:	bool surface = GetMainWindow()->viewport->layer == MapLayer::Surface;
+./map_layer_gui.cpp:146:MapLayer GetVehicleDisplayLayer(const Vehicle *v)
+./map_layer_gui.cpp:172:void SetViewportLayer(Window *w, MapLayer layer)
+./map_layer_gui.cpp:181:	MapLayer old = vp->layer;
+./map_layer_gui.cpp:194:			if (GetVehicleDisplayLayer(veh) != layer) vp->CancelFollow(*w);
+./map_layer_gui.cpp:200:	vp->layer = layer;
+./map_layer_gui.cpp:210:void CycleMainViewportLayer()
+./map_layer_gui.cpp:214:	MapLayer current = main->viewport->layer;
+./map_layer_gui.cpp:215:	SetViewportLayer(main, GetNextMapLayer(current, MultiLayerMap::GetLayerCount()));
+./map_layer_gui.h:73:MapLayer GetVehicleDisplayLayer(const Vehicle *v);
+./map_layer_gui.h:81:void SetViewportLayer(Window *w, MapLayer layer);
+./map_layer_gui.h:84:void CycleMainViewportLayer();
+./saveload/misc_sl.cpp:58:		//Strip the same projected band offset SetViewportLayer adds when selecting a non-surface layer.
+./saveload/misc_sl.cpp:59:		int world_y = static_cast<int>(to_underlying(vp.layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
+./screenshot.cpp:211:			vp.layer = w->viewport->layer;
+./screenshot.cpp:232:			MapLayer layer = GetMainWindow()->viewport->layer;
+./screenshot.cpp:233:			vp.layer = layer;
+./screenshot.cpp:259:			vp.layer = w->viewport->layer;
+./smallmap_gui.cpp:896:		if (vp.layer != this->layer) return;
+./smallmap_gui.cpp:976:			if (GetVehicleDisplayLayer(v) != this->layer) continue;
+./smallmap_gui.cpp:1502:		this->layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
+./smallmap_gui.cpp:1530:		if (this->layer != main->viewport->layer) {
+./smallmap_gui.cpp:1531:			this->layer = main->viewport->layer;
+./smallmap_gui.cpp:1763:				SetViewportLayer(w, this->layer);
+./texteff.cpp:48:		layer = (main != nullptr && main->viewport != nullptr) ? main->viewport->layer : MapLayer::Surface;
+./toolbar_gui.cpp:924:	PopupMainToolbarMenu(w, widget, BuildMapLayerDropDown(), to_underlying(GetMainWindow()->viewport->layer));
+./toolbar_gui.cpp:936:	SetViewportLayer(GetMainWindow(), static_cast<MapLayer>(index));
+./toolbar_gui.cpp:956:	w->GetWidget<NWidgetCore>(widget)->SetSprite(GetMapLayerIcon(vp->layer));
+./toolbar_gui.cpp:2170:					CycleMainViewportLayer();
+./toolbar_gui.cpp:2275:		GuiShowTooltips(this, GetEncodedString(STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT, GetMapLayerName(vp->layer)), close_cond);
+./toolbar_gui.cpp:2610:					CycleMainViewportLayer();
+./vehicle.cpp:1195:				if (GetVehicleDisplayLayer(v) != _viewport_draw_layer) {
+./vehicle.cpp:1283:				if (GetVehicleDisplayLayer(v) != vp.layer) {
+./viewport.cpp:251:		vp->layer = GetVehicleDisplayLayer(veh);
+./viewport.cpp:259:			vp->layer = mw->viewport->layer;
+./viewport.cpp:270:			vp->layer = GetTileLayer(tile);
+./viewport.cpp:452:			ScaleByZoom(y - vp.top, vp.zoom) + vp.virtual_top, clamp_to_map, nullptr, vp.layer);
+./viewport.cpp:1838:	_vd.layer = vp.layer;
+./viewport.cpp:1839:	_viewport_draw_layer = vp.layer;
+./viewport.cpp:1965:	pt = InverseRemapCoords2(pt.x, pt.y, true, &clamped, vp.layer);
+./viewport.cpp:2024:		MapLayer vehicle_layer = GetVehicleDisplayLayer(veh);
+./viewport.cpp:2025:		if (vp.layer != vehicle_layer) {
+./viewport.cpp:2026:			vp.layer = vehicle_layer;
+./viewport.cpp:2370:				if (GetTileLayer(st->xy) != vp.layer) break;
+./viewport.cpp:2384:				if (GetTileLayer(st->xy) != vp.layer) break;
+./viewport.cpp:2390:				if (!show_towns || vp.layer != MapLayer::Surface) break;
+./viewport.cpp:2398:				if (GetLayerOfWorldY(si->y) != vp.layer) break;
+./viewport.cpp:2609:		if (w->viewport->layer != layer) {
+./viewport.cpp:2610:			w->viewport->layer = layer;
+./viewport_gui.cpp:65:		this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
+./viewport_gui.cpp:75:				MapLayer layer = (this->viewport != nullptr) ? this->viewport->layer : MapLayer::Surface;
+./viewport_gui.cpp:92:				ShowDropDownList(this, BuildMapLayerDropDown(), to_underlying(this->viewport->layer), WID_EV_MAP_LAYER);
+./viewport_gui.cpp:98:				SetViewportLayer(w, this->viewport->layer);
+./viewport_gui.cpp:111:				SetViewportLayer(this, w->viewport->layer);
+./viewport_gui.cpp:112:				this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
+./viewport_gui.cpp:132:		SetViewportLayer(this, static_cast<MapLayer>(index));
+./viewport_gui.cpp:133:		this->GetWidget<NWidgetCore>(WID_EV_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->viewport->layer));
+
+Classification: drawing (viewport.cpp, vehicle.cpp ViewportAddVehicles), click hit-testing (vehicle.cpp CheckClickOnVehicle), GUI windows (map_layer_gui, viewport_gui, toolbar_gui, smallmap_gui, linkgraph_gui, screenshot), cosmetic text effects (texteff.cpp) and the client's saved view position (saveload/misc_sl.cpp). None is called from a vehicle tick, the TBM controller, the hauler cycle, the pathfinder or a command.
+A vehicle's VehState::Hidden comes only from its position (IsHiddenInLayerPortal, FD-3) and the depot state, so it is the same in every view.
+The movement tests ([tbm-movement], [tbm-loop], [portal-movement]) run headless, with no viewport at all, and the loop replays to an identical trace.

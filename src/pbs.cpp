@@ -74,6 +74,19 @@ void SetRailStationPlatformReservation(TileIndex start, DiagDirection dir, bool 
 }
 
 /**
+ * Whether a tile carries a track that a train may reserve. A Commissioning pair shows no track to ordinary routing,
+ * but the project's own trains drive and reserve its axis like any rail portal end (R2MLVS3MP-M decision 3).
+ * @param tile Tile to check.
+ * @param t Track to reserve or free.
+ * @return True when the tile has the track, or is a rail portal end on that axis.
+ */
+[[maybe_unused]] static bool HasReservableTrack(TileIndex tile, Track t)
+{
+	if (TrackdirBitsToTrackBits(GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs).Test(t)) return true;
+	return IsLayerPortalTile(tile) && GetLayerPortalTransportType(tile) == TransportType::Rail && DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)) == t;
+}
+
+/**
  * Try to reserve a specific track on a tile
  * @param tile the tile
  * @param t the track
@@ -83,7 +96,7 @@ void SetRailStationPlatformReservation(TileIndex start, DiagDirection dir, bool 
  */
 bool TryReserveRailTrack(TileIndex tile, Track t, bool trigger_stations)
 {
-	assert(TrackdirBitsToTrackBits(GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs).Test(t));
+	assert(HasReservableTrack(tile, t));
 
 	if (_settings_client.gui.show_track_reservation) {
 		/* show the reserved rail if needed */
@@ -154,7 +167,7 @@ bool TryReserveRailTrack(TileIndex tile, Track t, bool trigger_stations)
  */
 void UnreserveRailTrack(TileIndex tile, Track t)
 {
-	assert(TrackdirBitsToTrackBits(GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs).Test(t));
+	assert(HasReservableTrack(tile, t));
 
 	if (_settings_client.gui.show_track_reservation) {
 		if (IsBridgeTile(tile)) {

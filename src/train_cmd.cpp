@@ -2295,8 +2295,9 @@ static void ReverseTrainDirection(Train *consist)
 	/* Check if we were approaching a rail/road-crossing */
 	TileIndex crossing = TrainApproachingCrossingTile(moving_front);
 
-	/* Check if we should back up or flip the train. */
-	if (consist->vehicle_flags.Test(VehicleFlag::DrivingBackwards) || _settings_game.difficulty.train_flip_reverse_allowed == TrainFlipReversingAllowed::None || consist->Last()->CanLeadTrain()) {
+	/* Check if we should back up or flip the train. A boring machine always backs up: flipping it end for end would put
+	 * its cutter behind its wagons (R2MLVS3MP-M decision 5). */
+	if (consist->vehicle_flags.Test(VehicleFlag::DrivingBackwards) || _settings_game.difficulty.train_flip_reverse_allowed == TrainFlipReversingAllowed::None || consist->Last()->CanLeadTrain() || GetTBMProjectForCutter(consist->index) != nullptr) {
 		/* The train will back up. */
 		consist->vehicle_flags.Flip(VehicleFlag::DrivingBackwards);
 
@@ -2373,6 +2374,17 @@ static void ReverseTrainDirection(Train *consist)
 		consist->flags.Reset(VehicleRailFlag::Stuck);
 		consist->wait_counter = 0;
 	}
+}
+
+void BackUpTBMConsist(Train &front)
+{
+	if (!front.IsFrontEngine() || front.vehicle_flags.Test(VehicleFlag::DrivingBackwards) || IsWholeTrainInsideDepot(&front)) return;
+	// A moving consist reverses once it has stopped, as the reverse command does with realistic acceleration.
+	if (front.cur_speed != 0) {
+		front.flags.Set(VehicleRailFlag::Reversing);
+		return;
+	}
+	ReverseTrainDirection(&front);
 }
 
 /**
@@ -2599,6 +2611,47 @@ static void CheckNextTrainTile(Train *consist)
 }
 
 /**
+ * Will a train standing wholly in its portal magazine stay there the next tick? Its controller decides when it
+ * leaves; a magazine has no depot reservation, whose helpers only accept a depot tile (R2MLVS3MP-M decision 2).
+ * @param v Front engine of a train whose parts all stand in the depot state on one portal tile.
+ * @return True if it stays, false once it has started to leave.
+ */
+static bool CheckTrainStayInMagazine(Train *v)
+{
+	const DiagDirection exit = GetLayerPortalMagazineExit(v->tile, *v);
+	// A train that is no longer the project's (retired, released, or from a stale save) cannot pass the housing: it stays.
+	if (exit == DiagDirection::Invalid || !MayTBMTrainLeaveMagazine(*v)) return true;
+	if (v->gcache.cached_power == 0) {
+		v->vehstatus.Set(VehState::Stopped);
+		return true;
+	}
+	// One train moves on the housing at a time; the others wait in the depot state.
+	if (IsLayerPortalMagazineBusy(v->tile, *v)) return true;
+
+	// Lay the train out at the inner point of its exit side, facing out, so its parts leave in chain order.
+	const int x = TileX(v->tile) * TILE_SIZE + _vehicle_initial_x_fract[exit];
+	const int y = TileY(v->tile) * TILE_SIZE + _vehicle_initial_y_fract[exit];
+	v->vehicle_flags.Reset(VehicleFlag::DrivingBackwards);
+	for (Train *u = v; u != nullptr; u = u->Next()) {
+		u->direction = DiagDirToDir(exit);
+		u->x_pos = x;
+		u->y_pos = y;
+		u->z_pos = GetSlopePixelZ(x, y, true);
+		u->UpdatePosition();
+	}
+	v->track = AxisToTrack(DiagDirToAxis(exit));
+	// FD-3: the point decides visibility; the parts still inside stay hidden until they are released.
+	v->vehstatus.Set(VehState::Hidden, IsHiddenInLayerPortal(GetLayerPortalShaftDirection(v->tile), x, y));
+	v->cur_speed = 0;
+	v->PlayLeaveStationSound();
+	SetWindowClassesDirty(WindowClass::TrainList);
+	v->UpdateViewport(true, true);
+	v->UpdatePosition();
+	v->UpdateAcceleration();
+	return false;
+}
+
+/**
  * Will the train stay in the depot the next tick?
  * @param v %Train to check.
  * @return True if it stays in the depot, false otherwise.
@@ -2609,6 +2662,9 @@ static bool CheckTrainStayInDepot(Train *v)
 	for (const Train *u = v; u != nullptr; u = u->Next()) {
 		if (u->track != Track::Depot || u->tile != v->tile) return false;
 	}
+
+	/* The key of a Commissioning pair is a magazine, not a depot (R2MLVS3MP-M). */
+	if (IsLayerPortalTile(v->tile)) return CheckTrainStayInMagazine(v);
 
 	/* if the train got no power, then keep it in the depot */
 	if (v->gcache.cached_power == 0) {
@@ -3685,6 +3741,8 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 				//FD-4: the pair is entered through its shaft, a side its track status refuses, so that query has no side.
 				DiagDirection side = shaft_step ? DiagDirection::Invalid : ReverseDiagDir(enterdir);
 				TrackStatus ts = GetTileTrackStatus(gp.new_tile, TransportType::Rail, RoadTramType::Invalid, side);
+				/* A Commissioning pair shows its track only to the project's own trains (R2MLVS3MP-M). */
+				if (ts.trackdirs.None() && IsLayerPortalTile(gp.new_tile)) ts.trackdirs = GetLayerPortalAdmittedTrackdirs(gp.new_tile, *first, side);
 				TrackdirBits reachable_trackdirs = DiagdirReachesTrackdirs(enterdir);
 
 				TrackdirBits trackdirbits = ts.trackdirs & reachable_trackdirs;
@@ -3786,6 +3844,10 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 							/* Vehicles entering tunnels enter the wormhole earlier than for bridges.
 							 * However, just choose the track into the wormhole. */
 							assert(IsTunnel(prev->tile));
+							chosen_track = bits;
+						} else if (prev->track == Track::Depot) {
+							/* The part ahead already stands inside, as when a train backs into a magazine while half out of
+							 * it: follow the tile's own track to the same inner point (R2MLVS3MP-M). */
 							chosen_track = bits;
 						} else {
 							chosen_track = prev->track;
@@ -4173,7 +4235,10 @@ static bool TrainApproachingLineEnd(Train *moving_front, bool signal, bool rever
 	if (!signal && x + (moving_front->gcache.cached_veh_length + rounding) / 2 * (IsDiagonalDirection(vdir) ? 1 : 2) >= TILE_SIZE) {
 		/* we are too near the tile end, reverse now */
 		consist->cur_speed = 0;
-		if (reverse) ReverseTrainDirection(consist);
+		/* A boring machine, and a hauler in front of its busy bay, wait here instead: their controllers choose the way
+		 * (R2MLVS3MP-M). */
+		const TileIndex next = GetLayerPortalNextTile(moving_front->tile, VehicleExitDir(vdir, moving_front->track));
+		if (reverse && !IsTBMWaitingAtLineEnd(*consist, next)) ReverseTrainDirection(consist);
 		return false;
 	}
 
@@ -4208,6 +4273,12 @@ static bool TrainCanLeaveTile(const Train *moving_front)
 	if (IsRailDepotTile(tile)) {
 		DiagDirection dir = ReverseDiagDir(GetRailDepotDirection(tile));
 		if (DiagDirToDir(dir) == moving_front->GetMovingDirection()) return false;
+	}
+
+	/* heading for the inner point of its magazine? (R2MLVS3MP-M) */
+	if (IsLayerPortalTile(tile)) {
+		const DiagDirection exit = GetLayerPortalMagazineExit(tile, *moving_front->First());
+		if (exit != DiagDirection::Invalid && DiagDirToDir(ReverseDiagDir(exit)) == moving_front->GetMovingDirection()) return false;
 	}
 
 	return true;
@@ -4274,6 +4345,8 @@ static bool TrainCheckIfLineEnds(Train *moving_front, bool reverse)
 
 	/* Determine the track status on the next tile */
 	TrackStatus ts = GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid, side);
+	/* A Commissioning pair shows its track only to the project's own trains (R2MLVS3MP-M). */
+	if (ts.trackdirs.None() && IsLayerPortalTile(tile)) ts.trackdirs = GetLayerPortalAdmittedTrackdirs(tile, *consist, side);
 	TrackdirBits reachable_trackdirs = DiagdirReachesTrackdirs(dir);
 
 	TrackdirBits trackdirbits = ts.trackdirs & reachable_trackdirs;

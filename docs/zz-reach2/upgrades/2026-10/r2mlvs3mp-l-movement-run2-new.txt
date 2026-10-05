@@ -1,0 +1,63 @@
+===== [tbm-movement]
+Assertion failed: TrackdirBitsToTrackBits(GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs).Test(t), file D:\Codez\Sandbox\OpenTTD\src\pbs.cpp, line 86
+  #0 PrintAbortStack D:\Codez\Sandbox\OpenTTD\src\tests\test_main.cpp:37
+  #1 raise minkernel\crts\ucrt\src\appcrt\misc\signal.cpp:547
+  #2 abort minkernel\crts\ucrt\src\appcrt\startup\abort.cpp:71
+  #3 common_assert_to_stderr<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:187
+  #4 common_assert<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:415
+  #5 _wassert minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:444
+  #6 TryReserveRailTrack D:\Codez\Sandbox\OpenTTD\src\pbs.cpp:86
+  #7 TrainController D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:3837
+  #8 TrainLocoHandler D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4502
+  #9 Train::Tick D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4584
+  #10 TBMMovementRig::Drive D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:135
+  #11 C_A_T_C_H_T_E_S_T_1 D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:185
+  #12 Catch::TestInvokerAsFunction::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14330
+  #13 Catch::TestCase::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14169
+  #14 Catch::RunContext::invokeActiveTestCase D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13025
+  #15 Catch::RunContext::runCurrentTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12998
+  #16 Catch::RunContext::runTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12759
+  #17 Catch::`anonymous namespace'::TestGroup::execute D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13352
+  #18 Catch::Session::runInternal D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13562
+  #19 Catch::Session::run D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13518
+  #20 Catch::Session::run<char> D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13236
+  #21 main D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:17543
+  #22 invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+  #23 __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+  #24 __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+  #25 mainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+  #26 BaseThreadInitThunk ?:0
+  #27 RtlUserThreadStart ?:0
+== exit 3
+===== [tbm-movement] rc=0
+===== [tbm-loop]
+Assertion failed: TrackdirBitsToTrackBits(GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs).Test(t), file D:\Codez\Sandbox\OpenTTD\src\pbs.cpp, line 86
+  #0 PrintAbortStack D:\Codez\Sandbox\OpenTTD\src\tests\test_main.cpp:37
+  #1 raise minkernel\crts\ucrt\src\appcrt\misc\signal.cpp:547
+  #2 abort minkernel\crts\ucrt\src\appcrt\startup\abort.cpp:71
+  #3 common_assert_to_stderr<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:187
+  #4 common_assert<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:415
+  #5 _wassert minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:444
+  #6 TryReserveRailTrack D:\Codez\Sandbox\OpenTTD\src\pbs.cpp:86
+  #7 TrainController D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:3837
+  #8 TrainLocoHandler D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4502
+  #9 Train::Tick D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4584
+  #10 C_A_T_C_H_T_E_S_T_9 D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:369
+  #11 Catch::TestInvokerAsFunction::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14330
+  #12 Catch::TestCase::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14169
+  #13 Catch::RunContext::invokeActiveTestCase D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13025
+  #14 Catch::RunContext::runCurrentTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12998
+  #15 Catch::RunContext::runTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12759
+  #16 Catch::`anonymous namespace'::TestGroup::execute D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13352
+  #17 Catch::Session::runInternal D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13562
+  #18 Catch::Session::run D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13518
+  #19 Catch::Session::run<char> D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13236
+  #20 main D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:17543
+  #21 invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+  #22 __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+  #23 __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+  #24 mainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+  #25 BaseThreadInitThunk ?:0
+  #26 RtlUserThreadStart ?:0
+== exit 3
+===== [tbm-loop] rc=0

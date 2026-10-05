@@ -17,6 +17,8 @@
 #include "vehicle_func.h"
 #include "train.h"
 #include "tbm.h"
+#include "tbm_exchange.h"
+#include "track_func.h"
 #include "pbs.h"
 #include "rail_map.h"
 #include "landscape.h"
@@ -137,7 +139,10 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
 	const auto *vehicle = Vehicle::Get(actor);
 	if (vehicle->type != VehicleType::Train || vehicle->owner != work->company || vehicle->First()->index != work->cutter || project != work->project) return LayerPortalWorkError::InvalidReference; // Each actual part must belong to the exact assigned consist/project, never another train behind it.
 	const auto *job = GetExcavationJob(project);
-	if (job == nullptr || job->company != work->company || job->state == ExcavationJobState::Cancelled || job->state == ExcavationJobState::Completed) return LayerPortalWorkError::InvalidReference; // Removed/closed foreign jobs cannot retain movement authority through a saved reference.
+	// Removed or foreign jobs cannot retain movement authority through a saved reference. A closed job, cancelled or with
+	// its last cut done, keeps it while its own project lives, so the cutter backs out to its bay for the final return;
+	// the project check below ends it once the project is finished (R2MLVS3MP-M).
+	if (job == nullptr || job->company != work->company) return LayerPortalWorkError::InvalidReference;
 	if (!GetLayerPortalWorkPocket(tile)) return LayerPortalWorkError::InvalidPair;
 	// Movement authority comes only from the TBM controller: a live project must own this exact cutter and job.
 	// Without one, the pair names a train that is not (yet) an assigned TBM, so admission stays unavailable.
@@ -146,6 +151,47 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
 	// Every entering or retreating part needs a role in that consist; a coupled stranger or altered chain has none.
 	if (GetTBMConsistRole(*tbm, *Train::From(vehicle)) == TBMConsistRole::Invalid || InspectTBMConsist(*Train::From(vehicle->First()), *tbm).error != TBMBlockedReason::None) return LayerPortalWorkError::InvalidReference;
 	return LayerPortalWorkError::None;
+}
+
+DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front)
+{
+	if (!IsLayerPortalTile(tile) || GetLayerPortalTransportType(tile) != TransportType::Rail) return DiagDirection::Invalid;
+	const auto key = GetLayerPortalPairKey(tile);
+	const auto *work = GetLayerPortalWorkRecord(tile);
+	// Only the key of a pair that commissions work keeps a magazine; its rock end is a passage.
+	if (!key.has_value() || *key != tile || work == nullptr || work->state != LayerPortalWorkState::Commissioning) return DiagDirection::Invalid;
+	if (CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None) return GetLayerPortalShaftDirection(tile);
+	if (IsTBMHaulerAdmittedAtBay(front, tile)) return GetLayerPortalDoorDirection(tile);
+	return DiagDirection::Invalid;
+}
+
+bool IsLayerPortalMagazineBusy(TileIndex tile, const Train &front)
+{
+	const Train *own = front.First();
+	/**
+	 * @param v Vehicle on the tile.
+	 * @return Whether it is a part of another train that moves on the housing rather than standing aside inside.
+	 */
+	return HasVehicleOnTile(tile, [own](const Vehicle *v) {
+		return v->type == VehicleType::Train && Train::From(v)->First() != own && Train::From(v)->track != Track::Depot;
+	});
+}
+
+TrackdirBits GetLayerPortalAdmittedTrackdirs(TileIndex tile, const Train &front, DiagDirection side)
+{
+	if (!IsLayerPortalTile(tile) || GetLayerPortalTransportType(tile) != TransportType::Rail) return {};
+	// The same side rule as the ordinary track status: an end is reached through its door, or by a shaft step.
+	if (side != DiagDirection::Invalid && side != GetLayerPortalDoorDirection(tile)) return {};
+	if (CheckLayerPortalAvailability(tile) != LayerPortalWorkError::None) return {};
+	const auto *work = GetLayerPortalWorkRecord(tile);
+	if (work == nullptr || work->state != LayerPortalWorkState::Commissioning) return {};
+	const bool cutter = CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None;
+	// A hauler reaches only the key of its own Source bay, and only through the door: it never passes the cutter.
+	const bool hauler = !cutter && side != DiagDirection::Invalid && IsTBMHaulerAdmittedAtBay(front, tile);
+	if (!cutter && !hauler) return {};
+	// A magazine that moves another train takes nobody in from outside until it is clear.
+	if (front.tile != tile && GetLayerPortalMagazineExit(tile, front) != DiagDirection::Invalid && IsLayerPortalMagazineBusy(tile, front)) return {};
+	return TrackBitsToTrackdirBits(DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)));
 }
 
 /**

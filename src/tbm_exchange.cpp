@@ -744,6 +744,42 @@ bool IsTBMHaulerHeld(const Train &front)
 	return assignment != nullptr && assignment->phase == TBMHaulerPhase::AwaitExchange && assignment->wait != TBMHaulerWait::LostProject;
 }
 
+bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
+{
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
+	if (assignment == nullptr || assignment->bay != tile) return false;
+	const TBMProject *project = GetTBMProject(assignment->project);
+	// Only a Source bay is a magazine; a depot bay is a genuine depot with the ordinary rules.
+	if (project == nullptr || front.owner != project->company) return false;
+	const TBMExchangeBay bay = ResolveTBMExchangeBay(*project, tile);
+	return bay.error == TBMExchangeError::None && bay.kind == TBMExchangeBayKind::Source;
+}
+
+bool MayTBMTrainLeaveMagazine(const Train &front)
+{
+	if (const TBMProject *project = GetTBMProjectForCutter(front.index); project != nullptr) {
+		return project->phase == TBMPhase::TravelToFace && project->blocked == TBMBlockedReason::None; // Off to the face.
+	}
+	// A hauler waits in the bay while it returns empties or awaits its exchange; afterwards it takes the load out.
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
+	return assignment != nullptr && assignment->phase != TBMHaulerPhase::ReturnEmpties && assignment->phase != TBMHaulerPhase::AwaitExchange;
+}
+
+bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next)
+{
+	if (GetTBMProjectForCutter(front.index) != nullptr) return true;
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
+	return assignment != nullptr && assignment->bay == next && IsTBMHaulerAdmittedAtBay(front, next);
+}
+
+TileIndex GetTBMHaulerSteeringTarget(const Train &front)
+{
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
+	// Only the empty return is steered; every other phase follows the player's orders, the origin visit included.
+	if (assignment == nullptr || assignment->phase != TBMHaulerPhase::ReturnEmpties || !IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return INVALID_TILE;
+	return assignment->bay;
+}
+
 TBMLogisticsWait GetTBMLogisticsWait(const TBMProject &project)
 {
 	if (!IsTBMOriginStation(project)) return TBMLogisticsWait::LostOrigin;

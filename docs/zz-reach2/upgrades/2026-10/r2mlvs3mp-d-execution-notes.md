@@ -17,7 +17,7 @@ Owner: [R2MLVS3MP](r2mlvs3mp-master-plan.md). Targets: [Plan 3](r2mlvs3-sealed-p
 
 ## Build cadence (user instruction, 2026-10-05)
 
-Do not build or run tests after each change. Compiling slows the user's machine. Build and run one focused burst only at a milestone, at most once every three or four master groups. The end-of-Group-4 milestone ran on 2026-10-05 (see [the milestone section](#milestone-build-and-burst-end-of-master-group-4-2026-10-05)). The end-of-Group-7 milestone ran the same day (see [its section](#milestone-build-and-burst-end-of-master-group-7-2026-10-05)). Code from master Group 7B on is unbuilt until the next milestone. Read real signatures before using them, because compile errors surface late.
+Do not build or run tests after each change. Compiling slows the user's machine. Build and run one focused burst only at a milestone, at most once every three or four master groups. The end-of-Group-4 milestone ran on 2026-10-05 (see [the milestone section](#milestone-build-and-burst-end-of-master-group-4-2026-10-05)). The end-of-Group-7 milestone ran the same day (see [its section](#milestone-build-and-burst-end-of-master-group-7-2026-10-05)). Code from master Group 7B on is unbuilt until the next milestone. For Group 7B the user allowed 2-3 build-and-test runs (2026-10-05), because movement needs runtime feedback; spend them at checkpoints, not after each change. The user also set the laptop to maximum performance. Read real signatures before using them, because compile errors surface late.
 
 Every test run must be wrapped in `timeout`. Since the end-of-Group-7 milestone, `src/tests/test_main.cpp` (MSVC) prints a failed assert with its call stack and exits with code 3, instead of the Debug runtime's modal Abort/Retry/Ignore dialog. Run tags one at a time with the runner described in the milestone section.
 
@@ -366,7 +366,8 @@ Build `openttd_test` and `openttd` (Debug). Then run these tags in short bursts 
     Group 4 milestone.
   - A stack sample of the stalled game showed 81% of the time in vanilla `CheckCaches` (the fixtures' `-d desync=5`)
     while the title game used up the null driver's ticks.
-  - Rerun this fixture on mains power before relying on its result.
+  - Rerun after the user set the laptop to maximum performance: `portal_save_fixture` passes in 75 s, so all five
+    save fixtures pass. Its 26 rewritten evidence files were restored from HEAD the same way.
 - Restore: the fixtures rewrote 50 tracked evidence files, none of them modified before the run. Each was restored from
   HEAD with `git cat-file --filters`, with no index or ref change.
 - Measurements for r2mlvs15: see the Plan 4 Group 20 status (standard 888 ticks, 360 charge, 216 t; Deep 1,184 ticks,
@@ -380,3 +381,141 @@ Build `openttd_test` and `openttd` (Debug). Then run these tags in short bursts 
   - 7.8 (Plan 4 20.1): whole-corridor time and cost with haulage.
   - Plan 3 17.1.
   - Gap G1: real-file round trips, with 7.4.
+
+## Group 7B - Movement (in progress)
+
+Design: [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). Steps 1 and 2 are built; the runs are listed below.
+
+- Portal side (`layer_portal_work.cpp`, `layer_portal_cmd.cpp`):
+  - `GetLayerPortalMagazineExit`: the key of a Commissioning pair is a magazine. The project's cutter consist leaves
+    it through the shaft, an assigned hauler of its Source bay through the door.
+  - `IsLayerPortalMagazineBusy`: another train has a part on the key outside the depot state.
+  - `GetLayerPortalAdmittedTrackdirs`: the axis for an admitted train, with the ordinary side rule; none for anyone
+    else, and none from outside while the magazine is busy.
+  - `VehicleEnterTile_LayerPortal` admits an assigned hauler at its bay and runs the magazine rules
+    (`RunLayerPortalMagazine`): one part released at a time at the leave point, parts taken into the depot state at
+    the inner point, and the last part normalizes facing and stops the train.
+  - A cancelled job keeps movement authority while its project lives, so the cutter can back out to its bay. The
+    project check after it still ends authority for a finished project.
+- Trains (`train_cmd.cpp`):
+  - The new-tile and line-end track queries fall back to the admitted track on a portal.
+  - A wagon whose part ahead already stands inside follows the tile's own track (it used to get no track at all).
+  - `CheckTrainStayInDepot` hands a train standing wholly on a portal to `CheckTrainStayInMagazine`. That function
+    lays the parts out at the exit side's inner point when the controller lets the train go and the magazine is free.
+  - `TrainCanLeaveTile` treats heading for the magazine's inner point as entering a depot.
+  - A boring machine, or a hauler in front of its busy bay, waits at a line end instead of reversing.
+  - A boring machine always backs up and is never flipped. `BackUpTBMConsist` is the controller's reversal.
+- Controller (`tbm_work.cpp`, `tbm_project.cpp`, `tbm_exchange.cpp`):
+  - AdvanceSupport no longer holds the train.
+  - Entering ReturnForExchange unblocked backs the consist up once.
+  - `IsTBMHaulerAdmittedAtBay`, `MayTBMTrainLeaveMagazine`, `IsTBMWaitingAtLineEnd` and
+    `GetTBMHaulerSteeringTarget` answer the movement questions.
+- Pathfinder: `follow_track.hpp` uses the admitted track on a portal, both for the next tile and in its old-tile
+  assert. `yapf_destrail.hpp` steers a hauler returning empties to its bay, entered through the door, and keeps that
+  search out of the shared segment cache.
+- Tests (`src/tests/tbm_movement.cpp`, `src/tests/portal_movement.cpp`, shared helpers in
+  `src/tests/movement_fixture.h`):
+  - `[tbm-movement]`:
+    - the whole three-cut route by real movement, straight and on a bend whose mid-route exchange sends the consist
+      out again;
+    - a cancellation while the consist straddles the pair;
+    - the admitted-track queries at a Commissioning and a Sealed pair;
+    - an ordinary train turned back at a Commissioning pair's door;
+    - the whole life of a pair: bore, retire, Sealed refusal, then freight through the bored tunnel.
+  - `[tbm-loop]`: both trains drive the whole route on the rig's straight route, on its bend, and on a 6-cut route
+    commissioned by command, plus a replay of the commissioned loop. The hauler has one order to the origin and
+    delivers to real receivers. Every exchange comes at its frozen breakpoint, and every committed tonne is delivered.
+  - `[portal-movement]`: freight crossing, reversal while spanning, and signals, on both allowed rail pairs.
+- Visible/hidden equivalence (decision 1): the tests run with no viewport at all. No simulation path reads the
+  viewport layer; a vehicle's hidden flag comes only from the portal point rule (FD-3) and the depot state.
+
+### Group 7B build-and-test runs (2026-10-05, on mains power)
+
+- Run 1 ([build 1](r2mlvs3mp-l-movement-build1.log), [build 2](r2mlvs3mp-l-movement-build2.log)): the first build
+  refused `std::to_string` in the new test (an OpenTTD safeguard); `fmt::format` replaced it. All
+  [55 TBM, portal and spoil tags](r2mlvs3mp-l-movement-run1-tags.txt) pass with the step 1 and 2 changes. Both new
+  tags stopped early ([output](r2mlvs3mp-l-movement-run1-new.txt)):
+  - `[tbm-movement]`: a divide by zero in vanilla `TrainController` (`tick_counter % path_backoff_interval`). Unit
+    tests start with every game setting at zero, and no earlier test drove a train. The movement tests now reset the
+    `pf.*` settings to their defaults (`PathfinderDefaults`).
+  - `[tbm-loop]`: building a depot names it after the nearest town, and the fixture town was never in the town index.
+    The loop test indexes it for its own duration (`TownIndexEntry`).
+  - The divide by zero gave no stack, because Catch catches it. A small fault catcher outside the repository
+    (`%TEMP%\stack_sampler\faultstack.exe`) runs the test under the Windows debug API and prints the stack of the
+    first hardware fault.
+- Run 2 ([build 3](r2mlvs3mp-l-movement-build3.log), [output](r2mlvs3mp-l-movement-run2-new.txt)): both tags
+  asserted in `TryReserveRailTrack`. The reservation asserts checked the ordinary track status, which a Commissioning
+  pair hides. `HasReservableTrack` in `pbs.cpp` also accepts a rail portal end's own axis.
+- Run 3 ([build 4](r2mlvs3mp-l-movement-build4.log), [output](r2mlvs3mp-l-movement-run3-new.txt)): both tags asserted
+  in the follower, from `FreeTrainTrackReservation`, after the cutter consist reversed at "invalid rail" on its final
+  return. The last cut completes the job, and `CheckLayerPortalWorkAccess` refused a completed job, so the consist
+  straddling the pair lost its authority. A closed job, cancelled or completed, now keeps authority while its own
+  project lives. In the loop test this came after the first exchange cycle: the hauler was steered back, exchanged
+  and the cutter left again for its third cut.
+- After run 3 the user confirmed mains power and lifted the run limit.
+- Run 4 ([build 5](r2mlvs3mp-l-movement-build5.log), [output](r2mlvs3mp-l-movement-run4-new.txt)): `[tbm-movement]`
+  passes (3 cases, 13,215 assertions). `[tbm-loop]` ran its 200,000 ticks without finishing: the cutter was
+  Completed, but the hauler stood stopped in its depot with the load half delivered.
+- Run 5 ([build 6](r2mlvs3mp-l-movement-build6.log), [journal](r2mlvs3mp-l-movement-run5-loop.txt)): a state journal
+  in the loop test showed the whole cycle. The hauler waited in its depot while the cutter was on the pair (with no
+  signals the line is one block), was steered to the bay, exchanged at tick 2,491, delivered part of the load (the
+  receivers admit 32 t per interval), and turned round in its depot. Vanilla `VehicleEnteredDepotThisTick` stops
+  every train entering a depot, and `CallVehicleTicks` starts it again after its autoreplace step. The test had
+  ticked the trains directly, so nothing restarted the hauler. The loop test now runs the game's vehicle step.
+- Run 6 ([build 7](r2mlvs3mp-l-movement-build7.log), [output](r2mlvs3mp-l-movement-run6-loop.txt)): `[tbm-loop]`
+  passes (36,015 assertions): every committed tonne reaches a receiver, one exchange per frozen breakpoint, and the
+  hauler's single order is untouched.
+- Burst after run 6 ([results](r2mlvs3mp-l-movement-burst-all.txt)): all 110 project tags pass, the two movement tags
+  included.
+- Run 7 ([build 8](r2mlvs3mp-l-movement-build8.log), [output](r2mlvs3mp-l-movement-run7-portal.txt)): the new
+  `[portal-movement]` tag (`src/tests/portal_movement.cpp`) asserted in the vehicle pool. The test built its wagons
+  without `Vehicle::CanAllocateItem`, which a pool allocation must follow. Every build now checks it first.
+- Run 8 ([build 9](r2mlvs3mp-l-movement-build9.log), [output](r2mlvs3mp-l-movement-run8-portal.txt)):
+  `[portal-movement]` passes (3 cases, 11,944 assertions). On both allowed rail pairs, Surface to Underground and
+  Underground to Deep, an ordinary train crosses a Connected pair and comes back. Reversed while it spans the pair, it
+  stays whole on its tiles. The block signals at both ends show red while it spans the pair and green once it is home.
+- Run 9 ([build 10](r2mlvs3mp-l-movement-build10.log), [output](r2mlvs3mp-l-movement-run9-cancel.txt)):
+  `[tbm-movement]` passes with the cancellation case (4 cases, 20,715 assertions). A consist cancelled while it
+  straddles the pair backs whole into its magazine: in the first cut, in the second cut with spoil aboard, and when
+  the player stops it on the way back.
+- Run 10 ([build 11](r2mlvs3mp-l-movement-build11.log), [summary and trace](r2mlvs3mp-l-movement-run10-loop.txt)):
+  `[tbm-loop]` passes (2 cases, 108,330 assertions).
+  - The loop now checks the Earth/Rock ledger at every transition. Every committed tonne is in exactly one place:
+    aboard a train, on a platform, or received.
+  - The trace records each train's wagon IDs. The exchange swaps the loaded wagons for empties: the cutter goes from
+    [0,1,2,3,4,5] to [0,1,12,13,14,15], the hauler from [11,12,13,14,15] to [11,2,3,4,5].
+  - A second run from the same seeded fixture gives the same trace (Plan 5 13.3).
+  - The assertion count is per evaluation: the loop checks crashes, the rock end and the ledger on every tick.
+- Visible/hidden equivalence ([audit](r2mlvs3mp-l-movement-layer-audit.txt)): every read of `Viewport::layer` and
+  `GetVehicleDisplayLayer` outside the tests is in GUI code, so no simulation path depends on the layer shown.
+- After run 10 the train builder moved into `movement_fixture.h` as `BuildTrainInDepot`, and a whole-life test
+  (Plan 3 15.2) joined `[tbm-movement]`.
+- Run 11 ([build 12](r2mlvs3mp-l-movement-build12.log), [output](r2mlvs3mp-l-movement-run11-new.txt)): the whole-life
+  test got as far as opening the pair. The bore, the retirement and the refusal at the Sealed door all passed. The
+  freight train's departure then asserted in `UpdateSignalsOnSegment`, because the signal buffer was not empty. The
+  test had opened the pair with `ChangeLayerPortalConnection` directly, which queues signal updates that only the
+  command kernel finishes. The test now uses the player's command and finishes the queued signals, as the kernel
+  does. `[portal-movement]` and `[tbm-loop]` passed.
+- Run 12 ([build 13](r2mlvs3mp-l-movement-build13.log), [output](r2mlvs3mp-l-movement-run12-life.txt)):
+  `[tbm-movement]` passes with the whole-life test (5 cases, 28,242 assertions). After it, all 111 tags passed
+  ([burst](r2mlvs3mp-l-movement-burst2-all.txt)).
+- Run 13 ([build 14](r2mlvs3mp-l-movement-build14.log), [output](r2mlvs3mp-l-movement-run13-loop.txt)): a loop
+  commissioned through `CmdCommissionTBM` at a second pair passes. The traces showed that every loop so far exchanged
+  only once, at the end of its route: three straight cuts and the command's two cuts both fit one load. So no run had
+  shown boring resume after an exchange, and the first `[tbm-movement]` case never reached its "leave again" branch.
+- Run 14 ([build 15](r2mlvs3mp-l-movement-build15.log), [output](r2mlvs3mp-l-movement-run14-bend.txt)): the bend of
+  `[tbm-exchange-acceptance]` overflows one load.
+  - The loop on that bend passes. The cutter bores on with the empties, and the loop now checks that each exchange
+    comes at its frozen breakpoint.
+  - The bending section of the first `[tbm-movement]` case failed one check: it expected the saved heading to stay at
+    the first cut's. The saved heading follows each committed cut, so on a bend it turns. Backing never changes it, as
+    the check meant to show, and it now compares with the last committed cut.
+- Run 15 ([build 16](r2mlvs3mp-l-movement-build16.log), [output](r2mlvs3mp-l-movement-run15-bend.txt)):
+  `[tbm-movement]` passes (5 cases, 33,557 assertions), and all 111 tags pass
+  ([burst](r2mlvs3mp-l-movement-burst3-all.txt)).
+- Run 16 captured build 16's loop traces; run 17 replaced them.
+- Run 17 ([build 17](r2mlvs3mp-l-movement-build17.log), [output](r2mlvs3mp-l-movement-run17-loop.txt),
+  [traces](r2mlvs3mp-l-movement-run17-loops.txt)): the commissioning area now covers seven cells. The command plans six
+  cuts, which overflow one load, so a single run goes commission, cut, fill, exchange, delivery, empty return and
+  resumed boring. `[tbm-loop]` passes (4 cases, 248,664 assertions), and all 111 tags pass on build 17
+  ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).

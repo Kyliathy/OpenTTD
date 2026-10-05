@@ -341,8 +341,23 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 {{MEDIUM}}
 - [X] 15.1 Test every allowed/refused layer pair, all four directions, Deep build tools, both-end removal/conversion and attempted road/elevator commissioning. `r2mlvs3-q-acceptance-results.txt`: 350 assertions/seven cases through actual matrix/command/lifecycle boundaries. Fleet movement cases remain separately pending below.
-- [ ] 15.2 Run a TBM first-entry and retreat scenario, normal train refusal before opening, then freight crossing after opening.
-- [ ] 15.3 Test reversal and signals with a consist spanning each new rail pair.
+- [X] 15.2 Run a TBM first-entry and retreat scenario, normal train refusal before opening, then freight crossing after opening.
+- [X] 15.3 Test reversal and signals with a consist spanning each new rail pair.
+
+Group 15 status (2026-10-05, R2MLVS3MP master 7.3): 15.2 and 15.3 pass by real movement, with all 111 project tags
+([burst](r2mlvs3mp-l-movement-burst3-all.txt)). The design is [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md).
+- 15.2, `[tbm-movement]` (`src/tests/tbm_movement.cpp`), "A freight train crosses the tunnel its TBM bored once the
+  pair is opened":
+  - The started TBM leaves its magazine, bores three cuts and backs in for its exchange.
+  - The project retires, the pair is Sealed again, the cutter is sold and its support becomes permanent track.
+  - A freight train driven up to the Sealed door finds a line end, turns back to its depot and never enters the pair.
+  - After the player's connect command, the same train drives through the pair to the end of the last cut and back.
+  - An ordinary train is also turned back at a Commissioning pair's door, with the cutter consist in its magazine.
+- 15.3, `[portal-movement]` (`src/tests/portal_movement.cpp`), Surface to Underground and Underground to Deep:
+  - A freight train crosses a Connected pair and comes back.
+  - Reversed while it spans the pair, it stays whole on its tiles.
+  - The two-way block signals at both ends show red while it spans the pair and green once it is home.
+- The movement tags check every tick that no train crashes and that every part stands on the tile its position names.
 
 ### Group 16 - Validate saved portal state and occupied references
 

@@ -1,0 +1,67 @@
+===== [tbm-movement]
+Assertion failed: [&]() { if (this->IsTram() && this->GetSingleTramBit(this->old_tile) != DiagDirection::Invalid) return true; const RoadTramType sub_mode = (IsRoadTT() && this->veh != nullptr) ? (this->IsTram() ? RoadTramType::Tram : RoadTramType::Road) : RoadTramType::Invalid; TrackdirBits old_tile_valid_dirs = GetTileTrackStatus(this->old_tile, TT(), sub_mode).trackdirs; if constexpr (Ttr_type_ == TransportType::Rail) { if (old_tile_valid_dirs.None() && this->veh != nullptr && IsLayerPortalTile(this->old_tile)) old_tile_valid_dirs = GetLayerPortalAdmittedTrackdirs(this->old_tile, *this->veh->First(), GetLayerPortalDoorDirection(this->old_tile)); } return old_tile_valid_dirs.Any(TrackdirToTrackdirBits(this->old_td)); }(), file D:\Codez\Sandbox\OpenTTD\src\pathfinder\follow_track.hpp, line 149
+  #0 PrintAbortStack D:\Codez\Sandbox\OpenTTD\src\tests\test_main.cpp:37
+  #1 raise minkernel\crts\ucrt\src\appcrt\misc\signal.cpp:547
+  #2 abort minkernel\crts\ucrt\src\appcrt\startup\abort.cpp:71
+  #3 common_assert_to_stderr<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:187
+  #4 common_assert<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:415
+  #5 _wassert minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:444
+  #6 CFollowTrackT<0,Train,1,0>::Follow D:\Codez\Sandbox\OpenTTD\src\pathfinder\follow_track.hpp:140
+  #7 FreeTrainTrackReservation D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:2810
+  #8 ReverseTrainDirection D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:2293
+  #9 TrainController D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4023
+  #10 TrainLocoHandler D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4502
+  #11 Train::Tick D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4584
+  #12 TBMMovementRig::Drive D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:135
+  #13 C_A_T_C_H_T_E_S_T_1 D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:214
+  #14 Catch::TestInvokerAsFunction::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14330
+  #15 Catch::TestCase::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14169
+  #16 Catch::RunContext::invokeActiveTestCase D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13025
+  #17 Catch::RunContext::runCurrentTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12998
+  #18 Catch::RunContext::runTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12759
+  #19 Catch::`anonymous namespace'::TestGroup::execute D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13352
+  #20 Catch::Session::runInternal D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13562
+  #21 Catch::Session::run D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13518
+  #22 Catch::Session::run<char> D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13236
+  #23 main D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:17543
+  #24 invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+  #25 __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+  #26 __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+  #27 mainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+  #28 BaseThreadInitThunk ?:0
+  #29 RtlUserThreadStart ?:0
+== exit 3
+===== [tbm-movement] rc=0
+===== [tbm-loop]
+Assertion failed: [&]() { if (this->IsTram() && this->GetSingleTramBit(this->old_tile) != DiagDirection::Invalid) return true; const RoadTramType sub_mode = (IsRoadTT() && this->veh != nullptr) ? (this->IsTram() ? RoadTramType::Tram : RoadTramType::Road) : RoadTramType::Invalid; TrackdirBits old_tile_valid_dirs = GetTileTrackStatus(this->old_tile, TT(), sub_mode).trackdirs; if constexpr (Ttr_type_ == TransportType::Rail) { if (old_tile_valid_dirs.None() && this->veh != nullptr && IsLayerPortalTile(this->old_tile)) old_tile_valid_dirs = GetLayerPortalAdmittedTrackdirs(this->old_tile, *this->veh->First(), GetLayerPortalDoorDirection(this->old_tile)); } return old_tile_valid_dirs.Any(TrackdirToTrackdirBits(this->old_td)); }(), file D:\Codez\Sandbox\OpenTTD\src\pathfinder\follow_track.hpp, line 149
+  #0 PrintAbortStack D:\Codez\Sandbox\OpenTTD\src\tests\test_main.cpp:37
+  #1 raise minkernel\crts\ucrt\src\appcrt\misc\signal.cpp:547
+  #2 abort minkernel\crts\ucrt\src\appcrt\startup\abort.cpp:71
+  #3 common_assert_to_stderr<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:187
+  #4 common_assert<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:415
+  #5 _wassert minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:444
+  #6 CFollowTrackT<0,Train,1,0>::Follow D:\Codez\Sandbox\OpenTTD\src\pathfinder\follow_track.hpp:140
+  #7 FreeTrainTrackReservation D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:2810
+  #8 ReverseTrainDirection D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:2293
+  #9 TrainController D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4023
+  #10 TrainLocoHandler D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4502
+  #11 Train::Tick D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:4584
+  #12 C_A_T_C_H_T_E_S_T_9 D:\Codez\Sandbox\OpenTTD\src\tests\tbm_movement.cpp:369
+  #13 Catch::TestInvokerAsFunction::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14330
+  #14 Catch::TestCase::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14169
+  #15 Catch::RunContext::invokeActiveTestCase D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13025
+  #16 Catch::RunContext::runCurrentTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12998
+  #17 Catch::RunContext::runTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12759
+  #18 Catch::`anonymous namespace'::TestGroup::execute D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13352
+  #19 Catch::Session::runInternal D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13562
+  #20 Catch::Session::run D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13518
+  #21 Catch::Session::run<char> D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13236
+  #22 main D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:17543
+  #23 invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+  #24 __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+  #25 __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+  #26 mainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+  #27 BaseThreadInitThunk ?:0
+  #28 RtlUserThreadStart ?:0
+== exit 3
+===== [tbm-loop] rc=0

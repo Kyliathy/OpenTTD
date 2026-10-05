@@ -18,6 +18,7 @@
 #include "../tunnelbridge.h"
 #include "../tunnelbridge_map.h"
 #include "../layer_portal_map.h"
+#include "../layer_portal_cmd.h"
 #include "../depot_map.h"
 #include "../tbm.h"
 #include "pathfinder_func.h"
@@ -139,7 +140,11 @@ struct CFollowTrackT {
 		assert([&]() {
 			if (this->IsTram() && this->GetSingleTramBit(this->old_tile) != DiagDirection::Invalid) return true; // Skip the check for single tram bits
 			const RoadTramType sub_mode = (IsRoadTT() && this->veh != nullptr) ? (this->IsTram() ? RoadTramType::Tram : RoadTramType::Road) : RoadTramType::Invalid;
-			const TrackdirBits old_tile_valid_dirs = GetTileTrackStatus(this->old_tile, TT(), sub_mode).trackdirs;
+			TrackdirBits old_tile_valid_dirs = GetTileTrackStatus(this->old_tile, TT(), sub_mode).trackdirs;
+			if constexpr (Ttr_type_ == TransportType::Rail) {
+				//A project's own train may stand on a Commissioning pair, whose track only it sees (R2MLVS3MP-M).
+				if (old_tile_valid_dirs.None() && this->veh != nullptr && IsLayerPortalTile(this->old_tile)) old_tile_valid_dirs = GetLayerPortalAdmittedTrackdirs(this->old_tile, *this->veh->First(), GetLayerPortalDoorDirection(this->old_tile));
+			}
 			return old_tile_valid_dirs.Any(TrackdirToTrackdirBits(this->old_td));
 		}());
 
@@ -269,6 +274,12 @@ protected:
 			this->new_td_bits = GetTrackdirBitsForRoad(this->new_tile, this->IsTram() ? RoadTramType::Tram : RoadTramType::Road);
 		} else {
 			this->new_td_bits = GetTileTrackStatus(this->new_tile, TT(), RoadTramType::Invalid).trackdirs;
+			if constexpr (Ttr_type_ == TransportType::Rail) {
+				//A Commissioning pair shows its track to the project's own trains only, through its door or by a shaft step (R2MLVS3MP-M).
+				if (this->new_td_bits.None() && this->veh != nullptr && IsLayerPortalTile(this->new_tile)) {
+					this->new_td_bits = GetLayerPortalAdmittedTrackdirs(this->new_tile, *this->veh->First(), this->is_portal ? DiagDirection::Invalid : ReverseDiagDir(this->exitdir));
+				}
+			}
 		}
 		return this->new_td_bits.Any();
 	}

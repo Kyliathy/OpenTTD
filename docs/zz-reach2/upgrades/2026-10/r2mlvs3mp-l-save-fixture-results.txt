@@ -19,3 +19,4 @@
     subprocess.TimeoutExpired: Command '['D:\\Codez\\Sandbox\\OpenTTD\\build\\Debug\\openttd_console.exe', '-v', 'null', '-s', 'null', '-m', 'null', '-x', '-X', '-d', 'misc=5,net=2,sl=3,grf=2,desync=5,script=2', '-c', 'grftest.cfg', '-g', '-G', '1234']' timed out after 70.0 seconds
 [portal_acceptance_save_fixture] rc=0 43s
 DONE
+[portal_save_fixture rerun on max performance] rc=0 75s

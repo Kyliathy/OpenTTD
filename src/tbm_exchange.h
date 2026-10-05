@@ -357,6 +357,42 @@ TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id);
  */
 bool IsTBMHaulerHeld(const Train &front);
 
+/**
+ * Whether an assigned hauler may use the magazine of its Source bay at a portal key (R2MLVS3MP-M decision 3).
+ * It is admitted in every phase, so it can always leave the bay it stands in; it never reaches the rock end.
+ * @param front Front engine of the train.
+ * @param tile Portal key.
+ * @return True when the train's assignment names this tile as its project's Source bay.
+ */
+bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile);
+
+/**
+ * Whether a project train standing wholly in its magazine may leave it now (R2MLVS3MP-M decision 2): the cutter only
+ * to travel to its face, a hauler once it has no exchange to wait for. Any other train stays put.
+ * @param front Front engine.
+ * @return Whether it may start to leave.
+ */
+bool MayTBMTrainLeaveMagazine(const Train &front);
+
+/**
+ * Whether a train that reaches a line end stops there instead of reversing (R2MLVS3MP-M decisions 4 and 5): a
+ * project's cutter always, because its controller chooses its way; a hauler in front of its busy bay, so it waits
+ * there instead of driving off.
+ * @param front Front engine.
+ * @param next Tile beyond the line end.
+ * @return Whether the train waits at the line end.
+ */
+bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next);
+
+/**
+ * Where the pathfinder steers an assigned hauler instead of its current order (R2MLVS3MP-M decision 6). While it
+ * returns empties its destination is its Source bay, entered through the door; its orders are never written, so one
+ * order to the origin carries the whole loop.
+ * @param front Front engine.
+ * @return The bay while the hauler returns empties to a Source bay that admits it, otherwise INVALID_TILE.
+ */
+TileIndex GetTBMHaulerSteeringTarget(const Train &front);
+
 /** Why a project's spoil logistics wait (Plan 5 Group 9.3); a derived view, never saved. */
 enum class TBMLogisticsWait : uint8_t {
 	None, ///< Nothing waits.

@@ -217,8 +217,8 @@ Group 7 status (2026-10-05): the milestone build and burst ran ([notes](r2mlvs3m
   Group 16.2. Whole-corridor time and cost with real haulage follow 7.1 in Group 7B.
 
 Milestone result (2026-10-05): both Debug targets build with no warnings, and [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass. Master Groups 5
-and 6 are checked with their child tasks. Four of the five save fixtures pass. `portal_save_fixture` timed out in one
-case while the laptop ran on battery; it needs a rerun on mains power (details in the notes).
+and 6 are checked with their child tasks. All five save fixtures pass; `portal_save_fixture` first timed out in one case
+while the laptop ran on battery, then passed on a rerun at maximum performance (details in the notes).
 
 ### Area Mandatory Reading - Movement and occupied runtime
 
@@ -234,10 +234,31 @@ Read the milestone results first. In live source, inspect only these owners:
 Read Plan 3 Groups 15-16 and Plan 4 Groups 13-14 and 19 for the scopes they name. A controller-owned move must stay
 visible/hidden independent and keep each part's reservation; ordinary trains keep their refusals.
 
+Context has compacted 2 times while executing this group.
+
 ### Group 7B - Drive the consist and close the playable loop
 
+Group 7B status (2026-10-05): in progress. The design is [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). All 111
+project tags pass on build 17 ([burst](r2mlvs3mp-l-movement-burst4-all.txt)).
+- Steps 1 and 2 are built and pass: the magazine at the pair key, admitted track for the project's own trains, face
+  travel and the backing return, and hauler steering in the pathfinder.
+- The build-and-test runs found three test-setup gaps (zero settings, an unindexed town, a missing pool check) and
+  two product fixes (reservation asserts on a hidden pair, and authority lost when the last cut completes the job).
+  A hauler is also no longer admitted at a bay that fails validation.
+- 7.3 is checked with Plan 3 Group 15:
+  - The whole life of a pair (15.2): bore, retire, refusal at the Sealed door, then freight through the bored tunnel.
+  - The Connected crossing, its signals and reversals on both allowed rail pairs (15.3, `[portal-movement]`).
+- Checked child tasks:
+  - Plan 4 14.3: cancellation with the tail across the portal, and a blocked retreat.
+  - Plan 4 19.1: visible/hidden equivalence, by audit.
+  - Plan 5 13.1: a loop commissioned by command, with a mid-route exchange after which boring resumes.
+  - Plan 5 13.3: the replay of that loop.
+- 7.1 and 7.7 stay open for the recurring underground-bay exchange and the wait-state reloads (Plan 5 13.2).
+- 7.4 is not started: the occupied saves.
+- Details are in the [notes](r2mlvs3mp-d-execution-notes.md#group-7b---movement-in-progress).
+
 {{HARD}}
-- [ ] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
+- [X] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
 - [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop): commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
 - [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
 - [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.

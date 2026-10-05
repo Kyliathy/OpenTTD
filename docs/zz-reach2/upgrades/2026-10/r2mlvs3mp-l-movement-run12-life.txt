@@ -1,0 +1,7 @@
+===== [tbm-movement]
+Filters: [tbm-movement]
+===============================================================================
+All tests passed (28242 assertions in 5 test cases)
+
+== exit 0
+===== [tbm-movement] rc=0

@@ -1,0 +1,62 @@
+[tbm-loop] run 10 (build 11): All tests passed (108330 assertions in 2 test cases). Verbose output (-s) was 17 MB; kept here: the summary and one transition trace (tick: phases [wagon IDs] | aboard cutter hauler, platforms, received, committed as Earth/Rock tonnes).
+  trace:
+  1: cutter phase 1 blocked 0 cursor 0 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 0/0 0/0 platforms 0/0 received 0/0 committed 0/0
+  81: cutter phase 2 blocked 0 cursor 0 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 0/0 0/0 platforms 0/0 received 0/0 committed 0/0
+  969: cutter phase 3 blocked 0 cursor 1 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 72/144 0/0 platforms 0/0 received 0/0 committed 72/
+  144
+  1061: cutter phase 2 blocked 0 cursor 1 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 72/144 0/0 platforms 0/0 received 0/0 committed 72/
+  144
+  1283: cutter phase 3 blocked 0 cursor 2 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 90/180 0/0 platforms 0/0 received 0/0 committed 90/
+  180
+  1376: cutter phase 2 blocked 0 cursor 2 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 90/180 0/0 platforms 0/0 received 0/0 committed 90/
+  180
+  1598: cutter phase 4 blocked 0 cursor 3 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 108/216 0/0 platforms 0/0 received 0/0 committed
+  108/216
+  1808: cutter phase 5 blocked 0 cursor 3 [0,1,2,3,4,5] | hauler phase 0 wait 0
+  [11,12,13,14,15] | aboard 108/216 0/0 platforms 0/0 received 0/0 committed
+  108/216
+  2490: cutter phase 5 blocked 0 cursor 3 [0,1,2,3,4,5] | hauler phase 1 wait 0
+  [11,12,13,14,15] | aboard 108/216 0/0 platforms 0/0 received 0/0 committed
+  108/216
+  2491: cutter phase 5 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 2
+  wait 0 [11,2,3,4,5] | aboard 0/0 108/216 platforms 0/0 received 0/0 committed
+  108/216
+  2492: cutter phase 6 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 3
+  wait 0 [11,2,3,4,5] | aboard 0/0 108/216 platforms 0/0 received 0/0 committed
+  108/216
+  2493: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 3
+  wait 0 [11,2,3,4,5] | aboard 0/0 108/216 platforms 0/0 received 0/0 committed
+  108/216
+  2734: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 0 [11,2,3,4,5] | aboard 0/0 108/216 platforms 0/0 received 0/0 committed
+  108/216
+  2803: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 8 [11,2,3,4,5] | aboard 0/0 76/152 platforms 0/0 received 32/64
+  committed 108/216
+  2812: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 0 [11,2,3,4,5] | aboard 0/0 76/152 platforms 0/0 received 32/64
+  committed 108/216
+  3583: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 8 [11,2,3,4,5] | aboard 0/0 44/88 platforms 0/0 received 64/128
+  committed 108/216
+  3626: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 0 [11,2,3,4,5] | aboard 0/0 44/88 platforms 0/0 received 64/128
+  committed 108/216
+  4354: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 8 [11,2,3,4,5] | aboard 0/0 12/24 platforms 0/0 received 96/192
+  committed 108/216
+  4366: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 4
+  wait 0 [11,2,3,4,5] | aboard 0/0 12/24 platforms 0/0 received 96/192
+  committed 108/216
+  5134: cutter phase 7 blocked 0 cursor 3 [0,1,12,13,14,15] | hauler phase 0
+  wait 0 [11,2,3,4,5] | aboard 0/0 0/0 platforms 0/0 received 108/216 committed
+  108/216
+
+All tests passed (108330 assertions in 2 test cases)

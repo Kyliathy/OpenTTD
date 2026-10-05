@@ -1,0 +1,819 @@
+/*
+ * This file is part of OpenTTD.
+ * OpenTTD is free software under the GNU General Public License, version 2.
+ * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
+ */
+
+/**
+ * @file tbm_movement.cpp Real movement of a boring machine and its hauler through their project pair (master Group
+ * 7B). The cutter consist leaves its magazine at the Surface key when started, drives through the shaft to its face,
+ * advances on its own support, backs into the magazine for each exchange and leaves again ([tbm-movement]). Once its
+ * project retires and the pair is opened, ordinary freight drives into the tunnel it bored. An assigned hauler with
+ * one order to the origin is steered back to the magazine after every delivery, so the whole route is carried out by
+ * real trains, from the rig's project or one commissioned through the player's command ([tbm-loop]). Only the trains'
+ * own ticks move them, through the game's vehicle step in the loop and whole-life tests; the TBM controller and the
+ * hauler cycle run inside them. A Commissioning pair shows its track to the project's own trains only.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md, decisions 1-7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15
+ */
+
+#include "../stdafx.h"
+#include "../3rdparty/catch2/catch.hpp"
+#include "spoil_receiver_fixture.h"
+#include "movement_fixture.h"
+#include "../vehicle_cmd.h"
+#include "../track_func.h"
+#include "../signal_func.h"
+#include "../town_kdtree.h"
+
+#include "../safeguards.h"
+
+/**
+ * @param project Live project.
+ * @return Its phase, blocked reason and cut cursor.
+ */
+static std::string DescribeProject(const TBMProject &project)
+{
+	const ExcavationJob *job = GetExcavationJob(project.job);
+	return fmt::format("phase {} blocked {} cursor {}", to_underlying(project.phase), to_underlying(project.blocked), job == nullptr ? std::string{"-"} : fmt::format("{}", job->cursor));
+}
+
+/**
+ * A fixture town in the town index for one test, so a command that names what it builds after the nearest town (a
+ * depot) finds it. Declare it after the rig that owns the town, so it leaves the index before the town is deleted.
+ */
+class TownIndexEntry {
+	TownID id; ///< Indexed town.
+public:
+	/** @param town Fixture town to index. */
+	explicit TownIndexEntry(const Town &town) : id(town.index) { _town_kdtree.Insert(this->id); }
+
+	/** Take the town out of the index again. */
+	~TownIndexEntry() { _town_kdtree.Remove(this->id); }
+};
+
+/** A published project whose real train drives itself; the controller steps inside the train's own ticks. */
+class TBMMovementRig : public TBMProjectRig {
+public:
+	TileIndex source = this->fixture.request.portal; ///< Surface pair key: the magazine and Source bay.
+	TileIndex rock_end = this->proof.destination; ///< Rock end of the pair: the first face approach.
+
+	/**
+	 * Publish a project with straight cuts; its consist stands stopped in the magazine, as commissioning leaves it.
+	 * @param segments Straight cuts out of the door.
+	 */
+	explicit TBMMovementRig(size_t segments) : TBMProjectRig(segments) {}
+
+	/**
+	 * Publish a project whose route turns as given; its consist stands stopped in the magazine.
+	 * @param turns Change of heading at each advance (see TBMProjectRig).
+	 */
+	explicit TBMMovementRig(const std::vector<DirDiff> &turns) : TBMProjectRig(turns) {}
+
+	/** @return The live project. */
+	const TBMProject &Project() const { return *GetTBMProject(this->project.id); }
+
+	/** @return The live job. */
+	const ExcavationJob &Job() const { return *GetExcavationJob(this->project.job); }
+
+	/** Start the consist with the player's ordinary start command (R2MLVS3MP-M decision 7). */
+	void Start() const
+	{
+		REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, this->front->index, true).Succeeded());
+	}
+
+	/** @return The project state and every part's tile, track, position, facing and visibility, for a failed drive. */
+	std::string Describe() const
+	{
+		std::string text = fmt::format("source {} rock end {}", this->source.base(), this->rock_end.base());
+		return text + "\n" + DescribeProject(this->Project()) + "\n" + DescribeTrain(this->front);
+	}
+
+	/**
+	 * Tick the real train until a condition holds; the train must never crash on the way.
+	 * @param done Condition on the live project and train.
+	 * @param limit Most ticks to try.
+	 * @return Ticks taken.
+	 */
+	uint Drive(const std::function<bool()> &done, uint limit = 20000) const
+	{
+		uint ticks = 0;
+		// One Train::Tick is the game's whole step for this train: the controller step, then the loco handler twice.
+		while (!done() && ticks < limit) {
+			REQUIRE(this->front->Tick());
+			REQUIRE_FALSE(this->front->vehstatus.Test(VehState::Crashed));
+			++ticks;
+		}
+		INFO(this->Describe());
+		REQUIRE(done());
+		return ticks;
+	}
+
+	/**
+	 * Tick the real train a fixed number of times; it must never crash.
+	 * @param ticks Ticks to run.
+	 */
+	void Run(uint ticks) const
+	{
+		for (uint tick = 0; tick < ticks; ++tick) {
+			REQUIRE(this->front->Tick());
+			REQUIRE_FALSE(this->front->vehstatus.Test(VehState::Crashed));
+		}
+	}
+
+	/** @return Whether every part stands in the depot state on the magazine tile. */
+	bool IsWhollyInMagazine() const
+	{
+		for (const Train *part = this->front; part != nullptr; part = part->Next()) {
+			if (part->tile != this->source || part->track != Track::Depot) return false;
+		}
+		return true;
+	}
+};
+
+/** The whole route by real movement: out to the face, along the new support, back for each exchange, and out again. */
+TEST_CASE("A started cutter drives to its face, works its route and backs into its magazine", "[tbm-movement]")
+{
+	PathfinderDefaults pathfinder;
+	std::vector<DirDiff> turns(3, DirDiff::Same);
+	bool bending = false;
+	SECTION("on a straight route, exchanged once at its end") {}
+	SECTION("on a bending route, exchanged before its end too") {
+		// The bend's diagonal cuts overflow one load, so the consist leaves its magazine again with empties.
+		turns = {DirDiff::Same, DirDiff::Right45, DirDiff::Right45};
+		bending = true;
+	}
+	TBMMovementRig rig(turns);
+	const auto route = rig.Job().route;
+	const auto breakpoints = rig.Job().pass_terms->exchange_after;
+	const DiagDirection shaft = GetLayerPortalShaftDirection(rig.source);
+	// Commissioning leaves the saved heading at the first cut's: out through the door.
+	CHECK(rig.Project().heading == route.front().heading);
+	REQUIRE(route.size() == 3);
+	// Only the bend has an exchange before the end; the straight route's wagons hold all of its spoil.
+	REQUIRE((breakpoints.size() >= 2) == bending);
+	REQUIRE(rig.Project().phase == TBMPhase::Commissioning);
+	REQUIRE(IsTrainStoppedAtPortalSite(*rig.front));
+
+	// A commissioned consist waits, stopped and wholly inside, until the player starts it.
+	rig.Run(20);
+	CHECK(rig.Project().phase == TBMPhase::Commissioning);
+	CHECK(rig.IsWhollyInMagazine());
+
+	rig.Start();
+	const uint first_travel = rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Bore; });
+	INFO("first travel " << first_travel << " ticks");
+	// The cutter leads through the shaft and stops at its first face, the rock end; the rest of it trails behind.
+	CHECK(rig.front->tile == rig.rock_end);
+	CHECK(rig.front->cur_speed == 0);
+	CHECK(IsTBMHoldingTrain(*rig.front));
+	for (const Train *part = rig.front; part != nullptr; part = part->Next()) {
+		CHECK((part->tile == rig.rock_end || part->tile == rig.source));
+	}
+
+	for (uint32_t cut = 0; cut < route.size(); ++cut) {
+		// Each cut is worked where the controller stopped the train: the rock end, then the end of the newest support.
+		const TileIndex approach = cut == 0 ? rig.rock_end : route[cut - 1].cutter_position;
+		INFO("cut " << cut);
+		REQUIRE(rig.Project().phase == TBMPhase::Bore);
+		CHECK(rig.front->tile == approach);
+		rig.Drive([&rig, cut] { return rig.Job().cursor == cut + 1; });
+
+		const bool exchange = std::ranges::find(breakpoints, static_cast<uint16_t>(cut + 1)) != breakpoints.end();
+		if (!exchange) {
+			// A cut that is no exchange breakpoint drives the train onto its new support, where it stops to work.
+			REQUIRE(rig.Project().phase == TBMPhase::AdvanceSupport);
+			CHECK_FALSE(IsTBMHoldingTrain(*rig.front));
+			rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Bore; });
+			continue;
+		}
+
+		// An exchange breakpoint backs the consist along its support and through the shaft into the magazine.
+		REQUIRE(rig.Project().phase == TBMPhase::ReturnForExchange);
+		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::WaitForEmpties; });
+		CHECK(rig.IsWhollyInMagazine());
+		CHECK_FALSE(rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards));
+		CHECK(rig.front->cur_speed == 0);
+		// It backed in, so it still faces its face, ready to leave head first. The saved heading is the last committed
+		// cut's, which a bend turns; backing never changed it.
+		CHECK(rig.front->direction == DiagDirToDir(shaft));
+		CHECK(rig.Project().heading == route[cut].heading);
+
+		// Stand-in for the exchange, which the hauler loop (step 2) drives: the wagons are emptied where they stand.
+		for (Train *part = rig.front; part != nullptr; part = part->Next()) part->cargo.Truncate();
+		if (cut + 1 == route.size()) {
+			rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Completed; });
+			break;
+		}
+		// With empties aboard it leaves the magazine through the shaft again and drives to the end of its support.
+		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Bore; });
+	}
+	CHECK(rig.Project().phase == TBMPhase::Completed);
+	CHECK(rig.Job().cursor == route.size());
+
+	// A finished project's consist no longer passes the housing: started or not, it stays in the magazine.
+	rig.Run(200);
+	CHECK(rig.IsWhollyInMagazine());
+}
+
+/**
+ * @param train Front engine.
+ * @return Every part's world position, in chain order.
+ */
+static std::vector<std::pair<int, int>> PartPositions(const Train *train)
+{
+	std::vector<std::pair<int, int>> positions;
+	for (const Train *part = train; part != nullptr; part = part->Next()) positions.emplace_back(part->x_pos, part->y_pos);
+	return positions;
+}
+
+/**
+ * A cancellation while the consist straddles the pair takes it back whole into its magazine, with or without spoil, and
+ * a player's stop on the way back holds the retreat until the train is started again (Plan 4 14.3).
+ */
+TEST_CASE("Cancelling a consist that straddles the pair takes it back into its magazine", "[tbm-movement]")
+{
+	PathfinderDefaults pathfinder;
+	TBMMovementRig rig(3);
+	rig.Start();
+	rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Bore; });
+	/** Finish the first cut and drive onto its support, so the second cut starts with spoil aboard. */
+	const auto second_cut = [&rig]() {
+		rig.Drive([&rig] { return rig.Job().cursor == 1; });
+		REQUIRE(rig.Project().phase == TBMPhase::AdvanceSupport);
+		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Bore; });
+	};
+	bool spoil = false;
+	bool stop_on_the_way = false;
+	SECTION("in the first cut, at the rock end") {}
+	SECTION("in the second cut, with spoil aboard") {
+		second_cut();
+		spoil = true;
+	}
+	SECTION("in the second cut, stopped by the player on the way back") {
+		second_cut();
+		spoil = true;
+		stop_on_the_way = true;
+	}
+	// Part of the current cut, so the cancellation has unfinished work to drop.
+	rig.Run(100);
+	REQUIRE(rig.Job().partial_work_ticks != 0);
+	bool on_key = false, beyond = false;
+	// The consist straddles the pair: some parts on the key, the others at the rock end or on the support beyond it.
+	for (const Train *part = rig.front; part != nullptr; part = part->Next()) {
+		on_key |= part->tile == rig.source;
+		beyond |= part->tile != rig.source;
+	}
+	INFO(rig.Describe());
+	REQUIRE(on_key);
+	REQUIRE(beyond);
+
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Cancel).Succeeded());
+	CHECK(rig.Job().partial_work_ticks == 0);
+	CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
+	if (stop_on_the_way) {
+		// Halfway back the player stops the train: the retreat holds, blocked, and nothing moves until it is started.
+		rig.Drive([&rig] { return rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards) && rig.front->cur_speed > 0; });
+		REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, rig.front->index, true).Succeeded());
+		rig.Drive([&rig] { return rig.front->cur_speed == 0; });
+		rig.Run(2);
+		CHECK(rig.Project().blocked == TBMBlockedReason::Stopped);
+		CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
+		CHECK_FALSE(rig.IsWhollyInMagazine());
+		const auto held = PartPositions(rig.front);
+		rig.Run(200);
+		CHECK(PartPositions(rig.front) == held);
+		rig.Start();
+	}
+	rig.Drive([&rig] { return rig.IsWhollyInMagazine() && rig.front->cur_speed == 0; });
+	CHECK_FALSE(IsTBMCorridorOccupied(rig.Project()));
+	CHECK_FALSE(rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards));
+	if (spoil) {
+		// The spoil of the committed cut is still aboard, so the consist waits in its bay for empties before it ends.
+		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::WaitForEmpties; });
+		CHECK(TBMExchangeRig::Aboard(rig.front) != 0);
+		for (Train *part = rig.front; part != nullptr; part = part->Next()) part->cargo.Truncate();
+	}
+	rig.Drive([&rig] { return rig.Project().phase == TBMPhase::Cancelled; });
+	CHECK(rig.Job().state == ExcavationJobState::Cancelled);
+	// A cancelled project's consist no longer passes the housing.
+	rig.Run(200);
+	CHECK(rig.IsWhollyInMagazine());
+}
+
+/**
+ * The whole life of a pair by real movement (Plan 3 15.2): the TBM bores its route and retreats; the retired pair is
+ * sealed and turns an ordinary freight train back at its door; once opened, the same train crosses it into the tunnel
+ * the TBM bored, to the end of its last cut, and comes back.
+ */
+TEST_CASE("A freight train crosses the tunnel its TBM bored once the pair is opened", "[tbm-movement]")
+{
+	PathfinderDefaults pathfinder;
+	TBMMovementRig rig(3);
+	const auto route = rig.Job().route;
+	rig.Start();
+	// The whole route by real movement. At each exchange, empties are put aboard where the consist stands, a stand-in
+	// for the hauler loop that [tbm-loop] drives.
+	rig.Drive([&rig] {
+		if (rig.Project().phase == TBMPhase::WaitForEmpties) {
+			for (Train *part = rig.front; part != nullptr; part = part->Next()) part->cargo.Truncate();
+		}
+		return rig.Project().phase == TBMPhase::Completed;
+	}, 60000);
+	REQUIRE(rig.IsWhollyInMagazine());
+
+	// Retire the finished project: the player stops the consist, the pair is sealed again, and the cutter is sold where
+	// it stands. The released support becomes permanent track.
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, rig.front->index, true).Succeeded());
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Retire).Succeeded());
+	REQUIRE(GetLayerPortalWorkState(rig.source) == LayerPortalWorkState::Sealed);
+	REQUIRE(Command<Commands::SellVehicle>::Do(DoCommandFlag::Execute, rig.front->index, true, false, ClientID::Invalid).Succeeded());
+	rig.front = nullptr;
+	for (const auto &support : CaptureTBMSupport()) REQUIRE(Command<Commands::ConvertTBMSupport>::Do(DoCommandFlag::Execute, support.tile).Succeeded());
+
+	// A line from the pair's door to a depot facing back up it, and a freight train in the depot.
+	const DiagDirection door = GetLayerPortalDoorDirection(rig.source);
+	const Track axis = DiagDirToDiagTrack(door);
+	const TileIndex approach = GetLayerPortalDoorTile(rig.source);
+	const TileIndex beyond = TileAddByDiagDir(approach, door);
+	const TileIndex depot = TileAddByDiagDir(beyond, door);
+	for (const TileIndex tile : {approach, beyond}) {
+		REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, tile, RAILTYPE_RAIL, axis, false).Succeeded());
+	}
+	REQUIRE(Command<Commands::BuildRailDepot>::Do(DoCommandFlag::Execute, depot, RAILTYPE_RAIL, ReverseDiagDir(door)).Succeeded());
+	UpdateSignalsInBuffer();
+	rig.fixture.stock->info.cargo_type = GetCargoTypeByLabel(CT_PASSENGERS);
+	Train *freight = BuildTrainInDepot(depot, rig.fixture.stock, Engine::Get(GetTBMEngine(2)), 3);
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, freight->index, true).Succeeded());
+
+	/** @return Whether every part of the freight train stands inside its depot. */
+	const auto home = [freight, depot]() {
+		for (const Train *part = freight; part != nullptr; part = part->Next()) {
+			if (part->tile != depot || part->track != Track::Depot) return false;
+		}
+		return true;
+	};
+	/**
+	 * @param tile Tile to look at.
+	 * @return Whether a part of the freight train stands on it.
+	 */
+	const auto reaches = [freight](TileIndex tile) {
+		for (const Train *part = freight; part != nullptr; part = part->Next()) {
+			if (part->tile == tile) return true;
+		}
+		return false;
+	};
+	/**
+	 * Run the game's vehicle step until a condition holds; the train must never crash or leave the tiles it stands on.
+	 * @param done Condition.
+	 * @param open Whether the pair is open; a closed pair must never take a part of the train.
+	 */
+	const auto drive = [&rig, freight, &reaches](const std::function<bool()> &done, bool open) {
+		uint ticks = 0;
+		while (!done() && ticks < 8000) {
+			CallVehicleTicks();
+			REQUIRE_FALSE(freight->vehstatus.Test(VehState::Crashed));
+			REQUIRE(IsTrainOnItsTiles(freight));
+			if (!open) REQUIRE_FALSE(reaches(rig.source));
+			++ticks;
+		}
+		INFO("after " << ticks << " ticks: " << DescribeTrain(freight));
+		REQUIRE(done());
+	};
+
+	// Sealed: the train runs to the door, finds a line end there and turns back to its depot.
+	bool at_door = false;
+	drive([&at_door, &reaches, &home, approach] {
+		at_door |= reaches(approach);
+		return at_door && home();
+	}, false);
+
+	// Opened with the player's command: the same train crosses the pair into the bored tunnel, to the end of its last
+	// cut, and comes back. The signals the connection queued are finished as the command kernel does after a command.
+	REQUIRE(Command<Commands::ChangeLayerPortalConnection>::Do(DoCommandFlag::Execute, rig.source, true).Succeeded());
+	UpdateSignalsInBuffer();
+	REQUIRE(GetLayerPortalWorkState(rig.source) == LayerPortalWorkState::Connected);
+	const TileIndex tunnel_end = route.back().cutter_position;
+	drive([&reaches, tunnel_end] { return reaches(tunnel_end); }, true);
+	drive([&home] { return home(); }, true);
+}
+
+/** The pair's track is shown to the project's cutter consist only, at both ends, through the legal sides only. */
+TEST_CASE("A Commissioning pair shows its track only to the project's own trains", "[tbm-movement]")
+{
+	TBMMovementRig rig(1);
+	const DiagDirection shaft = GetLayerPortalShaftDirection(rig.source);
+	const DiagDirection door = GetLayerPortalDoorDirection(rig.source);
+	const TrackdirBits axis = TrackBitsToTrackdirBits(DiagDirToDiagTrack(shaft));
+
+	// The cutter consist sees the axis at the key, through the door or by a shaft step, and at the rock end.
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.source, *rig.front, door) == axis);
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.source, *rig.front, DiagDirection::Invalid) == axis);
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.rock_end, *rig.front, DiagDirection::Invalid) == axis);
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.rock_end, *rig.front, GetLayerPortalDoorDirection(rig.rock_end)) == axis);
+	// The shaft side is never an ordinary edge.
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.source, *rig.front, shaft).None());
+	// Only the key keeps a magazine, which the cutter consist leaves through the shaft.
+	CHECK(GetLayerPortalMagazineExit(rig.source, *rig.front) == shaft);
+	CHECK(GetLayerPortalMagazineExit(rig.rock_end, *rig.front) == DiagDirection::Invalid);
+	// Ordinary routing still sees no track on the pair.
+	CHECK_FALSE(GetTileTrackStatus(rig.source, TransportType::Rail, RoadTramType::Invalid, door).trackdirs.Any());
+	CHECK_FALSE(GetTileTrackStatus(rig.rock_end, TransportType::Rail, RoadTramType::Invalid).trackdirs.Any());
+
+	// A second consist of the same company and model, assembled at a second, Sealed pair.
+	const TileIndex second = TileXYL(30, 20, MapLayer::Surface);
+	REQUIRE(CmdBuildLayerPortal(DoCommandFlag::Execute, second, TransportType::Rail, MapLayer::Underground, DiagDirection::SE, RAILTYPE_RAIL, ROADTYPE_ROAD).Succeeded());
+	auto request = rig.fixture.request;
+	request.portal = second;
+	request.proposal = rig.base;
+	request.proposal.commissioning_anchor = GetLayerPortalPairTile(second);
+	Train *other = nullptr;
+	const std::array<const Engine *, 1> wagons{Engine::Get(GetTBMEngine(2))};
+	REQUIRE(BuildTBMConsistAtSite(request, Engine::Get(GetTBMEngine(0)), 0, GetFreeUnitNumber(VehicleType::Train), wagons, &other).Succeeded());
+	// It is not this project's consist: no track and no magazine at either end of this pair.
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.source, *other, door).None());
+	CHECK(GetLayerPortalAdmittedTrackdirs(rig.rock_end, *other, DiagDirection::Invalid).None());
+	CHECK(GetLayerPortalMagazineExit(rig.source, *other) == DiagDirection::Invalid);
+	// A Sealed pair shows its track to nobody, its own assembled consist and the other project's cutter included.
+	CHECK(GetLayerPortalAdmittedTrackdirs(second, *other, door).None());
+	CHECK(GetLayerPortalAdmittedTrackdirs(second, *rig.front, door).None());
+	CHECK(GetLayerPortalMagazineExit(second, *other) == DiagDirection::Invalid);
+}
+
+/** An ordinary train that drives up to the door of a Commissioning pair reaches a line end there and turns back. */
+TEST_CASE("An ordinary train is turned back at a Commissioning pair's door", "[tbm-movement]")
+{
+	PathfinderDefaults pathfinder;
+	TBMExchangeRig rig;
+	const TileIndex source = rig.fixture.request.portal;
+	const DiagDirection door = GetLayerPortalDoorDirection(source);
+	const Track axis = DiagDirToDiagTrack(door);
+	// A short line from a depot straight up to the pair's door: the door tile, one more tile, then the depot.
+	const TileIndex approach = GetLayerPortalDoorTile(source);
+	const TileIndex beyond = TileAddByDiagDir(approach, door);
+	const TileIndex depot = TileAddByDiagDir(beyond, door);
+	REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, approach, RAILTYPE_RAIL, axis, false).Succeeded());
+	REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, beyond, RAILTYPE_RAIL, axis, false).Succeeded());
+	REQUIRE(Command<Commands::BuildRailDepot>::Do(DoCommandFlag::Execute, depot, RAILTYPE_RAIL, ReverseDiagDir(door)).Succeeded());
+	UpdateSignalsInBuffer();
+	Train *stranger = rig.BuildHauler(depot, 1, 0);
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, stranger->index, true).Succeeded());
+
+	bool reached = false;
+	// The train runs to the door, finds a line end, turns back to its depot, and leaves again; it never enters the pair.
+	for (uint tick = 0; tick < 3000; ++tick) {
+		REQUIRE(stranger->Tick());
+		for (const Train *part = stranger; part != nullptr; part = part->Next()) {
+			REQUIRE(part->tile != source);
+			reached |= part->tile == approach;
+		}
+	}
+	CHECK(reached);
+	CHECK_FALSE(stranger->vehstatus.Test(VehState::Crashed));
+	// The boring consist held in its magazine was never disturbed.
+	for (const Train *part = rig.front; part != nullptr; part = part->Next()) {
+		CHECK(part->tile == source);
+		CHECK(part->track == Track::Depot);
+	}
+}
+
+/** Earth and Rock tonnes, kept apart. */
+struct SpoilTonnes {
+	uint64_t earth = 0; ///< Earth tonnes.
+	uint64_t rock = 0; ///< Rock tonnes.
+
+	/** @param other Tonnes to add. @return The sum, kind by kind. */
+	SpoilTonnes operator+(const SpoilTonnes &other) const { return {this->earth + other.earth, this->rock + other.rock}; }
+
+	/** @param other Tonnes to compare. @return Whether both kinds match. */
+	bool operator==(const SpoilTonnes &other) const = default;
+};
+
+/**
+ * @param train Front engine.
+ * @return Every part's ID in chain order, comma separated, for the loop's trace.
+ */
+static std::string DescribeLoad(const Train *train)
+{
+	std::string ids;
+	for (VehicleID id : GetTBMChainIDs(train)) ids += fmt::format("{}{}", ids.empty() ? "" : ",", id.base());
+	return ids;
+}
+
+/** How the source loop's project comes to be. */
+enum class LoopStart : uint8_t {
+	Straight, ///< The rig's own project of three straight cuts, put back to its commissioned state.
+	Bend, ///< The rig's own project on a bend whose spoil overflows one load, put back to its commissioned state.
+	Command, ///< A project commissioned through the player's command at a second Sealed pair, on its own planned route.
+};
+
+/**
+ * @param start How the loop's project comes to be.
+ * @return The turns of the rig's own route: the bend for LoopStart::Bend, otherwise three straight cuts.
+ */
+static std::vector<DirDiff> LoopTurns(LoopStart start)
+{
+	if (start == LoopStart::Bend) return {DirDiff::Same, DirDiff::Right45, DirDiff::Right45};
+	return std::vector<DirDiff>(3, DirDiff::Same);
+}
+
+/**
+ * The source loop of a route with both trains driving themselves through the game's vehicle step. The line runs from
+ * the pair's door: plain rail, a platform of the origin, plain rail, and the hauler's depot facing back up it. The
+ * hauler has one ordinary order, to the origin. The game's random state is seeded, so two loops replay alike.
+ */
+class SourceLoop {
+	Randomizer saved_random = _random; ///< The caller's random state, restored at the end.
+public:
+	AutoRestoreBackup<uint8_t> indicators{_settings_client.gui.loading_indicators, uint8_t{0}}; ///< No filling text effect without a GUI.
+	PathfinderDefaults pathfinder; ///< Real pathfinder settings for moving trains.
+	SpoilReceiverRig rig; ///< Cutter consist, receivers and origin.
+	TownIndexEntry town; ///< The origin's town in the town index, so the depot can be named.
+	Industry *earth = nullptr; ///< Earth receiver.
+	Industry *rock = nullptr; ///< Rock crusher.
+	TBMProjectID project{}; ///< The loop's project.
+	Train *cutter = nullptr; ///< Its cutter consist.
+	TileIndex source = INVALID_TILE; ///< Its Surface pair key: the magazine and Source bay.
+	TileIndex rock_end = INVALID_TILE; ///< The rock end of its pair, which the hauler never reaches.
+	TileIndex depot = INVALID_TILE; ///< The hauler's depot at the end of the line.
+	Train *hauler = nullptr; ///< The assigned hauler.
+	std::string trace; ///< One line per transition: phases, wagon IDs and the Earth/Rock ledger, with its tick.
+	std::string journal; ///< Every change of both trains' state and the hauler's tile, for a stalled loop.
+	std::vector<uint16_t> exchanged_at; ///< The job's cut cursor at each completed exchange, in order.
+	uint ticks = 0; ///< Ticks run.
+
+	/**
+	 * Build the line and the hauler, give the loop its commissioned project, and start both trains.
+	 * @param start The rig's project on its straight route or its bend, or one commissioned through the player's command.
+	 */
+	explicit SourceLoop(LoopStart start = LoopStart::Straight) : rig(LoopTurns(start)), town(*rig.town)
+	{
+		_random.SetSeed(0x7B3D);
+		this->earth = this->rig.BuildReceiver(SpoilReceiverKind::Earth, 15, 22);
+		this->rock = this->rig.BuildReceiver(SpoilReceiverKind::Rock, 14, 16);
+		// The rig's own consist goes back to its commissioned state: stopped, wholly in its magazine.
+		this->rig.front->vehstatus.Set(VehState::Stopped);
+		this->rig.Reload(TBMPhase::Commissioning);
+		if (start != LoopStart::Command) {
+			this->project = this->rig.project.id;
+			this->cutter = this->rig.front;
+			this->source = this->rig.fixture.request.portal;
+			this->rock_end = this->rig.proof.destination;
+		} else {
+			// A second Sealed pair, built with the player's command; it is commissioned once its line and origin are ready.
+			this->source = TileXYL(32, 20, MapLayer::Surface);
+			REQUIRE(Command<Commands::BuildLayerPortal>::Do(DoCommandFlag::Execute, this->source, TransportType::Rail, MapLayer::Underground, DiagDirection::SE, RAILTYPE_RAIL, ROADTYPE_ROAD).Succeeded());
+			this->rock_end = GetLayerPortalPairTile(this->source);
+		}
+		const TileIndex source = this->source;
+		const DiagDirection door = GetLayerPortalDoorDirection(source);
+		const Track axis = DiagDirToDiagTrack(door);
+		const TileIndex approach = GetLayerPortalDoorTile(source);
+		const TileIndex platform = TileAddByDiagDir(approach, door);
+		const TileIndex tail = TileAddByDiagDir(platform, door);
+		this->depot = TileAddByDiagDir(tail, door);
+		for (const TileIndex tile : {approach, tail}) {
+			REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, tile, RAILTYPE_RAIL, axis, false).Succeeded());
+		}
+		REQUIRE(Command<Commands::BuildRailDepot>::Do(DoCommandFlag::Execute, this->depot, RAILTYPE_RAIL, ReverseDiagDir(door)).Succeeded());
+		MakeRailStation(platform, _current_company, this->rig.fixture.origin->index, DiagDirToAxis(door), 0, RAILTYPE_RAIL);
+		this->rig.fixture.origin->train_station = TileArea(this->rig.origin_tile, platform);
+		this->rig.fixture.origin->spread.Add(platform);
+		UpdateSignalsInBuffer();
+		this->rig.RefreshOrigin();
+		if (start == LoopStart::Command) this->Commission();
+
+		// The hauler gets one ordinary order, to the origin; the cycle never writes its orders.
+		this->hauler = this->rig.BuildHauler(this->depot, 2, 2);
+		Order order;
+		order.MakeGoToStation(this->rig.fixture.origin->index);
+		REQUIRE(CmdInsertOrder(DoCommandFlag::Execute, this->hauler->index, 0, order).Succeeded());
+		// The cutter consist starts as commissioning leaves it: stopped, wholly in its magazine.
+		REQUIRE(this->Project().phase == TBMPhase::Commissioning);
+		REQUIRE(IsTrainStoppedAtPortalSite(*this->cutter));
+		REQUIRE(AssignTBMHauler(this->project, this->hauler->index, true) == TBMExchangeError::None);
+		for (const Train *train : {this->cutter, this->hauler}) {
+			REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, train->index, true).Succeeded());
+		}
+	}
+
+	/** Restore the caller's random state. */
+	~SourceLoop() { _random = this->saved_random; }
+
+	/**
+	 * Commission at the second pair with the player's command: two Earth and two Rock hoppers, the origin with its
+	 * receivers, and a straight area of seven cells out of the rock end's door, long enough that its spoil overflows one
+	 * load. The command plans the route itself.
+	 */
+	void Commission()
+	{
+		const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(this->rock_end));
+		const TileIndex area_start = TileAddWrap(this->rock_end, step.x, step.y);
+		const TileIndex area_end = TileAddWrap(this->rock_end, step.x * 7, step.y * 7);
+		REQUIRE(IsValidTile(area_end));
+		const size_t before = CaptureTBMProjects().size();
+		const Money cash = SpoilReceiverRig::Cash();
+		const auto bought = Command<Commands::CommissionTBM>::Do(DoCommandFlag::Execute, this->source, 0, 2, 2, this->rig.fixture.origin->index, area_start, area_end, false);
+		INFO(bought.GetErrorMessage().base());
+		REQUIRE(bought.Succeeded());
+		// The top-level call charged the purchase; the queued signals are finished as the command kernel does.
+		UpdateSignalsInBuffer();
+		CHECK(SpoilReceiverRig::Cash() == cash - bought.GetCost());
+		REQUIRE(CaptureTBMProjects().size() == before + 1);
+		const TBMProject commissioned = CaptureTBMProjects().back();
+		REQUIRE(commissioned.portal == this->source);
+		this->project = commissioned.id;
+		this->cutter = Train::Get(commissioned.cutter);
+		REQUIRE(GetLayerPortalWorkState(this->source) == LayerPortalWorkState::Commissioning);
+	}
+
+	/** @return The loop's live project. */
+	const TBMProject &Project() const { return *GetTBMProject(this->project); }
+
+	/** @return Its live job. */
+	const ExcavationJob &Job() const { return *GetExcavationJob(this->Project().job); }
+
+	/** @return The hauler's live assignment. */
+	TBMExchangeAssignment Cycle() const { return *GetTBMExchangeAssignmentForHauler(this->hauler->index); }
+
+	/** @return Whether the route is finished and its last load delivered. */
+	bool Delivered() const { return this->Project().phase == TBMPhase::Completed && this->Cycle().phase == TBMHaulerPhase::ReturnEmpties; }
+
+	/**
+	 * @param train Front engine.
+	 * @return The Earth and Rock tonnes aboard its parts, wherever they are in their lists.
+	 */
+	static SpoilTonnes Aboard(const Train *train)
+	{
+		const CargoType earth = GetCargoTypeByLabel(CargoLabel{"ERTH"});
+		const CargoType rock = GetCargoTypeByLabel(CargoLabel{"ROCK"});
+		SpoilTonnes tonnes;
+		// A part carries one cargo; its whole list counts, whatever its loading state.
+		for (const Train *part = train; part != nullptr; part = part->Next()) {
+			if (part->cargo_type == earth) tonnes.earth += part->cargo.TotalCount();
+			if (part->cargo_type == rock) tonnes.rock += part->cargo.TotalCount();
+		}
+		return tonnes;
+	}
+
+	/** @return The spoil the receivers took: their stock, plus what they disposed of or crushed. */
+	SpoilTonnes Received() const
+	{
+		const SpoilReceiver *earth_state = GetSpoilReceiver(this->earth->index);
+		const SpoilReceiver *rock_state = GetSpoilReceiver(this->rock->index);
+		return {SpoilReceiverRig::Stock(*this->earth) + earth_state->disposed_t, SpoilReceiverRig::Stock(*this->rock) + rock_state->crushed_t + rock_state->disposed_t};
+	}
+
+	/** @return Spoil left on station platforms, which a refused transfer would put there. */
+	static SpoilTonnes OnPlatforms()
+	{
+		const CargoType earth = GetCargoTypeByLabel(CargoLabel{"ERTH"});
+		const CargoType rock = GetCargoTypeByLabel(CargoLabel{"ROCK"});
+		SpoilTonnes tonnes;
+		// Every station's lists count; a goods entry without data holds nothing.
+		for (const Station *st : Station::Iterate()) {
+			if (st->goods[earth].HasData()) tonnes.earth += st->goods[earth].GetData().cargo.TotalCount();
+			if (st->goods[rock].HasData()) tonnes.rock += st->goods[rock].GetData().cargo.TotalCount();
+		}
+		return tonnes;
+	}
+
+	/** @return The tonnes the job has committed. */
+	SpoilTonnes Committed() const { return {this->Job().completed_earth_t, this->Job().completed_rock_t}; }
+
+	/** @return Whether every committed tonne is in exactly one place: aboard a train, on a platform or received. */
+	bool IsConserved() const { return Aboard(this->cutter) + Aboard(this->hauler) + OnPlatforms() + this->Received() == this->Committed(); }
+
+	/** @return Both phases, the hauler's wait and each train's wagon IDs, as one line that changes only at a transition. */
+	std::string Transition() const
+	{
+		const TBMExchangeAssignment cycle = this->Cycle();
+		return fmt::format("cutter {} [{}] | hauler phase {} wait {} [{}]", DescribeProject(this->Project()), DescribeLoad(this->cutter), to_underlying(cycle.phase), to_underlying(cycle.wait), DescribeLoad(this->hauler));
+	}
+
+	/**
+	 * @param tonnes Earth and Rock tonnes.
+	 * @return Them as "earth/rock".
+	 */
+	static std::string Tonnes(const SpoilTonnes &tonnes) { return fmt::format("{}/{}", tonnes.earth, tonnes.rock); }
+
+	/**
+	 * Run the receivers and the game's vehicle step until the last load is delivered. At every transition the trace gets
+	 * a line with the wagon IDs and the ledger, and the ledger must balance.
+	 * @param limit Most ticks to run.
+	 */
+	void Run(uint limit = 200000)
+	{
+		std::string last_transition, last_state;
+		// The receivers take their intake, then the game's own vehicle step runs: stations load and unload, every vehicle
+		// ticks, and a train stopped on entering a depot is started again (VehicleEnteredDepotThisTick).
+		while (!this->Delivered() && this->ticks < limit) {
+			AdvanceSpoilReceiver(*this->earth);
+			AdvanceSpoilReceiver(*this->rock);
+			CallVehicleTicks();
+			REQUIRE_FALSE(this->cutter->vehstatus.Test(VehState::Crashed));
+			REQUIRE_FALSE(this->hauler->vehstatus.Test(VehState::Crashed));
+			// The hauler never passes the cutter: it never reaches the rock end of the pair.
+			for (const Train *part = this->hauler; part != nullptr; part = part->Next()) REQUIRE(part->tile != this->rock_end);
+			++this->ticks;
+			// Each exchange is recorded with the cut after which it came; two cannot complete in one tick.
+			if (const auto exchanges = this->Cycle().exchanges; exchanges != this->exchanged_at.size()) {
+				REQUIRE(exchanges == this->exchanged_at.size() + 1);
+				this->exchanged_at.push_back(static_cast<uint16_t>(this->Job().cursor));
+			}
+			if (std::string now = this->Transition(); now != last_transition) {
+				// Each transition records where every tonne is; the sum must still be what the job committed.
+				this->trace += fmt::format("\n{}: {} | aboard {} {} platforms {} received {} committed {}", this->ticks, now, Tonnes(Aboard(this->cutter)), Tonnes(Aboard(this->hauler)), Tonnes(OnPlatforms()), Tonnes(this->Received()), Tonnes(this->Committed()));
+				INFO("tick " << this->ticks << ": " << now);
+				CHECK(this->IsConserved());
+				last_transition = std::move(now);
+			}
+			const Train *lead = this->hauler->GetMovingFront();
+			if (std::string now = fmt::format("{} | order {} tile {} track {}{}", last_transition, to_underlying(this->hauler->current_order.GetType()), lead->tile.base(), lead->track.base(), this->hauler->vehstatus.Test(VehState::Stopped) ? " stopped" : ""); now != last_state) {
+				this->journal += fmt::format("\n{}: {}", this->ticks, now);
+				last_state = std::move(now);
+			}
+		}
+		INFO("journal (depot " << this->depot.base() << ", bay " << this->source.base() << "):" << this->journal);
+		INFO("cutter " << DescribeTrain(this->cutter) << "\nhauler " << DescribeTrain(this->hauler));
+		REQUIRE(this->Delivered());
+	}
+};
+
+/**
+ * Check a delivered loop's end state: one exchange at each frozen breakpoint and none elsewhere, spoil committed and
+ * every tonne of it received, nothing left aboard either train, and the player's order list untouched.
+ * @param loop A loop run until its last load was delivered.
+ */
+static void CheckDelivered(const SourceLoop &loop)
+{
+	INFO("trace:" << loop.trace);
+	CHECK(loop.Cycle().exchanges == loop.Job().pass_terms->exchange_after.size());
+	CHECK(loop.exchanged_at == loop.Job().pass_terms->exchange_after);
+	CHECK(SourceLoop::Aboard(loop.hauler) == SpoilTonnes{});
+	CHECK(SourceLoop::Aboard(loop.cutter) == SpoilTonnes{});
+	CHECK(loop.Received() == loop.Committed());
+	CHECK(loop.Committed() != SpoilTonnes{});
+	CHECK(loop.hauler->GetNumOrders() == 1);
+}
+
+/**
+ * The source loop with both trains driving themselves: one order to the origin carries every load of the route, every
+ * transition keeps the Earth/Rock ledger whole, and every committed tonne reaches a receiver (Plan 5 13.1).
+ */
+TEST_CASE("A hauler steered to its source bay carries every load of a route to the origin", "[tbm-loop]")
+{
+	SourceLoop loop;
+	loop.Run();
+	CheckDelivered(loop);
+}
+
+/**
+ * A bending route whose spoil overflows one load (Plan 5 13.1): the hauler takes the first load partway, the cutter
+ * goes back to its face with the empties and bores on, and the hauler, back with empties again, takes the last load.
+ */
+TEST_CASE("A cutter bores on with the empties of a mid-route exchange", "[tbm-loop]")
+{
+	SourceLoop loop(LoopStart::Bend);
+	REQUIRE(loop.Job().pass_terms->exchange_after.size() >= 2);
+	loop.Run();
+	CheckDelivered(loop);
+}
+
+/**
+ * The whole loop from the player's commands (Plan 5 13.1): a pair built and commissioned through them, the route
+ * the command planned, then every load carried to the origin by the steered hauler. The route overflows one load, so
+ * the cutter also bores on with the empties of a mid-route exchange.
+ */
+TEST_CASE("A project commissioned by command carries its whole route to the origin", "[tbm-loop]")
+{
+	SourceLoop loop(LoopStart::Command);
+	REQUIRE(loop.Project().id != loop.rig.project.id);
+	INFO("route of " << loop.Job().route.size() << " cuts");
+	REQUIRE(loop.Job().pass_terms->exchange_after.size() >= 2);
+	loop.Run();
+	CheckDelivered(loop);
+	// The rig's own project never moved: it still waits, stopped, in its own magazine.
+	CHECK(loop.rig.Project().phase == TBMPhase::Commissioning);
+	CHECK(IsTrainStoppedAtPortalSite(*loop.rig.front));
+}
+
+/**
+ * The same commands from the same fixture give the same trace, ledger and wagon IDs included (Plan 5 13.3). The
+ * project is commissioned by command, so the replay covers the commissioning too.
+ */
+TEST_CASE("The source loop replays the same trace from the same fixture", "[tbm-loop]")
+{
+	std::string first;
+	{
+		SourceLoop loop(LoopStart::Command);
+		loop.Run();
+		first = loop.trace;
+	}
+	SourceLoop again(LoopStart::Command);
+	again.Run();
+	REQUIRE_FALSE(first.empty());
+	CHECK(again.trace == first);
+}

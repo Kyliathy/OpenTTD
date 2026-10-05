@@ -1,0 +1,39 @@
+===== [portal-movement]
+Assertion failed: this->checked != 0, file D:\Codez\Sandbox\OpenTTD\src\core\pool_func.hpp, line 119
+  #0 PrintAbortStack D:\Codez\Sandbox\OpenTTD\src\tests\test_main.cpp:37
+  #1 raise minkernel\crts\ucrt\src\appcrt\misc\signal.cpp:547
+  #2 abort minkernel\crts\ucrt\src\appcrt\startup\abort.cpp:71
+  #3 common_assert_to_stderr<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:187
+  #4 common_assert<wchar_t> minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:415
+  #5 _wassert minkernel\crts\ucrt\src\appcrt\startup\assert.cpp:444
+  #6 Pool<Vehicle,PoolID<unsigned int,VehicleIDTag,1044480,1048575>,512,0,0>::GetNew D:\Codez\Sandbox\OpenTTD\src\core\pool_func.hpp:119
+  #7 Pool<Vehicle,PoolID<unsigned int,VehicleIDTag,1044480,1048575>,512,0,0>::PoolItem<&_vehicle_pool>::Create<Train> D:\Codez\Sandbox\OpenTTD\src\core\pool_type.hpp:340
+  #8 SpecializedVehicle<Train,0>::Create<> D:\Codez\Sandbox\OpenTTD\src\vehicle_base.h:1187
+  #9 BuildRailVehicleAtSite D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:840
+  #10 CmdBuildRailVehicle D:\Codez\Sandbox\OpenTTD\src\train_cmd.cpp:913
+  #11 OpenedPairLine::BuildTrain D:\Codez\Sandbox\OpenTTD\src\tests\portal_movement.cpp:117
+  #12 OpenedPairLine::OpenedPairLine D:\Codez\Sandbox\OpenTTD\src\tests\portal_movement.cpp:105
+  #13 C_A_T_C_H_T_E_S_T_1 D:\Codez\Sandbox\OpenTTD\src\tests\portal_movement.cpp:215
+  #14 Catch::TestInvokerAsFunction::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14330
+  #15 Catch::TestCase::invoke D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:14169
+  #16 Catch::RunContext::invokeActiveTestCase D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13025
+  #17 Catch::RunContext::runCurrentTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12998
+  #18 Catch::RunContext::runTest D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:12759
+  #19 Catch::`anonymous namespace'::TestGroup::execute D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13352
+  #20 Catch::Session::runInternal D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13562
+  #21 Catch::Session::run D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13518
+  #22 Catch::Session::run<char> D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:13236
+  #23 main D:\Codez\Sandbox\OpenTTD\src\3rdparty\catch2\catch.hpp:17543
+  #24 invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+  #25 __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+  #26 __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+  #27 mainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+  #28 BaseThreadInitThunk ?:0
+  #29 RtlUserThreadStart ?:0
+== exit 3
+===== [tbm-movement]
+Filters: [tbm-movement]
+===============================================================================
+All tests passed (13215 assertions in 3 test cases)
+
+== exit 0

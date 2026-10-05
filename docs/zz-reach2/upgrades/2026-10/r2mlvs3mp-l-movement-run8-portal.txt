@@ -1,0 +1,5 @@
+Filters: [portal-movement]
+===============================================================================
+All tests passed (11944 assertions in 3 test cases)
+
+== exit 0

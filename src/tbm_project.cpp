@@ -18,6 +18,7 @@
 #include "tbm.h"
 #include "tbm_cmd.h"
 #include "tbm_exchange.h"
+#include "train_cmd.h"
 #include "command_func.h"
 #include "train.h"
 #include "station_base.h"
@@ -737,7 +738,13 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 			inputs.exchange_due = IsTBMExchangeDue(*project);
 		}
 	}
-	return AdvanceTBMProjectPhase(id, inputs);
+	const TBMProjectError error = AdvanceTBMProjectPhase(id, inputs);
+	// The return backs the consist along its support to the bay, cutter last and facing the face (R2MLVS3MP-M decision 5).
+	if (error == TBMProjectError::None) {
+		const TBMProject *stepped = FindTBMProject(id);
+		if (Train *front = Train::GetIfValid(stepped->cutter); front != nullptr && stepped->phase == TBMPhase::ReturnForExchange && stepped->blocked == TBMBlockedReason::None) BackUpTBMConsist(*front);
+	}
+	return error;
 }
 
 /**

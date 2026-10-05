@@ -36,6 +36,7 @@
 #include "newgrf_roadtype.h"
 #include "map_layer_gui.h"
 #include "viewport_func.h"
+#include "tbm_exchange.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -347,6 +348,71 @@ static CommandCost CheckBuildAbove_LayerPortal(TileIndex, DoCommandFlags, Axis, 
 	return CommandCost(STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST);
 }
 
+/** Inner point of a magazine by exit side: where a depot keeps a train facing that way (rail_cmd.cpp, _fractcoords_enter). */
+static constexpr DiagDirectionIndexArray<Coord2D<uint8_t>> _magazine_inner{{{
+	{10, 8}, // NE
+	{8, 4}, // SE
+	{4, 8}, // SW
+	{8, 10}, // NW
+}}};
+
+/** Unit step of a part leaving a magazine by exit side (rail_cmd.cpp, _deltacoord_leaveoffset). */
+static constexpr DiagDirectionIndexArray<Coord2D<int8_t>> _magazine_leave_step{{{
+	{-1, 0}, // NE
+	{0, 1}, // SE
+	{1, 0}, // SW
+	{0, -1}, // NW
+}}};
+
+/**
+ * Run the depot rules of a magazine for one part of a project train on the key of its Commissioning pair
+ * (R2MLVS3MP-M decision 2). Leaving, the part ahead passing the leave point releases the next part, as at a depot
+ * exit. Entering, a part that reaches the inner point stands aside in the depot state; the last one readies the train
+ * to leave forwards and stops it, so its bay admission sees it whole.
+ * @param part Part of the train moving on the tile.
+ * @param tile Magazine tile.
+ * @param x World X of the part's new position.
+ * @param y World Y of the part's new position.
+ * @return EnteredWormhole when the part entered the depot state; nothing when the ordinary end rules apply.
+ */
+static std::optional<VehicleEnterTileStates> RunLayerPortalMagazine(Train *part, TileIndex tile, int x, int y)
+{
+	const DiagDirection exit = GetLayerPortalMagazineExit(tile, *part->First());
+	if (exit == DiagDirection::Invalid) return std::nullopt;
+	const Coord2D<uint8_t> fract{static_cast<uint8_t>(x & TILE_UNIT_MASK), static_cast<uint8_t>(y & TILE_UNIT_MASK)};
+	const Coord2D<uint8_t> inner = _magazine_inner[exit];
+	if (part->GetMovingDirection() == DiagDirToDir(exit)) {
+		// Leaving: the next part follows once this one is a whole part's length out, as at a depot exit.
+		const int length = part->CalcNextVehicleOffset() + 1;
+		const Coord2D<uint8_t> leave{static_cast<uint8_t>(inner.x + length * _magazine_leave_step[exit].x), static_cast<uint8_t>(inner.y + length * _magazine_leave_step[exit].y)};
+		if (fract == leave) {
+			if (Train *next = part->GetMovingNext(); next != nullptr && next->track == Track::Depot) {
+				next->track = AxisToTrack(DiagDirToAxis(exit));
+				// FD-3: the point decides visibility, so a part released inside the housing stays hidden.
+				next->vehstatus.Set(VehState::Hidden, IsHiddenInLayerPortal(GetLayerPortalShaftDirection(tile), next->x_pos, next->y_pos));
+			}
+		}
+		return std::nullopt;
+	}
+	if (part->GetMovingDirection() != DiagDirToDir(ReverseDiagDir(exit)) || fract != inner) return std::nullopt;
+	// Entering: the part stands aside in the depot state, hidden like a train in a depot.
+	part->track = Track::Depot;
+	part->vehstatus.Set(VehState::Hidden);
+	part->tile = tile;
+	if (part->GetMovingNext() == nullptr) {
+		Train *consist = part->First();
+		// The train leaves forwards next time: one that backed in stops backing, one that drove in turns round.
+		if (consist->vehicle_flags.Test(VehicleFlag::DrivingBackwards)) {
+			consist->vehicle_flags.Reset(VehicleFlag::DrivingBackwards);
+		} else {
+			for (Train *u = consist; u != nullptr; u = u->Next()) u->direction = ReverseDir(u->direction);
+		}
+		consist->cur_speed = 0;
+		consist->subspeed = 0;
+	}
+	return VehicleEnterTileState::EnteredWormhole;
+}
+
 /** @copydoc VehicleEnterTileProc */
 static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex tile, int x, int y)
 {
@@ -354,7 +420,9 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 	if (GetLayerPortalWorkState(tile) != LayerPortalWorkState::Connected) {
 		const auto *work = GetLayerPortalWorkRecord(tile);
 		// Actual movement rechecks the entering part/project; cached paths, force-proceed and unrelated followers cannot bypass sealed authority.
-		if (work == nullptr || CheckLayerPortalWorkAccess(tile, v->index, work->project) != LayerPortalWorkError::None) return VehicleEnterTileState::CannotEnter;
+		// Besides the cutter's parts, an assigned hauler of the project's Source bay may use the key (R2MLVS3MP-M).
+		const bool admitted = work != nullptr && (CheckLayerPortalWorkAccess(tile, v->index, work->project) == LayerPortalWorkError::None || (v->type == VehicleType::Train && IsTBMHaulerAdmittedAtBay(*Train::From(v)->First(), tile)));
+		if (!admitted) return VehicleEnterTileState::CannotEnter;
 	}
 	TransportType transport = GetLayerPortalTransportType(tile);
 	//Each end accepts only its own transport. A road elevator refuses trams.
@@ -362,6 +430,11 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 	if (transport == TransportType::Road) {
 		if (v->type != VehicleType::Road) return VehicleEnterTileState::CannotEnter;
 		if (RoadTypeIsTram(RoadVehicle::From(v)->roadtype)) return VehicleEnterTileState::CannotEnter;
+	}
+
+	// The key of a Commissioning pair is the depot-like magazine of the project's own trains (R2MLVS3MP-M decision 2).
+	if (v->type == VehicleType::Train) {
+		if (const auto magazine = RunLayerPortalMagazine(Train::From(v), tile, x, y); magazine.has_value()) return *magazine;
 	}
 
 	const DiagDirection shaft = GetLayerPortalShaftDirection(tile);

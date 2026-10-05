@@ -320,9 +320,30 @@ Group 12 status (2026-10-05): implemented and verified at the milestone.
 ### Group 13 - Demonstrate and reload the complete M1 logistics loop
 
 {{HARD}}
-- [ ] 13.1 Run commission -> cut -> fill -> real wagon exchange -> secondary train to Surface origin -> bounded disposal -> empty return -> boring resumes. Record each wagon ID and separate Earth/Rock ledger at every transition.
+- [X] 13.1 Run commission -> cut -> fill -> real wagon exchange -> secondary train to Surface origin -> bounded disposal -> empty return -> boring resumes. Record each wagon ID and separate Earth/Rock ledger at every transition.
 - [ ] 13.2 Save/reload at each logistics wait state and with the hauler spanning layers. Resume to the same next exchange and compare packet age, quantities, assignment cycle and cost.
-- [ ] 13.3 Replay the same commands from the same fixture and compare the normalized state/ledger trace, not only RNG synchronization. Retain evidence for r2mlvs15; blocked art/network review remains explicitly pending.
+- [X] 13.3 Replay the same commands from the same fixture and compare the normalized state/ledger trace, not only RNG synchronization. Retain evidence for r2mlvs15; blocked art/network review remains explicitly pending.
+
+Group 13 status (2026-10-05, R2MLVS3MP master 7.1): 13.1 and 13.3 pass by real movement, with all 111 project tags
+([burst](r2mlvs3mp-l-movement-burst3-all.txt)). The tests are `[tbm-loop]` in `src/tests/tbm_movement.cpp`. Both
+trains drive themselves through the game's vehicle step, and the hauler has one ordinary order, to the origin.
+- 13.1, "A project commissioned by command carries its whole route to the origin"
+  ([trace](r2mlvs3mp-l-movement-run17-loops.txt)):
+  - The pair is built and commissioned through the player's commands, which charge the purchase.
+  - The command plans a 6-cut route whose spoil overflows one load.
+  - The cutter bores four cuts and backs into its bay, where it swaps its loaded wagons for the hauler's empties.
+  - It goes back and bores cuts 5 and 6. Meanwhile the hauler delivers the first load to the real receivers at their
+    bounded intake and returns empty.
+  - The second exchange gives the cutter its original wagons back, and the hauler delivers the last load.
+  - A second case runs the same cycle on the rig's bend.
+  - Every transition records both trains' wagon IDs and the Earth/Rock ledger. At each one, every committed tonne must
+    be in exactly one place: aboard a train, on a platform, or received.
+  - Each exchange must come at its frozen breakpoint, and every committed tonne must reach a receiver.
+- 13.3: "The source loop replays the same trace from the same fixture" runs the commissioned loop twice from the same
+  seeded fixture. The traces must match: phases, wagon IDs and ledger at every transition, with their ticks. The traces
+  are kept for r2mlvs15 ([commissioned and bend](r2mlvs3mp-l-movement-run17-loops.txt),
+  [straight route](r2mlvs3mp-l-movement-run10-loop.txt)). Art and network review remain pending.
+- 13.2 stays open: the saves at each wait state and with the hauler spanning layers belong to master 7.4.
 
 ### Group 14 - Lifecycle and acceptance
 

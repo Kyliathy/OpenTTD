@@ -452,5 +452,5 @@ bool IsTBMHoldingTrain(const Train &front)
 {
 	const TBMProject *project = GetTBMProjectForCutter(front.index);
 	// Work at the face, and waiting wholly in the bay for empties, both keep the consist where its controller put it.
-	return project != nullptr && (project->phase == TBMPhase::Bore || project->phase == TBMPhase::AdvanceSupport || project->phase == TBMPhase::WaitForEmpties);
+	return project != nullptr && (project->phase == TBMPhase::Bore || project->phase == TBMPhase::WaitForEmpties);
 }

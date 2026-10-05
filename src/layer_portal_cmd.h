@@ -16,7 +16,10 @@
 #include "rail_type.h"
 #include "road_type.h"
 #include "transport_type.h"
+#include "track_type.h"
 #include "excavation.h"
+
+struct Train;
 
 /** One saved work phase per physical pair; topology and ordinary routing permissions remain distinct. */
 enum class LayerPortalWorkState : uint8_t { Sealed, Commissioning, Connected, Invalid = 255 };
@@ -72,6 +75,36 @@ LayerPortalWorkError CheckLayerPortalAvailability(TileIndex tile);
  *         ControllerUnavailable when no such project exists; otherwise a stable refusal.
  */
 LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor, ExcavationJobID project);
+
+/**
+ * Exit side of the depot-like magazine that a project's own train uses at the key of its Commissioning pair
+ * (R2MLVS3MP-M decision 2). The rock end is a passage, never a magazine.
+ * @param tile Rail portal end.
+ * @param front Front engine of the train.
+ * @return The shaft for the project's cutter consist, the door for an admitted hauler of its Source bay, or
+ *         DiagDirection::Invalid when the tile is no magazine for this train.
+ */
+DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front);
+
+/**
+ * Whether another train moves on a magazine tile, so that this train may neither enter nor leave it now. Parts in
+ * the depot state stand aside and do not count; one train moves on the housing at a time.
+ * @param tile Magazine tile.
+ * @param front Front engine of the train that wants to move.
+ * @return True while a part of another train stands on the tile outside the depot state.
+ */
+bool IsLayerPortalMagazineBusy(TileIndex tile, const Train &front);
+
+/**
+ * Track that a Commissioning pair shows to one admitted train; ordinary routing sees none there (R2MLVS3MP-M
+ * decision 3). The project's cutter consist is admitted at both ends, an assigned hauler of its Source bay only at
+ * the key through its door. A busy magazine takes no train in from outside until it is clear.
+ * @param tile Rail portal end being entered or looked at.
+ * @param front Front engine of the train.
+ * @param side Edge the train enters through on the end's own layer, or DiagDirection::Invalid for a shaft step.
+ * @return The end's axis trackdirs for an admitted train, otherwise none.
+ */
+TrackdirBits GetLayerPortalAdmittedTrackdirs(TileIndex tile, const Train &front, DiagDirection side);
 
 /** Portal-side commissioning request; the existing geological proposal owns route/model/origin/capacity meanings once. */
 struct LayerPortalCommissionRequest {

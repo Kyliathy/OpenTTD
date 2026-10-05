@@ -363,13 +363,16 @@ Context has compacted 1 times while executing this group.
 {{HARD}}
 - [X] 14.1 Define the reserved work corridor and supported return path by project/consist identity. Integrate reservations with existing path reservation calls without exposing the solid work face as a generic rail edge.
 - [X] 14.2 Refuse normal freight/force-proceed into the active pocket; permit only the assigned cutter and declared recovery movements. Apply the check to actual train parts at movement, not only order planning.
-- [ ] 14.3 Release claims in safe order after withdrawal, preserving any still-occupied support track. Test a waiting freight train, a blocked retreat and cancellation with the tail across a portal.
+- [X] 14.3 Release claims in safe order after withdrawal, preserving any still-occupied support track. Test a waiting freight train, a blocked retreat and cancellation with the tail across a portal.
 
-**R2MLVS3MP status, 2026-10-05.** 14.1 and 14.2 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 14.3 is only in part (no release with an occupied tail), so it stays unticked. The focused burst is `[tbm-corridor]` (`src/tests/tbm_corridor.cpp`).
+**R2MLVS3MP status, 2026-10-05.** 14.1 and 14.2 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 14.3 passes by real movement in master Group 7B, with all 111 project tags ([burst](r2mlvs3mp-l-movement-burst3-all.txt)). The focused bursts are `[tbm-corridor]` (`src/tests/tbm_corridor.cpp`) and `[tbm-movement]` (`src/tests/tbm_movement.cpp`).
 - 14.1: `GetTBMWorkCorridor` is the project's retreat path plus every support tile it laid, identified by project. Path finding integrates through the shared track follower: `CFollowTrackT::CanEnterNewTile` does not follow support for a train with a part the support may not carry. The solid face is only a dead end of the support track, never a route edge. The pair housing stays sealed by the portal owner.
 - 14.2: `VehicleEnterTile_Rail` refuses the moving front of any train with a part the support may not carry. The check runs on actual train parts at movement, so force-proceed cannot bypass it. The project's own consist (machinery and wagons) is allowed; Plan 5 haulers will add their class.
 - 14.3 delivered: support is released only when its project ends (Group 9). Released support under a train is still not removable. `IsTBMCorridorOccupied` lets cancellation wait for withdrawal. The waiting-freight case is the route and entry refusal.
-- 14.3 not delivered: the cancellation sequence and the tail-across-a-portal case. They need Group 17 cancellation (master 6.3) and real pocket entry (master 7.3).
+- 14.3 by real movement (master Group 7B, `[tbm-movement]`):
+  - Cancellation with the tail across the portal: a consist cancelled while it straddles the pair backs whole into its magazine, in the first cut and in the second cut with spoil aboard. Only then is the corridor free, and the project ends once its spoil is exchanged.
+  - A blocked retreat: the player stops the train halfway back. The retreat holds, blocked Stopped, with every part in place for 200 ticks, then finishes once the train is started.
+  - The waiting freight train: an ordinary train is turned back at the door while the project holds the pair. After the project retires, the pair is opened and the same freight train drives along the converted support to the end of the tunnel.
 
 ### Group 15 - Boring and accounting
 
@@ -464,8 +467,22 @@ Capacity boundaries (the frozen exchange breakpoints) and mixed ratios also appe
 ### Group 19 - Recovery, presentation and acceptance
 
 {{MEDIUM}}
-- [ ] 19.1 Compare progress with the layer hidden and visible.
+- [X] 19.1 Compare progress with the layer hidden and visible.
 - [ ] 19.2 Demonstrate the first cut and return to the source-side commissioning exchange, then integrate a recurring underground-bay loop with r2mlvs5.
+
+Group 19 status (2026-10-05, R2MLVS3MP master 7.7):
+- 19.1 is checked, by audit rather than a paired run, because unit tests have no viewport to show or hide a layer
+  ([audit](r2mlvs3mp-l-movement-layer-audit.txt)):
+  - The layer view is `Viewport::layer`, view state that the simulation never reads.
+  - Every read of it, and of `GetVehicleDisplayLayer`, outside the tests is in GUI code.
+  - A part's hidden flag comes only from the portal point rule (FD-3) and the depot state.
+  - So progress cannot differ with the layer shown or hidden. The movement and loop tags run with no viewport, and
+    the loop replays the same trace.
+- 19.2: the first half passes, the second stays open.
+  - `[tbm-loop]` (`src/tests/tbm_movement.cpp`) drives the first cut and the return to the source-side exchange, for the
+    rig's route, a bend with a mid-route exchange, and a project commissioned by command. Each run checks the ledger
+    and wagon IDs at every transition.
+  - The recurring underground-bay loop needs an underground network to the support corridor (master 7.1).
 
 ### Group 20 - Recovery, presentation and acceptance
 

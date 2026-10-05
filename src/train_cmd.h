@@ -60,6 +60,14 @@ CommandCost BuildTBMConsistAtSite(const LayerPortalCommissionRequest &request, c
 bool IsTrainStoppedAtPortalSite(const Train &front);
 
 /**
+ * Make a boring machine's consist drive backwards, so it can return along its support with the cutter last and still
+ * facing the face (R2MLVS3MP-M decision 5). A consist that already backs, or stands wholly in a depot or magazine, is
+ * left alone; a moving one reverses once it has stopped.
+ * @param front Front engine of the consist.
+ */
+void BackUpTBMConsist(Train &front);
+
+/**
  * Exchange whole wagon units between two stationary consists that stand on one rearrangement tile, as one
  * transaction (Plan 5 Group 1.3/3). The final chains are tried first: the shared attachment rules (length and
  * coupling callbacks) and a capacity rule run on them. The capacity rule refuses any part whose rebuilt capacity

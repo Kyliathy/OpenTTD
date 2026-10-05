@@ -12,6 +12,8 @@
 
 #include "../../train.h"
 #include "../../waypoint_base.h"
+#include "../../tbm_exchange.h"
+#include "../../layer_portal_map.h"
 #include "../pathfinder_func.h"
 
 class CYapfDestinationRailBase {
@@ -127,6 +129,16 @@ public:
 	void SetDestination(const Train *v)
 	{
 		this->any_depot = false;
+		/* A hauler returning empties is steered to its Source bay, entered through the door, without touching its orders
+		 * (R2MLVS3MP-M decision 6). Only it sees the bay's track, so its search keeps out of the shared segment cache. */
+		if (const TileIndex bay = GetTBMHaulerSteeringTarget(*v); bay != INVALID_TILE) {
+			Yapf().DisableCache(true);
+			this->dest_tile = bay;
+			this->dest_station_id = StationID::Invalid();
+			this->dest_trackdirs = TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(GetLayerPortalDoorDirection(bay))));
+			this->CYapfDestinationRailBase::SetDestination(v);
+			return;
+		}
 		switch (v->current_order.GetType()) {
 			case OT_GOTO_WAYPOINT:
 				if (!Waypoint::Get(v->current_order.GetDestination().ToStationID())->IsSingleTile()) {

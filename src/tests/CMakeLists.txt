@@ -55,6 +55,9 @@ add_test_files(
     tbm_exchange_lifecycle.cpp
     tbm_exchange_acceptance.cpp
     tbm_recovery.cpp
+    movement_fixture.h
+    tbm_movement.cpp
+    portal_movement.cpp
     portal_recovery.cpp
     geology_deposits.cpp
     geology_generation.cpp

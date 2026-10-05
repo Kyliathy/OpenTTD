@@ -836,9 +836,9 @@ std::vector<TileIndex> GetTBMWorkCorridor(const TBMProject &project);
 bool IsTBMCorridorOccupied(const TBMProject &project);
 
 /**
- * Whether the train's movement is held by its project: a cutter at work (Bore or AdvanceSupport), or waiting wholly
- * in its bay for empties (WaitForEmpties), stays still under the ordinary train controller, because its controller
- * owns that motion.
+ * Whether the train's movement is held by its project: a cutter at work (Bore), or waiting wholly in its bay for
+ * empties (WaitForEmpties), stays still under the ordinary train controller. In AdvanceSupport it drives onto its
+ * new support and stops at its end (R2MLVS3MP-M decision 4).
  * @param front Front engine.
  * @return Whether ordinary movement must hold this train.
  */
