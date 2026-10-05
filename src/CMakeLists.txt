@@ -1,4 +1,4 @@
-# Source registration for R2MLVS1/2; see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md.
+# Source registration for R2MLVS1/2/4; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -291,6 +291,9 @@ add_files(
     excavation_route.cpp
     excavation_pass.cpp
     excavation.h
+    tbm.h
+    tbm_model.cpp
+    tbm_engine.cpp
     geology.cpp
     geology_digest.cpp
     geology_generation.cpp

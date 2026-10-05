@@ -77,6 +77,8 @@ Proposed public owner: `src/multilayer_state.h`. Publish `MultiLayerStateSchema`
 
 ## Implementation Tasks
 
+Ground execution scope: [R2MLVS3MP](r2mlvs3mp-master-plan.md) schedules this plan's foundation and ground-family audits. For its scoped rows, require the actual content/geology/portal/TBM/exchange producers and, only for tube/riser rows, the relevant delivered tube/utility/geothermal producers. Orbital references in a shared area's entry list apply to orbital rows and final whole-epic closure, not to an independent ground audit. Validate every family actually present in the saved feature metadata; do not allocate surrogate objects for an absent family. Only fully covered original tasks/groups may be marked X; mixed-family tasks remain partial with their untested scope recorded.
+
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
 
 Groups are chronological and contain consecutive tasks of one difficulty. Each difficulty batch has at most eight tasks; area reading changes only when the implementation boundary or source of truth changes.

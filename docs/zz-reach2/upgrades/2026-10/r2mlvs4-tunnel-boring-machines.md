@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/train.h](../../../../src/train.h) | 120-148 | `Train::Tick`, `GetRunningCost`, `ConsistChanged` and acceleration declarations own simulation progress, costs and consist caches; view state cannot advance cutting. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs3 and r2mlvs1's wagon contract. r2mlvs5 completes the recurring haulage loop.
+Status: in progress; Group 1 complete, Group 2 blocked at the verified sealed-start producer boundary. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs3 and r2mlvs1's wagon contract. r2mlvs5 completes the recurring haulage loop.
 
 ## Outcome and Boundaries
 
@@ -54,13 +54,15 @@ Proposed public owner: `src/tbm.h`. Publish `TBMProject`, `TBMWorkState`, `Valid
 
 ## Implementation Tasks
 
+Execution coordination: [R2MLVS3MP](r2mlvs3mp-master-plan.md) explicitly stages the remaining Group 2 acquisition/activation work around saved controller foundations, the actual cut/support implementation, Plan 5 exchange/receivers and recovery. Follow its named scopes instead of requiring complete live commissioning before writing the controller that supplies it. Original tasks remain unchecked until their entire behavior passes; declarations/isolated fixtures never count as complete runtime delivery.
+
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
 
 Groups are chronological and contain consecutive tasks of one difficulty. Each difficulty batch has at most eight tasks; area reading changes only when the implementation boundary or source of truth changes.
 
 ### Area Mandatory Reading - Vehicle and work orders
 
-_Applies to Groups 1-5._
+_Applies to Groups 1-5, including Group 2B._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/excavation.h`: `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`; `src/layer_portal_cmd.h`: `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
@@ -100,17 +102,37 @@ Every phase also has a saved blocked/stopped reason and a supported recovery pat
 ### Group 1 - Define cutter models and immutable consist roles
 
 {{MEDIUM}}
-- [ ] 1.1 Add standard/deep-rated cutter definitions from the profile, with visible layers/date, speed/power, active/idle cost and compatible Earth/Rock wagon roles.
-- [ ] 1.2 Mark permanent cutter/support articulated units separately from exchangeable spoil wagons. Use real unit boundaries from `GetNextUnit`/`GetPrevUnit`; publish the allowed consist layout for r2mlvs5.
-- [ ] 1.3 Define the saved project record: cutter ID, heading, current face, pass cursor, partial work, Surface origin station, portal, exchange bay and blocked reason. Keep cached route lookup separate from authority.
+- [X] 1.1 Add standard/deep-rated cutter definitions from the profile, with visible layers/date, speed/power, active/idle cost and compatible Earth/Rock wagon roles.
+- [X] 1.2 Mark permanent cutter/support articulated units separately from exchangeable spoil wagons. Use real unit boundaries from `GetNextUnit`/`GetPrevUnit`; publish the allowed consist layout for r2mlvs5.
+- [X] 1.3 Define the saved project record: cutter ID, heading, Surface origin station, portal, exchange bay and blocked reason. Reference the actual `ExcavationJob` for its sole current face/pass cursor/partial work; expose those through `TBMWorkState` without duplicating saved progress. Keep cached route lookup separate from authority.
+
+Group 1 evidence (2026-10-05): `src/tbm.h` and `src/tbm_model.cpp` define two cutter tunings against the existing profile catalogue, explicit invalid defaults and the immutable cutter/articulated-support prefix followed by actual dedicated Earth/Rock wagon units. `InspectTBMConsist` uses actual whole-unit boundaries and refuses altered machinery, mixed cargo and foreign ownership. Debug `openttd_test` build passes; `[tbm-model],[tbm-consist]` passes 2 cases/43 assertions in `r2mlvs4-b-model-results.txt`. Initial producer boundary burst passes 13 cases/345 assertions. This definition group does not claim commissioning, saved-file loading or work progression; those remain later tasks.
 
 ### Group 2 - Commission only through the validated rail facility
 
 {{HARD}}
 - [ ] 2.1 Consume r2mlvs3 commissioning validation and its chosen depot-compatible/factored train construction boundary. Create a cutter/support/wagon consist only after all IDs, funds, capacity and source-side access pass validation.
-- [ ] 2.2 Apply the capability check to purchase, clone, autoreplace and script requests before allocating any part. Account for `CloneVehicle` being `NoTest`; failure must clean up new parts and preserve existing vehicles.
+- [X] 2.1A Register the real cutter/hopper engine definitions through the existing persisted EIDS mapping, factor pure portal preflight and genuine train-part construction with explicit portal geometry, and test immutable articulated support without changing portal tile types. This is a stopped unpublished part primitive, not complete-project commissioning.
+- [X] 2.1B Characterize the first solid-pocket dependency through the canonical pass/reservation APIs before enabling complete-project acquisition; retain refusal evidence and every dependent task unchecked.
+- [X] 2.2 Apply the capability check to purchase, clone, autoreplace and script requests before allocating any part. Account for `CloneVehicle` being `NoTest`; failure must clean up new parts and preserve existing vehicles.
 - [ ] 2.3 Allow servicing at compatible depots without enabling purchase there. A new deep-rated cutter may be assembled at an accessible Underground rail commissioning portal; its facility/supply access must be physically reachable. Existing cutters travel normally to later projects. Prevent road/elevator commissioning and ordinary-depot cloning.
 - [ ] 2.4 Test one legal Surface commissioning plus wrong facility, wrong depth/date, partial-part allocation failure and service-only depot requests.
+
+**Verified behavior gate, 2026-10-05.** The named public exports exist, but the cross-plan first-cut behavior is incomplete. `ValidateLayerPortalCommissioning` accepts an actual owned Sealed Surface/Underground rail pair with real profile/model/origin references. The same canonical advancing geometry passes `ValidateExcavationJobGeometry`, then `PrepareExcavationPass` and both estimate/execute `ReserveExcavationJob` refuse `MissingSupport` because the destination starter footprint remains Solid. Current `PrepareExcavationCut` additionally requires the previous footprint/retreat open and refuses still-solid portal metadata. The portal pocket currently grants geometry-only restricted occupancy, never a paid initial-support transaction. Painting a free starter room, bypassing these predicates or inserting another route/cargo owner would violate this plan's Area gate and master AD-5. Complete commissioning in 2.1 and Groups 3-22 remain unchecked at this snapshot. R2MLVS3MP now schedules the tested solid-starter contract and saved controller foundations before full commissioning activation; this historical refusal does not prohibit implementing those explicitly staged foundations.
+
+Required producer reconciliation before completing 2.1: define and test one explicit portal-issued initial support/cut contract across the canonical planner, reservation and prepared geological cut APIs. It must charge every newly solid old/new swept cell, preserve physical portal metadata, prepare actual support and both wagon packet capacities before terrain/cash writes, and validate a safe source-side retreat without treating occupancy permission as excavated floor. Its accepted route/cursor/partial work must remain with the existing `ExcavationJob`; estimates remain pure. Follow R2MLVS3MP Groups 2-6 to stage acquisition, saved controller/work, exchange/receivers and recovery, then return to finish the complete-consist commissioning coordinator and activate its controls. The existing open-starter behavior is not evidence of that missing solid-starter operation.
+
+Group 2 available boundary evidence: `r2mlvs4-g-gate-results.txt`, **8 focused cases/221 assertions**, including the sealed-start unchanged refusal, actual two-part articulated construction, real depot purchase/estimate/autoreplace refusals, `NoTest` clone refusal and the actual `ScriptVehicle::BuildVehicle` API through Game Script company/test scopes and the real command kernel. Both ends of an autoreplace mapping involving a cutter refuse; execution also protects every permanent machinery part before replacement estimates can allocate. This does not claim execution of a supplied Squirrel script or complete TBM commissioning. Debug `openttd_test` and `openttd` builds pass (`h`); the final script fixture build passes (`i`). Final art, saved TBM projects, simulation movement and paid cutting are not delivered by these prefix checks. Original inputs and pre-existing dirty files are retained; no Git write or full regression was run.
+
+Final boundary follow-up: `r2mlvs4-k-final-results.txt` passes **8 cases/237 assertions**, including preservation of a real original stock engine/mapping and deliberate separation of logical model IDs from allocated engine IDs. Both Debug targets rebuild successfully (`r2mlvs4-j-final-build.log`). This supersedes the earlier available-boundary totals; the sealed-start refusal and all pending tasks remain unchanged.
+
+### Group 2B - Prepare complete acquisition without premature activation
+
+{{HARD}}
+- [ ] 2B.1 Consume the tested Plan 3 Group 8B/Plan 2 Group 14B starter handoff. Prepare complete model/unit IDs, actual whole-consist capacity/dimensions, funds, source access and canonical route/retreat terms before allocating a part.
+- [ ] 2B.2 Factor bounded acquisition and full rollback using the existing engine/train owners. Acquire unpublished cutter/support/wagon parts and project/job capacity before irreversible writes; failure preserves existing vehicles, funds, terrain, packets, RNG and pair state.
+- [ ] 2B.3 Test estimate, legal construction preparation and failure at each acquisition boundary with actual pool-owned units. Publish the controller's immutable role/assignment contract for Groups 3-5; fixture construction is not a normal-game first-cut or disposal claim.
+- [ ] 2B.4 Keep production commissioning/start activation guarded until Groups 3-15, the required Plan 5 source exchange/receivers and Group 17 recovery are implemented and tested. Return to original 2.1/2.3/2.4 and Plan 3 Group 8 at R2MLVS3MP Group 6 to complete acquisition/publication/control activation together.
 
 ### Group 3 - Choose the project command and order representation
 

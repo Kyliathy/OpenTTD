@@ -39,6 +39,7 @@
 #include "station_func.h"
 #include "train.h"
 #include "train_cmd.h"
+#include "tbm.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
 #include "layer_portal_cmd.h"
@@ -669,9 +670,11 @@ static std::vector<VehicleID> GetFreeWagonsInDepot(TileIndex tile)
  * @param tile     tile of the depot where rail-vehicle is built.
  * @param e        the engine to build.
  * @param[out] ret the vehicle that has been built.
+ * @param direction Facility-owner-validated depot or portal assembly direction.
+ * @param attach_free Whether ordinary depot construction may join a free wagon chain.
  * @return the cost of this operation or an error.
  */
-static CommandCost CmdBuildRailWagon(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret)
+static CommandCost CmdBuildRailWagon(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret, DiagDirection direction, bool attach_free)
 {
 	const RailVehicleInfo *rvi = &e->VehInfo<RailVehicleInfo>();
 
@@ -686,7 +689,7 @@ static CommandCost CmdBuildRailWagon(DoCommandFlags flags, TileIndex tile, const
 		v->engine_type = e->index;
 		v->gcache.first_engine = EngineID::Invalid(); // needs to be set before first callback
 
-		DiagDirection dir = GetRailDepotDirection(tile);
+		DiagDirection dir = direction;
 
 		v->direction = DiagDirToDir(dir);
 		v->tile = tile;
@@ -734,6 +737,7 @@ static CommandCost CmdBuildRailWagon(DoCommandFlags flags, TileIndex tile, const
 
 		/* Try to connect the vehicle to one of free chains of wagons. */
 		for (VehicleID vehicle : GetFreeWagonsInDepot(tile)) {
+			if (!attach_free) break; // Portal acquisition cannot steal or rearrange an existing wagon chain.
 			if (vehicle == v->index) continue;
 
 			const Train *w = Train::Get(vehicle);
@@ -808,20 +812,22 @@ static void AddRearEngineToMultiheadedTrain(Train *v)
  * @param tile     tile of the depot where rail-vehicle is built.
  * @param e        the engine to build.
  * @param[out] ret the vehicle that has been built.
+ * @param direction Explicit genuine depot or validated portal assembly direction.
+ * @param portal_site Whether this is the dedicated portal construction boundary.
  * @return the cost of this operation or an error.
  */
-CommandCost CmdBuildRailVehicle(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret)
+static CommandCost BuildRailVehicleAtSite(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret, DiagDirection direction, bool portal_site)
 {
 	const RailVehicleInfo *rvi = &e->VehInfo<RailVehicleInfo>();
 
-	if (rvi->railveh_type == RailVehicleType::Wagon) return CmdBuildRailWagon(flags, tile, e, ret);
+	if (rvi->railveh_type == RailVehicleType::Wagon) return CmdBuildRailWagon(flags, tile, e, ret, direction, !portal_site);
 
 	/* Check if depot and new engine uses the same kind of tracks *
 	 * We need to see if the engine got power on the tile to avoid electric engines in non-electric depots */
 	if (!HasPowerOnRail(rvi->railtypes, GetRailType(tile))) return CMD_ERROR;
 
 	if (flags.Test(DoCommandFlag::Execute)) {
-		DiagDirection dir = GetRailDepotDirection(tile);
+		DiagDirection dir = direction;
 		int x = TileX(tile) * TILE_SIZE + _vehicle_initial_x_fract[dir];
 		int y = TileY(tile) * TILE_SIZE + _vehicle_initial_y_fract[dir];
 
@@ -885,6 +891,40 @@ CommandCost CmdBuildRailVehicle(DoCommandFlags flags, TileIndex tile, const Engi
 	}
 
 	return CommandCost();
+}
+
+/**
+ * Preserve ordinary depot construction while excluding portal-only cutters before allocation.
+ * @param flags Command estimate/execute policy.
+ * @param tile Actual genuine depot.
+ * @param e Actual train engine definition.
+ * @param ret Receives the actual new train on execute.
+ * @return Construction result or portal-only refusal.
+ */
+CommandCost CmdBuildRailVehicle(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret)
+{
+	if (IsTBMCutterEngine(e->index)) return CMD_ERROR;
+	return BuildRailVehicleAtSite(flags, tile, e, ret, GetRailDepotDirection(tile), false);
+}
+
+/**
+ * Use railway construction with validated portal geometry rather than changing a housing's tile type.
+ * @param flags Pure estimate or actual part acquisition.
+ * @param request Complete portal commissioning request.
+ * @param engine Actual native cutter/hopper definition.
+ * @param ret Receives a new unit; caller owns whole-consist rollback until publication.
+ * @return Construction result or unchanged facility/model/pool refusal.
+ */
+CommandCost BuildRailVehicleForTBM(DoCommandFlags flags, const LayerPortalCommissionRequest &request, const Engine *engine, Vehicle **ret)
+{
+	if (ValidateLayerPortalCommissioning(request).error != LayerPortalWorkError::None) return CMD_ERROR;
+	if (engine == nullptr) return CMD_ERROR;
+	// The construction boundary accepts only a live definition and a result owner; malformed callers cannot allocate an unowned part.
+	if (Engine::GetIfValid(engine->index) != engine || ret == nullptr) return CMD_ERROR;
+	const auto model = GetTBMEngineModel(engine->index);
+	// Only the requested cutter and dedicated spoil hoppers may use this site; other engines cannot inherit permission.
+	if (model > 3 || (model < 2 && model != request.proposal.model_id) || !Vehicle::CanAllocateItem(1 + CountArticulatedParts(engine->index))) return CMD_ERROR;
+	return BuildRailVehicleAtSite(flags, request.portal, engine, ret, GetLayerPortalDoorDirection(request.portal), true);
 }
 
 static Train *FindGoodVehiclePos(const Train *src)

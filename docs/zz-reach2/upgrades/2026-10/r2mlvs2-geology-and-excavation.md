@@ -295,6 +295,28 @@ Context has compacted 1 times while executing this group.
 - [X] 14.3 Check planned support removal/replacement leaves a retreat route after cutter and hauler withdrawal, so a cleared tube corridor can later replace temporary rail.
 - [X] 14.4 Freeze the validated pass/return/capacity result as the job input and revalidate at execution when ownership/obstructions change. Test refusal leaves excavation, claims and RNG unchanged.
 
+### Area Mandatory Reading - Sealed-start producer reconciliation
+
+_Applies to Group 14B._
+
+Read master AD-3/AD-5, [R2MLVS3MP Group 2](r2mlvs3mp-master-plan.md#group-2---reconcile-the-solid-starter-before-dependent-work), and Plan 3 Group 8B's actual published bootstrap contract and focused issuance test. Inspect `PlanExcavationRoute`, `ReserveExcavationJob`, `PrepareExcavationPass`, `PrepareExcavationCut`/`CommitExcavationCut`, `ExcavationMaterialParticipant`, and job restoration/pass fingerprints in their current public owners. Existing open-starter tests remain valid for that behavior; they do not prove a solid-starter transaction. If the portal-issued producer is absent, freeze its shared contract with its owner first; do not invent a geological permission flag or paint a room.
+
+### Group 14B - Reconcile canonical planning and cuts with a solid commissioning pocket
+
+{{HARD}}
+- [ ] 14B.1 Freeze the first advancing-segment contract with Plan 3 Group 8B and Plan 4 Group 2B: source support, actual straddling-consist geometry, permitted destination pocket, safe retreat and every newly solid old/new swept cell that must be paid for.
+- [ ] 14B.2 Extend the canonical route/pass/reservation APIs to consume and revalidate that explicit portal-issued contract. An occupancy pocket is never initial cleared floor; accepted geometry must include and quote all starter/turn/support excavation without a second planner.
+- [ ] 14B.3 Extend prepared cut validation/commit for the first solid-pocket segment while preserving physical portal metadata. Keep one geology/material participant transaction, separate Earth/Rock capacity, real support preparation and one cash/reserve debit; ordinary construction remains refused.
+- [ ] 14B.4 Extend owned job descriptors, reference checks, pass fingerprints and canonical digests for any new authoritative fields. Preserve old open-starter/legacy behavior and test initial-reservation/partial-work reload and stale issuer references.
+- [ ] 14B.5 Run focused producer success/refusal/rollback tests for solid startup, full one-cargo capacity, unavailable support/funds, issuer loss and replay. Distinguish interface-participant boundary tests from the later actual-wagon commissioning proof; no fake cargo/vehicle owner may substitute for that integration.
+- [ ] 14B.6 Publish the tested handoff to Plan 4 Groups 2B/4/6-8 and Plan 3 Group 8; update all direct signatures/reading gates. Retain the original MissingSupport characterization as historical evidence and replace its expected outcome only when the corresponding behavior is delivered.
+
+### Area Mandatory Reading - Existing cavity and reserve invariants
+
+_Applies to Group 15._
+
+Read master AD-2/AD-5 and the live `CheckExcavatedFootprint`/`CommitExcavationCut` contracts. Inspect infrastructure clearing and the canonical geological reserve-debit ledger only as relevant to demolition/retained seams. Group 14B's bootstrap capability grants no ordinary demolition or reserve reset.
+
 ### Group 15 - Excavation and construction contracts
 
 {{MEDIUM}}
@@ -349,7 +371,9 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [X] 19.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [X] 19.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 
-Evidence: [final focused checks](r2mlvs2-z-final-results.txt), [current Surface preservation](r2mlvs2-z-surface-results.txt), [large-map measurements](r2mlvs2-z-runtime-results.txt), [actual frozen-pass saves/refusals](r2mlvs2-u-pass-save-results.txt), [art gate](r2mlvs2-w-art-gate.txt), and [public handoff/remaining producer boundaries](r2mlvs2-b-execution-notes.md#group-19---delivered-handoffs-and-final-focused-verification). The final build passed; 5,835 Plan 2 assertions and 44 metadata assertions passed, followed by 750 affected assertions after the final ownership review. Every case completed below two minutes. **Only task 16.1 remains unchecked; the parent stays in progress until actual Plan 13 art is delivered and integrated.**
+Evidence: [final focused checks](r2mlvs2-z-final-results.txt), [current Surface preservation](r2mlvs2-z-surface-results.txt), [large-map measurements](r2mlvs2-z-runtime-results.txt), [actual frozen-pass saves/refusals](r2mlvs2-u-pass-save-results.txt), [art gate](r2mlvs2-w-art-gate.txt), and [public handoff/remaining producer boundaries](r2mlvs2-b-execution-notes.md#group-19---delivered-handoffs-and-final-focused-verification). The final build passed; 5,835 Plan 2 assertions and 44 metadata assertions passed, followed by 750 affected assertions after the final ownership review. Every case completed below two minutes. **At that original closure only task 16.1 remained unchecked. The later R2MLVS3MP scheduling amendment also adds pending Group 14B for solid-starter behavior; both that extension and actual Plan 13 art must pass before current plan closure.**
+
+The remaining art task and its producer/acceptance requirements are also tracked in [R2MLVS99 - Leftovers](r2mlvs99-leftovers.md); task 16.1 remains unchecked.
 
 ## Consult on Demand
 

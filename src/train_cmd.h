@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file train_cmd.h Command definitions related to trains. */
+/** @file train_cmd.h Command definitions related to trains. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #ifndef TRAIN_CMD_H
 #define TRAIN_CMD_H
@@ -14,6 +14,21 @@
 #include "engine_type.h"
 #include "network/network_type.h"
 #include "vehicle_type.h"
+
+struct LayerPortalCommissionRequest;
+
+/**
+ * Construct one native railway unit at a portal-owner-validated assembly site.
+ * This primitive constructs stopped unpublished parts. Its caller must preflight
+ * complete-consist funds/route/capacity and own rollback before publishing a project.
+ * It has no command trait; whole-project commissioning remains unavailable until that coordinator exists.
+ * @param flags Pure estimate or actual construction policy.
+ * @param request Complete portal commissioning proposal.
+ * @param engine Actual native cutter/hopper definition.
+ * @param ret Receives the actual new unit on successful execution.
+ * @return Part construction result, excluding the controller-owned purchase charge; portal metadata remains intact.
+ */
+CommandCost BuildRailVehicleForTBM(DoCommandFlags flags, const LayerPortalCommissionRequest &request, const Engine *engine, Vehicle **ret);
 
 CommandCost CmdBuildRailVehicle(DoCommandFlags flags, TileIndex tile, const Engine *e, Vehicle **ret);
 CommandCost CmdSellRailWagon(DoCommandFlags flags, Vehicle *t, bool sell_chain, bool backup_order, ClientID user);

@@ -5,12 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file articulated_vehicles.cpp Implementation of articulated vehicles. */
+/** @file articulated_vehicles.cpp Implementation of articulated vehicles. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #include "stdafx.h"
 #include "core/bitmath_func.hpp"
 #include "core/random_func.hpp"
 #include "train.h"
+#include "tbm.h"
 #include "roadveh.h"
 #include "vehicle_func.h"
 #include "engine_func.h"
@@ -34,6 +35,10 @@ static const uint MAX_ARTICULATED_PARTS = 100; ///< Maximum of articulated parts
 static EngineID GetNextArticulatedPart(uint index, EngineID front_type, Vehicle *front = nullptr, bool *mirrored = nullptr)
 {
 	assert(front == nullptr || front->engine_type == front_type);
+	if (IsTBMCutterEngine(front_type)) {
+		if (mirrored != nullptr) *mirrored = false;
+		return index == 1 ? front_type : EngineID::Invalid(); // Native machinery has exactly one permanent support; no GRF callback or detachable rear engine defines it.
+	}
 
 	const Engine *front_engine = Engine::Get(front_type);
 
@@ -63,6 +68,7 @@ static EngineID GetNextArticulatedPart(uint index, EngineID front_type, Vehicle 
  */
 bool IsArticulatedEngine(EngineID engine_type)
 {
+	if (IsTBMCutterEngine(engine_type)) return true;
 	return EngInfo(engine_type)->callback_mask.Test(VehicleCallbackMask::ArticEngine);
 }
 
@@ -73,6 +79,7 @@ bool IsArticulatedEngine(EngineID engine_type)
  */
 uint CountArticulatedParts(EngineID engine_type)
 {
+	if (IsTBMCutterEngine(engine_type)) return 1;
 	if (!EngInfo(engine_type)->callback_mask.Test(VehicleCallbackMask::ArticEngine)) return 0;
 
 	Vehicle v(VehicleID::Invalid());
@@ -80,6 +87,7 @@ uint CountArticulatedParts(EngineID engine_type)
 	v.owner = _current_company;
 
 	uint i;
+	// The bounded callback sequence defines pool demand before purchase; stop at the first absent physical part.
 	for (i = 1; i < MAX_ARTICULATED_PARTS; i++) {
 		if (GetNextArticulatedPart(i, engine_type, &v) == EngineID::Invalid()) break;
 	}
@@ -329,9 +337,10 @@ void CheckConsistencyOfArticulatedVehicle(const Vehicle *v)
 void AddArticulatedParts(Vehicle *first)
 {
 	VehicleType type = first->type;
-	if (!EngInfo(first->engine_type)->callback_mask.Test(VehicleCallbackMask::ArticEngine)) return;
+	if (!IsArticulatedEngine(first->engine_type)) return; // Both native fixed supports and declared GRF parts use the real articulated construction boundary.
 
 	Vehicle *v = first;
+	// Assemble only declared physical parts in order so immutable supports and cargo-bearing wagon parts retain their real unit boundary.
 	for (uint i = 1; i < MAX_ARTICULATED_PARTS; i++) {
 		bool flip_image;
 		EngineID engine_type = GetNextArticulatedPart(i, first->engine_type, first, &flip_image);

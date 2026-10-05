@@ -5,11 +5,12 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file autoreplace_cmd.cpp Deals with autoreplace execution but not the setup. */
+/** @file autoreplace_cmd.cpp Deals with autoreplace execution but not the setup. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #include "stdafx.h"
 #include "company_func.h"
 #include "train.h"
+#include "tbm.h"
 #include "command_func.h"
 #include "engine_func.h"
 #include "vehicle_func.h"
@@ -62,6 +63,7 @@ static bool EnginesHaveCargoInCommon(EngineID engine_a, EngineID engine_b)
 bool CheckAutoreplaceValidity(EngineID from, EngineID to, CompanyID company)
 {
 	assert(Engine::IsValidID(from) && Engine::IsValidID(to));
+	if (IsTBMCutterEngine(from) || IsTBMCutterEngine(to)) return false; // Machinery changes require validated portal assembly and explicit project recovery, never depot replacement of either end of the assignment.
 
 	const Engine *e_from = Engine::Get(from);
 	const Engine *e_to = Engine::Get(to);
@@ -749,6 +751,10 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 {
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v)) return CMD_ERROR;
+	// Replacement estimates can construct temporary trains: protect the whole fixed machinery prefix before any replacement lookup or allocation.
+	for (const Vehicle *part = v->First(); part != nullptr; part = part->Next()) {
+		if (IsTBMCutterEngine(part->engine_type)) return CMD_ERROR;
+	}
 
 	CommandCost ret = CheckOwnership(v->owner);
 	if (ret.Failed()) return ret;

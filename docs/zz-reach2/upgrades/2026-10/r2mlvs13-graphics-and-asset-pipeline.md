@@ -771,6 +771,7 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 - [ ] 83.1 Bind r2mlvs4 work phase and heading to cutter/support/boring sprites, preserving directional continuity through legal 45-degree turns and supported retreat.
 - [ ] 83.2 Bind actual Earth/Rock load quantities to wagon states and r2mlvs5 stopped exchange to bay foregrounds; load graphics follow the same wagon IDs after coupling.
 - [ ] 83.3 Capture a real dig/fill/exchange/Surface-haul/empty-return loop and inspect clipping at native/zoomed scales. Correct assets or anchors, repack and retain reviewed hashes before claiming M1 graphics complete.
+- [ ] 83.4 Publish and verify the M1 TBM idle/boring/backing/service sound-event mapping required by Plan 4 task 16.2. Declare concrete distributed sample IDs/source/licensing or reviewed reuse of existing base sounds, verify loading and actual event playback, and update the consumer hook. Events consume authoritative phase/transition state and never advance work, charge money or consume simulation RNG. Track this audio mapping separately from raster frame coverage; an absent sample/hook remains pending. Execution is scheduled by [R2MLVS3MP Group 8](r2mlvs3mp-master-plan.md#group-8---deliver-and-review-the-complete-m1-asset-slice).
 
 ### Group 84 - Runtime integration and review
 

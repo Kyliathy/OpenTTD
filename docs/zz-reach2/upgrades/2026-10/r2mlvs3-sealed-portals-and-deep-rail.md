@@ -43,7 +43,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | `IsPortalPairAllowed`, `GetPortalTargetLayer`, `CheckLayerAllowsConstruction`, `CheckTilesShareLayer` define live connection/construction authority; new profile checks must preserve legacy behavior. |
 
-Status: available portal core, controls, script commands and persistence delivered and tested; exact completed tasks are marked X. Actual TBM/wagon/controller, capsule/utility integration, original occupied legacy portal fixtures and final state art remain gated and unchecked. Parent completion index is unchanged because this plan's full Completion Conditions are not met. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs2.
+Status: available portal core, controls, script commands, persistence and genuine version-370 portal compatibility delivered and tested; exact completed tasks are marked X. Actual TBM/wagon/controller, capsule/utility integration and final state art remain gated and unchecked. Core checkpoint is committed as `ee1cf35a97`; subsequent genuine-legacy coverage is recorded below. Parent completion index is unchanged because this plan's full Completion Conditions are not met. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs2.
 
 ## Outcome and Boundaries
 
@@ -54,6 +54,8 @@ New portal exits begin blocked; a controlled rail commissioning path admits a TB
 Delivered public owner: `src/layer_portal_cmd.h`. `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM` compile against the actual pair/geological/vehicle owners. Work admission and purchase return `ControllerUnavailable` until r2mlvs4/5 provide actual TBM role/consist and acquisition/exchange APIs; no substitute runtime mutation is authorized. Downstream plans consume this public contract rather than private pools or copied tables.
 
 ## Implementation Tasks
+
+Execution coordination: [R2MLVS3MP](r2mlvs3mp-master-plan.md) schedules this plan's remaining groups with their actual producers. It separates the early sealed-start geometry handoff from complete commissioning and returns here for runtime, tube/riser, graphics and persistence closure. Existing X marks remain historical delivered evidence; this scheduling amendment completes no implementation.
 
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
 
@@ -163,7 +165,7 @@ Evidence: `r2mlvs3-j-contract-results.txt` compiles the public signatures and ve
 
 ### Area Mandatory Reading - Commissioning and bootstrap
 
-_Applies to Groups 8-12._
+_Applies to Group 8; Groups 8B and 9-12 have their own reading blocks below._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/layer_portal_cmd.h`: `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
@@ -197,6 +199,26 @@ Creation order: preflight both endpoints -> reserve required record capacity -> 
 - [X] 8.5 Publish initial-entry and source-side exchange constraints for r2mlvs4/5: first safe cut, backed retreat with actual wagons and unloaded/empty return must work before any underground exchange bay exists.
 
 Controller handoff: pure portal/site/model validation -> actual complete route/pass/retreat validation -> reserve owner-specific geometric/project/vehicle/wagon/packet capacity without publication -> recheck pair revision, source floor, funds and actual participant revisions -> commit actual acquisition/payment/job/assignment once -> notify routing. Any refusal must discard all unpublished capacity and preserve cash, RNG, packets and pair authority. Cancellation must first stop and fully withdraw the actual consist; unload/account for owned spoil through the Plan 5 exchange owner, then cancel the real geological job and clear pair assignment once. No direct vehicle-pool edits or depot-type substitution is allowed. Plan 4 must factor its real railway construction entrypoint for this validated source assembly site; `CmdBuildVehicle` currently requires a genuine depot, so 8.3 remains pending. Plan 2's existing first-cut support requires open starter floor: Plan 4 must reconcile the actual sealed-pocket first cut and paid supports with that producer rather than paint a chamber open. Before any underground bay, loaded retreat and separate Earth/Rock wagon exchange must remain backed to the actual Surface origin, returning empty wagons without any normal traffic permission. Actual acquisition/exchange and first-cut runtime are pending; portal-side prefix evidence is `r2mlvs3-k-commissioning-results.txt`.
+
+### Area Mandatory Reading - Sealed-start geometry handoff
+
+_Applies to Group 8B._
+
+Read master AD-3/AD-5 and R2MLVS3MP Group 2. In live source inspect `ValidateLayerPortalCommissioning`, `LayerPortalWorkRecord`, `GetLayerPortalWorkPocket` in `src/layer_portal_cmd.h`/`src/layer_portal_work.cpp`, and `ExcavationCommissioningPocket`/`ExcavationJob` in `src/excavation.h`. These are the physical/geometric owners; the handoff below is a new producer obligation. It must not require a finished work controller merely to quote source-side support. Actual project publication and vehicle admission still require the tested Plan 4 owner.
+
+### Group 8B - Publish the narrow solid-starter geometry contract
+
+{{HARD}}
+- [ ] 8B.1 Define a typed portal-issued bootstrap proposal/proof containing canonical pair/revision, owner, model/date, explicit source support, bounded destination pocket and origin reference. Freeze its validation and invalid-reference semantics with Plan 2 Group 14B and Plan 4 Group 2B before dependent code.
+- [ ] 8B.2 Implement pure issuance/revalidation from the actual accessible rail pair. Distinguish source-side physical support and restricted destination occupancy from excavated destination floor; preserve both housings, normal routing and packed rock.
+- [ ] 8B.3 Publish the exact public location/signatures and update direct geology/controller consumers. Quote issuance must work before full TBM acquisition; later assignment/publication must still resolve actual train/project references through their owners.
+- [ ] 8B.4 Test stale pair revision, foreign/blocked source, wrong facility/model/date and unchanged estimate/refusal state. Compile the Plan 2 consumer fixture; claim only this geometry contract, not a paid cut, live entry or exchange.
+
+### Area Mandatory Reading - Commissioned pair and lifecycle integration
+
+_Applies to Groups 9-12._
+
+Read master AD-3/AD-4, the preceding Commissioning and bootstrap area's acquisition/cancellation handoff, and the applicable R2MLVS3MP checkpoint. Inspect the live `ChangeLayerPortalConnection`, `CheckLayerPortalLifecycle`, `CheckLayerPortalWorkAccess` and `CommissionLayerPortalTBM` owners. Assigned-consist integration requires Plan 4's tested role/controller/retreat functions and Plan 5's tested exchange/recovery functions; unavailable consumers leave only their dependent scenarios pending. Group 12's actual tube/riser integration additionally requires the scoped Plan 16/17 producers scheduled by R2MLVS3MP; catalogue exclusions alone cannot complete it.
 
 ### Group 9 - Connect only a cleared and safely reserved pair
 
@@ -287,8 +309,10 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [ ] 16.1 Create separate Sealed, Commissioning and Connected fixtures and compare pair keys, work status, date policy and endpoint geometry after reload.
 - [X] 16.1A Verify actual Sealed/Connected repeated files (`r2mlvs3-e-save-results.txt`) and all three public owner-state round trips with actual geological/train references (`r2mlvs3-d-state-results.txt`). Actual Commissioning vehicle-file integration remains in 16.1/16.2 pending r2mlvs4/5.
 - [ ] 16.2 After r2mlvs4/5 integration, save with a TBM/wagons in the work pocket and with a train spanning the pair; check part positions, reservations and the next legal transition after reload.
-- [ ] 16.3 Load original version-370 rail/road/elevator fixtures under legacy policy. Verify no state migration opens new solid rock or removes an existing usable legacy route.
-- [X] 16.3A Reload the unchanged supplied version-370 `build/save/camera-deep-repaired.sav`, plus separate owned version-370 rail/road/elevator topology and repeated Native ownerless-road files. Supplied original has no portal tiles, so original occupied portal-route preservation in 16.3 remains pending suitable fixtures. `r2mlvs3-r-save-results.txt`: five actual loads, exact endpoint metadata/work/geology and retained supplied bytes.
+- [X] 16.3 Load genuine version-370 rail/elevator fixtures under legacy policy, with separately authored version-370 road-tunnel coverage where original road tunnels are absent. Verify no state migration opens new solid rock or removes an existing usable legacy route.
+- [X] 16.3A Reload the unchanged supplied version-370 `build/save/camera-deep-repaired.sav`, plus separate owned version-370 rail/road/elevator topology and repeated Native ownerless-road files. This particular camera save has no portal tiles; genuine portal worlds were subsequently located and verified in 16.3. `r2mlvs3-r-save-results.txt`: five actual loads, exact endpoint metadata/work/geology and retained supplied bytes.
+
+Follow-up correction: genuine `build/save/makinpr2.sav` and `makinpr2-connected.sav` both contain five rail pairs and four Deep road elevators. `r2mlvs3-y-original-results.txt` records their four actual migration/repeat loads and a fifth separately authored road-tunnel load. The accepted-world diagnostic queries actual `GetTileTrackStatus` at both ends, proving all original rail/elevator ordinary edges remain usable. Eighteen complete original endpoint field sets remain exact; Classic creates neither portal work rows nor packed geology. Original input/startup/config hashes are unchanged. Eight focused state/routing/lifecycle cases pass 285 assertions (`r2mlvs3-z-legacy-diagnostic-results.txt`). The earlier assertion that original portal fixtures were absent was based on checking only the empty camera save and is superseded by this evidence.
 
 ### Group 17 - Controls, art and acceptance
 
@@ -296,6 +320,8 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [ ] 17.1 Test 31 December 1979 refusal and 1 January 1980 success through every Deep rail/elevator path, both build directions, scripting and commissioning.
 - [X] 17.1A Exercise the actual shared build/connection/routing/tile-admission/commissioning-refusal gate at both endpoints and all four headings. Publish/compile AI/GS `ScriptRail`/`ScriptRoad` BuildLayerPortal/ConnectLayerPortal bindings, and execute the script APIs through actual Game Script company/test scopes and the real command kernel at both dates. `r2mlvs3-s-date-script-results.txt`: 282 assertions/four cases. Full scripted fleet scenarios and successful actual TBM commissioning remain in 17.1 pending their controller; this test does not claim execution of a supplied Squirrel game script.
 - [X] 17.2 Check a legacy pre-1980 save still follows its explicit compatibility mode and changing economy speed cannot unlock technology early. Existing original370/owned legacy file loads retain Classic policy; actual legacy pre-1980 elevator queries and advanced economy/frozen calendar tests use the shared gate.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 18 - Controls, art and acceptance
 
@@ -306,13 +332,15 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 ## Execution evidence and remaining gates
 
+Deferred tasks and their exact remaining work are tracked in [R2MLVS99 - Leftovers](r2mlvs99-leftovers.md). This plan remains incomplete; its unfinished checkboxes and parent completion status are unchanged.
+
 Public owner: `src/layer_portal_cmd.h`; actual canonical store: `src/layer_portal_work.cpp`. Delivered work queries/records/pockets, `CheckLayerPortalAvailability`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM` request/result, `CmdChangeLayerPortalConnection`, safe empty lifecycle/capacity APIs and actual AI/GS BuildLayerPortal/ConnectLayerPortal consumers all compile in Debug. Save version 375's LPWH/LPWK and diagnostic root publish after accepted content/geology. Native sealed construction never opens rock, and ordinary movement/routing remains independently gated by phase/date.
 
 Final focused command: `build/Debug/openttd_test.exe` selecting `[portal-build]`, `[portal-routing]`, `[portal-connect]`, `[portal-lifecycle]`, `[portal-date]`, `[portal-script]`, `[portal-profile]`, `[portal-work-state]`, `[portal-contract]`, `[portal-road]`, `[portal-quote]`, `[portal-acceptance]`, two relevant excavation tags and five existing layer/WindowDesc boundaries. `r2mlvs3-t-final-results.txt`: **29 cases, 1,498 assertions passed**, approximately 0.4 seconds. A combined run exposed fixture-only stale vehicle hashes; actual pool teardown now calls the real `ResetVehicleHash`, and the same combined burst passed afterward. Readonly saved Connected edge validation also uses bounded actual door helpers rather than asserting on malformed edge addresses. Debug `openttd_test` and `openttd` builds pass. No full regression was run.
 
 Actual loader evidence: eleven initial native/state/refusal cases (`e`), five original/owned legacy and ownerless round trips (`r`), one targeted older Native ownerless migration (`u`), and four separate Underground/Deep Sealed/Connected loads plus repeats (`x`): 21 actual creation/load/refusal cases. The older ownerless pair becomes explicitly Sealed/unassigned without a new company, cavity or traffic authority. Retained inputs/startup/config bytes are unchanged. Public copied-state tests cover all three work phases with real geological/train references; actual occupied TBM/wagon save and movement scenarios remain pending. Final small follow-ups passed 134 metadata/state assertions (`v`) after replacing save-copy allocation with the public count query, and 244 construction/state assertions (`w`) after publication rechecked actual profile/company/pair authority, including Classic refusal. `git diff --check` and fixture syntax checks pass.
 
-Named producer gates remain in 5.3B, 8.1-8.3, 9.3, 11.3-11.4, 12.1, 13.1, 15.2-15.3, 16.1-16.3 and 17.1. Plan 4 must deliver actual TBM engine/consist authorization, site construction, paid first solid-pocket cut and recoverable project lifecycle; Plan 5 supplies actual source-side wagon/packet exchange. Plans 16/17 own actual capsule/interchange/riser consumers. Plan 13's state-face/Deep sprites still have planned source/packed fields. Original version-370 occupied portal/fleet evidence is absent; the supplied original has no portal tiles and separate owned topology is labelled accordingly. Multiplayer joins/deterministic occupied-controller transitions and final rendered controls/art review are not claimed. Full plan completion and a Plan 3 commit are deferred until those required gates close; the sole Git write in this execution was the explicitly requested Plan 2 checkpoint commit.
+Named producer gates remain in 5.3B, 8.1-8.3, 9.3, 11.3-11.4, 12.1, 13.1, 15.2-15.3, 16.1-16.2 and 17.1. Plan 4 must deliver actual TBM engine/consist authorization, site construction, paid first solid-pocket cut and recoverable project lifecycle; Plan 5 supplies actual source-side wagon/packet exchange. Plans 16/17 own actual capsule/interchange/riser consumers. Plan 13's state-face/Deep sprites still have planned source/packed fields. Genuine version-370 portal migration is now verified; actual new TBM/spanning-consist acceptance remains pending its producers. Multiplayer joins/deterministic occupied-controller transitions and final rendered controls/art review are not claimed. Full plan completion remains gated. The repository now contains core checkpoint `ee1cf35a97`; no Git write was performed during this legacy follow-up.
 
 ## Consult on Demand
 

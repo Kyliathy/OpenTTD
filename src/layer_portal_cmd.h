@@ -96,6 +96,13 @@ struct LayerPortalCommissionResult {
 LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommissionRequest &request, bool execute);
 
 /**
+ * Perform the portal owner's pure commissioning preflight separately from train acquisition.
+ * @param request Actual accessible pair and canonical geological proposal.
+ * @return None and a pair revision on valid source access; no vehicle/job identity is allocated.
+ */
+LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCommissionRequest &request);
+
+/**
  * Connect or safely hide an empty pair without changing its physical topology or geology.
  * @param tile Either actual endpoint.
  * @param company Actual command owner, checked against both housings and saved authority.

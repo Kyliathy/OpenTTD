@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_cmd.cpp Commands for vehicles. */
+/** @file vehicle_cmd.cpp Commands for vehicles. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #include "stdafx.h"
 #include "roadveh.h"
@@ -14,6 +14,7 @@
 #include "command_func.h"
 #include "company_func.h"
 #include "train.h"
+#include "tbm.h"
 #include "aircraft.h"
 #include "newgrf_text.h"
 #include "vehicle_func.h"
@@ -113,7 +114,8 @@ VehicleTypeIndexArray<const StringID> _send_to_depot_msg_table = {
  */
 std::tuple<CommandCost, VehicleID, uint, uint16_t, CargoArray> CmdBuildVehicle(DoCommandFlags flags, TileIndex tile, EngineID eid, bool use_free_vehicles, CargoType cargo, ClientID client_id)
 {
-	/* Elementary check for valid location. */
+	if (IsTBMCutterEngine(eid)) return { CMD_ERROR, VehicleID::Invalid(), 0, 0, {} }; // Portal-only machinery refuses before refit estimates, clone/autoreplace or script purchase can allocate any part.
+	/* Ordinary purchase requires a genuine facility owned by the command actor; foreign infrastructure cannot supply assembly permission. */
 	if (!IsDepotTile(tile) || !IsTileOwner(tile, _current_company)) return { CMD_ERROR, VehicleID::Invalid(), 0, 0, {} };
 
 	VehicleType type = GetDepotVehicleType(tile);
@@ -842,8 +844,13 @@ std::tuple<CommandCost, VehicleID> CmdCloneVehicle(DoCommandFlags flags, TileInd
 	CommandCost total_cost(ExpensesType::NewVehicles);
 
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
+	// Clone only an existing ordinary fleet head; arbitrary parts or noncompany vehicles cannot supply new ownership or order references.
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || !v->IsPrimaryVehicle()) return { CMD_ERROR, VehicleID::Invalid() };
 	Vehicle *v_front = v;
+	// CloneVehicle is NoTest: inspect every source part now, before its execution loop can create any new unit.
+	for (const Vehicle *part = v_front; part != nullptr; part = part->Next()) {
+		if (IsTBMCutterEngine(part->engine_type)) return { CMD_ERROR, VehicleID::Invalid() }; // Shared travel orders cannot duplicate permanent machinery or active-cut ownership.
+	}
 	Vehicle *w = nullptr;
 	Vehicle *w_front = nullptr;
 	Vehicle *w_rear = nullptr;

@@ -15,6 +15,7 @@
 #include "fileio_func.h"
 #include "engine_func.h"
 #include "engine_base.h"
+#include "tbm.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1749,6 +1750,7 @@ static void AfterLoadGRFs()
 	/* Deallocate temporary loading data */
 	_gted.clear();
 	_grm_sprites.clear();
+	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
 }
 
 #ifdef WITH_MULTILAYER_LOADER_PROBE

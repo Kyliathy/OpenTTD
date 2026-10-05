@@ -149,6 +149,18 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
  */
 LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommissionRequest &request, [[maybe_unused]] bool execute)
 {
+	auto result = ValidateLayerPortalCommissioning(request);
+	if (result.error == LayerPortalWorkError::None) result.error = LayerPortalWorkError::ControllerUnavailable;
+	return result;
+}
+
+/**
+ * Validate physical facility and supply-side floor before its controller allocates any part.
+ * @param request Actual pair and unallocated canonical geological proposal.
+ * @return Pure permission/refusal plus pair revision; allocated references remain invalid.
+ */
+LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCommissionRequest &request)
+{
 	LayerPortalCommissionResult result;
 	const auto key = GetLayerPortalPairKey(request.portal);
 	if (!key) return result;
@@ -189,7 +201,7 @@ LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommission
 	}
 	if (CheckExcavationConstruction(assembly).Failed()) { result.error = LayerPortalWorkError::MissingExcavation; return result; }
 	result.pair_revision = work->revision;
-	result.error = LayerPortalWorkError::ControllerUnavailable;
+	result.error = LayerPortalWorkError::None;
 	return result;
 }
 
@@ -444,6 +456,35 @@ void StageLoadedLayerPortalWork(std::vector<LayerPortalWorkRecord> records)
 	_pending_portal_work = std::move(prepared);
 }
 
+/**
+ * Report actual ordinary-edge usability after loaded profile, geology and work authority are accepted.
+ * This load-boundary diagnostic queries the real tile dispatch rather than reproducing
+ * portal permission in a fixture. It owns no connectivity cache or saved state.
+ */
+static void LogLoadedLayerPortalConnectivity()
+{
+	std::array<uint32_t, 3> pairs{}, usable{};
+	uint32_t invalid = 0;
+	// Count each actual reciprocal pair once at its canonical lower end; ordinary legacy and Native edges use exactly the same runtime track-status dispatch.
+	for (uint32_t index = 0; index < Map::Size(); ++index) {
+		const TileIndex tile{index};
+		if (!IsLayerPortalTile(tile)) continue;
+		const auto key = GetLayerPortalPairKey(tile);
+		if (!key) { ++invalid; continue; }
+		if (*key != tile) continue;
+		const auto pair = GetLayerPortalPairTile(tile);
+		const auto kind = GetLayerPortalKind(tile);
+		if (!MultiLayerMap::IsPortalPairAllowed(kind, GetTileLayer(tile), GetTileLayer(pair))) { ++invalid; continue; }
+		const auto slot = to_underlying(kind);
+		++pairs[slot];
+		const auto transport = GetLayerPortalTransportType(tile);
+		const auto road_kind = transport == TransportType::Road ? RoadTramType::Road : RoadTramType::Invalid;
+		// A usable connection needs a real ordinary edge at both housings; a saved physical neighbour alone does not prove phase/date admission.
+		if (GetTileTrackStatus(tile, transport, road_kind).trackdirs.Any() && GetTileTrackStatus(pair, transport, road_kind).trackdirs.Any()) ++usable[slot];
+	}
+	Debug(Facility::Misc, Severity::Info, "MLVS_PORTAL_CONNECTIVITY rail={}/{} road={}/{} elevator={}/{} invalid={}", usable[0], pairs[0], usable[1], pairs[1], usable[2], pairs[2], invalid);
+}
+
 /** Publish once only after shared content/geological acceptance. */
 void AcceptLoadedLayerPortalWork()
 {
@@ -455,4 +496,5 @@ void AcceptLoadedLayerPortalWork()
 	for (const auto &[key, record] : _portal_work) {
 		Debug(Facility::Misc, Severity::Info, "MLVS_PORTAL_WORK key={} state={} company={} project={} cutter={} revision={}", key.base(), to_underlying(record.state), record.company.base(), record.project.base(), record.cutter.base(), record.revision);
 	}
+	LogLoadedLayerPortalConnectivity();
 }

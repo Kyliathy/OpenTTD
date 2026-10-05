@@ -1,4 +1,4 @@
-# Focused content/geology fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs2-geology-and-excavation.md.
+# Focused content/geology/TBM fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md and r2mlvs4-tunnel-boring-machines.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
@@ -15,6 +15,8 @@ add_test_files(
     excavation_pass.cpp
     excavation_budget.cpp
     excavation_fixture.h
+    tbm_model.cpp
+    tbm_engine.cpp
     geology_deposits.cpp
     geology_generation.cpp
     geology_state.cpp

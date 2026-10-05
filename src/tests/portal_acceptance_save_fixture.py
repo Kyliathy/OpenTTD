@@ -229,10 +229,61 @@ def resume_deep_roundtrips():
         "Explicit fixture foundations are not a TBM excavation or occupied vehicle scenario.\n", encoding="utf-8")
 
 
+def resume_original_portals():
+    """Verify genuine retained version-370 portal worlds and their current repeated reloads.
+
+    @return None; preserve supplied original saves/startup/config and compare actual ordinary-edge diagnostics and complete endpoint fields.
+    """
+    prefix = "r2mlvs3-y"
+    sources = (ROOT / "build/save/makinpr2.sav", ROOT / "build/save/makinpr2-connected.sav")
+    hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in sources}
+    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    original_script, original_config = startup.read_bytes(), config.read_bytes()
+    try:
+        # Genuine supplied worlds each contain five usable rail pairs and four Deep road elevators; authored old road-tunnel coverage remains separately labelled.
+        for name, source in zip(("original-portals", "original-connected"), sources):
+            version, stream = read_stream(source)
+            assert version == 370
+            records = {record["name"]: record for record in chunks(stream)}
+            endpoints = [index for index, tile in enumerate(records[b"MAPT"]["payload"]) if tile >> 4 == 11]
+            assert len(endpoints) == 18
+            expected = "MLVS_PORTAL_CONNECTIVITY rail=5/5 road=0/0 elevator=4/4 invalid=0"
+            loaded = run_case(name, ["-g", source.as_posix()], expected, prefix=prefix)
+            repeated = run_case(name + "-repeat", ["-g", loaded.as_posix()], expected, prefix=prefix)
+            # Both actual loaders must retain every public portal field at each original endpoint; real tile dispatch must continue exposing all original ordinary edges.
+            for output in (loaded, repeated):
+                restored = {record["name"]: record for record in chunks(read_stream(output)[1])}
+                for label, width in FIELDS:
+                    for tile in endpoints:
+                        begin = tile * width
+                        assert restored[label]["payload"][begin:begin + width] == records[label]["payload"][begin:begin + width], (name, label, tile)
+                assert len(restored[b"LPWK"]["rows"]) == 1
+                assert int.from_bytes(restored[b"MLMD"]["rows"][1][2:3], "big") == 0
+                assert "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0" in output.with_suffix(".log").read_text(encoding="utf-8", errors="replace")
+        # Genuine originals have no road tunnel; the existing separately authored version-370 three-kind fixture proves that actual ordinary road dispatch also survives migration.
+        authored_road = AREA / "r2mlvs3-r-legacy-pairs-input.sav"
+        authored_hash = hashlib.sha256(authored_road.read_bytes()).hexdigest()
+        run_case("retained-road-topology", ["-g", authored_road.as_posix()], "MLVS_PORTAL_CONNECTIVITY rail=1/1 road=1/1 elevator=1/1 invalid=0", prefix=prefix)
+        assert hashlib.sha256(authored_road.read_bytes()).hexdigest() == authored_hash
+    finally:
+        startup.write_bytes(original_script)
+        config.write_bytes(original_config)
+        for path, digest in hashes.items():
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+    (AREA / f"{prefix}-original-results.txt").write_text(
+        "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16 task 16.3.\n"
+        "Five actual loads passed: unchanged genuine makinpr2/original-connected version-370 worlds, each current repeat, and retained separately authored road-tunnel topology.\n"
+        "Actual runtime dispatch preserves rail=5/5 and elevator=4/4 usable ordinary pairs, invalid=0; eighteen original endpoint field sets remain exact.\n"
+        "Classic migration allocates no work/geological authority and retains supplied original/startup/config bytes.\n"
+        "Original road tunnels are absent from these worlds; separately authored version-370 road topology is retained as distinct coverage.\n", encoding="utf-8")
+
+
 if __name__ == "__main__":
     if "--migration" in sys.argv:
         resume_ownerless_migration()
     elif "--deep" in sys.argv:
         resume_deep_roundtrips()
+    elif "--original-portals" in sys.argv:
+        resume_original_portals()
     else:
         main()
