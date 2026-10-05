@@ -298,6 +298,7 @@ add_files(
     tbm_engine.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
+    tbm_commission.cpp
     tbm_cmd.h
     tbm_exchange.h
     tbm_exchange.cpp

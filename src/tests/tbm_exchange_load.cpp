@@ -20,73 +20,6 @@
 
 #include "../safeguards.h"
 
-/** One loaded copy of the exchange store, as the save chunks stage it. */
-struct TBMExchangeSave {
-	std::vector<TBMExchangeAssignment> assignments = CaptureTBMExchangeAssignments(); ///< Assignments in identity order.
-	uint32_t next_assignment = GetNextTBMExchangeAssignmentID(); ///< Assignment cursor.
-	std::vector<TBMWagonSet> sets = CaptureTBMWagonSets(); ///< Sets in identity order.
-	uint32_t next_set = GetNextTBMWagonSetID(); ///< Set cursor.
-
-	/**
-	 * Clear the live store, stage this copy and try to publish it.
-	 * @return Whether it was accepted.
-	 */
-	bool Load() const
-	{
-		ResetTBMExchangeState();
-		StageLoadedTBMExchange(this->assignments, this->next_assignment, this->sets, this->next_set);
-		CHECK(CaptureTBMExchangeAssignments().empty()); // Staged rows are not live until accepted.
-		return AcceptLoadedTBMExchange();
-	}
-
-	/** Require this copy to refuse and leave the whole store, cursors included, empty. */
-	void Refuse() const
-	{
-		CHECK_FALSE(this->Load());
-		CHECK(CaptureTBMExchangeAssignments().empty());
-		CHECK(CaptureTBMWagonSets().empty());
-		CHECK(GetNextTBMExchangeAssignmentID() == 0);
-		CHECK(GetNextTBMWagonSetID() == 0);
-	}
-
-	/** @return Whether the live store equals this copy, cursors included. */
-	bool IsLive() const
-	{
-		return CaptureTBMExchangeAssignments() == this->assignments && CaptureTBMWagonSets() == this->sets && GetNextTBMExchangeAssignmentID() == this->next_assignment && GetNextTBMWagonSetID() == this->next_set;
-	}
-
-	/**
-	 * @param state Set state.
-	 * @return The copy's set in that state, which must exist.
-	 */
-	TBMWagonSet &Set(TBMWagonSetState state)
-	{
-		const auto found = std::ranges::find(this->sets, state, &TBMWagonSet::state);
-		REQUIRE(found != this->sets.end());
-		return *found;
-	}
-};
-
-/** A rig after its first exchange: the cutter rides its Assigned set and the hauler takes its Loaded set to the origin. */
-struct TBMExchangeLoadRig : TBMExchangeRig {
-	TileIndex origin = INVALID_TILE; ///< Origin station tile.
-	uint64_t spoil = 0; ///< Tonnes collected.
-
-	/** Bore, exchange in the source bay and leave towards the origin. */
-	TBMExchangeLoadRig()
-	{
-		this->origin = this->MakeOriginStationTile();
-		const auto estimate = this->BoreOneCut();
-		this->spoil = estimate.earth_t + estimate.rock_t;
-		REQUIRE(this->Tick().phase == TBMPhase::WaitForEmpties);
-		this->Meet();
-		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::AwaitExchange);
-		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::CollectLoaded);
-		this->PlaceOnTrack(this->hauler, TileXYL(25, 20, MapLayer::Surface));
-		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::VisitOrigin);
-	}
-};
-
 /** An intact store publishes unchanged, keeps the wagons' own packets and resumes the next step of the same cycle. */
 TEST_CASE("A loaded exchange store publishes unchanged and resumes its cycle", "[tbm-exchange-load]")
 {
@@ -163,6 +96,15 @@ TEST_CASE("Loaded exchange stores refuse missing, reused or shared references", 
 		TBMExchangeAssignment twin = saved.assignments[0];
 		twin.id = TBMExchangeAssignmentID{saved.next_assignment};
 		twin.set = TBMWagonSetID{UINT32_MAX};
+		saved.assignments.push_back(twin);
+		++saved.next_assignment;
+		saved.Refuse();
+	}
+	SECTION("one set carried by two haulers") {
+		// Two heads may never claim one set's wagons (Plan 14 10.5), even when both are real haulers of the project.
+		TBMExchangeAssignment twin = saved.assignments[0];
+		twin.id = TBMExchangeAssignmentID{saved.next_assignment};
+		twin.hauler = rig.BuildHauler(rig.depot, 1, 0)->index;
 		saved.assignments.push_back(twin);
 		++saved.next_assignment;
 		saved.Refuse();

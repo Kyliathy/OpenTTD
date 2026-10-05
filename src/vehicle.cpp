@@ -64,6 +64,7 @@
 #include "timer/timer_game_calendar.h"
 #include "timer/timer_game_economy.h"
 #include "timer/timer_game_tick.h"
+#include "tbm_exchange.h"
 
 #include "table/strings.h"
 
@@ -830,6 +831,9 @@ void Vehicle::HandlePathfindingResult(bool path_found)
 void Vehicle::PreDestructor()
 {
 	if (CleaningPool()) return;
+
+	/* A deleted train part leaves the TBM stores at once, so a reused ID never joins a set, assignment, project or pair. */
+	if (this->type == VehicleType::Train) OnTBMTrainPartDeleted(*Train::From(this));
 
 	if (Station::IsValidID(this->last_station_visited)) {
 		Station *st = Station::Get(this->last_station_visited);

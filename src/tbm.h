@@ -191,6 +191,8 @@ enum class TBMAcquisitionError : uint8_t {
 	InsufficientFunds, ///< The company cannot pay for the machinery and every wagon.
 	Stale, ///< A fresh preparation no longer equals the accepted plan.
 	AllocationFailure, ///< Construction or coupling failed after allocation began; everything was rolled back.
+	NoReceiver, ///< Commissioning: the origin is not the company's Surface railway station, or no real receiver there accepts both Earth and Rock.
+	ProjectLimit, ///< Commissioning: the project store, its identity cursor or the pair's revision is exhausted.
 };
 
 /** Physical size of a requested consist, from its definitions alone (shared by area preview and acquisition). */
@@ -357,7 +359,8 @@ static constexpr size_t MAX_TBM_PERMANENT_PARTS = 4; ///< Cutter plus its articu
 enum class TBMProjectAction : uint8_t {
 	Pause, ///< Hold work in its current phase (saved as TBMBlockedReason::Paused).
 	Resume, ///< Clear a player pause; any lost reference becomes the blocked reason at once.
-	Cancel, ///< Recoverable cancellation; refused until Group 17 delivers support/retreat recovery.
+	Cancel, ///< Recoverable cancellation (Group 17.1): the job releases its unfinished cells and keeps every cavity; the consist returns to its bay, gives any spoil away through the exchange, and the project ends Cancelled. A project whose cutter was deleted ends Cancelled at once, whatever its job.
+	Retire, ///< Erase a finished project whose consist stands withdrawn and empty, with no hauler, loaded set or Commissioning pair left (Group 17.2); its consist becomes an ordinary train.
 	End, ///< Validation bound.
 };
 
@@ -447,6 +450,30 @@ TBMProjectError ValidateTBMProjects(std::span<const TBMProject> projects, TBMPro
  */
 TBMProjectError PublishTBMProject(TBMProject &project, bool execute);
 
+/** Result of one commissioning purchase (Group 2.1, R2MLVS3MP master 6.6); refusals allocate nothing. */
+struct TBMCommissionResult {
+	TBMAcquisitionError error = TBMAcquisitionError::InvalidConsist; ///< Overall result; Portal and Geology carry their owner's reason.
+	LayerPortalWorkError portal_error = LayerPortalWorkError::None; ///< Portal owner's reason for a Portal refusal.
+	ExcavationError geology_error = ExcavationError::None; ///< Geology owner's reason for a Geology refusal.
+	TileIndex failure_tile = INVALID_TILE; ///< Stable failing location, when one exists.
+	Money cost = 0; ///< Machinery and every hopper; the command charges it once.
+	TBMProjectID project{UINT32_MAX}; ///< Published project, after execution only.
+	ExcavationJobID job{UINT32_MAX}; ///< Reserved geological job, after execution only.
+	VehicleID cutter = VehicleID::Invalid(); ///< Commissioned front engine, after execution only.
+};
+
+/**
+ * Commission one boring machine at a Sealed rail portal as one transaction (Group 2.1, r2mlvs3 Group 8). Every pure
+ * check runs first: the portal proof, definitions, route replay, pass and reservation quotes, pool, unit number, funds,
+ * origin receivers, store capacity and the pair binding. Execution then acquires the consist, reserves the job, binds
+ * the pair Commissioning that job and cutter, and publishes the project in the Commissioning phase; nothing after
+ * the acquisition can fail once those checks passed. Payment is the command's returned cost.
+ * @param request Portal request whose proposal is the canonical route; its wagon counts size the consist.
+ * @param execute False quotes only and changes nothing.
+ * @return The quote or the published identities, or a refusal with vehicles, funds, geology, pair and RNG unchanged.
+ */
+TBMCommissionResult CommissionTBMProject(const LayerPortalCommissionRequest &request, bool execute);
+
 /**
  * Apply one player control to a project owned by the command actor.
  * @param id Project to control.
@@ -487,7 +514,8 @@ struct TBMPhaseInputs {
 	bool support_advanced = false; ///< The consist moved onto the new support (ends AdvanceSupport).
 	bool exchange_due = false; ///< Actual wagon space cannot take the next cut, per the frozen pass breakpoints.
 	bool at_exchange = false; ///< The cutter consist is admitted at its bay (ends ReturnForExchange; Plan 5 Group 1).
-	bool route_complete = false; ///< The job has no further cuts.
+	bool route_complete = false; ///< The job has no further cuts (also true once the job is cancelled).
+	bool cancelled = false; ///< The job was cancelled (Group 17.1): forward phases turn back, and the return ends the project Cancelled.
 	TBMBlockedReason work_wait = TBMBlockedReason::None; ///< Precise wait from the face work step (Group 6.3); holds the phase.
 };
 
@@ -507,7 +535,8 @@ struct TBMPhaseStep {
  * the consist is admitted at its bay; WaitForEmpties to Resume once no exchange is due, which only an executed exchange
  * makes true (the actual wagons then hold no spoil); Resume to TravelToFace, or to Completed after the final return.
  * Conditions: a lost reference, a player pause, a stopped, broken-down or servicing train, or a face work wait each
- * hold the phase.
+ * hold the phase. Group 17.1: with a cancelled job every forward phase (Commissioning, TravelToFace, Bore, AdvanceSupport)
+ * turns to ReturnForExchange, the exchange gives away whatever spoil is aboard, and Resume ends the project Cancelled.
  * Heading is never read from the train, so reversing or backing cannot change the cutting direction.
  * @param project Current record.
  * @param inputs Observed facts.
@@ -734,6 +763,40 @@ void ReleaseTBMSupportPiece(TileIndex tile, Track track);
  * @param new_owner New owner.
  */
 void ChangeTBMSupportOwner(TileIndex tile, Owner new_owner);
+
+/**
+ * Move every project whose exchange is at a removed depot bay back to its Source bay (its portal key), or to no bay
+ * when its portal is gone; the project then waits MissingExchange (Plan 5 Group 11.3). Lifecycle owner: no actor check.
+ * @param bay Removed rearrangement tile.
+ */
+void ReleaseTBMProjectExchangeBay(TileIndex bay);
+
+/**
+ * Apply a company merger or removal to the TBM projects, their excavation jobs and their exchange records (common
+ * lifecycle contract, Plan 5 Group 11.4). Called after the company's vehicles moved or were deleted, before its tiles.
+ * A merger moves each project and job to the buyer. A removal erases the company's projects (identities are never
+ * reused) and their exchange records, and leaves their jobs as explicit orphans.
+ * @param old_owner Company that goes away.
+ * @param new_owner Buyer, or INVALID_OWNER when the company is removed.
+ */
+void ChangeTBMOwnership(Owner old_owner, Owner new_owner);
+
+/**
+ * Common deletion hook of the TBM owners (Plan 4/5, Plan 14 16.1), called from Vehicle::PreDestructor for every train
+ * part on every deletion path but pool cleaning. The exchange store forgets the part first; a deleted cutter is then
+ * cleared from its project (MissingCutter) and from its Commissioning pair at once, so a later train that reuses the
+ * ID never inherits the project, its consist lock or its pair.
+ * @param part Train part about to be deleted, still linked in its chain.
+ */
+void OnTBMTrainPartDeleted(const Train &part);
+
+/**
+ * Station deletion hook of the TBM owners (Plan 4 Group 17, Plan 14 16.1), called from Station::~Station on every
+ * deletion but pool cleaning. A project whose origin it was loses it at once (MissingOrigin), and so does a pair
+ * naming it, so a later station that reuses the ID never becomes an origin and the pair's record still loads.
+ * @param station Station about to be deleted.
+ */
+void OnTBMStationDeleted(StationID station);
 
 /**
  * Traffic class of one train part on support.

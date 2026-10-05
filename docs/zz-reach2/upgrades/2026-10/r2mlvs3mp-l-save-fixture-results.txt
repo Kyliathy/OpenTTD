@@ -1,0 +1,21 @@
+[excavation_save_fixture] rc=0 75s
+[excavation_pass_save_fixture] rc=0 44s
+[geology_save_fixture --refusals-only] rc=0 34s
+[portal_save_fixture] rc=1 80s
+      File "D:\Codez\Sandbox\OpenTTD\src\tests\portal_save_fixture.py", line 165, in <module>
+        main()
+      File "D:\Codez\Sandbox\OpenTTD\src\tests\portal_save_fixture.py", line 105, in main
+        owned = run_case("native-company", ["-G", "1234"], "MLVS_GEOLOGY generator=1", prefix=PREFIX, single_player=True)
+      File "D:\Codez\Sandbox\OpenTTD\src\tests\multilayer_state_fixture.py", line 48, in run_case
+        subprocess.run([str(console), "-v", "null", "-s", "null", "-m", "null", "-x", "-X", "-d", env["OTTD_DEBUG"],
+      File "C:\Users\Axonn\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 503, in run
+        stdout, stderr = process.communicate(input, timeout=timeout)
+      File "C:\Users\Axonn\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1168, in communicate
+        sts = self.wait(timeout=self._remaining_time(endtime))
+      File "C:\Users\Axonn\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1204, in wait
+        return self._wait(timeout=timeout)
+      File "C:\Users\Axonn\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1488, in _wait
+        raise TimeoutExpired(self.args, timeout)
+    subprocess.TimeoutExpired: Command '['D:\\Codez\\Sandbox\\OpenTTD\\build\\Debug\\openttd_console.exe', '-v', 'null', '-s', 'null', '-m', 'null', '-x', '-X', '-d', 'misc=5,net=2,sl=3,grf=2,desync=5,script=2', '-c', 'grftest.cfg', '-g', '-G', '1234']' timed out after 70.0 seconds
+[portal_acceptance_save_fixture] rc=0 43s
+DONE

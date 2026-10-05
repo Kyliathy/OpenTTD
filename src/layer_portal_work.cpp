@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_work.cpp One canonical saved work owner per reciprocal portal pair. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 2, 5 (task 5.3B: TBM role admission) and 8B (solid-start load binding); docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file layer_portal_work.cpp One canonical saved work owner per reciprocal portal pair. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 2, 5 (task 5.3B: TBM role admission), 8 (commissioning binding), 8B (solid-start load binding) and 11.3/11.4 (withdrawal, merger and company removal of assigned pairs); docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md; docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
@@ -149,15 +149,24 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
 }
 
 /**
- * Publish the portal-side producer boundary without inventing a TBM purchase/controller fallback.
- * @param request Actual upper pair and canonical geological proposal.
- * @param execute Actual estimate/execute intent; acquisition remains unavailable until its owner exists.
- * @return Typed pair/date/owner/refusal and a real preflight stamp, with no allocated IDs on refusal.
+ * Validate the portal side, then hand the purchase to the TBM controller's commissioning transaction.
+ * @param request Actual upper pair, canonical geological proposal and wagon counts.
+ * @param execute False estimates; true commissions.
+ * @return Typed pair/date/owner refusal, ControllerUnavailable for a controller refusal, or None with the allocated
+ *         job and cutter after execution; no IDs are allocated on refusal.
  */
-LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommissionRequest &request, [[maybe_unused]] bool execute)
+LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommissionRequest &request, bool execute)
 {
 	auto result = ValidateLayerPortalCommissioning(request);
-	if (result.error == LayerPortalWorkError::None) result.error = LayerPortalWorkError::ControllerUnavailable;
+	if (result.error != LayerPortalWorkError::None) return result;
+	// The purchase belongs to the TBM controller (r2mlvs4 Group 2.1); a refusal there has allocated nothing.
+	const auto commissioned = CommissionTBMProject(request, execute);
+	if (commissioned.error != TBMAcquisitionError::None) {
+		result.error = commissioned.error == TBMAcquisitionError::Portal ? commissioned.portal_error : LayerPortalWorkError::ControllerUnavailable;
+		return result;
+	}
+	result.project = commissioned.job;
+	result.cutter = commissioned.cutter;
 	return result;
 }
 
@@ -315,9 +324,13 @@ LayerPortalWorkError RetireLayerPortalWorkPair(TileIndex tile)
  */
 LayerPortalWorkError TransferLayerPortalWorkPair(TileIndex tile, Owner new_owner)
 {
-	const auto error = CheckLayerPortalLifecycle(tile);
-	if (error != LayerPortalWorkError::None) return error;
+	// Ownerless retention needs a safe empty pair; a receiving company takes the pair with everything bound to it.
+	if (new_owner == OWNER_NONE) {
+		const auto error = CheckLayerPortalLifecycle(tile);
+		if (error != LayerPortalWorkError::None) return error;
+	}
 	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return LayerPortalWorkError::InvalidPair;
 	const auto it = _portal_work.find(*key);
 	if (it == _portal_work.end()) return LayerPortalWorkError::None;
 	if (new_owner != OWNER_NONE && !Company::IsValidID(new_owner)) return LayerPortalWorkError::InvalidOwner; // A transfer cannot bind a record to an invented/deleted company.
@@ -327,6 +340,94 @@ LayerPortalWorkError TransferLayerPortalWorkPair(TileIndex tile, Owner new_owner
 	if (new_owner == OWNER_NONE) it->second.state = LayerPortalWorkState::Sealed;
 	++it->second.revision;
 	return LayerPortalWorkError::None;
+}
+
+/**
+ * Clear a record's assignment, returning it to Sealed, and tell the routing owner.
+ * @param key Pair key.
+ * @param record Record to clear.
+ */
+static void UnbindLayerPortalWork(TileIndex key, LayerPortalWorkRecord &record)
+{
+	record.state = LayerPortalWorkState::Sealed;
+	record.project = ExcavationJobID{UINT32_MAX};
+	record.cutter = VehicleID::Invalid();
+	record.origin = StationID::Invalid();
+	++record.revision;
+	NotifyLayerPortalRoutingChanged(key);
+}
+
+LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool execute)
+{
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return LayerPortalWorkError::InvalidPair;
+	const auto it = _portal_work.find(*key);
+	// Only the pair Commissioning exactly this job and cutter is released, and only by that job's controller.
+	if (it == _portal_work.end() || it->second.state != LayerPortalWorkState::Commissioning || it->second.project != job || it->second.cutter != cutter) return LayerPortalWorkError::Conflict;
+	const auto &geology = GetGeologyWorldState();
+	const auto found = std::ranges::find(geology.jobs, job, &ExcavationJob::id);
+	// The work is over: a retired, completed or cancelled job no longer needs the pocket.
+	if (found != geology.jobs.end() && found->state != ExcavationJobState::Completed && found->state != ExcavationJobState::Cancelled) return LayerPortalWorkError::Conflict;
+	const TileIndex rock = GetLayerPortalPairTile(*key);
+	const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(rock));
+	const TileIndex door = TileAddWrap(rock, step.x, step.y);
+	if (!IsValidTile(door)) return LayerPortalWorkError::InvalidPair;
+	// The rock side is empty, part and claim alike; the withdrawn consist may still stand in its Surface assembly state.
+	if (EnsureNoVehicleOnGround(rock).Failed() || EnsureNoVehicleOnGround(door).Failed() || geology.job_claims.contains(rock) || geology.job_claims.contains(door)) return LayerPortalWorkError::Conflict;
+	if (it->second.revision >= UINT64_MAX - 1) return LayerPortalWorkError::Limit;
+	if (!execute) return LayerPortalWorkError::None;
+	UnbindLayerPortalWork(*key, it->second);
+	return LayerPortalWorkError::None;
+}
+
+void ForgetLayerPortalWorkCutter(TileIndex tile, VehicleID cutter)
+{
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return;
+	const auto it = _portal_work.find(*key);
+	if (it == _portal_work.end() || it->second.state != LayerPortalWorkState::Commissioning || it->second.cutter != cutter || it->second.revision >= UINT64_MAX - 1) return;
+	it->second.cutter = VehicleID::Invalid();
+	++it->second.revision;
+	NotifyLayerPortalRoutingChanged(*key);
+}
+
+void ForgetLayerPortalWorkOrigin(StationID station)
+{
+	// Only a Commissioning pair names an origin; every pair naming this one forgets it.
+	for (auto &[key, record] : _portal_work) {
+		if (record.origin != station || record.revision >= UINT64_MAX - 1) continue;
+		record.origin = StationID::Invalid();
+		++record.revision;
+	}
+}
+
+LayerPortalWorkError BindLayerPortalWorkCommissioning(TileIndex tile, uint64_t pair_revision, ExcavationJobID job, VehicleID cutter, StationID origin, bool execute)
+{
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return LayerPortalWorkError::InvalidPair;
+	const auto it = _portal_work.find(*key);
+	if (it == _portal_work.end()) return LayerPortalWorkError::InvalidPair;
+	auto &record = it->second;
+	// Only the unassigned Sealed pair the preflight saw is bound; any change since then refuses the whole purchase.
+	if (record.state != LayerPortalWorkState::Sealed || record.revision != pair_revision || record.project != ExcavationJobID{UINT32_MAX} || record.cutter != VehicleID::Invalid() || record.origin != StationID::Invalid()) return LayerPortalWorkError::Conflict;
+	if (record.revision >= UINT64_MAX - 1) return LayerPortalWorkError::Limit;
+	if (!execute) return LayerPortalWorkError::None;
+	record.state = LayerPortalWorkState::Commissioning;
+	record.project = job;
+	record.cutter = cutter;
+	record.origin = origin;
+	++record.revision;
+	NotifyLayerPortalRoutingChanged(*key);
+	return LayerPortalWorkError::None;
+}
+
+void ReleaseLayerPortalWorkBinding(TileIndex tile)
+{
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return;
+	const auto it = _portal_work.find(*key);
+	if (it == _portal_work.end() || it->second.state != LayerPortalWorkState::Commissioning || it->second.revision >= UINT64_MAX - 1) return;
+	UnbindLayerPortalWork(*key, it->second);
 }
 
 /**
@@ -430,7 +531,10 @@ LayerPortalWorkError ValidateLayerPortalWorkRecords(std::span<const LayerPortalW
 		}
 		if (GetLayerPortalTransportType(record.pair_key) != TransportType::Rail) return LayerPortalWorkError::InvalidReference;
 		const auto job = std::ranges::find(geology.jobs, record.project, &ExcavationJob::id);
-		if (job == geology.jobs.end() || job->company != record.company || job->state == ExcavationJobState::Cancelled || job->state == ExcavationJobState::Completed || record.cutter == VehicleID::Invalid()) return LayerPortalWorkError::InvalidReference; // Commissioning binds an actual live geological project and train, never surrogate IDs.
+		// Commissioning binds an actual geological job, never a surrogate ID. A closed (completed or cancelled) job still
+		// binds its cutter while the consist returns, until the pair is withdrawn (r2mlvs4 Group 17); a deleted cutter
+		// leaves the binding without one (r2mlvs3 Group 11.4), never a dangling or reused vehicle ID.
+		if (job == geology.jobs.end() || job->company != record.company) return LayerPortalWorkError::InvalidReference;
 		if (job->commissioning_anchor != pair || (job->cutter != VehicleID::Invalid() && job->cutter != record.cutter)) return LayerPortalWorkError::InvalidReference; // Saved work must start at this physical destination and preserve any actual controller binding already owned by geology.
 		// A commissioned job that has not yet opened its housing must still leave through the door and pay for the
 		// whole pocket in its first cut; a tampered first segment could otherwise skip unpaid starter rock.
@@ -439,9 +543,11 @@ LayerPortalWorkError ValidateLayerPortalWorkRecords(std::span<const LayerPortalW
 			if (envelope.empty() || CheckExcavationStarterGeometry(*job, DiagDirToDir(GetLayerPortalDoorDirection(pair)), envelope).error != ExcavationError::None) return LayerPortalWorkError::InvalidReference;
 		}
 		if (check_references) {
-			if (!Vehicle::IsValidID(record.cutter)) return LayerPortalWorkError::InvalidReference;
-			const auto *cutter = Vehicle::Get(record.cutter);
-			if (cutter->type != VehicleType::Train || cutter->owner != record.company) return LayerPortalWorkError::InvalidReference; // Role/model admission remains with the actual controller; a stored reference alone never makes a TBM.
+			if (record.cutter != VehicleID::Invalid()) {
+				if (!Vehicle::IsValidID(record.cutter)) return LayerPortalWorkError::InvalidReference;
+				const auto *cutter = Vehicle::Get(record.cutter);
+				if (cutter->type != VehicleType::Train || cutter->owner != record.company) return LayerPortalWorkError::InvalidReference; // Role/model admission remains with the actual controller; a stored reference alone never makes a TBM.
+			}
 			if (record.origin != StationID::Invalid()) {
 				if (!Station::IsValidID(record.origin)) return LayerPortalWorkError::InvalidReference;
 				const auto *station = Station::Get(record.origin);

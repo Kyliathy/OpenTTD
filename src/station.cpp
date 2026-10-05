@@ -27,6 +27,7 @@
 #include "core/random_func.hpp"
 #include "linkgraph/linkgraph.h"
 #include "linkgraph/linkgraphschedule.h"
+#include "tbm.h"
 
 #include "table/strings.h"
 
@@ -94,6 +95,9 @@ Station::~Station()
 	while (!this->loading_vehicles.empty()) {
 		this->loading_vehicles.front()->LeaveStation();
 	}
+
+	/* A TBM project or portal pair forgets this origin at once, so a reused ID never becomes one (r2mlvs4 Group 17). */
+	OnTBMStationDeleted(this->index);
 
 	for (Aircraft *a : Aircraft::Iterate()) {
 		if (!a->IsNormalAircraft()) continue;

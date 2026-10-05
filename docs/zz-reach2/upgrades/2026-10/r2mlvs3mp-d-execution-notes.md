@@ -17,9 +17,9 @@ Owner: [R2MLVS3MP](r2mlvs3mp-master-plan.md). Targets: [Plan 3](r2mlvs3-sealed-p
 
 ## Build cadence (user instruction, 2026-10-05)
 
-Do not build or run tests after each change. Compiling slows the user's machine. Build and run one focused burst only at a milestone, at most once every three or four master groups. The end-of-Group-4 milestone ran on 2026-10-05 (see [the milestone section](#milestone-build-and-burst-end-of-master-group-4-2026-10-05)). Code from master Group 5 on is unbuilt until the next milestone, due at the end of master Group 7 or 8 (or earlier only if the user asks). Read real signatures before using them, because compile errors surface late.
+Do not build or run tests after each change. Compiling slows the user's machine. Build and run one focused burst only at a milestone, at most once every three or four master groups. The end-of-Group-4 milestone ran on 2026-10-05 (see [the milestone section](#milestone-build-and-burst-end-of-master-group-4-2026-10-05)). The end-of-Group-7 milestone ran the same day (see [its section](#milestone-build-and-burst-end-of-master-group-7-2026-10-05)). Code from master Group 7B on is unbuilt until the next milestone. Read real signatures before using them, because compile errors surface late.
 
-Every test run must be wrapped in `timeout` (a Debug assert opens a modal dialog and hangs the run). Run tags one at a time with the runner described in the milestone section.
+Every test run must be wrapped in `timeout`. Since the end-of-Group-7 milestone, `src/tests/test_main.cpp` (MSVC) prints a failed assert with its call stack and exits with code 3, instead of the Debug runtime's modal Abort/Retry/Ignore dialog. Run tags one at a time with the runner described in the milestone section.
 
 Changes built at the Group 4 milestone (kept as a map of what Groups 2-4 touched):
 
@@ -131,6 +131,8 @@ Check these first when the build runs; they are the least certain compile points
 
 ## Group 5 - Exchange and disposal (in progress, unbuilt)
 
+Stale since the end-of-Group-7 milestone: this group is built and verified. Its risk lists are kept as history.
+
 - Design: [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md). Plan 5 Groups 1-7 (master 5.1-5.7) and Plan 4 4.2B are implemented but unbuilt; the burst waits for the next milestone.
 - New sources: `tbm_exchange.h`, `tbm_exchange.cpp` (in `src/CMakeLists.txt`).
 - Public API now (Groups 6-7 changed Groups 1-5's first shape):
@@ -176,7 +178,9 @@ Check these first when the build runs; they are the least certain compile points
 
 ## Group 6 - Persist and recover (in progress, unbuilt)
 
-Context: compacted once while executing 6.1. Read Plan 5's Global Mandatory Reading, the Lifecycle and acceptance area (`VEHSChunkHandler`) and this master's Area block for Groups 6-8 again.
+Stale since the end-of-Group-7 milestone: this group is built and verified. Its risk lists are kept as history.
+
+Context: compacted once while executing 6.1 and again during 6.5. Read Plan 5's Global Mandatory Reading, the Lifecycle and acceptance area (`VEHSChunkHandler`) and this master's Area block for Groups 6-8 again.
 
 - 6.1 (Plan 5 Group 10), design under Persistence in [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md#persistence-plan-5-group-10):
   - New files: `saveload/tbm_exchange_sl.cpp` (listed in `saveload/CMakeLists.txt`) and `tests/tbm_exchange_load.cpp` (tag `[tbm-exchange-load]`).
@@ -192,3 +196,187 @@ Context: compacted once while executing 6.1. Read Plan 5's Global Mandatory Read
     - `AcceptLoadedTBMExchange` runs before `AcceptLoadedSpoilReceivers`. That is safe, because neither reads the other's store.
     - The fixture flag test assumes the rig's reset leaves both cursors at zero.
   - Burst additions: `[tbm-exchange-load]`, `[spoil-receiver-load]`, plus every `tbm-*` tag, because `ResetTBMExchangeState` changed.
+- 6.2 (Plan 5 Groups 11-12), design [r2mlvs3mp-j](r2mlvs3mp-j-lifecycle-design.md):
+  - New tests:
+    - `tests/tbm_exchange_lifecycle.cpp` (`[tbm-exchange-lifecycle]`);
+    - `tests/tbm_exchange_acceptance.cpp` (`[tbm-exchange-acceptance]`).
+  - `TBMExchangeSave` and `TBMExchangeLoadRig` moved from `tbm_exchange_load.cpp` into `tbm_exchange_fixture.h`, and gained `Reloads()`.
+  - `tbm_exchange.h`/`.cpp`:
+    - new `OnTBMExchangeTrainPartDeleted`, `ForgetTBMExchangeProject`, `CheckTBMTrainRearrangement`, `CheckTBMRailVehicleSale`, `CheckTBMRefit`, `IsTBMReplacementLocked`, `CheckTBMExchangeBayRemoval`, `ReleaseTBMExchangeBay`;
+    - `ReleaseTBMHauler` now calls `EndTBMExchangeAssignment`.
+  - `tbm.h`/`tbm_project.cpp`: `ReleaseTBMProjectExchangeBay`, `ChangeTBMOwnership`.
+  - `excavation.h`/`.cpp`: `ChangeExcavationJobOwnership`. On removal it also clears a cutter binding that no longer resolves.
+  - Hooks:
+    - `vehicle.cpp`: `PreDestructor`.
+    - `train_cmd.cpp`:
+      - `MoveRailVehicleParts`, after the genuine-depot checks, so the existing bay test still gets the depot error first;
+      - `CmdSellRailWagon`.
+    - `vehicle_cmd.cpp`: `CmdRefitVehicle`, for every candidate unit.
+    - `autoreplace_cmd.cpp`: the parts loop.
+    - `rail_cmd.cpp`: `RemoveTrainDepot`, checking after `EnsureNoVehicleOnGround` and releasing after `DoClearSquare`.
+    - `economy.cpp`: `ChangeOwnershipOfCompanyItems`, after the vehicle loops and before the tiles.
+  - Strings: `STR_ERROR_TBM_CONSIST_LOCKED`, `_SPOIL_ABOARD`, `_SET_REFIT`, `_EXCHANGE_BAY_IN_USE`.
+  - Risks to check first at the burst:
+    - Direct `delete` of rig trains in the tests; the hook runs inside `PreDestructor`.
+    - `GetVehicleSet` for a front with `num_vehicles == 0`.
+    - `LandscapeClear` of an Underground depot (`DoClearSquare` on a rock layer).
+    - `CmdSellVehicle` of a lone front engine leaves a free wagon chain, which `MoveRailVehicle` must accept with `move_chain`.
+    - Whether the second cut of a two-cut `SpoilReceiverRig` reaches WaitForEmpties straight after its commit.
+    - Exchange 2's unit order. The test compares sorted IDs only.
+  - Burst additions: `[tbm-exchange-lifecycle]` and `[tbm-exchange-acceptance]`, plus `[tbm-exchange-bay]`, `[tbm-wagon-sets]` and `[portal-lifecycle]`, because moves, sales, depot removal and ownership changed. Run every `tbm-*`, `excavation-*` and `portal-*` tag.
+- 6.3 (Plan 4 Group 17), unbuilt:
+  - `tbm.h`: `TBMProjectAction::Retire` before `End`; `TBMPhaseInputs::cancelled`; step documentation.
+  - `tbm_project.cpp`:
+    - `GetLiveTBMJob` accepts cancelled jobs;
+    - Cancel and Retire in `ControlTBMProject` (`RetireTBMProject`, `IsTBMConsistWithdrawn`);
+    - the cancelled forward-phase edge and Resume to Cancelled in `StepTBMProjectPhase`;
+    - `cancelled` and `route_complete` in `ObserveTBMPhaseInputs`;
+    - `works` in `AdvanceTBMWork` excludes cancelled jobs;
+    - adds `rail_map.h`.
+  - `tbm_work.cpp`: `IsTBMExchangeDue` with a cancelled job.
+  - `tbm_exchange.h`/`.cpp`: `IsTBMProjectExchangeIdle`; `DescribeTBMWagonExchange` treats a cancelled route as complete; `CmdSetTBMExchangeBay` replaces a lost bay and moves its queue.
+  - `layer_portal_work.cpp`: the closed-job relaxation for Commissioning records.
+  - Tests: `tests/tbm_recovery.cpp` (`[tbm-recovery]`); the `tbm_project.cpp` pause/resume check.
+  - Risks:
+    - the existing `[tbm-phase]` and `[tbm-project]` expectations around cancelled jobs;
+    - `AcceptLoadedLayerPortalWork` with a hand-released Sealed record;
+    - the partial-cut test needs `work_ticks >= 2`;
+    - the breakdown test assumes the first tick does not commit;
+    - selling the retired consist at the portal through `CmdSellVehicle` (the depot-like state);
+    - `std::ranges::count_if` over the claims map.
+  - Burst additions: `[tbm-recovery]`, `[tbm-phase]`, `[tbm-project]`, `[portal-tbm-access]`, `[portal-bootstrap]` and every `portal-*` tag, because of the portal validator.
+- 6.4 (Plan 3 Group 11.3/11.4), unbuilt:
+  - `layer_portal_cmd.h` and `layer_portal_work.cpp`:
+    - new `WithdrawLayerPortalWorkPair` and `ReleaseLayerPortalWorkBinding`, sharing the helper `UnbindLayerPortalWork`;
+    - `TransferLayerPortalWorkPair` checks the lifecycle only for `OWNER_NONE`.
+  - `layer_portal_cmd.cpp`: `ChangeTileOwner_LayerPortal` refuses an unsafe pair only for `INVALID_OWNER`.
+  - `tbm_project.cpp`:
+    - Retire withdraws a bound pair;
+    - in `ChangeTBMOwnership`, removal cancels each erased project's open job (as `OWNER_DEITY`), releases its pair and forgets its exchange records, then orphans the remaining jobs;
+    - adds `core/backup_type.hpp`.
+  - Tests:
+    - new `tests/portal_recovery.cpp` (`[portal-recovery]`);
+    - updated `tbm_recovery.cpp` (Retire withdraws the pair itself) and the removal section of `tbm_exchange_lifecycle.cpp` (job cancelled, pair released).
+  - Risks:
+    - the vehicle-on-ground check on the rock-side tile (`StandOn`, `z_pos`);
+    - selling at the portal after Retire;
+    - the bankrupt `LandscapeClear` of a released rail pair (`assert` in `ChangeTileOwner_LayerPortal`);
+    - `AutoRestoreBackup` with `OWNER_DEITY`;
+    - `[portal-lifecycle]`'s assigned-pair owner test, which must still refuse unchanged.
+- 6.5 (Plan 14 Groups 7-15, `-G`), unbuilt. Audit: [r2mlvs3mp-k](r2mlvs3mp-k-ground-persistence-audit.md).
+  - `tbm.h`/`tbm_project.cpp`:
+    - `OnTBMTrainPartDeleted`, now the only call in `Vehicle::PreDestructor`; it calls the exchange hook first;
+    - `OnTBMStationDeleted`, called from `Station::~Station` (`station.cpp` includes `tbm.h`);
+    - Cancel accepts a cutter-less project whatever its job's state, and cancels the job only when it is open;
+    - a stray duplicate doc block above `IsTBMConsistWithdrawn` was removed.
+  - `layer_portal_cmd.h`/`layer_portal_work.cpp`: `ForgetLayerPortalWorkCutter`, `ForgetLayerPortalWorkOrigin`; the validator accepts a Commissioning record with no cutter.
+  - `afterload.cpp`: `LogMultiLayerStateDiagnostics` moved after `AcceptLoadedSpoilReceivers`.
+  - Tests:
+    - `tbm_exchange_fixture.h`: `TBMPacketCustody`, used in `tbm_exchange_acceptance.cpp`;
+    - `tbm_exchange_load.cpp`: section "one set carried by two haulers";
+    - `spoil_receiver_load.cpp`: section "a closed receiver leaves no row behind";
+    - `tbm_recovery.cpp`: the deleted-cutter, cancelled-reload and deleted-origin cases.
+  - Risks:
+    - `delete rig.front` in a `TBMExchangeLoadRig`: the hook order (exchange, then project, then pair) while the wagons are deleted after the front;
+    - `delete rig.fixture.origin`: `Station::~Station` in a test world (kdtree removal of a station never inserted is a no-op; `RemoveOrderFromAllVehicles`);
+    - `delete &rock` in the receiver rig: `Industry::~Industry` clears its Surface tiles;
+    - `TBMPacketCustody` iterates `CargoPacket::Iterate()`; packets left by earlier fixtures are excluded by the baseline;
+    - the reused station must get the freed index (`REQUIRE(reuse->index == origin)`).
+  - Burst additions: `[tbm-recovery]`, `[tbm-exchange-acceptance]`, `[tbm-exchange-load]`, `[spoil-receiver-load]`, `[portal-recovery]`, `[portal-work-state]`, plus every `portal-*` tag (validator and record hooks) and the station-using tags `[spoil-receiver-delivery]` and `[tbm-exchange-origin]`.
+- 6.6 (Plan 4 Group 2, Plan 3 Group 8), unbuilt:
+  - New `src/tbm_commission.cpp` (listed in `src/CMakeLists.txt`): `CommissionTBMProject`, `PlanTBMCommission`, `GetTBMCommissionErrorMessage`, `CmdCommissionTBM`.
+  - `tbm.h`: `TBMAcquisitionError::NoReceiver` and `ProjectLimit`; `TBMCommissionResult`; `CommissionTBMProject`.
+  - `tbm_cmd.h` and `command_type.h`: `Commands::CommissionTBM`, appended last.
+  - `layer_portal_cmd.h`/`layer_portal_work.cpp`: request wagon counts; `BindLayerPortalWorkCommissioning`; `CommissionLayerPortalTBM` delegates.
+  - `layer_portal_gui.cpp`: the active control, `GetDefaultTBMCommissionModel` and `GetDefaultTBMCommissionOrigin`.
+  - `lang/english.txt`: `STR_ERROR_CAN_T_COMMISSION_TBM`, eleven `STR_ERROR_TBM_COMMISSION_*` strings and a new tooltip.
+  - Tests: new `tests/tbm_commission.cpp` (`[tbm-commission]`); comments in `tbm_acquisition.cpp` and `tbm_engine.cpp`.
+  - Risks:
+    - building the second pair at (32, 20) in the receiver rig, and its door corridor;
+    - the one-cell working ring accepted by `AuthorizeExcavationOutline` (the `[tbm-area]` rig used the same ring for a straight corridor);
+    - `CheckTBMOriginAdmission` with a probe project;
+    - the CTAD of `AutoRestoreBackup` for the date and the money;
+    - `CmdCloneVehicle` refusing a cutter in a depot it is not in;
+    - the `[portal-contract]`, `[tbm-acquisition]` and `[tbm-sealed-start-gate]` checks that still expect `ControllerUnavailable` (no wagons);
+    - `std::ranges::binary_search` over the row-ordered floor;
+    - compiling the GUI's `Command<Commands::CommissionTBM>::Post`.
+  - Burst additions: `[tbm-commission]`, `[tbm-acquisition]`, `[tbm-area]`, `[tbm-sealed-start-gate]`, `[portal-contract]`, `[portal-bootstrap]`, every `portal-*` tag, and the game build for the GUI.
+
+## Group 7 - Ground acceptance without new movement (unbuilt)
+
+Stale since the end-of-Group-7 milestone: 7.2 and 7.6 are verified; 7.5 and 7.8 keep the open parts named in the master.
+
+- Split: the movement tasks (7.1, 7.3, 7.4, 7.7) moved to Group 7B, to be written after the milestone with runtime feedback.
+- 7.2: a test in `tests/portal_recovery.cpp`: complete, retire, sell, convert support, lay the Surface approach, refuse a spanning hauler, then connect.
+- 7.5: `TBMDeepCommissionRig` and the Deep date-gate case in `tests/tbm_commission.cpp`.
+- 7.6: new `tests/tbm_conservation.cpp` (`[tbm-conservation]`).
+- 7.8: `MeasureFirstCut` and the `[tbm-measure]` case in `tests/tbm_commission.cpp`; it reports `MLVS_TBM_MEASURE` lines through `WARN`.
+- Risks:
+  - `CmdBuildLayerPortal` on opened Underground ground (the tile types after `ExcavationFixture::Open`);
+  - the Deep pocket fitting six Rock hoppers within the train-length setting;
+  - `ComputeTBMRecurringCharge` after the in-test ticks (no daily charge runs);
+  - the hauler spanning both ends registered through `UpdatePosition` for `EnsureNoVehicleOnGround`;
+  - `CmdConvertTBMSupport` after Retire (the project gone, so the support is no longer in use).
+
+## Milestone burst list (end of master Group 7)
+
+Build `openttd_test` and `openttd` (Debug). Then run these tags in short bursts with timeouts, so that no run exceeds two minutes:
+- Plan 5: `[tbm-exchange-bay]`, `[tbm-exchange-proposal]`, `[tbm-exchange-commit]`, `[tbm-exchange-origin]`, `[tbm-exchange-consumer]`, `[tbm-hauler-cycle]`, `[tbm-wagon-sets]`, `[spoil-receiver-definition]`, `[spoil-receiver-intake]`, `[spoil-receiver-delivery]`, `[spoil-receiver-leg]`, `[spoil-receiver-accounting]`, `[spoil-receiver-stall]`, `[spoil-receiver-load]`, `[tbm-exchange-load]`, `[tbm-exchange-lifecycle]`, `[tbm-exchange-acceptance]`.
+- Plan 4: every `tbm-*` tag, including `[tbm-recovery]`, `[tbm-commission]`, `[tbm-conservation]`, `[tbm-measure]`, `[tbm-sealed-start-gate]`.
+- Plan 3: every `portal-*` tag, including `[portal-recovery]`, `[portal-contract]`, `[portal-tbm-access]`.
+- Plans 2/14: every `excavation-*` and `geology-*` tag, and `[multilayer-state-foundation]` and `[multilayer-state-digest]`.
+- Python save fixtures: the five that accept versions 377/378.
+
+## Milestone build and burst (end of master Group 7, 2026-10-05)
+
+- Builds: `openttd_test` and `openttd` (Debug) build with no warnings ([build 6](r2mlvs3mp-l-milestone-build6.log)).
+  Logs 1-5 record the compile fixes and the fix iterations; logs 7 and 8 add the last two test cases.
+- Compile fixes: the `Money` multiplication in `spoil_receiver.cpp` was ambiguous; `tests/tbm_commission.cpp` needed
+  `table/strings.h`.
+- Product fixes found by the burst:
+  - `AdvanceTBMWork` checks the exchange again after a commit. A commit at a frozen exchange breakpoint, or of the last
+    cut, now goes straight to ReturnForExchange, not first onto support the consist would not use before the exchange.
+  - `AcceptLoadedSpoilReceivers` with nothing staged keeps the live store, and checks that every receiver industry has
+    its row.
+  - A whole train stopped in the depot state on a portal assembly site can be sold there (`IsTrainStoppedAtPortalSite`
+    in `CmdSellVehicle`), so a retired cutter is sold where it stands.
+- Test fixes (wrong expectations, no product change):
+  - Single-cut rigs expect ReturnForExchange at the commit. Two-cut rigs expect AdvanceSupport, because both cuts fit
+    one load and exchange breakpoints are frozen in the pass terms.
+  - The Deep measurement expects the model's work rate of 3/2.
+  - A portal tile never passes `IsStoppedInDepot`, which the exchange-bay test assumed. A detached wagon keeps its own
+    load in the hauler-hold test. The occupied-bay test needs the cutter waiting before the second hauler asks.
+  - The conservation test now takes its exchange from a cancellation. The two-cycle test uses a bending route whose
+    first breakpoint comes before its last cut; new turn constructors on `TBMExchangeRig` and `SpoilReceiverRig` build it.
+  - `BuildDepotBay` flushes queued signals after building, as the command kernel does after each command. Its stale
+    "depot inside" entry asserted in the fixture teardown once a test had removed the depot.
+- New cases at the milestone: NoEmpties at a mid-route breakpoint (`[tbm-exchange-acceptance]`), and the ledger across a
+  reversal (`[tbm-conservation]`).
+- Test runner: `src/tests/test_main.cpp` (MSVC) no longer opens the abort dialog. An assert prints with its DbgHelp stack
+  and exits with code 3; this located the depot assert.
+- Results: [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass (per-tag sums 221 cases and 252,050
+  assertions; a case with two tags counts twice). After the last two cases, the touched tags pass again
+  ([burst 5](r2mlvs3mp-l-burst5-results.txt)). Earlier rounds: [burst 1](r2mlvs3mp-l-burst1-results.txt),
+  [burst 2](r2mlvs3mp-l-burst2-results.txt), [burst 3](r2mlvs3mp-l-burst3-all-results.txt) and
+  [lifecycle by case](r2mlvs3mp-l-lifecycle-results.txt).
+- Save fixtures ([results](r2mlvs3mp-l-save-fixture-results.txt)): `excavation_save_fixture`,
+  `excavation_pass_save_fixture`, `geology_save_fixture --refusals-only` and `portal_acceptance_save_fixture` pass.
+  `portal_save_fixture` timed out twice in its `native-company` case (fixed 70 s limit), and no assertion failed.
+  - The laptop ran on battery (discharging, Balanced plan, 1.9 GHz). Every fixture ran about twice as slow as at the
+    Group 4 milestone.
+  - A stack sample of the stalled game showed 81% of the time in vanilla `CheckCaches` (the fixtures' `-d desync=5`)
+    while the title game used up the null driver's ticks.
+  - Rerun this fixture on mains power before relying on its result.
+- Restore: the fixtures rewrote 50 tracked evidence files, none of them modified before the run. Each was restored from
+  HEAD with `git cat-file --filters`, with no index or ref change.
+- Measurements for r2mlvs15: see the Plan 4 Group 20 status (standard 888 ticks, 360 charge, 216 t; Deep 1,184 ticks,
+  960 charge, 504 t).
+- Checked: master 5.1-5.8, 6.1-6.6, 7.2 and 7.6.
+  - Plan 5 Groups 1-12.
+  - Plan 4: 2.1, 2.3, 2.4, 4.2, 4.2B, 17.1-17.4 and 18.1.
+  - Plan 3: 8.1-8.3, 9.3, 11.3 and 11.4.
+- Still open:
+  - 7.5: script commissioning, and Deep fleet movement.
+  - 7.8 (Plan 4 20.1): whole-corridor time and cost with haulage.
+  - Plan 3 17.1.
+  - Gap G1: real-file round trips, with 7.4.

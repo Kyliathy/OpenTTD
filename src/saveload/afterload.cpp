@@ -835,8 +835,6 @@ bool AfterLoadGame()
 	// Chunk fixups prepared all geological references before this point; accepted shared content now permits feature publication.
 	AcceptLoadedGeologyState();
 	AcceptLoadedLayerPortalWork();
-	// Diagnostics read accepted feature owners after profile/reference validation, so saved work/terrain differences cannot hide in metadata-only hashes.
-	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());
 	LoadStringWidthTable();
 
 	/* Copy temporary data to Engine pool */
@@ -3480,6 +3478,9 @@ bool AfterLoadGame()
 	if (!AcceptLoadedTBMExchange()) SlErrorCorrupt("Invalid TBM exchange state");
 	// Receiver state sits beside its industry's own stock, so it is validated once the industries are rebuilt.
 	if (!AcceptLoadedSpoilReceivers()) SlErrorCorrupt("Invalid spoil receiver state");
+	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 14 14.3), so saved
+	// work/terrain/fleet differences cannot hide in metadata-only hashes.
+	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());
 	AfterLoadStoryBook();
 
 	_gamelog.PrintDebug(Severity::Error);

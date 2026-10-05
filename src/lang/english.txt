@@ -2878,7 +2878,7 @@ STR_PORTAL_CONNECT_TOOLTIP                                    :{BLACK}Connect an
 STR_PORTAL_SEAL                                               :{BLACK}Seal
 STR_PORTAL_SEAL_TOOLTIP                                       :{BLACK}Close an empty shaft to ordinary traffic and safely release its reservations
 STR_PORTAL_COMMISSION                                         :{BLACK}Commission TBM
-STR_PORTAL_COMMISSION_TOOLTIP                                 :{BLACK}Assemble a compatible boring machine at this rail portal with a validated route and Earth/Rock wagons
+STR_PORTAL_COMMISSION_TOOLTIP                                 :{BLACK}Buy a boring machine with two Earth and two Rock hoppers at this rail portal, to bore a straight corridor of six cells out of its door; the spoil goes to your nearest Surface railway station
 STR_RAIL_TOOLBAR_TOOLTIP_TOGGLE_BUILD_REMOVE_FOR                :{BLACK}Toggle build/remove for railway track, signals, waypoints and stations. Ctrl+Click to also remove the rail of waypoints and stations
 STR_RAIL_TOOLBAR_TOOLTIP_CONVERT_RAIL                           :{BLACK}Convert/Upgrade the type of rail. Also press Shift to show cost estimate only
 
@@ -5185,6 +5185,20 @@ STR_ERROR_TBM_SUPPORT_IN_USE                                    :{WHITE}This tem
 STR_ERROR_TBM_SUPPORT_NONE                                      :{WHITE}There is no temporary support track here
 STR_ERROR_TBM_SUPPORT_CONVERT_FIRST                             :{WHITE}Convert or remove the temporary support track first
 STR_ERROR_TBM_EXCHANGE_CAPACITY_LOSS                            :{WHITE}The exchanged wagons would hold less cargo than they carry
+STR_ERROR_TBM_CONSIST_LOCKED                                    :{WHITE}This train is a tunnel boring machine; only its project can change it
+STR_ERROR_TBM_SPOIL_ABOARD                                      :{WHITE}These spoil wagons still carry spoil; deliver it to a receiver first
+STR_ERROR_TBM_SET_REFIT                                         :{WHITE}Spoil wagons serving a boring project cannot be refitted
+STR_ERROR_TBM_EXCHANGE_BAY_IN_USE                               :{WHITE}A boring project uses this depot as its exchange bay and has no other bay
+STR_ERROR_TBM_COMMISSION_PORTAL                                 :{WHITE}A boring machine needs your sealed, empty rail portal with free, excavated assembly ground around its upper end
+STR_ERROR_TBM_COMMISSION_MODEL                                  :{WHITE}This boring machine or its spoil wagons are not available here yet
+STR_ERROR_TBM_COMMISSION_CONSIST                                :{WHITE}A boring machine needs Earth and Rock wagons and must fit within the train length limit
+STR_ERROR_TBM_COMMISSION_AREA                                   :{WHITE}Select connected floor on the portal's rock layer, at most 64 tiles across
+STR_ERROR_TBM_COMMISSION_ROUTE                                  :{WHITE}The boring machine cannot plan a supported route out of the portal through this area
+STR_ERROR_TBM_COMMISSION_PARTIAL                                :{WHITE}The boring machine can cover only part of this area
+STR_ERROR_TBM_COMMISSION_FUNDS                                  :{WHITE}Not enough money to buy the boring machine and its wagons
+STR_ERROR_TBM_COMMISSION_RECEIVER                               :{WHITE}The spoil needs your Surface railway station, with receivers for both Earth and Rock in its catchment
+STR_ERROR_TBM_COMMISSION_LIMIT                                  :{WHITE}Too many boring projects
+STR_ERROR_TBM_COMMISSION_FAILED                                 :{WHITE}The boring machine could not be assembled; nothing was bought
 STR_INDUSTRY_NAME_EARTH_RECLAMATION_SITE                        :Earth Reclamation Site
 STR_INDUSTRY_NAME_ROCK_CRUSHER                                  :Rock Crusher
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
@@ -5454,6 +5468,7 @@ STR_ERROR_SITE_UNSUITABLE_FOR_TUNNEL                            :site unsuitable
 STR_ERROR_MUST_DEMOLISH_TUNNEL_FIRST                            :must demolish tunnel first
 STR_ERROR_MUST_REMOVE_LAYER_PORTAL_FIRST                        :must remove layer portal first
 STR_ERROR_CAN_T_BUILD_LAYER_PORTAL                              :Can't build layer portal here...
+STR_ERROR_CAN_T_COMMISSION_TBM                                  :Can't commission boring machine...
 STR_ERROR_ANOTHER_TUNNEL_IN_THE_WAY                             :another tunnel in the way
 STR_ERROR_TUNNEL_THROUGH_MAP_BORDER                             :tunnel would end out of the map
 STR_ERROR_UNABLE_TO_EXCAVATE_LAND                               :unable to excavate land for other end of tunnel

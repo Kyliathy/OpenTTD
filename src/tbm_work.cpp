@@ -295,8 +295,10 @@ bool TBMCutParticipant::IsSupported(const ExcavationJob &job, [[maybe_unused]] c
 bool IsTBMExchangeDue(const TBMProject &project)
 {
 	const auto *job = project.job == ExcavationJobID{UINT32_MAX} ? nullptr : GetExcavationJob(project.job);
-	if (job == nullptr || !job->pass_terms.has_value() || job->cursor == 0) return false;
-	if (!std::ranges::binary_search(job->pass_terms->exchange_after, static_cast<uint16_t>(job->cursor))) return false;
+	if (job == nullptr || !job->pass_terms.has_value()) return false;
+	// A cancelled job (Group 17.1) gives away whatever spoil is aboard; otherwise only a frozen breakpoint makes it due.
+	const bool cancelled = job->state == ExcavationJobState::Cancelled;
+	if (!cancelled && (job->cursor == 0 || !std::ranges::binary_search(job->pass_terms->exchange_after, static_cast<uint16_t>(job->cursor)))) return false;
 	const Train *front = Train::GetIfValid(project.cutter);
 	if (front == nullptr) return false;
 	const auto layout = InspectTBMConsist(*front, project);

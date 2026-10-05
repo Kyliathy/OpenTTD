@@ -479,6 +479,15 @@ ExcavationError CancelExcavationJob(ExcavationJobID id);
  */
 ExcavationError RetireExcavationJob(ExcavationJobID id);
 
+/**
+ * Apply a company merger or removal to every job (common lifecycle contract, r2mlvs5 Group 11.4). A merger moves the
+ * jobs to the buyer. A removal leaves each one an explicit orphan: Invalid company, and unfinished work paused with
+ * InvalidOwner, so the old company value can never attach to a later company with the same ID.
+ * @param old_owner Company that goes away.
+ * @param new_owner Buyer, or CompanyID::Invalid() when the company is removed.
+ */
+void ChangeExcavationJobOwnership(CompanyID old_owner, CompanyID new_owner);
+
 /** Read-only actual material/funds participant snapshot supplied by the TBM owner; geology never walks private wagon pools. */
 struct ExcavationMaterialSnapshot {
 	uint64_t revision = 0; ///< External owner stamp revalidated immediately before irreversible writes.

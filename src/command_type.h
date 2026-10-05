@@ -390,6 +390,7 @@ enum class Commands : uint8_t {
 	ExchangeTBMWagons, ///< atomic loaded-for-empty wagon exchange at a TBM bay; append preserves existing command identities
 	SetTBMProjectOrigin, ///< replace a TBM project's Surface origin station; append preserves existing command identities
 	SetSpoilReceiverMode, ///< choose crushing or surplus disposal at a Rock crusher; append preserves existing command identities
+	CommissionTBM, ///< buy and commission a boring machine at a sealed rail portal; append preserves existing command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

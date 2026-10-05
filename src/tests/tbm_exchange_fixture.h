@@ -8,7 +8,8 @@
  * @file tbm_exchange_fixture.h A TBM work rig with a real hauler for the wagon exchange tests: the original locomotive
  * with empty Earth and Rock hoppers, built and coupled in a real Surface depot, then placed in the project's bay, on
  * track or in a depot as its hauler cycle (Plan 5 Group 6) expects. Neither train can yet drive itself (master Group 7).
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11 (staged store copies: Group 10)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md, task 10.3 (packet custody audit)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
  */
 
@@ -23,6 +24,7 @@
 #include "../command_func.h"
 #include "../cargotype.h"
 #include "../station_map.h"
+#include "../station_base.h"
 #include "../tilearea_type.h"
 
 /** Every part of a chain, in order. */
@@ -56,6 +58,61 @@ inline std::map<VehicleID, TBMPacketList> GetTBMPacketOwners(const Train *head)
 	return owners;
 }
 
+/**
+ * Temporary packet custody audit (Plan 14 10.3): every cargo packet belongs to exactly one container, a vehicle's or a
+ * station's cargo list. The TBM stores name wagons, never packets, and receiver stock is a plain industry counter, so
+ * neither can become a second owner of the same tonnes.
+ */
+class TBMPacketCustody {
+public:
+	/** @return Whether no packet is in two lists and none made since the audit began is in no list while still allocated. */
+	bool IsSole() const
+	{
+		const auto held = Held();
+		const std::set<CargoPacketID> ids(held.begin(), held.end());
+		if (ids.size() != held.size()) return false; // One packet in two lists.
+		// A packet that leaves its last list is delivered and deleted; one still allocated outside every list was lost.
+		for (const CargoPacket *packet : CargoPacket::Iterate()) {
+			if (!ids.contains(packet->index) && !this->unheld.contains(packet->index)) return false;
+		}
+		return true;
+	}
+
+private:
+	/** Packets outside every list when the audit began, such as those an earlier fixture's pool cleaning left behind. */
+	std::set<CargoPacketID> unheld = Unheld();
+
+	/** @return Every packet reference of every vehicle and station cargo list, duplicates included. */
+	static std::vector<CargoPacketID> Held()
+	{
+		std::vector<CargoPacketID> held;
+		for (const Vehicle *v : Vehicle::Iterate()) {
+			for (const CargoPacket *packet : *v->cargo.Packets()) held.push_back(packet->index);
+		}
+		// Station lists hold transferred or unloaded cargo; a goods entry without data holds none.
+		for (const Station *st : Station::Iterate()) {
+			for (const GoodsEntry &ge : st->goods) {
+				if (!ge.HasData()) continue;
+				const StationCargoPacketMap *packets = ge.GetData().cargo.Packets();
+				for (StationCargoList::ConstIterator it(packets->begin()); it != packets->end(); it++) held.push_back((*it)->index);
+			}
+		}
+		return held;
+	}
+
+	/** @return Allocated packets in no list. */
+	static std::set<CargoPacketID> Unheld()
+	{
+		const auto held = Held();
+		const std::set<CargoPacketID> ids(held.begin(), held.end());
+		std::set<CargoPacketID> unheld;
+		for (const CargoPacket *packet : CargoPacket::Iterate()) {
+			if (!ids.contains(packet->index)) unheld.insert(packet->index);
+		}
+		return unheld;
+	}
+};
+
 /** One published project boring on a single cut, plus a company hauler with empty hoppers in a real Surface depot. */
 class TBMExchangeRig : public TBMWorkRig {
 public:
@@ -69,6 +126,25 @@ public:
 	 * @param rock Empty Rock hoppers after them.
 	 */
 	explicit TBMExchangeRig(size_t segments = 1, uint8_t earth = 2, uint8_t rock = 2) : TBMWorkRig(segments)
+	{
+		this->BuildDepotAndHauler(earth, rock);
+	}
+
+	/**
+	 * Build the hauler with two hoppers of each kind in the depot, for a project whose route turns as given.
+	 * @param turns Change of heading at each advance (see TBMProjectRig).
+	 */
+	explicit TBMExchangeRig(const std::vector<DirDiff> &turns) : TBMWorkRig(turns)
+	{
+		this->BuildDepotAndHauler(2, 2);
+	}
+
+	/**
+	 * Build the Surface depot and the hauler in it.
+	 * @param earth Empty Earth hoppers behind the locomotive.
+	 * @param rock Empty Rock hoppers after them.
+	 */
+	void BuildDepotAndHauler(uint8_t earth, uint8_t rock)
 	{
 		// Load time resolves an original engine's cargo label; this isolated registry is installed after the engine exists.
 		this->fixture.stock->info.cargo_type = GetCargoTypeByLabel(CT_PASSENGERS);
@@ -145,6 +221,9 @@ public:
 		for (uint index = 1; index <= approach; ++index) {
 			REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, TileXYL(40 + index, 40, MapLayer::Underground), RAILTYPE_RAIL, Track::X, false).Succeeded());
 		}
+		// The command kernel finishes queued signals after each command; the depot's inside entry must not outlive the
+		// depot, which a test may remove before the fixture flushes the rest.
+		UpdateSignalsInBuffer();
 		return depot_tile;
 	}
 
@@ -253,6 +332,79 @@ public:
 		REQUIRE(IsTBMExchangeDue(this->Project()));
 		this->Meet();
 		return estimate;
+	}
+};
+
+/** One loaded copy of the exchange store, as the save chunks stage it. */
+struct TBMExchangeSave {
+	std::vector<TBMExchangeAssignment> assignments = CaptureTBMExchangeAssignments(); ///< Assignments in identity order.
+	uint32_t next_assignment = GetNextTBMExchangeAssignmentID(); ///< Assignment cursor.
+	std::vector<TBMWagonSet> sets = CaptureTBMWagonSets(); ///< Sets in identity order.
+	uint32_t next_set = GetNextTBMWagonSetID(); ///< Set cursor.
+
+	/**
+	 * Clear the live store, stage this copy and try to publish it.
+	 * @return Whether it was accepted.
+	 */
+	bool Load() const
+	{
+		ResetTBMExchangeState();
+		StageLoadedTBMExchange(this->assignments, this->next_assignment, this->sets, this->next_set);
+		CHECK(CaptureTBMExchangeAssignments().empty()); // Staged rows are not live until accepted.
+		return AcceptLoadedTBMExchange();
+	}
+
+	/** Require this copy to refuse and leave the whole store, cursors included, empty. */
+	void Refuse() const
+	{
+		CHECK_FALSE(this->Load());
+		CHECK(CaptureTBMExchangeAssignments().empty());
+		CHECK(CaptureTBMWagonSets().empty());
+		CHECK(GetNextTBMExchangeAssignmentID() == 0);
+		CHECK(GetNextTBMWagonSetID() == 0);
+	}
+
+	/** @return Whether this copy loads and then equals the live store, as a save and reload of it would. */
+	bool Reloads() const
+	{
+		return this->Load() && this->IsLive();
+	}
+
+	/** @return Whether the live store equals this copy, cursors included. */
+	bool IsLive() const
+	{
+		return CaptureTBMExchangeAssignments() == this->assignments && CaptureTBMWagonSets() == this->sets && GetNextTBMExchangeAssignmentID() == this->next_assignment && GetNextTBMWagonSetID() == this->next_set;
+	}
+
+	/**
+	 * @param state Set state.
+	 * @return The copy's set in that state, which must exist.
+	 */
+	TBMWagonSet &Set(TBMWagonSetState state)
+	{
+		const auto found = std::ranges::find(this->sets, state, &TBMWagonSet::state);
+		REQUIRE(found != this->sets.end());
+		return *found;
+	}
+};
+
+/** A rig after its first exchange: the cutter rides its Assigned set and the hauler takes its Loaded set to the origin. */
+struct TBMExchangeLoadRig : TBMExchangeRig {
+	TileIndex origin = INVALID_TILE; ///< Origin station tile.
+	uint64_t spoil = 0; ///< Tonnes collected.
+
+	/** Bore, exchange in the source bay and leave towards the origin. */
+	TBMExchangeLoadRig()
+	{
+		this->origin = this->MakeOriginStationTile();
+		const auto estimate = this->BoreOneCut();
+		this->spoil = estimate.earth_t + estimate.rock_t;
+		REQUIRE(this->Tick().phase == TBMPhase::WaitForEmpties);
+		this->Meet();
+		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::AwaitExchange);
+		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::CollectLoaded);
+		this->PlaceOnTrack(this->hauler, TileXYL(25, 20, MapLayer::Surface));
+		REQUIRE(this->StepHauler().phase == TBMHaulerPhase::VisitOrigin);
 	}
 };
 

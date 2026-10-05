@@ -23,6 +23,8 @@ add_test_files(
     tbm_acquisition.cpp
     tbm_project.cpp
     tbm_area.cpp
+    tbm_commission.cpp
+    tbm_conservation.cpp
     tbm_phase.cpp
     tbm_consumer.cpp
     portal_tbm_access.cpp
@@ -50,6 +52,10 @@ add_test_files(
     spoil_receiver_stall.cpp
     spoil_receiver_accounting.cpp
     tbm_exchange_load.cpp
+    tbm_exchange_lifecycle.cpp
+    tbm_exchange_acceptance.cpp
+    tbm_recovery.cpp
+    portal_recovery.cpp
     geology_deposits.cpp
     geology_generation.cpp
     geology_state.cpp

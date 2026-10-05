@@ -52,6 +52,14 @@ CommandCost BuildRailVehicleForTBM(DoCommandFlags flags, const LayerPortalCommis
 CommandCost BuildTBMConsistAtSite(const LayerPortalCommissionRequest &request, const Engine *cutter, Money cutter_value, UnitID unit_number, std::span<const Engine *const> wagons, Train **front);
 
 /**
+ * Whether a train stands whole and stopped on a portal assembly site, in the depot state its assembly left it in.
+ * A retired boring machine waits there until it can leave (r2mlvs4 Group 17.2); it may be sold where it stands.
+ * @param front Front engine.
+ * @return True when the train is stopped and every part is in the depot state on the same portal tile.
+ */
+bool IsTrainStoppedAtPortalSite(const Train &front);
+
+/**
  * Exchange whole wagon units between two stationary consists that stand on one rearrangement tile, as one
  * transaction (Plan 5 Group 1.3/3). The final chains are tried first: the shared attachment rules (length and
  * coupling callbacks) and a capacity rule run on them. The capacity rule refuses any part whose rebuilt capacity

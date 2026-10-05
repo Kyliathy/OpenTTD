@@ -50,7 +50,9 @@ Deliver a real train that bores connected rock, advances on paid support track a
 
 ## Public Handoff Contract
 
-Public owner: `src/tbm.h`. `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute` and `AdvanceTBMWork` exist in code since R2MLVS3MP Group 3 (2026-10-05); their focused tests are pending the milestone build. Consumers may also use `GetTBMProjectForCutter`, `GetTBMWorkState`, `InspectTBMConsist`, `GetTBMConsistRole` and `MeasureTBMConsist`. Since Groups 6-8, `AdvanceTBMWork` observes face arrival and runs paid cuts with real support and wagon space. The consist cannot yet drive into the pocket or onto new support (master Group 7, Group 14), and exchange completion comes from Group 4.2B with Plan 5. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Public owner: `src/tbm.h`. `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute` and `AdvanceTBMWork` exist in code since R2MLVS3MP Group 3 (2026-10-05); their focused tests pass at the R2MLVS3MP milestones (end of master Groups 4 and 7). Consumers may also use `GetTBMProjectForCutter`, `GetTBMWorkState`, `InspectTBMConsist`, `GetTBMConsistRole` and `MeasureTBMConsist`. Since Groups 6-8, `AdvanceTBMWork` observes face arrival and runs paid cuts with real support and wagon space. The consist cannot yet drive into the pocket or onto new support (master Group 7, Group 14), and exchange completion comes from Group 4.2B with Plan 5. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+
+Commissioning (Group 2.1, implemented 2026-10-05 in R2MLVS3MP master 6.6, verified at the end-of-Group-7 milestone): `TBMCommissionResult` and `CommissionTBMProject` in `src/tbm.h`, the command `CmdCommissionTBM` in `src/tbm_cmd.h`, and the active portal window control.
 
 Acquisition and role contract (Group 2B, implemented 2026-10-05, focused tests pending the milestone build): `TBMConsistRequest`, `TBMAcquisitionError`, `TBMAcquisitionPlan`, `PrepareTBMAcquisition`, `TBMAcquisition`, `AcquireTBMConsist` and `GetTBMConsistRole` in `src/tbm.h`; site assembly through `BuildTBMConsistAtSite` in `src/train_cmd.h`. Preparation is pure. Acquisition holds stopped, hidden, unpublished parts and rolls them back unless released. It charges nothing and reserves no job; publication belongs to R2MLVS3MP Group 6.
 
@@ -121,12 +123,12 @@ Group 1 evidence (2026-10-05): `src/tbm.h` and `src/tbm_model.cpp` define two cu
 ### Group 2 - Commission only through the validated rail facility
 
 {{HARD}}
-- [ ] 2.1 Consume r2mlvs3 commissioning validation and its chosen depot-compatible/factored train construction boundary. Create a cutter/support/wagon consist only after all IDs, funds, capacity and source-side access pass validation.
+- [X] 2.1 Consume r2mlvs3 commissioning validation and its chosen depot-compatible/factored train construction boundary. Create a cutter/support/wagon consist only after all IDs, funds, capacity and source-side access pass validation.
 - [X] 2.1A Register the real cutter/hopper engine definitions through the existing persisted EIDS mapping, factor pure portal preflight and genuine train-part construction with explicit portal geometry, and test immutable articulated support without changing portal tile types. This is a stopped unpublished part primitive, not complete-project commissioning.
 - [X] 2.1B Characterize the first solid-pocket dependency through the canonical pass/reservation APIs before enabling complete-project acquisition; retain refusal evidence and every dependent task unchecked.
 - [X] 2.2 Apply the capability check to purchase, clone, autoreplace and script requests before allocating any part. Account for `CloneVehicle` being `NoTest`; failure must clean up new parts and preserve existing vehicles.
-- [ ] 2.3 Allow servicing at compatible depots without enabling purchase there. A new deep-rated cutter may be assembled at an accessible Underground rail commissioning portal; its facility/supply access must be physically reachable. Existing cutters travel normally to later projects. Prevent road/elevator commissioning and ordinary-depot cloning.
-- [ ] 2.4 Test one legal Surface commissioning plus wrong facility, wrong depth/date, partial-part allocation failure and service-only depot requests.
+- [X] 2.3 Allow servicing at compatible depots without enabling purchase there. A new deep-rated cutter may be assembled at an accessible Underground rail commissioning portal; its facility/supply access must be physically reachable. Existing cutters travel normally to later projects. Prevent road/elevator commissioning and ordinary-depot cloning.
+- [X] 2.4 Test one legal Surface commissioning plus wrong facility, wrong depth/date, partial-part allocation failure and service-only depot requests.
 
 **Verified behavior gate, 2026-10-05.** The named public exports exist, but the cross-plan first-cut behavior is incomplete. `ValidateLayerPortalCommissioning` accepts an actual owned Sealed Surface/Underground rail pair with real profile/model/origin references. The same canonical advancing geometry passes `ValidateExcavationJobGeometry`, then `PrepareExcavationPass` and both estimate/execute `ReserveExcavationJob` refuse `MissingSupport` because the destination starter footprint remains Solid. Current `PrepareExcavationCut` additionally requires the previous footprint/retreat open and refuses still-solid portal metadata. The portal pocket currently grants geometry-only restricted occupancy, never a paid initial-support transaction. Painting a free starter room, bypassing these predicates or inserting another route/cargo owner would violate this plan's Area gate and master AD-5. Complete commissioning in 2.1 and Groups 3-22 remain unchecked at this snapshot. R2MLVS3MP now schedules the tested solid-starter contract and saved controller foundations before full commissioning activation; this historical refusal does not prohibit implementing those explicitly staged foundations.
 
@@ -135,6 +137,16 @@ Required producer reconciliation before completing 2.1: define and test one expl
 Group 2 available boundary evidence: `r2mlvs4-g-gate-results.txt`, **8 focused cases/221 assertions**, including the sealed-start unchanged refusal, actual two-part articulated construction, real depot purchase/estimate/autoreplace refusals, `NoTest` clone refusal and the actual `ScriptVehicle::BuildVehicle` API through Game Script company/test scopes and the real command kernel. Both ends of an autoreplace mapping involving a cutter refuse; execution also protects every permanent machinery part before replacement estimates can allocate. This does not claim execution of a supplied Squirrel script or complete TBM commissioning. Debug `openttd_test` and `openttd` builds pass (`h`); the final script fixture build passes (`i`). Final art, saved TBM projects, simulation movement and paid cutting are not delivered by these prefix checks. Original inputs and pre-existing dirty files are retained; no Git write or full regression was run.
 
 Final boundary follow-up: `r2mlvs4-k-final-results.txt` passes **8 cases/237 assertions**, including preservation of a real original stock engine/mapping and deliberate separation of logical model IDs from allocated engine IDs. Both Debug targets rebuild successfully (`r2mlvs4-j-final-build.log`). This supersedes the earlier available-boundary totals; the sealed-start refusal and all pending tasks remain unchanged.
+
+Group 2 status (2026-10-05, R2MLVS3MP master 6.6): 2.1, 2.3 and 2.4 are implemented and verified at the R2MLVS3MP end-of-Group-7 milestone ([all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass).
+- 2.1: `CommissionTBMProject` (`src/tbm_commission.cpp`) commissions as one transaction.
+  - Pure checks first: `PrepareTBMAcquisition` (proof, definitions, route replay, pass and reservation quotes, pool, unit number, funds), then real receivers for both spoils at the origin (`CheckTBMOriginAdmission`), store capacity and the pair binding estimate.
+  - Execution: `AcquireTBMConsist`, `ReserveExcavationJob`, `BindLayerPortalWorkCommissioning` (r2mlvs3), a `PublishTBMProject` estimate, then release and publication in the Commissioning phase. The two refusals after the reservation are unreachable once the estimates pass; their defensive rollback releases the binding and cancels and retires the job.
+  - The command `CmdCommissionTBM` (`Commands::CommissionTBM`) takes a floor rectangle on the rock layer. It plans the canonical route for the actual consist from the door through `PreviewTBMArea`, accepting the one-cell working ring around the floor and housing, and charges the machinery and wagon price as `NewVehicles`.
+  - `CommissionLayerPortalTBM` now hands the purchase to this transaction; without wagon counts it stays a portal-only quote that refuses as `ControllerUnavailable`.
+- 2.3: depots may service a cutter (`VehicleServiceInDepot` leaves the project and its lock untouched) but never sell or clone one (2.2). Road and elevator portals refuse (rail-only preflight). An Underground-to-Deep pair uses the same path: `[tbm-commission]` commissions a Deep cutter at an Underground portal from 1 January 1980 (master 7.5).
+- 2.4: `src/tests/tbm_commission.cpp` (`[tbm-commission]`): one legal Surface commissioning (quote unchanged, then one purchase and a refused second one, reload), seven refusals before any part exists, and the depot service case. A failure inside assembly is the existing `[tbm-acquisition]` case.
+- Not covered here: the cutter stands stopped in Commissioning until it can drive into the pocket (master 7.3); an area-selection tool and price preview window (Group 16, master 8.7); script access (master 7.5).
 
 ### Group 2B - Prepare complete acquisition without premature activation
 
@@ -170,13 +182,13 @@ Final boundary follow-up: `r2mlvs4-k-final-results.txt` passes **8 cases/237 ass
 
 {{HARD}}
 - [X] 4.1 Add Boring Project order data and area-outline selection. Consume the r2mlvs2 canonical route planner; preview generated passes, turn envelope, hardness, both spoil quantities and support cost before command acceptance.
-- [ ] 4.2 Implement Commissioning, TravelToFace, Bore, AdvanceSupport, ReturnForExchange, WaitForEmpties and Resume transitions one edge at a time, with explicit guards and one saved phase timer.
+- [X] 4.2 Implement Commissioning, TravelToFace, Bore, AdvanceSupport, ReturnForExchange, WaitForEmpties and Resume transitions one edge at a time, with explicit guards and one saved phase timer.
 - [X] 4.2A Scoped split ([R2MLVS3MP 1.4](r2mlvs3mp-e-scoped-gates.md#plan-4-groups-2-5), executed at master 3.2): Commissioning, TravelToFace, Bore and AdvanceSupport edges plus the ReturnForExchange entry guard, with the one saved phase timer.
-- [ ] 4.2B Scoped split (master 5.5): ReturnForExchange completion, WaitForEmpties and Resume through the tested Plan 5 `ValidateTBMWagonExchange`/`ExecuteTBMWagonExchange`. Task 4.2 stays unchecked until 4.2A and 4.2B both pass.
+- [X] 4.2B Scoped split (master 5.5): ReturnForExchange completion, WaitForEmpties and Resume through the tested Plan 5 `ValidateTBMWagonExchange`/`ExecuteTBMWagonExchange`. Task 4.2 stays unchecked until 4.2A and 4.2B both pass.
 - [X] 4.3 Add Stopped/Blocked/Servicing as resumable conditions without losing the previous work phase. Separate cutter heading from the train reversal flag so retreat never implies a new cutting direction.
 - [X] 4.4 Persist the order/project/heading/timer references and test reload at TravelToFace and Bore entry; reject a missing origin station/project with a recoverable reason.
 
-**R2MLVS3MP status, 2026-10-05 (4.2B).** 4.2B is implemented at master 5.5 and not yet run: ReturnForExchange becomes WaitForEmpties once the consist is admitted at its bay (`TBMPhaseInputs::at_exchange`, from the Plan 5 `CheckTBMExchangeParticipant`). WaitForEmpties becomes Resume once no exchange is due, which only an executed `ExecuteTBMWagonExchange` makes true. Resume becomes TravelToFace, or Completed after the final return. `IsTBMExchangeLive` now accepts a Plan 5 depot bay as well as the source portal. Tests: `[tbm-exchange-consumer]`, `[tbm-exchange-origin]`, and the adjusted `[tbm-phase]` hold case. 4.2 stays unchecked until 4.2B passes at the next milestone.
+**R2MLVS3MP status, 2026-10-05 (4.2B).** 4.2B is implemented at master 5.5 and verified at the end-of-Group-7 milestone: ReturnForExchange becomes WaitForEmpties once the consist is admitted at its bay (`TBMPhaseInputs::at_exchange`, from the Plan 5 `CheckTBMExchangeParticipant`). WaitForEmpties becomes Resume once no exchange is due, which only an executed `ExecuteTBMWagonExchange` makes true. Resume becomes TravelToFace, or Completed after the final return. `IsTBMExchangeLive` now accepts a Plan 5 depot bay as well as the source portal. Tests: `[tbm-exchange-consumer]`, `[tbm-exchange-origin]`, and the adjusted `[tbm-phase]` hold case. 4.2 is checked now that 4.2A and 4.2B both pass. Milestone change: a commit at a frozen exchange breakpoint, or of the last cut, now goes straight to ReturnForExchange in the same step (`AdvanceTBMWork` re-evaluates the exchange after the commit) instead of first onto support it would not use.
 
 **R2MLVS3MP status, 2026-10-05.** 4.1, 4.2A, 4.3 and 4.4 are implemented and passed the [R2MLVS3MP milestone burst](r2mlvs3mp-g-burst4-all-results.txt) on 2026-10-05. 4.2B (and so 4.2) stays with master 5.5. The focused burst is `[tbm-area]` in `src/tests/tbm_area.cpp` and `[tbm-phase]` in `src/tests/tbm_phase.cpp`.
 - 4.1: `PreviewTBMArea` (`src/tbm_area.cpp`) takes a normalized, authorized outline, a start pose and a consist. It plans through `PlanExcavationRoute` only, then reports the passes, the turn envelope (swept cells outside the requested floor), a hardness count of newly solid swept cells, the whole-route Earth/Rock/support/cost/work, and the frozen pass terms at the consist's real capacities. It also returns a ready job proposal and the prospective job ID. Nothing is reserved. A partial plan requests only the floor it covers. Hardness uses the new geology helper `GetExcavationCellHardness`, which `QuoteExcavationCells` and `PrepareExcavationCut` now share. Consist sizing is the shared `GetTBMConsistDimensions`, so preview and acquisition agree on planning points and capacities; the accepted preview proposal passes `PrepareTBMAcquisition` unchanged.
@@ -408,15 +420,46 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 ### Group 17 - Implement recoverable cancellation and reassignment
 
 {{HARD}}
-- [ ] 17.1 Define cancellation at travel, partial-cut and full-wagon states: retain completed cavities/cargo, release only unused claims and route the cutter along supported retreat.
-- [ ] 17.2 Handle breakdown/service while boring as a saved pause; prevent cutter sale while it owns unrecovered wagons or occupies a sealed work pocket. Require safe withdrawal or explicit public project reassignment first.
-- [ ] 17.3 Handle lost exchange bay/origin station with a visible recovery state and explicit reassignment. Do not orphan the project or delete spoil to unblock it.
-- [ ] 17.4 Integrate r2mlvs5 recovery/exchange behavior when delivered; independent stop/retreat tests may run earlier, while full recurring haulage acceptance remains pending.
+- [X] 17.1 Define cancellation at travel, partial-cut and full-wagon states: retain completed cavities/cargo, release only unused claims and route the cutter along supported retreat.
+- [X] 17.2 Handle breakdown/service while boring as a saved pause; prevent cutter sale while it owns unrecovered wagons or occupies a sealed work pocket. Require safe withdrawal or explicit public project reassignment first.
+- [X] 17.3 Handle lost exchange bay/origin station with a visible recovery state and explicit reassignment. Do not orphan the project or delete spoil to unblock it.
+- [X] 17.4 Integrate r2mlvs5 recovery/exchange behavior when delivered; independent stop/retreat tests may run earlier, while full recurring haulage acceptance remains pending.
+
+Group 17 status (2026-10-05): implemented and verified at the milestone (R2MLVS3MP master 6.3). Design: [r2mlvs3mp-j](r2mlvs3mp-j-lifecycle-design.md).
+- 17.1: `TBMProjectAction::Cancel` now runs.
+  - It cancels the project's own open job (`CancelExcavationJob`). Unfinished claimed cells return to rock; cavities, committed totals and the spoil aboard stay. No money moves.
+  - A forward phase (Commissioning, TravelToFace, Bore, AdvanceSupport) turns to ReturnForExchange; a return or an exchange already under way goes on.
+  - A cancelled job no longer cuts. It still anchors the return (`GetLiveTBMJob` accepts it), and the step sends every forward phase back. `IsTBMExchangeDue` is true while any spoil is aboard, and Resume ends the project Cancelled. Support stays in use until then.
+  - The route back is the supported retreat path (`GetExcavationRetreatPath`, checked in `[tbm-coverage]`); driving along it is master Group 7B (Plan 3 Group 15).
+- 17.2:
+  - Breakdown and service are saved holds: no face work, and the hold survives a reload.
+  - While its project record exists, the cutter consist cannot be sold or rearranged (Plan 5 Group 11).
+  - New `TBMProjectAction::Retire` erases a finished project once its consist is withdrawn and empty and no hauler or loaded set depends on it. Withdrawn means stopped on its Source bay or in a rail depot, every part on one tile. The consist then becomes an ordinary train.
+  - Retire withdraws the pair that still Commissions the job or cutter in the same action (r2mlvs3 Group 11.3, master 6.4); it is refused while the rock side is occupied or claimed.
+  - Reassigning the consist to a new job is a new commissioning (master 6.6).
+- 17.3: a lost origin or bay is a visible block (`MissingOrigin`/`MissingExchange`) with all the spoil aboard. `CmdSetTBMProjectOrigin` clears the first. `CmdSetTBMExchangeBay` may now replace a lost bay even with haulers queued, and they follow it; a working bay still cannot move under them.
+- 17.4: a cancelled project with full wagons gives its spoil away through the real Plan 5 exchange; even short empties may take a last load. The hauler still takes that load to the origin after the project ends.
+- Supporting change in r2mlvs3: a Commissioning work record may name a completed or cancelled job while its cutter returns (`ValidateLayerPortalWorkRecords`).
+- Tests: `src/tests/tbm_recovery.cpp` (`[tbm-recovery]`). The pause/resume test in `tbm_project.cpp` now checks Retire instead of the old Cancel refusal.
+- Master 6.5 additions, from the [ground audit](r2mlvs3mp-k-ground-persistence-audit.md):
+  - `OnTBMTrainPartDeleted` clears a deleted cutter from its project (`MissingCutter`) and its pair at once, so a reused ID never rebinds. Cancel then ends such a project Cancelled at once, even when its job is already closed; Retire erases it.
+  - `OnTBMStationDeleted` clears a deleted origin from projects and pairs at once (`MissingOrigin`).
+  - New `[tbm-recovery]` cases: a deleted cutter, a deleted origin, and a cancelled project reloaded mid-return.
 
 ### Group 18 - Recovery, presentation and acceptance
 
 {{HARD}}
-- [ ] 18.1 Test exact material conservation across partial cuts, capacity boundaries, mixed spoil ratios, cancellation, reversal and saves during work.
+- [X] 18.1 Test exact material conservation across partial cuts, capacity boundaries, mixed spoil ratios, cancellation, reversal and saves during work.
+
+Group 18 status (2026-10-05, R2MLVS3MP master 7.6): verified at the milestone. `src/tests/tbm_conservation.cpp` (`[tbm-conservation]`) compares the job's committed Earth and Rock with the spoil counted aboard every vehicle, on every platform and at the receivers (stock, disposed, crushed). The two must agree:
+- during a partial cut, which creates nothing;
+- at the commit, which puts the whole cut aboard;
+- through a save and reload, and a reversal of the working train, during the next cut;
+- through cancellation mid-cut;
+- through the exchange that the cancellation makes due;
+- through every delivery visit.
+
+Capacity boundaries (the frozen exchange breakpoints) and mixed ratios also appear in `[tbm-work]` and `[tbm-exchange-acceptance]`.
 
 ### Group 19 - Recovery, presentation and acceptance
 
@@ -428,6 +471,15 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 
 {{SIMPLE}}
 - [ ] 20.1 Record time and full cost for a standard corridor and a harder Deep corridor. Hand the measurements to r2mlvs15 instead of declaring balance from nominal prices.
+
+Group 20 status (2026-10-05, R2MLVS3MP master 7.8): the first-cut measurement ran at the milestone. `[tbm-measure]` commissions a standard and a Deep cutter through the command. The Deep consist is the smallest whose quote holds its pocket. It bores each first cut through the real controller, checks ticks, charge and spoil against the cut's quote, and reports the purchase, first-cut ticks, cost, spoil and running cost as `MLVS_TBM_MEASURE` lines. Measured (Debug build, fixture site, 1980; money in base currency units; `MLVS_TBM_MEASURE` lines of the `[tbm-measure]` run):
+
+| Corridor | Hoppers (Earth/Rock) | Purchase | First-cut ticks | First-cut charge | First-cut spoil | Running cost over those ticks |
+| --- | --- | --- | --- | --- | --- | --- |
+| Standard | 2/2 | 400,000 | 888 | 360 | 216 t | 3,945 |
+| Deep | 2/4 | 800,000 | 1,184 | 960 | 504 t | 11,397 |
+
+The Deep cutter does 3/2 geological work per tick, so its 1,776 work ticks take 1,184 ticks. Handed to [r2mlvs15 Group 16.2](r2mlvs15-integrated-acceptance-and-balance.md#group-16---measure-complete-ground-project-economics). 20.1 stays open: whole-corridor time and cost with haulage and disposal need movement (master Group 7B, after 7.1).
 
 **R2MLVS3MP note, 2026-10-05.** The solid starter charges the whole 3x3 pocket in cut 0 (12 cells, not 3). This supersedes the cleared-area assumption in [r2mlvs1-e](r2mlvs1-e-ground-and-space-budgets.md) line 32. Measure the larger first-cut cost and the minimum consist it implies (two Earth and two Rock hoppers on the soft-ground fixture site) ([r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md#capacity-consequence)).
 

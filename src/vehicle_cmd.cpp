@@ -15,6 +15,7 @@
 #include "company_func.h"
 #include "train.h"
 #include "tbm.h"
+#include "tbm_exchange.h"
 #include "aircraft.h"
 #include "newgrf_text.h"
 #include "vehicle_func.h"
@@ -261,7 +262,9 @@ CommandCost CmdSellVehicle(DoCommandFlags flags, VehicleID v_id, bool sell_chain
 
 	if (front->vehstatus.Test(VehState::Crashed)) return CommandCost(STR_ERROR_VEHICLE_IS_DESTROYED);
 
-	if (!front->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAIN_MUST_BE_STOPPED_INSIDE_DEPOT + to_underlying(front->type));
+	// A whole train stopped on a portal assembly site, such as a retired boring machine, is sold where it stands.
+	const bool at_portal_site = front->type == VehicleType::Train && sell_chain && v == front && IsTrainStoppedAtPortalSite(*Train::From(front));
+	if (!front->IsStoppedInDepot() && !at_portal_site) return CommandCost(STR_ERROR_TRAIN_MUST_BE_STOPPED_INSIDE_DEPOT + to_underlying(front->type));
 
 	if (v->type == VehicleType::Train) {
 		ret = CmdSellRailWagon(flags, v, sell_chain, backup_order, client_id);
@@ -533,6 +536,19 @@ std::tuple<CommandCost, uint, uint16_t, CargoArray> CmdRefitVehicle(DoCommandFla
 
 	/* Check cargo */
 	if (new_cargo_type >= NUM_CARGO) return { CMD_ERROR, 0, 0, {} };
+
+	if (v->type == VehicleType::Train) {
+		/* Units serving a boring project keep their capacity: check every unit this refit could change. */
+		VehicleSet candidates;
+		if (only_this) {
+			candidates.push_back(v->index);
+		} else {
+			GetVehicleSet(candidates, v, num_vehicles == 0 ? UINT8_MAX : num_vehicles);
+		}
+		for (VehicleID id : candidates) {
+			if (CommandCost locked = CheckTBMRefit(*Train::Get(id)); locked.Failed()) return { locked, 0, 0, {} };
+		}
+	}
 
 	/* For ships and aircraft there is always only one. */
 	only_this |= front->type == VehicleType::Ship || front->type == VehicleType::Aircraft;

@@ -109,7 +109,7 @@ TEST_CASE("Validated portal geometry constructs real cutter machinery without ch
  * Sealed startup through the delivered solid-starter contract (r2mlvs3mp-f). Historical evidence r2mlvs4-k recorded
  * MissingSupport for this sideways step because no portal-issued start existed; it now refuses as an illegal turn,
  * and the legal door exit refuses because one Earth and one Rock hopper cannot hold its twelve-cell first cut.
- * Complete commissioning stays guarded: CommissionLayerPortalTBM still reports ControllerUnavailable.
+ * The portal entry without wagons still refuses as ControllerUnavailable; complete commissioning is tbm_commission.cpp.
  */
 TEST_CASE("Sealed TBM startup needs the door heading and capacity for the whole pocket", "[tbm-sealed-start-gate]")
 {

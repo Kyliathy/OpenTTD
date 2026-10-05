@@ -60,9 +60,10 @@ TEST_CASE("Face work adds bounded work per tick and commits one paid cut", "[tbm
 	CHECK(rig.Spoil(TBMConsistRole::RockWagon) == 0);
 	CHECK(CaptureTBMSupport().empty());
 
-	/* The tick that completes the work commits the cut in the same step. */
+	/* The tick that completes the work commits the cut in the same step; the route's only cut makes the final
+	 * exchange due at once, so the consist goes back instead of onto its new support. */
 	const TileIndex cell = rig.Job().route[0].cutter_position;
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport);
+	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange);
 	CHECK(rig.Project().blocked == TBMBlockedReason::None);
 	CHECK(rig.Job().cursor == 1);
 	CHECK(rig.Job().partial_work_ticks == 0);
@@ -99,7 +100,7 @@ TEST_CASE("Face work adds bounded work per tick and commits one paid cut", "[tbm
 
 	/* The only cut is done: the exchange is due, and no second cut is ever attempted. */
 	CHECK(IsTBMExchangeDue(rig.Project()));
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport); // Driving onto the new support needs master Group 7.
+	CHECK(rig.Tick().phase == TBMPhase::WaitForEmpties); // The consist already stands in its Source bay.
 	CHECK(rig.Job().cursor == 1);
 	CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == estimate.earth_t);
 }
@@ -143,7 +144,7 @@ TEST_CASE("Face work waits precisely at the boundary and resumes from the same c
 		CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == earth_before);
 		CHECK(rig.Spoil(TBMConsistRole::RockWagon) == rock_before);
 		clear();
-		CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport);
+		CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange); // The only cut commits, and its final exchange is due.
 		CHECK(rig.Job().cursor == 1);
 	};
 
@@ -264,7 +265,7 @@ TEST_CASE("Only the assigned project advances its claim over supported retreat",
 	/* After the first real cut, the completed cell carries support and the second cut's retreat is supported. */
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	WorkToLastTick(rig, estimate);
-	REQUIRE(rig.Tick().phase == TBMPhase::AdvanceSupport);
+	REQUIRE(rig.Tick().phase == TBMPhase::AdvanceSupport); // Both cuts fit the wagons, so the first is no exchange breakpoint.
 	REQUIRE(rig.Job().cursor == 1);
 	TBMCutParticipant after(rig.Project());
 	CHECK(after.IsSupported(rig.Job(), rig.Job().route[1]));
@@ -285,7 +286,7 @@ TEST_CASE("Saves on both sides of a cut reload to the same next step", "[tbm-wor
 	rig.Reload();
 	CHECK(ComputeTBMProjectDigest() == projects);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport); // The reloaded face commits on exactly the same tick.
+	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange); // The reloaded face commits on exactly the same tick.
 
 	projects = ComputeTBMProjectDigest();
 	geology = ComputeGeologyStateDigest(GetGeologyWorldState());

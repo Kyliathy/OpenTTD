@@ -1391,7 +1391,7 @@ static CommandCost MoveRailVehicleParts(DoCommandFlags flags, Train *src, Train 
 	/* Ordinary moves need both chains stopped inside a genuine depot; validated portal assembly checks its own site. */
 	if (require_depot) {
 		/* Ordinary moves happen only in a genuine depot. A portal assembly site or exchange bay also keeps its parts on
-		 * Track::Depot, which IsStoppedInDepot accepts, but only its own restricted owner may rearrange it. */
+		 * Track::Depot, but only its own restricted owner may rearrange it. */
 		if (!IsRailDepotTile(src_head->tile)) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
 
 		/* Check if all vehicles in the source train are stopped inside a depot. */
@@ -1399,6 +1399,10 @@ static CommandCost MoveRailVehicleParts(DoCommandFlags flags, Train *src, Train 
 
 		/* Check if all vehicles in the destination train are stopped inside a depot. */
 		if (dst_head != nullptr && !dst_head->IsStoppedInDepot()) return CommandCost(STR_ERROR_TRAINS_CAN_ONLY_BE_ALTERED_INSIDE_A_DEPOT);
+
+		/* A TBM cutter consist is rearranged only by its project's restricted owners, never by an ordinary move. */
+		ret = CheckTBMTrainRearrangement(*src_head, dst_head);
+		if (ret.Failed()) return ret;
 	}
 
 	/* First make a backup of the order of the trains. That way we can do
@@ -1633,6 +1637,16 @@ CommandCost ExchangeRailWagonUnits(DoCommandFlags flags, Train *first, Train *fi
  * @param[out] front Receives the stopped, hidden front engine, or nullptr on failure.
  * @return Success, or a refusal after deleting every part this call built.
  */
+bool IsTrainStoppedAtPortalSite(const Train &front)
+{
+	if (!front.IsFrontEngine() || !front.vehstatus.Test(VehState::Stopped) || front.cur_speed != 0 || !IsLayerPortalTile(front.tile)) return false;
+	// Every part stands in the depot state on the one portal tile, as assembly left it; a train in the shaft does not.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part->track != Track::Depot || part->tile != front.tile) return false;
+	}
+	return true;
+}
+
 CommandCost BuildTBMConsistAtSite(const LayerPortalCommissionRequest &request, const Engine *cutter, Money cutter_value, UnitID unit_number, std::span<const Engine *const> wagons, Train **front)
 {
 	if (front == nullptr) return CMD_ERROR;
@@ -1702,6 +1716,9 @@ CommandCost CmdSellRailWagon(DoCommandFlags flags, Vehicle *t, bool sell_chain, 
 	Train *first = v->First();
 
 	if (v->IsRearDualheaded()) return CommandCost(STR_ERROR_REAR_ENGINE_FOLLOW_FRONT);
+
+	/* A TBM cutter consist stays whole, and spoil wagons are emptied at a receiver before they can be sold. */
+	if (CommandCost tbm = CheckTBMRailVehicleSale(*v, sell_chain); tbm.Failed()) return tbm;
 
 	/* First make a backup of the order of the train. That way we can do
 	 * whatever we want with the order and later on easily revert. */

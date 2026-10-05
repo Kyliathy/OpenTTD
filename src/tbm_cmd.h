@@ -7,7 +7,7 @@
 /**
  * @file tbm_cmd.h Command definitions for TBM project controls, temporary support conversion, the wagon exchange, the
  * project origin and the spoil receivers.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 3 and 9
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 2 (commissioning), 3 and 9
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-8
  */
 
@@ -96,11 +96,30 @@ CommandCost CmdSetTBMProjectOrigin(DoCommandFlags flags, TBMProjectID project, S
  */
 CommandCost CmdSetSpoilReceiverMode(DoCommandFlags flags, IndustryID industry, SpoilReceiverMode mode);
 
+/**
+ * Buy and commission a boring machine at a Sealed rail portal of the command actor (Plan 4 Group 2.1, r2mlvs3
+ * Group 8.1). The rectangle is the requested floor on the portal's rock layer; the command plans the canonical route
+ * for the actual consist from the portal's door, accepting the one-cell working ring around the floor and housing,
+ * and commissions the result as one transaction.
+ * @param flags Command estimate/execute policy.
+ * @param portal Upper rail end of the pair.
+ * @param model_id Logical cutter model.
+ * @param earth_wagons Earth hoppers behind the cutter.
+ * @param rock_wagons Rock hoppers after them.
+ * @param origin Company Surface railway station whose receivers take the spoil.
+ * @param area_start One corner of the requested floor, on the rock layer.
+ * @param area_end The opposite corner, on the same layer.
+ * @param accept_partial Accept a plan that covers only part of the floor.
+ * @return The machinery and wagon price, or a refusal with nothing changed.
+ */
+CommandCost CmdCommissionTBM(DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial);
+
 DEF_CMD_TRAIT(Commands::AssignTBMHauler, CmdAssignTBMHauler, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::ReleaseTBMHauler, CmdReleaseTBMHauler, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::SetTBMExchangeBay, CmdSetTBMExchangeBay, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::ExchangeTBMWagons, CmdExchangeTBMWagons, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::SetTBMProjectOrigin, CmdSetTBMProjectOrigin, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::SetSpoilReceiverMode, CmdSetSpoilReceiverMode, CommandFlags{}, CommandType::OtherManagement)
+DEF_CMD_TRAIT(Commands::CommissionTBM, CmdCommissionTBM, CommandFlags{}, CommandType::VehicleConstruction)
 
 #endif /* TBM_CMD_H */

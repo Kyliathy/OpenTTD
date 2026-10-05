@@ -11,6 +11,7 @@
 #include "company_func.h"
 #include "train.h"
 #include "tbm.h"
+#include "tbm_exchange.h"
 #include "command_func.h"
 #include "engine_func.h"
 #include "vehicle_func.h"
@@ -754,6 +755,8 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 	// Replacement estimates can construct temporary trains: protect the whole fixed machinery prefix before any replacement lookup or allocation.
 	for (const Vehicle *part = v->First(); part != nullptr; part = part->Next()) {
 		if (IsTBMCutterEngine(part->engine_type)) return CMD_ERROR;
+		// Assigned haulers and wagon-set units keep their vehicle identities; renewing them would break the cycle or set.
+		if (part->type == VehicleType::Train && IsTBMReplacementLocked(*Train::From(part))) return CMD_ERROR;
 	}
 
 	CommandCost ret = CheckOwnership(v->owner);

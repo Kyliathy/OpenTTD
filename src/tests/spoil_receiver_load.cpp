@@ -7,7 +7,7 @@
 /**
  * @file spoil_receiver_load.cpp Staged loading of receiver state (Plan 5 Group 8 persistence): loaded rows stay
  * unpublished until they match the rebuilt receiver industries one for one, with in-range fields and stock; any
- * refusal publishes nothing. The metadata feature flag follows the live receivers.
+ * refusal publishes nothing. A closed receiver takes its row with it. The metadata feature flag follows the live receivers.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md, Persistence
  */
 
@@ -85,6 +85,15 @@ TEST_CASE("Loaded receiver rows publish only against matching receiver industrie
 	SECTION("a stock above the cap refuses") {
 		SpoilReceiverRig::Stock(earth) = 1025;
 		CHECK_FALSE(load(saved));
+	}
+	SECTION("a closed receiver leaves no row behind") {
+		const IndustryID closed = rock.index;
+		delete &rock; // As when the industry closes; its row goes with it, so the store still loads.
+		CHECK(GetSpoilReceiver(closed) == nullptr);
+		const auto rows = CaptureSpoilReceivers();
+		REQUIRE(rows.size() == 1);
+		CHECK(rows[0].industry == earth.index);
+		CHECK(load(rows));
 	}
 	SECTION("without receivers the flag clears") {
 		ResetSpoilReceiverState();

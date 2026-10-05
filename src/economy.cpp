@@ -478,6 +478,10 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 		if (new_owner != INVALID_OWNER) GroupStatistics::UpdateAutoreplace(new_owner);
 	}
 
+	/* TBM projects, their jobs and exchange records follow the vehicles that just moved or were deleted, before the
+	 * tiles change, so project track and bays are no longer in use when a removed company's tiles are cleared. */
+	ChangeTBMOwnership(old_owner, new_owner);
+
 	/*  Change ownership of tiles */
 	{
 		for (const auto tile : Map::Iterate()) {

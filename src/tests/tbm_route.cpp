@@ -111,10 +111,10 @@ TEST_CASE("Another vehicle in the swept envelope keeps the cut uncommitted", "[t
 	CHECK(rig.Job().partial_work_ticks == estimate.work_ticks);
 	CHECK(GetCash() == cash);
 	CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == 0);
-	// Once it has left, the same cut commits on the next tick.
+	// Once it has left, the same cut commits on the next tick, and its final exchange is due.
 	intruder->tile = home;
 	intruder->UpdatePosition();
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport);
+	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange);
 	CHECK(rig.Job().cursor == 1);
 }
 

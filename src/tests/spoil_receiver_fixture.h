@@ -43,6 +43,21 @@ public:
 	 */
 	explicit SpoilReceiverRig(size_t segments = 1) : TBMExchangeRig(segments)
 	{
+		this->InstallReceivers();
+	}
+
+	/**
+	 * Install the receiver definitions and give the origin a real station tile, for a project whose route turns as given.
+	 * @param turns Change of heading at each advance (see TBMProjectRig).
+	 */
+	explicit SpoilReceiverRig(const std::vector<DirDiff> &turns) : TBMExchangeRig(turns)
+	{
+		this->InstallReceivers();
+	}
+
+	/** Install the receiver definitions, then the origin's station tile and town. */
+	void InstallReceivers()
+	{
 		REQUIRE(Industry::GetNumItems() == 0);
 		ResetIndustries();
 		REQUIRE(InitialiseSpoilReceiverDefinitions(this->fixture.package));

@@ -7,7 +7,7 @@
 /**
  * @file tbm_acquisition.cpp Whole-consist preparation, unpublished acquisition, rollback and the role contract,
  * with actual pool-owned parts. These are fixture constructions, not a normal-game first cut or disposal claim;
- * production commissioning stays guarded (CommissionLayerPortalTBM still reports ControllerUnavailable).
+ * the portal entry without wagons is a portal-only quote (CommissionLayerPortalTBM reports ControllerUnavailable).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2B
  */
 

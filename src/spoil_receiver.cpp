@@ -283,7 +283,8 @@ uint AdmitSpoilToReceiver(Industry &industry, CargoType cargo, uint requested, C
 	if (admitted == 0) return 0;
 	const auto &recipe = GetSpoilReceiverRecipe(receiver->kind);
 	// The fee is settled once, here, for exactly the admitted tonnes and at the mode current at intake.
-	const Money fee = Money{admitted} * (receiver->mode == SpoilReceiverMode::SurplusDisposal ? recipe.surplus_fee_per_t : recipe.fee_per_t);
+	const Money per_t = receiver->mode == SpoilReceiverMode::SurplusDisposal ? recipe.surplus_fee_per_t : recipe.fee_per_t;
+	const Money fee = per_t * static_cast<int64_t>(admitted);
 	receiver->interval_intake += static_cast<uint16_t>(admitted);
 	receiver->fees += static_cast<uint64_t>(fee.base());
 	++receiver->revision;
@@ -368,7 +369,14 @@ static bool IsLoadedSpoilReceiverValid(const SpoilReceiver &row, const Industry 
 
 bool AcceptLoadedSpoilReceivers()
 {
-	std::vector<SpoilReceiver> rows = _staged_spoil_receivers.value_or(std::vector<SpoilReceiver>{});
+	if (!_staged_spoil_receivers.has_value()) {
+		// Nothing was loaded: the live store stays, and every receiver industry must still have its row.
+		for (const Industry *industry : Industry::Iterate()) {
+			if (GetSpoilReceiverKind(industry->type) != SpoilReceiverKind::End && !_spoil_receivers.contains(industry->index)) return false;
+		}
+		return true;
+	}
+	std::vector<SpoilReceiver> rows = std::move(*_staged_spoil_receivers);
 	_staged_spoil_receivers.reset();
 	std::map<IndustryID, SpoilReceiver> accepted;
 	// Every row names a live receiver industry of its own kind, once, with in-range fields.

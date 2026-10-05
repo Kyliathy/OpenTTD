@@ -101,7 +101,10 @@ TEST_CASE("Holds keep the phase and cargo until their cause is gone", "[tbm-haul
 	SECTION("a wagon of the set leaves the hauler") {
 		Train *last = rig.hauler->Last();
 		last->Previous()->SetNext(nullptr);
-		held(TBMHaulerWait::WrongWagons);
+		const auto step = rig.StepHauler();
+		CHECK(step.wait == TBMHaulerWait::WrongWagons);
+		CHECK(step.phase == TBMHaulerPhase::VisitOrigin);
+		CHECK(TBMExchangeRig::Aboard(rig.hauler) + TBMExchangeRig::Aboard(last) == spoil); // The detached wagon keeps its load.
 		rig.hauler->Last()->SetNext(last);
 		CHECK(rig.StepHauler().wait == TBMHaulerWait::None);
 	}

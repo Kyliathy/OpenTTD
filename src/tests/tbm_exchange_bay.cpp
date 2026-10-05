@@ -165,9 +165,10 @@ TEST_CASE("Ordinary moves keep their genuine-depot guard at a bay", "[tbm-exchan
 {
 	TBMExchangeRig rig;
 	rig.HaulerToSourceBay();
-	rig.front->vehstatus.Set(VehState::Stopped); // Both trains now pass the depot-like stopped check on the portal tile.
-	REQUIRE(rig.front->IsStoppedInDepot());
-	REQUIRE(rig.hauler->IsStoppedInDepot());
+	rig.front->vehstatus.Set(VehState::Stopped); // Both trains now stand stopped in the depot state on the portal tile.
+	REQUIRE(IsTrainStoppedAtPortalSite(*rig.front));
+	REQUIRE(IsTrainStoppedAtPortalSite(*rig.hauler));
+	CHECK_FALSE(rig.front->IsStoppedInDepot()); // The portal is no depot, so the ordinary depot check never passes there.
 	const auto cutter = GetTBMChainIDs(rig.front);
 	const auto hauler = GetTBMChainIDs(rig.hauler);
 	const auto onto_cutter = Command<Commands::MoveRailVehicle>::Do(DoCommandFlag::Execute, rig.hauler->Next()->index, rig.front->Last()->index, false);

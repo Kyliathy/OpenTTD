@@ -16,6 +16,7 @@
 #include "debug.h"
 #include "company_base.h"
 #include "company_func.h"
+#include "vehicle_base.h"
 
 #include "safeguards.h"
 
@@ -344,6 +345,27 @@ ExcavationError RetireExcavationJob(ExcavationJobID id)
 	const auto it = std::lower_bound(_geology_world.jobs.begin(), _geology_world.jobs.end(), id, ExcavationJobBeforeID);
 	_geology_world.jobs.erase(it);
 	return ExcavationError::None;
+}
+
+void ChangeExcavationJobOwnership(CompanyID old_owner, CompanyID new_owner)
+{
+	for (auto &job : _geology_world.jobs) {
+		if (job.company != old_owner) continue;
+		if (new_owner != CompanyID::Invalid()) {
+			job.company = new_owner;
+		} else {
+			job.company = CompanyID::Invalid();
+			// The company's trains were deleted first: a cutter binding that no longer resolves is cleared, so it can never
+			// name a later vehicle with the same ID.
+			if (job.cutter != VehicleID::Invalid() && !Vehicle::IsValidID(job.cutter)) job.cutter = VehicleID::Invalid();
+			// Closed history stays closed; live work takes the explicit recoverable orphan pause.
+			if (job.state != ExcavationJobState::Completed && job.state != ExcavationJobState::Cancelled) {
+				job.state = ExcavationJobState::Paused;
+				job.pause_reason = ExcavationError::InvalidOwner;
+			}
+		}
+		++job.revision;
+	}
 }
 
 /**

@@ -24,11 +24,13 @@
 #include "company_base.h"
 #include "company_func.h"
 #include "layer_portal_map.h"
+#include "rail_map.h"
 #include "direction_func.h"
 #include "map_func.h"
 #include "debug.h"
 #include "timer/timer_game_tick.h"
 #include "timer/timer_game_calendar.h"
+#include "core/backup_type.hpp"
 
 #include "safeguards.h"
 
@@ -136,8 +138,8 @@ static const ExcavationJob *GetLiveTBMJob(const TBMProject &project)
 	const auto *job = GetExcavationJob(project.job);
 	// The job must belong to this company and model, and be unbound or bound to this same cutter.
 	if (job == nullptr || job->company != project.company || job->model_id != project.model_id || (job->cutter != VehicleID::Invalid() && job->cutter != project.cutter)) return nullptr;
-	// A cancelled job cannot drive a live project; a completed one still anchors the final return and exchange.
-	if (job->state == ExcavationJobState::Cancelled && !IsTBMProjectFinished(project.phase)) return nullptr;
+	// A cancelled or completed job no longer cuts, but it still anchors the project's return, final exchange and history
+	// (Group 17.1); the phase step turns every forward phase of a cancelled job back to the bay.
 	// When the portal is a canonical pair key, the job must start in that pair's rock-side housing; any other portal
 	// value is the portal check's refusal, not evidence that the job is foreign.
 	if (IsTBMPortalKey(project.portal) && job->commissioning_anchor != GetLayerPortalPairTile(project.portal)) return nullptr;
@@ -316,18 +318,56 @@ TBMProjectError PublishTBMProject(TBMProject &project, bool execute)
 }
 
 /**
- * Apply one player control to a project owned by the command actor.
- * @param id Project to control.
- * @param action Requested control.
- * @param execute False validates only.
- * @return None or an unchanged refusal.
+ * @param front Cutter front engine.
+ * @param project Its project.
+ * @return Whether the whole consist stands withdrawn and empty: stopped, every part on one tile in the depot state,
+ *         that tile being the project's Source bay or a genuine rail depot, and no cargo aboard any part.
  */
+static bool IsTBMConsistWithdrawn(const Train &front, const TBMProject &project)
+{
+	const TileIndex tile = front.tile;
+	if (!front.vehstatus.Test(VehState::Stopped) || (tile != project.portal && !IsRailDepotTile(tile))) return false;
+	// Outside the work pocket and on one tile, with no spoil or other cargo leaving the project with the train.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part->tile != tile || part->track != Track::Depot || part->cargo.TotalCount() != 0) return false;
+	}
+	return true;
+}
+
+/**
+ * Erase a finished project so its consist becomes an ordinary train (Group 17.2).
+ * @param project Record of the command actor.
+ * @param execute False validates only.
+ * @return None, or Unavailable while the project is unfinished, a hauler serves it or a set of it carries spoil, its
+ *         consist is not withdrawn and empty, or its Commissioning pair cannot be withdrawn yet.
+ */
+static TBMProjectError RetireTBMProject(const TBMProject &project, bool execute)
+{
+	if (!IsTBMProjectFinished(project.phase) || !IsTBMProjectExchangeIdle(project.id)) return TBMProjectError::Unavailable;
+	if (const Train *front = Train::GetIfValid(project.cutter); front != nullptr && !IsTBMConsistWithdrawn(*front, project)) return TBMProjectError::Unavailable;
+	// The pair Commissioning this project is withdrawn with it (r2mlvs3 Group 11.3), once its rock side is empty;
+	// otherwise the record would stay bound to an ordinary train that may then be sold.
+	const auto *record = IsTBMPortalKey(project.portal) ? GetLayerPortalWorkRecord(project.portal) : nullptr;
+	const bool bound = record != nullptr && record->state == LayerPortalWorkState::Commissioning && (record->project == project.job || record->cutter == project.cutter);
+	if (bound && WithdrawLayerPortalWorkPair(project.portal, project.job, project.cutter, false) != LayerPortalWorkError::None) return TBMProjectError::Unavailable;
+	if (!execute) return TBMProjectError::None;
+	if (bound) {
+		[[maybe_unused]] const auto withdrawn = WithdrawLayerPortalWorkPair(project.portal, project.job, project.cutter, true);
+		assert(withdrawn == LayerPortalWorkError::None);
+	}
+	const TBMProjectID id = project.id;
+	ForgetTBMExchangeProject(id); // Only empty sets are left; their wagons simply stop being a set.
+	std::erase_if(_tbm_projects, [id](const TBMProject &candidate) { return candidate.id == id; });
+	return TBMProjectError::None;
+}
+
 TBMProjectError ControlTBMProject(TBMProjectID id, TBMProjectAction action, bool execute)
 {
 	if (to_underlying(action) >= to_underlying(TBMProjectAction::End)) return TBMProjectError::InvalidProject;
 	TBMProject *project = FindTBMProject(id);
 	if (project == nullptr) return TBMProjectError::InvalidProject;
 	if (project->company != _current_company) return TBMProjectError::InvalidOwner;
+	if (action == TBMProjectAction::Retire) return RetireTBMProject(*project, execute); // The one control of a finished project.
 	if (IsTBMProjectFinished(project->phase)) return TBMProjectError::Unavailable;
 	TBMProject next = *project;
 	switch (action) {
@@ -340,8 +380,34 @@ TBMProjectError ControlTBMProject(TBMProjectID id, TBMProjectAction action, bool
 			next.blocked = TBMBlockedReason::None;
 			NormalizeTBMProjectReferences(next); // A loss that happened during the pause becomes the reason at once.
 			break;
+		case TBMProjectAction::Cancel: {
+			const auto *job = project->job == ExcavationJobID{UINT32_MAX} ? nullptr : GetExcavationJob(project->job);
+			const bool lost = project->cutter == VehicleID::Invalid();
+			const bool open = job != nullptr && job->state != ExcavationJobState::Cancelled && job->state != ExcavationJobState::Completed;
+			// An open job must be the project's own and still stampable. With its cutter live, a project without an open job
+			// has nothing to cancel; a project that lost its cutter can always be ended, whatever its job.
+			if (open && (job->company != project->company || job->revision == UINT64_MAX)) return TBMProjectError::Unavailable;
+			if (!open && !lost) return TBMProjectError::Unavailable;
+			// Without a cutter there is nothing to bring back: its train and anything aboard went when it was deleted.
+			// Otherwise a forward phase turns back to the bay; a return or an exchange already under way simply goes on.
+			if (lost) {
+				next.phase = TBMPhase::Cancelled;
+				next.phase_ticks = 0;
+			} else if (project->phase == TBMPhase::Commissioning || project->phase == TBMPhase::TravelToFace || project->phase == TBMPhase::Bore || project->phase == TBMPhase::AdvanceSupport) {
+				next.phase = TBMPhase::ReturnForExchange;
+				next.phase_ticks = 0;
+			}
+			next.blocked = TBMBlockedReason::None; // A pause gives way to the return.
+			if (execute && open) {
+				// Unfinished claimed cells return to rock; cavities, committed totals and the spoil aboard stay.
+				[[maybe_unused]] const auto cancelled = CancelExcavationJob(project->job);
+				assert(cancelled == ExcavationError::None);
+			}
+			NormalizeTBMProjectReferences(next); // A loss that happened meanwhile is the reason at once.
+			break;
+		}
 		default:
-			return TBMProjectError::Unavailable; // Cancel needs Group 17's support/retreat recovery first.
+			return TBMProjectError::Unavailable;
 	}
 	if (!execute) return TBMProjectError::None;
 	++next.revision;
@@ -366,6 +432,75 @@ TBMProjectError SetTBMProjectExchangeBay(TBMProjectID id, TileIndex bay, bool ex
 	project->exchange_bay = bay;
 	++project->revision;
 	return TBMProjectError::None;
+}
+
+void ReleaseTBMProjectExchangeBay(TileIndex bay)
+{
+	for (auto &project : _tbm_projects) {
+		if (project.exchange_bay != bay) continue;
+		// The Source bay is the project's own portal key; without one the project has no bay at all.
+		project.exchange_bay = IsTBMPortalKey(project.portal) ? project.portal : INVALID_TILE;
+		++project.revision;
+	}
+}
+
+void ChangeTBMOwnership(Owner old_owner, Owner new_owner)
+{
+	if (new_owner != INVALID_OWNER) {
+		ChangeExcavationJobOwnership(old_owner, new_owner);
+		// A merger moves each project to the buyer; its vehicles, stations and track move in the same company change,
+		// and its assignments and sets take their company from the project.
+		for (auto &project : _tbm_projects) {
+			if (project.company != old_owner) continue;
+			project.company = new_owner;
+			++project.revision;
+		}
+		return;
+	}
+	// A removed company's projects end with it; its trains are already deleted. No controller can ever resume their
+	// work, so each job is cancelled (its unfinished cells return to rock, cavities stay) and its Commissioning pair is
+	// released, so the company's tiles can be cleared. Its other jobs become explicit orphans below.
+	std::vector<TBMProject> removed;
+	for (const auto &project : _tbm_projects) {
+		if (project.company == old_owner) removed.push_back(project);
+	}
+	AutoRestoreBackup actor(_current_company, OWNER_DEITY); // The lifecycle owner acts for the removed company.
+	for (const auto &project : removed) {
+		const auto *job = project.job == ExcavationJobID{UINT32_MAX} ? nullptr : GetExcavationJob(project.job);
+		if (job != nullptr && job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled) {
+			[[maybe_unused]] const auto cancelled = CancelExcavationJob(project.job);
+		}
+		const auto *record = IsTBMPortalKey(project.portal) ? GetLayerPortalWorkRecord(project.portal) : nullptr;
+		if (record != nullptr && record->state == LayerPortalWorkState::Commissioning && record->project == project.job) ReleaseLayerPortalWorkBinding(project.portal);
+		ForgetTBMExchangeProject(project.id);
+	}
+	std::erase_if(_tbm_projects, [old_owner](const TBMProject &project) { return project.company == old_owner; });
+	ChangeExcavationJobOwnership(old_owner, new_owner);
+}
+
+void OnTBMTrainPartDeleted(const Train &part)
+{
+	OnTBMExchangeTrainPartDeleted(part); // First: it still reads which project the cutter served.
+	const auto it = std::ranges::find(_tbm_projects, part.index, &TBMProject::cutter);
+	if (it == _tbm_projects.end()) return;
+	it->cutter = VehicleID::Invalid();
+	it->permanent_parts.clear();
+	// An unfinished project shows the loss at once; a pause or an earlier block is kept, as normalization does.
+	if (!IsTBMProjectFinished(it->phase) && it->blocked == TBMBlockedReason::None) it->blocked = TBMBlockedReason::MissingCutter;
+	++it->revision;
+	if (IsTBMPortalKey(it->portal)) ForgetLayerPortalWorkCutter(it->portal, part.index);
+}
+
+void OnTBMStationDeleted(StationID station)
+{
+	for (auto &project : _tbm_projects) {
+		if (project.origin != station) continue;
+		project.origin = StationID::Invalid();
+		// An unfinished project shows the loss at once; a pause or an earlier block is kept, as normalization does.
+		if (!IsTBMProjectFinished(project.phase) && project.blocked == TBMBlockedReason::None) project.blocked = TBMBlockedReason::MissingOrigin;
+		++project.revision;
+	}
+	ForgetLayerPortalWorkOrigin(station);
 }
 
 TBMProjectError SetTBMProjectOrigin(TBMProjectID id, StationID station, bool execute)
@@ -441,6 +576,14 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 	}
 	if (step.blocked != TBMBlockedReason::None) return step;
 
+	/* A cancelled job turns every forward phase back to the bay along the supported retreat (Group 17.1). */
+	const bool forward = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport;
+	if (inputs.cancelled && forward) {
+		step.phase = TBMPhase::ReturnForExchange;
+		step.phase_changed = true;
+		return step;
+	}
+
 	/* Edges. The ReturnForExchange entry guard needs the job's frozen pass terms, never a guess. */
 	const auto *job = GetLiveTBMJob(project);
 	const bool exchange_due = inputs.exchange_due && job != nullptr && job->pass_terms.has_value();
@@ -477,7 +620,8 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 			if (!inputs.exchange_due) step.phase = TBMPhase::Resume;
 			break;
 		case TBMPhase::Resume:
-			step.phase = inputs.route_complete ? TBMPhase::Completed : TBMPhase::TravelToFace; // The final return ends the project.
+			// The final return ends the project: Completed after the last cut, Cancelled after a cancellation.
+			step.phase = inputs.route_complete ? (inputs.cancelled ? TBMPhase::Cancelled : TBMPhase::Completed) : TBMPhase::TravelToFace;
 			break;
 		default:
 			break;
@@ -537,7 +681,8 @@ TBMPhaseInputs ObserveTBMPhaseInputs(const TBMProject &project)
 		const TileIndex approach = job->cursor == 0 ? job->commissioning_anchor : job->route[job->cursor - 1].cutter_position;
 		inputs.at_face = front->tile == approach;
 		inputs.support_advanced = inputs.at_face; // Read only in AdvanceSupport, where the approach is the new support end.
-		inputs.route_complete = job->cursor == job->route.size();
+		inputs.cancelled = job->state == ExcavationJobState::Cancelled;
+		inputs.route_complete = job->cursor == job->route.size() || inputs.cancelled; // A cancelled route has no further cut.
 	}
 	inputs.exchange_due = IsTBMExchangeDue(project);
 	inputs.at_exchange = CheckTBMExchangeParticipant(*front, GetTBMExchangeBay(project), project.company) == TBMExchangeError::None;
@@ -579,13 +724,18 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 	auto inputs = ObserveTBMPhaseInputs(*project);
 	// The face works only when this step leaves the project unblocked in Bore with no exchange due, so a paused,
 	// stopped, broken-down, servicing or reference-lost project never cuts. An earlier work wait is retried.
-	const bool works = project->phase == TBMPhase::Bore && project->blocked != TBMBlockedReason::Paused && FindTBMProjectReferenceLoss(*project) == TBMBlockedReason::None && !inputs.train_stopped && !inputs.broken_down && !inputs.servicing && !inputs.exchange_due;
+	const bool works = project->phase == TBMPhase::Bore && project->blocked != TBMBlockedReason::Paused && FindTBMProjectReferenceLoss(*project) == TBMBlockedReason::None && !inputs.train_stopped && !inputs.broken_down && !inputs.servicing && !inputs.exchange_due && !inputs.cancelled;
 	if (works) {
 		const auto work = AdvanceTBMFaceWork(*project);
 		inputs.cut_committed = work.cut_committed;
 		inputs.work_wait = work.wait;
 		project->work_remainder = work.work_remainder; // Face work never touches the store, so the pointer is still valid.
-		if (work.cut_committed) project->heading = work.heading; // Only a committed advance turns the cutter.
+		if (work.cut_committed) {
+			project->heading = work.heading; // Only a committed advance turns the cutter.
+			// A commit that makes the exchange due (wagons full, or the final return) sends the consist straight back,
+			// rather than first onto support it would not use before the exchange.
+			inputs.exchange_due = IsTBMExchangeDue(*project);
+		}
 	}
 	return AdvanceTBMProjectPhase(id, inputs);
 }

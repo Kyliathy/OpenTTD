@@ -7,9 +7,10 @@
 /**
  * @file tbm_exchange.cpp The controlled wagon exchange: bays, hauler assignments and their bay turns, wagon sets, the
  * pure proposal, the atomic commit through the restricted train rearrangement primitive, the hauler cycle, the origin
- * leg of unloading (Group 8.1), the logistics waits that pause new cutting (Group 9.3) and the staged acceptance of a
- * loaded store (Group 10).
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-10
+ * leg of unloading (Group 8.1), the logistics waits that pause new cutting (Group 9.3), the staged acceptance of a
+ * loaded store (Group 10) and the lifecycle rules for sale, refit, autoreplace, deletion, bays and companies (Group 11).
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md
  */
@@ -265,6 +266,22 @@ TBMExchangeError AssignTBMHauler(TBMProjectID project_id, VehicleID hauler_id, b
 	return TBMExchangeError::None;
 }
 
+/**
+ * End one assignment without an actor check (lifecycle owner), as a release does: its set stays registered, an empty
+ * returning set becomes Available, and a loaded set keeps its spoil and its origin visit.
+ * @param id Assignment to end; a missing one is ignored.
+ */
+static void EndTBMExchangeAssignment(TBMExchangeAssignmentID id)
+{
+	TBMExchangeAssignment *assignment = FindTBMExchangeAssignment(id);
+	if (assignment == nullptr) return;
+	if (TBMWagonSet *set = FindTBMWagonSet(assignment->set); set != nullptr && set->state == TBMWagonSetState::ReturningEmpty) {
+		set->state = TBMWagonSetState::Available;
+		++set->revision;
+	}
+	std::erase_if(_tbm_exchange_assignments, [id](const TBMExchangeAssignment &candidate) { return candidate.id == id; });
+}
+
 TBMExchangeError ReleaseTBMHauler(VehicleID hauler, bool execute)
 {
 	TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(hauler);
@@ -273,13 +290,7 @@ TBMExchangeError ReleaseTBMHauler(VehicleID hauler, bool execute)
 	// A released project may already be gone; only another company's live project is protected from this actor.
 	if (owner != nullptr && owner->company != _current_company) return TBMExchangeError::NotAssigned;
 	if (!execute) return TBMExchangeError::None;
-	// The set stays registered without a carrier; an empty one becomes Available, a loaded one keeps its spoil and visit.
-	if (TBMWagonSet *set = FindTBMWagonSet(assignment->set); set != nullptr && set->state == TBMWagonSetState::ReturningEmpty) {
-		set->state = TBMWagonSetState::Available;
-		++set->revision;
-	}
-	const TBMExchangeAssignmentID id = assignment->id;
-	std::erase_if(_tbm_exchange_assignments, [id](const TBMExchangeAssignment &candidate) { return candidate.id == id; });
+	EndTBMExchangeAssignment(assignment->id); // The set stays where it is, with any spoil and visit it has.
 	return TBMExchangeError::None;
 }
 
@@ -452,8 +463,9 @@ TBMExchangeProposal DescribeTBMWagonExchange(const TBMExchangeRequest &request)
 			}
 		}
 	}
-	// The cutter needs a full set of empties for the next pass; after the final cut it only gives its spoil away.
-	const bool route_complete = job->cursor >= job->route.size();
+	// The cutter needs a full set of empties for the next pass; after the final cut, or once its job is cancelled
+	// (Plan 4 Group 17.1), it only gives its spoil away.
+	const bool route_complete = job->cursor >= job->route.size() || job->state == ExcavationJobState::Cancelled;
 	if (!route_complete && (proposal.empty_earth_capacity_t < job->pass_terms->earth_capacity_t || proposal.empty_rock_capacity_t < job->pass_terms->rock_capacity_t)) return refuse(TBMExchangeError::InsufficientEmpties);
 	proposal.empty_units = earth_units;
 	proposal.empty_units.insert(proposal.empty_units.end(), rock_units.begin(), rock_units.end());
@@ -883,6 +895,140 @@ bool MayTBMSpoilLeaveVehicle(const Vehicle &front, const Vehicle &part, StationI
 	return set->visited_origin || (project != nullptr && project->origin == station);
 }
 
+/**
+ * @param unit Unit head.
+ * @return Whether the unit or any of its articulated parts carries cargo.
+ */
+static bool IsTBMUnitLoaded(const Train &unit)
+{
+	for (const Train *part = &unit; part != nullptr; part = part->Next()) {
+		if (part->cargo.TotalCount() != 0) return true;
+		if (!part->HasArticulatedPart()) break; // The unit ends with its last articulated part.
+	}
+	return false;
+}
+
+/**
+ * @param part Any train part.
+ * @return Whether its train is the cutter consist of a project record, finished or not.
+ */
+static bool IsTBMCutterConsistPart(const Train &part)
+{
+	return GetTBMProjectForCutter(part.First()->index) != nullptr;
+}
+
+void OnTBMExchangeTrainPartDeleted(const Train &part)
+{
+	if (_tbm_exchange_assignments.empty() && _tbm_wagon_sets.empty()) return; // Every other train deletion costs nothing.
+	const VehicleID id = part.index;
+	// A deleted hauler ends its assignment; its set and any spoil in it stay where they are.
+	if (const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(id); assignment != nullptr) EndTBMExchangeAssignment(assignment->id);
+	// A deleted wagon leaves its set. A set without wagons is gone, and so is the cycle of the hauler carrying it.
+	if (TBMWagonSet *set = FindTBMWagonSetForWagon(id); set != nullptr) {
+		std::erase(set->wagons, id);
+		++set->revision;
+		if (set->wagons.empty()) {
+			const TBMWagonSetID gone = set->id;
+			std::erase_if(_tbm_wagon_sets, [gone](const TBMWagonSet &candidate) { return candidate.id == gone; });
+			std::vector<TBMExchangeAssignmentID> carriers;
+			for (const auto &assignment : _tbm_exchange_assignments) {
+				if (assignment.set == gone) carriers.push_back(assignment.id);
+			}
+			for (TBMExchangeAssignmentID carrier : carriers) EndTBMExchangeAssignment(carrier);
+		}
+	}
+	// A deleted cutter leaves its working set on no cutter: with spoil aboard it waits, Loaded, for a hauler to adopt
+	// it; empty it is simply Available. Normally its wagons are deleted with it and the set goes as above.
+	if (const TBMProject *project = GetTBMProjectForCutter(id); project != nullptr) {
+		for (auto &set : _tbm_wagon_sets) {
+			if (set.project != project->id || set.state != TBMWagonSetState::Assigned) continue;
+			const bool loaded = std::ranges::any_of(set.wagons, [](VehicleID wagon) {
+				const Train *unit = Train::GetIfValid(wagon);
+				return unit != nullptr && IsTBMUnitLoaded(*unit);
+			});
+			set.state = loaded ? TBMWagonSetState::Loaded : TBMWagonSetState::Available;
+			set.visited_origin = false;
+			++set.revision;
+		}
+	}
+}
+
+bool IsTBMProjectExchangeIdle(TBMProjectID project)
+{
+	if (std::ranges::any_of(_tbm_exchange_assignments, [project](const TBMExchangeAssignment &assignment) { return assignment.project == project; })) return false;
+	// A set of the project still holding spoil, carried or not, would lose the only record of its origin leg.
+	for (const auto &set : _tbm_wagon_sets) {
+		if (set.project != project) continue;
+		for (VehicleID wagon : set.wagons) {
+			const Train *unit = Train::GetIfValid(wagon);
+			if (unit != nullptr && IsTBMUnitLoaded(*unit)) return false;
+		}
+	}
+	return true;
+}
+
+void ForgetTBMExchangeProject(TBMProjectID project)
+{
+	// A removed company's wagons were deleted first, and a retired project has no spoil in its sets; nothing is dropped.
+	std::erase_if(_tbm_exchange_assignments, [project](const TBMExchangeAssignment &assignment) { return assignment.project == project; });
+	std::erase_if(_tbm_wagon_sets, [project](const TBMWagonSet &set) { return set.project == project; });
+}
+
+CommandCost CheckTBMTrainRearrangement(const Train &src_head, const Train *dst_head)
+{
+	// A part may neither leave a cutter consist nor join one; only the project's restricted owners rearrange it.
+	if (IsTBMCutterConsistPart(src_head) || (dst_head != nullptr && IsTBMCutterConsistPart(*dst_head))) return CommandCost(STR_ERROR_TBM_CONSIST_LOCKED);
+	return CommandCost();
+}
+
+CommandCost CheckTBMRailVehicleSale(const Train &unit, bool sell_chain)
+{
+	if (IsTBMCutterConsistPart(unit)) return CommandCost(STR_ERROR_TBM_CONSIST_LOCKED);
+	// Each unit the sale deletes: the chosen one, and with a chain sale every unit behind it. A set unit with spoil
+	// aboard refuses; an empty one may go, and its set shrinks when it is deleted.
+	for (const Train *sold = &unit; sold != nullptr; sold = sell_chain ? sold->GetNextUnit() : nullptr) {
+		if (FindTBMWagonSetForWagon(sold->index) != nullptr && IsTBMUnitLoaded(*sold)) return CommandCost(STR_ERROR_TBM_SPOIL_ABOARD);
+	}
+	return CommandCost();
+}
+
+CommandCost CheckTBMRefit(const Train &unit)
+{
+	if (IsTBMCutterConsistPart(unit)) return CommandCost(STR_ERROR_TBM_CONSIST_LOCKED);
+	if (FindTBMWagonSetForWagon(unit.GetFirstEnginePart()->index) != nullptr) return CommandCost(STR_ERROR_TBM_SET_REFIT);
+	return CommandCost();
+}
+
+bool IsTBMReplacementLocked(const Train &part)
+{
+	return IsTBMCutterConsistPart(part) || FindTBMExchangeAssignmentForHauler(part.index) != nullptr || FindTBMWagonSetForWagon(part.index) != nullptr;
+}
+
+CommandCost CheckTBMExchangeBayRemoval(TileIndex tile, DoCommandFlags flags)
+{
+	// Company removal and flooding clear whatever stands there; the release afterwards still keeps the stores consistent.
+	if (flags.Test(DoCommandFlag::Bankrupt) || _current_company == OWNER_WATER) return CommandCost();
+	for (const TBMProject &project : CaptureTBMProjects()) {
+		// An unfinished project using this bay must have its Source bay to fall back on; otherwise it keeps the depot.
+		if (project.exchange_bay != tile || IsTBMProjectFinished(project.phase)) continue;
+		if (ResolveTBMExchangeBay(project, project.portal).error != TBMExchangeError::None) return CommandCost(STR_ERROR_TBM_EXCHANGE_BAY_IN_USE);
+	}
+	return CommandCost();
+}
+
+void ReleaseTBMExchangeBay(TileIndex tile)
+{
+	ReleaseTBMProjectExchangeBay(tile);
+	// A hauler queued for the removed bay now queues for its project's new bay; none stood in the depot.
+	for (auto &assignment : _tbm_exchange_assignments) {
+		if (assignment.bay != tile) continue;
+		const TBMProject *project = GetTBMProject(assignment.project);
+		if (project == nullptr || project->exchange_bay == INVALID_TILE) continue; // No bay left: the hauler simply never reaches one.
+		assignment.bay = project->exchange_bay;
+		++assignment.revision;
+	}
+}
+
 CommandCost CmdAssignTBMHauler(DoCommandFlags flags, TBMProjectID project, VehicleID hauler)
 {
 	if (AssignTBMHauler(project, hauler, flags.Test(DoCommandFlag::Execute)) != TBMExchangeError::None) return CMD_ERROR;
@@ -899,9 +1045,17 @@ CommandCost CmdSetTBMExchangeBay(DoCommandFlags flags, TBMProjectID project, Til
 {
 	const TBMProject *record = GetTBMProject(project);
 	if (record == nullptr || record->company != _current_company || IsTBMProjectFinished(record->phase)) return CMD_ERROR;
-	// A bay with queued haulers cannot move under them; release them first.
-	if (GetTBMExchangeAssignment(project) != nullptr || ResolveTBMExchangeBay(*record, tile).error != TBMExchangeError::None) return CMD_ERROR;
+	// A working bay with queued haulers cannot move under them; release them first. A lost bay (Plan 4 Group 17.3) may
+	// be replaced under them, and its queue follows to the new bay.
+	const bool lost = GetTBMExchangeBay(*record).error != TBMExchangeError::None;
+	if ((!lost && GetTBMExchangeAssignment(project) != nullptr) || ResolveTBMExchangeBay(*record, tile).error != TBMExchangeError::None) return CMD_ERROR;
 	if (SetTBMProjectExchangeBay(project, tile, flags.Test(DoCommandFlag::Execute)) != TBMProjectError::None) return CMD_ERROR;
+	if (!flags.Test(DoCommandFlag::Execute)) return CommandCost();
+	for (auto &assignment : _tbm_exchange_assignments) {
+		if (assignment.project != project || assignment.bay == tile) continue;
+		assignment.bay = tile;
+		++assignment.revision;
+	}
 	return CommandCost();
 }
 

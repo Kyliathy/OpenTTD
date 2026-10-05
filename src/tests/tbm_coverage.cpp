@@ -194,7 +194,7 @@ TEST_CASE("A late obstruction pauses at the previous safe support with a valid r
 	CHECK(participant.IsSupported(rig.Job(), rig.Job().route[1]));
 	intruder->tile = home;
 	intruder->UpdatePosition();
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport);
+	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange); // The last cut commits, and its final exchange is due.
 	CHECK(rig.Job().cursor == 2);
 }
 
@@ -233,7 +233,7 @@ TEST_CASE("A reload during a bend continues the same cursor and ledger", "[tbm-c
 	CHECK(rig.Job().partial_work_ticks == half);
 	// The rest of the work takes exactly the remaining ticks, and the ledger grows by this cut alone.
 	for (uint64_t tick = half + 1; tick < estimate.work_ticks; ++tick) REQUIRE(rig.Tick().phase == TBMPhase::Bore);
-	CHECK(rig.Tick().phase == TBMPhase::AdvanceSupport);
+	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange); // The wagons cannot take the third cut as well: a frozen breakpoint.
 	CHECK(rig.Job().cursor == 2);
 	CHECK(rig.Job().completed_earth_t == earth + estimate.earth_t);
 	CHECK(rig.Project().heading == rig.Job().route[1].heading);

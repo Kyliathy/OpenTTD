@@ -97,7 +97,7 @@ TEST_CASE("Project controls pause and resume without touching orders or phase", 
 	CHECK(GetTBMProject(id)->blocked == TBMBlockedReason::None);
 	CHECK(GetTBMProject(id)->revision == 3);
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Resume).Failed());
-	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Cancel).Failed()); // Needs Group 17 recovery first.
+	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Retire).Failed()); // Only a finished project retires; cancellation has its own tests (tbm_recovery.cpp).
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::End).Failed());
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, TBMProjectID{7}, TBMProjectAction::Pause).Failed());
 	REQUIRE(Company::CanAllocateItem());

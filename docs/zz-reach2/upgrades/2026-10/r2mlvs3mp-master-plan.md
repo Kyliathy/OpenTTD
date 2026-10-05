@@ -119,22 +119,20 @@ Context has compacted 1 times while executing this group.
 ### Group 5 - Supply actual exchange and disposal before enabling commissioning
 
 {{HARD}}
-- [ ] 5.1 Execute [Plan 5 Group 1](r2mlvs5-spoil-wagons-and-haulage.md#group-1---build-the-controlled-exchange-location): real controlled bay, full stopped-consist admission and restricted rearrangement primitives.
-- [ ] 5.2 Execute [Plan 5 Group 2](r2mlvs5-spoil-wagons-and-haulage.md#group-2---describe-both-resulting-consists-before-mutation): complete before/after ID/capacity/order/group proposals with immutable cutter/support prefix.
-- [ ] 5.3 Execute [Plan 5 Group 3](r2mlvs5-spoil-wagons-and-haulage.md#group-3---commit-one-wagon-exchange-with-complete-recovery): one two-way transaction preserving real wagon IDs/packets and complete failure recovery.
-- [ ] 5.4 Execute [Plan 5 Group 4](r2mlvs5-spoil-wagons-and-haulage.md#group-4---reuse-the-exchange-at-the-commissioning-origin): the same exchange on the source side before any underground bay. Freeze real origin/receiver admission; defer its full loop until receiver delivery below.
-- [ ] 5.5 Execute [Plan 5 Group 5](r2mlvs5-spoil-wagons-and-haulage.md#group-5---controlled-exchange-facility): tested `tbm_exchange.h` producer and direct Plan 3/4 consumer fixtures.
-- [ ] 5.6 Execute [Plan 5 Group 6](r2mlvs5-spoil-wagons-and-haulage.md#group-6---drive-one-assigned-hauler-through-its-saved-cycle): actual secondary locomotive and saved collect/origin/dispose/empty-return phases; full-cycle test follows receiver implementation.
-- [ ] 5.7 Execute [Plan 5 Group 7](r2mlvs5-spoil-wagons-and-haulage.md#group-7---queue-wagon-sets-independently-of-train-heads): stable exclusive sets/queues and multi-hauler refusals.
-- [ ] 5.8 Execute [Plan 5 Group 8](r2mlvs5-spoil-wagons-and-haulage.md#group-8---enforce-the-surface-origin-leg-and-real-disposal), then [Group 9](r2mlvs5-spoil-wagons-and-haulage.md#group-9---account-for-spoil-delivery-and-expose-logistics-stalls): the minimal real Earth/Rock Surface sinks, exact intake/fees and controller pause/recovery. These sinks are owned by Plan 5 and must not wait for Plan 6 factories. Close the deferred 4.2/6.3 receiver/cycle cases.
+- [X] 5.1 Execute [Plan 5 Group 1](r2mlvs5-spoil-wagons-and-haulage.md#group-1---build-the-controlled-exchange-location): real controlled bay, full stopped-consist admission and restricted rearrangement primitives.
+- [X] 5.2 Execute [Plan 5 Group 2](r2mlvs5-spoil-wagons-and-haulage.md#group-2---describe-both-resulting-consists-before-mutation): complete before/after ID/capacity/order/group proposals with immutable cutter/support prefix.
+- [X] 5.3 Execute [Plan 5 Group 3](r2mlvs5-spoil-wagons-and-haulage.md#group-3---commit-one-wagon-exchange-with-complete-recovery): one two-way transaction preserving real wagon IDs/packets and complete failure recovery.
+- [X] 5.4 Execute [Plan 5 Group 4](r2mlvs5-spoil-wagons-and-haulage.md#group-4---reuse-the-exchange-at-the-commissioning-origin): the same exchange on the source side before any underground bay. Freeze real origin/receiver admission; defer its full loop until receiver delivery below.
+- [X] 5.5 Execute [Plan 5 Group 5](r2mlvs5-spoil-wagons-and-haulage.md#group-5---controlled-exchange-facility): tested `tbm_exchange.h` producer and direct Plan 3/4 consumer fixtures.
+- [X] 5.6 Execute [Plan 5 Group 6](r2mlvs5-spoil-wagons-and-haulage.md#group-6---drive-one-assigned-hauler-through-its-saved-cycle): actual secondary locomotive and saved collect/origin/dispose/empty-return phases; full-cycle test follows receiver implementation.
+- [X] 5.7 Execute [Plan 5 Group 7](r2mlvs5-spoil-wagons-and-haulage.md#group-7---queue-wagon-sets-independently-of-train-heads): stable exclusive sets/queues and multi-hauler refusals.
+- [X] 5.8 Execute [Plan 5 Group 8](r2mlvs5-spoil-wagons-and-haulage.md#group-8---enforce-the-surface-origin-leg-and-real-disposal), then [Group 9](r2mlvs5-spoil-wagons-and-haulage.md#group-9---account-for-spoil-delivery-and-expose-logistics-stalls): the minimal real Earth/Rock Surface sinks, exact intake/fees and controller pause/recovery. These sinks are owned by Plan 5 and must not wait for Plan 6 factories. Close the deferred 4.2/6.3 receiver/cycle cases.
 
-Group 5 status (2026-10-05): every scope of Plan 5 Groups 1-9 is implemented but not yet compiled or run, so 5.1-5.8 stay unchecked until the next milestone burst (end of master Group 7 or 8).
+Group 5 status (2026-10-05): every scope of Plan 5 Groups 1-9 is implemented and verified at the end-of-Group-7 milestone ([all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass), so 5.1-5.8 are checked.
 - Designs: [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md) (bay, exchange, hauler cycle, wagon sets) and [r2mlvs3mp-i](r2mlvs3mp-i-receiver-design.md) (receivers, origin leg, persistence).
 - The deferred cases are closed in code: origin admission is satisfied by real receivers (4.2), and one complete cycle with real disposal is a test (6.3).
-- Not delivered here:
-  - saving assignments and wagon sets, and queue reload (Plan 5 Group 10, master 6.1);
-  - refusing ordinary moves, sales and refits of cutter parts in a depot bay (Plan 5 Group 11, master 6.2);
-  - either train driving itself into a bay (master Group 7).
+- Not delivered here: either train driving itself into a bay (master Group 7B). Saves and queue reload (6.1) and the
+  fleet locks (6.2) followed in Group 6.
 - The burst list and compile/runtime risks are in the [notes](r2mlvs3mp-d-execution-notes.md#group-5---exchange-and-disposal-in-progress-unbuilt).
 
 ### Area Mandatory Reading - Activation, occupied runtime and M1 art
@@ -143,35 +141,106 @@ _Applies to Groups 6-8._
 
 Read Plan 3's acquisition/cancellation handoff, Plan 4 recovery and Plan 5 lifecycle/persistence scopes. Verify the public owners produced in Groups 2-5 and the relevant Plan 14 lifecycle rows. For art use only the selected Plan 13 authoring/conversion/runtime areas and matching manifest families; read the image-generation skill at actual raster authoring time. Structural/runtime prefixes are not final asset acceptance.
 
-Context has compacted 1 times while executing this group.
+Context has compacted 2 times while executing this group.
 
 ### Group 6 - Persist and recover before completing live commissioning
 
 {{HARD}}
-- [ ] 6.1 Execute [Plan 5 Group 10](r2mlvs5-spoil-wagons-and-haulage.md#group-10---persist-assignment-and-queue-state): real assignments/queues/packet ownership survive load and every exchange save is before or after the atomic action.
-- [ ] 6.2 Execute [Plan 5 Group 11](r2mlvs5-spoil-wagons-and-haulage.md#group-11---handle-fleet-and-company-lifecycle-around-assignments), then [Group 12](r2mlvs5-spoil-wagons-and-haulage.md#group-12---lifecycle-and-acceptance): safe refit/autoreplace/sale, bay loss, takeover and repeated mixed-spoil conservation.
-- [ ] 6.3 Execute [Plan 4 Group 17](r2mlvs4-tunnel-boring-machines.md#group-17---implement-recoverable-cancellation-and-reassignment): independent cancellation/service/lost-reference rules and the now-delivered Plan 5 exchange/reassignment integration. Do not strand occupied support or delete spoil to recover.
-- [ ] 6.4 Finish [Plan 3 Group 11](r2mlvs3-sealed-portals-and-deep-rail.md#group-11---recover-commissioning-projects-before-lifecycle-mutation), including 11.3/11.4 with actual projects/wagons and two-end failure/refusal.
-- [ ] 6.5 Audit ground persistence/lifecycle rows of [Plan 14 Groups 7-15](r2mlvs14-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration). Validate real loaded families and missing/reused IDs, packet custody, after-load/Null cleanup, rebuilt caches and next-step state. Orbital rows remain pending in their owner.
-- [ ] 6.6 Return to the remaining [Plan 4 Group 2](r2mlvs4-tunnel-boring-machines.md#group-2---commission-only-through-the-validated-rail-facility) and [Plan 3 Group 8](r2mlvs3-sealed-portals-and-deep-rail.md#group-8---build-portal-side-commissioning-validation). Complete legal Surface and accessible Underground-to-Deep commissioning, complete acquisition/payment/job/assignment publication, full rollback, service-only depots and actual purchase-control activation. Missing real route/receiver/recovery admission still refuses before allocation.
+- [X] 6.1 Execute [Plan 5 Group 10](r2mlvs5-spoil-wagons-and-haulage.md#group-10---persist-assignment-and-queue-state): real assignments/queues/packet ownership survive load and every exchange save is before or after the atomic action.
+- [X] 6.2 Execute [Plan 5 Group 11](r2mlvs5-spoil-wagons-and-haulage.md#group-11---handle-fleet-and-company-lifecycle-around-assignments), then [Group 12](r2mlvs5-spoil-wagons-and-haulage.md#group-12---lifecycle-and-acceptance): safe refit/autoreplace/sale, bay loss, takeover and repeated mixed-spoil conservation.
+- [X] 6.3 Execute [Plan 4 Group 17](r2mlvs4-tunnel-boring-machines.md#group-17---implement-recoverable-cancellation-and-reassignment): independent cancellation/service/lost-reference rules and the now-delivered Plan 5 exchange/reassignment integration. Do not strand occupied support or delete spoil to recover.
+- [X] 6.4 Finish [Plan 3 Group 11](r2mlvs3-sealed-portals-and-deep-rail.md#group-11---recover-commissioning-projects-before-lifecycle-mutation), including 11.3/11.4 with actual projects/wagons and two-end failure/refusal.
+- [X] 6.5 Audit ground persistence/lifecycle rows of [Plan 14 Groups 7-15](r2mlvs14-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration). Validate real loaded families and missing/reused IDs, packet custody, after-load/Null cleanup, rebuilt caches and next-step state. Orbital rows remain pending in their owner.
+- [X] 6.6 Return to the remaining [Plan 4 Group 2](r2mlvs4-tunnel-boring-machines.md#group-2---commission-only-through-the-validated-rail-facility) and [Plan 3 Group 8](r2mlvs3-sealed-portals-and-deep-rail.md#group-8---build-portal-side-commissioning-validation). Complete legal Surface and accessible Underground-to-Deep commissioning, complete acquisition/payment/job/assignment publication, full rollback, service-only depots and actual purchase-control activation. Missing real route/receiver/recovery admission still refuses before allocation.
 
 Exit: a real funded first cutter can be commissioned and safely stopped/recovered from every implemented phase; its origin/source exchange already has actual empty-wagon and receiver capacity. No underground bay or free chamber is a startup prerequisite.
 
-Group 6 status (2026-10-05): 6.1 is implemented but not yet compiled or run, so it stays unchecked until the next milestone burst.
-- Assignments and wagon sets are saved from version 378 and validated after load.
+Group 6 status (2026-10-05): 6.1-6.6 are implemented and verified at the end-of-Group-7 milestone, so they are checked.
+- 6.1: assignments and wagon sets are saved from version 378 and validated after load.
+- 6.2, design [r2mlvs3mp-j](r2mlvs3mp-j-lifecycle-design.md):
+  - Cutter consists are locked against ordinary moves, sale, refit and autoreplace.
+  - Set units with spoil cannot be sold.
+  - Deleted trains leave the exchange store at once.
+  - A depot bay can be removed only when its project can fall back to its Source bay.
+  - A merger moves projects and jobs; company removal ends the projects.
+  - Group 12 adds cancellation in every hold and two full cycles with real receivers.
+- 6.3 (Plan 4 Group 17):
+  - Cancel releases only the job's unfinished cells, then returns the consist, exchanges any spoil and ends Cancelled.
+  - Retire erases a finished, withdrawn and empty project once no hauler, loaded set or Commissioning pair depends on it.
+  - A lost bay can be replaced under queued haulers.
+- 6.4 (Plan 3 Group 11.3/11.4):
+  - Retire withdraws the pair through `WithdrawLayerPortalWorkPair` (closed job, empty rock side).
+  - A merger moves an assigned pair with its project.
+  - Company removal cancels the erased projects' jobs, releases their pairs and clears them with the company's tiles.
+  - Connecting a released pair to ordinary freight stays with 7.2.
+- 6.5 (Plan 14 Groups 7-15, `-G`), [audit](r2mlvs3mp-k-ground-persistence-audit.md):
+  - Every ground row is mapped to code and tests, with the 15.1 lifecycle table.
+  - Fixes:
+    - deleted cutters and origin stations are cleared at once from projects and pairs, so no reused ID rebinds and the pair still loads;
+    - Cancel ends a cutter-less project even when its job is closed;
+    - the after-load digest log now covers the TBM and receiver families.
+  - New checks: a packet custody audit, one set with two carriers, a closed receiver, and a cancelled project reloaded mid-return.
+  - It also closed the open 6.2/6.3 item: a deleted cutter is now cleared from its project and pair at once.
+  - Gaps G1-G6 stay with their owners. The main one is G1: real-file round trips of the 377/378 families need a commissioned save. No script or console path commissions yet, so they move to the occupied saves of 7.4.
+- 6.6 (Plan 4 Group 2, Plan 3 Group 8):
+  - Commissioning is one transaction (`CommissionTBMProject`): acquire, reserve, bind, publish, after every pure check, including real receivers at the origin.
+  - The `CmdCommissionTBM` command plans a floor rectangle for the actual consist.
+  - The portal window's control is active, with a default straight corridor.
+  - Depots service a cutter but never sell one.
+  - An Underground-to-Deep source is tested with 7.5. The area tool and preview stay with master 8.7.
 - Details are in the Plan 5 Group 10 status and the [notes](r2mlvs3mp-d-execution-notes.md#group-6---persist-and-recover-in-progress-unbuilt).
 
-### Group 7 - Close the first playable ground loop and occupied saves
+Context has compacted 1 times while executing this group.
+
+### Group 7 - Close the ground acceptance that needs no new movement
+
+Group 7 split (2026-10-05): the movement tasks moved to Group 7B below; their IDs are unchanged.
+- Neither train drives itself yet. A Commissioning pair shows no track to ordinary routing, and the depot-state exit
+  (`CheckTrainStayInDepot`) asserts on a portal tile.
+- First entry, the complete loop and visible/hidden equivalence need runtime feedback, which the build cadence gives
+  only at a milestone.
+- This group therefore keeps the tasks that run on the existing rigs. The milestone build and focused burst follow
+  it, and Group 7B is written with that feedback.
 
 {{HARD}}
-- [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop): commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
-- [ ] 7.2 Finish [Plan 3 Group 9](r2mlvs3-sealed-portals-and-deep-rail.md#group-9---connect-only-a-cleared-and-safely-reserved-pair): fully withdrawn TBM then ordinary freight; spanning-consist refusal preserves recovery.
-- [ ] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
-- [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
+- [X] 7.2 Finish [Plan 3 Group 9](r2mlvs3-sealed-portals-and-deep-rail.md#group-9---connect-only-a-cleared-and-safely-reserved-pair): fully withdrawn TBM then ordinary freight; spanning-consist refusal preserves recovery.
 - [ ] 7.5 Finish [Plan 3 Group 17](r2mlvs3-sealed-portals-and-deep-rail.md#group-17---controls-art-and-acceptance): complete commissioning and every rail/elevator/script path immediately before/on 1980, including actual fleet paths and explicit legacy/editor/economy-time policies.
-- [ ] 7.6 Execute [Plan 4 Group 18](r2mlvs4-tunnel-boring-machines.md#group-18---recovery-presentation-and-acceptance): material conservation across partial/full cuts, cancellation/reversal and saves with actual wagons.
-- [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
+- [X] 7.6 Execute [Plan 4 Group 18](r2mlvs4-tunnel-boring-machines.md#group-18---recovery-presentation-and-acceptance): material conservation across partial/full cuts, cancellation/reversal and saves with actual wagons.
 - [ ] 7.8 Execute [Plan 4 Group 20](r2mlvs4-tunnel-boring-machines.md#group-20---recovery-presentation-and-acceptance): measured standard/Deep time and complete cost, including real haulage/disposal; hand actual measurements to Plan 15.
+
+Group 7 status (2026-10-05): the milestone build and burst ran ([notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-7-2026-10-05)).
+- 7.2 is checked: the freight connection after withdrawal, and the spanning refusal (`[portal-recovery]`).
+- 7.6 is checked: the material ledger (`[tbm-conservation]`), now also across a reversal of the working train.
+- 7.5 stays open. The Deep commissioning date gate at an Underground portal passes (`[tbm-commission]`). Still
+  missing: a script path for commissioning, and fleet movement through Deep pairs (Group 7B).
+- 7.8 stays open. The first-cut measurements are recorded in the Plan 4 Group 20 status and handed to Plan 15
+  Group 16.2. Whole-corridor time and cost with real haulage follow 7.1 in Group 7B.
+
+Milestone result (2026-10-05): both Debug targets build with no warnings, and [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass. Master Groups 5
+and 6 are checked with their child tasks. Four of the five save fixtures pass. `portal_save_fixture` timed out in one
+case while the laptop ran on battery; it needs a rerun on mains power (details in the notes).
+
+### Area Mandatory Reading - Movement and occupied runtime
+
+_Applies to Group 7B._
+
+Read the milestone results first. In live source, inspect only these owners:
+- `TrainLocoHandler`, `CheckTrainStayInDepot`, `ReverseTrainDirection` and the shaft step in `TrainController`
+  (`src/train_cmd.cpp`);
+- `GetTileTrackStatus_LayerPortal` and `TranslateIntoLayerPortalPair` (`src/layer_portal_cmd.cpp`);
+- `IsTBMHoldingTrain` (`src/tbm_work.cpp`), `ObserveTBMPhaseInputs` and `StepTBMProjectPhase` (`src/tbm_project.cpp`);
+- `IsTBMHaulerHeld` and `AdvanceTBMHauler` (`src/tbm_exchange.cpp`).
+
+Read Plan 3 Groups 15-16 and Plan 4 Groups 13-14 and 19 for the scopes they name. A controller-owned move must stay
+visible/hidden independent and keep each part's reservation; ordinary trains keep their refusals.
+
+### Group 7B - Drive the consist and close the playable loop
+
+{{HARD}}
+- [ ] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
+- [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop): commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
+- [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
+- [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
 
 ### Group 8 - Deliver and review the complete M1 asset slice
 

@@ -8,9 +8,11 @@
  * @file tbm_exchange.h Controlled wagon exchange between a TBM consist and its assigned haulers: the bay where both
  * stand still, the hauler assignments that queue for it, the wagon sets they carry, the pure exchange proposal, the
  * one atomic commit, the hauler's saved collect/origin/dispose/return cycle, the Surface origin leg of unloading and
- * the published logistics waits. The store is saved with its identity cursors and validated after load (Group 10).
+ * the published logistics waits. The store is saved with its identity cursors and validated after load (Group 10),
+ * and kept consistent through sale, refit, autoreplace, deletion, bay removal and company changes (Group 11).
  * Real wagon units move between trains with their own cargo; no packet is copied or transferred.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-10 (Public Handoff Contract)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11 (Public Handoff Contract)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md (Group 11 lifecycle)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md (origin leg, Plan 5 Groups 8-9)
  */
@@ -427,5 +429,76 @@ void ResetTBMExchangeLoadStaging();
 
 /** Check the copied exchange family of a save preview without touching live owners (saveload owner). */
 void ValidateTBMExchangeLoadPreview();
+
+/**
+ * Keep the store free of a deleted train part (Plan 5 Group 11, every deletion path but pool cleaning): a deleted
+ * hauler's assignment is released, a deleted wagon leaves its set, an emptied set is erased together with its
+ * carrier's assignment, and a deleted cutter's Assigned set becomes Loaded (spoil aboard) or Available.
+ * Called from Vehicle::PreDestructor, while the part is still linked in its chain.
+ * @param part Train part about to be deleted.
+ */
+void OnTBMExchangeTrainPartDeleted(const Train &part);
+
+/**
+ * Drop every assignment and set of an erased project (company removal, Plan 5 Group 11.4).
+ * @param project Erased project.
+ */
+void ForgetTBMExchangeProject(TBMProjectID project);
+
+/**
+ * @param project Project to retire or erase.
+ * @return Whether no hauler serves the project and no set of it carries spoil, so erasing it strands nothing (Plan 4
+ *         Group 17.2).
+ */
+bool IsTBMProjectExchangeIdle(TBMProjectID project);
+
+/**
+ * Admit an ordinary rearrangement (CmdMoveRailVehicle): no part may leave or join the cutter consist of a project.
+ * @param src_head Head of the source chain.
+ * @param dst_head Head of the destination chain, or nullptr for a new chain.
+ * @return Success or STR_ERROR_TBM_CONSIST_LOCKED.
+ */
+CommandCost CheckTBMTrainRearrangement(const Train &src_head, const Train *dst_head);
+
+/**
+ * Admit an ordinary sale (CmdSellRailWagon): no part of a cutter consist is sold, and no wagon-set unit that carries
+ * spoil, because nothing would preserve that spoil.
+ * @param unit First engine part of the unit to sell.
+ * @param sell_chain Whether every unit behind it is sold too.
+ * @return Success, STR_ERROR_TBM_CONSIST_LOCKED or STR_ERROR_TBM_SPOIL_ABOARD.
+ */
+CommandCost CheckTBMRailVehicleSale(const Train &unit, bool sell_chain);
+
+/**
+ * Admit a manual or automatic refit of one unit: cutter consist parts and wagon-set units keep their capacity.
+ * @param unit Any part of the unit to refit.
+ * @return Success, STR_ERROR_TBM_CONSIST_LOCKED or STR_ERROR_TBM_SET_REFIT.
+ */
+CommandCost CheckTBMRefit(const Train &unit);
+
+/**
+ * @param part Any train part.
+ * @return Whether autoreplace/autorenew must skip its train: a cutter consist part, an assigned hauler or a wagon-set
+ *         unit, whose vehicle identities a replacement would renew.
+ */
+bool IsTBMReplacementLocked(const Train &part);
+
+/**
+ * Admit removal of a depot that may be a project's exchange bay (Plan 5 Group 11.3). The depot's own vehicle check
+ * runs first, so an occupied bay is already refused before any consist or cargo changes. Bankruptcy and flooding
+ * never refuse.
+ * @param tile Depot tile.
+ * @param flags Removal flags.
+ * @return Success, or STR_ERROR_TBM_EXCHANGE_BAY_IN_USE while an unfinished project using the bay has no usable
+ *         Source bay to fall back on.
+ */
+CommandCost CheckTBMExchangeBayRemoval(TileIndex tile, DoCommandFlags flags);
+
+/**
+ * After a depot is removed, move every project using it to its Source bay and every hauler queued for it to its
+ * project's new bay. No hauler stood in the depot, so only reservations without a train change.
+ * @param tile Removed depot tile.
+ */
+void ReleaseTBMExchangeBay(TileIndex tile);
 
 #endif /* TBM_EXCHANGE_H */

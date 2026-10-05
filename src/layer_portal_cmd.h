@@ -77,6 +77,8 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
 struct LayerPortalCommissionRequest {
 	TileIndex portal = INVALID_TILE; ///< Actual accessible upper rail portal, never a viewport-selected proxy.
 	ExcavationJob proposal; ///< Actual unallocated geological route, owner/model/Surface-origin references and frozen separate Earth/Rock pass capacities.
+	uint8_t earth_wagons = 0; ///< Earth hoppers of the consist to commission (Plan 4 Group 2.1); zero leaves a portal-only quote.
+	uint8_t rock_wagons = 0; ///< Rock hoppers of the consist to commission, after the Earth ones.
 };
 
 /** Portal-side commissioning result; no prospective job/vehicle identity is represented as allocated on refusal. */
@@ -89,10 +91,13 @@ struct LayerPortalCommissionResult {
 };
 
 /**
- * Validate portal-side commissioning and hand off actual purchase/work to its owning controller.
- * @param request Actual pair and canonical unallocated geological proposal.
- * @param execute False estimates; true may acquire only through the actual Plan 4/5 APIs after they exist.
- * @return Stable validated refusal until the real controller is available; never creates substitute trains, jobs, wagons, stations or cash.
+ * Validate portal-side commissioning, then hand the purchase to its owning controller (Plan 4 CommissionTBMProject),
+ * which acquires the consist, reserves the job, binds this pair and publishes the project as one transaction.
+ * @param request Actual pair, canonical unallocated geological proposal and wagon counts.
+ * @param execute False estimates; true commissions.
+ * @return The portal refusal; ControllerUnavailable when the controller refuses (its own result has the reason);
+ *         otherwise None, with the allocated job and cutter after execution. Never creates substitute trains, jobs,
+ *         wagons, stations or cash.
  */
 LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommissionRequest &request, bool execute);
 
@@ -200,12 +205,63 @@ LayerPortalWorkError CheckLayerPortalLifecycle(TileIndex tile);
 LayerPortalWorkError RetireLayerPortalWorkPair(TileIndex tile);
 
 /**
- * Reassign one safe empty pair before the lifecycle owner updates both endpoint owners together.
+ * Reassign one pair before the lifecycle owner updates both endpoint owners together. A receiving company takes the
+ * pair with whatever is bound to it, because a merger moves its trains, stations, job and project in the same change
+ * (r2mlvs3 Group 11.4); only the ownerless road retention of a bankruptcy needs a safe empty pair.
  * @param tile Either actual endpoint.
  * @param new_owner Actual receiving company, or OWNER_NONE for a sealed unassigned ownerless road housing.
  * @return Complete unchanged refusal or nonallocating saved-owner update.
  */
 LayerPortalWorkError TransferLayerPortalWorkPair(TileIndex tile, Owner new_owner);
+
+/**
+ * Release a Commissioning pair once its actual controller has finished (r2mlvs3 Group 11.3): the pair must be
+ * Commissioning exactly this job and cutter, the job must be closed (completed, cancelled or retired), and no train
+ * part or claim may remain on the rock-side end or its door; the withdrawn consist may still stand at the Surface key.
+ * The pair returns to Sealed with no project, cutter or origin, as one record change.
+ * @param tile Either endpoint.
+ * @param job Job the pair must be Commissioning.
+ * @param cutter Cutter the pair must be bound to.
+ * @param execute False validates only.
+ * @return None, InvalidPair, Conflict (other binding, live job, occupied rock side) or Limit.
+ */
+LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool execute);
+
+/**
+ * Release whatever Commissioning binding a pair has, for company removal only: the company's trains are already
+ * deleted and its project erased, so nothing is left to withdraw (r2mlvs3 Group 11.4, via the TBM lifecycle owner).
+ * @param tile Either endpoint.
+ */
+void ReleaseLayerPortalWorkBinding(TileIndex tile);
+
+/**
+ * Bind the Sealed pair a commissioning preflight saw to its newly reserved job and acquired cutter (Group 8.4, as the
+ * pair half of the Plan 4 commissioning transaction). The pair becomes Commissioning with that job, cutter and origin,
+ * as one record change, and routing is notified.
+ * @param tile Either endpoint.
+ * @param pair_revision Revision the preflight captured; any change since refuses.
+ * @param job Reserved job; Invalid is accepted for an estimate.
+ * @param cutter Acquired front engine; Invalid is accepted for an estimate.
+ * @param origin Project origin station.
+ * @param execute False validates only.
+ * @return None, InvalidPair, Conflict (not the same unassigned Sealed pair) or Limit.
+ */
+LayerPortalWorkError BindLayerPortalWorkCommissioning(TileIndex tile, uint64_t pair_revision, ExcavationJobID job, VehicleID cutter, StationID origin, bool execute);
+
+/**
+ * Forget a deleted cutter in the pair Commissioning it (r2mlvs3 Group 11.4, via the TBM deletion hook). The pair stays
+ * bound to its job, with no cutter, until the controller cancels the job and withdraws the pair.
+ * @param tile Either endpoint.
+ * @param cutter Deleted cutter front engine.
+ */
+void ForgetLayerPortalWorkCutter(TileIndex tile, VehicleID cutter);
+
+/**
+ * Forget a deleted origin station in every pair naming it (r2mlvs3 Group 11.4, via the TBM station hook). An explicit
+ * origin reference is optional, so the pair keeps its binding and its record stays valid without one.
+ * @param station Deleted station.
+ */
+void ForgetLayerPortalWorkOrigin(StationID station);
 
 /**
  * Derive restricted assigned-cutter occupancy without opening any geological cell.

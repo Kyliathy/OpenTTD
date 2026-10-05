@@ -37,6 +37,7 @@
 #include "rail_cmd.h"
 #include "landscape_cmd.h"
 #include "tbm.h"
+#include "tbm_exchange.h"
 
 #include "table/strings.h"
 #include "table/railtypes.h"
@@ -1898,6 +1899,10 @@ static CommandCost RemoveTrainDepot(TileIndex tile, DoCommandFlags flags)
 	CommandCost ret = EnsureNoVehicleOnGround(tile);
 	if (ret.Failed()) return ret;
 
+	/* A project's depot bay goes only when the project can fall back on its Source bay; an occupied one refused above. */
+	ret = CheckTBMExchangeBayRemoval(tile, flags);
+	if (ret.Failed()) return ret;
+
 	if (flags.Test(DoCommandFlag::Execute)) {
 		/* read variables before the depot is removed */
 		DiagDirection dir = GetRailDepotDirection(tile);
@@ -1914,6 +1919,7 @@ static CommandCost RemoveTrainDepot(TileIndex tile, DoCommandFlags flags)
 
 		delete Depot::GetByTile(tile);
 		DoClearSquare(tile);
+		ReleaseTBMExchangeBay(tile); // Projects and queued haulers fall back to their Source bay.
 		AddSideToSignalBuffer(tile, dir, owner);
 		YapfNotifyTrackLayoutChange(tile, DiagDirToDiagTrack(dir));
 		if (v != nullptr) TryPathReserve(v, true);

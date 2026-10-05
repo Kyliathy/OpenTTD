@@ -50,7 +50,7 @@ A second locomotive physically takes the TBM's loaded carriages to its originati
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/tbm_exchange.h`. Publish `TBMExchangeAssignment`, `ValidateTBMWagonExchange`, `ExecuteTBMWagonExchange`. Delivered in code 2026-10-05 (R2MLVS3MP Group 5), with focused tests pending until the next milestone: `TBMExchangeAssignment` {id, project, hauler, bay, set, phase, wait, phase_ticks, exchanges, revision}, one per hauler, with the `TBMWagonSet` {id, project, wagons, state, visited_origin, revision} it carries; `TBMExchangeProposal ValidateTBMWagonExchange(const TBMExchangeRequest &)` (pure estimate, trial restored); `TBMExchangeProposal ExecuteTBMWagonExchange(const TBMExchangeRequest &)` (atomic commit). Assignments and sets are saved since version `TBMExchange` (378) and published by `AcceptLoadedTBMExchange` at the end of `AfterLoadGame`. The Surface receivers' public owner is `src/spoil_receiver.h` (`GetSpoilReceiverRoomAt`, `AdmitSpoilToReceiver`, `GetSpoilReceiver`, `CaptureSpoilReceivers`), saved since version `SpoilReceivers`. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Proposed public owner: `src/tbm_exchange.h`. Publish `TBMExchangeAssignment`, `ValidateTBMWagonExchange`, `ExecuteTBMWagonExchange`. Delivered in code 2026-10-05 (R2MLVS3MP Group 5), with focused tests pending until the next milestone: `TBMExchangeAssignment` {id, project, hauler, bay, set, phase, wait, phase_ticks, exchanges, revision}, one per hauler, with the `TBMWagonSet` {id, project, wagons, state, visited_origin, revision} it carries; `TBMExchangeProposal ValidateTBMWagonExchange(const TBMExchangeRequest &)` (pure estimate, trial restored); `TBMExchangeProposal ExecuteTBMWagonExchange(const TBMExchangeRequest &)` (atomic commit). Assignments and sets are saved since version `TBMExchange` (378) and published by `AcceptLoadedTBMExchange` at the end of `AfterLoadGame`. Lifecycle (Group 11): `OnTBMExchangeTrainPartDeleted`, `CheckTBMTrainRearrangement`, `CheckTBMRailVehicleSale`, `CheckTBMRefit`, `IsTBMReplacementLocked`, `CheckTBMExchangeBayRemoval`/`ReleaseTBMExchangeBay`, and `ChangeTBMOwnership` in `src/tbm.h`. The Surface receivers' public owner is `src/spoil_receiver.h` (`GetSpoilReceiverRoomAt`, `AdmitSpoilToReceiver`, `GetSpoilReceiver`, `CaptureSpoilReceivers`), saved since version `SpoilReceivers`. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
 
 ## Implementation Tasks
 
@@ -101,49 +101,49 @@ Keep loaded units' capacity stable through callbacks. Restoring next/previous po
 ### Group 1 - Build the controlled exchange location
 
 {{HARD}}
-- [ ] 1.1 Implement the bay on a fully excavated footprint with approach length and rail compatibility. Define its functional rearrangement tile so both entire consists can satisfy same-location stopped-depot semantics.
-- [ ] 1.2 Reserve the bay by project and participating train heads; refuse crashed, moving, wrong-owner or partly outside consists before touching their chains.
-- [ ] 1.3 Keep `CmdMoveRailVehicle` ordinary depot guard intact. Identify reusable internal rearrangement/validation primitives and expose a restricted exchange boundary instead of adding general on-track coupling.
+- [X] 1.1 Implement the bay on a fully excavated footprint with approach length and rail compatibility. Define its functional rearrangement tile so both entire consists can satisfy same-location stopped-depot semantics.
+- [X] 1.2 Reserve the bay by project and participating train heads; refuse crashed, moving, wrong-owner or partly outside consists before touching their chains.
+- [X] 1.3 Keep `CmdMoveRailVehicle` ordinary depot guard intact. Identify reusable internal rearrangement/validation primitives and expose a restricted exchange boundary instead of adding general on-track coupling.
 
-**R2MLVS3MP status, 2026-10-05.** 1.1-1.3 are implemented; design in [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md). Code: `src/tbm_exchange.h`/`.cpp` (`ResolveTBMExchangeBay`, `CheckTBMExchangeParticipant`, the assignment store) and `CmdSetTBMExchangeBay`/`CmdAssignTBMHauler`/`CmdReleaseTBMHauler` (traits in `src/tbm_cmd.h`). Each hauler has one assignment; since Group 7 several haulers queue for one bay, and only one of them exchanges at a time. The source bay is the project's portal key; a depot bay is an excavated rock-layer company depot with an approach of ceil(cutter consist length / TILE_SIZE) straight tiles. Admission needs every part on the bay tile in `Track::Depot`, `cur_speed == 0` and no crash; the player's stop flag is not required, because the controller holds the cutter. The ordinary guard is tightened, not loosened: `MoveRailVehicleParts` now needs a genuine depot tile, because the portal site also satisfies `IsStoppedInDepot`. The restricted primitive is `ExchangeRailWagonUnits` in `src/train_cmd.cpp`. Assignments live in memory until Group 10. Test: `src/tests/tbm_exchange_bay.cpp` (`[tbm-exchange-bay]`). Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 1.1-1.3 are implemented; design in [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md). Code: `src/tbm_exchange.h`/`.cpp` (`ResolveTBMExchangeBay`, `CheckTBMExchangeParticipant`, the assignment store) and `CmdSetTBMExchangeBay`/`CmdAssignTBMHauler`/`CmdReleaseTBMHauler` (traits in `src/tbm_cmd.h`). Each hauler has one assignment; since Group 7 several haulers queue for one bay, and only one of them exchanges at a time. The source bay is the project's portal key; a depot bay is an excavated rock-layer company depot with an approach of ceil(cutter consist length / TILE_SIZE) straight tiles. Admission needs every part on the bay tile in `Track::Depot`, `cur_speed == 0` and no crash; the player's stop flag is not required, because the controller holds the cutter. The ordinary guard is kept: `IsStoppedInDepot` needs a genuine depot tile, so trains standing in the depot state on a portal site never pass it (milestone correction: an earlier note said they did), and `MoveRailVehicleParts` checks the genuine depot tile as well. The restricted primitive is `ExchangeRailWagonUnits` in `src/train_cmd.cpp`. Assignments live in memory until Group 10. Test: `src/tests/tbm_exchange_bay.cpp` (`[tbm-exchange-bay]`). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 2 - Describe both resulting consists before mutation
 
 {{HARD}}
-- [ ] 2.1 Enumerate loaded spoil units, empty replacement units, fixed cutter/support parts and secondary locomotive using real articulated/dual-head unit boundaries. Store an ordered ID list for each original and proposed consist.
-- [ ] 2.2 Validate railtype/coupling callbacks, maximum resulting lengths, per-wagon cargo capacities and ownership for both final consists. Require stable Keep cargo with no loading/unloading reservations; reject refits or callback capacity changes that would discard loaded cargo.
-- [ ] 2.3 Validate empty Earth/Rock capacity independently against the project cut/return contract. Require an assigned secondary locomotive; the cutter cannot satisfy its own haulage leg.
-- [ ] 2.4 Create a pure exchange proposal and snapshot every authoritative field affected by any trial rearrangement, including head orders/group identity; estimate must restore all changes and consume no RNG.
+- [X] 2.1 Enumerate loaded spoil units, empty replacement units, fixed cutter/support parts and secondary locomotive using real articulated/dual-head unit boundaries. Store an ordered ID list for each original and proposed consist.
+- [X] 2.2 Validate railtype/coupling callbacks, maximum resulting lengths, per-wagon cargo capacities and ownership for both final consists. Require stable Keep cargo with no loading/unloading reservations; reject refits or callback capacity changes that would discard loaded cargo.
+- [X] 2.3 Validate empty Earth/Rock capacity independently against the project cut/return contract. Require an assigned secondary locomotive; the cutter cannot satisfy its own haulage leg.
+- [X] 2.4 Create a pure exchange proposal and snapshot every authoritative field affected by any trial rearrangement, including head orders/group identity; estimate must restore all changes and consume no RNG.
 
-**R2MLVS3MP status, 2026-10-05.** 2.1-2.4 are implemented in `DescribeTBMWagonExchange`/`ValidateTBMWagonExchange`. Every exchangeable unit of the cutter leaves; the empties are the hauler's empty ERTH/ROCK hopper units, Earth then Rock. Loaded parts must hold only Keep cargo. The capacity rule against the frozen terms is skipped after the final cut, when the cutter only gives its spoil away. The trial relinks both final chains and runs the shared `CheckTrainAttachment` plus a capacity check that mirrors `ConsistChanged(CCF_ARRANGE)`'s truncation, then restores both chains. Test: `src/tests/tbm_exchange_proposal.cpp` (`[tbm-exchange-proposal]`). Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 2.1-2.4 are implemented in `DescribeTBMWagonExchange`/`ValidateTBMWagonExchange`. Every exchangeable unit of the cutter leaves; the empties are the hauler's empty ERTH/ROCK hopper units, Earth then Rock. Loaded parts must hold only Keep cargo. The capacity rule against the frozen terms is skipped after the final cut, when the cutter only gives its spoil away. The trial relinks both final chains and runs the shared `CheckTrainAttachment` plus a capacity check that mirrors `ConsistChanged(CCF_ARRANGE)`'s truncation, then restores both chains. Test: `src/tests/tbm_exchange_proposal.cpp` (`[tbm-exchange-proposal]`). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 3 - Commit one wagon exchange with complete recovery
 
 {{HARD}}
-- [ ] 3.1 Factor a transaction that moves the designated loaded wagon units to the hauler and empties to the cutter. Preserve the same wagon IDs and their attached cargo lists; no copying through hidden storage.
-- [ ] 3.2 Validate the complete two-way result before public side effects. A sequence of independently successful `CmdMoveRailVehicle` calls is insufficient: either make commit non-failing after preparation or restore all chains/caches/metadata on any later failure.
-- [ ] 3.3 After successful chain mutation, normalize subtypes/heads, rebuild consist caches/reservations, preserve engine orders/groups and publish one assignment update. Wagon group/cache follows its new head through canonical rules; set identity stays independent. Avoid capacity-repair code that silently truncates cargo, including truncation inside `ConsistChanged(CCF_ARRANGE)` before `CheckCargoCapacity`.
-- [ ] 3.4 Test an estimate and an injected failure after the first proposed leg; compare wagon order, heads, packet counts/age/refits, orders, groups, RNG and assignment IDs before/after.
-- [ ] 3.5 Repeat a successful mixed Earth/Rock exchange and confirm exactly one head owns each wagon and each packet remains attached to the same wagon.
+- [X] 3.1 Factor a transaction that moves the designated loaded wagon units to the hauler and empties to the cutter. Preserve the same wagon IDs and their attached cargo lists; no copying through hidden storage.
+- [X] 3.2 Validate the complete two-way result before public side effects. A sequence of independently successful `CmdMoveRailVehicle` calls is insufficient: either make commit non-failing after preparation or restore all chains/caches/metadata on any later failure.
+- [X] 3.3 After successful chain mutation, normalize subtypes/heads, rebuild consist caches/reservations, preserve engine orders/groups and publish one assignment update. Wagon group/cache follows its new head through canonical rules; set identity stays independent. Avoid capacity-repair code that silently truncates cargo, including truncation inside `ConsistChanged(CCF_ARRANGE)` before `CheckCargoCapacity`.
+- [X] 3.4 Test an estimate and an injected failure after the first proposed leg; compare wagon order, heads, packet counts/age/refits, orders, groups, RNG and assignment IDs before/after.
+- [X] 3.5 Repeat a successful mixed Earth/Rock exchange and confirm exactly one head owns each wagon and each packet remains attached to the same wagon.
 
-**R2MLVS3MP status, 2026-10-05.** 3.1-3.5 are implemented: `ExecuteTBMWagonExchange` validates, then commits through `ExchangeRailWagonUnits`, whose commit is the non-failing bookkeeping of an ordinary move without `CheckCargoCapacity`. The commit hands the wagon sets over once: the cutter's units become the hauler's Loaded set and the hauler's empties the cutter's Assigned set (Group 7). Test: `src/tests/tbm_exchange_commit.cpp` (`[tbm-exchange-commit]`); the injected failure is a too-long hauler after the cutter's leg has passed. Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 3.1-3.5 are implemented: `ExecuteTBMWagonExchange` validates, then commits through `ExchangeRailWagonUnits`, whose commit is the non-failing bookkeeping of an ordinary move without `CheckCargoCapacity`. The commit hands the wagon sets over once: the cutter's units become the hauler's Loaded set and the hauler's empties the cutter's Assigned set (Group 7). Test: `src/tests/tbm_exchange_commit.cpp` (`[tbm-exchange-commit]`); the injected failure is a too-long hauler after the cutter's leg has passed. Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 4 - Reuse the exchange at the commissioning origin
 
 {{HARD}}
-- [ ] 4.1 Map the portal commissioning-side bay to the same stopped-consist proposal/commit contract. Document approach/retreat geometry and where the waiting hauler/empties fit without requiring an underground bay.
-- [ ] 4.2 Implement a pure origin/route admission contract requiring the saved Surface station and real receivers for both spoil types or onward transfer. Receiver construction and live disposal are implemented in the following haulage area; keep that runtime admission/scenario pending until then.
-- [ ] 4.3 Validate the commissioning-side exchange with already-created real train/wagon boundary fixtures and the restricted work route. Defer first-cut-to-disposal runtime acceptance to the final M1 group after receivers exist; fixture construction does not prove that complete loop.
-- [ ] 4.4 Test insufficient initial empty capacity and an obstructed source-side bay; pause without opening free rock or deleting spoil. Only after this works enable the recurring underground-bay variant.
+- [X] 4.1 Map the portal commissioning-side bay to the same stopped-consist proposal/commit contract. Document approach/retreat geometry and where the waiting hauler/empties fit without requiring an underground bay.
+- [X] 4.2 Implement a pure origin/route admission contract requiring the saved Surface station and real receivers for both spoil types or onward transfer. Receiver construction and live disposal are implemented in the following haulage area; keep that runtime admission/scenario pending until then.
+- [X] 4.3 Validate the commissioning-side exchange with already-created real train/wagon boundary fixtures and the restricted work route. Defer first-cut-to-disposal runtime acceptance to the final M1 group after receivers exist; fixture construction does not prove that complete loop.
+- [X] 4.4 Test insufficient initial empty capacity and an obstructed source-side bay; pause without opening free rock or deleting spoil. Only after this works enable the recurring underground-bay variant.
 
-**R2MLVS3MP status, 2026-10-05.** 4.1-4.4 are implemented. The source bay is the cutter's assembly site on the Surface source portal; the hauler waits there wholly in the depot-like state. `CheckTBMOriginAdmission` needs the company's Surface railway station to accept both ERTH and ROCK, which only real receivers give. Since Group 8, real receivers in the station's catchment give that acceptance; without them it refuses `NoReceiver`. The Plan 4 4.2B edges drive the source-side exchange; the depot bay is the recurring variant. Test: `src/tests/tbm_exchange_origin.cpp` (`[tbm-exchange-origin]`). Driving either train into a bay waits for master Group 7; Group 6 drives the hauler's phases from where it stands. Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 4.1-4.4 are implemented. The source bay is the cutter's assembly site on the Surface source portal; the hauler waits there wholly in the depot-like state. `CheckTBMOriginAdmission` needs the company's Surface railway station to accept both ERTH and ROCK, which only real receivers give. Since Group 8, real receivers in the station's catchment give that acceptance; without them it refuses `NoReceiver`. The Plan 4 4.2B edges drive the source-side exchange; the depot bay is the recurring variant. Test: `src/tests/tbm_exchange_origin.cpp` (`[tbm-exchange-origin]`). Driving either train into a bay waits for master Group 7; Group 6 drives the hauler's phases from where it stands. Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 5 - Controlled exchange facility
 
 {{HARD}}
-- [ ] 5.1 Publish `src/tbm_exchange.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+- [X] 5.1 Publish `src/tbm_exchange.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
 
-**R2MLVS3MP status, 2026-10-05.** 5.1 is implemented: `src/tbm_exchange.h` publishes `TBMExchangeAssignment`, `ValidateTBMWagonExchange` and `ExecuteTBMWagonExchange` at the contracted location, with the bay, admission, assignment and origin-admission helpers beside them. `src/tbm_exchange.cpp` is in `src/CMakeLists.txt`. Direct consumer: Plan 4 task 4.2B (`StepTBMProjectPhase`, `ObserveTBMPhaseInputs`, `IsTBMExchangeLive`). Test: `src/tests/tbm_exchange_consumer.cpp` (`[tbm-exchange-consumer]`, compile-time signatures and the 4.2B edges). Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 5.1 is implemented: `src/tbm_exchange.h` publishes `TBMExchangeAssignment`, `ValidateTBMWagonExchange` and `ExecuteTBMWagonExchange` at the contracted location, with the bay, admission, assignment and origin-admission helpers beside them. `src/tbm_exchange.cpp` is in `src/CMakeLists.txt`. Direct consumer: Plan 4 task 4.2B (`StepTBMProjectPhase`, `ObserveTBMPhaseInputs`, `IsTBMExchangeLive`). Test: `src/tests/tbm_exchange_consumer.cpp` (`[tbm-exchange-consumer]`, compile-time signatures and the 4.2B edges). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Area Mandatory Reading - Hauler orders and disposal
 
@@ -180,28 +180,28 @@ flowchart LR
 ### Group 6 - Drive one assigned hauler through its saved cycle
 
 {{HARD}}
-- [ ] 6.1 Consume r2mlvs4 project-command and ordinary travel-order separation. Bind one project, secondary locomotive and explicit wagon-set IDs; validate Surface origin and preserve unrelated/shared user orders.
-- [ ] 6.2 Implement AwaitExchange -> CollectLoaded -> VisitOrigin -> DisposeOrTransfer -> ReturnEmpties as saved assignment phases. Each transition verifies actual location, actual wagon IDs and cargo emptiness rather than trusting the previous head ID.
-- [ ] 6.3 Define cancellation/manual-order intervention at each phase as a recoverable pause with existing cargo intact. Test one complete cycle after the next receiver groups are ready; test independent phase guards earlier.
+- [X] 6.1 Consume r2mlvs4 project-command and ordinary travel-order separation. Bind one project, secondary locomotive and explicit wagon-set IDs; validate Surface origin and preserve unrelated/shared user orders.
+- [X] 6.2 Implement AwaitExchange -> CollectLoaded -> VisitOrigin -> DisposeOrTransfer -> ReturnEmpties as saved assignment phases. Each transition verifies actual location, actual wagon IDs and cargo emptiness rather than trusting the previous head ID.
+- [X] 6.3 Define cancellation/manual-order intervention at each phase as a recoverable pause with existing cargo intact. Test one complete cycle after the next receiver groups are ready; test independent phase guards earlier.
 
-**R2MLVS3MP status, 2026-10-05.** 6.1-6.3 are implemented in `src/tbm_exchange.cpp`; design in [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md). `AssignTBMHauler` binds one project, one company locomotive that is not a cutter, and the explicit wagon IDs of the set it brings. It refuses `MissingOrigin` unless the project's Surface railway station is valid. The cycle never writes orders: it observes where the train is, so the player's own and shared orders stay as they are. `AdvanceTBMHauler` runs once per tick from `Train::Tick` and moves through ReturnEmpties -> AwaitExchange -> CollectLoaded -> VisitOrigin -> DisposeOrTransfer -> ReturnEmpties. `ObserveTBMHaulerInputs` checks each edge against the hauler's location, the head of every set wagon and cargo emptiness. The exchange runs in the hauler's own step while the cutter waits, and `IsTBMHaulerHeld` keeps the hauler in the bay meanwhile. These interventions hold the phase with a saved wait reason and the cargo intact: a stop away from the bay, a crash, a missing set wagon, a lost origin or a lost project. Releasing a loaded hauler leaves its set Loaded; a new assignment resumes VisitOrigin, or DisposeOrTransfer once the origin was visited. A finished project's final load is still hauled. Test: `src/tests/tbm_hauler_cycle.cpp` (`[tbm-hauler-cycle]`). Disposal is a stand-in (emptying the wagons) until the Group 8 receivers; the complete cycle with real disposal is still owed under 6.3. Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 6.1-6.3 are implemented in `src/tbm_exchange.cpp`; design in [r2mlvs3mp-h](r2mlvs3mp-h-exchange-design.md). `AssignTBMHauler` binds one project, one company locomotive that is not a cutter, and the explicit wagon IDs of the set it brings. It refuses `MissingOrigin` unless the project's Surface railway station is valid. The cycle never writes orders: it observes where the train is, so the player's own and shared orders stay as they are. `AdvanceTBMHauler` runs once per tick from `Train::Tick` and moves through ReturnEmpties -> AwaitExchange -> CollectLoaded -> VisitOrigin -> DisposeOrTransfer -> ReturnEmpties. `ObserveTBMHaulerInputs` checks each edge against the hauler's location, the head of every set wagon and cargo emptiness. The exchange runs in the hauler's own step while the cutter waits, and `IsTBMHaulerHeld` keeps the hauler in the bay meanwhile. These interventions hold the phase with a saved wait reason and the cargo intact: a stop away from the bay, a crash, a missing set wagon, a lost origin or a lost project. Releasing a loaded hauler leaves its set Loaded; a new assignment resumes VisitOrigin, or DisposeOrTransfer once the origin was visited. A finished project's final load is still hauled. Test: `src/tests/tbm_hauler_cycle.cpp` (`[tbm-hauler-cycle]`). Disposal is a stand-in (emptying the wagons) in this test; the complete cycle with real disposal is Group 12's two-cycle test. Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 7 - Queue wagon sets independently of train heads
 
 {{HARD}}
-- [ ] 7.1 Give a set/assignment a stable saved identity and ordered wagon IDs independent of its current locomotive. Track loaded, assigned, returning-empty and available states with exclusive ownership.
-- [ ] 7.2 Implement a deterministic queue ordered by accepted request sequence and stable IDs. Start with one active exchange per bay; prevent two haulers reserving the same set.
-- [ ] 7.3 Extend from the single-set loop to multiple sets/haulers after its fixture passes. Test head changes, full versus empty cargo validation, cancellation and queue reload without duplicated claims.
+- [X] 7.1 Give a set/assignment a stable saved identity and ordered wagon IDs independent of its current locomotive. Track loaded, assigned, returning-empty and available states with exclusive ownership.
+- [X] 7.2 Implement a deterministic queue ordered by accepted request sequence and stable IDs. Start with one active exchange per bay; prevent two haulers reserving the same set.
+- [X] 7.3 Extend from the single-set loop to multiple sets/haulers after its fixture passes. Test head changes, full versus empty cargo validation, cancellation and queue reload without duplicated claims.
 
-**R2MLVS3MP status, 2026-10-05.** 7.1 and 7.2 are implemented, and 7.3 except queue reload. `TBMWagonSet` {id, project, wagons, state, visited_origin, revision} is a stable identity holding ordered unit IDs, independent of any head. Its states are Available, Assigned (on the cutter), Loaded and ReturningEmpty. A wagon belongs to at most one set, and a set to at most one assignment. `AssignTBMHauler` refuses `Reserved` when the wagons belong to a carried set, the cutter's Assigned set, another project's set or two sets, and `WrongWagons` when the set is not wholly aboard. Several haulers queue for one bay. `GetTBMExchangeTurn` gives the turn to the lowest assignment ID (accepted request order) whose hauler is admitted and carries no spoil, so one exchange runs per bay and the others wait `OccupiedBay`. A loaded set moved to another locomotive in a genuine depot keeps its ID and order, and the new head's assignment adopts it. A returning set with cargo aboard cannot await the exchange. Tests: `src/tests/tbm_wagon_sets.cpp` (`[tbm-wagon-sets]`) and the queue and cancellation cases in `[tbm-exchange-bay]`. Queue reload without duplicated claims needs the Group 10 saves. Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+**R2MLVS3MP status, 2026-10-05.** 7.1-7.3 are implemented. `TBMWagonSet` {id, project, wagons, state, visited_origin, revision} is a stable identity holding ordered unit IDs, independent of any head. Its states are Available, Assigned (on the cutter), Loaded and ReturningEmpty. A wagon belongs to at most one set, and a set to at most one assignment. `AssignTBMHauler` refuses `Reserved` when the wagons belong to a carried set, the cutter's Assigned set, another project's set or two sets, and `WrongWagons` when the set is not wholly aboard. Several haulers queue for one bay. `GetTBMExchangeTurn` gives the turn to the lowest assignment ID (accepted request order) whose hauler is admitted and carries no spoil, so one exchange runs per bay and the others wait `OccupiedBay`. A loaded set moved to another locomotive in a genuine depot keeps its ID and order, and the new head's assignment adopts it. A returning set with cargo aboard cannot await the exchange. Tests: `src/tests/tbm_wagon_sets.cpp` (`[tbm-wagon-sets]`) and the queue and cancellation cases in `[tbm-exchange-bay]`. Queue reload without duplicated claims is in `[tbm-exchange-load]` (Group 10). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 8 - Enforce the Surface origin leg and real disposal
 
 {{HARD}}
-- [ ] 8.1 Record whether each loaded set has visited the project origin on its current loaded cycle; validate a company-owned Surface replacement on explicit reassignment. A below-ground sink cannot satisfy this leg.
-- [ ] 8.2 Implement capacity-limited Earth reclamation/disposal and Rock crusher/disposal receivers from the frozen content recipes. These minimal Surface spoil sinks belong to this M1 owner; do not wait for r2mlvs6 mine factories.
-- [ ] 8.3 At origin arrival, reserve exact receiver capacity before packet removal or fee settlement. `CargoDelivery` removes the requested amount while `PayFinalDelivery` returns no accepted count; adapt this boundary for bounded spoil rather than trusting the acceptance flag. Keep the refused remainder in wagons or transfer onward; visiting the station alone consumes nothing.
-- [ ] 8.4 Keep tube conversion after safe TBM/hauler withdrawal and the mandatory conventional wagon haul. A capsule or underground dump cannot substitute for the recorded Surface journey.
+- [X] 8.1 Record whether each loaded set has visited the project origin on its current loaded cycle; validate a company-owned Surface replacement on explicit reassignment. A below-ground sink cannot satisfy this leg.
+- [X] 8.2 Implement capacity-limited Earth reclamation/disposal and Rock crusher/disposal receivers from the frozen content recipes. These minimal Surface spoil sinks belong to this M1 owner; do not wait for r2mlvs6 mine factories.
+- [X] 8.3 At origin arrival, reserve exact receiver capacity before packet removal or fee settlement. `CargoDelivery` removes the requested amount while `PayFinalDelivery` returns no accepted count; adapt this boundary for bounded spoil rather than trusting the acceptance flag. Keep the refused remainder in wagons or transfer onward; visiting the station alone consumes nothing.
+- [X] 8.4 Keep tube conversion after safe TBM/hauler withdrawal and the mandatory conventional wagon haul. A capsule or underground dump cannot substitute for the recorded Surface journey.
 
 **R2MLVS3MP status, 2026-10-05.** 8.1-8.4 are implemented; design in [r2mlvs3mp-i](r2mlvs3mp-i-receiver-design.md).
 - 8.1: each loaded set records `visited_origin` for its current cycle (Group 6). `CmdSetTBMProjectOrigin` (`SetTBMProjectOrigin`, Plan 4 owner) replaces the origin only with a company Surface railway station, and earlier visits are kept. `MayTBMSpoilLeaveVehicle` (in `PrepareUnload`) keeps spoil aboard in three cases: the train is a cutter, the Loaded set is away from its carrier, or the set has not yet visited the origin.
@@ -210,14 +210,14 @@ flowchart LR
 - 8.4: an explicit rule in `CmdBuildIndustry` keeps receivers on the Surface; tube conversion stays with master Group 10.
 - Receiver state is saved (`SaveLoadVersion::SpoilReceivers`, chunks `SPRH`/`SPRR`, `MULTILAYER_FEATURE_SPOIL_RECEIVERS`). It is staged on load and accepted after `AfterLoadGame`.
 - Tests: `src/tests/spoil_receiver_definition.cpp`, `_intake.cpp`, `_leg.cpp`, `_load.cpp` and `_delivery.cpp` (`[spoil-receiver-*]`). The delivery test unloads a real hauler through `PrepareUnload`/`LoadUnloadStation`.
-- Not here: a receiver window beyond the ordinary industry window, and aggregate consumption (a later construction owner). Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+- Not here: a receiver window beyond the ordinary industry window, and aggregate consumption (a later construction owner). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Group 9 - Account for spoil delivery and expose logistics stalls
 
 {{HARD}}
-- [ ] 9.1 Define disposal fees, crusher production and any allowed final-delivery revenue at the actual accepted quantity. Preserve feeder-share/age/provenance through transfer; no payment solely for origin visitation or layer crossing.
-- [ ] 9.2 Test repeated transfer orders, company-owned receiver loops, partial acceptance and one loaded set visiting the origin twice. Final delivery/disposal can settle a quantity only once.
-- [ ] 9.3 Publish waiting reasons for no empties/hauler, occupied bay, blocked line, saturated receiver or lost origin. Pause new excavation through the TBM public controller while preserving already-loaded recovery movement.
+- [X] 9.1 Define disposal fees, crusher production and any allowed final-delivery revenue at the actual accepted quantity. Preserve feeder-share/age/provenance through transfer; no payment solely for origin visitation or layer crossing.
+- [X] 9.2 Test repeated transfer orders, company-owned receiver loops, partial acceptance and one loaded set visiting the origin twice. Final delivery/disposal can settle a quantity only once.
+- [X] 9.3 Publish waiting reasons for no empties/hauler, occupied bay, blocked line, saturated receiver or lost origin. Pause new excavation through the TBM public controller while preserving already-loaded recovery movement.
 
 **R2MLVS3MP status, 2026-10-05.** 9.1-9.3 are implemented.
 - 9.1: fees are charged at intake for exactly the admitted tonnes and the mode current then: Earth 2, crushing 3, surplus disposal 4 Money units per tonne. Crushing records aggregate and residue per batch. ERTH and ROCK pay no freight, so neither a final delivery, a transfer's feeder share nor an origin visit earns anything. Transfers go through the ordinary packet path, so feeder share, age and source stay with each packet.
@@ -225,7 +225,7 @@ flowchart LR
 - 9.3: `GetTBMLogisticsWait` (`src/tbm_exchange.h`) publishes NoHauler, NoEmpties, OccupiedBay, BlockedLine (the hauler's pathfinder is lost), SaturatedReceiver and LostOrigin. Haulers hold the new waits BlockedLine and SaturatedReceiver (the second at the origin, while no receiver there has room for the spoil aboard). `AdvanceTBMFaceWork` waits `LogisticsStall`, a new `TBMBlockedReason`, while `IsTBMLogisticsStalled` holds (saturated receiver, lost route or lost origin). The face is only worked in Bore, so the return for exchange, the exchange and the haul go on.
 - A lost origin also blocks Plan 4's whole controller as `MissingOrigin`. Recovery is `CmdSetTBMProjectOrigin`.
 - Tests: `src/tests/spoil_receiver_stall.cpp` (`[spoil-receiver-stall]`), `spoil_receiver_accounting.cpp` (`[spoil-receiver-accounting]`) and the delivery cases in `[spoil-receiver-delivery]`.
-- NoEmpties is not reached through the step in the current fixtures. A short-empty refusal needs a two-segment route whose second cut waits on support movement (master Group 7). Not yet compiled or run: under the user's build-cadence instruction the focused burst runs at the next R2MLVS3MP milestone (end of master Group 7 or 8); tick the tasks only after it passes.
+- NoEmpties is reached through the step at a breakpoint before a route's last cut: a hauler one Earth hopper short waits there and nothing moves (`[tbm-exchange-acceptance]`, added at the milestone). Verified at the R2MLVS3MP end-of-Group-7 milestone (2026-10-05): [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass.
 
 ### Area Mandatory Reading - Lifecycle and acceptance
 
@@ -250,11 +250,11 @@ Context has compacted 1 times while executing this group.
 ### Group 10 - Persist assignment and queue state
 
 {{HARD}}
-- [ ] 10.1 Serialize stable assignments, wagon-set IDs, origin-visited cycle state, queue order and wait reason with typed references. Rebuild head/location lookup from actual consists after load.
-- [ ] 10.2 Keep the exchange atomic within one simulation action so saves observe before or after, never a half-swap. If implementation introduces persistent shunting phases, revise the schema and each recovery test before using them.
-- [ ] 10.3 Round-trip every wait state and validate missing/reused vehicle IDs without attaching a wagon to two projects. Verify actual packet lists remain authoritative.
+- [X] 10.1 Serialize stable assignments, wagon-set IDs, origin-visited cycle state, queue order and wait reason with typed references. Rebuild head/location lookup from actual consists after load.
+- [X] 10.2 Keep the exchange atomic within one simulation action so saves observe before or after, never a half-swap. If implementation introduces persistent shunting phases, revise the schema and each recovery test before using them.
+- [X] 10.3 Round-trip every wait state and validate missing/reused vehicle IDs without attaching a wagon to two projects. Verify actual packet lists remain authoritative.
 
-Group 10 status (2026-10-05): implemented, not yet compiled or run.
+Group 10 status (2026-10-05): implemented and verified at the R2MLVS3MP end-of-Group-7 milestone ([all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass).
 - 10.1: version `TBMExchange` (378) saves four chunks in `src/saveload/tbm_exchange_sl.cpp`:
   - `TBXH`, a header with the format, both identity cursors and the row counts;
   - `TBXA`, the assignments, in identity order (which is also the bay's queue order), with phase, wait, timer, exchanges and revision;
@@ -268,21 +268,54 @@ Group 10 status (2026-10-05): implemented, not yet compiled or run.
   - Each phase × wait pair round-trips unchanged.
   - These refuse: a missing hauler, or a hauler ID used by the cutter or by a wagon; one hauler with two assignments; a missing project; a missing wagon, or a wagon ID used by an engine; a wagon in two sets or owned by another company; the cutter's set off the cutter; a carried Assigned set; a missing carried set; an identity at or beyond its cursor; sets out of order; an empty set.
 - Tests: `src/tests/tbm_exchange_load.cpp` (`[tbm-exchange-load]`). The five Python save fixtures now also accept versions 377 and 378.
-- Tick the tasks only after the next milestone burst passes (end of master Group 7 or 8).
+- Real-file round trips of these chunks need a save with a live project; they come with master 7.4 (audit gap G1 in [r2mlvs3mp-k](r2mlvs3mp-k-ground-persistence-audit.md)).
 
 ### Group 11 - Handle fleet and company lifecycle around assignments
 
 {{HARD}}
-- [ ] 11.1 Define autoreplace/refit admission for assigned units; validate replacement Earth/Rock capacity and fixed support compatibility before replacing any part.
-- [ ] 11.2 Handle vehicle sale, changed lengths and articulated/dual-headed replacements by pausing/revalidating the assignment. Refuse sale of loaded unrecovered wagons unless a declared cargo-preserving recovery path exists.
-- [ ] 11.3 Refuse unsafe bay removal before any consist or cargo mutation. Cancel only unoccupied reservations; retain an alternate supported recovery route for occupied projects.
-- [ ] 11.4 On takeover/bankruptcy, transfer or safely suspend project/set ownership through the common lifecycle contract. Test mismatched owners and lost origin station without deleting cargo or stealing a set.
+- [X] 11.1 Define autoreplace/refit admission for assigned units; validate replacement Earth/Rock capacity and fixed support compatibility before replacing any part.
+- [X] 11.2 Handle vehicle sale, changed lengths and articulated/dual-headed replacements by pausing/revalidating the assignment. Refuse sale of loaded unrecovered wagons unless a declared cargo-preserving recovery path exists.
+- [X] 11.3 Refuse unsafe bay removal before any consist or cargo mutation. Cancel only unoccupied reservations; retain an alternate supported recovery route for occupied projects.
+- [X] 11.4 On takeover/bankruptcy, transfer or safely suspend project/set ownership through the common lifecycle contract. Test mismatched owners and lost origin station without deleting cargo or stealing a set.
+
+Group 11 status (2026-10-05): implemented and verified at the milestone. Design: [r2mlvs3mp-j](r2mlvs3mp-j-lifecycle-design.md).
+- 11.1:
+  - While its project record exists, a cutter consist is locked against ordinary moves, sale, refit and autoreplace (`STR_ERROR_TBM_CONSIST_LOCKED`).
+  - Wagon-set units refuse refit (`STR_ERROR_TBM_SET_REFIT`).
+  - Autoreplace and autorenew skip any train with an assigned hauler or a set unit, so no replacement renews the identities a set depends on.
+  - The TBM hoppers already have an empty refit mask.
+- 11.2:
+  - A set unit that carries spoil cannot be sold (`STR_ERROR_TBM_SPOIL_ABOARD`).
+  - The locomotive and empty units can be sold. The declared recovery for a sold locomotive: its loaded wagons stay in the depot, and coupling them to another locomotive and assigning it adopts the set.
+  - Lengths, coupling and capacity are checked again at every exchange.
+  - `Vehicle::PreDestructor` calls `OnTBMExchangeTrainPartDeleted`, so a deleted hauler, wagon or cutter leaves the store at once. No saved record names a deleted vehicle, and a reused ID joins nothing.
+- 11.3: a project's depot bay can be removed only after the ordinary vehicle check, and only while every unfinished project using it can fall back to its Source bay (`STR_ERROR_TBM_EXCHANGE_BAY_IN_USE` otherwise). Projects and queued haulers then move to that bay. Bankruptcy and flooding never refuse.
+- 11.4: `ChangeOwnershipOfCompanyItems` calls `ChangeTBMOwnership`.
+  - A merger moves projects and their excavation jobs (`ChangeExcavationJobOwnership`) to the buyer.
+  - A removal erases the company's projects and exchange records and leaves its jobs as explicit orphans.
+- Not covered here:
+  - Releasing a finished project's consist (project retirement) and clearing the project's own cutter reference at deletion time belong to Plan 4 Group 17 (master 6.3). Both are now delivered (masters 6.3 and 6.5).
+  - Transferring a Commissioning portal pair on merger belongs to Plan 3 Group 11 (master 6.4).
+- Tests: `src/tests/tbm_exchange_lifecycle.cpp` (`[tbm-exchange-lifecycle]`).
 
 ### Group 12 - Lifecycle and acceptance
 
 {{MEDIUM}}
-- [ ] 12.1 Test mixed Earth/Rock wagons, insufficient empty capacity, competing haulers, blocked exits and cancellation at every wait state.
-- [ ] 12.2 Verify unchanged wagon IDs and packet totals before/after repeated cycles.
+- [X] 12.1 Test mixed Earth/Rock wagons, insufficient empty capacity, competing haulers, blocked exits and cancellation at every wait state.
+- [X] 12.2 Verify unchanged wagon IDs and packet totals before/after repeated cycles.
+
+Group 12 status (2026-10-05): implemented and verified at the milestone.
+- 12.1 is covered by these tests:
+  - releasing the hauler in every hold the step can reach (Stopped, Crashed, WrongWagons, LostOrigin, BlockedLine, SaturatedReceiver, OccupiedBay) keeps every wagon, packet and set, and a new assignment adopts the set again;
+  - short empties: `tbm_exchange_origin.cpp`;
+  - competing haulers: `tbm_wagon_sets.cpp`;
+  - blocked lines: `spoil_receiver_stall.cpp`.
+
+  NoEmpties is reached at a breakpoint before the last cut (a milestone case in `tbm_exchange_acceptance.cpp`). LostProject cannot be reached through the step: company removal erases the assignment together with the project.
+- 12.2: two complete cycles with real receivers, on a bending route whose first exchange breakpoint comes before its last cut, bring the same wagon units back to each train. No vehicle or set is created. Every tonne cut is with the receivers, either processed or in stock.
+  - The cutter cannot drive onto its next support yet, so the test reloads the project into Bore between the cycles, like the other multi-cut rigs.
+  - The exchange store is carried across that reload as a save would carry it.
+- Tests: `src/tests/tbm_exchange_acceptance.cpp` (`[tbm-exchange-acceptance]`).
 
 ### Group 13 - Demonstrate and reload the complete M1 logistics loop
 

@@ -286,7 +286,10 @@ static void ChangeTileOwner_LayerPortal(TileIndex tile, Owner old_owner, Owner n
 	TileIndex pair = GetLayerPortalPairTile(tile);
 	TransportType transport = GetLayerPortalTransportType(tile);
 	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
-		if (CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return; // Assigned/occupied projects require the actual controller's recoverable lifecycle before ownership can change.
+		// A merger moves the pair with its trains, stations, job and project (r2mlvs3 Group 11.4). Company removal needs a
+		// safe empty pair: the TBM lifecycle owner has already released its assigned work, and anything else still bound
+		// or occupied stays recoverable.
+		if (new_owner == INVALID_OWNER && CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return;
 		if (new_owner == INVALID_OWNER && transport == TransportType::Rail) {
 			[[maybe_unused]] const auto removed = Command<Commands::LandscapeClear>::Do({DoCommandFlag::Execute, DoCommandFlag::Bankrupt}, tile);
 			assert(removed.Succeeded());
