@@ -6,6 +6,8 @@ This epic turns the four existing layers into a connected transport economy: exc
 
 This master owns scope, proposed architecture decisions, cross-plan invariants, dependencies and milestones. Implementation checkboxes live only in the owning child plans. Writing a plan does not complete its implementation tasks. New gameplay decisions below are planning defaults, not a claim of user approval or existing behavior. This epic does not inherit R2MLM's historical permission to skip operator acceptance.
 
+Retained test saves live beside their tests in [`src/tests/fixtures/`](../../../../src/tests/fixtures/), grouped by feature: `content`, `state`, `geology`, `portals`, `mines` and `processors`. Save-writing C++ tests and Python round-trip fixtures use these same directories; processor `.sav.txt` checkpoints accompany their saves. Content-test configs and the probe GRF live in `content/` too; generated console scripts use the owning feature directory. Keep screenshots and review boards in [`assets/reviews/`](assets/reviews/), and authored sprite sources and previews in the existing `assets/` subdirectories. Keep these binaries out of the planning directory itself.
+
 Scope expanded on 2026-10-04: launch-center collection hubs and 20-tile orbital drops, Deep access from 1980, geothermal energy and later geothermal manufacturing, general-purpose TBM clearing with 45-degree turns, and underground tubes with five original vehicle designs. The 20-tile orbital radius, TBM turn limit and minimum five vehicles are requirements; the Surface collection radius, exact unlock date, model dates and futuristic recipes below are proposed defaults. Existing plan numbers remain stable; the new feature owners are r2mlvs16 and r2mlvs17.
 
 ## Additions at a glance

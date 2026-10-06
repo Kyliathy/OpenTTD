@@ -12,7 +12,7 @@ import subprocess
 
 from geology_save_fixture import chunks, encode_chunk
 from geology_generation_fixture import read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def processor_chunks(path):
@@ -38,7 +38,7 @@ def main():
     args = parser.parse_args()
     startup = ROOT / "build/scripts/game_start.scr"
     original = startup.read_bytes()
-    sources = [AREA / f"r2mlvs6-ds-processor-{name}.sav" for name in ("missing-input", "full-output", "in-transit")]
+    sources = [save_path(f"r2mlvs6-ds-processor-{name}.sav") for name in ("missing-input", "full-output", "in-transit")]
     hashes = {source: hashlib.sha256(source.read_bytes()).hexdigest() for source in sources}
     try:
         # The stock digest uses actual Industry input/output slots and stable labels, independently of runtime cargo-slot mapping.
@@ -80,7 +80,7 @@ def main():
                 error = "Invalid native processor state"
             encoded = b"".join(encode_chunk(row) if row.get("edited") else row["raw"]
                                for row in records if not row.get("remove")) + bytes(4)
-            candidate = AREA / f"r2mlvs6-ea-{name}-input.sav"
+            candidate = save_path(f"r2mlvs6-ea-{name}-input.sav")
             candidate.write_bytes(original_bytes[:8] + lzma.compress(encoded))
             try:
                 run_case(name, ["-g", candidate.as_posix()], error, accepted=False, prefix="r2mlvs6-ea")
@@ -89,7 +89,7 @@ def main():
                 assert refusal.returncode == 2
                 evidence = (AREA / f"r2mlvs6-ea-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence
-                assert not (AREA / f"r2mlvs6-ea-{name}.sav").exists()
+                assert not save_path(f"r2mlvs6-ea-{name}.sav").exists()
     finally:
         startup.write_bytes(original)
         # Source writer output is supplied evidence, never the mutation destination.

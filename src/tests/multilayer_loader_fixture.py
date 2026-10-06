@@ -16,6 +16,8 @@ import re
 import struct
 import subprocess
 
+from multilayer_state_fixture import save_path
+
 
 def word(value):
     """Encode an unsigned little-endian word.
@@ -96,6 +98,7 @@ def run_roundtrips(root):
     @return Dictionary of checked candidate diagnostics.
     """
     area = root / "docs/zz-reach2/upgrades/2026-10"
+    fixtures = root / "src/tests/fixtures/content"
     startup = root / "build/scripts/game_start.scr"
     original = startup.read_bytes()
     config_proxy = root / "build/grftest.cfg"
@@ -103,7 +106,7 @@ def run_roundtrips(root):
     package_proxy = root / "build/newgrf/test_road_type.grf"
     original_package = package_proxy.read_bytes()
     runner = area / "tools/run_dedicated.sh"
-    package = area / "multilayer_probe.grf"
+    package = fixtures / "multilayer_probe.grf"
     package.write_bytes(package_bytes())
     # Saved GRFs are rediscovered by identity from the runtime newgrf search directory.
     # Reuse and restore the existing local test package; an arbitrary absolute path is insufficient on reload.
@@ -112,7 +115,7 @@ def run_roundtrips(root):
     try:
         # Each candidate is regenerated then reloaded once; there is no broad world regression.
         for mode in ("native", "bundled"):
-            config = area / f"r2mlvs1-b-{mode}.cfg"
+            config = fixtures / f"r2mlvs1-b-{mode}.cfg"
             config.write_text(
                 "# @see r2mlvs1-gameplay-contracts-and-content.md, Group 3 dedicated fixture.\n"
                 "[game_creation]\nmap_x = 6\nmap_y = 6\nlandscape = temperate\n"
@@ -126,9 +129,9 @@ def run_roundtrips(root):
             before = None
             # The second load reconstructs definitions using saved engine and industry mappings.
             for phase in ("new", "reload"):
-                saved = area / f"r2mlvs1-b-{mode}-{phase}.sav"
+                saved = save_path(f"r2mlvs1-b-{mode}-{phase}.sav")
                 saved.unlink(missing_ok=True)
-                script = area / f"r2mlvs1-b-{mode}-{phase}.scr"
+                script = fixtures / f"r2mlvs1-b-{mode}-{phase}.scr"
                 log = area / f"r2mlvs1-b-{mode}-{phase}.log"
                 script.write_text(
                     "# @see r2mlvs1-gameplay-contracts-and-content.md, Group 3 saved-content fixture.\n"
@@ -139,7 +142,7 @@ def run_roundtrips(root):
                 env = dict(os.environ, OTTD_MULTILAYER_LOADER_PROBE=mode,
                            OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=2,grf=2,script=2")
                 arguments = ["-G", "1234"] if phase == "new" else [
-                    "-g", (area / f"r2mlvs1-b-{mode}-new.sav").as_posix()]
+                    "-g", save_path(f"r2mlvs1-b-{mode}-new.sav").as_posix()]
                 command = ["C:/Program Files/Git/bin/bash.exe", runner.as_posix(),
                            (root / "build").as_posix(), "Debug", log.as_posix(),
                            "-X", "-c", config_proxy.name, *arguments]
@@ -169,7 +172,7 @@ def run_roundtrips(root):
         # Generated command scripts are disposable; retain the supplied saves and the actual run evidence.
         for mode in ("native", "bundled"):
             for phase in ("new", "reload"):
-                (area / f"r2mlvs1-b-{mode}-{phase}.scr").unlink(missing_ok=True)
+                (fixtures / f"r2mlvs1-b-{mode}-{phase}.scr").unlink(missing_ok=True)
     (area / "r2mlvs1-b-loader-results.txt").write_text(
         "R2MLVS1 Group 3: dedicated definition round-trip evidence\n"
         + "\n".join(f"{mode}: {value!r}" for mode, value in results.items()) + "\n",
@@ -185,13 +188,14 @@ def run_profiles(root):
     @return Checked label-to-slot maps for both supported Temperate profiles.
     """
     area = root / "docs/zz-reach2/upgrades/2026-10"
+    fixtures = root / "src/tests/fixtures/content"
     startup = root / "build/scripts/game_start.scr"
     config_proxy = root / "build/grftest.cfg"
     package = root / "build/newgrf/multilayer_industry.grf"
     original_script = startup.read_bytes()
     original_config = config_proxy.read_bytes()
     original_package = package.read_bytes()
-    held_package = area / "r2mlvs1-c-held-package.grf"
+    held_package = fixtures / "r2mlvs1-c-held-package.grf"
     catalogue = json.loads((root / "media/multilayer/cargo_catalogue.json").read_text(encoding="utf-8"))
     expected_classic = {label: slot for slot, label in enumerate(catalogue["baseline_labels"])}
     expected_multilayer = dict(expected_classic)
@@ -208,10 +212,10 @@ def run_profiles(root):
     try:
         # Each case exercises one activation/refusal boundary; no broad map or vehicle regression runs here.
         for name, profile, climate, extra, refusal in cases:
-            script = area / f"r2mlvs1-c-{name}.scr"
-            saved = area / f"r2mlvs1-c-{name}.sav"
+            script = fixtures / f"r2mlvs1-c-{name}.scr"
+            saved = save_path(f"r2mlvs1-c-{name}.sav")
             log = area / f"r2mlvs1-c-{name}.log"
-            config = area / f"r2mlvs1-c-{name}.cfg"
+            config = fixtures / f"r2mlvs1-c-{name}.cfg"
             saved.unlink(missing_ok=True)
             config.write_text(
                 "# @see r2mlvs1-gameplay-contracts-and-content.md, Group 4 profile fixture.\n"
@@ -265,7 +269,7 @@ def run_profiles(root):
         config_proxy.write_bytes(original_config)
         # Keep evidence and saves; disposable generated console source is reconstructed by this harness.
         for name, *_ in cases:
-            (area / f"r2mlvs1-c-{name}.scr").unlink(missing_ok=True)
+            (fixtures / f"r2mlvs1-c-{name}.scr").unlink(missing_ok=True)
     (area / "r2mlvs1-c-profile-results.txt").write_text(
         "R2MLVS1 Group 4: dedicated profile activation and four refusal cases\n"
         + json.dumps(results, indent=2) + "\n", encoding="utf-8")

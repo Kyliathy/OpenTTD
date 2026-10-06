@@ -84,7 +84,7 @@ Entry gate. Live games must allocate three layers (`InitializeGame` passes `MAX_
 - [x] 1.3 In `InitializeWindowViewport`, take the layer from `GetTileLayer(tile)` for a tile focus and from the vehicle's tile for a vehicle focus; keep the r2mlm1 copy of the main layer for `INVALID_TILE`.
 - [x] 1.4 In the follow-vehicle branch of `UpdateViewportPosition`, update `vp.layer` from the followed vehicle's tile and invalidate the toolbar when the window is the main window.
 - [x] 1.5 In `ScrollWindowTo`, set the viewport layer from `GetLayerOfWorldY(y)` before computing the destination, without the band translation.
-- [x] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band). R2MLM1 Group 7B verifies all three band translations with identical saved plane camera coordinates and actual Surface reload captures; [camera-save-review.png](camera-save-review.png).
+- [x] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band). R2MLM1 Group 7B verifies all three band translations with identical saved plane camera coordinates and actual Surface reload captures; [camera-save-review.png](assets/reviews/camera-save-review.png).
 
 ### Area Mandatory Reading - Band drawing
 

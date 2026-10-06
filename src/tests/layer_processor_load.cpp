@@ -183,7 +183,7 @@ TEST_CASE("Native processor checkpoints write real stock and packet descriptor f
 	const auto saved = CaptureLayerProcessors();
 	const auto digest = ComputeLayerProcessorDigest();
 	REQUIRE(AcceptLoadedLayerProcessors()); // Prove that the written stocks and counters satisfy the same final runtime activation boundary.
-	const auto path = std::filesystem::current_path().parent_path() / "docs/zz-reach2/upgrades/2026-10" / ("r2mlvs6-ds-processor-" + suffix + ".sav");
+	const auto path = std::filesystem::current_path().parent_path() / "src/tests/fixtures/processors" / ("r2mlvs6-ds-processor-" + suffix + ".sav");
 	REQUIRE(std::filesystem::is_directory(path.parent_path()));
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
 	AutoRestoreBackup<GameMode> no_ui(_game_mode, GameMode::Menu);

@@ -9,7 +9,7 @@ import hashlib
 from functools import partial
 
 from geology_save_fixture import chunks, geology_chunk, variant, read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def bad_vent(records, remove=False):
@@ -38,7 +38,7 @@ def main():
     startup = ROOT / "build/scripts/game_start.scr"
     config = ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
-    older = AREA / "r2mlvs2-g-native.sav"
+    older = save_path("r2mlvs2-g-native.sav")
     older_hash = hashlib.sha256(older.read_bytes()).hexdigest()
     try:
         config.write_text("# @see r2mlvs2-geology-and-excavation.md, natural-field fixture.\n"

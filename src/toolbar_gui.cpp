@@ -1048,6 +1048,17 @@ static CallBackFunction MenuClickBuildWater(int)
 
 /* --- Airport button menu --- */
 
+/** @param w Main toolbar, including its split layouts, whose airport slot follows the viewed layer. */
+static void UpdateAirportConstructionEntry(Window *w)
+{
+	const Viewport *viewport = GetMainWindow()->viewport.get();
+	if (viewport == nullptr) return;
+	const bool underground = IsUndergroundConstructionLayer(viewport->layer);
+	auto *widget = w->GetWidget<NWidgetCore>(WID_TN_AIR);
+	widget->SetSprite(underground ? SPR_IMG_BUILDRAIL : SPR_IMG_BUILDAIR);
+	widget->SetToolTip(underground ? STR_UNDERGROUND_MENU : STR_TOOLBAR_TOOLTIP_BUILD_AIRPORTS);
+}
+
 /** @param w Main toolbar owning this dropdown. @return No placement callback; the selected construction tool owns it. */
 static CallBackFunction ToolbarBuildAirClick(Window *w)
 {
@@ -1075,6 +1086,12 @@ static CallBackFunction MenuClickBuildAir(int index)
 		ShowBuildAirToolbar();
 	}
 	return CallBackFunction::None;
+}
+
+/** @param layer Layer selected when the shortcut is invoked. */
+static void ShowLayerAirportConstruction(MapLayer layer)
+{
+	MenuClickBuildAir(IsUndergroundConstructionLayer(layer) ? 100 + to_underlying(layer) : 0);
 }
 
 /* --- Forest button menu --- */
@@ -1352,10 +1369,16 @@ static CallBackFunction ToolbarScenGenTown(int index)
 	return CallBackFunction::None;
 }
 
+/** @param w Editor toolbar whose industry slot also supplies rock-layer construction entry. @return No placement callback. */
 static CallBackFunction ToolbarScenGenIndustry(Window *w)
 {
 	w->HandleButtonClick(WID_TE_INDUSTRY);
-	ShowBuildIndustryWindow();
+	const MapLayer layer = GetMainWindow()->viewport->layer;
+	if (IsUndergroundConstructionLayer(layer)) {
+		ShowUndergroundConstructionToolbar(layer, GetCurrentMultiLayerProfileSelection());
+	} else {
+		ShowBuildIndustryWindow();
+	}
 	return CallBackFunction::None;
 }
 
@@ -2121,6 +2144,7 @@ static_assert(std::size(_toolbar_button_procs) == static_cast<size_t>(WID_TN_END
 
 /** Main toolbar. */
 struct MainToolbarWindow : Window {
+	/** @param desc Main or split toolbar's shared widget description. */
 	MainToolbarWindow(WindowDesc &desc) : Window(desc)
 	{
 		this->InitNested(0);
@@ -2128,6 +2152,7 @@ struct MainToolbarWindow : Window {
 		_last_started_action = CallBackFunction::None;
 		this->flags.Reset(WindowFlag::WhiteBorder);
 		UpdateMapLayerButtonSprite(this, WID_TN_MAP_LAYER);
+		UpdateAirportConstructionEntry(this);
 		this->SetWidgetDisabledState(WID_TN_PAUSE, _networking && !_network_server); // if not server, disable pause button
 		this->SetWidgetDisabledState(WID_TN_FAST_FORWARD, _networking); // if networking, disable fast-forward button
 		PositionMainToolbar(this);
@@ -2139,12 +2164,14 @@ struct MainToolbarWindow : Window {
 		Window::FindWindowPlacementAndResize(_toolbar_width, def_height, allow_resize);
 	}
 
+	/** Refresh player availability and layer-specific construction entry before painting. */
 	void OnPaint() override
 	{
 		/* If spectator, disable all construction buttons
 		 * ie : Build road, rail, ships, airports and landscaping
 		 * Since enabled state is the default, just disable when needed */
 		this->SetWidgetsDisabledState(_local_company == COMPANY_SPECTATOR, WID_TN_RAILS, WID_TN_ROADS, WID_TN_TRAMS, WID_TN_WATER, WID_TN_AIR, WID_TN_LANDSCAPE);
+		UpdateAirportConstructionEntry(this);
 		/* disable company list drop downs, if there are no companies */
 		this->SetWidgetsDisabledState(Company::GetNumItems() == 0, WID_TN_STATIONS, WID_TN_FINANCES, WID_TN_TRAINS, WID_TN_ROADVEHS, WID_TN_SHIPS, WID_TN_AIRCRAFT);
 
@@ -2165,6 +2192,7 @@ struct MainToolbarWindow : Window {
 		if (cbf != CallBackFunction::None) _last_started_action = cbf;
 	}
 
+	/** @param hotkey Configured main-toolbar action. @return Whether this toolbar handled the shortcut. */
 	EventState OnHotkey(int hotkey) override
 	{
 		CallBackFunction cbf = CallBackFunction::None;
@@ -2202,7 +2230,7 @@ struct MainToolbarWindow : Window {
 			case MTHK_BUILD_ROAD: ShowBuildRoadToolbar(_last_built_roadtype); break;
 			case MTHK_BUILD_TRAM: ShowBuildRoadToolbar(_last_built_tramtype); break;
 			case MTHK_BUILD_DOCKS: ShowBuildDocksToolbar(); break;
-			case MTHK_BUILD_AIRPORT: ShowBuildAirToolbar(); break;
+			case MTHK_BUILD_AIRPORT: ShowLayerAirportConstruction(GetMainWindow()->viewport->layer); break;
 			case MTHK_BUILD_TREES: ShowBuildTreesToolbar(); break;
 			case MTHK_MUSIC: ShowMusicWindow(); break;
 			case MTHK_SCRIPT_DEBUG: ShowScriptDebugWindow(); break;
@@ -2265,6 +2293,7 @@ struct MainToolbarWindow : Window {
 		if (!gui_scope) return;
 		HandleZoomMessage(this, *GetMainWindow()->viewport, WID_TN_ZOOM_IN, WID_TN_ZOOM_OUT);
 		UpdateMapLayerButtonSprite(this, WID_TN_MAP_LAYER);
+		UpdateAirportConstructionEntry(this);
 	}
 
 	/**
@@ -2511,6 +2540,7 @@ enum class MainToolbarEditorHotkeys : int32_t {
 	BuildTram, ///< Open toolbar window with tools for building tramways.
 };
 
+/** Editor construction entry respects the viewed layer while mutation stays in feature commands. */
 struct ScenarioEditorToolbarWindow : Window {
 	ScenarioEditorToolbarWindow(WindowDesc &desc) : Window(desc)
 	{
@@ -2528,8 +2558,12 @@ struct ScenarioEditorToolbarWindow : Window {
 		Window::FindWindowPlacementAndResize(_toolbar_width, def_height, allow_resize);
 	}
 
+	/** Refresh editor construction presentation from its viewed layer without granting command permission. */
 	void OnPaint() override
 	{
+		const bool underground = IsUndergroundConstructionLayer(GetMainWindow()->viewport->layer);
+		this->GetWidget<NWidgetCore>(WID_TE_INDUSTRY)->SetSprite(underground ? SPR_IMG_BUILDRAIL : SPR_IMG_INDUSTRY);
+		this->GetWidget<NWidgetCore>(WID_TE_INDUSTRY)->SetToolTip(underground ? STR_UNDERGROUND_MENU : STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP);
 		this->SetWidgetDisabledState(WID_TE_DATE_BACKWARD, _settings_game.game_creation.starting_year <= CalendarTime::MIN_YEAR);
 		this->SetWidgetDisabledState(WID_TE_DATE_FORWARD, _settings_game.game_creation.starting_year >= CalendarTime::MAX_YEAR);
 		this->SetWidgetDisabledState(WID_TE_ROADS, !GetRoadTypes(true).Any(GetMaskForRoadTramType(RoadTramType::Road)));

@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/window_gui.h](../../../../src/window_gui.h) | 799-805 | `Window::OnPlaceObject` receives the clicked world tile; construction uses that layer even from extra viewports. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs3/5/6.
+Status: in progress; Group 1 completed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs3/5/6. Execution evidence: [underground interface ledger](r2mlvs7-a-underground-interface.md).
 
 ## Outcome and Boundaries
 
@@ -106,8 +106,10 @@ The tube/geothermal providers are scoped future integrations. **ASSUMPTION: this
 ### Group 1 - Underground construction interface
 
 {{MEDIUM}}
-- [ ] 1.1 Replace the Airport slot/action on both rock layers with Underground Construction. Include surveys, excavation projects, mines, exchange bays, underground freight stations, road terminals and service facilities.
-- [ ] 1.2 Keep rail/road construction and new Deep rail controls consistent with excavated state. Explain why an unavailable facility needs excavation, a deposit, rail access or a model capability.
+- [X] 1.1 Replace the Airport slot/action on both rock layers with Underground Construction. Include surveys, excavation projects, mines, exchange bays, underground freight stations, road terminals and service facilities.
+- [X] 1.2 Keep rail/road construction and new Deep rail controls consistent with excavated state. Explain why an unavailable facility needs excavation, a deposit, rail access or a model capability.
+
+Evidence: `r2mlvs7-e-underground-window-build.log` and `r2mlvs7-f-underground-window-checks.log` record a successful Debug test build and 80 assertions across three focused cases. Surveys read the existing geological authority; portal projects, selected real exchange projects, native mine funding and conventional construction retain their command owners. Both rock planes use the canonical whole-footprint guards and Deep calendar gate. Existing rail artwork is a toolbar substitute, not completed R2MLVS13 asset acceptance.
 
 ### Group 2 - Underground construction interface
 

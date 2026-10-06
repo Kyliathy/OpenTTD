@@ -11,7 +11,7 @@ import sys
 from functools import partial
 
 from geology_save_fixture import chunks, geology_chunk, read_stream, variant
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 PREFIX = "r2mlvs3-e"
 WORK_FORMAT = ">IBBIIIQ"
@@ -93,7 +93,7 @@ def main():
     """
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
-    prior = AREA / "r2mlvs2-z-native-current.sav"
+    prior = save_path("r2mlvs2-z-native-current.sav")
     prior_hash = hashlib.sha256(prior.read_bytes()).hexdigest()
     try:
         config.write_text("# @see r2mlvs3-sealed-portals-and-deep-rail.md, portal save fixture.\n"
@@ -138,7 +138,7 @@ def resume_refusals():
     """
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
-    sealed = AREA / f"{PREFIX}-sealed-input.sav"
+    sealed = save_path(f"{PREFIX}-sealed-input.sav")
     original_hash = hashlib.sha256(sealed.read_bytes()).hexdigest()
     try:
         # The earlier run already proved creation and phase reloads; only these unresolved corruption expectations need another executable check.

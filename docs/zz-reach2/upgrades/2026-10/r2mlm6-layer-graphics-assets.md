@@ -146,7 +146,7 @@ _Applies to Groups 3-4._
 - [x] 3.4 Generate the vacuum floor (offsets 10 to 11) as one 2-variant sheet.
 - [x] 3.5 Review every image at game size (downscale preview with the quantise script in dry-run mode once Group 5 exists, or a plain Pillow resize now); regenerate any icon that is unreadable at 20 x 20.
 
-  Offline review completed 2026-10-04 against the actual quantised manifest: the selected Space/elevator `_v2` icons resolve the first-pass readability problems, and both cursors use the tool picture. The four-layer 1x/4x comparison is `r2mlm13-c-compare-44.png`; the retained-original-set board is `r2mlm13-d-replaced.png`. Original floors were viewed at contract size and 4x. This closes the downscale review, not the separate in-game art checks.
+  Offline review completed 2026-10-04 against the actual quantised manifest: the selected Space/elevator `_v2` icons resolve the first-pass readability problems, and both cursors use the tool picture. The four-layer 1x/4x comparison is `assets/reviews/r2mlm13-c-compare-44.png`; the retained-original-set board is `assets/reviews/r2mlm13-d-replaced.png`. Original floors were viewed at contract size and 4x. This closes the downscale review, not the separate in-game art checks.
 - [x] 3.6 Record every prompt, the reference images used and the chosen output file under this task, so the art can be regenerated.
 
 Raw files are in `docs/zz-reach2/upgrades/2026-10/assets/raw/`. GenerateImage wrote JPEG; each file was copied to PNG there. The shared prompt is the Group 2 template. Chosen files:

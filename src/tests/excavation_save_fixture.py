@@ -10,7 +10,7 @@ import struct
 from functools import partial
 
 from geology_save_fixture import chunks, geology_chunk, variant, read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 PREFIX = "r2mlvs2-o"
 JOB_FORMAT = ">IBIIHIBBIQQQQqHHH"
@@ -121,7 +121,7 @@ def main():
     """
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
-    older = AREA / "r2mlvs2-i-native.sav"
+    older = save_path("r2mlvs2-i-native.sav")
     older_hash = hashlib.sha256(older.read_bytes()).hexdigest()
     try:
         config.write_text("# @see r2mlvs2-geology-and-excavation.md, sparse-job fixture.\n"

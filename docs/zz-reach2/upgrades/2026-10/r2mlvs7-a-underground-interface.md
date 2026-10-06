@@ -21,8 +21,18 @@ evidence, not final construction/fleet acceptance.
 
 ## Group 1 - Underground construction interface
 
-Implementation in progress. Surveys read the public/free geological planning
+Surveys read the public/free geological planning
 information; they cannot excavate, claim a seam or allocate energy. Projects
 reuse the portal window. Exchange placement uses a real selected project and
 the owning command. Conventional facilities reuse their ordinary construction
 tools and whole-footprint excavation guards.
+
+The Debug build passed in `r2mlvs7-e-underground-window-build.log`; focused
+`[underground-window],[excavation-construction]` passed 80 assertions in three
+cases (`r2mlvs7-f-underground-window-checks.log`). Real windows opened on both
+rock planes, reused their layer identities, refreshed the canonical 1979/1980
+boundary, and refused cross-plane survey clicks without geology/cash changes.
+The first build exposed a missing Company include, then another concurrent
+Debug build held an MSBuild tracking-file lock. Both were resolved before any
+new binary was tested. Logs c/d are not passing evidence. This group did not
+compact. Ordinary rail icons/pickers are substitutes, not final art acceptance.

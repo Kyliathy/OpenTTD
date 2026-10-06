@@ -636,7 +636,7 @@ TOOLS=/d/Codez/Sandbox/OpenTTD/docs/zz-reach2/upgrades/2026-10/tools
   - Tell the user before the first start in a task, and close the game when the check is done.
   - Start it only from a `build/` folder that has `baseset/`. On 2026-10-03 a start from a folder without it showed the user an error dialog.
   - The first dedicated run (`-D`) may raise a Windows Firewall prompt. The user may cancel it; the server only has to run locally.
-  - To check a screen without the user, capture the game window itself and view the PNG. Use `PrintWindow`, never a copy of the screen: on 2026-10-03 a screen copy caught the user's Start menu over the game. Run it in PowerShell, with `$build` and `$shot` set for the task. The image is a scratch file, named like one, for example `r2rvm-b-title-epic.png` next to the plan:
+  - To check a screen without the user, capture the game window itself and view the PNG. Use `PrintWindow`, never a copy of the screen: on 2026-10-03 a screen copy caught the user's Start menu over the game. Run it in PowerShell, with `$build` and `$shot` set for the task. The image is a scratch file, named like one, for example `assets/reviews/r2rvm-b-title-epic.png` in the review-assets directory:
     ```powershell
     #Start the game, wait for its window, capture that window only, then close the game.
     Add-Type -AssemblyName System.Drawing
@@ -650,7 +650,7 @@ TOOLS=/d/Codez/Sandbox/OpenTTD/docs/zz-reach2/upgrades/2026-10/tools
     }
     '@
     $build = 'D:\Codez\Sandbox\OpenTTD\build'
-    $shot = 'D:\Codez\Sandbox\OpenTTD\docs\zz-reach2\upgrades\2026-10\r2rvm-b-title-epic.png'
+    $shot = 'D:\Codez\Sandbox\OpenTTD\docs\zz-reach2\upgrades\2026-10\assets\reviews\r2rvm-b-title-epic.png'
     $p = Start-Process -FilePath "$build\RelWithDebInfo\openttd.exe" -ArgumentList '-c','baseline.cfg' -WorkingDirectory $build -PassThru
     #Wait up to 40 seconds for the main window, then 12 more for the title game to draw.
     $deadline = (Get-Date).AddSeconds(40)
@@ -760,7 +760,7 @@ _Applies to Groups 1-2._
   ls "$B/baseset"
   ```
   Tell the user, start `RelWithDebInfo/openttd.exe` from the export's `build/`, confirm that the title screen shows no missing-graphics warning, and close the game.
-  - 2026-10-03, done: the seven files match the `[md5s]` of `orig_dos.obg`, `orig_dos.obs` and `orig_dos.obm`, the check `CheckExternalFiles` makes. Started with `-c baseline.cfg` (written early with the 8x8 content of task 2.1), so the user's own `openttd.cfg` stayed untouched. The window capture [r2rvm-a-title-baseline.png](r2rvm-a-title-baseline.png) shows the title game in the original graphics, no warning, and only the first-start survey question.
+  - 2026-10-03, done: the seven files match the `[md5s]` of `orig_dos.obg`, `orig_dos.obs` and `orig_dos.obm`, the check `CheckExternalFiles` makes. Started with `-c baseline.cfg` (written early with the 8x8 content of task 2.1), so the user's own `openttd.cfg` stayed untouched. The window capture [r2rvm-a-title-baseline.png](assets/reviews/r2rvm-a-title-baseline.png) shows the title game in the original graphics, no warning, and only the first-start survey question.
 - [x] 1.7 In the export, build the regression files and run the four regression tests:
   ```bash
   "$CMAKE" --build build --config RelWithDebInfo --target regression_files -- /nodeReuse:false
@@ -1146,7 +1146,7 @@ _Applies to Group 5._
 
 {{MEDIUM}}
 - [x] 5.1 Execute master-plan task 1.5 for the repository's `build/`: run the copy commands of task 1.6 with `B=/d/Codez/Sandbox/OpenTTD/build`. Tell the user, start `RelWithDebInfo/openttd.exe` from `build/`, confirm the title screen shows no missing-graphics warning, and close it. Check master-plan task 1.5.
-  - 2026-10-03, done: baseset copied. [r2rvm-b-title-epic.png](r2rvm-b-title-epic.png) shows the original graphics and no missing-graphics warning. The menu is wider than in the pre-epic capture because of one more row, which [r2rvm-c-title-epic-no-survey.png](r2rvm-c-title-epic-no-survey.png) shows once the survey question is dismissed: "This translation misses 32 strings".
+  - 2026-10-03, done: baseset copied. [r2rvm-b-title-epic.png](assets/reviews/r2rvm-b-title-epic.png) shows the original graphics and no missing-graphics warning. The menu is wider than in the pre-epic capture because of one more row, which [r2rvm-c-title-epic-no-survey.png](assets/reviews/r2rvm-c-title-epic-no-survey.png) shows once the survey question is dismissed: "This translation misses 32 strings".
     - On an en-US system the game picks American English, which lacks the strings the epic added to `english.txt` only. Development builds show the notice from 25 missing strings; release builds never do. It follows the convention that only `english.txt` is edited, so it is not a finding.
     - `participate_survey = no` in `build/private.cfg` did not stop the question. A left click posted to the game window with `PostMessage` (`WM_LBUTTONDOWN`, `WM_LBUTTONUP` at the client position of "No") dismissed it without moving the user's mouse.
     - The epic build loads the same extra sprites as the export: 1387 extra, 93 from the baseset, 1294 from the fallback (`sprite:1` log line), because the epic changed nothing under `media/`.
@@ -1196,9 +1196,9 @@ _Applies to Group 5._
 - [x] 5.6 With the user, run master-plan task 4.5 as a smoke check in a new game started from `build/`, and record the outcome here. Do not check master-plan task 4.5.
   - 2026-10-03, done in a new 256x256 game (seed 1234, RelWithDebInfo). The layer button sits immediately right of the map button. Clicks and hovers were posted to the game window, so the mouse of the user stayed free; each state was captured:
     - Surface to Underground to Space to Surface, in that order. The icon follows: trees, grey rock, aircraft.
-    - The tooltip names the shown layer: "Now showing: Surface" in [r2rvm-e-layer-1-underground.png](r2rvm-e-layer-1-underground.png) and "Now showing: Space" in [r2rvm-e-layer-3-surface-again.png](r2rvm-e-layer-3-surface-again.png).
-    - Each layer draws only its own map: the surface map, flat bedrock ([r2rvm-e-layer-2-space.png](r2rvm-e-layer-2-space.png)) and the black vacuum, the designed stand-in in `clear_cmd.cpp`. The view position stays the same; with no landmarks underground, only the unchanged scroll shows that.
-    - The captures are named after the click that preceded them, one state late: the first capture ([r2rvm-e-layer-0-surface.png](r2rvm-e-layer-0-surface.png)), before any posted click, already showed Space. The user had clicked the button twice while the window was open after the start capture [r2rvm-d-layer-start.png](r2rvm-d-layer-start.png), and confirmed it; the cycle itself behaved correctly throughout.
+    - The tooltip names the shown layer: "Now showing: Surface" in [r2rvm-e-layer-1-underground.png](assets/reviews/r2rvm-e-layer-1-underground.png) and "Now showing: Space" in [r2rvm-e-layer-3-surface-again.png](assets/reviews/r2rvm-e-layer-3-surface-again.png).
+    - Each layer draws only its own map: the surface map, flat bedrock ([r2rvm-e-layer-2-space.png](assets/reviews/r2rvm-e-layer-2-space.png)) and the black vacuum, the designed stand-in in `clear_cmd.cpp`. The view position stays the same; with no landmarks underground, only the unchanged scroll shows that.
+    - The captures are named after the click that preceded them, one state late: the first capture ([r2rvm-e-layer-0-surface.png](assets/reviews/r2rvm-e-layer-0-surface.png)), before any posted click, already showed Space. The user had clicked the button twice while the window was open after the start capture [r2rvm-d-layer-start.png](assets/reviews/r2rvm-d-layer-start.png), and confirmed it; the cycle itself behaved correctly throughout.
     - No assert, no crash.
 
 ### Area Mandatory Reading - Local fixes

@@ -16,7 +16,7 @@
 
 /** Repository-owned save sink uses the real save writer without initializing user-wide content search paths. */
 class LayerSaveFileSink : public SaveFilter {
-	std::ofstream output; ///< Actual evidence bytes written beside the owning plan.
+	std::ofstream output; ///< Actual save bytes written in the feature's test fixture directory.
 public:
 	/** @param path Repository-local evidence destination validated by the fixture. */
 	explicit LayerSaveFileSink(const std::filesystem::path &path) : SaveFilter(nullptr), output(path, std::ios::binary)

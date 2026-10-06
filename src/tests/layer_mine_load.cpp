@@ -112,7 +112,7 @@ TEST_CASE("Finite mine state writes its actual savegame descriptor family", "[la
 	const auto saved = CaptureLayerMines();
 	const auto reserve = rig.Reserve();
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE); // The real save owner toggles its busy cursor, even with no visible window.
-	const auto path = std::filesystem::current_path().parent_path() / "docs/zz-reach2/upgrades/2026-10" / ("r2mlvs6-cr-mine-" + suffix + ".sav");
+	const auto path = std::filesystem::current_path().parent_path() / "src/tests/fixtures/mines" / ("r2mlvs6-cr-mine-" + suffix + ".sav");
 	REQUIRE(std::filesystem::is_directory(path.parent_path()));
 	AutoRestoreBackup<GameMode> no_ui(_game_mode, GameMode::Menu);
 	REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);

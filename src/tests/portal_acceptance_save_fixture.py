@@ -11,7 +11,7 @@ import struct
 import sys
 
 from geology_save_fixture import chunks, encode_chunk, geology_chunk, read_stream, variant
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 PREFIX = "r2mlvs3-r"
 FIELDS = ((b"MAPT", 1), (b"MAPO", 1), (b"MAP2", 2), (b"M3LO", 1),
@@ -70,7 +70,7 @@ def main():
     @return None; retain exact supplied inputs/startup/config bytes and repository-local evidence.
     """
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
-    originals = (ROOT / "build/save/camera-deep-repaired.sav", AREA / "r2mlvs3-e-sealed-input.sav")
+    originals = (ROOT / "build/save/camera-deep-repaired.sav", save_path("r2mlvs3-e-sealed-input.sav"))
     hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in originals}
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
@@ -90,7 +90,7 @@ def main():
             housing(records, source, target, road, 16, 0, target_layer)
             endpoints.extend((source, target))
         encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"] for record in records) + bytes(4)
-        authored = AREA / f"{PREFIX}-legacy-pairs-input.sav"
+        authored = save_path(f"{PREFIX}-legacy-pairs-input.sav")
         authored.write_bytes(originals[0].read_bytes()[:8] + lzma.compress(encoded))
         loaded = run_case("legacy-pairs", ["-g", authored.as_posix()], "MLVS_METADATA absent profile=0 version=0 legacy=true", prefix=PREFIX)
         repeated = run_case("legacy-repeat", ["-g", loaded.as_posix()], "profile=0 version=0 legacy=true", prefix=PREFIX)
@@ -130,7 +130,7 @@ def resume_ownerless_migration():
     @return None; preserve retained owned input/startup/config and all existing accepted evidence.
     """
     prefix = "r2mlvs3-u"
-    source = AREA / f"{PREFIX}-ownerless-input.sav"
+    source = save_path(f"{PREFIX}-ownerless-input.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
@@ -148,7 +148,7 @@ def resume_ownerless_migration():
                 record["remove"] = True
         encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]
                            for record in records if not record.get("remove")) + bytes(4)
-        authored = AREA / f"{prefix}-old-ownerless-input.sav"
+        authored = save_path(f"{prefix}-old-ownerless-input.sav")
         authored.write_bytes(b"OTTX" + (374 << 16).to_bytes(4, "big") + lzma.compress(encoded))
         loaded = run_case("old-ownerless", ["-g", authored.as_posix()], "MLVS_PORTAL_WORK_LOADED pairs=1", prefix=prefix)
         restored = {record["name"]: record for record in chunks(read_stream(loaded)[1])}
@@ -201,7 +201,7 @@ def resume_deep_roundtrips():
     """
     from functools import partial
     prefix = "r2mlvs3-x"
-    source = AREA / "r2mlvs3-e-native-company.sav"
+    source = save_path("r2mlvs3-e-native-company.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
@@ -261,7 +261,7 @@ def resume_original_portals():
                 assert int.from_bytes(restored[b"MLMD"]["rows"][1][2:3], "big") == 0
                 assert "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0" in output.with_suffix(".log").read_text(encoding="utf-8", errors="replace")
         # Genuine originals have no road tunnel; the existing separately authored version-370 three-kind fixture proves that actual ordinary road dispatch also survives migration.
-        authored_road = AREA / "r2mlvs3-r-legacy-pairs-input.sav"
+        authored_road = save_path("r2mlvs3-r-legacy-pairs-input.sav")
         authored_hash = hashlib.sha256(authored_road.read_bytes()).hexdigest()
         run_case("retained-road-topology", ["-g", authored_road.as_posix()], "MLVS_PORTAL_CONNECTIVITY rail=1/1 road=1/1 elevator=1/1 invalid=0", prefix=prefix)
         assert hashlib.sha256(authored_road.read_bytes()).hexdigest() == authored_hash

@@ -14,6 +14,31 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
+FIXTURES = ROOT / "src/tests/fixtures"
+
+
+def save_path(name):
+    """Locate a retained or generated save beside the tests for its feature.
+
+    @param name Basename using the owning plan's established evidence prefix.
+    @return Repository-local feature fixture path; logs and reports remain in AREA.
+    """
+    if Path(name).name != name or not name.endswith(".sav"):
+        raise ValueError("fixture save must be a .sav basename")
+    families = (
+        ("r2mlvs1-", "content"),
+        ("r2mlvs2-", "geology"),
+        ("r2mlvs3-", "portals"),
+        ("r2mlvs14-", "state"),
+        ("r2mlvs6-ds-", "processors"),
+        ("r2mlvs6-dz-", "processors"),
+        ("r2mlvs6-ea-", "processors"),
+        ("r2mlvs6-", "mines"),
+    )
+    for prefix, family in families:
+        if name.startswith(prefix):
+            return FIXTURES / family / name
+    raise ValueError(f"unknown fixture save owner: {name}")
 
 
 def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False):
@@ -23,12 +48,12 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     @param arguments Structured dedicated load/new-world arguments.
     @param expected Metadata acceptance/refusal text required in the actual log.
     @param accepted Whether the candidate must reach startup/save; refusal must produce no save.
-    @param prefix Owning plan's evidence prefix; all artifacts stay beside that plan.
+    @param prefix Owning plan's evidence prefix; saves live in feature fixture directories.
     @param single_player Use null-video nonnetworked mode and the actual start_ai command to create an owned company for portal fixtures; default preserves dedicated behavior.
     @return Saved output path; failure preserves supplied inputs through the caller's finally block.
     """
-    script = AREA / f"{prefix}-{name}.scr"
-    output = AREA / f"{prefix}-{name}.sav"
+    output = save_path(f"{prefix}-{name}.sav")
+    script = output.with_suffix(".scr")
     log = AREA / f"{prefix}-{name}.log"
     output.unlink(missing_ok=True)
     company_setup = "start_ai\n" if single_player and "-g" not in arguments else ""  # New null-video worlds need an actual owner; loaded worlds retain their saved company without creating another.
@@ -82,7 +107,7 @@ def main():
                           "gameplay_profile = multilayer_industry\n"
                           "[network]\nserver_advertise = false\nserver_bind_addresses = 127.0.0.1\n", encoding="utf-8")
         if args.smoke:
-            run_case("normal-native", ["-g", (AREA / "r2mlvs14-b-native-new.sav").as_posix()],
+            run_case("normal-native", ["-g", save_path("r2mlvs14-b-native-new.sav").as_posix()],
                      "MLVS_METADATA schema=1 profile=1 version=1 legacy=false editor=false", prefix="r2mlvs1-i")
             run_case("normal-classic", ["-g", legacy[0][1].as_posix()],
                      "MLVS_METADATA absent profile=0 version=0 legacy=true", prefix="r2mlvs1-i")

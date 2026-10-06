@@ -11,7 +11,7 @@ import lzma
 from functools import partial as bind_fixture_mutation
 
 from geology_generation_fixture import Reader, CHUNK_RIFF, CHUNK_RECORDS, read_stream, saved_geology_seed
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def chunks(stream):
@@ -92,7 +92,7 @@ def variant(source, name, mutation, prefix="r2mlvs2-g"):
     mutation(records)
     encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]
                        for record in records if not record.get("remove")) + bytes(4)
-    path = AREA / f"{prefix}-{name}-input.sav"
+    path = save_path(f"{prefix}-{name}-input.sav")
     path.write_bytes(original[:8] + lzma.compress(encoded))
     return path
 
@@ -168,7 +168,7 @@ def main():
     config = ROOT / "build/grftest.cfg"
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
-    older = (("native371", AREA / "r2mlvs14-b-native-new.sav"),
+    older = (("native371", save_path("r2mlvs14-b-native-new.sav")),
              ("legacy370", ROOT / "build/save/camera-deep-repaired.sav"))
     older_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for _, path in older}
     parser = argparse.ArgumentParser()
@@ -197,7 +197,7 @@ def main():
             for name, path in older:
                 run_case(name, ["-g", path.as_posix()], "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0", prefix="r2mlvs2-g")
         else:
-            source = AREA / "r2mlvs2-g-native.sav"
+            source = save_path("r2mlvs2-g-native.sav")
             source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
             # A partial rerun reports accepted boundaries only after their retained logs and saved outputs still prove success.
             for name, expected in (("native", "MLVS_GEOLOGY generator=1"),
@@ -208,7 +208,7 @@ def main():
                                    ("legacy370", "MLVS_GEOLOGY_LOADED generator=0")):
                 evidence = (AREA / f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert expected in evidence, (name, "prior acceptance evidence missing")
-                assert (AREA / f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
+                assert save_path(f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
         for kind, expected in (("reserved", "Reserved geology terrain encoding"),
                                ("truncated", "Invalid geology payload bounds"),
                                ("dimensions", "Invalid geology dimensions"),

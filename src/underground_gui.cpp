@@ -14,6 +14,7 @@
 #include "dropdown_func.h"
 #include "dropdown_type.h"
 #include "company_func.h"
+#include "company_base.h"
 #include "command_func.h"
 #include "excavation.h"
 #include "cargotype.h"
@@ -82,6 +83,8 @@ struct UndergroundConstructionWindow : Window {
 		this->SetWidgetsDisabledState(locked || spectator, WID_UC_PROJECT, WID_UC_MINE, WID_UC_EXCHANGE,
 			WID_UC_RAIL, WID_UC_ROAD, WID_UC_RAIL_STATION, WID_UC_ROAD_TERMINAL, WID_UC_RAIL_SERVICE, WID_UC_ROAD_SERVICE);
 		this->SetWidgetDisabledState(WID_UC_SURVEY, locked);
+		// Scenario road tools retain their existing editor owner; company-only purchase/service controls stay unavailable.
+		this->SetWidgetDisabledState(WID_UC_ROAD, locked || (spectator && _game_mode != GameMode::Editor));
 		this->DrawWidgets();
 	}
 
@@ -125,7 +128,7 @@ struct UndergroundConstructionWindow : Window {
 			case WID_UC_ROAD:
 			case WID_UC_ROAD_TERMINAL:
 			case WID_UC_ROAD_SERVICE: {
-				Window *toolbar = ShowBuildRoadToolbar(_last_built_roadtype);
+				Window *toolbar = _game_mode == GameMode::Editor ? ShowBuildRoadScenToolbar(_last_built_roadtype) : ShowBuildRoadToolbar(_last_built_roadtype);
 				if (toolbar == nullptr) return;
 				if (widget == WID_UC_ROAD_TERMINAL) toolbar->OnClick({}, WID_ROT_TRUCK_STATION, 1);
 				if (widget == WID_UC_ROAD_SERVICE) toolbar->OnClick({}, WID_ROT_DEPOT, 1);

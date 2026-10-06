@@ -10,7 +10,7 @@ import argparse
 import lzma
 from pathlib import Path
 
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def metadata_variant(source, suffix, policy=None, schema_version=None, remove=False):
@@ -39,7 +39,7 @@ def metadata_variant(source, suffix, policy=None, schema_version=None, remove=Fa
         stream[row:row + 2] = schema_version.to_bytes(2, "big")
     if remove:
         del stream[start:end]
-    target = AREA / f"r2mlvs1-h-{suffix}-input.sav"
+    target = save_path(f"r2mlvs1-h-{suffix}-input.sav")
     target.write_bytes(original[:8] + lzma.compress(stream))
     return target
 
@@ -49,7 +49,7 @@ def main():
 
     @return None; failures retain their logs and restore the exact original inputs.
     """
-    source = AREA / "r2mlvs14-b-native-new.sav"
+    source = save_path("r2mlvs14-b-native-new.sav")
     source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
     package = ROOT / "build/newgrf/multilayer_industry.grf"
     held = AREA / "r2mlvs1-h-held-package.grf"
@@ -107,7 +107,7 @@ def main():
         for name, expected, accepted in previous:
             evidence = (AREA / f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
             assert expected in evidence, (name, "prior boundary evidence missing")
-            assert (AREA / f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
+            assert save_path(f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
     scope = "Two package refusals rerun; five earlier editor/metadata boundaries verified from retained evidence.\n" if args.packages_only else "All seven boundaries executed in this run.\n"
     (AREA / "r2mlvs1-h-saved-profile-results.txt").write_text(
         "R2MLVS1 Group 21: explicit saved editor policy/reload and five metadata/content refusals passed.\n" + scope +

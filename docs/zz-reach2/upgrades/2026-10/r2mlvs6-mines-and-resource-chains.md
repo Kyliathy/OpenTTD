@@ -380,7 +380,7 @@ Read this plan's delivered public handoff, completed task evidence and unchecked
 
 ### Focused execution evidence and remaining gates
 
-From `build`, focused C++ checks use `Debug/openttd_test.exe '<tags>' --durations yes`; build with `cmake --build build --config Debug --target openttd_test --parallel 4`. Actual save fixtures run from the repository with `python -B src/tests/layer_mine_save_fixture.py` and `python -B src/tests/layer_processor_save_fixture.py`. Both preserve supplied source hashes and the original startup script; their generated saves/logs live beside this plan. Individual evidence files are named on the completed groups above and in [`r2mlvs6-a-industry-lifecycle.md`](r2mlvs6-a-industry-lifecycle.md).
+From `build`, focused C++ checks use `Debug/openttd_test.exe '<tags>' --durations yes`; build with `cmake --build build --config Debug --target openttd_test --parallel 4`. Actual save fixtures run from the repository with `python -B src/tests/layer_mine_save_fixture.py` and `python -B src/tests/layer_processor_save_fixture.py`. Both preserve supplied source hashes and the original startup script; their saves and processor checkpoints live in `src/tests/fixtures/mines/` and `src/tests/fixtures/processors/`, respectively, beside the tests; logs live beside this plan. Individual evidence files are named on the completed groups above and in [`r2mlvs6-a-industry-lifecycle.md`](r2mlvs6-a-industry-lifecycle.md).
 
 | Focused family | Delivered evidence |
 | --- | --- |

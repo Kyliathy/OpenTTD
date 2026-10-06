@@ -6,7 +6,7 @@ Each fixture ran as `timeout 600 python src/tests/<name>.py` from the repository
 [geology_save_fixture] rc=0 33s
 [geothermal_save_fixture] rc=1 10s  (first run; see the rerun below)
     older-geology: AssertionError ('required metadata evidence missing'); expected "packed_bytes=2048 vents=0", got vents=1.
-    Cause: geology_save_fixture's full mode regenerates r2mlvs2-g-native.sav, which is also this fixture's retained
+    Cause: geology_save_fixture's full mode regenerates ../../../../src/tests/fixtures/geology/r2mlvs2-g-native.sav, which is also this fixture's retained
     geology-only predecessor. The fresh file comes from the current generator and contains a vent.
 [portal_save_fixture] rc=0 63s
 [portal_acceptance_save_fixture] rc=0 19s

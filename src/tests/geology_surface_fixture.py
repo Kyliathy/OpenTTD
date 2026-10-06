@@ -9,7 +9,7 @@ import hashlib
 import json
 
 from geology_generation_fixture import read_stream, saved_geology_seed, surface_digests
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
     @return None; preserve baseline, startup and configuration bytes exactly.
     """
     startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
-    baseline = AREA / "r2mlvs2-e-classic.sav"
+    baseline = save_path("r2mlvs2-e-classic.sav")
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     baseline_hash = hashlib.sha256(baseline.read_bytes()).hexdigest()
     prior = surface_digests(read_stream(baseline)[1])
@@ -36,7 +36,7 @@ def main():
             measured[name] = surface_digests(stream)
             assert measured[name] == prior, (name, "Surface differs from retained baseline")
             assert (saved_geology_seed(stream) == 0) == (profile == "classic")
-        old = AREA / "r2mlvs2-o-active.sav"
+        old = save_path("r2mlvs2-o-active.sav")
         old_hash = hashlib.sha256(old.read_bytes()).hexdigest()
         run_case("old-job-current", ["-g", old.as_posix()],
                  "MLVS_EXCAVATION_JOB id=0 state=3 cursor=0 partial=77 revision=2", prefix="r2mlvs2-z")

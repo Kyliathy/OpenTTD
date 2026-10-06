@@ -257,7 +257,7 @@ Coding baseline: `build/build-layer-art-Debug.log` builds both targets without c
   Final closure check, 2026-10-04: R2RVM2 code/automated tasks are complete, with explicit user-scenario skips. R2MLM6 and both consumer art-swap groups deliver generated art; their operator acceptance cases are explicitly skipped under the goal allowance. The inherited human gates therefore do not block coding/closure. `rg -n 'SPR_MAP_LAYER_BASE|MAP_LAYER_SPRITE_COUNT' src/table/sprites.h` shows the base at line 385 and the live count 66 at 386, as extended by canonical AD-10/R2MLM13; the original 44-row replay is retained. `rg -n '_depot_gfx_table|_road_depot' src/layer_portal_cmd.cpp` has no matches. R2MLM13 tasks 9.4/10.5 record the actual all-offset load without missing-extra-sprite warnings. No skipped human prerequisite is claimed as passed.
 - [x] 1.2 Build Debug and RelWithDebInfo, and run the unit tests. Record the pass count under this task as this plan's baseline. Final current-tree evidence: both build targets/configurations exit 0 with zero compiler warnings, both pass 111/111 unit cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`), and full release CTest passes 115/115 (`build/ctest-console-final-RelWithDebInfo.log`).
 - [s] 1.3 Find or ask for a version-369 save that holds at least one rail portal, one road portal and one road vehicle underground. Copy it, never move it, to `build/save/deep_pre_portals.sav`. If none exists, ask the user to build one in the Debug build of the gate's tree and save it under that name. Record its savegame version, read with `python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py`.
-- [s] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `tools/ottd_window.ps1`. Capture these, saved next to this plan as `r2mlm12-a-...` PNGs:
+- [s] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `tools/ottd_window.ps1`. Capture these, saved in `assets/reviews/` as `r2mlm12-a-...` PNGs:
   - the main toolbar with the layer button on each layer;
   - the rail and road toolbars;
   - a rail portal and a road portal end on Surface and on Underground, at normal zoom;
@@ -745,7 +745,7 @@ Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The full
   Save it again and confirm version 370 with the digest tool.
 - [x] 9.7 Record every result of Group 9 under this task, with the capture file names.
 
-  The complete operator matrix 9.1..9.6 is skipped as recorded above; no pass is inferred. Current four-layer main/editor views are in R2MLM1 Group 7 and [scenario-layer-review.png](scenario-layer-review.png). R2MLM13 Group 9C records the supplied-save portal/traffic captures and coverage gaps. Task 3.6 verifies a real three-to-four-layer upgrade. Those named subsets do not replace the historical stand-in captures, construction refusal matrix or the requested pre-change portal save.
+  The complete operator matrix 9.1..9.6 is skipped as recorded above; no pass is inferred. Current four-layer main/editor views are in R2MLM1 Group 7 and [scenario-layer-review.png](assets/reviews/scenario-layer-review.png). R2MLM13 Group 9C records the supplied-save portal/traffic captures and coverage gaps. Task 3.6 verifies a real three-to-four-layer upgrade. Those named subsets do not replace the historical stand-in captures, construction refusal matrix or the requested pre-change portal save.
 
 ### Group 10 - Scenario runs with the user
 
@@ -850,7 +850,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 
 Closed 2026-10-04 under the goal's operator/gate allowance, with each skip recorded at its owning group. Implementation and automated checks are complete: both configurations build without compiler warnings and pass 111/111 unit cases; full release CTest passes 115/115. Human art, cost and scenario decisions are not inferred. The original full runtime/approval criteria below remain future validation criteria.
 
-- Every task box of this plan is checked, and every capture it names exists next to the plan.
+- Every task box of this plan is checked, and every retained capture it names exists in `assets/reviews/`.
 - New and loaded games have four layers. A version-369 save loads with a bedrock Deep Underground plane, saves as version 370, and keeps its surface digest.
 - Deep Underground accepts road, road stops, road depots, signs and elevators, and refuses rail, rail stations, train depots, signals, rail portals and road tunnels, with an error message.
 - Road tunnels join Surface and Underground and are driven through at speed. Elevators join Surface or Underground with Deep Underground. A bus stops in an elevator for 370 ticks, hidden. It survives a save and load mid-ride, cannot be turned round mid-ride, and never rides twice when its way out is blocked. Buses queue at an elevator without overlapping. Rail portals behave as before.

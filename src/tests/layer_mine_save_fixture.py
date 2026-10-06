@@ -12,7 +12,7 @@ import subprocess
 
 from geology_save_fixture import chunks, encode_chunk
 from geology_generation_fixture import read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
 def owned_chunks(path):
@@ -36,7 +36,7 @@ def main():
     parser.add_argument("--refusals-only", action="store_true", help="run only the malformed mine files")
     args = parser.parse_args()
     original = startup.read_bytes()
-    sources = [AREA / f"r2mlvs6-cr-mine-{name}.sav" for name in ("construction", "partial", "depleted")]
+    sources = [save_path(f"r2mlvs6-cr-mine-{name}.sav") for name in ("construction", "partial", "depleted")]
     hashes = {source: hashlib.sha256(source.read_bytes()).hexdigest() for source in sources}
     try:
         # Each source was written by the actual save owner after command funding, not assembled from invented mine rows.
@@ -74,7 +74,7 @@ def main():
                 table["edited"] = True
             encoded = b"".join(encode_chunk(row) if row.get("edited") else row["raw"]
                                for row in records if not row.get("remove")) + bytes(4)
-            candidate = AREA / f"r2mlvs6-dl-{name}-input.sav"
+            candidate = save_path(f"r2mlvs6-dl-{name}-input.sav")
             candidate.write_bytes(original_bytes[:8] + lzma.compress(encoded))
             try:
                 run_case(name, ["-g", candidate.as_posix()], error, accepted=False, prefix="r2mlvs6-dl")
@@ -83,7 +83,7 @@ def main():
                 assert refusal.returncode == 2, "unexpected process failure"
                 evidence = (AREA / f"r2mlvs6-dl-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence, "expected mine refusal missing"
-                assert not (AREA / f"r2mlvs6-dl-{name}.sav").exists(), "refused world was saved"
+                assert not save_path(f"r2mlvs6-dl-{name}.sav").exists(), "refused world was saved"
                 print(f"{name}: real game rejected corrupt mine transport", flush=True)
     finally:
         startup.write_bytes(original)
