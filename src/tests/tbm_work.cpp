@@ -45,7 +45,15 @@ static Money GetCash()
 /** Work accrues once per tick up to the requirement; the boundary tick commits one paid cut into the real wagons. */
 TEST_CASE("Face work adds bounded work per tick and commits one paid cut", "[tbm-work]")
 {
+	AutoRestoreBackup<decltype(_settings_game.vehicle.freight_trains)> freight_weight(_settings_game.vehicle.freight_trains, 1);
 	TBMWorkRig rig;
+	// Real package spoil has mass; zero-weight transaction fixtures cannot reveal a stale physical cache after a paid cut.
+	for (CargoLabel label : {CargoLabel{"ERTH"}, CargoLabel{"ROCK"}}) {
+		CargoSpec::Get(GetCargoTypeByLabel(label))->weight = 16;
+		CargoSpec::Get(GetCargoTypeByLabel(label))->is_freight = true;
+	}
+	const auto empty_weight = rig.front->gcache.cached_weight;
+	const auto empty_acceleration = rig.front->acceleration;
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	REQUIRE(estimate.error == ExcavationError::None);
 	REQUIRE(estimate.new_cells == 12); // The solid start opens the whole pocket and the first cell beyond the door.
@@ -71,6 +79,8 @@ TEST_CASE("Face work adds bounded work per tick and commits one paid cut", "[tbm
 	CHECK(rig.Job().completed_rock_t == estimate.rock_t);
 	CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == estimate.earth_t);
 	CHECK(rig.Spoil(TBMConsistRole::RockWagon) == estimate.rock_t);
+	CHECK(rig.front->gcache.cached_weight > empty_weight);
+	CHECK(rig.front->acceleration < empty_acceleration);
 	CHECK(GetCash() == cash - estimate.cost);
 	// Every swept cell is open now, and the new cutter cell carries the axis support track out of the door.
 	for (TileIndex tile : rig.Job().route[0].swept_tiles) CHECK(GetGeologyWorldState().terrain.Get(tile) == ExcavationState::Excavated);

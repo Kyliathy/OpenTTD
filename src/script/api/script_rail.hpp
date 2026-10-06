@@ -456,6 +456,24 @@ public:
 	static bool ConnectLayerPortal(TileIndex tile, bool connected);
 
 	/**
+	 * Commission a real boring consist at an eligible sealed rail portal through the synchronized command.
+	 * @param tile Accessible upper assembly endpoint; never an arbitrary depot or a road/elevator endpoint.
+	 * @param model_id Canonical cutter model: 0 is standard, 1 is Deep-rated.
+	 * @param earth_wagons Number of native Earth hoppers, from 1 to 255; actual capacity and length are revalidated.
+	 * @param rock_wagons Number of native Rock hoppers, from 1 to 255; actual capacity and length are revalidated.
+	 * @param origin Required owned Surface station with real spoil disposal admission.
+	 * @param area_start First corner of the requested rock-layer floor rectangle.
+	 * @param area_end Opposite corner of the same rectangle.
+	 * @param accept_partial Whether the command may commission its declared reachable subset.
+	 * @game @pre ScriptCompanyMode::IsValid().
+	 * @return Whether the actual profile/calendar/geometry/logistics/funds checks accept the estimate or purchase.
+	 * @note Test mode allocates nothing. Execution buys actual vehicles and publishes one canonical job/project;
+	 *       the script cannot clear rock or bypass the saved 1980 Deep gate.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 17
+	 */
+	static bool CommissionTBM(TileIndex tile, SQInteger model_id, SQInteger earth_wagons, SQInteger rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial);
+
+	/**
 	 * Remove a rail connection between two tiles.
 	 * @param from The tile just before the tile to remove rail from.
 	 * @param tile The first tile to remove rail from.

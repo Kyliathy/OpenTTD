@@ -12,6 +12,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 3B (same-owner area quotes)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 17 (actual script commissioning)
  */
 
 #include "../stdafx.h"
@@ -25,6 +26,12 @@
 #include "../timer/timer_game_calendar.h"
 #include "../table/strings.h"
 #include "../core/math_func.hpp"
+#include "../script/api/script_rail.hpp"
+#include "../script/api/script_companymode.hpp"
+#include "../script/api/script_testmode.hpp"
+#include "../script/api/script_execmode.hpp"
+#include "../script/script_suspend.hpp"
+#include "../game/game_instance.hpp"
 
 #include "../safeguards.h"
 
@@ -251,6 +258,69 @@ TEST_CASE("A Deep cutter commissions at an Underground portal only from 1 Januar
 	CHECK(GetLayerPortalWorkState(c.deep_portal) == LayerPortalWorkState::Commissioning);
 	CHECK(GetTileLayer(Train::Get(project.cutter)->tile) == MapLayer::Underground); // Assembled on the accessible upper end.
 	CHECK(ValidateTBMProject(project) == TBMProjectError::None);
+}
+
+/** Actual script actor scope, retaining the GameInstance's command, storage and suspension owners. */
+class TBMCommissionScriptScope : public ScriptObject {
+	ActiveInstance active; ///< Native active instance, restored before the runtime is destroyed.
+public:
+	/** @param game Actual Game Script runtime whose public commissioning binding is exercised. */
+	explicit TBMCommissionScriptScope(GameInstance &game) : active(game) {}
+
+	/** @return The actual runtime's most recent synchronized command result. */
+	static bool LastCommandSucceeded() { return GetLastCommandRes(); }
+};
+
+/** Script estimates and successful purchases use the same real Deep calendar gate and acquisition transaction. */
+TEST_CASE("Scripts commission actual cutters through the ordinary synchronized command", "[portal-script-commission]")
+{
+	TBMDeepCommissionRig c;
+	const auto consist = c.FitDeepConsist();
+	REQUIRE(consist.earth_wagons != 0);
+	GameInstance game;
+	TBMCommissionScriptScope active(game);
+	ScriptCompanyMode company(static_cast<ScriptCompany::CompanyID>(_current_company.base()));
+	AutoRestoreBackup pause(_pause_mode, PauseModes{}); // Actual script commands run under ordinary unpaused permission.
+	const StationID origin = c.rig.fixture.origin->index;
+	/** @return The actual script API result for this owned sealed Deep site. */
+	const auto commission = [&] {
+		return ScriptRail::CommissionTBM(c.deep_portal, 1, consist.earth_wagons, consist.rock_wagons, origin, c.deep_start, c.deep_end, false);
+	};
+	const auto before = c.rig.Digest();
+	{
+		ScriptTestMode estimate;
+		TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1979}, 11, 31);
+		CHECK_FALSE(commission());
+		TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1);
+		CHECK(commission());
+		CHECK_FALSE(ScriptRail::CommissionTBM(c.deep_portal, 1, 256, consist.rock_wagons, origin, c.deep_start, c.deep_end, false));
+		CHECK_FALSE(ScriptRail::CommissionTBM(c.deep_portal, -1, consist.earth_wagons, consist.rock_wagons, origin, c.deep_start, c.deep_end, false));
+	}
+	CHECK(c.rig.Digest() == before);
+	{
+		ScriptExecMode execute;
+		TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1979}, 11, 31);
+		CHECK_FALSE(commission());
+		CHECK(c.rig.Digest() == before);
+		TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1);
+		bool suspended = false;
+		try {
+			commission();
+		} catch (Script_Suspend &resume) {
+			// A real successful single-player script command suspends until its callback; this is its normal protocol.
+			suspended = true;
+			CHECK(resume.GetSuspendCallback() != nullptr);
+		}
+		REQUIRE(suspended);
+		REQUIRE(TBMCommissionScriptScope::LastCommandSucceeded());
+	}
+	const auto project = CaptureTBMProjects().back();
+	CHECK(project.portal == c.deep_portal);
+	CHECK(project.model_id == 1);
+	CHECK(project.phase == TBMPhase::Commissioning);
+	CHECK(GetLayerPortalWorkState(c.deep_portal) == LayerPortalWorkState::Commissioning);
+	CHECK(ValidateTBMProject(project) == TBMProjectError::None);
+	CHECK(Vehicle::GetNumItems() == before.vehicles + 2 + consist.earth_wagons + consist.rock_wagons);
 }
 
 /** One measured first cut. */

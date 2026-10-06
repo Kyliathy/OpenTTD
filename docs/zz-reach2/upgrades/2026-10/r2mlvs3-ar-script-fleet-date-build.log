@@ -1,0 +1,162 @@
+﻿MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  string_consumer.cpp
+  error.cpp
+  strgen.cpp
+  strgen_base.cpp
+  string.cpp
+  -- Version string: 20261006-mlm-mlv-m4d65cbd31d
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  string_consumer.cpp
+  error.cpp
+  settingsgen.cpp
+  string.cpp
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  Generating table/strings.h
+  Generating table/settings.h
+  Compiling language afrikaans
+  Compiling language arabic_egypt
+  Compiling language basque
+  Compiling language belarusian
+  Compiling language brazilian_portuguese
+  Compiling language bulgarian
+  Compiling language catalan
+  Compiling language chuvash
+  Compiling language croatian
+  Compiling language czech
+  Compiling language danish
+  Compiling language dutch
+  Compiling language english
+  Compiling language english_AU
+  Compiling language english_US
+  Compiling language esperanto
+  Compiling language estonian
+  Compiling language faroese
+  Compiling language finnish
+  Compiling language french
+  Compiling language frisian
+  Compiling language gaelic
+  Compiling language galician
+  Compiling language german
+  Compiling language greek
+  Compiling language hebrew
+  Compiling language hindi
+  Compiling language hungarian
+  Compiling language icelandic
+  Compiling language ido
+  Compiling language indonesian
+  Compiling language irish
+  Compiling language italian
+  Compiling language japanese
+  Compiling language korean
+  Compiling language latin
+  Compiling language latvian
+  Compiling language lithuanian
+  Compiling language luxembourgish
+  Compiling language macedonian
+  Compiling language malay
+  Compiling language maltese
+  Compiling language maori
+  Compiling language marathi
+  Compiling language norwegian_bokmal
+  Compiling language norwegian_nynorsk
+  Compiling language persian
+  Compiling language polish
+  Compiling language portuguese
+  Compiling language romanian
+  Compiling language russian
+  Compiling language serbian
+  Compiling language simplified_chinese
+  Compiling language slovak
+  Compiling language slovenian
+  Compiling language spanish
+  Compiling language spanish_MX
+  Compiling language swedish
+  Compiling language tamil
+  Compiling language thai
+  Compiling language traditional_chinese
+  Compiling language turkish
+  Compiling language ukrainian
+  Compiling language urdu
+  Compiling language vietnamese
+  Compiling language welsh
+  autoreplace.cpp
+  bootstrap_gui.cpp
+  cargopacket.cpp
+  company_cmd.cpp
+  depot.cpp
+  driver.cpp
+  economy.cpp
+  engine.cpp
+  error.cpp
+  gfxinit.cpp
+  goal.cpp
+  group_cmd.cpp
+  industry_cmd.cpp
+  landscape.cpp
+  league_cmd.cpp
+  linkgraph.cpp
+  linkgraphjob.cpp
+  map.cpp
+  map_layer.cpp
+  music.cpp
+  dmusic.cpp
+  tcp_connect.cpp
+  network.cpp
+  network_admin.cpp
+  network_client.cpp
+  network_command.cpp
+  network_server.cpp
+  newgrf.cpp
+  newgrf_spritegroup.cpp
+  newgrf_storage.cpp
+  object_cmd.cpp
+  openttd.cpp
+  order_backup.cpp
+  order_cmd.cpp
+  font_win32.cpp
+  win32.cpp
+  random_access_file.cpp
+  roadstop.cpp
+  roadveh_cmd.cpp
+  saveload.cpp
+  squirrel.cpp
+  signs.cpp
+  sound.cpp
+  win32_s.cpp
+  spritecache.cpp
+  station.cpp
+  story.cpp
+  strgen_base.cpp
+  string.cpp
+  strings.cpp
+  subsidy.cpp
+  town_cmd.cpp
+  train_cmd.cpp
+  vehicle.cpp
+  dedicated_v.cpp
+  video_driver.cpp
+  win32_v.cpp
+  openttd_lib.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\openttd_lib.dir\Debug\openttd_lib.lib
+  openttd.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\Debug\openttd.exe
+  	Pairing language packs with the playable executable
+MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  -- Version string: 20261006-mlm-mlv-m4d65cbd31d
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  openttd_lib.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\openttd_lib.dir\Debug\openttd_lib.lib
+  test_main.cpp
+  openttd_test.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\Debug\openttd_test.exe

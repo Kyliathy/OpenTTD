@@ -112,6 +112,7 @@ struct LayerPortalCommissionRequest {
 	ExcavationJob proposal; ///< Actual unallocated geological route, owner/model/Surface-origin references and frozen separate Earth/Rock pass capacities.
 	uint8_t earth_wagons = 0; ///< Earth hoppers of the consist to commission (Plan 4 Group 2.1); zero leaves a portal-only quote.
 	uint8_t rock_wagons = 0; ///< Rock hoppers of the consist to commission, after the Earth ones.
+	VehicleID reuse_cutter = VehicleID::Invalid(); ///< Optional real retired, healthy, empty native consist withdrawn at this same source; transient and revalidated, never a saved replacement identity.
 };
 
 /** Portal-side commissioning result; no prospective job/vehicle identity is represented as allocated on refusal. */
@@ -153,6 +154,7 @@ struct LayerPortalBootstrapProof {
 	CompanyID company = CompanyID::Invalid(); ///< Actual owner of both housings and of the proposal.
 	uint16_t model_id = UINT16_MAX; ///< Logical cutter whose layer and introduction date were checked.
 	StationID origin = StationID::Invalid(); ///< Actual company-owned Surface railway origin.
+	VehicleID reuse_cutter = VehicleID::Invalid(); ///< Exact existing source consist exempted from occupancy after native reuse validation; invalid for fresh purchase.
 	TileIndex source = INVALID_TILE; ///< Accessible upper endpoint where the consist assembles.
 	std::vector<TileIndex> source_support; ///< Complete 3x3 source floor carrying the straddling consist and its retreat.
 	TileIndex destination = INVALID_TILE; ///< Solid rock-side housing; the job's commissioning anchor.

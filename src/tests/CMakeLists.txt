@@ -1,4 +1,4 @@
-# Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
@@ -25,6 +25,16 @@ add_test_files(
     tbm_area.cpp
     tbm_commission.cpp
     tbm_commission_fixture.h
+    tbm_economics.cpp
+    tbm_logistics_save.cpp
+    tbm_logistics_runtime.cpp
+    tbm_logistics_stalls.cpp
+    tbm_logistics_queue.cpp
+    tbm_logistics_crash.cpp
+    logistics_crash_fixture.h
+    tbm_depot_workflow.cpp
+    tbm_depot_trace.cpp
+    underground_depot_fixture.h
     tbm_conservation.cpp
     tbm_phase.cpp
     tbm_consumer.cpp
@@ -101,6 +111,7 @@ add_test_files(
     portal_profile.cpp
     portal_build.cpp
     portal_date.cpp
+    portal_fleet_date.cpp
     portal_lifecycle.cpp
     portal_work_state.cpp
     portal_window.cpp

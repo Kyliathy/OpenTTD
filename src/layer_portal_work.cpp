@@ -16,6 +16,7 @@
 #include "debug.h"
 #include "vehicle_func.h"
 #include "train.h"
+#include "aircraft.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
 #include "track_func.h"
@@ -217,10 +218,28 @@ LayerPortalCommissionResult CommissionLayerPortalTBM(const LayerPortalCommission
 }
 
 /**
- * Validate physical facility and supply-side floor before its controller allocates any part.
- * @param request Actual pair and unallocated canonical geological proposal.
- * @return Pure permission/refusal plus pair revision; allocated references remain invalid.
+ * Check ordinary ground occupancy, exempting only a prevalidated existing source consist.
+ * @param tile Actual source/assembly cell; destination cells never receive a reuse exemption.
+ * @param reused Exact healthy, empty withdrawn native train, or nullptr for ordinary fresh-site validation.
+ * @return True when no unrelated ground vehicle occupies the construction footprint.
  */
+static bool IsCommissioningGroundFree(TileIndex tile, const Train *reused)
+{
+	if (reused == nullptr) return EnsureNoVehicleOnGround(tile).Succeeded();
+	const int z = GetTileMaxPixelZ(tile);
+	// Match the native ground-occupancy exclusions. Only the exact eligible retired consist may remain in its
+	// source magazine; all other physical vehicles retain the same construction protection as fresh purchases.
+	for (const Vehicle *vehicle : VehiclesOnTile(tile)) {
+		// Disaster entities and aircraft shadows are excluded by the ordinary owner; airborne vehicles do not occupy ground.
+		if (vehicle->type == VehicleType::Disaster || (vehicle->type == VehicleType::Aircraft && vehicle->subtype == AIR_SHADOW) || vehicle->z_pos > z) continue;
+		// The exemption belongs to one actual train chain, not all trains of its company or every vehicle on this tile.
+		if (vehicle->type == VehicleType::Train && vehicle->First() == reused) continue;
+		return false;
+	}
+	return true;
+}
+
+/** @copydoc ValidateLayerPortalCommissioning */
 LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCommissionRequest &request)
 {
 	LayerPortalCommissionResult result;
@@ -233,6 +252,16 @@ LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCo
 	if (work == nullptr || GetLayerPortalTransportType(request.portal) != TransportType::Rail || request.portal != *key) { result.error = LayerPortalWorkError::InvalidPair; return result; } // Commissioning originates at the actual accessible upper rail end, never a road/elevator or rock-side purchase bypass.
 	if (!Company::IsValidID(request.proposal.company) || request.proposal.company != _current_company || request.proposal.company != work->company) { result.error = LayerPortalWorkError::InvalidOwner; return result; } // The real command actor and both owned housings must agree before project capacity is acquired.
 	if (work->state != LayerPortalWorkState::Sealed || work->project != ExcavationJobID{UINT32_MAX} || work->cutter != VehicleID::Invalid()) { result.error = LayerPortalWorkError::Conflict; return result; } // Ordinary Connected traffic and already assigned work cannot share a new commissioning purchase.
+	const Train *reused = nullptr;
+	if (request.reuse_cutter != VehicleID::Invalid()) {
+		reused = Train::GetIfValid(request.reuse_cutter);
+		// Only the existing owner can reassign a completely withdrawn, empty native machine; stale, ordinary,
+		// foreign, crashed, loaded or still-assigned trains cannot borrow a source-occupancy exemption.
+		if (reused == nullptr || !IsTBMConsistReusableAtPortal(*reused, request.portal, work->company, request.proposal.model_id)) {
+			result.error = LayerPortalWorkError::InvalidReference;
+			return result;
+		}
+	}
 	const auto destination = GetLayerPortalPairTile(request.portal);
 	const auto models = GetMultiLayerVehicleCapabilities();
 	const auto model = std::ranges::find(models, request.proposal.model_id, &LayerVehicleCapability::model_id);
@@ -247,7 +276,7 @@ LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCo
 	const auto *origin = Station::Get(request.proposal.origin);
 	if (origin->owner != work->company || !IsValidTile(origin->xy) || GetTileLayer(origin->xy) != MapLayer::Surface || !origin->facilities.Test(StationFacility::Train)) { result.error = LayerPortalWorkError::InvalidReference; return result; } // Pre-bay exchange requires an actual company-owned Surface railway origin, never a coincident underground station or invented reference.
 	for (TileIndex end : {request.portal, destination}) {
-		if (EnsureNoVehicleOnGround(end).Failed() || HasLayerPortalReservation(end)) { result.error = LayerPortalWorkError::Conflict; return result; } // Both real shaft ends must be free before any project/vehicle capacity acquisition.
+		if (!IsCommissioningGroundFree(end, end == request.portal ? reused : nullptr) || HasLayerPortalReservation(end)) { result.error = LayerPortalWorkError::Conflict; return result; } // Both shafts stay free/resolved; only the exact prevalidated existing source consist may remain withdrawn for reassignment.
 	}
 	std::vector<TileIndex> assembly;
 	// The conservative complete purchase footprint stays on accessible source ground; the restricted rock pocket is not painted open to make this check pass.
@@ -257,7 +286,7 @@ LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCo
 			if (!IsValidTile(cell)) { result.error = LayerPortalWorkError::InvalidPair; return result; }
 			if (cell != request.portal && GetTileType(cell) != TileType::Clear && !IsPlainRailTile(cell)) { result.error = LayerPortalWorkError::Conflict; return result; } // Assembly cannot clear another structure or borrow incompatible infrastructure as hidden purchase space.
 			if (IsPlainRailTile(cell) && (GetTileOwner(cell) != work->company.base() || GetRailType(cell) != GetRailType(request.portal))) { result.error = LayerPortalWorkError::Conflict; return result; } // Any rail assembly floor must remain the same company's compatible conventional rail.
-			if (EnsureNoVehicleOnGround(cell).Failed()) { result.error = LayerPortalWorkError::Conflict; return result; }
+			if (!IsCommissioningGroundFree(cell, reused)) { result.error = LayerPortalWorkError::Conflict; return result; }
 			assembly.push_back(cell);
 		}
 	}

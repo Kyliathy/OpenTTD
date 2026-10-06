@@ -21,6 +21,7 @@
 #include "../../rail_cmd.h"
 #include "../../layer_portal_cmd.h"
 #include "../../layer_portal_map.h"
+#include "../../tbm_cmd.h"
 #include "../../station_cmd.h"
 #include "../../waypoint_cmd.h"
 
@@ -397,6 +398,20 @@ static Track SimulateDrag(TileIndex from, TileIndex tile, TileIndex *to)
 	EnforcePrecondition(false, IsLayerPortalTile(tile));
 	EnforcePrecondition(false, GetLayerPortalTransportType(tile) == TransportType::Rail);
 	return ScriptObject::Command<Commands::ChangeLayerPortalConnection>::Do(tile, connected);
+}
+
+/** @copydoc ScriptRail::CommissionTBM */
+/* static */ bool ScriptRail::CommissionTBM(TileIndex tile, SQInteger model_id, SQInteger earth_wagons, SQInteger rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, ::IsValidTile(tile));
+	EnforcePrecondition(false, ::IsValidTile(area_start));
+	EnforcePrecondition(false, ::IsValidTile(area_end));
+	// Script integers must fit command fields before narrowing; the canonical command owns model/date and whole-consist policy.
+	EnforcePrecondition(false, model_id >= 0 && model_id <= UINT16_MAX);
+	EnforcePrecondition(false, earth_wagons > 0 && earth_wagons <= UINT8_MAX);
+	EnforcePrecondition(false, rock_wagons > 0 && rock_wagons <= UINT8_MAX);
+	return ScriptObject::Command<Commands::CommissionTBM>::Do(tile, static_cast<uint16_t>(model_id), static_cast<uint8_t>(earth_wagons), static_cast<uint8_t>(rock_wagons), origin, area_start, area_end, accept_partial);
 }
 
 /* static */ bool ScriptRail::RemoveRail(TileIndex from, TileIndex tile, TileIndex to)

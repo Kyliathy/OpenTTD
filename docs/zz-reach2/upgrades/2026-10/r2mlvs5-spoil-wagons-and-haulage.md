@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/train_cmd.h](../../../../src/train_cmd.h) | 18-27 | Build/sell/move/reverse train commands and traits are the public commissioning/rearrangement boundary; restrict specialist capabilities through every applicable command. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs4. This is a major train-operation feature, not a cosmetic loading animation.
+Status: native exchange, hauler/queue, Surface receiver, persistence/lifecycle foundations, driven source-side loop and 12 actual source-file families are delivered. Groups 13A/13AB/13AC close source 13.2A; the recurring underground-bay consumer is delivered in Group 13B; its actual files remain pending in Group 13C. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs4.
 
 ## Outcome and Boundaries
 
@@ -345,6 +345,7 @@ trains drive themselves through the game's vehicle step, and the hauler has one 
   are kept for r2mlvs15 ([commissioned and bend](r2mlvs3mp-l-movement-run17-loops.txt),
   [straight route](r2mlvs3mp-l-movement-run10-loop.txt)). Art and network review remain pending.
 - 13.2 stays open: the saves at each wait state and with the hauler spanning layers belong to master 7.4.
+
 - 13.4 (master 7.9), `[tbm-controls]` in `src/tests/tbm_movement.cpp`, passes with all 112 project tags
   ([burst](r2mlvs3mp-l-controls-burst2-all.txt)):
   - The portal window assigns the clicked train and releases it. The commands name their refusals (finished
@@ -355,6 +356,92 @@ trains drive themselves through the game's vehicle step, and the hauler has one 
     project's bay in any phase. Release is offered only once the hauler is outside the bay.
   - The test plays a commissioned project's whole life through the window's controls. The game's daily train
     steps run as well, with a real service interval and every train overdue.
+
+2026-10-06 continuation: the source/bay producer burst `[tbm-loop],[tbm-exchange-bay]` passes 251,896 assertions / eight cases ([a](r2mlvs5-a-source-and-bay-producer-checks.log)). The original source-loop 13.1/13.3 evidence remains valid. Whole file task 13.2 is split below into source and depot families; its parent stays unchecked until both pass. Group 13B adds the master-required recurring underground consumer, which the retained boundary/source tests do not prove.
+
+### Local Mandatory Reading - Actual source logistics files
+
+_Applies to Group 13A; supplements Lifecycle and acceptance above._
+
+Read the delivered exchange/receiver/project public handoffs and actual `TBXA`/`TBXS`/`TBXW`, project/support, `VEHS`/orders and receiver serialization/fixups. Read `LayerSaveFileSink` / `LayerSaveContent`, the native fleet full-save fixture's dense original-plus-native EIDS setup and distributed cargo slots, and the repository-local real loader harness. Scenarios must reach their saved waits by actual controls/commands, physical movement and supported lifecycle events; enumerate genuinely reachable waits separately from guarded refusals. Retain original files and compare packet identity/age/quantity, assignments, receivers, money and the next actual exchange after loading. No copied-row restoration can complete this group.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13A - Save and resume actual source-side logistics
+
+{{HARD}}
+- [X] 13.2A Reach and write actual source-side logistics waits and a hauler spanning layers, load them through the real game, and resume to the same next exchange with exact wagon/packet, cycle and cost ledgers. For an irreversible native crash, compare the same delayed native cleanup and actual cargo-destruction receipts; a wreck has no repair or exchange transition. Document command-guarded unreachable combinations without inventing a runtime state; retain their focused refusal evidence.
+- [X] 13A.1 Complete the native stopped-startup, AwaitExchange, actual Surface disposal, post-delivery empty return and spanning source files. Verify full physical cache reconstruction and the same next actual exchange after one and two real application loads, including packets, geology, controller, receivers and company expenses. Groups 13AB/13AC close the remaining wait/lifecycle portion before parent 13.2A can be checked.
+
+13A.1 closure, 2026-10-06: five immutable `source-fixed-deep-*` inputs come from actual commands and physical movement. Each passes the real application/content loader and normal game-loop continuation after one and two loads. Vehicle fields reconstruct exactly, and 35 authoritative vehicle/packet/order/project/geology/receiver/company/time/RNG chunks match at the next atomic exchange. Native frame counts: stopped 2,164; AwaitExchange 2; disposal 10,125; post-delivery empty return 462; spanning 179. The optimized playable game builds with paired language packs ([z](r2mlvs5-z-optimized-mass-and-shaft-build.log)). Detailed fixes, exact inputs and per-case two-process logs: [f](r2mlvs5-f-source-file-continuation.md). Whole 13.2A stays pending for Groups 13AB/13AC, and whole 13.2 also requires depot files in 13C.
+
+### Local Mandatory Reading - Recoverable physical source stalls
+
+_Applies to Group 13AB._
+
+Read only actual station removal/rebuild, `OnTBMStationDeleted` / `SetTBMProjectOrigin`, receiver construction/removal/intake, ordinary rail removal/rebuild and native pathfinder lost-state reporting. Read `ObserveTBMHaulerInputs`, the relevant `StepTBMHaulerPhase` branches and the delivered Group 13A application-loader observer. Reach each stall by supported construction/control/lifecycle commands, recover through the same owners, and preserve original inputs plus native invoices and packet ages. A staged wait enum or manually positioned train does not establish reachability.
+
+### Group 13AB - Save and recover actual source-side stalls
+
+{{HARD}}
+- [X] 13AB.1 Reach a genuine lost Surface origin through native removal, save/load the wait and rebuild/rebind a legal origin before the same next actual exchange.
+- [X] 13AB.2 Reach unavailable receiver room through actual bounded intake or supported receiver loss, save/load the saturation wait and restore real intake before physical empty return and the next exchange.
+- [X] 13AB.3 Reach a blocked ordinary haulage line through legal route interruption, save/load the native wait and repair the actual route before the next exchange.
+
+13AB.1 closure, 2026-10-06: native paid demolition removes the unoccupied Surface platform while a real loaded set travels there. The saved assignment reaches LostOrigin through the normal tick owner; all loaded wagons remain physically attached. Ordinary station construction reuses the nearby deleted sign and retained rail without requiring optional distant joining. The complete paid physical producer passes 90,341 assertions ([af](r2mlvs5-af-origin-reuse-checks.log)). One and two actual application loads, followed by owning recovery commands, reach exchange 2 in exactly 10,835 frames with exact physical vehicle reconstruction and 35 identical authoritative next-exchange chunks ([ah-1](r2mlvs5-ah-lost-origin-1.log), [ah-2](r2mlvs5-ah-lost-origin-2.log)). Original source and startup bytes are retained. Current work is 13AB.2; 13AB.3 and whole source/depot closure remain pending.
+
+13AB.2 closure, 2026-10-06: the normal paid Deep delivery itself reaches the frozen per-interval receiver limit. Its saved SaturatedReceiver wait retains actual loaded packets; no stock, timer or vehicle state is manufactured. Ordinary receiver ticks reopen intake, dispose the same load and permit physical empty return before another exchange. The producer passes 57,415 assertions ([aj](r2mlvs5-aj-receiver-stall-writer.log)). One and two actual application loads resume to exchange 2 after exactly 9,940 frames, with exact vehicle reconstruction and 35 identical authoritative next-exchange chunks ([ak-1](r2mlvs5-ak-saturated-receiver-1.log), [ak-2](r2mlvs5-ak-saturated-receiver-2.log)). Current work is 13AB.3.
+
+13AB.3 closure, 2026-10-06: an owned paid fork in the already accessible Underground approach invokes native route finding; ordinary demolition then removes one existing Surface rail tile during a loaded trip. The hauler is demonstrably not lost before demolition. Its actual BlockedLine wait retains attached loaded packets. Paid repair and the normal reverse command bring the real train through a fresh route decision; no lost flag, order, position or phase is edited. The producer passes 92,338 assertions ([at](r2mlvs5-at-valid-line-writer.log)). The accepted immutable input is `source-route-deep-blocked-line.sav`; the earlier zero-budget prototype is retained but does not establish this scope. One and two actual application loads repair/reverse through owning commands and reach exchange 2 after exactly 11,154 frames, with exact vehicle reconstruction and 35 identical next-exchange chunks ([aw-1](r2mlvs5-aw-blocked-line-1.log), [aw-2](r2mlvs5-aw-blocked-line-2.log)). Group 13AB is complete; current source closure is Group 13AC.
+
+### Local Mandatory Reading - Source wait reachability and lifecycle guards
+
+_Applies to Group 13AC._
+
+Read the exact public assignment, wagon-set, queue, rearrangement, sale, refit, crash/deletion and retirement guards, plus their focused refusal tests. Audit only remaining LostProject/Crashed/WrongWagons/NoEmpties/OccupiedBay combinations. Where normal commands can reach a wait, drive and reload it with supported recovery; where guards prohibit it, retain precise command refusal evidence rather than writing fabricated runtime fields. Read the delivered 13A/13AB file comparisons only for final source-family closure.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13AC - Resolve remaining source waits and close their files
+
+{{HARD}}
+- [X] 13AC.1 Audit the remaining lifecycle/capacity/queue waits, physically drive and reload reachable combinations and document guarded combinations with focused native refusal evidence.
+- [X] 13AC.2 Verify packet identity/age/quantity, cycles, actual next transitions and invoices across all delivered source-file families, then close parent 13.2A only when 13A.1 and Groups 13AB/13AC pass.
+
+13AC closure, 2026-10-06: ordinary detach/recouple, short-empties cancellation, two real FIFO haulers and an actual forced-proceed collision establish the remaining reachable waits. LostProject is protected by synchronous retirement/deletion and missing-reference load refusals. Twelve immutable actual source families preserve initial packet/custody/invoice owners and the same next legal native transition after one and two complete application loads; all 35 next-state owner chunks match without exclusions. The collision led to a production fix for signal updates while deleting a hidden portal-magazine unit. Native crash destruction is explicitly recorded (24 Earth / 480 Rock tonnes), with surviving cargo balanced against paid generation. The only declared initial reconstruction adjustment is the reduced scenario's previously unset manager face/style and its normal native RNG draws. Focused guard/portal checks pass 73,786 assertions / 24 cases; Debug and optimized playable builds pass. Exact inputs, per-family logs, guard names and reconstruction limits: [be](r2mlvs5-be-wait-reachability.md), [cc](r2mlvs5-cc-source-owner-reconstruction.log). Source 13.2A closes; recurring depot consumer/files remain 13B/13C, so parent 13.2 and master 7.1 stay pending.
+
+### Local Mandatory Reading - Recurring underground depot consumer
+
+_Applies to Group 13B._
+
+Read `ResolveTBMExchangeBay`, `CmdSetTBMExchangeBay`, `SetTBMProjectExchangeBay`, reassignment validation, `GetTBMHaulerSteeringTarget`, actual cutter forward/backing destinations and ordinary depot entry/restart. Use the existing paid clear/withdraw/convert workflow before depot/network construction; inspect only the actual rail/portal/retreat owners at any geometry refusal. Preserve the assigned pair, full straight bay approach, existing Surface origin and a hauler route that never passes an active cutter. Add no private registry, cargo buffer or forced vehicle position/phase.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13B - Drive recurring underground-bay exchanges
+
+{{HARD}}
+- [X] 13B.1 Complete paid starter clearing and safely prepare a genuine owned underground depot bay, its whole-consist approach and a separate Connected haulage route to the existing Surface origin. Record the first project's charged geology and complete initial construction invoices; retain the further project's charged geology/spoil/cost totals at 13B.3 after its assignment in 13B.2.
+- [X] 13B.2 Reassign a legal further cut and select the genuine depot through owning commands; complete any missing native cutter return/hauler empty-return steering and safe depot release while preserving ordinary restrictions.
+- [X] 13B.3 Drive repeated underground-depot exchanges, Surface disposal and empty return with actual trains. Record exact wagon/packet custody, both spoil ledgers, receiver receipts and costs at every transition; no source-side substitute completes this scope.
+- [X] 13B.4 Replay the same native command/step schedule from the same declared scenario and compare normalized full state/quantity/cost traces; preserve evidence for Plan 15.
+
+13B.1 closure, 2026-10-06: the actual paid wide clearing project opens the first depot/network floor and physically disposes all 366 Earth / 732 Rock tonnes. Native initial logistics cost 2,101,454; complete first-project expenditure is 491,771, including 1,830 in canonical paid work/support. The machine is withdrawn and its project retires through the owning command; its original real consist remains stopped for further commissioning. Released support becomes permanent track before ordinary depot/network construction. A separate real Connected rail portal and paid western Surface route reach the existing origin without passing the future southern cutter faces. Native subsequent construction/control invoices total 11,070 and balance exactly against cash. The real original consist validates the entire straight depot approach through `ResolveTBMExchangeBay`. Normal per-frame `UpdateLandscapingLimits` replenishes the declared native default company allowance; no balance is reset after refusal. Focused proof passes 19,039 assertions / one case in 2.868 seconds ([cy](r2mlvs5-cy-paid-depot-foundation-checks.log)). The remaining recurring scope is closed below; actual depot files remain Group 13C. Continuation: [cd](r2mlvs5-cd-recurring-depot.md).
+
+13B.2-13B.4 closure, 2026-10-06: the existing commissioning command reuses only the same owned healthy empty machine withdrawn in its Sealed source magazine after ordinary retirement. Quote/preflight and rollback preserve all actual parts, money, geology and project state; another live assignment, ordinary hauler or wrong length refuses ([dn](r2mlvs5-dn-native-reuse-and-floor-guard-checks.log), 20,153 assertions / 11 cases). Recommissioning costs no second purchase. The pure canonical rail path is funded on existing floor through ordinary commands, and depot buildings are excluded from cutter sweeps. Directional cutter goals preserve the actual planned entry/exit at old junctions; empty hauler return uses the real depot door. The native loop executes two genuine depot exchanges, mandatory Surface visits/disposal, physical empty return and final completed-job disposal ([ee](r2mlvs5-ee-recurring-depot-checks.log), 83,771 assertions / one case). The further job generates 180 Earth / 360 Rock tonnes with 900 charged work/support, and subsequent construction/control costs total 12,770.
+
+Two declared fresh native worlds replay the identical command/frame schedule. Every frame checks sole packet custody, both generated-spoil balances against real vehicles/platforms/receiver receipts, and native expense categories against company cash. All 63 transition records match: whole physical parts, ordered packet identities/age/provenance, queue/set state, receiver intake/timers/fees, pending running costs, every expense category and complete geology/project/support/exchange/receiver digests ([ei](r2mlvs5-ei-complete-depot-trace-checks.log), 378,756 assertions / one case in 46.102 seconds). Final native cash is 7,330,957 after explicit final operating-cost billing. This completes the driven/replay consumer; actual-file depot reconstruction remains unchecked in 13C. Continuation: [cd](r2mlvs5-cd-recurring-depot.md).
+
+### Local Mandatory Reading - Actual underground-bay logistics files
+
+_Applies to Group 13C._
+
+Read Group 13A's actual file transport/loader boundary and Group 13B's delivered depot consumer, then only the selected exchange/vehicle/reference fixups and observed waits. Preserve complete depot/pair geometry, packet custody, pending costs and the next legal physical transition through actual loading. A source-bay file does not establish depot reconstruction; preserve immutable inputs and use distinct outputs.
+
+### Group 13C - Save and resume the recurring depot loop
+
+{{HARD}}
+- [ ] 13.2B Reach and round-trip actual recurring-depot logistics waits and a hauler spanning its layer connection, then resume to the same next exchange with exact packet age/quantity, assignment cycle and cost. Close parent 13.2 only after 13.2A and this scope both pass.
 
 ### Group 14 - Lifecycle and acceptance
 

@@ -91,7 +91,7 @@ static Track GetTBMSupportTrack(DiagDirection entry, DiagDirection exit)
  * @param[out] ends Index in the returned path of each included position.
  * @return Tiles from the housing onward; empty when two positions are not neighbours or a diagonal leaves the housing.
  */
-static std::vector<TileIndex> ExpandTBMSupportPath(const ExcavationJob &job, size_t positions, std::vector<size_t> &ends)
+std::vector<TileIndex> GetTBMWorkRailPath(const ExcavationJob &job, size_t positions, std::vector<size_t> &ends)
 {
 	std::vector<TileIndex> path{job.commissioning_anchor};
 	ends.clear();
@@ -129,7 +129,7 @@ bool CheckTBMSupportRailTurns(const ExcavationJob &job)
 	const RailType railtype = GetRailType(job.commissioning_anchor);
 	if (!Rail90DegTurnDisallowed(railtype, railtype)) return true;
 	std::vector<size_t> ends;
-	const auto path = ExpandTBMSupportPath(job, job.route.size(), ends);
+	const auto path = GetTBMWorkRailPath(job, job.route.size(), ends);
 	if (ends.size() != job.route.size()) return false;
 	Track previous = DiagDirToDiagTrack(GetLayerPortalDoorDirection(job.commissioning_anchor));
 	// Validate every physical corner, including the diagonal side cells: legal cutter heading changes can still form a forbidden ordinary rail bend.
@@ -164,8 +164,23 @@ std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &f
 	// Missing or malformed live geometry cannot authorize another route or a fabricated waypoint.
 	if (job == nullptr || job->cursor > job->route.size()) return std::nullopt;
 	const TileIndex target = job->cursor == 0 ? job->commissioning_anchor : job->route[job->cursor - 1].cutter_position;
-	// Match ObserveTBMPhaseInputs' physical arrival condition on the existing face tile. Revisited support can have several valid approaches; only actual laid track supplies directions.
-	return TBMCutterSteeringTarget{target, GetTileTrackStatus(target, TransportType::Rail, RoadTramType::Invalid).trackdirs};
+	if (job->cursor == 0) {
+		return TBMCutterSteeringTarget{target, TrackdirToTrackdirBits(DiagDirToDiagTrackdir(GetLayerPortalDoorDirection(target)))};
+	}
+	std::vector<size_t> ends;
+	const auto path = GetTBMWorkRailPath(*job, job->cursor + 1, ends);
+	if (ends.size() < job->cursor) return std::nullopt;
+	const size_t index = ends[job->cursor - 1];
+	if (index == 0) return std::nullopt;
+	const DiagDirection entry = DiagdirBetweenTiles(path[index], path[index - 1]);
+	const DiagDirection exit = index + 1 < path.size() ? DiagdirBetweenTiles(path[index], path[index + 1]) : ReverseDiagDir(entry);
+	const TrackdirBits actual = GetTileTrackStatus(target, TransportType::Rail, RoadTramType::Invalid).trackdirs;
+	// A reused chamber has other paid junction branches. Arriving on any branch of the same tile can send the
+	// physical head away from its next planned advance; accept only the actual laid piece joining this route's entry and exit.
+	for (Trackdir trackdir : DiagdirReachesTrackdirs(ReverseDiagDir(entry))) {
+		if (TrackdirToExitdir(trackdir) == exit && actual.Test(trackdir)) return TBMCutterSteeringTarget{target, TrackdirToTrackdirBits(trackdir)};
+	}
+	return std::nullopt;
 }
 
 /**
@@ -195,7 +210,7 @@ TBMSupportPlan PrepareTBMSupport(const TBMProject &project, const ExcavationJob 
 
 	/* Path through the next planned position too, so the last new piece already points where the train goes next. */
 	std::vector<size_t> ends;
-	const auto path = ExpandTBMSupportPath(job, job.cursor + 2, ends);
+	const auto path = GetTBMWorkRailPath(job, job.cursor + 2, ends);
 	if (ends.size() <= job.cursor) return refuse(TBMBlockedReason::Obstruction, job.route[job.cursor].cutter_position);
 	const size_t first = job.cursor == 0 ? 1 : ends[job.cursor - 1] + 1;
 	const size_t last = ends[job.cursor];
@@ -215,6 +230,10 @@ TBMSupportPlan PrepareTBMSupport(const TBMProject &project, const ExcavationJob 
 		if (!swept && geology.terrain.Get(tile) != ExcavationState::Excavated) return refuse(TBMBlockedReason::Obstruction, tile);
 		if (GetTileSlope(tile) != SLOPE_FLAT) return refuse(TBMBlockedReason::Obstruction, tile);
 		const auto *support = GetTBMSupportTile(tile);
+		// A further project may traverse already paid permanent rail. Reuse only the exact owned compatible
+		// piece on open floor; the cut transaction neither adds free ordinary track nor creates temporary metadata for it.
+		if (support == nullptr && IsPlainRailTile(tile) && !HasSignals(tile) && GetTileOwner(tile) == project.company &&
+			GetRailType(tile) == plan.railtype && geology.terrain.Get(tile) == ExcavationState::Excavated && GetTrackBits(tile).Test(track)) continue;
 		if (IsTileType(tile, TileType::Clear)) {
 			++new_tiles; // A fresh cell takes new temporary track.
 		} else if (support != nullptr && support->project == project.id && IsPlainRailTile(tile) && !HasSignals(tile) && GetTileOwner(tile) == project.company && GetRailType(tile) == plan.railtype) {

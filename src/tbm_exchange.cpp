@@ -788,11 +788,21 @@ bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next)
 	return assignment != nullptr && assignment->bay == next && IsTBMHaulerAdmittedAtBay(front, next);
 }
 
+/** @copydoc GetTBMHaulerSteeringTarget */
 TileIndex GetTBMHaulerSteeringTarget(const Train &front)
 {
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
 	// Only the empty return is steered; every other phase follows the player's orders, the origin visit included.
-	if (assignment == nullptr || assignment->phase != TBMHaulerPhase::ReturnEmpties || !IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return INVALID_TILE;
+	if (assignment == nullptr || assignment->phase != TBMHaulerPhase::ReturnEmpties) return INVALID_TILE; // Only a real assigned empty-return obligation can override the ordinary origin order.
+	const auto *project = GetTBMProject(assignment->project);
+	if (project == nullptr) return INVALID_TILE;
+	const auto bay = GetTBMExchangeBay(*project);
+	if (bay.error != TBMExchangeError::None) return INVALID_TILE;
+	if (bay.kind == TBMExchangeBayKind::Source) {
+		if (!IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return INVALID_TILE;
+	} else if (IsTBMProjectFinished(project->phase)) {
+		return INVALID_TILE; // A final delivered load ends the depot obligation; ordinary orders take the hauler onward.
+	}
 	return assignment->bay;
 }
 

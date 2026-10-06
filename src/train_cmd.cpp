@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md (native crash cleanup) */
 
 #include "stdafx.h"
 #include "error.h"
@@ -87,20 +87,46 @@ uint8_t FreightWagonMult(CargoType cargo)
 	return _settings_game.vehicle.freight_trains;
 }
 
-/** Checks if lengths of all rail vehicles are valid. If not, shows an error message. */
+/**
+ * Measure adjacent physical parts in their track's continuous coordinate space.
+ * @param leading Moving frontward part of one real consist.
+ * @param following Its next physical part in movement order.
+ * @return Maximum axis separation in pixels, with a valid shaft edge unfolded onto the leading part's plane.
+ */
+static int GetAdjacentTrainPartDistance(const Train &leading, const Train &following)
+{
+	int x = following.x_pos;
+	int y = following.y_pos;
+	// Only actual paired portal tiles bridge stacked map bands. Other cross-layer locations remain invalid spacing;
+	// a plane-local shortcut would conceal a displaced wagon or an unrelated portal after loading.
+	if (IsLayerPortalTile(leading.tile) && IsLayerPortalTile(following.tile) && GetLayerPortalPairTile(following.tile) == leading.tile) {
+		const auto shaft = TileIndexDiffCByDiagDir(GetLayerPortalShaftDirection(following.tile));
+		x += (static_cast<int>(TileX(leading.tile)) - static_cast<int>(TileX(following.tile)) - shaft.x) * static_cast<int>(TILE_SIZE);
+		y += (static_cast<int>(TileY(leading.tile)) - static_cast<int>(TileY(following.tile)) - shaft.y) * static_cast<int>(TILE_SIZE);
+	}
+	return std::max(abs(leading.x_pos - x), abs(leading.y_pos - y));
+}
+
+/** Check every actual train's part spacing, including a valid continuous shaft edge; report and pause genuinely broken consists. */
 void CheckTrainsLengths()
 {
 	bool first = true;
 
+	// Reload validation covers every physical coupling; one broken train pauses the game, while subsequent ones still receive their warning.
 	for (const Train *v : Train::Iterate()) {
+		// Only living chain heads own complete spacing checks; crashed parts no longer form a driving consist.
 		if (v->First() == v && !v->vehstatus.Test(VehState::Crashed)) {
+			// Follow movement order so reversed trains validate the same actual couplings from their current front.
 			for (const Train *u = v->GetMovingFront(), *w = v->GetMovingNext(); w != nullptr; u = w, w = w->GetMovingNext()) {
 				if (u->track != Track::Depot) {
+					// Coupled parts on track keep their actual length offset. A trailing depot part is valid only while
+					// its ordinary release delay remains positive; shaft translation changes neither that delay nor the length.
 					if ((w->track != Track::Depot &&
-							std::max(abs(u->x_pos - w->x_pos), abs(u->y_pos - w->y_pos)) != u->CalcNextVehicleOffset()) ||
+							GetAdjacentTrainPartDistance(*u, *w) != u->CalcNextVehicleOffset()) ||
 							(w->track == Track::Depot && TicksToLeaveDepot(u) <= 0)) {
 						ShowErrorMessage(GetEncodedString(STR_BROKEN_VEHICLE_LENGTH, v->index, v->owner), {}, WarningLevel::Critical);
 
+						// Local validation pauses only once; network peers retain synchronized server pause authority.
 						if (!_networking && first) {
 							first = false;
 							Command<Commands::Pause>::Post(PauseMode::Error, true);
@@ -923,6 +949,8 @@ CommandCost CmdBuildRailVehicle(DoCommandFlags flags, TileIndex tile, const Engi
  */
 CommandCost BuildRailVehicleForTBM(DoCommandFlags flags, const LayerPortalCommissionRequest &request, const Engine *engine, Vehicle **ret)
 {
+	// Reassignment preserves an already owned consist. A part-purchase primitive must never use its occupancy exemption to allocate overlapping replacements.
+	if (request.reuse_cutter != VehicleID::Invalid()) return CMD_ERROR;
 	if (ValidateLayerPortalCommissioning(request).error != LayerPortalWorkError::None) return CMD_ERROR;
 	if (engine == nullptr) return CMD_ERROR;
 	// The construction boundary accepts only a live definition and a result owner; malformed callers cannot allocate an unowned part.
@@ -1651,6 +1679,8 @@ CommandCost BuildTBMConsistAtSite(const LayerPortalCommissionRequest &request, c
 {
 	if (front == nullptr) return CMD_ERROR;
 	*front = nullptr;
+	// Existing-consist requests belong to the acquisition owner's reuse branch; this builder can only allocate a fresh complete purchase.
+	if (request.reuse_cutter != VehicleID::Invalid()) return CMD_ERROR;
 	if (ValidateLayerPortalCommissioning(request).error != LayerPortalWorkError::None) return CMD_ERROR;
 	// Only the request's own live cutter design may head the consist; any other engine cannot inherit portal assembly.
 	if (cutter == nullptr || Engine::GetIfValid(cutter->index) != cutter || !IsTBMCutterEngine(cutter->index) || GetTBMEngineModel(cutter->index) != request.proposal.model_id) return CMD_ERROR;
@@ -4079,6 +4109,8 @@ static void DeleteLastWagon(Train *v)
 		trackbits = DiagDirToDiagTrack(GetTunnelBridgeDirection(tile));
 	}
 
+	// Hidden depot/magazine units own no ordinary track reservation. A deleted physical track occupant releases its
+	// reservation only through the existing owner, then restores reservations needed by surviving crashed parts.
 	if (trackbits != Track::Depot && HasReservedTracks(tile, trackbits)) {
 		Track track = TrackBitsToTrack(trackbits);
 		UnreserveRailTrack(tile, track);
@@ -4086,6 +4118,7 @@ static void DeleteLastWagon(Train *v)
 		/* If there are still crashed vehicles on the tile, give the track reservation to them */
 		TrackBits remaining_trackbits{};
 		for (const Vehicle *u : VehiclesOnTile(tile)) {
+			// Other vehicle types and living trains cannot inherit this wreck's retained collision reservation.
 			if (u->type != VehicleType::Train || !u->vehstatus.Test(VehState::Crashed)) continue;
 			TrackBits train_tbits = Train::From(u)->track;
 			if (train_tbits == Track::Wormhole) {
@@ -4111,8 +4144,10 @@ static void DeleteLastWagon(Train *v)
 		SetRailStationPlatformReservation(tile, ReverseDiagDir(dir), occupied);
 	}
 
-	/* Update signals */
-	if (IsTileType(tile, TileType::TunnelBridge) || IsRailDepotTile(tile)) {
+	// A portal magazine can still contain depot-state trailing units after its moving head crashes outside.
+	// Update the housing's complete signal segment using its real door/pair semantics, as for other rail facilities;
+	// converting the hidden unit's Depot sentinel to an ordinary track would assert and strand native cleanup.
+	if (IsLayerPortalTile(tile) || IsTileType(tile, TileType::TunnelBridge) || IsRailDepotTile(tile)) {
 		UpdateSignalsOnSegment(tile, DiagDirection::Invalid, owner);
 	} else {
 		SetSignalsOnBothDir(tile, TrackBitsToTrack(trackbits), owner);

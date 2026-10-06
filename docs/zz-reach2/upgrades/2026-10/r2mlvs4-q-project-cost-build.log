@@ -1,0 +1,15 @@
+﻿MSBuild version 17.14.23+b0019275e for .NET Framework
+
+  strgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\strgen\Debug\strgen.exe
+  settingsgen.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\src\settingsgen\Debug\settingsgen.exe
+  -- Version string: 20261006-mlm-mlv-m4d65cbd31d
+  -- Generating rev.cpp
+  -- Generating ottdres.rc
+  -- Generating CPackProperties.cmake
+  -- Generating Doxyfile
+  -- Generating Doxyfile_AI
+  -- Generating Doxyfile_GS
+  openttd_lib.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\openttd_lib.dir\Debug\openttd_lib.lib
+  tbm_economics.cpp
+  underground_workflow.cpp
+  openttd_test.vcxproj -> D:\Codez\Sandbox\OpenTTD\build\Debug\openttd_test.exe

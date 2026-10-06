@@ -23,6 +23,7 @@
 #include "company_func.h"
 #include "train.h"
 #include "map_func.h"
+#include "vehicle_func.h"
 #include "table/strings.h"
 
 #include "safeguards.h"
@@ -30,6 +31,7 @@
 /** Longest side of a commissioning floor rectangle, in tiles; the planner bounds the job itself. */
 static constexpr uint MAX_TBM_COMMISSION_AREA_SIDE = 64;
 
+/** @copydoc CommissionTBMProject */
 TBMCommissionResult CommissionTBMProject(const LayerPortalCommissionRequest &request, bool execute)
 {
 	TBMCommissionResult result;
@@ -136,6 +138,15 @@ static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex po
 	base.proposal.pass_terms.emplace();
 	base.earth_wagons = earth_wagons;
 	base.rock_wagons = rock_wagons;
+	// A healthy retired machine withdrawn at this exact source can take the next project without another purchase.
+	// Select only one actual eligible native chain; multiple candidates or unrelated occupants retain the ordinary portal refusal.
+	for (const Vehicle *vehicle : VehiclesOnTile(portal)) {
+		if (vehicle->type != VehicleType::Train) continue;
+		const Train *train = Train::From(vehicle);
+		if (!IsTBMConsistReusableAtPortal(*train, portal, company, model_id)) continue;
+		if (base.reuse_cutter != VehicleID::Invalid()) return STR_ERROR_TBM_COMMISSION_PORTAL;
+		base.reuse_cutter = train->index;
+	}
 	const auto proof = IssueLayerPortalBootstrap(base);
 	// The portal preflight reports a date lock for both a Deep pair and a cutter not yet introduced; only the first is Deep.
 	if (proof.error == LayerPortalWorkError::LockedDeep) return CheckLayerPortalAvailability(portal) == LayerPortalWorkError::LockedDeep ? STR_ERROR_EXCAVATION_DEEP_LOCKED : STR_ERROR_TBM_COMMISSION_MODEL;

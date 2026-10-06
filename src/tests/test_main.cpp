@@ -8,7 +8,8 @@
 /**
  * @file test_main.cpp Entry point for all the unit tests.
  * With MSVC a failed assertion prints the call stack and ends the run without a modal dialog, so an unattended
- * focused burst never waits for a click.
+ * focused burst never waits for a click. The process-local fatal reporter prints native FatalErrorI text and aborts
+ * without opening a Windows error box; test fixtures retain their existing video and drawing setup.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Global Mandatory Reading (bounded test runs)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, actual window failure diagnosis
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, actual viewport event diagnosis
@@ -21,6 +22,7 @@
 #include "../3rdparty/catch2/catch.hpp"
 
 #ifdef _MSC_VER
+#include "../error_func.h"
 #include <windows.h>
 #include <dbghelp.h>
 #include <crtdbg.h>
@@ -117,6 +119,17 @@ static LONG WINAPI PrintAccessViolationStack(EXCEPTION_POINTERS *exception)
 }
 
 /**
+ * Print an actual native fatal error and keep its normal failure exit without waiting for a Windows dialog.
+ * @param message Fatal text already retained by the native crash-log owner.
+ */
+[[noreturn]] static void PrintFatalTestError(const std::string &message)
+{
+	fprintf(stderr, "Fatal test error: %s\n", message.c_str());
+	fflush(stderr);
+	abort(); // The existing SIGABRT handler records the native stack; this cannot become a passing test.
+}
+
+/**
  * Send failed assertions and aborts to stderr instead of the Abort/Retry/Ignore box, as the null video driver does
  * for the game, and print the stack on abort.
  * @return Always true; only the settings matter.
@@ -132,6 +145,7 @@ static bool QuietTestAssertions()
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 	signal(SIGABRT, PrintAbortStack);
 	AddVectoredExceptionHandler(1, PrintAccessViolationStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.
+	SetFatalErrorReporter(PrintFatalTestError);
 	return true;
 }
 

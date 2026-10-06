@@ -396,10 +396,10 @@ bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next);
 
 /**
  * Where the pathfinder steers an assigned hauler instead of its current order (R2MLVS3MP-M decision 6). While it
- * returns empties its destination is its Source bay, entered through the door; its orders are never written, so one
+ * returns empties its destination is its validated Source magazine or native underground depot, entered through the door; its orders are never written, so one
  * order to the origin carries the whole loop.
  * @param front Front engine.
- * @return The bay while the hauler returns empties to a Source bay that admits it, otherwise INVALID_TILE.
+ * @return The admitted Source bay or unfinished project's validated real depot during empty return, otherwise INVALID_TILE.
  */
 TileIndex GetTBMHaulerSteeringTarget(const Train &front);
 

@@ -299,16 +299,30 @@ struct TBMAcquisitionPlan {
 TBMAcquisitionPlan PrepareTBMAcquisition(const LayerPortalCommissionRequest &request, const TBMConsistRequest &consist);
 
 /**
+ * Check whether an existing native cutter can start another job at its original commissioning site.
+ * @param front Actual whole train, with no live project or exchange custody.
+ * @param portal Actual Sealed source site; its pair/owner/date checks remain with the portal owner.
+ * @param company Requesting company; every real part must belong to it.
+ * @param model_id Requested native cutter model.
+ * @return True only for a healthy, empty, stopped whole consist withdrawn in this exact magazine.
+ */
+bool IsTBMConsistReusableAtPortal(const Train &front, TileIndex portal, CompanyID company, uint16_t model_id);
+
+/**
  * Unpublished acquisition owner: stopped, hidden cutter/support/wagon parts on the source site plus their prepared
  * project. Destroying it without Release() deletes every acquired part (undoing unit number and group counts) and
  * restores the random seeds captured before construction, so a failed publication leaves nothing behind.
- * Only AcquireTBMConsist fills it; it is not copyable.
+ * Reusing an eligible retired consist holds only its prospective assignment: rollback never deletes those already
+ * owned parts or alters their packets/positions. Only AcquireTBMConsist fills it; it is not copyable.
  */
 class TBMAcquisition {
 public:
+	/** Create an empty unpublished acquisition owner. */
 	TBMAcquisition() = default;
-	TBMAcquisition(const TBMAcquisition &) = delete;
-	TBMAcquisition &operator=(const TBMAcquisition &) = delete;
+	/** @param other Existing acquisition; unique publication ownership cannot be copied. */
+	TBMAcquisition(const TBMAcquisition &other) = delete;
+	/** @param other Existing acquisition; unique publication ownership cannot be assigned. @return Unavailable. */
+	TBMAcquisition &operator=(const TBMAcquisition &other) = delete;
 	/** Roll back anything still held. */
 	~TBMAcquisition() { this->Rollback(); }
 
@@ -322,7 +336,7 @@ public:
 	const TBMProject &GetProject() const { return this->project; }
 
 	/**
-	 * Delete every held part and restore the captured random seeds; a no-op when nothing is held.
+	 * Delete fresh held parts and restore captured random seeds; reused paid parts survive rollback unchanged.
 	 * Any randomness consumed after acquisition in the same command is rewound too, which is correct
 	 * because the whole command is being undone on every client.
 	 */
@@ -341,12 +355,14 @@ private:
 	TBMProject project; ///< Prepared assignment; not allocated or published.
 	SavedRandomSeeds seeds{}; ///< Seeds captured immediately before the first part was built.
 	bool held = false; ///< Whether rollback still owns the parts.
+	bool existing = false; ///< True holds only a prospective assignment for already owned parts; rollback must preserve them.
 };
 
 /**
  * Build the whole consist as unpublished parts. Re-prepares first and refuses Stale unless the result equals plan,
  * then assembles through BuildTBMConsistAtSite and verifies the actual layout, length, parts and capacities.
- * Charges nothing and reserves no job; publication (R2MLVS3MP Group 6) pays, reserves and publishes together.
+ * Eligible explicit reuse holds the existing retired chain and validates that same layout without allocating or
+ * charging a second purchase. Charges nothing and reserves no job; publication pays, reserves and binds together.
  * @param request The same portal request the plan was prepared from.
  * @param plan Accepted successful preparation.
  * @param out Empty owner; on success it holds the parts, on failure it stays empty with everything rolled back.
@@ -584,10 +600,11 @@ TBMPhaseInputs ObserveTBMPhaseInputs(const TBMProject &project);
  *
  * Tested by Groups 3-4: assignment, references, phase edges and conditions, timer and reload. Groups 6-8 add the
  * work facts: face arrival and support advance are observed from the cutter's tile; in Bore the face step adds
- * bounded work and commits paid cuts that lay support and load real spoil, or names a precise wait. Still missing:
- * the train's own movement into the pocket and onto new support (master Group 7, with Plan 3 first entry and Plan 4
- * Group 14 reservations), and exchange completion (Group 4.2B with Plan 5). A working cutter is held still by the
- * ordinary train controller (IsTBMHoldingTrain). No consumer may claim live exchange from this header alone.
+ * bounded work and commits paid cuts that lay support and load real spoil, or names a precise wait. Ordinary train
+ * ticks drive the physical chain through its work pocket and paid support under the project corridor's admission
+ * rules; GetTBMCutterSteeringTarget names the existing approach for TravelToFace/AdvanceSupport. IsTBMHoldingTrain
+ * holds only face work and the wait for empty wagons. Plan 5 owns actual source exchange/disposal/empty return;
+ * recurring underground-bay and complete occupied-file acceptance remain separate scopes in the master plan.
  */
 
 /**
@@ -685,12 +702,23 @@ struct TBMSupportPlan {
  * successive diagonal advances alternate corner pieces like ordinary diagonal track (straight after the housing it
  * passes straight on first, so the piece at the portal mouth is the axis track that joins it). Each piece already
  * points at the next planned position, so a later cut never has to change track under the train. A route that passes
- * over its own support again reuses the piece there or adds a junction piece; any other track refuses.
+ * over its own support again reuses the piece there or adds a junction piece. Existing owned compatible permanent
+ * rail on paid open floor is reused only when the exact required piece is already present; adding ordinary track
+ * remains a paid construction command before assignment. Other infrastructure refuses.
  * @param project Assigned project.
  * @param job Its live job, with the cursor at the cut to support.
  * @return The pieces, or a refusal naming the first tile that cannot take support.
  */
 TBMSupportPlan PrepareTBMSupport(const TBMProject &project, const ExcavationJob &job);
+
+/**
+ * Read the canonical edge-connected track path used by native cut/support planning.
+ * @param job Canonical job whose accepted route and commissioning anchor supply every position.
+ * @param positions Number of route positions to include, bounded by the actual route.
+ * @param[out] ends Path index of each included cutter position.
+ * @return Actual edge-adjacent path from the housing, or empty for invalid cross-layer/diagonal start geometry.
+ */
+std::vector<TileIndex> GetTBMWorkRailPath(const ExcavationJob &job, size_t positions, std::vector<size_t> &ends);
 
 /**
  * Lay prepared support pieces and register their metadata; cannot fail once prepared.
@@ -857,7 +885,7 @@ bool IsTBMHoldingTrain(const Train &front);
 /** Derived pathfinding destination for a cutter travelling on its own canonical support, never an ordinary saved order. */
 struct TBMCutterSteeringTarget {
 	TileIndex tile = INVALID_TILE; ///< Current face approach or real exchange bay.
-	TrackdirBits trackdirs{}; ///< Real laid face track directions, or the bay's required physical door direction.
+	TrackdirBits trackdirs{}; ///< Actual laid face piece in its canonical entry/exit direction, or the bay's required physical door direction.
 };
 
 /**

@@ -24,6 +24,7 @@
 #include "vehicle_func.h"
 #include "settings_type.h"
 #include "layer_portal_map.h"
+#include "tbm_exchange.h"
 #include "core/math_func.hpp"
 #include "timer/timer_game_calendar.h"
 
@@ -155,12 +156,79 @@ TBMConsistDimensions MeasureTBMConsist(const Train &front, const TBMProject &pro
 	return result;
 }
 
+/** @copydoc IsTBMConsistReusableAtPortal */
+bool IsTBMConsistReusableAtPortal(const Train &front, TileIndex portal, CompanyID company, uint16_t model_id)
+{
+	// Reuse is an existing owned machine's next project. It cannot sell ordinary depot acquisition as commissioning,
+	// revive a wreck, share a live controller or carry another project's registered cargo/wagons into a new identity.
+	if (front.First() != &front || front.owner != company || front.tile != portal || !IsTBMCutterEngine(front.engine_type) || GetTBMEngineModel(front.engine_type) != model_id ||
+		!IsTrainStoppedAtPortalSite(front) || GetTBMProjectForCutter(front.index) != nullptr || GetTBMExchangeAssignmentForHauler(front.index) != nullptr) return false;
+	// Every real articulated part and wagon stays healthy, empty and outside exchange custody; checking only the head would conceal trailing spoil.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part->owner != company || part->vehstatus.Test(VehState::Crashed) || part->cargo.TotalCount() != 0 || GetTBMWagonSetForWagon(part->index) != nullptr) return false;
+	}
+	return true;
+}
+
 /**
- * Prepare a complete commissioning consist without allocating, charging or reserving anything.
- * @param request Portal request whose proposal carries the canonical route, requested floor and exchange path.
- * @param consist Requested Earth/Rock wagon counts.
- * @return Complete plan, or a refusal with every world state unchanged.
+ * Describe a prospective assignment from one real whole consist, without publishing or moving it.
+ * @param request Validated source, company, origin and logical model.
+ * @param proof Current portal-owned start and exit-heading proof.
+ * @param front Actual new or reused native chain.
+ * @return Unallocated project with the actual immutable machinery prefix.
  */
+static TBMProject MakeAcquiredTBMProject(const LayerPortalCommissionRequest &request, const LayerPortalBootstrapProof &proof, const Train &front)
+{
+	TBMProject project;
+	project.company = request.proposal.company;
+	project.cutter = front.index;
+	project.model_id = request.proposal.model_id;
+	// The permanent prefix is the real cutter and its articulated support; the first detachable wagon ends machinery ownership.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part != &front && !part->IsArticulatedPart()) break;
+		project.permanent_parts.push_back(part->index);
+	}
+	project.heading = proof.exit_heading;
+	project.origin = request.proposal.origin;
+	project.portal = proof.pair_key;
+	project.exchange_bay = proof.source;
+	project.phase = TBMPhase::Commissioning;
+	project.blocked = TBMBlockedReason::None;
+	return project;
+}
+
+/**
+ * Verify an actual new/reused train against its prepared complete native layout.
+ * @param front Actual stopped whole chain.
+ * @param project Prospective assignment used only to classify real machinery/wagon roles.
+ * @param plan Current native definitions, accepted counts, capacity, length and unit number.
+ * @return True when every actual quantity and ordered role agrees with the same estimate.
+ */
+static bool MatchesAcquiredTBMConsist(const Train &front, const TBMProject &project, const TBMAcquisitionPlan &plan)
+{
+	const auto layout = InspectTBMConsist(front, project);
+	// Both the complete immutable prefix and separate wagon counts must match; reuse never shortens a train to make a new route fit.
+	if (layout.error != TBMBlockedReason::None || layout.exchangeable_units.size() != size_t{plan.consist.earth_wagons} + plan.consist.rock_wagons) return false;
+	// Earth precedes Rock in the native complete consist; mismatched or reordered dedicated units cannot inherit a different capacity quote.
+	for (size_t i = 0; i < layout.exchangeable_units.size(); ++i) {
+		const auto expected = i < plan.consist.earth_wagons ? TBMConsistRole::EarthWagon : TBMConsistRole::RockWagon;
+		if (layout.exchangeable_units[i].role != expected) return false;
+	}
+	const CargoType earth_cargo = Engine::Get(plan.earth_engine)->GetDefaultCargoType();
+	const CargoType rock_cargo = Engine::Get(plan.rock_engine)->GetDefaultCargoType();
+	uint32_t parts = 0;
+	uint64_t earth_t = 0, rock_t = 0;
+	// Count each physical part and its native capacity, catching definition changes before publication or reuse.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		++parts;
+		if (part->cargo_type == earth_cargo) earth_t += part->cargo_cap;
+		if (part->cargo_type == rock_cargo) rock_t += part->cargo_cap;
+	}
+	return parts == plan.vehicle_parts && front.gcache.cached_total_length == plan.consist_length &&
+		earth_t == plan.earth_capacity_t && rock_t == plan.rock_capacity_t && front.unitnumber == plan.unit_number;
+}
+
+/** @copydoc PrepareTBMAcquisition */
 TBMAcquisitionPlan PrepareTBMAcquisition(const LayerPortalCommissionRequest &request, const TBMConsistRequest &consist)
 {
 	TBMAcquisitionPlan plan;
@@ -240,6 +308,16 @@ TBMAcquisitionPlan PrepareTBMAcquisition(const LayerPortalCommissionRequest &req
 		return refuse(TBMAcquisitionError::Geology, reservation.failure_tile);
 	}
 	plan.prospective_job = reservation.id;
+	if (request.reuse_cutter != VehicleID::Invalid()) {
+		const Train *front = Train::GetIfValid(request.reuse_cutter);
+		// The portal preflight already admitted this exact retired chain; recheck before returning a layout/cost quote.
+		if (front == nullptr || !IsTBMConsistReusableAtPortal(*front, request.portal, request.proposal.company, model_id)) return refuse(TBMAcquisitionError::InvalidConsist);
+		plan.unit_number = front->unitnumber;
+		const auto project = MakeAcquiredTBMProject(request, plan.proof, *front);
+		if (!MatchesAcquiredTBMConsist(*front, project, plan)) return refuse(TBMAcquisitionError::InvalidConsist);
+		plan.error = TBMAcquisitionError::None; // Already paid parts need no pool allocation, new unit number or second purchase invoice.
+		return plan;
+	}
 
 	/* Pool, unit number and the per-part site estimates, in the order the builder needs them. */
 	if (!Vehicle::CanAllocateItem(plan.vehicle_parts)) return refuse(TBMAcquisitionError::VehicleLimit);
@@ -271,12 +349,14 @@ void TBMAcquisition::Rollback()
 {
 	if (!this->held) return;
 	Train *front = Train::GetIfValid(this->front);
-	// Delete only the chain this owner built; a vanished or changed head means there is nothing of ours left to delete.
-	if (front != nullptr && front->IsFrontEngine() && front->owner == this->project.company) delete front;
+	// Delete only a chain this owner built; existing paid parts survive failed reassignment. A vanished or changed
+	// head cannot make rollback adopt another company's train, and reuse never transfers vehicle ownership.
+	if (!this->existing && front != nullptr && front->IsFrontEngine() && front->owner == this->project.company) delete front;
 	RestoreRandomSeeds(this->seeds);
 	this->front = VehicleID::Invalid();
 	this->project = {};
 	this->held = false;
+	this->existing = false;
 }
 
 /**
@@ -289,6 +369,7 @@ TBMProject TBMAcquisition::Release()
 	this->project = {};
 	this->front = VehicleID::Invalid();
 	this->held = false;
+	this->existing = false;
 	return project;
 }
 
@@ -311,52 +392,21 @@ TBMAcquisitionError AcquireTBMConsist(const LayerPortalCommissionRequest &reques
 	wagons.insert(wagons.end(), plan.consist.rock_wagons, Engine::Get(plan.rock_engine));
 	SavedRandomSeeds seeds;
 	SaveRandomSeeds(&seeds);
-	Train *front = nullptr;
-	// The builder deletes its own partial parts on refusal; only the random seeds remain for this owner to restore.
-	if (BuildTBMConsistAtSite(request, Engine::Get(plan.cutter_engine), plan.machinery_cost, plan.unit_number, wagons, &front).Failed() || front == nullptr) {
+	Train *front = Train::GetIfValid(request.reuse_cutter);
+	// Only a fresh request calls the purchase builder; a reuse request already names the exact revalidated chain.
+	// The builder deletes partial fresh parts on refusal, leaving only native random seeds to restore.
+	if (request.reuse_cutter == VehicleID::Invalid() && (BuildTBMConsistAtSite(request, Engine::Get(plan.cutter_engine), plan.machinery_cost, plan.unit_number, wagons, &front).Failed() || front == nullptr)) {
 		RestoreRandomSeeds(seeds);
 		return TBMAcquisitionError::AllocationFailure;
 	}
 	out.front = front->index;
 	out.seeds = seeds;
 	out.held = true;
+	out.existing = request.reuse_cutter != VehicleID::Invalid();
 
-	TBMProject &project = out.project;
-	project.company = request.proposal.company;
-	project.cutter = front->index;
-	project.model_id = request.proposal.model_id;
-	// The permanent prefix is the cutter and its articulated support, in chain order; the first wagon ends it.
-	for (const Train *part = front; part != nullptr; part = part->Next()) {
-		if (part != front && !part->IsArticulatedPart()) break;
-		project.permanent_parts.push_back(part->index);
-	}
-	project.heading = plan.proof.exit_heading;
-	project.origin = request.proposal.origin;
-	project.portal = plan.proof.pair_key;
-	project.exchange_bay = plan.proof.source; // Source-side commissioning exchange until a Plan 5 bay exists.
-	project.phase = TBMPhase::Commissioning;
-	project.blocked = TBMBlockedReason::None;
-
-	/* Verify the built consist against the plan; any difference rolls everything back. */
-	const auto layout = InspectTBMConsist(*front, project);
-	bool matches = layout.error == TBMBlockedReason::None && layout.exchangeable_units.size() == size_t{plan.consist.earth_wagons} + plan.consist.rock_wagons;
-	// Earth units come first, then Rock, exactly as requested; a reordered or mislabelled unit is a failed assembly.
-	for (size_t i = 0; matches && i < layout.exchangeable_units.size(); ++i) {
-		const auto expected = i < plan.consist.earth_wagons ? TBMConsistRole::EarthWagon : TBMConsistRole::RockWagon;
-		matches = layout.exchangeable_units[i].role == expected;
-	}
-	const CargoType earth_cargo = Engine::Get(plan.earth_engine)->GetDefaultCargoType();
-	const CargoType rock_cargo = Engine::Get(plan.rock_engine)->GetDefaultCargoType();
-	uint32_t parts = 0;
-	uint64_t earth_t = 0, rock_t = 0;
-	// Count every actual part and its real capacity, so a definition change between quote and build is caught.
-	for (const Train *part = front; part != nullptr; part = part->Next()) {
-		++parts;
-		if (part->cargo_type == earth_cargo) earth_t += part->cargo_cap;
-		if (part->cargo_type == rock_cargo) rock_t += part->cargo_cap;
-	}
-	// Every prepared quantity must hold on the real train before anything can rely on it.
-	if (!matches || parts != plan.vehicle_parts || front->gcache.cached_total_length != plan.consist_length || earth_t != plan.earth_capacity_t || rock_t != plan.rock_capacity_t || front->unitnumber != plan.unit_number) {
+	out.project = MakeAcquiredTBMProject(request, plan.proof, *front);
+	// Reuse and fresh construction must satisfy the same physical dimensions and separate capacity contract before publication.
+	if (!MatchesAcquiredTBMConsist(*front, out.project, plan)) {
 		out.Rollback();
 		return TBMAcquisitionError::AllocationFailure;
 	}

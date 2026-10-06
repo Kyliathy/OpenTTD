@@ -18,6 +18,7 @@
 #include "layer_portal_map.h"
 #include "company_base.h"
 #include "tile_map.h"
+#include "rail_map.h"
 
 #include "safeguards.h"
 
@@ -25,9 +26,10 @@
  * Check that a destination pocket is still free rock for this start, without reading private geology state.
  * @param pocket Destination 3x3 envelope from GetExcavationCutterEnvelope.
  * @param destination Issuing housing, the only structure the first cut may sweep.
+ * @param request Prevalidated native source request; explicit existing-consist reuse can retain already paid owned plain rail on excavated floor.
  * @return None, or Conflict when another job, active cut or structure already occupies a pocket cell.
  */
-static LayerPortalWorkError CheckBootstrapPocket(std::span<const TileIndex> pocket, TileIndex destination)
+static LayerPortalWorkError CheckBootstrapPocket(std::span<const TileIndex> pocket, TileIndex destination, const LayerPortalCommissionRequest &request)
 {
 	const auto &geology = GetGeologyWorldState();
 	// Every pocket cell will be swept by the first paid cut. A cell already claimed by another job or being
@@ -35,7 +37,12 @@ static LayerPortalWorkError CheckBootstrapPocket(std::span<const TileIndex> pock
 	for (TileIndex cell : pocket) {
 		if (geology.job_claims.contains(cell)) return LayerPortalWorkError::Conflict;
 		if (geology.terrain.Get(cell) == ExcavationState::Excavating) return LayerPortalWorkError::Conflict;
-		if (cell != destination && GetTileType(cell) != TileType::Clear) return LayerPortalWorkError::Conflict;
+		// Recommissioning starts in the already paid former pocket. Its same-owner compatible plain rail can
+		// remain on excavated floor; a new purchase, solid cell, other facility or foreign rail gets no exemption.
+		if (cell != destination && GetTileType(cell) != TileType::Clear) {
+			if (request.reuse_cutter == VehicleID::Invalid() || geology.terrain.Get(cell) != ExcavationState::Excavated ||
+				!IsPlainRailTile(cell) || GetTileOwner(cell) != request.proposal.company || GetRailType(cell) != GetRailType(request.portal)) return LayerPortalWorkError::Conflict;
+		}
 	}
 	return LayerPortalWorkError::None;
 }
@@ -61,12 +68,13 @@ LayerPortalBootstrapProof IssueLayerPortalBootstrap(const LayerPortalCommissionR
 		proof.error = LayerPortalWorkError::InvalidPair;
 		return proof;
 	}
-	proof.error = CheckBootstrapPocket(pocket, destination);
+	proof.error = CheckBootstrapPocket(pocket, destination, request);
 	if (proof.error != LayerPortalWorkError::None) return proof;
 	proof.pair_revision = preflight.pair_revision;
 	proof.company = request.proposal.company;
 	proof.model_id = request.proposal.model_id;
 	proof.origin = request.proposal.origin;
+	proof.reuse_cutter = request.reuse_cutter;
 	proof.source = request.portal;
 	proof.source_support = std::move(source_support);
 	proof.destination = destination;

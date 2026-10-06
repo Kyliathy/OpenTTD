@@ -79,6 +79,27 @@ public:
 	}
 };
 
+/** A future area can include previously paid open floor, but its route must still sweep every requested solid cell. */
+TEST_CASE("A job distinguishes existing floor from unswept solid targets", "[excavation-job-existing-floor]")
+{
+	ExcavationFixture fixture;
+	const TileIndex anchor = TileXYL(20, 20, MapLayer::Underground);
+	OpenJobFixtureStarter(fixture, anchor);
+	auto job = JobFixturePass(anchor);
+	const TileIndex existing = TileAddWrap(anchor, 0, 3);
+	job.requested_tiles.push_back(existing);
+	job.authorized_tiles.push_back(existing);
+	std::ranges::sort(job.requested_tiles);
+	std::ranges::sort(job.authorized_tiles);
+	const auto refused = ValidateExcavationJobGeometry(GetGeologyWorldState(), job);
+	CHECK(refused.error == ExcavationError::InvalidRoute);
+	CHECK(refused.failure_tile == existing);
+	// Declared pre-existing floor satisfies a final-use target without another cut. This geometry/refusal fixture
+	// creates no work, cargo or invoice; the separate driven recommissioning test proves its actual paid producer.
+	fixture.Open(std::array{existing});
+	CHECK(ValidateExcavationJobGeometry(GetGeologyWorldState(), job).error == ExcavationError::None);
+}
+
 /** Reservation estimates and conflicting/disconnected routes leave both existing claims and identity cursors untouched. */
 TEST_CASE("Excavation jobs reserve one owner per complete advancing footprint", "[excavation-job-reservation]")
 {

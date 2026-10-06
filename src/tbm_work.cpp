@@ -10,6 +10,7 @@
  * envelope, lays support, loads real Earth and Rock packets into the assigned wagons and debits the company.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 6, 7, 8 and 10
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 9.3 (the logistics pause of new cutting)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13A (loaded train-mass continuity)
  */
 
 #include "stdafx.h"
@@ -254,7 +255,11 @@ bool TBMCutParticipant::Commit(const ExcavationMaterialSnapshot &expected, const
 		part->cargo.Append(packet, VehicleCargoList::MoveToAction::Keep);
 	}
 	if (!loads.empty()) {
-		// Weight and visuals change with the cargo, exactly as after ordinary loading.
+		// Paid spoil becomes physical train mass in this same atomic cut. Without rebuilding both caches,
+		// movement uses empty-train physics until a later rearrangement, while loading a save uses the correct loaded mass.
+		prepared->front->CargoChanged();
+		prepared->front->UpdateAcceleration();
+		// Visuals reflect the authoritative packets after the physical caches agree with their wagon contents.
 		SetWindowDirty(GetWindowClassForVehicleType(VehicleType::Train), prepared->front->owner);
 		SetWindowDirty(WindowClass::VehicleDetails, prepared->front->index);
 		prepared->front->MarkDirty();

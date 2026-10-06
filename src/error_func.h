@@ -5,14 +5,23 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file error_func.h Error reporting related functions. */
+/** @file error_func.h Error reporting related functions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, bounded unattended diagnostics */
 
 #ifndef ERROR_FUNC_H
 #define ERROR_FUNC_H
 
 #include "3rdparty/fmt/format.h"
 
+/** @param str Fatal user-facing error text. @attention Terminates the process after reporting the error. */
 [[noreturn]] void UserErrorI(const std::string &str);
+
+/**
+ * Configure a process-local reporter for unattended native fatal errors.
+ * @param handler Receives the actual fatal text after crash-log ownership is updated; null restores normal reporting.
+ *        A reporter may terminate the process. If it returns, normal error presentation and abort continue.
+ * @note This startup-only presentation hook owns no synchronized gameplay or video state.
+ */
+void SetFatalErrorReporter(void (*handler)(const std::string &));
 
 /**
  * Error handling for fatal non-user errors.

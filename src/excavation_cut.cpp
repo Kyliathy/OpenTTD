@@ -10,6 +10,7 @@
 #include "excavation.h"
 #include "company_base.h"
 #include "tile_map.h"
+#include "rail_map.h"
 
 #include "safeguards.h"
 
@@ -168,6 +169,9 @@ ExcavationCutResult PrepareExcavationCut(const ExcavationCutRequest &request, co
 		if (*terrain == ExcavationState::Excavated) {
 			const auto type = GetTileType(tile);
 			if (type != TileType::Clear && type != TileType::Railway && type != TileType::LayerPortal) return {ExcavationError::Conflict, tile}; // Already open overlap still belongs to the full cutter envelope; later buildings cannot be ignored as zero-yield cells.
+			// Revalidate the planner's facility exclusion: a depot's open ground is still occupied building space,
+			// even when no train currently stands there. Zero-yield overlap cannot authorize sweeping its constrained door.
+			if (type == TileType::Railway && !IsPlainRailTile(tile)) return {ExcavationError::Conflict, tile};
 			if (type != TileType::Clear && GetTileOwner(tile) != job->company) return {ExcavationError::InvalidOwner, tile}; // Physical support ownership changes invalidate the accepted sweep before any whole-cut receipt.
 			continue;
 		}

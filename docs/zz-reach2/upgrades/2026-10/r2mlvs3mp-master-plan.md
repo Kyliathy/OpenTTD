@@ -1,6 +1,6 @@
 # R2MLVS3MP - Portal and TBM execution master plan
 
-Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). Targets: complete [r2mlvs3](r2mlvs3-sealed-portals-and-deep-rail.md) and [r2mlvs4](r2mlvs4-tunnel-boring-machines.md), including their late integrations and acceptance. Related architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Planning snapshot: 2026-10-05; implementation checkpoints below remain unexecuted by this planning change.
+Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). Targets: complete [r2mlvs3](r2mlvs3-sealed-portals-and-deep-rail.md) and [r2mlvs4](r2mlvs4-tunnel-boring-machines.md), including their late integrations and acceptance. Related architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Planning snapshot: 2026-10-05. Execution audit: [2026-10-06 completion review](r2mlvs3mp-n-completion-audit.md); native foundations are delivered, but this master is not fully executed.
 
 Planning continuation note: Context has compacted 1 times while executing this group. This count belongs to creation and validation of the master document, not execution of the implementation groups below.
 
@@ -30,11 +30,13 @@ Before execution and after every context compaction, read this section, the curr
 | [Plan 3](r2mlvs3-sealed-portals-and-deep-rail.md#public-handoff-contract) and [Plan 4](r2mlvs4-tunnel-boring-machines.md#public-handoff-contract) | Public Handoff Contract; the executing group; Completion Conditions at closure | Distinguish delivered prefixes from complete public runtime behavior. |
 | This document | Scope and authority; current Area/checkpoint; completion coverage table | Dispatch work without recreating the circular whole-plan dependency. |
 
-Keep writes inside authorized repositories; no commit/checkout/reset/stash or other Git mutation is authorized. Retain supplied saves and other working changes. New source/test/JSON names do not begin with r2. Assisting Markdown and scratch evidence stays beside this master under `r2mlvs3mp-a-`, `-b-`, etc.; implementation artifacts follow the owning child's established evidence prefix. Test saves belong in feature directories under `src/tests/fixtures/`, and review PNGs in `assets/reviews/`. Do not create assisting scripts in source directories.
+Keep writes inside authorized repositories; the user's 2026-10-06 checkpoint instruction authorizes staging and committing the current completed group. Other Git mutations remain unauthorized. Retain supplied saves and other working changes. New source/test/JSON names do not begin with r2. Assisting Markdown and scratch evidence stays beside this master under `r2mlvs3mp-a-`, `-b-`, etc.; implementation artifacts follow the owning child's established evidence prefix. Test saves belong in feature directories under `src/tests/fixtures/`, and review PNGs in `assets/reviews/`. Do not create assisting scripts in source directories.
 
 Use focused tests for the active owner group. Wait at least 50 seconds when polling a still-running test/build, with waits bounded so progress updates remain possible; the harness must tolerate one minute without agent interaction. Split a test exceeding two minutes into focused files. Avoid full regressions; run them only when justified at ten-group intervals or final closure. After compaction add the required count above the actually executing child group; beyond three compactions split that group into B/C/D groups with scoped reading. Keep continuation notes identifying stale ranges and current producer readiness.
 
-## Current verified baseline
+## Original planning baseline (2026-10-05)
+
+This table records the queue's original producer gaps. Paid solid commissioning, actual support movement, source-side exchange/disposal, material industries and the native underground fleet have since arrived. Current verified closures and genuinely missing late providers are recorded in the [completion audit](r2mlvs3mp-n-completion-audit.md); this historical table cannot establish present absence.
 
 | Owner | Delivered portion | Still needed for this queue |
 | --- | --- | --- |
@@ -92,16 +94,18 @@ Context has compacted 1 times while executing this group.
 - [X] 3.4 Execute [Plan 3 Group 5 task 5.3B](r2mlvs3-sealed-portals-and-deep-rail.md#group-5---expose-sealed-routing-without-losing-physical-pair-geometry): consume actual controller role/part authorization. Test restricted owned-consist entry/retreat and normal/unrelated follower refusal against real boundary consists; final playable entry comes in Group 7.
 - [X] 3.5 Execute [Plan 4 Group 6](r2mlvs4-tunnel-boring-machines.md#group-6---advance-bounded-work-against-one-reserved-face): one claimed face, one saved work accumulator/tick and precise capacity/support/funds waits.
 - [X] 3.6 Execute [Plan 4 Group 7](r2mlvs4-tunnel-boring-machines.md#group-7---join-geological-cuts-to-real-wagon-inventory-atomically): actual separate Earth/Rock packets, canonical work-site provenance, storage acquisition and one atomic paid cut; test exact fill, one-cargo fullness and pool/participant failure.
-- [ ] 3.7 Execute [Plan 4 Group 8](r2mlvs4-tunnel-boring-machines.md#group-8---install-charged-support-and-preserve-retreat): paid temporary support metadata/placement and actual part positions/reservations, including the first solid-pocket segment. Finish the work-behavior producer tests promised by Group 5.
+- [X] 3.7 Execute [Plan 4 Group 8](r2mlvs4-tunnel-boring-machines.md#group-8---install-charged-support-and-preserve-retreat): paid temporary support metadata/placement and actual part positions/reservations, including the first solid-pocket segment. Finish the work-behavior producer tests promised by Group 5.
 
 Group 3 status (2026-10-05): all seven child scopes passed the [milestone burst](r2mlvs3mp-g-burst4-all-results.txt), so 3.1-3.6 are checked. 3.7 stays unchecked because one part of it is not delivered: moving the parts onto new support and their reservations. It needs the first pocket entry (7.3) and Plan 4 Group 14 (4.6); until then a working cutter is held still. Child evidence is in the Plan 4 Groups 3-8 status paragraphs and the Plan 3 Group 5 status line. Notes: [r2mlvs3mp-d](r2mlvs3mp-d-execution-notes.md#group-3---saved-controller-and-cut-participants-verified).
+
+2026-10-06 closure: 3.7 is checked with Plan 4 task 8.3. The focused movement/support/work/corridor/coverage burst passes 130,034 assertions / 24 cases in [Plan 4 m](r2mlvs4-m-paid-support-bend-checks.log), including every actual trailing part on excavated paid support during turning/backing and protected occupied-tail release. The old held-still limitation above is historical.
 
 ### Group 4 - Finish geometry, accounting and protected retreat
 
 {{HARD}}
 - [X] 4.1 Execute [Plan 4 Group 9](r2mlvs4-tunnel-boring-machines.md#group-9---boring-and-accounting): declared conversion/removal/traversal rules for actual temporary track.
 - [X] 4.2 Execute [Plan 4 Group 10](r2mlvs4-tunnel-boring-machines.md#group-10---bind-canonical-area-passes-to-the-actual-train): bind actual consist dimensions/capacity to accepted canonical passes and charge every authorized extra cut.
-- [ ] 4.3 Execute [Plan 4 Group 11](r2mlvs4-tunnel-boring-machines.md#group-11---exercise-area-coverage-and-turning-as-a-separate-behavior): straight/two-bend/irregular coverage, tight-turn/obstruction refusal and saved safe backing.
+- [X] 4.3 Execute [Plan 4 Group 11](r2mlvs4-tunnel-boring-machines.md#group-11---exercise-area-coverage-and-turning-as-a-separate-behavior): straight/two-bend/irregular coverage, tight-turn/obstruction refusal and saved safe backing.
 - [X] 4.4 Execute [Plan 4 Group 12](r2mlvs4-tunnel-boring-machines.md#group-12---accrue-active-and-idle-costs-without-tick-duplication): saved state-duration charging, nonzero idle cost, insufficient funds and bankruptcy protection.
 - [X] 4.5 Execute [Plan 4 Group 13](r2mlvs4-tunnel-boring-machines.md#group-13---boring-and-accounting): actual backing preserves cutter-facing authority and cannot bore backwards.
 - [X] 4.6 Execute [Plan 4 Group 14](r2mlvs4-tunnel-boring-machines.md#group-14---separate-work-reservations-from-ordinary-freight): project corridor/retreat claims, movement/force-proceed enforcement and safe release with occupied tails.
@@ -113,6 +117,8 @@ Group 4 status (2026-10-05): all seven child scopes passed the [milestone burst]
 - tube and plant reuse (Plan 4 Group 15), which needs Group 10.
 
 Later in Group 7B (2026-10-05), 4.6 is checked. Plan 4 14.3 passes by real movement: cancellation with the tail across the portal, a blocked retreat, and a waiting freight train. 4.3 stays open for Plan 4 11.3's reload during a bend.
+
+2026-10-06 closure: 4.3 is checked with Plan 4 task 11.3. An actual consist on its first bend resumes partial work after unchanged project/support staging; physical state, packet custody, saved heading and accounting match, followed by safe backing. Focused proof is [Plan 4 m](r2mlvs4-m-paid-support-bend-checks.log). Full occupied-file acceptance remains 7.4.
 
 The milestone fixed two code defects (validator order in `GetLiveTBMJob`; reversal of a consist on its portal site) and five test setups; see the [milestone notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-4-2026-10-05) and [Group 4 notes](r2mlvs3mp-d-execution-notes.md#group-4---geometry-accounting-and-protected-retreat-verified).
 
@@ -206,9 +212,9 @@ Group 7 split (2026-10-05): the movement tasks moved to Group 7B below; their ID
 
 {{HARD}}
 - [X] 7.2 Finish [Plan 3 Group 9](r2mlvs3-sealed-portals-and-deep-rail.md#group-9---connect-only-a-cleared-and-safely-reserved-pair): fully withdrawn TBM then ordinary freight; spanning-consist refusal preserves recovery.
-- [ ] 7.5 Finish [Plan 3 Group 17](r2mlvs3-sealed-portals-and-deep-rail.md#group-17---controls-art-and-acceptance): complete commissioning and every rail/elevator/script path immediately before/on 1980, including actual fleet paths and explicit legacy/editor/economy-time policies.
+- [X] 7.5 Finish [Plan 3 Group 17](r2mlvs3-sealed-portals-and-deep-rail.md#group-17---controls-art-and-acceptance): complete commissioning and every rail/elevator/script path immediately before/on 1980, including actual fleet paths and explicit legacy/editor/economy-time policies.
 - [X] 7.6 Execute [Plan 4 Group 18](r2mlvs4-tunnel-boring-machines.md#group-18---recovery-presentation-and-acceptance): material conservation across partial/full cuts, cancellation/reversal and saves with actual wagons.
-- [ ] 7.8 Execute [Plan 4 Group 20](r2mlvs4-tunnel-boring-machines.md#group-20---recovery-presentation-and-acceptance): measured standard/Deep time and complete cost, including real haulage/disposal; hand actual measurements to Plan 15.
+- [X] 7.8 Execute [Plan 4 Group 20](r2mlvs4-tunnel-boring-machines.md#group-20---recovery-presentation-and-acceptance): measured standard/Deep time and complete cost, including real haulage/disposal; hand actual measurements to Plan 15.
 
 Group 7 status (2026-10-05): the milestone build and burst ran ([notes](r2mlvs3mp-d-execution-notes.md#milestone-build-and-burst-end-of-master-group-7-2026-10-05)).
 - 7.2 is checked: the freight connection after withdrawal, and the spanning refusal (`[portal-recovery]`).
@@ -217,6 +223,10 @@ Group 7 status (2026-10-05): the milestone build and burst ran ([notes](r2mlvs3m
   missing: a script path for commissioning, and fleet movement through Deep pairs (Group 7B).
 - 7.8 stays open. The first-cut measurements are recorded in the Plan 4 Group 20 status and handed to Plan 15
   Group 16.2. Whole-corridor time and cost with real haulage follow 7.1 in Group 7B.
+
+2026-10-06 closure: 7.5 is checked with Plan 3 17.1. AI/GS commissioning now consumes the actual synchronized transaction, and real rail/truck fleets prove the pre/on-1980 calendar boundary at every allowed Deep origin. The focused calendar/command/UI/fleet burst passes 34,886 assertions / 18 cases ([Plan 3 as](r2mlvs3-as-calendar-command-matrix.log)); no full regression was run.
+
+2026-10-06 closure: 7.8 is checked with Plan 4 20.1. The [complete paid ledgers](r2mlvs4-t-complete-project-ledger.md) include actual initial logistics, whole-consist purchase, all 36 swept cells, active/idle accrual, native haulage and receiver fees through two/three actual source exchanges. Standard: 10,620 ticks / 2,546,553 base currency units; Deep: 32,926 / 3,154,099. Actual cash balances exactly. The focused economics/affected-workflow burst passes 27,534 assertions / four cases ([Plan 4 s](r2mlvs4-s-project-and-workflow-checks.log)). Plan 15 received the input; its broader acceptance and recurring underground-bay checkpoint 7.1 remain pending.
 
 Milestone result (2026-10-05): both Debug targets build with no warnings, and [all 108 project tags](r2mlvs3mp-l-burst4-all-results.txt) pass. Master Groups 5
 and 6 are checked with their child tasks. All five save fixtures pass; `portal_save_fixture` first timed out in one case
@@ -238,7 +248,9 @@ visible/hidden independent and keep each part's reservation; ordinary trains kee
 
 Context has compacted 3 times while executing this group.
 
-### Group 7B - Drive the consist and close the playable loop
+### Group 7B - Retained native movement and playable controls
+
+2026-10-06 split: the remaining logistics, visibility and occupied-file checkpoints move in their original order to 7BB/7BC/7BD below. The three compactions above belong to the earlier delivered movement/control work. Each continuation has its own reading boundary.
 
 Group 7B status (2026-10-05): in progress. The design is [r2mlvs3mp-m](r2mlvs3mp-m-movement-design.md). All 112
 project tags pass after 7.9 ([burst](r2mlvs3mp-l-controls-burst2-all.txt)).
@@ -266,9 +278,41 @@ project tags pass after 7.9 ([burst](r2mlvs3mp-l-controls-burst2-all.txt)).
 
 {{HARD}}
 - [X] 7.3 Finish [Plan 3 Group 15](r2mlvs3-sealed-portals-and-deep-rail.md#group-15---controls-art-and-acceptance): first entry/retreat, sealed normal-train refusal, connected crossing, signals and reversals across both allowed rail pairs.
-- [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop): commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
-- [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
 - [X] 7.9 Close the loop from visible controls (added 2026-10-05 at the user's request, so that the game can be played): execute [Plan 5 task 13.4](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop) and [Plan 4 task 16.3](r2mlvs4-tunnel-boring-machines.md#group-16---expose-controller-state-and-integrate-matching-assets). Commission, start, assign and release the hauler, pause, cancel, retire, sell, convert and connect, all from the portal window, with stand-in visuals. Update [r2mlvs-how-to.md](r2mlvs-how-to.md).
+
+### Local Mandatory Reading - Source reloads and recurring underground logistics
+
+_Applies to Group 7BB; supplements Movement and occupied runtime above._
+
+Read Plan 5 Global, its Lifecycle and acceptance Area and only the executing continuation's Local Mandatory Reading: 13A, 13AB, 13AC, 13B or 13C in that order. The retained source/bay producer burst is [Plan 5 a](r2mlvs5-a-source-and-bay-producer-checks.log), 251,896 assertions / eight cases. For source stalls inspect only their named station/receiver/ordinary route owner and the delivered real application-loader observer; do not preload depot geometry. At 13B inspect `CmdSetTBMExchangeBay`, `ResolveTBMExchangeBay`, `AdvanceTBMHauler`, `GetTBMHaulerSteeringTarget`, `SetTBMProjectExchangeBay`, actual cutter face/return steering and the shared native workflow tick. Real files use `LayerSaveFileSink` / `LayerSaveContent`, dense original-plus-native EIDS setup and distributed cargo slots. Depot construction must use already paid excavated floor, preserve protected retreat and provide an ordinary haulage route that does not pass an active cutter. In-memory row restoration is not file-load or driven-loop proof.
+
+Context has compacted 3 times while executing this group.
+
+### Group 7BB - Complete logistics and wait-state reloads
+
+{{HARD}}
+- [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop), its recurring-bay continuation 13B and depot-file continuation 13C: commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
+
+### Local Mandatory Reading - Visibility equivalence of both logistics loops
+
+_Applies to Group 7BC._
+
+Read Plan 4 Global, its Recovery, presentation and acceptance Area and Group 19. Reuse the actual source/depot loops delivered in 7BB and compare canonical job/project/exchange, wagon/packet, receiver, money and next-step state with actual viewport selections and headless execution. Camera/rendering state may only change presentation; a source audit alone cannot complete the paired runtime comparison or the recurring-bay portion.
+
+### Group 7BC - Compare visible and hidden native progress
+
+{{HARD}}
+- [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
+
+### Local Mandatory Reading - Occupied portal files
+
+_Applies to Group 7BD._
+
+Read Plan 3 Global, its Controls, art and acceptance Area and Group 16. Read actual `VEHS`/order, portal, project, support and exchange serialization/fixups and the repository-local loader harness only for the selected occupied scenarios. Retain genuine version-370 inputs and compare endpoint topology, whole part positions, reservations, packet custody and the next legal transition after real loading. Reuse 7BB's saved logistics worlds when they satisfy the exact portal scenario; never relabel a copied-state test as a file round-trip.
+
+### Group 7BD - Complete occupied-file acceptance
+
+{{HARD}}
 - [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
 
 ### Group 8 - Deliver and review the complete M1 asset slice

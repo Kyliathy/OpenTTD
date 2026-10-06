@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file underground_workflow.cpp Connected visible excavation and mine freight workflow using real controls and native movement. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D */
+/** @file underground_workflow.cpp Connected visible excavation and mine freight workflow using real controls and native movement. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D; r2mlvs4-tunnel-boring-machines.md, Group 20; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (paid wide depot chamber) */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -176,9 +176,14 @@ static void RefitWorkflowCarrier(RoadVehicle *carrier, CargoType cargo)
  * @param world Accepted generated scenario; its target floor is still solid.
  * @param view Actual main or extra viewport used for world picking.
  * @param wide Whether this scenario has explicitly enabled sharp rail turns for a wider chamber.
+ * @param stopped_ticks Actual startup hold before starting either train, used to measure native idle expense.
+ * @param observe Read-only evidence observer after actual simulation steps; it grants no phase or position mutation.
+ * @param control Optional player action schedule after observation; all changes use owning commands without advancing another simulation step.
  * @return Actual completed project identity; the same world continues into mine freight acceptance.
  */
-static TBMProjectID RunVisibleExcavation(UndergroundWorkflowWorld &world, Window *view, bool wide = false)
+static TBMProjectID RunVisibleExcavation(UndergroundWorkflowWorld &world, Window *view, bool wide = false, uint stopped_ticks = 0,
+	const std::function<void(const UndergroundWorkflowWorld &)> &observe = {},
+	const std::function<void(const UndergroundWorkflowWorld &)> &control = {})
 {
 	SetViewportLayer(view, world.layer);
 	Window *tools = ShowUndergroundConstructionToolbar(world.layer, GetCurrentMultiLayerProfileSelection());
@@ -212,6 +217,12 @@ static TBMProjectID RunVisibleExcavation(UndergroundWorkflowWorld &world, Window
 	REQUIRE(GetTBMExchangeAssignmentForHauler(world.hauler->index) != nullptr);
 	AddWorkflowOrder(world.hauler, world.origin->xy, view);
 	REQUIRE(world.hauler->GetNumOrders() == 1);
+	// A commissioned but not yet started machine pays its own idle rate; preserve real stopped states and run only native ticks.
+	for (uint tick = 0; tick < stopped_ticks; ++tick) {
+		world.Tick();
+		if (observe) observe(world);
+		if (control) control(world);
+	}
 	ShowVehicleViewWindow(world.hauler);
 	ClickWorkflowControl(FindWindowById(WindowClass::VehicleView, world.hauler->index), WID_VV_START_STOP);
 	ClickWorkflowControl(portal, PW_START_STOP);
@@ -221,6 +232,8 @@ static TBMProjectID RunVisibleExcavation(UndergroundWorkflowWorld &world, Window
 	// Run only actual native owners until excavation and its final physical exchange/delivery finish; never force phases or empty wagons.
 	while (attempts < 100000) {
 		world.Tick();
+		if (observe) observe(world);
+		if (control) control(world);
 		++attempts;
 		const auto *record = GetTBMProject(project);
 		const auto *assignment = GetTBMExchangeAssignmentForHauler(world.hauler->index);
@@ -258,6 +271,15 @@ TEST_CASE("Visible underground excavation and exchange produce the mine floor", 
 	AutoRestoreBackup<bool> turns(_settings_game.pf.forbid_90_deg, !wide);
 	UndergroundWorkflowUI ui(_current_company);
 	RunVisibleExcavation(world, new UndergroundTestViewport(), wide);
+}
+
+/** @copydoc RunUndergroundExcavationWorkflow */
+TBMProjectID RunUndergroundExcavationWorkflow(UndergroundWorkflowWorld &world, uint stopped_ticks,
+	const std::function<void(const UndergroundWorkflowWorld &)> &observe,
+	const std::function<void(const UndergroundWorkflowWorld &)> &control, bool wide)
+{
+	UndergroundWorkflowUI ui(_current_company);
+	return RunVisibleExcavation(world, new UndergroundTestViewport(), wide, stopped_ticks, observe, control);
 }
 
 /**

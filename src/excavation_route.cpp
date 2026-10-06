@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "excavation.h"
 #include "tile_map.h"
+#include "rail_map.h"
 #include "company_func.h"
 #include <queue>
 
@@ -153,6 +154,9 @@ static ExcavationFootprintResult CheckPlanningCut(const ExcavationCutGeometry &c
 		if (*terrain == ExcavationState::Excavating) return {ExcavationError::ActiveCut, tile};
 		// Real support rail/portal occupancy is validated by the later controller; other structures are not implicit demolition permission.
 		if (GetTileType(tile) != TileType::Clear && GetTileType(tile) != TileType::Railway && GetTileType(tile) != TileType::LayerPortal) return {ExcavationError::Conflict, tile};
+		// A depot shares Railway's tile type but is a building with a constrained door. Its already open floor
+		// cannot make it part of a cutter's full physical sweep; only ordinary plain track may support that sweep.
+		if (IsTileType(tile, TileType::Railway) && !IsPlainRailTile(tile)) return {ExcavationError::Conflict, tile};
 		if (GetTileType(tile) != TileType::Clear && GetTileOwner(tile) != _current_company) return {ExcavationError::InvalidOwner, tile}; // Planning cannot promise another company's support track or portal as collision-free working space.
 		const auto *deposit = geology.deposits.Get(geology.deposits.Find(tile));
 		if (deposit != nullptr && deposit->claimant != CompanyID::Invalid() && deposit->claimant != _current_company) return {ExcavationError::Conflict, tile}; // Planning cannot promise another company's recoverable seam.

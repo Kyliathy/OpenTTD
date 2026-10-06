@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_destrail.hpp Rail destinations and canonical native cutter/hauler steering. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B */
+/** @file yapf_destrail.hpp Rail destinations and canonical native cutter/hauler steering. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (recurring native depot destination) */
 
 #ifndef YAPF_DESTRAIL_HPP
 #define YAPF_DESTRAIL_HPP
@@ -152,13 +152,14 @@ public:
 			this->CYapfDestinationRailBase::SetDestination(v);
 			return;
 		}
-		/* A hauler returning empties is steered to its Source bay, entered through the door, without touching its orders
-		 * (R2MLVS3MP-M decision 6). Only it sees the bay's track, so its search keeps out of the shared segment cache. */
+		/* Empty returns use the validated Source magazine or genuine depot's own door without changing their ordinary
+		 * origin order. Only the assignment supplies this destination, so the search stays outside shared segment caching. */
 		if (const TileIndex bay = GetTBMHaulerSteeringTarget(*v); bay != INVALID_TILE) {
 			Yapf().DisableCache(true);
 			this->dest_tile = bay;
 			this->dest_station_id = StationID::Invalid();
-			this->dest_trackdirs = TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(GetLayerPortalDoorDirection(bay))));
+			const DiagDirection door = IsLayerPortalTile(bay) ? GetLayerPortalDoorDirection(bay) : GetRailDepotDirection(bay);
+			this->dest_trackdirs = TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(door)));
 			this->CYapfDestinationRailBase::SetDestination(v);
 			return;
 		}

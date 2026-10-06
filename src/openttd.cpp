@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file openttd.cpp Functions related to starting OpenTTD. */
+/** @file openttd.cpp Functions related to starting OpenTTD. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, bounded native failure reporting */
 
 #include "stdafx.h"
 
@@ -104,6 +104,14 @@ bool _save_config = false;
 bool _request_newgrf_scan = false;
 NewGRFScanCallback *_request_newgrf_scan_callback = nullptr;
 
+static void (*_fatal_error_reporter)(const std::string &) = nullptr; ///< Optional process-local diagnostic reporter; normal game startup leaves it unset.
+
+/** @copydoc SetFatalErrorReporter */
+void SetFatalErrorReporter(void (*handler)(const std::string &))
+{
+	_fatal_error_reporter = handler;
+}
+
 /**
  * Error handling for fatal user errors.
  * @param str the string to print.
@@ -129,12 +137,14 @@ void UserErrorI(const std::string &str)
 /* Doxygen in error_func.h */
 void FatalErrorI(const std::string &str)
 {
+	/* Preserve the actual native error before an unattended reporter terminates; rendering never owns this failure. */
+	CrashLog::SetErrorMessage(str);
+	if (_fatal_error_reporter != nullptr) _fatal_error_reporter(str);
+	/* Startup and interactive video failures show their native error box; noninteractive drivers proceed to abort. */
 	if (VideoDriver::GetInstance() == nullptr || VideoDriver::GetInstance()->HasGUI()) {
 		ShowOSErrorBox(str, true);
 	}
 
-	/* Set the error message for the crash log and then invoke it. */
-	CrashLog::SetErrorMessage(str);
 	abort();
 }
 

@@ -10,6 +10,7 @@
  * back, reverses while it spans the pair, and occupies the signal block that runs through it.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15 (15.2, 15.3)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 17 (actual calendar-gated entry)
  */
 
 #include "../stdafx.h"
@@ -163,6 +164,10 @@ public:
 			CallVehicleTicks();
 			REQUIRE_FALSE(this->train->vehstatus.Test(VehState::Crashed));
 			REQUIRE(IsTrainOnItsTiles(this->train));
+			// The same spacing validator used after real loading must accept forward and reversed physical crossings;
+			// legitimate shaft continuity cannot trigger the critical broken-train pause.
+			CheckTrainsLengths();
+			REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));
 			++ticks;
 		}
 		INFO("after " << ticks << " ticks: " << DescribeTrain(this->train));
@@ -178,6 +183,25 @@ public:
 static std::pair<MapLayer, MapLayer> AllowedRailPair(int section)
 {
 	return section == 0 ? std::pair{MapLayer::Surface, MapLayer::Underground} : std::pair{MapLayer::Underground, MapLayer::DeepUnderground};
+}
+
+/** An existing actual fleet must wait outside Deep before the calendar unlock, then cross and return normally. */
+TEST_CASE("Actual Deep rail traffic waits for the calendar gate then crosses both ways", "[portal-fleet-date]")
+{
+	OpenedPairLine line(MapLayer::Underground, MapLayer::DeepUnderground);
+	line.Start();
+	TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1979}, 11, 31);
+	// A real started train repeatedly tries its route; neither faster economic time nor existing Connected topology unlocks Deep.
+	AutoRestoreBackup economy(TimerGameEconomy::date, TimerGameEconomy::ConvertYMDToDate(TimerGameEconomy::Year{2090}, 0, 1));
+	for (uint tick = 0; tick < 1500; ++tick) {
+		CallVehicleTicks();
+		REQUIRE_FALSE(line.train->vehstatus.Test(VehState::Crashed));
+		// Check the whole chain so a trailing wagon crossing early cannot hide behind the front engine's refusal.
+		for (const Train *part = line.train; part != nullptr; part = part->Next()) REQUIRE(GetTileLayer(part->tile) == MapLayer::Underground);
+	}
+	TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1);
+	line.Drive([&line] { return GetTileLayer(line.train->tile) == MapLayer::DeepUnderground; });
+	line.Drive([&line] { return line.IsHome(); });
 }
 
 /** Freight crosses an opened pair to the end of the lower line and comes back up to its depot. */

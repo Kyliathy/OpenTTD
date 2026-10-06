@@ -61,6 +61,7 @@ ExcavationFootprintResult ValidateExcavationJobGeometry(const GeologyWorldState 
 	}
 	// Only actual TBM designs may reserve rock passes, with their own layer capability preserved.
 	if (capability->commissioning != MultiLayerCommissioningFacility::RailPortalBay || !capability->supported_layers.Test(layer)) return {ExcavationError::InvalidPolicy, job.commissioning_anchor};
+	// Both final-use targets and accepted working space must remain sorted, bounded domains on the same rock layer before claims can exist.
 	for (const auto &tiles : {std::span<const TileIndex>{job.requested_tiles}, std::span<const TileIndex>{job.authorized_tiles}}) {
 		const auto result = CheckJobTiles(tiles, layer, MAX_EXCAVATION_JOB_TILES);
 		if (result.error != ExcavationError::None) return result;
@@ -96,9 +97,11 @@ ExcavationFootprintResult ValidateExcavationJobGeometry(const GeologyWorldState 
 		previous = cut.cutter_position;
 		previous_heading = cut.heading;
 	}
-	// A claimed job cannot report completion while silently leaving requested floor outside its accepted pass.
+	// The planner counts previously paid open floor as satisfied without sweeping it again. A further job may
+	// request that existing floor beside its new cuts; every still-solid requested cell must remain in the actual
+	// accepted route so completion cannot promise unpaid excavation or duplicate the first project's spoil.
 	for (TileIndex tile : job.requested_tiles) {
-		if (!swept.contains(tile)) return {ExcavationError::InvalidRoute, tile};
+		if (!swept.contains(tile) && geology.terrain.Get(tile) != ExcavationState::Excavated) return {ExcavationError::InvalidRoute, tile};
 	}
 	return {};
 }
