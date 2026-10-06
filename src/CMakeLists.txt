@@ -1,4 +1,4 @@
-# Source registration for R2MLVS1/2/4/6; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md and r2mlvs6-mines-and-resource-chains.md.
+# Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -265,6 +265,8 @@ add_files(
     layer_portal_work.cpp
     layer_portal_bootstrap.cpp
     layer_portal_gui.cpp
+    underground_gui.cpp
+    underground_gui.h
     layer_portal_cmd.h
     layer_portal_map.h
     language.h

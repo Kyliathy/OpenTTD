@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.cpp Code related to the (main) toolbar. */
+/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
 #include "core/geometry_func.hpp"
@@ -55,6 +55,7 @@
 #include "toolbar_gui.h"
 #include "map_layer_gui.h"
 #include "map_layer.h"
+#include "underground_gui.h"
 #include "framerate_type.h"
 #include "screenshot_gui.h"
 #include "misc_cmd.h"
@@ -1047,22 +1048,32 @@ static CallBackFunction MenuClickBuildWater(int)
 
 /* --- Airport button menu --- */
 
+/** @param w Main toolbar owning this dropdown. @return No placement callback; the selected construction tool owns it. */
 static CallBackFunction ToolbarBuildAirClick(Window *w)
 {
 	DropDownList list;
-	list.push_back(MakeDropDownListIconItem(SPR_IMG_AIRPORT, PAL_NONE, STR_AIRCRAFT_MENU_AIRPORT_CONSTRUCTION, 0));
-	ShowDropDownList(w, std::move(list), 0, WID_TN_AIR, 140, GetToolbarDropDownOptions());
+	const MapLayer layer = GetMainWindow()->viewport->layer;
+	// Capture the rock plane in the menu result so a later camera switch cannot change which toolbar opens.
+	const int selection = IsUndergroundConstructionLayer(layer) ? 100 + to_underlying(layer) : 0;
+	list.push_back(MakeDropDownListIconItem(IsUndergroundConstructionLayer(layer) ? SPR_IMG_BUILDRAIL : SPR_IMG_AIRPORT,
+		PAL_NONE, IsUndergroundConstructionLayer(layer) ? STR_UNDERGROUND_MENU : STR_AIRCRAFT_MENU_AIRPORT_CONSTRUCTION, selection));
+	ShowDropDownList(w, std::move(list), selection, WID_TN_AIR, 140, GetToolbarDropDownOptions());
 	return CallBackFunction::None;
 }
 
 /**
  * Handle click on the entry in the Build Air menu.
  *
+ * @param index Captured rock-layer result or zero for the ordinary airport entry.
  * @return #CallBackFunction::None
  */
-static CallBackFunction MenuClickBuildAir(int)
+static CallBackFunction MenuClickBuildAir(int index)
 {
-	ShowBuildAirToolbar();
+	if (index >= 100) {
+		ShowUndergroundConstructionToolbar(static_cast<MapLayer>(index - 100), GetCurrentMultiLayerProfileSelection());
+	} else {
+		ShowBuildAirToolbar();
+	}
 	return CallBackFunction::None;
 }
 

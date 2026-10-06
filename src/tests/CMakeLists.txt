@@ -1,4 +1,4 @@
-# Focused content/geology/portal/TBM/mine fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md and r2mlvs6-mines-and-resource-chains.md.
+# Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
@@ -103,6 +103,7 @@ add_test_files(
     portal_lifecycle.cpp
     portal_work_state.cpp
     portal_window.cpp
+    underground_window.cpp
     portal_bootstrap.cpp
     math_func.cpp
     mock_environment.h

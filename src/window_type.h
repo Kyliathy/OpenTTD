@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window_type.h Types related to windows. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md */
+/** @file window_type.h Types related to windows. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md and r2mlvs7-underground-construction-and-fleet.md */
 
 #ifndef WINDOW_TYPE_H
 #define WINDOW_TYPE_H
@@ -744,6 +744,7 @@ enum class WindowClass : uint16_t {
 	Help,
 
 	LayerPortal, ///< Native pair status/connection controls; window number is the actual canonical pair tile. Appended to preserve existing classes.
+	UndergroundConstruction, ///< Explicit rock-layer tool context; window number is the requested layer.
 
 	Invalid = 0xFFFF, ///< Invalid window.
 };

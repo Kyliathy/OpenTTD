@@ -6300,3 +6300,36 @@ STR_INDUSTRY_LAYER_MINE_EXTRACTED                              :{BLACK}Extracted
 STR_INDUSTRY_LAYER_MINE_REQUIREMENTS                           :{BLACK}Production needs excavated machinery and loading space. Station pickup stays on this layer; Surface delivery needs a connected transport route.
 STR_INDUSTRY_LAYER_OUTPUT_STORE                                :{BLACK}Output stored: {CARGO_LONG} / {COMMA}
 STR_INDUSTRY_LAYER_INPUT_STORES                                :{BLACK}Delivered input stores:
+
+# Underground entry controls: r2mlvs7-underground-construction-and-fleet.md. Append after legacy contiguous ranges.
+STR_UNDERGROUND_MENU                                          :Underground Construction
+STR_UNDERGROUND_CAPTION                                       :{WHITE}Underground Construction - {STRING}
+STR_UNDERGROUND_REQUIREMENTS                                  :{BLACK}Excavate the whole facility and approach before construction.
+STR_UNDERGROUND_LOCKED                                        :{BLACK}Deep construction becomes available in {NUM}.
+STR_UNDERGROUND_SELECT_TOOL                                   :{BLACK}Select a tool; placement uses the world tile you click.
+STR_UNDERGROUND_INVALID_CONTEXT                               :{BLACK}Construction context unavailable.
+STR_UNDERGROUND_WRONG_LAYER                                   :{BLACK}This tool is for another layer. Select that layer's construction tools.
+STR_UNDERGROUND_SURVEY                                        :{BLACK}Survey geology
+STR_UNDERGROUND_SURVEY_TOOLTIP                                :{BLACK}Inspect rock state, mineral and remaining reserve. A survey grants no excavation or mining permission.
+STR_UNDERGROUND_PROJECT                                       :{BLACK}Excavation projects
+STR_UNDERGROUND_PROJECT_TOOLTIP                               :{BLACK}Click a rail portal to commission or control its TBM project. Actual spoil wagons and Surface disposal are required.
+STR_UNDERGROUND_NEEDS_PORTAL                                   :{BLACK}Select a rail portal for excavation project controls.
+STR_UNDERGROUND_MINE                                          :{BLACK}Fund a mine
+STR_UNDERGROUND_MINE_TOOLTIP                                  :{BLACK}Choose the mineral's mine, then click its deposit. Machinery and loading space must already be excavated.
+STR_UNDERGROUND_EXCHANGE                                      :{BLACK}Set project exchange bay
+STR_UNDERGROUND_EXCHANGE_TOOLTIP                              :{BLACK}Select an active project, then its source portal or compatible excavated rail depot. The full consist needs a straight rail approach.
+STR_UNDERGROUND_NEEDS_PROJECT                                 :{BLACK}No active project owned by your company on this layer.
+STR_UNDERGROUND_PROJECT_ENTRY                                 :Excavation project {NUM}
+STR_UNDERGROUND_RAIL                                          :{BLACK}Rail construction
+STR_UNDERGROUND_ROAD                                          :{BLACK}Road construction
+STR_UNDERGROUND_RAIL_STATION                                  :{BLACK}Rail freight station
+STR_UNDERGROUND_ROAD_TERMINAL                                 :{BLACK}Mine road terminal
+STR_UNDERGROUND_RAIL_SERVICE                                  :{BLACK}Train service depot
+STR_UNDERGROUND_ROAD_SERVICE                                  :{BLACK}Road service depot
+STR_UNDERGROUND_FACILITY_TOOLTIP                              :{BLACK}Excavate the full footprint and approach first. Vehicles must support the layer and track or road type. Servicing a TBM never permits buying one at an ordinary depot.
+STR_UNDERGROUND_SURVEY_RESULT                                 :{BLACK}{STRING}; {STRING}; reserve {COMMA} tonnes.
+STR_UNDERGROUND_SURVEY_SOLID                                  :Solid rock - excavation required
+STR_UNDERGROUND_SURVEY_WORKING                                :Reserved excavation work
+STR_UNDERGROUND_SURVEY_OPEN                                   :Excavated ground
+STR_UNDERGROUND_SURVEY_LEGACY                                 :Legacy open terrain
+STR_UNDERGROUND_SURVEY_NO_DEPOSIT                             :No mineral deposit

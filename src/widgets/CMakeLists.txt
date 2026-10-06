@@ -1,3 +1,4 @@
+# Underground controls: docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md.
 add_files(
     ai_widget.h
     airport_widget.h
@@ -56,6 +57,7 @@ add_files(
     toolbar_widget.h
     town_widget.h
     transparency_widget.h
+    underground_widget.h
     tree_widget.h
     vehicle_widget.h
     viewport_widget.h

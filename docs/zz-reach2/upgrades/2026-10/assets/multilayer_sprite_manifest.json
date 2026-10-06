@@ -67,15 +67,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-v1.png",
+        "sha256": "a44e24f593f745b871b0c2d48fcc6856aa3415f0ca28250aab0794f1cd6badac",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "base_states_staged_edges_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground.png",
+        "native_sha256": "30f8724ccb6e781cc1d44024406851d868581f5acbd0057fa481a12462c148a4",
+        "staged_pose_count": 12,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -121,15 +136,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-v1.png",
+        "sha256": "c08d03f46e4d82c81d45b45f3a147af735a338da9ea6d14d8927b971bc71c64a",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "base_states_staged_edges_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep.png",
+        "native_sha256": "2226e7a5d2c6fe5c01103fbd4eedc9b6e1c726a4f28505a54ebc26f35c4a51ed",
+        "staged_pose_count": 12,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1292,15 +1322,31 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
+        "sha256": "e15ec859ff9b33733860f654ab3d5eda31078477d8f63c7d54dcc54d8fbd3b72",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "frame_0_staged_animation_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/tbm-standard.png",
+        "native_sha256": "dbe2f6f5e1ad54b641a092e792593bc9e0bcbb89029a6e421c9c32f7deaa667b",
+        "staged_pose_count": 32,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1344,15 +1390,31 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
+        "sha256": "e15ec859ff9b33733860f654ab3d5eda31078477d8f63c7d54dcc54d8fbd3b72",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "available_staged_locked_pose_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-00.png",
+        "native_sha256": "9b0f155afaf1fe9cb6ad88e888389755780a02fb7f21453acfa393fc57b5b3af",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1405,15 +1467,31 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
+        "sha256": "2a4c74c563d7c5a8d6898a0a2e1b56098e1f92e715c618bcb22110baaa184c7f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "frame_0_staged_animation_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/tbm-deep.png",
+        "native_sha256": "2cba38f14956fa8e097acdf4e6c395efa0048dc15f67192d2a20e732ec8c9ed0",
+        "staged_pose_count": 32,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1457,15 +1535,31 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
+        "sha256": "2a4c74c563d7c5a8d6898a0a2e1b56098e1f92e715c618bcb22110baaa184c7f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "available_staged_locked_pose_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-01.png",
+        "native_sha256": "2e6be325ba82810e202346a11edfd987694b56643e809737f8de3f08ea7f3d03",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1519,15 +1613,30 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
+        "sha256": "0e76e399cdcb36c32f1378b89ac7673a4c3cf16f8abd4e6770a967ec03f1fbe6",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "frame_0_staged_animation_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/hopper-earth.png",
+        "native_sha256": "7e7175f21490f92d922a46d6bf104bc7917a24dfd8fee13d0cd58058e92b0e1f",
+        "staged_pose_count": 40,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1571,15 +1680,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
+        "sha256": "0e76e399cdcb36c32f1378b89ac7673a4c3cf16f8abd4e6770a967ec03f1fbe6",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "available_staged_locked_pose_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-02.png",
+        "native_sha256": "ab1cf0f6dd92c8e458b02b1c91e7015ea83971deca40a1561e11fb09042a67d0",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1633,15 +1757,30 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
+        "sha256": "11dda71cf233bcec3a81573297df86d82903bda5023894a94127a42b4923abe9",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "frame_0_staged_animation_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/hopper-rock.png",
+        "native_sha256": "593aafbf2fff95db7230afec1b7eb4e2aadde39fddee281d3a1e2c6b405a23fe",
+        "staged_pose_count": 40,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1685,15 +1824,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
+        "sha256": "11dda71cf233bcec3a81573297df86d82903bda5023894a94127a42b4923abe9",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "available_staged_locked_pose_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-03.png",
+        "native_sha256": "4daed819c42bf5769bb576308cff489ebce0b195a334e0f22f249eed730d57c3",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1746,15 +1900,30 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
+        "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "frame_0_staged_animation_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/spoil-hauler.png",
+        "native_sha256": "6b1eae6a7618ac8cd71664a254804a6e31ee325fe2e143e12db77f78e297972d",
+        "staged_pose_count": 32,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -1798,15 +1967,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
+        "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "available_staged_locked_pose_and_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-04.png",
+        "native_sha256": "6aee70145d3d8b8ff49e16fdef527a1843199d0da14a0003ccd092f20573a79a",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -3457,15 +3641,30 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png",
+        "sha256": "178d32f23271fcd27c15965ab67ee1d40a85f030d267d26b566098d1e6d49310",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "candidate_geometry_and_front_back_slicing_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/portal-states-candidate.png",
+        "native_sha256": "24aef9261bbb99538f1b0b348c007392a7c5554aace5a4ada08b4826a409153f",
+        "staged_pose_count": 12,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -3515,15 +3714,30 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png",
+        "sha256": "f02fdcee6378002c77f51f943ccfde18e6bca8afc9495f75a5d5f296ccf9b37e",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "candidate_geometry_and_front_back_slicing_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/portal-deep-candidate.png",
+        "native_sha256": "4eb7cb0783d0af921d7e9252da90e4a17c8931f4b2967c11a0db2f62a6bd2078",
+        "staged_pose_count": 12,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -3573,15 +3787,30 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored_partial",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-v1.png",
+        "sha256": "08ed65ed489575f982cecbdf3ef13aaf366235c62256b5902041e687f61bf6a3",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "candidate_geometry_and_front_back_slicing_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/exchange-bay-candidate.png",
+        "native_sha256": "94fc15682dfcb58e399b6a125f52ca1c35a16f5f18e25508b94cbcc4a4d98967",
+        "staged_pose_count": 16,
+        "runtime_activated": false,
+        "coverage_complete": false
       }
     },
     {
@@ -7381,15 +7610,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-earth-v1.png",
+        "sha256": "a32f0b292a092a2fa426eb930b6fb30f72df02a83000a7dcdcbefecd0c7376fd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "authored_icon_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-earth-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/cargo-earth.png",
+        "native_sha256": "a7432dd6853f691a6efbbdc7111c6713811899d380b49aad5abfa46a863e5b54",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -7432,15 +7676,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-rock-v1.png",
+        "sha256": "11dcfbb1d7c363448bd15f321267bec54f14d94df4ed8294d576b0c1e9a2bafb",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-06",
+        "status": "authored_icon_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-rock-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/cargo-rock.png",
+        "native_sha256": "bcb2da7b1dc7491bdb3faddb60c053a7d098364ac195682aa2ad7aab8ef9cff2",
+        "staged_pose_count": 1,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -7902,5 +8161,11 @@
         "sha256": null
       }
     }
-  ]
+  ],
+  "authoring_pass": {
+    "date": "2026-10-06",
+    "scope": "Plans 1-5 partial source authoring",
+    "record": "docs/zz-reach2/upgrades/2026-10/multilayer-m1-art-pass.md",
+    "runtime_activated": false
+  }
 }

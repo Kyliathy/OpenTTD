@@ -200,6 +200,14 @@ flowchart LR
 
 ### Group 9 - Prepare controlled asset authoring and originals
 
+Source-art pass, 2026-10-06: [Plans 1-5 artwork record](multilayer-m1-art-pass.md)
+retains 14 built-in-generated originals and 17 indexed atlases (247 staged
+poses/previews), with exact prompts, hashes and native previews. The public
+manifest now links those authored/partial sources. Only Earth/Rock cargo icons
+have complete source coverage; vehicle animation and building geometry/slicing
+remain unfinished. Runtime packing/integration and all full-plan art acceptance
+remain pending. This bounded pass does not complete these global checkboxes.
+
 {{MEDIUM}}
 - [ ] 9.1 At asset execution time, read/use the available image-generation skill/tool for AI raster work and follow its editing/reference requirements. Keep prompts, references, chosen originals and provenance in repository asset directories; this planning pass generates no art.
 - [ ] 9.2 Use the approved geometry/style templates to write one bounded generation brief per family/model: view labels, light direction, silhouette, material accents, state differences, transparent background and native target footprint.

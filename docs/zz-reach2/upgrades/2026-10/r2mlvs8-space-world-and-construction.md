@@ -178,8 +178,19 @@ For cargo transitions, require `source owns -> saved transition owns -> destinat
 ### Group 8 - Create stable orbital entities and coordinate conversion
 
 {{HARD}}
-- [ ] 8.1 Create typed persistent body/structure IDs with owner, authoritative fixed-point position and explicit invalid/deleted-reference handling. Asteroids later use this identity; they are not Industry tiles.
-- [ ] 8.2 Choose fixed-point units and bounds for supported maps, with checked conversion to/from Space plane coordinates and existing stacked world helpers. Document enough wide arithmetic for distance, velocity and interpolation endpoints.
+
+#### Coordinate and motion defaults
+
+| Setting | Default |
+| --- | --- |
+| Coordinate precision | 65,536 integer units/tile (Q16). |
+| Supported plane dimensions | 64-4,096 tiles per axis, powers of two; validate imported geometry separately. |
+| Motion update interval | One synchronized simulation tick; 74 ticks per economy-day tuning unit. |
+
+Configure these through the planned immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the selected profile. Band and edge values are in Group 10. These are proposed defaults, not delivered motion code.
+
+- [ ] 8.1 Create typed persistent body/structure IDs with owner, authoritative fixed-point position and explicit invalid/deleted-reference handling. Body IDs must address 14,336 live bodies plus invalid/deleted states, matching r2mlvs10's population maximum. Asteroids later use this identity; they are not Industry tiles.
+- [ ] 8.2 Implement the Coordinate and motion defaults' Q16 tile units and supported bounds through the selected profile, with checked conversion to/from Space plane coordinates and existing stacked world helpers. Document enough wide arithmetic for distance, velocity and interpolation endpoints.
 - [ ] 8.3 Define deterministic velocity/phase state independent of render interpolation. Test equal plane positions on Surface/Space map to different world tiles without changing stable layer IDs.
 
 ### Group 9 - Index orbital entities with bounded deterministic work
@@ -187,13 +198,30 @@ For cargo transitions, require `source owns -> saved transition owns -> destinat
 {{HARD}}
 - [ ] 9.1 Implement a derived bucket/spatial index for drawing, picking and local occupancy queries. Authoritative ID/position records remain the save source; rebuild the index after load.
 - [ ] 9.2 Update only moved entities and affected buckets. Use sorted stable IDs for simulation queries; do not let hash iteration or viewport culling determine motion/target selection.
-- [ ] 9.3 Set measurable active-entity and neighborhood-work limits; test clustered entities and map-edge buckets without all-pairs or full-plane scans.
+- [ ] 9.3 Set measurable active-entity and neighborhood-work limits supporting r2mlvs10 Group 2's explicit population table, including 10,240 bodies on the largest Normal map and 14,336 on Dense; test clustered entities and map-edge buckets without all-pairs or full-plane scans.
 
 ### Group 10 - Partition drift, construction and approach occupancy
 
 {{HARD}}
-- [ ] 10.1 Define the initial asteroid travel band, buildable static structure regions and dock approach/exclusion cells in plane coordinates. Validate that supported map sizes still permit first station placement and launch/drop approach access.
-- [ ] 10.2 Specify deterministic edge behavior for slow drifting bodies, including a corner and maximum single-tick overshoot. Prefer a bounded reflection/wrap rule with saved velocity; no orbital integrator or impact damage.
+
+#### Shared Space geometry and motion defaults
+
+These are initial profile defaults for this group and shared with [r2mlvs10's asteroid tuning](r2mlvs10-asteroids-and-mining-probes.md#movement-trajectory-defaults). They establish one coordinate/band/edge authority; neither these records nor Space motion are implemented by this documentation change. Configure them through a planned immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the selected `MultiLayerGameplayProfile`.
+
+| Parameter | Default | Semantics |
+| --- | --- | --- |
+| Asteroid travel strip | Full plane width; middle half of plane height | Strip tiles have `floor(H/4) <= y < floor(3H/4)`. Static module footprints and their exclusion regions stay outside the strip; free craft may cross it through the shared occupancy rules. |
+| Maximum body-plus-attached-craft envelope radius | 2 tiles | All asteroid sizes/slots fit this bound; changing it requires rechecking safe center bounds and placement capacity. |
+| Admissible body-center tile rectangle | `2 <= x < W - 2`; `floor(H/4) + 2 <= y < floor(3H/4) - 2` | Reserve the envelope margin at map/strip boundaries. Integer tile-center coordinates are used; the continuous reflection rectangle joins the first and last admissible tile centers. |
+| Admissible center area | `(W - 4) * (floor(3H/4) - floor(H/4) - 4)` tiles | Use this area for placement-capacity checks. r2mlvs10 Group 2 chooses total bodies from its explicit map-count table; this area does not set that count. |
+| Body edge behavior | Reflection, no wrap | At a reached/crossed center boundary, mirror any overshoot and reverse that axis's velocity. Both axes reflect on a corner; retain fractional travel remainder. Bound maximum step by the selected body's speed. |
+| Body/attachment transform | Translation only | Reflect velocity without rotating the body or changing its saved attachment offset; update attached craft after body motion. The envelope margin prevents a latched craft crossing the strip edge. |
+| Static safety / impact damage | Travel-strip separation / none | Construction cannot intrude into the strip. No gravity, impacts or random turns are introduced. |
+
+For a 64 x 64 plane, the strip occupies rows 16..47, admissible body centers occupy columns 2..61 and rows 18..45, and center area is `60 * 28 = 1,680` tiles. This group must validate this layout against actual body/slot envelopes, first station footprints and launch/drop access before claiming the geometry ready. The 4-tile placement grid has 15 columns and 7 rows here: 105 positions, enough for r2mlvs10's 6/10/14-body Sparse/Normal/Dense settings. Changes to these defaults must revalidate placement capacity and motion examples; they must not silently lower the population table's counts.
+
+- [ ] 10.1 Implement the Shared Space geometry and motion defaults' middle-half travel strip and 2-tile center margin alongside buildable static structure regions and dock approach/exclusion cells in plane coordinates. Validate actual body/attachment envelopes, first station placement and launch/drop approach access at supported map sizes; publish the usable center area and grid capacity for asteroid placement checks; population counts come from r2mlvs10 Group 2's table.
+- [ ] 10.2 Implement the shared reflection rule with saved velocity/remainders, including exact boundary arrival, a corner and maximum single-tick overshoot. Attached offsets remain translation-only; no wrap, orbital integrator or impact damage. Publish worked fixtures for r2mlvs10 to consume unchanged.
 - [ ] 10.3 Define which moving craft may enter a body approach/attachment region and which reservations exclude static construction. Distinguish a body position from a structure footprint so they cannot reserve one tile via incompatible authorities.
 - [ ] 10.4 Test band-edge drift, a blueprint touching the exclusion boundary and a blocked approach; failures retain object position/inventory rather than destroying either participant.
 
