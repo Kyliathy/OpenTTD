@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_destrail.hpp Determining the destination for rail vehicles. */
+/** @file yapf_destrail.hpp Rail destinations and canonical native cutter/hauler steering. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B */
 
 #ifndef YAPF_DESTRAIL_HPP
 #define YAPF_DESTRAIL_HPP
@@ -16,28 +16,37 @@
 #include "../../layer_portal_map.h"
 #include "../pathfinder_func.h"
 
+/** Shared rail compatibility and transient native work-face target context for YAPF destination variants. */
 class CYapfDestinationRailBase {
 protected:
 	RailTypes compatible_railtypes;
+	bool cutter_steering_destination = false; ///< Native plain-support destinations are checked without shared segment caching.
 
 public:
+	/** @return Whether this search must recognize a cutter's project-owned plain work-face tile. */
+	bool IsCutterSteeringDestination() const { return this->cutter_steering_destination; }
+
+	/** @param v Actual train supplying compatible rail types. @param override_rail_type Whether this search permits every physically compatible type. */
 	void SetDestination(const Train *v, bool override_rail_type = false)
 	{
 		this->compatible_railtypes = v->compatible_railtypes;
 		if (override_rail_type) this->compatible_railtypes.Set(GetAllCompatibleRailTypes(v->railtypes));
 	}
 
+	/** @param rt Actual candidate track type. @return Whether this train's current search can use that rail. */
 	bool IsCompatibleRailType(RailType rt)
 	{
 		return this->compatible_railtypes.Test(rt);
 	}
 
+	/** @return The train-owned rail compatibility used by this search. */
 	RailTypes GetCompatibleRailTypes() const
 	{
 		return this->compatible_railtypes;
 	}
 };
 
+/** Find an actual rail depot while retaining the train's physical rail compatibility. @tparam Types Derived YAPF search/node family. */
 template <class Types>
 class CYapfDestinationAnyDepotRailT : public CYapfDestinationRailBase {
 public:
@@ -71,6 +80,7 @@ public:
 	}
 };
 
+/** Find a reservation-safe waiting position under the current physical turn rule. @tparam Types Derived YAPF search/node family. */
 template <class Types>
 class CYapfDestinationAnySafeTileRailT : public CYapfDestinationRailBase {
 public:
@@ -106,6 +116,7 @@ public:
 	}
 };
 
+/** Resolve ordinary orders or a live project-owned cutter/hauler destination without changing saved orders. @tparam Types Derived YAPF search/node family. */
 template <class Types>
 class CYapfDestinationTileOrStationRailT : public CYapfDestinationRailBase {
 public:
@@ -126,9 +137,21 @@ protected:
 	}
 
 public:
+	/** @param v Actual train; project-owned travel destinations are derived independently of its ordinary saved order list. */
 	void SetDestination(const Train *v)
 	{
 		this->any_depot = false;
+		this->cutter_steering_destination = false;
+		if (const auto target = GetTBMCutterSteeringTarget(*v); target.has_value()) {
+			// Revisited chamber rails must lead to the live face approach instead of an arbitrary branch toward an empty order.
+			this->cutter_steering_destination = true;
+			Yapf().DisableCache(true);
+			this->dest_tile = target->tile;
+			this->dest_station_id = StationID::Invalid();
+			this->dest_trackdirs = target->trackdirs;
+			this->CYapfDestinationRailBase::SetDestination(v);
+			return;
+		}
 		/* A hauler returning empties is steered to its Source bay, entered through the door, without touching its orders
 		 * (R2MLVS3MP-M decision 6). Only it sees the bay's track, so its search keeps out of the shared segment cache. */
 		if (const TileIndex bay = GetTBMHaulerSteeringTarget(*v); bay != INVALID_TILE) {

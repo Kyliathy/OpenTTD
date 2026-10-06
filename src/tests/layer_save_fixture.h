@@ -34,13 +34,14 @@ class LayerSaveContent {
 	GRFConfigList original = std::move(_grfconfig); ///< Caller package ownership restored without copying private loader state.
 	decltype(_engine_mngr.mappings) original_engines = _engine_mngr.mappings; ///< Caller engine identities restored after the ordinary save.
 public:
-	/** @param activated Actual public profile fixture descriptors, already checked against the required identity. */
-	explicit LayerSaveContent(const GRFConfigList &activated)
+	/** @param activated Actual public profile fixture descriptors, already checked against the required identity. @param preserve_engine_mappings Keep actual full-world native EIDS definitions already initialized before acquisition. */
+	explicit LayerSaveContent(const GRFConfigList &activated, bool preserve_engine_mappings = false)
 	{
 		CopyGRFConfigList(_grfconfig, activated, false);
 		REQUIRE(_grfconfig.size() == 1);
 		_grfconfig.front()->filename = "multilayer_industry.grf"; // Distributed native package name from PrepareMultiLayerProfileContent.
-		_engine_mngr.ResetToDefaultMapping(); // A full-world save also needs the normal original-engine mapping published during new-game initialization.
+		// Simple industry-only fixtures need original mappings; actual native fleets already own their dense original-plus-native EIDS identities.
+		if (!preserve_engine_mappings) _engine_mngr.ResetToDefaultMapping();
 	}
 	/** Restore the caller's actual package list after writing the test-owned world. */
 	~LayerSaveContent()

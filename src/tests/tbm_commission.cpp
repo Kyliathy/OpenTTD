@@ -11,12 +11,14 @@
  * Depots service a commissioned cutter but never sell one.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 3B (same-owner area quotes)
  */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
-#include "spoil_receiver_fixture.h"
+#include "tbm_commission_fixture.h"
 #include "../layer_portal_cmd.h"
+#include "../tbm_area_preview.h"
 #include "../layer_portal_map.h"
 #include "../vehicle_func.h"
 #include "../vehicle_cmd.h"
@@ -26,44 +28,33 @@
 
 #include "../safeguards.h"
 
-/** The receiver rig with real receivers at its origin and a second, empty Sealed pair to commission at. */
-class TBMCommissionRig {
-public:
-	SpoilReceiverRig rig; ///< Engines, origin, receivers, and the first pair with its own project.
-	TileIndex portal = TileXYL(32, 20, MapLayer::Surface); ///< Upper end of the second pair.
-	TileIndex rock = INVALID_TILE; ///< Its rock-side housing.
-	TileIndex start = INVALID_TILE; ///< First corridor cell beyond the housing, straight out of the door.
-	TileIndex end = INVALID_TILE; ///< Third corridor cell.
 
-	/** Install the receivers and build the second pair through the real portal command. */
-	TBMCommissionRig()
-	{
-		this->rig.BuildReceiver(SpoilReceiverKind::Earth, 15, 22);
-		this->rig.BuildReceiver(SpoilReceiverKind::Rock, 14, 16);
-		this->rig.RefreshOrigin();
-		REQUIRE(CmdBuildLayerPortal(DoCommandFlag::Execute, this->portal, TransportType::Rail, MapLayer::Underground, DiagDirection::SE, RAILTYPE_RAIL, ROADTYPE_ROAD).Succeeded());
-		REQUIRE(GetLayerPortalWorkState(this->portal) == LayerPortalWorkState::Sealed);
-		this->rock = GetLayerPortalPairTile(this->portal);
-		const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(this->rock));
-		this->start = TileAddWrap(this->rock, step.x, step.y);
-		this->end = TileAddWrap(this->rock, step.x * 3, step.y * 3);
-		REQUIRE(IsValidTile(this->end));
-	}
-
-	/**
-	 * Commission at the second pair through the command.
-	 * @param flags Estimate or execute.
-	 * @param origin Origin station; Invalid takes the rig's origin.
-	 * @param earth Earth hoppers.
-	 * @param rock Rock hoppers.
-	 * @return The command result.
-	 */
-	CommandCost Commission(DoCommandFlags flags, StationID origin = StationID::Invalid(), uint8_t earth = 2, uint8_t rock = 2) const
-	{
-		if (origin == StationID::Invalid()) origin = this->rig.fixture.origin->index;
-		return CmdCommissionTBM(flags, this->portal, 0, earth, rock, origin, this->start, this->end, false);
-	}
-};
+/** The UI and command share the complete canonical material/work and purchase quote, without any allocation. */
+TEST_CASE("Commissioning area preview quotes the exact owning command and future paid work", "[underground-area-quote]")
+{
+	TBMCommissionRig c;
+	const auto before = c.rig.Digest();
+	const auto quote = PreviewTBMCommissionArea(_current_company, c.portal, 0, 2, 2, c.rig.fixture.origin->index, c.start, c.end, false);
+	REQUIRE(quote.purchase.Succeeded());
+	CHECK(quote.purchase.GetCost() == c.Commission({}).GetCost());
+	CHECK_FALSE(quote.area.partial);
+	CHECK_FALSE(quote.area.plan.route.empty());
+	CHECK(quote.area.totals.new_cells > 0);
+	CHECK(quote.area.totals.earth_t > 0);
+	CHECK(quote.area.totals.rock_t > 0);
+	CHECK(quote.area.totals.support_units > 0);
+	CHECK_FALSE(quote.area.turn_envelope.empty());
+	CHECK(quote.request.proposal.requested_tiles == quote.area.proposal.requested_tiles);
+	CHECK(quote.request.proposal.route == quote.area.plan.route);
+	CHECK(c.rig.Digest() == before);
+	const auto wrong_layer = PreviewTBMCommissionArea(_current_company, c.portal, 0, 2, 2, c.rig.fixture.origin->index,
+		MultiLayerMap::TileInLayer(c.start, MapLayer::Surface), c.end, false);
+	CHECK(wrong_layer.purchase.Failed());
+	CHECK(c.rig.Digest() == before);
+	const auto foreign = PreviewTBMCommissionArea(CompanyID::Invalid(), c.portal, 0, 2, 2, c.rig.fixture.origin->index, c.start, c.end, false);
+	CHECK(foreign.purchase.Failed());
+	CHECK(c.rig.Digest() == before);
+}
 
 /** One purchase publishes the whole project once; the pair then refuses a second one. */
 TEST_CASE("A legal Surface commissioning buys, reserves, binds and publishes once", "[tbm-commission]")

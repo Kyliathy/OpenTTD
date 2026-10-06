@@ -16,6 +16,7 @@
 #include "engine_func.h"
 #include "engine_base.h"
 #include "tbm.h"
+#include "underground_vehicle.h"
 #include "spoil_receiver.h"
 #include "multilayer_industry.h"
 #include "layer_industry_processor.h"
@@ -1754,6 +1755,7 @@ static void AfterLoadGRFs()
 	_gted.clear();
 	_grm_sprites.clear();
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
+	InitialiseUndergroundEngineDefinitions(_grfconfig); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
 	// The Surface spoil receivers are native industries in the same package scope (r2mlvs5 Group 8); the build list is sorted again to show them.
 	if (InitialiseSpoilReceiverDefinitions(_grfconfig)) SortIndustryTypes();
 	if (InitialiseLayerMineDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native catalogue reuses saved IIDS/TIDS; installation creates no geological reserve.

@@ -6333,3 +6333,16 @@ STR_UNDERGROUND_SURVEY_WORKING                                :Reserved excavati
 STR_UNDERGROUND_SURVEY_OPEN                                   :Excavated ground
 STR_UNDERGROUND_SURVEY_LEGACY                                 :Legacy open terrain
 STR_UNDERGROUND_SURVEY_NO_DEPOSIT                             :No mineral deposit
+STR_UNDERGROUND_AREA                                          :{BLACK}Plan an excavation area
+STR_UNDERGROUND_AREA_TOOLTIP                                  :{BLACK}Click the rock-side rail portal, then drag the final floor. White marks final floor, blue marks extra working space and red marks uncovered cells. Previewing buys nothing and cuts no rock.
+STR_UNDERGROUND_AREA_SELECT_FLOOR                              :{BLACK}Drag the intended final floor on this layer.
+STR_UNDERGROUND_AREA_EMPTY                                    :{BLACK}No excavation area selected.
+STR_UNDERGROUND_AREA_PRICE                                    :{BLACK}Machinery and wagons: {CURRENCY_LONG}; later geological work: {CURRENCY_LONG}.
+STR_UNDERGROUND_AREA_MATERIAL                                 :{BLACK}Earth: {COMMA} t; Rock: {COMMA} t; supports: {COMMA}; work: {COMMA} ticks.
+STR_UNDERGROUND_AREA_FLOOR                                    :{BLACK}Final floor: {NUM} cells; extra working space: {NUM}; new cuts: {NUM}; uncovered: {NUM}.
+STR_UNDERGROUND_AREA_READY                                    :{BLACK}Complete plan. Confirm to buy the machine; excavation still needs actual work and spoil hauling.
+STR_UNDERGROUND_AREA_CONFIRM                                  :{BLACK}Commission the complete area plan
+STR_UNDERGROUND_MODEL_DATE                                    :{RAW_STRING} ({NUM})
+STR_UNDERGROUND_MODEL_CALENDAR                                :{BLACK}Cutter introduction dates: {RAW_STRING}
+STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY                       :This native freight design is unavailable for the current profile, calendar date, layer or cargo. Check its introduction date and supported refits.
+STR_ERROR_TBM_COMMISSION_RAIL_TURNS                            :This excavation route needs sharp rail bends. Allow 90-degree train turns in the game settings, or select a straight corridor.

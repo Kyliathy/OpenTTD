@@ -8,6 +8,7 @@
 /** @file autoreplace_cmd.cpp Deals with autoreplace execution but not the setup. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #include "stdafx.h"
+#include "underground_vehicle.h"
 #include "company_func.h"
 #include "train.h"
 #include "tbm.h"
@@ -757,6 +758,7 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 		if (IsTBMCutterEngine(part->engine_type)) return CMD_ERROR;
 		// Assigned haulers and wagon-set units keep their vehicle identities; renewing them would break the cycle or set.
 		if (part->type == VehicleType::Train && IsTBMReplacementLocked(*Train::From(part))) return CMD_ERROR;
+		if (CommandCost capability = CheckUndergroundVehicleCapability(part->engine_type, GetTileLayer(part->tile)); capability.Failed()) return capability;
 	}
 
 	CommandCost ret = CheckOwnership(v->owner);
@@ -788,6 +790,10 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 		EngineID e;
 		CommandCost cost = GetNewEngineType(w, c, false, e);
 		if (cost.Failed()) return cost;
+		// Validate every proposed native replacement before constructing any temporary part of the whole chain.
+		if (e != EngineID::Invalid()) {
+			if (CommandCost capability = CheckUndergroundVehicleCapability(e, GetTileLayer(w->tile), w->cargo_type); capability.Failed()) return capability;
+		}
 		any_replacements |= (e != EngineID::Invalid());
 		w = (!free_wagon && w->type == VehicleType::Train ? Train::From(w)->GetNextUnit() : nullptr);
 	}

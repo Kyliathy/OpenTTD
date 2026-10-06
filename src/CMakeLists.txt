@@ -124,6 +124,7 @@ add_files(
     command.cpp
     command_func.h
     command_type.h
+    construction_preview.h
     company_base.h
     company_cmd.cpp
     company_cmd.h
@@ -298,10 +299,13 @@ add_files(
     tbm.h
     tbm_model.cpp
     tbm_engine.cpp
+    underground_vehicle.h
+    underground_vehicle.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
     tbm_commission.cpp
     tbm_cmd.h
+    tbm_area_preview.h
     tbm_controls.h
     tbm_controls.cpp
     tbm_exchange.h

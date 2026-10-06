@@ -28,4 +28,18 @@ Window *ShowUndergroundConstructionToolbar(MapLayer layer, const MultiLayerProfi
  */
 bool IsUndergroundConstructionLayer(MapLayer layer);
 
+/** Separate presentation domains; logical capsule rows never confer ordinary rail or portal permission. */
+enum class UndergroundFleetKind : uint8_t { ConventionalFreight, TubeCapsules };
+
+/**
+ * Filter immutable logical designs for an explicit construction/fleet context.
+ * @param layer Actual requested rock layer, not a live camera reference.
+ * @param policy Explicit accepted profile/version; Classic or malformed policy offers no native fleet.
+ * @param date Synchronized calendar date for the proposed operation, not economy or wall time.
+ * @param kind Conventional rail/road freight or separate tube capsule presentation.
+ * @return Profile-owned design pointers in catalogue order; no engine IDs are allocated and commands retain permission.
+ */
+std::vector<const LayerVehicleCapability *> BuildUndergroundVehicleFilter(MapLayer layer,
+	const MultiLayerProfileSelection &policy, TimerGameCalendar::Date date, UndergroundFleetKind kind);
+
 #endif /* UNDERGROUND_GUI_H */

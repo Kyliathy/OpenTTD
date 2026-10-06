@@ -4436,6 +4436,12 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 
 	if (consist->current_order.IsType(OT_LOADING)) return true;
 
+	// Each paid cut or exchange return changes the cutter's derived goal. Retire reservations to the previous goal before a reused chamber junction can steer it away from the current face.
+	if (const auto target = GetTBMCutterSteeringTarget(*consist); target.has_value()) {
+		if (consist->dest_tile != target->tile) FreeTrainTrackReservation(consist);
+		consist->dest_tile = target->tile;
+	}
+
 	if (CheckTrainStayInDepot(consist)) return true;
 
 	if (!mode) consist->ShowVisualEffect();

@@ -24,6 +24,12 @@ enum UndergroundConstructionWidgets : WidgetID {
 	WID_UC_RAIL_SERVICE, ///< Open the ordinary rail service-depot picker.
 	WID_UC_ROAD_SERVICE, ///< Open the ordinary road service-depot picker.
 	WID_UC_STATUS, ///< Selected tile information or a visible placement refusal.
+	WID_UC_AREA, ///< Select a real portal, then drag a requested excavation floor.
+	WID_UC_AREA_CONFIRM, ///< Submit the owning commissioning command after a complete current quote.
+	WID_UC_AREA_PRICE, ///< Separate purchase and future geological-work charges.
+	WID_UC_AREA_MATERIAL, ///< Canonical Earth, Rock, support and work requirements.
+	WID_UC_AREA_FLOOR, ///< Final floor and actual additional swept work space.
+	WID_UC_MODEL_DATES, ///< Compatible cutter names and introduction years from the canonical catalogue.
 };
 
 #endif /* WIDGETS_UNDERGROUND_WIDGET_H */

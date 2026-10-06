@@ -11,6 +11,7 @@
  * focused burst never waits for a click.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Global Mandatory Reading (bounded test runs)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, actual window failure diagnosis
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, actual viewport event diagnosis
  */
 
 #include "../stdafx.h"
@@ -57,13 +58,61 @@ static void PrintAbortStack(int)
 }
 
 /**
+ * Record assertions from MSVC's checked STL before its fail-fast bypasses signal/exception handlers.
+ * @param report_type CRT report category; only assertions need a native stack.
+ * @param message CRT-owned diagnostic text, emitted by its normal stderr report.
+ * @param result CRT-owned action result; unchanged so the original assertion still terminates the run.
+ * @return False to preserve the CRT's normal reporting and failure behavior.
+ */
+static int PrintCheckedLibraryStack(int report_type, [[maybe_unused]] char *message, [[maybe_unused]] int *result)
+{
+	if (report_type == _CRT_ASSERT) PrintAbortStack(0);
+	return FALSE;
+}
+
+/**
+ * Print the native fault's saved execution context instead of the exception handler's own stack.
+ * @param exception Actual Windows fault record and register context.
+ */
+static void PrintExceptionStack(EXCEPTION_POINTERS *exception)
+{
+#ifdef _M_X64
+	HANDLE process = GetCurrentProcess();
+	SymSetOptions(SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+	SymInitialize(process, nullptr, TRUE);
+	CONTEXT context = *exception->ContextRecord;
+	STACKFRAME64 frame{};
+	frame.AddrPC = {context.Rip, 0, AddrModeFlat};
+	frame.AddrFrame = {context.Rbp, 0, AddrModeFlat};
+	frame.AddrStack = {context.Rsp, 0, AddrModeFlat};
+	alignas(SYMBOL_INFO) char buffer[sizeof(SYMBOL_INFO) + 256];
+	SYMBOL_INFO *symbol = reinterpret_cast<SYMBOL_INFO *>(buffer);
+	// Walk only the saved fault stack, bounded to avoid an unattended diagnostic hanging on corrupt frames.
+	for (uint i = 0; i < 48; ++i) {
+		symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+		symbol->MaxNameLen = 255;
+		IMAGEHLP_LINE64 line{};
+		line.SizeOfStruct = sizeof(line);
+		DWORD displacement = 0;
+		const bool named = SymFromAddr(process, frame.AddrPC.Offset, nullptr, symbol) != FALSE;
+		const bool lined = SymGetLineFromAddr64(process, frame.AddrPC.Offset, &displacement, &line) != FALSE;
+		fprintf(stderr, "  fault #%u %s %s:%lu [0x%llx]\n", i, named ? symbol->Name : "?", lined ? line.FileName : "?", lined ? line.LineNumber : 0UL, frame.AddrPC.Offset);
+		if (!StackWalk64(IMAGE_FILE_MACHINE_AMD64, process, GetCurrentThread(), &frame, &context, nullptr, SymFunctionTableAccess64, SymGetModuleBase64, nullptr)) break;
+	}
+	fflush(stderr);
+#else
+	PrintAbortStack(0);
+#endif
+}
+
+/**
  * Print an actual access-violation stack before Catch's fatal-condition handler unwinds it.
  * @param exception Windows exception context; ordinary C++ exceptions remain with their existing handlers.
  * @return Continue normal exception handling after recording the fault; never turn a crash into a passing test.
  */
 static LONG WINAPI PrintAccessViolationStack(EXCEPTION_POINTERS *exception)
 {
-	if (exception->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) PrintAbortStack(0);
+	if (exception->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) PrintExceptionStack(exception);
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
@@ -79,6 +128,7 @@ static bool QuietTestAssertions()
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+	_CrtSetReportHook(PrintCheckedLibraryStack);
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 	signal(SIGABRT, PrintAbortStack);
 	AddVectoredExceptionHandler(1, PrintAccessViolationStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.

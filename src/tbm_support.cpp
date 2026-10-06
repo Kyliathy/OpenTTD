@@ -10,11 +10,13 @@
  * geology keeps the excavation state beneath it.
  * The work corridor and its occupancy serve Group 14.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8, 9 and 14
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B (canonical cutter steering)
  */
 
 #include "stdafx.h"
 #include "tbm.h"
 #include "tbm_cmd.h"
+#include "tbm_exchange.h"
 #include "command_func.h"
 #include "train.h"
 #include "company_func.h"
@@ -119,6 +121,51 @@ static std::vector<TileIndex> ExpandTBMSupportPath(const ExcavationJob &job, siz
 		ends.push_back(path.size() - 1);
 	}
 	return path;
+}
+
+/** @copydoc CheckTBMSupportRailTurns */
+bool CheckTBMSupportRailTurns(const ExcavationJob &job)
+{
+	const RailType railtype = GetRailType(job.commissioning_anchor);
+	if (!Rail90DegTurnDisallowed(railtype, railtype)) return true;
+	std::vector<size_t> ends;
+	const auto path = ExpandTBMSupportPath(job, job.route.size(), ends);
+	if (ends.size() != job.route.size()) return false;
+	Track previous = DiagDirToDiagTrack(GetLayerPortalDoorDirection(job.commissioning_anchor));
+	// Validate every physical corner, including the diagonal side cells: legal cutter heading changes can still form a forbidden ordinary rail bend.
+	for (size_t index = 1; index < path.size(); ++index) {
+		const DiagDirection entry = DiagdirBetweenTiles(path[index], path[index - 1]);
+		const DiagDirection exit = index + 1 < path.size() ? DiagdirBetweenTiles(path[index], path[index + 1]) : ReverseDiagDir(entry);
+		// Invalid geometry cannot be presented as traversable, regardless of the route's geological coverage.
+		if (entry == DiagDirection::Invalid || exit == DiagDirection::Invalid) return false;
+		const Track track = GetTBMSupportTrack(entry, exit);
+		// The physical controller masks this same sharp-turn pair; refuse it before buying a machine that would stall there.
+		if (track == Track::Invalid || TrackCrossesTracks(previous).Test(track)) return false;
+		previous = track;
+	}
+	return true;
+}
+
+/** @copydoc GetTBMCutterSteeringTarget */
+std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &front)
+{
+	const auto *project = GetTBMProjectForCutter(front.First()->index);
+	// Ordinary trains and actual service visits follow player/depot orders; only project travel supplies a derived destination.
+	if (project == nullptr || front.current_order.IsType(OT_GOTO_DEPOT)) return std::nullopt;
+	if (project->phase == TBMPhase::ReturnForExchange) {
+		const auto bay = GetTBMExchangeBay(*project);
+		if (bay.error != TBMExchangeError::None) return std::nullopt;
+		const DiagDirection door = bay.kind == TBMExchangeBayKind::Source ? GetLayerPortalDoorDirection(bay.tile) : GetRailDepotDirection(bay.tile);
+		return TBMCutterSteeringTarget{bay.tile, TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(door)))};
+	}
+	// Work/wait phases hold through their existing train controller; only approach and advancing onto paid support need pathfinding.
+	if (project->phase != TBMPhase::TravelToFace && project->phase != TBMPhase::AdvanceSupport) return std::nullopt;
+	const auto *job = GetExcavationJob(project->job);
+	// Missing or malformed live geometry cannot authorize another route or a fabricated waypoint.
+	if (job == nullptr || job->cursor > job->route.size()) return std::nullopt;
+	const TileIndex target = job->cursor == 0 ? job->commissioning_anchor : job->route[job->cursor - 1].cutter_position;
+	// Match ObserveTBMPhaseInputs' physical arrival condition on the existing face tile. Revisited support can have several valid approaches; only actual laid track supplies directions.
+	return TBMCutterSteeringTarget{target, GetTileTrackStatus(target, TransportType::Rail, RoadTramType::Invalid).trackdirs};
 }
 
 /**

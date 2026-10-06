@@ -24,6 +24,7 @@ add_test_files(
     tbm_project.cpp
     tbm_area.cpp
     tbm_commission.cpp
+    tbm_commission_fixture.h
     tbm_conservation.cpp
     tbm_phase.cpp
     tbm_consumer.cpp
@@ -104,6 +105,23 @@ add_test_files(
     portal_work_state.cpp
     portal_window.cpp
     underground_window.cpp
+    underground_quote.cpp
+    underground_area.cpp
+    underground_workflow_fixture.h
+    underground_view_fixture.h
+    underground_workflow.cpp
+    underground_filter.cpp
+    underground_facility.cpp
+    underground_engine.cpp
+    underground_fleet.cpp
+    underground_loading.cpp
+    underground_project_label.cpp
+    underground_admission.cpp
+    underground_airport.cpp
+    underground_command_boundary.cpp
+    underground_save.cpp
+    underground_facility_fixture.h
+    underground_fleet_fixture.h
     portal_bootstrap.cpp
     math_func.cpp
     mock_environment.h

@@ -4,11 +4,15 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_guard.cpp Shared read-only construction and restricted commissioning predicates. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 8 */
+/** @file excavation_guard.cpp Shared construction and commissioning predicates. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 8 and r2mlvs7-underground-construction-and-fleet.md, Group 3B */
 
 #include "stdafx.h"
+#include "language.h"
 #include "excavation.h"
 #include "command_func.h"
+#include "company_func.h"
+#include "map_layer_gui.h"
+#include "strings_func.h"
 #include "timer/timer_game_calendar.h"
 #include "table/strings.h"
 
@@ -102,13 +106,22 @@ bool CheckExcavationCommissioningPocket(const ExcavationCommissioningPocket &poc
 CommandCost CheckExcavationConstruction(std::span<const TileIndex> footprint)
 {
 	const auto result = CheckExcavatedFootprint(footprint);
+	StringID message;
 	switch (result.error) {
 		case ExcavationError::None: return {};
-		case ExcavationError::SolidRock: return CommandCost(STR_ERROR_EXCAVATION_SOLID_ROCK);
-		case ExcavationError::ActiveCut: return CommandCost(STR_ERROR_EXCAVATION_ACTIVE_CUT);
-		case ExcavationError::LockedDeep: return CommandCost(STR_ERROR_EXCAVATION_DEEP_LOCKED);
+		case ExcavationError::SolidRock: message = STR_ERROR_EXCAVATION_SOLID_ROCK; break;
+		case ExcavationError::ActiveCut: message = STR_ERROR_EXCAVATION_ACTIVE_CUT; break;
+		case ExcavationError::LockedDeep: message = STR_ERROR_EXCAVATION_DEEP_LOCKED; break;
 		default: return CMD_ERROR;
 	}
+	CommandCost error(message);
+	// A local player with a loaded language receives cell details; headless/early-startup command checks keep their stable refusal without invoking uninitialized UI strings.
+	if (IsLocalCompany() && _current_language != nullptr && IsValidTile(result.failure_tile)) {
+		const TileIndex blocked = result.failure_tile;
+		const std::string location = GetString(STR_LAND_AREA_INFORMATION_LANDINFO_COORDS, TileX(blocked), TilePlaneY(blocked), TileHeight(blocked));
+		error.SetEncodedMessage(GetEncodedString(STR_JUST_RAW_STRING, GetString(message) + "\n" + GetString(GetMapLayerName(GetTileLayer(blocked))) + " - " + location));
+	}
+	return error;
 }
 
 /**

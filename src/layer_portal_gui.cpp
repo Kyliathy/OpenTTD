@@ -12,13 +12,16 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 8/13
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 and task 16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, shared area-control defaults
  */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
 #include "map_layer_gui.h"
+#include "widgets/layer_portal_widget.h"
 #include "company_func.h"
+#include "company_base.h"
 #include "command_func.h"
 #include "window_func.h"
 #include "window_gui.h"
@@ -49,19 +52,23 @@ static constexpr int TBM_COMMISSION_MIN_CORRIDOR = 2;
 /** Longest corridor the commissioning control asks for; the command's area stays within its 64-tile bound. */
 static constexpr int TBM_COMMISSION_MAX_CORRIDOR = 60;
 /** Hoppers of each kind the window's commissioning control buys. */
-static constexpr uint8_t TBM_COMMISSION_DEFAULT_WAGONS = 2;
 /** Corridor length the next commissioning asks for; kept for the session, shared by every pair window. */
 static int _tbm_commission_corridor = 6;
 
 /**
  * Choose the cutter the commissioning control buys for a pair.
- * @param key Canonical pair; its upper end assembles and its lower end works.
+ * @param tile Either actual pair endpoint; its upper end assembles and its lower end works.
  * @return The first catalogue cutter commissioned at a rail portal that serves both ends and is available today, or
  *         UINT16_MAX when there is none.
  */
-static uint16_t GetDefaultTBMCommissionModel(TileIndex key)
+uint16_t GetLayerPortalDefaultTBMModel(TileIndex tile)
 {
+	const auto pair = GetLayerPortalPairKey(tile);
+	if (!pair) return UINT16_MAX;
+	const TileIndex key = *pair;
+	if (GetLayerPortalTransportType(key) != TransportType::Rail) return UINT16_MAX;
 	const MapLayer work = GetTileLayer(GetLayerPortalPairTile(key));
+	// Catalogue ordering selects the first compatible available cutter without inventing another model table.
 	for (const auto &model : GetMultiLayerVehicleCapabilities()) {
 		// Only rail-portal cutters that serve both layers qualify; the command validates the rest again.
 		if (model.commissioning != MultiLayerCommissioningFacility::RailPortalBay || !model.supported_layers.Test(GetTileLayer(key)) || !model.supported_layers.Test(work)) continue;
@@ -85,18 +92,24 @@ static bool DoesStationAcceptSpoil(const Station &st)
 
 /**
  * Choose the origin the commissioning control names for a pair.
- * @param key Canonical pair.
- * @return The local company's Surface railway station nearest the pair among those whose catchment takes both Earth
+ * @param tile Actual pair endpoint.
+ * @param company Actual requesting company.
+ * @return The company's Surface railway station nearest the pair among those whose catchment takes both Earth
  *         and Rock; failing any such station, the nearest one, so the command names what is missing. Invalid if none.
  */
-static StationID GetDefaultTBMCommissionOrigin(TileIndex key)
+StationID GetLayerPortalDefaultTBMOrigin(TileIndex tile, CompanyID company)
 {
+	const auto pair = GetLayerPortalPairKey(tile);
+	// Missing geometry or ownership cannot choose an unrelated company's spoil origin.
+	if (!pair || !Company::IsValidID(company)) return StationID::Invalid();
+	const TileIndex key = *pair;
 	StationID best = StationID::Invalid();
 	bool best_accepts = false;
 	uint best_distance = UINT_MAX;
+	// Find a real owned Surface disposal origin, preferring actual acceptance before geographical proximity.
 	for (const Station *st : Station::Iterate()) {
 		// Loaded spoil always goes to the company's own Surface railway station first.
-		if (st->owner != _local_company || !st->facilities.Test(StationFacility::Train) || GetTileLayer(st->xy) != MapLayer::Surface) continue;
+		if (st->owner != company || !st->facilities.Test(StationFacility::Train) || GetTileLayer(st->xy) != MapLayer::Surface) continue;
 		const bool accepts = DoesStationAcceptSpoil(*st);
 		const uint distance = DistanceManhattan(st->xy, key);
 		// A station with both receivers beats any without; among equals the nearer one wins.
@@ -215,27 +228,6 @@ static StringID GetTBMPlayerStepString(TBMPlayerStep step)
 		default: return STR_PORTAL_STEP_CONNECTED;
 	}
 }
-
-/** Native pair window widgets; status always queries canonical saved authority. */
-enum PortalWidgets : WidgetID {
-	PW_STATUS, ///< Pair state line.
-	PW_CONNECT, ///< Connect the pair for ordinary trains.
-	PW_SEAL, ///< Seal it again.
-	PW_COMMISSION, ///< Buy and commission a boring machine.
-	PW_CORRIDOR_DOWN, ///< Shorter corridor to commission.
-	PW_CORRIDOR, ///< Corridor length to commission.
-	PW_CORRIDOR_UP, ///< Longer corridor to commission.
-	PW_INFO, ///< Project lines: progress, hold, spoil dug, hauler and the next step.
-	PW_SHOW_MACHINE, ///< Open the machine's vehicle window.
-	PW_START_STOP, ///< Start or stop the machine.
-	PW_PAUSE, ///< Pause or resume the project.
-	PW_CANCEL, ///< Cancel the project, after confirmation.
-	PW_RETIRE, ///< Retire the finished project.
-	PW_ASSIGN, ///< Pick a train to assign as hauler.
-	PW_RELEASE, ///< Release the hauler.
-	PW_SELL, ///< Sell the withdrawn train in the portal.
-	PW_CONVERT, ///< Convert the released temporary track.
-};
 
 /** Lines of the project panel. */
 static constexpr int PORTAL_INFO_LINES = 5;
@@ -356,7 +348,7 @@ public:
 		this->SetWidgetDisabledState(PW_SEAL, ChangeLayerPortalConnection(this->pair_key, _local_company, false, false) != LayerPortalWorkError::None);
 		const auto *work = GetLayerPortalWorkRecord(this->pair_key);
 		// Only the local company's empty Sealed rail pair can commission; the command checks everything else and prices it.
-		const bool can_commission = work != nullptr && work->state == LayerPortalWorkState::Sealed && work->company == _local_company && GetLayerPortalTransportType(this->pair_key) == TransportType::Rail && CheckLayerPortalAvailability(this->pair_key) == LayerPortalWorkError::None && GetDefaultTBMCommissionModel(this->pair_key) != UINT16_MAX && GetDefaultTBMCommissionOrigin(this->pair_key) != StationID::Invalid();
+		const bool can_commission = work != nullptr && work->state == LayerPortalWorkState::Sealed && work->company == _local_company && GetLayerPortalTransportType(this->pair_key) == TransportType::Rail && CheckLayerPortalAvailability(this->pair_key) == LayerPortalWorkError::None && GetLayerPortalDefaultTBMModel(this->pair_key) != UINT16_MAX && GetLayerPortalDefaultTBMOrigin(this->pair_key, _local_company) != StationID::Invalid();
 		this->SetWidgetDisabledState(PW_COMMISSION, !can_commission);
 		this->SetWidgetDisabledState(PW_CORRIDOR_DOWN, _tbm_commission_corridor <= TBM_COMMISSION_MIN_CORRIDOR);
 		this->SetWidgetDisabledState(PW_CORRIDOR_UP, _tbm_commission_corridor >= TBM_COMMISSION_MAX_CORRIDOR);
@@ -400,7 +392,8 @@ public:
 					ShowErrorMessage(GetEncodedString(STR_ERROR_CAN_T_COMMISSION_TBM), GetEncodedString(STR_ERROR_TBM_COMMISSION_AREA), WarningLevel::Error);
 					break;
 				}
-				Command<Commands::CommissionTBM>::Post(STR_ERROR_CAN_T_COMMISSION_TBM, this->pair_key, GetDefaultTBMCommissionModel(this->pair_key), TBM_COMMISSION_DEFAULT_WAGONS, TBM_COMMISSION_DEFAULT_WAGONS, GetDefaultTBMCommissionOrigin(this->pair_key), start, end, false);
+				const auto consist = GetDefaultTBMConsist(GetTileLayer(rock));
+				Command<Commands::CommissionTBM>::Post(STR_ERROR_CAN_T_COMMISSION_TBM, this->pair_key, GetLayerPortalDefaultTBMModel(this->pair_key), consist.earth_wagons, consist.rock_wagons, GetLayerPortalDefaultTBMOrigin(this->pair_key, _local_company), start, end, false);
 				break;
 			}
 

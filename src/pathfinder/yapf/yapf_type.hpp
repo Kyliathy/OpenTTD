@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_type.hpp Types used by YAPF. */
+/** @file yapf_type.hpp YAPF segment reasons including uncached native work targets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B */
 
 #ifndef YAPF_TYPE_HPP
 #define YAPF_TYPE_HPP
@@ -43,6 +43,7 @@ static constexpr EndSegmentReasons ESRF_POSSIBLE_TARGET = {
 	EndSegmentReason::Waypoint,
 	EndSegmentReason::Station,
 	EndSegmentReason::SafeTile,
+	EndSegmentReason::TargetReached, ///< A native plain-support goal ends an uncached search segment; it is deliberately absent from ESRF_CACHED_MASK.
 };
 
 /** What reasons can be stored back into cached segment. */

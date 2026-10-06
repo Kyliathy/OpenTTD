@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.h Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file map_layer_gui.h Names, icons, layer switching and shared portal UI choices. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef MAP_LAYER_GUI_H
 #define MAP_LAYER_GUI_H
@@ -15,6 +15,8 @@
 #include "gfx_type.h"
 #include "strings_type.h"
 #include "dropdown_type.h"
+#include "station_type.h"
+#include "company_type.h"
 
 struct Window;
 struct Vehicle;
@@ -88,5 +90,21 @@ void CycleMainViewportLayer();
  * @param tile Actual clicked endpoint; window identity derives from its canonical reciprocal pair.
  */
 void ShowLayerPortalWindow(TileIndex tile);
+
+/**
+ * Choose the canonical available cutter for one actual rail pair's two layers.
+ * @param tile Either real endpoint; pair identity and calendar/model capabilities are resolved by their owners.
+ * @return Profile-owned model identity, or UINT16_MAX when no eligible model exists.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, area tools
+ */
+uint16_t GetLayerPortalDefaultTBMModel(TileIndex tile);
+
+/**
+ * Choose an owned Surface origin for the shared portal/area controls.
+ * @param tile Actual pair endpoint; distance is measured using plane geometry.
+ * @param company Actual requesting company, never selected from the camera.
+ * @return Nearest owned railway station accepting both spoil cargos, otherwise nearest owned railway station or Invalid.
+ */
+StationID GetLayerPortalDefaultTBMOrigin(TileIndex tile, CompanyID company);
 
 #endif /* MAP_LAYER_GUI_H */

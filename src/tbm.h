@@ -179,6 +179,15 @@ struct TBMConsistRequest {
 	bool operator==(const TBMConsistRequest &other) const = default;
 };
 
+/**
+ * Choose the native version-1 commissioning presentation's separate spoil groups.
+ * @param layer Actual working rock layer; camera state and the upper assembly layer do not choose capacity.
+ * @return Two Earth hoppers and either two ordinary or four Deep Rock hoppers; invalid layers return an empty request.
+ * The first twelve-cell Hard starter cut yields 480 tonnes of Rock, so Deep needs four native 128-tonne hoppers.
+ * Native sizing, site, purchase and command checks remain authoritative; these defaults grant no construction permission.
+ */
+TBMConsistRequest GetDefaultTBMConsist(MapLayer layer);
+
 /** Stable acquisition refusal; the detailed owner reason is kept beside it in the plan. */
 enum class TBMAcquisitionError : uint8_t {
 	None, ///< Every precondition passed; acquisition may allocate.
@@ -193,6 +202,7 @@ enum class TBMAcquisitionError : uint8_t {
 	AllocationFailure, ///< Construction or coupling failed after allocation began; everything was rolled back.
 	NoReceiver, ///< Commissioning: the origin is not the company's Surface railway station, or no real receiver there accepts both Earth and Rock.
 	ProjectLimit, ///< Commissioning: the project store, its identity cursor or the pair's revision is exhausted.
+	RailTurns, ///< The canonical paid support path needs a physical bend forbidden by the current rail rule.
 };
 
 /** Physical size of a requested consist, from its definitions alone (shared by area preview and acquisition). */
@@ -843,6 +853,28 @@ bool IsTBMCorridorOccupied(const TBMProject &project);
  * @return Whether ordinary movement must hold this train.
  */
 bool IsTBMHoldingTrain(const Train &front);
+
+/** Derived pathfinding destination for a cutter travelling on its own canonical support, never an ordinary saved order. */
+struct TBMCutterSteeringTarget {
+	TileIndex tile = INVALID_TILE; ///< Current face approach or real exchange bay.
+	TrackdirBits trackdirs{}; ///< Real laid face track directions, or the bay's required physical door direction.
+};
+
+/**
+ * Resolve the cutter's next physical destination from its actual project/job/support owners.
+ * @param front Ordinary train head; noncutters and ordinary service orders retain existing routing.
+ * @return Current canonical travel target, or no override for ordinary trains and held work phases.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B
+ */
+std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &front);
+
+/**
+ * Check whether the canonical support path obeys the actual railtype and current sharp-turn preference.
+ * @param job Validated, portal-anchored proposal; this query allocates no vehicle, job or track.
+ * @return Whether every physical support bend can be traversed under the same rule as the train controller.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B
+ */
+bool CheckTBMSupportRailTurns(const ExcavationJob &job);
 
 /** Result of one work step at the face (Groups 6-7). */
 struct TBMFaceWork {

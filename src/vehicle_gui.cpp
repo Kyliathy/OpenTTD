@@ -5,9 +5,12 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_gui.cpp The base GUI for all vehicles. */
+/** @file vehicle_gui.cpp Vehicle controls and shared native freight refit restrictions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "underground_vehicle.h"
+#include "tbm.h"
+#include "tbm_exchange.h"
 #include "debug.h"
 #include "company_func.h"
 #include "gui.h"
@@ -802,6 +805,7 @@ struct RefitWindow : public Window {
 				CargoType cargo_type = cs->Index();
 				/* Skip cargo type if it's not listed */
 				if (!cmask.Test(cargo_type)) continue;
+				if (CheckUndergroundVehicleCapability(v->engine_type, GetTileLayer(v->tile), cargo_type).Failed()) continue;
 
 				auto &list = this->refit_list[cargo_type];
 				bool first_vehicle = list.empty();
@@ -3170,12 +3174,23 @@ public:
 		this->DrawWidgets();
 	}
 
+	/** @copydoc Window::GetWidgetString */
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
 		if (widget != WID_VV_CAPTION) return this->Window::GetWidgetString(widget, stringid);
 
 		const Vehicle *v = Vehicle::Get(this->window_number);
-		return GetString(STR_VEHICLE_VIEW_CAPTION, v->index);
+		std::string caption = GetString(STR_VEHICLE_VIEW_CAPTION, v->index);
+		// A native carrier or any underground ordinary ground vehicle keeps its actual location visible while its camera follows another plane.
+		if (GetUndergroundEngineCapability(v->engine_type) != nullptr || (v->IsGroundVehicle() && GetTileLayer(v->tile) != MapLayer::Surface)) {
+			caption += " / " + GetString(GetMapLayerName(GetTileLayer(v->tile)));
+		}
+		if (v->type == VehicleType::Train) {
+			const TBMProject *project = GetTBMProjectForCutter(v->index);
+			if (const auto *assignment = GetTBMExchangeAssignmentForHauler(v->index); assignment != nullptr) project = GetTBMProject(assignment->project);
+			if (project != nullptr) caption += " / " + GetString(STR_UNDERGROUND_PROJECT_ENTRY, project->id.base());
+		}
+		return caption;
 	}
 
 	/**

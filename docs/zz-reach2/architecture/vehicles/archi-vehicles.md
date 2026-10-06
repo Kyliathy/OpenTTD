@@ -1,5 +1,7 @@
 # Vehicles
 
+Native underground construction and conventional freight are specified by [R2MLVS7](../../upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md); this page records their delivered vehicle ownership and save boundaries.
+
 Company vehicles are pool items of type `Vehicle` (`src/vehicle_base.h`). Trains, road vehicles, ships, and aircraft each override `Tick`. Effect vehicles and disaster vehicles share the same pool and the same walk; their handlers live in `src/effectvehicle.cpp` and `src/disaster_vehicle.cpp` and are outside the movement described here.
 
 `StateGameLoop` calls `CallVehicleTicks` once per simulation frame. The frame order is in [the game loop](../game-loop/archi-game-loop.md). Player actions that buy, sell, start, stop, refit, or send a vehicle to a depot are commands in `src/vehicle_cmd.cpp`. Order-list edits are commands in `src/order_cmd.cpp`. The command pipeline is in [commands](../commands/archi-commands.md).
@@ -31,6 +33,18 @@ Path choice for trains, road vehicles, and ships is YAPF. This page names the ca
 | Road | `src/roadveh.h`, `src/roadveh_cmd.cpp` | `RoadVehicle::Tick`, `RoadVehController` |
 | Ship | `src/ship.h`, `src/ship_cmd.cpp` | `Ship::Tick`, `ShipController` |
 | Aircraft | `src/aircraft.h`, `src/aircraft_cmd.cpp` | `Aircraft::Tick`, airport state machine |
+
+## Native underground conventional fleet
+
+`src/underground_vehicle.h` resolves immutable profile models through the existing engine/EIDS mapping. Models 2/3 reuse the Earth/Rock hopper definitions from the TBM owner; models 4-8 add a diesel freight locomotive, mineral wagon, sealed wagon, bulk truck and sealed carrier in the pinned package's reserved local range. Logical model IDs are never vehicle or engine pool IDs. Loading reconstructs real engine identities through `SetupEngines` and the accepted package. Native startup uses the catalogue's exact calendar dates; ordinary engine introduction retains its existing behavior.
+
+`CheckUndergroundVehicleCapability` applies the accepted profile/version, current calendar, allocated operation layer, Deep unlock and exact cargo-label policy. Engine availability, depot purchase lists, refit lists and actual buy/refit/clone/renew commands consult that same predicate before allocating vehicles or temporary replacement chains. A global list can omit location, but an owning command checks its actual depot or vehicle layer. Sealed designs provide the published Uranium/Rare Earth cargo options. Original engines retain their ordinary checks, and paid TBM support does not provide electrical compatibility to an unpowered railtype.
+
+These are ordinary `Train` and `RoadVehicle` pool items with existing costs, groups, service, cargo packets, station/depot orders and loading. Project haulers use the TBM exchange owner's actual association; their ordinary vehicle caption reads that project and the vehicle's world layer. Logical tube designs have no ordinary engine registration or delivered runtime controls here. Connected visible workflows physically deliver Coal in the bulk truck and Deep Rare minerals in the sealed carrier to their actual Surface receivers; finite reserve, stocks, packets and intake receipts reconcile. Final native directional/load sprites remain pending in R2MLVS13.
+
+`GetTBMCutterSteeringTarget` derives the cutter's live work-face or exchange-bay destination from its existing project/job. YAPF recognizes that plain paid support as an uncached target, and the train releases reservations when its cached goal changes; ordinary saved orders remain with their existing owner. `CheckTBMSupportRailTurns` refuses a commissioned support path that the actual rail turn rule forbids. Shared `GetDefaultTBMConsist(MapLayer)` supplies two Earth/four Rock hoppers for Deep's first complete Hard cut, retaining two/two on Underground; actual capacity, length and purchase checks remain authoritative.
+
+The focused native save fixture writes actual purchased and physically loaded vehicles with station/service orders and an active hauler association. The real game-loader round trip preserves EIDS, VEHS, ORDL and project/exchange descriptors exactly and resolves all seven conventional mappings. `dump_info underground_fleet` reads those loaded owners for evidence; it creates no replacement registry. See R2MLVS7 Group 10B for commands and retained input/output saves.
 
 ## Pool and chain
 

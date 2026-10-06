@@ -5,9 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file engine.cpp Base for all engine handling. */
+/** @file engine.cpp Base for engine handling and canonical native freight dates. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "underground_vehicle.h"
 #include "core/container_func.hpp"
 #include "company_func.h"
 #include "command_func.h"
@@ -777,6 +778,8 @@ void StartupOneEngine(Engine *e, const TimerGameCalendar::YearMonthDay &aging_ym
 	 * of engines in early starting games.
 	 * Note: TTDP uses fixed 1922 */
 	e->intro_date = ei->base_intro <= TimerGameCalendar::ConvertYMDToDate(_settings_game.game_creation.starting_year + 2, 0, 1) ? ei->base_intro : (TimerGameCalendar::Date)GB(r, 0, 9) + ei->base_intro;
+	// Native ground freight has published exact calendar dates; ordinary random introduction offsets cannot postpone the sealed 1980 transport handoff.
+	if (GetUndergroundEngineCapability(e->index) != nullptr) e->intro_date = ei->base_intro;
 	if (e->intro_date <= TimerGameCalendar::date) {
 		TimerGameCalendar::YearMonthDay intro_ymd = TimerGameCalendar::ConvertDateToYMD(e->intro_date);
 		int aging_months = aging_ymd.year.base() * 12 + aging_ymd.month;
@@ -1292,6 +1295,7 @@ bool IsEngineBuildable(EngineID engine, VehicleType type, CompanyID company)
 
 	/* check if it's an engine of specified type */
 	if (e->type != type) return false;
+	if (CheckUndergroundVehicleCapability(engine, MapLayer::Invalid).Failed()) return false;
 
 	/* check if it's available ... */
 	if (company == OWNER_DEITY) {

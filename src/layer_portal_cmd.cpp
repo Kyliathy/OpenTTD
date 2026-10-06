@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
@@ -816,9 +816,30 @@ CommandCost CmdChangeLayerPortalConnection(DoCommandFlags flags, TileIndex tile,
  * @param railtype Unused rail type argument.
  * @param roadtype Unused road type argument.
  */
-void CcBuildLayerPortal(Commands, const CommandCost &result, TileIndex tile, TransportType, MapLayer, DiagDirection, RailType, RoadType)
+/**
+ * Finish visible portal construction by connecting existing road stubs, as ordinary road depots/stops do.
+ * @param command Completed command identity.
+ * @param result Actual portal construction receipt; refusals must not post follow-up work.
+ * @param tile Actual clicked endpoint, on either layer.
+ * @param transport Built transport family; rail approaches retain their ordinary track controls.
+ * @param target Requested other layer, already validated by the command.
+ * @param shaft Requested shaft direction, already present in the actual endpoint geometry.
+ * @param railtype Requested rail type, unused for road-stub completion.
+ * @param roadtype Command-captured road type; later toolbar selection cannot change this construction.
+ */
+void CcBuildLayerPortal([[maybe_unused]] Commands command, const CommandCost &result, TileIndex tile, TransportType transport,
+	[[maybe_unused]] MapLayer target, [[maybe_unused]] DiagDirection shaft, [[maybe_unused]] RailType railtype, RoadType roadtype)
 {
-	if (result.Succeeded()) SndPlayTileFx(SND_1F_CONSTRUCTION_OTHER, tile);
+	if (result.Failed()) return;
+	SndPlayTileFx(SND_1F_CONSTRUCTION_OTHER, tile);
+	if (transport != TransportType::Road) return;
+	// A newly placed structure supplies the missing outer bit to an existing road stub; it never builds through solid rock or connects the sealed pair.
+	for (TileIndex end : {tile, GetLayerPortalPairTile(tile)}) {
+		const TileIndex approach = GetLayerPortalDoorTile(end);
+		// Only existing normal roads receive the same paid, command-validated completion as a depot entrance; empty floor remains a player construction task.
+		if (!IsNormalRoadTile(approach) || !GetRoadBits(approach, GetRoadTramType(roadtype)).Any()) continue;
+		Command<Commands::BuildRoad>::Post(approach, DiagDirToRoadBits(GetLayerPortalShaftDirection(end)), roadtype, {}, TownID::Invalid());
+	}
 }
 
 /** TileTypeProcs for TileType::LayerPortal. */

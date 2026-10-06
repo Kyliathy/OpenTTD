@@ -64,6 +64,7 @@
 #include "core/backup_type.hpp"
 #include "landscape.h"
 #include "viewport_func.h"
+#include "construction_preview.h"
 #include "station_base.h"
 #include "station_func.h"
 #include "waypoint_base.h"
@@ -236,8 +237,9 @@ void InitializeWindowViewport(Window *w, int x, int y,
 
 	vp->zoom = Clamp(zoom, _settings_client.gui.zoom_min, _settings_client.gui.zoom_max);
 
-	vp->virtual_width = ScaleByZoom(width, zoom);
-	vp->virtual_height = ScaleByZoom(height, zoom);
+	// Picking and scrolling must use the actual zoom after client limits clamp it, including before the first resize.
+	vp->virtual_width = ScaleByZoom(width, vp->zoom);
+	vp->virtual_height = ScaleByZoom(height, vp->zoom);
 
 	Point pt;
 
@@ -1029,13 +1031,61 @@ const Waypoint *_viewport_highlight_waypoint; ///< Currently selected waypoint f
 const Waypoint *_viewport_highlight_waypoint_rect; ///< Currently selected waypoint for rectangle highlight
 const Town *_viewport_highlight_town; ///< Currently selected town for coverage area highlight
 
+/** Active cursor owner's derived canonical floor/turn/refusal tiles; never saved or used by commands. */
+static Window *_construction_preview_owner = nullptr;
+static std::array<std::vector<TileIndex>, 3> _construction_preview_tiles; ///< Sorted draw lookup, independent of simulation state.
+
+/** @copydoc ClearConstructionPreview */
+void ClearConstructionPreview()
+{
+	if (_construction_preview_owner == nullptr) return;
+	_construction_preview_owner = nullptr;
+	// Remove every geometry role together so a cancelled/refused project cannot leave misleading floor highlights.
+	for (auto &tiles : _construction_preview_tiles) tiles.clear();
+	MarkWholeScreenDirty();
+}
+
+/** @copydoc SetConstructionPreview */
+void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered)
+{
+	// Only the current cursor window may replace derived geometry; a stale window cannot overwrite another tool.
+	if (owner == nullptr || _thd.GetCallbackWnd() != owner) return;
+	_construction_preview_owner = owner;
+	const std::array roles{floor, working_space, uncovered};
+	// Normalize each producer-derived role for bounded binary lookups during actual tile rendering.
+	for (size_t i = 0; i < roles.size(); ++i) {
+		_construction_preview_tiles[i].assign(roles[i].begin(), roles[i].end());
+		std::ranges::sort(_construction_preview_tiles[i]);
+		auto duplicates = std::ranges::unique(_construction_preview_tiles[i]);
+		_construction_preview_tiles[i].erase(duplicates.begin(), duplicates.end());
+	}
+	MarkWholeScreenDirty();
+}
+
+/** @copydoc GetConstructionPreviewTile */
+ConstructionPreviewTile GetConstructionPreviewTile(TileIndex tile)
+{
+	// Closed or replaced cursor ownership cannot leave a preview attached to an unrelated construction tool.
+	if (_construction_preview_owner == nullptr || _thd.GetCallbackWnd() != _construction_preview_owner) return ConstructionPreviewTile::None;
+	if (std::ranges::binary_search(_construction_preview_tiles[2], tile)) return ConstructionPreviewTile::Uncovered;
+	if (std::ranges::binary_search(_construction_preview_tiles[0], tile)) return ConstructionPreviewTile::Floor;
+	if (std::ranges::binary_search(_construction_preview_tiles[1], tile)) return ConstructionPreviewTile::WorkingSpace;
+	return ConstructionPreviewTile::None;
+}
+
 /**
- * Get tile highlight type of coverage area for a given tile.
+ * Get tile highlight type of coverage or active construction preview for a given tile.
  * @param t Tile that is being drawn
  * @return Tile highlight type to draw
  */
 static TileHighlightType GetTileHighlightType(TileIndex t)
 {
+	switch (GetConstructionPreviewTile(t)) {
+		case ConstructionPreviewTile::Floor: return TileHighlightType::White;
+		case ConstructionPreviewTile::WorkingSpace: return TileHighlightType::Blue;
+		case ConstructionPreviewTile::Uncovered: return TileHighlightType::Red;
+		case ConstructionPreviewTile::None: break;
+	}
 	if (_viewport_highlight_station != nullptr) {
 		if (IsTileType(t, TileType::Station) && GetStationIndex(t) == _viewport_highlight_station->index) return TileHighlightType::White;
 		if (_viewport_highlight_station->TileIsInCatchment(t)) return TileHighlightType::Blue;
@@ -2023,6 +2073,8 @@ void UpdateViewportPosition(Window *w, uint32_t delta_ms)
 		//Following a vehicle also follows its layer. The scroll above is already in that band.
 		MapLayer vehicle_layer = GetVehicleDisplayLayer(veh);
 		if (vp.layer != vehicle_layer) {
+			// A followed vehicle crossing layers cancels unfinished placement before the camera's world band changes.
+			ResetObjectToPlace();
 			vp.layer = vehicle_layer;
 			//FD-8: the link overlay cached the stations of the old layer.
 			if (vp.overlay != nullptr) vp.overlay->SetDirty();
@@ -2607,6 +2659,8 @@ bool ScrollWindowTo(int x, int y, int z, Window *w, bool instant)
 	if (w->viewport != nullptr) {
 		MapLayer layer = GetLayerOfWorldY(y);
 		if (w->viewport->layer != layer) {
+			// Centring on another plane is also a layer switch; retain posted commands but cancel unfinished selection.
+			ResetObjectToPlace();
 			w->viewport->layer = layer;
 			if (w == GetMainWindow()) InvalidateWindowData(WindowClass::MainToolbar, 0);
 		}
@@ -3621,6 +3675,8 @@ void SetObjectToPlaceWnd(CursorID icon, PaletteID pal, HighLightStyle mode, Wind
  */
 void SetObjectToPlace(CursorID icon, PaletteID pal, HighLightStyle mode, WindowClass window_class, WindowNumber window_num)
 {
+	// Replacing the shared placement owner also retires its purely visual canonical-area preview.
+	ClearConstructionPreview();
 	if (_thd.window_class != WindowClass::Invalid) {
 		/* Undo clicking on button and drag & drop */
 		Window *w = _thd.GetCallbackWnd();

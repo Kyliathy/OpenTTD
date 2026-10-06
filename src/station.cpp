@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station.cpp Implementation of the station base class. */
+/** @file station.cpp Station ownership, catchment and layer-local spread. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
 #include "core/flatset_type.hpp"
@@ -534,6 +534,8 @@ CommandCost CheckStationSpread(TileArea area, const TileArea &new_area)
 
 	/* Check if the first and last tile are valid. */
 	if (!IsValidTile(new_area.tile) || TileAddWrap(new_area.tile, new_area.w - 1, new_area.h - 1) == INVALID_TILE) return CMD_ERROR;
+	// Storage bands may have adjacent raw Y rows, but joining another physical layer would share cargo/order identity and corrupt the layer-bounded catchment bitmap.
+	if (area.tile != INVALID_TILE && GetTileLayer(area.tile) != GetTileLayer(new_area.tile)) return CommandCost(STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER);
 
 	area.Add(new_area);
 

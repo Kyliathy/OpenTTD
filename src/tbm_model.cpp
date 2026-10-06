@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file tbm_model.cpp Immutable cutter tuning and actual unit-boundary validation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 1 */
+/** @file tbm_model.cpp Immutable cutter tuning and actual unit-boundary validation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 1; docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, native Deep starter capacity */
 
 #include "stdafx.h"
 #include "tbm.h"
@@ -16,6 +16,16 @@ static const TBMCutterModel _tbm_models[] = {
 	{0, 64, 1800, 1, 1, 400000, 120000, 12000, 2, 3},
 	{1, 48, 3200, 3, 2, 800000, 260000, 26000, 2, 3},
 };
+
+/** @copydoc GetDefaultTBMConsist */
+TBMConsistRequest GetDefaultTBMConsist(MapLayer layer)
+{
+	switch (layer) {
+		case MapLayer::Underground: return {2, 2};
+		case MapLayer::DeepUnderground: return {2, 4};
+		default: return {};
+	}
+}
 
 /** @return Immutable initial tuning; measured corridor budgets remain a later acceptance obligation. */
 std::span<const TBMCutterModel> GetTBMCutterModels()

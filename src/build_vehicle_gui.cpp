@@ -5,9 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file build_vehicle_gui.cpp GUI for building vehicles. */
+/** @file build_vehicle_gui.cpp Vehicle purchase UI and explicit depot-layer capability parity. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "underground_vehicle.h"
+#include "tbm.h"
 #include "engine_base.h"
 #include "engine_func.h"
 #include "station_base.h"
@@ -1446,7 +1448,7 @@ struct BuildVehicleWindow : Window {
 		return this->string_filter.GetState();
 	}
 
-	/* Figure out what train EngineIDs to put in the list */
+	/** @param list Destination for genuine depot-compatible train definitions; portal-only machinery is managed through its project window. */
 	void GenerateBuildTrainList(GUIEngineList &list)
 	{
 		FlatSet<EngineID> variants;
@@ -1465,6 +1467,8 @@ struct BuildVehicleWindow : Window {
 		for (const Engine *e : Engine::IterateType(VehicleType::Train)) {
 			if (!this->show_hidden_engines && e->IsVariantHidden(_local_company)) continue;
 			EngineID eid = e->index;
+			if (IsTBMCutterEngine(eid)) continue;
+			if (CheckUndergroundVehicleCapability(eid, this->listview_mode ? MapLayer::Invalid : GetTileLayer(TileIndex(this->window_number))).Failed()) continue;
 			const RailVehicleInfo *rvi = &e->VehInfo<RailVehicleInfo>();
 
 			if (this->filter.railtype != INVALID_RAILTYPE && !HasPowerOnRail(rvi->railtypes, this->filter.railtype)) continue;
@@ -1531,6 +1535,7 @@ struct BuildVehicleWindow : Window {
 			if (!this->show_hidden_engines && e->IsVariantHidden(_local_company)) continue;
 			EngineID eid = e->index;
 			if (!IsEngineBuildable(eid, VehicleType::Road, _local_company)) continue;
+			if (CheckUndergroundVehicleCapability(eid, this->listview_mode ? MapLayer::Invalid : GetTileLayer(TileIndex(this->window_number))).Failed()) continue;
 			if (this->filter.roadtype != INVALID_ROADTYPE && !HasPowerOnRoad(e->VehInfo<RoadVehicleInfo>().roadtype, this->filter.roadtype)) continue;
 			if (!bdf.Filter(e->badges)) continue;
 

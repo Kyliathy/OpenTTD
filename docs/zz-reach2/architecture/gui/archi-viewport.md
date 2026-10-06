@@ -4,6 +4,8 @@ A viewport is a `Window`-owned view of one rectangle of the isometric map. `View
 
 The window system that hosts this view is in [archi-gui.md](archi-gui.md). The blitter that turns the resulting sprites into pixels is in [archi-blitter.md](archi-blitter.md).
 
+Explicit rock-layer placement, canonical chamber previews and their executable evidence are owned by [R2MLVS7](../../upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md).
+
 ## Where a viewport lives
 
 `Window::viewport` is empty until something calls `InitializeWindowViewport` (`src/viewport.cpp`). The usual caller is `NWidgetViewport::InitializeViewport` (`src/widget.cpp`), which passes the widget's position and size inside the window. `InitializeWindowViewport` clamps zoom to `_settings_client.gui.zoom_min` and `zoom_max`, sets `virtual_width` and `virtual_height` with `ScaleByZoom`, and centres the virtual origin on a tile or on a vehicle.
@@ -104,6 +106,12 @@ inline int ScaleByZoom(int value, ZoomLevel zoom)
 3. Otherwise a sign click, then `CheckClickOnLandscape` (`ClickTile`), then the vehicle window (or start/stop when control is held).
 
 `HandlePlacePresize` (`src/window.cpp`) is the move-without-click path for `SpecialMouseMode::Presize`. It calls `OnPlacePresize` with the tile under the cursor so a tool can preview a dock or a similar footprint. Highlight rectangles are drawn from `DrawTileSelection` inside the landscape walk, using `_thd`.
+
+`OnPlaceObject` receives the world tile picked in the clicked viewport, including an extra view whose layer differs from the main view. Underground tools retain their explicit opening layer; they reject another layer's tile instead of changing command authority to match a camera. `SetViewportLayer`, tile centering and vehicle-follow navigation reset active placement when changing layers. A stale mouse release cannot commission a project after that cancellation. Order destinations follow the same cursor rule: choose the destination's layer before arming Go To. Connected functional tests exercise actual picking for construction and orders across both rock layers, main/extra views, full/split toolbars and keyboard/menu entry; they move floating dialogs beside the world so placement reaches the visible tile through the ordinary global cursor picker.
+
+`src/construction_preview.h` supplies derived tile roles for the current cursor-owning window: floor, additional working space and uncovered floor. `SetConstructionPreview` consumes the canonical owner's world-tile geometry; `GetConstructionPreviewTile` is presentation only. Replacing or resetting placement clears it through `ClearConstructionPreview`. These vectors are neither terrain, reservation, project permission nor saved state; confirmation revalidates through the owning command. Preview/placement fixtures exercise actual picking and event dispatch without claiming final sprite or occlusion acceptance.
+
+Viewport initialization derives virtual dimensions from the stored, settings-clamped `vp->zoom`. Using the caller's unclamped request would make drawing and inverse picking disagree before the first zoom adjustment.
 
 ```mermaid
 flowchart TD

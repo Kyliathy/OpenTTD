@@ -5,9 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file console_cmds.cpp Implementation of the console hooks. */
+/** @file console_cmds.cpp Console hooks and read-only native fleet reconstruction evidence. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "underground_gui.h"
+#include "underground_vehicle.h"
+#include "tbm_exchange.h"
+#include "vehicle_base.h"
 #include "core/string_consumer.hpp"
 #include "console_internal.h"
 #include "debug.h"
@@ -2929,13 +2933,42 @@ static void ConDumpCargoTypes()
 	}
 }
 
-/** Dump information about some NewGRF types. @copydoc IConsoleCmdProc */
+/** Print actual loaded native definitions, filter context and fleet associations without authorizing or changing any vehicle. */
+static void ConDumpUndergroundFleet()
+{
+	const auto &policy = GetCurrentMultiLayerProfileSelection();
+	IConsolePrint(CC_DEFAULT, "MLVS_FREIGHT_FILTER underground={} deep={}",
+		BuildUndergroundVehicleFilter(MapLayer::Underground, policy, TimerGameCalendar::date, UndergroundFleetKind::ConventionalFreight).size(),
+		BuildUndergroundVehicleFilter(MapLayer::DeepUnderground, policy, TimerGameCalendar::date, UndergroundFleetKind::ConventionalFreight).size());
+	// Resolve every conventional logical design through the real loaded mapping; a missing definition remains visibly missing rather than inheriting a stock engine.
+	for (uint16_t model = 2; model <= 8; ++model) {
+		const auto id = GetUndergroundEngine(model);
+		const auto *engine = Engine::GetIfValid(id);
+		if (engine == nullptr) {
+			IConsolePrint(CC_DEFAULT, "MLVS_FREIGHT_MODEL model={} missing", model);
+			continue;
+		}
+		IConsolePrint(CC_DEFAULT, "MLVS_FREIGHT_MODEL model={} engine={} type={} capacity={}", model, id.base(),
+			to_underlying(engine->type), engine->GetDisplayDefaultCapacity());
+	}
+	// Native ordinary identities, exact cargo and project associations come from their existing public owners after full loader reconstruction.
+	for (const Vehicle *vehicle : Vehicle::Iterate()) {
+		const auto *capability = GetUndergroundEngineCapability(vehicle->engine_type);
+		if (capability == nullptr) continue;
+		const auto *assignment = GetTBMExchangeAssignmentForHauler(vehicle->index);
+		IConsolePrint(CC_DEFAULT, "MLVS_FREIGHT_VEHICLE id={} model={} engine={} layer={} cargo={} packets={} orders={} project={}",
+			vehicle->index.base(), capability->model_id, vehicle->engine_type.base(), to_underlying(GetTileLayer(vehicle->tile)),
+			vehicle->cargo_type, vehicle->cargo.TotalCount(), vehicle->GetNumOrders(), assignment == nullptr ? UINT32_MAX : assignment->project.base());
+	}
+}
+
+/** Dump information about some NewGRF types and actual native fleet reconstruction. @copydoc IConsoleCmdProc */
 static bool ConDumpInfo(std::span<std::string_view> argv)
 {
 	if (argv.size() != 2) {
 		IConsolePrint(CC_HELP, "Dump debugging information.");
-		IConsolePrint(CC_HELP, "Usage: 'dump_info roadtypes|railtypes|cargotypes'.");
-		IConsolePrint(CC_HELP, "  Show information about road/tram types, rail types or cargo types.");
+		IConsolePrint(CC_HELP, "Usage: 'dump_info roadtypes|railtypes|cargotypes|underground_fleet'.");
+		IConsolePrint(CC_HELP, "  Show road/tram, rail or cargo types, or actual native underground engines and fleet associations.");
 		return true;
 	}
 
@@ -2951,6 +2984,10 @@ static bool ConDumpInfo(std::span<std::string_view> argv)
 
 	if (StrEqualsIgnoreCase(argv[1], "cargotypes")) {
 		ConDumpCargoTypes();
+		return true;
+	}
+	if (StrEqualsIgnoreCase(argv[1], "underground_fleet")) {
+		ConDumpUndergroundFleet();
 		return true;
 	}
 

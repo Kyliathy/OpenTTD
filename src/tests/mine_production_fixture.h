@@ -22,8 +22,8 @@ class MineProductionRig : public MineAdmissionRig {
 public:
 	Industry *industry = nullptr; ///< Actual fixture-funded pool object, destroyed by the shared fixture.
 
-	/** @param index Published mine recipe index, including Deep minerals. */
-	explicit MineProductionRig(size_t index = 0) : MineAdmissionRig(index), fluct(_economy.fluct, 1), scale(_settings_game.economy.industry_cargo_scale, uint16_t{100})
+	/** @param index Published mine recipe index, including Deep minerals. @param serialized_native_slots Match distributed cargo slots for actual full-game save fixtures. */
+	explicit MineProductionRig(size_t index = 0, bool serialized_native_slots = false) : MineAdmissionRig(index, serialized_native_slots), fluct(_economy.fluct, 1), scale(_settings_game.economy.industry_cargo_scale, uint16_t{100})
 	{
 		this->PrepareFunding();
 		REQUIRE(this->Fund(DoCommandFlag::Execute).Succeeded());

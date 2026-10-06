@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.cpp Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file map_layer_gui.cpp Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "map_layer_gui.h"
@@ -18,6 +18,7 @@
 #include "linkgraph/linkgraph_gui.h"
 #include "dropdown_func.h"
 #include "gfx_func.h"
+#include "tilehighlight_func.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -171,6 +172,7 @@ MapLayer GetVehicleDisplayLayer(const Vehicle *v)
  */
 void SetViewportLayer(Window *w, MapLayer layer)
 {
+	// A missing viewport has no displayed layer or active selection to remap.
 	if (w == nullptr || w->viewport == nullptr) return;
 
 	//A viewport may only show a layer this game allocated. Release builds fall back to the surface.
@@ -180,6 +182,9 @@ void SetViewportLayer(Window *w, MapLayer layer)
 	ViewportData *vp = w->viewport.get();
 	MapLayer old = vp->layer;
 	if (old != layer) {
+		// Cancel the visible cursor/drag before its world-coordinate band changes, including extra viewports.
+		// Already posted commands retain their captured world tiles; this only ends the unfinished GUI selection.
+		ResetObjectToPlace();
 		//One layer is Map::SizeY() tiles tall. RemapCoords turns that world shift into a view shift.
 		int world_dy = (static_cast<int>(to_underlying(layer)) - static_cast<int>(to_underlying(old))) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
 		Point delta = RemapCoords(0, world_dy, 0);
