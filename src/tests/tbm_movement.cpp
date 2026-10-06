@@ -16,6 +16,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md, decisions 1-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8 and 11 (paid support and bend reload)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15
  */
 
@@ -94,6 +95,44 @@ public:
 		return text + "\n" + DescribeProject(this->Project()) + "\n" + DescribeTrain(this->front);
 	}
 
+	/** Verify that real trailing parts stay on paid, excavated support throughout movement and backing. */
+	void CheckPaidSupport() const
+	{
+		REQUIRE(IsTrainOnItsTiles(this->front));
+		// Check the whole physical chain after each complete train tick: a safe cutter alone cannot prove wagon clearance.
+		for (const Train *part = this->front; part != nullptr; part = part->Next()) {
+			if (GetTileLayer(part->tile) == MapLayer::Surface) continue;
+			// The sealed housing is the controlled shaft exception; every ordinary rock-layer track cell must already be cut.
+			if (IsTileType(part->tile, TileType::LayerPortal)) continue;
+			REQUIRE(GetGeologyWorldState().terrain.Get(part->tile) == ExcavationState::Excavated);
+			REQUIRE(IsTBMSupportUsable(this->Project(), part->tile));
+		}
+	}
+
+	/**
+	 * Reload unchanged controller/support records while the real consist stands on a bend.
+	 * This is the producer staging boundary; complete serialized vehicle/file acceptance remains master checkpoint 7.4.
+	 */
+	void ReloadOnBend() const
+	{
+		const auto before = this->Digest();
+		const auto packets = GetTBMPacketOwners(this->front);
+		const auto positions = DescribeTrain(this->front);
+		const auto digest = ComputeTBMProjectDigest();
+		auto projects = CaptureTBMProjects();
+		auto support = CaptureTBMSupport();
+		const auto next = GetNextTBMProjectID();
+		ResetTBMProjectState();
+		StageLoadedTBMProjects(std::move(projects), next);
+		StageLoadedTBMSupport(std::move(support));
+		REQUIRE(AcceptLoadedTBMProjects());
+		CHECK(ComputeTBMProjectDigest() == digest);
+		CHECK(this->Digest() == before);
+		CHECK(GetTBMPacketOwners(this->front) == packets);
+		CHECK(DescribeTrain(this->front) == positions);
+		this->CheckPaidSupport();
+	}
+
 	/**
 	 * Tick the real train until a condition holds; the train must never crash on the way.
 	 * @param done Condition on the live project and train.
@@ -107,6 +146,7 @@ public:
 		while (!done() && ticks < limit) {
 			REQUIRE(this->front->Tick());
 			REQUIRE_FALSE(this->front->vehstatus.Test(VehState::Crashed));
+			this->CheckPaidSupport();
 			++ticks;
 		}
 		INFO(this->Describe());
@@ -120,9 +160,11 @@ public:
 	 */
 	void Run(uint ticks) const
 	{
+		// Whole train ticks preserve the trailing-part safety check during timed holds as well as travel.
 		for (uint tick = 0; tick < ticks; ++tick) {
 			REQUIRE(this->front->Tick());
 			REQUIRE_FALSE(this->front->vehstatus.Test(VehState::Crashed));
+			this->CheckPaidSupport();
 		}
 	}
 
@@ -142,11 +184,17 @@ TEST_CASE("A started cutter drives to its face, works its route and backs into i
 	PathfinderDefaults pathfinder;
 	std::vector<DirDiff> turns(3, DirDiff::Same);
 	bool bending = false;
+	bool reload_bend = false;
 	SECTION("on a straight route, exchanged once at its end") {}
 	SECTION("on a bending route, exchanged before its end too") {
 		// The bend's diagonal cuts overflow one load, so the consist leaves its magazine again with empties.
 		turns = {DirDiff::Same, DirDiff::Right45, DirDiff::Right45};
 		bending = true;
+	}
+	SECTION("on a bending route with a saved controller continuation") {
+		turns = {DirDiff::Same, DirDiff::Right45, DirDiff::Right45};
+		bending = true;
+		reload_bend = true;
 	}
 	TBMMovementRig rig(turns);
 	const auto route = rig.Job().route;
@@ -182,6 +230,17 @@ TEST_CASE("A started cutter drives to its face, works its route and backs into i
 		INFO("cut " << cut);
 		REQUIRE(rig.Project().phase == TBMPhase::Bore);
 		CHECK(rig.front->tile == approach);
+		// The third cut starts on the actual first bend; preserve partial work, paid support and wagon custody across reload.
+		if (reload_bend && cut == 2) {
+			REQUIRE(rig.front->tile == route[1].cutter_position);
+			REQUIRE(rig.Project().heading == route[1].heading);
+			const auto estimate = EstimateExcavationCut(rig.project.job);
+			REQUIRE(estimate.error == ExcavationError::None);
+			rig.Run(static_cast<uint>(estimate.work_ticks / 2));
+			REQUIRE(rig.Job().cursor == cut);
+			REQUIRE(rig.Job().partial_work_ticks != 0);
+			rig.ReloadOnBend();
+		}
 		rig.Drive([&rig, cut] { return rig.Job().cursor == cut + 1; });
 
 		const bool exchange = std::ranges::find(breakpoints, static_cast<uint16_t>(cut + 1)) != breakpoints.end();

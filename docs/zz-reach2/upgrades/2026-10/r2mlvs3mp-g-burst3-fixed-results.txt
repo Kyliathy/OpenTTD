@@ -1,6 +1,0 @@
-[tbm-acquisition] rc=0 All tests passed (442 assertions in 4 test cases)
-[tbm-project] rc=0 All tests passed (294 assertions in 5 test cases)
-[tbm-work] rc=0 All tests passed (32322 assertions in 5 test cases)
-[tbm-coverage] rc=0 All tests passed (22791 assertions in 6 test cases)
-[tbm-cost] rc=0 All tests passed (3804 assertions in 3 test cases)
-DONE

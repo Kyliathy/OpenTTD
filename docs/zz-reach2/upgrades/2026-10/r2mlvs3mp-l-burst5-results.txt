@@ -1,8 +1,0 @@
-[tbm-exchange-acceptance] rc=0 All tests passed (19170 assertions in 4 test cases)
-[tbm-conservation] rc=0 All tests passed (2126 assertions in 1 test case)
-[tbm-exchange-bay] rc=0 All tests passed (726 assertions in 4 test cases)
-[tbm-exchange-lifecycle] rc=0 All tests passed (11391 assertions in 7 test cases)
-[tbm-hauler-cycle] rc=0 All tests passed (12867 assertions in 3 test cases)
-[spoil-receiver-load] rc=0 All tests passed (467 assertions in 1 test case)
-[tbm-coverage] rc=0 All tests passed (22791 assertions in 6 test cases)
-DONE

@@ -1,4 +1,0 @@
-Plan 1/14 content, identity, profile, catalogue, state, bootstrap, utility and recipe focused burst
-===============================================================================
-All tests passed (715 assertions in 18 test cases)
-

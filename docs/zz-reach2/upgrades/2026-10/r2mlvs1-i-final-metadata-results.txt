@@ -1,2 +1,0 @@
-R2MLVS1 normal build: selected native and supplied Classic loads passed.
-Supplied legacy file SHA256 preserved. Feature payloads and multiplayer runtime remain pending.

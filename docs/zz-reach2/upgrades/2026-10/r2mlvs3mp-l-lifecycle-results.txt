@@ -1,9 +1,0 @@
-[Ordinary commands*] rc=0 All tests passed (46 assertions in 1 test case)
-[Loaded set units*] rc=0 All tests passed (1844 assertions in 1 test case)
-[Empty set units*] rc=0 All tests passed (48 assertions in 1 test case)
-[Set units refuse*] rc=0 All tests passed (52 assertions in 1 test case)
-[Deleted trains*] rc=0 All tests passed (5514 assertions in 1 test case)
-[Removing a depot bay*] rc=3 Assertion failed: IsValidDiagDirection(dir), file D:\Codez\Sandbox\OpenTTD\src\map_func.h, line 648
-    Assertion failed: IsValidDiagDirection(dir), file D:\Codez\Sandbox\OpenTTD\src\map_func.h, line 648
-[Company changes*] rc=0 All tests passed (3672 assertions in 1 test case)
-DONE

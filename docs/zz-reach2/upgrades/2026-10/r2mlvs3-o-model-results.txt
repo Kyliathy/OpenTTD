@@ -1,2 +1,0 @@
-Passed 1 test case with 26 assertions.
-

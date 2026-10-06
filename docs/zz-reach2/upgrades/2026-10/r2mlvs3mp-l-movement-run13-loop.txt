@@ -1,7 +1,0 @@
-===== [tbm-loop]
-Filters: [tbm-loop]
-===============================================================================
-All tests passed (120268 assertions in 3 test cases)
-
-== exit 0
-===== [tbm-loop] rc=0 seconds=5

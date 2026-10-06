@@ -1,3 +1,0 @@
-R2MLVS1 Group 3: dedicated definition round-trip evidence
-native: ('cargo CORE slot=12 sprite=true', 'processor type=37 inputs=12,1 output=9 layouts=2', 'carrier id=256 local=116 cargo=12 capacity=32 image=2')
-bundled: ('cargo CORE slot=12 sprite=true', 'processor type=7 inputs=12,1 output=9 layouts=2', 'carrier id=256 local=116 cargo=12 capacity=32 image=2')

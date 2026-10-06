@@ -1,4 +1,0 @@
-@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.
-Four actual Deep rail loads passed: separate Sealed/Connected Underground/Deep pairs and each repeated reload.
-Canonical key/reciprocal Deep topology and LPWH/LPWK/GEOS/GDEP/GSPN/GVNT remain exact; retained source/config/startup unchanged.
-Explicit fixture foundations are not a TBM excavation or occupied vehicle scenario.

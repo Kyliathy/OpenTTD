@@ -1,4 +1,0 @@
-@see r2mlvs2-geology-and-excavation.md, Group 14.
-Six actual cases passed: native, active frozen pass, repeated reload, missing family, changed capacity proof, orphan parent.
-Nine job/pass/geological chunks stayed byte-exact across two reloads. Partial 77/cursor 0/revision 2 retained.
-Actual paused removed-owner geometry; TBM, wagons and exchange controller remain Plans 3/4/5.

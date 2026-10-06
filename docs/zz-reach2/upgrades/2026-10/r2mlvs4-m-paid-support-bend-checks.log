@@ -1,0 +1,59 @@
+﻿Filters: [tbm-support],[tbm-work],[tbm-movement],[tbm-corridor],[tbm-coverage]
+0.069 s: Face work adds bounded work per tick and commits one paid cut
+0.059 s: Earth full while Rock is free; freeing one tonne fills the Earth wagons exactly
+0.065 s: Face work waits precisely at the boundary and resumes from the same cursor
+0.058 s: Rock full while Earth is free; freeing one tonne fills the Rock wagons exactly
+0.065 s: Face work waits precisely at the boundary and resumes from the same cursor
+0.057 s: too little cash waits for funds
+0.064 s: Face work waits precisely at the boundary and resumes from the same cursor
+0.001 s: cargo packet storage cannot be allocated
+0.064 s: A refused participant leaves geology, wagons and funds unchanged
+0.000 s: support placement is obstructed after the quote
+0.063 s: A refused participant leaves geology, wagons and funds unchanged
+0.064 s: Only the assigned project advances its claim over supported retreat
+0.000 s: support metadata that no longer matches the track refuses
+0.063 s: Saves on both sides of a cut reload to the same next step
+0.000 s: support rows without any project refuse
+0.065 s: Saves on both sides of a cut reload to the same next step
+0.007 s: The first support piece is the axis track at the portal mouth
+0.007 s: Turning support stays connected and trailing parts stay in opened ground
+0.061 s: Support refuses cells it may not lay on
+0.062 s: Laid support is company track with saved metadata
+0.000 s: company removal clears the track and its metadata even in use
+0.062 s: Support in use refuses ordinary rail tools until released
+0.000 s: after the project ends, removal drops the metadata and the cavity stays open
+0.062 s: Support in use refuses ordinary rail tools until released
+0.000 s: after the project ends, conversion keeps the track for its price
+0.062 s: Support in use refuses ordinary rail tools until released
+0.062 s: Support traffic classes follow the consist roles
+0.000 s: straight pass
+0.134 s: Straight, two-bend and irregular floors are bored to the accepted outline
+0.000 s: a 90-degree change made of two advancing bends
+0.201 s: Straight, two-bend and irregular floors are bored to the accepted outline
+0.000 s: irregular chamber with a branch
+0.149 s: Straight, two-bend and irregular floors are bored to the accepted outline
+0.007 s: Too-tight turns are refused before anything is reserved
+0.112 s: Diagonal advances cut their solid corner cells
+0.076 s: A late obstruction pauses at the previous safe support with a valid retreat
+0.007 s: Reversing keeps the cutting heading and never cuts backwards
+0.100 s: A reload during a bend continues the same cursor and ledger
+0.077 s: Ordinary trains can neither route nor drive into a work corridor
+0.064 s: Released support stays while a train stands on it
+0.000 s: on a straight route, exchanged once at its end
+0.154 s: A started cutter drives to its face, works its route and backs into its magazine
+0.000 s: on a bending route, exchanged before its end too
+0.207 s: A started cutter drives to its face, works its route and backs into its magazine
+0.000 s: on a bending route with a saved controller continuation
+0.208 s: A started cutter drives to its face, works its route and backs into its magazine
+0.000 s: in the first cut, at the rock end
+0.034 s: Cancelling a consist that straddles the pair takes it back into its magazine
+0.073 s: in the second cut, with spoil aboard
+0.111 s: Cancelling a consist that straddles the pair takes it back into its magazine
+0.071 s: in the second cut, stopped by the player on the way back
+0.116 s: Cancelling a consist that straddles the pair takes it back into its magazine
+0.177 s: A freight train crosses the tunnel its TBM bored once the pair is opened
+0.007 s: A Commissioning pair shows its track only to the project's own trains
+0.013 s: An ordinary train is turned back at a Commissioning pair's door
+===============================================================================
+All tests passed (130034 assertions in 24 test cases)
+

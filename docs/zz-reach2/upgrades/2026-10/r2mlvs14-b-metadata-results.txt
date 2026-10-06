@@ -1,2 +1,0 @@
-R2MLVS14 M0 metadata: explicit native new/reload/reload, Surface/369/370 legacy loads passed.
-Supplied legacy file SHA256 preserved. Feature payloads and multiplayer runtime remain pending.

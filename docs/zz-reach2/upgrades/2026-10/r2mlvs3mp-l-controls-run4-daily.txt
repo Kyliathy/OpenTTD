@@ -1,7 +1,0 @@
-===== [tbm-controls] with daily train steps
-Filters: [tbm-controls]
-===============================================================================
-All tests passed (61742 assertions in 1 test case)
-
-== exit 0
-===== rc=0

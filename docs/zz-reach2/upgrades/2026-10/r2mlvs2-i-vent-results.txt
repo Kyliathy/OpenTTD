@@ -1,3 +1,0 @@
-R2MLVS2 Group 6: natural-field new/reload, geology-only predecessor and capacity/missing-family refusals passed.
-Minerals, terrain and thermal ID/capacity remained exact; discovery produced no plant, freight or power grant.
-Original configuration/startup/predecessor bytes preserved. Runtime heat allocation remains Plan 17.
