@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation.cpp Packed rock authority independent of tile reconstruction. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file excavation.cpp Packed rock authority independent of tile reconstruction. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include "excavation.h"
@@ -27,6 +27,42 @@ static std::optional<GeologyWorldState> _pending_geology; ///< Validated unaccep
 const GeologyWorldState &GetGeologyWorldState()
 {
 	return _geology_world;
+}
+
+/** @copydoc ClaimLayerMineDeposit */
+GeologyError ClaimLayerMineDeposit(GeologyDepositID deposit, CompanyID company, uint64_t expected_remaining)
+{
+	const auto *record = _geology_world.deposits.Get(deposit);
+	if (record == nullptr) return GeologyError::InvalidID;
+	// Exact unclaimed reserve admission prevents both stale quotes and a second mine by the same claimant.
+	if (!Company::IsValidID(company) || record->claimant != CompanyID::Invalid()) return GeologyError::ClaimConflict;
+	if (record->remaining_reserve != expected_remaining) return GeologyError::InvalidReserve;
+	return _geology_world.deposits.Claim(deposit, company);
+}
+
+/** @copydoc ReleaseLayerMineDeposit */
+GeologyError ReleaseLayerMineDeposit(GeologyDepositID deposit, CompanyID company)
+{
+	return _geology_world.deposits.ReleaseClaim(deposit, company);
+}
+
+/** @copydoc TransferLayerMineDeposit */
+GeologyError TransferLayerMineDeposit(GeologyDepositID deposit, CompanyID old_company, CompanyID new_company)
+{
+	// Company removal releases the geological claim; a takeover must name an existing actual company.
+	if (new_company != CompanyID::Invalid() && !Company::IsValidID(new_company)) return GeologyError::ClaimConflict;
+	return _geology_world.deposits.TransferMineClaim(deposit, old_company, new_company);
+}
+
+/** @copydoc ConsumeLayerMineReserve */
+GeologyError ConsumeLayerMineReserve(GeologyDepositID deposit, CompanyID company, uint64_t amount, uint64_t expected_remaining)
+{
+	const auto *record = _geology_world.deposits.Get(deposit);
+	if (record == nullptr) return GeologyError::InvalidID;
+	// A failed participant or stale output proposal cannot debit a different balance or create a zero-progress receipt.
+	if (amount == 0 || record->remaining_reserve != expected_remaining) return GeologyError::InvalidReserve;
+	if (!Company::IsValidID(company)) return GeologyError::ClaimConflict;
+	return _geology_world.deposits.ConsumeReserve(deposit, company, amount);
 }
 
 /** Clear geological authority at world initialization; old absence never becomes newly generated rock. */

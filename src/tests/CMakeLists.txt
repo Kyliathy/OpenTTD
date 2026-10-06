@@ -1,4 +1,4 @@
-# Focused content/geology/TBM fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md and r2mlvs4-tunnel-boring-machines.md.
+# Focused content/geology/portal/TBM/mine fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md and r2mlvs6-mines-and-resource-chains.md.
 add_test_files(
     alternating_iterator.cpp
     bitmath_func.cpp
@@ -70,6 +70,29 @@ add_test_files(
     multilayer_content.cpp
     multilayer_content_identity.cpp
     multilayer_recipe.cpp
+    layer_industry_admission.cpp
+    layer_industry_contract.cpp
+    layer_mine_production.cpp
+    layer_mine_definition.cpp
+    processor_fixture.h
+    layer_processor.cpp
+    layer_processor_delivery.cpp
+    processor_spoil_delivery.cpp
+    layer_baseline_receiver.cpp
+    layer_freight_accounting.cpp
+    layer_surface_manufacturing.cpp
+    layer_mine_presentation.cpp
+    layer_mine_load.cpp
+    layer_save_fixture.h
+    layer_processor_load.cpp
+    layer_industry_lifecycle.cpp
+    layer_window_fixture.h
+    layer_industry_window.cpp
+    layer_mine_dispatch.cpp
+    layer_mine_dispatch_pool.cpp
+    layer_recipe_batch.cpp
+    mine_fixture.h
+    mine_production_fixture.h
     multilayer_bootstrap.cpp
     multilayer_utility.cpp
     solar_power_contract.cpp
@@ -79,6 +102,7 @@ add_test_files(
     portal_date.cpp
     portal_lifecycle.cpp
     portal_work_state.cpp
+    portal_window.cpp
     portal_bootstrap.cpp
     math_func.cpp
     mock_environment.h

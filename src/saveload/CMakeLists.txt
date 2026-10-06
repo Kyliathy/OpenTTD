@@ -20,6 +20,8 @@ add_files(
     layer_portal_work_sl.cpp
     tbm_sl.cpp
     spoil_receiver_sl.cpp
+    layer_mine_sl.cpp
+    layer_processor_sl.cpp
     tbm_exchange_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp

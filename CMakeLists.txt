@@ -1,4 +1,4 @@
-# First-party content distribution: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md.
+# First-party content distribution/runtime language pairing: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs6-mines-and-resource-chains.md.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT BINARY_NAME)
@@ -306,6 +306,16 @@ if(IPO_FOUND)
     set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO True)
 endif()
 set_target_properties(openttd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+
+# Windows multi-configuration builds keep executable snapshots in separate directories.
+# Pair their compiled language packs so rebuilding tests cannot strand an older playable binary with newer shared packs.
+if(WIN32 AND CMAKE_CONFIGURATION_TYPES)
+    add_custom_command(TARGET openttd POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/lang" "$<TARGET_FILE_DIR:openttd>/lang"
+        COMMENT "Pairing language packs with the playable executable"
+        VERBATIM
+    )
+endif()
 
 include(LinkPackage)
 link_package(PNG TARGET PNG::PNG ENCOURAGED)

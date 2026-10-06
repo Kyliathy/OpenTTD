@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargopacket.h Base class for cargo packets. */
+/** @file cargopacket.h Base class for cargo packets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, plane-coordinate freight accounting */
 
 #ifndef CARGOPACKET_H
 #define CARGOPACKET_H
@@ -220,9 +220,12 @@ public:
 		/* Distance is always requested when the cargo is still inside the
 		 * vehicle. So first finish the calculation for travelled to
 		 * become a vector. */
-		auto local_travelled = travelled;
-		local_travelled.x -= TileX(current_tile);
-		local_travelled.y -= TileY(current_tile);
+		const int travelled_x = this->travelled.x - static_cast<int>(TileX(current_tile));
+		// Keep the saved vector representation. While aboard, same-layer station unload/load pairs telescope its stacked offset to the origin's layer.
+		// Remove that offset before comparing plane coordinates, so a vertical portal leg cannot pay for a free move within a station.
+		const int source_layer_offset = static_cast<int>(TileY(this->source_xy) - TilePlaneY(this->source_xy));
+		const int travelled_plane_y = static_cast<int16_t>(this->travelled.y - source_layer_offset);
+		const int travelled_y = travelled_plane_y - static_cast<int>(TilePlaneY(current_tile));
 
 		/* Cargo-movement is a vector that indicates how much the cargo has
 		 * actually traveled in a vehicle. This is the distance you get paid
@@ -240,7 +243,7 @@ public:
 		 * use the actual distance between source and destination.
 		 */
 
-		uint distance_travelled = abs(local_travelled.x) + abs(local_travelled.y);
+		uint distance_travelled = abs(travelled_x) + abs(travelled_y);
 		uint distance_source_dest = DistanceManhattan(this->source_xy, current_tile);
 		return std::min(distance_travelled, distance_source_dest);
 	}

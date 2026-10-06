@@ -504,7 +504,8 @@ static constexpr std::initializer_list<NWidgetPart> _portal_widgets = {
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::DarkGreen),
 		NWidget(NWID_VERTICAL), SetPadding(WidgetDimensions::unscaled.framerect),
-			NWidget(WWT_TEXT, Colours::DarkGreen, PW_STATUS), SetStringTip(STR_PORTAL_STATE_SEALED, STR_PORTAL_STATUS_TOOLTIP), SetMinimalSize(460, 20), SetFill(1, 0),
+			// Text takes its background from the enclosing panel; assigning a colour makes window construction throw.
+			NWidget(WWT_TEXT, Colours::Invalid, PW_STATUS), SetStringTip(STR_PORTAL_STATE_SEALED, STR_PORTAL_STATUS_TOOLTIP), SetMinimalSize(460, 20), SetFill(1, 0),
 			NWidget(NWID_HORIZONTAL),
 				NWidget(WWT_PUSHTXTBTN, Colours::Grey, PW_CONNECT), SetStringTip(STR_PORTAL_CONNECT, STR_PORTAL_CONNECT_TOOLTIP), SetFill(1, 0),
 				NWidget(WWT_PUSHTXTBTN, Colours::Grey, PW_SEAL), SetStringTip(STR_PORTAL_SEAL, STR_PORTAL_SEAL_TOOLTIP), SetFill(1, 0),
@@ -513,7 +514,7 @@ static constexpr std::initializer_list<NWidgetPart> _portal_widgets = {
 			NWidget(NWID_HORIZONTAL),
 				NWidget(WWT_PUSHARROWBTN, Colours::Grey, PW_CORRIDOR_DOWN), SetArrowWidgetTypeTip(ArrowWidgetType::Decrease, STR_PORTAL_CORRIDOR_DECREASE_TOOLTIP),
 				NWidget(WWT_PUSHARROWBTN, Colours::Grey, PW_CORRIDOR_UP), SetArrowWidgetTypeTip(ArrowWidgetType::Increase, STR_PORTAL_CORRIDOR_INCREASE_TOOLTIP),
-				NWidget(WWT_TEXT, Colours::DarkGreen, PW_CORRIDOR), SetStringTip(STR_PORTAL_CORRIDOR, STR_PORTAL_CORRIDOR_TOOLTIP), SetPadding(0, 0, 0, WidgetDimensions::unscaled.hsep_normal), SetFill(1, 0),
+				NWidget(WWT_TEXT, Colours::Invalid, PW_CORRIDOR), SetStringTip(STR_PORTAL_CORRIDOR, STR_PORTAL_CORRIDOR_TOOLTIP), SetPadding(0, 0, 0, WidgetDimensions::unscaled.hsep_normal), SetFill(1, 0),
 			EndContainer(),
 		EndContainer(),
 	EndContainer(),

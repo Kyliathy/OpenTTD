@@ -50,6 +50,8 @@
 #include "../layer_portal_cmd.h"
 #include "../tbm.h"
 #include "../spoil_receiver.h"
+#include "../multilayer_industry.h" // r2mlvs6-mines-and-resource-chains.md: independent preview and chunk registration.
+#include "../layer_industry_processor.h"
 #include "../tbm_exchange.h"
 #include "../error.h"
 #include "../strings_type.h"
@@ -255,6 +257,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _portal_work_chunk_handlers;
 	extern const ChunkHandlerTable _tbm_project_chunk_handlers;
 	extern const ChunkHandlerTable _spoil_receiver_chunk_handlers;
+	extern const ChunkHandlerTable _layer_mine_chunk_handlers;
+	extern const ChunkHandlerTable _layer_processor_chunk_handlers;
 	extern const ChunkHandlerTable _tbm_exchange_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
@@ -301,6 +305,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_portal_work_chunk_handlers,
 		_tbm_project_chunk_handlers,
 		_spoil_receiver_chunk_handlers,
+		_layer_mine_chunk_handlers,
+		_layer_processor_chunk_handlers,
 		_tbm_exchange_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
@@ -3323,6 +3329,8 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateLayerPortalWorkLoadPreview();
 		ValidateTBMProjectLoadPreview();
 		ValidateSpoilReceiverLoadPreview();
+		ValidateLayerMineLoadPreview();
+		ValidateLayerProcessorLoadPreview();
 		ValidateTBMExchangeLoadPreview();
 		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {

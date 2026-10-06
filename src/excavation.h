@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation.h Persistent rock-plane state and sparse geological authority. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file excavation.h Persistent rock-plane state and sparse geological/mining authority. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #ifndef EXCAVATION_H
 #define EXCAVATION_H
@@ -173,6 +173,15 @@ public:
 	GeologyError ReleaseClaim(GeologyDepositID id, CompanyID company);
 
 	/**
+	 * Move an existing exclusive mine claim during takeover or company removal, including exhausted seams.
+	 * @param id Existing finite deposit identity.
+	 * @param old_company Current claiming company.
+	 * @param new_company New company, or invalid to release an abandoned mine's claim.
+	 * @return Complete ownership change or unchanged refusal; initial/remaining reserves never change.
+	 */
+	GeologyError TransferMineClaim(GeologyDepositID id, CompanyID old_company, CompanyID new_company);
+
+	/**
 	 * Debit the sole reserve during a complete validated mine/cut transaction.
 	 * Excavation reports destroyed ore separately from Earth/Rock; later mines cannot extract it again.
 	 * @param id Existing claimed deposit.
@@ -263,6 +272,42 @@ GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed);
 
 /** @return Read-only accepted geology; absence retains legacy free-ground behavior. */
 const GeologyWorldState &GetGeologyWorldState();
+
+/**
+ * Bind an admitted mine to the sole live geological claim, before non-failing construction writes.
+ * @param deposit Explicit stable seam identity selected by the mine owner.
+ * @param company Actual existing mining company.
+ * @param expected_remaining Reserve stamp from complete placement preflight.
+ * @return Complete exclusive claim or unchanged refusal; even same-company replay is refused.
+ */
+GeologyError ClaimLayerMineDeposit(GeologyDepositID deposit, CompanyID company, uint64_t expected_remaining);
+
+/**
+ * Release a removed mine's live company claim while retaining the original finite seam and cavity.
+ * @param deposit Stable seam owned by the removed industry binding.
+ * @param company Current claiming company; wrong owners cannot release it.
+ * @return Complete release or unchanged refusal; no reserve is replenished.
+ */
+GeologyError ReleaseLayerMineDeposit(GeologyDepositID deposit, CompanyID company);
+
+/**
+ * Transfer the live mine claim through its geological owner during takeover/abandonment.
+ * @param deposit Actual bound seam, including an exhausted one.
+ * @param old_company Existing claimant.
+ * @param new_company Existing new company, or invalid for company removal.
+ * @return Complete claim transfer/release or unchanged refusal; no geological material is created.
+ */
+GeologyError TransferLayerMineDeposit(GeologyDepositID deposit, CompanyID old_company, CompanyID new_company);
+
+/**
+ * Debit the sole live reserve during an already prepared non-failing accountable-output commit.
+ * @param deposit Stable claimed seam belonging to the mine binding.
+ * @param company Actual current mining owner.
+ * @param amount Exact whole units that the same transaction adds to bounded industry output.
+ * @param expected_remaining Reserve stamp captured immediately before commitment.
+ * @return Whole debit or unchanged refusal; caller must not discard/clamp any debited output.
+ */
+GeologyError ConsumeLayerMineReserve(GeologyDepositID deposit, CompanyID company, uint64_t amount, uint64_t expected_remaining);
 
 /** Reset feature authority before map allocation/load; this never changes the accepted profile owner. */
 void ResetGeologyWorldState();

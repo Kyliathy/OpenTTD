@@ -32,64 +32,19 @@ This is the arithmetic behind a delivery. The stop, the ledger, and the subsidy 
 				cp->next_hop = cargo_next;
 ```
 
-`CargoDelivery` prices the slice that is actually leaving the vehicle:
+`CargoDelivery` first obtains the actual accepted count from `CargoPayment::PayFinalDelivery`, then removes only those units from the vehicle's packet and cached delivery count. Payment and feeder-share settlement use that same receipt. A partial refusal reassigns the retained delivery prefix to `Keep`; count, original source/station, age and the remaining proportional feeder share stay aboard. `VehicleCargoList::Unload` reports the actual before-minus-after debit, so another receiver cannot be credited for refused material.
 
-```113:118:src/cargoaction.cpp
-bool CargoDelivery::operator()(CargoPacket *cp)
-{
-	uint remove = this->Preprocess(cp);
-	this->source->RemoveFromMeta(cp, VehicleCargoList::MoveToAction::Deliver, remove);
-	this->payment->PayFinalDelivery(this->cargo, cp, remove, this->current_tile);
-	return this->Postprocess(cp, remove);
-}
-```
+Native processors commit accepted stock/history immediately through `ReceiveLayerProcessorCargo`, then their shared all-input owner consumes it on economy ticks. Their receipts do not queue a borrowed industry pointer for the legacy production callback. Bounded original Steel and spoil receivers likewise leave excess cargo aboard. These delivered boundaries and their focused packet fixtures are owned by [R2MLVS6](../../upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md); ordinary legacy arrival callbacks retain their own production owner.
 
-`PayFinalDelivery` passes `cp->GetDistance(current_tile)` and `cp->GetPeriodsInTransit()` into `DeliverGoods` (`src/economy.cpp` 1216–1223). `GetFeederShare(count)` prorates the packet's stored feeder share by `count / packet count`.
+`PayFinalDelivery` passes `cp->GetDistance(current_tile)` and `cp->GetPeriodsInTransit()` into `DeliverGoods`. `GetFeederShare(count)` prorates the packet's stored feeder share for the count actually accepted.
 
 ## Distance
 
-`GetDistance` is called while the packet is still on the vehicle. It finishes the travelled vector against the current tile locally and does not write the packet:
+`CargoPacket::GetDistance(current_tile)` reads the vector while cargo is aboard and never mutates saved provenance. Horizontal movement uses `travelled.x - TileX(current_tile)`. The existing saved Y vector still uses stacked world coordinates. At payment, the source plane's offset, `TileY(source_xy) - TilePlaneY(source_xy)`, is removed in the original signed 16-bit encoding before comparing with `TilePlaneY(current_tile)`.
 
-```213:246:src/cargopacket.h
-	inline uint GetDistance(TileIndex current_tile) const
-	{
-		assert(this->source_xy != INVALID_TILE);
-#ifdef WITH_ASSERT
-		assert(this->in_vehicle);
-#endif /* WITH_ASSERT */
+The paid distance is the minimum of the absolute projected in-vehicle X/Y vector and the existing plane Manhattan distance from the original pickup tile. This keeps handling across a station free and prevents a vertical portal/elevator leg from paying for the stacked map band's height. Unload/load pairs on one station's layer retain the historical vector representation, so this projection requires no cargo-field or save-version migration.
 
-		/* Distance is always requested when the cargo is still inside the
-		 * vehicle. So first finish the calculation for travelled to
-		 * become a vector. */
-		auto local_travelled = travelled;
-		local_travelled.x -= TileX(current_tile);
-		local_travelled.y -= TileY(current_tile);
-
-		/* Cargo-movement is a vector that indicates how much the cargo has
-		 * actually traveled in a vehicle. This is the distance you get paid
-		 * for. However, one could construct a route where this vector would
-		 * be really long. To not overpay the player, cap out at the distance
-		 * between source and destination.
-		 *
-		 * This way of calculating is to counter people moving cargo for free
-		 * and instantly in stations, where you deliver it in one part of the
-		 * station and pick it up in another. By using the actual distance
-		 * traveled in a vehicle, using this trick doesn't give you more money.
-		 *
-		 * However, especially in large networks with large transfer station,
-		 * etc, one could actually make the route a lot longer. In that case,
-		 * use the actual distance between source and destination.
-		 */
-
-		uint distance_travelled = abs(local_travelled.x) + abs(local_travelled.y);
-		uint distance_source_dest = DistanceManhattan(this->source_xy, current_tile);
-		return std::min(distance_travelled, distance_source_dest);
-	}
-```
-
-`travelled` gains `TileX`/`TileY` of the load tile in `UpdateLoadingTile` and loses the unload tile in `UpdateUnloadingTile` (`src/cargopacket.h` 104–136). The first load also sets `source_xy`. The paid distance is the smaller of the in-vehicle Manhattan vector and the Manhattan distance from the first pickup tile to the tile where payment is computed. The comment above the `min` states why both exist: the vehicle vector ignores cargo that was walked across a station without a trip, and the source-to-destination cap limits a deliberately long route.
-
-Transfer uses the same `GetDistance` at stage time, on the vehicle's cargo tile. Final delivery uses it again at unload time, on that slice's tile.
+Transfer evaluates that same distance at stage time; final delivery evaluates it for the accepted unload slice. [R2MLVS6 Group 12](../../upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md) records focused geometry, original-source/feeder-share and real final-delivery evidence. Actual native-fleet route/refit and complete economic balancing still wait for their producer gates.
 
 ## Cargo age
 

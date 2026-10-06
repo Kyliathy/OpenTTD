@@ -100,6 +100,10 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::TBMProjects) && (schema.feature_flags & MULTILAYER_FEATURE_TBM_PROJECTS) != 0) SlErrorCorrupt("Unexpected TBM projects in old save version"); // Typed projects require their versioned descriptor family.
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpoilReceivers) && (schema.feature_flags & MULTILAYER_FEATURE_SPOIL_RECEIVERS) != 0) SlErrorCorrupt("Unexpected spoil receivers in old save version"); // Receiver state requires its versioned descriptor family.
 		if (IsSavegameVersionBefore(SaveLoadVersion::TBMExchange) && (schema.feature_flags & MULTILAYER_FEATURE_TBM_EXCHANGE) != 0) SlErrorCorrupt("Unexpected TBM exchange in old save version"); // Assignments and sets require their versioned descriptor family.
+		// Finite mine bindings require their actual descriptor version; older saves cannot request invented claims.
+		if (IsSavegameVersionBefore(SaveLoadVersion::LayerMines) && (schema.feature_flags & MULTILAYER_FEATURE_MINES) != 0) SlErrorCorrupt("Unexpected mines in old save version");
+		// Saved recipe counters require their actual descriptor version, never invented defaults in an older file.
+		if (IsSavegameVersionBefore(SaveLoadVersion::LayerProcessors) && (schema.feature_flags & MULTILAYER_FEATURE_PROCESSORS) != 0) SlErrorCorrupt("Unexpected processors in old save version");
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}

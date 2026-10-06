@@ -98,6 +98,12 @@ void LoadCheckData::Clear()
 	this->tbm_support_expected = this->tbm_support_rows = 0;
 	this->spoil_receiver_present.fill(false);
 	this->spoil_receiver_expected = this->spoil_receiver_rows = 0;
+	// Each file preview starts independently; an earlier mine header cannot satisfy a later file's missing family.
+	this->layer_mine_present.fill(false);
+	this->layer_mine_expected = this->layer_mine_rows = 0;
+	this->layer_processor_present.fill(false);
+	this->layer_processor_expected.fill(0);
+	this->layer_processor_rows.fill(0);
 	this->tbm_exchange_present.fill(false);
 	this->tbm_exchange_header.fill(0);
 	this->tbm_exchange_rows.fill(0);

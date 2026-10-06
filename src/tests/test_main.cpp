@@ -10,6 +10,7 @@
  * With MSVC a failed assertion prints the call stack and ends the run without a modal dialog, so an unattended
  * focused burst never waits for a click.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Global Mandatory Reading (bounded test runs)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, actual window failure diagnosis
  */
 
 #include "../stdafx.h"
@@ -56,6 +57,17 @@ static void PrintAbortStack(int)
 }
 
 /**
+ * Print an actual access-violation stack before Catch's fatal-condition handler unwinds it.
+ * @param exception Windows exception context; ordinary C++ exceptions remain with their existing handlers.
+ * @return Continue normal exception handling after recording the fault; never turn a crash into a passing test.
+ */
+static LONG WINAPI PrintAccessViolationStack(EXCEPTION_POINTERS *exception)
+{
+	if (exception->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) PrintAbortStack(0);
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+/**
  * Send failed assertions and aborts to stderr instead of the Abort/Retry/Ignore box, as the null video driver does
  * for the game, and print the stack on abort.
  * @return Always true; only the settings matter.
@@ -69,6 +81,7 @@ static bool QuietTestAssertions()
 	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 	signal(SIGABRT, PrintAbortStack);
+	AddVectoredExceptionHandler(1, PrintAccessViolationStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.
 	return true;
 }
 

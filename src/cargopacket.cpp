@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargopacket.cpp Implementation of the cargo packets. */
+/** @file cargopacket.cpp Implementation of the cargo packets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, accepted-count unloading */
 
 #include "stdafx.h"
 #include "station_base.h"
@@ -645,6 +645,7 @@ uint VehicleCargoList::Shift(uint max_move, VehicleCargoList *dest)
  */
 uint VehicleCargoList::Unload(uint max_move, StationCargoList *dest, CargoType cargo, CargoPayment *payment, TileIndex current_tile)
 {
+	const uint before = this->TotalCount();
 	uint moved = 0;
 	if (this->action_counts[MoveToAction::Transfer] > 0) {
 		uint move = std::min(this->action_counts[MoveToAction::Transfer], max_move);
@@ -656,7 +657,8 @@ uint VehicleCargoList::Unload(uint max_move, StationCargoList *dest, CargoType c
 		this->ShiftCargo(CargoDelivery(this, move, cargo, payment, current_tile));
 		moved += move;
 	}
-	return moved;
+	// Delivery admission may accept less than the staged amount; loading speed and vehicle capacity must use the actual packet debit.
+	return before - this->TotalCount();
 }
 
 /**

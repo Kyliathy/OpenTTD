@@ -2,11 +2,52 @@
 
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
 
-Updated against the current fork on 2026-10-05 through save version 375, including four-layer storage, sealed portals/Deep rail, profile metadata and bounded geology/job/pass/work descriptors. [Map-layer architecture](../map-layers/archi-map-layers.md) explains gameplay/addressing. [Save-game working notes](../save-game.md) retain inspection helpers. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md), [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) and [R2MLVS2 execution](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) own their contracts and evidence.
+Updated against the current fork on 2026-10-06 through save version 380, including four-layer storage, sealed portals/Deep rail, profile metadata and bounded geology/job/pass/work, TBM/exchange/spoil-receiver and finite mine/processor descriptors. [Map-layer architecture](../map-layers/archi-map-layers.md) explains gameplay/addressing. [Save-game working notes](../save-game.md) retain inspection helpers. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md), [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) and [R2MLVS2 execution](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) own their contracts and evidence.
 
 A save is a small uncompressed header, a compressed blob, and inside that blob a sequence of tagged chunks. Multi-byte integers in the OpenTTD blob are big-endian on every host. Each gameplay feature has a `*_sl.cpp` description of its fields. Saves written by an older OpenTTD are read by the same description, gated on `SaveLoadVersion`, and then repaired in memory by `AfterLoadGame`. A save newer than this binary is rejected.
 
 There is a second, separate loader for the original Transport Tycoon games. It is not this container. It is covered below because `SaveOrLoad` still sends those files through `AfterLoadGame`.
+
+## Finite mine and native processor state
+
+[R2MLVS6](../../upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md) appends save
+versions 379 (`LayerMines`) and 380 (`LayerProcessors`) after the existing TBM,
+spoil receiver and wagon exchange families. Metadata feature bits 256 and 512
+advertise actual mine and processor owners; mines also require existing geology.
+Each current-format save writes mandatory headers and tables even when empty.
+
+| Family | Transport and ownership |
+| --- | --- |
+| `LMNH` / `LMNR` | Version/count header and ordered mine bindings: actual IndustryID, GeologyDepositID, company, active/depleted/abandoned phase, bounded rational/rate work, extracted/dispatched totals and revision. No reserve/output is copied into these rows. |
+| `LPCH` / `LPCR` / `LPCC` | Version/scalar/counter count header, ordered processor choice/controller/work/revision/dispatch rows and ordered owner/category/label historical keys. Explicit zero keys preserve non-allocating batch commits; unknown/missing/duplicate meanings are refused. |
+
+Full load parses bounded unpublished transport. Fixup requires exact family
+presence/count/feature consistency. At the end of `AfterLoadGame`, once actual
+industries, cargo meanings, geology and companies are rebuilt, the owner accepts
+only a complete valid family: mines still touch excavated machinery/seams and
+retain their exact claim; processors retain exact frozen role unions and batch
+arithmetic. Historical output minus actual dispatch equals physical stock.
+Old family absence remains valid for worlds that have no corresponding native
+owner; a native industry without its saved binding/history cannot be activated
+from guessed defaults. Unknown or inconsistent references refuse the candidate
+and ordinary world reinitialization clears all staging.
+
+Preview uses independent per-file header/table/count fields and clears them
+between files. It never publishes live claims, controls or stock. Existing
+geology/industry/station/vehicle/cargo-packet chunks remain the sole reserve and
+cargo owners. Transient station tickets, inventory proposals and borrowed
+definition/participant pointers are never serialized. Original cargo-vector
+encoding is retained; layer-distance projection needs no packet migration.
+
+Canonical diagnostics append mine and processor roots without renumbering
+existing kinds; stable label/ID ordering and explicit integer bytes exclude
+pointer/padding/presentation state. Actual game round trips cover construction,
+partial/exhausted mine reserve, missing processor input, full output and output
+aboard an existing original wagon, including exact stock/history digests and
+packet provenance. Missing families, wrong counts/companies, foreign recipes
+and forged product counters refuse without saving; source hashes are preserved.
+The native freight, utility/tube, final-art and multiplayer integrations still
+retain their producer gates in the owning plan.
 
 ## The container
 

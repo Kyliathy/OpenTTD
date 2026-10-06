@@ -4,6 +4,8 @@ How an industry is placed, how its tiles grow to completion, and how the game de
 
 ## Who calls creation
 
+The native layer-aware extension below is owned by [R2MLVS6](../../upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md). The following conventional construction paths retain their legacy role.
+
 | Path | Entry | Founder | Notes |
 | --- | --- | --- | --- |
 | Map generation | `GenerateIndustries` → `PlaceInitialIndustry` → `PlaceIndustry` | `OWNER_NONE` | Runs only while the world is generating. Density `FundedOnly` skips it outside the editor |
@@ -112,9 +114,67 @@ Each pass places the forced types first (`try_hard`), then spends the remaining 
 
 `ClearTile_Industry` deletes the whole industry, not one tile. Water, the scenario editor, and the magic bulldozer may do it. A company auto-command, and water against `BuiltOnWater` or a tile whose slope-refusal bit 5 is set, cannot. The cost is `GetRemovalCost` (`Price::ClearIndustry` times `removal_cost_multiplier`); the comment on that function says non-GRF industries have a zero multiplier.
 
-`Industry::~Industry` turns each of its industry tiles into water of the same class (`MakeWaterKeepingClass`), deletes an oil-rig station tile, clears farmland industry indexes out to 21 tiles when `PlantFields` is set, releases disaster targets, deletes persistent storage, erases the type set entry, closes the view and production graph, drops subsidies and cargo packets sourced from the industry, and removes itself from nearby stations. `PostDestructor` rebuilds the industry directory.
+`Industry::~Industry` turns each of its industry tiles into water of the same class (`MakeWaterKeepingClass`), deletes an oil-rig station tile, clears farmland industry indexes out to 21 tiles when `PlantFields` is set, releases disaster targets, deletes persistent storage, erases the type set entry, closes the view and production graph, drops subsidies and invalidates the industry's identity in existing sourced cargo packets without deleting their physical units, and removes itself from nearby stations. `PostDestructor` rebuilds the industry directory.
 
 The economy does not call this destructor on the month it announces closure. It sets `prod_level` to `PRODLEVEL_CLOSURE`. The next economy month deletes the object. See the industries note for which types are protected from that announcement.
+
+## Native layered mines and Surface processors
+
+`multilayer_industry.h` resolves only the accepted first-party package's mapped
+mine IDs `0x8100..0x8109` and processor IDs `0x8200..0x8206`. Cargo labels resolve
+through CargoSpec; translated names, substitute graphics and camera selection
+grant no placement or production permission. All ten mine definitions and seven
+Surface processor families install after GRF polishing with native scheduling;
+their automatic appearance/rates/callbacks are disabled. Final mine/processor
+art remains with R2MLVS13.
+
+`CmdBuildLayerMine` takes an explicit actual seam and installed layout. Complete
+company/calendar admission, excavated machinery and separate loading floor,
+seam contact, existing physical/deposit exclusion, clear/equipment cost, funds,
+town and allocation checks finish before binding/claim publication and tile
+creation. It preserves original/remaining geological reserve. Generic industry
+funding/prospecting cannot open these mines on Surface or bypass Deep's 1980
+calendar rule. `CmdBuildIndustry` remains the Surface processor funding boundary.
+
+Native machinery completes on its own physical rock layer. `OnTick_Industry`
+earns bounded rational/rate-scaled work and consumes geology into bounded real
+`Industry::produced` stock; native tile loops dispatch through exact same-layer
+station packet receipts and never run inherited Surface smoke/water/farm effects.
+Depletion, full storage, stopped production and unavailable/pause/editor states
+retain material. A viewport or same-XY station on another layer changes neither
+production nor catchment. Supplied units alone reduce mine stock; rating limits
+throughput and retains every unsupplied unit.
+
+`layer_industry_processor.h` owns recipe choice, controller, work and historical
+complete-batch counters. The existing Industry accepted/produced vectors own
+all physical cargo, including inputs for an alternative that is not selected.
+`CmdSelectLayerIndustryRecipe` changes choice through shared company/calendar
+admission without moving stocks. The common inventory/commit interfaces require
+every input and every product's room before a whole batch commits. Scalar
+heat/power cannot commit until the utility producer supplies real atomic grants.
+`layer_industry_baseline.h` reuses only compatible original one-to-one Iron
+Ore/Steel behavior; it allocates no duplicate receiver or recipe identity.
+
+Stored mine output, processor inputs/products and bounded baseline Steel protect
+against demolition/automatic disposal. Abandoned mines stop extraction but can
+dispatch existing material to an eligible same-layer station, then empty
+machinery can be demolished/rebuilt against the original remaining reserve.
+The first valid explicit recipe-selection actor can recover abandoned processor
+control. Deity actions do not invent a company controller, and repeated processor
+registration cannot reset saved control/work/history. Company changes invalidate
+quotes without wrapping an exhausted revision.
+
+Save versions 379/380 append owner-specific binding/choice/work/history tables.
+Geology, Industry and existing station/vehicle/packet chunks retain their own
+physical state. Final activation validates real definitions, seam/claim/geometry,
+exact role sets, frozen batch arithmetic and output/dispatch conservation before
+publishing the complete family. Missing rows are refused rather than repaired
+with renewed reserves or zeroed histories. See [savegame architecture](../savegame/archi-savegame.md).
+
+The complete useful Coal/Uranium power, native freight/portal workflow, tubes,
+typed direct-heat grants, final graphics and all-resource financial acceptance
+remain explicitly gated in R2MLVS6; substitute drawings and packet fixtures are
+not completion of those producer obligations.
 
 ## Invariants
 

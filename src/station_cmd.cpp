@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include "core/flatset_type.hpp"
@@ -41,8 +41,13 @@
 #include "elrail_func.h"
 #include "station_base.h"
 #include "map_layer.h"
+#include "map_layer_gui.h"
+#include "multilayer_content.h"
 #include "excavation.h"
 #include "station_func.h"
+#include "station_supply.h"
+#include "multilayer_industry.h"
+#include "layer_industry_baseline.h"
 #include "station_kdtree.h"
 #include "roadstop_base.h"
 #include "newgrf_railtype.h"
@@ -490,10 +495,16 @@ void UpdateAllStationVirtCoords()
 	}
 }
 
+/** Cache a station/waypoint name, including the explicit operating layer used by lists, news and vehicle orders. */
 void BaseStation::FillCachedName() const
 {
 	auto tmp_params = MakeParameters(this->index);
 	this->cached_name = GetStringWithArgs(Waypoint::IsExpected(this) ? STR_WAYPOINT_NAME : STR_STATION_NAME, tmp_params);
+	const MapLayer layer = GetTileLayer(this->xy);
+	// Native freight destinations expose their layer in every cached-name consumer; legacy names retain their saved profile behavior.
+	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry && layer != MapLayer::Surface) {
+		this->cached_name += " [" + GetString(GetMapLayerName(layer)) + "]";
+	}
 }
 
 void ClearAllStationCachedNames()
@@ -4418,6 +4429,14 @@ void ModifyStationRatingAround(TileIndex tile, Owner owner, int amount, uint rad
 	});
 }
 
+/**
+ * Append station supply expressed in 1/256 units, retaining the station owner's existing fractional balance.
+ * @param st Actual receiving station.
+ * @param cargo Runtime cargo slot.
+ * @param amount Offered supply in 1/256 cargo units; exact finite callers offer whole units shifted by eight bits.
+ * @param source Existing producer provenance.
+ * @return Whole units actually placed into accountable packets, or zero without allocation.
+ */
 static uint UpdateStationWaiting(Station *st, CargoType cargo, uint amount, Source source)
 {
 	/* We can't allocate a CargoPacket? Then don't do anything
@@ -4594,6 +4613,7 @@ const StationList &StationFinder::GetStations()
 }
 
 
+/** @param st Actual candidate station. @param cargo Runtime cargo meaning. @return Whether town exclusivity, service/rating and station facilities allow supply. */
 static bool CanMoveGoodsToStation(const Station *st, CargoType cargo)
 {
 	/* Is the station reserved exclusively for somebody else? */
@@ -4613,6 +4633,48 @@ static bool CanMoveGoodsToStation(const Station *st, CargoType cargo)
 		if (st->facilities == StationFacility::BusStop) return false;
 	}
 	return true;
+}
+
+/** @copydoc PrepareExactStationSupply */
+ExactStationSupplyTicket PrepareExactStationSupply(StationID station, CargoType cargo, uint32_t requested, Source source, MapLayer layer, Owner exclusivity)
+{
+	ExactStationSupplyTicket ticket;
+	// Exact finite supply is an existing native industry's handoff, not an alternative cargo source registry.
+	if (source.type != SourceType::Industry || !source.IsValid() || !IsValidCargoType(cargo) || requested == 0) return ticket;
+	const Industry *industry = Industry::GetIfValid(IndustryID{source.id});
+	Station *st = Station::GetIfValid(station);
+	if (industry == nullptr) return ticket;
+	if (st == nullptr) return ticket;
+	if (st->town == nullptr) return ticket;
+	// Only exact native capabilities or the explicitly validated original Steel path may supply finite packets; ordinary matching cargo gives no authority.
+	if (GetLayerIndustryCapability(industry->type) == nullptr && !IsLayerBaselineSteelDefinition(industry->type)) return ticket;
+	// Catchment never transfers cargo vertically; both physical objects and their actual association must agree.
+	if (GetTileLayer(industry->location.tile) != layer || GetTileLayer(st->xy) != layer || !industry->stations_near.contains(st)) return ticket;
+	// A finite mine's chosen company retains its cargo; neighbouring foreign stations cannot collect it by proximity.
+	if (exclusivity != INVALID_OWNER && st->owner != exclusivity) return ticket;
+	if (!CanMoveGoodsToStation(st, cargo)) return ticket;
+	if (!CargoPacket::CanAllocateItem()) return ticket;
+	const GoodsEntry &goods = st->goods[cargo];
+	const uint32_t waiting = goods.TotalCount();
+	if (waiting >= EXACT_STATION_SUPPLY_CAPACITY) return ticket;
+	ticket = {station, cargo, source, layer, exclusivity, waiting, goods.rating,
+		static_cast<uint16_t>(std::min({requested, EXACT_STATION_SUPPLY_CAPACITY - waiting, static_cast<uint32_t>(CargoPacket::MAX_COUNT)}))};
+	return ticket;
+}
+
+/** @copydoc CommitExactStationSupply */
+uint32_t CommitExactStationSupply(const ExactStationSupplyTicket &ticket)
+{
+	if (ticket.amount == 0) return 0;
+	const auto current = PrepareExactStationSupply(ticket.station, ticket.cargo, ticket.amount, ticket.source, ticket.layer, ticket.exclusivity);
+	// A changed service/rating, packet limit or queue invalidates the whole quote before any fractional or packet write.
+	if (current.amount != ticket.amount || current.waiting != ticket.waiting || current.rating != ticket.rating) return 0;
+	Station *station = Station::Get(ticket.station);
+	const auto fraction = station->goods[ticket.cargo].amount_fract;
+	const uint32_t supplied = UpdateStationWaiting(station, ticket.cargo, static_cast<uint32_t>(ticket.amount) << 8, ticket.source);
+	assert(station->goods[ticket.cargo].amount_fract == fraction);
+	assert(supplied == ticket.amount);
+	return supplied;
 }
 
 uint MoveGoodsToStation(CargoType cargo, uint amount, Source source, const StationList &all_stations, Owner exclusivity)

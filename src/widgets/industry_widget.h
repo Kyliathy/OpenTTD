@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_widget.h Types related to the industry widgets. */
+/** @file industry_widget.h Types related to the industry widgets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, native recipe selection */
 
 #ifndef WIDGETS_INDUSTRY_WIDGET_H
 #define WIDGETS_INDUSTRY_WIDGET_H
@@ -30,6 +30,7 @@ enum IndustryViewWidgets : WidgetID {
 	WID_IV_GOTO,     ///< Goto button.
 	WID_IV_DISPLAY,  ///< Display chain button.
 	WID_IV_GRAPH,    ///< Production history button.
+	WID_IV_RECIPE,   ///< Cycle the current native facility's supported, unlocked recipe alternatives.
 };
 
 /** Widgets of the #IndustryDirectoryWindow class. */

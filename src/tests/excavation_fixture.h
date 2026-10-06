@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_fixture.h Focused real-profile/geology setup through public owner boundaries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file excavation_fixture.h Focused real-profile/geology setup through public owner boundaries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md; r2mlvs6-mines-and-resource-chains.md, actual save fixtures */
 
 #ifndef TESTS_EXCAVATION_FIXTURE_H
 #define TESTS_EXCAVATION_FIXTURE_H
@@ -33,8 +33,11 @@ class ExcavationFixture {
 	GameMode mode = _game_mode; ///< Caller game/editor policy.
 	PauseModes pause = _pause_mode; ///< Caller effect policy, restored after focused command checks.
 public:
-	/** Activate the exact required package/labels on an initialized 64x64 four-layer map. */
-	ExcavationFixture()
+	/** @return This fixture's exact activated package descriptors, read-only for native catalogue producer checks. */
+	const GRFConfigList &ActivatedContent() const { return this->package; }
+
+	/** Activate the exact required package/labels on an initialized 64x64 four-layer map. @param serialized_native_slots Use the distributed package's slot-12 custom-cargo boundary when writing a full game save. */
+	explicit ExcavationFixture(bool serialized_native_slots = false)
 	{
 		SaveRandomSeeds(&this->seeds);
 		ResetGeologyWorldState();
@@ -63,9 +66,12 @@ public:
 		_cargo_mask = {};
 		// Deliberately use label resolution rather than relying on the shipped runtime slot arrangement.
 		for (uint i = 0; i < required.labels.size(); ++i) {
-			CargoSpec::Get(i)->label = required.labels[i];
-			CargoSpec::Get(i)->bitnum = i;
-			_cargo_mask.Set(CargoType{static_cast<uint8_t>(i)});
+			// build_content.py preserves all twelve original slots; required baseline labels omit unused Temperate Food at slot 11.
+			// Full disk fixtures must match that pinned native layout because ordinary Industry/Vehicle saves retain runtime cargo IDs.
+			const uint slot = i + (serialized_native_slots && i >= 11 ? 1 : 0);
+			CargoSpec::Get(slot)->label = required.labels[i];
+			CargoSpec::Get(slot)->bitnum = slot;
+			_cargo_mask.Set(CargoType{static_cast<uint8_t>(slot)});
 		}
 		BuildCargoLabelMap();
 		auto config = std::make_unique<GRFConfig>();

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
+/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include "misc/history_type.hpp"
@@ -49,6 +49,7 @@
 #include "terraform_cmd.h"
 #include "map_func.h"
 #include "map_layer.h"
+#include "map_layer_gui.h"
 #include "excavation.h"
 #include "script/api/script_event_types.hpp"
 #include "timer/timer.h"
@@ -57,6 +58,9 @@
 #include "timer/timer_game_tick.h"
 
 #include "spoil_receiver.h"
+#include "layer_industry_processor.h"
+#include "layer_industry_baseline.h"
+#include "multilayer_industry.h"
 
 #include "table/strings.h"
 #include "table/industry_land.h"
@@ -67,7 +71,9 @@
 IndustryPool _industry_pool("Industry");
 INSTANTIATE_POOL_METHODS(Industry)
 
+/** @param industry Stable identity whose industry information window should be shown. */
 void ShowIndustryViewWindow(IndustryID industry);
+/** @param tile Completed Surface oil-rig tile where its neutral station should be created. */
 void BuildOilRig(TileIndex tile);
 
 static uint8_t _industry_sound_ctr;
@@ -155,7 +161,9 @@ Industry::~Industry()
 {
 	if (CleaningPool()) return;
 
+	ReleaseLayerMineIndustry(this->index); // Demolition releases ownership, retaining the original finite geological reserve/cavity.
 	UnregisterSpoilReceiver(this->index); // A receiver's state goes with its industry (r2mlvs5 Group 8).
+	ReleaseLayerProcessorIndustry(this->index); // Only choice/work/history are released; actual cargo remains subject to demolition admission.
 
 	/* Industry can also be destroyed when not fully initialized.
 	 * This means that we do not have to clear tiles either.
@@ -255,6 +263,7 @@ void Industry::PostDestructor(size_t)
 }
 
 
+/** Draw the Surface sugar-mine overlay. @param ti World tile drawing information. */
 static void IndustryDrawSugarMine(const TileInfo *ti)
 {
 	if (!IsIndustryCompleted(ti->tile)) return;
@@ -273,6 +282,7 @@ static void IndustryDrawSugarMine(const TileInfo *ti)
 	}
 }
 
+/** Draw the Surface toffee-quarry overlay. @param ti World tile drawing information. */
 static void IndustryDrawToffeeQuarry(const TileInfo *ti)
 {
 	uint8_t x = 0;
@@ -288,6 +298,7 @@ static void IndustryDrawToffeeQuarry(const TileInfo *ti)
 	AddChildSpriteScreen(SPR_IT_TOFFEE_QUARRY_TOFFEE, PAL_NONE, 6, 14);
 }
 
+/** Draw the Surface bubble-generator overlay. @param ti World tile drawing information. */
 static void IndustryDrawBubbleGenerator( const TileInfo *ti)
 {
 	if (IsIndustryCompleted(ti->tile)) {
@@ -296,6 +307,7 @@ static void IndustryDrawBubbleGenerator( const TileInfo *ti)
 	AddChildSpriteScreen(SPR_IT_BUBBLE_GENERATOR_SPRING, PAL_NONE, 3, 67);
 }
 
+/** Draw the Surface toy-factory overlay. @param ti World tile drawing information. */
 static void IndustryDrawToyFactory(const TileInfo *ti)
 {
 	const DrawIndustryAnimationStruct *d = &_industry_anim_offs_toys[GetAnimationFrame(ti->tile)];
@@ -312,6 +324,7 @@ static void IndustryDrawToyFactory(const TileInfo *ti)
 	AddChildSpriteScreen(SPR_IT_TOY_FACTORY_STAMP_HOLDER, PAL_NONE, 0, 42);
 }
 
+/** Draw Surface power-plant sparks. @param ti World tile drawing information. */
 static void IndustryDrawCoalPlantSparks(const TileInfo *ti)
 {
 	if (IsIndustryCompleted(ti->tile)) {
@@ -499,6 +512,8 @@ static void GetTileDesc_Industry(TileIndex tile, TileDesc &td)
 static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 {
 	Industry *i = Industry::GetByTile(tile);
+	// Geological output and delivered processor inputs remain accountable until transported/consumed; demolition cannot discard them.
+	if (LayerMineHasStoredOutput(*i) || LayerProcessorHasStoredCargo(*i) || LayerBaselineSteelHasStoredCargo(*i)) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
 	std::vector<TileIndex> footprint;
 	// Industry demolition removes every owned foundation, while empty layout holes retain independent geology.
 	for (TileIndex member : i->location) {
@@ -506,14 +521,18 @@ static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 	}
 	if (CommandCost ground = CheckExcavationConstruction(footprint); ground.Failed()) return ground;
 	const IndustrySpec *indspec = GetIndustrySpec(i->type);
+	const auto *mine = GetLayerMineState(i->index);
+	const bool owned_mine = mine != nullptr && (mine->company == _current_company ||
+		(mine->phase == LayerMinePhase::Abandoned && Company::IsValidID(_current_company)));
 
-	/* water can destroy industries
+	/* An empty native mine may be removed by its actual claimant. Other industries retain the legacy demolition policy:
+	 * water can destroy industries
 	 * in editor you can bulldoze industries
 	 * with magic_bulldozer cheat you can destroy industries
 	 * (area around OILRIG is water, so water shouldn't flood it
 	 */
 	if ((_current_company != OWNER_WATER && _game_mode != GameMode::Editor &&
-			!_cheats.magic_bulldozer.value) ||
+			!_cheats.magic_bulldozer.value && !owned_mine) ||
 			flags.Test(DoCommandFlag::Auto) ||
 			(_current_company == OWNER_WATER &&
 				(indspec->behaviour.Test(IndustryBehaviour::BuiltOnWater) ||
@@ -564,6 +583,7 @@ static bool TransportIndustryGoods(TileIndex tile)
 	return moved_cargo;
 }
 
+/** Advance the sugar sieve's animation and ambient sound. @param tile Actual Surface industry tile. */
 static void AnimateSugarSieve(TileIndex tile)
 {
 	uint8_t m = GetAnimationFrame(tile) + 1;
@@ -584,6 +604,7 @@ static void AnimateSugarSieve(TileIndex tile)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance the quarry's visible animation. @param tile Actual Surface industry tile. */
 static void AnimateToffeeQuarry(TileIndex tile)
 {
 	uint8_t m = GetAnimationFrame(tile);
@@ -601,6 +622,7 @@ static void AnimateToffeeQuarry(TileIndex tile)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance the bubble catcher's visible animation. @param tile Actual Surface industry tile. */
 static void AnimateBubbleCatcher(TileIndex tile)
 {
 	uint8_t m = GetAnimationFrame(tile);
@@ -614,6 +636,7 @@ static void AnimateBubbleCatcher(TileIndex tile)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance Surface power-plant sparks without producing energy. @param tile Actual industry tile. */
 static void AnimatePowerPlantSparks(TileIndex tile)
 {
 	uint8_t m = GetAnimationFrame(tile);
@@ -626,6 +649,7 @@ static void AnimatePowerPlantSparks(TileIndex tile)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance Surface toy-factory machinery and ambient sound. @param tile Actual industry tile. */
 static void AnimateToyFactory(TileIndex tile)
 {
 	uint8_t m = GetAnimationFrame(tile) + 1;
@@ -650,6 +674,7 @@ static void AnimateToyFactory(TileIndex tile)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance a plastic-fountain overlay. @param tile Actual Surface industry tile. @param gfx Current graphics identity. */
 static void AnimatePlasticFountain(TileIndex tile, IndustryGfx gfx)
 {
 	gfx = (gfx < GFX_PLASTIC_FOUNTAIN_ANIMATED_8) ? gfx + 1 : GFX_PLASTIC_FOUNTAIN_ANIMATED_1;
@@ -657,6 +682,7 @@ static void AnimatePlasticFountain(TileIndex tile, IndustryGfx gfx)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Advance an oil-well overlay. @param tile Actual Surface industry tile. @param gfx Current graphics identity. */
 static void AnimateOilWell(TileIndex tile, IndustryGfx gfx)
 {
 	bool b = Chance16(1, 7);
@@ -672,6 +698,7 @@ static void AnimateOilWell(TileIndex tile, IndustryGfx gfx)
 	MarkTileDirtyByTile(tile);
 }
 
+/** Animate a legacy Surface mine tower; native finite mines use their own capability path. @param tile Actual industry tile. */
 static void AnimateMineTower(TileIndex tile)
 {
 	int state = TimerGameTick::counter & 0x7FF;
@@ -756,6 +783,7 @@ static void AnimateTile_Industry(TileIndex tile)
 	}
 }
 
+/** Create a legacy Surface chimney effect. @param tile Industry tile defining the world position. */
 static void CreateChimneySmoke(TileIndex tile)
 {
 	uint x = TileX(tile) * TILE_SIZE;
@@ -765,6 +793,7 @@ static void CreateChimneySmoke(TileIndex tile)
 	CreateEffectVehicle(x + 15, y + 14, z + 59, EV_CHIMNEY_SMOKE);
 }
 
+/** Advance construction, including the supported construction callback. @param tile Actual industry tile. */
 static void MakeIndustryTileBigger(TileIndex tile)
 {
 	uint8_t cnt = GetIndustryConstructionCounter(tile) + 1;
@@ -825,6 +854,7 @@ static void MakeIndustryTileBigger(TileIndex tile)
 	}
 }
 
+/** Run legacy Surface bubble effects independently of cargo production. @param tile Actual industry tile. */
 static void TileLoopIndustry_BubbleGenerator(TileIndex tile)
 {
 	static const int8_t _bubble_spawn_location[3][4] = {
@@ -850,7 +880,27 @@ static void TileLoopIndustry_BubbleGenerator(TileIndex tile)
 /** @copydoc TileLoopProc */
 static void TileLoop_Industry(TileIndex tile)
 {
-	//Industries exist only on the surface. A later plan must not let this loop see another layer.
+	Industry *industry = Industry::GetByTile(tile);
+	// Native recipes and validated baseline Steel share exact finite supply; neither may enter lossy legacy dispatch.
+	if (IsLayerProcessorDefinition(industry->type) || IsLayerBaselineSteelDefinition(industry->type)) {
+		if (CheckLayerIndustryConstruction(tile, industry->type).Failed()) return;
+		if (!IsIndustryCompleted(tile)) MakeIndustryTileBigger(tile);
+		if (IsLayerProcessorDefinition(industry->type)) {
+			DispatchLayerProcessorCargo(*industry);
+		} else {
+			DispatchLayerBaselineSteel(*industry);
+		}
+		return;
+	}
+	if (IsLayerMineDefinition(industry->type)) {
+		if (GetLayerMineState(industry->index) == nullptr) return; // Missing/restoring native side state holds machinery; it never enters Surface effects or lossy dispatch.
+		// Geological machinery completes on its own excavated layer. Native scheduling owns its minerals;
+		// inherited water, smoke, farm effects and graphics-based production never run on rock planes.
+		if (CheckLayerIndustryConstruction(tile, industry->type).Failed()) return;
+		if (!IsIndustryCompleted(tile)) MakeIndustryTileBigger(tile);
+		DispatchLayerMineCargo(*industry); // Exact finite supply debits output only after the same-layer station owns its packet receipt.
+		return;
+	}
 	assert(GetTileLayer(tile) == MapLayer::Surface);
 
 	if (IsTileOnWater(tile)) TileLoop_Water(tile);
@@ -1065,6 +1115,7 @@ static void SetupFarmFieldFence(TileIndex tile, int size, uint8_t type, DiagDire
 	} while (--size);
 }
 
+/** Plant an associated Surface farm field. @param tile Candidate field origin. @param industry Owning industry identity. */
 static void PlantFarmField(TileIndex tile, IndustryID industry)
 {
 	if (_settings_game.game_creation.landscape == LandscapeType::Arctic) {
@@ -1116,6 +1167,7 @@ static void PlantFarmField(TileIndex tile, IndustryID industry)
 	SetupFarmFieldFence(ta.tile + TileDiffXY(0, ta.h - 1), ta.w, type, DiagDirection::SE);
 }
 
+/** Attempt one legacy Surface farm-field placement. @param i Existing farm whose location defines the search. */
 void PlantRandomFarmField(const Industry *i)
 {
 	int x = i->location.w / 2 + Random() % 31 - 16;
@@ -1177,8 +1229,24 @@ static void ProduceIndustryGoodsHelper(Industry *i, bool scale)
 	}
 }
 
+/**
+ * Run the appropriate production owner independently of the viewed layer.
+ * @param i Existing industry; native finite extraction must never enter legacy rate/callback production.
+ */
 static void ProduceIndustryGoods(Industry *i)
 {
+	if (IsLayerBaselineSteelDefinition(i->type)) {
+		ProcessLayerBaselineSteel(*i); // Retry retained Iron Ore against actual output/history room; legacy conversion cannot clamp it away.
+		return;
+	}
+	if (IsLayerProcessorDefinition(i->type)) {
+		AdvanceLayerProcessor(*i, 1); // One native all-input work/stock owner runs once per real economy tick.
+		return;
+	}
+	if (IsLayerMineDefinition(i->type)) {
+		ProduceLayerMineCargo(*i, 1, true); // Native work is credited once per economy tick; legacy rates cannot create reserve-free ore.
+		return;
+	}
 	const IndustrySpec *indsp = GetIndustrySpec(i->type);
 
 	/* play a sound? */
@@ -1250,6 +1318,7 @@ static void ProduceIndustryGoods(Industry *i)
 	}
 }
 
+/** Tick all actual industries once per synchronized simulation tick; scenario editing produces no cargo. */
 void OnTick_Industry()
 {
 	if (_industry_sound_ctr != 0) {
@@ -1466,6 +1535,7 @@ static CommandCost FindTownForIndustry(TileIndex tile, IndustryType type, Town *
 	return CommandCost();
 }
 
+/** @param current Actual terrain slope. @param refused Definition's refused slope mask. @return Whether placement refuses this slope. */
 bool IsSlopeRefused(Slope current, Slope refused)
 {
 	if (IsSteepSlope(current)) return true;
@@ -1606,6 +1676,13 @@ static CommandCost CheckIfIndustryIsAllowed(TileIndex tile, IndustryType type, c
 	return CommandCost();
 }
 
+/**
+ * Check whether legacy platform levelling can safely extend to neighboring terrain.
+ * @param tile World tile whose surrounding terrain is checked.
+ * @param height Required platform height.
+ * @param internal Recursion depth; interior checks allow only bounded height changes.
+ * @return Whether the whole surrounding terrain can be levelled safely.
+ */
 static bool CheckCanTerraformSurroundingTiles(TileIndex tile, uint height, int internal)
 {
 	/* Check if we don't leave the map */
@@ -1738,7 +1815,10 @@ static void AdvertiseIndustryOpening(const Industry *ind)
 {
 	const IndustrySpec *ind_spc = GetIndustrySpec(ind->type);
 	EncodedString headline;
-	if (ind_spc->new_industry_text > STR_LAST_STRINGID) {
+	if (GetLayerMineState(ind->index) != nullptr) {
+		// The cached industry name includes its explicit layer, so news cannot confuse coincident Surface/rock sites.
+		headline = GetEncodedString(STR_NEWS_LAYER_MINE_CONSTRUCTION, ind->index);
+	} else if (ind_spc->new_industry_text > STR_LAST_STRINGID) {
 		headline = GetEncodedString(ind_spc->new_industry_text, ind_spc->name, STR_TOWN_NAME, ind->town->index);
 	} else {
 		headline = GetEncodedString(ind_spc->new_industry_text, ind_spc->name, ind->town->index);
@@ -1764,6 +1844,8 @@ static void PopulateStationsNearby(Industry *ind)
 	}
 
 	ForAllStationsAroundTiles(ind->location, [ind](Station *st, TileIndex tile) {
+		// Physical catchment is layer-local even if a stale station association would have the same horizontal coordinates.
+		if (GetTileLayer(st->xy) != GetTileLayer(ind->location.tile)) return false;
 		if (!IsTileType(tile, TileType::Industry) || GetIndustryIndex(tile) != ind->index) return false;
 		ind->stations_near.insert(st);
 		st->AddIndustryToDeliver(ind, tile);
@@ -1781,8 +1863,9 @@ static void PopulateStationsNearby(Industry *ind)
  * @param t                   Nearest town.
  * @param founder             Founder of the industry; OWNER_NONE in case of random construction.
  * @param initial_random_bits Random bits for the industry.
+ * @param mine_site           Complete preflighted native site, or nullptr for legacy Surface placement.
  */
-static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, const IndustryTileLayout &layout, size_t layout_index, Town *t, Owner founder, uint16_t initial_random_bits)
+static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, const IndustryTileLayout &layout, size_t layout_index, Town *t, Owner founder, uint16_t initial_random_bits, const LayerMineAdmission *mine_site = nullptr)
 {
 	const IndustrySpec *indspec = GetIndustrySpec(type);
 
@@ -1962,15 +2045,21 @@ static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, 
 
 	/* Plant the tiles */
 
+	size_t machinery_index = 0;
+	// Native mines reuse the entire admitted footprint; legacy industries retain their normal clearing/callback path.
 	for (const IndustryTileLayoutTile &it : layout) {
-		TileIndex cur_tile = tile + ToTileIndexDiff(it.ti);
+		TileIndex cur_tile = mine_site == nullptr ? TileAddWrap(tile, it.ti.x, it.ti.y) : mine_site->machinery[machinery_index++];
 
 		if (it.gfx != GFX_WATERTILE_SPECIALCHECK) {
 			i->location.Add(cur_tile);
 
 			WaterClass wc = (IsWaterTile(cur_tile) ? GetWaterClass(cur_tile) : WaterClass::Invalid);
 
-			Command<Commands::LandscapeClear>::Do({DoCommandFlag::Execute, DoCommandFlag::NoTestTownRating, DoCommandFlag::NoModifyTownRating}, cur_tile);
+			if (mine_site == nullptr) {
+				Command<Commands::LandscapeClear>::Do({DoCommandFlag::Execute, DoCommandFlag::NoTestTownRating, DoCommandFlag::NoModifyTownRating}, cur_tile);
+			}
+			// A native foundation was already validated as empty flat floor and fully charged; overwriting it is non-failing.
+			// No nested clearing command may now partially fail after the geological claim/industry identity commit.
 
 			MakeIndustry(cur_tile, i->index, it.gfx, Random(), wc);
 
@@ -1999,6 +2088,7 @@ static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, 
 		for (uint j = 0; j != 50; j++) PlantRandomFarmField(i);
 	}
 	RegisterSpoilReceiver(*i); // A receiver starts empty, crushing or disposing, at the start of an interval (r2mlvs5 Group 8).
+	RegisterLayerProcessorIndustry(*i); // A material processor starts with one saved primary recipe and no delivered/produced cargo.
 	InvalidateWindowData(WindowClass::IndustryDirectory, 0, IDIWD_FORCE_REBUILD);
 	SetWindowDirty(WindowClass::BuildIndustry, 0);
 
@@ -2017,12 +2107,35 @@ static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, 
  * @param founder Founder of the industry
  * @param creation_type The circumstances the industry is created under.
  * @param[out] ip Pointer to store newly created industry.
+ * @param mine_request Explicit native seam request, or nullptr for legacy/automatic Surface construction.
  * @return Succeeded or failed command.
  *
  * @post \c *ip contains the newly created industry if all checks are successful and the \a flags request actual creation, else it contains \c nullptr afterwards.
  */
-static CommandCost CreateNewIndustryHelper(TileIndex tile, IndustryType type, DoCommandFlags flags, const IndustrySpec *indspec, size_t layout_index, uint32_t random_var8f, uint16_t random_initial_bits, Owner founder, IndustryAvailabilityCallType creation_type, Industry **ip)
+static CommandCost CreateNewIndustryHelper(TileIndex tile, IndustryType type, DoCommandFlags flags, const IndustrySpec *indspec, size_t layout_index, uint32_t random_var8f, uint16_t random_initial_bits, Owner founder, IndustryAvailabilityCallType creation_type, Industry **ip, const LayerMineRequest *mine_request = nullptr)
 {
+	*ip = nullptr;
+	if (CommandCost layer = CheckLayerIndustryConstruction(tile, type); layer.Failed()) return layer;
+	if (IsLayerMineDefinition(type)) {
+		// Every entry path needs an explicit seam and real company. Random generation/prospecting cannot bypass mine admission.
+		if (mine_request == nullptr || mine_request->tile != tile || mine_request->type != type ||
+				mine_request->layout != layout_index || mine_request->company != founder || founder != _current_company) return CMD_ERROR;
+		const auto site = ValidateMineDepositClaim(*mine_request);
+		if (site.error != LayerIndustryError::None) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+		if (site.cost > GetAvailableMoneyForCommand()) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+		Town *town = ClosestTownFromTile(tile, UINT_MAX);
+		if (town == nullptr) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+		if (flags.Test(DoCommandFlag::Execute)) {
+			Industry *candidate = Industry::Create(tile);
+			if (BindLayerMineIndustry(*candidate, *mine_request, site) != LayerIndustryError::None) {
+				delete candidate; // No footprint/claim remains when binding refuses.
+				return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+			}
+			DoCreateNewIndustry(candidate, tile, type, indspec->layouts[layout_index], layout_index, town, founder, random_initial_bits, &site);
+			*ip = candidate;
+		}
+		return CommandCost(ExpensesType::Construction, site.cost);
+	}
 	assert(layout_index < indspec->layouts.size());
 	const IndustryTileLayout &layout = indspec->layouts[layout_index];
 
@@ -2098,8 +2211,9 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 	/* Check if the to-be built/founded industry is available for this climate. */
 	if (!indspec->enabled || indspec->layouts.empty()) return CMD_ERROR;
 
-	//Industries are a surface construction.
-	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Industry); layer_cost.Failed()) return layer_cost;
+	// The same capability policy guards the shared helper; only the dedicated seam command may fund a geological mine.
+	if (CommandCost layer_cost = CheckLayerIndustryConstruction(tile, it); layer_cost.Failed()) return layer_cost;
+	if (IsLayerMineDefinition(it)) return CMD_ERROR;
 	// A spoil receiver ends the Surface leg; no below-ground dump may stand in for it, whatever later layers allow (r2mlvs5 8.4).
 	if (GetSpoilReceiverKind(it) != SpoilReceiverKind::End && GetTileLayer(tile) != MapLayer::Surface) return CMD_ERROR;
 
@@ -2176,6 +2290,36 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 	}
 
 	return CommandCost(ExpensesType::Other, indspec->GetConstructionCost());
+}
+
+/** @copydoc CmdBuildLayerMine */
+CommandCost CmdBuildLayerMine(DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t layout, GeologyDepositID deposit, uint32_t seed)
+{
+	if (it >= NUM_INDUSTRYTYPES) return CMD_ERROR;
+	if (!IsLayerMineDefinition(it)) return CMD_ERROR;
+	const auto *spec = GetIndustrySpec(it);
+	// A network/script request cannot index a missing layout or use a non-company actor to invent a claim.
+	if (!spec->enabled || layout >= spec->layouts.size() || !Company::IsValidID(_current_company)) return CMD_ERROR;
+	const LayerMineRequest request{tile, it, layout, deposit, _current_company};
+	Industry *industry = nullptr;
+	const CommandCost result = CreateNewIndustryHelper(tile, it, flags, spec, layout, seed, GB(seed, 0, 16),
+		_current_company, IndustryAvailabilityCallType::UserCreation, &industry, &request);
+	// Only a completely committed gameplay mine can publish opening news/script events.
+	if (result.Succeeded() && industry != nullptr && _game_mode != GameMode::Editor) AdvertiseIndustryOpening(industry);
+	return result;
+}
+
+/** @copydoc CmdSelectLayerIndustryRecipe */
+CommandCost CmdSelectLayerIndustryRecipe(DoCommandFlags flags, IndustryID industry, uint32_t recipe_value)
+{
+	Industry *facility = Industry::GetIfValid(industry);
+	if (facility == nullptr) return CMD_ERROR;
+	MultiLayerRecipeID recipe{};
+	// Transport the frozen four-byte content identity unchanged through the synchronized command; no runtime recipe registry is allocated.
+	for (size_t byte = 0; byte < recipe.size(); ++byte) recipe[byte] = static_cast<char>((recipe_value >> (24 - byte * 8)) & 0xFF);
+	if (!SelectLayerProcessorRecipe(*facility, recipe, _current_company, flags.Test(DoCommandFlag::Execute))) return CMD_ERROR;
+	if (flags.Test(DoCommandFlag::Execute)) SetWindowDirty(WindowClass::IndustryView, industry);
+	return CommandCost();
 }
 
 /**
@@ -2632,12 +2776,16 @@ void Industry::RecomputeProductionMultipliers()
 	}
 }
 
+/** Cache the displayed industry name from its stable definition and Surface naming-town identity. */
 void Industry::FillCachedName() const
 {
 	auto tmp_params = MakeParameters(this->index);
 	this->cached_name = GetStringWithArgs(STR_INDUSTRY_NAME, tmp_params);
+	const MapLayer layer = GetTileLayer(this->location.tile);
+	if (layer != MapLayer::Surface) this->cached_name += " [" + GetString(GetMapLayerName(layer)) + "]";
 }
 
+/** Invalidate every industry name after shared naming or localization changes. */
 void ClearAllIndustryCachedNames()
 {
 	for (Industry *ind : Industry::Iterate()) {
@@ -2903,6 +3051,8 @@ static const uint PERCENT_TRANSPORTED_80 = 204;
  */
 static void ChangeIndustryProduction(Industry *i, bool monthly)
 {
+	// Native finite mines and bounded factories hold their buffers/work; random legacy closure cannot discard material.
+	if (IsLayerMineDefinition(i->type) || IsLayerProcessorDefinition(i->type) || LayerBaselineSteelHasStoredCargo(*i)) return;
 	StringID str = STR_NULL;
 	bool closeit = false;
 	const IndustrySpec *indspec = GetIndustrySpec(i->type);
@@ -3173,8 +3323,10 @@ static const IntervalTimer<TimerGameEconomy> _economy_industries_monthly({TimerG
 });
 
 
+/** Reset industry indexes, audio scheduling and native bindings during whole-world initialization. */
 void InitializeIndustries()
 {
+	ResetLayerIndustryState(); // Whole-world initialization drops side bindings; it never recreates finite deposits.
 	Industry::industries.fill({});
 	_industry_sound_tile = TileIndex{};
 
@@ -3303,6 +3455,7 @@ extern const TileTypeProcs _tile_type_industry_procs = {
 	.terraform_tile_proc = TerraformTile_Industry,
 };
 
+/** @param lhs First nearby entry. @param rhs Second nearby entry. @return Stable delivery order by distance and industry identity. */
 bool IndustryCompare::operator() (const IndustryListEntry &lhs, const IndustryListEntry &rhs) const
 {
 	/* Compare by distance first and use index as a tiebreaker. */

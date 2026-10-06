@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_gui.cpp GUIs related to industries. */
+/** @file industry_gui.cpp GUIs related to industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include <ranges>
@@ -18,6 +18,9 @@
 #include "command_func.h"
 #include "viewport_func.h"
 #include "industry.h"
+#include "multilayer_industry.h"
+#include "layer_industry_processor.h"
+#include "layer_industry_baseline.h"
 #include "map_layer.h"
 #include "town.h"
 #include "cargo_type.h"
@@ -298,6 +301,7 @@ static WindowDesc _build_industry_desc(
 );
 
 /** Build (fund or prospect) a new industry, */
+/** Funding selection and preview; native mines send an explicit geological selection to the shared command authority. */
 class BuildIndustryWindow : public Window {
 	IndustryType selected_type = IT_INVALID; ///< industry corresponding to the above index
 	std::vector<IndustryType> list{}; ///< List of industries.
@@ -309,11 +313,18 @@ class BuildIndustryWindow : public Window {
 	/** The largest allowed minimum-width of the window, given in line heights */
 	static const int MAX_MINWIDTH_LINEHEIGHTS = 20;
 
+	/** Refresh definition/callback availability; actual world-layer/site/date admission remains with the shared command. */
 	void UpdateAvailability()
 	{
 		this->enabled = this->selected_type != IT_INVALID && (_game_mode == GameMode::Editor || GetIndustryProbabilityCallback(this->selected_type, IndustryAvailabilityCallType::UserCreation, 1) > 0);
+		if (const auto *capability = GetLayerIndustryCapability(this->selected_type); capability != nullptr) {
+			const MapLayer layer = capability->layers.Test(MapLayer::Surface) ? MapLayer::Surface :
+				(capability->layers.Test(MapLayer::DeepUnderground) ? MapLayer::DeepUnderground : MapLayer::Underground);
+			this->enabled = IsLayerIndustryTechnologyAvailable(*capability, layer, GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date);
+		}
 	}
 
+	/** Rebuild the enabled definition list while keeping native seam funding separate from legacy random prospecting. */
 	void SetupArrays()
 	{
 		this->list.clear();
@@ -328,7 +339,8 @@ class BuildIndustryWindow : public Window {
 				/* Rule is that editor mode loads all industries.
 				 * In game mode, all non raw industries are loaded too
 				 * and raw ones are loaded only when setting allows it */
-				if (_game_mode != GameMode::Editor && indsp->IsRawIndustry() && _settings_game.construction.raw_industry_construction == 0) {
+				// Native geology has its own explicit funding contract; the legacy raw-industry setting still filters ordinary definitions.
+				if (_game_mode != GameMode::Editor && indsp->IsRawIndustry() && _settings_game.construction.raw_industry_construction == 0 && GetLayerIndustryCapability(ind) == nullptr) {
 					/* Unselect if the industry is no longer in the list */
 					if (this->selected_type == ind) this->selected_type = IT_INVALID;
 					continue;
@@ -384,6 +396,7 @@ class BuildIndustryWindow : public Window {
 	}
 
 public:
+	/** Initialize the funding window, list and selection widgets from the active industry definitions. */
 	BuildIndustryWindow() : Window(_build_industry_desc)
 	{
 		this->CreateNestedTree();
@@ -493,7 +506,9 @@ public:
 				}
 				if (this->selected_type != IT_INVALID) {
 					const IndustrySpec *indsp = GetIndustrySpec(this->selected_type);
-					return GetString((_settings_game.construction.raw_industry_construction == 2 && indsp->IsRawIndustry()) ? STR_FUND_INDUSTRY_PROSPECT_NEW_INDUSTRY : STR_FUND_INDUSTRY_FUND_NEW_INDUSTRY);
+					// A geological mine is always funded at the selected seam; it never advertises a random Surface prospecting action.
+					const bool prospect = _settings_game.construction.raw_industry_construction == 2 && indsp->IsRawIndustry() && GetLayerIndustryCapability(this->selected_type) == nullptr;
+					return GetString(prospect ? STR_FUND_INDUSTRY_PROSPECT_NEW_INDUSTRY : STR_FUND_INDUSTRY_FUND_NEW_INDUSTRY);
 				}
 				return GetString(STR_FUND_INDUSTRY_FUND_NEW_INDUSTRY);
 
@@ -662,7 +677,7 @@ public:
 					this->SetDirty();
 
 					if (_thd.GetCallbackWnd() == this &&
-							((_game_mode != GameMode::Editor && _settings_game.construction.raw_industry_construction == 2 && indsp != nullptr && indsp->IsRawIndustry()) || !this->enabled)) {
+							((_game_mode != GameMode::Editor && _settings_game.construction.raw_industry_construction == 2 && indsp != nullptr && indsp->IsRawIndustry() && GetLayerIndustryCapability(this->selected_type) == nullptr) || !this->enabled)) {
 						/* Reset the button state if going to prospecting or "build many industries" */
 						this->RaiseButtons();
 						ResetObjectToPlace();
@@ -680,7 +695,8 @@ public:
 
 			case WID_DPI_FUND_WIDGET: {
 				if (this->selected_type != IT_INVALID) {
-					if (_game_mode != GameMode::Editor && _settings_game.construction.raw_industry_construction == 2 && GetIndustrySpec(this->selected_type)->IsRawIndustry()) {
+					// Ordinary raw definitions may prospect; native mines require the player to choose an actual world seam.
+					if (_game_mode != GameMode::Editor && _settings_game.construction.raw_industry_construction == 2 && GetIndustrySpec(this->selected_type)->IsRawIndustry() && GetLayerIndustryCapability(this->selected_type) == nullptr) {
 						Command<Commands::BuildIndustry>::Post(STR_ERROR_CAN_T_CONSTRUCT_THIS_INDUSTRY, TileIndex{}, this->selected_type, 0, false, InteractiveRandom());
 						this->HandleButtonClick(WID_DPI_FUND_WIDGET);
 					} else {
@@ -698,6 +714,7 @@ public:
 		this->vscroll->SetCapacityFromWidget(this, WID_DPI_MATRIX_WIDGET);
 	}
 
+	/** @copydoc Window::OnPlaceObject */
 	void OnPlaceObject([[maybe_unused]] Point pt, TileIndex tile) override
 	{
 		bool success = true;
@@ -706,7 +723,13 @@ public:
 		uint32_t seed = InteractiveRandom();
 		uint32_t layout_index = InteractiveRandomRange((uint32_t)indsp->layouts.size());
 
-		if (_game_mode == GameMode::Editor) {
+		if (IsLayerMineDefinition(this->selected_type)) {
+			// Clicking the seam chooses its stable geological ID, transmitted with the complete site/layout request.
+			// The command revalidates excavation, resource, layer, date, claim and funds; UI state grants no placement authority.
+			const GeologyDepositID deposit = GetGeologyWorldState().deposits.Find(tile);
+			success = Command<Commands::BuildLayerMine>::Post(STR_ERROR_CAN_T_CONSTRUCT_THIS_INDUSTRY,
+				tile, this->selected_type, layout_index, deposit, seed);
+		} else if (_game_mode == GameMode::Editor) {
 			/* Show error if no town exists at all */
 			if (Town::GetNumItems() == 0) {
 				ShowErrorMessage(GetEncodedString(STR_ERROR_CAN_T_BUILD_HERE, indsp->name),
@@ -781,6 +804,7 @@ static inline bool IsProductionAlterable(const Industry *i)
 			!_networking);
 }
 
+/** Industry inspection, supplied inputs and production controls for the actual selected industry identity. */
 class IndustryViewWindow : public Window
 {
 	/** Modes for changing production */
@@ -807,6 +831,61 @@ class IndustryViewWindow : public Window
 	int cheat_line_height = 0; ///< Height of each line for the #WID_IV_INFO panel
 
 public:
+	/**
+	 * Locate the next available alternative without modifying stocks or choice.
+	 * @return Immutable permitted alternative, or nullptr when there is no controllable choice.
+	 */
+	const MultiLayerManufacturingRecipe *NextNativeRecipe() const
+	{
+		Industry &industry = *Industry::Get(this->window_number);
+		const auto *current = GetLayerProcessorRecipe(industry);
+		if (current == nullptr) return nullptr;
+		const auto records = GetMultiLayerManufacturingRecipes();
+		const size_t start = static_cast<size_t>(current - records.data());
+		// Traverse each alternative once in the content owner's stable order; other families and locked choices never appear as usable actions.
+		for (size_t offset = 1; offset < records.size(); ++offset) {
+			const auto &candidate = records[(start + offset) % records.size()];
+			if (SelectLayerProcessorRecipe(industry, candidate.recipe.id, _local_company, false)) return &candidate;
+		}
+		return nullptr;
+	}
+
+	/** @param industry Actual native mine. @param area Writable text cursor within the existing info panel. */
+	void DrawMineDetails(const Industry &industry, Rect &area) const
+	{
+		const auto *mine = GetLayerMineState(industry.index);
+		const auto *deposit = mine == nullptr ? nullptr : GetGeologyWorldState().deposits.Get(mine->deposit);
+		static constexpr std::array<StringID, 10> status_strings{STR_INDUSTRY_LAYER_MINE_MISSING, STR_INDUSTRY_LAYER_MINE_CONSTRUCTION,
+			STR_INDUSTRY_LAYER_MINE_UNAVAILABLE, STR_INDUSTRY_LAYER_MINE_ABANDONED, STR_INDUSTRY_LAYER_MINE_DEPLETED,
+			STR_INDUSTRY_LAYER_MINE_PAUSED, STR_INDUSTRY_LAYER_MINE_FULL, STR_INDUSTRY_LAYER_MINE_PICKUP, STR_INDUSTRY_LAYER_MINE_OPERATING,
+			STR_INDUSTRY_VIEW_INDUSTRY_ANNOUNCED_CLOSURE};
+		area.top = DrawStringMultiLine(area, GetString(STR_INDUSTRY_LAYER_MINE_STATUS, status_strings[static_cast<size_t>(GetLayerMineOperationalStatus(industry))]));
+		// Missing/restoring state must show no invented reserve or historical quantities; the actual owners supply every displayed number.
+		if (mine != nullptr && deposit != nullptr) {
+			DrawString(area, GetString(STR_INDUSTRY_LAYER_MINE_RESERVE, deposit->remaining_reserve));
+			area.top += GetCharacterHeight(FontSize::Normal);
+			area.top = DrawStringMultiLine(area, GetString(STR_INDUSTRY_LAYER_MINE_EXTRACTED, mine->extracted, mine->dispatched));
+		}
+		area.top = DrawStringMultiLine(area, STR_INDUSTRY_LAYER_MINE_REQUIREMENTS);
+		area.top += WidgetDimensions::scaled.vsep_wide;
+	}
+
+	/** @param industry Actual finite stock owner. @param area Writable text cursor; display does not dispatch cargo or allocate any inventory. */
+	void DrawFiniteStorage(const Industry &industry, Rect &area) const
+	{
+		const auto *capability = GetLayerIndustryCapability(industry.type);
+		// Only delivered native/validated Steel paths own the explicit finite storage contract; legacy industry rendering keeps its existing fields.
+		if (capability == nullptr && !IsLayerBaselineSteelDefinition(industry.type)) return;
+		const uint32_t capacity = capability == nullptr ? UINT16_MAX : capability->output_capacity;
+		// Every declared product has a separate real buffer; showing each prevents alternative output from being mistaken for incoming stock.
+		for (const auto &output : industry.produced) {
+			if (!IsValidCargoType(output.cargo)) continue;
+			area.top = DrawStringMultiLine(area, GetString(STR_INDUSTRY_LAYER_OUTPUT_STORE, output.cargo, output.waiting, capacity));
+		}
+		area.top += WidgetDimensions::scaled.vsep_wide;
+	}
+
+	/** @param desc Shared industry-window layout. @param window_number Existing industry identity displayed in its own layer. */
 	IndustryViewWindow(WindowDesc &desc, WindowNumber window_number) : Window(desc)
 	{
 		this->flags.Set(WindowFlag::DisableVpScroll);
@@ -837,6 +916,7 @@ public:
 
 	void OnPaint() override
 	{
+		this->SetWidgetDisabledState(WID_IV_RECIPE, this->NextNativeRecipe() == nullptr);
 		this->DrawWidgets();
 
 		if (this->IsShaded()) return; // Don't draw anything when the window is shaded.
@@ -873,6 +953,8 @@ public:
 
 	/**
 	 * Draw the text in the #WID_IV_INFO panel.
+	 * @param r Existing panel rectangle, enlarged only through normal window sizing.
+	 * @return Required final bottom row including padding.
 	 * @param r Rectangle of the panel.
 	 * @return Expected position of the bottom edge of the panel.
 	 */
@@ -887,6 +969,24 @@ public:
 
 		/* Use all the available space past the rect, so that we can enlarge the window if needed. */
 		ir.bottom = INT_MAX;
+		if (IsLayerMineDefinition(i->type)) this->DrawMineDetails(*i, ir);
+		this->DrawFiniteStorage(*i, ir);
+		if (const auto *recipe = GetLayerProcessorRecipe(*i); recipe != nullptr) {
+			std::string description;
+			// Show the selected quantities by cargo meaning so players can distinguish alternatives without internal recipe IDs.
+			for (const auto &role : recipe->recipe.inputs) {
+				if (!description.empty()) description += " + ";
+				description += GetString(STR_JUST_CARGO, GetCargoTypeByLabel(role.label), role.quantity);
+			}
+			description += " → ";
+			for (size_t output = 0; output < recipe->recipe.outputs.size(); ++output) {
+				if (output != 0) description += " + ";
+				const auto &role = recipe->recipe.outputs[output];
+				description += GetString(STR_JUST_CARGO, GetCargoTypeByLabel(role.label), role.quantity);
+			}
+			ir.top = DrawStringMultiLine(ir, GetString(STR_INDUSTRY_LAYER_RECIPE_DESCRIPTION, description));
+			ir.top += WidgetDimensions::scaled.vsep_wide;
+		}
 
 		if (i->prod_level == PRODLEVEL_CLOSURE) {
 			DrawString(ir, STR_INDUSTRY_VIEW_INDUSTRY_ANNOUNCED_CLOSURE);
@@ -894,13 +994,13 @@ public:
 		}
 
 		const int label_indent = WidgetDimensions::scaled.hsep_normal + this->cargo_icon_size.width;
-		bool stockpiling = ind->callback_mask.Any({IndustryCallbackMask::ProductionCargoArrival, IndustryCallbackMask::Production256Ticks});
+		bool stockpiling = IsLayerProcessorDefinition(i->type) || IsLayerBaselineSteelDefinition(i->type) || ind->callback_mask.Any({IndustryCallbackMask::ProductionCargoArrival, IndustryCallbackMask::Production256Ticks});
 
 		for (const auto &a : i->accepted) {
 			if (!IsValidCargoType(a.cargo)) continue;
 			has_accept = true;
 			if (first) {
-				DrawString(ir, STR_INDUSTRY_VIEW_REQUIRES);
+				DrawString(ir, IsLayerProcessorDefinition(i->type) ? STR_INDUSTRY_LAYER_INPUT_STORES : STR_INDUSTRY_VIEW_REQUIRES);
 				ir.top += GetCharacterHeight(FontSize::Normal);
 				first = false;
 			}
@@ -908,7 +1008,12 @@ public:
 			DrawCargoIcon(ir, a.cargo);
 
 			CargoSuffix suffix;
-			GetCargoSuffix(CargoSuffixDirection::In, CargoSuffixType::View, i, i->type, ind, a.cargo, &a - i->accepted.data(), suffix);
+			// Native inventories use all sixteen slots; legacy three-input suffix indexing must not hide a delivered alternative's fourth stock amount.
+			if (IsLayerProcessorDefinition(i->type) || IsLayerBaselineSteelDefinition(i->type)) {
+				suffix.display = CargoSuffixDisplay::Amount;
+			} else {
+				GetCargoSuffix(CargoSuffixDirection::In, CargoSuffixType::View, i, i->type, ind, a.cargo, &a - i->accepted.data(), suffix);
+			}
 			/* if the industry is not stockpiling then don't show amount in the acceptance display. */
 			if (!stockpiling && suffix.display == CargoSuffixDisplay::AmountAndText) suffix.display = CargoSuffixDisplay::Text;
 			if (!stockpiling && suffix.display == CargoSuffixDisplay::Amount) suffix.display = CargoSuffixDisplay::None;
@@ -1105,6 +1210,14 @@ public:
 			case WID_IV_GRAPH:
 				ShowIndustryProductionGraph(this->window_number);
 				break;
+			case WID_IV_RECIPE: {
+				const auto *next = this->NextNativeRecipe();
+				if (next == nullptr) break;
+				uint32_t choice = 0;
+				for (uint8_t byte : next->recipe.id) choice = (choice << 8) | byte;
+				Command<Commands::SelectLayerIndustryRecipe>::Post(STR_ERROR_CAN_T_DO_THIS, IndustryID{this->window_number}, choice);
+				break;
+			}
 		}
 	}
 
@@ -1212,6 +1325,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_industry_view_widget
 		EndContainer(),
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::Cream, WID_IV_INFO), SetMinimalSize(260, 0), SetMinimalTextLines(2, WidgetDimensions::unscaled.framerect.Vertical()), SetResize(1, 0),
+	NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_RECIPE), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_LAYER_RECIPE_CHANGE, STR_INDUSTRY_LAYER_RECIPE_CHANGE_TOOLTIP),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_DISPLAY), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_DISPLAY_CHAIN, STR_INDUSTRY_DISPLAY_CHAIN_TOOLTIP),

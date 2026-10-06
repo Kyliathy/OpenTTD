@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf.cpp Base of all NewGRF support. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
+/** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -17,6 +17,8 @@
 #include "engine_base.h"
 #include "tbm.h"
 #include "spoil_receiver.h"
+#include "multilayer_industry.h"
+#include "layer_industry_processor.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1754,6 +1756,8 @@ static void AfterLoadGRFs()
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
 	// The Surface spoil receivers are native industries in the same package scope (r2mlvs5 Group 8); the build list is sorted again to show them.
 	if (InitialiseSpoilReceiverDefinitions(_grfconfig)) SortIndustryTypes();
+	if (InitialiseLayerMineDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native catalogue reuses saved IIDS/TIDS; installation creates no geological reserve.
+	if (InitialiseLayerProcessorDefinitions(_grfconfig)) SortIndustryTypes(); // Material factories use published all-input recipes, never inherited independent-input multipliers.
 }
 
 #ifdef WITH_MULTILAYER_LOADER_PROBE

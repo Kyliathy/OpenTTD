@@ -11,7 +11,7 @@
 
 
 # This file is part of OpenTTD.
-# Profile/construction controls: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs2-geology-and-excavation.md.
+# Profile/construction controls: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md and r2mlvs6-mines-and-resource-chains.md.
 # OpenTTD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
 # OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
@@ -6260,3 +6260,43 @@ STR_BADGE_CONFIG_FILTERS                                        :{WHITE}Badge Fi
 STR_BADGE_CONFIG_PREVIEW                                        :Preview Image
 STR_BADGE_CONFIG_NAME                                           :Name
 STR_BADGE_FILTER_ANY_LABEL                                      :Any {STRING}
+
+# Native layer-mine news lies outside the contiguous legacy NewGRF news/name mappings.
+STR_NEWS_LAYER_MINE_CONSTRUCTION                                :{BIG_FONT}{BLACK}New mine under construction: {INDUSTRY}!
+
+# Native mine names remain outside every contiguous legacy NewGRF string mapping.
+STR_INDUSTRY_NAME_LAYER_COAL_MINE                               :Coal Mine
+STR_INDUSTRY_NAME_LAYER_IRON_MINE                               :Iron Ore Mine
+STR_INDUSTRY_NAME_LAYER_COPPER_MINE                             :Copper Ore Mine
+STR_INDUSTRY_NAME_LAYER_BAUXITE_MINE                            :Bauxite Mine
+STR_INDUSTRY_NAME_LAYER_SALT_MINE                               :Salt Mine
+STR_INDUSTRY_NAME_LAYER_LITHIUM_MINE                            :Lithium Ore Mine
+STR_INDUSTRY_NAME_LAYER_NICKEL_MINE                             :Nickel Ore Mine
+STR_INDUSTRY_NAME_LAYER_COBALT_MINE                             :Cobalt Ore Mine
+STR_INDUSTRY_NAME_LAYER_RARE_MINE                               :Rare Earth Mine
+STR_INDUSTRY_NAME_LAYER_URANIUM_MINE                            :Uranium Mine
+STR_INDUSTRY_NAME_LAYER_METAL_REFINERY                          :Metal Refinery
+STR_INDUSTRY_NAME_LAYER_CHEMICAL_WORKS                          :Chemical Works
+STR_INDUSTRY_NAME_LAYER_BATTERY_WORKS                           :Battery Works
+STR_INDUSTRY_NAME_LAYER_ELECTRONICS_WORKS                       :Electronics Works
+STR_INDUSTRY_NAME_LAYER_COMPONENT_WORKS                         :Component Works
+STR_INDUSTRY_NAME_LAYER_ROBOTICS_WORKS                          :Robotics Works
+STR_INDUSTRY_NAME_LAYER_MIRROR_WORKS                            :Mirror-kit Works
+STR_INDUSTRY_LAYER_RECIPE_DESCRIPTION                          :{BLACK}Production recipe: {RAW_STRING}
+STR_INDUSTRY_LAYER_RECIPE_CHANGE                               :{BLACK}Change recipe
+STR_INDUSTRY_LAYER_RECIPE_CHANGE_TOOLTIP                       :{BLACK}Select the next available production recipe. Delivered inputs and stored products stay at this facility.
+STR_INDUSTRY_LAYER_MINE_STATUS                                 :{BLACK}Mine status: {STRING}
+STR_INDUSTRY_LAYER_MINE_MISSING                                :Mine records unavailable
+STR_INDUSTRY_LAYER_MINE_CONSTRUCTION                           :Under construction
+STR_INDUSTRY_LAYER_MINE_UNAVAILABLE                            :Technology not yet available
+STR_INDUSTRY_LAYER_MINE_ABANDONED                              :Abandoned; extraction stopped
+STR_INDUSTRY_LAYER_MINE_DEPLETED                               :Reserve depleted; stored output can still be collected
+STR_INDUSTRY_LAYER_MINE_PAUSED                                 :Paused; material and work retained
+STR_INDUSTRY_LAYER_MINE_FULL                                   :Output storage full; extraction stopped
+STR_INDUSTRY_LAYER_MINE_PICKUP                                 :Waiting for eligible station pickup
+STR_INDUSTRY_LAYER_MINE_OPERATING                              :Operating
+STR_INDUSTRY_LAYER_MINE_RESERVE                                :{BLACK}Remaining reserve: {COMMA} tonnes
+STR_INDUSTRY_LAYER_MINE_EXTRACTED                              :{BLACK}Extracted: {COMMA} tonnes; sent to stations: {COMMA} tonnes
+STR_INDUSTRY_LAYER_MINE_REQUIREMENTS                           :{BLACK}Production needs excavated machinery and loading space. Station pickup stays on this layer; Surface delivery needs a connected transport route.
+STR_INDUSTRY_LAYER_OUTPUT_STORE                                :{BLACK}Output stored: {CARGO_LONG} / {COMMA}
+STR_INDUSTRY_LAYER_INPUT_STORES                                :{BLACK}Delivered input stores:

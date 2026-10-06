@@ -20,6 +20,8 @@ static constexpr uint32_t MULTILAYER_FEATURE_PORTAL_WORK = 16; ///< Canonical na
 static constexpr uint32_t MULTILAYER_FEATURE_TBM_PROJECTS = 32; ///< Typed TBM projects (any ID ever allocated) require the version-376 project family.
 static constexpr uint32_t MULTILAYER_FEATURE_SPOIL_RECEIVERS = 64; ///< Live Earth/Rock spoil receivers require the version-377 receiver family.
 static constexpr uint32_t MULTILAYER_FEATURE_TBM_EXCHANGE = 128; ///< Hauler assignments/wagon sets (any ID ever allocated) require the version-378 exchange family.
+static constexpr uint32_t MULTILAYER_FEATURE_MINES = 256; ///< Finite mine bindings require the version-379 family and existing geology/industry inventories. See r2mlvs6-mines-and-resource-chains.md.
+static constexpr uint32_t MULTILAYER_FEATURE_PROCESSORS = 512; ///< Native recipe choice/work/counters require version-380 descriptors beside Industry stock. See r2mlvs6-mines-and-resource-chains.md.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -93,6 +95,8 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	SpaceMission, LaunchHandling, StationConstruction, Solar, Utility, Tube, Geothermal,
 	GeologyRoot, ///< Appended aggregate over actual packed/seam/vent/job authority; existing diagnostic kind IDs stay unchanged.
 	PortalWorkRoot, ///< Appended pair phase/project/actor authority; physical endpoint fields remain in the ordinary map digest.
+	MineRoot, ///< Appended finite bindings/work/counters; reserve and output keep their own owners. See r2mlvs6-mines-and-resource-chains.md.
+	ProcessorRoot, ///< Appended native choice/work/batch/material history, with stock read from Industry. See r2mlvs6-mines-and-resource-chains.md.
 	End,
 };
 

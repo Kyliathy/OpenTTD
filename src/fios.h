@@ -71,6 +71,10 @@ struct LoadCheckData {
 	uint32_t tbm_support_expected = 0, tbm_support_rows = 0; ///< Exact copied temporary support counts.
 	std::array<bool, 2> spoil_receiver_present{}; ///< Independent spoil receiver header and row table preview presence.
 	uint32_t spoil_receiver_expected = 0, spoil_receiver_rows = 0; ///< Exact copied spoil receiver counts.
+	std::array<bool, 2> layer_mine_present{}; ///< Independent mine header/table preview presence. See r2mlvs6-mines-and-resource-chains.md.
+	uint32_t layer_mine_expected = 0, layer_mine_rows = 0; ///< Exact copied mine counts; no claims are activated by preview.
+	std::array<bool, 3> layer_processor_present{}; ///< Independent native processor header/scalar/counter preview presence. See r2mlvs6-mines-and-resource-chains.md.
+	std::array<uint32_t, 2> layer_processor_expected{}, layer_processor_rows{}; ///< Exact declared/read scalar and counter counts; no recipe is activated by preview.
 	std::array<bool, 4> tbm_exchange_present{}; ///< Independent exchange header, assignment, set and set-wagon table preview presence.
 	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
 	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.

@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file geology.cpp Finite sparse seams and deterministic company claims. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 2 */
+/** @file geology.cpp Finite sparse seams and deterministic company claims. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include "excavation.h"
@@ -225,6 +225,18 @@ GeologyError GeologyDepositStore::ConsumeReserve(GeologyDepositID id, CompanyID 
 	if (company >= CompanyID::End() || deposit->claimant != company) return GeologyError::ClaimConflict;
 	if (amount > deposit->remaining_reserve) return GeologyError::Depleted;
 	deposit->remaining_reserve -= amount;
+	return GeologyError::None;
+}
+
+/** @copydoc GeologyDepositStore::TransferMineClaim */
+GeologyError GeologyDepositStore::TransferMineClaim(GeologyDepositID id, CompanyID old_company, CompanyID new_company)
+{
+	auto *deposit = this->Mutable(id);
+	if (deposit == nullptr) return GeologyError::InvalidID;
+	// Transfer only the actual exclusive owner to a real company or the explicit abandoned sentinel; exhausted ore stays exhausted.
+	if (old_company >= CompanyID::End() || deposit->claimant != old_company ||
+			(new_company != CompanyID::Invalid() && new_company >= CompanyID::End())) return GeologyError::ClaimConflict;
+	deposit->claimant = new_company;
 	return GeologyError::None;
 }
 

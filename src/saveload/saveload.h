@@ -436,6 +436,9 @@ enum class SaveLoadVersion : uint16_t {
 	SpoilReceivers, ///< Saveload version: 377\n Native Earth/Rock spoil receiver side state beside the industries' own stock. See r2mlvs5-spoil-wagons-and-haulage.md.
 	TBMExchange, ///< Saveload version: 378\n Hauler assignments and wagon sets; wagon packets stay in their vehicles. See r2mlvs5-spoil-wagons-and-haulage.md.
 
+	LayerMines, ///< Saveload version: 379\n Finite mine bindings/work/history beside existing geology and Industry output. See r2mlvs6-mines-and-resource-chains.md.
+	LayerProcessors, ///< Saveload version: 380\n Native recipe choices/work/counters; physical cargo remains in industry/station/vehicle chunks. See r2mlvs6-mines-and-resource-chains.md.
+
 	MaxVersion, ///< Highest possible saveload version.
 };
 

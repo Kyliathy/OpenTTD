@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file economy_base.h Base classes related to the economy. */
+/** @file economy_base.h Base classes related to the economy. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, exact final-delivery receipts */
 
 #ifndef ECONOMY_BASE_H
 #define ECONOMY_BASE_H
@@ -34,7 +34,8 @@ struct CargoPayment : CargoPaymentPool::PoolItem<&_cargo_payment_pool> {
 	~CargoPayment();
 
 	Money PayTransfer(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile);
-	void PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile);
+	/** @param cargo Runtime cargo type. @param cp Actual offered packet. @param count Whole units offered. @param current_tile Actual unloading tile. @return Exactly accepted/paid units; rejected units remain with the carrier. */
+	uint PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile);
 };
 
 #endif /* ECONOMY_BASE_H */

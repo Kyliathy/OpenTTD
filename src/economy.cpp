@@ -5,13 +5,16 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file economy.cpp Handling of the economy. */
+/** @file economy.cpp Handling of the economy. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
 #include <ranges>
 #include "company_func.h"
 #include "command_func.h"
 #include "industry.h"
+#include "multilayer_industry.h"
+#include "layer_industry_processor.h"
+#include "layer_industry_baseline.h"
 #include "town.h"
 #include "news_func.h"
 #include "network/network.h"
@@ -481,6 +484,7 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	/* TBM projects, their jobs and exchange records follow the vehicles that just moved or were deleted, before the
 	 * tiles change, so project track and bays are no longer in use when a removed company's tiles are cleared. */
 	ChangeTBMOwnership(old_owner, new_owner);
+	ChangeLayerIndustryOwnership(old_owner, new_owner); // Keep actual mine bindings and geological claims together during takeover or abandonment.
 
 	/*  Change ownership of tiles */
 	{
@@ -1062,18 +1066,27 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
 
 		if (ind->exclusive_supplier != INVALID_OWNER && ind->exclusive_supplier != st->owner) continue;
 
-		/* Insert the industry into _cargo_delivery_destinations, if not yet contained */
-		include(_cargo_delivery_destinations, ind);
-
 		uint amount = std::min(num_pieces, 0xFFFFu - it->waiting);
 		// A spoil receiver admits only its bounded room and charges its fee for exactly that (r2mlvs5 Group 8.3).
 		if (GetSpoilReceiverKind(ind->type) != SpoilReceiverKind::End) {
 			amount = AdmitSpoilToReceiver(*ind, cargo_type, amount, company);
 			if (amount == 0) continue;
 		}
-		it->waiting += amount;
-		it->GetOrCreateHistory()[THIS_MONTH].accepted += amount;
-		it->last_accepted = TimerGameEconomy::date;
+		if (IsLayerProcessorDefinition(ind->type)) {
+			amount = ReceiveLayerProcessorCargo(*ind, cargo_type, amount); // Native intake commits exact delivered stock/history/revision before the carrier removes those units.
+			if (amount == 0) continue;
+			ind->was_cargo_delivered = true; // The native batch owner needs no deferred legacy arrival callback or borrowed industry pointer.
+		} else if (IsLayerBaselineSteelDefinition(ind->type)) {
+			amount = ReceiveLayerBaselineSteelCargo(*ind, cargo_type, amount);
+			if (amount == 0) continue;
+			ind->was_cargo_delivered = true; // The validated Steel owner converts on actual industry ticks, independently of deferred legacy callbacks.
+		} else {
+			if (amount == 0) continue;
+			it->waiting += amount;
+			it->GetOrCreateHistory()[THIS_MONTH].accepted += amount;
+			it->last_accepted = TimerGameEconomy::date;
+			include(_cargo_delivery_destinations, ind); // Only actual legacy/spoil arrivals need the end-of-station production notification.
+		}
 		num_pieces -= amount;
 		accepted += amount;
 
@@ -1093,10 +1106,10 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
  * @param periods_in_transit Travel time in cargo aging periods
  * @param company The company delivering the cargo
  * @param src Source of cargo
- * @return Revenue for delivering cargo
+ * @return Revenue and exactly accepted whole units; the caller retains every unaccepted unit.
  * @note The cargo is just added to the stockpile of the industry. It is due to the caller to trigger the industry's production machinery
  */
-static Money DeliverGoods(int num_pieces, CargoType cargo_type, StationID dest, uint distance, uint16_t periods_in_transit, Company *company, Source src)
+static std::pair<Money, uint> DeliverGoods(int num_pieces, CargoType cargo_type, StationID dest, uint distance, uint16_t periods_in_transit, Company *company, Source src)
 {
 	assert(num_pieces > 0);
 
@@ -1140,7 +1153,7 @@ static Money DeliverGoods(int num_pieces, CargoType cargo_type, StationID dest, 
 		}
 	}
 
-	return profit;
+	return {profit, accepted_total};
 }
 
 /**
@@ -1154,9 +1167,14 @@ static void TriggerIndustryProduction(Industry *i)
 	IndustryCallbackMasks cbm = indspec->callback_mask;
 
 	i->was_cargo_delivered = true;
+	if (IsLayerBaselineSteelDefinition(i->type)) {
+		ProcessLayerBaselineSteel(*i); // One-to-one baseline conversion keeps every excess input at the same industry until output room returns.
+		return;
+	}
 
 	/* A spoil receiver keeps its stock for its own interval processing (r2mlvs5 Group 8.2). */
 	if (GetSpoilReceiverKind(i->type) != SpoilReceiverKind::End) return;
+	if (IsLayerProcessorDefinition(i->type)) return; // Delivered inputs wait for the sole all-input batch owner; legacy multipliers must not independently clear them.
 
 	if (cbm.Test(IndustryCallbackMask::ProductionCargoArrival) || cbm.Test(IndustryCallbackMask::Production256Ticks)) {
 		if (cbm.Test(IndustryCallbackMask::ProductionCargoArrival)) {
@@ -1225,17 +1243,19 @@ CargoPayment::~CargoPayment()
  * Handle payment for final delivery of the given cargo packet.
  * @param cargo The cargo type of the cargo.
  * @param cp The cargo packet to pay for.
- * @param count The number of packets to pay for.
+ * @param count Whole units offered from this packet.
  * @param current_tile Current tile the payment is happening on.
+ * @return Exactly accepted units; feeder shares are settled only for those units.
  */
-void CargoPayment::PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile)
+uint CargoPayment::PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile)
 {
 	/* Handle end of route payment */
-	Money profit = DeliverGoods(count, cargo, this->current_station, cp->GetDistance(current_tile), cp->GetPeriodsInTransit(), Company::Get(this->front->owner), cp->GetSource());
+	const auto [profit, accepted] = DeliverGoods(count, cargo, this->current_station, cp->GetDistance(current_tile), cp->GetPeriodsInTransit(), Company::Get(this->front->owner), cp->GetSource());
 	this->route_profit += profit;
 
 	/* The vehicle's profit is whatever route profit there is minus feeder shares. */
-	this->visual_profit += profit - cp->GetFeederShare(count);
+	this->visual_profit += profit - cp->GetFeederShare(accepted);
+	return accepted;
 }
 
 /**
@@ -1709,10 +1729,10 @@ static void LoadUnloadVehicle(Vehicle *front)
 				}
 			}
 
-			/* Spoil is delivered only into its receivers' bounded room (r2mlvs5 Group 8.3). The rest is transferred on an
+			/* Spoil and material processors stage delivery only into their actual bounded room (r2mlvs5 Group 8.3/r2mlvs6 Group 10). The rest is transferred on an
 			 * unload or transfer order, as unaccepted cargo is above, and otherwise stays aboard. */
 			if (const uint deliver = v->cargo.ActionCount(VehicleCargoList::MoveToAction::Deliver); deliver > 0) {
-				const uint room = GetSpoilReceiverRoomAt(*st, v->cargo_type);
+				const uint room = std::min(GetSpoilReceiverRoomAt(*st, v->cargo_type), GetLayerIndustryReceiverRoomAt(*st, v->cargo_type));
 				if (room < deliver) {
 					const uint refused = deliver - room;
 					if (front->current_order.GetUnloadType() == OrderUnloadType::Transfer || front->current_order.GetUnloadType() == OrderUnloadType::Unload) {

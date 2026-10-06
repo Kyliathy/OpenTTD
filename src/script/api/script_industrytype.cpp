@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_industrytype.cpp Implementation of ScriptIndustryType. */
+/** @file script_industrytype.cpp Implementation of ScriptIndustryType. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "../../stdafx.h"
 #include "script_industrytype.hpp"
@@ -90,11 +90,18 @@
 	return list;
 }
 
+/** @copydoc ScriptIndustryType::CanBuildIndustry */
 /* static */ bool ScriptIndustryType::CanBuildIndustry(IndustryType industry_type)
 {
 	if (!IsValidIndustryType(industry_type)) return false;
 
 	const bool deity = ScriptCompanyMode::IsDeity();
+	if (const auto *capability = GetLayerIndustryCapability(industry_type); capability != nullptr) {
+		const MapLayer layer = capability->layers.Test(MapLayer::Surface) ? MapLayer::Surface :
+			(capability->layers.Test(MapLayer::DeepUnderground) ? MapLayer::DeepUnderground : MapLayer::Underground);
+		// A real company's script may fund dated native machinery; deity mode cannot fabricate an exclusive company claim.
+		return (!deity || capability->resource == CT_INVALID) && IsLayerIndustryTechnologyAvailable(*capability, layer, GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date);
+	}
 	if (::GetIndustryProbabilityCallback(industry_type, deity ? IndustryAvailabilityCallType::RandomCreation : IndustryAvailabilityCallType::UserCreation, 1) == 0) return false;
 	if (deity) return true;
 	if (!::GetIndustrySpec(industry_type)->IsRawIndustry()) return true;
@@ -103,9 +110,11 @@
 	return _settings_game.construction.raw_industry_construction == 1;
 }
 
+/** @copydoc ScriptIndustryType::CanProspectIndustry */
 /* static */ bool ScriptIndustryType::CanProspectIndustry(IndustryType industry_type)
 {
 	if (!IsValidIndustryType(industry_type)) return false;
+	if (GetLayerIndustryCapability(industry_type) != nullptr) return false; // Geological selection is explicit, never random Surface prospecting.
 
 	const bool deity = ScriptCompanyMode::IsDeity();
 	if (!deity && !::GetIndustrySpec(industry_type)->IsRawIndustry()) return false;
@@ -115,6 +124,7 @@
 	return deity || _settings_game.construction.raw_industry_construction == 2;
 }
 
+/** @copydoc ScriptIndustryType::BuildIndustry */
 /* static */ bool ScriptIndustryType::BuildIndustry(IndustryType industry_type, TileIndex tile)
 {
 	EnforceDeityOrCompanyModeValid(false);
@@ -123,6 +133,10 @@
 
 	uint32_t seed = ScriptBase::Rand();
 	uint32_t layout_index = ScriptBase::RandRange((uint32_t)::GetIndustrySpec(industry_type)->layouts.size());
+	if (IsLayerMineDefinition(industry_type)) {
+		const GeologyDepositID deposit = GetGeologyWorldState().deposits.Find(tile);
+		return ScriptObject::Command<Commands::BuildLayerMine>::Do(tile, industry_type, layout_index, deposit, seed);
+	}
 	return ScriptObject::Command<Commands::BuildIndustry>::Do(tile, industry_type, layout_index, true, seed);
 }
 

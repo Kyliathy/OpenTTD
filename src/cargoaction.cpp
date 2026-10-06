@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargoaction.cpp Implementation of cargo actions. */
+/** @file cargoaction.cpp Implementation of cargo actions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, exact accepted-count delivery */
 
 #include "stdafx.h"
 #include "economy_base.h"
@@ -112,9 +112,14 @@ bool CargoRemoval<VehicleCargoList>::operator()(CargoPacket *cp)
  */
 bool CargoDelivery::operator()(CargoPacket *cp)
 {
-	uint remove = this->Preprocess(cp);
+	const uint offered = this->Preprocess(cp);
+	const uint remove = this->payment->PayFinalDelivery(this->cargo, cp, offered, this->current_tile);
 	this->source->RemoveFromMeta(cp, VehicleCargoList::MoveToAction::Deliver, remove);
-	this->payment->PayFinalDelivery(this->cargo, cp, remove, this->current_tile);
+	if (remove < offered) {
+		// A capacity/source/callback refusal stops this delivery visit. Keep the remaining prefix aboard so packet order and action counts agree.
+		this->source->Reassign<VehicleCargoList::MoveToAction::Deliver, VehicleCargoList::MoveToAction::Keep>(UINT_MAX);
+		this->max_move = 0;
+	}
 	return this->Postprocess(cp, remove);
 }
 
