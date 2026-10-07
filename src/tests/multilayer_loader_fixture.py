@@ -16,7 +16,7 @@ import re
 import struct
 import subprocess
 
-from multilayer_state_fixture import save_path
+from multilayer_state_fixture import log_path, save_path
 
 
 def word(value):
@@ -132,7 +132,7 @@ def run_roundtrips(root):
                 saved = save_path(f"r2mlvs1-b-{mode}-{phase}.sav")
                 saved.unlink(missing_ok=True)
                 script = fixtures / f"r2mlvs1-b-{mode}-{phase}.scr"
-                log = area / f"r2mlvs1-b-{mode}-{phase}.log"
+                log = log_path(f"r2mlvs1-b-{mode}-{phase}.log", root)
                 script.write_text(
                     "# @see r2mlvs1-gameplay-contracts-and-content.md, Group 3 saved-content fixture.\n"
                     f'dump_info cargotypes\nsave "{saved.with_suffix("").as_posix()}"\nquit\n',
@@ -214,7 +214,7 @@ def run_profiles(root):
         for name, profile, climate, extra, refusal in cases:
             script = fixtures / f"r2mlvs1-c-{name}.scr"
             saved = save_path(f"r2mlvs1-c-{name}.sav")
-            log = area / f"r2mlvs1-c-{name}.log"
+            log = log_path(f"r2mlvs1-c-{name}.log", root)
             config = fixtures / f"r2mlvs1-c-{name}.cfg"
             saved.unlink(missing_ok=True)
             config.write_text(

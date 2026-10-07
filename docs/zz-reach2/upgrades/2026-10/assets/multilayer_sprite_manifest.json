@@ -18,8 +18,8 @@
   },
   "core_extension": {
     "planned_start": 74,
-    "planned_count": 94,
-    "planned_end_exclusive": 168,
+    "planned_count": 126,
+    "planned_end_exclusive": 200,
     "activated": false,
     "runtime_loader_change": "later_packing_group"
   },
@@ -46,6 +46,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -115,6 +116,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -183,6 +185,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -204,15 +207,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png",
+        "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
+        "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -240,6 +258,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -294,6 +313,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -315,15 +335,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png",
+        "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
+        "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -351,6 +386,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -405,6 +441,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -426,15 +463,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png",
+        "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
+        "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -462,6 +514,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -516,6 +569,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -537,15 +591,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png",
+        "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
+        "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -573,6 +642,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -627,6 +697,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -648,15 +719,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png",
+        "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
+        "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -684,6 +770,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -738,6 +825,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -759,15 +847,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png",
+        "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
+        "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -795,6 +898,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -849,6 +953,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -870,15 +975,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png",
+        "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
+        "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -906,6 +1026,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -960,6 +1081,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -981,15 +1103,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png",
+        "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
+        "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -1017,6 +1154,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -1071,6 +1209,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1092,15 +1231,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png",
+        "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
+        "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -1128,6 +1282,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -1182,6 +1337,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1203,15 +1359,30 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png",
+        "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
+        "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
+        "staged_pose_count": 3,
+        "runtime_activated": false,
+        "coverage_complete": true
       }
     },
     {
@@ -1239,6 +1410,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -1291,7 +1463,9 @@
         "idle",
         "moving",
         "working",
-        "blocked"
+        "blocked",
+        "reversing",
+        "service"
       ],
       "native_size": [
         64,
@@ -1301,6 +1475,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -1312,7 +1487,8 @@
         48
       ],
       "parts": [
-        "body"
+        "body",
+        "support"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -1323,8 +1499,8 @@
       "animation_colors": "forbidden",
       "source": {
         "status": "authored_partial",
-        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
-        "sha256": "e15ec859ff9b33733860f654ab3d5eda31078477d8f63c7d54dcc54d8fbd3b72",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+        "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3",
         "provenance": "first_party_original_builtin_image_gen",
         "rights": "first_party_generated_original"
       },
@@ -1334,17 +1510,23 @@
         "sha256": null
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "frame_0_staged_animation_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "partial_registered_source_coverage_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/tbm-standard.png",
-        "native_sha256": "dbe2f6f5e1ad54b641a092e792593bc9e0bcbb89029a6e421c9c32f7deaa667b",
-        "staged_pose_count": 32,
+        "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/vehicle-model-00-authored.png",
+        "native_sha256": "367c36246d6bc4598dd03aa902f767d1f3e7cdbef66e629f20d9fc573624a8b7",
+        "staged_pose_count": 40,
+        "required_pose_count": 384,
+        "missing_pose_count": 344,
         "runtime_activated": false,
         "coverage_complete": false
       }
@@ -1369,6 +1551,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1436,7 +1619,9 @@
         "idle",
         "moving",
         "working",
-        "blocked"
+        "blocked",
+        "reversing",
+        "service"
       ],
       "native_size": [
         64,
@@ -1446,6 +1631,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -1457,7 +1643,8 @@
         48
       ],
       "parts": [
-        "body"
+        "body",
+        "support"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -1514,6 +1701,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1592,6 +1780,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -1659,6 +1848,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1736,6 +1926,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -1803,6 +1994,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -1869,7 +2061,8 @@
         "idle",
         "moving",
         "working",
-        "blocked"
+        "blocked",
+        "service"
       ],
       "native_size": [
         64,
@@ -1879,6 +2072,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -1946,6 +2140,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2023,6 +2218,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2075,6 +2271,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2137,6 +2334,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2189,6 +2387,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2251,6 +2450,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2303,6 +2503,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2365,6 +2566,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2417,6 +2619,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2479,6 +2682,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2531,6 +2735,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2593,6 +2798,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2645,6 +2851,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2707,6 +2914,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2759,6 +2967,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2821,6 +3030,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2873,6 +3083,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -2935,6 +3146,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -2987,6 +3199,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3051,6 +3264,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -3103,6 +3317,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3168,6 +3383,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -3220,6 +3436,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3282,6 +3499,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -3334,6 +3552,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3397,6 +3616,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -3449,6 +3669,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3510,6 +3731,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -3562,6 +3784,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -3604,12 +3827,11 @@
         "SW",
         "NW"
       ],
-      "frames": 4,
+      "frames": 1,
       "states": [
-        "construction",
-        "ready",
-        "working",
-        "blocked"
+        "sealed",
+        "commissioning",
+        "connected"
       ],
       "native_size": [
         64,
@@ -3619,6 +3841,7 @@
         2,
         1
       ],
+      "footprint_semantics": "paired_endpoint_tiles",
       "anchor": [
         -31,
         -33
@@ -3641,9 +3864,9 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
-        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png",
-        "sha256": "178d32f23271fcd27c15965ab67ee1d40a85f030d267d26b566098d1e6d49310",
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-surface-underground-v2.png",
+        "sha256": "f10d832d957c1fb29ec5aa0265ff5e8dc35eaeaf2352546fe8f3fe3b06c200e4",
         "provenance": "first_party_original_builtin_image_gen",
         "rights": "first_party_generated_original"
       },
@@ -3652,19 +3875,25 @@
         "offset": null,
         "sha256": null
       },
+      "state_owner": "LayerPortalWorkState; controller blocked reason is independent presentation",
+      "endpoint_variants": [
+        "upper",
+        "lower"
+      ],
       "authoring": {
-        "date": "2026-10-06",
-        "status": "candidate_geometry_and_front_back_slicing_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_phase_and_part_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/portal-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-surface-underground-v2.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/portal-states-candidate.png",
-        "native_sha256": "24aef9261bbb99538f1b0b348c007392a7c5554aace5a4ada08b4826a409153f",
-        "staged_pose_count": 12,
+        "atlas_manifest": "media/multilayer/sprites/m1/portal-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/portal_surface-authored.png",
+        "native_sha256": "d7b549f80a0603a4daa8f55f8c6d3a3073ee0f95211d22d2d8c4f5b5c069e27d",
+        "staged_pose_count": 48,
         "runtime_activated": false,
-        "coverage_complete": false
+        "coverage_complete": true
       }
     },
     {
@@ -3677,12 +3906,11 @@
         "SW",
         "NW"
       ],
-      "frames": 4,
+      "frames": 1,
       "states": [
-        "construction",
-        "ready",
-        "working",
-        "blocked"
+        "sealed",
+        "commissioning",
+        "connected"
       ],
       "native_size": [
         64,
@@ -3692,6 +3920,7 @@
         2,
         1
       ],
+      "footprint_semantics": "paired_endpoint_tiles",
       "anchor": [
         -31,
         -33
@@ -3714,9 +3943,9 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
-        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png",
-        "sha256": "f02fdcee6378002c77f51f943ccfde18e6bca8afc9495f75a5d5f296ccf9b37e",
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-underground-deep-v2.png",
+        "sha256": "a0660a1a17656c97a47d57d01927e37e22a5cff914af78c2dcef37e0c8e75922",
         "provenance": "first_party_original_builtin_image_gen",
         "rights": "first_party_generated_original"
       },
@@ -3725,19 +3954,25 @@
         "offset": null,
         "sha256": null
       },
+      "state_owner": "LayerPortalWorkState; controller blocked reason is independent presentation",
+      "endpoint_variants": [
+        "upper",
+        "lower"
+      ],
       "authoring": {
-        "date": "2026-10-06",
-        "status": "candidate_geometry_and_front_back_slicing_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_phase_and_part_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/portal-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-underground-deep-v2.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/portal-deep-candidate.png",
-        "native_sha256": "4eb7cb0783d0af921d7e9252da90e4a17c8931f4b2967c11a0db2f62a6bd2078",
-        "staged_pose_count": 12,
+        "atlas_manifest": "media/multilayer/sprites/m1/portal-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/portal_deep-authored.png",
+        "native_sha256": "88c4f268d9feaea89ce1835593c923f54ca1ede7a7c1c68039dbea6e1361e627",
+        "staged_pose_count": 48,
         "runtime_activated": false,
-        "coverage_complete": false
+        "coverage_complete": true
       }
     },
     {
@@ -3762,9 +3997,10 @@
         64
       ],
       "footprint": [
-        3,
-        2
+        1,
+        1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -3780,7 +4016,7 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 6,
+      "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
@@ -3838,6 +4074,7 @@
         3,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -3896,6 +4133,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -3951,9 +4189,10 @@
         64
       ],
       "footprint": [
-        3,
-        2
+        1,
+        1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -3969,7 +4208,7 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 6,
+      "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
@@ -4009,9 +4248,10 @@
         64
       ],
       "footprint": [
-        2,
-        2
+        1,
+        1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4027,7 +4267,7 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 4,
+      "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
@@ -4067,9 +4307,10 @@
         64
       ],
       "footprint": [
-        3,
+        2,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4085,7 +4326,7 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 9,
+      "tile_variants": 6,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
@@ -4125,9 +4366,10 @@
         64
       ],
       "footprint": [
-        3,
-        3
+        4,
+        4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4143,7 +4385,7 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 9,
+      "tile_variants": 16,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
@@ -4186,6 +4428,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4244,6 +4487,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4302,6 +4546,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4360,6 +4605,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4418,6 +4664,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4476,6 +4723,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4534,6 +4782,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4592,6 +4841,7 @@
         3,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4650,6 +4900,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4708,6 +4959,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4766,6 +5018,7 @@
         3,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4824,6 +5077,7 @@
         3,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4883,6 +5137,7 @@
         3,
         3
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -4942,6 +5197,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5001,6 +5257,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5060,6 +5317,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5119,6 +5377,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5178,6 +5437,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5237,6 +5497,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5295,6 +5556,7 @@
         4,
         4
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5352,6 +5614,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5408,6 +5671,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5464,6 +5728,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5520,6 +5785,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5576,6 +5842,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5632,6 +5899,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5686,6 +5954,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5742,6 +6011,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -5799,6 +6069,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5857,6 +6128,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5915,6 +6187,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -5973,6 +6246,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -6031,6 +6305,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -6089,6 +6364,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -6147,6 +6423,7 @@
         2,
         2
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -6209,6 +6486,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -6270,6 +6548,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -6331,6 +6610,7 @@
         0,
         0
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -32,
         -32
@@ -6389,6 +6669,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         -33
@@ -6443,6 +6724,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6496,6 +6778,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6549,6 +6832,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6602,6 +6886,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6655,6 +6940,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6708,6 +6994,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6761,6 +7048,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6814,6 +7102,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6867,6 +7156,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6920,6 +7210,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -6973,6 +7264,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7026,6 +7318,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7078,6 +7371,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -7130,6 +7424,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         -31,
         0
@@ -7181,6 +7476,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7232,6 +7528,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7283,6 +7580,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7334,6 +7632,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7385,6 +7684,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7436,6 +7736,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7487,6 +7788,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7538,6 +7840,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7589,6 +7892,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7655,6 +7959,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7721,6 +8026,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7772,6 +8078,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7823,6 +8130,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7874,6 +8182,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7925,6 +8234,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -7976,6 +8286,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -8027,6 +8338,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -8078,6 +8390,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -8129,6 +8442,7 @@
         1,
         1
       ],
+      "footprint_semantics": "world_tiles",
       "anchor": [
         0,
         0
@@ -8160,12 +8474,185 @@
         "offset": null,
         "sha256": null
       }
+    },
+    {
+      "asset_id": "terrain.edges.underground",
+      "consumer": 2,
+      "kind": "terrain",
+      "directions": [
+        "none"
+      ],
+      "frames": 1,
+      "states": [
+        "mask_00",
+        "mask_01",
+        "mask_02",
+        "mask_03",
+        "mask_04",
+        "mask_05",
+        "mask_06",
+        "mask_07",
+        "mask_08",
+        "mask_09",
+        "mask_0a",
+        "mask_0b",
+        "mask_0c",
+        "mask_0d",
+        "mask_0e",
+        "mask_0f"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -31,
+        0
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "parts": [
+        "body"
+      ],
+      "geometry": "per_view",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "native_icon_or_overlay",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-edges-v1.png",
+        "sha256": "0ccaa18d0d37adcd4586e1b9d559a629d595aa39421b15a1a0f3b4f3c3b74ddd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "native_map_layer_extension",
+        "offset": 168,
+        "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-edges-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-underground-edges.png",
+        "native_sha256": "0344892961b44f441ead1a3d8eeae018fc8038f78703d98b30a5d8cd913cca53",
+        "staged_pose_count": 16,
+        "runtime_activated": false,
+        "coverage_complete": true
+      }
+    },
+    {
+      "asset_id": "terrain.edges.deep",
+      "consumer": 2,
+      "kind": "terrain",
+      "directions": [
+        "none"
+      ],
+      "frames": 1,
+      "states": [
+        "mask_00",
+        "mask_01",
+        "mask_02",
+        "mask_03",
+        "mask_04",
+        "mask_05",
+        "mask_06",
+        "mask_07",
+        "mask_08",
+        "mask_09",
+        "mask_0a",
+        "mask_0b",
+        "mask_0c",
+        "mask_0d",
+        "mask_0e",
+        "mask_0f"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -31,
+        0
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "parts": [
+        "body"
+      ],
+      "geometry": "per_view",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "native_icon_or_overlay",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-edges-v1.png",
+        "sha256": "1303bfde09688d17b342f6462dca3b3dd97f105083f108e1f8e2462a3b70638e",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "native_map_layer_extension",
+        "offset": 184,
+        "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_pending",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-edges-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/terrain-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/terrain-deep-edges.png",
+        "native_sha256": "669afa2055ce443d2f1a91a71e5639cd4010be8b058031b5074e5e04391c8f31",
+        "staged_pose_count": 16,
+        "runtime_activated": false,
+        "coverage_complete": true
+      }
     }
   ],
   "authoring_pass": {
     "date": "2026-10-06",
     "scope": "Plans 1-5 partial source authoring",
     "record": "docs/zz-reach2/upgrades/2026-10/multilayer-m1-art-pass.md",
+    "runtime_activated": false
+  },
+  "m1_geometry_review": {
+    "owner": "r2mlvs13-b-m1-authoring.md",
+    "evidence": "r2mlvs13-e-native-art-layout-checks.log",
+    "cutter_parts": "actual body plus permanent articulated support",
+    "depot": "one actual owned tile; full straight approach remains ordinary track",
+    "earth": "2x3 native accepted layout / six cells",
+    "rock": "4x4 native accepted layout / sixteen cells",
     "runtime_activated": false
   }
 }

@@ -30,7 +30,9 @@ Before execution and after every context compaction, read this section, the curr
 | [Plan 3](r2mlvs3-sealed-portals-and-deep-rail.md#public-handoff-contract) and [Plan 4](r2mlvs4-tunnel-boring-machines.md#public-handoff-contract) | Public Handoff Contract; the executing group; Completion Conditions at closure | Distinguish delivered prefixes from complete public runtime behavior. |
 | This document | Scope and authority; current Area/checkpoint; completion coverage table | Dispatch work without recreating the circular whole-plan dependency. |
 
-Keep writes inside authorized repositories; the user's 2026-10-06 checkpoint instruction authorizes staging and committing the current completed group. Other Git mutations remain unauthorized. Retain supplied saves and other working changes. New source/test/JSON names do not begin with r2. Assisting Markdown and scratch evidence stays beside this master under `r2mlvs3mp-a-`, `-b-`, etc.; implementation artifacts follow the owning child's established evidence prefix. Test saves belong in feature directories under `src/tests/fixtures/`, and review PNGs in `assets/reviews/`. Do not create assisting scripts in source directories.
+Keep writes inside authorized repositories; the user's 2026-10-06 checkpoint instruction authorized the completed 13B commit `d649e0ba30`. The 2026-10-07 instruction authorizes committing the current workspace changes after updating log tools, with every plan filename containing newly completed tasks in the message. Further Git writes after that checkpoint require an explicit user instruction; reset/checkout/stash remain unauthorized. Retain supplied saves and other working changes. New source/test/JSON names do not begin with r2. Assisting Markdown and scratch scripts stay beside this master under `r2mlvs3mp-a-`, `-b-`, etc.; implementation artifacts follow the owning child's established evidence prefix. Test saves belong in feature directories under `src/tests/fixtures/`, and review PNGs in `assets/reviews/`. Do not create assisting scripts in source directories.
+
+**Log location (user instruction, 2026-10-07):** all new build, test and application capture logs belong in the repository's `logs/` directory (`D:\Codez\Sandbox\OpenTTD\logs\`), retaining the owning plan's evidence basename. From this plan directory, link new logs with `../../../../logs/<basename>.log`. Fixture writers/readers share `multilayer_state_fixture.log_path`; both shell game runners enforce this directory even when passed an old documentation path. The user removed earlier documentation logs; their historical result summaries remain valid, but those removed log links no longer identify retained files. Do not recreate them in documentation or invent relocated evidence.
 
 Use focused tests for the active owner group. Wait at least 50 seconds when polling a still-running test/build, with waits bounded so progress updates remain possible; the harness must tolerate one minute without agent interaction. Split a test exceeding two minutes into focused files. Avoid full regressions; run them only when justified at ten-group intervals or final closure. After compaction add the required count above the actually executing child group; beyond three compactions split that group into B/C/D groups with scoped reading. Keep continuation notes identifying stale ranges and current producer readiness.
 
@@ -291,7 +293,7 @@ Context has compacted 3 times while executing this group.
 ### Group 7BB - Complete logistics and wait-state reloads
 
 {{HARD}}
-- [ ] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop), its recurring-bay continuation 13B and depot-file continuation 13C: commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
+- [X] 7.1 Execute [Plan 5 Group 13](r2mlvs5-spoil-wagons-and-haulage.md#group-13---demonstrate-and-reload-the-complete-m1-logistics-loop), its recurring-bay continuation 13B and depot-file continuation 13C: commission, paid first cut, fill, source-side exchange, real Surface visit/disposal, empty return and resume; then recurring underground-bay exchange. Retain per-wagon/packet/cost ledgers and wait-state reloads.
 
 ### Local Mandatory Reading - Visibility equivalence of both logistics loops
 
@@ -302,7 +304,7 @@ Read Plan 4 Global, its Recovery, presentation and acceptance Area and Group 19.
 ### Group 7BC - Compare visible and hidden native progress
 
 {{HARD}}
-- [ ] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
+- [X] 7.7 Execute [Plan 4 Group 19](r2mlvs4-tunnel-boring-machines.md#group-19---recovery-presentation-and-acceptance): visible/hidden equivalence and both first source exchange and recurring underground exchange.
 
 ### Local Mandatory Reading - Occupied portal files
 
@@ -313,13 +315,21 @@ Read Plan 3 Global, its Controls, art and acceptance Area and Group 16. Read act
 ### Group 7BD - Complete occupied-file acceptance
 
 {{HARD}}
-- [ ] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
+- [X] 7.4 Finish [Plan 3 Group 16](r2mlvs3-sealed-portals-and-deep-rail.md#group-16---validate-saved-portal-state-and-occupied-references): actual Sealed/Commissioning/Connected files, work-pocket wagons and spanning consists; retain genuine version-370 inputs/evidence.
+
+### Local Mandatory Reading - Complete M1 asset slice
+
+_Applies to Group 8; supplements master Global without preloading later utility consumers._
+
+Read Plan 13 Global and only the Area/Local immediately above its executing asset-authoring group. Start at Group 9's selected M1 briefs, original selection and provenance; then follow the master 8.2-8.7 named family/conversion/runtime groups in order. Inspect the published sprite contract, actual M0/M1 manifest/source/converter/packed-loading boundaries and active source families only. Current placeholder/M0 imagery and templates do not complete final art. Preserve originals, immutable package identity/compatibility and real directional/state footprints. Use the selected source-authoring workflow and its skill instructions before generating bitmap assets. Actual gameplay gates remain with the established portal/TBM/exchange owners.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 8 - Deliver and review the complete M1 asset slice
 
 {{HARD}}
-- [ ] 8.1 Execute [Plan 13 Group 9](r2mlvs13-graphics-and-asset-pipeline.md#group-9---prepare-controlled-asset-authoring-and-originals): selected family briefs, stable original selection and provenance.
-- [ ] 8.2 Execute [Plan 13 Groups 10-13](r2mlvs13-graphics-and-asset-pipeline.md#group-10---author-underground-terrain): Underground/Deep ground, sealed/commissioning overlays and Deep portal.
+- [X] 8.1 Execute [Plan 13 Group 9](r2mlvs13-graphics-and-asset-pipeline.md#group-9---prepare-controlled-asset-authoring-and-originals): selected family briefs, stable original selection and provenance.
+- [X] 8.2 Execute [Plan 13 Groups 10-13](r2mlvs13-graphics-and-asset-pipeline.md#group-10---author-underground-terrain): Underground/Deep ground, sealed/commissioning overlays and Deep portal.
 - [ ] 8.3 Execute [Plan 13 Groups 14-18](r2mlvs13-graphics-and-asset-pipeline.md#group-14---author-standard-tbm): both cutters/support, Earth/Rock load states and the actual spoil hauler.
 - [ ] 8.4 Execute [Plan 13 Group 23](r2mlvs13-graphics-and-asset-pipeline.md#group-23---author-tbm-exchange-bay), [Group 26](r2mlvs13-graphics-and-asset-pipeline.md#group-26---author-underground-service-depots), and [Groups 37-38](r2mlvs13-graphics-and-asset-pipeline.md#group-37---author-earth-reclamationdisposal-site): occupied bays/service and both real spoil receiver families.
 - [ ] 8.5 Execute the ground commissioning/outline/turn/blocked/date/control subset of [Plan 13 Group 78](r2mlvs13-graphics-and-asset-pipeline.md#group-78---author-construction-and-cargo-controls). Record that subset; the orbital collection/drop controls stay pending.

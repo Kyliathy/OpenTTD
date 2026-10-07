@@ -12,7 +12,7 @@ import subprocess
 
 from geology_save_fixture import chunks, encode_chunk
 from geology_generation_fixture import read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case, save_path
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
 def processor_chunks(path):
@@ -87,7 +87,7 @@ def main():
             except subprocess.CalledProcessError as refusal:
                 # A dedicated refused startup may exit 2; require the exact owner error and no resulting save.
                 assert refusal.returncode == 2
-                evidence = (AREA / f"r2mlvs6-ea-{name}.log").read_text(encoding="utf-8", errors="replace")
+                evidence = log_path(f"r2mlvs6-ea-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence
                 assert not save_path(f"r2mlvs6-ea-{name}.sav").exists()
     finally:

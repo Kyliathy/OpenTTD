@@ -10,7 +10,7 @@ import argparse
 import lzma
 from pathlib import Path
 
-from multilayer_state_fixture import AREA, ROOT, run_case, save_path
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
 def metadata_variant(source, suffix, policy=None, schema_version=None, remove=False):
@@ -105,7 +105,7 @@ def main():
                     ("missing-metadata", "Missing required multilayer metadata chunk", False),
                     ("bad-policy", "Unknown multilayer policy flags", False))
         for name, expected, accepted in previous:
-            evidence = (AREA / f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
+            evidence = log_path(f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
             assert expected in evidence, (name, "prior boundary evidence missing")
             assert save_path(f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
     scope = "Two package refusals rerun; five earlier editor/metadata boundaries verified from retained evidence.\n" if args.packages_only else "All seven boundaries executed in this run.\n"

@@ -11,7 +11,7 @@ import lzma
 from functools import partial as bind_fixture_mutation
 
 from geology_generation_fixture import Reader, CHUNK_RIFF, CHUNK_RECORDS, read_stream, saved_geology_seed
-from multilayer_state_fixture import AREA, ROOT, run_case, save_path
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
 def chunks(stream):
@@ -206,7 +206,7 @@ def main():
                                    ("partial-reload", "MLVS_GEOLOGY_LOADED generator=1"),
                                    ("native371", "MLVS_GEOLOGY_LOADED generator=0"),
                                    ("legacy370", "MLVS_GEOLOGY_LOADED generator=0")):
-                evidence = (AREA / f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
+                evidence = log_path(f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert expected in evidence, (name, "prior acceptance evidence missing")
                 assert save_path(f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
         for kind, expected in (("reserved", "Reserved geology terrain encoding"),

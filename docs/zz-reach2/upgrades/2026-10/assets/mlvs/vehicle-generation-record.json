@@ -1,0 +1,1168 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18",
+    "geometry": "multilayer_geometry_templates.svg and vehicle-direction-guide.png",
+    "parts": "src/tbm.h TBMConsistRole; native articulated_vehicles.cpp",
+    "selection": "Rejected candidates never satisfy direction/state/animation coverage. Immutable source pixels are selected before deterministic conversion."
+  },
+  "schema_version": 1,
+  "sources": [
+    {
+      "key": "standard_body_idle_frame3",
+      "asset_id": "vehicle.model-00",
+      "part": "body",
+      "state": "idle",
+      "frame": 3,
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-0035a3bd-4efe-4c74-90fb-48884034d02b.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+      "prompt": "Use case: sprite-sheet. Reference/edit target is the selected standard PRIMARY CUTTER eight-view idle frame0 PNG. Create ONE complete frame3 sheet, exactly same FOUR-column TWO-row layout and same eight engine views N NE E SE / S SW W NW.\nPreserve the EXACT model, cab, cylinder, steel cutter phase0, wheels, couplers, colors, scale, top-left light and ground contacts. Change ONLY the tiny amber bulb on the blue cab roof to bright PALE YELLOW-AMBER (luminance230). The bulb itself is bright, no halo outside sprite, no headlight elsewhere. Cutter/wheels remain stopped; no debris.\nAll EIGHT sprites must be present: top row N(front up/rear cab down), NE(front upper-right/rear cab lower-left), E(front right/rear cab left), SE(front lower-right/rear cab upper-left); bottom row S(front down/rear cab up), SW(front lower-left/rear cab upper-right), W(front left/rear cab right), NW(front upper-left/rear cab lower-right). The rear-facing N/NE/NW forms expose cab nearest viewer, not the cutting disk. Exact common idle chassis registration; no additional machinery or reinterpreted views.\nTrue transparent alpha around sprites, wide alpha gutters; no text, grid, floor, rails or shadow outside body. Crisp original TTD native pixel art with 64x48 canvas and(-32,-32) world anchor. This is one bright idle equipment-cue frame for display only; do not produce extra frames or start drilling.",
+      "grid": [
+        4,
+        2
+      ],
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3",
+          "role": "fixed eight-view model and cab-beacon reference"
+        }
+      ],
+      "selection": "Selected tool-authored cab-beacon regions only, assembled at the fixed reference chassis anchor. Other generated body pixels, including the extra forward highlight in frame3 N, are excluded. This preserves the original physical body/coupler/alpha geometry; native cue review remains required.",
+      "revision": "New retained authored cue source; base chassis original remains immutable.",
+      "native_canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "crop_registration": "Selected idle frame-zero per-view whole-part extents. These are explicit geometry calibration, not missing animation completion. Future state/frame registration must preserve these native contact points instead of independently recropping moving parts.",
+      "component_reference": "standard_body_idle_frame0",
+      "sha256": "bc6e94eec56cf0198fe8836f36feea23526a3da07a727cfac211ee3c6c1caf2d",
+      "native_crop_boxes": [
+        [
+          0,
+          0,
+          135,
+          274
+        ],
+        [
+          18,
+          23,
+          249,
+          275
+        ],
+        [
+          2,
+          83,
+          274,
+          242
+        ],
+        [
+          2,
+          21,
+          244,
+          250
+        ],
+        [
+          0,
+          0,
+          136,
+          270
+        ],
+        [
+          0,
+          29,
+          248,
+          258
+        ],
+        [
+          0,
+          88,
+          274,
+          249
+        ],
+        [
+          0,
+          19,
+          244,
+          281
+        ]
+      ],
+      "beacon_source_boxes": [
+        [
+          31,
+          27,
+          1,
+          1
+        ],
+        [
+          27,
+          26,
+          1,
+          1
+        ],
+        [
+          22,
+          21,
+          1,
+          1
+        ],
+        [
+          25,
+          18,
+          1,
+          1
+        ],
+        [
+          31,
+          16,
+          1,
+          1
+        ],
+        [
+          38,
+          19,
+          1,
+          1
+        ],
+        [
+          42,
+          22,
+          1,
+          1
+        ],
+        [
+          37,
+          26,
+          1,
+          1
+        ]
+      ],
+      "component_name": "cab_beacon",
+      "component_source_boxes": [
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          26,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          19,
+          3,
+          3
+        ],
+        [
+          24,
+          16,
+          3,
+          3
+        ],
+        [
+          30,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          18,
+          3,
+          3
+        ],
+        [
+          41,
+          20,
+          3,
+          3
+        ],
+        [
+          36,
+          24,
+          3,
+          3
+        ]
+      ],
+      "component_target_boxes": [
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          26,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          20,
+          3,
+          3
+        ],
+        [
+          24,
+          16,
+          3,
+          3
+        ],
+        [
+          30,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          18,
+          3,
+          3
+        ],
+        [
+          40,
+          19,
+          3,
+          3
+        ],
+        [
+          36,
+          24,
+          3,
+          3
+        ]
+      ],
+      "component_policy": "Plan13 14.3 changes only declared moving/load/status parts: deterministic packing selects these authored native component regions onto the immutable base chassis. No new colors/pixels are painted; original outputs stay byte-identical.",
+      "component_sampling": "Nearest source-pixel resampling for the tiny authored status component; BOX resampling remains for the fixed chassis. SW component is registered from its source lamp top to the selected reference lamp top, avoiding body-scale differences in the generated contact sheet."
+    },
+    {
+      "key": "standard_body_idle_frames1_2",
+      "asset_id": "vehicle.model-00",
+      "part": "body",
+      "state": "idle",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-9453c4f9-0e6d-4a2d-984d-8d09f1e0020a.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+      "prompt": "Use case: sprite-sheet. Edit/reference target is the selected eight-view standard PRIMARY CUTTER idle frame-zero sheet. Preserve its exact train model, all eight camera views, yellow cylinder, blue rear cab, real wheel bogies, cutter stopped, top-left light, native coupler/ground contacts and body silhouette. Reference sheet is 4 columns by 2 rows in engine N NE E SE / S SW W NW.\nCreate EXACTLY THREE sequential idle equipment-cue frames (frames1,2,3), with all eight views per frame: a FOUR-column by SIX-row transparent sheet = 24 sprites. Copy the model/camera/pose geometry; change ONLY the small amber equipment beacon on the cab roof. No wheel/cutter/debris/hatch changes. No shadow/halo outside the body. All original backgrounds stay genuine alpha. No captions, text, grid, new bodies or extra machinery.\nRows1-2 frame1: SAME eight views as reference, amber beacon DIM ochre (luminance roughly80).\nRows3-4 frame2: SAME eight views, amber beacon MEDIUM warm amber (luminance roughly150).\nRows5-6 frame3: SAME eight views, amber beacon BRIGHT pale amber (luminance roughly230), only the bulb itself bright, no glow outside sprite. Four columns in each pair: N NE E SE on upper row, S SW W NW on lower row.\nFrame0 already exists and has the unlit bulb. Every frame1/2/3 must be present and visibly distinct at native palette scale; don't repeat frame0. Keep exactly the same cab and cylinder shape/position and steel cutter disk teeth phase zero. N/NE/NW rear-facing: blue CAB REAR nearest viewer, cutter points away; S/SE/SW cutter face nearest viewer; E nose right, W nose left. Opposite views remain genuine, fixed top-left illumination. Same subject scale and within-cell anchor throughout. Crisp restrained TTD native pixel art, 64x48 native canvas/(-32,-32), no rails, floor, people, company-color or palette animation effect. Three genuinely authored RGB bulb states for display animation only, not simulation.",
+      "requested_grid": [
+        4,
+        6
+      ],
+      "grid": [
+        4,
+        5
+      ],
+      "poses": [
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "N",
+          "source_cell": [
+            0,
+            0
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "NE",
+          "source_cell": [
+            1,
+            0
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "E",
+          "source_cell": [
+            2,
+            0
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "SE",
+          "source_cell": [
+            3,
+            0
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "S",
+          "source_cell": [
+            0,
+            1
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "SW",
+          "source_cell": [
+            1,
+            1
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "W",
+          "source_cell": [
+            2,
+            1
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 1,
+          "direction": "NW",
+          "source_cell": [
+            3,
+            1
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "N",
+          "source_cell": [
+            0,
+            2
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "NE",
+          "source_cell": [
+            1,
+            2
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "E",
+          "source_cell": [
+            2,
+            2
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "SE",
+          "source_cell": [
+            3,
+            2
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "S",
+          "source_cell": [
+            0,
+            3
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "SW",
+          "source_cell": [
+            1,
+            3
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "W",
+          "source_cell": [
+            2,
+            3
+          ]
+        },
+        {
+          "state": "idle",
+          "frame": 2,
+          "direction": "NW",
+          "source_cell": [
+            3,
+            3
+          ]
+        }
+      ],
+      "excluded_cells": [
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3",
+          "role": "eight-view idle model reference and invariant target"
+        }
+      ],
+      "selection": "Selected tool-authored cab-beacon regions only, assembled at the fixed reference chassis anchor. Other generated body pixels, including the extra forward highlight in frame3 N, are excluded. This preserves the original physical body/coupler/alpha geometry; native cue review remains required.",
+      "revision": "New authored bulb frames; base body and all original pixels immutable.",
+      "native_canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "sha256": "92abddada187f042ed2e02d0aea27890ed2571a9232ee1e91a346717477a0e0a",
+      "native_crop_boxes": [
+        [
+          0,
+          0,
+          106,
+          187
+        ],
+        [
+          20,
+          1,
+          204,
+          187
+        ],
+        [
+          0,
+          43,
+          219,
+          170
+        ],
+        [
+          0,
+          0,
+          202,
+          175
+        ],
+        [
+          0,
+          0,
+          106,
+          185
+        ],
+        [
+          0,
+          4,
+          202,
+          172
+        ],
+        [
+          1,
+          38,
+          225,
+          164
+        ],
+        [
+          6,
+          6,
+          200,
+          192
+        ],
+        [
+          0,
+          0,
+          106,
+          190
+        ],
+        [
+          19,
+          1,
+          204,
+          190
+        ],
+        [
+          0,
+          45,
+          219,
+          172
+        ],
+        [
+          0,
+          1,
+          202,
+          177
+        ],
+        [
+          0,
+          0,
+          106,
+          186
+        ],
+        [
+          0,
+          3,
+          202,
+          174
+        ],
+        [
+          1,
+          38,
+          225,
+          164
+        ],
+        [
+          5,
+          6,
+          200,
+          193
+        ]
+      ],
+      "crop_registration": "Explicit selected per-view/frame extent calibration. Fixed native envelope, ground contact and public anchor; native animation chassis stability must pass review before full source handoff.",
+      "beacon_source_boxes": [
+        [
+          31,
+          27,
+          1,
+          1
+        ],
+        [
+          26,
+          26,
+          1,
+          1
+        ],
+        [
+          22,
+          22,
+          1,
+          1
+        ],
+        [
+          25,
+          19,
+          1,
+          1
+        ],
+        [
+          32,
+          16,
+          1,
+          1
+        ],
+        [
+          38,
+          21,
+          1,
+          1
+        ],
+        [
+          41,
+          22,
+          1,
+          1
+        ],
+        [
+          38,
+          27,
+          1,
+          1
+        ],
+        [
+          31,
+          27,
+          1,
+          1
+        ],
+        [
+          26,
+          26,
+          1,
+          1
+        ],
+        [
+          22,
+          22,
+          1,
+          1
+        ],
+        [
+          25,
+          19,
+          1,
+          1
+        ],
+        [
+          31,
+          16,
+          1,
+          1
+        ],
+        [
+          38,
+          20,
+          1,
+          1
+        ],
+        [
+          41,
+          22,
+          1,
+          1
+        ],
+        [
+          37,
+          27,
+          1,
+          1
+        ]
+      ],
+      "component_reference": "standard_body_idle_frame0",
+      "component_name": "cab_beacon",
+      "component_source_boxes": [
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          25,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          20,
+          3,
+          3
+        ],
+        [
+          24,
+          17,
+          3,
+          3
+        ],
+        [
+          31,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          20,
+          3,
+          3
+        ],
+        [
+          40,
+          20,
+          3,
+          3
+        ],
+        [
+          37,
+          25,
+          3,
+          3
+        ],
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          25,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          20,
+          3,
+          3
+        ],
+        [
+          24,
+          17,
+          3,
+          3
+        ],
+        [
+          30,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          20,
+          3,
+          3
+        ],
+        [
+          40,
+          20,
+          3,
+          3
+        ],
+        [
+          36,
+          25,
+          3,
+          3
+        ]
+      ],
+      "component_target_boxes": [
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          26,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          20,
+          3,
+          3
+        ],
+        [
+          24,
+          16,
+          3,
+          3
+        ],
+        [
+          30,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          18,
+          3,
+          3
+        ],
+        [
+          40,
+          19,
+          3,
+          3
+        ],
+        [
+          36,
+          24,
+          3,
+          3
+        ],
+        [
+          30,
+          25,
+          3,
+          3
+        ],
+        [
+          26,
+          24,
+          3,
+          3
+        ],
+        [
+          21,
+          20,
+          3,
+          3
+        ],
+        [
+          24,
+          16,
+          3,
+          3
+        ],
+        [
+          30,
+          14,
+          3,
+          3
+        ],
+        [
+          37,
+          18,
+          3,
+          3
+        ],
+        [
+          40,
+          19,
+          3,
+          3
+        ],
+        [
+          36,
+          24,
+          3,
+          3
+        ]
+      ],
+      "component_policy": "Plan13 14.3 changes only declared moving/load/status parts: deterministic packing selects these authored native component regions onto the immutable base chassis. No new colors/pixels are painted; original outputs stay byte-identical.",
+      "component_sampling": "Nearest source-pixel resampling for the tiny authored status component; BOX resampling remains for the fixed chassis. SW component is registered from its source lamp top to the selected reference lamp top, avoiding body-scale differences in the generated contact sheet."
+    },
+    {
+      "key": "standard_support_idle_frame0",
+      "asset_id": "vehicle.model-00",
+      "part": "support",
+      "state": "idle",
+      "frame": 0,
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-72f8d03d-4fe5-4f55-beb9-d9b037817fe8.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+      "prompt": "Use case: sprite-sheet. Original OpenTTD permanent TBM SUPPORT EQUIPMENT CART. This is a rail flatcar, NEVER a locomotive, never a cab, never a drill. Use the guide only for engine direction geometry and canvas anchors. Draw original restrained game pixels with fixed top-left lighting.\nEXACTLY EIGHT different sprites in a regular FOUR-column TWO-row transparent PNG grid, wide clear gutters. No labels, text, grid, rails or background. Fixed isometric camera and same model dimensions in all eight cells.\nCart: a low rectangular black STEEL FLATCAR on two real rail bogies, two end couplers. A small GRAY horizontal HOSE DRUM is at the cart's FRONT end. A low rectangular BLUE VENTED GENERATOR BOX is at the REAR end. Blue box has an opaque flat lid and ventilation slits, ZERO windows, ZERO windshield, ZERO glazed panels, ZERO driver's compartment. Hose drum is a steel spool with smooth rims and wrapped dark hose, no drill teeth, no cutter disk. One thin yellow safety stripe along the low flatcar edge. Entire cart low, machinery only. Front hose drum feeds the primary cutter; rear generator follows. Native canvas64x48, anchor(-32,-32), same train scale and contacts, restrained charcoal/gray/blue/yellow. No halo or outside cast shadow.\nFollow these exact SCREEN positions, where FRONT always means GRAY HOSE DRUM and REAR always means BLUE VENTED BOX:\nrow1col1: gray drum TOP, blue box BOTTOM; vertical cart.\nrow1col2: gray drum UPPER-RIGHT, blue box LOWER-LEFT; diagonal up-right cart. Show the back of BLUE BOX nearest lower-left.\nrow1col3: gray drum RIGHT, blue box LEFT; horizontal cart.\nrow1col4: gray drum LOWER-RIGHT, blue box UPPER-LEFT; diagonal down-right cart.\nrow2col1: gray drum BOTTOM, blue box TOP; vertical cart.\nrow2col2: gray drum LOWER-LEFT, blue box UPPER-RIGHT; diagonal down-left cart.\nrow2col3: gray drum LEFT, blue box RIGHT; horizontal cart.\nrow2col4: gray drum UPPER-LEFT, blue box LOWER-RIGHT; diagonal up-left cart. Show the back of BLUE BOX nearest lower-right.\nThe second and sixth cells are OPPOSITE views, as are fourth and eighth; do not repeat diagonal perspectives. Row-major engine views N NE E SE / S SW W NW. Fixed top-left highlights in all eight. All IDLE with closed panels and tiny unlit amber equipment status bulb, no cab, no people, no spoil cargo, no drilling head or yellow cylinder. True transparent alpha. Common articulated coupler seam and normal-zoom readable low support-cart silhouette.",
+      "grid": [
+        4,
+        2
+      ],
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-direction-guide.png",
+          "sha256": "1aa80add8cae078276b540a4d02181f267870d6ad4c6b0178e06021e174eb93e"
+        }
+      ],
+      "selection": "All eight gray-hose-front vectors correct; vented blue box has no cab/glazing, no second cutter. Idle frame 0 only; native seam and animation acceptance pending.",
+      "revision": "Selected sibling v3; rejected v2 retained separately.",
+      "native_canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "front_identity": "gray hose drum nearest primary cutter; blue generator box behind",
+      "sha256": "d0685c2ed2bfc5693213b892bbbbcb3a5d44171805685204b328a3f390fe0a02",
+      "native_crop_boxes": [
+        [
+          0,
+          0,
+          101,
+          324
+        ],
+        [
+          0,
+          53,
+          254,
+          274
+        ],
+        [
+          0,
+          119,
+          322,
+          243
+        ],
+        [
+          0,
+          56,
+          246,
+          272
+        ],
+        [
+          0,
+          0,
+          103,
+          319
+        ],
+        [
+          5,
+          60,
+          258,
+          276
+        ],
+        [
+          0,
+          115,
+          328,
+          239
+        ],
+        [
+          0,
+          52,
+          239,
+          271
+        ]
+      ],
+      "crop_registration": "Selected idle frame-zero per-view whole-part extents. These are explicit geometry calibration, not missing animation completion. Future state/frame registration must preserve these native contact points instead of independently recropping moving parts."
+    },
+    {
+      "key": "standard_body_idle_frame0",
+      "asset_id": "vehicle.model-00",
+      "part": "body",
+      "state": "idle",
+      "frame": 0,
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-6941f679-4fe1-4052-95b8-2d3e8ab29ff4.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+      "prompt": "Use case: sprite-sheet. Create a NEW base-view source sheet for ONE original OpenTTD standard primary TBM rail unit, IDLE, no animation.\nReferences: labeled vector guide is the geometry authority; the three-view rear TBM sheet supplies yellow cylindrical cutter / compact blue rear cab / steel disk materials only. Retain originals.\nExactly EIGHT different views in a regular FOUR-column by TWO-row grid. Same fixed isometric camera, TOP-LEFT light, common body/coupler/wheel contact anchors. Real rail-wheel bogies under a compact yellow cutter cylinder and blue rear cab, no tank tracks. NO attached support cart or hopper. Subject fits native 48x32 inside 64x48 canvas at anchor(-32,-32), wheel contact at row40. No text, labels, grid, rails, floor, outside shadow or halo. Genuine transparent alpha around every sprite.\nThe cutter end is FRONT; blue cab is REAR. Follow exact SCREEN positions:\nROW 1 COL 1: front cutter at TOP, rear blue cab at BOTTOM. Vertical body. See back of cab, NOT the front face of cutter.\nROW 1 COL 2: front cutter at UPPER-RIGHT, rear blue cab at LOWER-LEFT. Body slopes up-right. See rear/left side of cab and back of cylinder; cutter disk faces AWAY and is mostly hidden.\nROW 1 COL 3: front cutter at RIGHT, rear blue cab at LEFT. Horizontal body. See side of cylinder with a thin edge of cutter disk at right.\nROW 1 COL 4: front cutter at LOWER-RIGHT, rear blue cab at UPPER-LEFT. Body slopes down-right. Full circular cutter face is visible.\nROW 2 COL 1: front cutter at BOTTOM, rear blue cab at TOP. Vertical body, visible circular cutter face near bottom.\nROW 2 COL 2: front cutter at LOWER-LEFT, rear blue cab at UPPER-RIGHT. Body slopes down-left. Full cutter face visible.\nROW 2 COL 3: front cutter at LEFT, rear blue cab at RIGHT. Horizontal body, thin cutter edge at left.\nROW 2 COL 4: front cutter at UPPER-LEFT, rear blue cab at LOWER-RIGHT. Body slopes up-left. See rear/right side of blue cab; cutter face points AWAY and is mostly hidden.\nThese are engine N NE E SE / S SW W NW. The upper-right-facing second cell MUST expose the rear cab nearest lower-left, not a cutter disk nearest lower-left. Make genuinely opposite views; no near-view duplicates. All same compact model and scale, idle unlit amber beacon. Crisp restrained TTD game pixels and fixed top-left shading. Original game sprites only.",
+      "grid": [
+        4,
+        2
+      ],
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-direction-guide.png",
+          "sha256": "1aa80add8cae078276b540a4d02181f267870d6ad4c6b0178e06021e174eb93e"
+        },
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png",
+          "sha256": "48ee801cfd7f580012d22fc93aaec27da229f9bca167c25f6689d8c9c9c4801c"
+        }
+      ],
+      "selection": "All eight front vectors visually correct, including genuine rear NE/NW; native pair seam review pending. Idle frame 0 only, animation and other states unfilled.",
+      "revision": "Selected sibling v2 base view; original v1 sources immutable.",
+      "native_canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3",
+      "native_crop_boxes": [
+        [
+          0,
+          0,
+          131,
+          267
+        ],
+        [
+          17,
+          19,
+          244,
+          267
+        ],
+        [
+          2,
+          80,
+          269,
+          237
+        ],
+        [
+          1,
+          17,
+          239,
+          242
+        ],
+        [
+          1,
+          0,
+          131,
+          267
+        ],
+        [
+          0,
+          30,
+          244,
+          256
+        ],
+        [
+          0,
+          88,
+          269,
+          246
+        ],
+        [
+          0,
+          19,
+          239,
+          277
+        ]
+      ],
+      "crop_registration": "Selected idle frame-zero per-view whole-part extents. These are explicit geometry calibration, not missing animation completion. Future state/frame registration must preserve these native contact points instead of independently recropping moving parts.",
+      "beacon_source_boxes": [
+        [
+          31,
+          27,
+          1,
+          1
+        ],
+        [
+          27,
+          26,
+          1,
+          1
+        ],
+        [
+          22,
+          22,
+          1,
+          1
+        ],
+        [
+          25,
+          18,
+          1,
+          1
+        ],
+        [
+          31,
+          16,
+          1,
+          1
+        ],
+        [
+          38,
+          18,
+          1,
+          1
+        ],
+        [
+          41,
+          21,
+          1,
+          1
+        ],
+        [
+          37,
+          26,
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "key": "standard_support_idle_candidate",
+      "asset_id": "vehicle.model-00",
+      "part": "support",
+      "state": "idle",
+      "frame": 0,
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-6ec91f63-3f57-41de-b324-c1c0b682525c.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-candidate-v2.png",
+      "prompt": "Use case: sprite-sheet. Create a NEW base-view source sheet for ONE original OpenTTD standard TBM PERMANENT SUPPORT rail cart, IDLE, no animation.\nReferences: the labeled vector guide is the geometry authority; the primary cutter eight-view v2 sheet supplies matching yellow/blue/steel materials, top-left light and actual rail-wheel bogies. The support is a SEPARATE physical articulated cart behind that primary unit, never a second cutter.\nExactly EIGHT views in a FOUR-column by TWO-row grid. Equal cells, genuine transparent alpha, wide gutters. NO text, labels, grid, rails, ground tile or halo. Fixed isometric camera and TOP-LEFT light.\nA low rectangular steel rail chassis with real bogie wheels and two ordinary end couplers. On its bed: a compact BLUE generator/compressor crate toward the FRONT, one small PALE GRAY horizontal hose reel/tank toward the REAR, a thin yellow safety stripe and short hydraulic connections. No cab, no circular cutter disk, no drill cylinder, no spoil hopper, no long convoy. Entire support cart is a compact half-machine part with the same appropriate train scale as the reference cutter. Distinguish its front BLUE crate from rear gray hose reel in all views. Native64x48 canvas at(-32,-32), part body within48x32 safe area, common centers and wheel contact row40; all articulated coupler seams fixed.\nExact SCREEN orientation:\nROW1 COL1 FRONT blue crate TOP, REAR hose reel BOTTOM; vertical cart.\nROW1 COL2 FRONT blue crate UPPER-RIGHT, REAR hose reel LOWER-LEFT; diagonal up-right cart. See rear hose reel nearest lower-left.\nROW1 COL3 FRONT blue crate RIGHT, REAR hose reel LEFT; horizontal cart.\nROW1 COL4 FRONT blue crate LOWER-RIGHT, REAR hose reel UPPER-LEFT; diagonal down-right cart.\nROW2 COL1 FRONT blue crate BOTTOM, REAR hose reel TOP; vertical cart.\nROW2 COL2 FRONT blue crate LOWER-LEFT, REAR hose reel UPPER-RIGHT; diagonal down-left cart.\nROW2 COL3 FRONT blue crate LEFT, REAR hose reel RIGHT; horizontal cart.\nROW2 COL4 FRONT blue crate UPPER-LEFT, REAR hose reel LOWER-RIGHT; diagonal up-left cart. See rear hose reel nearest lower-right.\nThese are N NE E SE / S SW W NW. Make all genuinely opposite views without rotated or mirrored lighting. All same low cart, closed panels and unlit little amber status cue. Original restrained TTD native game pixels, crisp dark wheel/chassis silhouette, grayscale-readable crate versus hose reel. No drilling head anywhere.",
+      "grid": [
+        4,
+        2
+      ],
+      "selection": "rejected: reference cab was copied into the generator crate; opposing crate/reel views include a duplicate and do not satisfy the requested forward vector.",
+      "revision": "Retained rejected candidate; no support source coverage claimed.",
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-direction-guide.png",
+          "sha256": "1aa80add8cae078276b540a4d02181f267870d6ad4c6b0178e06021e174eb93e"
+        },
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3"
+        }
+      ],
+      "sha256": "7defc39dbf1082bb51f90a3604d13b0170c61a710f0d339c2a99de3b69386485"
+    },
+    {
+      "key": "standard_body_frame0_candidate",
+      "asset_id": "vehicle.model-00",
+      "part": "body",
+      "frame": 0,
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-eb08fbb0-1656-4020-99fb-31cc1065522c.png",
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-candidate-v2.png",
+      "prompt": "Use case: sprite-sheet. Asset type: original OpenTTD standard TBM PRIMARY CUTTER rail-unit source, animation frame 0.\nReference roles: the geometry guide supplies exact engine view ordering and cutter nose vectors; standard TBM v1/rear-v1 supply yellow cutter cylinder, blue compact rear cab, steel cutting teeth and top-left lighting ONLY. Create a new coherent v2 model on REAL RAIL BOGIES/wheels, without tank tracks. Preserve reference originals unchanged.\nTransparent PNG sprite sheet, EXACTLY EIGHT columns by SIX rows = 48 separate sprites, regular equal cells with wide alpha gutters. No labels, text, grid lines, background, rails, cast shadow outside the vehicle or glowing background.\nColumns N, NE, E, SE, S, SW, W, NW in that exact order. Cutter-front screen vectors are N=(0,-9), NE=(14,-7), E=(20,0), SE=(14,7), S=(0,9), SW=(-14,7), W=(-20,0), NW=(-14,-7). N/NE/NW show the BLUE CAB REAR nearest the viewer and cutter facing AWAY; S/SE/SW show the steel round cutter disk facing TOWARD viewer; E nose right, W nose left. Draw genuine opposite views, not copies of a near view. Fixed isometric TTD camera and TOP-LEFT light even when heading changes.\nOne compact yellow cylindrical cutter unit with round steel toothed disk at front, blue compact cab at rear, black rail-wheel bogie underframe, small ordinary end couplers. This is ONLY the primary cutter; permanent supply/support car is a separate actual train part. No extra rear support wagon attached, no second cutter, no detachable hopper. Keep the same cab, roof, cutter silhouette, lengths, contact points, wheel diameters and world anchor in EVERY state. Native canvas64x48, anchor(-32,-32), subject inside48x32 safe area, all ground contacts fixed to native row40. Vehicle centers and coupler seams align within every column. Crisp restrained game pixels readable at normal zoom.\nRows:\n1 IDLE: cutter disk teeth phase 0, stopped wheels, unlit amber beacon.\n2 MOVING: same idle cutter disk phase, rail wheel rods phase 0, small lit amber beacon, no debris.\n3 WORKING/boring: cutter teeth at active phase 0, small gray chips touching the leading cutter only, amber beacon. Chips stay inside common canvas; no terrain is drawn.\n4 BLOCKED: same physical body and wheels, tiny red lit warning beacon, cutter stopped.\n5 REVERSING/backing: same physical front/heading and cutter shape, stopped cutter disk, wheel rods phase 0, small rear WHITE backing lamp. Never turn the cutter around or imply boring backwards.\n6 SERVICE: stopped cutter, small blue service light and open little side maintenance hatch. No people or separate depot, no geometry changes or disconnected parts.\nAll 48 sprites show the same model; only listed disk/wheel/lamp/hatch/debris parts differ by state. This is authored frame 0; don't include extra frames or captions. Genuine alpha, charcoal/steel/yellow/blue restrained palette; no company-color mask or reserved animated palette effects.",
+      "requested_grid": [
+        8,
+        6
+      ],
+      "observed_grid": [
+        8,
+        5
+      ],
+      "references": [
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
+          "sha256": "e15ec859ff9b33733860f654ab3d5eda31078477d8f63c7d54dcc54d8fbd3b72"
+        },
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png",
+          "sha256": "48ee801cfd7f580012d22fc93aaec27da229f9bca167c25f6689d8c9c9c4801c"
+        },
+        {
+          "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-direction-guide.png",
+          "sha256": "1aa80add8cae078276b540a4d02181f267870d6ad4c6b0178e06021e174eb93e"
+        }
+      ],
+      "selection": "rejected: missing service row, NE repeats a near SW view, E/W columns reversed; not accepted source coverage.",
+      "revision": "Retained candidate only; all earlier originals immutable.",
+      "sha256": "07ca916347b25652fad3585348f4e4ea1e8f4ca9fd09eb7314d83cb25c998018"
+    }
+  ]
+}

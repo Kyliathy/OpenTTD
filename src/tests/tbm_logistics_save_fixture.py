@@ -2,8 +2,9 @@
 """Inspect actual logistics save tables without editing their authoritative rows.
 
 @file tbm_logistics_save_fixture.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13A
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 13A/13C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 16 actual portal-only reconstruction
 """
 
 import argparse
@@ -15,10 +16,10 @@ import subprocess
 
 from geology_generation_fixture import Reader, read_stream
 from geology_save_fixture import chunks
+from multilayer_state_fixture import log_path
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "src/tests/fixtures/haulage"
-AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
 WIDTHS = {1: 1, 2: 1, 3: 2, 4: 2, 5: 4, 6: 4, 7: 8, 8: 8, 9: 2}
 STATES = ("stopped", "await-exchange", "dispose-origin", "return-empties", "spanning")
 STALL_STATES = ("lost-origin", "saturated-receiver", "blocked-line", "wrong-wagons", "no-empties", "occupied-bay", "crashed")
@@ -83,7 +84,7 @@ def saved_table(path, name):
     @return Object identity to fully decoded fields, without changing any input.
     """
     version, stream = read_stream(path)
-    assert version >= 380, "this fixture requires delivered native vehicle save families"
+    assert version >= 375, "named table inspection requires the delivered native portal table format"
     chunk = next(chunk for chunk in chunks(stream) if chunk["name"] == name)
     assert chunk["kind"] in (3, 4), "owner must be a current table"
     header_reader = Reader(chunk["rows"][0])
@@ -110,7 +111,7 @@ def owned_chunks(path):
              b"TBXH", b"TBXA", b"TBXS", b"TBXW", b"INDY", b"STNN", b"PLYR",
              b"EXJS", b"XJOB", b"XJRT", b"XJTL", b"XPAS", b"GEOS", b"GDEP",
              b"GSPN", b"GVNT", b"SPRH", b"SPRR", b"LPWH", b"LPWK", b"DATE",
-             b"ECMY", b"SRND", b"MAPT", b"MAPO", b"MAP2", b"M3LO", b"M3HI", b"MAP5"}
+             b"ECMY", b"SRND", b"MAPS", b"MAPT", b"MAPH", b"MAPO", b"MAP2", b"M3LO", b"M3HI", b"MAP5", b"MAPE", b"MAP7", b"MAP8"}
     owners = {chunk["name"]: chunk["raw"] for chunk in chunks(stream) if chunk["name"] in names}
     assert owners.keys() == names, "real loaded logistics owner family incomplete"
     return version, owners
@@ -155,12 +156,14 @@ def verify_initial_owners(source, loaded):
             assert value == restored_clocks[identity][name], (identity, name, "initial clock field changed")
 
 
-def resume_case(state, evidence_prefix, input_prefix):
+def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_track=1):
     """Compare the next legal native transition across one and two full application loads.
 
     @param state Physically reached retained source snapshot name.
     @param evidence_prefix Fresh owning-plan evidence prefix for the two process logs.
     @param input_prefix Retained native source basename, allowing improved scenarios without editing earlier inputs.
+    @param repair_tile Optional actual removed Surface tile reported by the winding-depot producer; recovery uses an ordinary rail command.
+    @param repair_track Actual removed track enum reported by that producer, supplied to the same owning build command.
     @return None; missing physical progress, changed packets/costs or input edits fail.
     """
     startup = ROOT / "build/scripts/game_start.scr"
@@ -178,7 +181,10 @@ def resume_case(state, evidence_prefix, input_prefix):
         for index, output in enumerate(outputs):
             loaded_source = source if index == 0 else Path(str(outputs[0]) + "-loaded.sav")
             environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(loaded_source), OTTD_TBM_LOGISTICS_OUTPUT=str(output))
-            log = AREA / f"{evidence_prefix}-{state}-{index + 1}.log"
+            if repair_tile is not None:
+                assert state == "blocked-line", "declared rail repair belongs only to an observed blocked route"
+                environment.update(OTTD_TBM_LOGISTICS_REPAIR_TILE=str(repair_tile), OTTD_TBM_LOGISTICS_REPAIR_TRACK=str(repair_track))
+            log = log_path(f"{evidence_prefix}-{state}-{index + 1}.log")
             with log.open("wb") as sink:
                 subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
                                cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
@@ -206,6 +212,124 @@ def resume_case(state, evidence_prefix, input_prefix):
         assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash, "immutable source changed"
 
 
+def visibility_case(input_prefix, evidence_prefix, output_prefix=None):
+    """Compare complete real source/depot loops with actual visible, hidden and untouched viewport policies.
+
+    @param input_prefix Immutable physically produced stopped source or recurring-depot basename.
+    @param evidence_prefix Fresh owning-plan prefix for three isolated actual application logs.
+    @param output_prefix Optional fresh output basename for preserving previous native outputs after observer improvements.
+    @return None; changed native completion timing, physical custody or full owner bytes fail.
+    """
+    assert Path(input_prefix).name == input_prefix, "visibility input must be a repository-local basename"
+    output_prefix = output_prefix or input_prefix + "-view"
+    assert Path(output_prefix).name == output_prefix, "visibility outputs must use a repository-local basename"
+    source = FIXTURES / f"{input_prefix}-stopped.sav"
+    original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    startup = ROOT / "build/scripts/game_start.scr"
+    original_startup = startup.read_bytes()
+    results = []
+    try:
+        startup.write_text("# @see r2mlvs4-tunnel-boring-machines.md, Group 19 actual visibility pairs.\nlogistics_probe\n", encoding="utf-8")
+        # Each fresh application reconstructs the exact same complete native world. Only normal client camera/draw
+        # calls differ; native commands, full GameLoop work/vehicle/disposal and accounting remain identical.
+        for presentation in ("headless", "visible", "hidden"):
+            output = FIXTURES / f"{output_prefix}-{presentation}"
+            environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(source), OTTD_TBM_LOGISTICS_OUTPUT=str(output),
+                               OTTD_TBM_LOGISTICS_COMPLETE_LOOP="1", OTTD_TBM_LOGISTICS_VIEW=presentation)
+            log = log_path(f"{evidence_prefix}-{presentation}.log")
+            with log.open("wb") as sink:
+                subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
+                               cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
+                               creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=110)
+            evidence = log.read_text(encoding="utf-8", errors="replace")
+            match = re.search(r"LOGISTICS_COMPLETE_LOOP ticks=(\d+) exchanges=(\d+) presentation=" + presentation, evidence)
+            assert match, "actual application did not complete native work and final physical Surface disposal"
+            verify_initial_owners(source, Path(str(output) + "-loaded.sav"))
+            results.append((match.groups(), owned_chunks(Path(str(output) + "-complete-loop.sav"))))
+            print(f"{input_prefix} {presentation}: complete real loop after {match[1]} frames / {match[2]} exchanges", flush=True)
+        assert results[0] == results[1] == results[2], "actual viewport presentation changed native timing/custody/owner state"
+        print("All 40 native owners, including every map field/height/dimension chunk, match across headless, visible and hidden execution.", flush=True)
+    finally:
+        startup.write_bytes(original_startup)
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == original_hash, "immutable visibility input changed"
+
+
+def portal_case(input_name, output_prefix, evidence_prefix, expected_state):
+    """Round-trip an immutable Sealed/Connected or genuine legacy portal through actual application loading.
+
+    @param input_name Existing basename inside the portal fixture directory; earlier supplied names stay unchanged.
+    @param output_prefix Fresh non-planning basename for current loaded outputs; no previous evidence is overwritten.
+    @param evidence_prefix Fresh owning-plan log prefix for both isolated actual processes.
+    @param expected_state Sealed, Connected or explicit legacy compatibility policy to verify after native acceptance.
+    @return None; changed pair metadata, opening new map ground or a lost ordinary legacy edge fails.
+    """
+    directory = ROOT / "src/tests/fixtures/portals"
+    assert Path(input_name).name == input_name, "portal input must be an existing fixture basename"
+    assert output_prefix and Path(output_prefix).name == output_prefix and not output_prefix.startswith("r2"), "fresh portal outputs must use a non-planning basename"
+    source = directory / input_name
+    original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    startup = ROOT / "build/scripts/game_start.scr"
+    original_startup = startup.read_bytes()
+    fields = (b"MAPT", b"MAPH", b"MAPO", b"MAP2", b"M3LO", b"M3HI", b"MAP5", b"MAPE", b"MAP7", b"MAP8")
+    widths = {b"MAP2": 2, b"MAP8": 2}
+    version, original_stream = read_stream(source)
+    original = {chunk["name"]: chunk for chunk in chunks(original_stream)}
+    endpoints = [index for index, value in enumerate(original[b"MAPT"]["payload"]) if value >> 4 == 11]
+    assert endpoints, "portal boundary needs actual reciprocal endpoint tiles"
+    loaded = []
+    try:
+        startup.write_text("# @see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16 actual portal load.\nlogistics_probe\n", encoding="utf-8")
+        # Native acceptance/save is the legal empty/legacy checkpoint. No missing hauler is invented to make these
+        # real older worlds imitate a commissioning project; all original endpoint/ground bits must survive migration.
+        for index in range(2):
+            output = directory / f"{output_prefix}-{index + 1}"
+            input_path = source if index == 0 else loaded[0]
+            environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(input_path), OTTD_TBM_LOGISTICS_OUTPUT=str(output), OTTD_TBM_PORTAL_LOAD_ONLY="1")
+            log = log_path(f"{evidence_prefix}-{index + 1}.log")
+            with log.open("wb") as sink:
+                subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
+                               cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
+                               creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=110)
+            evidence = log.read_text(encoding="utf-8", errors="replace")
+            assert "PORTAL_LOAD_ONLY pairs=" in evidence, "native portal acceptance checkpoint absent"
+            result = Path(str(output) + "-loaded.sav")
+            restored = {chunk["name"]: chunk for chunk in chunks(read_stream(result)[1])}
+            # Compare complete geometry/field bytes at every actual original endpoint. Height and all extended
+            # fields are included; newer unrelated schemas cannot excuse a changed shaft, door, reservation or owner.
+            for name in fields:
+                width = widths.get(name, 1)
+                for tile in endpoints:
+                    start = tile * width
+                    assert original[name]["payload"][start:start + width] == restored[name]["payload"][start:start + width], (name, tile, "portal endpoint changed")
+            if expected_state == "legacy":
+                assert version == 370, "legacy input must be genuine version 370"
+                assert "PORTAL_LOAD_ONLY pairs=0" in evidence, "legacy migration introduced Native commissioning state"
+                assert "PORTAL_NATIVE_EDGES rail=5/5 road=0/0 elevator=4/4 invalid=0" in evidence, "actual ordinary legacy edges became unusable"
+                assert "profile=0" in evidence and "legacy=true" in evidence, "loaded legacy policy changed"
+                assert "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0 vents=0" in evidence, "legacy migration generated Native rock/reserves"
+                for name in (b"MAPS", b"MAPT", b"MAPH"):
+                    assert original[name]["raw"] == restored[name]["raw"], "legacy map dimensions/type/height changed"
+            else:
+                expected = 0 if expected_state == "sealed" else 2
+                before = saved_table(source, b"LPWK")
+                after = saved_table(result, b"LPWK")
+                assert before == after, "native work owner changed on empty portal load"
+                assert all(row["state"] == expected for row in after.values()), "wrong actual saved portal state"
+                assert saved_table(source, b"MLMD") == saved_table(result, b"MLMD"), "native saved profile/date policy changed"
+                # The calendar technology date must reconstruct exactly; manager-face presentation setup
+                # cannot move an empty portal across its actual Deep availability gate.
+                dates = saved_table(source, b"DATE")
+                restored_dates = saved_table(result, b"DATE")
+                for identity, row in dates.items():
+                    for field in ("date", "date_fract"):
+                        assert row[field] == restored_dates[identity][field], "native technology date changed"
+            loaded.append(result)
+        print(f"{input_name}: actual {expected_state} load/reload preserves {len(endpoints)} complete endpoint field sets and policy", flush=True)
+    finally:
+        startup.write_bytes(original_startup)
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == original_hash, "immutable portal input changed"
+
+
 def main():
     """Report precise actual vehicle-field differences across the five retained loads.
 
@@ -215,9 +339,23 @@ def main():
     parser.add_argument("--resume", choices=STATES + STALL_STATES, help="run one focused actual loader/next-exchange comparison")
     parser.add_argument("--evidence-prefix", default="r2mlvs5-l", help="fresh chronological owning-plan log prefix")
     parser.add_argument("--input-prefix", default="source-native-deep", help="immutable native source save basename")
+    parser.add_argument("--repair-tile", type=int, help="actual removed Surface tile reported by the recurring-depot producer")
+    parser.add_argument("--repair-track", type=int, choices=range(6), default=1, help="actual removed native track enum")
+    parser.add_argument("--visibility", action="store_true", help="compare three actual complete loops with headless/visible/hidden viewport policies")
+    parser.add_argument("--output-prefix", help="fresh repository-local visibility outputs; never overwrite retained evidence")
+    parser.add_argument("--portal-input", help="existing immutable portal fixture basename for actual portal-only loading")
+    parser.add_argument("--portal-state", choices=("sealed", "connected", "legacy"), help="expected native work or legacy policy")
     arguments = parser.parse_args()
+    if arguments.portal_input:
+        assert arguments.portal_state and not arguments.visibility and arguments.resume is None, "one explicit focused portal family is required"
+        portal_case(arguments.portal_input, arguments.output_prefix, arguments.evidence_prefix, arguments.portal_state)
+        return
+    if arguments.visibility:
+        assert arguments.resume is None, "one focused fixture family per run"
+        visibility_case(arguments.input_prefix, arguments.evidence_prefix, arguments.output_prefix)
+        return
     if arguments.resume:
-        resume_case(arguments.resume, arguments.evidence_prefix, arguments.input_prefix)
+        resume_case(arguments.resume, arguments.evidence_prefix, arguments.input_prefix, arguments.repair_tile, arguments.repair_track)
         return
     for state in STATES:
         source = saved_table(FIXTURES / f"source-deep-{state}.sav", b"VEHS")

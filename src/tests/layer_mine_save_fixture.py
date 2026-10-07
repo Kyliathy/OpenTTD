@@ -12,7 +12,7 @@ import subprocess
 
 from geology_save_fixture import chunks, encode_chunk
 from geology_generation_fixture import read_stream
-from multilayer_state_fixture import AREA, ROOT, run_case, save_path
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
 def owned_chunks(path):
@@ -81,7 +81,7 @@ def main():
             except subprocess.CalledProcessError as refusal:
                 # Dedicated startup exits 2 on a refused save; require the precise owned refusal and no resulting save.
                 assert refusal.returncode == 2, "unexpected process failure"
-                evidence = (AREA / f"r2mlvs6-dl-{name}.log").read_text(encoding="utf-8", errors="replace")
+                evidence = log_path(f"r2mlvs6-dl-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence, "expected mine refusal missing"
                 assert not save_path(f"r2mlvs6-dl-{name}.sav").exists(), "refused world was saved"
                 print(f"{name}: real game rejected corrupt mine transport", flush=True)

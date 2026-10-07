@@ -11,7 +11,7 @@ import struct
 import sys
 
 from geology_save_fixture import chunks, encode_chunk, geology_chunk, read_stream, variant
-from multilayer_state_fixture import AREA, ROOT, run_case, save_path
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 PREFIX = "r2mlvs3-r"
 FIELDS = ((b"MAPT", 1), (b"MAPO", 1), (b"MAP2", 2), (b"M3LO", 1),
@@ -259,7 +259,7 @@ def resume_original_portals():
                         assert restored[label]["payload"][begin:begin + width] == records[label]["payload"][begin:begin + width], (name, label, tile)
                 assert len(restored[b"LPWK"]["rows"]) == 1
                 assert int.from_bytes(restored[b"MLMD"]["rows"][1][2:3], "big") == 0
-                assert "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0" in output.with_suffix(".log").read_text(encoding="utf-8", errors="replace")
+                assert "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0" in log_path(output.with_suffix(".log").name).read_text(encoding="utf-8", errors="replace")
         # Genuine originals have no road tunnel; the existing separately authored version-370 three-kind fixture proves that actual ordinary road dispatch also survives migration.
         authored_road = save_path("r2mlvs3-r-legacy-pairs-input.sav")
         authored_hash = hashlib.sha256(authored_road.read_bytes()).hexdigest()

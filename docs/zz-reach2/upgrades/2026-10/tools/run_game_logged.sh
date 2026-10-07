@@ -7,7 +7,7 @@
 #Usage: run_game_logged.sh <build dir> <config> <log file> <openttd arguments...>
 #  build dir  the CMake build folder, also the working and personal folder of the game (-c makes it so)
 #  config     Debug or RelWithDebInfo; scenario runs use Debug, because the asserts are part of the evidence
-#  log file   where stdout and stderr of the game go; a relative path is relative to the build dir
+#  log file   basename for stdout/stderr in the repository logs/ directory; supplied directories are ignored
 #  arguments  passed on unchanged, for example: -c scenario.cfg -g -G 1234
 #Environment: OTTD_DEBUG overrides the -d levels, EDITBIN the path of editbin.exe.
 #
@@ -24,7 +24,19 @@ if [ "$#" -lt 3 ]; then
 fi
 build_dir=$1
 config=$2
-log=$3
+# The shared repository log directory prevents older plan commands from
+# recreating removed evidence in docs. Preserve only the requested basename,
+# including Windows separators, before any game process opens its output.
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../../../../.." && pwd) || exit 2
+log_name=$(basename -- "${3//\\//}")
+case "$log_name" in
+    ""|"."|".."|"/")
+        echo "run_game_logged.sh: provide a log filename" >&2
+        exit 2
+        ;;
+esac
+mkdir -p "$repo_root/logs" || exit 2
+log="$repo_root/logs/$log_name"
 shift 3
 
 exe="$build_dir/$config/openttd.exe"
@@ -34,8 +46,11 @@ if [ ! -f "$exe" ]; then
 	exit 2
 fi
 
-#Print the PE subsystem of an executable: 2 is a GUI program, 3 a console program.
-#  $1 path of the executable
+##
+# Read the executable's PE subsystem before selecting the console runner.
+# @param $1 Path of the executable whose Windows header must be inspected.
+# @return Prints 2 for a GUI executable or 3 for a console executable.
+##
 pe_subsystem() {
 	local header
 	header=$(od -An -t u4 -j 60 -N 4 "$1" | tr -d ' ')
@@ -65,7 +80,6 @@ if [ ! -f "$console" ] || [ "$exe" -nt "$console" ] || [ "$(pe_subsystem "$conso
 fi
 
 cd "$build_dir" || exit 2
-mkdir -p "$(dirname "$log")"
 #desync=2 turns on CheckCaches every tick; misc shows paths and config, sl loading and saving, net a local server.
 levels=${OTTD_DEBUG:-desync=2,misc=3,sl=2,net=2}
 started=$(date +%T)

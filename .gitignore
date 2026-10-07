@@ -1,5 +1,6 @@
 /!kit/
 /.vs
+/logs
 /build*
 CMakeSettings.json
 docs/aidocs/*

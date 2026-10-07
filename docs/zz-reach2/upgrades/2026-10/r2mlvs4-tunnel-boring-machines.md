@@ -492,11 +492,17 @@ Group 18 status (2026-10-05, R2MLVS3MP master 7.6): verified at the milestone. `
 
 Capacity boundaries (the frozen exchange breakpoints) and mixed ratios also appear in `[tbm-work]` and `[tbm-exchange-acceptance]`.
 
+### Local Mandatory Reading - Actual visibility equivalence
+
+_Applies to Group 19; supplements Recovery, presentation and acceptance above._
+
+Read the delivered Plan 5 13A/13B/13C closures and only `LogisticsRuntimeProbe`, its actual application loader, the exact full-owner chunk comparator, `SetViewportLayer`, `ViewportDoDraw` and native `WindowClass::MainWindow` ownership. Pair identical immutable stopped source/depot inputs through complete physical excavation, exchanges and final Surface disposal. Actual view selection/render dispatch owns presentation only. Existing sprite/loading state suffices for a runtime comparison, but does not count as final M1 art. No copied-row restoration or source audit can complete this paired scope.
+
 ### Group 19 - Recovery, presentation and acceptance
 
 {{MEDIUM}}
 - [X] 19.1 Compare progress with the layer hidden and visible.
-- [ ] 19.2 Demonstrate the first cut and return to the source-side commissioning exchange, then integrate a recurring underground-bay loop with r2mlvs5.
+- [X] 19.2 Demonstrate the first cut and return to the source-side commissioning exchange, then integrate a recurring underground-bay loop with r2mlvs5.
 
 Group 19 status (2026-10-05, R2MLVS3MP master 7.7):
 - 19.1 is checked, by audit rather than a paired run, because unit tests have no viewport to show or hide a layer
@@ -511,6 +517,8 @@ Group 19 status (2026-10-05, R2MLVS3MP master 7.7):
     rig's route, a bend with a mid-route exchange, and a project commissioned by command. Each run checks the ledger
     and wagon IDs at every transition.
   - The recurring underground-bay loop needs an underground network to the support corridor (master 7.1).
+
+19.1-19.2 actual runtime closure, 2026-10-06: the historical source audit above is superseded by paired application-loader runs of complete source and recurring-depot loops. Identical immutable stopped worlds use the same native start commands/full GameLoop while the observer either makes no camera calls, follows/draws the real cutter plane, or selects/draws empty Space. Native `ViewportDoDraw` runs with the null driver's actual screen context and complete virtual viewport rectangle. The source finishes after 32,853 frames / three exchanges in every policy ([z-headless](r2mlvs4-z-headless.log), [visible](r2mlvs4-z-visible.log), [hidden](r2mlvs4-z-hidden.log)); visible/hidden each dispatch 444 draws, including 57 actual non-hidden cutter draws only in the visible run. The recurring depot finishes after 15,677 frames / two exchanges in every policy ([aa-headless](r2mlvs4-aa-headless.log), [visible](r2mlvs4-aa-visible.log), [hidden](r2mlvs4-aa-hidden.log)). All 35 complete final native owner chunks match byte-for-byte within each three-run family: geometry/jobs/projects/support, physical vehicles/packets/orders/age, queue cycles, receivers, money/pending costs and clocks/RNG. Completion includes mandatory final Surface disposal and genuinely empty physical wagons. Each three-process family finishes under one minute. Source/depot immutable inputs and distinct outputs are retained. This comparison proves actual view/render dispatch cannot change native progress; final M1 art and multiplayer/performance acceptance remain separate scopes. Reproduction: `python src/tests/tbm_logistics_save_fixture.py --visibility --input-prefix <source-native-deep|depot-native-underground> --output-prefix <fresh-basename> --evidence-prefix <fresh-plan-prefix>`. Continuation: [w](r2mlvs4-w-visibility-continuation.md).
 
 ### Group 20 - Recovery, presentation and acceptance
 

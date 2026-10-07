@@ -13,6 +13,7 @@ import subprocess
 
 from geology_save_fixture import chunks
 from geology_generation_fixture import read_stream
+from multilayer_state_fixture import log_path
 
 ROOT = Path(__file__).resolve().parents[2]
 AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
@@ -40,7 +41,7 @@ def main():
     """
     source = FIXTURES / "native-fleet.sav"
     output = FIXTURES / "native-fleet-roundtrip.sav"
-    log = AREA / "r2mlvs7-cn-fleet-runtime-roundtrip.log"
+    log = log_path("r2mlvs7-cn-fleet-runtime-roundtrip.log")
     startup = ROOT / "build/scripts/game_start.scr"
     original_startup = startup.read_bytes()
     original_hash = hashlib.sha256(source.read_bytes()).hexdigest()

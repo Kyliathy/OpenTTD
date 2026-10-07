@@ -6,8 +6,9 @@
 
 /**
  * @file tbm_logistics_runtime.cpp Isolated real startup/loader/game-loop logistics continuation.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13A
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 13A/13C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19 (actual viewport/headless pairs)
  */
 
 #include "../stdafx.h"
@@ -35,8 +36,13 @@
 #include "../timer/timer.h"
 #include "../timer/timer_game_tick.h"
 #include "../saveload/saveload_func.h"
+#include "../window_func.h"
+#include "../window_gui.h"
+#include "../map_layer_gui.h"
+#include "../viewport_func.h"
 #include <cstdlib>
 #include <filesystem>
+#include <charconv>
 
 #include "../safeguards.h"
 
@@ -49,6 +55,10 @@ public:
 	uint ticks = 0; ///< Number of real frames observed after the startup command.
 	bool started = false; ///< Startup has accepted the actual reconstructed public owners.
 	bool completed = false; ///< The next physical exchange has reached its complete atomic boundary.
+	bool complete_loop = false; ///< Optional complete-job plus final Surface disposal endpoint for actual visibility pairs.
+	std::string presentation; ///< Process-local headless/visible/hidden policy; it never changes native gameplay commands.
+	mutable uint draws = 0; ///< Number of actual native viewport render dispatches; observer evidence only.
+	mutable uint visible_cutter_draws = 0; ///< Actual draws centered on a non-hidden cutter in the selected physical layer.
 	std::unique_ptr<LogisticsCrashLedger> crash; ///< Actual irreversible wreck; the next legal transition is native cleanup.
 
 	/**
@@ -60,6 +70,59 @@ public:
 		const auto path = std::filesystem::path(this->output.string() + std::string(suffix) + ".sav");
 		REQUIRE_FALSE(std::filesystem::exists(path));
 		REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);
+	}
+
+	/** Select and draw the actual native main viewport; camera changes own no work, packet or movement step. */
+	void Present() const
+	{
+		if (this->presentation.empty() || this->presentation == "headless") return; // The baseline performs no observer-owned camera selection or draw.
+		Window *window = FindWindowById(WindowClass::MainWindow, 0);
+		REQUIRE(window != nullptr);
+		REQUIRE(window->viewport != nullptr);
+		const auto *assignment = GetTBMExchangeAssignmentForHauler(this->hauler);
+		REQUIRE(assignment != nullptr);
+		const auto *project = GetTBMProject(assignment->project);
+		REQUIRE(project != nullptr);
+		const Train *cutter = Train::Get(project->cutter);
+		const MapLayer selected = this->presentation == "visible" ? GetTileLayer(cutter->tile) : MapLayer::Space;
+		SetViewportLayer(window, selected);
+		CHECK(window->viewport->layer == selected);
+		ScrollWindowToTile(MultiLayerMap::TileInLayer(cutter->tile, selected), window, true);
+		UpdateViewportPosition(window, 0);
+		const Viewport &viewport = *window->viewport;
+		// The null video driver's ordinary loop intentionally skips raster refresh and leaves _cur_dpi unset.
+		// Bind its real initialized screen for this explicit native render dispatch, then restore the process's previous draw context.
+		AutoRestoreBackup drawing(_cur_dpi, &_screen);
+		ViewportDoDraw(viewport, viewport.virtual_left, viewport.virtual_top, viewport.virtual_left + viewport.virtual_width, viewport.virtual_top + viewport.virtual_height);
+		++this->draws;
+		// A visible pair must actually draw while the physical cutter is outside its hidden magazine/shaft; layer selection alone is insufficient evidence.
+		if (selected == GetVehicleDisplayLayer(cutter) && !cutter->vehstatus.Test(VehState::Hidden)) ++this->visible_cutter_draws;
+	}
+
+	/** Report actual ordinary tile-dispatch edges for accepted portal pairs, including legacy worlds with no Native work rows. */
+	void ReportPortalEdges() const
+	{
+		std::array<uint32_t, 3> total{}, usable{};
+		uint invalid = 0;
+		// Read each accepted reciprocal pair once. This observer queries the native track-status owner;
+		// it owns no replacement connectivity cache, construction permission or saved portal state.
+		for (uint32_t index = 0; index < Map::Size(); ++index) {
+			const TileIndex tile{index};
+			if (!IsLayerPortalTile(tile)) continue;
+			const auto key = GetLayerPortalPairKey(tile);
+			if (!key) { ++invalid; continue; }
+			if (*key != tile) continue;
+			const auto pair = GetLayerPortalPairTile(tile);
+			const auto kind = GetLayerPortalKind(tile);
+			REQUIRE(to_underlying(kind) < total.size());
+			const auto slot = to_underlying(kind);
+			++total[slot];
+			const auto transport = GetLayerPortalTransportType(tile);
+			const auto road = transport == TransportType::Road ? RoadTramType::Road : RoadTramType::Invalid;
+			// Both real housings must expose ordinary edges; a stored neighbor cannot establish usable legacy/date/phase admission.
+			if (GetTileTrackStatus(tile, transport, road).trackdirs.Any() && GetTileTrackStatus(pair, transport, road).trackdirs.Any()) ++usable[slot];
+		}
+		fmt::print("PORTAL_NATIVE_EDGES rail={}/{} road={}/{} elevator={}/{} invalid={}\n", usable[0], total[0], usable[1], total[1], usable[2], total[2], invalid);
 	}
 
 	/**
@@ -94,6 +157,29 @@ public:
 	 */
 	void RestoreLine(const TBMProject &project) const
 	{
+		const char *declared_tile = std::getenv("OTTD_TBM_LOGISTICS_REPAIR_TILE");
+		const char *declared_track = std::getenv("OTTD_TBM_LOGISTICS_REPAIR_TRACK");
+		if (declared_tile != nullptr) {
+			// The recurring depot has a separate winding freight route. Its producer reports the exact ordinary
+			// removed piece; this explicit player repair command cannot infer a straight route from the cutter's Sealed source.
+			REQUIRE(declared_track != nullptr);
+			uint32_t tile_value = 0, track_value = 0;
+			const auto tile_result = std::from_chars(declared_tile, declared_tile + strlen(declared_tile), tile_value);
+			const auto track_result = std::from_chars(declared_track, declared_track + strlen(declared_track), track_value);
+			REQUIRE(tile_result.ec == std::errc{});
+			REQUIRE(tile_result.ptr == declared_tile + strlen(declared_tile));
+			REQUIRE(track_result.ec == std::errc{});
+			REQUIRE(track_result.ptr == declared_track + strlen(declared_track));
+			const TileIndex tile{tile_value};
+			REQUIRE(IsValidTile(tile));
+			REQUIRE(GetTileLayer(tile) == MapLayer::Surface);
+			REQUIRE(IsTileType(tile, TileType::Clear));
+			REQUIRE(track_value < to_underlying(Track::End));
+			REQUIRE(GetTBMExchangeBay(project).kind == TBMExchangeBayKind::Depot);
+			REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, tile, GetRailType(project.portal), static_cast<Track>(track_value), false).Succeeded());
+			REQUIRE(Command<Commands::ReverseTrainDirection>::Do(DoCommandFlag::Execute, this->hauler, false).Succeeded());
+			return;
+		}
 		const Station *origin = Station::GetIfValid(project.origin);
 		REQUIRE(origin != nullptr);
 		REQUIRE(IsRailStationTile(origin->train_station.tile));
@@ -161,6 +247,17 @@ public:
 	void Start()
 	{
 		REQUIRE_FALSE(this->started);
+		if (std::getenv("OTTD_TBM_PORTAL_LOAD_ONLY") != nullptr) {
+			// Empty Sealed/Connected and genuine legacy portal fixtures have no hauler assignment. Their accepted
+			// native reconstruction is the checkpoint; the observer cannot fabricate a project just to reuse logistics startup.
+			REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));
+			this->Save("-loaded");
+			this->ReportPortalEdges();
+			fmt::print("PORTAL_LOAD_ONLY pairs={}\n", GetLayerPortalWorkPairCount());
+			this->started = this->completed = true;
+			_exit_game = true;
+			return;
+		}
 		const auto assignments = CaptureTBMExchangeAssignments();
 		REQUIRE_FALSE(assignments.empty());
 		// A queued source scenario observes its existing short-empty first turn, not the blocked peer's fictitious exchange.
@@ -172,6 +269,11 @@ public:
 		REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));
 		this->hauler = assignment.hauler;
 		this->initial_exchanges = assignment.exchanges;
+		this->complete_loop = std::getenv("OTTD_TBM_LOGISTICS_COMPLETE_LOOP") != nullptr;
+		if (const char *view = std::getenv("OTTD_TBM_LOGISTICS_VIEW"); view != nullptr) {
+			this->presentation = view;
+			REQUIRE((this->presentation == "headless" || this->presentation == "visible" || this->presentation == "hidden"));
+		}
 		this->Save("-loaded");
 		AutoRestoreBackup actor(_current_company, project->company);
 		if (assignment.wait == TBMHaulerWait::LostOrigin) this->RestoreOrigin(*project);
@@ -203,6 +305,7 @@ public:
 		}
 		REQUIRE(Command<Commands::Pause>::Do(DoCommandFlag::Execute, PauseMode::Normal, false).Succeeded());
 		this->started = true;
+		this->Present();
 	}
 
 	/**
@@ -228,6 +331,23 @@ public:
 		const auto *assignment = GetTBMExchangeAssignmentForHauler(this->hauler);
 		REQUIRE(assignment != nullptr);
 		REQUIRE(this->ticks < 80000);
+		if (this->complete_loop) {
+			// Daily native view refresh must leave the same physical/cargo/cost result as a process with no observer camera calls.
+			if (this->ticks % Ticks::DAY_TICKS == 0) this->Present();
+			const auto *project = GetTBMProject(assignment->project);
+			REQUIRE(project != nullptr);
+			// Completion includes the final ordinary originating Surface visit and actual empty packets, not merely finished excavation.
+			if (!IsTBMProjectFinished(project->phase) || assignment->phase != TBMHaulerPhase::ReturnEmpties || assignment->exchanges == 0) return;
+			// Native station housekeeping can settle after its assignment reports empty return; observe only real physical packets here.
+			for (const Vehicle *vehicle : Vehicle::Iterate()) REQUIRE(vehicle->cargo.TotalCount() == 0);
+			this->Save("-complete-loop");
+			if (this->presentation == "visible") CHECK(this->visible_cutter_draws > 0);
+			fmt::print("LOGISTICS_COMPLETE_LOOP ticks={} exchanges={} presentation={} draws={} cutter_draws={}\n", this->ticks, assignment->exchanges,
+				this->presentation, this->draws, this->visible_cutter_draws);
+			this->completed = true;
+			_exit_game = true;
+			return;
+		}
 		if (assignment->exchanges == this->initial_exchanges) return;
 		CHECK(assignment->exchanges == this->initial_exchanges + 1);
 		this->Save("-next-exchange");
@@ -262,16 +382,24 @@ TEST_CASE("Loaded source logistics reaches its next physical exchange", "[.tbm-l
 	REQUIRE(output != nullptr);
 	const auto root = std::filesystem::current_path().parent_path();
 	const auto family = std::filesystem::weakly_canonical(root / "src/tests/fixtures/haulage");
-	REQUIRE(std::filesystem::weakly_canonical(std::filesystem::path(source).parent_path()) == family);
-	REQUIRE(std::filesystem::weakly_canonical(std::filesystem::path(output).parent_path()) == family);
+	const auto portals = std::filesystem::weakly_canonical(root / "src/tests/fixtures/portals");
+	// Actual portal-only inputs and logistics worlds stay in their existing owned fixture families; a test environment
+	// cannot redirect this native writer into a user-wide save/content directory or an unrelated repository path.
+	for (const char *path : {source, output}) {
+		const auto parent = std::filesystem::weakly_canonical(std::filesystem::path(path).parent_path());
+		REQUIRE((parent == family || parent == portals));
+	}
 	LogisticsRuntimeProbe probe;
 	probe.output = output;
 	AutoRestoreBackup observer(_logistics_runtime_probe, &probe);
 	IConsole::CmdRegister("logistics_probe", StartLogisticsRuntimeProbe);
 	/** @param elapsed Real game frames; timer dispatch does not grant simulation ownership to this observer. */
 	const IntervalTimer<TimerGameTick> timer({TimerGameTick::Priority::None, 1}, [&probe](uint elapsed) { probe.Observe(elapsed); });
-	std::array<std::string_view, 15> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=80000",
-		"-s", "null", "-m", "null", "-x", "-X", "-c", "grftest.cfg", "-g", source, "-d", "misc=3,sl=2,script=2"};
+	// Portal-only acceptance needs startup/reconstruction. Null video otherwise consumes its whole declared
+	// tick budget after an exit request, causing unrelated minutes of legacy traffic after the saved checkpoint.
+	const std::string_view video = std::getenv("OTTD_TBM_PORTAL_LOAD_ONLY") != nullptr ? "null:ticks=2" : "null:ticks=80000";
+	std::array<std::string_view, 15> arguments = {"Debug/openttd_test.exe", "-v", video,
+		"-s", "null", "-m", "null", "-x", "-X", "-c", "grftest.cfg", "-g", source, "-d", "misc=5,sl=2,script=2"};
 	CHECK(openttd_main(arguments) == 0);
 	CHECK(probe.started);
 	CHECK(probe.completed);

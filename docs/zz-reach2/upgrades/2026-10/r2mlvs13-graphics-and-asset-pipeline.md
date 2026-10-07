@@ -18,6 +18,12 @@
 > - Do not read Consult on Demand or Planning Provenance merely because those
 >   sources are listed. Use a Consult on Demand source only when its trigger
 >   occurs.
+> - Per the user's 2026-10-07 instruction, store all new build/test/application
+>   capture logs in the repository `logs/` directory. Preserve owning-plan
+>   basenames and link them here with `../../../../logs/<basename>.log`.
+>   Earlier documentation logs were removed by the user; retain historical
+>   result summaries without recreating those files. Markdown notes and scratch
+>   scripts still belong beside their owning plan.
 > - No created source file, test file or JSON file should start with same prefix as a planning MD file (such as r2). Only MD files can have that prefix. No MD file should be created anywhere in source directories unless specifically asked.
 > - After EVERY CONTEXT COMPACTION, you must add a note above the task group
 >   which is currently in execution. The note will say: "Context has compacted
@@ -198,6 +204,8 @@ flowchart LR
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. The preceding Sprite Contract Handoff supplies exact schema/counts/anchors. Verify the manifest fixture before writing the converter; stop dependent packing on an absent/invalid manifest and continue independent source/template work without inventing offsets.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 9 - Prepare controlled asset authoring and originals
 
 Source-art pass, 2026-10-06: [Plans 1-5 artwork record](multilayer-m1-art-pass.md)
@@ -208,45 +216,134 @@ have complete source coverage; vehicle animation and building geometry/slicing
 remain unfinished. Runtime packing/integration and all full-plan art acceptance
 remain pending. This bounded pass does not complete these global checkboxes.
 
+M1 preparation, 2026-10-06: [selected source/geometry record](r2mlvs13-b-m1-authoring.md) verifies the available built-in tool/installed skill, all 14 immutable original hashes and existing atlas checks, and publishes 28 bounded M1 briefs. Native consumer geometry passes 47 assertions: both cutters need distinct permanent support art; one-tile depot families, 2x3 Earth and 4x4 Rock replace unsupported draft rectangles. Public manifest/publisher now require 57,163 sprites across the same 141 families while preserving original provenance, protected offsets and payload identity. The user explicitly authorized built-in image outputs in CODEX_HOME on 2026-10-07, with selected originals copied into this repository. These preparation results do not mark missing directions/animation/per-cell art or the whole global authoring tasks complete.
+
+{{MEDIUM}}- [X] 9.1 For the selected M1 slice, read/use the available image-generation skill/tool for AI raster work and follow its editing/reference requirements. Keep prompts, references, chosen originals and provenance in repository asset directories; this preparation generates no art.
+- [X] 9.2 Use the approved geometry/style templates to write one bounded generation brief per selected M1 family/model: view labels, light direction, silhouette, material accents, state differences, transparent background and native target footprint.
+- [X] 9.3 Keep selected M1 original outputs immutable and record selection/revision history separately from deterministic conversion. Generative output is not assumed reproducible from a seed; checked-in originals make subsequent packing reproducible.
+
+Selected M1 preparation closure (2026-10-07): 28 briefs, all 14 retained original hashes, the public 141-family schema and actual native geometry are verified in [the scoped authoring record](r2mlvs13-b-m1-authoring.md). This closes master 8.1; source pixel coverage and final runtime review remain with their later owning groups.
+
+### Local Mandatory Reading - Later-family authoring preparation
+
+_Applies to Group 9B when dispatched by a later milestone; master M1 does not dispatch it._
+
+Read this plan's Global and Source generation Area, then only the nonselected manifest families and their actual consumer geometry. Use the installed imagegen skill, repository provenance and original immutability rules. Do not re-author already selected M1 sources.
+
+### Group 9B - Prepare remaining profile asset families
+
 {{MEDIUM}}
-- [ ] 9.1 At asset execution time, read/use the available image-generation skill/tool for AI raster work and follow its editing/reference requirements. Keep prompts, references, chosen originals and provenance in repository asset directories; this planning pass generates no art.
-- [ ] 9.2 Use the approved geometry/style templates to write one bounded generation brief per family/model: view labels, light direction, silhouette, material accents, state differences, transparent background and native target footprint.
-- [ ] 9.3 Keep original outputs immutable and record selection/revision history separately from deterministic conversion. Generative output is not assumed reproducible from a seed; checked-in originals make subsequent packing reproducible.
+- [ ] 9B.1 Apply the image-generation skill/tool and repository provenance workflow to the remaining profile families when their actual consumer contracts are ready.
+- [ ] 9B.2 Publish bounded approved geometry/style briefs for each remaining family/model, preserving the original whole-profile authoring requirement.
+- [ ] 9B.3 Retain immutable selected originals and independent revision history for those families before deterministic conversion.
+
+### Local Mandatory Reading - M1 terrain originals
+
+_Applies to Groups 10-11; supplements the Source generation Area._
+
+Read the active terrain brief and manifest, retained terrain original/provenance, geometry template's flat diamond, and actual excavation rendering's state/neighbor/survey mapping. Use the approved tool for new raster pixels; deterministic crop/palette conversion follows selection. Ground masks must follow world neighbors and fixed anchors, with no camera-driven simulation changes.
 
 ### Group 10 - Author Underground terrain
 
 {{HARD}}
-- [ ] 10.1 For Underground terrain, derive a single-model brief from its approved manifest/template: solid face versus cavity with readable edges and survey markers. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 10.2 Produce the required directions/rotations for Underground terrain from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 10.3 Add all cut/progress/edge/corner and five resource-marker states for Underground terrain, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 10.1 For Underground terrain, derive a single-model brief from its approved manifest/template: solid face versus cavity with readable edges and survey markers. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 10.2 Produce the required directions/rotations for Underground terrain from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 10.3 Add all cut/progress/edge/corner and five resource-marker states for Underground terrain, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 10 source handoff (2026-10-07): the retained 12 base-state/texture poses are selected at native 64x31 / anchor (-31,0). Terrain uses one fixed engine camera, so no rotated camera views are required. Two fresh built-in originals add all 16 neighbor-rim combinations and five distinct resource markers in unknown/surveyed/depleted states. [Prompts, references, immutable cache/copy hashes and selection](assets/mlvs/terrain-generation-record.json), [native 1x/4x sheet](assets/mlvs/terrain-details-review.png), and `convert_terrain_art.py --check` prove deterministic alpha/palette/coverage/bounds for 31 supplemental poses. Source art is handed to later packing; runtime and user acceptance remain pending. Two explicit edge-mask families append planned offsets 168..199 after all original planned offsets, preserving live 0..65 and reserved 66..73; the public contract now has 143 families / 57,195 required source sprites. The selected M1 briefs expand from 28 to 40 to include the two edge families and ten resource markers already required by terrain tasks.
 
 ### Group 11 - Author Deep terrain
 
 {{HARD}}
-- [ ] 11.1 For Deep terrain, derive a single-model brief from its approved manifest/template: distinct basalt palette with the same cavity grammar. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 11.2 Produce the required directions/rotations for Deep terrain from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 11.3 Add all cut/progress/edge/corner and five Deep resource-marker states for Deep terrain, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 11.1 For Deep terrain, derive a single-model brief from its approved manifest/template: distinct basalt palette with the same cavity grammar. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 11.2 Produce the required directions/rotations for Deep terrain from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 11.3 Add all cut/progress/edge/corner and five Deep resource-marker states for Deep terrain, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 11 source handoff (2026-10-07): retained native basalt base/texture states are selected; terrain has a fixed camera. Two fresh built-in originals supply all 16 Deep neighbor rims and LITH/NORE/COBT/RARE/URAN markers in three disclosure states. The shared [provenance record](assets/mlvs/terrain-generation-record.json) and [native 1x/4x review](assets/mlvs/terrain-details-review.png) retain all prompts, reference/source hashes and selections. Focused conversion validates 62 supplemental poses across both depths; actual packaging/rendering stays with Groups 79-83.
+
+### Local Mandatory Reading - M1 portal source geometry
+
+_Applies to Groups 12-13; supplements the Source generation Area._
+
+Read the active portal brief/manifest, immutable portal original/provenance, `LayerPortalWorkState` in layer_portal_cmd.h, `DrawTile_LayerPortal` and its separator bounds in layer_portal_cmd.cpp, and the established portal front-mask conversion. Four actual door directions share a fixed world anchor. Surface/Underground or Underground/Deep endpoint variants are independent one-tile housings on distinct layers. Resolve the draft generic state aliases against actual Sealed/Commissioning/Connected before authoring; keep blocked status a presentation of the existing controller, never a new saved work phase. Far-facing roofs/walls must occlude vehicles; native runtime acceptance remains in later integration groups.
 
 ### Group 12 - Author sealed and commissioning portal overlays
 
 {{HARD}}
-- [ ] 12.1 For sealed and commissioning portal overlays, derive a single-model brief from its approved manifest/template: existing four-direction housings with controlled work faces. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 12.2 Produce the required directions/rotations for sealed and commissioning portal overlays from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 12.3 Add Sealed/Commissioning/Connected fronts and backs for sealed and commissioning portal overlays, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 12.1 For sealed and commissioning portal overlays, derive a single-model brief from its approved manifest/template: existing four-direction housings with controlled work faces. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 12.2 Produce the required directions/rotations for sealed and commissioning portal overlays from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 12.3 Add Sealed/Commissioning/Connected fronts and backs for sealed and commissioning portal overlays, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 12 source handoff (2026-10-07): [selected sibling v2 and provenance](assets/mlvs/portal-generation-record.json) provide true four-direction housings in actual Sealed/Commissioning/Connected phases, independently for Surface/Underground endpoint tiles. The public publisher and briefs now match the static phase owner (one frame per phase); 123 focused owner assertions pass in [g](r2mlvs13-g-portal-phase-contract.log). This replaces unsupported generic four-frame/four-state portal drafting, reducing total source requirements to 143 families / 56,779 while preserving all live/reserved/planned native offsets. Deterministic native 64x64 / (-31,-33) conversion stages 48 back/front parts with full far-roof coverage and explicit source-reviewed near apertures. [Native sheet](assets/mlvs/portal-details-review.png) verifies door/state readability and aligned cuts; actual train sorting, packed loading and final acceptance remain with later groups. Original v1 pixels and atlases stay immutable.
 
 ### Group 13 - Author Deep rail portal variant
 
 {{HARD}}
-- [ ] 13.1 For Deep rail portal variant, derive a single-model brief from its approved manifest/template: rail-compatible deep housing aligned to the shared shaft geometry. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 13.2 Produce the required directions/rotations for Deep rail portal variant from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 13.3 Add all four approach directions and work states for Deep rail portal variant, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 13.1 For Deep rail portal variant, derive a single-model brief from its approved manifest/template: rail-compatible deep housing aligned to the shared shaft geometry. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 13.2 Produce the required directions/rotations for Deep rail portal variant from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 13.3 Add all four approach directions and work states for Deep rail portal variant, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+### Local Mandatory Reading - M1 moving machinery originals
+
+_Applies to Groups 14, 14D and 15-18; supplements the Source generation Area._
+
+Read the executing model's public brief/manifest and immutable sources, engine vectors in the approved SVG and its raster guide, `TBMConsistRole`/`TBMPhase`/`TBMBlockedReason` in tbm.h, and actual native rail/chassis/parts in tbm_engine.cpp and articulated_vehicles.cpp as relevant to the current model. The cutter and permanent support are separate physical train parts; the support never receives a second cutter head. Reversal follows ordinary train orientation/backing; never turn an idle cutter into an advancing backward bore. Preserve fixed articulated contact points through all eight genuine views. Animation must use authored moving pixels and remain display-only, with no cargo/terrain/controller mutations. Service and reversing views required by the source tasks must be declared explicitly before final coverage.
 
 ### Group 14 - Author Standard TBM
 
 {{HARD}}
-- [ ] 14.1 For Standard TBM, derive a single-model brief from its approved manifest/template: cutter/support proportions and legal 45-degree heading continuity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 14.2 Produce the required directions/rotations for Standard TBM from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 14.1 For Standard TBM, derive a single-model brief from its approved manifest/template: cutter/support proportions and legal 45-degree heading continuity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 14.2 Produce the required directions/rotations for Standard TBM from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 14.3 Add idle/boring/reversing/service frames with fixed articulated seams for Standard TBM, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 14 base-source handoff (2026-10-07): [selected body v2/support v3](assets/mlvs/vehicle-generation-record.json) have eight genuine engine views each, with source-reviewed per-view crop registration and native bounds/anchors. The support is a low generator/hose cart with no cab or second cutter. [Native partial sheet](assets/mlvs/vehicle-details-review.png) stages 16 idle frame-zero poses. Two rejected candidates are retained with exact reasons/prompts/hashes and never fill coverage. The publisher/briefs now explicitly include backing and ordinary service for both cutters, and service for the hauler, as required by these source tasks (143 families / 57,051 required source sprites). Art animation creates no new saved work phase. Task 14.3 remains pending until the bounded body/support batches and 14D combined source review pass; 368 Standard poses are still missing. Actual loaded seam/occlusion review remains required during integration.
+
+### Local Mandatory Reading - Standard cutter body animation
+
+_Applies to Group 14B; supplements Source generation Area._
+
+Read vehicle.model-00 body states/frames/anchor in the public manifest and selected brief, selected idle body source/crop registration in vehicle-generation-record.json, and the sparse converter's real coverage/missing list. Use the viewed body original as the built-in tool's edit/reference target; preserve chassis/heading/contact points. Each state batch retains all eight true views and four genuinely authored frames. Idle/blocked/service never imply boring; reversing keeps the actual physical heading. No duplicate frame padding. Stop only the affected asset if a generated sheet misses a view/state/frame; preserve rejected provenance and iterate.
+
+### Group 14B - Author Standard cutter body states and frames
+
+{{HARD}}
+- [X] 14B.1 Author/select idle body frames 1-3 against the retained eight-view frame 0, preserving static chassis and declaring the animated equipment cue.
+- [ ] 14B.2 Author/select moving body frames 0-3 with actual wheel/rod cues, preserving cutter-stop and articulated contacts.
+- [ ] 14B.3 Author/select boring body frames 0-3 with genuine cutter phase/debris changes inside fixed bounds.
+- [ ] 14B.4 Author/select blocked body frames 0-3 with clear resumable wait cues and stopped cutter.
+- [ ] 14B.5 Author/select backing body frames 0-3 without turning the machine or presenting backward excavation.
+- [ ] 14B.6 Author/select ordinary service body frames 0-3 with fixed housing, distinct service cue and no depot/cargo invention.
+
+14B.1 source handoff (2026-10-07): four genuinely authored RGB equipment-cue phases now exist in all eight engine views. The tool's partial sheet contributes complete frames 1/2 only; the excluded partial row never fills a frame. A separate original supplies frame 3. Deterministic source-part assembly uses only selected cab-beacon regions onto the immutable idle chassis, as 14.3 requires changing declared parts only. Native checks independently prove identical alpha/contact geometry and exact pixels outside that cue, plus four distinct palette phases in every view. [Prompt/selection/crop/component provenance](assets/mlvs/vehicle-generation-record.json), [animation source review](assets/mlvs/standard-idle-animation-review.gif), and [focused checks](r2mlvs13-i-standard-idle-source-checks.log) retain evidence. Current Standard coverage is 40/384 (32 body idle plus 8 support idle); moving/boring/blocked/backing/service and support animations remain pending. This is source review, not a loaded gameplay capture.
+
+### Local Mandatory Reading - Standard permanent support animation
+
+_Applies to Group 14C; supplements Source generation Area._
+
+Read vehicle.model-00 support states/frames/anchor, selected support v3 and its crop registration, TBMConsistRole::PermanentSupport and actual native articulated prefix, then sparse source coverage. Animate existing machinery/wheels/status cues only. The same real cart stays permanently behind the cutter; no second head, cab, detachable cargo or new quantity owner. Retain all eight views and exact state/frame identities separately from body sources.
+
+### Group 14C - Author Standard permanent support states and frames
+
+{{HARD}}
+- [ ] 14C.1 Author/select idle support frames 1-3 against the retained eight-view frame 0.
+- [ ] 14C.2 Author/select moving support frames 0-3 with wheel/rod cues at fixed coupler contacts.
+- [ ] 14C.3 Author/select boring support frames 0-3 with genuine machinery/hose-reel changes and no cutter head.
+- [ ] 14C.4 Author/select blocked support frames 0-3 with distinct wait cue and unchanged physical machinery.
+- [ ] 14C.5 Author/select backing support frames 0-3 with the same real forward/rear couplers.
+- [ ] 14C.6 Author/select service support frames 0-3 with declared equipment panels/cues, no cargo or detached cart.
+
+### Local Mandatory Reading - Standard combined source review
+
+_Applies to Group 14D; supplements M1 moving machinery Local above Group 14._
+
+Read only the selected Standard body/support records and full 384-pose coverage, public native anchor, real Train::GetImage orientation handling and actual articulated parts. Compare neighboring headings/state/frame contacts and retained immutable hashes. Source review does not replace later packed/native runtime rendering or user acceptance.
+
+### Group 14D - Review the complete Standard source model
+
+{{MEDIUM}}
+- [ ] 14D.1 Verify all 384 declared body/support poses, genuine animation pixels and deterministic palette/alpha/crop/anchor conversion; refuse missing or duplicated coverage.
+- [ ] 14D.2 Review the combined native sheet for eight-view continuity, 45-degree neighbors, static chassis/contacts and readable body/support/work/backing/service differences.
+- [ ] 14D.3 Publish the completed source handoff and check original 14.3 only after 14B/14C/14D checks pass; keep actual packed train seam/occlusion/runtime acceptance with the owning later groups.
 
 ### Group 15 - Author Deep-rated TBM
 

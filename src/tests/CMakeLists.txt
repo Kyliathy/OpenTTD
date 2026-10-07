@@ -34,6 +34,11 @@ add_test_files(
     logistics_crash_fixture.h
     tbm_depot_workflow.cpp
     tbm_depot_trace.cpp
+    tbm_depot_save.cpp
+    tbm_depot_stalls.cpp
+    tbm_depot_queue.cpp
+    tbm_depot_crash.cpp
+    depot_file_fixture.h
     underground_depot_fixture.h
     tbm_conservation.cpp
     tbm_phase.cpp
@@ -112,6 +117,8 @@ add_test_files(
     portal_build.cpp
     portal_date.cpp
     portal_fleet_date.cpp
+    portal_occupied_save.cpp
+    multilayer_art_geometry.cpp
     portal_lifecycle.cpp
     portal_work_state.cpp
     portal_window.cpp

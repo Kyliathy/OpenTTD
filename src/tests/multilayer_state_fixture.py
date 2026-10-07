@@ -17,12 +17,30 @@ AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
 FIXTURES = ROOT / "src/tests/fixtures"
 
 
+def log_path(name, root=ROOT):
+    """Route fixture output to the repository log directory shared by all plans.
+
+    @param name Log basename retaining the owning plan's evidence prefix.
+    @param root Repository root containing the fixture's configured build.
+    @return Absolute log path, with its repository-local directory created.
+    """
+    # Reject directories and other artifact types so callers cannot recreate
+    # logs beside plans or relocate immutable saves through this shared route.
+    if Path(name).name != name or not name.endswith(".log"):
+        raise ValueError("fixture log must be a .log basename")
+    directory = root.resolve() / "logs"
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory / name
+
+
 def save_path(name):
     """Locate a retained or generated save beside the tests for its feature.
 
     @param name Basename using the owning plan's established evidence prefix.
-    @return Repository-local feature fixture path; logs and reports remain in AREA.
+    @return Repository-local feature fixture path; logs use log_path and reports remain in AREA.
     """
+    # Only owned save basenames may select a feature directory; arbitrary paths
+    # must not overwrite retained inputs or place saves in the documentation tree.
     if Path(name).name != name or not name.endswith(".sav"):
         raise ValueError("fixture save must be a .sav basename")
     families = (
@@ -35,6 +53,8 @@ def save_path(name):
         ("r2mlvs6-ea-", "processors"),
         ("r2mlvs6-", "mines"),
     )
+    # Specific processor prefixes precede the wider mine prefix so each save
+    # stays with the feature that owns its persistence contract.
     for prefix, family in families:
         if name.startswith(prefix):
             return FIXTURES / family / name
@@ -54,7 +74,7 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     """
     output = save_path(f"{prefix}-{name}.sav")
     script = output.with_suffix(".scr")
-    log = AREA / f"{prefix}-{name}.log"
+    log = log_path(f"{prefix}-{name}.log")
     output.unlink(missing_ok=True)
     company_setup = "start_ai\n" if single_player and "-g" not in arguments else ""  # New null-video worlds need an actual owner; loaded worlds retain their saved company without creating another.
     script.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md, metadata fixture.\n"

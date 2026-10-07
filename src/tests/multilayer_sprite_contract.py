@@ -3,6 +3,7 @@
 
 @file multilayer_sprite_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
 """
 
 import argparse
@@ -26,7 +27,7 @@ def record(asset_id, consumer, kind, states, frames=1, footprint=(1, 1), directi
     @param kind Icon, terrain, vehicle or building placement policy.
     @param states Explicit complete gameplay-state names.
     @param frames Exact frame count per state and direction.
-    @param footprint World tile dimensions; moving vehicles use no static tile footprint.
+    @param footprint Static world tile dimensions; a portal's pair coverage means one independent tile per endpoint, and moving vehicles have no static floor.
     @param directions Explicit engine views; defaults depend on placement kind.
     @return One manifest record with pending source/packing status.
     """
@@ -35,9 +36,14 @@ def record(asset_id, consumer, kind, states, frames=1, footprint=(1, 1), directi
     width, height, x, y = sizes[kind]
     views = directions if directions is not None else DIRECTIONS if kind == "vehicle" else DOORS if kind == "building" else ["none"]
     parts = ["back", "front"] if kind == "building" else ["body"]
+    # Both native cutters have a real permanent articulated support part. Source coverage must supply that
+    # separate moving part instead of drawing another cutter head or counting one whole-machine image twice.
+    if asset_id in {"vehicle.model-00", "vehicle.model-01"}:
+        parts.append("support")
     return {"asset_id": asset_id, "consumer": consumer, "kind": kind,
             "directions": views, "frames": frames, "states": states,
             "native_size": [width, height], "footprint": list(footprint),
+            "footprint_semantics": "paired_endpoint_tiles" if asset_id.startswith("facility.portal.") else "world_tiles",
             "anchor": [x, y], "bounds": [0, 0, width, height], "parts": parts,
             "geometry": "per_tile" if kind == "building" else "per_view",
             "tile_variants": footprint[0] * footprint[1] if kind == "building" else 1,
@@ -71,13 +77,20 @@ def build_manifest():
                         17: ["empty", "partial", "full", "moving", "service", "blocked"],
                         18: ["packed", "descending", "recovered", "blocked"]}
         states = space_states.get(model, states)
+        # Machinery source tasks include real backing and ordinary service. These
+        # are presentation views of existing train/controller facts, not new saved
+        # work phases; the support remains permanently articulated in every view.
+        if model < 2:
+            states.extend(["reversing", "service"])
+        elif model == 4:
+            states.append("service")
         rows.append(record(f"vehicle.model-{model:02}", owner, "vehicle", states, 4 if model < 2 else 2, (0, 0)))
         rows.append(record(f"purchase.model-{model:02}", owner, "icon", ["available", "locked"]))
     # Each facility has an explicit footprint and back/front pair; local-ID packing belongs to its feature owner.
     facilities = [("portal.sealed", 3, (2, 1)), ("portal.deep-rail", 3, (2, 1)),
-                  ("exchange", 5, (3, 2)), ("rail-station", 7, (3, 2)), ("road-terminal", 7, (2, 2)),
-                  ("rail-service", 7, (3, 2)), ("road-service", 7, (2, 2)),
-                  ("earth-receiver", 6, (3, 3)), ("rock-receiver", 6, (3, 3)),
+                  ("exchange", 5, (1, 1)), ("rail-station", 7, (3, 2)), ("road-terminal", 7, (2, 2)),
+                  ("rail-service", 7, (1, 1)), ("road-service", 7, (1, 1)),
+                  ("earth-receiver", 6, (2, 3)), ("rock-receiver", 6, (4, 4)),
                   ("metal-refinery", 6, (4, 4)), ("chemical-works", 6, (4, 4)),
                   ("battery-works", 6, (4, 4)), ("electronics-works", 6, (4, 4)),
                   ("component-works", 6, (4, 4)), ("robotics-works", 6, (4, 4)),
@@ -88,10 +101,18 @@ def build_manifest():
                   ("heat-battery-works", 17, (4, 4)), ("mantle-forge", 17, (4, 4)),
                   ("utility-riser", 17, (2, 2)), ("launch-center", 9, (4, 4))]
     for name, owner, footprint in facilities:
-        states = ["construction", "ready", "working", "blocked"]
+        # A portal's real owner has exactly three saved work phases. Its housing
+        # is static within each phase; controller waits have separate UI cues and
+        # cannot introduce a fourth saved phase or fictitious animation frames.
+        portal = name.startswith("portal.")
+        states = ["sealed", "commissioning", "connected"] if portal else ["construction", "ready", "working", "blocked"]
         if owner == 17:
             states.append("heat_starved")
-        rows.append(record(f"facility.{name}", owner, "building", states, 4, footprint))
+        row = record(f"facility.{name}", owner, "building", states, 1 if portal else 4, footprint)
+        if portal:
+            row["state_owner"] = "LayerPortalWorkState; controller blocked reason is independent presentation"
+            row["endpoint_variants"] = ["upper", "lower"]
+        rows.append(row)
     for shape in ("straight", "bend45", "junction", "end", "crossing", "conduit"):
         rows.append(record(f"tube.{shape}", 16, "terrain", ["construction", "powered", "unpowered"], directions=DOORS))
     rows.append(record("geothermal.vent", 17, "terrain", ["hidden", "surveyed", "tapped", "heat_starved"], 4))
@@ -109,6 +130,10 @@ def build_manifest():
     cargo_catalogue = json.loads((ROOT / "media/multilayer/cargo_catalogue.json").read_text(encoding="utf-8"))
     for cargo in (entry["label"] for entry in cargo_catalogue["cargoes"]):
         rows.append(record(f"cargo.{cargo}", 1, "icon", ["normal"]))
+    # Append neighbor-mask families after every existing public planned offset. A cavity border is
+    # selected from actual adjacent rock cells; it must not reuse a full rim around every open tile.
+    for depth in ("underground", "deep"):
+        rows.append(record(f"terrain.edges.{depth}", 2, "terrain", [f"mask_{mask:02x}" for mask in range(16)]))
     sheet = ROOT / "media/baseset/openttd/map_layers.png"
     next_offset = 74
     # Core overlays get an explicit future append range; current 0..65 and optional 66..73 are never occupied by this draft.

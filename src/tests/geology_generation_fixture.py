@@ -9,7 +9,7 @@ import hashlib
 import json
 import sys
 
-from multilayer_state_fixture import AREA, ROOT, run_case
+from multilayer_state_fixture import AREA, ROOT, log_path, run_case
 
 sys.path.insert(0, str(AREA / "tools"))
 from savegame_plane_digest import Reader, PLANE_BYTES, CHUNK_RIFF, CHUNK_RECORDS, read_stream
@@ -86,7 +86,7 @@ def main():
         assert roots["classic"] == 0, "Classic acquired geology"
         digests = {name: surface_digests(stream) for name, stream in streams.items()}
         assert digests["native"] == digests["repeated"] == digests["classic"], "Surface generation changed"
-        assert "MLVS_GEOLOGY" not in (AREA / "r2mlvs2-e-classic.log").read_text(encoding="utf-8", errors="replace"), "Classic activated geology"
+        assert "MLVS_GEOLOGY" not in log_path("r2mlvs2-e-classic.log").read_text(encoding="utf-8", errors="replace"), "Classic activated geology"
     finally:
         startup.write_bytes(original_script)
         config.write_bytes(original_config)

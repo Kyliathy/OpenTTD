@@ -1,0 +1,3287 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; sparse source coverage only",
+  "schema_version": 1,
+  "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
+  "runtime_activated": false,
+  "atlases": [
+    {
+      "asset_id": "vehicle.model-00",
+      "path": "media/multilayer/sprites/m1/vehicle-model-00-authored.png",
+      "sha256": "367c36246d6bc4598dd03aa902f767d1f3e7cdbef66e629f20d9fc573624a8b7",
+      "size": [
+        512,
+        240
+      ],
+      "native_cell": [
+        64,
+        48
+      ],
+      "coverage_complete": false,
+      "required_pose_count": 384,
+      "missing_pose_count": 344,
+      "missing": [
+        [
+          "body",
+          "blocked",
+          0,
+          "E"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "N"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "NE"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "NW"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "S"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "SE"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "SW"
+        ],
+        [
+          "body",
+          "blocked",
+          0,
+          "W"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "E"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "N"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "NE"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "NW"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "S"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "SE"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "SW"
+        ],
+        [
+          "body",
+          "blocked",
+          1,
+          "W"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "E"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "N"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "NE"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "NW"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "S"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "SE"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "SW"
+        ],
+        [
+          "body",
+          "blocked",
+          2,
+          "W"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "E"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "N"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "NE"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "NW"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "S"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "SE"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "SW"
+        ],
+        [
+          "body",
+          "blocked",
+          3,
+          "W"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "E"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "N"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "NE"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "NW"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "S"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "SE"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "SW"
+        ],
+        [
+          "body",
+          "moving",
+          0,
+          "W"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "E"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "N"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "NE"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "NW"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "S"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "SE"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "SW"
+        ],
+        [
+          "body",
+          "moving",
+          1,
+          "W"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "E"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "N"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "NE"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "NW"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "S"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "SE"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "SW"
+        ],
+        [
+          "body",
+          "moving",
+          2,
+          "W"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "E"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "N"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "NE"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "NW"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "S"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "SE"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "SW"
+        ],
+        [
+          "body",
+          "moving",
+          3,
+          "W"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "E"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "N"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "NE"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "NW"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "S"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "SE"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "SW"
+        ],
+        [
+          "body",
+          "reversing",
+          0,
+          "W"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "E"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "N"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "NE"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "NW"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "S"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "SE"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "SW"
+        ],
+        [
+          "body",
+          "reversing",
+          1,
+          "W"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "E"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "N"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "NE"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "NW"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "S"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "SE"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "SW"
+        ],
+        [
+          "body",
+          "reversing",
+          2,
+          "W"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "E"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "N"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "NE"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "NW"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "S"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "SE"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "SW"
+        ],
+        [
+          "body",
+          "reversing",
+          3,
+          "W"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "E"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "N"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "NE"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "NW"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "S"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "SE"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "SW"
+        ],
+        [
+          "body",
+          "service",
+          0,
+          "W"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "E"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "N"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "NE"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "NW"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "S"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "SE"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "SW"
+        ],
+        [
+          "body",
+          "service",
+          1,
+          "W"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "E"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "N"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "NE"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "NW"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "S"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "SE"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "SW"
+        ],
+        [
+          "body",
+          "service",
+          2,
+          "W"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "E"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "N"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "NE"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "NW"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "S"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "SE"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "SW"
+        ],
+        [
+          "body",
+          "service",
+          3,
+          "W"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "E"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "N"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "NE"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "NW"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "S"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "SE"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "SW"
+        ],
+        [
+          "body",
+          "working",
+          0,
+          "W"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "E"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "N"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "NE"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "NW"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "S"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "SE"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "SW"
+        ],
+        [
+          "body",
+          "working",
+          1,
+          "W"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "E"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "N"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "NE"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "NW"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "S"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "SE"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "SW"
+        ],
+        [
+          "body",
+          "working",
+          2,
+          "W"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "E"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "N"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "NE"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "NW"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "S"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "SE"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "SW"
+        ],
+        [
+          "body",
+          "working",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "E"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "N"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "NE"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "NW"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "S"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "SE"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "SW"
+        ],
+        [
+          "support",
+          "blocked",
+          0,
+          "W"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "blocked",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "blocked",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "blocked",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "idle",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "idle",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "idle",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "E"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "N"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "NE"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "NW"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "S"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "SE"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "SW"
+        ],
+        [
+          "support",
+          "moving",
+          0,
+          "W"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "moving",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "moving",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "moving",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "E"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "N"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "NE"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "NW"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "S"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "SE"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "SW"
+        ],
+        [
+          "support",
+          "reversing",
+          0,
+          "W"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "reversing",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "reversing",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "reversing",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "E"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "N"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "NE"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "NW"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "S"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "SE"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "SW"
+        ],
+        [
+          "support",
+          "service",
+          0,
+          "W"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "service",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "service",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "service",
+          3,
+          "W"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "E"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "N"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "NE"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "NW"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "S"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "SE"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "SW"
+        ],
+        [
+          "support",
+          "working",
+          0,
+          "W"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "E"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "N"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "NE"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "NW"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "S"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "SE"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "SW"
+        ],
+        [
+          "support",
+          "working",
+          1,
+          "W"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "E"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "N"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "NE"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "NW"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "S"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "SE"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "SW"
+        ],
+        [
+          "support",
+          "working",
+          2,
+          "W"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "E"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "N"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "NE"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "NW"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "S"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "SE"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "SW"
+        ],
+        [
+          "support",
+          "working",
+          3,
+          "W"
+        ]
+      ],
+      "sprites": [
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "N",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            83,
+            187,
+            214,
+            454
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            0,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "NE",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            381,
+            187,
+            625,
+            454
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            64,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "E",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            760,
+            187,
+            1029,
+            454
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            128,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "SE",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            1135,
+            187,
+            1374,
+            454
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            192,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "S",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            83,
+            625,
+            214,
+            902
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            256,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "SW",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            381,
+            625,
+            625,
+            902
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            320,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "W",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            760,
+            625,
+            1029,
+            902
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            384,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 0,
+          "direction": "NW",
+          "source": "standard_body_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "source_box": [
+            1135,
+            625,
+            1374,
+            902
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            448,
+            0,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "N",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            131,
+            13,
+            237,
+            200
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            25,
+            3,
+            3
+          ],
+          "box": [
+            0,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "NE",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            421,
+            13,
+            626,
+            200
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            26,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            64,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "E",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            771,
+            13,
+            996,
+            200
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            21,
+            20,
+            3,
+            3
+          ],
+          "box": [
+            128,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "SE",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            1130,
+            13,
+            1332,
+            200
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            24,
+            16,
+            3,
+            3
+          ],
+          "box": [
+            192,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "S",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            131,
+            222,
+            237,
+            414
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            14,
+            3,
+            3
+          ],
+          "box": [
+            256,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "SW",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            421,
+            222,
+            626,
+            414
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            37,
+            18,
+            3,
+            3
+          ],
+          "box": [
+            320,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "W",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            771,
+            222,
+            996,
+            414
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            40,
+            19,
+            3,
+            3
+          ],
+          "box": [
+            384,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 1,
+          "direction": "NW",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            1130,
+            222,
+            1332,
+            414
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            36,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            448,
+            48,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "N",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            131,
+            425,
+            237,
+            615
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            25,
+            3,
+            3
+          ],
+          "box": [
+            0,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "NE",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            421,
+            425,
+            626,
+            615
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            26,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            64,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "E",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            771,
+            425,
+            996,
+            615
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            21,
+            20,
+            3,
+            3
+          ],
+          "box": [
+            128,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "SE",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            1130,
+            425,
+            1332,
+            615
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            24,
+            16,
+            3,
+            3
+          ],
+          "box": [
+            192,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "S",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            131,
+            636,
+            237,
+            829
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            14,
+            3,
+            3
+          ],
+          "box": [
+            256,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "SW",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            421,
+            636,
+            626,
+            829
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            37,
+            18,
+            3,
+            3
+          ],
+          "box": [
+            320,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "W",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            771,
+            636,
+            996,
+            829
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            40,
+            19,
+            3,
+            3
+          ],
+          "box": [
+            384,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 2,
+          "direction": "NW",
+          "source": "standard_body_idle_frames1_2",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "source_box": [
+            1130,
+            636,
+            1332,
+            829
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            36,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            448,
+            96,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "N",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            80,
+            181,
+            216,
+            456
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            25,
+            3,
+            3
+          ],
+          "box": [
+            0,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "NE",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            378,
+            181,
+            627,
+            456
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            26,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            64,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "E",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            758,
+            181,
+            1032,
+            456
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            21,
+            20,
+            3,
+            3
+          ],
+          "box": [
+            128,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "SE",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            1135,
+            181,
+            1379,
+            456
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            24,
+            16,
+            3,
+            3
+          ],
+          "box": [
+            192,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "S",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            80,
+            624,
+            216,
+            905
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            30,
+            14,
+            3,
+            3
+          ],
+          "box": [
+            256,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "SW",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            378,
+            624,
+            627,
+            905
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            37,
+            18,
+            3,
+            3
+          ],
+          "box": [
+            320,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "W",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            758,
+            624,
+            1032,
+            905
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            40,
+            19,
+            3,
+            3
+          ],
+          "box": [
+            384,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "body",
+          "state": "idle",
+          "frame": 3,
+          "direction": "NW",
+          "source": "standard_body_idle_frame3",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "source_box": [
+            1135,
+            624,
+            1379,
+            905
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": "cab_beacon",
+          "component_target_box": [
+            36,
+            24,
+            3,
+            3
+          ],
+          "box": [
+            448,
+            144,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "N",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            123,
+            144,
+            226,
+            468
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            0,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "NE",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            415,
+            144,
+            673,
+            468
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            64,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "E",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            744,
+            144,
+            1072,
+            468
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            128,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "SE",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            1156,
+            144,
+            1402,
+            468
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            192,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "S",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            123,
+            660,
+            226,
+            979
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            256,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "SW",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            415,
+            660,
+            673,
+            979
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            320,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "W",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            744,
+            660,
+            1072,
+            979
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            384,
+            192,
+            64,
+            48
+          ]
+        },
+        {
+          "part": "support",
+          "state": "idle",
+          "frame": 0,
+          "direction": "NW",
+          "source": "standard_support_idle_frame0",
+          "source_path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
+          "source_box": [
+            1156,
+            660,
+            1402,
+            979
+          ],
+          "anchor": [
+            -32,
+            -32
+          ],
+          "component": null,
+          "component_target_box": null,
+          "box": [
+            448,
+            192,
+            64,
+            48
+          ]
+        }
+      ]
+    }
+  ],
+  "pose_count": 40,
+  "occupied_envelopes": {
+    "N": [
+      16,
+      24
+    ],
+    "NE": [
+      24,
+      24
+    ],
+    "E": [
+      32,
+      24
+    ],
+    "SE": [
+      24,
+      24
+    ],
+    "S": [
+      16,
+      24
+    ],
+    "SW": [
+      24,
+      24
+    ],
+    "W": [
+      32,
+      24
+    ],
+    "NW": [
+      24,
+      24
+    ]
+  }
+}
