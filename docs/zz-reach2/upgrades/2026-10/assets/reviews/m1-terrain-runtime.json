@@ -1,0 +1,59 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group82; actual viewport/picker raster evidence, final-machine crossings pending",
+  "source": "src/tests/fixtures/haulage/portal-native-deep-stopped.sav",
+  "source_sha256": "438f221ba4deb7083e8c673f0251534b76967e1a290218c6d205e641f983df57",
+  "log": "logs/r2mlvs13-bh-native-terrain-capture.log",
+  "renderer": "actual ViewportDoDraw with 8bpp-simple",
+  "frames": [
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-layer-1-zoom-2.png",
+      "sha256": "d0e9f7cae95dc23608d8af3f7b3b8671dc49eab6b9b3d7a638bba86105e93523",
+      "layer": 1,
+      "zoom": 2
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-layer-1-zoom-1.png",
+      "sha256": "d8788975d7f2922aa565955970ae7d7d9d9255ef498c5957060609258d14bc87",
+      "layer": 1,
+      "zoom": 1
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-layer-3-zoom-2.png",
+      "sha256": "a30d059d4f77e32b394398a84b9fc85aa8bc5160f74f520a6933bf9f0c562a1d",
+      "layer": 3,
+      "zoom": 2
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-layer-3-zoom-1.png",
+      "sha256": "b9ca8ed7740756ce7ad395e7b02fd0708f61facdecef6b0b23155b0b4a821510",
+      "layer": 3,
+      "zoom": 1
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-portal-picker-basic-upper.png",
+      "sha256": "e7fdfe0aa7e32ddf5ddc0bc76a6a164ec5eb5798fe50ac13104dd60ad29385d2",
+      "layer": null,
+      "zoom": null
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-portal-picker-basic-lower.png",
+      "sha256": "432b33b95710132118c0c4b4f510767716fb782c4a42910431aeb3be807a3a9d",
+      "layer": null,
+      "zoom": null
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-portal-picker-deep-upper.png",
+      "sha256": "778cadb57506a5ac30b51a58aec2b12aba5be147c3b1c5f1a6e0ed09c8a4d5c8",
+      "layer": null,
+      "zoom": null
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-portal-picker-deep-lower.png",
+      "sha256": "684cbc2c736172c3a2876961344157bbfeaa0c34dc212111a43ae048712fa0ea",
+      "layer": null,
+      "zoom": null
+    }
+  ],
+  "simulation_owners_unchanged_during_render": true,
+  "user_review": "deferred_until_integration"
+}

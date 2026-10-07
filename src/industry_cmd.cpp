@@ -13,6 +13,8 @@
 #include "bridge_map.h"
 #include "clear_map.h"
 #include "industry.h"
+#include "multilayer_sprite.h"
+#include "timer/timer_game_tick.h"
 #include "station_base.h"
 #include "station_func.h"
 #include "landscape.h"
@@ -354,6 +356,21 @@ static void DrawTile_Industry(TileInfo *ti)
 {
 	IndustryGfx gfx = GetIndustryGfx(ti->tile);
 	Industry *ind = Industry::GetByTile(ti->tile);
+	if (const auto native_back = GetMultiLayerReceiverSprite(ti->tile, false, TimerGameTick::counter)) {
+		// Selected native receivers use their exact funded world cells and aligned
+		// back/fronts. Existing foreign/climate industries retain their own resolver.
+		if (ti->tileh != SLOPE_FLAT) DrawFoundation(ti, Foundation::Leveled);
+		DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
+		if (!IsInvisibilitySet(TransparencyOption::Industries)) {
+			SpriteID back = *native_back;
+			const bool transparent = IsTransparencySet(TransparencyOption::Industries);
+			if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
+			DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+			const SpriteID front = *GetMultiLayerReceiverSprite(ti->tile, true, TimerGameTick::counter);
+			AddSortableSpriteToDraw(front, PAL_NONE, *ti, SpriteBounds{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}}, transparent);
+		}
+		return;
+	}
 	const IndustryTileSpec *indts = GetIndustryTileSpec(gfx);
 
 	/* Retrieve pointer to the draw industry tile struct */

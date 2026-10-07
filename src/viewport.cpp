@@ -65,6 +65,7 @@
 #include "landscape.h"
 #include "viewport_func.h"
 #include "construction_preview.h"
+#include "underground_gui.h"
 #include "station_base.h"
 #include "station_func.h"
 #include "waypoint_base.h"
@@ -985,7 +986,7 @@ static const HighLightStyle _autorail_type[6][2] = {
 /**
  * Draws autorail highlights.
  *
- * @param *ti TileInfo Tile that is being drawn
+ * @param ti Actual world tile being drawn; native survey overlays require the real active cursor owner.
  * @param highlight_style Highlight to draw
  */
 static void DrawAutorailSelection(const TileInfo *ti, HighLightStyle highlight_style)
@@ -1183,6 +1184,11 @@ static void DrawTileSelection(const TileInfo *ti)
 {
 	/* Highlight tiles inside local authority of selected towns. */
 	HighlightTownLocalAuthorityTiles(ti);
+	// The active free survey tool overlays the geology owner's exact seam and
+	// depletion on existing tiles of every infrastructure type. A marker never
+	// excavates a cell or surveys it in saved state. Center its 20px source cell
+	// inside the ordinary 64x32 tile diamond, preserving the packed crop anchor.
+	if (const auto marker = GetUndergroundSurveyOverlaySprite(ti->tile)) DrawGroundSprite(*marker, PAL_NONE, nullptr, -10, 6);
 
 	/* Draw a red error square? */
 	bool is_redsq = _thd.redsq == ti->tile;

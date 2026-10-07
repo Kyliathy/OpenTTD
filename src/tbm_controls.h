@@ -8,7 +8,7 @@
  * @file tbm_controls.h What a player can do at a rail portal pair and with its boring project, for the portal window
  * (R2MLVS3MP master 7.9). One query derives the offered controls and the next step from the commands' own checks, so
  * the window never offers a step the commands would refuse.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, task 16.3
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, tasks 16.1/16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
  */
 
@@ -45,6 +45,19 @@ struct TBMPairControls {
 	std::optional<TBMExchangeAssignment> hauler; ///< The project's first hauler, in accepted request order.
 	uint32_t cuts_done = 0; ///< Committed cuts of the project's route.
 	uint32_t cuts_total = 0; ///< Cuts of the whole route.
+	TBMWorkState work; ///< Face, partial work and the single hold reason, projected by the controller.
+	std::optional<GeologyHardness> hardness; ///< Actual next-face geology; absent when the route has no face.
+	uint64_t face_work_ticks = 0; ///< Pure estimate of the current cut's geological work requirement.
+	uint32_t pass_number = 0; ///< One-based next accepted pass, derived from frozen exchange boundaries.
+	uint32_t pass_total = 0; ///< Number of accepted passes, never a second saved progress cursor.
+	uint32_t pass_cuts_done = 0; ///< Committed cuts within the displayed pass.
+	uint32_t pass_cuts_total = 0; ///< Accepted cut count within the displayed pass.
+	uint64_t earth_loaded_t = 0; ///< Actual packets aboard attached Earth wagon parts.
+	uint64_t earth_capacity_t = 0; ///< Actual capacity of attached Earth wagon parts.
+	uint64_t rock_loaded_t = 0; ///< Actual packets aboard attached Rock wagon parts.
+	uint64_t rock_capacity_t = 0; ///< Actual capacity of attached Rock wagon parts.
+	Money active_cost_per_year = 0; ///< Model's recurring boring rate, separate from work/support charges.
+	Money idle_cost_per_year = 0; ///< Model's nonzero stopped/service rate.
 	uint64_t earth_t = 0; ///< Earth the project has dug.
 	uint64_t rock_t = 0; ///< Rock the project has dug.
 	uint8_t earth_hoppers = 0; ///< The cutter's Earth hoppers; a hauler brings as many empties.

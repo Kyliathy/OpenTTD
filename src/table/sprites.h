@@ -7,6 +7,7 @@
 
 /**
  * @file sprites.h This file contains all sprite-related enums and defines. @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B (native M1 ranges)
  *
  * These consist mainly of the sprite numbers and a bunch of masks and macros
  * to handle sprites and to get rid of all the magic numbers in the code.
@@ -40,6 +41,7 @@
 
 #include "../gfx_type.h"
 #include "../slope_type.h"
+#include "multilayer_sprite_assets.h"
 
 static const SpriteID SPR_SELECT_TILE  = 752;
 static const SpriteID SPR_DOT          = 774; ///< Corner marker for lower/raise land.
@@ -383,7 +385,7 @@ static const SpriteID SPR_BRIDGE_DECKS_ROAD = SPR_BRIDGE_DECKS_BASE + 18;
  * @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  */
 static constexpr SpriteID SPR_MAP_LAYER_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT; ///< First Map Layer sprite.
-static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = 66; ///< Original 44 sprites plus Deep Underground and road tunnel art.
+static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = MULTILAYER_M1_SPRITE_COUNT; ///< Original 66, reserved/planned slots and selected M1 native art; legacy offsets stay unchanged.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SURFACE = SPR_MAP_LAYER_BASE + 0; ///< Surface toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_UNDERGROUND = SPR_MAP_LAYER_BASE + 1; ///< Underground toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SPACE = SPR_MAP_LAYER_BASE + 2; ///< Space toolbar icon.

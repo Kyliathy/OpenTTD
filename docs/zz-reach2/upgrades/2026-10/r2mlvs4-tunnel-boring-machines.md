@@ -421,8 +421,8 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 ### Group 16 - Expose controller state and integrate matching assets
 
 {{MEDIUM}}
-- [ ] 16.1 Display face, pass progress, hardness, both spoil capacities, active/idle cost and one precise blocked reason from controller queries.
-- [ ] 16.2 Integrate idle/boring/reversing/servicing graphics and sound events from r2mlvs13 after manifest/asset verification. Animation must consume state and never trigger work.
+- [X] 16.1 Display face, pass progress, hardness, both spoil capacities, active/idle cost and one precise blocked reason from controller queries.
+- [X] 16.2 Integrate idle/boring/reversing/servicing graphics and sound events from r2mlvs13 after manifest/asset verification. Animation must consume state and never trigger work.
 - [X] 16.3 Give the player a project's controls in the portal window (added 2026-10-05, R2MLVS3MP master 7.9), with stand-in visuals until 16.2 and master Group 8 deliver the art:
   - the corridor length to commission;
   - show the machine, start/stop it, pause/resume, cancel (confirmed) and retire, through `CmdControlTBMProject` with named refusals;
@@ -431,7 +431,9 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 
   What the window offers comes from one tested query, so it never offers a step the commands refuse. 16.1's full display stays open.
 
-Group 16 status (2026-10-05, R2MLVS3MP master 7.9): 16.3 passes with all 112 project tags
+Group 16 closure (2026-10-07, master 8.7): `GetTBMPairControls` projects the real next face and layer-local coordinates, geology hardness, accepted pass boundaries and partial work, attached Earth/Rock packet totals and capacities, and the actual model's yearly active/idle rates. The eleven-line portal panel displays one controller hold reason. [Focused presentation/cost/window checks](../../../../logs/r2mlvs3mp-s-tbm-presentation-checks.log) pass 5,961 assertions / six cases; [actual native UI capture](../../../../logs/r2mlvs3mp-s-tbm-face-coordinates-runtime.log) passes 97 assertions / one case, with the [panel](assets/reviews/m1-controls-portal.png) inspected for clipping and correct layer coordinates. Repeated queries preserve geology, project/job state, cash, cargo and both random streams. Plan 13 Groups 83/83B deliver verified cutter/support/hopper/bay art; 83.3 records actual driven loops and four exposed same-heading drilling poses. Task 83.4 verifies all four existing licensed baseset cues through actual sound decoding and nonzero mixer output. Animation/audio only observe the existing state owners. [Runtime binding refresh](../../../../logs/r2mlvs3mp-s-runtime-bindings-refresh.log) preserves the distributed payload and passes three bounded metadata corruption refusals. User art feedback remains deferred.
+
+Historical Group 16 status (2026-10-05, R2MLVS3MP master 7.9): 16.3 passes with all 112 project tags
 ([burst](r2mlvs3mp-l-controls-burst2-all.txt)); 16.1 and 16.2 stay open for the full display and the art.
 - `GetTBMPairControls` (`src/tbm_controls.cpp`) derives each offered control from the commands' own estimates, run
   as the asking company. It also derives the next step of the project's life, from commission to connected.

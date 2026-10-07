@@ -1,0 +1,75 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group83B; actual loaded UI and survey consumer proof",
+  "source": "src/tests/fixtures/haulage/portal-native-deep-stopped.sav",
+  "source_sha256": "438f221ba4deb7083e8c673f0251534b76967e1a290218c6d205e641f983df57",
+  "log": "logs/r2mlvs13-cl-native-control-capture.log",
+  "renderer": "actual widgets, DrawTrainEngine, cargo and ViewportDoDraw with 8bpp-simple",
+  "frames": [
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-controls-layer-1.png",
+      "size": [
+        524,
+        388
+      ],
+      "sha256": "3e513e54c7c8ffe10b4a22f484b431b5e833140d93ca78b929d8d1e994dd6aff"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-controls-layer-3.png",
+      "size": [
+        524,
+        388
+      ],
+      "sha256": "adfc1b467214de1857d069e821d36856c05ac925daebf9346d417618b2a9a9ee"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-survey-layer-1.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "88366500e1f83b9b7fe70ac8b9202a245f91e78bd6a4a0b013b3268dc18adedc"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-survey-layer-3.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "5fe68563dcd3836c11102ea1b2bd8248500766b6f48ec4673040fe8daecdfe57"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-controls-portal.png",
+      "size": [
+        472,
+        290
+      ],
+      "sha256": "64678baf9491f5a03e9195a7d170be188893bd9f2434aa1b908553f290213f15"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-purchase-cargo.png",
+      "size": [
+        640,
+        240
+      ],
+      "sha256": "4a0603566fc91c9be4995723a4f28c7197aa9b2dc989512840da0e7d778c63a3"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-job-inspection-controls.png",
+      "size": [
+        524,
+        388
+      ],
+      "sha256": "0359fa3db25f2493b4c756f0e69e032b94fedfdf955317451865a0bdba7b80e2"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-job-inspection-footprint.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "ee8fb06e6ecf19909a25d905233572fcb21581a44921d6404e6c5419e8402965"
+    }
+  ],
+  "simulation_owners_unchanged_during_render": true,
+  "user_review": "deferred_until_integration"
+}

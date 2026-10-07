@@ -330,11 +330,15 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 **Scoped graphics gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Final graphics tasks in this area require the corresponding r2mlvs13 manifest entries, delivered sprites and packed loading fixture. Verify them before binding/review; if absent, stop only those art tasks and their acceptance claims, continue independent code/state tests, and never count placeholders as finished assets.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 13 - Controls, art and acceptance
 
 {{MEDIUM}}
-- [ ] 13.1 Show sealed face, TBM-only commissioning and connected traffic states in portal preview, tooltip and sprites.
+- [X] 13.1 Show sealed face, TBM-only commissioning and connected traffic states in portal preview, tooltip and sprites.
 - [X] 13.1A Deliver actual either-end click controls, saved status/date label and tooltip, plus validated synchronized Connect/Seal actions. Commissioning purchase stays disabled until its real controller exists. State-preview/final sprites remain in 13.1 under the verified Plan 13 art gate (`facility.portal.sealed` source/packed path/hash are still absent).
+
+13.1 closure (2026-10-07, master 8.7): the pair window renders both actual endpoint layers, door directions and saved Sealed/Commissioning/Connected sprite states; the construction picker correctly previews a newly Sealed pair. Status/tooltips and traffic permissions retain their existing owners. The selected packed portal art and real crossing captures are verified by Plan 13 Group 82. [Focused portal checks](../../../../logs/r2mlvs3mp-s-portal-preview-checks.log) pass 94 assertions / four cases, and [native controls capture](../../../../logs/r2mlvs3mp-s-portal-preview-runtime.log) passes 97 assertions / one case. The [actual Commissioning pair preview](assets/reviews/m1-controls-portal.png) was inspected for endpoint placement and labels; user art review remains deferred.
 
 ### Group 14 - Controls, art and acceptance
 

@@ -68,7 +68,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-v1.png",
         "sha256": "a44e24f593f745b871b0c2d48fcc6856aa3415f0ca28250aab0794f1cd6badac",
         "provenance": "first_party_original_builtin_image_gen",
@@ -77,11 +77,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 74,
+        "sprite_count": 12,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-06",
-        "status": "base_states_staged_edges_and_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-v1.png"
@@ -90,8 +95,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground.png",
         "native_sha256": "30f8724ccb6e781cc1d44024406851d868581f5acbd0057fa481a12462c148a4",
         "staged_pose_count": 12,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/clear_cmd.cpp",
+          "symbol": "DrawTile_Clear",
+          "call": "GetMultiLayerTerrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -138,7 +153,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-v1.png",
         "sha256": "c08d03f46e4d82c81d45b45f3a147af735a338da9ea6d14d8927b971bc71c64a",
         "provenance": "first_party_original_builtin_image_gen",
@@ -147,11 +162,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 86,
+        "sprite_count": 12,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-06",
-        "status": "base_states_staged_edges_and_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-v1.png"
@@ -160,8 +180,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep.png",
         "native_sha256": "2226e7a5d2c6fe5c01103fbd4eedc9b6e1c726a4f28505a54ebc26f35c4a51ed",
         "staged_pose_count": 12,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/clear_cmd.cpp",
+          "symbol": "DrawTile_Clear",
+          "call": "GetMultiLayerTerrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -216,11 +246,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 98,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
@@ -229,8 +264,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
         "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -344,11 +389,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 101,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
@@ -357,8 +407,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
         "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -472,11 +532,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 104,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
@@ -485,8 +550,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
         "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -600,11 +675,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 107,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
@@ -613,8 +693,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
         "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -728,11 +818,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 110,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-underground-v1.png"
@@ -741,8 +836,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-survey.png",
         "native_sha256": "7b71f766dc6cd92cccfc54279ee78b28bc06b7e804868e8e35eef164d06f35f8",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -856,11 +961,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 113,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
@@ -869,8 +979,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
         "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -984,11 +1104,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 116,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
@@ -997,8 +1122,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
         "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1112,11 +1247,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 119,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
@@ -1125,8 +1265,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
         "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1240,11 +1390,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 122,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
@@ -1253,8 +1408,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
         "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1368,11 +1533,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 125,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/survey-deep-v1.png"
@@ -1381,8 +1551,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-survey.png",
         "native_sha256": "80ea89abe155df0fb563dceaa714c862168c1e0a21ee686a31e26047d0d2b9c5",
         "staged_pose_count": 3,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection",
+          "call": "GetUndergroundSurveyOverlaySprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1498,7 +1678,7 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
         "sha256": "2a2e0f7ad5b3b051d9ddb432e607f11055ee2a7f2a08ed57e176fbb459c39ea3",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1507,11 +1687,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 200,
+        "sprite_count": 384,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "partial_registered_source_coverage_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
@@ -1519,16 +1704,33 @@
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-idle-frame-0-v3.png",
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-0-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frame-3-tail-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-working-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-blocked-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-service-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-moving-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-working-frames-0-3-v1.png"
         ],
         "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
         "native_atlas": "media/multilayer/sprites/m1/vehicle-model-00-authored.png",
-        "native_sha256": "367c36246d6bc4598dd03aa902f767d1f3e7cdbef66e629f20d9fc573624a8b7",
-        "staged_pose_count": 40,
+        "native_sha256": "c3d46d21de8be403f0b22ecc112e063e7e1af881aa0e46bb01b99ed110b7dc56",
+        "staged_pose_count": 384,
         "required_pose_count": 384,
-        "missing_pose_count": 344,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "missing_pose_count": 0,
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage",
+          "call": "GetMultiLayerTrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1573,7 +1775,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
         "sha256": "e15ec859ff9b33733860f654ab3d5eda31078477d8f63c7d54dcc54d8fbd3b72",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1582,22 +1784,40 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 584,
+        "sprite_count": 2,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "available_staged_locked_pose_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/purchase-generation-record.json",
+        "atlas_manifest": "media/multilayer/sprites/m1/purchase-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-00-authored.png",
+        "native_sha256": "fd59dbd615033a9f90c488113bb1d94a6006144e9734a0f41ee2e4de67c9220f",
+        "staged_pose_count": 2,
+        "required_pose_count": 2,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": true,
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-v1.png",
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png"
-        ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/purchase-model-00.png",
-        "native_sha256": "9b0f155afaf1fe9cb6ad88e888389755780a02fb7f21453acfa393fc57b5b3af",
-        "staged_pose_count": 1,
-        "runtime_activated": false,
-        "coverage_complete": false
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-rear-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/purchase-models-locked-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon",
+          "call": "GetMultiLayerEnginePurchaseSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1654,7 +1874,7 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
         "sha256": "2a4c74c563d7c5a8d6898a0a2e1b56098e1f92e715c618bcb22110baaa184c7f",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1663,22 +1883,50 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 586,
+        "sprite_count": 384,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "frame_0_staged_animation_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-support-idle-frame-0-v1.png",
+          "media/multilayer/sprites/m1/tbm-deep.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frames-1-2-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frame-3-tail-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-working-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-blocked-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-service-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-moving-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-support-working-frames-0-3-v1.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/tbm-deep.png",
-        "native_sha256": "2cba38f14956fa8e097acdf4e6c395efa0048dc15f67192d2a20e732ec8c9ed0",
-        "staged_pose_count": 32,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/vehicle-model-01-authored.png",
+        "native_sha256": "39a4fabf81e2454f6659817a3f40624b55ac746a96758c6e88357f0d37f5ab82",
+        "staged_pose_count": 384,
+        "required_pose_count": 384,
+        "missing_pose_count": 0,
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage",
+          "call": "GetMultiLayerTrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1723,7 +1971,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
         "sha256": "2a4c74c563d7c5a8d6898a0a2e1b56098e1f92e715c618bcb22110baaa184c7f",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1732,22 +1980,40 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 970,
+        "sprite_count": 2,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "available_staged_locked_pose_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/purchase-generation-record.json",
+        "atlas_manifest": "media/multilayer/sprites/m1/purchase-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-01-authored.png",
+        "native_sha256": "061e6b1b5a7dbd6e3ebf168bf31eb87894fb5c6293d0f8ec90b850417152da13",
+        "staged_pose_count": 2,
+        "required_pose_count": 2,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": true,
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-v1.png",
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png"
-        ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/purchase-model-01.png",
-        "native_sha256": "2e6be325ba82810e202346a11edfd987694b56643e809737f8de3f08ea7f3d03",
-        "staged_pose_count": 1,
-        "runtime_activated": false,
-        "coverage_complete": false
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-deep-rear-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/purchase-models-locked-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon",
+          "call": "GetMultiLayerEnginePurchaseSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1802,7 +2068,7 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
         "sha256": "0e76e399cdcb36c32f1378b89ac7673a4c3cf16f8abd4e6770a967ec03f1fbe6",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1811,21 +2077,40 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 972,
+        "sprite_count": 80,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "frame_0_staged_animation_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
+          "media/multilayer/sprites/m1/hopper-earth.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frames-0-3-v1.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/hopper-earth.png",
-        "native_sha256": "7e7175f21490f92d922a46d6bf104bc7917a24dfd8fee13d0cd58058e92b0e1f",
-        "staged_pose_count": 40,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/vehicle-model-02-authored.png",
+        "native_sha256": "b58d040cbece193da336bfc1e5979fc076e6bf01c65a96134c0659bbc8b8e432",
+        "staged_pose_count": 80,
+        "required_pose_count": 80,
+        "missing_pose_count": 0,
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage",
+          "call": "GetMultiLayerTrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1870,7 +2155,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
         "sha256": "0e76e399cdcb36c32f1378b89ac7673a4c3cf16f8abd4e6770a967ec03f1fbe6",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1879,21 +2164,39 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1052,
+        "sprite_count": 2,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "available_staged_locked_pose_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/purchase-generation-record.json",
+        "atlas_manifest": "media/multilayer/sprites/m1/purchase-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-02-authored.png",
+        "native_sha256": "4ad3712a8f65dbe0983f786ed3877d81f343d3a4c1b024d530da67be6ea44482",
+        "staged_pose_count": 2,
+        "required_pose_count": 2,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": true,
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png"
-        ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/purchase-model-02.png",
-        "native_sha256": "ab1cf0f6dd92c8e458b02b1c91e7015ea83971deca40a1561e11fb09042a67d0",
-        "staged_pose_count": 1,
-        "runtime_activated": false,
-        "coverage_complete": false
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-earth-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/purchase-models-locked-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon",
+          "call": "GetMultiLayerEnginePurchaseSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -1948,7 +2251,7 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
         "sha256": "11dda71cf233bcec3a81573297df86d82903bda5023894a94127a42b4923abe9",
         "provenance": "first_party_original_builtin_image_gen",
@@ -1957,21 +2260,40 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1054,
+        "sprite_count": 80,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "frame_0_staged_animation_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
+          "media/multilayer/sprites/m1/hopper-rock.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frames-0-3-v1.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/hopper-rock.png",
-        "native_sha256": "593aafbf2fff95db7230afec1b7eb4e2aadde39fddee281d3a1e2c6b405a23fe",
-        "staged_pose_count": 40,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/vehicle-model-03-authored.png",
+        "native_sha256": "b8b611e3804a107a10611072c6ded37e280a13ab829a13518aab32addbea7447",
+        "staged_pose_count": 80,
+        "required_pose_count": 80,
+        "missing_pose_count": 0,
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage",
+          "call": "GetMultiLayerTrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -2016,7 +2338,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
         "sha256": "11dda71cf233bcec3a81573297df86d82903bda5023894a94127a42b4923abe9",
         "provenance": "first_party_original_builtin_image_gen",
@@ -2025,21 +2347,39 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1134,
+        "sprite_count": 2,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "available_staged_locked_pose_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/purchase-generation-record.json",
+        "atlas_manifest": "media/multilayer/sprites/m1/purchase-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-03-authored.png",
+        "native_sha256": "ead46c4594e4e85114e91e6f87bb953f7792f880148a778704ea6ae7ef07e529",
+        "staged_pose_count": 2,
+        "required_pose_count": 2,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": true,
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png"
-        ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/purchase-model-03.png",
-        "native_sha256": "4daed819c42bf5769bb576308cff489ebce0b195a334e0f22f249eed730d57c3",
-        "staged_pose_count": 1,
-        "runtime_activated": false,
-        "coverage_complete": false
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/hopper-rock-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/purchase-models-locked-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon",
+          "call": "GetMultiLayerEnginePurchaseSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -2094,7 +2434,7 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
         "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
         "provenance": "first_party_original_builtin_image_gen",
@@ -2103,21 +2443,44 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1136,
+        "sprite_count": 80,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "frame_0_staged_animation_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
+          "media/multilayer/sprites/m1/spoil-hauler.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-idle-frame-3-v2.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-moving-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-working-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-blocked-frames-0-3-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/tbm-standard-body-service-frames-0-3-v1.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/spoil-hauler.png",
-        "native_sha256": "6b1eae6a7618ac8cd71664a254804a6e31ee325fe2e143e12db77f78e297972d",
-        "staged_pose_count": 32,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "atlas_manifest": "media/multilayer/sprites/m1/vehicle-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/vehicle-model-04-authored.png",
+        "native_sha256": "753dd76bfbe2ec11d11b4d38496ffbde061e7fa0142250e51971ba317de28df5",
+        "staged_pose_count": 80,
+        "required_pose_count": 80,
+        "missing_pose_count": 0,
+        "runtime_activated": true,
+        "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage",
+          "call": "GetMultiLayerTrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -2162,7 +2525,7 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
+        "status": "authored",
         "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
         "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
         "provenance": "first_party_original_builtin_image_gen",
@@ -2171,21 +2534,39 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1216,
+        "sprite_count": 2,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "available_staged_locked_pose_and_runtime_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/purchase-generation-record.json",
+        "atlas_manifest": "media/multilayer/sprites/m1/purchase-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/purchase-model-04-authored.png",
+        "native_sha256": "8a1c925e1c19689d4172c1805db3d9c28e4c39fe9fb6b6ba8a652d7c092cbb08",
+        "staged_pose_count": 2,
+        "required_pose_count": 2,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": true,
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png"
-        ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/purchase-model-04.png",
-        "native_sha256": "6aee70145d3d8b8ff49e16fdef527a1843199d0da14a0003ccd092f20573a79a",
-        "staged_pose_count": 1,
-        "runtime_activated": false,
-        "coverage_complete": false
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/spoil-hauler-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/purchase-models-locked-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon",
+          "call": "GetMultiLayerEnginePurchaseSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -3873,7 +4254,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1218,
+        "sprite_count": 48,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "state_owner": "LayerPortalWorkState; controller blocked reason is independent presentation",
       "endpoint_variants": [
@@ -3882,7 +4268,7 @@
       ],
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_phase_and_part_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/portal-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-states-v1.png",
@@ -3892,8 +4278,18 @@
         "native_atlas": "media/multilayer/sprites/m1/portal_surface-authored.png",
         "native_sha256": "d7b549f80a0603a4daa8f55f8c6d3a3073ee0f95211d22d2d8c4f5b5c069e27d",
         "staged_pose_count": 48,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/layer_portal_cmd.cpp",
+          "symbol": "DrawTile_LayerPortal",
+          "call": "GetMultiLayerPortalSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -3952,7 +4348,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1266,
+        "sprite_count": 48,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "state_owner": "LayerPortalWorkState; controller blocked reason is independent presentation",
       "endpoint_variants": [
@@ -3961,7 +4362,7 @@
       ],
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_phase_and_part_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/portal-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/portal-deep-v1.png",
@@ -3971,8 +4372,18 @@
         "native_atlas": "media/multilayer/sprites/m1/portal_deep-authored.png",
         "native_sha256": "88c4f268d9feaea89ce1835593c923f54ca1ede7a7c1c68039dbea6e1361e627",
         "staged_pose_count": 48,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/layer_portal_cmd.cpp",
+          "symbol": "DrawTile_LayerPortal",
+          "call": "GetMultiLayerPortalSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -4023,30 +4434,46 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "authored_partial",
-        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-v1.png",
-        "sha256": "08ed65ed489575f982cecbdf3ef13aaf366235c62256b5902041e687f61bf6a3",
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-one-tile-v2.png",
+        "sha256": "9afa6979c7b847d70e9b53c0814aedcb0be4e41b1859e76f5429849d60c202a1",
         "provenance": "first_party_original_builtin_image_gen",
         "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1314,
+        "sprite_count": 128,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
-        "date": "2026-10-06",
-        "status": "candidate_geometry_and_front_back_slicing_pending",
-        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
         "originals": [
-          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-v1.png"
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-v1.png",
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-one-tile-v2.png"
         ],
-        "atlas_manifest": "media/multilayer/sprites/m1/atlas-manifest.json",
-        "native_atlas": "media/multilayer/sprites/m1/exchange-bay-candidate.png",
-        "native_sha256": "94fc15682dfcb58e399b6a125f52ca1c35a16f5f18e25508b94cbcc4a4d98967",
-        "staged_pose_count": 16,
-        "runtime_activated": false,
-        "coverage_complete": false
+        "atlas_manifest": "media/multilayer/sprites/m1/facility-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/exchange-bay-authored.png",
+        "native_sha256": "105466e8f5d9a349b60412262bfc00c4e39d6b2cf0622f8bea140652e50fa1a0",
+        "staged_pose_count": 128,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Track",
+          "call": "GetMultiLayerRailDepotSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -4215,15 +4642,45 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-one-tile-v2.png",
+        "sha256": "9afa6979c7b847d70e9b53c0814aedcb0be4e41b1859e76f5429849d60c202a1",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1442,
+        "sprite_count": 128,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/exchange-bay-one-tile-v2.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/facility-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/rail-service-authored.png",
+        "native_sha256": "105466e8f5d9a349b60412262bfc00c4e39d6b2cf0622f8bea140652e50fa1a0",
+        "staged_pose_count": 128,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Track",
+          "call": "GetMultiLayerRailDepotSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -4274,15 +4731,45 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/road-service-depot-v1.png",
+        "sha256": "c7e379f390014243f5d2494677e17e096fd86020225cdc2ed90514d858df28de",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1570,
+        "sprite_count": 128,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/road-service-depot-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/facility-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/road-service-authored.png",
+        "native_sha256": "a884bb768166be9462ee21881249efaf02107868e274ece4abfecc0ace631f32",
+        "staged_pose_count": 128,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/road_cmd.cpp",
+          "symbol": "DrawTile_Road",
+          "call": "GetMultiLayerRoadDepotSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -4290,10 +4777,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -4333,15 +4817,47 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/earth-receiver-cells-v1.png",
+        "sha256": "60676db7ef226f705f826ddc52dc71fcc9f5eed7ca9e87dc5065dded184c94fa",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1698,
+        "sprite_count": 192,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "state_owner": "Native industry construction; ready=idle, working=existing bounded processing, blocked=full stock/aggregate or interval refusal",
+      "layout_owner": "InstallSpoilReceiverDefinition; one fixed native Surface layout",
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/earth-receiver-cells-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/facility-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/earth-receiver-authored.png",
+        "native_sha256": "b7c862edabba8151aa940ffa474e4adbb788c658d54c06c6cf4d6e47583456b5",
+        "staged_pose_count": 192,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry",
+          "call": "GetMultiLayerReceiverSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -4349,10 +4865,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -4392,15 +4905,47 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/rock-receiver-idle-cells-v1.png",
+        "sha256": "5992f5a4111b4973ad4f30bb8332b3f228516b42c0e76321792205fed7bc0d47",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 1890,
+        "sprite_count": 512,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "state_owner": "Native industry construction; ready=idle, working=existing bounded processing, blocked=full stock/aggregate or interval refusal",
+      "layout_owner": "InstallSpoilReceiverDefinition; one fixed native Surface layout",
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/rock-receiver-idle-cells-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/facility-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/rock-receiver-authored.png",
+        "native_sha256": "aa4e7b704d008b472d65577769f51fe0ccbf1a4506e673c8b03e045515afead7",
+        "staged_pose_count": 512,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry",
+          "call": "GetMultiLayerReceiverSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6746,15 +7291,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 128,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 128,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-survey-authored.png",
+        "native_sha256": "a4292b4cbf6015e203e634f4a4f5a5a2a5a28884b74d2556671204dbbd8cdbcb",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6800,15 +7375,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 131,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 131,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-excavation-authored.png",
+        "native_sha256": "52cd4a7ce457a477bced016b1b12993a638391f22f506487d4d2a48d36e0b628",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6854,15 +7459,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 134,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 134,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-tbm-area-authored.png",
+        "native_sha256": "b7b74607b42a7d6e0e3356d53924a8e52539c4241009e831cd0d5220f59d6dcf",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6908,15 +7543,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 137,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 137,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-tbm-turn45-authored.png",
+        "native_sha256": "9f0465f1b50714a59c4bb22e5e2154e08ae0e6ae0a2424e30568560b2f713758",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6962,15 +7627,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 140,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 140,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-exchange-authored.png",
+        "native_sha256": "73b9d3a3efbc156971d0311101a5c7a42480f2d5a454bc03218a0337148f0656",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -7286,15 +7981,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 158,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 158,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-deep-lock-authored.png",
+        "native_sha256": "2c1dc89efb7e95831520c7d69bbe33feea37623109f7dadfbb92bd22d5e4d19b",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -7340,15 +8065,45 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+        "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 161,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 161,
+        "sprite_count": 3,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-07",
+        "status": "source_coverage_verified_runtime_bound",
+        "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+        "originals": [
+          "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "media/multilayer/sprites/m1/control-details-manifest.json",
+        "native_atlas": "media/multilayer/sprites/m1/control-future-lock-authored.png",
+        "native_sha256": "99cd6ea11f69cb32e40fe526041686ebb0c0c9fb56c7631c39fc8485226ef8e7",
+        "staged_pose_count": 3,
+        "coverage_complete": true,
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/underground_gui.cpp",
+          "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+          "call": "GetMultiLayerControlSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -7923,11 +8678,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 2402,
+        "sprite_count": 1,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-06",
-        "status": "authored_icon_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-earth-v1.png"
@@ -7936,8 +8696,18 @@
         "native_atlas": "media/multilayer/sprites/m1/cargo-earth.png",
         "native_sha256": "a7432dd6853f691a6efbbdc7111c6713811899d380b49aad5abfa46a863e5b54",
         "staged_pose_count": 1,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/cargotype.cpp",
+          "symbol": "CargoSpec::GetCargoIcon",
+          "call": "GetMultiLayerCargoSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -7990,11 +8760,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 2403,
+        "sprite_count": 1,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-06",
-        "status": "authored_icon_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/cargo-rock-v1.png"
@@ -8003,8 +8778,18 @@
         "native_atlas": "media/multilayer/sprites/m1/cargo-rock.png",
         "native_sha256": "bcb2da7b1dc7491bdb3faddb60c053a7d098364ac195682aa2ad7aab8ef9cff2",
         "staged_pose_count": 1,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/cargotype.cpp",
+          "symbol": "CargoSpec::GetCargoIcon",
+          "call": "GetMultiLayerCargoSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -8540,11 +9325,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 168,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 168,
+        "sprite_count": 16,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-underground-edges-v1.png"
@@ -8553,8 +9343,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-underground-edges.png",
         "native_sha256": "0344892961b44f441ead1a3d8eeae018fc8038f78703d98b30a5d8cd913cca53",
         "staged_pose_count": 16,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/clear_cmd.cpp",
+          "symbol": "DrawTile_Clear",
+          "call": "GetMultiLayerTerrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -8622,11 +9422,16 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 184,
-        "sha256": null
+        "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+        "route": "native_action5_1c",
+        "native_offset": 184,
+        "sprite_count": 16,
+        "source_payload": "media/multilayer/sprites/m1/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-07",
-        "status": "source_coverage_verified_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/terrain-generation-record.json",
         "originals": [
           "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/terrain-deep-edges-v1.png"
@@ -8635,8 +9440,18 @@
         "native_atlas": "media/multilayer/sprites/m1/terrain-deep-edges.png",
         "native_sha256": "669afa2055ce443d2f1a91a71e5639cd4010be8b058031b5074e5e04391c8f31",
         "staged_pose_count": 16,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/clear_cmd.cpp",
+          "symbol": "DrawTile_Clear",
+          "call": "GetMultiLayerTerrainSprite"
+        },
+        "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+        "user_review": "deferred_until_integration"
       }
     }
   ],

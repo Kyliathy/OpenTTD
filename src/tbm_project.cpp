@@ -37,6 +37,14 @@
 #include "safeguards.h"
 
 static std::vector<TBMProject> _tbm_projects; ///< Live projects in strictly increasing ID order.
+
+/** @copydoc GetTBMProjectForExchangeBay */
+const TBMProject *GetTBMProjectForExchangeBay(TileIndex bay)
+{
+	if (bay == INVALID_TILE) return nullptr;
+	const auto it = std::ranges::find(_tbm_projects, bay, &TBMProject::exchange_bay);
+	return it == _tbm_projects.end() ? nullptr : &*it;
+}
 static TBMProjectID _next_tbm_project{0}; ///< Next identity; IDs are never reused.
 static std::optional<std::pair<std::vector<TBMProject>, TBMProjectID>> _pending_tbm_projects; ///< Unpublished loaded store.
 

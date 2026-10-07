@@ -54,5 +54,30 @@ def create_guide():
     return path
 
 
+def create_purchase_guide():
+    """Expose retained purchase silhouettes as a labeled raster edit reference.
+
+    @return Repository guide path; composed original pixels are geometry inputs.
+    """
+    image = Image.new("RGBA", (1100, 250), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    labels = ["Standard cutter", "Deep cutter", "Earth hopper", "Rock hopper", "Spoil hauler"]
+    # Reuse every existing authored available preview without repainting its
+    # shape. Nearest enlargement exposes the exact tiny model identity for the
+    # new locked presentation; labels remain outside selected sprite pixels.
+    for index, label in enumerate(labels):
+        source = ROOT / f"media/multilayer/sprites/m1/purchase-model-{index:02}.png"
+        original = Image.open(source).convert("RGBA")
+        enlarged = original.resize((160, 160), Image.Resampling.NEAREST)
+        image.paste(enlarged, (index * 220 + 30, 30), enlarged)
+        draw.text((index * 220 + 15, 210), label, fill="white")
+    path = ASSETS / "mlvs/purchase-model-reference-guide.png"
+    metadata = PngImagePlugin.PngInfo()
+    metadata.add_text("Owner", "r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; retained available purchase pose reference")
+    image.save(path, pnginfo=metadata)
+    return path
+
+
 if __name__ == "__main__":
     print(create_guide().relative_to(ROOT).as_posix())
+    print(create_purchase_guide().relative_to(ROOT).as_posix())

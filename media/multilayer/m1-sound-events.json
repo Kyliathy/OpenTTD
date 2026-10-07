@@ -1,0 +1,49 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md task83.4 and r2mlvs4-tunnel-boring-machines.md task16.2. Runtime mapping authority: src/multilayer_sound.h. Reviewed reuse of existing sound baseset slots; no audio samples are copied, modified or repackaged.",
+  "schema_version": 1,
+  "source": "src/multilayer_sound.h",
+  "selector": "src/multilayer_sound.cpp:GetMultiLayerTBMSound",
+  "consumer": "src/train_cmd.cpp:Train::Tick",
+  "playback": "src/multilayer_sound.cpp:PlayMultiLayerTBMSound -> SndPlayVehicleFx -> existing sound loader/mixer",
+  "provider": "selected_sounds_baseset",
+  "rights": "Existing selected baseset retains its own licence. This mapping distributes only existing SoundFx identities and contains no sample data. Original DOS/Windows origins remain documented in media/baseset/orig_dos.obs and orig_win.obs; a compatible free sound baseset supplies the same slots.",
+  "simulation_owner": "actual TBMProject, physical front-engine motion and genuine rail-depot occupancy",
+  "mute_owner": "existing client vehicle-sound and effect-volume settings",
+  "events": [
+    {
+      "event": "Idle",
+      "symbol": "SND_0B_MINE",
+      "sound_id": 9,
+      "interval_ticks": 192,
+      "cue": "mine headgear machinery",
+      "owner": "native cutter idle/held/travel context; no active unblocked boring"
+    },
+    {
+      "event": "Boring",
+      "symbol": "SND_38_LUMBER_MILL_1",
+      "sound_id": 56,
+      "interval_ticks": 96,
+      "cue": "powered cutting motor",
+      "owner": "actual unblocked Bore controller, with the real cutter not stopped"
+    },
+    {
+      "event": "Backing",
+      "symbol": "SND_0E_LEVEL_CROSSING",
+      "sound_id": 12,
+      "interval_ticks": 96,
+      "cue": "reversing warning bell",
+      "owner": "actual IsDrivingBackwards motion; no backwards cutting"
+    },
+    {
+      "event": "Service",
+      "symbol": "SND_20_CONSTRUCTION_RAIL",
+      "sound_id": 30,
+      "interval_ticks": 192,
+      "cue": "metallic depot tool strike",
+      "owner": "actual IsInDepot on a genuine rail depot; portal assembly magazines excluded"
+    }
+  ],
+  "runtime_verified": true,
+  "user_review": "deferred_until_integration",
+  "evidence": "media/multilayer/sprites/m1/sound-runtime.json"
+}

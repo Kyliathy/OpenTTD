@@ -10,6 +10,9 @@
 #define UNDERGROUND_GUI_H
 
 #include "multilayer_content.h"
+#include "tile_type.h"
+#include "gfx_type.h"
+#include "window_type.h"
 
 struct Window;
 
@@ -41,5 +44,20 @@ enum class UndergroundFleetKind : uint8_t { ConventionalFreight, TubeCapsules };
  */
 std::vector<const LayerVehicleCapability *> BuildUndergroundVehicleFilter(MapLayer layer,
 	const MultiLayerProfileSelection &policy, TimerGameCalendar::Date date, UndergroundFleetKind kind);
+
+/**
+ * Query a resource marker only while the real survey window owns the placement cursor.
+ * @param tile Explicit world tile being rendered, independent of the current main-camera layer.
+ * @return Native public/free seam marker, or no overlay for another tool, layer or locked context.
+ */
+std::optional<SpriteID> GetUndergroundSurveyOverlaySprite(TileIndex tile);
+
+/**
+ * Inspect the actual underground control/row presentation using its live window state.
+ * @param window Actual underground construction window; another window class receives no icon.
+ * @param widget Existing control/row identity.
+ * @return Selected native icon, or no icon for another context.
+ */
+std::optional<SpriteID> GetUndergroundConstructionWidgetSprite(const Window &window, WidgetID widget);
 
 #endif /* UNDERGROUND_GUI_H */

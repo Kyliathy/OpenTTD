@@ -1,0 +1,989 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group83B; selected actual native consumers; final gallery/user review pending; sound proof in sound-runtime.json",
+  "schema_version": 1,
+  "packed_payload": {
+    "path": "media/baseset/openttd.grf",
+    "sha256": "cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac",
+    "grfid_md5": "9e6ba7ea0fa173a5d3129c2922875e46",
+    "selected_sprites": 2311,
+    "protected_sprites": 66,
+    "native_bound": 2404,
+    "proof": "media/multilayer/sprites/m1/packed-build-proof.json",
+    "loader_log": "logs/r2mlvs13-al-generator-free-load.log"
+  },
+  "selected_families": 40,
+  "selected_sprites": 2311,
+  "bindings": [
+    {
+      "asset_id": "terrain.underground",
+      "native_offset": 74,
+      "sprite_count": 12,
+      "selector": "GetMultiLayerTerrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/clear_cmd.cpp",
+        "symbol": "DrawTile_Clear",
+        "call": "GetMultiLayerTerrainSprite"
+      },
+      "state_authorities": [
+        "GetGeologyWorldState.terrain",
+        "layer-bounded TileAddWrap",
+        "static tile texture"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "terrain.deep",
+      "native_offset": 86,
+      "sprite_count": 12,
+      "selector": "GetMultiLayerTerrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/clear_cmd.cpp",
+        "symbol": "DrawTile_Clear",
+        "call": "GetMultiLayerTerrainSprite"
+      },
+      "state_authorities": [
+        "GetGeologyWorldState.terrain",
+        "layer-bounded TileAddWrap",
+        "static tile texture"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.COAL",
+      "native_offset": 98,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.IORE",
+      "native_offset": 101,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.CORE",
+      "native_offset": 104,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.BAUX",
+      "native_offset": 107,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.SALT",
+      "native_offset": 110,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.LITH",
+      "native_offset": 113,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.NORE",
+      "native_offset": 116,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.COBT",
+      "native_offset": 119,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.RARE",
+      "native_offset": 122,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "survey.URAN",
+      "native_offset": 125,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerSurveySprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/viewport.cpp",
+        "symbol": "DrawTileSelection",
+        "call": "GetUndergroundSurveyOverlaySprite"
+      },
+      "state_authorities": [
+        "actual active survey cursor",
+        "GeologyDeposit.resource",
+        "GeologyDeposit.remaining_reserve",
+        "existing Native public/free information"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "vehicle.model-00",
+      "native_offset": 200,
+      "sprite_count": 384,
+      "selector": "GetMultiLayerTrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "Train::GetImage",
+        "call": "GetMultiLayerTrainSprite"
+      },
+      "state_authorities": [
+        "actual EIDS/physical part direction",
+        "GetTBMProjectForCutter/GetTBMConsistRole",
+        "real cargo.StoredCount/cargo_cap",
+        "IsDrivingBackwards/IsInDepot"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "purchase.model-00",
+      "native_offset": 584,
+      "sprite_count": 2,
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "GetRailIcon",
+        "call": "GetMultiLayerEnginePurchaseSprite"
+      },
+      "state_authorities": [
+        "actual persisted engine mapping",
+        "IsEngineBuildable",
+        "portal button's own can_commission"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "vehicle.model-01",
+      "native_offset": 586,
+      "sprite_count": 384,
+      "selector": "GetMultiLayerTrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "Train::GetImage",
+        "call": "GetMultiLayerTrainSprite"
+      },
+      "state_authorities": [
+        "actual EIDS/physical part direction",
+        "GetTBMProjectForCutter/GetTBMConsistRole",
+        "real cargo.StoredCount/cargo_cap",
+        "IsDrivingBackwards/IsInDepot"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "purchase.model-01",
+      "native_offset": 970,
+      "sprite_count": 2,
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "GetRailIcon",
+        "call": "GetMultiLayerEnginePurchaseSprite"
+      },
+      "state_authorities": [
+        "actual persisted engine mapping",
+        "IsEngineBuildable",
+        "portal button's own can_commission"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "vehicle.model-02",
+      "native_offset": 972,
+      "sprite_count": 80,
+      "selector": "GetMultiLayerTrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "Train::GetImage",
+        "call": "GetMultiLayerTrainSprite"
+      },
+      "state_authorities": [
+        "actual EIDS/physical part direction",
+        "GetTBMProjectForCutter/GetTBMConsistRole",
+        "real cargo.StoredCount/cargo_cap",
+        "IsDrivingBackwards/IsInDepot"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "purchase.model-02",
+      "native_offset": 1052,
+      "sprite_count": 2,
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "GetRailIcon",
+        "call": "GetMultiLayerEnginePurchaseSprite"
+      },
+      "state_authorities": [
+        "actual persisted engine mapping",
+        "IsEngineBuildable",
+        "portal button's own can_commission"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "vehicle.model-03",
+      "native_offset": 1054,
+      "sprite_count": 80,
+      "selector": "GetMultiLayerTrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "Train::GetImage",
+        "call": "GetMultiLayerTrainSprite"
+      },
+      "state_authorities": [
+        "actual EIDS/physical part direction",
+        "GetTBMProjectForCutter/GetTBMConsistRole",
+        "real cargo.StoredCount/cargo_cap",
+        "IsDrivingBackwards/IsInDepot"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "purchase.model-03",
+      "native_offset": 1134,
+      "sprite_count": 2,
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "GetRailIcon",
+        "call": "GetMultiLayerEnginePurchaseSprite"
+      },
+      "state_authorities": [
+        "actual persisted engine mapping",
+        "IsEngineBuildable",
+        "portal button's own can_commission"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "vehicle.model-04",
+      "native_offset": 1136,
+      "sprite_count": 80,
+      "selector": "GetMultiLayerTrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "Train::GetImage",
+        "call": "GetMultiLayerTrainSprite"
+      },
+      "state_authorities": [
+        "actual EIDS/physical part direction",
+        "GetTBMProjectForCutter/GetTBMConsistRole",
+        "real cargo.StoredCount/cargo_cap",
+        "IsDrivingBackwards/IsInDepot"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "purchase.model-04",
+      "native_offset": 1216,
+      "sprite_count": 2,
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/train_cmd.cpp",
+        "symbol": "GetRailIcon",
+        "call": "GetMultiLayerEnginePurchaseSprite"
+      },
+      "state_authorities": [
+        "actual persisted engine mapping",
+        "IsEngineBuildable",
+        "portal button's own can_commission"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.portal.sealed",
+      "native_offset": 1218,
+      "sprite_count": 48,
+      "selector": "GetMultiLayerPortalSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/layer_portal_cmd.cpp",
+        "symbol": "DrawTile_LayerPortal",
+        "call": "GetMultiLayerPortalSprite"
+      },
+      "state_authorities": [
+        "actual reciprocal pair",
+        "GetLayerPortalWorkState",
+        "existing rail/transparency/sorting"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.portal.deep-rail",
+      "native_offset": 1266,
+      "sprite_count": 48,
+      "selector": "GetMultiLayerPortalSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/layer_portal_cmd.cpp",
+        "symbol": "DrawTile_LayerPortal",
+        "call": "GetMultiLayerPortalSprite"
+      },
+      "state_authorities": [
+        "actual reciprocal pair",
+        "GetLayerPortalWorkState",
+        "existing rail/transparency/sorting"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.exchange",
+      "native_offset": 1314,
+      "sprite_count": 128,
+      "selector": "GetMultiLayerRailDepotSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/rail_cmd.cpp",
+        "symbol": "DrawTile_Track",
+        "call": "GetMultiLayerRailDepotSprite"
+      },
+      "state_authorities": [
+        "GetTBMProjectForExchangeBay",
+        "GetTBMExchangeAssignment",
+        "real train depot occupancy",
+        "custom railtype resolver/transparency"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.rail-service",
+      "native_offset": 1442,
+      "sprite_count": 128,
+      "selector": "GetMultiLayerRailDepotSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/rail_cmd.cpp",
+        "symbol": "DrawTile_Track",
+        "call": "GetMultiLayerRailDepotSprite"
+      },
+      "state_authorities": [
+        "GetTBMProjectForExchangeBay",
+        "GetTBMExchangeAssignment",
+        "real train depot occupancy",
+        "custom railtype resolver/transparency"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-bw-native-image-exchange-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.road-service",
+      "native_offset": 1570,
+      "sprite_count": 128,
+      "selector": "GetMultiLayerRoadDepotSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/road_cmd.cpp",
+        "symbol": "DrawTile_Road",
+        "call": "GetMultiLayerRoadDepotSprite"
+      },
+      "state_authorities": [
+        "actual road depot/vehicle occupancy",
+        "custom roadtype resolver/transparency"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-ce-native-facility-art-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.earth-receiver",
+      "native_offset": 1698,
+      "sprite_count": 192,
+      "selector": "GetMultiLayerReceiverSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/industry_cmd.cpp",
+        "symbol": "DrawTile_Industry",
+        "call": "GetMultiLayerReceiverSprite"
+      },
+      "state_authorities": [
+        "actual Industry cells/construction",
+        "GetSpoilReceiver/stock/room",
+        "existing interval/aggregate bounds",
+        "foreign resolver/transparency"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-ce-native-facility-art-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "facility.rock-receiver",
+      "native_offset": 1890,
+      "sprite_count": 512,
+      "selector": "GetMultiLayerReceiverSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/industry_cmd.cpp",
+        "symbol": "DrawTile_Industry",
+        "call": "GetMultiLayerReceiverSprite"
+      },
+      "state_authorities": [
+        "actual Industry cells/construction",
+        "GetSpoilReceiver/stock/room",
+        "existing interval/aggregate bounds",
+        "foreign resolver/transparency"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-ce-native-facility-art-checks.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.survey",
+      "native_offset": 128,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.excavation",
+      "native_offset": 131,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.tbm-area",
+      "native_offset": 134,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.tbm-turn45",
+      "native_offset": 137,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.exchange",
+      "native_offset": 140,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.deep-lock",
+      "native_offset": 158,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "control.future-lock",
+      "native_offset": 161,
+      "sprite_count": 3,
+      "selector": "GetMultiLayerControlSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/underground_gui.cpp",
+        "symbol": "UndergroundConstructionWindow::GetWidgetIcon",
+        "call": "GetMultiLayerControlSprite"
+      },
+      "state_authorities": [
+        "actual disabled/lowered widgets",
+        "CheckDeepLayerAvailability/IsTBMCutterAvailable",
+        "canonical area_quote/turn_envelope"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "cargo.ERTH",
+      "native_offset": 2402,
+      "sprite_count": 1,
+      "selector": "GetMultiLayerCargoSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/cargotype.cpp",
+        "symbol": "CargoSpec::GetCargoIcon",
+        "call": "GetMultiLayerCargoSprite"
+      },
+      "state_authorities": [
+        "actual CargoSpec label and GRFFile owner",
+        "immutable first-party definition package"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "cargo.ROCK",
+      "native_offset": 2403,
+      "sprite_count": 1,
+      "selector": "GetMultiLayerCargoSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/cargotype.cpp",
+        "symbol": "CargoSpec::GetCargoIcon",
+        "call": "GetMultiLayerCargoSprite"
+      },
+      "state_authorities": [
+        "actual CargoSpec label and GRFFile owner",
+        "immutable first-party definition package"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-cj-native-control-art-checks.log",
+        "logs/r2mlvs13-cl-native-control-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "terrain.edges.underground",
+      "native_offset": 168,
+      "sprite_count": 16,
+      "selector": "GetMultiLayerTerrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/clear_cmd.cpp",
+        "symbol": "DrawTile_Clear",
+        "call": "GetMultiLayerTerrainSprite"
+      },
+      "state_authorities": [
+        "GetGeologyWorldState.terrain",
+        "layer-bounded TileAddWrap",
+        "static tile texture"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    },
+    {
+      "asset_id": "terrain.edges.deep",
+      "native_offset": 184,
+      "sprite_count": 16,
+      "selector": "GetMultiLayerTerrainSprite",
+      "selector_source": "src/multilayer_sprite.cpp",
+      "consumer": {
+        "source": "src/clear_cmd.cpp",
+        "symbol": "DrawTile_Clear",
+        "call": "GetMultiLayerTerrainSprite"
+      },
+      "state_authorities": [
+        "GetGeologyWorldState.terrain",
+        "layer-bounded TileAddWrap",
+        "static tile texture"
+      ],
+      "evidence": [
+        "logs/r2mlvs13-be-terrain-portal-checks.log",
+        "logs/r2mlvs13-bh-native-terrain-capture.log"
+      ],
+      "simulation_independent": true,
+      "gallery_status": "final_m1_review_pending",
+      "user_review": "deferred_until_integration"
+    }
+  ],
+  "rasters": [
+    "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-runtime.json",
+    "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-control-runtime.json"
+  ],
+  "user_review": "deferred_until_integration"
+}

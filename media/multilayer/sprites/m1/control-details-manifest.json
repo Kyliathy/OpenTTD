@@ -1,0 +1,733 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group78B; native control source, runtime pending",
+  "schema_version": 1,
+  "source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+  "runtime_activated": false,
+  "pose_count": 21,
+  "atlases": [
+    {
+      "asset_id": "control.survey",
+      "path": "media/multilayer/sprites/m1/control-survey-authored.png",
+      "sha256": "a4292b4cbf6015e203e634f4a4f5a5a2a5a28884b74d2556671204dbbd8cdbcb",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            0,
+            0
+          ],
+          "source_box": [
+            61,
+            73,
+            271,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            0,
+            1
+          ],
+          "source_box": [
+            61,
+            315,
+            271,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            0,
+            2
+          ],
+          "source_box": [
+            61,
+            558,
+            271,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.excavation",
+      "path": "media/multilayer/sprites/m1/control-excavation-authored.png",
+      "sha256": "52cd4a7ce457a477bced016b1b12993a638391f22f506487d4d2a48d36e0b628",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            1,
+            0
+          ],
+          "source_box": [
+            313,
+            73,
+            501,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            1,
+            1
+          ],
+          "source_box": [
+            313,
+            315,
+            501,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            1,
+            2
+          ],
+          "source_box": [
+            313,
+            558,
+            501,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.tbm-area",
+      "path": "media/multilayer/sprites/m1/control-tbm-area-authored.png",
+      "sha256": "b7b74607b42a7d6e0e3356d53924a8e52539c4241009e831cd0d5220f59d6dcf",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            2,
+            0
+          ],
+          "source_box": [
+            578,
+            73,
+            807,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            2,
+            1
+          ],
+          "source_box": [
+            578,
+            315,
+            807,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            2,
+            2
+          ],
+          "source_box": [
+            578,
+            558,
+            807,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.tbm-turn45",
+      "path": "media/multilayer/sprites/m1/control-tbm-turn45-authored.png",
+      "sha256": "9f0465f1b50714a59c4bb22e5e2154e08ae0e6ae0a2424e30568560b2f713758",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            3,
+            0
+          ],
+          "source_box": [
+            879,
+            73,
+            1048,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            3,
+            1
+          ],
+          "source_box": [
+            879,
+            315,
+            1048,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            3,
+            2
+          ],
+          "source_box": [
+            879,
+            558,
+            1048,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.exchange",
+      "path": "media/multilayer/sprites/m1/control-exchange-authored.png",
+      "sha256": "73b9d3a3efbc156971d0311101a5c7a42480f2d5a454bc03218a0337148f0656",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            4,
+            0
+          ],
+          "source_box": [
+            1127,
+            73,
+            1339,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            4,
+            1
+          ],
+          "source_box": [
+            1127,
+            315,
+            1339,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            4,
+            2
+          ],
+          "source_box": [
+            1127,
+            558,
+            1339,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.deep-lock",
+      "path": "media/multilayer/sprites/m1/control-deep-lock-authored.png",
+      "sha256": "2c1dc89efb7e95831520c7d69bbe33feea37623109f7dadfbb92bd22d5e4d19b",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            5,
+            0
+          ],
+          "source_box": [
+            1414,
+            73,
+            1608,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            5,
+            1
+          ],
+          "source_box": [
+            1414,
+            315,
+            1608,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            5,
+            2
+          ],
+          "source_box": [
+            1414,
+            558,
+            1608,
+            749
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "control.future-lock",
+      "path": "media/multilayer/sprites/m1/control-future-lock-authored.png",
+      "sha256": "99cd6ea11f69cb32e40fe526041686ebb0c0c9fb56c7631c39fc8485226ef8e7",
+      "source": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/raw/ground-controls-v1.png",
+      "source_sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+      "size": [
+        60,
+        20
+      ],
+      "native_cell": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sprites": [
+        {
+          "state": "enabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            6,
+            0
+          ],
+          "source_box": [
+            1694,
+            73,
+            1858,
+            263
+          ]
+        },
+        {
+          "state": "disabled",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            20,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            6,
+            1
+          ],
+          "source_box": [
+            1694,
+            315,
+            1858,
+            506
+          ]
+        },
+        {
+          "state": "pressed",
+          "direction": "none",
+          "frame": 0,
+          "part": "body",
+          "tile_variant": 0,
+          "anchor": [
+            0,
+            0
+          ],
+          "box": [
+            40,
+            0,
+            20,
+            20
+          ],
+          "source_cell": [
+            6,
+            2
+          ],
+          "source_box": [
+            1694,
+            558,
+            1858,
+            749
+          ]
+        }
+      ]
+    }
+  ],
+  "world_preview_reuse": {
+    "query": "PreviewTBMCommissionArea",
+    "owner": "SetConstructionPreview / GetConstructionPreviewTile",
+    "source": "src/underground_gui.cpp; src/construction_preview.h; src/viewport.cpp",
+    "floor": "White native tile highlight, actual covered floor",
+    "turn": "Blue native tile highlight, actual swept working/turn envelope",
+    "blocked": "Red native tile highlight, actual uncovered floor",
+    "cursor": "Existing SPR_CURSOR_QUERY / HT_RECT owner; classic cursor art is retained",
+    "policy": "Preserve native selection primitives and actual planner world tiles. New glyphs grant no construction or movement permission."
+  }
+}

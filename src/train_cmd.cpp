@@ -29,6 +29,8 @@
 #include "effectvehicle_func.h"
 #include "core/random_func.hpp"
 #include "company_base.h"
+#include "engine_func.h"
+#include "multilayer_sound.h"
 #include "newgrf.h"
 #include "order_backup.h"
 #include "pbs.h"
@@ -41,6 +43,7 @@
 #include "train_cmd.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
+#include "multilayer_sprite.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
 #include "layer_portal_cmd.h"
@@ -48,6 +51,7 @@
 #include "script/api/script_event_types.hpp"
 #include "timer/timer_game_calendar.h"
 #include "timer/timer_game_economy.h"
+#include "timer/timer_game_tick.h"
 
 #include "widgets/vehicle_widget.h"
 
@@ -558,6 +562,12 @@ void Train::GetImage(Direction direction, EngineImageType image_type, VehicleSpr
 	uint8_t spritenum = this->spritenum;
 
 	if (this->flags.Test(VehicleRailFlag::Flipped)) direction = ReverseDir(direction);
+	// Native art consumes the existing body's facing and saved work/cargo owners.
+	// Backing changes motion rather than turning the cutter toward its wagons.
+	if (const auto sprite = GetMultiLayerTrainSprite(*this, direction, image_type == EngineImageType::OnMap ? TimerGameTick::counter : 0)) {
+		result->Set(*sprite);
+		return;
+	}
 
 	if (IsCustomVehicleSpriteNum(spritenum)) {
 		if (spritenum == CUSTOM_VEHICLE_SPRITENUM_REVERSED) direction = ReverseDir(direction);
@@ -575,9 +585,24 @@ void Train::GetImage(Direction direction, EngineImageType image_type, VehicleSpr
 	result->Set(sprite);
 }
 
+/**
+ * Resolve the actual engine's purchase/list preview through its existing definition owner.
+ * @param engine Real engine identity; native mappings select the authored purchase family.
+ * @param rear_head Whether this is the rear half of an ordinary multihead design.
+ * @param y Existing preview baseline, adjusted only by ordinary custom-vehicle pitch below.
+ * @param image_type Existing list/purchase/news rendering context.
+ * @param result Destination sprite sequence; no engine availability is changed.
+ */
 static void GetRailIcon(EngineID engine, bool rear_head, int &y, EngineImageType image_type, VehicleSpriteSeq *result)
 {
 	const Engine *e = Engine::Get(engine);
+	// Purchase availability comes from the existing engine/company owner. Portal
+	// commissioning uses its separate control; no purchase picture bypasses it.
+	const bool available = Company::IsValidID(_local_company) && IsEngineBuildable(engine, VehicleType::Train, _local_company);
+	if (const auto native = GetMultiLayerEnginePurchaseSprite(engine, available)) {
+		result->Set(*native);
+		return;
+	}
 	Direction dir = rear_head ? Direction::E : Direction::W;
 	uint8_t spritenum = e->VehInfo<RailVehicleInfo>().image_index;
 
@@ -4603,12 +4628,17 @@ Money Train::GetRunningCost() const
  * Update train vehicle data for a tick.
  * @return True if the vehicle still exists, false if it has ceased to exist (front of consists only).
  */
+/** @copydoc Vehicle::Tick */
 bool Train::Tick()
 {
 	this->tick_counter++;
 
 	if (this->IsFrontEngine()) {
 		PerformanceAccumulator framerate(PerformanceElement::GameLoopTrains);
+		// One presentation refresh on the existing front tick preserves the
+		// single controller/hauler call sites below and the ordinary train physics.
+		RefreshMultiLayerTrainArt(*this, TimerGameTick::counter);
+		PlayMultiLayerTBMSound(*this, TimerGameTick::counter);
 
 		if (!this->vehstatus.Test(VehState::Stopped) || this->cur_speed > 0) this->running_ticks++;
 

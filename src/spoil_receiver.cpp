@@ -25,6 +25,8 @@
 #include "multilayer_content.h"
 #include "multilayer_content_identity.h"
 #include "window_func.h"
+#include "viewport_func.h"
+#include "timer/timer_game_tick.h"
 #include "core/math_func.hpp"
 #include "table/strings.h"
 
@@ -296,6 +298,16 @@ void AdvanceSpoilReceiver(Industry &industry)
 {
 	SpoilReceiver *receiver = FindSpoilReceiver(industry.index);
 	if (receiver == nullptr) return;
+	if (TimerGameTick::counter % 8 == 0) {
+		// Native status lamps refresh through this existing receiver tick. Only
+		// presentation dirtiness changes: interval/cargo processing remains below.
+		// The fixed six/sixteen owned cells bound the refresh without a world scan.
+		for (uint y = 0; y < industry.location.h; ++y) {
+			for (uint x = 0; x < industry.location.w; ++x) {
+				MarkTileDirtyByTile(TileAddXY(industry.location.tile, x, y));
+			}
+		}
+	}
 	if (++receiver->interval_ticks < SPOIL_RECEIVER_INTERVAL_TICKS) return;
 	receiver->interval_ticks = 0;
 	bool changed = receiver->interval_intake != 0;

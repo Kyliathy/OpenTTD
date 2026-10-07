@@ -42,8 +42,10 @@ SpriteID GetMapLayerIcon(MapLayer layer);
  * @param y Tile north-corner Y in the current GUI drawing region.
  * @param kind Kind of portal being placed.
  * @param door Door direction selected by the preview button.
+ * @param target Explicit selected target layer, or Invalid for the existing default choice.
+ * @param preview_tile Actual existing endpoint for a saved-state preview; Invalid shows a fresh Sealed placement.
  */
-void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door);
+void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door, MapLayer target = MapLayer::Invalid, TileIndex preview_tile = INVALID_TILE);
 
 /**
  * Layer that follows this one in GUI display order, skipping unallocated Layers.

@@ -29,6 +29,81 @@ ENVELOPES = {"N": (16, 24), "NE": (24, 24), "E": (32, 24), "SE": (24, 24),
              "S": (16, 24), "SW": (24, 24), "W": (32, 24), "NW": (24, 24)}
 
 
+def source_cells(source):
+    """Cut reviewed irregular sheets without trusting generated grid alignment.
+
+    @param source Immutable source with a grid and optional explicit cell bounds.
+    @return Rows of original RGBA cell pixels and their source rectangles.
+    @throws ValueError On missing, overlapping or out-of-image registered cells.
+    """
+    if "source_cell_boxes" not in source:
+        return base.source_cells(source)
+    image = Image.open(base.repository_path(source["path"])).convert("RGBA")
+    columns, rows = source["grid"]
+    boxes = source["source_cell_boxes"]
+    if len(boxes) != columns * rows:
+        raise ValueError("explicit vehicle cell count disagrees with grid")
+    cells = []
+    # Measured crop rectangles compensate for uneven generated gutters. Crops
+    # preserve original pixels, and actual selected equipment is registered later
+    # onto the retained native chassis; they never synthesize a missing heading.
+    for index, (left, top, right, bottom) in enumerate(boxes):
+        if not (0 <= left < right <= image.width and 0 <= top < bottom <= image.height):
+            raise ValueError("explicit vehicle cell leaves original image")
+        if any(left < other[2] and right > other[0] and top < other[3] and bottom > other[1] for other in boxes[:index]):
+            # Overlapping crops could count the same generated pixels as two
+            # directions/frames, concealing a genuinely missing source pose.
+            raise ValueError("explicit vehicle source cells overlap")
+        if index % columns == 0:
+            cells.append([])
+        cell = image.crop((left, top, right, bottom))
+        if cell.getchannel("A").point(lambda value: 255 if value >= 128 else 0).getbbox() is None:
+            raise ValueError("empty explicitly registered vehicle cell")
+        cells[-1].append(cell)
+    return cells, boxes
+
+
+def native_pose(subject, source, direction, state="idle"):
+    """Reuse a selected native atlas cell or resample a retained source crop.
+
+    @param subject Original selected RGBA crop, with alpha preserved.
+    @param source Provenance indicating whether this is an existing native pose.
+    @param direction Genuine engine view owning its approved safe envelope.
+    @param state Source load/work state owning any ground-contact calibration.
+    @return RGBA native canvas with the same fixed world anchor and contacts.
+    @throws ValueError If a declared native pose has another canvas size.
+    """
+    if source.get("pose_sampling") == "native":
+        if subject.size != (64, 48):
+            raise ValueError("selected existing native vehicle pose has wrong canvas")
+        if "native_translation" in source:
+            translated = Image.new("RGBA", (64, 48))
+            offsets = source["native_translation"]
+            translated.paste(subject, tuple(offsets.get(state + "/" + direction, offsets.get(direction, [0, 0]))))
+            return translated
+        return subject.copy()
+    return base.fit(subject, (64, 48), ENVELOPES[direction])
+
+
+def component_regions(source, index):
+    """Resolve selected authored equipment regions without expanding their ownership.
+
+    @param source Source record with registered source/target equipment regions.
+    @param index Pose index, retaining the source's real state/frame/view mapping.
+    @return Ordered pairs of source and target rectangles in native coordinates.
+    @throws ValueError When source/target registrations have different lengths.
+    """
+    if "component_source_regions" in source:
+        before = source["component_source_regions"][index]
+        after = source["component_target_regions"][index]
+    else:
+        before = [source["component_source_boxes"][index]]
+        after = [source["component_target_boxes"][index]]
+    if len(before) != len(after):
+        raise ValueError("vehicle component source/target region counts disagree")
+    return list(zip(before, after))
+
+
 def assemble_component(pixels, source, index, direction, sources, cache):
     """Pack an authored cue onto its declared immutable native chassis.
 
@@ -46,32 +121,44 @@ def assemble_component(pixels, source, index, direction, sources, cache):
         # The component can change only this model/part's selected chassis; a
         # foreign vehicle or animated reference would conceal geometry changes.
         raise ValueError("vehicle component has no fixed own-part reference")
-    if source["component_name"] != "cab_beacon":
+    if source["component_name"] not in {"cab_beacon", "equipment_indicator", "running_gear", "cutter_and_work_status", "service_equipment"}:
         raise ValueError("unsupported selected vehicle component")
-    key = (reference["key"], direction)
+    reference_state = source.get("component_reference_state", "idle")
+    if reference_state == "pose_state":
+        reference_state = source["poses"][index]["state"]
+    key = (reference["key"], direction, reference_state)
     if key not in cache:
-        cells, _boxes = base.source_cells(reference)
-        pose = reference["directions"].index(direction)
-        subject = cells[pose // 4][pose % 4].crop(reference["native_crop_boxes"][pose])
-        cache[key] = base.fit(subject, (64, 48), ENVELOPES[direction])
+        cells, _boxes = source_cells(reference)
+        if "poses" in reference:
+            pose, mapping = next((index, row) for index, row in enumerate(reference["poses"])
+                                 if row["direction"] == direction and row["state"] == reference_state and row["frame"] == 0)
+            column, row = mapping["source_cell"]
+        else:
+            pose = reference["directions"].index(direction)
+            column, row = pose % 4, pose // 4
+        subject = cells[row][column].crop(reference["native_crop_boxes"][pose])
+        cache[key] = native_pose(subject, reference, direction, reference_state)
     image = cache[key].copy()
-    sx, sy, width, height = source["component_source_boxes"][index]
-    tx, ty, target_width, target_height = source["component_target_boxes"][index]
-    if (width, height) != (target_width, target_height) or not (0 <= sx <= 64 - width and 0 <= sy <= 48 - height and 0 <= tx <= 64 - width and 0 <= ty <= 48 - height):
-        # Component registration uses exact native coordinates, so no scaled or
-        # out-of-canvas region can shift the original contact/silhouette geometry.
-        raise ValueError("vehicle component is not registered inside its canvas")
-    # Select only retained tool-authored pixels inside the explicit status region.
-    # The original chassis alpha stays authoritative; another generated body or
-    # detached highlight cannot alter the rail unit's silhouette or coupler seam.
-    for row in range(height):
-        for column in range(width):
-            authored = pixels.getpixel((sx + column, sy + row))
-            original = image.getpixel((tx + column, ty + row))
-            if authored[3] >= 128 and original[3] >= 128:
-                # Both pixels must belong to real opaque equipment. Transparent
-                # source padding cannot erase the housing or add another light.
-                image.putpixel((tx + column, ty + row), (*authored[:3], original[3]))
+    # A physical part may have several visible wheels or a disk plus its status
+    # lamp. Select their authored pixels independently, retaining one fixed body
+    # and its contacts rather than accepting generated chassis drift as motion.
+    for source_box, target_box in component_regions(source, index):
+        sx, sy, width, height = source_box
+        tx, ty, target_width, target_height = target_box
+        if (width, height) != (target_width, target_height) or not (0 < width <= 64 and 0 < height <= 48 and 0 <= sx <= 64 - width and 0 <= sy <= 48 - height and 0 <= tx <= 64 - width and 0 <= ty <= 48 - height):
+            # Component registration cannot scale or leave the native canvas;
+            # otherwise another source region could shift contacts or erase art.
+            raise ValueError("vehicle component is not registered inside its canvas")
+        # Real source and chassis pixels must both be opaque. Transparent
+        # padding cannot erase the body or introduce a detached moving highlight.
+        for row in range(height):
+            for column in range(width):
+                authored = pixels.getpixel((sx + column, sy + row))
+                original = image.getpixel((tx + column, ty + row))
+                if authored[3] >= 128 and original[3] >= 128:
+                    # Keep the selected chassis alpha so wheel/disk phases never
+                    # change the train's silhouette, ground contact or couplers.
+                    image.putpixel((tx + column, ty + row), (*authored[:3], original[3]))
     return image
 
 
@@ -137,7 +224,7 @@ def derive():
             # Every generated cell is selected once or explicitly excluded. A
             # missing last row must never masquerade as a full animation sheet.
             raise ValueError("ambiguous vehicle source cell coverage")
-        cells, boxes = base.source_cells(source)
+        cells, boxes = source_cells(source)
         poses = grouped.setdefault(source["asset_id"], [])
         for index, pose in enumerate(mapping):
             direction, state, frame = pose["direction"], pose["state"], pose["frame"]
@@ -155,15 +242,19 @@ def derive():
             crop = source["native_crop_boxes"][index]
             column, row = pose["source_cell"]
             subject = cells[row][column].crop(crop)
-            pixels = base.fit(subject, (64, 48), ENVELOPES[direction])
+            pixels = native_pose(subject, source, direction, state)
             if "component_reference" in source:
-                authored_cue = nearest_component_pose(subject, direction)
+                # Tiny authored equipment lights retain nearest source colors;
+                # wheel/reel regions use the declared native sampling policy.
+                authored_cue = nearest_component_pose(subject, direction) if source.get("component_sampling") == "nearest" or source["component_name"] in {"cab_beacon", "equipment_indicator"} else pixels
                 pixels = assemble_component(authored_cue, source, index, direction, sources, fixed_images)
             poses.append({"part": source["part"], "state": state, "frame": frame,
                           "direction": direction, "source": source["key"], "source_path": source["path"],
                           "source_box": boxes[row * columns + column], "anchor": family["anchor"],
                           "component": source.get("component_name"),
                           "component_target_box": source.get("component_target_boxes", [None] * len(mapping))[index],
+                          "component_regions": [list(target) for _origin, target in component_regions(source, index)] if "component_reference" in source else [],
+                          "reference_state": state if source.get("component_reference_state") == "pose_state" else source.get("component_reference_state", "idle"),
                           "pixels": base.quantize(pixels, cache)})
     outputs, files = [], {}
     # Stable sorting produces an exact sparse atlas; there is no padded pose
@@ -187,7 +278,7 @@ def derive():
         missing = sorted(required - present)
         outputs.append({"asset_id": identity, "path": path.relative_to(base.ROOT).as_posix(),
                         "sha256": hashlib.sha256(encoded).hexdigest(), "size": list(sheet.size),
-                        "native_cell": [64, 48], "coverage_complete": not missing,
+                        "native_cell": [64, 48], "frames_per_state": family["frames"], "coverage_complete": not missing,
                         "required_pose_count": len(required), "missing_pose_count": len(missing),
                         "missing": [list(row) for row in missing], "sprites": sprites})
     report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; sparse source coverage only",
@@ -223,6 +314,45 @@ def publish(report, files):
         review.paste(large, (12, y + image.height + 36), large)
         y += row["size"][1] * 3 + 64
     review.save(REVIEW)
+    publish_animation_reviews(report)
+
+
+def publish_animation_reviews(report):
+    """Expose complete authored direction/frame sets as native and enlarged GIFs.
+
+    @param report Selected sparse model coverage; incomplete states are excluded.
+    @return None; write source-only reviews, never runtime screenshots or sprites.
+    """
+    # Review only actually complete part/state sets. A missing support phase
+    # cannot be hidden by animating the cutter or borrowing another part's pixels.
+    for model in report["atlases"]:
+        frame_count = model["frames_per_state"]
+        atlas = Image.open(base.ROOT / model["path"]).convert("RGBA")
+        poses = {(row["part"], row["state"], row["frame"], row["direction"]): row for row in model["sprites"]}
+        sets = sorted({(row["part"], row["state"]) for row in model["sprites"]})
+        for part, state in sets:
+            if not all((part, state, frame, direction) in poses for frame in range(frame_count) for direction in DIRECTIONS):
+                continue
+            frames = []
+            # Native poses reveal lost animation pixels; nearest enlargement
+            # exposes registration jitter and heading continuity without implying
+            # that the current game already loads these feature sprites.
+            for frame in range(frame_count):
+                canvas = Image.new("RGB", (1048, 560), (44, 47, 51))
+                draw = ImageDraw.Draw(canvas)
+                draw.text((12, 12), f"SOURCE ONLY: {model['asset_id']} {part} {state} frame {frame}; native 1x / enlarged 4x; runtime pending", fill="white")
+                for index, direction in enumerate(DIRECTIONS):
+                    row = poses[(part, state, frame, direction)]
+                    x, y, width, height = row["box"]
+                    sprite = atlas.crop((x, y, x + width, y + height))
+                    left, top = 12 + index % 4 * 256, 40 + index // 4 * 250
+                    draw.text((left, top), direction, fill="white")
+                    canvas.paste(sprite, (left + 80, top + 16), sprite)
+                    large = sprite.resize((256, 192), Image.Resampling.NEAREST)
+                    canvas.paste(large, (left, top + 58), large)
+                frames.append(canvas)
+            name = model["asset_id"].replace(".", "-") + f"-{part}-{state}-animation-review.gif"
+            frames[0].save(base.ASSETS / name, save_all=True, append_images=frames[1:], duration=240, loop=0, disposal=2)
 
 
 def bind_manifest(report):
@@ -242,10 +372,11 @@ def bind_manifest(report):
         selected = [source for source in sources if source["asset_id"] == output["asset_id"]]
         original = next(source for source in selected if source["part"] == "body" and source.get("frame") == 0)
         original_paths = list(dict.fromkeys(row.get("authoring", {}).get("originals", []) + [source["path"] for source in selected]))
+        original_identity = original.get("original_source", original)
         row["source"] = {"status": "authored" if output["coverage_complete"] else "authored_partial",
-                         "path": original["path"], "sha256": original["sha256"],
+                         "path": original_identity["path"], "sha256": original_identity["sha256"],
                          "provenance": "first_party_original_builtin_image_gen", "rights": "first_party_generated_original"}
-        row["authoring"] = {"date": "2026-10-07", "status": "partial_registered_source_coverage_runtime_pending",
+        row["authoring"] = {"date": "2026-10-07", "status": "complete_registered_source_coverage_runtime_pending" if output["coverage_complete"] else "partial_registered_source_coverage_runtime_pending",
                             "source_record": report["source_record"], "originals": original_paths,
                             "atlas_manifest": REPORT.relative_to(base.ROOT).as_posix(),
                             "native_atlas": output["path"], "native_sha256": output["sha256"],
@@ -291,26 +422,31 @@ def check(expected, files):
             if any(sprite.getpixel(point) for point in [(0, 0), (63, 0), (0, 47), (63, 47)]):
                 raise ValueError("opaque vehicle canvas corner")
             native[(pose["part"], pose["state"], pose["frame"], pose["direction"])] = sprite
-        # Idle equipment cues are the only allowed changing pixels in these
-        # assembled frames. Independently compare the published chassis, alpha
-        # and coupler footprint against frame zero rather than trusting a crop.
+        # Each declared moving/status component changes only its own equipment.
+        # Compare against the selected idle chassis independently of source crop
+        # calibration, keeping heading and coupler geometry stable through motion.
         for pose in row["sprites"]:
             if pose["component"] is None:
                 continue
             current = native[(pose["part"], pose["state"], pose["frame"], pose["direction"])]
-            original = native[(pose["part"], "idle", 0, pose["direction"])]
-            x, y, width, height = pose["component_target_box"]
-            if current.tobytes() == original.tobytes():
+            original = native[(pose["part"], pose["reference_state"], 0, pose["direction"])]
+            regions = pose["component_regions"]
+            if pose["component"] in {"cab_beacon", "equipment_indicator"} and current.tobytes() == original.tobytes():
+                # A lamp is visible in every heading; an unchanged authored lamp
+                # means native conversion lost the declared status animation.
                 raise ValueError("authored animation cue disappeared at native palette scale")
+            # End-on wheels and away-facing cutter teeth may be hidden. Real
+            # authored frames can therefore match; source provenance still must
+            # include every frame, rather than padding missing poses with idle.
             for yy in range(48):
                 for xx in range(64):
                     before, after = original.getpixel((xx, yy)), current.getpixel((xx, yy))
                     if (before == 0) != (after == 0):
                         raise ValueError("status animation changes chassis alpha/contacts")
-                    if not (x <= xx < x + width and y <= yy < y + height) and before != after:
-                        # All frame changes must stay inside the declared real
-                        # status component; body or wheel motion is forbidden here.
-                        raise ValueError("status frame changes pixels outside authored cue")
+                    if not any(x <= xx < x + width and y <= yy < y + height for x, y, width, height in regions) and before != after:
+                        # Selected wheel/disk/lamp pixels never authorize a new
+                        # cab, shell, coupler or unregistered machinery change.
+                        raise ValueError("vehicle frame changes pixels outside authored equipment")
         for direction in DIRECTIONS:
             idle = [native[("body", "idle", frame, direction)] for frame in range(4)
                     if ("body", "idle", frame, direction) in native]
@@ -318,6 +454,16 @@ def check(expected, files):
                 # Four supplied idle cue phases must survive the native palette;
                 # duplicated frame-zero pixels cannot conceal an unfilled frame.
                 raise ValueError("idle authored cue phases collapse into duplicate pixels")
+    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    families = {row["asset_id"]: row for row in public["assets"]}
+    # The public source handoff must describe exactly these baked poses. A stale
+    # source count/hash can mislead packing into accepting a partial model or a
+    # different atlas even when local source conversion is reproducible.
+    for atlas in expected["atlases"]:
+        family = families[atlas["asset_id"]]
+        authoring = family["authoring"]
+        if authoring["native_sha256"] != atlas["sha256"] or authoring["staged_pose_count"] != len(atlas["sprites"]) or authoring["missing_pose_count"] != atlas["missing_pose_count"] or authoring["coverage_complete"] != atlas["coverage_complete"]:
+            raise ValueError("public vehicle source handoff is stale: " + atlas["asset_id"])
     print(f"Vehicle source conversion: {len(expected['atlases'])} models / {expected['pose_count']} authored poses; exact regeneration, palette, alpha and sparse coverage pass; runtime pending")
 
 

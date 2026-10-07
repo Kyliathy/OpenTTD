@@ -10,6 +10,8 @@
 #include "stdafx.h"
 #include "map_layer_gui.h"
 #include "map_layer.h"
+#include "multilayer_sprite.h"
+#include "multilayer_content.h"
 #include "window_func.h"
 #include "window_gui.h"
 #include "window_type.h"
@@ -68,10 +70,12 @@ SpriteID GetMapLayerIcon(MapLayer layer)
  * @param y Tile north-corner Y in the current GUI drawing region.
  * @param kind Kind of portal being placed.
  * @param door Door direction selected by the preview button.
+ * @param target Explicit selected target layer, or Invalid for the existing default choice.
  */
-void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door)
+void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection door, MapLayer target, TileIndex preview_tile)
 {
-	bool surface = GetMainWindow()->viewport->layer == MapLayer::Surface;
+	const MapLayer layer = IsValidTile(preview_tile) ? GetTileLayer(preview_tile) : GetMainWindow()->viewport->layer;
+	bool surface = layer == MapLayer::Surface;
 	SpriteID base;
 	switch (kind) {
 		case LayerPortalKind::RailTunnel: base = surface ? SPR_MAP_LAYER_RAIL_PORTAL_SURFACE : SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND; break;
@@ -80,8 +84,29 @@ void DrawLayerPortalPreview(int x, int y, LayerPortalKind kind, DiagDirection do
 		default: NOT_REACHED();
 	}
 	SpriteID back = base + to_underlying(door) * 2;
+	SpriteID front = back + 1;
+	// A native rail preview shows the same Sealed source housing it would build.
+	// The picker still owns availability/date checks and the destination choice.
+	if (kind == LayerPortalKind::RailTunnel && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
+		if (const auto existing = GetMultiLayerPortalSprite(preview_tile, false)) {
+			// Existing endpoints display their actual Sealed/Commissioning/Connected
+			// owner state; they do not reuse the new-build picker's default phase.
+			DrawSprite(*existing, PAL_NONE, x, y);
+			DrawSprite(*GetMultiLayerPortalSprite(preview_tile, true), PAL_NONE, x, y);
+			return;
+		}
+		// A Deep housing stays distinct on either endpoint, including an existing
+		// lower-end picker. The chosen destination never supplies excavation rights.
+		const bool deep = layer == MapLayer::DeepUnderground || target == MapLayer::DeepUnderground;
+		const auto family = deep ? MultiLayerSpriteAsset::FacilityPortalDeepRail : MultiLayerSpriteAsset::FacilityPortalSealed;
+		// Surface and Underground-to-Deep are upper endpoints; their reciprocal
+		// Underground and Deep views use the independently authored lower housing.
+		const uint16_t endpoint = layer == MapLayer::Surface || (layer == MapLayer::Underground && deep) ? 0 : 1;
+		back = *GetMultiLayerSprite(family, {0, 0, static_cast<uint8_t>(door), endpoint, 0});
+		front = *GetMultiLayerSprite(family, {0, 0, static_cast<uint8_t>(door), endpoint, 1});
+	}
 	DrawSprite(back, PAL_NONE, x, y);
-	DrawSprite(back + 1, PAL_NONE, x, y);
+	DrawSprite(front, PAL_NONE, x, y);
 }
 
 /**

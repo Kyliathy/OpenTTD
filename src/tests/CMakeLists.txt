@@ -28,6 +28,18 @@ add_test_files(
     tbm_economics.cpp
     tbm_logistics_save.cpp
     tbm_logistics_runtime.cpp
+    native_art_loop_fixture.h
+    native_sound_runtime_fixture.h
+    # Actual M1 base-set loading: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B.
+    multilayer_packed_load.cpp
+    multilayer_sprite_selection.cpp
+    multilayer_terrain_portal.cpp
+    multilayer_terrain_runtime.cpp
+    multilayer_train_art.cpp
+    multilayer_facility_selection.cpp
+    multilayer_control_selection.cpp
+    multilayer_control_runtime.cpp
+    multilayer_sound_selection.cpp
     tbm_logistics_stalls.cpp
     tbm_logistics_queue.cpp
     tbm_logistics_crash.cpp
@@ -123,6 +135,8 @@ add_test_files(
     portal_work_state.cpp
     portal_window.cpp
     underground_window.cpp
+    underground_job_presentation.cpp
+    tbm_presentation.cpp
     underground_quote.cpp
     underground_area.cpp
     underground_workflow_fixture.h

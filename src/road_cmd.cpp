@@ -8,6 +8,8 @@
 /** @file road_cmd.cpp Commands related to road tiles. @see docs/zz-reach2/architecture/landscape/road-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "multilayer_sprite.h"
+#include "timer/timer_game_tick.h"
 #include "bridge.h"
 #include "road.h"
 #include "road_internal.h"
@@ -1910,6 +1912,15 @@ static void DrawTile_Road(TileInfo *ti)
 			DiagDirection dir = GetRoadDepotDirection(ti->tile);
 			const DrawTileSprites *dts = &_road_depot[dir];
 			DrawGroundSprite(dts->ground.sprite, PAL_NONE);
+			// A custom road-type depot keeps its own graphics. The selected native
+			// service family replaces only the ordinary underground default building.
+			const auto native_back = default_gfx ? GetMultiLayerRoadDepotSprite(ti->tile, false, TimerGameTick::counter) : std::nullopt;
+			if (native_back && !IsInvisibilitySet(TransparencyOption::Buildings)) {
+				SpriteID back = *native_back;
+				const bool transparent = IsTransparencySet(TransparencyOption::Buildings);
+				if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
+				DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+			}
 
 			if (default_gfx) {
 				uint offset = GetRoadSpriteOffset(SLOPE_FLAT, DiagDirToRoadBits(dir));
@@ -1921,7 +1932,14 @@ static void DrawTile_Road(TileInfo *ti)
 				}
 			}
 
-			DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, relocation, 0, palette);
+			if (native_back) {
+				if (!IsInvisibilitySet(TransparencyOption::Buildings)) {
+					const SpriteID front = *GetMultiLayerRoadDepotSprite(ti->tile, true, TimerGameTick::counter);
+					AddSortableSpriteToDraw(front, PAL_NONE, *ti, GetMultiLayerDepotFrontBounds(dir), IsTransparencySet(TransparencyOption::Buildings));
+				}
+			} else {
+				DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, relocation, 0, palette);
+			}
 			blocked_pillars = BRIDGEPILLARFLAGS_ALL;
 			break;
 		}

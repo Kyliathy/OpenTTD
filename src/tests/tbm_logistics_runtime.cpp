@@ -9,12 +9,15 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 13A/13C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19 (actual viewport/headless pairs)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups82/83, optional actual native raster observation
  */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "layer_save_fixture.h"
 #include "logistics_crash_fixture.h"
+#include "native_art_loop_fixture.h"
+#include "native_sound_runtime_fixture.h"
 #include "../console_internal.h"
 #include "../openttd.h"
 #include "../tbm_exchange.h"
@@ -60,6 +63,8 @@ public:
 	mutable uint draws = 0; ///< Number of actual native viewport render dispatches; observer evidence only.
 	mutable uint visible_cutter_draws = 0; ///< Actual draws centered on a non-hidden cutter in the selected physical layer.
 	std::unique_ptr<LogisticsCrashLedger> crash; ///< Actual irreversible wreck; the next legal transition is native cleanup.
+	std::unique_ptr<NativeArtLoopProbe> art; ///< Optional read-only scene capture; normal logistics checks allocate no art observer.
+	std::unique_ptr<NativeSoundRuntimeProbe> sound; ///< Optional actual cue/decoder/mixer proof; normal checks retain their audio policy.
 
 	/**
 	 * Save one fully reconstructed native state through the production writer.
@@ -269,6 +274,8 @@ public:
 		REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));
 		this->hauler = assignment.hauler;
 		this->initial_exchanges = assignment.exchanges;
+		if (std::getenv("OTTD_M1_LOOP_ART") != nullptr) this->art = std::make_unique<NativeArtLoopProbe>(this->output, assignment);
+		if (std::getenv("OTTD_M1_SOUND_PROOF") != nullptr) this->sound = std::make_unique<NativeSoundRuntimeProbe>(assignment);
 		this->complete_loop = std::getenv("OTTD_TBM_LOGISTICS_COMPLETE_LOOP") != nullptr;
 		if (const char *view = std::getenv("OTTD_TBM_LOGISTICS_VIEW"); view != nullptr) {
 			this->presentation = view;
@@ -306,6 +313,8 @@ public:
 		REQUIRE(Command<Commands::Pause>::Do(DoCommandFlag::Execute, PauseMode::Normal, false).Succeeded());
 		this->started = true;
 		this->Present();
+		if (this->art) this->art->Observe(assignment, this->ticks);
+		if (this->sound) this->sound->Observe(assignment, this->ticks);
 	}
 
 	/**
@@ -331,6 +340,8 @@ public:
 		const auto *assignment = GetTBMExchangeAssignmentForHauler(this->hauler);
 		REQUIRE(assignment != nullptr);
 		REQUIRE(this->ticks < 80000);
+		if (this->art) this->art->Observe(*assignment, this->ticks);
+		if (this->sound) this->sound->Observe(*assignment, this->ticks);
 		if (this->complete_loop) {
 			// Daily native view refresh must leave the same physical/cargo/cost result as a process with no observer camera calls.
 			if (this->ticks % Ticks::DAY_TICKS == 0) this->Present();
@@ -341,6 +352,8 @@ public:
 			// Native station housekeeping can settle after its assignment reports empty return; observe only real physical packets here.
 			for (const Vehicle *vehicle : Vehicle::Iterate()) REQUIRE(vehicle->cargo.TotalCount() == 0);
 			this->Save("-complete-loop");
+			if (this->art) this->art->Finish();
+			if (this->sound) this->sound->Finish();
 			if (this->presentation == "visible") CHECK(this->visible_cutter_draws > 0);
 			fmt::print("LOGISTICS_COMPLETE_LOOP ticks={} exchanges={} presentation={} draws={} cutter_draws={}\n", this->ticks, assignment->exchanges,
 				this->presentation, this->draws, this->visible_cutter_draws);
@@ -398,8 +411,11 @@ TEST_CASE("Loaded source logistics reaches its next physical exchange", "[.tbm-l
 	// Portal-only acceptance needs startup/reconstruction. Null video otherwise consumes its whole declared
 	// tick budget after an exit request, causing unrelated minutes of legacy traffic after the saved checkpoint.
 	const std::string_view video = std::getenv("OTTD_TBM_PORTAL_LOAD_ONLY") != nullptr ? "null:ticks=2" : "null:ticks=80000";
-	std::array<std::string_view, 15> arguments = {"Debug/openttd_test.exe", "-v", video,
-		"-s", "null", "-m", "null", "-x", "-X", "-c", "grftest.cfg", "-g", source, "-d", "misc=5,sl=2,script=2"};
+	const std::string_view config = std::getenv("OTTD_M1_LOOP_ART") != nullptr ? "native-art.cfg" : "grftest.cfg";
+	std::vector<std::string_view> arguments = {"Debug/openttd_test.exe", "-v", video,
+		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", source, "-d", "misc=5,sl=2,script=2"};
+	if (probe.art) arguments.insert(arguments.end(), {"-I", "original_dos"});
+	if (probe.sound) arguments.insert(arguments.end(), {"-S", "original_dos"});
 	CHECK(openttd_main(arguments) == 0);
 	CHECK(probe.started);
 	CHECK(probe.completed);

@@ -1,5 +1,7 @@
 # R2MLVS13 - Graphics and Asset Pipeline
 
+Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). M1 dispatch: [R2MLVS3MP](r2mlvs3mp-master-plan.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**
@@ -48,7 +50,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 380-409 | Complete Map Layer sprite constants and `SPR_NEWGRFS_BASE` bound the published block; preserve 0..65 and resolve any accepted live extension before allocating new IDs. |
 
-Status: Groups 1-8 M0 contract completed; final source generation/packing/runtime art remain pending. Evidence: [sprite contract and geometry](r2mlvs13-a-sprite-contract.md). Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). First reading area uses r2mlvs1 `Draft Content Handoff` and feeds its `Content Freeze Handoff`; integration follows each consumer. Final art is required for milestone acceptance.
+Status: Groups 1-8 M0 contract and the master's selected forty-family M1 source/packing/native-consumer/crossing/loop/sound slice are complete. Selected final gallery/distribution acceptance is Group 85B; unselected later families and full-profile gallery obligations remain pending. User personal art review is deferred as requested. Evidence: [sprite contract and geometry](r2mlvs13-a-sprite-contract.md) and [current presentation continuation](r2mlvs3mp-s-presentation-and-review.md). Parent completion is unchanged. Final art is required for milestone acceptance.
 
 ## Outcome and Boundaries
 
@@ -294,7 +296,7 @@ Read the executing model's public brief/manifest and immutable sources, engine v
 {{HARD}}
 - [X] 14.1 For Standard TBM, derive a single-model brief from its approved manifest/template: cutter/support proportions and legal 45-degree heading continuity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [X] 14.2 Produce the required directions/rotations for Standard TBM from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 14.3 Add idle/boring/reversing/service frames with fixed articulated seams for Standard TBM, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 14.3 Add idle/boring/reversing/service frames with fixed articulated seams for Standard TBM, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 Group 14 base-source handoff (2026-10-07): [selected body v2/support v3](assets/mlvs/vehicle-generation-record.json) have eight genuine engine views each, with source-reviewed per-view crop registration and native bounds/anchors. The support is a low generator/hose cart with no cab or second cutter. [Native partial sheet](assets/mlvs/vehicle-details-review.png) stages 16 idle frame-zero poses. Two rejected candidates are retained with exact reasons/prompts/hashes and never fill coverage. The publisher/briefs now explicitly include backing and ordinary service for both cutters, and service for the hauler, as required by these source tasks (143 families / 57,051 required source sprites). Art animation creates no new saved work phase. Task 14.3 remains pending until the bounded body/support batches and 14D combined source review pass; 368 Standard poses are still missing. Actual loaded seam/occlusion review remains required during integration.
 
@@ -308,13 +310,15 @@ Read vehicle.model-00 body states/frames/anchor in the public manifest and selec
 
 {{HARD}}
 - [X] 14B.1 Author/select idle body frames 1-3 against the retained eight-view frame 0, preserving static chassis and declaring the animated equipment cue.
-- [ ] 14B.2 Author/select moving body frames 0-3 with actual wheel/rod cues, preserving cutter-stop and articulated contacts.
-- [ ] 14B.3 Author/select boring body frames 0-3 with genuine cutter phase/debris changes inside fixed bounds.
-- [ ] 14B.4 Author/select blocked body frames 0-3 with clear resumable wait cues and stopped cutter.
-- [ ] 14B.5 Author/select backing body frames 0-3 without turning the machine or presenting backward excavation.
-- [ ] 14B.6 Author/select ordinary service body frames 0-3 with fixed housing, distinct service cue and no depot/cargo invention.
+- [X] 14B.2 Author/select moving body frames 0-3 with actual wheel/rod cues, preserving cutter-stop and articulated contacts.
+- [X] 14B.3 Author/select boring body frames 0-3 with genuine cutter phase/debris changes inside fixed bounds.
+- [X] 14B.4 Author/select blocked body frames 0-3 with clear resumable wait cues and stopped cutter.
+- [X] 14B.5 Author/select backing body frames 0-3 without turning the machine or presenting backward excavation.
+- [X] 14B.6 Author/select ordinary service body frames 0-3 with fixed housing, distinct service cue and no depot/cargo invention.
 
 14B.1 source handoff (2026-10-07): four genuinely authored RGB equipment-cue phases now exist in all eight engine views. The tool's partial sheet contributes complete frames 1/2 only; the excluded partial row never fills a frame. A separate original supplies frame 3. Deterministic source-part assembly uses only selected cab-beacon regions onto the immutable idle chassis, as 14.3 requires changing declared parts only. Native checks independently prove identical alpha/contact geometry and exact pixels outside that cue, plus four distinct palette phases in every view. [Prompt/selection/crop/component provenance](assets/mlvs/vehicle-generation-record.json), [animation source review](assets/mlvs/standard-idle-animation-review.gif), and [focused checks](r2mlvs13-i-standard-idle-source-checks.log) retain evidence. Current Standard coverage is 40/384 (32 body idle plus 8 support idle); moving/boring/blocked/backing/service and support animations remain pending. This is source review, not a loaded gameplay capture.
+
+Group 14B source handoff (2026-10-07): the retained chassis and eight genuine headings are reused for all **192 body poses**. Five new immutable tool outputs supply selected rolling gear, drilling teeth/work indicator, red wait and cyan service cues; the first movement sheet has 28 real cells and a separate four-cell source completes frame 3. Backing reuses the real rolling phases in inverse order without rotating the body. Explicit per-view source/target equipment registration excludes generated lamp/chassis drift and preserves the original alpha/couplers. [Focused checks](../../../../logs/r2mlvs13-j-standard-body-source-checks.log) prove four distinct native palette phases in every heading/state, exact regeneration and the public manifest. Source-only GIF reviews are linked through [provenance](assets/mlvs/vehicle-generation-record.json). Support coverage, combined model handoff, packed loading and runtime review remain later tasks. The user deferred art feedback until integration on 2026-10-07; this does not claim that review passed.
 
 ### Local Mandatory Reading - Standard permanent support animation
 
@@ -325,12 +329,14 @@ Read vehicle.model-00 support states/frames/anchor, selected support v3 and its 
 ### Group 14C - Author Standard permanent support states and frames
 
 {{HARD}}
-- [ ] 14C.1 Author/select idle support frames 1-3 against the retained eight-view frame 0.
-- [ ] 14C.2 Author/select moving support frames 0-3 with wheel/rod cues at fixed coupler contacts.
-- [ ] 14C.3 Author/select boring support frames 0-3 with genuine machinery/hose-reel changes and no cutter head.
-- [ ] 14C.4 Author/select blocked support frames 0-3 with distinct wait cue and unchanged physical machinery.
-- [ ] 14C.5 Author/select backing support frames 0-3 with the same real forward/rear couplers.
-- [ ] 14C.6 Author/select service support frames 0-3 with declared equipment panels/cues, no cargo or detached cart.
+- [X] 14C.1 Author/select idle support frames 1-3 against the retained eight-view frame 0.
+- [X] 14C.2 Author/select moving support frames 0-3 with wheel/rod cues at fixed coupler contacts.
+- [X] 14C.3 Author/select boring support frames 0-3 with genuine machinery/hose-reel changes and no cutter head.
+- [X] 14C.4 Author/select blocked support frames 0-3 with distinct wait cue and unchanged physical machinery.
+- [X] 14C.5 Author/select backing support frames 0-3 with the same real forward/rear couplers.
+- [X] 14C.6 Author/select service support frames 0-3 with declared equipment panels/cues, no cargo or detached cart.
+
+Group 14C source handoff (2026-10-07): **192 support poses** reuse the selected generator/hose cart and shared tool-authored indicator components. Two new immutable sheets supply selected wheel and hose-reel machinery phases; explicit crop rectangles handle uneven/touching generated cells while rejecting missing/overlapping/out-of-bounds registrations. Every source frame preserves the original own-part chassis, alpha and contacts, and backing reuses rolling phases in inverse order. [Combined focused checks](../../../../logs/r2mlvs13-k-standard-model-source-checks.log) pass all six states/four native phases/eight headings for both physical parts. Source-only native/enlarged GIF reviews and exact crop/component provenance are retained; actual loaded coupling remains with runtime integration.
 
 ### Local Mandatory Reading - Standard combined source review
 
@@ -341,37 +347,47 @@ Read only the selected Standard body/support records and full 384-pose coverage,
 ### Group 14D - Review the complete Standard source model
 
 {{MEDIUM}}
-- [ ] 14D.1 Verify all 384 declared body/support poses, genuine animation pixels and deterministic palette/alpha/crop/anchor conversion; refuse missing or duplicated coverage.
-- [ ] 14D.2 Review the combined native sheet for eight-view continuity, 45-degree neighbors, static chassis/contacts and readable body/support/work/backing/service differences.
-- [ ] 14D.3 Publish the completed source handoff and check original 14.3 only after 14B/14C/14D checks pass; keep actual packed train seam/occlusion/runtime acceptance with the owning later groups.
+- [X] 14D.1 Verify all 384 declared body/support poses, genuine animation pixels and deterministic palette/alpha/crop/anchor conversion; refuse missing or duplicated coverage.
+- [X] 14D.2 Review the combined native sheet for eight-view continuity, 45-degree neighbors, static chassis/contacts and readable body/support/work/backing/service differences.
+- [X] 14D.3 Publish the completed source handoff and check original 14.3 only after 14B/14C/14D checks pass; keep actual packed train seam/occlusion/runtime acceptance with the owning later groups.
+
+Group 14D source closure (2026-10-07): [native/enlarged sheet](assets/mlvs/vehicle-details-review.png) and six state GIFs per part retain all **384/384 Standard poses**, with explicit source hash/cell/component ownership in [provenance](assets/mlvs/vehicle-generation-record.json). Body/support remain visually distinct; original eight-view geometry is unchanged outside declared equipment, including adjacent 45-degree headings. Missing coverage is zero and the public authoring record is complete-source/runtime-pending. [Technical checks](../../../../logs/r2mlvs13-k-standard-model-source-checks.log) pass. User feedback is deferred until integration by instruction; packed loading and physical articulated seam/occlusion review are not claimed. This closes original 14.3, while master 8.3 still requires Deep, Earth/Rock and hauler source groups.
 
 ### Group 15 - Author Deep-rated TBM
 
 {{HARD}}
-- [ ] 15.1 For Deep-rated TBM, derive a single-model brief from its approved manifest/template: visibly heavier cutter and depth equipment. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 15.2 Produce the required directions/rotations for Deep-rated TBM from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 15.3 Add idle/boring/reversing/service frames with fixed articulated seams for Deep-rated TBM, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 15.1 For Deep-rated TBM, derive a single-model brief from its approved manifest/template: visibly heavier cutter and depth equipment. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 15.2 Produce the required directions/rotations for Deep-rated TBM from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 15.3 Add idle/boring/reversing/service frames with fixed articulated seams for Deep-rated TBM, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 15 source handoff (2026-10-07): all **384 Deep body/support poses** are baked. The retained red/graphite cutter and its genuine corrected rear views are reused from the immutable original/native source chain; transparent canvas translation aligns the existing poses to the common ground contact without repainting their body. One new tool-authored support original reuses the accepted cart geometry with reinforced Deep material cues and no cab/cutter. Shared authored steel, machinery and indicator phases are registered only inside the Deep model's own physical equipment; its heavier shell, heading, alpha and contacts stay fixed. [Body checks](../../../../logs/r2mlvs13-l-deep-body-source-checks.log), [support checks](../../../../logs/r2mlvs13-l-deep-support-source-checks.log), [provenance](assets/mlvs/vehicle-generation-record.json), and per-part/state source GIFs retain exact source/cell/component identities and four distinct native phases in every heading. Public source coverage is complete; packed/native coupling/occlusion review remains later. User art feedback is deferred by instruction.
 
 ### Group 16 - Author Earth hopper
 
 {{HARD}}
-- [ ] 16.1 For Earth hopper, derive a single-model brief from its approved manifest/template: readable soil load and detachable wagon identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 16.2 Produce the required directions/rotations for Earth hopper from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 16.3 Add empty/partial/full load and purchase views for Earth hopper, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 16.1 For Earth hopper, derive a single-model brief from its approved manifest/template: readable soil load and detachable wagon identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 16.2 Produce the required directions/rotations for Earth hopper from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 16.3 Add empty/partial/full load and purchase views for Earth hopper, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 16 source handoff (2026-10-07): **80 Earth poses** reuse the selected brown hopper, original true-axis view mapping and five retained load/status first poses. The second frame selects existing authored steel wheel details at explicit own-state positions; soil/load pixels, alpha and couplers stay exact. Runtime must use rolling phases only during actual movement, keep frame zero while stopped, and give actual load quantity priority over optional empty-service/wait views. [Focused checks](../../../../logs/r2mlvs13-m-earth-source-checks.log) pass five states/two native phases/eight headings and exact conversion/crop refusals. Available purchase art is reused; a single five-model tool original supplies separate locked UI previews with padlocks, never vehicle bodies. [Purchase provenance/review](assets/mlvs/purchase-generation-record.json) and [checks](../../../../logs/r2mlvs13-n-purchase-source-checks.log) prove ten native available/locked previews and manifest coverage. Full native/loaded cargo sorting and runtime art review remain later; user feedback is deferred.
 
 ### Group 17 - Author Rock hopper
 
 {{HARD}}
-- [ ] 17.1 For Rock hopper, derive a single-model brief from its approved manifest/template: coarse rock load distinct from Earth. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 17.2 Produce the required directions/rotations for Rock hopper from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 17.3 Add empty/partial/full load and purchase views for Rock hopper, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 17.1 For Rock hopper, derive a single-model brief from its approved manifest/template: coarse rock load distinct from Earth. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 17.2 Produce the required directions/rotations for Rock hopper from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 17.3 Add empty/partial/full load and purchase views for Rock hopper, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 17 source handoff (2026-10-07): all **80 Rock poses** reuse the selected blue/steel hopper and real coarse rubble quantities, with common authored steel wheel phases registered on each own-state frame-zero chassis. [Focused checks](../../../../logs/r2mlvs13-o-rock-source-checks.log) pass all five states/two native phases/eight headings, unchanged load/chassis/alpha outside declared gear and exact regeneration. Available/locked purchase previews pass the shared [UI source checks](../../../../logs/r2mlvs13-n-purchase-source-checks.log). The same runtime policy as Earth applies: actual quantities choose load views, rolling phases require real movement, and empty-service/wait art cannot hide carried cargo. Native sheets/GIFs retain technical source review; final packed/load/service/coupling review remains later.
 
 ### Group 18 - Author spoil hauler locomotive
 
 {{HARD}}
-- [ ] 18.1 For spoil hauler locomotive, derive a single-model brief from its approved manifest/template: secondary hauling engine distinct from the cutter. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 18.2 Produce the required directions/rotations for spoil hauler locomotive from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 18.3 Add running/idle/service and purchase views for spoil hauler locomotive, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 18.1 For spoil hauler locomotive, derive a single-model brief from its approved manifest/template: secondary hauling engine distinct from the cutter. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 18.2 Produce the required directions/rotations for spoil hauler locomotive from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 18.3 Add running/idle/service and purchase views for spoil hauler locomotive, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Group 18 source handoff (2026-10-07): all **80 hauler poses** reuse the selected plain orange/gray locomotive and eight genuine headings. The actual native model 4 is the ordinary Singlehead diesel in `src/underground_vehicle.cpp`, eligible for Plan 5's separate non-cutter haulage assignment. Existing travel/exchange/wait first poses are retained; selected common steel/indicator phases provide missing animation and both cyan service poses on the own-body reference. No cutter disk, debris, articulated support or invisible cargo buffer enters this family. [Focused checks](../../../../logs/r2mlvs13-p-hauler-source-checks.log) pass five states/two native phases/eight headings, exact source/public-manifest regeneration, fixed chassis/alpha and malformed crop refusals. Shared available/locked previews pass [UI checks](../../../../logs/r2mlvs13-n-purchase-source-checks.log). All vehicle source groups in master 8.3 now close: **1,008 vehicle/support poses plus ten purchase UI poses**. Packing, actual model callbacks/sounds and native rendered acceptance retain their later gates.
 
 ### Group 19 - Author underground freight locomotive
 
@@ -401,12 +417,20 @@ Read only the selected Standard body/support records and full 384-pose coverage,
 - [ ] 22.2 Produce the required directions/rotations for sealed mineral carrier from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 22.3 Add required sealed-load/service and purchase views for sealed mineral carrier, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+### Local Mandatory Reading - M1 exchange source
+
+_Applies to Group 23; master checkpoint 8.4._
+
+Read this plan's Global and Source generation Area, the `facility.exchange` public manifest/brief, and the retained `exchange-bay-v1.png` source/provenance. In native source inspect `ResolveTBMExchangeBay` / `CheckTBMExchangeParticipant` in `src/tbm_exchange.cpp` and the depot branch of `DrawTile_Rail` in `src/rail_cmd.cpp`: this is one owned depot tile, with real consists hidden after entering, rather than the old candidate's 3x2 plaza. Keep four actual entry views and aligned back/front parts. Reuse the original steel/hoist/safety palette and preserve its bytes; author compact geometry and genuine presentation phases where missing. Housing/status animation never transfers cargo or grants exchange permission.
+
 ### Group 23 - Author TBM exchange bay
 
 {{HARD}}
-- [ ] 23.1 For TBM exchange bay, derive a single-model brief from its approved manifest/template: stopped-consist exchange space with readable approaches. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 23.2 Produce the required directions/rotations for TBM exchange bay from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 23.3 Add occupied/available and directional back/front parts for TBM exchange bay, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 23.1 For TBM exchange bay, derive a single-model brief from its approved manifest/template: stopped-consist exchange space with readable approaches. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 23.2 Produce the required directions/rotations for TBM exchange bay from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 23.3 Add occupied/available and directional back/front parts for TBM exchange bay, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+23 source closure (2026-10-07): selected compact one-tile source reuses the original steel/hoist/safety design; the first long-plaza revision remains a rejected immutable candidate. Four actual entry views, four state cues and four authored indicator phases yield **128 aligned back/front sprites**. [Geometry boundary](../../../../logs/r2mlvs13-r-facility-geometry.log) passes 47 assertions; [focused source/placement/schema checks](../../../../logs/r2mlvs13-s-exchange-source-checks.log) pass. Originals/prompts are in [facility provenance](assets/mlvs/facility-generation-record.json); review is `assets/mlvs/exchange-bay-details-review.png` plus four per-state GIFs. Native payload/rendering and user art feedback remain later checkpoints.
 
 ### Group 24 - Author underground rail freight station
 
@@ -422,12 +446,20 @@ Read only the selected Standard body/support records and full 384-pose coverage,
 - [ ] 25.2 Produce the required directions/rotations for road mine terminal from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 25.3 Add all approaches/loading and back/front parts for road mine terminal, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+### Local Mandatory Reading - M1 ordinary service sources
+
+_Applies to Group 26; master checkpoint 8.4._
+
+Read this plan's Global and Source generation Area and only `facility.rail-service` / `facility.road-service` manifest/brief rows. Inspect native depot branches in `DrawTile_Rail` and `DrawTile_Road`, their one-tile build commands, and `src/underground_vehicle.h` for ordinary servicing ownership. Read the completed exchange source record/converter for reusable geometry and phase components. Rail has a single track entry; road has a distinct paved entry. Occupancy comes from real depot vehicles; visual service cues cannot create a second repair or vehicle registry.
+
 ### Group 26 - Author underground service depots
 
 {{HARD}}
-- [ ] 26.1 For underground service depots, derive a single-model brief from its approved manifest/template: distinct rail and road service entry templates. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 26.2 Produce the required directions/rotations for underground service depots from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 26.3 Add open/occupied/service and required approach views for underground service depots, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 26.1 For underground service depots, derive a single-model brief from its approved manifest/template: distinct rail and road service entry templates. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 26.2 Produce the required directions/rotations for underground service depots from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 26.3 Add open/occupied/service and required approach views for underground service depots, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+26 source closure (2026-10-07): ordinary rail servicing reuses the exact compact rail original because the exchange owner assigns an existing native depot. The road family reuses its architecture with distinct teal fittings, asphalt/white entry stripe, no rails, and an internal service jack. Four actual entries and fixed construction/open/occupied-service/blocked views plus shared authored lamp phases supply **128 poses per family / 256 total**. [Focused service placement/phase/refusal checks](../../../../logs/r2mlvs13-t-service-source-checks.log) pass. Provenance and per-family PNG/four GIF reviews live beside the exchange originals; no new vehicle or repair authority is introduced. Native payload/rendering and personal art review remain pending.
 
 ### Group 27 - Author Coal mine
 
@@ -499,19 +531,29 @@ Read only the selected Standard body/support records and full 384-pose coverage,
 - [ ] 36.2 Produce the required directions/rotations for Uranium mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 36.3 Add construction/working/paused/depleted layout states for Uranium mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+### Local Mandatory Reading - M1 Surface spoil receiver sources
+
+_Applies to Groups 37-38; master checkpoint 8.4._
+
+Read this plan's Global and Source generation Area, only the executing receiver's manifest/brief, and `InstallSpoilReceiverDefinition`, `GetSpoilReceiverRoom`, `AdvanceSpoilReceiver` in `src/spoil_receiver.cpp` / public recipe/state in `src/spoil_receiver.h`. The measured native layouts are Earth 2x3/six cells and Rock 4x4/sixteen cells (`src/tests/multilayer_art_geometry.cpp`). Inspect the actual layout cells before selecting per-tile art. Industries expose one fixed layout, so unsupported view rotations must be reconciled with that producer rather than synthesized. Construction/idle/working/full cues present existing bounded stock/processing; animation cannot consume cargo. Keep per-cell 64x64 anchors/back/front coverage and assemble a whole-site review before source closure.
+
 ### Group 37 - Author Earth reclamation/disposal site
 
 {{HARD}}
-- [ ] 37.1 For Earth reclamation/disposal site, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 37.2 Produce the required directions/rotations for Earth reclamation/disposal site from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 37.3 Add construction/working/full/idle states for Earth reclamation/disposal site, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 37.1 For Earth reclamation/disposal site, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 37.2 Produce the required directions/rotations for Earth reclamation/disposal site from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 37.3 Add construction/working/full/idle states for Earth reclamation/disposal site, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+37 source closure (2026-10-07): the actual fixed native 2x3 layout has six column-major cells, with intake, brown soil bank, retaining drain, soil conveyor, receiving yard and service hut. `ready` presents idle; `blocked` presents full/interval refusal. No industry rotation exists: publisher/validator and both receiver briefs now declare only `none`, reducing the exact whole-profile requirement to **143 families / 54,939 sprites** without altering native offsets/content identity. Four source states, shared authored lamp phases and paired per-cell parts supply **192 poses**; static soil/paving repeats intentionally while the hut fitting animates. [Actual receiver boundaries](../../../../logs/r2mlvs13-u-receiver-boundary.log) pass 2,560 assertions / seven cases; [focused Earth source/contact/refusal/schema checks](../../../../logs/r2mlvs13-v-earth-source-checks.log) pass. Whole-site PNG/GIF review is in `assets/mlvs/earth-receiver-details-review.png`. Runtime loading/stock-state selection and user art review remain pending.
 
 ### Group 38 - Author Rock crusher/disposal site
 
 {{HARD}}
-- [ ] 38.1 For Rock crusher/disposal site, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 38.2 Produce the required directions/rotations for Rock crusher/disposal site from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 38.3 Add construction/working/full/idle states for Rock crusher/disposal site, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 38.1 For Rock crusher/disposal site, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 38.2 Produce the required directions/rotations for Rock crusher/disposal site from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 38.3 Add construction/working/full/idle states for Rock crusher/disposal site, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+38 source closure (2026-10-07): **512 per-cell back/front poses** cover the actual fixed 4x4 layout, construction/idle/working/full states and four shared authored indicator phases. Twelve Rock-specific roles use selected idle/construction/stock originals; hut, paving, retaining wall and drain reuse exact Earth cells. The short stock sheet contributes only its real 20 panels; a separate original fills the missing four full-state roles. Explicit nonoverlapping crop rectangles resolve tight gutters. [Focused Rock source/placement/refusal/schema checks](../../../../logs/r2mlvs13-w-rock-source-checks.log) pass; the slow placement fixture was split into `multilayer_facility_art.py` / `multilayer_facility_art-1.py` and now caches fixed-cell palette reductions. Whole-site PNG/GIF review is `assets/mlvs/rock-receiver-details-review.png`. User art review and native payload/state selection remain pending.
 
 ### Group 39 - Author metal refinery
 
@@ -786,12 +828,64 @@ Read only the selected Standard body/support records and full 384-pose coverage,
 - [ ] 77.2 Produce the required directions/rotations for solar mirror and kit from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 77.3 Add packed/deploying/aiming/operating/idle states for solar mirror and kit, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+### Local Mandatory Reading - M1 ground control source slice
+
+_Applies to Group 78B; master checkpoint 8.5. Whole Group 78 remains pending for later orbital controls._
+
+Read this plan's Global and Source generation Area, the seven selected `control.survey`, `control.excavation`, `control.tbm-area`, `control.tbm-turn45`, `control.exchange`, `control.deep-lock`, `control.future-lock` rows/briefs and existing `cargo.ERTH` / `cargo.ROCK` originals. Inspect `GetTBMPairControls` in `src/tbm_controls.h/.cpp`, actual portal widgets in `src/layer_portal_gui.cpp`, and project/area/exchange tools in `src/underground_gui.cpp`. `PreviewTBMCommissionArea` / `SetConstructionPreview` supplies canonical outline/turn geometry; sprite icons cannot grant construction, rotate a cutter or change a quote. Read existing layer icons and purchase-menu lock art for reuse. Native 20x20 enabled/disabled/pressed controls have no world heading. Keep locks/date cues in menus and controls, never on world vehicle bodies. Personal art review remains deferred. Testing/build verification is deferred until 2026-10-07 12:25:55 UTC by the user's low-power instruction.
+
+### Group 78B - Author the M1 ground control subset
+
+{{MEDIUM}}
+- [X] 78B.1 Derive native ground briefs/bindings from actual survey, portal commissioning, area outline, legal 45-degree turn, exchange and Deep/date control owners; reuse delivered Earth/Rock cargo and existing layer/menu graphics. Retain originals/prompts/provenance.
+- [X] 78B.2 Supply the seven ground control families in enabled/disabled/pressed states at 20x20 with fixed anchors, plus an explicit handoff to the existing canonical world outline/turn preview. No orbital collection/drop source is dispatched here.
+- [X] 78B.3 Bake model-specific native/enlarged contact review; check source coverage, palette/anchors and distinct blocked/date/selection cues in a focused burst after the low-power window. Record the completed subset before closing master 8.5; leave original Group 78 unchecked.
+
+78B source staging (2026-10-07): seven controls / **21 native 20x20 poses** are baked with retained layer/portal/cutter designs and UI-only Deep/calendar locks. [Original/prompt/bindings](assets/mlvs/control-generation-record.json) maps commissioning, floor, 45-degree advancing turn and exchange to their actual command/query/widget owners. Earth/Rock cargo stays exact; existing `SPR_CURSOR_QUERY`, white floor/blue turn-space/red uncovered `SetConstructionPreview` overlays are reused. Review: `assets/mlvs/ground-controls-details-review.png`. Source status/coverage remains explicitly **verification deferred**, and master 8.5 stays unchecked until the requested focused checks can run after **12:25:55 UTC**. During this user-requested window, continue independent packing/tool development without activating unverified sources or claiming checks passed.
+
+78B source closure (2026-10-07, after 12:25:55 UTC): [focused native controls](../../../../logs/r2mlvs13-x-control-source-checks.log) pass exact regeneration, seven-family/21-state coverage, palette/anchor/public bindings and independent missing-state/bad-bounds/illegal-color refusals. Public source coverage is verified; review/provenance status now matches that evidence. Only this declared ground subset and master 8.5 close; original whole Group 78, orbital collection/drop controls and all native runtime integration remain pending.
+
 ### Group 78 - Author construction and cargo controls
 
 {{HARD}}
 - [ ] 78.1 For construction and cargo controls, derive a single-model brief from its approved manifest/template: native-size layer/cargo identities with separate collection/drop circles. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 78.2 Produce the required directions/rotations for construction and cargo controls from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 78.3 Add menu/cursor/locked/blocked/turn-preview and resource icons for construction and cargo controls, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+### Local Mandatory Reading - M1 deterministic packing preparation
+
+_Applies to Groups 79B/80B/81B; master checkpoint 8.6. Independent tool preparation may proceed while 78B.3 testing is deferred; do not pack/activate unverified control art._
+
+Read this plan's Global and Source generation Area, the exact 40-family M1 brief set and current public/source atlas manifests. Read `sprite_quantize.crop_and_shift` / `png_indexed` and native `src/newgrf/newgrf_act5.cpp` type 0x1C offset/count handling. Read base-set NFO includes, `media/baseset/openttd/CMakeLists.txt`, `media/baseset/CMakeLists.txt`, `cmake/scripts/CreateGRF.cmake` and published constants in `src/table/sprites.h`. Keep original 0..65 pixels and files immutable, leave 66..73 unactivated, preserve planned 74..199 offsets and emit only delivered core segments. Append selected vehicle/portal/facility/purchase/cargo art after 199 in stable public family/state/frame/direction/tile/part order. Use a separate base-set PNG/NFO so the immutable MLVI cargo package and legacy source sheet retain their hashes. Validate each actual source cell and anchor; static paving and terrain texture variants are explicitly distinguished from animated machinery/status. Later unselected families remain pending.
+
+Context has compacted 1 times while executing this group.
+
+### Group 79B - Pack the selected M1 source set
+
+{{HARD}}
+- [X] 79B.1 Read the selected per-family authoritative atlases and quantization policy, validate exact cell identities, and crop transparent margins with anchor shifts; preserve all original source bytes.
+- [X] 79B.2 Emit separate PNG/NFO, native range metadata and generated source declarations in stable manifest order. Preserve old 0..65, reserved 66..73 and planned 74..199; append selected art with an explicit native packing route while retaining definition-package identity.
+- [X] 79B.3 Pack the actual native base-set payload with pinned tools and regenerate its checksum metadata; compare two clean selected-source conversions for identical output.
+- [X] 79B.4 Prove the generator-free build loads checked-in payload/IDs/counts; keep unselected later-family scope and whole 79.1-79.4 pending.
+
+79B closure (2026-10-07): forty selected families supply 2,311 native sprites in independent Action5 type1C segments. [Two clean pinned conversions/builds](../../../../logs/r2mlvs13-ap-pinned-pack-reproducibility.log) reproduce GRF SHA256 `cc70556571c1b12549538baa5ea91cf176527faacad3f6d1299682defd1e79ac` and GRFID container-v2 checksum `9e6ba7ea0fa173a5d3129c2922875e46`. [Generator-free packaging](../../../../logs/r2mlvs13-aq-generator-free-packaging.log) disables Grfcodec discovery, removes only the disposable build copy, executes the checked-in source-copy rule, and [actually loads every protected/selected sprite](../../../../logs/r2mlvs13-al-generator-free-load.log): 40,431 assertions / one case. Generator discovery is restored. Protected source PNG/NFO and immutable MLVI definitions retain their identity; reserved/unselected slots stay unactivated. [Packed handoff](../../../../logs/r2mlvs13-ar-packed-handoff.log) binds public native ranges/hashes only after passing build/load evidence. Runtime consumers and user acceptance remain pending.
+
+### Group 80B - Validate the packed M1 source set
+
+{{HARD}}
+- [X] 80B.1 Validate complete selected Cartesian source coverage, exact native dimensions/anchors and unique packed references, with failing family/source diagnostics.
+- [X] 80B.2 Check DOS palette/index-zero alpha, forbidden colors and nonempty physical parts, preserving authored near-mouth masks and immutable protected source bytes.
+- [X] 80B.3 Match public native-route ranges/hashes to emitted and actually loaded sprite counts; reject stale/unreferenced selected payloads.
+- [X] 80B.4 Add bounded missing-frame, bad-bounds and illegal-palette corruption fixtures; execute them in focused files after the low-power window.
+
+80B closure (2026-10-07): [source/refusal/crop checks](../../../../logs/r2mlvs13-z-pack-source-checks.log) cover all 2,311 exact Cartesian poses, DOS palette/index-zero rules and independent missing-frame/bounds/reserved-color guards. The actual native loader compares every normal-resolution pixel, dimension and anchor for the 66 protected M0 and 2,311 selected M1 sprites, actual file ownership and exact loaded count at bound 2,404. Its observation encoder reads the normal decoder without replacing the renderer/cache. Initial test assumptions about Windows config-folder lookup and scaled zoom roots were corrected; the [native loader](../../../../logs/r2mlvs13-am-packed-art-loading.log) and generator-free check pass. Whole-profile Groups79/80 remain pending.
+
+### Group 81B - Preserve M1 simulation independence
+
+{{MEDIUM}}
+- [X] 81B.1 Expose presentation-only frame/texture selection to native consumers. Actual stopped wagon load/phase, reversed motion, depot occupancy and receiver stock use their existing owners; clocks/cameras never advance cutting, exchange or processing.
+
+81B closure (2026-10-07): `multilayer_sprite.h` supplies pure validated pose, animation-phase and stable floor-texture selection over the one generated range authority. Invalid family/state/frame/view/cell/part indices refuse; stopped hopper wheels remain frame zero while actual load level stays a separate caller-owned state. [Native boundary/owner checks](../../../../logs/r2mlvs13-aw-visual-selector-checks.log) pass 9,541 assertions / two cases, covering all 2,311 unique poses, explicit reversed/portal/receiver references and unchanged native receiver/project/funds/RNG owners across widely separated visual clocks. The native world fixture explicitly loads language before sorted cargo definitions. [Packed public schema](../../../../logs/r2mlvs13-ax-packed-public-contract.log) validates all 143 families / 54,939 profile requirements. Actual rendering consumers and sound remain the next checkpoint; this closes only the selected simulation-independence scope.
 
 ### Group 79 - Convert and pack from stable originals
 
@@ -863,20 +957,63 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
 
+### Local Mandatory Reading - M1 native terrain and portal binding
+
+_Applies to Group82 and the staged Group83 return in master8.7._
+
+Read this plan's Global and Runtime integration Area, then `multilayer_sprite.h`, generated `multilayer_sprite_assets.h` and the selected packed handoff. Inspect only `GetGeologyWorldState`, `PackedExcavationState::Get`, layer-bounded `TileAddWrap`, `GetLayerPortalWorkState`, reciprocal portal metadata and `DrawTile_Clear` / `DrawTile_LayerPortal` / `DrawLayerPortalPreview`. Preserve Classic/no-geology artwork, real layer filtering, existing rail overlays, building transparency and vanilla portal sorting boxes. Terrain mask bits follow screen upper-left/upper-right/lower-right/lower-left; texture frames are static variants. Verify the focused excavation-storage/portal-work-state producers before binding. Group82.3's actual final-machine crossing capture follows Group83.1-83.2's native vehicle/bay binding; this staging resolves its presentation dependency without claiming placeholder crossings as final art. Group83 then requires only the active train/project/exchange/receiver/service owners and actual sound event path, not unselected orbital/industry providers.
+
 ### Group 82 - Integrate M1 terrain and portal states
 
 {{HARD}}
-- [ ] 82.1 Verify r2mlvs2/3 state queries and matching manifest entries, then bind Solid/Excavating/Excavated terrain and Sealed/Commissioning/Connected portal graphics to authoritative state.
-- [ ] 82.2 Check adjacent tile edges, both depth palettes, every portal orientation and extra-view layer filtering in runtime scenes. The renderer does not advance excavation.
-- [ ] 82.3 Capture frame evidence for an assigned TBM entering/reversing through a sealed work pocket; validate front/back occlusion at each crossing phase.
+- [X] 82.1 Verify r2mlvs2/3 state queries and matching manifest entries, then bind Solid/Excavating/Excavated terrain and Sealed/Commissioning/Connected portal graphics to authoritative state.
+- [X] 82.2 Check adjacent tile edges, both depth palettes, every portal orientation and extra-view layer filtering in runtime scenes. The renderer does not advance excavation.
+- [X] 82.3 Capture frame evidence for an assigned TBM entering/reversing through a sealed work pocket; validate front/back occlusion at each crossing phase.
+
+82.1-82.2 closure (2026-10-07): the real clear-tile and rail-portal renderers consume geology/work queries and packed source poses; Classic/no-geology and road art retain their original paths. [Producer checks](../../../../logs/r2mlvs13-ay-terrain-portal-producers.log) pass 122 assertions / three cases, and [native bindings](../../../../logs/r2mlvs13-be-terrain-portal-checks.log) pass 80 / three cases, including a real reserved TBM job and unchanged controller/job state. [Actual native raster checks](../../../../logs/r2mlvs13-bm-native-picker-capture-checks.log) pass 34 assertions / one isolated application case and preserve the immutable stopped Deep save: four independent-layer native/2x viewport frames and four real picker scenes / sixteen depth/endpoint/orientation views. [Gallery metadata](assets/reviews/m1-terrain-runtime.json) records PNG hashes. Normal/zoomed terrain and basic/Deep mouth views were inspected; roofs fit the native 64-pixel picker and existing sorting/transparency remains in use. Render-time geology/projects/receivers/RNG remain unchanged. User personal acceptance and82.3's final-machine crossing evidence stay pending; the latter follows83.1-83.2 as staged above.
+
+82.3 closure (2026-10-07): [actual loaded Deep source loop](../../../../logs/r2mlvs13-cx-native-loop-deep-3.log) passes197,581 assertions / one native application case through32,853 real frames and three exchanges. Its [40 native/2x rasters and physical-state records](assets/reviews/m1-loop-deep-3-runtime.json) cover assigned entry/spanning/pocket, supported backing through both real housings and the correct independent endpoint/layer sorting. Mouths occlude the machine while it is inside; four same-heading drilling phases farther into the actual corridor show the exposed cutter/support and their preserved anchors. Native/2x entry/retreat, drilling and Surface disposal/returned-empty scenes were inspected. Each render preserves actual vehicle packet/position, geology/project/assignment/receiver/cash and both RNG owners; the immutable stopped source and startup script remain unchanged. The first live attempt exposed front-only consist recalculation in the animation refresh; it now calls each physical part's viewport refresh, with [complete-chain/unchanged-physics checks](../../../../logs/r2mlvs13-db-native-animation-refresh-checks.log) passing3,764 / four cases. The first empty-positioning snapshot was replaced by the actual post-disposal empty return. Deep source crossing evidence is complete;83.3 additionally runs and inspects the separate ordinary Underground depot loop. User personal art review remains deferred.
+
+### Local Mandatory Reading - M1 actual train, cargo and facility presentation
+
+_Applies to Group83 under the staged master8.7 order._
+
+Read this plan's Global/Runtime integration Area and the delivered selected packing/terrain closures. Inspect `Train::GetImage` / `Train::Tick` / `Vehicle::UpdateViewport`, actual `GetTBMEngineModel` / `GetUndergroundEngineCapability`, `GetTBMProjectForCutter` / `GetTBMConsistRole` / `GetTBMWorkState`, `IsDrivingBackwards` and saved exchange assignments. Read actual wagon `cargo.StoredCount` / `cargo_cap`, native depot occupancy and Surface receiver stock/interval queries only when binding those consumers. Verify focused TBM-work/exchange-commit producers before integration. Actual part direction supplies physical bend/backing continuity; reversing changes movement, never rotates the cutter body to the motion direction. A stopped loaded wagon keeps its real partial/full load and frame-zero wheels. Derive and invalidate only presentation caches through the existing train tick/rendering path; no new work tick, packet store, role registry or simulation RNG. Use actual saved-world viewport captures for crossing/loop evidence. Audio later reads the real phase/transition owner and distributed sample IDs separately.
 
 ### Group 83 - Integrate M1 cutter, wagons and exchange facility
 
 {{HARD}}
-- [ ] 83.1 Bind r2mlvs4 work phase and heading to cutter/support/boring sprites, preserving directional continuity through legal 45-degree turns and supported retreat.
-- [ ] 83.2 Bind actual Earth/Rock load quantities to wagon states and r2mlvs5 stopped exchange to bay foregrounds; load graphics follow the same wagon IDs after coupling.
-- [ ] 83.3 Capture a real dig/fill/exchange/Surface-haul/empty-return loop and inspect clipping at native/zoomed scales. Correct assets or anchors, repack and retain reviewed hashes before claiming M1 graphics complete.
-- [ ] 83.4 Publish and verify the M1 TBM idle/boring/backing/service sound-event mapping required by Plan 4 task 16.2. Declare concrete distributed sample IDs/source/licensing or reviewed reuse of existing base sounds, verify loading and actual event playback, and update the consumer hook. Events consume authoritative phase/transition state and never advance work, charge money or consume simulation RNG. Track this audio mapping separately from raster frame coverage; an absent sample/hook remains pending. Execution is scheduled by [R2MLVS3MP Group 8](r2mlvs3mp-master-plan.md#group-8---deliver-and-review-the-complete-m1-asset-slice).
+- [X] 83.1 Bind r2mlvs4 work phase and heading to cutter/support/boring sprites, preserving directional continuity through legal 45-degree turns and supported retreat.
+- [X] 83.2 Bind actual Earth/Rock load quantities to wagon states and r2mlvs5 stopped exchange to bay foregrounds; load graphics follow the same wagon IDs after coupling.
+- [X] 83.3 Capture a real dig/fill/exchange/Surface-haul/empty-return loop and inspect clipping at native/zoomed scales. Correct assets or anchors, repack and retain reviewed hashes before claiming M1 graphics complete.
+- [X] 83.4 Publish and verify the M1 TBM idle/boring/backing/service sound-event mapping required by Plan 4 task 16.2. Declare concrete distributed sample IDs/source/licensing or reviewed reuse of existing base sounds, verify loading and actual event playback, and update the consumer hook. Events consume authoritative phase/transition state and never advance work, charge money or consume simulation RNG. Track this audio mapping separately from raster frame coverage; an absent sample/hook remains pending. Execution is scheduled by [R2MLVS3MP Group 8](r2mlvs3mp-master-plan.md#group-8---deliver-and-review-the-complete-m1-asset-slice).
+
+83.1-83.2 closure (2026-10-07): `Train::GetImage` consumes actual native engine identity, immutable cutter/support role, physical body facing and saved work/hold/service/backing facts. Backing changes movement rather than turning the cutter body; the existing front-engine tick refreshes only native visual caches at authored phase boundaries. Packet quantity takes priority over empty service/hold cues and stopped hopper wheels remain frame zero. Rail depot rendering reads the existing project/assignment/spatial occupancy owners and uses authored exchange/service back/fronts with existing overlays/transparency. [Producer checks](../../../../logs/r2mlvs13-bn-machine-exchange-producers.log) pass 39,683 assertions / eight cases; [actual GetImage, paid-cut/load/depot and genuine-coupling checks](../../../../logs/r2mlvs13-bw-native-image-exchange-checks.log) pass 3,762 / four cases. The same loaded wagon IDs preserve their packet quantities and source poses after real two-way coupling. Actual final-machine crossing/loop capture and sound remain pending. The remaining selected facilities/UI consumers are scoped83B below, before the combined raster capture.
+
+83.3 closure (2026-10-07): real Deep source and Underground depot loops both load the immutable stopped saves and run the ordinary application/command/timer owners. [Deep3](../../../../logs/r2mlvs13-cx-native-loop-deep-3.log) passes197,581 assertions / one case through32,853 frames and three exchanges; [Underground2](../../../../logs/r2mlvs13-cx-native-loop-underground-2.log) passes94,385 / one through15,677 frames and two exchanges. [Deep review metadata](assets/reviews/m1-loop-deep-3-runtime.json) and [Underground review metadata](assets/reviews/m1-loop-underground-2-runtime.json) retain40/28 native/2x PNG hashes, four actual drilling phases and real dig/load/coupling/Surface disposal/returned-empty scenes. Source bays physically retreat through their commissioning pair; ordinary rock-layer depots physically receive their cutter there, as the actual resolved bay kind requires. Rendering snapshots preserve actual packets/positions, terrain/projects/assignments/receiver balances/cash and both RNG streams. Technical inspection found correct exposed body/support alignment, native bay foreground occlusion and stopped load/empty rendering; initial first-cell work remains correctly behind the mouth roof. No raster correction/repacking was needed. The real refresh assertion was corrected and verified as recorded above. Each scenario is a separate bounded focused invocation; no full regression ran. Personal user review and final M1 gallery acceptance remain deferred, and83.4 sound is current.
+
+83.4 closure (2026-10-07): `multilayer_sound.h/.cpp` and the existing front-engine tick bind actual idle/unblocked boring/moving backing/genuine depot state to reviewed base-slot reuse: mine machinery9, cutting motor56, warning bell12 and metallic rail-tool30, with192/96/96/192 tick cadences. `media/multilayer/m1-sound-events.json` records mapping authority, selected-provider rights and exact IDs; no sound samples or proprietary CAT bytes are copied/repackaged. Existing mute, effect-volume, viewport and dedicated behavior owns audibility. [Owner/mute/cadence/depot/assembly-reversal checks](../../../../logs/r2mlvs13-do-native-sound-selection-checks.log) pass95 assertions / three cases. The assembly-magazine reverse command correctly does not create actual backwards motion; genuine backing is verified by the live loop. [Actual native phase/decoder/mixer playback](../../../../logs/r2mlvs13-cx-native-loop-underground-3.log) passes110,129 / one isolated case: all four events are selected by the real moving/stopped/depot controller at ticks0/81/3299/4178 and each emits nonempty signed stereo PCM at11,025Hz. Temporary camera/audio sampling preserves geology/projects/assignments/receivers/cash and both RNG owners. [Publication and silent-dispatch corruption refusal](../../../../logs/r2mlvs13-dp-native-sound-handoff-checks.log) bind that evidence in `media/multilayer/sprites/m1/sound-runtime.json`; decoded sizes/counts/fingerprints are retained without exporting sample audio. Native raster packing/content identities remain unchanged. Personal sound/art review remains deferred; master8.7 continues with the linked Plan2/3/4 presentation tasks.
+
+### Local Mandatory Reading - Selected M1 service, receiver and UI consumers
+
+_Applies to Group83B; scheduled after83.1-83.2 and before82.3/83.3 combined capture under master8.7._
+
+Read child Global/Runtime integration Area and only delivered selected family ranges/source geometry. Inspect `DrawTile_Industry`, native receiver kind/stock/room/interval queries and fixed world-cell offsets; `DrawTile_Road` depot art and real road-vehicle occupancy; actual underground/portal/TBM widget state/capability queries, `GetRailIcon`, first-party cargo icons and geological survey visibility/depletion. Native receiver and road-service family dimensions/states/parts are authoritative in the public manifest. Preserve foreign/Classic art, date/capability refusals, existing transparency and all stock/cargo/work owners. No presentation clock processes a batch, creates a depot, unlocks a control or surveys a seam. Reuse existing world preview/cursor primitives. Verify focused active producer queries; actual combined runtime capture is later83.3, with user personal review deferred.
+
+Context has compacted 1 times while executing this group.
+
+### Group 83B - Bind the remaining selected M1 facilities and controls
+
+{{HARD}}
+- [X] 83B.1 Bind the selected ordinary road-service depot and Surface Earth/Rock receiver parts to actual occupancy, construction, stock and bounded-intake state; retain fixed cells and transparency.
+- [X] 83B.2 Bind the selected seven ground controls, ten purchase states, two cargo icons and ten survey marker families to their existing UI/capability/cargo/geological queries. Keep all calendar and command gates with their owners and reuse actual preview/cursor geometry.
+- [X] 83B.3 Verify those live family bindings and source ranges in focused cases, publish exact runtime consumer/evidence metadata for the selected set, then return to82.3/83.3 combined capture and83.4 sound. Unselected later families and user personal acceptance stay pending.
+
+83B.1 evidence (2026-10-07): road/industry rendering consumes the actual native service/receiver selectors, fixed cells and occupancy/construction/stock/interval/aggregate bounds. Road-type custom depot graphics and foreign industries retain their resolvers; existing transparency remains active. Native receiver lamps refresh only tile presentation dirtiness through the existing receiver tick, before unchanged processing. [Receiver producer queries](../../../../logs/r2mlvs13-bx-receiver-art-producers.log) pass 691 assertions / six cases; [fixed-cell/stock/construction/road-owner checks](../../../../logs/r2mlvs13-ce-native-facility-art-checks.log) pass 147 / two cases. The road fixture opens its actual entrance and initializes the road registry before invoking the ordinary construction command. Actual combined raster capture remains the staged83.3 work after selected controls are bound.
+
+83B.2 evidence (2026-10-07): actual underground widgets use seven native control families through standard image/text buttons or reserved informational icon regions; unchanged cursor/quote geometry owns placement. Purchase/list rendering resolves the real five engine mappings and existing buildability; the portal button uses its own commissioning query. Cargo icons require the actual first-party definition owner and preserve foreign labels/graphics. Survey overlays require the active lowered survey cursor and its explicit plane, expose the existing public/free geology policy and read actual depletion without setting saved survey flags. A focused cancellation fixture caught and corrected stale overlay ownership. [Controls, calendar, cancellation, ten resources, package ownership and actual EIDS checks](../../../../logs/r2mlvs13-cj-native-control-art-checks.log) pass186 assertions / six cases; [Debug game/test build](../../../../logs/r2mlvs13-ci-native-control-art-build.log) passes. Actual UI raster/range metadata is the following83B.3 task.
+
+83B.3 closure (2026-10-07): [actual loaded control/window/purchase/cargo/survey rendering](../../../../logs/r2mlvs13-cl-native-control-capture.log) passes81 assertions / one isolated application case, with six lossless PNG review images and immutable source/RNG/work/receiver/reserve/cash owners. The [capture runner](../../../../logs/r2mlvs13-cq-native-control-raster-checks.log) retains exact window dimensions/pixels and restores the startup script. Ground menu, portal panel, five real engine purchase previews, two actual first-party cargo icons and Deep seam rendering were inspected for placement/clipping. [Existing area/turn/facility quote checks](../../../../logs/r2mlvs13-cu-native-area-presentation-checks.log) pass302 / three cases. [Exact selected binding publication and three stale-range/payload/raster refusals](../../../../logs/r2mlvs13-ct-native-runtime-binding-checks.log) publish40 families /2,311 sprites in the public manifest and `media/multilayer/sprites/m1/runtime-manifest.json`; actual call sites, loaded payload and emitted ranges agree. The verifier reads both PowerShell UTF16 and native UTF8 evidence without rewriting logs. Native source/definition bytes remain unchanged; unselected later families remain inactive. Headless window paint runs inside an explicit screenshot canvas, and native buttons reserve their full20px cell before paint changes state. Current work returns to82.3/83.3 final-machine crossing/loop scenes and83.4 sound; gallery/user acceptance remain pending.
 
 ### Group 84 - Runtime integration and review
 
@@ -884,6 +1021,22 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 - [ ] 84.1 Integrate all ten mines and the underground conventional fleet after their r2mlvs6/7 code is delivered.
 - [ ] 84.2 Integrate orbital launch, probe, module and solar families after their corresponding r2mlvs8..12 producers are delivered.
 - [ ] 84.3 Integrate tube/geothermal art after r2mlvs16/17 producers are delivered; this later work does not block M1 art.
+
+### Local Mandatory Reading - Selected M1 final gallery
+
+_Applies to Group 85B under master 8.8; original Groups 85-88 remain the full-profile obligations._
+
+Read child Global and Runtime integration Area only for the delivered M1 geology/portal/TBM/exchange/UI owners. Read the selected forty-family public/packed/runtime manifests and retained terrain/control/Deep/Underground loop reports. Inspect `NativeArtLoopProbe`, `CaptureNativeArtViewport`, actual `Train::GetImage`, `CheckClickOnVehicle` and existing building/industry transparency. Preserve immutable source saves, final payload identity and all simulation owners. Direction sheets query the real renderer without rotating a vehicle; animation and occlusion claims require actual driven world frames. Keep technical acceptance and the user's deferred personal review separate. Do not preload later launch/module/dock families.
+
+### Group 85B - Review the selected M1 runtime slice
+
+{{MEDIUM}}
+- [X] 85B.1 Supplement genuine native/2x loop captures with paused/idle/service views, eight-direction renderer queries, building transparency and actual visible-body/layer picking checks.
+- [ ] 85B.2 Produce a compact contact sheet and linked native scenario gallery for all forty selected manifest IDs, retaining exact frame/source/log provenance and actual animation phases.
+- [ ] 85B.3 Confirm selected placeholders are retired and distributed GRF/source/range hashes match reviewed evidence; document retained limits and bounded stale-evidence refusals.
+- [ ] 85B.4 Record technical acceptance separately from deferred user feedback; keep unselected full-profile gallery rows pending.
+
+85B.1 closure (2026-10-07): the optional gallery observer retains genuine paused/idle and real railway-depot service poses, queries all eight directions through actual `Train::GetImage` without rotating a unit, renders the same physical portal/disposal scenes with existing building/industry transparency, and verifies exposed cutter picking on its own layer with rejection on another layer. [Underground5 capture](../../../../logs/r2mlvs3mp-s-gallery-underground-capture-1.log) passes 94,734 assertions / one native case, fourteen physical scenes / forty-five PNGs. [Deep4 capture](../../../../logs/r2mlvs3mp-s-gallery-deep-capture.log) passes 197,868 assertions / one native case, sixteen physical scenes / fifty-four PNGs. Actual logs/source/frame hashes are retained in [Underground5](assets/reviews/m1-loop-underground-5-runtime.json) and [Deep4](assets/reviews/m1-loop-deep-4-runtime.json). Native direction/load/service/transparency frames were inspected. Rendering preserves projects/jobs/packets/positions/geology/receivers/cash and both random streams; original sources remain unchanged. Direction sheets are explicitly renderer queries; animation and occlusion evidence comes from actual driven world frames. 85B.2-85B.4 remain pending.
 
 ### Group 85 - Runtime integration and review
 

@@ -30,6 +30,7 @@ enum UndergroundConstructionWidgets : WidgetID {
 	WID_UC_AREA_MATERIAL, ///< Canonical Earth, Rock, support and work requirements.
 	WID_UC_AREA_FLOOR, ///< Final floor and actual additional swept work space.
 	WID_UC_MODEL_DATES, ///< Compatible cutter names and introduction years from the canonical catalogue.
+	WID_UC_JOB_PROGRESS, ///< Live selected job cut/partial-work progress; geology retains its sole cursor.
 };
 
 #endif /* WIDGETS_UNDERGROUND_WIDGET_H */

@@ -22,8 +22,14 @@
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
 #include "tbm_cmd.h"
+#include "tbm_controls.h"
+#include "timer/timer.h"
+#include "timer/timer_window.h"
 #include "tbm_area_preview.h"
 #include "construction_preview.h"
+#include "multilayer_sprite.h"
+#include "gfx_func.h"
+#include "zoom_func.h"
 #include "rail_gui.h"
 #include "road_gui.h"
 #include "toolbar_gui.h"
@@ -78,6 +84,7 @@ struct UndergroundConstructionWindow : Window {
 	WidgetID selected_tool = WID_UC_SURVEY; ///< Placement operation armed by this window.
 	TBMProjectID exchange_project{UINT32_MAX}; ///< Actual selected project; no UI-allocated identity.
 	std::string status; ///< Last read-only survey or visible placement refusal.
+	TileIndex survey_tile = INVALID_TILE; ///< Last explicit survey point; rendering re-queries its live seam without saving information.
 	TileIndex area_portal = INVALID_TILE; ///< Selected real source housing, independent of camera changes.
 	TileIndex area_start = INVALID_TILE; ///< First world corner of the transient floor quote.
 	TileIndex area_end = INVALID_TILE; ///< Opposite world corner on the same rock plane.
@@ -85,6 +92,10 @@ struct UndergroundConstructionWindow : Window {
 	TBMConsistRequest area_consist; ///< Shared native defaults for the actual working rock layer; confirmation reuses the displayed quote's counts.
 	StationID area_origin = StationID::Invalid(); ///< Actual Surface disposal origin selected by common controls.
 	std::optional<TBMCommissionAreaPreview> area_quote; ///< Read-only canonical quantities and derived drawing geometry.
+	TBMProjectID inspected_project{UINT32_MAX}; ///< Actual clicked project identity for live progress/footprint queries, not saved authority.
+	uint64_t inspected_revision = UINT64_MAX; ///< Derived overlay refresh stamp; never work permission or a second progress cursor.
+	/** @param elapsed Unused presentation periods. Refresh the UI without stepping its actual job/controller owners. */
+	const IntervalTimer<TimerWindow> project_refresh = {std::chrono::seconds(1), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
 
 	/** @param desc Widget description. @param layer Requested rock plane. @param policy Accepted display policy. */
 	UndergroundConstructionWindow(WindowDesc &desc, MapLayer layer, const MultiLayerProfileSelection &policy) : Window(desc), layer(layer), policy(policy)
@@ -99,6 +110,16 @@ struct UndergroundConstructionWindow : Window {
 		switch (widget) {
 			case WID_UC_CAPTION: return GetString(STR_UNDERGROUND_CAPTION, GetMapLayerName(this->layer));
 			case WID_UC_STATUS: return this->status;
+			case WID_UC_JOB_PROGRESS: {
+				const auto *project = GetTBMProject(this->inspected_project);
+				// Missing/foreign projects cannot expose stale owned progress after
+				// retirement, company changes or a replaced placement context.
+				if (project == nullptr || project->company != _local_company) return GetString(STR_UNDERGROUND_JOB_NONE);
+				const auto *job = GetExcavationJob(project->job);
+				if (job == nullptr) return GetString(STR_UNDERGROUND_JOB_NONE);
+				const auto work = GetTBMWorkState(project->id);
+				return GetString(STR_UNDERGROUND_JOB_PROGRESS, job->id.base(), work.pass_cursor, job->route.size(), work.partial_work_ticks);
+			}
 			case WID_UC_MODEL_DATES: {
 				const auto *profile = GetMultiLayerContentProfile(this->policy.id);
 				// Native cutter dates cannot imply native commissioning permission in Classic or an invalid profile.
@@ -137,9 +158,101 @@ struct UndergroundConstructionWindow : Window {
 		}
 	}
 
+	/**
+	 * Select the native icon for a real button or informational row.
+	 * @param widget Actual window widget; gameplay availability remains with its existing owner.
+	 * @return Authored control/resource icon, or no icon for an unrelated/Classic context.
+	 */
+	std::optional<SpriteID> GetWidgetIcon(WidgetID widget) const
+	{
+		MultiLayerSpriteAsset asset;
+		switch (widget) {
+			case WID_UC_SURVEY: asset = MultiLayerSpriteAsset::ControlSurvey; break;
+			case WID_UC_PROJECT: asset = MultiLayerSpriteAsset::ControlExcavation; break;
+			case WID_UC_AREA: asset = MultiLayerSpriteAsset::ControlTbmArea; break;
+			case WID_UC_EXCHANGE: asset = MultiLayerSpriteAsset::ControlExchange; break;
+			case WID_UC_REQUIREMENTS:
+				// The date owner's Deep refusal selects the lock cue; a camera or
+				// enabled-looking icon never grants permission to enter the layer.
+				return GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlDeepLock,
+					this->layer == MapLayer::DeepUnderground && !CheckDeepLayerAvailability(this->policy, TimerGameCalendar::date), false);
+			case WID_UC_MODEL_DATES: {
+				bool future = false;
+				// Inspect only the compatible portal catalogue rows whose dates this
+				// row already displays; the immutable capability owner defines them.
+				for (const auto &model : GetMultiLayerVehicleCapabilities()) {
+					// Freight and incompatible cutters cannot contribute a misleading
+					// future-technology warning to this plane's commissioning row.
+					if (model.commissioning != MultiLayerCommissioningFacility::RailPortalBay || !model.supported_layers.Test(this->layer)) continue;
+					future |= !IsTBMCutterAvailable(model.model_id, this->layer, this->policy, TimerGameCalendar::date);
+				}
+				return GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlFutureLock, future, false);
+			}
+			case WID_UC_AREA_FLOOR:
+				// Turn art describes the canonical swept-envelope quote, including
+				// refusals. It adds no pivot command or substitute floor geometry.
+				return GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlTbmTurn45,
+					!this->area_quote || this->area_quote->purchase.Failed(), this->area_quote.has_value());
+			case WID_UC_STATUS: return GetMultiLayerSurveySprite(this->survey_tile, true);
+			default: return std::nullopt;
+		}
+		return GetMultiLayerControlSprite(asset, this->IsWidgetDisabled(widget), this->IsWidgetLowered(widget));
+	}
+
+	/**
+	 * Reserve icon room without overlapping localized status text.
+	 * @param widget Row being sized; ordinary buttons retain standard image/text sizing.
+	 * @param size Minimum size to extend.
+	 * @param padding Existing container padding.
+	 * @param fill Unchanged fill step.
+	 * @param resize Unchanged resize step.
+	 */
+	void UpdateWidgetSize(WidgetID widget, Dimension &size, const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
+	{
+		// The template initially carries the ordinary query cursor. Reserve the
+		// complete native control cell before OnPaint selects its current state,
+		// so a disabled/pressed picture cannot overrun the actual button frame.
+		if (widget == WID_UC_SURVEY || widget == WID_UC_PROJECT || widget == WID_UC_AREA || widget == WID_UC_EXCHANGE) {
+			if (this->GetWidgetIcon(widget)) {
+				const Dimension caption = GetStringBoundingBox(this->GetWidgetString(widget, this->GetWidget<NWidgetCore>(widget)->GetString()));
+				const uint picture = ScaleGUITrad(20);
+				size.width = std::max(size.width, caption.width + 2 * (picture + WidgetDimensions::scaled.hsep_wide) + padding.width);
+				size.height = std::max(size.height, std::max(picture, caption.height) + padding.height);
+			}
+			return;
+		}
+		// Only custom informational rows need this space; buttons already measure
+		// their native picture and localized caption through the ordinary widget.
+		if (widget != WID_UC_REQUIREMENTS && widget != WID_UC_MODEL_DATES && widget != WID_UC_AREA_FLOOR && widget != WID_UC_STATUS) return;
+		const Dimension text = GetStringBoundingBox(this->GetWidgetString(widget, this->GetWidget<NWidgetCore>(widget)->GetString()));
+		size.width = std::max(size.width, text.width + ScaleGUITrad(24) + padding.width);
+		size.height = std::max(size.height, std::max<uint>(ScaleGUITrad(20), text.height) + padding.height);
+	}
+
+	/**
+	 * Draw native status cues beside the existing localized query text.
+	 * @param r Actual informational row rectangle.
+	 * @param widget Row identity; buttons use the standard image/text renderer.
+	 */
+	void DrawWidget(const Rect &r, WidgetID widget) const override
+	{
+		// Other widget families keep their normal renderer and existing input
+		// behavior. These four rows explicitly reserve their icon/text regions.
+		if (widget != WID_UC_REQUIREMENTS && widget != WID_UC_MODEL_DATES && widget != WID_UC_AREA_FLOOR && widget != WID_UC_STATUS) return;
+		const bool rtl = _current_text_dir == TD_RTL;
+		Rect text_rect = r;
+		if (const auto icon = this->GetWidgetIcon(widget)) {
+			DrawSpriteIgnorePadding(*icon, PAL_NONE, r.WithWidth(ScaleGUITrad(20), rtl), {AlignmentH::Centre, AlignmentV::Middle});
+			text_rect = r.Indent(ScaleGUITrad(24), rtl);
+		}
+		const std::string text = this->GetWidgetString(widget, this->GetWidget<NWidgetCore>(widget)->GetString());
+		DrawString(text_rect.left, text_rect.right, r.top + (r.Height() - GetCharacterHeight(FontSize::Normal)) / 2, text, TextColour::Black);
+	}
+
 	/** Refresh calendar/company availability without modifying geological or vehicle state. */
 	void OnPaint() override
 	{
+		this->RefreshInspectedFootprint();
 		const bool locked = this->layer == MapLayer::DeepUnderground && !CheckDeepLayerAvailability(this->policy, TimerGameCalendar::date);
 		const bool spectator = !Company::IsValidID(_local_company);
 		// Deep dates and actual player ownership govern offered tools; all commands still perform their own checks.
@@ -151,6 +264,11 @@ struct UndergroundConstructionWindow : Window {
 		this->SetWidgetDisabledState(WID_UC_SURVEY, locked);
 		// Scenario road tools retain their existing editor owner; company-only purchase/service controls stay unavailable.
 		this->SetWidgetDisabledState(WID_UC_ROAD, locked || (spectator && _game_mode != GameMode::Editor));
+		// Update only actual control pictures; the standard widget retains the
+		// localized caption, tooltip and hit testing for each existing command.
+		for (const WidgetID widget : {WID_UC_SURVEY, WID_UC_PROJECT, WID_UC_AREA, WID_UC_EXCHANGE}) {
+			this->GetWidget<NWidgetCore>(widget)->SetSprite(this->GetWidgetIcon(widget).value_or(SPR_CURSOR_QUERY));
+		}
 		this->DrawWidgets();
 	}
 
@@ -158,6 +276,10 @@ struct UndergroundConstructionWindow : Window {
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		if (this->IsWidgetDisabled(widget)) return;
+		if (_thd.GetCallbackWnd() == this) ClearConstructionPreview();
+		this->survey_tile = INVALID_TILE;
+		this->inspected_project = TBMProjectID{UINT32_MAX};
+		this->inspected_revision = UINT64_MAX;
 		switch (widget) {
 			case WID_UC_AREA:
 				this->selected_tool = widget;
@@ -176,6 +298,7 @@ struct UndergroundConstructionWindow : Window {
 			case WID_UC_PROJECT:
 				this->selected_tool = widget;
 				HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT);
+				MarkWholeScreenDirty(); // Cursor ownership also governs the read-only seam overlay in every viewport.
 				break;
 			case WID_UC_MINE: ShowBuildIndustryWindow(); break;
 			case WID_UC_EXCHANGE: {
@@ -231,6 +354,7 @@ struct UndergroundConstructionWindow : Window {
 	{
 		// A different-layer click cannot redirect an armed survey/project command; explain and preserve all owners.
 		if (!IsValidTile(tile) || GetTileLayer(tile) != this->layer) {
+			this->survey_tile = INVALID_TILE;
 			this->status = GetString(STR_UNDERGROUND_WRONG_LAYER);
 			this->SetDirty();
 			return;
@@ -253,6 +377,7 @@ struct UndergroundConstructionWindow : Window {
 				}
 				break;
 			case WID_UC_SURVEY: {
+				this->survey_tile = tile;
 				const auto &geology = GetGeologyWorldState();
 				const auto terrain = geology.terrain.Get(tile);
 				StringID state = STR_UNDERGROUND_SURVEY_LEGACY;
@@ -277,6 +402,12 @@ struct UndergroundConstructionWindow : Window {
 					break;
 				}
 				ShowLayerPortalWindow(tile);
+				const auto controls = GetTBMPairControls(*key, _local_company);
+				if (controls.project) {
+					this->inspected_project = controls.project->id;
+					this->inspected_revision = UINT64_MAX;
+					this->RefreshInspectedFootprint();
+				}
 				break;
 			}
 			case WID_UC_EXCHANGE:
@@ -318,6 +449,38 @@ struct UndergroundConstructionWindow : Window {
 		this->SetDirty();
 	}
 
+	/** Refresh the actual selected job's derived floor/working-space/uncovered overlay; no cell is reserved or cleared. */
+	void RefreshInspectedFootprint()
+	{
+		// Only the active project-inspection cursor can own these overlays. A
+		// background window cannot replace another tool's canonical area quote.
+		if (this->selected_tool != WID_UC_PROJECT || _thd.GetCallbackWnd() != this) return;
+		const auto *project = GetTBMProject(this->inspected_project);
+		// A selected project becoming foreign or unavailable cannot leave an
+		// owned construction-looking overlay after takeover or retirement.
+		if (project == nullptr || project->company != _local_company) {
+			if (this->inspected_revision != UINT64_MAX) ClearConstructionPreview();
+			this->inspected_revision = UINT64_MAX;
+			return;
+		}
+		const auto *job = GetExcavationJob(project->job);
+		if (job == nullptr) return;
+		if (job->revision == this->inspected_revision) return;
+		std::vector<TileIndex> floor, working, uncovered;
+		// Partition only the geology owner's canonical accepted authorization.
+		// Uncovered requested targets remain red and charged approach/turn work
+		// remains blue. White floor cues never grant construction or free cutting.
+		auto requested = job->requested_tiles;
+		auto authorized = job->authorized_tiles;
+		std::ranges::sort(requested);
+		std::ranges::sort(authorized);
+		std::ranges::set_intersection(requested, authorized, std::back_inserter(floor));
+		std::ranges::set_difference(authorized, requested, std::back_inserter(working));
+		std::ranges::set_difference(requested, authorized, std::back_inserter(uncovered));
+		SetConstructionPreview(this, floor, working, uncovered);
+		this->inspected_revision = job->revision;
+	}
+
 	/** Release cursor ownership when the player cancels placement. */
 	void OnPlaceObjectAbort() override
 	{
@@ -325,11 +488,36 @@ struct UndergroundConstructionWindow : Window {
 		this->area_quote.reset();
 		this->area_portal = INVALID_TILE;
 		this->status = GetString(STR_UNDERGROUND_SELECT_TOOL);
+		this->survey_tile = INVALID_TILE;
+		this->inspected_project = TBMProjectID{UINT32_MAX};
+		this->inspected_revision = UINT64_MAX;
 		this->SetDirty();
+		MarkWholeScreenDirty(); // Cancelling the actual cursor immediately removes its presentation overlay.
 	}
 };
 
-/** Native controls; stock icons remain with the ordinary rail/road pickers until the art owner delivers assets. */
+/** @copydoc GetUndergroundConstructionWidgetSprite */
+std::optional<SpriteID> GetUndergroundConstructionWidgetSprite(const Window &window, WidgetID widget)
+{
+	if (window.window_class != WindowClass::UndergroundConstruction) return std::nullopt;
+	return static_cast<const UndergroundConstructionWindow &>(window).GetWidgetIcon(widget);
+}
+
+/** @copydoc GetUndergroundSurveyOverlaySprite */
+std::optional<SpriteID> GetUndergroundSurveyOverlaySprite(TileIndex tile)
+{
+	const Window *owner = _thd.GetCallbackWnd();
+	// Only the actual active underground survey cursor exposes markers. A
+	// background window or an unrelated construction cursor cannot leave seams
+	// painted across another plane or revive the locked Deep survey control.
+	if (owner == nullptr || owner->window_class != WindowClass::UndergroundConstruction || !IsValidTile(tile)) return std::nullopt;
+	const auto *survey = static_cast<const UndergroundConstructionWindow *>(owner);
+	if (survey->selected_tool != WID_UC_SURVEY || !survey->IsWidgetLowered(WID_UC_SURVEY) || survey->layer != GetTileLayer(tile) ||
+		(survey->layer == MapLayer::DeepUnderground && !CheckDeepLayerAvailability(survey->policy, TimerGameCalendar::date))) return std::nullopt;
+	return GetMultiLayerSurveySprite(tile, true); // Existing Native survey/planning is public and free; no saved survey flag changes.
+}
+
+/** Native ground pictures retain actual command IDs, localized captions and existing cursor primitives. */
 static constexpr std::initializer_list<NWidgetPart> _underground_widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkGreen),
@@ -337,13 +525,13 @@ static constexpr std::initializer_list<NWidgetPart> _underground_widgets = {
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::DarkGreen),
 		NWidget(NWID_VERTICAL), SetPadding(WidgetDimensions::unscaled.framerect),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_REQUIREMENTS), SetStringTip(STR_UNDERGROUND_REQUIREMENTS, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_MODEL_DATES), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_SURVEY), SetStringTip(STR_UNDERGROUND_SURVEY, STR_UNDERGROUND_SURVEY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_PROJECT), SetStringTip(STR_UNDERGROUND_PROJECT, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_AREA), SetStringTip(STR_UNDERGROUND_AREA, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
+			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_REQUIREMENTS), SetStringTip(STR_UNDERGROUND_REQUIREMENTS, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_MODEL_DATES), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_SURVEY), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_SURVEY, STR_UNDERGROUND_SURVEY_TOOLTIP), SetFill(1, 0),
+			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_PROJECT), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_PROJECT, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
+			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_AREA), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_AREA, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_MINE), SetStringTip(STR_UNDERGROUND_MINE, STR_UNDERGROUND_MINE_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_EXCHANGE), SetStringTip(STR_UNDERGROUND_EXCHANGE, STR_UNDERGROUND_EXCHANGE_TOOLTIP), SetFill(1, 0),
+			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_EXCHANGE), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_EXCHANGE, STR_UNDERGROUND_EXCHANGE_TOOLTIP), SetFill(1, 0),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL), SetStringTip(STR_UNDERGROUND_RAIL, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD), SetStringTip(STR_UNDERGROUND_ROAD, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL_STATION), SetStringTip(STR_UNDERGROUND_RAIL_STATION, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
@@ -352,9 +540,10 @@ static constexpr std::initializer_list<NWidgetPart> _underground_widgets = {
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD_SERVICE), SetStringTip(STR_UNDERGROUND_ROAD_SERVICE, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
 			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_AREA_PRICE), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
 			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_AREA_MATERIAL), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_AREA_FLOOR), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_FLOOR), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
 			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_AREA_CONFIRM), SetStringTip(STR_UNDERGROUND_AREA_CONFIRM, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_STATUS), SetStringTip(STR_UNDERGROUND_SELECT_TOOL, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_JOB_PROGRESS), SetStringTip(STR_UNDERGROUND_JOB_NONE, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_STATUS), SetStringTip(STR_UNDERGROUND_SELECT_TOOL, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
 		EndContainer(),
 	EndContainer(),
 };

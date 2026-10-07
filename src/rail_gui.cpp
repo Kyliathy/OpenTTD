@@ -1940,7 +1940,10 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	{
 		if (!IsInsideMM(widget, WID_BRLP_MOUTH_NE, WID_BRLP_MOUTH_NW + 1)) return;
 		size.width = ScaleGUITrad(64) + WidgetDimensions::scaled.fullbevel.Horizontal();
-		size.height = ScaleGUITrad(48) + WidgetDimensions::scaled.fullbevel.Vertical();
+		// Authored M1 housings use the full 64-pixel canvas; the original Classic
+		// portal is 48 pixels high. The picker must fit its actual roof and mouth.
+		const bool native = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
+		size.height = ScaleGUITrad(native ? 64 : 48) + WidgetDimensions::scaled.fullbevel.Vertical();
 	}
 
 	/**
@@ -1956,8 +1959,13 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 		if (FillDrawPixelInfo(&tmp_dpi, ir)) {
 			AutoRestoreBackup dpi_backup(_cur_dpi, &tmp_dpi);
 			int x = (ir.Width() - ScaleSpriteTrad(64)) / 2 + ScaleSpriteTrad(31);
-			int y = (ir.Height() + ScaleSpriteTrad(48)) / 2 - ScaleSpriteTrad(31);
-			DrawLayerPortalPreview(x, y, LayerPortalKind::RailTunnel, static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE));
+			// Place the declared north-corner anchor inside the native preview
+			// canvas, retaining the original Classic anchor for its smaller art.
+			const bool native = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
+			int y = native ? (ir.Height() - ScaleSpriteTrad(64)) / 2 + ScaleSpriteTrad(33)
+				: (ir.Height() + ScaleSpriteTrad(48)) / 2 - ScaleSpriteTrad(31);
+			DrawLayerPortalPreview(x, y, LayerPortalKind::RailTunnel, static_cast<DiagDirection>(widget - WID_BRLP_MOUTH_NE),
+				_rail_portal_underground_target);
 		}
 	}
 

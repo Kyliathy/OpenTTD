@@ -10,7 +10,7 @@
  * the pair (R2MLVS3MP master 7.9): its machine, hauler, retirement, the withdrawn machine's sale and the conversion of
  * its temporary track. What the window offers comes from GetTBMPairControls, so it never offers a refused step.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 8/13
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 and task 16.3
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 and tasks 16.1/16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, shared area-control defaults
  */
@@ -32,10 +32,12 @@
 #include "cargotype.h"
 #include "map_func.h"
 #include "multilayer_content.h"
+#include "multilayer_sprite.h"
 #include "train.h"
 #include "vehicle_cmd.h"
 #include "vehicle_gui.h"
 #include "gfx_func.h"
+#include "zoom_func.h"
 #include "strings_func.h"
 #include "textbuf_gui.h"
 #include "tilehighlight_func.h"
@@ -230,12 +232,52 @@ static StringID GetTBMPlayerStepString(TBMPlayerStep step)
 }
 
 /** Lines of the project panel. */
-static constexpr int PORTAL_INFO_LINES = 5;
+static constexpr int PORTAL_INFO_LINES = 11;
+
+/**
+ * Translate the geological owner's hardness identity for the current face.
+ * @param hardness Accepted rock hardness of the actual next cut.
+ * @return Localized hardness description; no geological or work state is changed.
+ */
+static StringID GetTBMHardnessString(GeologyHardness hardness)
+{
+	switch (hardness) {
+		case GeologyHardness::Soft: return STR_PORTAL_HARDNESS_SOFT;
+		case GeologyHardness::Mixed: return STR_PORTAL_HARDNESS_MIXED;
+		case GeologyHardness::Hard: return STR_PORTAL_HARDNESS_HARD;
+		case GeologyHardness::Basalt: return STR_PORTAL_HARDNESS_BASALT;
+		default: return STR_PORTAL_HARDNESS_UNKNOWN;
+	}
+}
 
 /** One status/control window per canonical pair, independent of the currently selected viewport layer. */
 class LayerPortalWindow : public Window {
 	TileIndex pair_key; ///< Canonical pair key: the upper end; never a camera-relative address or duplicate work state.
 	TBMPairControls controls; ///< What the pair offers, refreshed at every paint and click.
+
+	/**
+	 * Choose the purchase picture without changing the actual commissioning model/date query.
+	 * @return Current project/available cutter, or the first compatible future catalogue design for a locked preview.
+	 */
+	uint16_t GetPurchasePreviewModel() const
+	{
+		if (this->controls.project) return this->controls.project->model_id;
+		const uint16_t available = GetLayerPortalDefaultTBMModel(this->pair_key);
+		if (available != UINT16_MAX) return available;
+		const auto pair = GetLayerPortalPairKey(this->pair_key);
+		if (!pair) return UINT16_MAX;
+		const MapLayer upper = GetTileLayer(*pair);
+		const MapLayer lower = GetTileLayer(GetLayerPortalPairTile(*pair));
+		// The catalogue owns compatibility. A future compatible design supplies
+		// only a locked UI picture; the existing command still refuses its purchase.
+		for (const auto &model : GetMultiLayerVehicleCapabilities()) {
+			// A portal preview must serve both real endpoints and be rail-origin
+			// machinery; freight/capsule pictures would suggest a wrong purchase path.
+			if (model.commissioning == MultiLayerCommissioningFacility::RailPortalBay &&
+				model.supported_layers.Test(upper) && model.supported_layers.Test(lower)) return model.model_id;
+		}
+		return UINT16_MAX;
+	}
 
 	/** Refresh the window every second, so the project's progress shows while the game runs. */
 	const IntervalTimer<TimerWindow> refresh_interval = {std::chrono::seconds(1), [this](auto) { this->SetDirty(); }};
@@ -278,6 +320,21 @@ public:
 	 */
 	void UpdateWidgetSize(WidgetID widget, Dimension &size, const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
 	{
+		if (widget == PW_PREVIEW) {
+			size.height = std::max<uint>(size.height, ScaleGUITrad(64) + GetCharacterHeight(FontSize::Normal) + padding.height);
+		}
+		if (widget == PW_COMMISSION) {
+			// Measure both availability states so a future date or temporary owner
+			// refusal changes only the cue, without clipping or moving the controls.
+			for (const bool available : {false, true}) {
+				if (const auto icon = GetMultiLayerPurchaseSprite(this->GetPurchasePreviewModel(), available)) {
+					const Dimension picture = GetSquareScaledSpriteSize(*icon);
+					const Dimension caption = GetStringBoundingBox(STR_PORTAL_COMMISSION);
+					size.width = std::max(size.width, caption.width + 2 * (picture.width + WidgetDimensions::scaled.hsep_wide) + padding.width);
+					size.height = std::max(size.height, std::max(picture.height, caption.height) + padding.height);
+				}
+			}
+		}
 		if (widget != PW_INFO) return;
 		size.height = std::max<uint>(size.height, PORTAL_INFO_LINES * GetCharacterHeight(FontSize::Normal) + padding.height);
 	}
@@ -304,6 +361,19 @@ public:
 	 */
 	void DrawWidget(const Rect &r, WidgetID widget) const override
 	{
+		if (widget == PW_PREVIEW) {
+			const std::array endpoints{this->pair_key, GetLayerPortalPairTile(this->pair_key)};
+			// Both actual world endpoints keep their independent layer, door and
+			// saved phase. The current camera or a preview cannot open the pair.
+			for (size_t endpoint = 0; endpoint < endpoints.size(); ++endpoint) {
+				const TileIndex tile = endpoints[endpoint];
+				const Rect half = r.WithWidth(r.Width() / 2, endpoint != 0);
+				DrawLayerPortalPreview(half.left + half.Width() / 2, half.top + ScaleSpriteTrad(33),
+					GetLayerPortalKind(tile), GetLayerPortalDoorDirection(tile), MapLayer::Invalid, tile);
+				DrawString(half.left, half.right, half.bottom - GetCharacterHeight(FontSize::Normal) + 1, GetMapLayerName(GetTileLayer(tile)), TextColour::Black, AlignmentH::Centre);
+			}
+			return;
+		}
 		if (widget != PW_INFO) return;
 		Rect tr = r.Shrink(WidgetDimensions::scaled.framerect);
 		const int line = GetCharacterHeight(FontSize::Normal);
@@ -312,7 +382,23 @@ public:
 			const TBMProject &project = *c.project;
 			DrawString(tr, GetString(STR_PORTAL_PROJECT_PROGRESS, GetTBMPhaseString(project.phase), c.cuts_done, c.cuts_total));
 			tr.top += line;
-			DrawString(tr, project.blocked == TBMBlockedReason::None ? GetString(STR_PORTAL_PROJECT_NO_HOLD) : GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(project.blocked)));
+			DrawString(tr, c.work.blocked == TBMBlockedReason::None ? GetString(STR_PORTAL_PROJECT_NO_HOLD) : GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(c.work.blocked)));
+			tr.top += line;
+			if (c.hardness.has_value()) {
+				DrawString(tr, GetString(STR_PORTAL_PROJECT_FACE, GetMapLayerName(GetTileLayer(c.work.face)), TileX(c.work.face), TilePlaneY(c.work.face), GetTBMHardnessString(*c.hardness)));
+			} else {
+				DrawString(tr, GetString(STR_PORTAL_PROJECT_NO_FACE));
+			}
+			tr.top += line;
+			DrawString(tr, c.pass_total == 0 ? GetString(STR_PORTAL_PROJECT_NO_PASS) : GetString(STR_PORTAL_PROJECT_PASS, c.pass_number, c.pass_total, c.pass_cuts_done, c.pass_cuts_total));
+			tr.top += line;
+			DrawString(tr, GetString(STR_PORTAL_PROJECT_FACE_WORK, c.work.partial_work_ticks, c.face_work_ticks));
+			tr.top += line;
+			DrawString(tr, GetString(STR_PORTAL_PROJECT_EARTH_CAPACITY, c.earth_loaded_t, c.earth_capacity_t));
+			tr.top += line;
+			DrawString(tr, GetString(STR_PORTAL_PROJECT_ROCK_CAPACITY, c.rock_loaded_t, c.rock_capacity_t));
+			tr.top += line;
+			DrawString(tr, GetString(STR_PORTAL_PROJECT_RUNNING_COST, c.active_cost_per_year, c.idle_cost_per_year));
 			tr.top += line;
 			DrawString(tr, GetString(STR_PORTAL_PROJECT_DUG, c.earth_t, c.rock_t));
 			tr.top += line;
@@ -326,7 +412,7 @@ public:
 			}
 		} else {
 			DrawString(tr, GetString(STR_PORTAL_PROJECT_NONE));
-			tr.top += line * 3;
+			tr.top += line * (PORTAL_INFO_LINES - 2);
 		}
 		tr.top += line;
 		DrawString(tr, GetString(STR_PORTAL_NEXT, GetTBMPlayerStepString(c.step)));
@@ -350,6 +436,7 @@ public:
 		// Only the local company's empty Sealed rail pair can commission; the command checks everything else and prices it.
 		const bool can_commission = work != nullptr && work->state == LayerPortalWorkState::Sealed && work->company == _local_company && GetLayerPortalTransportType(this->pair_key) == TransportType::Rail && CheckLayerPortalAvailability(this->pair_key) == LayerPortalWorkError::None && GetLayerPortalDefaultTBMModel(this->pair_key) != UINT16_MAX && GetLayerPortalDefaultTBMOrigin(this->pair_key, _local_company) != StationID::Invalid();
 		this->SetWidgetDisabledState(PW_COMMISSION, !can_commission);
+		this->GetWidget<NWidgetCore>(PW_COMMISSION)->SetSprite(GetMultiLayerPurchaseSprite(this->GetPurchasePreviewModel(), can_commission).value_or(SPR_CURSOR_QUERY));
 		this->SetWidgetDisabledState(PW_CORRIDOR_DOWN, _tbm_commission_corridor <= TBM_COMMISSION_MIN_CORRIDOR);
 		this->SetWidgetDisabledState(PW_CORRIDOR_UP, _tbm_commission_corridor >= TBM_COMMISSION_MAX_CORRIDOR);
 
@@ -499,10 +586,11 @@ static constexpr std::initializer_list<NWidgetPart> _portal_widgets = {
 		NWidget(NWID_VERTICAL), SetPadding(WidgetDimensions::unscaled.framerect),
 			// Text takes its background from the enclosing panel; assigning a colour makes window construction throw.
 			NWidget(WWT_TEXT, Colours::Invalid, PW_STATUS), SetStringTip(STR_PORTAL_STATE_SEALED, STR_PORTAL_STATUS_TOOLTIP), SetMinimalSize(460, 20), SetFill(1, 0),
+			NWidget(WWT_EMPTY, Colours::Invalid, PW_PREVIEW), SetMinimalSize(460, 64), SetFill(1, 0),
 			NWidget(NWID_HORIZONTAL),
 				NWidget(WWT_PUSHTXTBTN, Colours::Grey, PW_CONNECT), SetStringTip(STR_PORTAL_CONNECT, STR_PORTAL_CONNECT_TOOLTIP), SetFill(1, 0),
 				NWidget(WWT_PUSHTXTBTN, Colours::Grey, PW_SEAL), SetStringTip(STR_PORTAL_SEAL, STR_PORTAL_SEAL_TOOLTIP), SetFill(1, 0),
-				NWidget(WWT_PUSHTXTBTN, Colours::Grey, PW_COMMISSION), SetStringTip(STR_PORTAL_COMMISSION, STR_PORTAL_COMMISSION_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, PW_COMMISSION), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_PORTAL_COMMISSION, STR_PORTAL_COMMISSION_TOOLTIP), SetFill(1, 0),
 			EndContainer(),
 			NWidget(NWID_HORIZONTAL),
 				NWidget(WWT_PUSHARROWBTN, Colours::Grey, PW_CORRIDOR_DOWN), SetArrowWidgetTypeTip(ArrowWidgetType::Decrease, STR_PORTAL_CORRIDOR_DECREASE_TOOLTIP),

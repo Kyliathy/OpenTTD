@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
+#include "multilayer_sprite.h"
 #include "layer_portal_map.h"
 #include "excavation.h"
 #include "timer/timer_game_calendar.h"
@@ -152,6 +153,13 @@ static void DrawTile_LayerPortal(TileInfo *ti)
 	SpriteID base = rail ? (surface ? SPR_MAP_LAYER_RAIL_PORTAL_SURFACE : SPR_MAP_LAYER_RAIL_PORTAL_UNDERGROUND)
 	                     : (surface ? SPR_MAP_LAYER_ROAD_ELEVATOR_SURFACE : SPR_MAP_LAYER_ROAD_ELEVATOR_UNDERGROUND);
 	SpriteID back = base + to_underlying(door) * 2;
+	SpriteID front = back + 1;
+	// Read the pair owner's actual work phase without changing track admission,
+	// reservations or mouth sorting. Classic and road housings retain their art.
+	if (const auto authored = GetMultiLayerPortalSprite(ti->tile, false)) {
+		back = *authored;
+		front = *GetMultiLayerPortalSprite(ti->tile, true);
+	}
 	bool invisible = IsInvisibilitySet(TransparencyOption::Buildings);
 	bool transparent = IsTransparencySet(TransparencyOption::Buildings);
 	Axis axis = DiagDirToAxis(GetLayerPortalShaftDirection(ti->tile));
@@ -180,7 +188,7 @@ static void DrawTile_LayerPortal(TileInfo *ti)
 		DrawRoadOverlays(ti, PAL_NONE, rti, nullptr, to_underlying(axis), 0);
 	}
 	if (!invisible) {
-		AddSortableSpriteToDraw(back + 1, PAL_NONE, *ti, _layer_portal_front_bounds[door], transparent);
+		AddSortableSpriteToDraw(front, PAL_NONE, *ti, _layer_portal_front_bounds[door], transparent);
 	}
 }
 

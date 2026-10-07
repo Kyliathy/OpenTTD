@@ -15,6 +15,7 @@
 #include "landscape.h"
 #include "map_layer.h"
 #include "excavation.h"
+#include "multilayer_sprite.h"
 #include "genworld.h"
 #include "slope_func.h"
 #include "viewport_func.h"
@@ -154,6 +155,7 @@ static void DrawClearLandFence(const TileInfo *ti)
  */
 static SpriteID GetLayerGroundSprite(MapLayerGround ground, TileIndex tile)
 {
+	if (const auto sprite = GetMultiLayerTerrainSprite(tile)) return *sprite;
 	uint hash = TileHash(TileX(tile), TilePlaneY(tile));
 	switch (ground) {
 		case MapLayerGround::Bedrock:

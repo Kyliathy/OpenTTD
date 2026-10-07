@@ -1,0 +1,52 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md83.4; real native phase/selected baseset decode/mixer proof, no sample bytes redistributed",
+  "schema_version": 1,
+  "provider": "original_dos (isolated fixture)",
+  "provider_descriptor": "media/baseset/orig_dos.obs",
+  "runtime_provider": "player-selected sounds baseset",
+  "evidence": "logs/r2mlvs13-cx-native-loop-underground-3.log",
+  "selection_log": "logs/r2mlvs13-do-native-sound-selection-checks.log",
+  "capture": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-runtime.json",
+  "source": "src/tests/fixtures/haulage/depot-native-underground-stopped.sav",
+  "source_sha256": "4f71707f6179878143569e610e595310838c61cec1773a6bd0ee48c43928678a",
+  "events": [
+    {
+      "event": "Idle",
+      "sound_id": 9,
+      "game_tick": 0,
+      "sample_rate": 11025,
+      "decoded_bytes": 15467,
+      "nonzero_pcm": 20122,
+      "pcm_fingerprint": "18437446346386798989"
+    },
+    {
+      "event": "Boring",
+      "sound_id": 56,
+      "game_tick": 81,
+      "sample_rate": 11025,
+      "decoded_bytes": 19041,
+      "nonzero_pcm": 21250,
+      "pcm_fingerprint": "1435055794569130905"
+    },
+    {
+      "event": "Backing",
+      "sound_id": 12,
+      "game_tick": 3299,
+      "sample_rate": 11025,
+      "decoded_bytes": 26861,
+      "nonzero_pcm": 17558,
+      "pcm_fingerprint": "11323300612869546995"
+    },
+    {
+      "event": "Service",
+      "sound_id": 30,
+      "game_tick": 4178,
+      "sample_rate": 11025,
+      "decoded_bytes": 2723,
+      "nonzero_pcm": 3974,
+      "pcm_fingerprint": "1273113704925420257"
+    }
+  ],
+  "simulation_owners_unchanged": true,
+  "user_review": "deferred_until_integration"
+}

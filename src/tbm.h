@@ -417,6 +417,13 @@ const TBMProject *GetTBMProject(TBMProjectID id);
  */
 const TBMProject *GetTBMProjectForCutter(VehicleID cutter);
 
+/**
+ * Query the first saved project designating an actual exchange depot, without a second facility registry.
+ * @param bay Actual depot tile; source portal magazines remain with their portal owner.
+ * @return Read-only project in stable saved order, or nullptr when no project designates this depot.
+ */
+const TBMProject *GetTBMProjectForExchangeBay(TileIndex bay);
+
 /** @return Copy of every live project in increasing ID order, for saving and diagnostics. */
 std::vector<TBMProject> CaptureTBMProjects();
 

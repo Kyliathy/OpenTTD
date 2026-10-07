@@ -55,7 +55,7 @@
         }
       ],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending"
     },
     {
       "asset_id": "terrain.deep",
@@ -103,7 +103,7 @@
         }
       ],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending"
     },
     {
       "asset_id": "vehicle.model-00",
@@ -700,7 +700,7 @@
     {
       "asset_id": "facility.exchange",
       "consumer": 5,
-      "subject": "Genuine owned underground rail depot and whole-consist straight approach, with actual stopped machinery/hauler occupancy and blocked logistics.",
+      "subject": "One owned native rail depot, compact closed blue-gray housing, four actual entries; available/occupied/blocked controlled exchange cues and fixed contacts.",
       "view_labels": [
         "NE",
         "SE",
@@ -747,12 +747,14 @@
       "geometry_review": [
         "Native geometry reconciled before authoring: ['back', 'front']; footprint [1, 1]. Actual part/per-cell source coverage remains pending."
       ],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_cell_and_phase_coverage_verified_runtime_pending",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+      "staged_pose_count": 128
     },
     {
       "asset_id": "facility.rail-service",
       "consumer": 7,
-      "subject": "facility.rail-service with the actual delivered control/facility meaning.",
+      "subject": "Reuse exact selected exchange housing as ordinary rail service depot: an exchange bay is the assigned existing native depot, not a separate build type. One track entry, four true views, open/occupied hoist/service and blocked cues; no vehicle baked into art.",
       "view_labels": [
         "NE",
         "SE",
@@ -789,12 +791,14 @@
       "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_cell_and_phase_coverage_verified_runtime_pending",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+      "staged_pose_count": 128
     },
     {
       "asset_id": "facility.road-service",
       "consumer": 7,
-      "subject": "facility.road-service with the actual delivered control/facility meaning.",
+      "subject": "Distinct one-tile dark-teal road service shed reuses compact native depot architecture; asphalt/white entry stripe, no rails/sleepers, cyan tool fittings and jack. Four genuine entries and construction/available/occupied-service/blocked source states.",
       "view_labels": [
         "NE",
         "SE",
@@ -831,17 +835,16 @@
       "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_cell_and_phase_coverage_verified_runtime_pending",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+      "staged_pose_count": 128
     },
     {
       "asset_id": "facility.earth-receiver",
       "consumer": 6,
-      "subject": "Earth reclamation/disposal site with bounded intake: fine brown soil, open receiving area, retaining banks and machinery.",
+      "subject": "Fixed native2x3 industry, six independently authored cell roles, construction/idle/working/full load states. Reuses depot material design and exact shared authored status phases; only site-hut indicator animates, soil/walls/paving are static per stock state.",
       "view_labels": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "states": [
         "construction",
@@ -873,19 +876,19 @@
       "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
       "originals": [],
       "geometry_review": [
-        "Actual native layout measured by [m1-art-geometry]: [2, 3] with 6 accepted cells."
+        "Actual native layout measured by [m1-art-geometry]: [2, 3] with 6 accepted cells.",
+        "One fixed native layout, no world rotation; per-cell source order follows original native layout, not view columns."
       ],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_cell_and_phase_coverage_verified_runtime_pending",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+      "staged_pose_count": 192
     },
     {
       "asset_id": "facility.rock-receiver",
       "consumer": 6,
-      "subject": "Rock crusher/disposal site with gray coarse rubble, crusher jaws/conveyors and distinct outgoing aggregate/residue handling.",
+      "subject": "Actual fixed4x4native layout. Twelve rock-specific cell roles and four exact reused Earth cells. Construction/idle/working/full states, coarse gray rubble and distinct pale aggregate/dark residue. Shared hut indicator supplies4authored display phases; static infrastructure deliberately repeats.",
       "view_labels": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "states": [
         "construction",
@@ -917,14 +920,17 @@
       "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
       "originals": [],
       "geometry_review": [
-        "Actual native layout measured by [m1-art-geometry]: [4, 4] with 16 accepted cells."
+        "Actual native layout measured by [m1-art-geometry]: [4, 4] with 16 accepted cells.",
+        "One fixed native layout, no world rotation; per-cell source order follows original native layout, not view columns."
       ],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_cell_and_phase_coverage_verified_runtime_pending",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/facility-generation-record.json",
+      "staged_pose_count": 512
     },
     {
       "asset_id": "control.survey",
       "consumer": 7,
-      "subject": "control.survey with the actual delivered control/facility meaning.",
+      "subject": "Survey actual geology",
       "view_labels": [
         "none"
       ],
@@ -953,15 +959,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "Read existing solid/excavated/survey/deposit/reserve state; no excavation side effect. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "WID_UC_SURVEY",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.excavation",
       "consumer": 7,
-      "subject": "control.excavation with the actual delivered control/facility meaning.",
+      "subject": "Portal commissioning/project",
       "view_labels": [
         "none"
       ],
@@ -990,15 +999,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "GetTBMPairControls and the actual portal commission command own permission and quotes. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "WID_UC_PROJECT / PW_COMMISSION",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.tbm-area",
       "consumer": 7,
-      "subject": "control.tbm-area with the actual delivered control/facility meaning.",
+      "subject": "Canonical floor outline",
       "view_labels": [
         "none"
       ],
@@ -1027,15 +1039,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "PreviewTBMCommissionArea supplies covered targets, swept turn envelope and remaining targets; SetConstructionPreview draws those exact world tiles. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "WID_UC_AREA / WID_UC_AREA_CONFIRM",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.tbm-turn45",
       "consumer": 7,
-      "subject": "control.tbm-turn45 with the actual delivered control/facility meaning.",
+      "subject": "Legal advancing 45-degree turn",
       "view_labels": [
         "none"
       ],
@@ -1064,15 +1079,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "An advancing traversed segment is required; a menu arrow cannot rotate the cutter in place or authorize a 90-degree turn. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "TBMAreaPreview::turn_envelope",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.exchange",
       "consumer": 7,
-      "subject": "control.exchange with the actual delivered control/facility meaning.",
+      "subject": "Controlled native depot wagon exchange",
       "view_labels": [
         "none"
       ],
@@ -1101,15 +1119,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "Select an owned unfinished project and assign an actual rail depot via SetTBMExchangeBay; preserve real consists/cargo. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "WID_UC_EXCHANGE",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.deep-lock",
       "consumer": 7,
-      "subject": "control.deep-lock with the actual delivered control/facility meaning.",
+      "subject": "Deep calendar/capability lock",
       "view_labels": [
         "none"
       ],
@@ -1138,15 +1159,18 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "Deep date/capability gates remain authoritative across UI/commands; padlock is menu-only. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "WID_UC_MODEL_DATES / Deep access controls",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "control.future-lock",
       "consumer": 7,
-      "subject": "control.future-lock with the actual delivered control/facility meaning.",
+      "subject": "Model/calendar availability lock",
       "view_labels": [
         "none"
       ],
@@ -1175,10 +1199,13 @@
       "style": "TTD normal-zoom crisp restrained pixel art, fixed isometric camera, one top-left light, grounded contact/shadow, grayscale-readable silhouettes. Native engine headings come from approved geometry vectors, not generic rotation or mirroring.",
       "background": "actual transparency; no text, labels, grid lines, borders or decorative background in sprite pixels",
       "palette": "DOS 8bpp downstream conversion, index 0 transparent; no reserved animation/company colors except an explicit declared company mask",
-      "state_invariants": "Preserve common world anchor and whole-body bounds across frames. Authored working/load/status changes must be real pixels; duplicate frame-0 filling is not missing-animation completion.",
+      "state_invariants": "Calendar/model availability comes from the existing content profile and capability query, not icon animation. Whole glyph palette/refusal/selection differences are authored; no world heading.",
       "originals": [],
       "geometry_review": [],
-      "status": "brief_ready_originals_partial_or_missing; generation/packing acceptance pending"
+      "status": "source_coverage_verified_runtime_pending",
+      "consumer_binding": "PW_MODEL / WID_UC_MODEL_DATES",
+      "selected_source_record": "docs/zz-reach2/upgrades/2026-10/assets/mlvs/control-generation-record.json",
+      "staged_pose_count": 3
     },
     {
       "asset_id": "cargo.ERTH",

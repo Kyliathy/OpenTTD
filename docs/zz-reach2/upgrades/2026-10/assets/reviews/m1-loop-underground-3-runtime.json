@@ -1,0 +1,137 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups82/83; real ordinary loop and physical portal raster evidence",
+  "source": "src/tests/fixtures/haulage/depot-native-underground-stopped.sav",
+  "source_sha256": "4f71707f6179878143569e610e595310838c61cec1773a6bd0ee48c43928678a",
+  "scenario": "underground",
+  "log": "logs/r2mlvs13-cx-native-loop-underground-3.log",
+  "renderer": "actual ViewportDoDraw at native and 2x scales",
+  "stages": [
+    "M1_LOOP_ART stage=spanning-entry ticks=80 frames=4 phase=1 hauler_phase=0 exchanges=0 cutter=5 tile=4749 direction=3 backwards=false",
+    "M1_LOOP_ART stage=pocket-entry ticks=173 frames=8 phase=3 hauler_phase=0 exchanges=0 cutter=5 tile=4813 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-0 ticks=267 frames=10 phase=2 hauler_phase=0 exchanges=0 cutter=5 tile=4877 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-3 ticks=547 frames=12 phase=2 hauler_phase=0 exchanges=0 cutter=5 tile=5069 direction=4 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-1 ticks=654 frames=14 phase=2 hauler_phase=0 exchanges=0 cutter=5 tile=5134 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-2 ticks=950 frames=16 phase=2 hauler_phase=0 exchanges=0 cutter=5 tile=5325 direction=3 backwards=false",
+    "M1_LOOP_ART stage=loaded-cutter ticks=1169 frames=18 phase=3 hauler_phase=0 exchanges=0 cutter=5 tile=5325 direction=3 backwards=false",
+    "M1_LOOP_ART stage=actual-exchange ticks=4180 frames=22 phase=6 hauler_phase=2 exchanges=1 cutter=5 tile=4943 direction=3 backwards=false",
+    "M1_LOOP_ART stage=surface-loaded-haul ticks=5016 frames=24 phase=1 hauler_phase=3 exchanges=1 cutter=5 tile=4943 direction=3 backwards=false",
+    "M1_LOOP_ART stage=actual-disposal ticks=6721 frames=26 phase=1 hauler_phase=4 exchanges=1 cutter=5 tile=4943 direction=3 backwards=false",
+    "M1_LOOP_ART stage=empty-return ticks=11803 frames=28 phase=5 hauler_phase=0 exchanges=1 cutter=5 tile=4943 direction=3 backwards=false"
+  ],
+  "frames": [
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-disposal-scene-0-zoom-1.png",
+      "sha256": "f1537d9ae832ea8d1dddfd7c80507224ef3a3cfb6253f1fe87c5d3e4eab6a823"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-disposal-scene-0-zoom-2.png",
+      "sha256": "674f9f83a8bea59d068e208e41170501a7cb2ca05ada5ca062694f87eba8cfda"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-exchange-scene-0-zoom-1.png",
+      "sha256": "aa0bd11d267ded45eb1679bd664a28f750927222db91643339e551b6b38751f5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-exchange-scene-0-zoom-2.png",
+      "sha256": "8b0a9c79ffa7b109831f45b7e4bb8a6c437ea80b9814261eb14f88582143f4e5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-exchange-scene-1-zoom-1.png",
+      "sha256": "aa0bd11d267ded45eb1679bd664a28f750927222db91643339e551b6b38751f5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-actual-exchange-scene-1-zoom-2.png",
+      "sha256": "8b0a9c79ffa7b109831f45b7e4bb8a6c437ea80b9814261eb14f88582143f4e5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-0-scene-0-zoom-1.png",
+      "sha256": "c69845688b4eba6f7faca0d5d662aa6c9001f94d1dce210d68866497057241be"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-0-scene-0-zoom-2.png",
+      "sha256": "dd3b6ab3546bccb1c71a01065c0f6aec673f12fb989093dd79d455f417afe3fe"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-1-scene-0-zoom-1.png",
+      "sha256": "ac51268b99330c9afab2813e89f8d5eed5e3b31b36ec098537f089a8ee754e63"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-1-scene-0-zoom-2.png",
+      "sha256": "c961b85fa251d62a68ea8185ab9707025bf035af248cc22b2537bc630e1a2925"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-2-scene-0-zoom-1.png",
+      "sha256": "1c51f2a0a59b8921437be1c7d7106bb356fb615235dccda05207d6dcf8574e91"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-2-scene-0-zoom-2.png",
+      "sha256": "6d623cad642265f57e167489292f2351fe84e42eade085bcd5c30f9143869a6a"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-3-scene-0-zoom-1.png",
+      "sha256": "ee78c70e62aeeb272a01239da053c5cb05ea6c02e204faa12a0a856e118e3d23"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-boring-phase-3-scene-0-zoom-2.png",
+      "sha256": "f9636c8cd261afe677562160b4f5d7a8053a5ab345edfb1605eb4a402cf55647"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-empty-return-scene-0-zoom-1.png",
+      "sha256": "2cc2c661c38ea470c43bd5456691aba408c4686a938ce1e87b58b4944d0f1028"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-empty-return-scene-0-zoom-2.png",
+      "sha256": "1f402382e1260ef489d10f8728ddc3cef2a80756ba8a6033f7507f1aa38bb54a"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-loaded-cutter-scene-0-zoom-1.png",
+      "sha256": "8600028c25762909558c706971f74e192148b05f8e359b08afc9fef04c230b7f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-loaded-cutter-scene-0-zoom-2.png",
+      "sha256": "d9f795629537255ad7073f722821ebb45ce744acd3e36d4dc9fcd1666a6e94e8"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-pocket-entry-scene-0-zoom-1.png",
+      "sha256": "ad218b1f8464f2c50b3b13eaf90f71d1d5c3c7697674b4905371695638c4583b"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-pocket-entry-scene-0-zoom-2.png",
+      "sha256": "82f4e7a6f6a3fae09459432d39c577bc687b2a08854495aab92d2c0132bb89b2"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-pocket-entry-scene-1-zoom-1.png",
+      "sha256": "68178d6a72fe91836b6a5fc904b5b45be270fd840326c4290565c21bfcee16cd"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-pocket-entry-scene-1-zoom-2.png",
+      "sha256": "39fe9bf76a980890b686676edba73baf31210431859ce78c72b7311a0934516e"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-spanning-entry-scene-0-zoom-1.png",
+      "sha256": "1a9fabe1707feb35253f674f58eb3dcdd3e70eb0df03a6d2db2e7bb657499e76"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-spanning-entry-scene-0-zoom-2.png",
+      "sha256": "371b4f6b42b8b10cfbd58f97c85268ed5d3f5a553827a1320eda4982f088284f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-spanning-entry-scene-1-zoom-1.png",
+      "sha256": "8257875ec5940357fb82d77d2c4b97f3218cdbdac98d9bc63ffec6e2ea4d05fe"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-spanning-entry-scene-1-zoom-2.png",
+      "sha256": "d8834440e47f04f4ad2231071f5eac3e223245e6f95832352242c23daa84b3a2"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-surface-loaded-haul-scene-0-zoom-1.png",
+      "sha256": "d31c80ef33812f9e7ac8127750147a3d44e15eb7b34ec0a445d0d244e46746bf"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-underground-3-surface-loaded-haul-scene-0-zoom-2.png",
+      "sha256": "bf283896d5fdfda3c1f3fd8a832a598c96636991afbca9a660a06dd08d09e3bc"
+    }
+  ],
+  "simulation_owners_unchanged_during_render": true,
+  "user_review": "deferred_until_integration"
+}

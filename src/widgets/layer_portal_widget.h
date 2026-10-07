@@ -28,6 +28,7 @@ enum PortalWidgets : WidgetID {
 	PW_RELEASE, ///< Release the hauler.
 	PW_SELL, ///< Sell the withdrawn train in the portal.
 	PW_CONVERT, ///< Convert the released temporary track.
+	PW_PREVIEW, ///< Actual saved-state views of both independent pair endpoints.
 };
 
 #endif /* WIDGETS_LAYER_PORTAL_WIDGET_H */

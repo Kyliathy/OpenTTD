@@ -1,0 +1,188 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups82/83; real ordinary loop and physical portal raster evidence",
+  "source": "src/tests/fixtures/haulage/portal-native-deep-stopped.sav",
+  "source_sha256": "438f221ba4deb7083e8c673f0251534b76967e1a290218c6d205e641f983df57",
+  "scenario": "deep",
+  "log": "logs/r2mlvs13-cx-native-loop-deep-2.log",
+  "renderer": "actual ViewportDoDraw at native and 2x scales",
+  "stages": [
+    "M1_LOOP_ART stage=empty-return ticks=0 frames=2 phase=0 hauler_phase=0 exchanges=0 cutter=7 tile=6090 direction=7 backwards=false",
+    "M1_LOOP_ART stage=spanning-entry ticks=66 frames=6 phase=1 hauler_phase=0 exchanges=0 cutter=7 tile=14282 direction=3 backwards=false",
+    "M1_LOOP_ART stage=spanning-retreat ticks=1251 frames=10 phase=4 hauler_phase=0 exchanges=0 cutter=7 tile=14282 direction=3 backwards=true",
+    "M1_LOOP_ART stage=upper-retreat ticks=1251 frames=14 phase=4 hauler_phase=0 exchanges=0 cutter=7 tile=14282 direction=3 backwards=true",
+    "M1_LOOP_ART stage=loaded-cutter ticks=1251 frames=16 phase=4 hauler_phase=0 exchanges=0 cutter=7 tile=14282 direction=3 backwards=true",
+    "M1_LOOP_ART stage=actual-exchange ticks=2164 frames=20 phase=6 hauler_phase=2 exchanges=1 cutter=7 tile=6090 direction=3 backwards=false",
+    "M1_LOOP_ART stage=surface-loaded-haul ticks=2671 frames=22 phase=1 hauler_phase=3 exchanges=1 cutter=7 tile=6090 direction=3 backwards=false",
+    "M1_LOOP_ART stage=pocket-entry ticks=2778 frames=26 phase=1 hauler_phase=3 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-3 ticks=2779 frames=28 phase=2 hauler_phase=3 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-0 ticks=2783 frames=30 phase=2 hauler_phase=3 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-1 ticks=2791 frames=32 phase=2 hauler_phase=3 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=boring-phase-2 ticks=2799 frames=34 phase=2 hauler_phase=3 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=actual-disposal ticks=2876 frames=36 phase=2 hauler_phase=4 exchanges=1 cutter=7 tile=14346 direction=3 backwards=false",
+    "M1_LOOP_ART stage=pocket-retreat ticks=4342 frames=40 phase=4 hauler_phase=4 exchanges=1 cutter=7 tile=14538 direction=3 backwards=true"
+  ],
+  "frames": [
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-disposal-scene-0-zoom-1.png",
+      "sha256": "692fc0a47b405c61c64eded272e22681706ec6c92d9862b24a7994a1bd15dc06"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-disposal-scene-0-zoom-2.png",
+      "sha256": "43d1b6e468df1dea33a1de84566794aef82e4817e7e4ccd609e60d95e3dd4ac0"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-exchange-scene-0-zoom-1.png",
+      "sha256": "2f9c2395167b6852323c8fb39c9d87f8a04067661a47e1fdceb2048e3fb20c6f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-exchange-scene-0-zoom-2.png",
+      "sha256": "4288878c90793a0692ba76fe94a76ca07e9f40b464f49d55653d2f4826b0e040"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-exchange-scene-1-zoom-1.png",
+      "sha256": "2f9c2395167b6852323c8fb39c9d87f8a04067661a47e1fdceb2048e3fb20c6f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-actual-exchange-scene-1-zoom-2.png",
+      "sha256": "4288878c90793a0692ba76fe94a76ca07e9f40b464f49d55653d2f4826b0e040"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-0-scene-0-zoom-1.png",
+      "sha256": "9e2cd1cc07e12a2dac68d20e0be388a51b2d8770fe0876fcd28f87964ac65cf9"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-0-scene-0-zoom-2.png",
+      "sha256": "04bef1c8589ad487591edceab2982cc40e868c7bdd00f954f52229eebf24737b"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-1-scene-0-zoom-1.png",
+      "sha256": "994f1e1f8eb340c019d7cea915a44ff05db2ac35fc0c7bed6102b5545c92e109"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-1-scene-0-zoom-2.png",
+      "sha256": "6d71a1b28381c8e1543c20d14ce6cb1ae7e1bd14960cfbfa0c6edd95042ee9bf"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-2-scene-0-zoom-1.png",
+      "sha256": "0b7126d6043a6f31a0e8e0bb5fa54515025539b042191ae004696e4354c1d4b6"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-2-scene-0-zoom-2.png",
+      "sha256": "9c10ee38417ef7c9c49b994b5f8f1fff4594b592310193766b846dbdab6e907c"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-3-scene-0-zoom-1.png",
+      "sha256": "9e2cd1cc07e12a2dac68d20e0be388a51b2d8770fe0876fcd28f87964ac65cf9"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-boring-phase-3-scene-0-zoom-2.png",
+      "sha256": "04bef1c8589ad487591edceab2982cc40e868c7bdd00f954f52229eebf24737b"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-empty-return-scene-0-zoom-1.png",
+      "sha256": "a270d1807cbbb232203be76169f2e4bbb8c16c32ea2674e565b7d3cb132d927f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-empty-return-scene-0-zoom-2.png",
+      "sha256": "5cbad83317099771016ec82b185d7e2edd6b8fb274c1e3921b16454df126aa02"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-loaded-cutter-scene-0-zoom-1.png",
+      "sha256": "d4271de26f094f7f7095cc9b359c414d4bfeaf891c5ce8673d57c33212fe9ddd"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-loaded-cutter-scene-0-zoom-2.png",
+      "sha256": "5c2ee5635a12ed5af2a6f7f0d59c1ed9233cbf61220ed9b01064ee9537d9a312"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-entry-scene-0-zoom-1.png",
+      "sha256": "9bb3f79ccb11dfca0b94c78466ca62d64578f6745e539e7c2f93669785c96e02"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-entry-scene-0-zoom-2.png",
+      "sha256": "60dbe1ac62b448945e0fed65834561a4cdf3b81fe499c54153c7db891dca2d8c"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-entry-scene-1-zoom-1.png",
+      "sha256": "e7876c7845b78ae98aa73a27302704098ab20324302dadc4c9426eafb4338d2f"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-entry-scene-1-zoom-2.png",
+      "sha256": "17b6eac40c2de1e942bd9a90f496bf4424c688f4a78b7e6a7b3f9195dfd1be9e"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-retreat-scene-0-zoom-1.png",
+      "sha256": "6bc0635e4695de45d92d1b53f7ecece9084c1ee48772062d7c83431f591046b0"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-retreat-scene-0-zoom-2.png",
+      "sha256": "f44e197a0c963b7a7f166a23d05b997c900afc0dac090c7bb994df9919efbe00"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-retreat-scene-1-zoom-1.png",
+      "sha256": "681c0f0e11cfbaca503eaf04e42c8522d55e693095c9e67c9e44ce310cfe19a5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-pocket-retreat-scene-1-zoom-2.png",
+      "sha256": "e98e9496c9f65d60f0aa4d4896e5ba55293fa2e9770d13e286242d3a7c7e959b"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-entry-scene-0-zoom-1.png",
+      "sha256": "6bc0635e4695de45d92d1b53f7ecece9084c1ee48772062d7c83431f591046b0"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-entry-scene-0-zoom-2.png",
+      "sha256": "f44e197a0c963b7a7f166a23d05b997c900afc0dac090c7bb994df9919efbe00"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-entry-scene-1-zoom-1.png",
+      "sha256": "11c19c742578dded8fd0074d22a939d4d0cab73dbb3e8a41ed1872a6c191f567"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-entry-scene-1-zoom-2.png",
+      "sha256": "483b0b6e28b22fc92810bb451b7b69f1a173cec36f11d0a09a3ea131809c92f5"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-retreat-scene-0-zoom-1.png",
+      "sha256": "6bc0635e4695de45d92d1b53f7ecece9084c1ee48772062d7c83431f591046b0"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-retreat-scene-0-zoom-2.png",
+      "sha256": "f44e197a0c963b7a7f166a23d05b997c900afc0dac090c7bb994df9919efbe00"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-retreat-scene-1-zoom-1.png",
+      "sha256": "d4271de26f094f7f7095cc9b359c414d4bfeaf891c5ce8673d57c33212fe9ddd"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-spanning-retreat-scene-1-zoom-2.png",
+      "sha256": "5c2ee5635a12ed5af2a6f7f0d59c1ed9233cbf61220ed9b01064ee9537d9a312"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-surface-loaded-haul-scene-0-zoom-1.png",
+      "sha256": "2e499544749924c998b624b40af7427ea5ce13ee20ae18f84b76d74b1d557fd7"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-surface-loaded-haul-scene-0-zoom-2.png",
+      "sha256": "c77e5178874436581d7692ce986b6538abef92fcbfa2edd1bc6399af75c0cecb"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-upper-retreat-scene-0-zoom-1.png",
+      "sha256": "6bc0635e4695de45d92d1b53f7ecece9084c1ee48772062d7c83431f591046b0"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-upper-retreat-scene-0-zoom-2.png",
+      "sha256": "f44e197a0c963b7a7f166a23d05b997c900afc0dac090c7bb994df9919efbe00"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-upper-retreat-scene-1-zoom-1.png",
+      "sha256": "d4271de26f094f7f7095cc9b359c414d4bfeaf891c5ce8673d57c33212fe9ddd"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-loop-deep-2-upper-retreat-scene-1-zoom-2.png",
+      "sha256": "5c2ee5635a12ed5af2a6f7f0d59c1ed9233cbf61220ed9b01064ee9537d9a312"
+    }
+  ],
+  "simulation_owners_unchanged_during_render": true,
+  "user_review": "deferred_until_integration"
+}

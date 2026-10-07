@@ -108,7 +108,15 @@ def build_manifest():
         states = ["sealed", "commissioning", "connected"] if portal else ["construction", "ready", "working", "blocked"]
         if owner == 17:
             states.append("heat_starved")
-        row = record(f"facility.{name}", owner, "building", states, 1 if portal else 4, footprint)
+        # Native Surface spoil receivers expose one fixed industry layout. They
+        # have no build rotation/entry direction; authored cells follow actual
+        # world offsets rather than pretending to offer four depot approaches.
+        receiver = name in ("earth-receiver", "rock-receiver")
+        row = record(f"facility.{name}", owner, "building", states, 1 if portal else 4, footprint,
+                     directions=["none"] if receiver else DOORS)
+        if receiver:
+            row["state_owner"] = "Native industry construction; ready=idle, working=existing bounded processing, blocked=full stock/aggregate or interval refusal"
+            row["layout_owner"] = "InstallSpoilReceiverDefinition; one fixed native Surface layout"
         if portal:
             row["state_owner"] = "LayerPortalWorkState; controller blocked reason is independent presentation"
             row["endpoint_variants"] = ["upper", "lower"]
@@ -184,9 +192,13 @@ def validate_manifest(document):
         if row["palette"] != "dos_8bpp" or row["transparent_index"] != 0:
             # Every first-deliverable family shares the same palette/transparency contract.
             raise ValueError("unsupported palette")
-        if row["kind"] == "building" and row["directions"] != DOORS:
-            # Per-tile buildings need four real approach views and coherent foreground cuts.
-            raise ValueError("incomplete building directions")
+        if row["kind"] == "building":
+            # Native receivers have one fixed world layout; depot/portal families
+            # still require all four real entry views and foreground cuts.
+            receiver = row["asset_id"] in ("facility.earth-receiver", "facility.rock-receiver")
+            expected_directions = ["none"] if receiver else DOORS
+            if row["directions"] != expected_directions:
+                raise ValueError("incomplete building directions")
         if row["source"]["status"] == "planned":
             if row["source"]["path"] is not None or row["packed"]["sha256"] is not None:
                 # M0 placeholders may not claim a nonexistent final source or packed payload hash.

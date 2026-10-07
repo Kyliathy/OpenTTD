@@ -1,0 +1,81 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/81B; r2mlvs3mp-master-plan.md8.6. Selected M1 source set only; preserve protected M0 and immutable MLVI definitions. See docs/zz-reach2/architecture/map-layers/archi-map-layers.md.",
+  "schema_version": 1,
+  "asset_ids": [
+    "terrain.underground",
+    "terrain.deep",
+    "vehicle.model-00",
+    "purchase.model-00",
+    "vehicle.model-01",
+    "purchase.model-01",
+    "vehicle.model-02",
+    "purchase.model-02",
+    "vehicle.model-03",
+    "purchase.model-03",
+    "vehicle.model-04",
+    "purchase.model-04",
+    "facility.portal.sealed",
+    "facility.portal.deep-rail",
+    "facility.exchange",
+    "facility.rail-service",
+    "facility.road-service",
+    "facility.earth-receiver",
+    "facility.rock-receiver",
+    "control.survey",
+    "control.excavation",
+    "control.tbm-area",
+    "control.tbm-turn45",
+    "control.exchange",
+    "control.deep-lock",
+    "control.future-lock",
+    "cargo.ERTH",
+    "cargo.ROCK",
+    "survey.COAL",
+    "survey.IORE",
+    "survey.CORE",
+    "survey.BAUX",
+    "survey.SALT",
+    "survey.LITH",
+    "survey.NORE",
+    "survey.COBT",
+    "survey.RARE",
+    "survey.URAN",
+    "terrain.edges.underground",
+    "terrain.edges.deep"
+  ],
+  "native_route": "native_action5_1c",
+  "appended_start": 200,
+  "protected_offsets": [
+    0,
+    65
+  ],
+  "unactivated_reserved_offsets": [
+    66,
+    73
+  ],
+  "planned_core_range": [
+    74,
+    200
+  ],
+  "toolchain": {
+    "python": "3.10.0",
+    "pillow": "12.3.0",
+    "grfcodec": "6.2.0",
+    "nforenum": "6.2.0"
+  },
+  "sheet_width": 4096,
+  "sprite_gap": 2,
+  "png": "media/baseset/openttd/map_layers_m1.png",
+  "nfo": "media/baseset/openttd/map_layers_m1.nfo",
+  "header": "src/table/multilayer_sprite_assets.h",
+  "report": "media/multilayer/sprites/m1/packed-manifest.json",
+  "definition_policy": "Keep packed.namespace/offset as the existing definition/core owner. Add packed.route/native_offset/sprite_count for actual base-set art; the MLVI cargo definition package is never rewritten.",
+  "order": [
+    "state",
+    "frame",
+    "direction",
+    "tile_variant",
+    "part"
+  ],
+  "verification_policy": "Require completed source coverage before publishing PNG/NFO/header. Describe/layout preparation is read-only; no low-power test/build execution."
+}

@@ -352,8 +352,10 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 ### Group 16 - Presentation and validation
 
 {{MEDIUM}}
-- [ ] 16.1 Add solid faces, cavity floor, edges/corners, survey overlay, job footprint and progress display through r2mlvs13 assets. Solid rock and a dark open chamber must be visually distinguishable.
+- [X] 16.1 Add solid faces, cavity floor, edges/corners, survey overlay, job footprint and progress display through r2mlvs13 assets. Solid rock and a dark open chamber must be visually distinguishable.
 - [X] 16.2 Test all construction families on solid, active and excavated footprints, including one blocked tile in a larger footprint and a placement through an extra viewport.
+
+16.1 closure (2026-10-07, master8.7): Plan13's40 selected families /2,311 source-exact loaded sprites supply distinct solid/work/cavity/edge depth art and ten live survey markers. The actual project cursor now shows the geological job's accepted final floor, additional charged working space and uncovered requested cells through existing preview roles; sorted temporary set operations avoid quadratic scans. Its localized progress row reads the sole saved job cursor/route count and partial-work accumulator via the public controller query. A presentation timer dirties only the UI, and cancellation/stale company references remove the transient overlay. [Canonical job/area/turn UI checks](../../../../logs/r2mlvs3mp-s-job-presentation-checks.log) pass318 assertions / three focused cases with unchanged geological/project ownership. [Actual saved-world UI/footprint capture](../../../../logs/r2mlvs3mp-s-job-runtime-capture.log) runs the real graphics/application loader and passes97 / one case in [native evidence](../../../../logs/r2mlvs13-cl-native-control-capture.log); [job menu](assets/reviews/m1-job-inspection-controls.png) and [canonical footprint](assets/reviews/m1-job-inspection-footprint.png) were inspected for localized progress and white/blue roles over distinct rock. The saved source, reserves/work/funds/receiver state and both RNG streams remain unchanged during presentation. Source/GRF bytes remain immutable; user personal art review remains deferred under the master.
 
 ### Group 17 - Presentation and validation
 

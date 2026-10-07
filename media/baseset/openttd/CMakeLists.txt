@@ -1,3 +1,5 @@
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
+# Preserve the immutable M0 source sheet; M1 uses independent offset blocks.
 # In case both NFORenum and GRFCodec are found, generate the GRF.
 # Otherwise, just use them from the cache (read: git).
 # This is mainly because not many people have both of these tools installed,
@@ -16,6 +18,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/elrails.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.nfo
+                         ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttd.nfo
@@ -41,6 +44,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/elrails.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.png
+                         ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttdgui.png

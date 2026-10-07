@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargotype.cpp Implementation of cargoes. */
+/** @file cargotype.cpp Implementation of cargoes. @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B, first-party spoil icons. */
 
 #include "stdafx.h"
 #include "cargotype.h"
@@ -14,6 +14,7 @@
 #include "string_func.h"
 #include "strings_func.h"
 #include "settings_type.h"
+#include "multilayer_sprite.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -174,6 +175,7 @@ Dimension GetLargestCargoIconSize()
  */
 SpriteID CargoSpec::GetCargoIcon() const
 {
+	if (const auto native = GetMultiLayerCargoSprite(*this)) return *native;
 	SpriteID sprite = this->sprite;
 	if (sprite == 0xFFFF) {
 		/* A value of 0xFFFF indicates we should draw a custom icon */

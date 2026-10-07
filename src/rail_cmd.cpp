@@ -8,6 +8,8 @@
 /** @file rail_cmd.cpp Handling of rail tiles. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "multilayer_sprite.h"
+#include "timer/timer_game_tick.h"
 #include "bridge.h"
 #include "tilearea_type.h"
 #include "viewport_func.h"
@@ -2647,6 +2649,18 @@ static void DrawTile_Rail(TileInfo *ti)
 		}
 
 		DrawGroundSprite(image, GroundSpritePaletteTransform(image, PAL_NONE, pal));
+		const int depot_sprite = GetCustomRailSprite(rti, ti->tile, RailSpriteType::Depot);
+		// A railtype that supplies its own depot retains that resolver. Selected
+		// native service art replaces only the ordinary depot building graphics.
+		const auto native_back = depot_sprite == 0 ? GetMultiLayerRailDepotSprite(ti->tile, false, TimerGameTick::counter) : std::nullopt;
+		// Authored native back/floor is inserted before the existing rail overlays.
+		// The same building transparency controls remain shared with ordinary depots.
+		if (native_back && !IsInvisibilitySet(TransparencyOption::Buildings)) {
+			SpriteID back = *native_back;
+			const bool transparent = IsTransparencySet(TransparencyOption::Buildings);
+			if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
+			DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+		}
 
 		if (rti->UsesOverlay()) {
 			SpriteID ground = GetCustomRailSprite(rti, ti->tile, RailSpriteType::Ground);
@@ -2709,12 +2723,18 @@ static void DrawTile_Rail(TileInfo *ti)
 				}
 			}
 		}
-		int depot_sprite = GetCustomRailSprite(rti, ti->tile, RailSpriteType::Depot);
 		int relocation = depot_sprite != 0 ? depot_sprite - SPR_RAIL_DEPOT_SE_1 : rti->GetRailtypeSpriteOffset();
 
 		if (HasRailCatenaryDrawn(GetRailType(ti->tile))) DrawRailCatenary(ti);
 
-		DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, relocation, 0, pal);
+		if (native_back) {
+			if (!IsInvisibilitySet(TransparencyOption::Buildings)) {
+				const SpriteID front = *GetMultiLayerRailDepotSprite(ti->tile, true, TimerGameTick::counter);
+				AddSortableSpriteToDraw(front, PAL_NONE, *ti, GetMultiLayerDepotFrontBounds(dir), IsTransparencySet(TransparencyOption::Buildings));
+			}
+		} else {
+			DrawRailTileSeq(ti, dts, TransparencyOption::Buildings, relocation, 0, pal);
+		}
 		blocked_pillars = BRIDGEPILLARFLAGS_ALL;
 	}
 	DrawBridgeMiddle(ti, blocked_pillars);

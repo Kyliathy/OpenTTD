@@ -7,7 +7,7 @@
 /**
  * @file tbm_controls.cpp The player's view of a rail portal pair and its boring project (R2MLVS3MP master 7.9): the
  * controls the portal window offers and the next step of a project's life, derived from the commands' own checks.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, task 16.3
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, tasks 16.1/16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
  */
 
@@ -103,18 +103,57 @@ static TBMPlayerStep ChooseTBMProjectStep(const TBMPairControls &controls)
 static void DescribeTBMProject(TBMPairControls &controls)
 {
 	const TBMProject &project = *controls.project;
+	controls.work = GetTBMWorkState(project.id);
+	if (controls.work.face != INVALID_TILE) {
+		controls.hardness = GetExcavationCellHardness(GetGeologyWorldState(), controls.work.face);
+		controls.face_work_ticks = EstimateExcavationCut(project.job).work_ticks;
+	}
+	if (const TBMCutterModel *model = GetTBMCutterModel(project.model_id); model != nullptr) {
+		controls.active_cost_per_year = model->active_cost_per_year;
+		controls.idle_cost_per_year = model->idle_cost_per_year;
+	}
 	if (const ExcavationJob *job = GetExcavationJob(project.job); job != nullptr) {
 		controls.cuts_done = job->cursor;
 		controls.cuts_total = static_cast<uint32_t>(job->route.size());
 		controls.earth_t = job->completed_earth_t;
 		controls.rock_t = job->completed_rock_t;
+		// Accepted exchange boundaries split the geological owner's sole cursor
+		// into passes. At completion retain the last pass's completed progress;
+		// while exchanging, the next pass is shown without advancing any work.
+		if (job->pass_terms.has_value()) {
+			const auto &ends = job->pass_terms->exchange_after;
+			if (!ends.empty()) {
+				const auto next = std::ranges::upper_bound(ends, job->cursor);
+				const size_t index = next == ends.end() ? ends.size() - 1 : static_cast<size_t>(next - ends.begin());
+				const uint32_t start = index == 0 ? 0 : ends[index - 1];
+				controls.pass_number = static_cast<uint32_t>(index + 1);
+				controls.pass_total = static_cast<uint32_t>(ends.size());
+				controls.pass_cuts_total = ends[index] - start;
+				controls.pass_cuts_done = std::min(job->cursor - start, controls.pass_cuts_total);
+			}
+		}
 	}
 	if (const Train *cutter = Train::GetIfValid(project.cutter); cutter != nullptr) {
 		controls.running = !cutter->vehstatus.Test(VehState::Stopped);
-		// A hauler brings one empty hopper for each of the cutter's, kind by kind.
+		// Only whole attached units contribute to replacement counts and storage.
+		// Articulated parts carry their own packets/capacity; planned pass limits
+		// and historical dug totals must never stand in for this live inventory.
 		for (const TBMConsistUnit &unit : InspectTBMConsist(*cutter, project).exchangeable_units) {
 			if (unit.role == TBMConsistRole::EarthWagon) ++controls.earth_hoppers;
 			if (unit.role == TBMConsistRole::RockWagon) ++controls.rock_hoppers;
+			const Train *head = Train::Get(unit.vehicle);
+			const Train *next_unit = head->GetNextUnit();
+			// Stop at this unit's boundary so each articulated part is counted
+			// exactly once, including when physical exchange replaces the head.
+			for (const Train *part = head; part != next_unit; part = part->Next()) {
+				if (unit.role == TBMConsistRole::EarthWagon) {
+					controls.earth_loaded_t += part->cargo.TotalCount();
+					controls.earth_capacity_t += part->cargo_cap;
+				} else {
+					controls.rock_loaded_t += part->cargo.TotalCount();
+					controls.rock_capacity_t += part->cargo_cap;
+				}
+			}
 		}
 	}
 	controls.wait = GetTBMLogisticsWait(project);

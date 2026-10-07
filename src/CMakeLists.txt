@@ -322,6 +322,10 @@ add_files(
     geothermal_geology.cpp
     excavation_state.h
     multilayer_content.cpp
+    multilayer_sprite.cpp
+    multilayer_sound.cpp
+    multilayer_sound.h
+    multilayer_sprite.h
     multilayer_content.h
     multilayer_state.cpp
     multilayer_state.h

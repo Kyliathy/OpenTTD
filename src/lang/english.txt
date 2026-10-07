@@ -1,4 +1,5 @@
 ##name English (UK)
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md task16.1; native job progress/footprint presentation.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -6346,3 +6347,21 @@ STR_UNDERGROUND_MODEL_DATE                                    :{RAW_STRING} ({NU
 STR_UNDERGROUND_MODEL_CALENDAR                                :{BLACK}Cutter introduction dates: {RAW_STRING}
 STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY                       :This native freight design is unavailable for the current profile, calendar date, layer or cargo. Check its introduction date and supported refits.
 STR_ERROR_TBM_COMMISSION_RAIL_TURNS                            :This excavation route needs sharp rail bends. Allow 90-degree train turns in the game settings, or select a straight corridor.
+
+STR_UNDERGROUND_JOB_NONE                                      :{BLACK}No active excavation project selected.
+STR_UNDERGROUND_JOB_PROGRESS                                  :{BLACK}Job {NUM}: {NUM} of {NUM} cuts complete; current face work: {COMMA} ticks.
+
+# Controller-only project presentation: r2mlvs4-tunnel-boring-machines.md task16.1.
+STR_PORTAL_PROJECT_FACE                                       :{BLACK}Face: {STRING} ({NUM}, {NUM}); hardness: {STRING}
+STR_PORTAL_PROJECT_NO_FACE                                    :{BLACK}No remaining excavation face
+STR_PORTAL_PROJECT_PASS                                       :{BLACK}Next pass: {NUM} of {NUM}; {NUM} of {NUM} cuts complete
+STR_PORTAL_PROJECT_NO_PASS                                    :{BLACK}No accepted pass schedule
+STR_PORTAL_PROJECT_FACE_WORK                                  :{BLACK}Current face work: {COMMA} of {COMMA} ticks
+STR_PORTAL_PROJECT_EARTH_CAPACITY                             :{BLACK}Attached Earth wagons: {COMMA} of {COMMA} t
+STR_PORTAL_PROJECT_ROCK_CAPACITY                              :{BLACK}Attached Rock wagons: {COMMA} of {COMMA} t
+STR_PORTAL_PROJECT_RUNNING_COST                               :{BLACK}Yearly running cost: boring {CURRENCY_LONG}; idle {CURRENCY_LONG}
+STR_PORTAL_HARDNESS_SOFT                                      :Soft
+STR_PORTAL_HARDNESS_MIXED                                     :Mixed
+STR_PORTAL_HARDNESS_HARD                                      :Hard
+STR_PORTAL_HARDNESS_BASALT                                    :Basalt
+STR_PORTAL_HARDNESS_UNKNOWN                                   :Unknown
