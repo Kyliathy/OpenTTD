@@ -4,7 +4,10 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_vehicle_sl.cpp Saved387 capsule bindings/demand fractions/once-tick history. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group6 */
+/** @file transport_tube_vehicle_sl.cpp Saved387 capsule bindings and common interval tick, also driven by391 collectors without capsules.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group6
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2
+ */
 
 #include "../stdafx.h"
 #include "saveload.h"
@@ -65,7 +68,9 @@ static bool CheckTubeVehicleFamily(bool preview)
 	const auto *utility = preview ? &_load_check_data.utility_power_state : nullptr;
 	const auto connections = preview ? std::span<const TubePowerConnection>{_load_check_data.tube_power_rows} : std::span<const TubePowerConnection>{};
 	if (ValidateTubePowerVehicles(rows, false, utility, connections) != TubePowerError::None) SlErrorCorrupt("Invalid capsule power structure");
-	if (rows.empty() && tick != UINT64_MAX) SlErrorCorrupt("Unexpected empty capsule power tick history"); // Native global preparation requires a real retained binding, including retired history.
+	// Before391 only capsules could drive this clock. Collector-only worlds
+	// and their retained post-demolition history now use the same saved driver.
+	if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatSources) && rows.empty() && tick != UINT64_MAX) SlErrorCorrupt("Unexpected empty capsule power tick history");
 	// Each front's prepared work belongs to the same or an earlier complete
 	// global request tick; preview cannot borrow the live world's clock.
 	for (const auto &row : rows) {

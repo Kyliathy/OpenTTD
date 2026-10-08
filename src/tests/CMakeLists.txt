@@ -143,6 +143,13 @@ add_test_files(
     geothermal_definitions.cpp
     geothermal_collector_fixture.h
     geothermal_collector.cpp
+    geothermal_heat.cpp
+    geothermal_allocation.cpp
+    geothermal_allocation_load.cpp
+    geothermal_topology.cpp
+    geothermal_heat_load.cpp
+    geothermal_utility.cpp
+    geothermal_utility_load.cpp
     geothermal_collector_load.cpp
     # Declared connected ground fixture: r2mlvs15-integrated-acceptance-and-balance.md Group2.
     acceptance_ground_fixture.cpp

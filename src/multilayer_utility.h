@@ -114,6 +114,17 @@ struct UtilityHeatConversion {
 /** Source family before its one source-specific availability/mirror calculation. */
 enum class UtilityGenerationKind : uint8_t { SolarFarm, Geothermal, Nuclear, Coal, External, OrbitalPanel };
 
+/** Frozen paid Deep utility-cell definition; capacities are rates, never stored energy or an implicit generator. */
+struct MultiLayerLocalUtilityLinkContract {
+	UtilityEnergyDomain domain; ///< Heat and electricity travel in distinct layer-local networks.
+	uint64_t capacity_w; ///< Installed bottleneck rate; synchronized routing converts it to interval joules.
+	uint32_t capital_cost; ///< Whole per-cell construction bill paid through the ordinary command kernel.
+	uint32_t removal_cost; ///< Removal labour, with no capital refund or reclaimed energy.
+};
+
+/** @param domain Actual Heat/Electricity network. @return Immutable original-content cell terms or nullptr for an unknown domain; no availability, money or identity changes. */
+const MultiLayerLocalUtilityLinkContract *GetMultiLayerLocalUtilityLinkContract(UtilityEnergyDomain domain);
+
 /** Native consumer response; optional Surface processing does not block the pre-grid manufacturing bootstrap. */
 enum class UtilityConsumerEffect : uint8_t {
 	ProcessorBoost, TubeWork, AssemblyWork, TownGrowth,

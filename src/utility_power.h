@@ -53,17 +53,24 @@ struct UtilityPowerShare {
 	UtilityLinkID imported_link{UINT32_MAX}; ///< Exact incoming physical route; imported slices cannot re-export this interval.
 };
 
-/** Saved directed electrical route; the utility owner meters flow while its builder owns physical commissioning/payment. */
+/** Immutable shared link role; local geometry never becomes a portal export or generation account. */
+enum class UtilityLinkKind : uint8_t { ElectricalPortal, LocalCell };
+
+/** Saved shared link identity; portal routes meter flow, while local cells retain installed rate/owner/domain without an energy balance. */
 struct UtilityPowerLink {
 	UtilityLinkID id{UINT32_MAX}; ///< Ledger-issued identity, retained after retirement and never reused.
-	UtilityConsumerID source{UINT32_MAX}; ///< Actual source-side reservation of its own generation.
-	UtilityConsumerID destination{UINT32_MAX}; ///< Actual requested destination-side consumer; never a new generator.
-	TileIndex source_endpoint = INVALID_TILE; ///< Existing source-layer endpoint of the actual Connected owned portal pair.
-	TileIndex destination_endpoint = INVALID_TILE; ///< Exact reciprocal world endpoint, independent of camera geometry.
-	uint64_t portal_revision = 0; ///< Actual commissioning revision; demolition/reconnection cannot silently rebind this route.
-	uint64_t capacity_j = 0; ///< Builder-authorized positive per-interval electrical flow cap.
-	uint64_t flow_j = 0; ///< This interval's once-only conserved flow; source lineage stays in destination slices.
+	UtilityConsumerID source{UINT32_MAX}; ///< Portal source-side reservation; local physical cells have no energy participants.
+	UtilityConsumerID destination{UINT32_MAX}; ///< Portal destination reservation; invalid for a local cell, never a new generator.
+	TileIndex source_endpoint = INVALID_TILE; ///< Actual paired source endpoint or installed local cell, independent of camera geometry.
+	TileIndex destination_endpoint = INVALID_TILE; ///< Reciprocal portal end or the same world cell for local infrastructure.
+	uint64_t portal_revision = 0; ///< Portal commissioning incarnation; zero for a local physical cell.
+	uint64_t capacity_j = 0; ///< Portal per-interval electrical cap; zero for local infrastructure, whose separate rate is in watts.
+	uint64_t flow_j = 0; ///< Once-only portal flow; local cells own no transported/stored energy.
 	bool active = true; ///< Lost/decommissioned routes cannot credit another usable import.
+	UtilityLinkKind kind = UtilityLinkKind::ElectricalPortal; ///< Genuine older links retain their original commissioned export role.
+	CompanyID local_owner = CompanyID::Invalid(); ///< Local-cell controller; portal ownership stays with its actual registered participants.
+	UtilityEnergyDomain local_domain = UtilityEnergyDomain::Electricity; ///< Local-cell network; Heat never uses an electrical portal.
+	uint64_t local_capacity_w = 0; ///< Installed local-cell rate, distinct from portal per-interval joules and generation.
 };
 
 /** One registered consumer and the explicit same-layer sources validated by its physical network owner. */
@@ -93,13 +100,51 @@ struct UtilityPowerState {
 	std::vector<UtilityPowerProducer> producers; ///< Stable owner-allocated source order.
 	std::vector<UtilityPowerConsumer> consumers; ///< Stable owner-allocated consumer order.
 	std::vector<UtilityPowerLink> links; ///< Saved actual commissioned eligibility and interval metered flow.
+	uint64_t local_link_revision = 0; ///< Saved committed local topology/ownership changes only; energy publication/allocation never invalidates physical path caches.
 };
+
+/**
+ * Issue a paid builder's local-cell identity through the existing shared link allocator.
+ * @param owner Actual constructing company; physical funding/coexistence belong to its command.
+ * @param domain Heat or electricity, both Deep-local.
+ * @param tile Explicit fully excavated Deep cell; each domain has one active installed cell here.
+ * @param capacity_w Bounded installed rate supplied by the canonical utility definition.
+ * @param execute False validates/predicts without registering or spending anything.
+ * @return Shared nonreused link identity or unchanged refusal; this primitive adds no energy, grant or private registry.
+ */
+std::optional<UtilityLinkID> RegisterUtilityLocalLink(CompanyID owner, UtilityEnergyDomain domain, TileIndex tile, uint64_t capacity_w, bool execute = true);
+/** @param id Shared issued link reference. @return Borrowed immutable retained link, including retired history; re-query after mutation/reset. */
+const UtilityPowerLink *GetUtilityPowerLink(UtilityLinkID id);
+/** @return Borrowed bounded shared link list; callers filter actual immutable kinds, with no copied identity or energy authority. */
+std::span<const UtilityPowerLink> GetUtilityPowerLinks();
+/** @return Committed local topology revision; ordinary resource queries/publications cannot change it. */
+uint64_t GetUtilityLocalLinkRevision();
+/** @return Whether retained local-cell identities exist, including removed historical installations; no cell or energy is created. */
+bool HasUtilityLocalLinks();
 
 /** Explicit current-interval request; registration owns its company, layer, capacity and eligible sources. */
 struct UtilityPowerRequest {
 	UtilityConsumerID consumer{UINT32_MAX}; ///< Registered consumer, never a feature-local ID.
 	uint64_t demand_j = 0; ///< Actual bounded request, separate from production and available supply.
 };
+
+/** Transient exact same-domain source allocation checked by a physical network; the native utility owner alone publishes its quantity and lineage. */
+struct UtilityHeatRoutingShare {
+	UtilityConsumerID consumer{UINT32_MAX}; ///< Actual registered thermal participant.
+	UtilityProducerID producer{UINT32_MAX}; ///< Actual active same-company Deep Heat meter.
+	uint64_t quantity_j = 0; ///< Exact feasible route quantity; zero records eligibility without creating a reservation.
+};
+
+/**
+ * Allocate physically constrained thermal routes in the existing shared owner.
+ * @param interval Exact current open accounting epoch.
+ * @param requests Whole feasible bounded requests, independent of grant/use.
+ * @param routes Network-validated source shares in stable consumer/source order; all references/aggregate source and request bounds are revalidated atomically.
+ * @param execute False estimates the complete phase without changing eligibility, meters, shares or time.
+ * @return Complete once-only allocation or unchanged refusal; native quantities and source lineage are never stored by a second allocator.
+ */
+UtilityPowerError AllocateUtilityHeatRoutes(uint64_t interval, std::span<const UtilityPowerRequest> requests,
+	std::span<const UtilityHeatRoutingShare> routes, bool execute = true);
 
 /** Exact reservation identity combines its owner-allocated consumer and accounting epoch; never aliases a later grant. */
 struct UtilityGrantID {
@@ -252,6 +297,8 @@ UtilityPowerError RemoveUtilityPowerLink(UtilityLinkID link, bool execute = true
  * @param endpoint Either actual world endpoint; this lifecycle hook retires routes and expires only unused imports.
  */
 void InvalidateUtilityPowerLinksForPortal(TileIndex endpoint);
+/** Revalidate accepted physical Heat paths after actual load. Expire only unused native slices whose original installed cells are now retired; preserve original quantities/use/history otherwise, including legacy393 lost-path state. No new grant or replacement path is inferred. */
+void RevalidateUtilityHeatRoutes();
 
 /**
  * Register an actual company's native source without adding any energy.

@@ -395,6 +395,8 @@ enum class Commands : uint8_t {
 	SelectLayerIndustryRecipe, ///< choose one content-owned native material recipe; append preserves existing command identities
 
 	BuildGeothermalCollector, ///< fund actual native collector from a retained cold claim; append preserves existing command identities
+	BuildGeothermalUtilityLink, ///< install one paid Deep utility cell through the shared link issuer; see r2mlvs17 Group3B
+	RemoveGeothermalUtilityLink, ///< remove an owned installed cell with labour cost and no capital/energy refund
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

@@ -450,6 +450,9 @@ enum class SaveLoadVersion : uint16_t {
 	GeothermalCollectors, ///< Saveload version: 389\n Actual native collector work/material receipt/source/control; stocks remain in Industry. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
 
 	UtilityHeatDomains, ///< Saveload version: 390\n Shared native typed heat identities/roles/domain balances and independent thermal phase. See r2mlvs17-geothermal-energy-and-industry.md Group2B.
+	GeothermalHeatSources, ///< Saveload version: 391\n Actual completed collector references its single shared Heat meter; interval/carry/grants remain in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group2.
+	LocalUtilityLinks, ///< Saveload version: 392\n Shared native local-cell link identities, Heat/Electricity geometry/capacity/ownership and topology revision. See r2mlvs17-geothermal-energy-and-industry.md Group3B.
+	GeothermalHeatRoutes, ///< Saveload version: 393\n Exact physical Heat consumer ports and original source-slice paths; every quantity remains in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group3.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

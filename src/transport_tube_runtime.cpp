@@ -5,13 +5,16 @@
  */
 
 /**
- * @file transport_tube_runtime.cpp One global electrical request phase and one paid actual capsule front-tick participant.
+ * @file transport_tube_runtime.cpp Common synchronized heat/electrical interval driver and one paid actual capsule front-tick participant.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups6-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md canonical mandatory service units
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2 actual bounded collector offers
  */
 
 #include "stdafx.h"
 #include "transport_tube.h"
+#include "geothermal_collector.h"
+#include "openttd.h"
 #include "multilayer_bootstrap.h"
 #include "train.h"
 #include "engine_base.h"
@@ -165,14 +168,17 @@ void PrepareTubePowerTick()
 {
 	if (_tube_power_executing != VehicleID::Invalid()) return;
 	if (_tube_power_prepared_tick == TimerGameTick::counter) return;
-	if (_tube_power_vehicles.empty()) return;
-	if (std::ranges::none_of(_tube_power_vehicles, &TubePowerVehicle::active)) return;
+	// Native simulation owns both domains. Pausing or an editor view cannot
+	// earn heat; a completed collector also runs when no capsules exist.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return;
+	if (std::ranges::none_of(_tube_power_vehicles, &TubePowerVehicle::active) && !HasGeothermalHeatSources()) return;
 	_tube_power_prepared_tick = TimerGameTick::counter;
 	{
 		AutoRestoreBackup system(_current_company, OWNER_DEITY);
 		if (IsUtilityPowerAllocated() && BeginUtilityPowerInterval() != UtilityPowerError::None) return;
 	}
 	const uint64_t interval = GetUtilityPowerInterval();
+	PublishGeothermalHeatSources(interval, 1);
 	// Publish each installed service once before any company's request is
 	// allocated. Availability/funds failures provide no source for this tick.
 	for (const auto &connection : CaptureTubePowerConnections()) {
@@ -200,6 +206,10 @@ void PrepareTubePowerTick()
 		if (demand->energy_j != 0) requests.push_back({binding.consumer, demand->energy_j});
 	}
 	AutoRestoreBackup system(_current_company, OWNER_DEITY);
+	// Physical thermal requests arrive through the upcoming connected-network
+	// owner. Until then close an empty thermal pass, curtailing unused offers
+	// through the shared ledger without inventing a proximity consumer or grant.
+	if (HasUtilityHeatState()) AllocateUtilityHeat(interval, {});
 	AllocateUtilityPower(interval, requests);
 }
 

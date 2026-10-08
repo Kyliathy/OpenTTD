@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file command.cpp Handling of commands. */
+/** @file command.cpp Handling of commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group3B synchronized paid utility commands. */
 
 #include "stdafx.h"
 #include "landscape.h"
@@ -31,6 +31,7 @@
 #include "goal_cmd.h"
 #include "group_cmd.h"
 #include "industry_cmd.h"
+#include "geothermal_utility_cmd.h"
 #include "league_cmd.h"
 #include "landscape_cmd.h"
 #include "layer_portal_cmd.h"

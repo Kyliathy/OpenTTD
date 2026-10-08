@@ -13,6 +13,7 @@
 #define GEOTHERMAL_COLLECTOR_H
 
 #include "geothermal.h"
+#include "utility_power.h"
 
 /** Native inventory owner; the collector side record contains no private material or energy store. */
 struct Industry;
@@ -26,6 +27,7 @@ struct GeothermalCollectorState {
 	bool materials_committed = false; ///< Receipt for one complete frozen bill consumed from native accepted stock; never a second stock balance.
 	bool has_work_tick = false; ///< Explicit once-per-tick metering presence, including tick zero.
 	uint64_t last_work_tick = 0; ///< Last actual construction tick; retries in that tick cannot earn additional work.
+	UtilityProducerID heat_producer{UINT32_MAX}; ///< Shared native meter for this actual collector incarnation; energy, epoch and carry belong exclusively to the utility ledger.
 	/** @param other Candidate transport. @return Exact equality of every authoritative construction/control field. */
 	bool operator==(const GeothermalCollectorState &other) const = default;
 };
@@ -53,6 +55,19 @@ uint32_t ReceiveGeothermalCollectorCargo(Industry &industry, CargoType cargo, ui
 void AdvanceGeothermalCollector(Industry &industry);
 /** @param industry Actual native identity. @return Whether real completed machinery, the whole consumed material bill and current company/source/date agree; no heat offer is created by this query. */
 bool IsGeothermalCollectorOperational(IndustryID industry);
+/**
+ * Publish the original vent rate through its completed collector's single shared meter.
+ * @param industry Actual native collector; cold, unfinished, abandoned or unavailable machinery refuses.
+ * @param interval Exact current utility epoch, supplied by the synchronized driver.
+ * @param economy_ticks Synchronized duration; the native driver supplies one tick, with subdivision preserving fractional generation.
+ * @param execute False estimates the entire association/publication without allocating an identity or changing carry.
+ * @return Complete publication or unchanged refusal; duplicate queries cannot create another offer.
+ */
+UtilityPowerError PublishGeothermalCollectorHeat(IndustryID industry, uint64_t interval, uint32_t economy_ticks, bool execute = true);
+/** @return Whether actual completed machinery or a retained source binding needs the common interval driver; this query generates nothing. */
+bool HasGeothermalHeatSources();
+/** @param interval Exact common utility epoch. @param economy_ticks Synchronized duration. Publish each operational collector once, in native industry order, before thermal allocation. */
+void PublishGeothermalHeatSources(uint64_t interval, uint32_t economy_ticks);
 /** @param industry Actual native facility. @return Whether demolition would destroy any delivered input or malformed output; consumed construction materials remain a historical receipt. */
 bool GeothermalCollectorHasStoredCargo(const Industry &industry);
 /** @param industry Deleted native identity. Retire only its construction/source binding; geology and the retained cold blueprint are preserved. */

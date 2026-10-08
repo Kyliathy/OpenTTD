@@ -18,6 +18,7 @@
 #include "economy_func.h"
 #include "openttd.h"
 #include "timer/timer_game_tick.h"
+#include "core/backup_type.hpp"
 #include "viewport_func.h"
 #include <set>
 #include "safeguards.h"
@@ -209,8 +210,78 @@ bool GeothermalCollectorHasStoredCargo(const Industry &industry)
 		std::ranges::any_of(industry.produced, [](const auto &slot) { return slot.waiting != 0; });
 }
 
+/** @copydoc PublishGeothermalCollectorHeat */
+UtilityPowerError PublishGeothermalCollectorHeat(IndustryID industry, uint64_t interval, uint32_t economy_ticks, bool execute)
+{
+	const auto found = _geothermal_collectors.find(industry);
+	if (found == _geothermal_collectors.end()) return UtilityPowerError::InvalidReference;
+	auto &state = found->second;
+	if (state.owner != _current_company) return UtilityPowerError::InvalidOwner;
+	if (!IsGeothermalCollectorOperational(industry)) return UtilityPowerError::Refused;
+	if (_pause_mode.Any()) return UtilityPowerError::Refused;
+	// The driver owns the epoch and duration. Reject stale, closed or excessive
+	// offers before acquiring a meter, so refusal cannot leave a new identity.
+	if (interval != GetUtilityPowerInterval() || interval == UINT64_MAX) return UtilityPowerError::InvalidInterval;
+	if (IsUtilityHeatAllocated()) return UtilityPowerError::AlreadyAllocated;
+	if (economy_ticks == 0) return UtilityPowerError::InvalidQuantity;
+	const auto *claim = GetGeothermalSiteClaim(state.site);
+	const auto &vents = GetGeologyWorldState().vents;
+	const auto vent = std::ranges::find(vents, claim->site.vent, &GeothermalVentField::id);
+	if (vent == vents.end()) return UtilityPowerError::InvalidReference;
+	if (!IntegrateUtilityGeneration(vent->thermal_capacity_w, economy_ticks, 0).has_value()) return UtilityPowerError::InvalidQuantity;
+	if (state.heat_producer == UtilityProducerID{UINT32_MAX}) {
+		const auto candidate = RegisterUtilityHeatProducer(state.owner, false);
+		if (!candidate.has_value()) return UtilityPowerError::Limit;
+		// Association plus publication need two sequence values. Acquire neither
+		// at exhaustion; the accepted native meter will own all energy and carry.
+		if (CaptureUtilityPowerState().operation_sequence >= UINT64_MAX - 2) return UtilityPowerError::Limit;
+		if (!execute) return UtilityPowerError::None;
+		const auto registered = RegisterUtilityHeatProducer(state.owner);
+		if (!registered.has_value()) return UtilityPowerError::Refused;
+		state.heat_producer = *registered;
+	}
+	const auto *source = GetUtilityPowerProducer(state.heat_producer);
+	// A retired, foreign or electrical meter cannot be rebound to this machinery.
+	// Actual demolition retires the meter; reconstruction acquires a fresh ID.
+	if (source == nullptr || !source->active || source->owner != state.owner || source->meter.domain != UtilityEnergyDomain::Heat ||
+		source->meter.layer != MapLayer::DeepUnderground || source->kind != UtilityGenerationKind::Geothermal) return UtilityPowerError::InvalidReference;
+	return PublishUtilityHeatGeneration(state.heat_producer, interval, vent->thermal_capacity_w, economy_ticks, execute);
+}
+
+/** @copydoc HasGeothermalHeatSources */
+bool HasGeothermalHeatSources()
+{
+	// Keep closing intervals after a temporary source/date interruption. Without
+	// this retained binding, a last unused promise could survive indefinitely.
+	for (const auto &[id, state] : _geothermal_collectors) {
+		if (state.heat_producer != UtilityProducerID{UINT32_MAX} || IsGeothermalCollectorOperational(id)) return true;
+	}
+	return false;
+}
+
+/** @copydoc PublishGeothermalHeatSources */
+void PublishGeothermalHeatSources(uint64_t interval, uint32_t economy_ticks)
+{
+	// Iterate only bounded actual machinery, in stable native ID order. Every
+	// company publishes before the one shared allocation; no map scan is needed.
+	for (const auto &[id, state] : _geothermal_collectors) {
+		if (!IsGeothermalCollectorOperational(id)) continue;
+		AutoRestoreBackup actor(_current_company, state.owner);
+		PublishGeothermalCollectorHeat(id, interval, economy_ticks);
+	}
+}
+
 /** @copydoc ReleaseGeothermalCollectorIndustry */
-void ReleaseGeothermalCollectorIndustry(IndustryID industry) { _geothermal_collectors.erase(industry); }
+void ReleaseGeothermalCollectorIndustry(IndustryID industry)
+{
+	const auto found = _geothermal_collectors.find(industry);
+	if (found == _geothermal_collectors.end()) return;
+	if (found->second.heat_producer != UtilityProducerID{UINT32_MAX}) {
+		AutoRestoreBackup system(_current_company, OWNER_DEITY);
+		RemoveUtilityPowerProducer(found->second.heat_producer); // Release only unused rights; shared consumed history survives physical removal.
+	}
+	_geothermal_collectors.erase(found);
+}
 /** @copydoc ChangeGeothermalCollectorOwnership */
 void ChangeGeothermalCollectorOwnership(Owner old_owner, Owner new_owner)
 {
@@ -242,6 +313,7 @@ bool ValidateGeothermalCollectors(std::span<const GeothermalCollectorState> rows
 	if (rows.size() > MAX_GEOTHERMAL_SITE_CLAIMS) return false;
 	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
 	std::set<IndustryID> industries; std::set<GeothermalSiteID> sites; std::set<GeothermalVentID> sources;
+	std::set<UtilityProducerID> meters;
 	const auto cold = world_refs ? CaptureGeothermalSiteClaims() : std::vector<GeothermalSiteClaim>{};
 	// Bounded actual bindings must preserve one native industry, consumed
 	// blueprint and original source. No corrupt row is repaired into machinery,
@@ -256,6 +328,16 @@ bool ValidateGeothermalCollectors(std::span<const GeothermalCollectorState> rows
 		if (industry == nullptr || claim == nullptr || !HasGeothermalCollectorStructure(state, *industry) ||
 			(state.owner != CompanyID::Invalid() && !Company::IsValidID(state.owner)) || !sources.insert(claim->site.vent).second ||
 			(state.has_work_tick && state.last_work_tick > TimerGameTick::counter)) return false; // Actual map/company/stock/source and synchronized clock must agree before source readiness publishes.
+		if (state.heat_producer != UtilityProducerID{UINT32_MAX}) {
+			const auto *meter = GetUtilityPowerProducer(state.heat_producer);
+			// Saved associations resolve the same actual Heat meter and original
+			// natural rate; an old completed flag cannot authorize invented supply.
+			if (state.work_ticks != terms->work_ticks || meter == nullptr || !meters.insert(state.heat_producer).second ||
+				meter->meter.domain != UtilityEnergyDomain::Heat || meter->meter.layer != MapLayer::DeepUnderground || meter->kind != UtilityGenerationKind::Geothermal ||
+				(meter->active && meter->owner != state.owner)) return false;
+			const auto vent = std::ranges::find(GetGeologyWorldState().vents, claim->site.vent, &GeothermalVentField::id);
+			if (meter->meter.generation_rate_w != 0 && meter->meter.generation_rate_w != vent->thermal_capacity_w) return false; // A save cannot inflate a collector's sustainable rate beyond its original immutable vent.
+		}
 		for (const auto &reservation : cold) {
 			if (reservation.active && reservation.site.kind == terms->kind && reservation.site.vent == claim->site.vent) return false; // A surviving cold blueprint cannot also reserve an already bound physical collector's source.
 		}
@@ -295,6 +377,7 @@ uint64_t ComputeGeothermalCollectorDigest()
 	for (const auto &[id, state] : _geothermal_collectors) {
 		field(id.base()); field(state.site.base()); field(state.owner.base()); field(state.work_ticks);
 		field(state.materials_committed); field(state.has_work_tick); field(state.last_work_tick);
+		field(state.heat_producer.base());
 		const auto *industry = Industry::GetIfValid(id);
 		if (industry == nullptr) { field(UINT64_MAX); continue; }
 		for (const auto &input : industry->accepted) {

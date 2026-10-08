@@ -16,6 +16,8 @@ Commit is one simulation-thread transaction: revalidate the same interval, sourc
 
 Heat is allocated first within one validated Deep vent/network. Direct recipes and generators request shares from the **same** bounded thermal budget, in stable ConsumerID order. Generators convert only their granted heat share at their declared efficiency; direct recipes consume a different grant. No heat export exists through an electrical riser, and electricity never substitutes for an ungranted thermal share. Solar source availability/mirror calculation happens once before publishing its generated electrical snapshot; the allocation pass never applies another mirror bonus. Geothermal and other non-solar sources are not eligible.
 
+Connected thermal interval clarification,2026-10-09: every published collector in the common native thermal allocation phase uses the same synchronized interval duration. Each installed path cell integrates its frozen rate over that duration once for aggregate source use plus unconsumed reservations. Mixed durations refuse unchanged; unpublished sources contribute zero. Residual routing follows stable consumer/source order and deterministic installed cardinal alternatives around saturated cells; no pipe stores fractional joules, new energy or an extra fair cursor.393 physical route transport records only references; native source/slice/consumed/released fields remain the sole quantity authority.
+
 | Worked electrical fixture | Result |
 | --- | --- |
 | 100 J supply, Consumer 3 then 8 each demand 70 | Grants 70 and 30, unmet 0 and 40; no unused energy |
@@ -26,6 +28,14 @@ Heat is allocated first within one validated Deep vent/network. Direct recipes a
 | 17 W over 37 ticks, one interval versus 37 one-tick intervals | Both 16 J plus 983 mJ remainder |
 
 The fixture also permutes demand/source order, checks per-account/global conservation and rejects wrong-layer/duplicate/invalid intervals. Pure signatures have no render/view input; interval subdivision preserves saved integer carry. No second freight payment, render-time meter or operational mirror implementation is introduced.
+
+### Paid Deep utility-cell extension,2026-10-08
+
+Plan17 Group3B consumes `GetMultiLayerLocalUtilityLinkContract` from the canonical utility definition owner. One Heat cell installs1MW rate capacity, one electrical cell200kW, each for1,000 Money capital and250 Money removal labour. That cash installation bill covers the cell itself; it adds no separate transported construction-input bill. First collector/plant/riser delivered material/capital/work terms remain the distinct Group19 facility obligations. There is no capital refund or heat/electricity recovery on removal. Missing utility input dates therefore cannot bootstrap a first plant from its own output.
+
+A cell is a paid physical overlay on fully excavated Deep ground, retaining the underlying native road/rail/tube metadata. Cells cannot replace protected TBM support, occupy a shaft, cross layers, use another company's infrastructure or be installed/removed under a vehicle. Actual collector ports reference the original native planning endpoint; generic industry tiles provide no port. Heat and electricity are separate networks even on the same tile. Cardinal adjacent installed cells of one company/domain form a deterministic bounded path; each traversed cell limits its rate. Rendering, coordinate overlap and catchment never establish a connection.
+
+Shared `UtilityLinkID` issuance includes these local physical identities without creating an energy account. The utility owner saves one installed-cell owner/domain/tile/rate and a monotonic topology revision; native geometry caches retain references only. A retired ID remains historical, a rebuild obtains a fresh one, takeover moves actual active infrastructure, and company removal retires it. Resource publication/allocation/queries do not increment topology. Convert installed watts to a conservative whole-joule interval limit using synchronized duration; no pipe stores fractional heat or creates carry. The actual source alone owns the saved generation fraction. Per-path reservations/actual use retain their later allocation owner and original source lineage.
 
 ## Group 16 - useful native effects and exclusive town authority
 

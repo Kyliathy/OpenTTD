@@ -121,6 +121,10 @@ void LoadCheckData::Clear()
 	this->tube_vehicle_tick = UINT64_MAX; this->tube_vehicle_rows.clear();
 	this->geothermal_site_present.fill(false); this->geothermal_site_expected = 0; this->geothermal_site_rows.clear();
 	this->geothermal_collector_present.fill(false); this->geothermal_collector_expected = 0; this->geothermal_collector_rows.clear();
+	// Each copied Heat preview owns fresh physical transport. A rejected file
+	// cannot supply header presence, ports or route cells to the next selection.
+	this->geothermal_heat_route_present.fill(false); this->geothermal_heat_route_expected.fill(0);
+	this->geothermal_heat_route_interval = 0; this->geothermal_heat_route_rows.clear();
 	this->native_industry_preview_ids.clear(); // Each file must supply its own native machinery references rather than borrowing a previous preview.
 	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;

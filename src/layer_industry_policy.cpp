@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "multilayer_industry.h"
 #include "geothermal.h"
+#include "geothermal_utility.h"
 #include "industry.h"
 #include "industrytype.h"
 #include "map_layer.h"
@@ -270,7 +271,9 @@ LayerMineAdmission ValidateMineDepositClaim(const LayerMineRequest &request)
 	result.cost = spec->GetConstructionCost() * capability->equipment_cost_factor;
 	// Native foundations use already clear, flat cavity floor. No demolition/terraforming can run after claim admission.
 	for (TileIndex tile : result.machinery) {
-		if (!IsTileType(tile, TileType::Clear) || !IsTileFlat(tile) || IsBridgeAbove(tile) || EnsureNoVehicleOnGround(tile).Failed()) {
+		// Funding cannot bury paid utilities under a new mine or undeclared
+		// industry port; its owner must remove the cell explicitly first.
+		if (!IsTileType(tile, TileType::Clear) || !IsTileFlat(tile) || IsBridgeAbove(tile) || EnsureNoVehicleOnGround(tile).Failed() || HasGeothermalUtilityCell(tile)) {
 			result.error = LayerIndustryError::Occupied;
 			result.failure_tile = tile;
 			return result;

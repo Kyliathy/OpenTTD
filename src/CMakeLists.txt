@@ -319,6 +319,11 @@ add_files(
     geothermal_collector_wire.h
     geothermal_collector.h
     geothermal_collector.cpp
+    geothermal_heat.h
+    geothermal_heat.cpp
+    geothermal_utility.h
+    geothermal_utility_cmd.h
+    geothermal_utility.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
     tbm_commission.cpp

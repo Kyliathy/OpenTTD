@@ -16,6 +16,7 @@
 #include "network/core/tcp_content_type.h"
 #include "timer/timer_game_calendar.h"
 #include "utility_power.h"
+#include "geothermal_heat.h"
 #include "transport_tube.h"
 #include "geothermal_site_wire.h"
 #include "geothermal_collector_wire.h"
@@ -85,7 +86,7 @@ struct LoadCheckData {
 	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
 	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.
 	std::array<bool, 2> utility_power_present{}; ///< Independent header/table preview; Plan 12 Group 7B.
-	std::array<uint64_t, 12> utility_power_header{}; ///< Copied version, epoch, cursors, phase, counts, mutation sequence and directed link allocator/count.
+	std::array<uint64_t, 13> utility_power_header{}; ///< Copied utility identity/phase/counts and392 committed local topology revision; no live geometry is borrowed.
 	std::array<uint32_t, 5> utility_power_rows{}; ///< Copied source/consumer/connection/share/directed-link counts.
 	UtilityPowerState utility_power_state; ///< Unpublished preview balances; never replaces live energy authority.
 	std::array<bool, 2> tube_power_present{}; ///< Independent physical paid service header/table preview. See r2mlvs16-underground-transport-tubes.md Group5.
@@ -101,6 +102,10 @@ struct LoadCheckData {
 	std::array<bool, 2> geothermal_collector_present{}; ///< Independent389 actual construction header/table presence.
 	uint32_t geothermal_collector_expected = 0; ///< Copied bounded actual native participant count.
 	std::vector<GeothermalCollectorWire> geothermal_collector_rows; ///< Copied work/control/receipt transport; Industry remains the stock/machinery owner.
+	std::array<bool, 2> geothermal_heat_route_present{}; ///< Independent393 physical header/table presence.
+	std::array<uint32_t, 3> geothermal_heat_route_expected{}; ///< Exact copied port/path/cell cardinalities.
+	uint64_t geothermal_heat_route_interval = 0; ///< Copied native grant epoch; preview never allocates.
+	std::vector<GeothermalHeatRouteWire> geothermal_heat_route_rows; ///< Copied physical references only; no running-world geometry or quantities.
 	std::vector<uint16_t> native_industry_preview_ids; ///< Copied current-format native INDY identities for independent actual construction references; no industry is allocated by preview.
 
 	TimerGameCalendar::Date current_date{};

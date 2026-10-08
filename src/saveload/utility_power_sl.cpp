@@ -84,7 +84,7 @@ static const SaveLoad _utility_row_desc[] = {
 };
 
 static std::array<bool, 2> _utility_presence{}; ///< Unaccepted header/table presence, separate from live authority.
-static std::array<uint64_t, 12> _utility_header{}; ///< Revision, epoch, IDs, phase, exact counts, operation sequence and directed link cursor/count.
+static std::array<uint64_t, 13> _utility_header{}; ///< Shared identity/phase/counts and392 actual local topology revision; generation never reconstructs installed cells.
 static std::array<uint32_t, 5> _utility_counts{}; ///< Actual decoded counts by wire kind, including directed links.
 static UtilityPowerState _utility_rows; ///< Structurally decoded transport, published only after actual company fixups.
 
@@ -131,6 +131,17 @@ static bool CheckUtilityPowerFamily(bool preview)
 	const auto heat_consumer = [](const UtilityPowerConsumer &consumer) { return consumer.meter.domain == UtilityEnergyDomain::Heat; };
 	const bool heat_history = rows.heat_allocated || std::ranges::any_of(rows.producers, heat_source) || std::ranges::any_of(rows.consumers, heat_consumer);
 	if (((flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0) != heat_history) SlErrorCorrupt("Utility heat metadata/history mismatch"); // Explicit saved domain/phase history cannot be borrowed from the running world or omitted from its marker.
+	if (((flags & MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS) != 0) != (rows.local_link_revision != 0)) SlErrorCorrupt("Local utility metadata/history mismatch"); // Installed geometry history cannot be omitted or fabricated from an energy account.
+	if (preview) {
+		const uint64_t plane_size = static_cast<uint64_t>(_load_check_data.map_size_x) * _load_check_data.map_size_y;
+		// Local cell addresses resolve only against this file's copied geometry
+		// and companies; the running world's layer size/ownership is irrelevant.
+		for (const auto &link : rows.links) {
+			if (link.kind != UtilityLinkKind::LocalCell) continue;
+			if (plane_size == 0 || _load_check_data.map_layers != 4 || link.source_endpoint.base() / plane_size != to_underlying(MapLayer::DeepUnderground) ||
+				(link.active && !_load_check_data.companies.contains(link.local_owner.base()))) SlErrorCorrupt("Invalid local utility preview geometry/owner");
+		}
+	}
 
 	MultiLayerProfileSelection selection;
 	selection.id = preview ? static_cast<MultiLayerGameplayProfileID>(_load_check_data.gameplay_profile_id) : metadata == nullptr ? MultiLayerGameplayProfileID::Classic : metadata->profile.id;
@@ -157,9 +168,9 @@ struct UPLHChunkHandler : ChunkHandler {
 			shares += consumer.shares.size();
 		}
 		const uint64_t phases = (state.allocated ? 1U : 0U) | (state.heat_allocated ? 2U : 0U); // Independent once-only domains share a native epoch; grants never reconstruct allocation phase.
-		std::array<uint64_t, 12> header{6, state.interval, state.next_producer, state.next_consumer, phases,
-			state.producers.size(), state.consumers.size(), links, shares, state.operation_sequence, state.next_link, state.links.size()};
-		SlSetLength(96);
+		std::array<uint64_t, 13> header{7, state.interval, state.next_producer, state.next_consumer, phases,
+			state.producers.size(), state.consumers.size(), links, shares, state.operation_sequence, state.next_link, state.links.size(), state.local_link_revision};
+		SlSetLength(104);
 		SlCopy<VarFileType::U64>(header);
 	}
 	/** @param preview Select copied preview transport instead of unpublished full-load staging. */
@@ -170,16 +181,17 @@ struct UPLHChunkHandler : ChunkHandler {
 		const bool effects = !IsSavegameVersionBefore(SaveLoadVersion::UtilityConsumerEffects);
 		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::UtilityCompanyLifecycle);
 		const bool thermal = !IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains);
-		const size_t length = transfers ? 96 : old ? 72 : 80;
+		const bool local = !IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks);
+		const size_t length = local ? 104 : transfers ? 96 : old ? 72 : 80;
 		// Each explicit version owns its exact header; only version381 lacks a
 		// saved mutation sequence because it had no actual-use operations.
 		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityPower) || SlGetFieldLength() != length) SlErrorCorrupt("Invalid utility power header version/length");
-		std::array<uint64_t, 12> header{};
+		std::array<uint64_t, 13> header{};
 		auto fields = std::span(header).first(length / 8);
 		SlCopy<VarFileType::U64>(fields);
 		// Version, identity sentinels, epoch/phase and whole-store bounds refuse
 		// before allocation, preserving source lineage and finite save memory.
-		if (header[0] != (thermal ? 6 : lifecycle ? 5 : effects ? 4 : transfers ? 3 : old ? 1 : 2) || header[1] == 0 || header[1] == UINT64_MAX || header[2] >= UINT32_MAX || header[3] >= UINT32_MAX || header[4] > (thermal ? 3U : 1U) || header[9] == UINT64_MAX || header[10] >= UINT32_MAX ||
+		if (header[0] != (local ? 7 : thermal ? 6 : lifecycle ? 5 : effects ? 4 : transfers ? 3 : old ? 1 : 2) || header[1] == 0 || header[1] == UINT64_MAX || header[2] >= UINT32_MAX || header[3] >= UINT32_MAX || header[4] > (thermal ? 3U : 1U) || header[9] == UINT64_MAX || header[10] >= UINT32_MAX || header[12] == UINT64_MAX ||
 			header[5] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[6] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[5] > header[2] || header[6] > header[3] ||
 			header[7] > MAX_UTILITY_POWER_CONNECTIONS || header[8] > MAX_UTILITY_POWER_SHARES || header[11] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[11] > header[10]) SlErrorCorrupt("Invalid utility power header bounds");
 		auto &presence = preview ? _load_check_data.utility_power_present : _utility_presence;
@@ -194,6 +206,7 @@ struct UPLHChunkHandler : ChunkHandler {
 		rows.heat_allocated = (header[4] & 2U) != 0;
 		rows.operation_sequence = header[9];
 		rows.next_link = static_cast<uint32_t>(header[10]);
+		rows.local_link_revision = header[12];
 	}
 	/** Read unpublished full-load header. */
 	void Load() const override { this->Read(false); }
@@ -254,6 +267,11 @@ struct UPLDChunkHandler : ChunkHandler {
 		// Explicit route endpoints/revision/capacity and actual flow are saved
 		// after all reservation slices; no derived graph publishes an import.
 		for (const auto &link : state.links) {
+			if (link.kind == UtilityLinkKind::LocalCell) {
+				UtilityWireRow wire{4, link.id.base(), 0, link.local_owner.base(), to_underlying(MapLayer::DeepUnderground), 1, link.active, 0, link.local_capacity_w};
+				wire.source_endpoint = wire.destination_endpoint = link.source_endpoint.base(); wire.domain = to_underlying(link.local_domain);
+				emit(wire); continue; // Installed physical rate/identity has no source reservation, generated energy or metered flow.
+			}
 			UtilityWireRow wire{4, link.id.base(), link.source.base(), 0, 0, 0, link.active, link.portal_revision, link.capacity_j, link.flow_j};
 			wire.destination = link.destination.base(); wire.source_endpoint = link.source_endpoint.base(); wire.destination_endpoint = link.destination_endpoint.base();
 			emit(wire);
@@ -268,6 +286,7 @@ struct UPLDChunkHandler : ChunkHandler {
 		const bool transfers = !IsSavegameVersionBefore(SaveLoadVersion::UtilityTransfers);
 		const bool effects = !IsSavegameVersionBefore(SaveLoadVersion::UtilityConsumerEffects);
 		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::UtilityCompanyLifecycle);
+		const bool local = !IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks);
 		if (description.size() != (!IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) ? 26 : effects ? 25 : transfers ? 21 : old ? 14 : 16)) SlErrorCorrupt("Invalid utility power field count");
 		if (!IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains)) {
 			// Current typed native quantities require every named scalar. A
@@ -309,7 +328,7 @@ struct UPLDChunkHandler : ChunkHandler {
 			if ((wire.type != 1 && (wire.town != 0 || wire.town_bonus != 0 || wire.town_applied != 0 || wire.town_suspended != 0)) || wire.town_applied > 1 || wire.town_suspended > 1) SlErrorCorrupt("Invalid utility town fields");
 			// Source/consumer records own typed quantities. A subordinate
 			// connection, slice or electrical route cannot conceal another meter.
-			if (wire.domain > to_underlying(UtilityEnergyDomain::Heat) || (wire.type > 1 && wire.domain != 0)) SlErrorCorrupt("Invalid utility energy domain fields");
+			if (wire.domain > to_underlying(UtilityEnergyDomain::Heat) || (wire.type > 1 && wire.domain != 0 && !(local && wire.type == 4 && wire.kind == 1))) SlErrorCorrupt("Invalid utility energy domain fields");
 			if (wire.type == 0) {
 				// Producer rows cannot carry a foreign reference or consumer-only
 				// payload, and liveness must be an actual boolean.
@@ -343,6 +362,16 @@ struct UPLDChunkHandler : ChunkHandler {
 				consumer.town_effect_suspended = wire.town_suspended != 0;
 				rows.consumers.push_back(std::move(consumer));
 			} else if (wire.type == 4) {
+				if (local && wire.kind == 1) {
+					// The appended local role has physical fields only. An older
+					// portal row cannot default into heat or hide a generation meter.
+					if (wire.reference != 0 || wire.destination != 0 || wire.layer != to_underlying(MapLayer::DeepUnderground) || wire.active > 1 ||
+						wire.epoch != 0 || wire.b != 0 || wire.c != 0 || wire.d != 0 || wire.ticks != 0 || wire.remainder != 0 || wire.lifetime_generated != 0 || wire.lifetime_consumed != 0) SlErrorCorrupt("Invalid local utility wire fields");
+					UtilityPowerLink link; link.kind = UtilityLinkKind::LocalCell; link.id = UtilityLinkID{wire.id};
+					link.local_owner = CompanyID{wire.owner}; link.local_domain = static_cast<UtilityEnergyDomain>(wire.domain); link.local_capacity_w = wire.a;
+					link.source_endpoint = TileIndex{wire.source_endpoint}; link.destination_endpoint = TileIndex{wire.destination_endpoint}; link.active = wire.active != 0;
+					rows.links.push_back(link); continue;
+				}
 				// Directed route payload contains physical references and metering
 				// only; producer/consumer publication or use cannot hide in it.
 				if (wire.owner != 0 || wire.layer != 0 || wire.kind != 0 || wire.active > 1 || wire.c != 0 || wire.d != 0 || wire.ticks != 0 || wire.remainder != 0 || wire.lifetime_generated != 0 || wire.lifetime_consumed != 0) SlErrorCorrupt("Invalid utility link wire fields");

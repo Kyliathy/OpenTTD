@@ -336,7 +336,7 @@ void ResetTubePowerVehicles();
 /** @return Exact field-wise physical binding digest; quantities retain their ledger and vehicle owners. */
 uint64_t ComputeTubePowerVehicleDigest();
 
-/** Prepare all companies' capsule opportunities once before the native vehicle loop; the common ledger owns allocation/rotation. */
+/** Prepare all companies' collector offers and capsule opportunities once before the native vehicle loop, including collector-only worlds; the common ledger owns both domains' allocation/rotation and saved common tick. */
 void PrepareTubePowerTick();
 /** @param train Actual capsule front. @param participant Complete native movement/service callback. @return Whether powered work was admitted and settled once; unbound/unpowered work waits. */
 bool AdvanceTubePowerTick(Train &train, UtilityMutationParticipant &participant);

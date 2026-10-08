@@ -13,6 +13,9 @@
 
 #include "stdafx.h"
 #include "utility_power.h"
+#include "geothermal_utility.h"
+#include "geothermal_heat.h"
+#include "excavation.h"
 #include "transport_tube.h"
 #include "company_base.h"
 #include "company_func.h"
@@ -126,6 +129,42 @@ static UtilityPowerLink *FindUtilityLink(UtilityLinkID id)
 	return &_utility_power.links[id.base()];
 }
 
+/** @copydoc GetUtilityPowerLink */
+const UtilityPowerLink *GetUtilityPowerLink(UtilityLinkID id) { return FindUtilityLink(id); }
+/** @copydoc GetUtilityPowerLinks */
+std::span<const UtilityPowerLink> GetUtilityPowerLinks() { return _utility_power.links; }
+/** @copydoc GetUtilityLocalLinkRevision */
+uint64_t GetUtilityLocalLinkRevision() { return _utility_power.local_link_revision; }
+/** @copydoc HasUtilityLocalLinks */
+bool HasUtilityLocalLinks() { return _utility_power.local_link_revision != 0; }
+
+/** @copydoc RegisterUtilityLocalLink */
+std::optional<UtilityLinkID> RegisterUtilityLocalLink(CompanyID owner, UtilityEnergyDomain domain, TileIndex tile, uint64_t capacity_w, bool execute)
+{
+	// An installation has physical identity and capacity, never a producer or
+	// reservation. Whole benefit commits cannot reenter the shared ID issuer.
+	if (_utility_mutation_committing || _utility_power.operation_sequence >= UINT64_MAX - 1 || _utility_power.local_link_revision >= UINT64_MAX - 1) return std::nullopt;
+	if (CheckUtilityPowerOwner(owner, MapLayer::DeepUnderground) != UtilityPowerError::None) return std::nullopt;
+	const auto *terms = GetMultiLayerLocalUtilityLinkContract(domain);
+	// Unknown domains, missing floor and unbounded capacities cannot acquire
+	// a reference that a future path solver might treat as installed supply.
+	if (terms == nullptr || capacity_w != terms->capacity_w || !IsValidTile(tile) || GetTileLayer(tile) != MapLayer::DeepUnderground) return std::nullopt;
+	if (CheckExcavatedFootprint(std::array{tile}).error != ExcavationError::None) return std::nullopt;
+	if (_utility_power.links.size() >= MAX_UTILITY_INTERVAL_ACCOUNTS) return std::nullopt;
+	// Each actual tile/domain has one installed cell. Retired rows remain in
+	// shared history, and replacement receives a new ID rather than reviving it.
+	for (const auto &link : _utility_power.links) {
+		if (link.kind == UtilityLinkKind::LocalCell && link.active && link.local_domain == domain && link.source_endpoint == tile) return std::nullopt;
+	}
+	UtilityPowerLink link; link.id = UtilityLinkID{_utility_power.next_link}; link.kind = UtilityLinkKind::LocalCell;
+	link.local_owner = owner; link.local_domain = domain; link.local_capacity_w = capacity_w;
+	link.source_endpoint = link.destination_endpoint = tile;
+	if (execute) {
+		_utility_power.links.push_back(link); ++_utility_power.next_link; ++_utility_power.operation_sequence; ++_utility_power.local_link_revision;
+	}
+	return link.id;
+}
+
 /** @param share Exact checked original reservation slice. @return Remaining usable quantity after settlement, expiry and outgoing transfer. */
 static uint64_t FreeUtilityShare(const UtilityPowerShare &share)
 {
@@ -143,6 +182,7 @@ static uint64_t FreeUtilityShare(const UtilityPowerShare &share)
 static UtilityPowerError CheckUtilityPowerLink(const UtilityPowerLink &link, const UtilityPowerConsumer &source,
 	const UtilityPowerConsumer &destination, bool world_refs = true)
 {
+	if (link.kind != UtilityLinkKind::ElectricalPortal) return UtilityPowerError::InvalidTopology;
 	// A direction connects two distinct same-company layer accounts; local
 	// loops and foreign budgets cannot masquerade as a commissioned export.
 	if (source.meter.domain != UtilityEnergyDomain::Electricity || destination.meter.domain != UtilityEnergyDomain::Electricity || source.owner != destination.owner || source.meter.layer == destination.meter.layer || link.source == link.destination) return UtilityPowerError::InvalidTopology;
@@ -199,12 +239,63 @@ std::optional<UtilityLinkID> RegisterUtilityPowerLink(UtilityConsumerID source_i
 	return link.id;
 }
 
+/** @param route Exact accepted original physical source path. @return Whether this native owner expired a positive unused current slice; original consumed quantities and source identity remain intact. */
+static bool ExpireUnusedUtilityHeatRoute(const GeothermalHeatRoute &route)
+{
+	auto *consumer = FindUtilityConsumer(route.consumer);
+	// Physical references may retain historical paths after expiry. They can
+	// release only this same native thermal consumer's current source slice.
+	if (consumer == nullptr || consumer->meter.domain != UtilityEnergyDomain::Heat || consumer->meter.accounting_interval != _utility_power.interval) return false;
+	const auto share = std::ranges::find(consumer->shares, route.producer, &UtilityPowerShare::producer);
+	if (share == consumer->shares.end()) return false;
+	const uint64_t unused = FreeUtilityShare(*share);
+	if (unused == 0) return false;
+	share->released_j += unused; FindUtilityProducer(share->producer)->reserved_j -= unused;
+	return true;
+}
+
+/** @copydoc RevalidateUtilityHeatRoutes */
+void RevalidateUtilityHeatRoutes()
+{
+	assert(!_utility_mutation_committing);
+	if (GetGeothermalHeatRouteInterval() != _utility_power.interval) return;
+	bool changed = false;
+	// A genuine older393 file could retain unused rights after losing a cell.
+	// Resolve accepted original references once during actual load; normalize
+	// only that lost quantity through its native owner, without rebuilding or
+	// granting a replacement path. Current healthy files remain byte-exact.
+	for (const auto &route : GetGeothermalHeatRoutes()) {
+		for (const auto id : route.cells) {
+			const auto *cell = FindUtilityLink(id);
+			if (cell != nullptr && cell->active) continue; // Retained original active cells preserve the exact allocated route; a fresh replacement ID cannot revive a retired node.
+			changed |= ExpireUnusedUtilityHeatRoute(route); break;
+		}
+	}
+	if (changed && _utility_power.operation_sequence < UINT64_MAX - 1) ++_utility_power.operation_sequence; // Nonrefusible load/lifecycle expiry stays monotonic without overflowing a terminal sequence.
+}
+
 /**
- * Expire only a route's still-unused imported slices during actual topology loss.
+ * Expire only a route's still-unused source slices during actual topology loss.
  * @param link Actual retained route owner, already admitted for retirement.
  */
 static void RetireUtilityPowerLink(UtilityPowerLink &link)
 {
+	if (link.kind == UtilityLinkKind::LocalCell) {
+		// The physical family supplies original issued cell references only.
+		// This native owner expires each affected slice's free quantity once;
+		// consumed history and every unaffected source/consumer stay intact.
+		// Borrowed routes avoid allocation during nonrefusible company cleanup.
+		if (link.local_domain == UtilityEnergyDomain::Heat && GetGeothermalHeatRouteInterval() == _utility_power.interval) {
+			for (const auto &route : GetGeothermalHeatRoutes()) {
+				if (std::ranges::find(route.cells, link.id) == route.cells.end()) continue;
+				ExpireUnusedUtilityHeatRoute(route);
+			}
+		}
+		link.active = false;
+		InvalidateGeothermalUtilityPathCache();
+		if (_utility_power.local_link_revision < UINT64_MAX - 1) ++_utility_power.local_link_revision;
+		return; // Physical loss revokes only unused rights and derived connectivity; repairing a fresh cell cannot revive an original grant.
+	}
 	auto *destination = FindUtilityConsumer(link.destination);
 	if (destination != nullptr) {
 		// Imported allocated/settled lineage stays saved; only free destination
@@ -228,10 +319,11 @@ UtilityPowerError RemoveUtilityPowerLink(UtilityLinkID id, bool execute)
 	// replacement physical housing under the same identity.
 	if (link == nullptr || !link->active) return UtilityPowerError::InvalidReference;
 	const auto *source = FindUtilityConsumer(link->source);
-	if (source == nullptr) return UtilityPowerError::InvalidReference;
+	if (source == nullptr && link->kind != UtilityLinkKind::LocalCell) return UtilityPowerError::InvalidReference; // Local cells own no source-side energy reservation.
 	// System cleanup can retire lost owners; ordinary companies can alter
 	// only their own explicit route, without touching another imported budget.
-	if (_current_company != OWNER_DEITY && _current_company != source->owner) return UtilityPowerError::InvalidOwner;
+	const auto owner = link->kind == UtilityLinkKind::LocalCell ? link->local_owner : source->owner;
+	if (_current_company != OWNER_DEITY && _current_company != owner) return UtilityPowerError::InvalidOwner;
 	if (_utility_power.operation_sequence >= UINT64_MAX - 1) return UtilityPowerError::Limit;
 	if (execute) { RetireUtilityPowerLink(*FindUtilityLink(id)); ++_utility_power.operation_sequence; }
 	return UtilityPowerError::None;
@@ -246,6 +338,7 @@ void InvalidateUtilityPowerLinksForPortal(TileIndex endpoint)
 	// all map planes, and retires both directed uses of either actual endpoint.
 	for (auto &link : _utility_power.links) {
 		if (!link.active) continue;
+		if (link.kind != UtilityLinkKind::ElectricalPortal) continue; // Local Deep cells cannot inherit a portal's commissioning or loss policy.
 		if (link.source_endpoint != endpoint && link.destination_endpoint != endpoint) continue;
 		RetireUtilityPowerLink(link); changed = true;
 	}
@@ -258,6 +351,9 @@ void InvalidateUtilityPowerLinksForPortal(TileIndex endpoint)
  * @param domain Explicit immutable source quantity domain; Heat is Deep geothermal only. */
 static std::optional<UtilityProducerID> RegisterUtilityDomainProducer(CompanyID owner, MapLayer layer, UtilityGenerationKind kind, bool execute, UtilityEnergyDomain domain)
 {
+	// Source acquisition cannot reenter a whole benefit commit or exhaust its
+	// retry sequence before publication. Refusal must leave the issuer unchanged.
+	if (_utility_mutation_committing || _utility_power.operation_sequence >= UINT64_MAX - 1) return std::nullopt;
 	// Domain and source family are fixed at registration; a Surface solar or
 	// external electrical source cannot later masquerade as Deep vent heat.
 	if (domain != UtilityEnergyDomain::Electricity && domain != UtilityEnergyDomain::Heat) return std::nullopt;
@@ -400,8 +496,10 @@ UtilityPowerError PublishUtilityHeatGeneration(UtilityProducerID id, uint64_t in
 }
 
 /** @copydoc AllocateUtilityPower
- * @param domain Explicit native quantity domain; source/request/slice eligibility and phase remain separate. */
-static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute, UtilityEnergyDomain domain)
+ * @param domain Explicit native quantity domain; source/request/slice eligibility and phase remain separate.
+ * @param routed Optional physical Heat source proposal; absence retains the original shared allocation policy. */
+static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute, UtilityEnergyDomain domain,
+	std::optional<std::span<const UtilityHeatRoutingShare>> routed = std::nullopt)
 {
 	if (_utility_mutation_committing) return UtilityPowerError::Refused;
 	if (_utility_power.operation_sequence >= UINT64_MAX - 1) return UtilityPowerError::Limit;
@@ -414,6 +512,21 @@ static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<cons
 	if (interval != _utility_power.interval || interval == UINT64_MAX) return UtilityPowerError::InvalidInterval;
 	if (IsUtilityDomainAllocated(_utility_power, domain)) return UtilityPowerError::AlreadyAllocated;
 	if (requests.size() > MAX_UTILITY_INTERVAL_ACCOUNTS) return UtilityPowerError::Limit;
+	std::map<UtilityConsumerID, std::vector<UtilityProducerID>> eligibility;
+	if (routed.has_value()) {
+		if (domain != UtilityEnergyDomain::Heat) return UtilityPowerError::InvalidTopology;
+		if (routed->size() > MAX_UTILITY_POWER_CONNECTIONS) return UtilityPowerError::Limit;
+		std::set<std::pair<UtilityConsumerID, UtilityProducerID>> pairs;
+		// A physical proposal may change eligible sources, but cannot introduce
+		// another company's quantity, duplicate pair or nonthermal identity.
+		for (const auto &route : *routed) {
+			const auto *consumer = FindUtilityConsumer(route.consumer); const auto *source = FindUtilityProducer(route.producer);
+			if (consumer == nullptr || source == nullptr || !consumer->active || !source->active || consumer->meter.domain != domain || source->meter.domain != domain ||
+				consumer->owner != source->owner || consumer->meter.layer != source->meter.layer || route.quantity_j > MAX_UTILITY_ACCOUNT_ENERGY_J ||
+				!pairs.emplace(route.consumer, route.producer).second) return UtilityPowerError::InvalidTopology;
+			eligibility[route.consumer].push_back(route.producer);
+		}
+	}
 	std::set<UtilityConsumerID> unique;
 	std::vector<UtilityConsumerDemand> demands;
 	// Validate every request before reserving anything. Foreign, duplicate or
@@ -427,7 +540,8 @@ static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<cons
 		if (permission != UtilityPowerError::None) return permission;
 		if (!unique.insert(request.consumer).second) return UtilityPowerError::InvalidReference;
 		if (request.demand_j > consumer->capacity_j) return UtilityPowerError::InvalidQuantity;
-		demands.push_back({request.consumer, consumer->meter.layer, consumer->linked_producers, request.demand_j});
+		const std::span<const UtilityProducerID> sources = routed.has_value() ? std::span<const UtilityProducerID>{eligibility[request.consumer]} : std::span<const UtilityProducerID>{consumer->linked_producers};
+		demands.push_back({request.consumer, consumer->meter.layer, sources, request.demand_j});
 	}
 	std::vector<UtilityProducerSnapshot> supply;
 	// A source which did not publish has genuinely zero supply. All companies
@@ -439,38 +553,57 @@ static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<cons
 		supply.push_back({source.meter.producer_id, source.meter.layer,
 			source.meter.accounting_interval == interval ? source.meter.generation_energy_j : 0});
 	}
-	const auto plan = PlanUtilityAllocation(interval, supply, demands, {});
+	auto plan = PlanUtilityAllocation(interval, supply, demands, {});
 	if (!plan.valid) return UtilityPowerError::InvalidTopology;
+	if (routed.has_value()) {
+		// The feature proposes physical shares; only this owner publishes them.
+		// Reset the transient numerical default, then revalidate complete source
+		// and requested totals before any live eligibility/reservation changes.
+		for (auto &source : plan.producers) { source.consumed_j = 0; source.unused_j = source.generated_j; }
+		for (auto &grant : plan.consumers) { grant.granted_j = 0; grant.sources.clear(); }
+		std::vector<UtilityHeatRoutingShare> ordered(routed->begin(), routed->end());
+		/** @param left First physical share. @param right Second share. @return Frozen consumer/source priority, independent of container order. */
+		std::ranges::sort(ordered, [](const auto &left, const auto &right) { return std::tie(left.consumer, left.producer) < std::tie(right.consumer, right.producer); });
+		for (const auto &route : ordered) {
+			const auto source = std::ranges::find(plan.producers, route.producer, &UtilityProducerBalance::id);
+			const auto consumer = std::ranges::find(plan.consumers, route.consumer, &UtilityConsumerGrant::id);
+			if (source == plan.producers.end() || consumer == plan.consumers.end()) return UtilityPowerError::InvalidReference; // Omitted or inactive participants cannot receive a hidden route reservation.
+			if (route.quantity_j > source->unused_j || route.quantity_j > consumer->demand_j - consumer->granted_j) return UtilityPowerError::InvalidQuantity; // Complete native balances bound every physical share before any account changes.
+			source->unused_j -= route.quantity_j; source->consumed_j += route.quantity_j; consumer->granted_j += route.quantity_j;
+			if (route.quantity_j != 0) consumer->sources.push_back({route.producer, route.quantity_j});
+		}
+	}
+	std::vector<std::pair<size_t, UtilityPowerConsumer>> replacements;
+	size_t connections = 0, shares = 0;
+	// Acquire complete bounded consumer storage before changing any source.
+	// Only a transient transaction candidate is copied; the native owner alone
+	// publishes authoritative quantities, fractions and source lineage.
+	for (size_t index = 0; index < _utility_power.consumers.size(); ++index) {
+		const auto &original = _utility_power.consumers[index];
+		if (original.meter.domain != domain) {
+			connections += original.linked_producers.size(); shares += original.shares.size(); continue;
+		}
+		auto consumer = original;
+		if (routed.has_value()) consumer.linked_producers = eligibility[consumer.meter.consumer_id];
+		consumer.meter.accounting_interval = interval; consumer.meter.demand_energy_j = 0;
+		consumer.meter.granted_energy_j = 0; consumer.meter.unmet_energy_j = 0; consumer.shares.clear();
+		consumer.town_bonus_percent = 0; consumer.town_effect_applied = false; consumer.town_effect_suspended = false;
+		const auto grant = std::ranges::find(plan.consumers, consumer.meter.consumer_id, &UtilityConsumerGrant::id);
+		if (grant != plan.consumers.end()) {
+			consumer.meter.demand_energy_j = grant->demand_j; consumer.meter.granted_energy_j = grant->granted_j;
+			consumer.meter.unmet_energy_j = grant->demand_j - grant->granted_j;
+			for (const auto &share : grant->sources) consumer.shares.push_back({share.producer, share.energy_j, 0, 0}); // Acquire each exact positive slice once, before any source reservation changes.
+		}
+		connections += consumer.linked_producers.size(); shares += consumer.shares.size();
+		replacements.emplace_back(index, std::move(consumer));
+	}
+	// The complete retained cross-domain graph and current slice family must
+	// fit their save/runtime bounds, even after source loss retains old lineage.
+	if (connections > MAX_UTILITY_POWER_CONNECTIONS || shares > MAX_UTILITY_POWER_SHARES) return UtilityPowerError::Limit;
 	if (execute) {
-		// Frozen allocation's consumed_j denotes the proposal's promised supply.
-		// Store it as reserved_j: only later atomic settlement may call it actual use.
-		for (const auto &source : plan.producers) FindUtilityProducer(source.id)->reserved_j = source.consumed_j;
-		// Every registered consumer receives a current zero baseline, including
-		// omitted requests. Its former epoch cannot hide or renew an old grant.
-		for (auto &consumer : _utility_power.consumers) {
-			if (consumer.meter.domain != domain) continue; // Allocating one domain cannot renew or erase another domain's source reservations.
-			consumer.meter.accounting_interval = interval;
-			consumer.meter.demand_energy_j = 0;
-			consumer.meter.granted_energy_j = 0;
-			consumer.meter.unmet_energy_j = 0;
-			consumer.shares.clear();
-			consumer.town_bonus_percent = 0;
-			consumer.town_effect_applied = false;
-			consumer.town_effect_suspended = false;
-		}
-		for (const auto &grant : plan.consumers) {
-			auto &consumer = *FindUtilityConsumer(grant.id);
-			auto &meter = consumer.meter;
-			meter.accounting_interval = interval;
-			meter.demand_energy_j = grant.demand_j;
-			meter.granted_energy_j = grant.granted_j;
-			meter.unmet_energy_j = grant.demand_j - grant.granted_j;
-			// Copy the allocator's exact positive slices once. It alone chose
-			// source ordering; the runtime must not recompute or guess lineage.
-			for (const auto &share : grant.sources) consumer.shares.push_back({share.producer, share.energy_j, 0, 0});
-		}
-		UtilityDomainPhase(domain) = true;
-		++_utility_power.operation_sequence;
+		for (const auto &source : plan.producers) FindUtilityProducer(source.id)->reserved_j = source.consumed_j; // Promised quantities remain reservations until whole actual use settles them.
+		for (auto &[index, consumer] : replacements) _utility_power.consumers[index] = std::move(consumer); // All fallible storage was acquired; other-domain accounts remain untouched.
+		UtilityDomainPhase(domain) = true; ++_utility_power.operation_sequence;
 	}
 	return UtilityPowerError::None;
 }
@@ -484,6 +617,13 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 UtilityPowerError AllocateUtilityHeat(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute)
 {
 	return AllocateUtilityDomain(interval, requests, execute, UtilityEnergyDomain::Heat);
+}
+
+/** @copydoc AllocateUtilityHeatRoutes */
+UtilityPowerError AllocateUtilityHeatRoutes(uint64_t interval, std::span<const UtilityPowerRequest> requests,
+	std::span<const UtilityHeatRoutingShare> routes, bool execute)
+{
+	return AllocateUtilityDomain(interval, requests, execute, UtilityEnergyDomain::Heat, routes);
 }
 
 /** @copydoc GetUtilityAllocation
@@ -548,6 +688,7 @@ UtilityPowerError BeginUtilityPowerInterval(bool execute)
 		for (auto &link : _utility_power.links) link.flow_j = 0;
 		++_utility_power.interval;
 		_utility_power.allocated = false; _utility_power.heat_allocated = false;
+		ClearGeothermalHeatRoutes(); // Native expiry owns all quantities; only now can their prior physical path references expire.
 		++_utility_power.operation_sequence;
 	}
 	return UtilityPowerError::None;
@@ -603,6 +744,18 @@ void ChangeUtilityPowerCompanyOwnership(Owner old_owner, Owner new_owner)
 	// change. Takeover must commission a new route rather than inherit stale
 	// portal revisions; settled imported use is never refunded.
 	for (auto &link : _utility_power.links) {
+		if (link.kind == UtilityLinkKind::LocalCell) {
+			// Actual installed infrastructure follows takeover; removal retires
+			// only current active cells. Historical CompanyID reuse owns no pipe.
+			if (!link.active || link.local_owner != old_owner) continue;
+			if (new_owner == INVALID_OWNER) RetireUtilityPowerLink(link);
+			else {
+				link.local_owner = CompanyID{new_owner};
+				InvalidateGeothermalUtilityPathCache();
+				if (_utility_power.local_link_revision < UINT64_MAX - 1) ++_utility_power.local_link_revision;
+			}
+			changed = true; continue;
+		}
 		const auto *source = FindUtilityConsumer(link.source);
 		if (!link.active) continue;
 		if (source->owner != old_owner) continue;
@@ -703,7 +856,9 @@ uint64_t ComputeUtilityPowerDigest()
 	for (const auto &link : _utility_power.links) {
 		field(link.id.base()); field(link.source.base()); field(link.destination.base()); field(link.source_endpoint.base()); field(link.destination_endpoint.base());
 		field(link.portal_revision); field(link.capacity_j); field(link.flow_j); field(link.active);
+		field(to_underlying(link.kind)); field(link.local_owner.base()); field(to_underlying(link.local_domain)); field(link.local_capacity_w);
 	}
+	field(_utility_power.local_link_revision);
 	return hash;
 }
 
@@ -1124,6 +1279,8 @@ void ResetUtilityPowerState()
 {
 	if (_utility_mutation_committing) return;
 	_utility_power = {};
+	ResetGeothermalHeatState();
+	ResetGeothermalUtilityPathCache();
 	_pending_utility_power.reset();
 	_utility_mutation_committing = false;
 	ResetUtilityPowerLoadStaging();
@@ -1164,11 +1321,34 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 	std::map<std::pair<UtilityConsumerID, UtilityProducerID>, uint64_t> transferred, imported;
 	std::set<std::pair<UtilityConsumerID, UtilityConsumerID>> active_routes;
 	std::set<TownID> bound_towns;
+	std::set<std::pair<TileIndex, UtilityEnergyDomain>> local_cells;
+	size_t local_count = 0;
 	// Exact retained link IDs and participant references must be complete
 	// before imported source slices can resolve their original donor account.
 	for (size_t index = 0; index < state.links.size(); ++index) {
 		const auto &link = state.links[index];
 		if (link.id.base() != index) return UtilityPowerError::InvalidReference;
+		if (link.kind == UtilityLinkKind::LocalCell) {
+			++local_count;
+			const auto *terms = GetMultiLayerLocalUtilityLinkContract(link.local_domain);
+			// A local cell has no reservation/export/flow fields. Its paid native
+			// definition alone supplies bounded installed rate and domain.
+			if (terms == nullptr || link.local_owner.base() >= MAX_COMPANIES || link.local_capacity_w != terms->capacity_w ||
+				link.source != UtilityConsumerID{UINT32_MAX} || link.destination != UtilityConsumerID{UINT32_MAX} || link.portal_revision != 0 ||
+				link.capacity_j != 0 || link.flow_j != 0 || link.source_endpoint == INVALID_TILE || link.destination_endpoint != link.source_endpoint) return UtilityPowerError::InvalidTopology;
+			if (link.active && !local_cells.emplace(link.source_endpoint, link.local_domain).second) return UtilityPowerError::InvalidTopology; // Duplicate identities cannot multiply the same installed tile/domain capacity.
+			if (check_world_refs && link.active) {
+				// Actual saved company, technology and excavated Deep floor must
+				// exist; a copied Surface coordinate never becomes a physical pipe.
+				if (!Company::IsValidID(link.local_owner) || !IsValidTile(link.source_endpoint) || GetTileLayer(link.source_endpoint) != MapLayer::DeepUnderground ||
+					!CheckDeepLayerAvailability(selection, TimerGameCalendar::date) || CheckExcavatedFootprint(std::array{link.source_endpoint}).error != ExcavationError::None) return UtilityPowerError::InvalidTopology;
+			}
+			continue;
+		}
+		// Portal routes preserve their genuine older role and cannot smuggle a
+		// local owner, thermal domain or rate into electrical transfer history.
+		if (link.kind != UtilityLinkKind::ElectricalPortal || link.local_owner != CompanyID::Invalid() ||
+			link.local_domain != UtilityEnergyDomain::Electricity || link.local_capacity_w != 0) return UtilityPowerError::InvalidTopology;
 		// Both endpoints name actual retained consumers; absent references can
 		// never be repaired into an output account or a second generator.
 		if (link.source.base() >= state.consumers.size() || link.destination.base() >= state.consumers.size()) return UtilityPowerError::InvalidReference;
@@ -1184,6 +1364,10 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		if (link.flow_j != 0 && (!state.allocated || source.meter.accounting_interval != state.interval || destination.meter.accounting_interval != state.interval)) return UtilityPowerError::InvalidInterval;
 		links.emplace(link.id, &link);
 	}
+	// The topology revision is a saved change receipt. Resource-only operations
+	// never change it, and omitted installed history cannot default to zero.
+	if ((local_count == 0) != (state.local_link_revision == 0) || state.local_link_revision < local_count ||
+		state.local_link_revision > state.operation_sequence || state.local_link_revision == UINT64_MAX) return UtilityPowerError::InvalidTopology;
 	UtilityProducerID previous{UINT32_MAX};
 	// Strict source order/cursors and frozen units reject duplicate identities
 	// and malformed carry before any candidate becomes live authority.
@@ -1390,6 +1574,7 @@ bool AcceptLoadedUtilityPowerState()
 	if (!_pending_utility_power.has_value()) return true;
 	if (ValidateUtilityPowerState(*_pending_utility_power, GetCurrentMultiLayerProfileSelection()) != UtilityPowerError::None) return false;
 	_utility_power = std::move(*_pending_utility_power);
+	ResetGeothermalUtilityPathCache();
 	_pending_utility_power.reset();
 	return true;
 }

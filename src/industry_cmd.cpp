@@ -64,6 +64,7 @@
 #include "layer_industry_baseline.h"
 #include "multilayer_industry.h"
 #include "geothermal_collector.h"
+#include "geothermal_utility.h"
 
 #include "table/strings.h"
 #include "table/industry_land.h"
@@ -2195,6 +2196,11 @@ static CommandCost CreateNewIndustryHelper(TileIndex tile, IndustryType type, Do
 	std::vector<TileIndex> geological_footprint;
 	// Check every layout foundation/check tile before callbacks, levelling or creation can change the map.
 	for (const auto &entry : layout) geological_footprint.push_back(TileAddWrap(tile, entry.ti.x, entry.ti.y));
+	// A new generic facility cannot bury installed utilities in a floor with
+	// no declared port. Explicit paid removal preserves topology/source rights.
+	for (const auto cell : geological_footprint) {
+		if (HasGeothermalUtilityCell(cell)) return CMD_ERROR;
+	}
 	if (CommandCost ground = CheckExcavationConstruction(geological_footprint); ground.Failed()) return ground;
 
 	/* 1. Cheap: Built-in checks on industry level. */

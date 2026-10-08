@@ -15,6 +15,19 @@
 static_assert(MILLISECONDS_PER_TICK == 27, "Utility bounds/schema must change explicitly with simulation duration");
 static_assert(MAX_UTILITY_ACCOUNT_ENERGY_J <= UINT64_MAX / MAX_UTILITY_INTERVAL_ACCOUNTS);
 
+/** Original paid per-cell utility installation; the first collector/plant/riser retain their separate frozen construction bills. */
+static constexpr std::array _local_utility_terms{
+	MultiLayerLocalUtilityLinkContract{UtilityEnergyDomain::Heat, 1000000, 1000, 250},
+	MultiLayerLocalUtilityLinkContract{UtilityEnergyDomain::Electricity, 200000, 1000, 250},
+};
+
+/** @copydoc GetMultiLayerLocalUtilityLinkContract */
+const MultiLayerLocalUtilityLinkContract *GetMultiLayerLocalUtilityLinkContract(UtilityEnergyDomain domain)
+{
+	const auto found = std::ranges::find(_local_utility_terms, domain, &MultiLayerLocalUtilityLinkContract::domain);
+	return found == _local_utility_terms.end() ? nullptr : &*found;
+}
+
 /**
  * Integrate bounded rates while carrying fractional joules across synchronized intervals.
  * @param rate_w Watts from the producer after its one source-specific availability modifier.

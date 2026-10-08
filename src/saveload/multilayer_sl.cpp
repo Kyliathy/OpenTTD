@@ -117,6 +117,8 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalSiteClaims) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_SITES) != 0) SlErrorCorrupt("Unexpected geothermal sites in old save version");
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalCollectors) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS) != 0) SlErrorCorrupt("Unexpected geothermal collectors in old save version"); // Older blueprints cannot impersonate the later paid native construction family.
 		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0) SlErrorCorrupt("Unexpected native heat domain in old save version"); // Genuine earlier electrical worlds receive no implicit thermal identities, roles or grants.
+		if (IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks) && (schema.feature_flags & MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS) != 0) SlErrorCorrupt("Unexpected local utility paths in old save version"); // Older electrical routes cannot impersonate installed Deep heat cells.
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatRoutes) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0) SlErrorCorrupt("Unexpected geothermal heat routes in old save version"); // Legacy absence creates neither physical ports nor a reconstructed grant path.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}

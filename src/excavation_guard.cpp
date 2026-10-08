@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "language.h"
 #include "excavation.h"
+#include "geothermal_utility.h"
 #include "command_func.h"
 #include "company_func.h"
 #include "map_layer_gui.h"
@@ -105,6 +106,11 @@ bool CheckExcavationCommissioningPocket(const ExcavationCommissioningPocket &poc
  */
 CommandCost CheckExcavationConstruction(std::span<const TileIndex> footprint)
 {
+	// Coexisting native transport cannot appropriate a foreign company's paid
+	// utility cell. This checks bounded command footprints, never all map tiles.
+	for (const auto tile : footprint) {
+		if (!CanConstructOverGeothermalUtility(tile)) return CMD_ERROR;
+	}
 	const auto result = CheckExcavatedFootprint(footprint);
 	StringID message;
 	switch (result.error) {
@@ -141,7 +147,11 @@ CommandCost CheckExcavationConstructionArea(TileIndex tile, uint width, uint hei
 	tiles.reserve(static_cast<size_t>(width) * height);
 	// Row-major layer-local traversal gives every multi-tile constructor the same stable refusal order.
 	for (uint y = 0; y < height; ++y) {
-		for (uint x = 0; x < width; ++x) tiles.push_back(TileAddWrap(tile, x, y));
+		for (uint x = 0; x < width; ++x) {
+			const auto cell = TileAddWrap(tile, x, y);
+			if (HasGeothermalUtilityCell(cell)) return CMD_ERROR; // A building cannot hide a paid pipe under an undeclared facility port; remove it first. Coexisting transport approaches remain valid below.
+			tiles.push_back(cell);
+		}
 	}
 	// Geological profiles require actual approaches; Classic keeps its historical edge/building policy.
 	if (IsValidDiagDirection(entrance) && GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::Classic) {
