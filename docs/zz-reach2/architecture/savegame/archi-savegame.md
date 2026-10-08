@@ -2,7 +2,7 @@
 
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
 
-Updated against the current fork on 2026-10-06 through save version 380, including four-layer storage, sealed portals/Deep rail, profile metadata and bounded geology/job/pass/work, TBM/exchange/spoil-receiver and finite mine/processor descriptors. [Map-layer architecture](../map-layers/archi-map-layers.md) explains gameplay/addressing. [Save-game working notes](../save-game.md) retain inspection helpers. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md), [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) and [R2MLVS2 execution](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) own their contracts and evidence.
+Updated against the current fork on 2026-10-08 through save version 385, including four-layer storage, sealed portals/Deep rail, profile metadata and bounded geology/job/pass/work, TBM/exchange/spoil-receiver, finite mine/processor and electrical-owner descriptors. [Map-layer architecture](../map-layers/archi-map-layers.md) explains gameplay/addressing. [Save-game working notes](../save-game.md) retain inspection helpers. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md), [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) and [R2MLVS2 execution](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) own their contracts and evidence.
 
 A save is a small uncompressed header, a compressed blob, and inside that blob a sequence of tagged chunks. Multi-byte integers in the OpenTTD blob are big-endian on every host. Each gameplay feature has a `*_sl.cpp` description of its fields. Saves written by an older OpenTTD are read by the same description, gated on `SaveLoadVersion`, and then repaired in memory by `AfterLoadGame`. A save newer than this binary is rejected.
 
@@ -48,6 +48,40 @@ packet provenance. Missing families, wrong counts/companies, foreign recipes
 and forged product counters refuse without saving; source hashes are preserved.
 The native freight, utility/tube, final-art and multiplayer integrations still
 retain their producer gates in the owning plan.
+
+## Electrical ownership and current ground continuation
+
+`utility_power_sl.cpp` transports `UPLH` revision5 (96 bytes) and `UPLD` (25 fields,
+104-byte rows) at `SaveLoadVersion::UtilityCompanyLifecycle` (385). Utility metadata
+bit1024 advertises the family. The existing consumer active scalar now records
+retirement; genuine381..384 consumers migrate as active after the old reserved-zero
+check. Meter carry, original-source shares, grants/use/release, directed links,
+operation sequence and real town associations remain owned by this ledger.
+
+`ChangeOwnershipOfCompanyItems` calls `ChangeUtilityPowerCompanyOwnership` before
+physical ownership and company IDs change. Takeover transfers the current live
+account/source lineage; routes retire and unused imported shares expire without a
+refund. Removal retains inactive IDs and lifetime settlement, clears town effects
+and expires unused energy. Reused company IDs cannot revive retired accounts or
+rewrite a former incarnation's tombstones. The field-wise utility digest includes
+consumer liveness; borrowed tickets are transient and their operation sequence
+must still match before commit.
+
+Full loading stages numeric rows, then validates actual company/profile/map/portal/
+town references after ordinary reconstruction. Preview is independent. Read-time
+and fixup-time refusals run actual `Null` cleanup without publishing a candidate
+ledger. [Useful Power handoff](../../upgrades/2026-10/r2mlvs3mp-x-useful-power-handoff.md)
+and [Plan14 company/native evidence](../../upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md#group-15b---complete-delivered-electrical-company-ownership)
+retain genuine old-format readers, ordinary-game round trips and corruption cases.
+
+Current385 physical ground saves cover partial bends, loaded capacity waits,
+cross-layer spanning, lost-origin recovery and cancelled retreat through final
+Surface disposal/empty return. The strict reader compares48 actual owner families
+plus clocks/RNG across repeated loads and subsequent legal transitions. A historical
+380 fixture's initial acceleration48 differs from current16; that exact-physics
+comparison remains failed and the input stays immutable. Local file/replay proof
+does not establish a real peer join. [Final audit](../../upgrades/2026-10/r2mlvs3mp-z-b-final-closure-audit.md)
+records network, bootstrap, performance and absent tube/thermal exceptions.
 
 ## The container
 

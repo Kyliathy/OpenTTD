@@ -1,8 +1,8 @@
 """Capture real loaded M1 controls, purchase/cargo resolvers and active seam overlays.
 
 @file multilayer_control_capture.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups83B/85B
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.7/8.8
 Only the real renderer authors these pixels; PPM-to-PNG conversion is lossless.
 """
 
@@ -25,6 +25,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--job-inspection", action="store_true")
+    parser.add_argument("--survey-gallery", action="store_true")
     args = parser.parse_args()
     source = ROOT / "src/tests/fixtures/haulage/portal-native-deep-stopped.sav"
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -38,6 +39,10 @@ def main():
         environment["OTTD_M1_JOB_ART"] = "1"
     else:
         environment.pop("OTTD_M1_JOB_ART", None)
+    if args.survey_gallery:
+        environment["OTTD_M1_SURVEY_GALLERY"] = "1"
+    else:
+        environment.pop("OTTD_M1_SURVEY_GALLERY", None)
     try:
         script.write_text("# @see r2mlvs13-graphics-and-asset-pipeline.md Group83B actual loaded UI observer.\nm1_control_art\n", encoding="utf-8")
         with log.open("wb") as sink:
@@ -54,6 +59,12 @@ def main():
         if args.job_inspection:
             assert "M1_JOB_RUNTIME frames=2" in evidence
             names.extend(("m1-job-inspection-controls", "m1-job-inspection-footprint"))
+        if args.survey_gallery:
+            assert "M1_SURVEY_GALLERY resources=10 frames=30 actual_seams=true" in evidence
+            # Bind each selected marker to its own genuine seam at both scales,
+            # keeping the real inspector text as independent resource evidence.
+            for resource in ("COAL", "IORE", "CORE", "BAUX", "SALT", "LITH", "NORE", "COBT", "RARE", "URAN"):
+                names.extend((f"m1-survey-{resource}-controls", f"m1-survey-{resource}-zoom-1", f"m1-survey-{resource}-zoom-2"))
         frames = []
         # Keep the actual window dimensions and every native RGB pixel. No
         # resizing, recoloring or repainting may conceal icon/text clipping.
@@ -71,9 +82,10 @@ def main():
                   "source": source.relative_to(ROOT).as_posix(), "source_sha256": source_hash,
                   "log": log.relative_to(ROOT).as_posix(), "renderer": "actual widgets, DrawTrainEngine, cargo and ViewportDoDraw with 8bpp-simple",
                   "frames": frames, "simulation_owners_unchanged_during_render": True,
+                  "all_selected_survey_resources": args.survey_gallery,
                   "user_review": "deferred_until_integration"}
         (reviews / "m1-control-runtime.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-        print("Actual M1 control raster: six UI/active-seam frames, five real engine previews and two first-party cargo icons; source and owners unchanged", flush=True)
+        print(f"Actual M1 control raster: {len(frames)} UI/active-seam frames, five real engine previews and two first-party cargo icons; source and owners unchanged", flush=True)
     finally:
         if existed:
             script.write_bytes(original)

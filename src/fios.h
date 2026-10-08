@@ -15,6 +15,7 @@
 #include "gamelog.h"
 #include "network/core/tcp_content_type.h"
 #include "timer/timer_game_calendar.h"
+#include "utility_power.h"
 
 
 /** Special values for save-load window for the data parameter of #InvalidateWindowData. */
@@ -78,6 +79,10 @@ struct LoadCheckData {
 	std::array<bool, 4> tbm_exchange_present{}; ///< Independent exchange header, assignment, set and set-wagon table preview presence.
 	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
 	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.
+	std::array<bool, 2> utility_power_present{}; ///< Independent header/table preview; Plan 12 Group 7B.
+	std::array<uint64_t, 12> utility_power_header{}; ///< Copied version, epoch, cursors, phase, counts, mutation sequence and directed link allocator/count.
+	std::array<uint32_t, 5> utility_power_rows{}; ///< Copied source/consumer/connection/share/directed-link counts.
+	UtilityPowerState utility_power_state; ///< Unpublished preview balances; never replaces live energy authority.
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

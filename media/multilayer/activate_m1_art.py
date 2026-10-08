@@ -146,6 +146,34 @@ def validate(public, packed, rasters):
     return result
 
 
+def verified_gallery(public, packed, bindings):
+    """Preserve completed review only when its entire current evidence still verifies.
+
+    @param public Current public selected family metadata.
+    @param packed Actual current native packing report.
+    @param bindings Newly validated actual consumer bindings.
+    @return Repository-relative gallery path, or None when review is absent/stale.
+    """
+    # A later binding refresh must not silently discard valid technical review,
+    # or carry it across changed frames/payloads. The gallery owner revalidates
+    # actual phases, source saves, distribution and all selected family links.
+    from review_m1_art import GALLERY, REPORTS, REVIEWS, read_json, validate as validate_gallery
+    if not GALLERY.exists():
+        return None
+    try:
+        record = read_json(GALLERY)
+        candidate = {"packed_payload": packed["packed_grf"], "bindings": bindings}
+        rows, frames = validate_gallery(public, packed, candidate, [read_json(REVIEWS / name) for name in REPORTS])
+        assert record["technical_acceptance"] == "verified"
+        assert record["packed_payload"] == packed["packed_grf"]
+        assert record["families"] == rows and record["frames"] == frames
+        for artifact in (record["contact_sheet"], record["html"]):
+            assert digest(ROOT / artifact["path"]) == artifact["sha256"]
+        return GALLERY.relative_to(ROOT).as_posix()
+    except (AssertionError, OSError, KeyError, ValueError):
+        return None
+
+
 def main():
     """Validate retained native bindings, exercise bounded corruption refusals, and optionally publish.
 
@@ -175,10 +203,17 @@ def main():
             continue
         raise AssertionError("runtime metadata corruption was accepted: " + fault)
     if args.publish:
+        gallery = verified_gallery(public, packed, bindings)
+        if gallery is not None:
+            for binding in bindings:
+                binding["gallery_status"] = "technical_review_verified_user_feedback_deferred"
         report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group83B; selected actual native consumers; final gallery/user review pending; sound proof in sound-runtime.json",
                   "schema_version": 1, "packed_payload": packed["packed_grf"], "selected_families": len(bindings),
                   "selected_sprites": 2311, "bindings": bindings, "rasters": [TERRAIN.relative_to(ROOT).as_posix(), CONTROL.relative_to(ROOT).as_posix()],
                   "user_review": "deferred_until_integration"}
+        if gallery is not None:
+            report["gallery_manifest"] = gallery
+            report["_documentation"] = "Owner: r2mlvs13-graphics-and-asset-pipeline.md83B/85B; selected native consumers and technical gallery verified; user feedback deferred"
         RUNTIME.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         selected = {row["asset_id"]: row for row in bindings}
         for family in public["assets"]:
@@ -187,10 +222,17 @@ def main():
             family["authoring"].update(runtime_activated=True, status="source_coverage_verified_runtime_bound")
             family["runtime"] = {"status": "bound_verified", "consumer": selected[family["asset_id"]]["consumer"],
                                  "binding_manifest": RUNTIME.relative_to(ROOT).as_posix(), "user_review": "deferred_until_integration"}
+            if gallery is not None:
+                family["runtime"]["gallery"] = {"manifest": gallery, "technical_acceptance": "verified", "user_feedback": "deferred"}
         PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
         packed["runtime_activated"] = True
         packed["runtime_binding_manifest"] = RUNTIME.relative_to(ROOT).as_posix()
         packed["_documentation"] = "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/83B; selected native bytes and actual runtime bindings; final gallery/user review pending; sound proof in sound-runtime.json"
+        if gallery is not None:
+            packed["gallery_manifest"] = gallery
+            packed["_documentation"] = "Owner: r2mlvs13-graphics-and-asset-pipeline.md79B/80B/83B/85B; selected native packing, consumer and technical gallery verified; user feedback deferred"
+        else:
+            packed.pop("gallery_manifest", None)
         PACKED.write_text(json.dumps(packed, indent=2) + "\n", encoding="utf-8")
     print("Selected M1 runtime bindings: 40 families / 2311 sprites; actual consumer/range/payload/raster evidence and three corruption refusals pass; final gallery/user review pending; sound proof retained")
 

@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/newgrf_industries.h](../../../../src/newgrf_industries.h) | 70-89 | `IndustryAvailabilityCallType`, `IndustryProductionCallback`, `MapNewGRFIndustryType` and callback declarations define availability/GRFID mapping; no translated-name or cargo-label-only adapter. |
 
-Status: initial M0 native-fallback decision and draft solar contract delivered; whole feature plan remains unfinished. [Execution evidence](r2mlvs12-a-eti-feasibility.md) reproduces the pinned source/hash precheck. ETI runtime tasks remain unchecked; no adapter is approved. Operational Useful Power follows Plan 1 Content Freeze. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
+Status: initial M0 native-fallback decision, draft solar contract and tested [Useful Power Handoff](r2mlvs3mp-x-useful-power-handoff.md) are delivered; whole feature plan remains unfinished. [Execution evidence](r2mlvs12-a-eti-feasibility.md) reproduces the pinned source/hash precheck. ETI runtime tasks remain unchecked; no adapter is approved. Solar/mirror runtime and final art retain their later tasks. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -70,7 +70,7 @@ Proposed public owner: `src/solar_power.h`. Publish `SolarGenerationAccount`, `M
 
 `ETI Feasibility Handoff`: the first reading area records the pinned fixture compatibility, distribution status, native/ETI route and label mapping for r2mlvs1 Content Freeze. This checkpoint does not wait for orbital mirror implementation.
 
-`Useful Power Handoff`: after Content Freeze, the early native-ledger, mutation and consumer groups publish planned `src/utility_power.h` exports `PublishUtilityGeneration`, `AllocateUtilityPower`, `GetUtilityAllocation`, `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation`, `CommitUtilityMutation`, with allocation, consume/release/layer-transfer, effect and save/retry fixtures. This is the single runtime utility owner for r2mlvs6/16/17; r2mlvs1 retains the units/schema contract. It does not wait for rockets, mirrors or geothermal producers.
+`Useful Power Handoff` (delivered 2026-10-08): [public contract and focused acceptance](r2mlvs3mp-x-useful-power-handoff.md) publish the implemented `src/utility_power.h` exports `PublishUtilityGeneration`, `AllocateUtilityPower`, `GetUtilityAllocation`, `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation`, `CommitUtilityMutation`, work/town effects and physical directed-link APIs. Allocation, consume/release/layer-transfer, actual effects, normal loading and saved retry fixtures pass. This is the single runtime utility owner for r2mlvs6/16/17; r2mlvs1 retains the units/schema contract. Solar/mirror generation and actual geothermal/tube consumers remain with their subsequent owners.
 
 ## Implementation Tasks
 
@@ -144,7 +144,7 @@ M0 evidence: [pinned investigation/native refusal decision](r2mlvs12-a-eti-feasi
 
 ### Area Mandatory Reading - Native useful-power ledger and consumers
 
-_Applies to Groups 7-9._
+_Applies to Groups 7-9, including 7B/7C/8B._
 
 **Entry gate.** r2mlvs1 Content Freeze supplies `MultiLayerGameplayProfile`/`UtilityPowerAccount` units and authority; r2mlvs14 Schema Foundation supplies the versioned state boundary. No rocket, mirror, geothermal plant or completed mine/tube consumer is required.
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Verify the named prior public exports and their type/behavior fixtures with the current source before dependent work. A declaration alone is insufficient for runtime mutation. If missing, stop the dependent implementation and passing claims in Groups 7-9; independent characterization, test design and source verification may continue. Do not copy private stores, invent substitute IDs/inventory/energy or treat historical planning prose as delivered code.
@@ -169,27 +169,87 @@ consumer effects -> same metered quantity, one selected town authority
 ### Group 7 - Implement the native useful-power ledger
 
 {{HARD}}
-- [ ] 7.1 After r2mlvs1 Content Freeze, implement planned `src/utility_power.h` exports `PublishUtilityGeneration`, `AllocateUtilityPower` and `GetUtilityAllocation` using the canonical `UtilityPowerAccount` units and IDs.
-- [ ] 7.2 Accept generation once per source/accounting interval with checked quantities and saved remainders. Define zero-supply, duplicate publication and source removal behavior; a Surface export is not a second generator.
-- [ ] 7.3 Allocate energy to explicit linked eligible consumers in stable order, bounded by supply/demand and capacity. Save authoritative interval/grants and rebuild only derived connectivity caches.
-- [ ] 7.4 Define reservation, actual-use settlement and unused-grant release so failed recipes cannot consume energy twice. Make `GetUtilityAllocation` read-only; repeated queries cannot renew a grant. Order generation, allocation, consumption and month rotation explicitly instead of relying on timer registration order.
-- [ ] 7.5 Test zero, oversubscribed and multiple-source/consumer ledger fixtures plus save/retry. Record ledger readiness here; publish the full `Useful Power Handoff` only after the following consumer-effect fixtures pass. Neither stage requires rockets, mirrors or completed geothermal plants.
+- [X] 7.1 After r2mlvs1 Content Freeze, implement planned `src/utility_power.h` exports `PublishUtilityGeneration`, `AllocateUtilityPower` and `GetUtilityAllocation` using the canonical `UtilityPowerAccount` units and IDs.
+
+### Local Mandatory Reading - Utility source epochs and saved authority
+
+_Applies to Group7B; continues original Group7's source/save tasks under master9.1._
+
+Read Global and Native useful-power Area, the canonical `UtilityPowerAccount` units and current `utility_power.h/.cpp` source/consumer/slice layout and validation. Read only actual chunk registration, utility descriptors, metadata feature bit/version, preview transport and post-company load acceptance; use `tbm_sl.cpp` for the concrete table/header pattern. Epoch/source-loss tests pass601/9 and staging tests514/6; neither is an actual-file round trip. Keep original source lineage/carry and strict scalar/count/owner checks, preserve older empty Classic/native files and validate before publishing. Do not preload consumer effects, solar, mirrors or geothermal code.
+
+Context has compacted 1 times while executing this group.
+
+### Group 7B - Persist utility source epochs and grants
+
+{{HARD}}
+- [X] 7.2 Accept generation once per source/accounting interval with checked quantities and saved remainders. Define zero-supply, duplicate publication and source removal behavior; a Surface export is not a second generator.
+- [X] 7.3 Allocate energy to explicit linked eligible consumers in stable order, bounded by supply/demand and capacity. Save authoritative interval/grants and rebuild only derived connectivity caches.
+
+7B closure (2026-10-07): version381 `UPLH`/`UPLD` and metadata bit1024 preserve exact source carry/publication, stable company/layer IDs, explicit links, original reservations and released source-loss slices. Full loading validates after real company/profile/map fixups; independent preview rejects malformed counts/owners/fractions/balances/missing tables without changing the accepted ledger. UtilityRoot adds a field-wise diagnostic digest. [Owner checks](../../../../logs/r2mlvs3mp-u-power-save-owner-checks-1.log) pass555 assertions/eight cases. [Ten actual native file cases](../../../../logs/r2mlvs3mp-u-power-native-file-checks-1.log) prove published/granted/source-loss phases through two byte-exact reloads, five corruption refusals and valid preview retry, plus saved carry27mJ to54mJ and next-epoch surviving-source continuation. The fixture exposed and corrected omitted consumers retaining stale epochs; allocation now publishes current zero baselines before explicit requests. Supplied paid-world input and startup bytes remain unchanged. Actual settlement/transfer/effects remain with Groups8/9.
+
+### Local Mandatory Reading - Utility reservation policy and owner acceptance
+
+_Applies to Group7C after7B's actual source/save checks._
+
+Read Global/Native useful-power Area and only the delivered utility API, owner/epoch/slice fields, exact file transport and source/consumer proof. Define explicit publication/allocation/settlement/rotation order; actual mutation operations belong to the following Group8 and consumer effects to Group9. Do not count fields or a staging-copy fixture as saved or consumed energy. Publish full Useful Power Handoff only after the stated mutation/effect boundaries pass.
+
+### Group 7C - Define reservation policy and complete ledger fixtures
+
+{{HARD}}
+- [X] 7.4 Define reservation, actual-use settlement and unused-grant release so failed recipes cannot consume energy twice. Make `GetUtilityAllocation` read-only; repeated queries cannot renew a grant. Order generation, allocation, consumption and month rotation explicitly instead of relying on timer registration order.
+- [X] 7.5 Test zero, oversubscribed and multiple-source/consumer ledger fixtures plus save/retry. Record ledger readiness here; publish the full `Useful Power Handoff` only after the following consumer-effect fixtures pass. Neither stage requires rockets, mirrors or completed geothermal plants.
+
+7C closure (2026-10-07): [reservation/settlement contract](r2mlvs3mp-v-utility-settlement-contract.md) specifies publication, one global allocation, revalidated settlement/effect, then explicit monthly rotation; current/free/source-loss conservation and persisted retry identity are separated from actual use. Delivered read-only/zero/fraction/shortage/multiple-owner/source/save boundaries are the focused7B evidence above. This closes ledger readiness and policy, with actual typed atomic mutation/link/sequence implementation in Group8 and observable effects in Group9. Full Useful Power Handoff and master9.1 stay pending.
+
+7.1 API checkpoint (2026-10-07, master9.1): `src/utility_power.h/.cpp` now owns native company/layer accounts and monotonically allocated producer/consumer IDs, once-only checked rate publication with the frozen millijoule carry, explicit bounded same-owner/same-layer consumer links, and the frozen deterministic allocation proposal. One synchronized `OWNER_DEITY` allocation serves all companies together; a company cannot close the world's interval ahead of peers. Promised source energy is reserved, never called settled consumption. `GetUtilityAllocation` only reads current owned grants, and metadata/world reset clears the prior ledger. The [upstream contract boundary](../../../../logs/r2mlvs3mp-u-power-producer-contracts.log) passes 180 assertions / eight cases. [New API and affected utility/schema checks](../../../../logs/r2mlvs3mp-u-power-api-checks.log) pass 263 assertions / eight cases, including zero/fractional publication, estimate/refusal purity, duplicate/stale input, stable shortage allocation, multiple companies and repeated queries. This checkpoint does not deliver epoch rotation/source removal, saved grants, atomic settlement or consumer effects; 7.2-7.5 and master9.1 remain pending.
+
+### Local Mandatory Reading - Atomic utility transactions
+
+_Applies to Group8 after7B/7C._
+
+Read Global/Native useful-power Area, the delivered `utility_power.h/.cpp` grant slices, version381 descriptors/digest and [settlement contract](r2mlvs3mp-v-utility-settlement-contract.md). Read `LayerRecipeCommitParticipant` and `CommitLayerRecipeBatch` only to identify the existing actual complete-transaction boundary; do not copy inventory state. For explicit link eligibility, inspect actual Connected/date-valid portal queries and canonical UtilityLink ownership in Content Freeze. Physical riser construction remains Plan17; absent later buildings do not authorize a new generator or implicit cross-layer credit. Extend saved records/version/preview and run mutation-owner plus actual-file fixtures before claiming retry or transfer delivered.
 
 ### Group 8 - Expose atomic utility consumption, release and transfer
 
 {{HARD}}
-- [ ] 8.1 Add public `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation` and `CommitUtilityMutation` in `src/utility_power.h`. Typed mutation kinds cover Consume, ReleaseUnused and TransferLayer; proposals carry grant/epoch, exact quantity, owner and explicit destination when needed.
-- [ ] 8.2 Prepare against saved grant balance/source lineage without mutation; commit through a revalidated transaction participant shared with recipe/movement jobs. Use a saved operation sequence/identity so retry cannot settle or export the same energy twice.
-- [ ] 8.3 Define unused-grant expiry and topology-loss release without refunding already consumed units. A layer transfer debits its source and credits destination availability while retaining source lineage, never invokes a second source-generation publication.
-- [ ] 8.4 Test insufficient/stale grants, duplicate commit, failed recipe participant and transfer/release around save/reload. Publish these mutation fixtures with the full Useful Power Handoff after consumer effects pass; downstream owners must not edit account fields privately.
+- [X] 8.1 Add public `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation` and `CommitUtilityMutation` in `src/utility_power.h`. Typed mutation kinds cover Consume, ReleaseUnused and TransferLayer; proposals carry grant/epoch, exact quantity, owner and explicit destination when needed.
+- [X] 8.2 Prepare against saved grant balance/source lineage without mutation; commit through a revalidated transaction participant shared with recipe/movement jobs. Use a saved operation sequence/identity so retry cannot settle or export the same energy twice.
+
+8.1 API/consume-release checkpoint (2026-10-07): exact consumer/epoch `UtilityGrantID`, typed kinds, pure sealed preparation, whole actual participant revalidation and saved operation-sequence receipts are implemented. Every accepted ledger change invalidates old tickets; estimates/queries do not. Generation/settlement lifetime totals survive rotation and retirement. Version382 extends the bounded transport while explicitly reading version381. [Focused mutation/ledger owners](../../../../logs/r2mlvs3mp-v-utility-mutation-checks.log) pass589 assertions/eight cases; [publication file checks](../../../../logs/r2mlvs3mp-v-utility-publication-file-checks.log) pass ten native cases; [settlement/migration file checks](../../../../logs/r2mlvs3mp-v-utility-settlement-file-checks.log) pass six native cases, including byte-exact consumption/release and original issued-ticket refusal after load. TransferLayer is typed but refuses until8.3 supplies actual commissioned link authority. The shared recipe adapter and its focused fixture have been added but are not yet compiled/verified;8.2-8.4 and the full handoff remain pending.
+
+8.2 shared transaction closure (2026-10-07): `LayerRecipeCommitParticipant::GetElectricalGrant` defaults to refusal; an actual token routes the complete existing material/output/work participant through `CommitUtilityMutation`. Inventory and ledger layers must agree, actual preparation/commit revalidates all owners, and thermal recipes still require their separate vent producer. [Shared recipe/mutation checks](../../../../logs/r2mlvs3mp-v-utility-recipe-checks.log) pass366 assertions/nine cases, including validation/commit failure, cross-layer refusal, exactly20J settled with two complete batches, stale recipe retry and forged historical-use refusal. Native scalar-only/bootstrap boundaries remain intact. The saved sequence and issued-ticket evidence above close settlement retry; actual link transfer and its file/loss/re-export cases remain8.3/8.4.
+
+### Local Mandatory Reading - Directed utility flow and topology loss
+
+_Applies to Group8B; continues original8.3/8.4 after the verified8.1/8.2 transaction producer._
+
+Read Global/Native useful-power Area and only current `UtilityPowerShare`/`UtilityPowerLink`, free-slice/transfer/retirement/validation paths in `utility_power.cpp`, utility383 wire descriptors and actual `ChangeLayerPortalConnection`/`RetireLayerPortalWorkPair` hooks. Existing recipe/consume/release proof is already delivered; do not preload it again unless those callbacks change. Run `utility_power_transfer_load.cpp` / `utility_power_save_fixture-2.py` against the unchanged paid Deep4 native input and its actual owned Connected Surface/Underground pair; no new room, copied grid or second generator proves a physical route. Preserve retained381/382 saves and verify older loading alongside new import/source/flow/loss/rebuild files. Current transfer code is drafted but not compiled/verified yet; keep8.3/8.4 pending.
+
+### Group 8B - Commission and persist directed utility flows
+
+{{HARD}}
+- [X] 8.3 Define unused-grant expiry and topology-loss release without refunding already consumed units. A layer transfer debits its source and credits destination availability while retaining source lineage, never invokes a second source-generation publication.
+- [X] 8.4 Test insufficient/stale grants, duplicate commit, failed recipe participant and transfer/release around save/reload. Publish these mutation fixtures with the full Useful Power Handoff after consumer effects pass; downstream owners must not edit account fields privately.
+
+8B closure (2026-10-08): directed ledger-issued links require real same-owner/date-valid Connected portal endpoints and exact commissioning revision. Transfers debit only original local slices, credit existing requested destination room within actual route capacity, retain original generator IDs and cannot re-export imports this interval. Sealing/demolition retires routes and releases only unused imports; consumed units survive loss/rotation and reconnection requires new link IDs. Version383 stores routes, flow and imported/transferred slices with381/382 readers. [Owner/recipe checks](../../../../logs/r2mlvs3mp-v-utility-transfer-owner-checks.log) pass645 assertions/nine cases; [five native physical transfer cases](../../../../logs/r2mlvs3mp-v-utility-transfer-file-checks.log) prove40J conserved from81J,10J actual original-source use,30J loss expiry without donor refund, new linkID2/rebuilt5J and byte-exact four-phase reloads. [Publication/current transport](../../../../logs/r2mlvs3mp-v-utility-transfer-publication-checks.log), [settlement/381 migration](../../../../logs/r2mlvs3mp-v-utility-transfer-settlement-checks.log) and [five retained382 loads](../../../../logs/r2mlvs3mp-v-utility-transfer-legacy382-checks.log) pass in separate bounded scripts. The [rebuilt normal executable](../../../../logs/r2mlvs3mp-v-utility-normal-build.log) and [ordinary loader/writer](../../../../logs/r2mlvs3mp-v-utility-normal-loader-checks.log) preserve exact current utility chunks with no fixture hook. Original paid Deep4/Underground5 inputs, retained old utility inputs and startup bytes remain unchanged. Physical riser construction/payment and complete tube/mine consumers remain their owning plans; Group9 effects and full Useful Power Handoff/master9.1 remain pending.
+
+### Local Mandatory Reading - Bounded consumer effects and town authority
+
+_Applies to Group9 after verified7/8/8B._
+
+Read Global/Native useful-power Area, `GetUtilityConsumerEffects`/`ComputeNativeTownPowerBonus`, actual `GetMultiLayerContentProfile().town_power_authority`, delivered current grant/whole-participant consumption boundary and saved consumer/source accounting. Read actual Town growth/custom-GS fields, `CmdTownGrowthRate` and `UpdateTownGrowthRate` before changing town behavior. Full native mine/tube implementations and solar/mirror authoring remain later; small real-owner consumer/effect fixtures must exhaust this exact ledger quantity and produce an observable bounded effect. Do not reread resolved link conversion/packing or ETI source investigations. A supported ETI adapter is absent; retain native authority and explicit custom-growth refusal/restoration policy.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 9 - Implement consumer effects and exclusive town authority
 
 {{HARD}}
-- [ ] 9.1 Apply the r2mlvs1 bounded native processor/tube service grants and Surface town-growth benefit through the canonical consumer boundary. Validate grants with small inventory/consumer fixtures; full mine/tube consumers are later integrations.
-- [ ] 9.2 Select native versus supported ETI town authority explicitly. Respect custom GS growth ownership and prevent native recalculation and GS commands from setting the same effect.
-- [ ] 9.3 Test accepted energy changes one observable consumer effect and exhausts the same ledger quantity, while unsupported/absent consumers receive no phantom benefit.
-- [ ] 9.4 Publish effect limits, update interval and public allocation-query fixture for r2mlvs6/16/17; keep missing final sprites pending under r2mlvs13.
+- [X] 9.1 Apply the r2mlvs1 bounded native processor/tube service grants and Surface town-growth benefit through the canonical consumer boundary. Validate grants with small inventory/consumer fixtures; full mine/tube consumers are later integrations.
+- [X] 9.2 Select native versus supported ETI town authority explicitly. Respect custom GS growth ownership and prevent native recalculation and GS commands from setting the same effect.
+- [X] 9.3 Test accepted energy changes one observable consumer effect and exhausts the same ledger quantity, while unsupported/absent consumers receive no phantom benefit.
+- [X] 9.4 Publish effect limits, update interval and public allocation-query fixture for r2mlvs6/16/17; keep missing final sprites pending under r2mlvs13.
+
+9 closure (2026-10-08): [Useful Power Handoff](r2mlvs3mp-x-useful-power-handoff.md) records the single ledger, exact transaction/effect APIs, frozen numerical caps, explicit synchronized interval ordering, exclusive native town authority and version384 transport. [829 assertions / 14 focused cases](../../../../logs/r2mlvs3mp-w-utility-effects-final-checks.log) prove whole-owner refusal, partial supply, zero-benefit preservation, actual work/real-town changes and matching original-source consumption, GS takeover before/after use and town ID reuse. [Five real town file cases](../../../../logs/r2mlvs3mp-w-utility-town-file-checks.log) and [normal executable loading/resaving](../../../../logs/r2mlvs3mp-w-utility-town-normal-checks.log) preserve exact utility/CITY state. [Current-format transport](../../../../logs/r2mlvs3mp-w-utility-current-transport-checks.log) passes ten native cases, including five corruption refusals, valid preview retry and saved carry/reservation continuation; [retained381/382/383 inputs](../../../../logs/r2mlvs3mp-w-utility-legacy-format-checks.log) pass current-reader grant/settlement-retry/physical-flow acceptance unchanged. Master9.1 closes. Actual solar/mirror generation, geothermal heat/construction, complete mine/tube consumers and their final art remain later tasks.
 
 ### Area Mandatory Reading - Solar generation and source accounting
 

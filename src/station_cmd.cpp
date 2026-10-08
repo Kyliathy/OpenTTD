@@ -43,6 +43,7 @@
 #include "map_layer.h"
 #include "map_layer_gui.h"
 #include "multilayer_content.h"
+#include "transport_tube.h"
 #include "excavation.h"
 #include "station_func.h"
 #include "station_supply.h"
@@ -1476,6 +1477,10 @@ CommandCost CmdBuildRailStation(DoCommandFlags flags, TileIndex tile_org, RailTy
 
 	/* these values are those that will be stored in train_tile and station_platforms */
 	TileArea new_location(tile_org, w_org, h_org);
+	if (IsTubeRailType(rt)) {
+		if (CommandCost tube = CheckTubeConstructionArea(tile_org, w_org, h_org,
+			axis == Axis::X ? DiagDirection::NE : DiagDirection::NW, true); tube.Failed()) return tube;
+	}
 	// Check every platform and approach before station allocation or the first automatic clear.
 	if (CommandCost ground = CheckExcavationConstructionArea(tile_org, w_org, h_org, axis == Axis::X ? DiagDirection::NE : DiagDirection::NW, true); ground.Failed()) return ground;
 	ret = CheckStationSpread({}, new_location);

@@ -107,6 +107,12 @@ void LoadCheckData::Clear()
 	this->tbm_exchange_present.fill(false);
 	this->tbm_exchange_header.fill(0);
 	this->tbm_exchange_rows.fill(0);
+	// Each preview owns fresh utility transport; a previous file cannot supply
+	// missing fractions, grants or chunk presence to the next selection.
+	this->utility_power_present.fill(false);
+	this->utility_power_header.fill(0);
+	this->utility_power_rows.fill(0);
+	this->utility_power_state = {};
 	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};

@@ -7,7 +7,13 @@
 
 /** @file economy.cpp Handling of the economy. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
+/**
+ * @file economy.cpp Native company/economy lifecycle and ownership transfer.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md Group15B utility ownership
+ */
+
 #include "stdafx.h"
+#include "utility_power.h"
 #include <ranges>
 #include "company_func.h"
 #include "command_func.h"
@@ -485,6 +491,9 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	 * tiles change, so project track and bays are no longer in use when a removed company's tiles are cleared. */
 	ChangeTBMOwnership(old_owner, new_owner);
 	ChangeLayerIndustryOwnership(old_owner, new_owner); // Keep actual mine bindings and geological claims together during takeover or abandonment.
+	// Electrical account history follows the same real company event before
+	// portal tiles or pool IDs disappear; only unused grants expire on removal.
+	ChangeUtilityPowerCompanyOwnership(old_owner, new_owner);
 
 	/*  Change ownership of tiles */
 	{

@@ -6,8 +6,8 @@
 
 /**
  * @file multilayer_control_runtime.cpp Actual loaded UI, purchase/cargo and active survey raster proof.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups83B/85B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.7/8.8
  */
 
 #include "../stdafx.h"
@@ -99,6 +99,33 @@ TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and se
 				Window::DeleteClosedWindows();
 			}
 			REQUIRE_FALSE(projects.empty());
+			if (std::getenv("OTTD_M1_SURVEY_GALLERY") != nullptr) {
+				// Every selected resource is represented by its actual retained seam
+				// and active survey owner, never a fabricated label or reserve state.
+				for (const CargoLabel label : {CargoLabel{"COAL"}, CargoLabel{"IORE"}, CargoLabel{"CORE"}, CargoLabel{"BAUX"}, CargoLabel{"SALT"},
+					CargoLabel{"LITH"}, CargoLabel{"NORE"}, CargoLabel{"COBT"}, CargoLabel{"RARE"}, CargoLabel{"URAN"}}) {
+					const std::string name = label.AsString();
+					const auto seam = std::ranges::find(records, label, &GeologyDeposit::resource);
+					REQUIRE(seam != records.end());
+					Window *window = ShowUndergroundConstructionToolbar(seam->layer, policy);
+					REQUIRE(window != nullptr);
+					CaptureNativeArtWindow(*window, reviews / fmt::format("m1-survey-{}-controls.ppm", name));
+					window->OnClick({}, WID_UC_SURVEY, 1);
+					const TileIndex tile = TileXYL(seam->spans.front().first_x, seam->spans.front().y, seam->layer);
+					REQUIRE(GetUndergroundSurveyOverlaySprite(tile).has_value());
+					window->OnPlaceObject({}, tile);
+					CaptureNativeArtWindow(*window, reviews / fmt::format("m1-survey-{}-controls.ppm", name));
+					// Native and 2x world views preserve real seam boundaries and
+					// the canonical marker anchor; survey selection writes no reserves.
+					for (const ZoomLevel zoom : {ZoomLevel::Normal, ZoomLevel::In2x}) {
+						CaptureNativeArtViewport(tile, zoom, reviews / fmt::format("m1-survey-{}-zoom-{}.ppm", name, to_underlying(zoom)));
+					}
+					window->OnPlaceObjectAbort();
+					window->Close();
+					Window::DeleteClosedWindows();
+				}
+				fmt::print("M1_SURVEY_GALLERY resources=10 frames=30 actual_seams=true\n");
+			}
 			if (std::getenv("OTTD_M1_JOB_ART") != nullptr) {
 				// Inspect the actual latest saved project through the real lower
 				// housing and existing project cursor. Its canonical authorization

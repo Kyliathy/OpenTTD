@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md (native crash cleanup) */
+/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md (native crash cleanup), docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md (capsule movement and recovery) */
 
 #include "stdafx.h"
 #include "error.h"
@@ -42,6 +42,7 @@
 #include "train.h"
 #include "train_cmd.h"
 #include "tbm.h"
+#include "transport_tube.h"
 #include "tbm_exchange.h"
 #include "multilayer_sprite.h"
 #include "tunnelbridge_map.h"
@@ -1420,6 +1421,21 @@ static CommandCost MoveRailVehicleParts(DoCommandFlags flags, Train *src, Train 
 
 	/* don't move the same vehicle.. */
 	if (src == dst) return CommandCost();
+	const bool capsule_domain = GetTubeVehicleCapability(src->engine_type).has_value();
+	const Train *selected_end = move_chain ? nullptr : src->GetLastEnginePart();
+	// Validate the complete selected physical unit/chain before any backup or
+	// relinking. Broad rail masks cannot attach ordinary wagons to a capsule.
+	for (const Train *part = src; part != nullptr; part = part->Next()) {
+		if (GetTubeVehicleCapability(part->engine_type).has_value() != capsule_domain) return CMD_ERROR;
+		if (part == selected_end) break;
+	}
+	// Every destination part must share that domain, including an existing
+	// trailing unit; rejecting only the destination head would miss mixed chains.
+	if (dst != nullptr) {
+		for (const Train *part = dst->First(); part != nullptr; part = part->Next()) {
+			if (GetTubeVehicleCapability(part->engine_type).has_value() != capsule_domain) return CMD_ERROR;
+		}
+	}
 
 	/* locate the head of the two chains */
 	Train *src_head = src->First();
@@ -2499,7 +2515,9 @@ CommandCost CmdReverseTrainDirection(DoCommandFlags flags, VehicleID veh_id, boo
 			v->force_proceed = TFP_NONE;
 			InvalidateWindowData(WindowClass::VehicleView, v->index);
 
-			if (_settings_game.vehicle.train_acceleration_model != AccelerationModel::Original && v->cur_speed != 0) {
+			// Capsules must brake before reversing even under the ordinary original-acceleration setting.
+			// Their physical guideway position and cargo stay with the same train while the normal handler completes the turnaround.
+			if ((_settings_game.vehicle.train_acceleration_model != AccelerationModel::Original || GetTubeVehicleCapability(v->engine_type).has_value()) && v->cur_speed != 0) {
 				v->flags.Flip(VehicleRailFlag::Reversing);
 			} else {
 				v->cur_speed = 0;
@@ -3501,6 +3519,11 @@ static void TrainEnterStation(Train *consist, StationID station)
  */
 static inline bool CheckCompatibleRail(const Train *v, TileIndex tile, bool check_railtype)
 {
+	// Actual movement rechecks the whole physical domain independently of
+	// pathfinder caches, force-proceed and broad compatible-rail masks.
+	if (!CanTubeTrainEnterTile(*v, tile)) return false;
+	// Existing ownership and optional mechanical rail compatibility still
+	// govern ordinary movement after semantic admission succeeds.
 	return IsTileOwner(tile, v->owner) &&
 			(!check_railtype || !v->IsFrontEngine() || v->compatible_railtypes.Test(GetRailType(tile)));
 }
@@ -4298,7 +4321,14 @@ static bool TrainApproachingLineEnd(Train *moving_front, bool signal, bool rever
 		/* A boring machine, and a hauler in front of its busy bay, wait here instead: their controllers choose the way
 		 * (R2MLVS3MP-M). */
 		const TileIndex next = GetLayerPortalNextTile(moving_front->tile, VehicleExitDir(vdir, moving_front->track));
-		if (reverse && !IsTBMWaitingAtLineEnd(*consist, next)) ReverseTrainDirection(consist);
+		// A closed or incompatible tube branch is a network wait, not an automatic return journey.
+		// Preserve the actual capsule footprint and packets; native PBS retry can resume after repair,
+		// while the player's explicit reverse command still owns a requested turnaround.
+		if (GetTubeVehicleCapability(consist->engine_type).has_value()) {
+			if (reverse) MarkTrainAsStuck(consist);
+		} else if (reverse && !IsTBMWaitingAtLineEnd(*consist, next)) {
+			ReverseTrainDirection(consist);
+		}
 		return false;
 	}
 
@@ -4515,8 +4545,10 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 	if (!mode && consist->flags.Test(VehicleRailFlag::Stuck)) {
 		++consist->wait_counter;
 
-		/* Should we try reversing this tick if still stuck? */
-		bool turn_around = consist->wait_counter % (_settings_game.pf.wait_for_pbs_path * Ticks::DAY_TICKS) == 0 && _settings_game.pf.reverse_at_signals;
+		// Ordinary signal waits may reverse on their configured retry interval.
+		// A capsule's closed network retains its route and cargo until repair or an explicit player turnaround, including long waits.
+		bool turn_around = consist->wait_counter % (_settings_game.pf.wait_for_pbs_path * Ticks::DAY_TICKS) == 0 &&
+			_settings_game.pf.reverse_at_signals && !GetTubeVehicleCapability(consist->engine_type).has_value();
 
 		if (!turn_around && consist->wait_counter % _settings_game.pf.path_backoff_interval != 0 && consist->force_proceed == TFP_NONE) return true;
 		if (!TryPathReserve(consist)) {

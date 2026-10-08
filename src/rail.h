@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail.h Rail specific functions. */
+/** @file rail.h Rail specific functions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md native tube capability */
 
 #ifndef RAIL_H
 #define RAIL_H
@@ -272,6 +272,7 @@ public:
 	EnumIndexArray<const SpriteGroup *, RailSpriteType, RailSpriteType::End> group{};
 
 	std::vector<BadgeID> badges;
+	bool native_tube = false; ///< First-party tube semantics owned by this canonical registry row; external labels/masks cannot grant the capability.
 
 	inline bool UsesOverlay() const
 	{

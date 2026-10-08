@@ -182,9 +182,26 @@ TEST_CASE("Support refuses cells it may not lay on", "[tbm-support]")
 	const auto next = PrepareTBMSupport(rig.Project(), rig.Job());
 	REQUIRE(next.error == TBMBlockedReason::None); // The second cut is still supportable.
 	REQUIRE_FALSE(next.pieces.empty());
-	// Track that is not this project's support is never merged: put plain company track on the second cell.
+	// Recurring projects may reuse exact owned, unsignalled track already on
+	// excavated floor. Reuse grants no new geology and proposes no duplicate
+	// construction charge for that physical piece (Plan5 Group13B).
 	const TileIndex second = next.pieces.back().tile;
 	MakeRailNormal(second, _current_company, TrackBits{next.pieces.back().track}, GetRailType(rig.proof.destination));
+	refused = PrepareTBMSupport(rig.Project(), rig.Job());
+	CHECK(refused.error == TBMBlockedReason::None);
+	// The existing matching track must stay under its original ordinary owner;
+	// newly proposed support pieces cannot overwrite it or charge it again.
+	for (const auto &piece : refused.pieces) CHECK(piece.tile != second);
+	const Track mismatched = next.pieces.back().track == Track::X ? Track::Y : Track::X;
+	MakeRailNormal(second, _current_company, TrackBits{mismatched}, GetRailType(rig.proof.destination));
+	refused = PrepareTBMSupport(rig.Project(), rig.Job());
+	CHECK(refused.error == TBMBlockedReason::Obstruction);
+	CHECK(refused.failure_tile == second);
+	MakeRailNormal(second, foreign.company, TrackBits{next.pieces.back().track}, GetRailType(rig.proof.destination));
+	refused = PrepareTBMSupport(rig.Project(), rig.Job());
+	CHECK(refused.error == TBMBlockedReason::Obstruction);
+	CHECK(refused.failure_tile == second);
+	MakeRailNormal(second, _current_company, TrackBits{next.pieces.back().track}, RAILTYPE_MONO);
 	refused = PrepareTBMSupport(rig.Project(), rig.Job());
 	CHECK(refused.error == TBMBlockedReason::Obstruction);
 	CHECK(refused.failure_tile == second);

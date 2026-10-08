@@ -27,6 +27,7 @@
 #include "../multilayer_industry.h" // r2mlvs6-mines-and-resource-chains.md: validate bindings only after actual industry/geology rebuild.
 #include "../layer_industry_processor.h"
 #include "../tbm_exchange.h"
+#include "../utility_power.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -3482,6 +3483,9 @@ bool AfterLoadGame()
 	if (!AcceptLoadedSpoilReceivers()) SlErrorCorrupt("Invalid spoil receiver state");
 	if (!AcceptLoadedLayerMines()) SlErrorCorrupt("Invalid finite mine state");
 	if (!AcceptLoadedLayerProcessors()) SlErrorCorrupt("Invalid native processor state");
+	// Utility grants bind actual companies and saved layers; accept only after
+	// physical owners and the profile have completed their load fixups.
+	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
 	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 14 14.3), so saved
 	// work/terrain/fleet differences cannot hide in metadata-only hashes.
 	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());

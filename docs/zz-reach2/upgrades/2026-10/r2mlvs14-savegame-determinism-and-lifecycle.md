@@ -71,7 +71,7 @@ Ordinary cargo packet/vehicle/station persistence should be reused where possibl
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/multilayer_state.h`. Publish `MultiLayerStateSchema`, `ValidateMultiLayerStateReferences`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Delivered foundation owner: `src/multilayer_state.h`, publishing `MultiLayerStateSchema` and `ValidateMultiLayerStateReferences`. Ground and electrical producer save/preview/fixup/Null/lifecycle evidence is delivered through current385; real multiplayer and later capsule/thermal/orbital families remain pending. Downstream consumers use these public owners, not private pools or copied tables.
 
 `Schema Foundation Handoff`: the first reading area publishes empty-compatible profile/schema/version rules and reference validation exports before new world-state implementation. Feature plans add their own descriptors as they land. Final feature/network audits do not block this initial checkpoint.
 
@@ -221,11 +221,13 @@ flowchart LR
 
 {{MEDIUM}}
 - [ ] 7.1 Require each feature plan to deliver its state descriptors, after-load reference fixups and meaningful mid-action fixture alongside implementation.
+- [X] 7.1G Verify delivered content/geology/portal/TBM/exchange and electrical ground descriptors/fixups against actual current mid-action files and focused producer boundaries. Orbital/tube/thermal rows remain pending.
 
 ### Group 8 - Feature persistence integration
 
 {{SIMPLE}}
 - [ ] 8.1 Collect a matrix of states covered, not just idle save samples.
+- [X] 8.1G Publish the ground state/evidence matrix below, including real partial bend, capacity wait, spanning hauler, origin loss, electrical retirement/transfer/effect and supported legacy formats.
 
 ### Group 9 - Validate feature metadata before activating loaded records
 
@@ -233,6 +235,9 @@ flowchart LR
 - [ ] 9.1 Map the live chunk-loading/AfterLoad sequence and insert profile/map metadata validation before new feature code depends on it. Respect existing chunk order and pointer-fixup phases rather than calling runtime APIs on unresolved IDs.
 - [ ] 9.2 Bound each new pool/array/shape/inventory length and validate raw numeric coordinates, enums and counters before allocation/use. Reject missing required content and impossible layer/feature combinations.
 - [ ] 9.3 Use the loader existing failure cleanup/error path for an invalid in-progress world. Do not resume gameplay with partially validated records or promise restoration of the previous running world unless the loader actually supports it.
+- [X] 9.1G Verify ground registry-order fixups and post-company/map/vehicle acceptance in `AfterLoadGame`; staged transport never becomes live authority before these owners validate.
+- [X] 9.2G Verify current ground/utility scalar/count/reference refusals through focused owner checks and actual malformed native files; retain exact content/version policies.
+- [X] 9.3G Execute actual read/fixup rejection through the normal game's Null cleanup. Preserve the existing in-progress-world failure semantics.
 
 ### Group 10 - Resolve references and unique inventory ownership
 
@@ -242,6 +247,20 @@ flowchart LR
 - [ ] 10.3 Construct a temporary ownership audit for each packet/inventory reservation: exactly one authoritative container owns the quantity and capacity reservations do not duplicate it.
 - [ ] 10.4 Validate consist links, attachment leases, module dependencies and job references for duplicate ownership, invalid IDs and forbidden cycles. Reject or apply only the documented legacy repair; do not silently drop cargo.
 - [ ] 10.5 Test one corrupt reference class at a time, including two heads claiming a wagon and two jobs claiming an input packet.
+### Local Mandatory Reading - Completed ground ownership subset
+
+_Applies to Group10B; supplement Feature persistence Area._
+
+Read only actual `tbm_exchange_load.cpp` duplicate/reused-owner boundaries, current ground48-owner reader and the actual utility read/fixup Null logs linked in the evidence matrix. The original Group10 includes unselected orbital obligations and remains pending; this separate completed subset preserves the eight-task group limit.
+
+### Group 10B - Completed ground ownership audit
+
+{{HARD}}
+- [X] 10.1G Resolve actual ground project/support/set/head/origin and utility references through their public validators, including stale/reused/duplicate claims.
+- [X] 10.2G Verify ground numeric staging handlers tolerate real Null dispatch without dereferencing absent pools.
+- [X] 10.3G Compare all48 present serialized ground owners, including physical packets/vehicles/industries and complete mine/processor/utility families; no second cargo balance is introduced.
+- [X] 10.4G Verify actual consist/set ownership and retained utility source/consumer/link lineage, with no silent packet repair.
+- [X] 10.5G Execute isolated ground missing/reused/shared wagon/project cases and malformed utility liveness/free-balance cases. Orbital input reservations remain outside this ground subset.
 
 ### Group 11 - Rebuild only derived caches after validation
 
@@ -249,19 +268,60 @@ flowchart LR
 - [ ] 11.1 Rebuild geology/spatial buckets, path/approach reservations and utility connectivity from validated authoritative fields in stable order.
 - [ ] 11.2 Verify cache reconstruction cannot change cargo, reserves, consumed milestones or source generation totals. Saved active grants/leases remain authority where their contract says so.
 - [ ] 11.3 Run one next-tick comparison per feature family after reload and a repeat load; pointer layout, render state and hash insertion order cannot change decisions.
+- [X] 11.1G Verify ground derived train/support/route caches rebuild through the actual native application loader after owner validation.
+- [X] 11.2G Preserve initial/next-transition ground packet, reserve, invoice and utility history, including exact accepted clock/RNG state on repeated loading.
+- [X] 11.3G Compare current partial-bend, capacity-wait and spanning next transitions after one/two actual loads; independently verify staged cut/phase/exchange/utility continuation owners.
 
 ### Group 12 - Feature persistence integration
 
 {{MEDIUM}}
 - [ ] 12.1 Verify estimate/execute semantics for portal construction, excavation, wagon swaps, launch/deployment, construction consumption and mirror assignment. Failed estimates or retries cannot consume RNG, inventory or funds.
 - [ ] 12.2 Verify saves during TBM cuts, straddling consists, queue waits, probe attachment, ascent/descent, partial modules and partial solar periods resume at the same simulation result.
+- [X] 12.1G Verify ground portal/project/cut/exchange and electrical estimate/refusal/retry ownership with current focused producer tests.
+- [X] 12.2G Verify actual partial cut/bend, loaded capacity wait and spanning-hauler files resume with unchanged current native owners and timing; keep orbital phases pending.
+
+### Ground persistence evidence matrix
+
+This scoped matrix closes the named G subsets, not mixed whole-profile tasks. Current saved inputs remain declared physical development fixtures; first-bootstrap and real host/client joins are separate requirements.
+
+| State/boundary | Actual evidence and scope |
+| --- | --- |
+| Partial advancing45-degree bend/work | [Group13B current writer and two native loads](#group-13b---verify-current-ground-files-through-real-loading); heading4/cursor3/partial1; same next exchange after3,749 frames |
+| Loaded capacity wait | [Native one/two loads](../../../../logs/r2mlvs3mp-z-a-ground-wagon-wait-checks.log); same vehicle packets and next exchange aftertwo frames |
+| Real spanning hauler | [Current Deep one/two loads](../../../../logs/r2mlvs3mp-z-a-ground-current-spanning-checks.log); exact native physics and179-frame next exchange |
+| Project/cut/phase/portal atomic references | [40,292 assertions/19 cases](../../../../logs/r2mlvs3mp-z-a-ground-reference-checks.log); unmatched exchange-save selector excluded from its passing scope |
+| Exchange phase/ownership/corruption | [Correct exchange-load selector](../../../../logs/r2mlvs3mp-z-a-ground-exchange-reference-checks.log);35,009 assertions/five cases, including two actual heads claiming one set |
+| Complete present owner families | [48-owner initial/next-exchange comparison](../../../../logs/r2mlvs3mp-z-a-ground-complete-owner-checks.log); packet/vehicle/company/clock/map/geology/project/exchange/receiver plus mine/processor/utility families |
+| Actual removed Surface origin | [Current writer](../../../../logs/r2mlvs3mp-z-a-ground-origin-writer.log), [native one/two loads](../../../../logs/r2mlvs3mp-z-a-ground-lost-origin-checks.log); real station rebuilding and10,835-frame next exchange |
+| Electrical owner lifetime/reference/cache continuation | [479 assertions/eight cases](../../../../logs/r2mlvs3mp-z-a-ground-state-owner-checks.log), [Group15B actual files and normal game](#group-15b---complete-delivered-electrical-company-ownership); older381..384 inputs remain immutable |
+| Actual malformed full-load cleanup | [Normal read/fixup refusal and Null dispatch](../../../../logs/r2mlvs3mp-z-a-utility-null-checks.log), with UPLH/UPLD cleanup and no previous-world restoration promise |
+
+Tube/thermal portions dispatched by master11.2 are skipped under GP-TG at these Groups7-12; their producers are absent across the separately recorded major gap. Orbital/descent/direct-heat tasks remain out of this master's scope. No skipped or unselected original whole task becomesX.
 
 ### Group 13 - Round-trip ground geometry and real wagon ownership
 
 {{HARD}}
-- [ ] 13.1 Save during a TBM 45-degree bend/partial pass, a full-wagon pause and a spanning-layer hauler. Compare heading, route cursor, support, actual wagon IDs and Earth/Rock quantities.
-- [ ] 13.2 Verify loaded failure/cancellation states preserve supported retreat and the required Surface origin cycle. Include these fields in the canonical digest.
+- [X] 13.1 Save during a TBM 45-degree bend/partial pass, a full-wagon pause and a spanning-layer hauler. Compare heading, route cursor, support, actual wagon IDs and Earth/Rock quantities.
+- [X] 13.2 Verify loaded failure/cancellation states preserve supported retreat and the required Surface origin cycle. Include these fields in the canonical digest.
 - [ ] 13.3 After tube delivery, round-trip all five capsule models with layer-local routes, power/service state and interchange cargo; retain the conventional mandatory spoil leg.
+
+13.2 closure,2026-10-08: actual station loss/rebuild [writes90,345 assertions](../../../../logs/r2mlvs3mp-z-a-ground-origin-writer.log), then [one/two native loads](../../../../logs/r2mlvs3mp-z-a-ground-lost-origin-checks.log) resume the same exchange after10,835 frames. Actual cancel-command execution during partial bend work [writes10,045 assertions](../../../../logs/r2mlvs3mp-z-a-ground-cancel-writer.log); [native retreat/exchange](../../../../logs/r2mlvs3mp-z-a-ground-cancel-checks.log) matches2,380 frames, and [complete cancelled Surface-haul/disposal/empty-return](../../../../logs/r2mlvs3mp-z-a-ground-cancel-final-cycle-checks.log) matches3,478 frames after both loads. All48 present owner chunks include supported track, job/cursor/heading, actual wagon packets, final receiver/company history and clocks/RNG. Fresh current inputs remain immutable. The first complete-loop harness attempt rejected its empty presentation label despite an actual native pass; explicitly declaring headless yields the final two-process pass. Tube13.3 is skipped for master finalization under GP-TG; capsule code remains undelivered.
+
+### Local Mandatory Reading - Current native ground snapshots
+
+_Applies to Group13B; master11.2 ground round-trip proof._
+
+Read this plan's Global/Feature persistence Area, actual `tbm_logistics_save.cpp` read-only writer/`RunUndergroundExcavationWorkflow`, `tbm_logistics_save_fixture.py` complete owner/current-format comparisons, and `tbm_logistics_runtime.cpp` native loader/full-game observer. Fresh385 snapshots must retain real source physics, heading, paid support, work cursor and cargo, with no repositioning. The immutable380 spanning input has serialized hauler acceleration48 while current native cache reconstruction produces16; keep that historical difference explicit and use a fresh current producer for exact initial physics claims. No arbitrary acceleration-ignore or source-byte patch is authorized. Prior `TBMMovingRig::ReloadOnBend` is only controller/support staging, not an actual serialized bend save.
+
+### Group 13B - Verify current ground files through real loading
+
+{{HARD}}
+- [X] 13B.1 Record fresh current-version physical stopped/exchange/disposal/return/spanning and partial-bend snapshots through the actual native workflow and writer, preserving the original380 inputs and declared fixture setup.
+- [X] 13B.2 Compare complete initial native owners/physics and the next legal transition after one/two actual application loads, including active bend heading/cursor/support and real wagon IDs/packets/invoices. Publish exact passing scope and retain any failed historical comparison.
+
+13B closure,2026-10-08: [current Deep writer](../../../../logs/r2mlvs3mp-z-a-ground-current-writer.log) passes33,101 assertions and [Underground wide/bend writer](../../../../logs/r2mlvs3mp-z-a-ground-bend-writer-1.log) passes59,355. Fresh385 Deep states are `acceptance-ground-deep-385-a-*`; the wide source is `acceptance-ground-bend-385-b-*`. Actual partial-bend heading/work/cursor/support and wagon IDs survive two full application loads, with an identical next physical exchange after3,749 frames; [spanning](../../../../logs/r2mlvs3mp-z-a-ground-current-spanning-checks.log) compares179 frames. [Bend native passes](../../../../logs/r2mlvs3mp-z-a-ground-bend-checks.log) and [exact accepted owner/clock/RNG reconstruction](../../../../logs/r2mlvs3mp-z-a-ground-repeated-owners.log) retain current evidence. The original380 acceleration difference remains a failed historical exact-physics comparison. First loading may initialize the reduced fixture's unset company face; the already accepted save's repeated load has no such owner/clock/RNG exception. These are declared physical fixture round trips, not real bootstrap or host/client join.
+
+Original13.1 also closes: the wide fixture's `await-exchange` records an actual loaded cutter in WaitForEmpties, with90t Earth/180t Rock and insufficient room for its next bounded cut. [Two native capacity-wait loads](../../../../logs/r2mlvs3mp-z-a-ground-wagon-wait-checks.log) preserve its inventory/owners and resume the same exchange aftertwo frames. The saved partial bend has actual heading4, cursor3 and partial work1. [Complete48-owner comparison](../../../../logs/r2mlvs3mp-z-a-ground-complete-owner-checks.log) additionally retains present mine/processor/utility families, rejecting partial families. This closes geometry/capacity/spanning evidence; failure/cancellation13.2 and absent tube13.3 remain separate.
 
 ### Group 14 - Round-trip descent, handling and energy ownership
 
@@ -269,6 +329,8 @@ flowchart LR
 - [ ] 14.1 Save off-center at the 20-tile drop boundary and during Surface handling with a pending member change. Verify release position, target incarnation, packet age/provenance and capacity reservations.
 - [ ] 14.2 After geothermal delivery, save shared heat allocation, electrical export and direct-processing inputs/remainders. Compare one owner per thermal/electric unit and no second grid credit.
 - [ ] 14.3 Compare normalized hashes and next-step ledgers for each independent delivered family. Full combined round-trip closure waits for every producer; a missing late family does not invalidate independent evidence.
+
+- [X] 14.3G Preserve delivered electrical generation/consumption/transfer/lifetime and monotonic account identities through real files, including source/route loss, expiry, town effects and company retirement/reuse. Direct-heat/solar-mirror/orbital inventory portions of Group14 remain pending; absent tube/thermal rows use GP-TG.
 
 ### Area Mandatory Reading - Entity lifecycle and multiplayer
 
@@ -299,13 +361,41 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [ ] 15.3 For tube/utility references, table depot/interchange/power-link loss, vent claim changes and accounting grant cancellation. Distinguish derived disconnected networks from saved consumed resources.
 - [ ] 15.4 Require each feature owner to implement/test its table rows via public lifecycle hooks. This audit records missing coverage instead of duplicating private repair code.
 
+Delivered utility subset,2026-10-08: [public-hook lifecycle policy and coverage](r2mlvs3mp-z-utility-lifecycle-policy.md) records tested electrical cancellation/whole-owner refusal, source retirement/new ID, actual portal sealing/demolition/reconnection, interval expiry and real-town authority/ID reuse. Ledger/recipe fixtures pass521 assertions/six cases; actual saved/native/normal-game proof is linked in the handoff. Upcoming tube/vent/operating-generator and company takeover/removal hooks are explicitly pending. The full15.3/15.4 tasks remain unchecked; master9.5A closes this delivered preparation subset and9.5B returns after actual producers.
+
+### Local Mandatory Reading - Delivered electrical company lifecycle
+
+_Applies to Group15B; master11.2 reference ownership audit._
+
+Read this plan's Global/Entity lifecycle Area, `ChangeOwnershipOfCompanyItems` in `src/economy.cpp`, `UtilityPowerConsumer` and public lifecycle APIs in `src/utility_power.h`, source retirement/admission/validation in `src/utility_power.cpp`, and concrete UPLH/UPLD readers in `src/saveload/utility_power_sl.cpp`. Existing384 consumer wire `active` is reserved zero; reserve385/format5 to persist consumer retirement while explicitly reading381..384 as live consumers. Preserve actual lifetime settlement, original shares and monotonic IDs. Only unused grants expire; company reuse never reactivates tombstones. Read the corresponding row in [the lifecycle policy](r2mlvs3mp-z-utility-lifecycle-policy.md). Tube/thermal company owners remain under GP-TG.
+
+### Group 15B - Complete delivered electrical company ownership
+
+{{HARD}}
+- [X] 15B.1 Add a public bounded utility-company lifecycle hook to the actual takeover/removal owner. Transfer retained account ownership on takeover; retire physical links and expire only their unused imports. Removal retires owned sources/consumers and clears town eligibility while preserving settled history.
+- [X] 15B.2 Persist inactive consumer tombstones in explicit385/format5 transport; reject usable retired balances/links and retain genuine381..384 readers.
+- [X] 15B.3 Test actual company takeover/removal, deletion/ID reuse, stale proposal refusal and native save/preview/reload of retired settled accounts in focused fixtures. Publish the completed policy/evidence without claiming missing tube/thermal lifecycle.
+
+15B closure,2026-10-08: `ChangeUtilityPowerCompanyOwnership` is called by actual `ChangeOwnershipOfCompanyItems` before tile ownership changes. Current live lineage transfers; earlier inactive company incarnations retain their historical owners. Deletion keeps monotonic source/consumer IDs and consumed lifetime use, expires unused slices, clears town eligibility and makes stale tickets refuse. Version385/UPLH5 uses the existing104-byte/25-field active scalar for consumer retirement; explicit381..384 readers preserve their genuine source bytes. [437 owner assertions/12 cases](../../../../logs/r2mlvs3mp-z-a-company-owner-checks-3.log), [actual native retirement/two reloads/corrupt previews/physical takeover](../../../../logs/r2mlvs3mp-z-a-company-native-checks-2.log), [four retained readers](../../../../logs/r2mlvs3mp-z-a-company-legacy-readers.log), and [ordinary game loading/resaving](../../../../logs/r2mlvs3mp-z-a-company-normal-checks.log) pass. [Debug game/test](../../../../logs/r2mlvs3mp-z-a-company-lifecycle-build-5.log) and [optimized game/test](../../../../logs/r2mlvs3mp-z-a-company-optimized-build.log) build. [Lifecycle policy](r2mlvs3mp-z-utility-lifecycle-policy.md) and [public handoff](r2mlvs3mp-x-useful-power-handoff.md) now describe current385 authority. This completes the delivered company row, not missing capsule/thermal owners or real join.
+
+### Local Mandatory Reading - Ground lifecycle and real network audit
+
+_Applies to Groups16-19 when dispatched by master11.3; read only selected ground scope._
+
+Read this plan's Global/Entity lifecycle Area, current master11.3 and the completed ground/utility evidence above. For real networking inspect `NetworkExecuteLocalCommandQueue`, server `SendSync`, client `ReceiveServerMapDone`/`SafeLoad`, and `LogMultiLayerStateDiagnostics`/`ComputeMultiLayerStateDigest`. The workspace currently has crypto unit tests but no discovered ground host/client/join runner; verify actual callable APIs before planning one. The diagnostic feature digest is not automatically a complete vehicle/packet/clock network trace. Actual snapshot-transfer and agreed-frame evidence remain required. Keep first-initialization portrait/RNG behavior distinct from exact already-accepted baseline reloads. GP-TG applies only to missing tube/thermal subscenarios; it cannot silently replace a real ground join.
+
 ### Group 16 - Entity lifecycle and multiplayer
+
+Goal finalization exception GP-NJ:16.2 real peer scenarios are skipped under the user's multi-group-gap permission; the absent harness/trace/scenario boundaries are recorded in [the final closure audit](r2mlvs3mp-z-b-final-closure-audit.md#gp-nj-real-multiplayer-acceptance-requires-a-new-multi-group-harness). Orbital16.1 remains out of scope; independent ground lifecycle is verified below. No host/client pass is inferred.
 
 {{MEDIUM}}
 - [ ] 16.1 Exercise lost origin station, destroyed/removed exchange bay, mine depletion, launch center removal, asteroid deletion, module dependency removal and solar-farm replacement. No stale ID can silently bind to a newly allocated object.
 - [ ] 16.2 Run host/client identical-command scenarios with different selected layers/viewports and rendering settings.
+- [X] 16.1G Exercise delivered ground origin/bay/train/set/mine/processor/company loss and ownership/reuse boundaries, preserving actual cargo and refusing stale ownership. Current focused proof passes11,736 assertions/18 cases.
 
 ### Group 17 - Compare complete host and client simulation traces
+
+Goal finalization exception GP-NJ:17.1-17.3 are skipped for this goal because complete actual peer/frame traces and their harness require the three new groups documented in [the audit](r2mlvs3mp-z-b-final-closure-audit.md). They remain required and unchecked for engineering acceptance.
 
 {{HARD}}
 - [ ] 17.1 Run underground and orbital loops on a real host/client pair with identical commands and different selected layers/render settings. Collect canonical feature digests at agreed simulation ticks.
@@ -314,12 +404,16 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 ### Group 18 - Join while independent feature jobs are active
 
+Goal finalization exception GP-NJ: ground18.1 and dependent combined18.3 are skipped for this goal; actual snapshot-transfer/join evidence is absent. Missing tube/thermal18.2 uses GP-TG; orbital18.2 and whole combined closure remain outside scope. Retained single-player files do not count as a join.
+
 {{HARD}}
 - [ ] 18.1 Prepare a host snapshot with active excavation and wagon waiting, then join a fresh client and compare reconstructed references, next-tick state and subsequent digests.
 - [ ] 18.2 Repeat with probe mining, cargo descent and partial module assembly; then add delivered tube/geothermal jobs. Keep each subscenario independent so a failure has a bounded state surface.
 - [ ] 18.3 Run the final combined join after all families pass independently. Single-player replay is useful diagnosis but cannot substitute for actual snapshot transfer and join.
 
 ### Group 19 - Entity lifecycle and multiplayer
+
+Goal finalization exception GP-NJ:19.1 and the peer/dedicated/time-mode comparisons in19.2 are skipped with the required new network harness/trace/scenario groups. Existing actual headless/hidden single-player evidence remains scoped evidence; unsupported time-mode/network claims stay unchecked.
 
 {{MEDIUM}}
 - [ ] 19.1 Verify the joining snapshot and subsequent hashes; single-player command replay is not a substitute for join testing.
@@ -334,6 +428,8 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 ### Group 21 - Stress tube and geothermal lifecycle across technology dates
 
+Goal finalization exception GP-TG:21.1-21.3 tube/thermal consumer/topology/date scenarios are skipped for this goal because their actual producers are undelivered. Existing ground Deep/calendar guards are retained and do not establish capsule/thermal behavior.
+
 {{HARD}}
 - [ ] 21.1 Remove tube power/depot/interchange support through allowed/refused commands and verify cargo recovery plus deterministic network invalidation.
 - [ ] 21.2 Exercise vent claim reuse and broken electrical risers during allocation/direct-processing; preserve already consumed heat and cancel only uncommitted grants.
@@ -344,6 +440,10 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 {{SIMPLE}}
 - [ ] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [ ] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+- [X] 22.1G Record current ground/electrical exports, native/repeated/normal-game/corrupt-load evidence and exact remaining network/thermal/orbital gaps in [the final audit](r2mlvs3mp-z-b-final-closure-audit.md).
+- [X] 22.2G Update delivered map-layer/savegame/electrical handoffs through385; preserve full-plan and parent incompletion.
+
+Ground documentation closure:48-owner physical continuation, genuine370/381..384 compatibility, actual utility company hooks/ID-reuse and full-load Null cleanup retain their source inputs and owning matrix. GP-TG/GP-NJ skip absent thermal/capsule and live join rows for this goal only; original22.1/22.2 full-family claims remain pending.
 
 ## Consult on Demand
 

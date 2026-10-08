@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/train.h](../../../../src/train.h) | 120-148 | `Train::Tick`, `GetRunningCost`, `ConsistChanged` and acceleration declarations own simulation progress, costs and consist caches; view state cannot advance cutting. |
 
-Status: in progress; sealed-solid commissioning, actual paid cuts, physical support movement, protected retreat and source-side haulage are delivered. Groups 8 and 11 close their movement/bend-continuation checks in the 2026-10-06 master audit. Recurring underground-bay logistics, occupied-file acceptance, complete economics, final art and actual tube/geothermal conversion remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs3 and r2mlvs1's wagon contract.
+Status, 2026-10-08: sealed-solid commissioning, paid cuts/support, actual source/recurring-depot haulage, recovery, current385 occupied/bend/cancelled files, measured corridor economics and selected loaded art/sounds are delivered. Tasks15.1/21.4 retain actual tube/plant final-use gaps;22.2 retains full closure. [Final audit](r2mlvs3mp-z-b-final-closure-audit.md) documents authorized finalization exceptions for absent late consumers, real network joins, normal-newgame proof, full performance and personal feedback. The engineering plan remains incomplete. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -380,6 +380,8 @@ Context has compacted 1 times while executing this group.
 
 ### Group 15 - Boring and accounting
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Only the tube/riser or final-use portion is skipped; independent completed work and turn/recovery checks retain their evidence. No skipped task is markedX.
+
 {{MEDIUM}}
 - [ ] 15.1 Allow cleared ground to become tubes, roads, terminals, mines, geothermal plants or open chambers after safe support-track removal/conversion. Final use need not contain rails. Never remove support under the TBM or strand it by completing a tube segment behind it. Deep cutting obeys the 1980 calendar gate.
 
@@ -544,17 +546,23 @@ The Deep cutter does 3/2 geological work per tick, so its 1,776 work ticks take 
 
 ### Group 21 - Recovery, presentation and acceptance
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Only the tube/riser or final-use portion is skipped; independent completed work and turn/recovery checks retain their evidence. No skipped task is markedX.
+
 {{HARD}}
-- [ ] 21.1 Test legal 45-degree bends and a 90-degree change made from two advancing bends.
-- [ ] 21.2 Test U-turn space, safe backing and refusal of stationary pivots or backwards boring.
-- [ ] 21.3 Save/reload during a turn and compare cutter heading, pass progress and generated spoil.
+- [X] 21.1 Test legal 45-degree bends and a 90-degree change made from two advancing bends.
+- [X] 21.2 Test U-turn space, safe backing and refusal of stationary pivots or backwards boring.
+- [X] 21.3 Save/reload during a turn and compare cutter heading, pass progress and generated spoil.
 - [ ] 21.4 Clear an irregular tube-terminal/geothermal-plant footprint, withdraw safely and replace temporary rail with its final non-rail use.
+
+Ground21.1-21.3 closure,2026-10-08: [geometry/turn/refusal checks](../../../../logs/r2mlvs3mp-z-b-ground-turn-checks.log) pass6,021 assertions/nine cases and [actual movement/backing/control/script/recovery](../../../../logs/r2mlvs3mp-z-b-ground-control-recovery-checks.log) passes136,634 assertions/16 cases. Legal two-bend90-degree motion, tight/stationary/sharp-step refusals and supported retreat retain their actual owners. [Plan14 Group13B](r2mlvs14-savegame-determinism-and-lifecycle.md#group-13b---verify-current-ground-files-through-real-loading) supplies real385 partial-turn files and two native loads, with exact heading4/cursor3/partial1, support/packet/clock ownership and next exchange;13.2 also proves cancelled retreat/Surface disposal.21.4 remains unchecked under the already recorded GP-TG exception.
 
 ### Group 22 - Recovery, presentation and acceptance
 
 {{SIMPLE}}
-- [ ] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
+- [X] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [ ] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+
+22.1 closure, 2026-10-08: `src/tbm.h`/`src/tbm_cmd.h` publish actual commissioning, project/work/geometry, acquisition/roles, support, controls/recovery and origin replacement; ordinary train ticks own movement and original wagon/packet owners retain cargo. Source/recurring bay, current385 bend/wait/spanning/origin-loss/cancelled final disposal, gallery/sound and full corridor costs are linked in [the final requirement matrix](r2mlvs3mp-z-b-final-closure-audit.md). Both final builds pass; focused Debug/optimized boundary bursts each pass162,516 assertions/38 cases. Original saves/art remain immutable. Old380 acceleration disagreement remains a failed historical comparison, not a current pass. 22.2 is **authorized skipped for goal finalization** because full final-use prerequisites require GP-TG; its checkbox and parent completion remain pending. Network/bootstrap/full-performance/personal-review exceptions remain explicit and unverified. Map-layer/savegame documentation records only delivered semantics.
 
 ## Consult on Demand
 

@@ -22,6 +22,7 @@ static constexpr uint32_t MULTILAYER_FEATURE_SPOIL_RECEIVERS = 64; ///< Live Ear
 static constexpr uint32_t MULTILAYER_FEATURE_TBM_EXCHANGE = 128; ///< Hauler assignments/wagon sets (any ID ever allocated) require the version-378 exchange family.
 static constexpr uint32_t MULTILAYER_FEATURE_MINES = 256; ///< Finite mine bindings require the version-379 family and existing geology/industry inventories. See r2mlvs6-mines-and-resource-chains.md.
 static constexpr uint32_t MULTILAYER_FEATURE_PROCESSORS = 512; ///< Native recipe choice/work/counters require version-380 descriptors beside Industry stock. See r2mlvs6-mines-and-resource-chains.md.
+static constexpr uint32_t MULTILAYER_FEATURE_UTILITY_POWER = 1024; ///< Native electrical epochs, fractions and grants require version-381 transport. See r2mlvs12-solar-farms-mirrors-and-eti.md.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -97,6 +98,7 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	PortalWorkRoot, ///< Appended pair phase/project/actor authority; physical endpoint fields remain in the ordinary map digest.
 	MineRoot, ///< Appended finite bindings/work/counters; reserve and output keep their own owners. See r2mlvs6-mines-and-resource-chains.md.
 	ProcessorRoot, ///< Appended native choice/work/batch/material history, with stock read from Industry. See r2mlvs6-mines-and-resource-chains.md.
+	UtilityRoot, ///< Appended exact electrical epoch/meter/link/slice authority. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B.
 	End,
 };
 

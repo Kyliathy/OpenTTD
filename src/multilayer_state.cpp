@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md */
+/** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md; r2mlvs12-solar-farms-mirrors-and-eti.md */
 
 #include "stdafx.h"
 #include "multilayer_state.h"
@@ -16,6 +16,7 @@
 #include "tbm_exchange.h"
 #include "multilayer_industry.h"
 #include "layer_industry_processor.h"
+#include "utility_power.h"
 
 #include "safeguards.h"
 
@@ -36,7 +37,7 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Every finite binding references existing geology; a mine flag cannot manufacture reserve authority on load.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_MINES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Natural vent geometry depends on the delivered rock-plane owner; a standalone bit cannot fabricate a usable thermal field.
@@ -88,6 +89,7 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (!CaptureSpoilReceivers().empty()) schema.feature_flags |= MULTILAYER_FEATURE_SPOIL_RECEIVERS; // Receivers live and die with their industries; no allocation history.
 	if (!CaptureLayerMines().empty()) schema.feature_flags |= MULTILAYER_FEATURE_MINES; // Physical bindings live and die with their industries; reserves keep their geological owner.
 	if (!CaptureLayerProcessors().empty()) schema.feature_flags |= MULTILAYER_FEATURE_PROCESSORS; // Choice/work/history belong to actual processors, independently of geology.
+	if (HasUtilityPowerState()) schema.feature_flags |= MULTILAYER_FEATURE_UTILITY_POWER; // Retained source/epoch identity survives zero supply and source retirement.
 	if (GetNextTBMExchangeAssignmentID() != 0 || GetNextTBMWagonSetID() != 0) schema.feature_flags |= MULTILAYER_FEATURE_TBM_EXCHANGE; // Identity cursors, like project IDs, survive release.
 	if (GetLayerPortalWorkPairCount() != 0) schema.feature_flags |= MULTILAYER_FEATURE_PORTAL_WORK; // Metadata/diagnostic queries read accepted owner cardinality without allocating a copied save transport.
 	// Only actual retained validated input enables the new family; old unvalidated paused jobs remain recoverable.
@@ -109,6 +111,9 @@ void ResetMultiLayerStateSchema()
 	_pending_multilayer_schema.reset();
 	_multilayer_geology_seed = 0;
 	_multilayer_orbital_seed = 0;
+	// World initialization must not leave a previous world's electrical accounts
+	// or allocation epoch available to a new native or Classic world.
+	ResetUtilityPowerState();
 }
 
 /**
@@ -272,6 +277,8 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 	if ((schema.feature_flags & MULTILAYER_FEATURE_MINES) != 0) records.push_back({MultiLayerCanonicalKind::MineRoot, 0, mine_fields});
 	const std::array processor_fields = {MultiLayerCanonicalField{1, 8, ComputeLayerProcessorDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_PROCESSORS) != 0) records.push_back({MultiLayerCanonicalKind::ProcessorRoot, 0, processor_fields});
+	const std::array utility_fields = {MultiLayerCanonicalField{1, 8, ComputeUtilityPowerDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_UTILITY_POWER) != 0) records.push_back({MultiLayerCanonicalKind::UtilityRoot, 0, utility_fields});
 	const auto digest = ComputeMultiLayerStateDigest(schema, records);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);

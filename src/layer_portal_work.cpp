@@ -19,6 +19,7 @@
 #include "aircraft.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
+#include "utility_power.h"
 #include "track_func.h"
 #include "pbs.h"
 #include "rail_map.h"
@@ -344,6 +345,9 @@ LayerPortalWorkError ChangeLayerPortalConnection(TileIndex tile, CompanyID compa
 	if (work.state == target_state) return LayerPortalWorkError::None;
 	if (work.revision >= UINT64_MAX - 1) return LayerPortalWorkError::Limit;
 	if (!execute) return LayerPortalWorkError::None;
+	// Sealing an admitted physical pair expires attached unused electrical
+	// imports before the old Connected revision loses routing authority.
+	if (!connected) InvalidateUtilityPowerLinksForPortal(*key);
 	if (!connected && GetLayerPortalTransportType(*key) == TransportType::Rail) {
 		// PBS asserts track visibility during release: drain each reserved endpoint while the old Connected state still exposes its axis.
 		for (TileIndex end : {*key, pair}) {
@@ -387,6 +391,9 @@ LayerPortalWorkError RetireLayerPortalWorkPair(TileIndex tile)
 {
 	const auto error = CheckLayerPortalLifecycle(tile);
 	if (error != LayerPortalWorkError::None) return error;
+	// Actual demolition retires metered routes while physical endpoint
+	// identity still resolves; consumed electricity is never refunded.
+	InvalidateUtilityPowerLinksForPortal(tile);
 	_portal_work.erase(*GetLayerPortalPairKey(tile));
 	return LayerPortalWorkError::None;
 }

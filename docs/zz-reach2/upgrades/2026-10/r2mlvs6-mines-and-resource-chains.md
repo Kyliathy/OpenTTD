@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/industry_cmd.h](../../../../src/industry_cmd.h) | 18-28 | Industry construction/funding command declarations and `DEF_CMD_TRAIT` entries are the shared UI/script mutation boundary; availability must agree on every entry path. |
 
-Status: resumed at the user's request, 2026-10-06. Groups 1-9 and independent material/accounting tasks through Group 16C are complete; handoff/evidence tasks 17.2 and 17.3A are complete. Useful-power, native freight, tube and final-art integrations remain gated on their absent producers; full financial acceptance and parent completion remain unchecked. The separate portal-click crash is fixed and playable language-pack snapshots protect both configurations during test-only rebuilds. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs2/5 and the r2mlvs1 content contract.
+Status: Groups1-9, independent material/accounting tasks through16C and handoff/evidence17.2/17.3A are complete. The2026-10-08 [electrical/material producer handoff](r2mlvs3mp-y-ground-producer-handoff.md) adds verified real utility custody and the complete first-generator Surface material bill. Plan7's conventional native fleet producer is also delivered; Plan6's remaining fleet-chain integrations, Nuclear/Coal useful-power receivers, actual thermal participant13B, tubes, final art and full financial acceptance remain unchecked. The separate portal-click crash is fixed and playable language-pack snapshots protect both configurations during test-only rebuilds. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs2/5 and the r2mlvs1 content contract.
 
 ## Outcome and Boundaries
 
@@ -57,7 +57,7 @@ Delivered public owner: [`src/multilayer_industry.h`](../../../../src/multilayer
 | Mine definitions, geometry and finite production | Exact first-party IIDS/TIDS identities and label-resolved recipes; geological claims/reserve stay with `excavation.h`. Industry output owns physical mineral units. No name, artwork, viewport layer or generic cargo slot grants mine capability. |
 | Processor choice/work/batches | [`layer_industry_processor.h`](../../../../src/layer_industry_processor.h) publishes selected recipe, controller, work and historical counters. Every incoming/outgoing unit remains in existing `Industry::accepted`/`produced` slots. Exact final-delivery receipts retain refused cargo aboard the real vehicle. |
 | Baseline Steel reuse | [`layer_industry_baseline.h`](../../../../src/layer_industry_baseline.h) identifies the compatible original one-to-one Iron Ore/Steel receiver and bounds conversion/supply without duplicate cargo/industry/recipe IDs. Coal identity characterization grants no useful-power implementation. |
-| Shared complete batch commit | `LayerRecipeInventoryView` and `LayerRecipeCommitParticipant` expose one real stock owner. Proposals bind immutable definition, owner and saved revision; foreign/stale/repeated or partial commits refuse unchanged. Scalar heat/power commitments still refuse until r2mlvs12 supplies actual grant/atomic participants. |
+| Shared complete batch commit | `LayerRecipeInventoryView` and `LayerRecipeCommitParticipant` expose one real stock owner. Proposals bind immutable definition, owner and saved revision; foreign/stale/repeated or partial commits refuse unchanged. `GetElectricalGrant` joins the actual whole participant to the delivered [utility ledger](r2mlvs3mp-x-useful-power-handoff.md). Scalar-only commitments refuse; direct heat still requires Plan17's actual participant. |
 | Save/preview/activation | Version 379 `LMNH`/`LMNR` and version 380 `LPCH`/`LPCR`/`LPCC` transport bindings/choices/work/history only. Metadata bits 256/512 advertise actual owners. After final industry/geology rebuild, complete reference/role/stock validation precedes activation; claims/reserves are never recreated. Existing industry/station/vehicle/packet formats own cargo and provenance. Transient supply/batch proposals are never saved. |
 
 Keep one authority for these fields and commands. Later r2mlvs11/17 inventory owners consume the exported batch interface, and r2mlvs7/8/12/13 supply their own still-pending fleet/tube/grid/art implementations; this producer does not emulate them.
@@ -263,14 +263,34 @@ Execution refinement: split receiver reuse/acceptance by material and useful-pow
 
 Execution refinement: separate independent custody/geometry/manufacturing from native-fleet integration. [Freight accounting and Surface chain evidence](r2mlvs6-a-industry-lifecycle.md#group-12-freight-accounting-and-surface-manufacturing) records 199 assertions in six accounting/delivery cases (`r2mlvs6-br-freight-checks.log`) and 173 assertions in the connected manufacture case (`r2mlvs6-bt-surface-chain-checks.log`). r2mlvs7's native freight model/refit group is unchecked and its public GUI/filter header is absent; no invented engine IDs, fake vehicle-service edges or claimed driven routes substitute for it.
 
-### Group 13 - Expose a utility participant for later direct-heat recipes
+### Local Mandatory Reading - Electrical recipe custody and first-generator material scope
+
+_Applies to Group13 after the delivered Useful Power Handoff; thermal implementation remains13B._
+
+Read Global/Resource production Area, `LayerRecipeInventoryView`/`LayerRecipeCommitParticipant::GetElectricalGrant`, `PrepareLayerRecipeBatch`/`CommitLayerRecipeBatch`, and the tested utility prepare/commit/release boundary. Read only the Geothermal material bill in `GetMultiLayerBootstrapMilestones`, the selected Surface recipes and compatible original Steel receiver. Validate actual material stocks/packet custody independently of future paid procurement and operating plant acceptance. Scalar heat remains a refusal until its distinct thermal owner exists.
+
+### Group 13 - Expose the shared electrical participant and thermal boundary
 
 {{HARD}}
-- [ ] 13.1 Extend the shared recipe proposal with an optional authoritative utility grant token/quantity and recipe selection. The future geothermal owner supplies heat; the mine reserve API is not reused as a heat source.
-- [ ] 13.2 Specify prepare/commit/cancel ownership for the grant: no inputs or heat are consumed if output capacity or one transported input is absent. A refused/retried batch cannot consume the grant twice.
+- [X] 13.1 Extend the shared recipe proposal/whole participant with an optional authoritative electrical grant token/quantity and recipe selection. The future geothermal owner supplies heat in13B; the mine reserve API is not reused as a heat source.
+- [X] 13.2 Specify electrical prepare/commit/cancel ownership: no inputs or granted electricity are consumed if output capacity or one transported input is absent. A refused/retried batch cannot consume the grant twice. Thermal commits remain refused until13B supplies custody.
 - [X] 13.3A Publish read-only quantity/refusal fixtures for all six future 2010 smelter, 2030 battery and 2045 Forge choices. Supplied scalar heat/power may bound planning; commits refuse without native utility custody, and missing input/full output consume nothing. This is no claim that r2mlvs17 plants or actual grants exist.
-- [ ] 13.3B Validate the real typed utility grant/epoch/consume/release/retry participant once r2mlvs12's tested native handoff exists; scalar fixtures cannot complete that integration.
-- [X] 13.4 Document the exact delivered public material batch fields/signatures for r2mlvs11/r2mlvs17 and the blocked utility-token extension. Scheduling, allocation and buildings remain with those owners; no copied account grants runtime authority.
+- [X] 13.3B Validate the real typed electrical grant/epoch/consume/release/retry participant after r2mlvs12's tested native handoff; scalar fixtures cannot complete that integration. Actual heat/combined thermal integration remains13B.
+- [X] 13.4 Document the exact delivered public material/electrical batch fields/signatures for r2mlvs11/r2mlvs17 and the blocked thermal extension. Scheduling, allocation and buildings remain with those owners; no copied account grants runtime authority.
+
+13 electrical closure (2026-10-08): [ground producer handoff](r2mlvs3mp-y-ground-producer-handoff.md) publishes the exact ledger token/whole recipe transaction and caller-owned unused release policy. [Focused supply/recipe checks](../../../../logs/r2mlvs3mp-y-ground-supply-checks.log) pass1,489 assertions/16 cases, including complete electrical settlement, owner failures, missing transported input, full output, cancellation and stale retry. Actual Surface factories and packet transfers provide the complete first collector/plant/riser material bill. Nuclear/Coal useful-power sources, driven procurement/delivery and thermal custody remain their explicit tasks.
+
+### Local Mandatory Reading - Actual geothermal heat participant
+
+_Applies to Group13B only after Plan17 delivers tested thermal grants and atomic custody._
+
+Read Global/Resource production Area, only Plan17's actual grant/consume/release public owner and the shared recipe whole participant. Retain the delivered electrical path and mineral-reserve ownership. Require positive native thermal custody, complete stock/work/output admission and actual heat/electric retry/loss fixtures before permitting direct-heat commits.
+
+### Group 13B - Integrate the actual thermal owner
+
+{{HARD}}
+- [ ] 13B.1 Extend the shared whole recipe participant with Plan17's actual typed thermal grant; consume no scalar heat or geological mineral reserve.
+- [ ] 13B.2 Validate complete heat/electric/material commit, cancellation, loss and saved retry with that producer. Missing input/full output/owner refusal must preserve every resource.
 
 Evidence: [delivered batch API and blocked utility participant](r2mlvs6-a-industry-lifecycle.md#group-13-delivered-batch-api-and-blocked-utility-participant). Focused `[layer-recipe-heat-boundary]` passed 126 assertions in one case (`r2mlvs6-by-heat-contract-checks.log`). r2mlvs12's `Useful Power Handoff` confirms the missing owner of `UtilityGrantID`/atomic mutations. Tasks 13.1/13.2/13.3B stay unchecked; no substitute token, registry or grid was declared.
 

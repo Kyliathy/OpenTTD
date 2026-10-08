@@ -293,6 +293,9 @@ struct LayerRecipeBatchProposal {
 	uint64_t power_j = 0; ///< Separate electrical grant use, never cargo payment or mine reserve.
 };
 
+/** Ledger-owned reservation identity; defined by utility_power.h, never derived from an industry ID. */
+struct UtilityGrantID;
+
 /** Actual inventory commit participant; a failed commit must preserve every input, output, work balance and supplied grant. */
 class LayerRecipeCommitParticipant {
 public:
@@ -300,6 +303,12 @@ public:
 	virtual ~LayerRecipeCommitParticipant() = default;
 	/** @return The same actual inventory view used to prepare the proposal, never a proxy for another physical owner. */
 	virtual const LayerRecipeInventoryView &Inventory() const = 0;
+	/**
+	 * Expose an actual electrical reservation for this exact inventory owner.
+	 * @param grant Receives the ledger-issued current consumer/epoch identity only on success.
+	 * @return Whether this owner has an actual grant; default refuses scalar-only power and allocates no utility identity.
+	 */
+	virtual bool GetElectricalGrant([[maybe_unused]] UtilityGrantID &grant) const { return false; }
 	/**
 	 * Revalidate the complete actual owner and its optional authoritative grant participant.
 	 * @param proposal Exact bounded all-input/output/work proposal.
@@ -338,7 +347,7 @@ LayerRecipeBatchProposal PrepareLayerRecipeBatch(const MultiLayerRecipe &recipe,
  * @param inventory Same real inventory owner that prepared the proposal.
  * @param participant Actual non-failing complete commit boundary, including any supplied authoritative utility participant.
  * @param proposal Whole transient proposal; foreign, stale, changed or repeated proposals are refused.
- * @return Exact complete receipt or unchanged refusal; scalar-only heat/power commits remain refused until their producer handoff exists.
+ * @return Exact complete receipt or unchanged refusal; scalar-only energy refuses, and electricity requires this actual owner's ledger reservation.
  */
 LayerRecipeBatchReceipt CommitLayerRecipeBatch(const MultiLayerRecipe &recipe, const LayerRecipeInventoryView &inventory, LayerRecipeCommitParticipant &participant, const LayerRecipeBatchProposal &proposal);
 

@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | `IsPortalPairAllowed`, `GetPortalTargetLayer`, `CheckLayerAllowsConstruction`, `CheckTilesShareLayer` define live connection/construction authority; new profile checks must preserve legacy behavior. |
 
-Status: geology, jobs, cuts, planning and validation delivered; task 16.1 remains pending under its explicit Plan 13 art gate. See [measured evidence](r2mlvs2-b-execution-notes.md). Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs1 and r2mlvs14 `Schema Foundation Handoff`.
+Status, 2026-10-08: all tasks and this plan's producer Completion Conditions are satisfied. Geology/job/cut/planning/guard/save validation and16.1's actual loaded terrain/survey/job presentation are delivered; retained closure evidence appears below and in [execution notes](r2mlvs2-b-execution-notes.md). Combined normal-newgame/network/performance acceptance remains with Plans14/15 and is not inferred from producer completion. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -56,7 +56,7 @@ Save versions 372/373/374 own geology/jobs/frozen passes, with metadata feature 
 
 Solid-starter extension (R2MLVS3MP Group 2, implemented 2026-10-05, focused tests pending the milestone build): `GetExcavationCutterEnvelope`, `ExcavationStarterResult`, `ResolveExcavationStarter` and `CheckExcavationStarterGeometry`. While the destination housing's packed cell is not Excavated, the canonical planner, pass, reservation and cut accept a portal-issued first segment that leaves straight through the door and sweeps the whole 3x3 pocket. They charge every swept cell, housing included, and leave portal metadata untouched. Rules: [r2mlvs3mp-f](r2mlvs3mp-f-solid-starter-contract.md).
 
-Actual TBM/wagon/controller binding, physical temporary rail, commissioning-pocket issuance, exchange movement and mine production remain with their producers. Material/cash/actor participants must use those actual owners; statistics are not inventory. Multi-process network replay and final integrated project acceptance remain Plans 14/15. Task 16.1 requires Plan 13 source/packed sprites and stays unchecked. Focused C++ commands/results and actual executable save/refusal fixtures are retained in [execution notes](r2mlvs2-b-execution-notes.md). Keep one authority for these fields/commands; downstream plans consume public contracts rather than copied private pools/tables.
+Actual TBM/wagon/controller, physical support, portal issuance, exchange and mine production use their delivered feature owners. Material/cash/actor participants cannot substitute statistics for inventory. Multi-process network and combined normal-newgame acceptance remain Plans14/15. Task16.1 is complete through the selected Plan13 source/packed/native gallery and actual public job/survey presentation. Focused producer/save/refusal evidence remains in [execution notes](r2mlvs2-b-execution-notes.md); downstream consumers use public contracts rather than copied private pools/tables.
 
 ## Implementation Tasks
 
@@ -379,7 +379,7 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 Evidence: [final focused checks](r2mlvs2-z-final-results.txt), [current Surface preservation](r2mlvs2-z-surface-results.txt), [large-map measurements](r2mlvs2-z-runtime-results.txt), [actual frozen-pass saves/refusals](r2mlvs2-u-pass-save-results.txt), [art gate](r2mlvs2-w-art-gate.txt), and [public handoff/remaining producer boundaries](r2mlvs2-b-execution-notes.md#group-19---delivered-handoffs-and-final-focused-verification). The final build passed; 5,835 Plan 2 assertions and 44 metadata assertions passed, followed by 750 affected assertions after the final ownership review. Every case completed below two minutes. **At that original closure only task 16.1 remained unchecked. The later R2MLVS3MP scheduling amendment also adds pending Group 14B for solid-starter behavior; both that extension and actual Plan 13 art must pass before current plan closure.**
 
-The remaining art task and its producer/acceptance requirements are also tracked in [R2MLVS99 - Leftovers](r2mlvs99-leftovers.md); task 16.1 remains unchecked.
+The reconciled [leftovers tracker](r2mlvs99-leftovers.md) records16.1's closure and the actual remaining Plan3 tasks. Full selected art/hash proof is in [the final audit](r2mlvs3mp-z-b-final-closure-audit.md); personal feedback and later-profile art remain separate.
 
 ## Consult on Demand
 

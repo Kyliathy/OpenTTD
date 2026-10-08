@@ -14,6 +14,7 @@
 #include "road.h"
 #include "road_internal.h" /* Cleaning up road bits */
 #include "road_cmd.h"
+#include "utility_power.h"
 #include "landscape.h"
 #include "tilearea_spiral.h"
 #include "tilearea_type.h"
@@ -118,9 +119,11 @@ static bool TestTownOwnsBridge(TileIndex tile, const Town *t)
 	return town_owned;
 }
 
+/** Retire actual town references, including utility association, before this pool identity can be reused. */
 Town::~Town()
 {
 	if (CleaningPool()) return;
+	RemoveUtilityTownBindings(this->index);
 
 	/* Delete town authority window
 	 * and remove from list of sorted towns */
@@ -3286,6 +3289,10 @@ CommandCost CmdTownGrowthRate(DoCommandFlags flags, TownID town_id, uint16_t gro
 			/* Just clear the flag, UpdateTownGrowth will determine a proper growth rate */
 			t->flags.Reset(TownFlag::CustomGrowth);
 		} else {
+			// Custom GS growth takes exclusive authority for this interval;
+			// previously settled native electricity is preserved without a
+			// renewable native bonus when the script later relinquishes control.
+			SuspendUtilityTownEffect(town_id);
 			uint old_rate = t->growth_rate;
 			if (t->grow_counter >= old_rate) {
 				/* This also catches old_rate == 0 */
@@ -3946,9 +3953,35 @@ static void UpdateTownGrowthRate(Town *t)
 {
 	if (t->flags.Test(TownFlag::CustomGrowth)) return;
 	uint old_rate = t->growth_rate;
-	t->growth_rate = GetNormalGrowthRate(t);
+	const uint rate = GetNormalGrowthRate(t);
+	const uint8_t bonus = GetUtilityTownPowerBonus(t->index);
+	// Recalculate from the ordinary owner baseline every time. The saved
+	// current native offer affects one interval, never a previous boosted rate.
+	t->growth_rate = bonus == 0 ? rate : std::max<uint>(1, rate * 100 / (100 + bonus));
 	UpdateTownGrowCounter(t, old_rate);
 	SetWindowDirty(WindowClass::TownView, t->index);
+}
+
+/** @copydoc ApplyUtilityTownGrowthRate */
+bool ApplyUtilityTownGrowthRate(TownID id, uint8_t bonus_percent)
+{
+	Town *town = Town::GetIfValid(id);
+	// Missing/custom/invalid-rate requests cannot alter a real town ahead of
+	// failed electrical settlement or compete with the script's authority.
+	if (town == nullptr || town->flags.Test(TownFlag::CustomGrowth) || bonus_percent > 25) return false;
+	const uint16_t previous = town->growth_rate;
+	const uint rate = GetNormalGrowthRate(town);
+	town->growth_rate = bonus_percent == 0 ? rate : std::max<uint>(1, rate * 100 / (100 + bonus_percent));
+	UpdateTownGrowCounter(town, previous);
+	SetWindowDirty(WindowClass::TownView, id);
+	return true;
+}
+
+/** @copydoc RefreshUtilityTownGrowthRate */
+void RefreshUtilityTownGrowthRate(TownID id)
+{
+	Town *town = Town::GetIfValid(id);
+	if (town != nullptr) UpdateTownGrowthRate(town);
 }
 
 /**

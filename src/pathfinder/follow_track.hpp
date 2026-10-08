@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file follow_track.hpp Template function for track followers. */
+/** @file follow_track.hpp Template track followers. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B semantic route domains. */
 
 #ifndef  FOLLOW_TRACK_HPP
 #define  FOLLOW_TRACK_HPP
@@ -21,6 +21,7 @@
 #include "../layer_portal_cmd.h"
 #include "../depot_map.h"
 #include "../tbm.h"
+#include "../transport_tube.h"
 #include "pathfinder_func.h"
 
 /**
@@ -325,6 +326,14 @@ protected:
 	 */
 	inline bool CanEnterNewTile()
 	{
+		if constexpr (Ttr_type_ == TransportType::Rail) {
+			// Native capsule/ordinary domains remain exclusive even when a caller
+			// overrides masks for route discovery or a GRF broadens compatibility.
+			if (this->veh != nullptr && !CanTubeTrainEnterTile(*this->veh, this->new_tile)) {
+				this->err = ErrorCode::RailRoadType;
+				return false;
+			}
+		}
 		if (IsRoadTT() && IsBayRoadStopTile(this->new_tile)) {
 			/* road stop can be entered from one direction only unless it's a drive-through stop */
 			DiagDirection exitdir = GetBayRoadStopDir(this->new_tile);

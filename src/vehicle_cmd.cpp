@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "underground_vehicle.h"
+#include "transport_tube.h"
 #include "roadveh.h"
 #include "news_func.h"
 #include "airport.h"
@@ -136,6 +137,9 @@ std::tuple<CommandCost, VehicleID, uint, uint16_t, CargoArray> CmdBuildVehicle(D
 	if (!IsValidCargoType(default_cargo)) return { CMD_ERROR, VehicleID::Invalid(), 0, 0, {} };
 	// Native cargo/layer/date policy is checked before even an estimate can buy temporary refit parts or consume RNG.
 	if (CommandCost capability = CheckUndergroundVehicleCapability(eid, GetTileLayer(tile), IsValidCargoType(cargo) ? cargo : default_cargo); capability.Failed()) return { capability, VehicleID::Invalid(), 0, 0, {} };
+	if (e->type == VehicleType::Train) {
+		if (CommandCost tube = CheckTubeVehicleAdmission(eid, tile, IsValidCargoType(cargo) ? cargo : default_cargo); tube.Failed()) return {tube, VehicleID::Invalid(), 0, 0, {}};
+	}
 
 	bool refitting = IsValidCargoType(cargo) && cargo != default_cargo;
 
@@ -404,12 +408,19 @@ static std::tuple<CommandCost, uint, uint16_t, CargoArray> RefitVehicle(Vehicle 
 		// An unselected train unit cannot gain a new refit restriction from another wagon's selection.
 		if (!only_this && part->type == VehicleType::Train && std::ranges::find(vehicles_to_refit, part->index) == vehicles_to_refit.end()) continue;
 		if (CommandCost capability = CheckUndergroundVehicleCapability(part->engine_type, GetTileLayer(part->tile)); capability.Failed()) return { capability, 0, 0, {} };
+		if (part->type == VehicleType::Train) {
+			if (CommandCost tube = CheckTubeVehicleAdmission(part->engine_type, part->tile); tube.Failed()) return {tube, 0, 0, {}};
+		}
 		const auto *engine = part->GetEngine();
 		if (!engine->CanCarryCargo()) continue;
 		native_cargo_target |= GetUndergroundEngineCapability(part->engine_type) != nullptr;
+		native_cargo_target |= GetTubeVehicleCapability(part->engine_type).has_value();
 		// Dedicated hoppers can retain their own cargo without refitting; other units must offer the exact shared refit label.
 		if (engine->info.refit_mask.Test(new_cargo_type) || part->cargo_type == new_cargo_type) {
 			if (CommandCost capability = CheckUndergroundVehicleCapability(part->engine_type, GetTileLayer(part->tile), new_cargo_type); capability.Failed()) return { capability, 0, 0, {} };
+			if (part->type == VehicleType::Train) {
+				if (CommandCost tube = CheckTubeVehicleAdmission(part->engine_type, part->tile, new_cargo_type); tube.Failed()) return {tube, 0, 0, {}};
+			}
 			compatible_cargo_target = true;
 		}
 	}

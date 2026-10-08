@@ -1,44 +1,51 @@
 # R2MLVS99 - Leftovers
 
-This tracker belongs to the [multilayer master plan](r2mlvs-multilayer-vehicles-and-structures.md) and records deferred work from [Plan 2](r2mlvs2-geology-and-excavation.md) and [Plan 3](r2mlvs3-sealed-portals-and-deep-rail.md). It supplements their task lists and public handoffs; the original plans remain incomplete until their remaining tasks and Completion Conditions pass.
+Owner: [multilayer parent](r2mlvs-multilayer-vehicles-and-structures.md). Target queue:
+[portal/TBM master](r2mlvs3mp-master-plan.md). Architecture:
+[map layers](../../architecture/map-layers/archi-map-layers.md).
+Reconciled 2026-10-08 against live child checkboxes and [the final audit](r2mlvs3mp-z-b-final-closure-audit.md).
 
-Inventory checked on 5 October 2026: **16 unfinished tasks: one in Plan 2 and fifteen in Plan 3.** [Plan 1](r2mlvs1-gameplay-contracts-and-content.md) has no unchecked tasks. Future plans' own unstarted tasks are tracked in those plans rather than duplicated here. Entries below retain the original task order and identify the remaining work after the completed partial tasks.
+## Current target leftovers
 
-## Plan 2 - Geology presentation
+Plan2's original final terrain/survey/job presentation task16.1 is complete through the
+selected packed/native M1 art. All Plan2 tasks are X. The former 2026-10-05 inventory
+of sixteen pending tasks is superseded: actual commissioning, occupied saves, Deep
+date/script cases and selected portal art have since passed in their owning plans.
 
-- [ ] **Plan 2 / 16.1:** Integrate final solid faces, cavity floor, edges/corners, survey overlay, excavation-job footprint and progress display. Solid rock must remain visually distinct from a dark open chamber. **Dependency:** [Plan 13](r2mlvs13-graphics-and-asset-pipeline.md) must deliver the corresponding source assets, manifest entries and packed sprites. **Finish when:** asset loading and rendered integration are verified for the delivered geology/job states; temporary visualizations do not satisfy this task. Geology, excavation commands and focused state acceptance are already delivered.
+- [ ] **Plan3 / 12.1:** Deliver actual tube/capsule separation, excavated interchanges
+  and commissioned date-valid geothermal riser consumers. Goal finalization skips
+  this major producer/art expansion under GP-TG; declarations are not runtime proof.
+- [ ] **Plan3 / 18.2:** Full target completion/index reconciliation remains dependent
+  on12.1 and required acceptance. Delivered documentation is updated through18.2A,
+  while the engineering plan and parent M1 remain incomplete.
+- [ ] **Plan4 / 15.1 and21.4:** Complete post-withdrawal tube-terminal/geothermal-plant
+  final non-rail use. Delivered geometry/safe support/recovery do not substitute for
+  missing physical consumers. GP-TG is an explicit goal exception.
+- [ ] **Plan4 / 22.2:** Full completion/index reconciliation remains pending.
+ 22.1's delivered export/evidence/gap report is complete.
 
-## Plan 3 - TBM commissioning and lifecycle
+## Cross-plan acceptance still unverified
 
-- [ ] **Plan 3 / 5.3B:** Integrate successful entry and retreat for the actual assigned TBM and its authorized consist. Ordinary routing must remain hidden during Sealed/Commissioning, and cached paths, force-proceed and unrelated followers must not grant entry. **Dependency:** [Plan 4](r2mlvs4-tunnel-boring-machines.md) must publish and test actual TBM role/consist authorization. **Finish when:** actual movement exercises both authorized passage and unrelated-vehicle refusal; the current `ControllerUnavailable` boundary alone is insufficient.
-- [ ] **Plan 3 / 8.1:** Enable actual TBM purchase/assembly through the portal-associated commissioning control on accessible conventional compatible rail. Enforce the rail-only origin rule, excluding tube guideways, road portals and elevators. **Dependency:** [Plan 4](r2mlvs4-tunnel-boring-machines.md), with actual wagon acquisition from [Plan 5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** the real control successfully commissions the real train and refuses ineligible origins. Task 8.1A already delivers the status/connection window and disabled purchase control.
-- [ ] **Plan 3 / 8.2:** Complete commissioning preflight against the actual vehicle/consist: model/depth/date, full assembly footprint, free shaft, independent Earth/Rock wagon capacities, owned Surface rail origin and a complete backed initial boring/retreat route. Resolve the paid first cut into the sealed work pocket through the excavation owner, without granting a free chamber. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** successful commissioning and each refusal preserve the required acquisition/payment atomicity, and the actual initial corridor/exchange-bay route is supported. Task 8.2A covers the read-only site/catalogue/date/station prefix and proposed capacities; it does not validate attached real wagons or the complete first-cut route.
-- [ ] **Plan 3 / 8.3:** Provide the real train-construction boundary for the validated portal assembly site, using a depot-compatible facility or a factored validated railway builder. **Dependency:** [Plan 4](r2mlvs4-tunnel-boring-machines.md). **Finish when:** actual construction works through the owning vehicle APIs, including estimates and failure cleanup. `CmdBuildVehicle` currently requires a genuine depot and its railway builder reads depot direction; temporarily retagging the portal as a depot is prohibited.
-- [ ] **Plan 3 / 9.3:** Exercise a fully withdrawn actual TBM followed by connection and normal freight crossing; refuse connection changes for an actual spanning consist while preserving its recoverable route and reservations. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** actual fleet scenarios verify the one-time state transition and both-end invalidation. Task 9.3A already implements the synchronized connection command and tests available occupancy/idempotence boundaries.
-- [ ] **Plan 3 / 11.3:** Release actual project/work claims after safe withdrawal and update paired ownership, type and infrastructure accounting atomically through lifecycle operations. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** real assigned-project cleanup succeeds safely and failure at either endpoint leaves a recoverable whole pair. Task 11.3A already covers empty, unassigned remove/convert/transfer behavior.
-- [ ] **Plan 3 / 11.4:** Apply the existing cancel/remove/convert/transfer/blocked-source policy table to the real TBM controller and wagon exchange, including occupied projects and company-removal recovery. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** withdrawal, owned-spoil accounting, job cancellation and assignment release follow their actual owners' APIs, with failures retaining a recoverable project. Current assigned destructive operations remain safely refused.
+Real host/client agreed-frame command traces and active joins (GP-NJ), a genuine
+normal-newgame predecessor/bootstrap chain (GP-BT), representative/maximum workloads
+with peak memory and join profiling (GP-PF), and personal art feedback remain
+unverified. The user expressly allowed multi-group and human-operator exceptions
+for this finalization goal; those exceptions do not satisfy engineering completion.
+Later mine/fleet/tube/geothermal art remains with Plan13, and unrelated orbital
+scenarios retain their own queue.
 
-## Plan 3 - Interchanges and portal art
+Current385 bend/wagon-wait/spanning/lost-origin/cancelled final disposal files and
+genuine370/381..384 readers are delivered in
+[Plan14's ground matrix](r2mlvs14-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).
+The old380 initial acceleration mismatch remains a failed historical exact-physics
+comparison, with its input unchanged. Selected technical art and real sound-event
+playback are complete; deferred personal feedback is not approval.
 
-- [ ] **Plan 3 / 12.1:** Verify actual capsules cannot commission a TBM or traverse rail portals/elevators; integrate tube/utility interchanges only on excavated accessible ground. Attach a geothermal electrical riser only to an already commissioned, Connected, date-valid portal. **Dependencies:** [Plan 16](r2mlvs16-underground-transport-tubes.md) for capsule/interchange behavior and [Plan 17](r2mlvs17-geothermal-energy-and-industry.md) for the geothermal utility consumer; delivered visuals also follow [Plan 13](r2mlvs13-graphics-and-asset-pipeline.md). **Finish when:** actual consumers enforce these restrictions. Task 12.1A covers logical-model exclusion and the published constraints only.
-- [ ] **Plan 3 / 13.1:** Integrate final Sealed, TBM-only Commissioning and Connected portal preview faces, tooltips and sprites, including the Deep variants. **Dependency:** [Plan 13](r2mlvs13-graphics-and-asset-pipeline.md) must deliver source/packed assets and their loading fixture. **Finish when:** all states render correctly with verified final assets. Task 13.1A already delivers actual status/date text, tooltip and Connect/Seal controls; commissioning control activation remains covered by 8.1.
+## Resume rules
 
-## Plan 3 - Fleet, persistence and calendar acceptance
-
-- [ ] **Plan 3 / 15.2:** Run actual TBM first entry and loaded retreat, ordinary-train refusal before opening, then freight crossing after opening. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** a real commissioned consist completes the sequence with the actual source-side exchange; copied owner records cannot substitute for this movement scenario.
-- [ ] **Plan 3 / 15.3:** Exercise actual consists spanning each supported rail layer pair, with reversal, signals and reservations. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** part positions and route/reservation safety remain correct across each transition and reversal.
-- [ ] **Plan 3 / 16.1:** Create and reload an actual Commissioning vehicle-file fixture and compare pair keys, work status, date policy and endpoint geometry against the Sealed/Connected fixtures. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** the real assigned TBM/wagon world round-trips through the normal loader. Task 16.1A already verifies repeated Sealed/Connected files and all three copied public owner states with actual typed references.
-- [ ] **Plan 3 / 16.2:** Save/reload a real TBM with wagons occupying the work pocket and a real train spanning the pair. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** vehicle-part positions, reservations and the next legal controller transition survive both occupied scenarios without duplicate ownership or movement authority.
-- [ ] **Plan 3 / 17.1:** Complete the actual successful TBM commissioning and scripted fleet cases at 31 December 1979 refusal and 1 January 1980 success, covering every Deep rail/elevator path and both build directions. **Dependencies:** [Plans 4](r2mlvs4-tunnel-boring-machines.md)/[5](r2mlvs5-spoil-wagons-and-haulage.md). **Finish when:** the real controller/fleet observes the shared calendar gate through these paths. Task 17.1A already verifies the available command, routing, admission and AI/GS API boundaries; it does not claim a full supplied Squirrel fleet scenario or successful actual TBM commissioning.
-
-## Plan 3 - Completion reconciliation
-
-- [ ] **Plan 3 / 18.2:** Reconcile affected architecture, public handoffs and the master completion index after all remaining Plan 3 tasks and its Completion Conditions pass. **Dependencies:** every Plan 3 entry above and its verified producer delivery. **Finish when:** documentation accurately reports the completed runtime/art acceptance and the parent index can truthfully mark the plan complete. Task 18.2A already documents delivered portal behavior; retaining this tracker does not complete the plan. The recorded unverified multiplayer joins/occupied-controller determinism and final rendered review must also be resolved or assigned explicitly to their acceptance owner before making those claims.
-
-## Resume and closure rules
-
-Before resuming an entry, read its original plan's Global Mandatory Reading and the nearest applicable Area Mandatory Reading, including after context compaction. Verify the named producer's actual exports, behavior and focused boundary tests before dependent mutation or acceptance; a declaration, fake role/wagon, copied state or placeholder sprite is insufficient.
-
-Finish entries in their original plan order once their dependencies are delivered. Mark both the original task and this tracker entry `[X]` only after the actual remaining work passes focused verification. Keep parent completion pending until the source plan's Completion Conditions pass, and retain links to its execution evidence.
-
-Plan 3 task **16.3 is complete**: genuine version-370 rail/elevator worlds and separately authored road-tunnel coverage were loaded and checked for retained usable connectivity. It is not a leftover. The latest evidence is recorded in [Plan 3's execution notes](r2mlvs3-c-execution-notes.md) and its task list.
+Read the owning plan's Global and nearest applicable Local/Area Mandatory Reading
+before resuming, including after compaction. Verify public exports and focused
+producer tests before dependent implementation. Keep original saves/art/configs
+immutable and mark only actual completed scopes X. New logs belong in the repository
+`logs/` directory. Close Plan3/4 and M1 only after their original complete conditions
+are satisfied; a goal exception does not authorize their completion.

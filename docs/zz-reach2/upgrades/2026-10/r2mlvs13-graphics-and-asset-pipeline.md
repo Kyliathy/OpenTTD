@@ -50,7 +50,7 @@ Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). M1 dispatc
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 380-409 | Complete Map Layer sprite constants and `SPR_NEWGRFS_BASE` bound the published block; preserve 0..65 and resolve any accepted live extension before allocating new IDs. |
 
-Status: Groups 1-8 M0 contract and the master's selected forty-family M1 source/packing/native-consumer/crossing/loop/sound slice are complete. Selected final gallery/distribution acceptance is Group 85B; unselected later families and full-profile gallery obligations remain pending. User personal art review is deferred as requested. Evidence: [sprite contract and geometry](r2mlvs13-a-sprite-contract.md) and [current presentation continuation](r2mlvs3mp-s-presentation-and-review.md). Parent completion is unchanged. Final art is required for milestone acceptance.
+Status: Groups 1-8 M0 contract and the master's selected forty-family M1 source/packing/native-consumer/crossing/loop/sound/gallery slice are complete. Group 85B records selected technical gallery/distribution acceptance; unselected later families and full-profile gallery obligations remain pending. User personal art review is deferred as requested. Evidence: [sprite contract and geometry](r2mlvs13-a-sprite-contract.md) and [selected gallery acceptance](r2mlvs3mp-t-gallery-acceptance.md). Parent completion is unchanged. Final art is required for milestone acceptance.
 
 ## Outcome and Boundaries
 
@@ -391,12 +391,16 @@ Group 18 source handoff (2026-10-07): all **80 hauler poses** reuse the selected
 
 ### Group 19 - Author underground freight locomotive
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 19.1 For underground freight locomotive, derive a single-model brief from its approved manifest/template: conventional mineral-freight traction silhouette. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 19.2 Produce the required directions/rotations for underground freight locomotive from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 19.3 Add running/idle/service and purchase views for underground freight locomotive, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 20 - Author mineral wagon
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 20.1 For mineral wagon, derive a single-model brief from its approved manifest/template: profile-compatible ore load presentation. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -405,12 +409,16 @@ Group 18 source handoff (2026-10-07): all **80 hauler poses** reuse the selected
 
 ### Group 21 - Author mine truck
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 21.1 For mine truck, derive a single-model brief from its approved manifest/template: compact underground road freight body. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 21.2 Produce the required directions/rotations for mine truck from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 21.3 Add required load/refit/service and purchase views for mine truck, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 22 - Author sealed mineral carrier
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 22.1 For sealed mineral carrier, derive a single-model brief from its approved manifest/template: deep-capable closed cargo body. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -434,12 +442,16 @@ Read this plan's Global and Source generation Area, the `facility.exchange` publ
 
 ### Group 24 - Author underground rail freight station
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 24.1 For underground rail freight station, derive a single-model brief from its approved manifest/template: loading platform and mine loader aligned to rail. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 24.2 Produce the required directions/rotations for underground rail freight station from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 24.3 Add all approaches/loading and back/front parts for underground rail freight station, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 25 - Author road mine terminal
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 25.1 For road mine terminal, derive a single-model brief from its approved manifest/template: truck loading and turning access. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -463,12 +475,16 @@ Read this plan's Global and Source generation Area and only `facility.rail-servi
 
 ### Group 27 - Author Coal mine
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 27.1 For Coal mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Coal identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 27.2 Produce the required directions/rotations for Coal mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 27.3 Add construction/working/paused/depleted layout states for Coal mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 28 - Author Iron mine
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 28.1 For Iron mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Iron identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -477,12 +493,16 @@ Read this plan's Global and Source generation Area and only `facility.rail-servi
 
 ### Group 29 - Author Copper mine
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 29.1 For Copper mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Copper identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 29.2 Produce the required directions/rotations for Copper mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 29.3 Add construction/working/paused/depleted layout states for Copper mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 30 - Author Bauxite mine
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 30.1 For Bauxite mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Bauxite identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -491,12 +511,16 @@ Read this plan's Global and Source generation Area and only `facility.rail-servi
 
 ### Group 31 - Author Salt mine
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 31.1 For Salt mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Salt identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 31.2 Produce the required directions/rotations for Salt mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 31.3 Add construction/working/paused/depleted layout states for Salt mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 32 - Author Lithium mine
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 32.1 For Lithium mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Lithium identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -505,12 +529,16 @@ Read this plan's Global and Source generation Area and only `facility.rail-servi
 
 ### Group 33 - Author Nickel mine
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 33.1 For Nickel mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Nickel identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 33.2 Produce the required directions/rotations for Nickel mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 33.3 Add construction/working/paused/depleted layout states for Nickel mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 34 - Author Cobalt mine
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 34.1 For Cobalt mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Cobalt identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -519,12 +547,16 @@ Read this plan's Global and Source generation Area and only `facility.rail-servi
 
 ### Group 35 - Author Rare-earth mine
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 35.1 For Rare-earth mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Rare-earth identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 35.2 Produce the required directions/rotations for Rare-earth mine from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 35.3 Add construction/working/paused/depleted layout states for Rare-earth mine, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 36 - Author Uranium mine
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 36.1 For Uranium mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Uranium identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -557,12 +589,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 39 - Author metal refinery
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 39.1 For metal refinery, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 39.2 Produce the required directions/rotations for metal refinery from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 39.3 Add construction/working/full/idle states for metal refinery, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 40 - Author chemical works
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 40.1 For chemical works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -571,12 +607,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 41 - Author Surface battery works
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 41.1 For Surface battery works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 41.2 Produce the required directions/rotations for Surface battery works from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 41.3 Add construction/working/full/idle states for Surface battery works, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 42 - Author electronics works
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 42.1 For electronics works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -585,12 +625,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 43 - Author component manufacture
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 43.1 For component manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 43.2 Produce the required directions/rotations for component manufacture from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 43.3 Add construction/working/full/idle states for component manufacture, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 44 - Author robotics manufacture
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 44.1 For robotics manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -599,12 +643,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 45 - Author mirror-kit manufacture
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 45.1 For mirror-kit manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 45.2 Produce the required directions/rotations for mirror-kit manufacture from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 45.3 Add construction/working/full/idle states for mirror-kit manufacture, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 46 - Author nuclear plant
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 46.1 For nuclear plant, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -613,12 +661,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 47 - Author tube guideways and junctions
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 47.1 For tube guideways and junctions, derive a single-model brief from its approved manifest/template: sealed shells that leave moving capsules readable. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 47.2 Produce the required directions/rotations for tube guideways and junctions from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 47.3 Add straight/45-degree bend/junction/end and powered/unpowered pieces for tube guideways and junctions, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 48 - Author tube terminals and service/interchange facilities
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 48.1 For tube terminals and service/interchange facilities, derive a single-model brief from its approved manifest/template: distinct powered terminal/depot/rail-road transfer templates. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -627,12 +679,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 49 - Author Mole-70
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 49.1 For Mole-70, derive a single-model brief from its approved manifest/template: low segmented amber hopper ribs. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 49.2 Produce the required directions/rotations for Mole-70 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 49.3 Add eight-direction empty/loaded/service and purchase frames for Mole-70, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 50 - Author Crate-75
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 50.1 For Crate-75, derive a single-model brief from its approved manifest/template: square green clamped containers. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -641,12 +697,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 51 - Author Cistern-80
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 51.1 For Cistern-80, derive a single-model brief from its approved manifest/template: cyan twin tanks and pressure bands. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 51.2 Produce the required directions/rotations for Cistern-80 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 51.3 Add eight-direction fluid-level/service and purchase frames for Cistern-80, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 52 - Author Shield-85
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 52.1 For Shield-85, derive a single-model brief from its approved manifest/template: short pale shielded octagonal body. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -655,12 +715,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 53 - Author Forge-05
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 53.1 For Forge-05, derive a single-model brief from its approved manifest/template: broad dark braced machinery frame. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 53.2 Produce the required directions/rotations for Forge-05 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 53.3 Add eight-direction heavy-load/service and purchase frames for Forge-05, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 54 - Author vent field and collector
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 54.1 For vent field and collector, derive a single-model brief from its approved manifest/template: natural source versus installed bounded heat capture. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -669,12 +733,16 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 
 ### Group 55 - Author Vent-Tap Powerhouse
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 55.1 For Vent-Tap Powerhouse, derive a single-model brief from its approved manifest/template: 1980 plant footprint and electrical output equipment. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 55.2 Produce the required directions/rotations for Vent-Tap Powerhouse from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 55.3 Add construction/working/heat-starved states for Vent-Tap Powerhouse, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 56 - Author Magma-Loop Power Station
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 56.1 For Magma-Loop Power Station, derive a single-model brief from its approved manifest/template: 2000 closed-loop plant distinct from the early powerhouse. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -703,6 +771,8 @@ Read this plan's Global and Source generation Area, only the executing receiver'
 - [ ] 59.3 Add construction/working/heat-starved/full states for Mantle Forge, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 ### Group 60 - Author heat/electric utilities and risers
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 60.1 For heat/electric utilities and risers, derive a single-model brief from its approved manifest/template: visually different thermal and electrical links. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -847,6 +917,8 @@ Read this plan's Global and Source generation Area, the seven selected `control.
 
 ### Group 78 - Author construction and cargo controls
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 78.1 For construction and cargo controls, derive a single-model brief from its approved manifest/template: native-size layer/cargo identities with separate collection/drop circles. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [ ] 78.2 Produce the required directions/rotations for construction and cargo controls from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
@@ -889,6 +961,8 @@ Context has compacted 1 times while executing this group.
 
 ### Group 79 - Convert and pack from stable originals
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 79.1 Extend deterministic quantization/cropping to consume manifest records, preserve index-0 transparency and handle reserved company/animation colors explicitly. Preserve world anchor when transparent margins are cropped.
 - [ ] 79.2 Generate back/front parts and NFO/content-package metadata in stable manifest order with pinned tool versions. Keep existing published sprite offsets unchanged.
@@ -897,6 +971,8 @@ Context has compacted 1 times while executing this group.
 
 ### Group 80 - Validate asset structure and palette deterministically
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{HARD}}
 - [ ] 80.1 Validate required record fields, unique IDs, expected direction/frame/state Cartesian coverage and exact native dimensions/anchors before packing. Report the failing asset ID and source.
 - [ ] 80.2 Check transparent index, forbidden palette ranges, intended company-color pixels and empty/missing frames against the declared per-asset policy.
@@ -904,6 +980,8 @@ Context has compacted 1 times while executing this group.
 - [ ] 80.4 Add small corruption fixtures for one missing frame, bad bounds and illegal palette entry. Validate authored transparent holes against explicit masks/templates; arbitrary legitimate holes still need human visual review.
 
 ### Group 81 - Source generation and reproducible conversion
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{MEDIUM}}
 - [ ] 81.1 Keep simulation state independent of animation timing.
@@ -1017,6 +1095,8 @@ Context has compacted 1 times while executing this group.
 
 ### Group 84 - Runtime integration and review
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{MEDIUM}}
 - [ ] 84.1 Integrate all ten mines and the underground conventional fleet after their r2mlvs6/7 code is delivered.
 - [ ] 84.2 Integrate orbital launch, probe, module and solar families after their corresponding r2mlvs8..12 producers are delivered.
@@ -1032,11 +1112,13 @@ Read child Global and Runtime integration Area only for the delivered M1 geology
 
 {{MEDIUM}}
 - [X] 85B.1 Supplement genuine native/2x loop captures with paused/idle/service views, eight-direction renderer queries, building transparency and actual visible-body/layer picking checks.
-- [ ] 85B.2 Produce a compact contact sheet and linked native scenario gallery for all forty selected manifest IDs, retaining exact frame/source/log provenance and actual animation phases.
-- [ ] 85B.3 Confirm selected placeholders are retired and distributed GRF/source/range hashes match reviewed evidence; document retained limits and bounded stale-evidence refusals.
-- [ ] 85B.4 Record technical acceptance separately from deferred user feedback; keep unselected full-profile gallery rows pending.
+- [X] 85B.2 Produce a compact contact sheet and linked native scenario gallery for all forty selected manifest IDs, retaining exact frame/source/log provenance and actual animation phases.
+- [X] 85B.3 Confirm selected placeholders are retired and distributed GRF/source/range hashes match reviewed evidence; document retained limits and bounded stale-evidence refusals.
+- [X] 85B.4 Record technical acceptance separately from deferred user feedback; keep unselected full-profile gallery rows pending.
 
 85B.1 closure (2026-10-07): the optional gallery observer retains genuine paused/idle and real railway-depot service poses, queries all eight directions through actual `Train::GetImage` without rotating a unit, renders the same physical portal/disposal scenes with existing building/industry transparency, and verifies exposed cutter picking on its own layer with rejection on another layer. [Underground5 capture](../../../../logs/r2mlvs3mp-s-gallery-underground-capture-1.log) passes 94,734 assertions / one native case, fourteen physical scenes / forty-five PNGs. [Deep4 capture](../../../../logs/r2mlvs3mp-s-gallery-deep-capture.log) passes 197,868 assertions / one native case, sixteen physical scenes / fifty-four PNGs. Actual logs/source/frame hashes are retained in [Underground5](assets/reviews/m1-loop-underground-5-runtime.json) and [Deep4](assets/reviews/m1-loop-deep-4-runtime.json). Native direction/load/service/transparency frames were inspected. Rendering preserves projects/jobs/packets/positions/geology/receivers/cash and both random streams; original sources remain unchanged. Direction sheets are explicitly renderer queries; animation and occlusion evidence comes from actual driven world frames. 85B.2-85B.4 remain pending.
+
+85B.2-85B.4 closure (2026-10-07): [gallery and distribution acceptance](r2mlvs3mp-t-gallery-acceptance.md) retains the [standalone offline gallery](assets/reviews/m1-runtime-gallery.html), [native contact sheet](assets/reviews/m1-runtime-contact-sheet.png) and exact forty-family/2,311-sprite review mapping. There are 157 original native frames, including all ten actual resource seams and separate actual road/unassigned rail-service depots built on paid-open ground. [Publication checks](../../../../logs/r2mlvs3mp-t-gallery-publication.log) verify actual source/frame/build/distributed GRF hashes and refuse missing real phases, substituted rasters and incomplete scope. The selected placeholders are retired; original/protected/reserved bytes and source poses retain their packing authority. Gallery frames/contact placement and offline links were inspected. Later binding refresh preserves technical review only when its complete current proof still verifies. User feedback is recorded as deferred, separately from technical acceptance. Original full-profile Groups 85-88 remain unchecked for later families.
 
 ### Group 85 - Runtime integration and review
 
@@ -1051,6 +1133,8 @@ Read child Global and Runtime integration Area only for the delivered M1 geology
 - [ ] 86.3 Verify correct vehicle hiding at bays, portals and docks, drawing on the correct layer and clickable moving bodies.
 
 ### Group 87 - Runtime integration and review
+
+Goal finalization disposition, 2026-10-08: selected M1 technical acceptance is complete in85B and freshly verified in [the final art check](../../../../logs/r2mlvs3mp-z-b-final-art-verification.log). The user explicitly permits skipping human operator gates; personal feedback remains **deferred**, never recorded as approval. Later-family whole-profile gallery/feedback tasks stay unchecked, with target tube/geothermal interop art under GP-TG. This exception applies only to goal finalization, not full-profile art acceptance.
 
 {{SIMPLE}}
 - [ ] 87.1 Produce a compact contact sheet and in-game scenario gallery linked to manifest IDs.

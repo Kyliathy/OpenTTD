@@ -104,6 +104,9 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::LayerMines) && (schema.feature_flags & MULTILAYER_FEATURE_MINES) != 0) SlErrorCorrupt("Unexpected mines in old save version");
 		// Saved recipe counters require their actual descriptor version, never invented defaults in an older file.
 		if (IsSavegameVersionBefore(SaveLoadVersion::LayerProcessors) && (schema.feature_flags & MULTILAYER_FEATURE_PROCESSORS) != 0) SlErrorCorrupt("Unexpected processors in old save version");
+		// Utility history requires exact epoch/fraction/grant transport; old files
+		// cannot request these records through a metadata bit alone.
+		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityPower) && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_POWER) != 0) SlErrorCorrupt("Unexpected utility power in old save version");
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}

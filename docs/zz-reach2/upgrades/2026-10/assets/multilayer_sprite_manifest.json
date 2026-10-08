@@ -106,7 +106,12 @@
           "call": "GetMultiLayerTerrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -191,7 +196,12 @@
           "call": "GetMultiLayerTerrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -275,7 +285,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -418,7 +433,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -561,7 +581,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -704,7 +729,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -847,7 +877,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -990,7 +1025,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1133,7 +1173,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1276,7 +1321,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1419,7 +1469,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1562,7 +1617,12 @@
           "call": "GetUndergroundSurveyOverlaySprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1730,7 +1790,12 @@
           "call": "GetMultiLayerTrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1817,7 +1882,12 @@
           "call": "GetMultiLayerEnginePurchaseSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -1926,7 +1996,12 @@
           "call": "GetMultiLayerTrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2013,7 +2088,12 @@
           "call": "GetMultiLayerEnginePurchaseSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2110,7 +2190,12 @@
           "call": "GetMultiLayerTrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2196,7 +2281,12 @@
           "call": "GetMultiLayerEnginePurchaseSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2293,7 +2383,12 @@
           "call": "GetMultiLayerTrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2379,7 +2474,12 @@
           "call": "GetMultiLayerEnginePurchaseSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2480,7 +2580,12 @@
           "call": "GetMultiLayerTrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -2566,7 +2671,12 @@
           "call": "GetMultiLayerEnginePurchaseSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4289,7 +4399,12 @@
           "call": "GetMultiLayerPortalSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4383,7 +4498,12 @@
           "call": "GetMultiLayerPortalSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4473,7 +4593,12 @@
           "call": "GetMultiLayerRailDepotSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4680,7 +4805,12 @@
           "call": "GetMultiLayerRailDepotSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4769,7 +4899,12 @@
           "call": "GetMultiLayerRoadDepotSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4857,7 +4992,12 @@
           "call": "GetMultiLayerReceiverSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -4945,7 +5085,12 @@
           "call": "GetMultiLayerReceiverSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -7329,7 +7474,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -7413,7 +7563,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -7497,7 +7652,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -7581,7 +7741,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -7665,7 +7830,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -8019,7 +8189,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -8103,7 +8278,12 @@
           "call": "GetMultiLayerControlSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -8707,7 +8887,12 @@
           "call": "GetMultiLayerCargoSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -8789,7 +8974,12 @@
           "call": "GetMultiLayerCargoSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -9354,7 +9544,12 @@
           "call": "GetMultiLayerTerrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     },
     {
@@ -9451,7 +9646,12 @@
           "call": "GetMultiLayerTerrainSprite"
         },
         "binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
-        "user_review": "deferred_until_integration"
+        "user_review": "deferred_until_integration",
+        "gallery": {
+          "manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json",
+          "technical_acceptance": "verified",
+          "user_feedback": "deferred"
+        }
       }
     }
   ],

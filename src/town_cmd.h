@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file town_cmd.h Command definitions related to towns. */
+/** @file town_cmd.h Command definitions related to towns. @see docs/zz-reach2/architecture/towns/archi-towns.md; docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 9 */
 
 #ifndef TOWN_CMD_H
 #define TOWN_CMD_H
@@ -22,6 +22,12 @@ std::tuple<CommandCost, Money, TownID> CmdFoundTown(DoCommandFlags flags, TileIn
 CommandCost CmdRenameTown(DoCommandFlags flags, TownID town_id, const std::string &text);
 CommandCost CmdDoTownAction(DoCommandFlags flags, TownID town_id, TownAction action);
 CommandCost CmdTownGrowthRate(DoCommandFlags flags, TownID town_id, uint16_t growth_rate);
+
+/** @param town Actual non-custom Surface town. @param bonus_percent Checked native bonus0..25. @return Whether its normal growth interval was updated without claiming GS authority or consuming RNG. */
+bool ApplyUtilityTownGrowthRate(TownID town, uint8_t bonus_percent);
+
+/** @param town Actual town whose native offer expired; restore its current ordinary rate through the same existing growth owner, respecting custom GS. */
+void RefreshUtilityTownGrowthRate(TownID town);
 CommandCost CmdTownRating(DoCommandFlags flags, TownID town_id, CompanyID company_id, int16_t rating);
 CommandCost CmdTownCargoGoal(DoCommandFlags flags, TownID town_id, TownAcceptanceEffect tae, uint32_t goal);
 CommandCost CmdTownSetText(DoCommandFlags flags, TownID town_id, const EncodedString &text);

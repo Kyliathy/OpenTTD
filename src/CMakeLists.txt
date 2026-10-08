@@ -301,6 +301,11 @@ add_files(
     tbm_engine.cpp
     underground_vehicle.h
     underground_vehicle.cpp
+    # Native tube capability producer: docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md
+    transport_tube.h
+    transport_tube.cpp
+    transport_tube_engine.cpp
+    transport_tube_construction.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
     tbm_commission.cpp
@@ -332,6 +337,8 @@ add_files(
     multilayer_vehicle_catalogue.cpp
     multilayer_utility.cpp
     multilayer_utility.h
+    utility_power.cpp
+    utility_power.h
     solar_power.h
     multilayer_content_identity.cpp
     multilayer_content_identity.h

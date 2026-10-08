@@ -438,6 +438,11 @@ enum class SaveLoadVersion : uint16_t {
 
 	LayerMines, ///< Saveload version: 379\n Finite mine bindings/work/history beside existing geology and Industry output. See r2mlvs6-mines-and-resource-chains.md.
 	LayerProcessors, ///< Saveload version: 380\n Native recipe choices/work/counters; physical cargo remains in industry/station/vehicle chunks. See r2mlvs6-mines-and-resource-chains.md.
+	UtilityPower, ///< Saveload version: 381\n Native electrical source carry, epochs and exact reservations. See r2mlvs12-solar-farms-mirrors-and-eti.md.
+	UtilityMutations, ///< Saveload version: 382\n Electrical operation sequence and lifetime generation/settlement counters. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 8.
+	UtilityTransfers, ///< Saveload version: 383\n Directed commissioned electrical links and original-source imported reservation slices. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 8.
+	UtilityConsumerEffects, ///< Saveload version: 384\n Native Surface town association, posted bounded offer and custom-GS suspension. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 9.
+	UtilityCompanyLifecycle, ///< Saveload version: 385\n Consumer retirement uses the existing active wire scalar; older consumers migrate as active. See r2mlvs14-savegame-determinism-and-lifecycle.md Group15B.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

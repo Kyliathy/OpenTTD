@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/83B; selected native bytes and actual runtime bindings; final gallery/user review pending; sound proof in sound-runtime.json",
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md79B/80B/83B/85B; selected native packing, consumer and technical gallery verified; user feedback deferred",
   "schema_version": 1,
   "route": "native_action5_1c",
   "scope": [
@@ -70561,5 +70561,6 @@
     "loader_log": "logs/r2mlvs13-al-generator-free-load.log"
   },
   "runtime_activated": true,
-  "runtime_binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json"
+  "runtime_binding_manifest": "media/multilayer/sprites/m1/runtime-manifest.json",
+  "gallery_manifest": "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-runtime-gallery.json"
 }

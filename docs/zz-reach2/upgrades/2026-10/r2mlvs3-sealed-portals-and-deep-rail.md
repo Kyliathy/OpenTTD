@@ -43,7 +43,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | `IsPortalPairAllowed`, `GetPortalTargetLayer`, `CheckLayerAllowsConstruction`, `CheckTilesShareLayer` define live connection/construction authority; new profile checks must preserve legacy behavior. |
 
-Status: available portal core, controls, script commands, persistence and genuine version-370 portal compatibility delivered and tested; exact completed tasks are marked X. Actual TBM/wagon/controller, capsule/utility integration and final state art remain gated and unchecked. Core checkpoint is committed as `ee1cf35a97`; subsequent genuine-legacy coverage is recorded below. Parent completion index is unchanged because this plan's full Completion Conditions are not met. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs2.
+Status, 2026-10-08: actual paid commissioning, TBM/wagon entry/backing/exchange/lifecycle, Deep date/script paths, genuine370/current385 occupied saves and selected final portal art are delivered.12.1 retains real tube/riser integration and18.2 retains full closure. [Final audit](r2mlvs3mp-z-b-final-closure-audit.md) records authorized goal exceptions; engineering completion and parent status remain pending. Original core checkpoint `ee1cf35a97` and supplied files remain intact. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 ## Outcome and Boundaries
 
@@ -303,6 +303,8 @@ Group 11.3/11.4 status (2026-10-05, R2MLVS3MP master 6.4): implemented and verif
 
 ### Group 12 - Commissioning and bootstrap
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Only the tube/riser or final-use portion is skipped; independent completed work and turn/recovery checks retain their evidence. No skipped task is markedX.
+
 {{MEDIUM}}
 - [ ] 12.1 Do not treat tube guideways as eligible rail commissioning infrastructure or allow tube capsules through rail portals/elevators. Supply tube/utility interchanges on excavated accessible ground; a geothermal electrical riser may attach only to an already commissioned, date-valid portal through r2mlvs17.
 - [X] 12.1A Reject tube/capsule and ordinary wagon logical models at the actual commissioning catalogue boundary. Publish the Connected/date/excavation requirement for later tube/utility/riser owners; actual capsule movement/interchanges remain in 12.1 pending r2mlvs16/17.
@@ -409,6 +411,8 @@ Context has compacted 1 times while executing this group.
 - [X] 18.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [ ] 18.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 - [X] 18.2A Update map-layer/savegame architecture and the delivered public handoff; keep parent completion and every gated integration task unchanged until full Completion Conditions are actually met.
+
+Finalization reconciliation, 2026-10-08: delivered public work/commissioning/script owners and current385 occupied/cancelled continuation, final selected states/occlusion and current Deep/profile/control/lifecycle checks are mapped in [the final audit](r2mlvs3mp-z-b-final-closure-audit.md). Both final builds and162,516 boundary assertions/38 cases per configuration pass. Actual replacement-origin command recovery is tested, with no GUI picker claim.18.2 is **authorized skipped for goal finalization** because12.1 needs the multi-group GP-TG producers; it remains unchecked and Plan3 remains incomplete. GP-NJ/GP-BT/GP-PF and deferred personal feedback do not become accepted runtime evidence. Earlier absence statements below describe their historical snapshot; this paragraph and live checkboxes govern current delivery.
 
 ## Execution evidence and remaining gates
 

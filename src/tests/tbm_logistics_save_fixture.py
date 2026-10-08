@@ -5,6 +5,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 13A/13C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 16 actual portal-only reconstruction
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md ground385 migration/complete owner audit
 """
 
 import argparse
@@ -13,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import uuid
 
 from geology_generation_fixture import Reader, read_stream
 from geology_save_fixture import chunks
@@ -112,8 +114,15 @@ def owned_chunks(path):
              b"EXJS", b"XJOB", b"XJRT", b"XJTL", b"XPAS", b"GEOS", b"GDEP",
              b"GSPN", b"GVNT", b"SPRH", b"SPRR", b"LPWH", b"LPWK", b"DATE",
              b"ECMY", b"SRND", b"MAPS", b"MAPT", b"MAPH", b"MAPO", b"MAP2", b"M3LO", b"M3HI", b"MAP5", b"MAPE", b"MAP7", b"MAP8"}
-    owners = {chunk["name"]: chunk["raw"] for chunk in chunks(stream) if chunk["name"] in names}
-    assert owners.keys() == names, "real loaded logistics owner family incomplete"
+    families = ({b"UPLH", b"UPLD"}, {b"LMNH", b"LMNR"}, {b"LPCH", b"LPCR", b"LPCC"})
+    optional = set().union(*families)
+    owners = {chunk["name"]: chunk["raw"] for chunk in chunks(stream) if chunk["name"] in names | optional}
+    assert names.issubset(owners), "real loaded logistics owner family incomplete"
+    # Every delivered optional ground family remains complete when present;
+    # a missing processor/mine/utility table cannot hide behind a base-stock hash.
+    for family in families:
+        present = family & owners.keys()
+        assert not present or present == family, "partial optional ground owner family"
     return version, owners
 
 
@@ -126,7 +135,18 @@ def verify_initial_owners(source, loaded):
     """
     version, original = owned_chunks(source)
     loaded_version, restored = owned_chunks(loaded)
-    assert version == loaded_version, "unexpected fixture format migration"
+    # The retained physical ground inputs are genuinely380. Current385 adds
+    # explicit empty utility transport without changing their native custody;
+    # all other unreviewed format changes remain a refusal.
+    assert version == loaded_version or (version == 380 and loaded_version == 385), "unexpected fixture format migration"
+    added = restored.keys() - original.keys()
+    assert added <= {b"UPLH", b"UPLD"}, "unexpected new ground owner during migration"
+    if added:
+        migrated = {chunk["name"]: chunk for chunk in chunks(read_stream(loaded)[1])}
+        header = migrated[b"UPLH"]["payload"]
+        values = [int.from_bytes(header[index:index + 8], "big") for index in range(0, len(header), 8)]
+        assert values == [5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "ground migration manufactured utility history"
+        assert len(migrated[b"UPLD"]["rows"]) == 1, "ground migration manufactured utility account rows"
     # The reduced scenario starts with an unset manager face. Normal application loading assigns its missing
     # presentation style once, consuming its usual RNG draws. All custody, work and invoice fields must still
     # reconstruct exactly; this narrowly declared face initialization does not permit arbitrary money/time changes.
@@ -156,7 +176,7 @@ def verify_initial_owners(source, loaded):
             assert value == restored_clocks[identity][name], (identity, name, "initial clock field changed")
 
 
-def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_track=1):
+def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_track=1, complete_loop=False):
     """Compare the next legal native transition across one and two full application loads.
 
     @param state Physically reached retained source snapshot name.
@@ -164,6 +184,7 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
     @param input_prefix Retained native source basename, allowing improved scenarios without editing earlier inputs.
     @param repair_tile Optional actual removed Surface tile reported by the winding-depot producer; recovery uses an ordinary rail command.
     @param repair_track Actual removed track enum reported by that producer, supplied to the same owning build command.
+    @param complete_loop Require actual final Surface-origin disposal/empty return, including cancelled projects, instead of only the next exchange.
     @return None; missing physical progress, changed packets/costs or input edits fail.
     """
     startup = ROOT / "build/scripts/game_start.scr"
@@ -171,7 +192,9 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
     assert Path(input_prefix).name == input_prefix, "input must be a repository-local fixture basename"
     source = FIXTURES / f"{input_prefix}-{state}.sav"
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    outputs = [FIXTURES / f"{input_prefix}-{state}-first", FIXTURES / f"{input_prefix}-{state}-second"]
+    run_id = uuid.uuid4().hex
+    outputs = [FIXTURES / f"acceptance-{input_prefix}-{state}-{run_id}-first",
+               FIXTURES / f"acceptance-{input_prefix}-{state}-{run_id}-second"]
     elapsed = []
     try:
         startup.write_text("# @see r2mlvs5-spoil-wagons-and-haulage.md, Group 13A actual loader continuation.\n"
@@ -181,6 +204,9 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
         for index, output in enumerate(outputs):
             loaded_source = source if index == 0 else Path(str(outputs[0]) + "-loaded.sav")
             environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(loaded_source), OTTD_TBM_LOGISTICS_OUTPUT=str(output))
+            if complete_loop:
+                environment["OTTD_TBM_LOGISTICS_COMPLETE_LOOP"] = "1"
+                environment["OTTD_TBM_LOGISTICS_VIEW"] = "headless"
             if repair_tile is not None:
                 assert state == "blocked-line", "declared rail repair belongs only to an observed blocked route"
                 environment.update(OTTD_TBM_LOGISTICS_REPAIR_TILE=str(repair_tile), OTTD_TBM_LOGISTICS_REPAIR_TRACK=str(repair_track))
@@ -194,11 +220,19 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
             # lifecycle transition; exact destruction receipts replace an imaginary exchange count.
             pattern = (r"LOGISTICS_CRASH_CLEANUP ticks=(\d+) destroyed_earth=(\d+) destroyed_rock=(\d+)" if state == "crashed"
                        else r"LOGISTICS_NEXT_EXCHANGE ticks=(\d+) exchanges=(\d+) phase=(\d+) wait=(\d+)")
+            if complete_loop:
+                pattern = r"LOGISTICS_COMPLETE_LOOP ticks=(\d+) exchanges=(\d+) presentation=headless"
             match = re.search(pattern, evidence)
             assert match, "normal loaded game did not reach its next legal native transition"
             elapsed.append(match.groups())
         assert elapsed[0] == elapsed[1], "next exchange timing/cycle changed after reloading"
+        # The first actual accepted save has already initialized any missing
+        # company presentation defaults. Its second load must preserve every
+        # owner and clock/RNG field exactly, with no initialization exception.
+        verify_initial_owners(Path(str(outputs[0]) + "-loaded.sav"), Path(str(outputs[1]) + "-loaded.sav"))
         suffix = "-crash-cleanup.sav" if state == "crashed" else "-next-exchange.sav"
+        if complete_loop:
+            suffix = "-complete-loop.sav"
         first = Path(str(outputs[0]) + suffix)
         second = Path(str(outputs[1]) + suffix)
         assert owned_chunks(first) == owned_chunks(second), "loaded next-exchange packet/controller/cost ledger changed"
@@ -336,11 +370,12 @@ def main():
     @return None; malformed descriptors or changed object identities fail.
     """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--resume", choices=STATES + STALL_STATES, help="run one focused actual loader/next-exchange comparison")
+    parser.add_argument("--resume", choices=STATES + STALL_STATES + ("bend-partial", "cancelled"), help="run one focused actual loader/next-exchange comparison")
     parser.add_argument("--evidence-prefix", default="r2mlvs5-l", help="fresh chronological owning-plan log prefix")
     parser.add_argument("--input-prefix", default="source-native-deep", help="immutable native source save basename")
     parser.add_argument("--repair-tile", type=int, help="actual removed Surface tile reported by the recurring-depot producer")
     parser.add_argument("--repair-track", type=int, choices=range(6), default=1, help="actual removed native track enum")
+    parser.add_argument("--complete-loop", action="store_true", help="require actual final Surface disposal and empty return after reload")
     parser.add_argument("--visibility", action="store_true", help="compare three actual complete loops with headless/visible/hidden viewport policies")
     parser.add_argument("--output-prefix", help="fresh repository-local visibility outputs; never overwrite retained evidence")
     parser.add_argument("--portal-input", help="existing immutable portal fixture basename for actual portal-only loading")
@@ -355,7 +390,10 @@ def main():
         visibility_case(arguments.input_prefix, arguments.evidence_prefix, arguments.output_prefix)
         return
     if arguments.resume:
-        resume_case(arguments.resume, arguments.evidence_prefix, arguments.input_prefix, arguments.repair_tile, arguments.repair_track)
+        # Complete-loop evidence belongs to an actual recoverable loaded world;
+        # a destroyed hauler has only its separately defined native cleanup.
+        assert not arguments.complete_loop or arguments.resume != "crashed", "crash cleanup cannot masquerade as a completed live loop"
+        resume_case(arguments.resume, arguments.evidence_prefix, arguments.input_prefix, arguments.repair_tile, arguments.repair_track, arguments.complete_loop)
         return
     for state in STATES:
         source = saved_table(FIXTURES / f"source-deep-{state}.sav", b"VEHS")

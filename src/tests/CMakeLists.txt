@@ -39,6 +39,7 @@ add_test_files(
     multilayer_facility_selection.cpp
     multilayer_control_selection.cpp
     multilayer_control_runtime.cpp
+    multilayer_facility_runtime.cpp
     multilayer_sound_selection.cpp
     tbm_logistics_stalls.cpp
     tbm_logistics_queue.cpp
@@ -123,6 +124,22 @@ add_test_files(
     mine_production_fixture.h
     multilayer_bootstrap.cpp
     multilayer_utility.cpp
+    # Canonical tube registry boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md
+    transport_tube_registry.cpp
+    transport_tube_prototype.cpp
+    transport_tube_fixture.h
+    transport_tube_construction.cpp
+    transport_tube_reservations.cpp
+    # Declared connected ground fixture: r2mlvs15-integrated-acceptance-and-balance.md Group2.
+    acceptance_ground_fixture.cpp
+    utility_power.cpp
+    utility_power_company.cpp
+    utility_power_performance.cpp
+    utility_power_load.cpp
+    utility_power_mutation.cpp
+    utility_power_transfer_load.cpp
+    utility_power_effects.cpp
+    utility_power_effect_load.cpp
     solar_power_contract.cpp
     multilayer_state.cpp
     portal_profile.cpp

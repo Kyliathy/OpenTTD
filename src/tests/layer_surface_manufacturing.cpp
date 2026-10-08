@@ -4,11 +4,13 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_surface_manufacturing.cpp Actual Surface factories and packet custody bootstrap fuel, components, robotics and mirror kits without orbital production. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 12.4 */
+/** @file layer_surface_manufacturing.cpp Actual Surface factories and packet custody bootstrap geothermal construction, fuel, components, robotics and mirror kits. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Groups 10/12; r2mlvs3mp-master-plan.md task 9.3 */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "processor_fixture.h"
+#include "../layer_industry_baseline.h"
+#include "../multilayer_bootstrap.h"
 #include "../train.h"
 #include "../economy_base.h"
 
@@ -39,6 +41,30 @@ public:
 		const TileIndex anchor = TileXYL(x, y, MapLayer::Surface);
 		REQUIRE(CmdBuildIndustry(DoCommandFlag::Execute, anchor, type, 0, true, 123).Succeeded());
 		Industry &factory = *Industry::GetByTile(anchor);
+		for (TileIndex tile : factory.location) {
+			if (factory.TileBelongsToIndustry(tile)) SetIndustryCompleted(tile);
+		}
+		return factory;
+	}
+	/** @param x Surface anchor column. @param y Surface anchor row. @return Actual original steelworks, funded through the ordinary command after explicit original label resolution. */
+	Industry &BuildBaselineSteel(uint x, uint y)
+	{
+		auto &spec = *const_cast<IndustrySpec *>(GetIndustrySpec(8));
+		// This reduced fixture omits GRF finalization; resolve the preserved
+		// original label properties exactly as the existing baseline fixture does.
+		for (size_t slot = 0; slot < spec.accepts_cargo_label.size(); ++slot) {
+			if (const auto *label = std::get_if<CargoLabel>(&spec.accepts_cargo_label[slot])) spec.accepts_cargo[slot] = GetCargoTypeByLabel(*label);
+		}
+		for (size_t slot = 0; slot < spec.produced_cargo_label.size(); ++slot) {
+			if (const auto *label = std::get_if<CargoLabel>(&spec.produced_cargo_label[slot])) spec.produced_cargo[slot] = GetCargoTypeByLabel(*label);
+		}
+		REQUIRE(GetLayerBaselineReceiverType(CT_IRON_ORE) == 8);
+		AutoRestoreBackup mode(_game_mode, GameMode::Editor);
+		const TileIndex anchor = TileXYL(x, y, MapLayer::Surface);
+		REQUIRE(CmdBuildIndustry(DoCommandFlag::Execute, anchor, 8, 0, true, 123).Succeeded());
+		Industry &factory = *Industry::GetByTile(anchor);
+		// Finish only actual cells in this command-created Surface footprint;
+		// construction itself grants no mineral input or usable product.
 		for (TileIndex tile : factory.location) {
 			if (factory.TileBelongsToIndustry(tile)) SetIndustryCompleted(tile);
 		}
@@ -99,6 +125,55 @@ public:
 		return output->waiting + this->StationFor(factory).goods[cargo].TotalCount();
 	}
 };
+
+/** The frozen first collector/powerhouse/riser material bill exists in actual Surface stocks without geothermal output or tube-only supply. */
+TEST_CASE("Surface factories provide the complete first geothermal construction bill", "[layer-surface-geothermal-supply]")
+{
+	SurfaceManufacturingRig rig;
+	Industry &metal = *rig.industry;
+	Industry &chemical = rig.Build(MultiLayerRecipeID{"CHEM"}, 22, 30);
+	Industry &battery = rig.Build(MultiLayerRecipeID{"BATT"}, 34, 30);
+	Industry &electronics = rig.Build(MultiLayerRecipeID{"ELEC"}, 46, 30);
+	Industry &steel = rig.BuildBaselineSteel(30, 46);
+	const auto milestones = GetMultiLayerBootstrapMilestones();
+	const auto first = std::ranges::find(milestones, MultiLayerBootstrapStage::Geothermal, &MultiLayerBootstrapMilestone::stage);
+	REQUIRE(first != milestones.end());
+	REQUIRE(first->introduction_year == TimerGameCalendar::Year{1980});
+	SurfaceManufacturingRig::Receive(metal, CargoLabel{"CORE"}, 48);
+	SurfaceManufacturingRig::Receive(metal, CargoLabel{"COAL"}, 12);
+	SurfaceManufacturingRig::Receive(chemical, CargoLabel{"SALT"}, 2);
+	SurfaceManufacturingRig::Receive(chemical, CargoLabel{"OIL_"}, 2);
+	SurfaceManufacturingRig::Receive(battery, CargoLabel{"LITH"}, 4);
+	SurfaceManufacturingRig::Receive(battery, CargoLabel{"COBT"}, 2);
+	SurfaceManufacturingRig::Receive(electronics, CargoLabel{"RARE"}, 4);
+	REQUIRE(ReceiveLayerBaselineSteelCargo(steel, GetCargoTypeByLabel(CT_IRON_ORE), 24) == 24);
+	REQUIRE(ProcessLayerBaselineSteel(steel) == 24);
+	SurfaceManufacturingRig::Work(metal, 12);
+	SurfaceManufacturingRig::Work(chemical, 1);
+	rig.Ship(chemical, battery, CargoLabel{"CHEM"}, 2);
+	rig.Ship(metal, electronics, CargoLabel{"RFMT"}, 8);
+	SurfaceManufacturingRig::Work(battery, 2);
+	SurfaceManufacturingRig::Work(electronics, 4);
+	const std::array stocks{std::pair{CargoLabel{"STEL"}, &steel}, std::pair{CargoLabel{"RFMT"}, &metal},
+		std::pair{CargoLabel{"ELEC"}, &electronics}, std::pair{CargoLabel{"BATY"}, &battery}};
+	REQUIRE(first->purchases.size() == stocks.size());
+	// Compare the immutable first-build bill to the sole physical Industry
+	// outputs plus dispatched packets. No copied bill becomes actual cargo.
+	for (const auto &role : first->purchases) {
+		const auto owner = std::ranges::find(stocks, role.label, &std::pair<CargoLabel, Industry *>::first);
+		REQUIRE(owner != stocks.end());
+		CHECK(rig.Remaining(*owner->second, role.label) == role.quantity);
+		CHECK(GetTileLayer(owner->second->location.tile) == MapLayer::Surface);
+	}
+	// These are real manufacturing/custody boundaries; cash procurement and
+	// a driven delivery into the eventual plant remain master10.6 acceptance.
+	for (const Industry *factory : Industry::Iterate()) {
+		for (const auto &input : factory->accepted) CHECK(input.waiting == 0);
+	}
+	CHECK(GetLayerProcessorState(metal.index)->batches.at(MultiLayerRecipeID{"CFMT"}) == 12);
+	CHECK(GetLayerProcessorState(electronics.index)->batches.at(MultiLayerRecipeID{"ELEC"}) == 4);
+	CHECK(GetLayerProcessorState(battery.index)->batches.at(MultiLayerRecipeID{"BATT"}) == 2);
+}
 
 /** Real recipes and packet transfers produce every first-orbital manufacturing requirement entirely on Surface from explicit earlier raw shipments. */
 TEST_CASE("Surface manufacture bootstraps fuel components robotics and mirror kits", "[layer-surface-manufacturing]")

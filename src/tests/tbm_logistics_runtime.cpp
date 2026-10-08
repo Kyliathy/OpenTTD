@@ -396,11 +396,14 @@ TEST_CASE("Loaded source logistics reaches its next physical exchange", "[.tbm-l
 	const auto root = std::filesystem::current_path().parent_path();
 	const auto family = std::filesystem::weakly_canonical(root / "src/tests/fixtures/haulage");
 	const auto portals = std::filesystem::weakly_canonical(root / "src/tests/fixtures/portals");
+	const auto acceptance = std::filesystem::weakly_canonical(root / "src/tests/fixtures/acceptance");
 	// Actual portal-only inputs and logistics worlds stay in their existing owned fixture families; a test environment
 	// cannot redirect this native writer into a user-wide save/content directory or an unrelated repository path.
 	for (const char *path : {source, output}) {
 		const auto parent = std::filesystem::weakly_canonical(std::filesystem::path(path).parent_path());
-		REQUIRE((parent == family || parent == portals));
+		// The declared connected ground fixture has its own repository family;
+		// accepting it does not permit user-wide paths or fabricate logistics.
+		REQUIRE((parent == family || parent == portals || parent == acceptance));
 	}
 	LogisticsRuntimeProbe probe;
 	probe.output = output;

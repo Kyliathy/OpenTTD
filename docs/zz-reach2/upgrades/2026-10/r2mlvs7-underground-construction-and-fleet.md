@@ -175,6 +175,8 @@ Evidence: actual viewport projection, mouse-event dispatch and native commission
 
 ### Group 4 - Connect later tube and geothermal tool providers
 
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
 {{MEDIUM}}
 - [ ] 4.1 After r2mlvs16 delivers its public capability/tools, add guideway, terminal, depot and power actions with a separate capsule fleet filter. Keep this integration pending if the provider is absent while the core underground toolbar remains testable.
 - [ ] 4.2 After r2mlvs17 delivers its public tools, add Deep vent survey, utilities, generators and later plant actions. Read dates from the canonical profile rather than copy unlock constants into widgets.
@@ -285,6 +287,8 @@ Read `VehicleEnterTile_LayerPortal` in `src/layer_portal_cmd.cpp`, the elevator 
 Evidence: actual command-purchased trucks physically ride Surface/Deep and Underground/Deep elevators, observing the timed wait. Connected endpoints accept pool-owned articulated front/follower reference roles and refuse trams or pre-1980 Deep. A genuine original electric engine refuses a non-electric depot; actual paid TBM work lays support rail whose railtype remains unpowered for electric engines. Focused admission and translated quote checks passed 4,706 assertions in five cases (`r2mlvs7-ca-physical-admission-checks.log`, build bz). Standalone portal housing producer checks passed 147 assertions in three cases (bx, build bw). The follower fixture is physical admission evidence, not an articulated native purchase design. Native roads explicitly connect through `CmdChangeLayerPortalConnection` after both approaches are built; the earlier incomplete fixture's sealed housings correctly refused traffic.
 
 ### Group 8 - Integrate the five delivered tube models into fleet controls
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{MEDIUM}}
 - [ ] 8.1 Consume r2mlvs16 engine identities for Mole-70, Crate-75, Cistern-80, Shield-85 and Forge-05; display their distinct dates, cargo roles and art rather than define another registry.

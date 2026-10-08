@@ -106,6 +106,7 @@ UtilityAllocationPlan PlanUtilityAllocation(uint64_t interval, std::span<const U
 	// Allocate once by consumer ID, then source ID. Every grant debits its eligible layer-local output balance immediately.
 	for (const auto &consumer : ordered_consumers) {
 		uint64_t remaining = consumer.demand_j;
+		UtilityConsumerGrant receipt{consumer.id, consumer.demand_j, 0, {}};
 		std::vector<UtilityProducerID> links(consumer.linked_producers.begin(), consumer.linked_producers.end());
 		std::ranges::sort(links);
 		for (const auto id : links) {
@@ -114,8 +115,12 @@ UtilityAllocationPlan PlanUtilityAllocation(uint64_t interval, std::span<const U
 			source.unused_j -= grant;
 			source.consumed_j += grant;
 			remaining -= grant;
+			// Retain only real positive source contributions so later settlement
+			// or topology loss can debit/release the exact original source once.
+			if (grant != 0) receipt.sources.push_back({id, grant});
 		}
-		plan.consumers.push_back({consumer.id, consumer.demand_j, consumer.demand_j - remaining});
+		receipt.granted_j = consumer.demand_j - remaining;
+		plan.consumers.push_back(std::move(receipt));
 	}
 	plan.valid = true;
 	return plan;

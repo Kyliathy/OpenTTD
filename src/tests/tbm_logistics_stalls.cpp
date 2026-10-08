@@ -19,6 +19,7 @@
 #include "../saveload/saveload_func.h"
 #include "../table/sprites.h"
 #include "../tbm_cmd.h"
+#include "../core/backup_type.hpp"
 #include <cstdlib>
 #include <filesystem>
 
@@ -26,6 +27,56 @@
 
 /** Stop only the fixture's observation loop at a reached native transition; no gameplay state is changed. */
 struct ReachedLogisticsCheckpoint {};
+
+/** Save actual command cancellation while a loaded cutter has unfinished work on a real bend; native loading owns retreat. */
+TEST_CASE("A cancelled loaded cutter writes its real supported retreat state", "[tbm-logistics-cancel-save]")
+{
+	MockEnvironment::Instance();
+	LoadGeneratedWindowTestLanguage();
+	UndergroundWorkflowWorld world(MapLayer::Underground, false, true);
+	LayerSaveContent content(world.ActivatedContent(), true);
+	AutoRestoreBackup<bool> turns(_settings_game.pf.forbid_90_deg, false);
+	const char *prefix = std::getenv("OTTD_TBM_LOGISTICS_RECORD");
+	if (prefix != nullptr) {
+		REQUIRE(std::filesystem::path(prefix).filename() == std::filesystem::path(prefix));
+		REQUIRE_FALSE(std::string_view(prefix).starts_with("r2"));
+	}
+	bool recorded = false;
+	/** @param current Actual post-tick player command boundary; neither cursor, train position nor cargo is assigned by this observer. */
+	const auto cancel = [&](const UndergroundWorkflowWorld &current) {
+		const auto *assignment = GetTBMExchangeAssignmentForHauler(current.hauler->index);
+		REQUIRE(assignment != nullptr);
+		const auto *project = GetTBMProject(assignment->project);
+		REQUIRE(project != nullptr);
+		const auto *job = GetExcavationJob(project->job);
+		REQUIRE(job != nullptr);
+		// Choose actual unfinished work after an advancing bend with spoil
+		// aboard. Cancellation must preserve completed material/support while
+		// releasing only unfinished work and keeping a legal physical retreat.
+		if (project->phase != TBMPhase::Bore || job->cursor < 3 || job->partial_work_ticks == 0) return;
+		REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project->id, TBMProjectAction::Cancel).Succeeded());
+		CHECK(GetExcavationJob(project->job)->state == ExcavationJobState::Cancelled);
+		CHECK(GetExcavationJob(project->job)->partial_work_ticks == 0);
+		CHECK(GetTBMProject(project->id)->phase == TBMPhase::ReturnForExchange);
+		if (prefix != nullptr) {
+			const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+			const auto path = directory / (std::string(prefix) + "-cancelled.sav");
+			REQUIRE_FALSE(std::filesystem::exists(path));
+			SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
+			AutoRestoreBackup no_ui(_game_mode, GameMode::Menu);
+			REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);
+		}
+		recorded = true;
+		throw ReachedLogisticsCheckpoint{};
+	};
+	try {
+		RunUndergroundExcavationWorkflow(world, Ticks::DAY_TICKS, {}, cancel, true);
+	} catch (const ReachedLogisticsCheckpoint &) {
+		// Stop only fixture observation after the actual cancellation/save.
+		// The separate real application loader must drive subsequent retreat.
+	}
+	CHECK(recorded);
+}
 
 /** Remove a genuinely empty Surface origin while real loaded wagons travel there, then save the observed wait and rebuild by command. */
 TEST_CASE("Loaded source haulage saves and recovers a removed Surface origin", "[tbm-logistics-origin-save]")

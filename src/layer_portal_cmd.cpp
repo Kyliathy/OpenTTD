@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"
+#include "transport_tube.h"
 #include "multilayer_sprite.h"
 #include "layer_portal_map.h"
 #include "excavation.h"
@@ -737,6 +738,9 @@ static CommandCost BuildNativePortalPair(const NativePortalBuildProposal &propos
  */
 CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportType transport_type, MapLayer target_layer, DiagDirection shaft_dir, RailType railtype, RoadType roadtype)
 {
+	// Tube guideways never become commissioning shafts or cross-layer capsule
+	// routes; reject their semantic type before constructing either endpoint.
+	if (transport_type == TransportType::Rail && IsTubeRailType(railtype)) return CMD_ERROR;
 	if (transport_type == TransportType::Rail) {
 		if (!ValParamRailType(railtype)) return CMD_ERROR;
 	} else if (transport_type == TransportType::Road) {

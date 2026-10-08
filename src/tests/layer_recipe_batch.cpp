@@ -4,11 +4,14 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_recipe_batch.cpp Shared all-input transaction boundaries, without native utility authority. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 7/13 */
+/** @file layer_recipe_batch.cpp Shared all-input transaction boundaries and actual utility participant admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 7/13; r2mlvs12-solar-farms-mirrors-and-eti.md Group 8 */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../multilayer_industry.h"
+#include "excavation_fixture.h"
+#include "utility_power_fixture.h"
+#include "../core/backup_type.hpp"
 
 #include "../safeguards.h"
 
@@ -76,6 +79,119 @@ public:
 
 /** @return The content owner's unchanged bootstrap Copper/Coal refinery definition. */
 static const MultiLayerRecipe &BatchTestRecipe() { return GetMultiLayerManufacturingRecipes().front().recipe; }
+
+/** Test-owned public inventory participant reads real ledger availability; it owns no electrical amount or source identity. */
+class PoweredRecipeBatchTestFacility : public RecipeBatchTestFacility {
+	UtilityGrantID grant; ///< Exact already registered consumer/epoch, issued by the real utility owner.
+public:
+	/** @param recipe Immutable test definition with bounded electrical demand. @param grant Actual ledger-issued reservation. */
+	PoweredRecipeBatchTestFacility(const MultiLayerRecipe &recipe, UtilityGrantID grant) : RecipeBatchTestFacility(recipe), grant(grant) {}
+	/** @return Actual material/work snapshot plus a read-only projection of this owner's real current electrical balance. */
+	LayerRecipeInventorySnapshot Capture() const override
+	{
+		auto snapshot = RecipeBatchTestFacility::Capture();
+		const auto allocation = GetUtilityAllocation(this->grant.consumer);
+		snapshot.power_j = allocation ? allocation->granted_energy_j : 0;
+		return snapshot;
+	}
+	/** @param result Receives the actual registered consumer/epoch. @return Whether this inventory has an explicit real reservation. */
+	bool GetElectricalGrant(UtilityGrantID &result) const override { result = this->grant; return true; }
+};
+
+/** A failed complete recipe cannot consume energy before material/output/work admission; success settles the same original source once. */
+TEST_CASE("Shared powered recipes commit actual ledger energy with their complete inventory participant", "[utility-power-recipe]")
+{
+	ExcavationFixture world;
+	UtilityPowerReset ledger;
+	const auto producer = RegisterUtilityPowerProducer(_current_company, MapLayer::Surface, UtilityGenerationKind::External);
+	REQUIRE(producer.has_value());
+	const auto consumer = RegisterUtilityPowerConsumer(_current_company, MapLayer::Surface, UtilityConsumerEffect::ProcessorBoost, 81, std::array{*producer});
+	REQUIRE(consumer.has_value());
+	REQUIRE(PublishUtilityGeneration(*producer, 1, 3, 1000) == UtilityPowerError::None);
+	{
+		AutoRestoreBackup system(_current_company, OWNER_DEITY);
+		REQUIRE(AllocateUtilityPower(1, std::array{UtilityPowerRequest{*consumer, 81}}) == UtilityPowerError::None);
+	}
+	MultiLayerRecipe recipe = BatchTestRecipe();
+	recipe.max_batches = 2; recipe.power_j_per_batch = 10;
+	PoweredRecipeBatchTestFacility facility(recipe, {*consumer, 1});
+	SECTION("complete inventory validation refuses") { facility.refuse_validation = true; }
+	SECTION("complete inventory commit refuses") { facility.refuse_commit = true; }
+	SECTION("another layer cannot borrow this reservation") { facility.stock.layer = MapLayer::Underground; }
+	SECTION("complete inventory and actual energy settle together") {}
+	const auto before = facility.Capture();
+	const auto digest = ComputeUtilityPowerDigest();
+	const auto proposal = PrepareLayerRecipeBatch(recipe, facility);
+	REQUIRE(proposal.plan.batches == 2);
+	const auto receipt = CommitLayerRecipeBatch(recipe, facility, facility, proposal);
+	// Either owner refusal or a physical layer mismatch blocks the whole
+	// material/work/energy transaction; none may be partially settled.
+	if (facility.refuse_validation || facility.refuse_commit || facility.stock.layer != MapLayer::Surface) {
+		CHECK(receipt.error == LayerRecipeCommitError::Refused);
+		CHECK(facility.stock.inputs[0].amount == before.inputs[0].amount);
+		CHECK(facility.stock.outputs[0].amount == 0);
+		CHECK(facility.stock.work_ticks == before.work_ticks);
+		CHECK(ComputeUtilityPowerDigest() == digest);
+	} else {
+		REQUIRE(receipt.error == LayerRecipeCommitError::None);
+		CHECK(receipt.batches == 2);
+		CHECK(facility.stock.inputs[0].amount == 0);
+		CHECK(facility.stock.outputs[0].amount == proposal.outputs[0].amount);
+		CHECK(GetUtilityAllocation(*consumer)->granted_energy_j == 61);
+		CHECK(CaptureUtilityPowerState().producers.front().consumed_lifetime_j == 20);
+		CHECK(CommitLayerRecipeBatch(recipe, facility, facility, proposal).error == LayerRecipeCommitError::Stale);
+		CHECK(GetUtilityAllocation(*consumer)->granted_energy_j == 61);
+	}
+}
+
+/** Incomplete material admission consumes no electricity; cancelling a quote releases only its unused real reservation. */
+TEST_CASE("Powered recipe pauses and cancelled quotes preserve their sole material and energy owners", "[utility-power-recipe]")
+{
+	ExcavationFixture world;
+	UtilityPowerReset ledger;
+	const auto producer = RegisterUtilityPowerProducer(_current_company, MapLayer::Surface, UtilityGenerationKind::External);
+	REQUIRE(producer.has_value());
+	const auto consumer = RegisterUtilityPowerConsumer(_current_company, MapLayer::Surface, UtilityConsumerEffect::ProcessorBoost, 81, std::array{*producer});
+	REQUIRE(consumer.has_value());
+	REQUIRE(PublishUtilityGeneration(*producer, 1, 3, 1000) == UtilityPowerError::None);
+	{
+		AutoRestoreBackup system(_current_company, OWNER_DEITY);
+		REQUIRE(AllocateUtilityPower(1, std::array{UtilityPowerRequest{*consumer, 81}}) == UtilityPowerError::None);
+	}
+	MultiLayerRecipe recipe = BatchTestRecipe();
+	recipe.max_batches = 2;
+	recipe.power_j_per_batch = 10;
+	PoweredRecipeBatchTestFacility facility(recipe, {*consumer, 1});
+	SECTION("missing transported secondary input") { facility.stock.inputs.back().amount = 0; }
+	SECTION("full product slot") { facility.stock.outputs.front().amount = facility.stock.outputs.front().capacity; }
+	SECTION("cancel an admitted quote") {}
+	const auto before = facility.Capture();
+	const auto digest = ComputeUtilityPowerDigest();
+	const auto quote = PrepareLayerRecipeBatch(recipe, facility);
+	// A material pause owns no electrical debit, even though this exact facility
+	// has a positive real allocation. Quotes themselves reserve no new power.
+	if (quote.plan.batches == 0) {
+		const auto receipt = CommitLayerRecipeBatch(recipe, facility, facility, quote);
+		CHECK(receipt.error == LayerRecipeCommitError::None);
+		CHECK(receipt.batches == 0);
+		CHECK(ComputeUtilityPowerDigest() == digest);
+	}
+	CHECK(facility.commits == 0);
+	CHECK(facility.stock.work_ticks == before.work_ticks);
+	CHECK(GetUtilityAllocation(*consumer)->granted_energy_j == 81);
+	// The job owns cancellation: discard its transient quote and explicitly
+	// expire unused ledger energy. Release never consumes stock or source fuel.
+	const auto release = PrepareUtilityMutation(UtilityMutationKind::ReleaseUnused, {*consumer, 1}, 81);
+	REQUIRE(CommitUtilityMutation(release).error == UtilityPowerError::None);
+	CHECK(GetUtilityAllocation(*consumer)->granted_energy_j == 0);
+	CHECK(CaptureUtilityPowerState().producers.front().consumed_lifetime_j == 0);
+	CHECK(CommitLayerRecipeBatch(recipe, facility, facility, quote).error == LayerRecipeCommitError::Stale);
+	CHECK(CommitUtilityMutation(release).error == UtilityPowerError::StaleMutation);
+	CHECK(facility.stock.inputs.front().amount == before.inputs.front().amount);
+	CHECK(facility.stock.inputs.back().amount == before.inputs.back().amount);
+	CHECK(facility.stock.outputs.front().amount == before.outputs.front().amount);
+	CHECK(facility.commits == 0);
+}
 
 /** Missing secondary input and full secondary output retain every delivered input and every work tick. */
 TEST_CASE("Shared recipe batches require all inputs and every output slot", "[layer-recipe-batch]")

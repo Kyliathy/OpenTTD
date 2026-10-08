@@ -8,10 +8,12 @@
  * @file layer_industry_recipe.cpp Complete bounded recipe transactions over the actual facility owner's inventory.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 6-7/10/13
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, all-input recipe contract
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 8 atomic electrical participant
  */
 
 #include "stdafx.h"
 #include "multilayer_industry.h"
+#include "utility_power.h"
 
 #include "safeguards.h"
 
@@ -105,6 +107,25 @@ LayerRecipeBatchProposal PrepareLayerRecipeBatch(const MultiLayerRecipe &recipe,
 	return BuildLayerRecipeProposal(recipe, inventory, inventory.Capture());
 }
 
+/** Shared utility participant commits the same actual recipe owner; it owns no copied stock or electrical counter. */
+class RecipeUtilityTransaction final : public UtilityMutationParticipant {
+	LayerRecipeCommitParticipant &participant; ///< Existing whole physical inventory/work transaction owner.
+	const LayerRecipeInventoryView &inventory; ///< Exact actual owner view used for original preparation.
+	const LayerRecipeBatchProposal &recipe; ///< Original checked material/work proposal, transient within this action.
+public:
+	/** @param participant Actual recipe commit owner. @param inventory Its exact original view. @param recipe Complete checked proposal. */
+	RecipeUtilityTransaction(LayerRecipeCommitParticipant &participant, const LayerRecipeInventoryView &inventory,
+		const LayerRecipeBatchProposal &recipe) : participant(participant), inventory(inventory), recipe(recipe) {}
+	/** @param proposal Exact electrical reservation. @return Whether the same actual inventory and complete material/work action remain valid. */
+	bool Validate([[maybe_unused]] const UtilityMutationProposal &proposal) const override
+	{
+		if (!EqualLayerRecipeInventory(this->recipe.before, this->inventory.Capture())) return false;
+		return this->participant.Validate(this->recipe);
+	}
+	/** @param proposal Exact already checked electrical debit. @return Complete inventory/work commit or unchanged refusal. */
+	bool Commit([[maybe_unused]] const UtilityMutationProposal &proposal) noexcept override { return this->participant.Commit(this->recipe); }
+};
+
 /** @copydoc CommitLayerRecipeBatch */
 LayerRecipeBatchReceipt CommitLayerRecipeBatch(const MultiLayerRecipe &recipe, const LayerRecipeInventoryView &inventory, LayerRecipeCommitParticipant &participant, const LayerRecipeBatchProposal &proposal)
 {
@@ -121,8 +142,23 @@ LayerRecipeBatchReceipt CommitLayerRecipeBatch(const MultiLayerRecipe &recipe, c
 	// Malformed definitions/bindings are refusals; ordinary lack of stock or work remains a harmless zero-batch pause.
 	if (proposal.plan.limiting == MultiLayerRecipeLimit::InvalidDefinition || proposal.plan.limiting == MultiLayerRecipeLimit::InvalidStock) return {LayerRecipeCommitError::InvalidProposal};
 	if (proposal.plan.batches == 0) return {LayerRecipeCommitError::None, 0};
-	// Scalar energy in a snapshot proves no grid/vent custody. Group 13 must install the actual atomic utility handoff.
-	if (proposal.heat_j != 0 || proposal.power_j != 0) return {LayerRecipeCommitError::Refused};
+	// Heat still requires its distinct vent owner; electrical snapshots alone
+	// also grant no custody without this exact participant's real ledger token.
+	if (proposal.heat_j != 0) return {LayerRecipeCommitError::Refused};
+	if (proposal.power_j != 0) {
+		UtilityGrantID grant;
+		if (!participant.GetElectricalGrant(grant)) return {LayerRecipeCommitError::Refused};
+		const auto allocation = GetUtilityAllocation(grant.consumer);
+		// A physical recipe may use only its own explicit layer's actual grant;
+		// overlapping Surface/underground inventory cannot borrow another meter.
+		if (!allocation || allocation->layer != current.layer) return {LayerRecipeCommitError::Refused};
+		const auto energy = PrepareUtilityMutation(UtilityMutationKind::Consume, grant, proposal.power_j);
+		if (energy.error != UtilityPowerError::None) return {LayerRecipeCommitError::Refused};
+		RecipeUtilityTransaction transaction(participant, inventory, proposal);
+		const auto receipt = CommitUtilityMutation(energy, &transaction);
+		if (receipt.error != UtilityPowerError::None) return {LayerRecipeCommitError::Refused};
+		return {LayerRecipeCommitError::None, proposal.plan.batches};
+	}
 	if (!participant.Validate(proposal)) return {LayerRecipeCommitError::Refused};
 	if (!participant.Commit(proposal)) return {LayerRecipeCommitError::Refused};
 	return {LayerRecipeCommitError::None, proposal.plan.batches};

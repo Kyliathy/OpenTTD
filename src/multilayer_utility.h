@@ -59,11 +59,18 @@ struct UtilityProducerBalance {
 	uint64_t unused_j = 0; ///< Unconsumed energy; curtail at interval end unless a separately bounded store owns it.
 };
 
+/** Exact source contribution to one proposed grant; runtime settlement retains this lineage rather than guessing it from totals. */
+struct UtilitySourceShare {
+	UtilityProducerID producer; ///< Local output account whose interval availability is reserved; explicit plan links retain any import origin.
+	uint64_t energy_j; ///< Whole allocated quantity from this source, never a second generation event.
+};
+
 /** Granted demand, distinct from requested or generated power. */
 struct UtilityConsumerGrant {
 	UtilityConsumerID id; ///< Stable sorted consumer reference.
 	uint64_t demand_j; ///< Original requested energy.
 	uint64_t granted_j; ///< Actual grant; unmet demand is demand minus grant.
+	std::vector<UtilitySourceShare> sources; ///< Exact deterministic source slices; their sum equals granted_j.
 };
 
 /** Exactly one conserved debit/credit for a commissioned link. */

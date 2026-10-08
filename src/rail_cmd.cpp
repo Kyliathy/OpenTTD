@@ -39,6 +39,7 @@
 #include "rail_cmd.h"
 #include "landscape_cmd.h"
 #include "tbm.h"
+#include "transport_tube.h"
 #include "tbm_exchange.h"
 
 #include "table/strings.h"
@@ -438,6 +439,11 @@ CommandCost CmdBuildSingleRail(DoCommandFlags flags, TileIndex tile, RailType ra
 
 	//This layer may refuse track before any cost is counted.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Rail); layer_cost.Failed()) return layer_cost;
+	// The native tube label adds a rock-only geological domain; shared rail
+	// commands, scripts and copy tools must not construct it on other planes.
+	if (IsTubeRailType(railtype)) {
+		if (CommandCost tube = CheckTubeConstruction(std::array{tile}); tube.Failed()) return tube;
+	}
 
 	Slope tileh = GetTileSlope(tile);
 	TrackBits trackbit = track;
@@ -1001,6 +1007,9 @@ CommandCost CmdBuildTrainDepot(DoCommandFlags flags, TileIndex tile, RailType ra
 	//This layer may refuse a train depot before any cost is counted.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::TrainDepot); layer_cost.Failed()) return layer_cost;
 	if (CommandCost ground = CheckExcavationConstructionEntrance(tile, dir); ground.Failed()) return ground;
+	if (IsTubeRailType(railtype)) {
+		if (CommandCost tube = CheckTubeConstructionArea(tile, 1, 1, dir); tube.Failed()) return tube;
+	}
 
 	Slope tileh = GetTileSlope(tile);
 
@@ -1624,6 +1633,14 @@ CommandCost CmdConvertRail(DoCommandFlags flags, TileIndex tile, TileIndex area_
 	bool found_convertible_track = false; // whether we actually did convert some track (see bug #7633)
 
 	auto tilearea = CreateOrthoDiagonalArea(area_end, area_start, diagonal);
+	if (GetTubeRailType() != INVALID_RAILTYPE) {
+		std::vector<TileIndex> conversion_tiles;
+		// Preserve the existing drag geometry while preflighting every native tube
+		// domain change before the ordinary converter can publish a partial result.
+		// Worlds without native tube capability retain the original allocation path.
+		for (const TileIndex selected : tilearea) conversion_tiles.push_back(selected);
+		if (CommandCost tube = CheckTubeRailConversion(conversion_tiles, totype, flags); tube.Failed()) return tube;
+	}
 	for (TileIndex cur_tile : tilearea) {
 		// A safe empty native housing converts only metadata over retained rock; ordinary tracks still require excavated floor and never acquire a clearing bypass.
 		const bool native_portal = IsLayerPortalTile(cur_tile) && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
@@ -3176,6 +3193,9 @@ int TicksToLeaveDepot(const Train *v)
 /** @copydoc VehicleEnterTileProc */
 static VehicleEnterTileStates VehicleEnterTile_Rail(Vehicle *v, TileIndex tile, int x, int y)
 {
+	// The actual tile dispatcher cannot admit an ordinary/capsule domain crossing
+	// merely because route discovery or a compatibility mask previously allowed it.
+	if (v->type == VehicleType::Train && !CanTubeTrainEnterTile(*Train::From(v), tile)) return VehicleEnterTileState::CannotEnter;
 	/* Temporary TBM support refuses a train unless it may carry every part; the moving front decides for the whole
 	 * train, so neither a route nor force-proceed can take ordinary freight into a work corridor (r2mlvs4 Group 14). */
 	if (v->type == VehicleType::Train && v == v->GetMovingFront() && GetTBMSupportTile(tile) != nullptr) {

@@ -1,4 +1,5 @@
 # Metadata/geology/job transport: docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md and r2mlvs2-geology-and-excavation.md.
+# Native electrical transport: docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B.
 add_subdirectory(compat)
 
 add_files(
@@ -23,6 +24,7 @@ add_files(
     layer_mine_sl.cpp
     layer_processor_sl.cpp
     tbm_exchange_sl.cpp
+    utility_power_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp
     group_sl.cpp
