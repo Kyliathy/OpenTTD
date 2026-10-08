@@ -4532,6 +4532,13 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 		consist->dest_tile = target->tile;
 	}
 
+	// Mechanical compatibility and force-proceed never supply electricity.
+	// Keep actual depot departure/service inside the complete paid front tick;
+	// orders and loading above may still perform their ordinary cleanup.
+	if (GetTubeVehicleCapability(consist->engine_type).has_value() && consist->IsInDepot() && !IsTubePowerExecutionAuthorized(*consist)) {
+		consist->cur_speed = 0; consist->subspeed = 0;
+		return true;
+	}
 	if (CheckTrainStayInDepot(consist)) return true;
 
 	if (!mode) consist->ShowVisualEffect();
@@ -4576,6 +4583,14 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 		return true;
 	}
 
+	// A lost/missing grant holds the occupied physical footprint and cargo.
+	// Both acceleration models and force-proceed pass this same native gate;
+	// reservations, orders and service cleanup remain with their existing owners.
+	if (GetTubeVehicleCapability(consist->engine_type).has_value() && !IsTubePowerExecutionAuthorized(*consist)) {
+		consist->cur_speed = 0; consist->subspeed = 0;
+		consist->SetLastSpeed();
+		return true;
+	}
 	int j = consist->UpdateSpeed();
 
 	/* we need to invalidate the widget if we are stopping from 'Stopping 0 km/h' to 'Stopped' */
@@ -4656,8 +4671,36 @@ Money Train::GetRunningCost() const
 	return cost;
 }
 
+/** Complete native two-substep work participant; one shared utility settlement surrounds its actual physical action. */
+class TubeNativeTick final : public UtilityMutationParticipant {
+	Train &train; ///< Actual capsule front; native handlers retain movement, reservations, packets and depot bookkeeping.
+public:
+	bool alive = true; ///< Native existence result, never a second vehicle lifecycle authority.
+	/** @param train Actual front engine for this one complete paid simulation tick. */
+	explicit TubeNativeTick(Train &train) : train(train) {}
+	/** @param proposal Exact revalidated owned electrical use. @return Whether this healthy actual capsule still owns the prepared work opportunity. */
+	bool Validate(const UtilityMutationProposal &proposal) const override
+	{
+		// A changed/foreign/crashed front cannot consume an earlier work offer;
+		// native crash deletion continues through the ordinary unpaid cleanup path.
+		return proposal.owner == this->train.owner && this->train.IsFrontEngine() &&
+			!this->train.vehstatus.Test(VehState::Crashed) && IsTubePowerExecutionAuthorized(this->train);
+	}
+	/** @param proposal Exact admitted whole energy amount. @return Complete native work; its two substeps never settle separate grants. */
+	bool Commit([[maybe_unused]] const UtilityMutationProposal &proposal) noexcept override
+	{
+		if (GetTubePowerPhase(this->train) == TubePowerPhase::DepotService) {
+			VehicleServiceInDepot(&this->train);
+			return true;
+		}
+		this->alive = TrainLocoHandler(&this->train, false);
+		if (this->alive) this->alive = TrainLocoHandler(&this->train, true);
+		return true;
+	}
+};
+
 /**
- * Update train vehicle data for a tick.
+ * Update train vehicle data for a tick, including one metered native capsule work boundary.
  * @return True if the vehicle still exists, false if it has ceased to exist (front of consists only).
  */
 /** @copydoc Vehicle::Tick */
@@ -4681,6 +4724,14 @@ bool Train::Tick()
 		if (const TBMProject *project = GetTBMProjectForCutter(this->index); project != nullptr) AdvanceTBMWork(project->id);
 		// The hauler cycle has the same one call site per hauler front engine (r2mlvs5 Group 6).
 		if (const TBMExchangeAssignment *assignment = GetTBMExchangeAssignmentForHauler(this->index); assignment != nullptr) AdvanceTBMHauler(assignment->id);
+		// Exactly one front call surrounds both native locomotive substeps.
+		// Cache refreshes never invoice, and an unpowered capsule continues only
+		// guarded order/loading/crash cleanup with physical departure held.
+		if (GetTubeVehicleCapability(this->engine_type).has_value()) {
+			AutoRestoreBackup actor(_current_company, this->owner);
+			TubeNativeTick work(*this);
+			if (AdvanceTubePowerTick(*this, work)) return work.alive;
+		}
 
 		if (!TrainLocoHandler(this, false)) return false;
 

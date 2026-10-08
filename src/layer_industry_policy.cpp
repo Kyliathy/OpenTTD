@@ -4,10 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_industry_policy.cpp Whitelisted definition and complete excavated-site admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 3-4 */
+/** @file layer_industry_policy.cpp Whitelisted definition and complete excavated-site admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 3-4; r2mlvs17-geothermal-energy-and-industry.md Group1B, exclusive collector capability. */
 
 #include "stdafx.h"
 #include "multilayer_industry.h"
+#include "geothermal.h"
 #include "industry.h"
 #include "industrytype.h"
 #include "map_layer.h"
@@ -130,6 +131,7 @@ const LayerIndustryCapability *GetLayerIndustryCapability(IndustryType type)
 	// Only native definitions in the pinned package scope gain geology authority; GRF art/substitutes never do.
 	if (!spec->enabled || spec->grf_prop.HasGrfFile() || spec->grf_prop.grfid != LayerIndustryGrfID()) return nullptr;
 	const uint16_t local = spec->grf_prop.local_id;
+	if (local == GEOTHERMAL_COLLECTOR_LOCAL_ID) return GetGeothermalCollectorIndustryCapability(type);
 	// Supported Surface processing stays explicit even though ordinary external industries also retain Surface permission.
 	if (local >= LAYER_PROCESSOR_LOCAL_BASE && local < LAYER_PROCESSOR_LOCAL_BASE + ProcessorCapabilities().size()) {
 		const auto &capability = ProcessorCapabilities()[local - LAYER_PROCESSOR_LOCAL_BASE];
@@ -165,7 +167,8 @@ CommandCost CheckLayerIndustryConstruction(TileIndex tile, IndustryType type)
 		// A malformed or wrong-profile native mine/processor must never fall back to legacy Surface construction.
 		if (spec != nullptr && spec->grf_prop.grfid == LayerIndustryGrfID() &&
 				((spec->grf_prop.local_id >= LAYER_MINE_LOCAL_BASE && spec->grf_prop.local_id < LAYER_MINE_LOCAL_BASE + MineCapabilities().size()) ||
-				(spec->grf_prop.local_id >= LAYER_PROCESSOR_LOCAL_BASE && spec->grf_prop.local_id < LAYER_PROCESSOR_LOCAL_BASE + ProcessorCapabilities().size()))) return CMD_ERROR;
+				(spec->grf_prop.local_id >= LAYER_PROCESSOR_LOCAL_BASE && spec->grf_prop.local_id < LAYER_PROCESSOR_LOCAL_BASE + ProcessorCapabilities().size()) ||
+				spec->grf_prop.local_id == GEOTHERMAL_COLLECTOR_LOCAL_ID)) return CMD_ERROR;
 		// Unadapted originals/GRFs retain Surface policy on every construction entry path.
 		return layer == MapLayer::Surface ? CommandCost{} : CommandCost{STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER};
 	}

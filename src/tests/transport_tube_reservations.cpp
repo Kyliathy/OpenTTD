@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_reservations.cpp Real capsule junction contention, layout recovery and physical turnaround.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups3/4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups3/4/6 paid physical movement
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.1
  */
 
@@ -27,6 +27,7 @@ class TubeJunctionRig : public TubePrototypeRig {
 	PathfinderDefaults pathfinder; ///< Restore real default routing budgets after the fixture.
 	AutoRestoreBackup<bool> paths{_settings_game.pf.reserve_paths, true}; ///< Require ordinary exclusive path reservations.
 	AutoRestoreBackup<AccelerationModel> acceleration{_settings_game.vehicle.train_acceleration_model, AccelerationModel::Realistic}; ///< Exercise physical braking.
+	AutoRestoreBackup<uint64_t> tick{TimerGameTick::counter, uint64_t{0}}; ///< Explicit simulation epoch for the real shared electrical request owner.
 public:
 	TileIndex junction = TileXYL(38, 43, MapLayer::Underground); ///< Shared physical Y/Right conflict cell.
 	TileIndex destination = TileXYL(38, 48, MapLayer::Underground); ///< Actual halt/service depot beyond the common branch.
@@ -67,6 +68,7 @@ public:
 		packet->UpdateLoadingTile(source);
 		capsule->cargo.Append(packet, VehicleCargoList::MoveToAction::Keep);
 		capsule->ConsistChanged(CCF_LOADUNLOAD);
+		this->InstallPaidFixturePower(*capsule); // Existing junction/turning checks now use real leased electricity, retaining their declared isolated floor input.
 		this->capsules.push_back(capsule);
 		return capsule;
 	}
@@ -83,6 +85,7 @@ public:
 		UpdateSignalsInBuffer(); // Direct fixture commands must finish the normal command dispatcher's buffered layout updates before train ticks.
 		// Stable real owner order gives repeatable competition and checks physical/cargo safety during every hold and crossing.
 		for (uint tick = 0; tick < ticks; ++tick) {
+			++TimerGameTick::counter; PrepareTubePowerTick(); // Gather both actual competitors before either physical front moves.
 			for (Train *capsule : this->capsules) {
 				REQUIRE(capsule->Tick());
 				REQUIRE_FALSE(capsule->vehstatus.Test(VehState::Crashed));

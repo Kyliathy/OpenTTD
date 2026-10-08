@@ -115,7 +115,11 @@ struct UtilityHeatConversion {
 enum class UtilityGenerationKind : uint8_t { SolarFarm, Geothermal, Nuclear, Coal, External, OrbitalPanel };
 
 /** Native consumer response; optional Surface processing does not block the pre-grid manufacturing bootstrap. */
-enum class UtilityConsumerEffect : uint8_t { ProcessorBoost, TubeWork, AssemblyWork, TownGrowth };
+enum class UtilityConsumerEffect : uint8_t {
+	ProcessorBoost, TubeWork, AssemblyWork, TownGrowth,
+	HeatDirectRecipe, ///< Appended immutable thermal role; electrical work/effect APIs refuse this consumer.
+	HeatGenerator, ///< Appended heat-to-electric conversion role; only actually granted/settled thermal shares may fund conversion.
+};
 
 /** Bounded effect definition, with actual grants from the one utility ledger. */
 struct UtilityConsumerEffectContract {

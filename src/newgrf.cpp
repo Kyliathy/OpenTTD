@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
+/** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -17,9 +17,12 @@
 #include "engine_base.h"
 #include "tbm.h"
 #include "underground_vehicle.h"
+#include "transport_tube.h"
+#include "multilayer_state.h"
 #include "spoil_receiver.h"
 #include "multilayer_industry.h"
 #include "layer_industry_processor.h"
+#include "geothermal.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1756,10 +1759,19 @@ static void AfterLoadGRFs()
 	_grm_sprites.clear();
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
 	InitialiseUndergroundEngineDefinitions(_grfconfig); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
+	// Restore delivered paid inlets' canonical hidden guideways and any saved
+	// prototype EIDS references. New-world construction/fleet activation remains
+	// with Plan16's later controls; save restoration cannot substitute ordinary rail.
+	const auto *tube_metadata = GetPendingMultiLayerStateSchema();
+	if (tube_metadata != nullptr && (tube_metadata->feature_flags & MULTILAYER_FEATURE_TUBE_POWER) != 0) {
+		InitialiseTubeRailType(_grfconfig);
+		InitialiseTubeEngineDefinitions(_grfconfig);
+	}
 	// The Surface spoil receivers are native industries in the same package scope (r2mlvs5 Group 8); the build list is sorted again to show them.
 	if (InitialiseSpoilReceiverDefinitions(_grfconfig)) SortIndustryTypes();
 	if (InitialiseLayerMineDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native catalogue reuses saved IIDS/TIDS; installation creates no geological reserve.
 	if (InitialiseLayerProcessorDefinitions(_grfconfig)) SortIndustryTypes(); // Material factories use published all-input recipes, never inherited independent-input multipliers.
+	if (InitialiseGeothermalCollectorDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native collector catalogue restores IIDS/TIDS only; cold claims and paid construction remain independent owners.
 }
 
 #ifdef WITH_MULTILAYER_LOADER_PROBE

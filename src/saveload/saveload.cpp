@@ -54,6 +54,8 @@
 #include "../layer_industry_processor.h"
 #include "../tbm_exchange.h"
 #include "../utility_power.h"
+#include "../transport_tube.h"
+#include "../geothermal_collector.h"
 #include "../error.h"
 #include "../strings_type.h"
 #include "../newgrf_railtype.h"
@@ -262,6 +264,10 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _layer_processor_chunk_handlers;
 	extern const ChunkHandlerTable _tbm_exchange_chunk_handlers;
 	extern const ChunkHandlerTable _utility_power_chunk_handlers;
+	extern const ChunkHandlerTable _tube_power_chunk_handlers;
+	extern const ChunkHandlerTable _tube_vehicle_chunk_handlers;
+	extern const ChunkHandlerTable _geothermal_site_chunk_handlers;
+	extern const ChunkHandlerTable _geothermal_collector_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
 	extern const ChunkHandlerTable _setting_chunk_handlers;
@@ -311,6 +317,10 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_layer_processor_chunk_handlers,
 		_tbm_exchange_chunk_handlers,
 		_utility_power_chunk_handlers,
+		_tube_power_chunk_handlers,
+		_tube_vehicle_chunk_handlers,
+		_geothermal_site_chunk_handlers,
+		_geothermal_collector_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
 		_setting_chunk_handlers,
@@ -3336,6 +3346,10 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateLayerProcessorLoadPreview();
 		ValidateTBMExchangeLoadPreview();
 		ValidateUtilityPowerLoadPreview();
+		ValidateTubePowerLoadPreview();
+		ValidateTubePowerVehicleLoadPreview();
+		ValidateGeothermalSiteLoadPreview();
+		ValidateGeothermalCollectorLoadPreview();
 		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {
 			if (!_load_check_data.geology_header_present || !_load_check_data.geology_deposits_present || !_load_check_data.geology_spans_present) SlErrorCorrupt("Missing required geology preview chunks");

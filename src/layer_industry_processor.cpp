@@ -7,6 +7,7 @@
 /** @file layer_industry_processor.cpp Native material processing over the existing Industry input/output inventories. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 10/16B */
 
 #include "stdafx.h"
+#include "geothermal_collector.h"
 #include "layer_industry_processor.h"
 #include "layer_industry_baseline.h"
 #include "industry.h"
@@ -24,7 +25,10 @@ static std::optional<std::vector<LayerProcessorState>> _staged_layer_processors;
 bool IsLayerProcessorDefinition(IndustryType type)
 {
 	const auto *capability = GetLayerIndustryCapability(type);
-	return capability != nullptr && capability->resource == CT_INVALID;
+	// Only Surface recipe families own this processing state. Input-only Deep
+	// collectors have no mineral output either, but their delivered construction
+	// and thermal source readiness belong to geothermal rather than this executor.
+	return capability != nullptr && capability->resource == CT_INVALID && capability->layers.Test(MapLayer::Surface) && capability->recipe != MultiLayerRecipeID{};
 }
 
 /**
@@ -300,7 +304,9 @@ uint32_t GetLayerIndustryReceiverRoomAt(const Station &station, CargoType cargo)
 		if (industry.exclusive_supplier != INVALID_OWNER && industry.exclusive_supplier != station.owner) continue;
 		const auto slot = std::ranges::find(industry.accepted, cargo, &Industry::AcceptedCargo::cargo);
 		if (slot == industry.accepted.end()) continue;
-		if (IsLayerProcessorDefinition(industry.type)) {
+		if (IsGeothermalCollectorDefinition(industry.type)) {
+			room += GetGeothermalCollectorInputRoom(industry, cargo); // Actual carrier unloading must respect the one remaining construction bill.
+		} else if (IsLayerProcessorDefinition(industry.type)) {
 			room += GetLayerProcessorInputRoom(industry, cargo);
 		} else if (IsLayerBaselineSteelDefinition(industry.type)) {
 			room += GetLayerBaselineSteelInputRoom(industry, cargo);

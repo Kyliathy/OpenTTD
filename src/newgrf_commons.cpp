@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf_commons.cpp Implementation of the class %OverrideManagerBase and its descendance, present and future. */
+/** @file newgrf_commons.cpp Implementation of the class %OverrideManagerBase and its descendance, present and future.  @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
 
 #include "stdafx.h"
 #include "debug.h"
@@ -207,31 +207,31 @@ uint16_t IndustryOverrideManager::GetID(uint16_t grf_local_id, GrfID grfid) cons
  */
 uint16_t IndustryOverrideManager::AddEntityID(uint16_t grf_local_id, GrfID grfid, uint16_t substitute_id)
 {
-	/* This entity hasn't been defined before, so give it an ID now. */
-	for (uint16_t id = 0; id < this->max_entities; id++) {
-		/* Skip overridden industries */
-		if (id < this->max_offset && this->entity_overrides[id] != this->invalid_id) continue;
+	const auto id = this->FindFreeEntityID();
+	if (id == this->invalid_id) return id;
+	this->mappings[id] = {grfid, grf_local_id, substitute_id};
+	return id;
+}
 
-		/* Get the real live industry */
-		const IndustrySpec *inds = GetIndustrySpec(id);
-
-		/* This industry must be one that is not available(enabled), mostly because of climate.
-		 * And it must not already be used by a grf (grffile == nullptr).
-		 * So reserve this slot here, as it is the chosen one */
-		if (!inds->enabled && !inds->grf_prop.HasGrfFile()) {
-			EntityIDMapping *map = &this->mappings[id];
-
-			if (map->entity_id == 0 && map->grfid.Empty()) {
-				/* winning slot, mark it as been used */
-				map->entity_id     = grf_local_id;
-				map->grfid         = grfid;
-				map->substitute_id = substitute_id;
-				return id;
-			}
-		}
+/** @copydoc IndustryOverrideManager::FindFreeEntityID */
+uint16_t IndustryOverrideManager::FindFreeEntityID() const
+{
+	// Industries may reuse disabled original climate slots as well as extension
+	// slots. One allocator owns this policy for both cold estimates and writes;
+	// saved mappings, active GRFs and pending overrides retain their identities.
+	for (uint16_t id = 0; id < this->max_entities; ++id) {
+		if (id < this->max_offset && this->entity_overrides[id] != this->invalid_id) continue; // Original overrides cannot be replaced by native construction.
+		const auto *spec = GetIndustrySpec(id);
+		const auto &mapping = this->mappings[id];
+		if (!spec->enabled && !spec->grf_prop.HasGrfFile() && mapping.entity_id == 0 && mapping.grfid.Empty()) return id; // Only truly disabled, unowned slots can host another definition.
 	}
-
 	return this->invalid_id;
+}
+
+/** @copydoc IndustryOverrideManager::CanAllocateEntityID */
+bool IndustryOverrideManager::CanAllocateEntityID(uint16_t grf_local_id, GrfID grfid) const
+{
+	return this->GetID(grf_local_id, grfid) != this->invalid_id || this->FindFreeEntityID() != this->invalid_id;
 }
 
 /**

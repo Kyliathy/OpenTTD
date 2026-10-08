@@ -25,6 +25,13 @@ add_files(
     layer_processor_sl.cpp
     tbm_exchange_sl.cpp
     utility_power_sl.cpp
+    # Physical paid tube invoices: r2mlvs16-underground-transport-tubes.md Group5.
+    transport_tube_power_sl.cpp
+    transport_tube_vehicle_sl.cpp
+    # Cold planning transport: r2mlvs17-geothermal-energy-and-industry.md Group1.
+    geothermal_site_sl.cpp
+    # Actual native construction transport: r2mlvs17-geothermal-energy-and-industry.md Group1B.
+    geothermal_collector_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp
     group_sl.cpp

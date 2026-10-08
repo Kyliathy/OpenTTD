@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_sl.cpp Code handling saving and loading of industries. */
+/** @file industry_sl.cpp Code handling saving and loading of industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B, independent actual-native preview identity. */
 
 #include "../stdafx.h"
 
@@ -14,6 +14,7 @@
 #include "compat/industry_sl_compat.h"
 
 #include "../industry.h"
+#include "../fios.h"
 #include "newgrf_sl.h"
 
 #include "../safeguards.h"
@@ -211,9 +212,12 @@ static const SaveLoad _industry_desc[] = {
 	SaveLoad::StructList<SlIndustryProduced>("produced", SaveLoadVersion::IndustryCargoReorganise),
 };
 
+/** Native machinery/inventory transport; current389 preview copies real pool identities without creating a running industry or a second stock owner. */
 struct INDYChunkHandler : ChunkHandler {
+	/** Register the existing authoritative industry table. */
 	INDYChunkHandler() : ChunkHandler("INDY", ChunkType::Table) {}
 
+	/** Save every actual industry and its native accepted/produced cargo exactly once. */
 	void Save() const override
 	{
 		SlTableHeader(_industry_desc);
@@ -225,6 +229,21 @@ struct INDYChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** @param len Older formats retain their ordinary skip policy; current389 copies bounded native identities without constructing any industry or inventory. */
+	void LoadCheck(size_t len) const override
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalCollectors)) { ChunkHandler::LoadCheck(len); return; }
+		const auto desc = SlTableHeader({});
+		auto &ids = _load_check_data.native_industry_preview_ids;
+		// Copy only real serialized native pool identities. Unknown native fields
+		// are skipped by the descriptor reader, never decoded into running pools.
+		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
+			if (index >= 64000 || (!ids.empty() && index <= ids.back())) SlErrorCorrupt("Invalid native industry preview identity"); // Native pool bounds and canonical order prevent duplicate/oversized construction references.
+			SlObject(nullptr, desc); ids.push_back(static_cast<uint16_t>(index));
+		}
+	}
+
+	/** @param i Actual loading native industry. @param inputs Legacy input slot count. @param outputs Legacy output slot count. Move old serialized stock/history into the same native inventory owner. */
 	void LoadMoveAcceptsProduced(Industry *i, uint inputs, uint outputs) const
 	{
 		i->accepted.reserve(inputs);
@@ -248,6 +267,7 @@ struct INDYChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Restore actual native pool/inventory records; construction side-state resolves these existing owners after normal fixup. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_industry_desc, _industry_sl_compat);

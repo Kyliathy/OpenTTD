@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.h Command definitions related to industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
+/** @file industry_cmd.h Command definitions related to industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
 
 #ifndef INDUSTRY_CMD_H
 #define INDUSTRY_CMD_H
@@ -15,6 +15,7 @@
 #include "industry_type.h"
 #include "industry.h"
 #include "multilayer_industry.h"
+#include "geothermal.h"
 
 /**
  * Build/fund an ordinary Surface industry through its shared availability/placement boundary.
@@ -41,6 +42,16 @@ CommandCost CmdBuildIndustry(DoCommandFlags flags, TileIndex tile, IndustryType 
 CommandCost CmdBuildLayerMine(DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t layout, GeologyDepositID deposit, uint32_t seed);
 
 /**
+ * Fund an actual native collector from a fully revalidated cold blueprint; the command kernel charges its frozen capital once.
+ * @param flags Pure estimate or complete execution.
+ * @param tile Explicit native world anchor, which must equal the cold reservation's original floor.
+ * @param site Actual active company-owned collector blueprint; execution consumes only its planning reservation.
+ * @param seed Synchronized native creation seed; estimates consume no simulation RNG.
+ * @return Full180,000 capital charge or unchanged source/company/cash/date/floor refusal; materials and296 paid work ticks remain actual construction obligations.
+ */
+CommandCost CmdBuildGeothermalCollector(DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed);
+
+/**
  * Select one supported native alternative without moving or consuming any delivered/produced stock.
  * @param flags Estimate or execution.
  * @param industry Existing native processor identity.
@@ -59,6 +70,7 @@ CommandCost CmdIndustrySetText(DoCommandFlags flags, IndustryID ind_id, const En
 CommandCost CmdIndustrySetProduction(DoCommandFlags flags, IndustryID ind_id, uint8_t prod_level, bool show_news, const EncodedString &text);
 
 DEF_CMD_TRAIT(Commands::BuildIndustry, CmdBuildIndustry, CommandFlag::Deity, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::BuildGeothermalCollector, CmdBuildGeothermalCollector, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildLayerMine, CmdBuildLayerMine, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::SelectLayerIndustryRecipe, CmdSelectLayerIndustryRecipe, CommandFlag::Deity, CommandType::OtherManagement)
 DEF_CMD_TRAIT(Commands::IndustrySetFlags, CmdIndustrySetFlags, CommandFlag::Deity, CommandType::OtherManagement)

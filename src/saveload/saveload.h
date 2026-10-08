@@ -443,6 +443,13 @@ enum class SaveLoadVersion : uint16_t {
 	UtilityTransfers, ///< Saveload version: 383\n Directed commissioned electrical links and original-source imported reservation slices. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 8.
 	UtilityConsumerEffects, ///< Saveload version: 384\n Native Surface town association, posted bounded offer and custom-GS suspension. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 9.
 	UtilityCompanyLifecycle, ///< Saveload version: 385\n Consumer retirement uses the existing active wire scalar; older consumers migrate as active. See r2mlvs14-savegame-determinism-and-lifecycle.md Group15B.
+	TubeExternalPower, ///< Saveload version: 386\n Explicit tube inlet paths, commissioned references and fractional paid invoices. See r2mlvs16-underground-transport-tubes.md Group5.
+	TubeMovementPower, ///< Saveload version: 387\n Actual capsule-to-consumer bindings, admitted demand carry and one global/front tick history. See r2mlvs16-underground-transport-tubes.md Group6.
+	GeothermalSiteClaims, ///< Saveload version: 388\n Cold site geometry, natural-source references and retained planning identities; no delivered construction or energy. See r2mlvs17-geothermal-energy-and-industry.md Group1.
+
+	GeothermalCollectors, ///< Saveload version: 389\n Actual native collector work/material receipt/source/control; stocks remain in Industry. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
+
+	UtilityHeatDomains, ///< Saveload version: 390\n Shared native typed heat identities/roles/domain balances and independent thermal phase. See r2mlvs17-geothermal-energy-and-industry.md Group2B.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

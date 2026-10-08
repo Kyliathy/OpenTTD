@@ -87,6 +87,7 @@ void LoadCheckData::Clear()
 	this->geology_deposit_rows = this->geology_span_rows = 0;
 	this->geology_vents_present = false;
 	this->geology_vent_rows = 0;
+	this->geology_vent_fields.clear();
 	this->excavation_present.fill(false);
 	this->excavation_header.fill(0);
 	this->excavation_pass_present = false;
@@ -113,6 +114,14 @@ void LoadCheckData::Clear()
 	this->utility_power_header.fill(0);
 	this->utility_power_rows.fill(0);
 	this->utility_power_state = {};
+	this->tube_power_present.fill(false);
+	this->tube_power_expected.fill(0);
+	this->tube_power_rows.clear();
+	this->tube_vehicle_present.fill(false); this->tube_vehicle_expected = 0;
+	this->tube_vehicle_tick = UINT64_MAX; this->tube_vehicle_rows.clear();
+	this->geothermal_site_present.fill(false); this->geothermal_site_expected = 0; this->geothermal_site_rows.clear();
+	this->geothermal_collector_present.fill(false); this->geothermal_collector_expected = 0; this->geothermal_collector_rows.clear();
+	this->native_industry_preview_ids.clear(); // Each file must supply its own native machinery references rather than borrowing a previous preview.
 	this->excavation_rows.fill(0);
 	this->current_date = CalendarTime::MIN_DATE;
 	this->landscape = {};

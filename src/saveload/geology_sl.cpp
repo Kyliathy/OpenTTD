@@ -425,6 +425,7 @@ struct GVNTChunkHandler : ChunkHandler {
 		const uint32_t width = preview ? _load_check_data.map_size_x : Map::SizeX();
 		const uint32_t height = preview ? _load_check_data.map_size_y : Map::SizeY();
 		// Every actual field must have a unique increasing natural ID and a fully bounded Deep rectangle/rate.
+		uint32_t minimum_id = 0; // Actual and copied families share canonical identities; a duplicate cannot lend a dependent claim phantom capacity.
 		for (int row = SlIterateArray(); row != -1; row = SlIterateArray()) {
 			if (count >= header.count) SlErrorCorrupt("Too many geothermal fields");
 			if (row != static_cast<int>(count + 1)) SlErrorCorrupt("Invalid geothermal table ordinal");
@@ -432,18 +433,18 @@ struct GVNTChunkHandler : ChunkHandler {
 			SlObject(&wire, description);
 			// Thermal authority is a natural source at one Deep location, never an extra cargo or an unbounded plant bonus.
 			if (wire.kind != 1 || wire.version != 1 || wire.id >= header.next_id || wire.layer != to_underlying(MapLayer::DeepUnderground) || wire.capacity == 0 || wire.capacity > MAX_UTILITY_RATE_W) SlErrorCorrupt("Invalid geothermal source fields");
+			if (wire.id < minimum_id) SlErrorCorrupt("Invalid geothermal source order");
+			minimum_id = wire.id + 1;
 			// Exact rectangle bounds are checked before any lookup/collector can treat the field as usable ground.
 			if (wire.width == 0 || wire.height == 0 || wire.width > 16 || wire.height > 16 || wire.x + static_cast<uint32_t>(wire.width) - 1 >= width - 1 || wire.y + static_cast<uint32_t>(wire.height) - 1 >= height - 1) SlErrorCorrupt("Invalid geothermal source footprint");
-			if (!preview) {
-				GeothermalVentField field;
-				field.id = GeothermalVentID{wire.id};
-				field.generation_version = wire.version;
-				field.layer = static_cast<MapLayer>(wire.layer);
-				field.x = wire.x; field.y = wire.y;
-				field.width = wire.width; field.height = wire.height;
-				field.thermal_capacity_w = wire.capacity;
-				_geology_load.vents.push_back(field);
-			}
+			GeothermalVentField field;
+			field.id = GeothermalVentID{wire.id}; field.generation_version = wire.version;
+			field.layer = static_cast<MapLayer>(wire.layer); field.x = wire.x; field.y = wire.y;
+			field.width = wire.width; field.height = wire.height; field.thermal_capacity_w = wire.capacity;
+			// Dependent preview validates its explicit natural references against
+			// this file's copied fields, never the running world's source registry.
+			if (preview) _load_check_data.geology_vent_fields.push_back(field);
+			else _geology_load.vents.push_back(field);
 			++count;
 		}
 		if (count != header.count) SlErrorCorrupt("Incomplete geothermal field family");

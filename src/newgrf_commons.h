@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf_commons.h This file simplifies and embeds a common mechanism of loading/saving and mapping of grf entities. */
+/** @file newgrf_commons.h This file simplifies and embeds a common mechanism of loading/saving and mapping of grf entities.  @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
 
 #ifndef NEWGRF_COMMONS_H
 #define NEWGRF_COMMONS_H
@@ -239,14 +239,23 @@ public:
 
 
 struct IndustrySpec;
+/** Canonical IIDS allocator; native collector preflights use the same disabled-slot policy as actual installation. */
 class IndustryOverrideManager : public OverrideManagerBase {
+	/** @return First actually unclaimed disabled industry slot, respecting original overrides, or the canonical invalid sentinel; no mapping/spec changes. */
+	uint16_t FindFreeEntityID() const;
 public:
+	/** @param offset Original industry definition count. @param maximum Complete native IIDS capacity. @param invalid Canonical missing-industry sentinel. */
 	IndustryOverrideManager(uint16_t offset, uint16_t maximum, uint16_t invalid) :
 			OverrideManagerBase(offset, maximum, invalid) {}
 
+	/** @param grf_local_id Requested package-local identity. @param grfid Exact owning package. @return Whether an existing mapping or the real disabled-slot policy can admit it without mutation. */
+	bool CanAllocateEntityID(uint16_t grf_local_id, GrfID grfid) const;
+	/** @param grf_local_id Requested package-local identity. @param grfid Exact owning package. @param substitute_id Original fallback display identity. @return Newly reserved actual IIDS slot or the invalid sentinel. */
 	uint16_t AddEntityID(uint16_t grf_local_id, GrfID grfid, uint16_t substitute_id) override;
+	/** @param grf_local_id Requested package-local industry identity. @param grfid Exact owning package. @return Existing mapping/override or canonical invalid identity, without reserving a slot. */
 	uint16_t GetID(uint16_t grf_local_id, GrfID grfid) const override;
 
+	/** @param inds Complete native/decoded industry definition; canonical IIDS reuses its saved mapping or reserves one real disabled slot before installation. */
 	void SetEntitySpec(IndustrySpec &&inds);
 };
 

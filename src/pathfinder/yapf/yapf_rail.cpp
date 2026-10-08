@@ -5,9 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_rail.cpp The rail pathfinding. */
+/** @file yapf_rail.cpp Native rail routing and actual layout invalidation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7 electrical topology follows eligible physical changes. */
 
 #include "../../stdafx.h"
+#include "../../transport_tube.h"
 
 #include "yapf.hpp"
 #include "yapf_cache.h"
@@ -690,7 +691,9 @@ bool YapfTrainFindNearestSafeTile(const Train *v, TileIndex tile, Trackdir td, b
 /** if any track changes, this counter is incremented - that will invalidate segment cost cache */
 int CSegmentCostCacheBase::s_rail_change_counter = 0;
 
+/** @param tile Actual changed world tile, or INVALID_TILE for native layout/capability reset. @param track Changed actual segment; invalidate native routing and affected tube circuits only for this physical event. */
 void YapfNotifyTrackLayoutChange(TileIndex tile, Track track)
 {
 	CSegmentCostCacheBase::NotifyTrackLayoutChange(tile, track);
+	InvalidateTubePowerTopology(tile);
 }

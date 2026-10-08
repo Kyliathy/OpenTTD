@@ -8,6 +8,7 @@
 /** @file vehicle.cpp Base implementations of all vehicles. @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
+#include "transport_tube.h"
 #include "error.h"
 #include "roadveh.h"
 #include "ship.h"
@@ -187,11 +188,15 @@ bool Vehicle::NeedsAutorenewing(const Company *c, bool use_renew_setting) const
 /**
  * Service a vehicle and all subsequent vehicles in the consist
  *
- * @param *v The vehicle or vehicle chain being serviced
+ * @param v Actual vehicle or linked chain being serviced; capsule service requires the complete paid utility participant.
  */
 void VehicleServiceInDepot(Vehicle *v)
 {
 	assert(v != nullptr);
+	// A capsule's actual service is mandatory powered work. Automatic depot,
+	// purchase and departure callbacks may not service it outside the complete
+	// metered participant; ordinary vehicles retain their existing service owner.
+	if (v->type == VehicleType::Train && GetTubeVehicleCapability(v->engine_type).has_value() && !IsTubeExternalPowerCommitting()) return;
 	SetWindowDirty(WindowClass::VehicleDetails, v->index); // ensure that last service date and reliability are updated
 
 	do {
@@ -832,6 +837,9 @@ void Vehicle::HandlePathfindingResult(bool path_found)
 /** Destroy all stuff that (still) needs the virtual functions to work properly */
 void Vehicle::PreDestructor()
 {
+	// Retire the exact capsule binding and unused offer before the physical
+	// pool identity can be reused by a newly purchased/replaced vehicle.
+	if (this->type == VehicleType::Train) RetireTubePowerVehicle(this->index);
 	if (CleaningPool()) return;
 
 	/* A deleted train part leaves the TBM stores at once, so a reused ID never joins a set, assignment, project or pair. */
@@ -991,6 +999,7 @@ static void RunEconomyVehicleDayProc()
 	}
 }
 
+/** Update actual vehicle owners once, preparing every company's capsule requests before any native front moves. */
 void CallVehicleTicks()
 {
 	_vehicles_to_autoreplace.clear();
@@ -1001,6 +1010,10 @@ void CallVehicleTicks()
 		PerformanceMeasurer framerate(PerformanceElement::GameLoopEconomy);
 		for (Station *st : Station::Iterate()) LoadUnloadStation(st);
 	}
+	// All capsule companies publish/request together after actual station load
+	// changes and before any front engine moves; allocation is independent of
+	// camera selection and the vehicle pool's native iteration order.
+	PrepareTubePowerTick();
 	PerformanceAccumulator::Reset(PerformanceElement::GameLoopTrains);
 	PerformanceAccumulator::Reset(PerformanceElement::GameLoopRoadVehicles);
 	PerformanceAccumulator::Reset(PerformanceElement::GameLoopShips);

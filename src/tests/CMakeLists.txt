@@ -130,8 +130,25 @@ add_test_files(
     transport_tube_fixture.h
     transport_tube_construction.cpp
     transport_tube_reservations.cpp
+    transport_tube_power_fixture.h
+    transport_tube_power.cpp
+    transport_tube_power_load.cpp
+    transport_tube_meter.cpp
+    transport_tube_meter_fixture.h
+    transport_tube_recovery.cpp
+    transport_tube_readiness.cpp
+    # Actual cold site admission: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
+    geothermal_site.cpp
+    geothermal_site_load.cpp
+    geothermal_definitions.cpp
+    geothermal_collector_fixture.h
+    geothermal_collector.cpp
+    geothermal_collector_load.cpp
     # Declared connected ground fixture: r2mlvs15-integrated-acceptance-and-balance.md Group2.
     acceptance_ground_fixture.cpp
+    # Shared thermal/electrical native owner: r2mlvs17-geothermal-energy-and-industry.md Group2B.
+    utility_heat.cpp
+    utility_heat_load.cpp
     utility_power.cpp
     utility_power_company.cpp
     utility_power_performance.cpp

@@ -46,4 +46,42 @@ std::span<const MultiLayerSurfaceSupply> GetMultiLayerSurfaceSupplies();
  */
 std::span<const MultiLayerBootstrapMilestone> GetMultiLayerBootstrapMilestones();
 
+/** Frozen early tube service prices; runtime invoices and electrical quantities have separate owners. */
+struct MultiLayerTubePowerContract {
+	uint32_t capacity_w = 100000; ///< Bounded paid external supply, available without geothermal generation.
+	uint16_t lease_per_day = 20; ///< Money charged once for an economy day in which service is offered.
+	uint16_t joules_per_money = 1000; ///< Used energy tariff; the connection saves the unpaid fractional numerator.
+	uint16_t introduction_year = 1970; ///< Calendar gate independent of Deep access and economy speed.
+};
+
+/** @return Canonical paid service contract frozen by r2mlvs1-f-utility-and-transfer-contracts.md Group19. */
+const MultiLayerTubePowerContract &GetMultiLayerTubePowerContract();
+
+/** Canonical propulsion envelope per capsule; native20-kW mandatory depot service remains the shared TubeWork contract. */
+struct MultiLayerTubeEnergyModel {
+	uint16_t model_id; ///< Existing immutable catalogue model, independent of EIDS runtime slots.
+	uint32_t empty_motion_w; ///< Motoring rate at an empty physical hold; stopping/waiting consumes none.
+	uint32_t full_motion_w; ///< Rate at the actual full hold, interpolated with checked integer load accounting.
+};
+
+/** @return Frozen relative tube propulsion envelopes; model9's full20-kW reference preserves the bootstrap invoice. */
+std::span<const MultiLayerTubeEnergyModel> GetMultiLayerTubeEnergyModels();
+
+/** Frozen first-utility construction families; ordinals select content, never a saved facility or utility identity. */
+enum class MultiLayerGeothermalConstructionKind : uint8_t { Collector, Powerhouse, Riser };
+
+/** Canonical transported construction/work contract; a blueprint supplies none of its materials, completed work or electricity. */
+struct MultiLayerGeothermalConstruction {
+	MultiLayerGeothermalConstructionKind kind; ///< Content-owned first-utility family.
+	uint8_t width; ///< Complete excavated facility floor width, excluding its access cells.
+	uint8_t height; ///< Complete excavated facility floor height.
+	uint32_t capital_cost; ///< Internal Money required for actual equipment/construction, excluding delivered inputs.
+	uint32_t work_ticks; ///< Cash-driven completed construction work; no first-build electricity requirement.
+	TimerGameCalendar::Year introduction_year; ///< Calendar availability, also constrained by shared Deep/portal policy.
+	std::span<const MultiLayerRecipeCargo> inputs; ///< Actual conventionally delivered cargo required before commissioning.
+};
+
+/** @param kind First collector/powerhouse/riser family. @return Frozen Plan1 Group19 contract, or nullptr for an unknown family; no runtime construction is authorized by reading it. */
+const MultiLayerGeothermalConstruction *GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind kind);
+
 #endif /* MULTILAYER_BOOTSTRAP_H */

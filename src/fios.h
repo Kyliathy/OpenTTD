@@ -16,6 +16,10 @@
 #include "network/core/tcp_content_type.h"
 #include "timer/timer_game_calendar.h"
 #include "utility_power.h"
+#include "transport_tube.h"
+#include "geothermal_site_wire.h"
+#include "geothermal_collector_wire.h"
+#include "excavation.h"
 
 
 /** Special values for save-load window for the data parameter of #InvalidateWindowData. */
@@ -60,6 +64,7 @@ struct LoadCheckData {
 	uint32_t geology_span_rows = 0; ///< Actual independent preview span count.
 	bool geology_vents_present = false; ///< Independent natural-source family presence.
 	uint32_t geology_vent_rows = 0; ///< Bounded natural-source count; no heat grant is implied.
+	std::vector<GeothermalVentField> geology_vent_fields; ///< Copied natural source identities/rectangles for independent dependent-family preview; never live rates or claims.
 	std::array<bool, 4> excavation_present{}; ///< Independent header/job/route/cell preview presence.
 	std::array<uint32_t, 4> excavation_header{}; ///< Saved next-ID/job/route/cell cardinalities, never live progress.
 	std::array<uint32_t, 3> excavation_rows{}; ///< Actual bounded job/route/cell preview counts.
@@ -83,6 +88,21 @@ struct LoadCheckData {
 	std::array<uint64_t, 12> utility_power_header{}; ///< Copied version, epoch, cursors, phase, counts, mutation sequence and directed link allocator/count.
 	std::array<uint32_t, 5> utility_power_rows{}; ///< Copied source/consumer/connection/share/directed-link counts.
 	UtilityPowerState utility_power_state; ///< Unpublished preview balances; never replaces live energy authority.
+	std::array<bool, 2> tube_power_present{}; ///< Independent physical paid service header/table preview. See r2mlvs16-underground-transport-tubes.md Group5.
+	std::array<uint32_t, 2> tube_power_expected{}; ///< Copied exact connection and path-cell counts.
+	std::vector<TubePowerConnection> tube_power_rows; ///< Unpublished preview invoices; no energy or movement authority.
+	std::array<bool, 2> tube_vehicle_present{}; ///< Independent387 capsule binding header/table preview.
+	uint32_t tube_vehicle_expected = 0; ///< Copied exact retained binding count.
+	uint64_t tube_vehicle_tick = UINT64_MAX; ///< Last complete global request tick; preview never renews allocation.
+	std::vector<TubePowerVehicle> tube_vehicle_rows; ///< Copied physical associations and carry, never live movement permission.
+	std::array<bool, 2> geothermal_site_present{}; ///< Independent388 cold-site header/table presence.
+	uint32_t geothermal_site_expected = 0; ///< Copied exact retained planning identity count.
+	std::vector<GeothermalSiteWire> geothermal_site_rows; ///< Copied local-coordinate blueprints; no conversion through the live map and no heat/power.
+	std::array<bool, 2> geothermal_collector_present{}; ///< Independent389 actual construction header/table presence.
+	uint32_t geothermal_collector_expected = 0; ///< Copied bounded actual native participant count.
+	std::vector<GeothermalCollectorWire> geothermal_collector_rows; ///< Copied work/control/receipt transport; Industry remains the stock/machinery owner.
+	std::vector<uint16_t> native_industry_preview_ids; ///< Copied current-format native INDY identities for independent actual construction references; no industry is allocated by preview.
+
 	TimerGameCalendar::Date current_date{};
 
 	LandscapeType landscape{}; ///< Landscape type.

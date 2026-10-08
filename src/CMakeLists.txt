@@ -306,6 +306,19 @@ add_files(
     transport_tube.cpp
     transport_tube_engine.cpp
     transport_tube_construction.cpp
+    transport_tube_power.cpp
+    transport_tube_runtime.cpp
+    transport_tube_topology.cpp
+    transport_tube_readiness.cpp
+    # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
+    geothermal.h
+    geothermal_site.cpp
+    geothermal_claim.cpp
+    geothermal_site_wire.h
+    geothermal_definitions.cpp
+    geothermal_collector_wire.h
+    geothermal_collector.h
+    geothermal_collector.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
     tbm_commission.cpp

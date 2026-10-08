@@ -28,6 +28,8 @@
 #include "../layer_industry_processor.h"
 #include "../tbm_exchange.h"
 #include "../utility_power.h"
+#include "../geothermal_collector.h"
+#include "../transport_tube.h"
 #include "../vehicle_func.h"
 #include "../string_func.h"
 #include "../strings_func.h"
@@ -3486,6 +3488,11 @@ bool AfterLoadGame()
 	// Utility grants bind actual companies and saved layers; accept only after
 	// physical owners and the profile have completed their load fixups.
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
+	// Paid physical inlets resolve after their actual portal, geology and ledger owners; load never fabricates a replacement contract.
+	if (!AcceptLoadedTubePowerConnections()) SlErrorCorrupt("Invalid tube power authority");
+	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority"); // Actual saved vehicles and paid sources resolve before native ticks.
+	if (!AcceptLoadedGeothermalSiteClaims()) SlErrorCorrupt("Invalid cold geothermal site authority"); // Original geology, actual company, full floor and shared date resolve before planning rights publish.
+	if (!AcceptLoadedGeothermalCollectors()) SlErrorCorrupt("Invalid native geothermal collector authority"); // Consumed blueprint, actual native floor/stock/receipt/work and company resolve before heat readiness publishes.
 	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 14 14.3), so saved
 	// work/terrain/fleet differences cannot hide in metadata-only hashes.
 	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());

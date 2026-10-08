@@ -14,6 +14,8 @@
 
 #include "stdafx.h"
 #include "utility_power.h"
+#include "transport_tube.h"
+#include "geothermal_collector.h"
 #include <ranges>
 #include "company_func.h"
 #include "command_func.h"
@@ -494,6 +496,9 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	// Electrical account history follows the same real company event before
 	// portal tiles or pool IDs disappear; only unused grants expire on removal.
 	ChangeUtilityPowerCompanyOwnership(old_owner, new_owner);
+	ChangeTubePowerCompanyOwnership(old_owner, new_owner); // Retire physical inlets/bindings after exact electrical lineage, before old company/tile identities disappear.
+	ChangeGeothermalCollectorOwnership(old_owner, new_owner); // Paid construction/control follows actual takeover, retaining native stock/work and original source association.
+	ChangeGeothermalSiteCompanyOwnership(old_owner, new_owner); // Cancel unbuilt site reservations before the old company/tile identities can be reused.
 
 	/*  Change ownership of tiles */
 	{
@@ -1081,7 +1086,10 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
 			amount = AdmitSpoilToReceiver(*ind, cargo_type, amount, company);
 			if (amount == 0) continue;
 		}
-		if (IsLayerProcessorDefinition(ind->type)) {
+		if (IsGeothermalCollectorDefinition(ind->type)) {
+			amount = ReceiveGeothermalCollectorCargo(*ind, cargo_type, amount); // Whole remaining construction bill enters actual stock/history; excess stays in carrier packets.
+			if (amount == 0) continue;
+		} else if (IsLayerProcessorDefinition(ind->type)) {
 			amount = ReceiveLayerProcessorCargo(*ind, cargo_type, amount); // Native intake commits exact delivered stock/history/revision before the carrier removes those units.
 			if (amount == 0) continue;
 			ind->was_cargo_delivered = true; // The native batch owner needs no deferred legacy arrival callback or borrowed industry pointer.
@@ -1183,6 +1191,7 @@ static void TriggerIndustryProduction(Industry *i)
 
 	/* A spoil receiver keeps its stock for its own interval processing (r2mlvs5 Group 8.2). */
 	if (GetSpoilReceiverKind(i->type) != SpoilReceiverKind::End) return;
+	if (IsGeothermalCollectorDefinition(i->type)) return; // Arrived construction supplies remain in actual accepted stock until the whole paid collector participant consumes its bill.
 	if (IsLayerProcessorDefinition(i->type)) return; // Delivered inputs wait for the sole all-input batch owner; legacy multipliers must not independently clear them.
 
 	if (cbm.Test(IndustryCallbackMask::ProductionCargoArrival) || cbm.Test(IndustryCallbackMask::Production256Ticks)) {

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file command_type.h Types related to commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
+/** @file command_type.h Types related to commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
 
 #ifndef COMMAND_TYPE_H
 #define COMMAND_TYPE_H
@@ -393,6 +393,8 @@ enum class Commands : uint8_t {
 	CommissionTBM, ///< buy and commission a boring machine at a sealed rail portal; append preserves existing command identities
 	BuildLayerMine, ///< fund a native mine on an explicitly selected finite seam; append preserves existing command identities
 	SelectLayerIndustryRecipe, ///< choose one content-owned native material recipe; append preserves existing command identities
+
+	BuildGeothermalCollector, ///< fund actual native collector from a retained cold claim; append preserves existing command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

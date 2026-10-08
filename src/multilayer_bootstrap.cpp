@@ -11,6 +11,24 @@
 
 #include "safeguards.h"
 
+static constexpr MultiLayerRecipeCargo _collector_inputs[] = {{CargoLabel{"STEL"}, 8}, {CargoLabel{"RFMT"}, 4}, {CargoLabel{"ELEC"}, 2}};
+static constexpr MultiLayerRecipeCargo _powerhouse_inputs[] = {{CargoLabel{"STEL"}, 12}, {CargoLabel{"RFMT"}, 8}, {CargoLabel{"ELEC"}, 4}, {CargoLabel{"BATY"}, 2}};
+static constexpr MultiLayerRecipeCargo _riser_inputs[] = {{CargoLabel{"STEL"}, 4}, {CargoLabel{"RFMT"}, 4}, {CargoLabel{"ELEC"}, 2}, {CargoLabel{"BATY"}, 2}};
+
+/** Frozen per-facility split of the existing first-geothermal480,000 capital/material ledger. */
+static const MultiLayerGeothermalConstruction _geothermal_construction[] = {
+	{MultiLayerGeothermalConstructionKind::Collector, 3, 3, 180000, 296, TimerGameCalendar::Year{1980}, _collector_inputs},
+	{MultiLayerGeothermalConstructionKind::Powerhouse, 4, 4, 180000, 592, TimerGameCalendar::Year{1980}, _powerhouse_inputs},
+	{MultiLayerGeothermalConstructionKind::Riser, 2, 2, 120000, 296, TimerGameCalendar::Year{1980}, _riser_inputs},
+};
+
+/** @copydoc GetMultiLayerGeothermalConstruction */
+const MultiLayerGeothermalConstruction *GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind kind)
+{
+	const auto found = std::ranges::find(_geothermal_construction, kind, &MultiLayerGeothermalConstruction::kind);
+	return found == std::end(_geothermal_construction) ? nullptr : &*found;
+}
+
 static const MultiLayerSurfaceSupply _surface_supplies[] = {
 	{CargoLabel{"STEL"}, TimerGameCalendar::Year{1950}, 100, 256},
 	{CargoLabel{"RFMT"}, TimerGameCalendar::Year{1950}, 180, 128},
@@ -70,4 +88,20 @@ std::span<const MultiLayerSurfaceSupply> GetMultiLayerSurfaceSupplies()
 std::span<const MultiLayerBootstrapMilestone> GetMultiLayerBootstrapMilestones()
 {
 	return _bootstrap_milestones;
+}
+
+/** @copydoc GetMultiLayerTubePowerContract */
+const MultiLayerTubePowerContract &GetMultiLayerTubePowerContract()
+{
+	static constexpr MultiLayerTubePowerContract contract;
+	return contract;
+}
+
+/** @copydoc GetMultiLayerTubeEnergyModels */
+std::span<const MultiLayerTubeEnergyModel> GetMultiLayerTubeEnergyModels()
+{
+	static constexpr MultiLayerTubeEnergyModel models[] = {
+		{9, 10000, 20000}, {10, 12000, 18000}, {11, 12000, 24000}, {12, 10000, 20000}, {13, 20000, 50000},
+	};
+	return models;
 }

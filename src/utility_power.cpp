@@ -5,13 +5,15 @@
  */
 
 /**
- * @file utility_power.cpp Native owner of bounded electrical publication and deterministic interval reservations.
+ * @file utility_power.cpp Shared native owner of bounded Heat/Electricity publication and separate deterministic interval reservations.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility units and single authority
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B shared typed heat accounting
  */
 
 #include "stdafx.h"
 #include "utility_power.h"
+#include "transport_tube.h"
 #include "company_base.h"
 #include "company_func.h"
 #include "map_layer.h"
@@ -28,6 +30,25 @@
 static UtilityPowerState _utility_power; ///< Sole runtime source/consumer/epoch authority; never a render-owned ledger.
 static std::optional<UtilityPowerState> _pending_utility_power; ///< Unaccepted file transport, never another live account owner.
 static bool _utility_mutation_committing = false; ///< Whole participant commits cannot recursively change their own prepared ledger.
+
+/** @param effect Immutable registered consumer response. @return Whether this is a direct-recipe/generator Heat role rather than an electrical work/effect consumer. */
+static bool IsUtilityHeatEffect(UtilityConsumerEffect effect)
+{
+	return effect == UtilityConsumerEffect::HeatDirectRecipe || effect == UtilityConsumerEffect::HeatGenerator;
+}
+
+/** @param state Actual/candidate native ledger. @param domain Explicit requested quantity domain. @return Whether this domain's current once-only allocation has closed; unknown domains grant no rights. */
+static bool IsUtilityDomainAllocated(const UtilityPowerState &state, UtilityEnergyDomain domain)
+{
+	return domain == UtilityEnergyDomain::Electricity ? state.allocated : domain == UtilityEnergyDomain::Heat ? state.heat_allocated : false;
+}
+
+/** @param domain Already validated electrical or thermal domain. @return The sole live domain allocation flag; generation/grants never share a cross-domain phase. */
+static bool &UtilityDomainPhase(UtilityEnergyDomain domain)
+{
+	assert(domain == UtilityEnergyDomain::Electricity || domain == UtilityEnergyDomain::Heat);
+	return domain == UtilityEnergyDomain::Electricity ? _utility_power.allocated : _utility_power.heat_allocated;
+}
 
 /**
  * Validate the native owner and explicit layer before account creation/publication.
@@ -75,6 +96,29 @@ static UtilityPowerConsumer *FindUtilityConsumer(UtilityConsumerID id)
 	return &_utility_power.consumers[id.base()];
 }
 
+/** @copydoc GetUtilityPowerProducer */
+const UtilityPowerProducer *GetUtilityPowerProducer(UtilityProducerID id) { return FindUtilityProducer(id); }
+
+/** @copydoc GetUtilityPowerConsumer */
+const UtilityPowerConsumer *GetUtilityPowerConsumer(UtilityConsumerID id) { return FindUtilityConsumer(id); }
+
+/** @copydoc IsUtilityHeatAllocated */
+bool IsUtilityHeatAllocated() { return _utility_power.heat_allocated; }
+/** @copydoc HasUtilityHeatState */
+bool HasUtilityHeatState()
+{
+	/** @param source Actual retained native producer. @return Whether its immutable meter domain is thermal, including retirement history. */
+	const auto heat_source = [](const UtilityPowerProducer &source) { return source.meter.domain == UtilityEnergyDomain::Heat; };
+	/** @param consumer Actual retained native consumer. @return Whether its immutable request/grant domain is thermal. */
+	const auto heat_consumer = [](const UtilityPowerConsumer &consumer) { return consumer.meter.domain == UtilityEnergyDomain::Heat; };
+	return _utility_power.heat_allocated || std::ranges::any_of(_utility_power.producers, heat_source) || std::ranges::any_of(_utility_power.consumers, heat_consumer);
+}
+
+/** @copydoc GetUtilityPowerInterval */
+uint64_t GetUtilityPowerInterval() { return _utility_power.interval; }
+/** @copydoc IsUtilityPowerAllocated */
+bool IsUtilityPowerAllocated() { return _utility_power.allocated; }
+
 /** @param id Ledger-issued directed edge identity. @return Its retained owner record, or absence for an unallocated ID. */
 static UtilityPowerLink *FindUtilityLink(UtilityLinkID id)
 {
@@ -101,7 +145,7 @@ static UtilityPowerError CheckUtilityPowerLink(const UtilityPowerLink &link, con
 {
 	// A direction connects two distinct same-company layer accounts; local
 	// loops and foreign budgets cannot masquerade as a commissioned export.
-	if (source.owner != destination.owner || source.meter.layer == destination.meter.layer || link.source == link.destination) return UtilityPowerError::InvalidTopology;
+	if (source.meter.domain != UtilityEnergyDomain::Electricity || destination.meter.domain != UtilityEnergyDomain::Electricity || source.owner != destination.owner || source.meter.layer == destination.meter.layer || link.source == link.destination) return UtilityPowerError::InvalidTopology;
 	// Retained route history may name retired consumers; an active route can
 	// never make a removed company or a reused pool identity operational again.
 	if (link.active && (!source.active || !destination.active)) return UtilityPowerError::InvalidTopology;
@@ -210,9 +254,14 @@ void InvalidateUtilityPowerLinksForPortal(TileIndex endpoint)
 	if (changed && _utility_power.operation_sequence < UINT64_MAX - 1) ++_utility_power.operation_sequence;
 }
 
-/** @copydoc RegisterUtilityPowerProducer */
-std::optional<UtilityProducerID> RegisterUtilityPowerProducer(CompanyID owner, MapLayer layer, UtilityGenerationKind kind, bool execute)
+/** @copydoc RegisterUtilityPowerProducer
+ * @param domain Explicit immutable source quantity domain; Heat is Deep geothermal only. */
+static std::optional<UtilityProducerID> RegisterUtilityDomainProducer(CompanyID owner, MapLayer layer, UtilityGenerationKind kind, bool execute, UtilityEnergyDomain domain)
 {
+	// Domain and source family are fixed at registration; a Surface solar or
+	// external electrical source cannot later masquerade as Deep vent heat.
+	if (domain != UtilityEnergyDomain::Electricity && domain != UtilityEnergyDomain::Heat) return std::nullopt;
+	if (domain == UtilityEnergyDomain::Heat && (layer != MapLayer::DeepUnderground || kind != UtilityGenerationKind::Geothermal)) return std::nullopt;
 	if (CheckUtilityPowerOwner(owner, layer) != UtilityPowerError::None) return std::nullopt;
 	if (to_underlying(kind) > to_underlying(UtilityGenerationKind::OrbitalPanel)) return std::nullopt;
 	// Bounded storage and monotonic identities keep malformed saves and retired
@@ -223,6 +272,7 @@ std::optional<UtilityProducerID> RegisterUtilityPowerProducer(CompanyID owner, M
 		UtilityPowerProducer producer;
 		producer.owner = owner;
 		producer.kind = kind;
+		producer.meter.domain = domain;
 		producer.meter.producer_id = id;
 		producer.meter.layer = layer;
 		_utility_power.producers.push_back(std::move(producer));
@@ -232,12 +282,28 @@ std::optional<UtilityProducerID> RegisterUtilityPowerProducer(CompanyID owner, M
 	return id;
 }
 
-/** @copydoc RegisterUtilityPowerConsumer */
-std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, MapLayer layer, UtilityConsumerEffect effect,
-	uint64_t capacity_j, std::span<const UtilityProducerID> sources, bool execute)
+/** @copydoc RegisterUtilityPowerProducer */
+std::optional<UtilityProducerID> RegisterUtilityPowerProducer(CompanyID owner, MapLayer layer, UtilityGenerationKind kind, bool execute)
+{
+	return RegisterUtilityDomainProducer(owner, layer, kind, execute, UtilityEnergyDomain::Electricity);
+}
+/** @copydoc RegisterUtilityHeatProducer */
+std::optional<UtilityProducerID> RegisterUtilityHeatProducer(CompanyID owner, bool execute)
+{
+	return RegisterUtilityDomainProducer(owner, MapLayer::DeepUnderground, UtilityGenerationKind::Geothermal, execute, UtilityEnergyDomain::Heat);
+}
+
+/** @copydoc RegisterUtilityPowerConsumer
+ * @param domain Immutable native request/grant domain; roles and eligible sources must match it. */
+static std::optional<UtilityConsumerID> RegisterUtilityDomainConsumer(CompanyID owner, MapLayer layer, UtilityConsumerEffect effect,
+	uint64_t capacity_j, std::span<const UtilityProducerID> sources, bool execute, UtilityEnergyDomain domain)
 {
 	if (CheckUtilityPowerOwner(owner, layer) != UtilityPowerError::None) return std::nullopt;
-	if (to_underlying(effect) > to_underlying(UtilityConsumerEffect::TownGrowth)) return std::nullopt;
+	// Registration binds role and energy together. A thermal generator/direct
+	// recipe never becomes an electrical bonus/tube/town consumer by relabelling.
+	if (domain != UtilityEnergyDomain::Electricity && domain != UtilityEnergyDomain::Heat) return std::nullopt;
+	if (to_underlying(effect) > to_underlying(UtilityConsumerEffect::HeatGenerator) || IsUtilityHeatEffect(effect) != (domain == UtilityEnergyDomain::Heat)) return std::nullopt;
+	if (domain == UtilityEnergyDomain::Heat && layer != MapLayer::DeepUnderground) return std::nullopt;
 	// Towns and their native growth offers are Surface entities. A numeric
 	// Deep/Space account cannot create an unsaveable or hidden city effect.
 	if (effect == UtilityConsumerEffect::TownGrowth && layer != MapLayer::Surface) return std::nullopt;
@@ -258,7 +324,7 @@ std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, M
 		const auto *source = FindUtilityProducer(id);
 		if (source == nullptr) return std::nullopt;
 		if (!source->active) return std::nullopt;
-		if (source->owner != owner || source->meter.layer != layer || !unique.insert(id).second) return std::nullopt;
+		if (source->owner != owner || source->meter.layer != layer || source->meter.domain != domain || !unique.insert(id).second) return std::nullopt;
 	}
 	const UtilityConsumerID id{_utility_power.next_consumer};
 	if (execute) {
@@ -266,6 +332,7 @@ std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, M
 		consumer.owner = owner;
 		consumer.effect = effect;
 		consumer.capacity_j = capacity_j;
+		consumer.meter.domain = domain;
 		consumer.meter.consumer_id = id;
 		consumer.meter.layer = layer;
 		consumer.linked_producers.assign(unique.begin(), unique.end());
@@ -276,18 +343,35 @@ std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, M
 	return id;
 }
 
-/** @copydoc PublishUtilityGeneration */
-UtilityPowerError PublishUtilityGeneration(UtilityProducerID id, uint64_t interval, uint64_t rate_w, uint32_t economy_ticks, bool execute)
+/** @copydoc RegisterUtilityPowerConsumer */
+std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, MapLayer layer, UtilityConsumerEffect effect,
+	uint64_t capacity_j, std::span<const UtilityProducerID> sources, bool execute)
+{
+	return RegisterUtilityDomainConsumer(owner, layer, effect, capacity_j, sources, execute, UtilityEnergyDomain::Electricity);
+}
+/** @copydoc RegisterUtilityHeatConsumer */
+std::optional<UtilityConsumerID> RegisterUtilityHeatConsumer(CompanyID owner, UtilityHeatUse use, uint64_t capacity_j,
+	std::span<const UtilityProducerID> sources, bool execute)
+{
+	if (to_underlying(use) > to_underlying(UtilityHeatUse::ElectricalGenerator)) return std::nullopt;
+	const auto effect = use == UtilityHeatUse::ElectricalGenerator ? UtilityConsumerEffect::HeatGenerator : UtilityConsumerEffect::HeatDirectRecipe;
+	return RegisterUtilityDomainConsumer(owner, MapLayer::DeepUnderground, effect, capacity_j, sources, execute, UtilityEnergyDomain::Heat);
+}
+
+/** @copydoc PublishUtilityGeneration
+ * @param domain Typed actual publication; each native source and its allocation phase must match it. */
+static UtilityPowerError PublishUtilityDomainGeneration(UtilityProducerID id, uint64_t interval, uint64_t rate_w, uint32_t economy_ticks, bool execute, UtilityEnergyDomain domain)
 {
 	auto *source = FindUtilityProducer(id);
 	if (source == nullptr) return UtilityPowerError::InvalidReference;
+	if (source->meter.domain != domain) return UtilityPowerError::InvalidReference; // Typed publication cannot generate another domain under an existing source identity.
 	if (!source->active) return UtilityPowerError::InvalidReference;
 	const auto permission = CheckUtilityPowerOwner(source->owner, source->meter.layer);
 	if (permission != UtilityPowerError::None) return permission;
 	// Only the owner's live nonterminal epoch accepts publication; old receipts
 	// and guessed future intervals cannot generate another copy of the energy.
 	if (interval != _utility_power.interval || interval == UINT64_MAX) return UtilityPowerError::InvalidInterval;
-	if (_utility_power.allocated) return UtilityPowerError::AlreadyAllocated;
+	if (IsUtilityDomainAllocated(_utility_power, domain)) return UtilityPowerError::AlreadyAllocated;
 	if (source->meter.accounting_interval == interval) return UtilityPowerError::DuplicatePublication;
 	const auto integrated = IntegrateUtilityGeneration(rate_w, economy_ticks, source->meter.remainder_mj);
 	if (!integrated.has_value()) return UtilityPowerError::InvalidQuantity;
@@ -304,8 +388,20 @@ UtilityPowerError PublishUtilityGeneration(UtilityProducerID id, uint64_t interv
 	return UtilityPowerError::None;
 }
 
-/** @copydoc AllocateUtilityPower */
-UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute)
+/** @copydoc PublishUtilityGeneration */
+UtilityPowerError PublishUtilityGeneration(UtilityProducerID id, uint64_t interval, uint64_t rate_w, uint32_t economy_ticks, bool execute)
+{
+	return PublishUtilityDomainGeneration(id, interval, rate_w, economy_ticks, execute, UtilityEnergyDomain::Electricity);
+}
+/** @copydoc PublishUtilityHeatGeneration */
+UtilityPowerError PublishUtilityHeatGeneration(UtilityProducerID id, uint64_t interval, uint64_t rate_w, uint32_t economy_ticks, bool execute)
+{
+	return PublishUtilityDomainGeneration(id, interval, rate_w, economy_ticks, execute, UtilityEnergyDomain::Heat);
+}
+
+/** @copydoc AllocateUtilityPower
+ * @param domain Explicit native quantity domain; source/request/slice eligibility and phase remain separate. */
+static UtilityPowerError AllocateUtilityDomain(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute, UtilityEnergyDomain domain)
 {
 	if (_utility_mutation_committing) return UtilityPowerError::Refused;
 	if (_utility_power.operation_sequence >= UINT64_MAX - 1) return UtilityPowerError::Limit;
@@ -316,7 +412,7 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 	// Allocation must close this exact live nonterminal epoch; a delayed or
 	// guessed future request cannot reserve another interval's supply.
 	if (interval != _utility_power.interval || interval == UINT64_MAX) return UtilityPowerError::InvalidInterval;
-	if (_utility_power.allocated) return UtilityPowerError::AlreadyAllocated;
+	if (IsUtilityDomainAllocated(_utility_power, domain)) return UtilityPowerError::AlreadyAllocated;
 	if (requests.size() > MAX_UTILITY_INTERVAL_ACCOUNTS) return UtilityPowerError::Limit;
 	std::set<UtilityConsumerID> unique;
 	std::vector<UtilityConsumerDemand> demands;
@@ -325,6 +421,7 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 	for (const auto &request : requests) {
 		const auto *consumer = FindUtilityConsumer(request.consumer);
 		if (consumer == nullptr) return UtilityPowerError::InvalidReference;
+		if (consumer->meter.domain != domain) return UtilityPowerError::InvalidReference; // An electrical request cannot reserve heat, or vice versa, even with the same native owner/layer.
 		if (!consumer->active) return UtilityPowerError::InvalidReference;
 		const auto permission = CheckUtilityPowerOwner(consumer->owner, consumer->meter.layer, false);
 		if (permission != UtilityPowerError::None) return permission;
@@ -336,7 +433,7 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 	// A source which did not publish has genuinely zero supply. All companies
 	// share this system phase, but each consumer's saved links remain owned/local.
 	for (const auto &source : _utility_power.producers) {
-		if (!source.active) continue;
+		if (!source.active || source.meter.domain != domain) continue; // Only active same-domain sources participate; every natural thermal budget remains distinct from electrical generation.
 		const auto permission = CheckUtilityPowerOwner(source.owner, source.meter.layer, false);
 		if (permission != UtilityPowerError::None) return permission;
 		supply.push_back({source.meter.producer_id, source.meter.layer,
@@ -351,6 +448,7 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 		// Every registered consumer receives a current zero baseline, including
 		// omitted requests. Its former epoch cannot hide or renew an old grant.
 		for (auto &consumer : _utility_power.consumers) {
+			if (consumer.meter.domain != domain) continue; // Allocating one domain cannot renew or erase another domain's source reservations.
 			consumer.meter.accounting_interval = interval;
 			consumer.meter.demand_energy_j = 0;
 			consumer.meter.granted_energy_j = 0;
@@ -371,20 +469,32 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
 			// source ordering; the runtime must not recompute or guess lineage.
 			for (const auto &share : grant.sources) consumer.shares.push_back({share.producer, share.energy_j, 0, 0});
 		}
-		_utility_power.allocated = true;
+		UtilityDomainPhase(domain) = true;
 		++_utility_power.operation_sequence;
 	}
 	return UtilityPowerError::None;
 }
 
-/** @copydoc GetUtilityAllocation */
-std::optional<UtilityPowerAccount> GetUtilityAllocation(UtilityConsumerID id)
+/** @copydoc AllocateUtilityPower */
+UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute)
+{
+	return AllocateUtilityDomain(interval, requests, execute, UtilityEnergyDomain::Electricity);
+}
+/** @copydoc AllocateUtilityHeat */
+UtilityPowerError AllocateUtilityHeat(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute)
+{
+	return AllocateUtilityDomain(interval, requests, execute, UtilityEnergyDomain::Heat);
+}
+
+/** @copydoc GetUtilityAllocation
+ * @param domain Exact requested balance domain; read-only views never allocate or convert quantities. */
+static std::optional<UtilityPowerAccount> GetUtilityDomainAllocation(UtilityConsumerID id, UtilityEnergyDomain domain)
 {
 	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return std::nullopt;
 	const auto *consumer = FindUtilityConsumer(id);
 	// A missing, foreign or not-yet-allocated consumer has no current grant.
 	// Reading a window cannot carry a previous epoch forward or renew a lease.
-	if (consumer == nullptr || !consumer->active || consumer->owner != _current_company || !_utility_power.allocated || consumer->meter.accounting_interval != _utility_power.interval) return std::nullopt;
+	if (consumer == nullptr || consumer->meter.domain != domain || !consumer->active || consumer->owner != _current_company || !IsUtilityDomainAllocated(_utility_power, domain) || consumer->meter.accounting_interval != _utility_power.interval) return std::nullopt;
 	UtilityPowerAccount view = consumer->meter;
 	uint64_t available_j = 0, consumed_j = 0;
 	// Project the remaining reservation from its one saved slice owner; a lost
@@ -397,6 +507,11 @@ std::optional<UtilityPowerAccount> GetUtilityAllocation(UtilityConsumerID id)
 	view.unmet_energy_j = view.demand_energy_j - consumed_j - available_j;
 	return view;
 }
+
+/** @copydoc GetUtilityAllocation */
+std::optional<UtilityPowerAccount> GetUtilityAllocation(UtilityConsumerID id) { return GetUtilityDomainAllocation(id, UtilityEnergyDomain::Electricity); }
+/** @copydoc GetUtilityHeatAllocation */
+std::optional<UtilityPowerAccount> GetUtilityHeatAllocation(UtilityConsumerID id) { return GetUtilityDomainAllocation(id, UtilityEnergyDomain::Heat); }
 
 /** @copydoc BeginUtilityPowerInterval */
 UtilityPowerError BeginUtilityPowerInterval(bool execute)
@@ -432,7 +547,7 @@ UtilityPowerError BeginUtilityPowerInterval(bool execute)
 		// the new interval with zero metered flow rather than renewed old credit.
 		for (auto &link : _utility_power.links) link.flow_j = 0;
 		++_utility_power.interval;
-		_utility_power.allocated = false;
+		_utility_power.allocated = false; _utility_power.heat_allocated = false;
 		++_utility_power.operation_sequence;
 	}
 	return UtilityPowerError::None;
@@ -561,6 +676,7 @@ uint64_t ComputeUtilityPowerDigest()
 		field(meter.demand_energy_j); field(meter.granted_energy_j); field(meter.unmet_energy_j); field(meter.remainder_mj);
 	};
 	field(_utility_power.interval); field(_utility_power.next_producer); field(_utility_power.next_consumer); field(_utility_power.allocated);
+	field(_utility_power.heat_allocated); // The independent thermal allocation phase is authoritative, not reconstructed from a graph or animation.
 	field(_utility_power.operation_sequence);
 	field(_utility_power.next_link);
 	field(_utility_power.producers.size());
@@ -599,7 +715,7 @@ uint64_t ComputeUtilityPowerDigest()
 static uint64_t SealUtilityMutation(const UtilityMutationProposal &proposal)
 {
 	uint64_t hash = 14695981039346656037ULL;
-	const std::array<uint64_t, 8> fields{to_underlying(proposal.kind), proposal.grant.consumer.base(), proposal.grant.interval,
+	const std::array<uint64_t, 9> fields{to_underlying(proposal.domain), to_underlying(proposal.kind), proposal.grant.consumer.base(), proposal.grant.interval,
 		proposal.owner.base(), proposal.quantity_j, proposal.destination.base(), proposal.link.base(), proposal.sequence_before};
 	// Explicit scalar bytes reject changed quantity/kind/target independently
 	// of pointer layout, without scanning unrelated networks on each work tick.
@@ -609,22 +725,25 @@ static uint64_t SealUtilityMutation(const UtilityMutationProposal &proposal)
 	return hash;
 }
 
-/** @copydoc PrepareUtilityMutation */
-UtilityMutationProposal PrepareUtilityMutation(UtilityMutationKind kind, UtilityGrantID grant, uint64_t quantity_j,
-	UtilityConsumerID destination, UtilityLinkID link)
+/** @copydoc PrepareUtilityMutation
+ * @param domain Exact typed reservation domain; thermal preparation admits local use/release only. */
+static UtilityMutationProposal PrepareUtilityDomainMutation(UtilityMutationKind kind, UtilityGrantID grant, uint64_t quantity_j,
+	UtilityConsumerID destination, UtilityLinkID link, UtilityEnergyDomain domain)
 {
 	UtilityMutationProposal proposal;
-	proposal.kind = kind; proposal.grant = grant; proposal.quantity_j = quantity_j;
+	proposal.domain = domain; proposal.kind = kind; proposal.grant = grant; proposal.quantity_j = quantity_j;
 	proposal.owner = _current_company; proposal.destination = destination; proposal.link = link;
 	proposal.sequence_before = _utility_power.operation_sequence;
 	auto *consumer = FindUtilityConsumer(grant.consumer);
 	if (consumer == nullptr) return proposal;
+	if (consumer->meter.domain != domain) return proposal; // Typed preparation cannot borrow a grant from another energy domain.
+	if (domain == UtilityEnergyDomain::Heat && kind == UtilityMutationKind::TransferLayer) return proposal; // Heat stays Deep-local; only electricity may travel through a commissioned riser.
 	if (!consumer->active) return proposal;
 	proposal.error = CheckUtilityPowerOwner(consumer->owner, consumer->meter.layer);
 	if (proposal.error != UtilityPowerError::None) return proposal;
 	// An exact current reservation is required; previous/future grants and
 	// an open generation phase cannot supply an action's electrical budget.
-	if (!_utility_power.allocated || grant.interval != _utility_power.interval || consumer->meter.accounting_interval != grant.interval) {
+	if (!IsUtilityDomainAllocated(_utility_power, domain) || grant.interval != _utility_power.interval || consumer->meter.accounting_interval != grant.interval) {
 		proposal.error = UtilityPowerError::InvalidInterval; return proposal;
 	}
 	// Zero or out-of-contract quantities are refused before any participant
@@ -695,6 +814,18 @@ UtilityMutationProposal PrepareUtilityMutation(UtilityMutationKind kind, Utility
 	return proposal;
 }
 
+/** @copydoc PrepareUtilityMutation */
+UtilityMutationProposal PrepareUtilityMutation(UtilityMutationKind kind, UtilityGrantID grant, uint64_t quantity_j,
+	UtilityConsumerID destination, UtilityLinkID link)
+{
+	return PrepareUtilityDomainMutation(kind, grant, quantity_j, destination, link, UtilityEnergyDomain::Electricity);
+}
+/** @copydoc PrepareUtilityHeatMutation */
+UtilityMutationProposal PrepareUtilityHeatMutation(UtilityMutationKind kind, UtilityGrantID grant, uint64_t quantity_j)
+{
+	return PrepareUtilityDomainMutation(kind, grant, quantity_j, UtilityConsumerID{UINT32_MAX}, UtilityLinkID{UINT32_MAX}, UtilityEnergyDomain::Heat);
+}
+
 /** @copydoc CommitUtilityMutation */
 UtilityMutationReceipt CommitUtilityMutation(const UtilityMutationProposal &proposal, UtilityMutationParticipant *participant)
 {
@@ -705,13 +836,21 @@ UtilityMutationReceipt CommitUtilityMutation(const UtilityMutationProposal &prop
 	if (proposal.sequence_before != _utility_power.operation_sequence || proposal.owner != _current_company) {
 		receipt.error = UtilityPowerError::StaleMutation; return receipt;
 	}
-	const auto current = PrepareUtilityMutation(proposal.kind, proposal.grant, proposal.quantity_j, proposal.destination, proposal.link);
+	const auto current = PrepareUtilityDomainMutation(proposal.kind, proposal.grant, proposal.quantity_j, proposal.destination, proposal.link, proposal.domain);
 	if (current.error != UtilityPowerError::None) { receipt.error = current.error; return receipt; }
 	if (current.seal != proposal.seal) { receipt.error = UtilityPowerError::StaleMutation; return receipt; }
 	// Actual use requires a complete physical/inventory/effect participant;
 	// a direct call cannot debit energy for a nonexistent gameplay benefit.
 	if (proposal.kind == UtilityMutationKind::Consume && participant == nullptr) { receipt.error = UtilityPowerError::Refused; return receipt; }
 	auto &consumer = *FindUtilityConsumer(proposal.grant.consumer);
+	// A complete benefit must consume its own domain and immutable thermal
+	// role. Generic electricity, direct-recipe and generator participants cannot
+	// silently substitute one another's grants or invent conversion eligibility.
+	if (proposal.kind == UtilityMutationKind::Consume && participant->EnergyDomain() != proposal.domain) { receipt.error = UtilityPowerError::Refused; return receipt; }
+	if (proposal.kind == UtilityMutationKind::Consume && proposal.domain == UtilityEnergyDomain::Heat) {
+		const auto use = consumer.effect == UtilityConsumerEffect::HeatGenerator ? UtilityHeatUse::ElectricalGenerator : UtilityHeatUse::DirectRecipe;
+		if (participant->ThermalUse() != use) { receipt.error = UtilityPowerError::Refused; return receipt; }
+	}
 	// Town offers require the actual native town participant and settle once
 	// per interval. A generic expense/inventory callback cannot create a town
 	// bonus or consume its offer after GS takeover or previous application.
@@ -731,6 +870,12 @@ UtilityMutationReceipt CommitUtilityMutation(const UtilityMutationProposal &prop
 		const uint64_t take = std::min(remaining, FreeUtilityShare(share));
 		if (take == 0) continue;
 		const auto &source = *FindUtilityProducer(share.producer);
+		// Installed paid tube sources can settle use only through their complete
+		// physical/tariff participant. A generic ledger consumer cannot bypass
+		// that invoice, while pure release and existing other source families
+		// retain their independent native transaction boundary.
+		if (proposal.kind == UtilityMutationKind::Consume && GetTubePowerConnection(share.producer) != nullptr &&
+			!IsTubeExternalPowerCommitting()) { receipt.error = UtilityPowerError::Refused; return receipt; }
 		if (take > source.reserved_j) { receipt.error = UtilityPowerError::InvalidQuantity; return receipt; }
 		// Source lifetime totals cannot overflow or exceed once-only actual
 		// publication, regardless of how many work actions settle this epoch.
@@ -996,7 +1141,7 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 	// Empty older/Classic worlds retain an empty ledger; actual electrical
 	// history requires the accepted native profile, never the startup selector.
 	if (selection.id != MultiLayerGameplayProfileID::MultilayerIndustry &&
-		(state.interval != 1 || state.allocated || state.next_producer != 0 || state.next_consumer != 0 || state.next_link != 0 || state.operation_sequence != 0 || !state.producers.empty() || !state.consumers.empty() || !state.links.empty())) return UtilityPowerError::UnsupportedProfile;
+		(state.interval != 1 || state.allocated || state.heat_allocated || state.next_producer != 0 || state.next_consumer != 0 || state.next_link != 0 || state.operation_sequence != 0 || !state.producers.empty() || !state.consumers.empty() || !state.links.empty())) return UtilityPowerError::UnsupportedProfile;
 	// Zero is an unpublished sentinel and the terminal epoch cannot rotate;
 	// neither may become an accepted accounting interval.
 	if (state.interval == 0 || state.interval == UINT64_MAX) return UtilityPowerError::InvalidInterval;
@@ -1058,9 +1203,10 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		// accepting carry here would manufacture electricity on its first call.
 		if (meter.accounting_interval == 0 && (meter.generation_rate_w != 0 || meter.economy_ticks != 0 || meter.generation_energy_j != 0 || meter.remainder_mj != 0)) return UtilityPowerError::InvalidQuantity;
 		if (to_underlying(source.kind) > to_underlying(UtilityGenerationKind::OrbitalPanel)) return UtilityPowerError::InvalidReference;
-		// Source meters belong exclusively to electricity generation; binding
-		// a consumer ID or thermal domain here would mix quantity owners.
-		if (meter.domain != UtilityEnergyDomain::Electricity || meter.consumer_id.base() != UINT32_MAX) return UtilityPowerError::InvalidReference;
+		// Each typed source owns one quantity domain and no consumer identity.
+		// Deep geothermal Heat cannot masquerade as solar/external electricity.
+		if (to_underlying(meter.domain) > to_underlying(UtilityEnergyDomain::Heat) || meter.consumer_id.base() != UINT32_MAX ||
+			(meter.domain == UtilityEnergyDomain::Heat && (source.kind != UtilityGenerationKind::Geothermal || meter.layer != MapLayer::DeepUnderground))) return UtilityPowerError::InvalidReference;
 		// Publication uses frozen rate/duration/energy/carry limits and cannot
 		// name a future interval that bypasses once-only generation.
 		if (meter.accounting_interval > state.interval || meter.generation_rate_w > MAX_UTILITY_RATE_W || meter.economy_ticks > MAX_UTILITY_INTERVAL_TICKS || meter.generation_energy_j > MAX_UTILITY_ACCOUNT_ENERGY_J || meter.remainder_mj >= 1000) return UtilityPowerError::InvalidQuantity;
@@ -1069,7 +1215,7 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		if (meter.demand_energy_j != 0 || meter.granted_energy_j != 0 || meter.unmet_energy_j != 0) return UtilityPowerError::InvalidQuantity;
 		// Neither an open generation phase nor a retired source can promise
 		// usable output; source loss must release all remaining reservations.
-		if ((!state.allocated && source.reserved_j != 0) || (!source.active && source.reserved_j != 0)) return UtilityPowerError::InvalidQuantity;
+		if ((!IsUtilityDomainAllocated(state, meter.domain) && source.reserved_j != 0) || (!source.active && source.reserved_j != 0)) return UtilityPowerError::InvalidQuantity;
 		// Lifetime settlement cannot exceed real publication and must retain
 		// at least current interval generation even after prior rotations.
 		if (source.consumed_lifetime_j > source.generated_lifetime_j || source.generated_lifetime_j < meter.generation_energy_j) return UtilityPowerError::InvalidQuantity;
@@ -1098,9 +1244,12 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		// A valid numeric Deep layer cannot authorize operation before the
 		// calendar gate, even if all linked sources are retired or absent.
 		if (check_world_refs && meter.layer == MapLayer::DeepUnderground && !CheckDeepLayerAvailability(selection, TimerGameCalendar::date)) return UtilityPowerError::InvalidLayer;
-		// Consumers use only the electrical ledger and a supported bounded
-		// effect, with no producer identity hidden in the same meter.
-		if (meter.domain != UtilityEnergyDomain::Electricity || meter.producer_id.base() != UINT32_MAX || to_underlying(consumer.effect) > to_underlying(UtilityConsumerEffect::TownGrowth)) return UtilityPowerError::InvalidReference;
+		// A consumer has one explicit domain and matching immutable role, with
+		// no hidden producer identity. Thermal participants remain Deep-local;
+		// electrical effects cannot reinterpret their heat grants as electricity.
+		if (to_underlying(meter.domain) > to_underlying(UtilityEnergyDomain::Heat) || meter.producer_id.base() != UINT32_MAX ||
+			to_underlying(consumer.effect) > to_underlying(UtilityConsumerEffect::HeatGenerator) || IsUtilityHeatEffect(consumer.effect) != (meter.domain == UtilityEnergyDomain::Heat) ||
+			(meter.domain == UtilityEnergyDomain::Heat && meter.layer != MapLayer::DeepUnderground)) return UtilityPowerError::InvalidReference;
 		// Stored grants must fit actual capacity/demand and match original
 		// unmet demand; future epochs cannot supply renewed reservations.
 		if (consumer.capacity_j > MAX_UTILITY_ACCOUNT_ENERGY_J || meter.demand_energy_j > consumer.capacity_j || meter.granted_energy_j > meter.demand_energy_j || meter.unmet_energy_j != meter.demand_energy_j - meter.granted_energy_j || meter.accounting_interval > state.interval) return UtilityPowerError::InvalidQuantity;
@@ -1115,7 +1264,7 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 			// Only Surface city offers have bounded native state, and a posted
 			// benefit must be tied to this closed current accounting interval.
 			if (meter.layer != MapLayer::Surface || consumer.town_bonus_percent > 25 || (!consumer.town_effect_applied && consumer.town_bonus_percent != 0) ||
-				(consumer.town_effect_applied && (!state.allocated || meter.accounting_interval != state.interval))) return UtilityPowerError::InvalidQuantity;
+				(consumer.town_effect_applied && (!IsUtilityDomainAllocated(state, meter.domain) || meter.accounting_interval != state.interval))) return UtilityPowerError::InvalidQuantity;
 			if (consumer.town != TownID::Invalid()) {
 				if (!bound_towns.insert(consumer.town).second) return UtilityPowerError::InvalidTopology;
 				if (check_world_refs) {
@@ -1143,7 +1292,7 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		for (const auto id : consumer.linked_producers) {
 			const auto found = sources.find(id);
 			if (found == sources.end()) return UtilityPowerError::InvalidReference;
-			if ((previous_link.base() != UINT32_MAX && id <= previous_link) || !found->second->active || found->second->owner != consumer.owner || found->second->meter.layer != meter.layer) return UtilityPowerError::InvalidTopology;
+			if ((previous_link.base() != UINT32_MAX && id <= previous_link) || !found->second->active || found->second->owner != consumer.owner || found->second->meter.layer != meter.layer || found->second->meter.domain != meter.domain) return UtilityPowerError::InvalidTopology;
 			previous_link = id;
 		}
 		uint64_t allocated = 0;
@@ -1163,7 +1312,8 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 			if (share.allocated_j == 0 || share.allocated_j > meter.granted_energy_j - allocated || share.consumed_j > share.allocated_j ||
 				share.released_j > share.allocated_j - share.consumed_j || share.transferred_j > share.allocated_j - share.consumed_j - share.released_j) return UtilityPowerError::InvalidQuantity;
 			const auto &source = *found->second;
-			if (source.owner != consumer.owner) return UtilityPowerError::InvalidTopology;
+			if (meter.domain == UtilityEnergyDomain::Heat && (share.imported_link.base() != UINT32_MAX || share.transferred_j != 0)) return UtilityPowerError::InvalidTopology; // Thermal shares are Deep-local and cannot carry electrical riser/import lineage.
+			if (source.owner != consumer.owner || source.meter.domain != meter.domain) return UtilityPowerError::InvalidTopology; // Saved source slices preserve both ownership and domain; consumed heat cannot appear as electrical lineage.
 			const uint64_t remaining = FreeUtilityShare(share);
 			// A retired consumer cannot retain usable energy even if its old
 			// numeric company ID now belongs to a new live company.
@@ -1205,7 +1355,7 @@ UtilityPowerError ValidateUtilityPowerState(const UtilityPowerState &state, cons
 		}
 		// A consumer outside this closed allocation has no active request or
 		// saved slices; prior epochs cannot be carried as fresh usable energy.
-		if ((!state.allocated || meter.accounting_interval != state.interval) && (meter.demand_energy_j != 0 || allocated != 0 || !consumer.shares.empty())) return UtilityPowerError::InvalidInterval;
+		if ((!IsUtilityDomainAllocated(state, meter.domain) || meter.accounting_interval != state.interval) && (meter.demand_energy_j != 0 || allocated != 0 || !consumer.shares.empty())) return UtilityPowerError::InvalidInterval;
 	}
 	// Exact reserve sums conserve source promises; no missing/corrupt row is
 	// repaired into a new source or a duplicate electrical credit.

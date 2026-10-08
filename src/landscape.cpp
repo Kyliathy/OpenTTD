@@ -10,6 +10,7 @@
 /** @defgroup SnowLineGroup Snowline functions and data structures */
 
 #include "stdafx.h"
+#include "geothermal.h"
 #include "bridge_map.h"
 #include "heightmap.h"
 #include "clear_map.h"
@@ -712,6 +713,11 @@ bool IsMapSurroundedByWater()
  */
 CommandCost CmdLandscapeClear(DoCommandFlags flags, TileIndex tile)
 {
+	// Ordinary demolition/overbuild cannot erase an active cold geothermal
+	// reservation. Explicit cancellation releases its floor without clearing
+	// rock or modifying the original natural source; later paid construction
+	// must consume its planning claim through its own complete transaction.
+	if (GetGeothermalSiteClaimForTile(tile) != nullptr) return CommandCost(STR_ERROR_GEOTHERMAL_SITE_CLAIMED);
 	// Removing a validated empty portal housing changes only map metadata; every ordinary clearing action still requires excavated floor and cannot bore solid rock.
 	if (IsValidTile(tile) && IsLayerPortalTile(tile) && GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
 		if (CheckLayerPortalLifecycle(tile) != LayerPortalWorkError::None) return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY);

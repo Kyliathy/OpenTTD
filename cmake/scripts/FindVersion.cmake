@@ -1,3 +1,6 @@
+# Read-only build identity; version discovery must preserve the user's repository index and working changes.
+# @file FindVersion.cmake
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md Global Mandatory Reading / authorized Git operations.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT REV_MAJOR)
@@ -13,6 +16,8 @@ endif()
 
 find_package(Git QUIET)
 # ${CMAKE_SOURCE_DIR}/.git may be a directory or a regular file
+# Only an actual Git checkout supplies live revision metadata; exported trees
+# use their retained version file without inventing repository authority.
 if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     # Make sure LC_ALL is set to something desirable
     set(SAVED_LC_ALL "$ENV{LC_ALL}")
@@ -21,14 +26,10 @@ if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     # Assume the dir is not modified
     set(REV_MODIFIED 0)
 
-    # Refresh the index to make sure file stat info is in sync, then look for modifications
-    execute_process(COMMAND ${GIT_EXECUTABLE} update-index --refresh
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                    OUTPUT_QUIET
-    )
-
-    # See if git tree is modified
-    execute_process(COMMAND ${GIT_EXECUTABLE} diff-index HEAD
+    # Compare the actual tracked working tree and staged contents directly to
+    # HEAD. Build-version queries must not refresh/write Git's index; disabling
+    # optional locks also prevents an incidental cache refresh during this read.
+    execute_process(COMMAND ${GIT_EXECUTABLE} --no-optional-locks diff --no-ext-diff --name-only HEAD --
                     OUTPUT_VARIABLE IS_MODIFIED
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -135,6 +136,8 @@ if(GENERATE_OTTDREV)
     message(STATUS "Generating .ottdrev")
     file(WRITE ${CMAKE_SOURCE_DIR}/.ottdrev "${REV_VERSION}\t${REV_ISODATE}\t${REV_MODIFIED}\t${REV_HASH}\t${REV_ISTAG}\t${REV_ISSTABLETAG}\n")
 else()
+    # A stable release advertises the internal release series. Refuse a
+    # mismatched tag before producing distributable version/resource metadata.
     if(REV_ISSTABLETAG AND NOT (REV_VERSION STREQUAL "${REV_MAJOR}.${REV_MINOR}"))
         message(FATAL_ERROR "Tag (${REV_VERSION}) doesn't match internal version (${REV_MAJOR}.${REV_MINOR})")
     endif()

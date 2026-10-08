@@ -5,7 +5,8 @@
  */
 
 /**
- * @file utility_power_sl.cpp Bounded native electrical epochs, exact meters, connectivity and grant-slice transport.
+ * @file utility_power_sl.cpp Bounded shared typed energy epochs, exact meters, domain roles, connectivity and grant-slice transport.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group7B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md schema authority
  */
@@ -50,6 +51,7 @@ struct UtilityWireRow {
 	uint8_t town_bonus = 0; ///< Version384 accepted current native benefit, bounded0..25.
 	uint8_t town_applied = 0; ///< Version384 once-only actual city effect settlement.
 	uint8_t town_suspended = 0; ///< Version384 custom-GS suppression for the remainder of this interval.
+	uint8_t domain = 0; ///< Version390 source/consumer immutable quantity domain; subordinate/link rows keep zero and genuine older rows remain Electricity.
 };
 
 static const SaveLoad _utility_row_desc[] = {
@@ -78,6 +80,7 @@ static const SaveLoad _utility_row_desc[] = {
 	SaveLoad::Variable<VarFileType::U8>("town_bonus", SLE_OBJECT_ADDRESS(UtilityWireRow, town_bonus), SaveLoadVersion::UtilityConsumerEffects),
 	SaveLoad::Variable<VarFileType::U8>("town_applied", SLE_OBJECT_ADDRESS(UtilityWireRow, town_applied), SaveLoadVersion::UtilityConsumerEffects),
 	SaveLoad::Variable<VarFileType::U8>("town_suspended", SLE_OBJECT_ADDRESS(UtilityWireRow, town_suspended), SaveLoadVersion::UtilityConsumerEffects),
+	SaveLoad::Variable<VarFileType::U8>("domain", SLE_OBJECT_ADDRESS(UtilityWireRow, domain), SaveLoadVersion::UtilityHeatDomains),
 };
 
 static std::array<bool, 2> _utility_presence{}; ///< Unaccepted header/table presence, separate from live authority.
@@ -122,6 +125,13 @@ static bool CheckUtilityPowerFamily(bool preview)
 	}
 	const bool history = header[1] != 1 || header[2] != 0 || header[3] != 0 || header[4] != 0 || header[9] != 0 || header[10] != 0;
 	if (required != history) SlErrorCorrupt("Utility power metadata/history mismatch");
+	/** @param source Copied native source. @return Whether this file retains a thermal producer identity. */
+	const auto heat_source = [](const UtilityPowerProducer &source) { return source.meter.domain == UtilityEnergyDomain::Heat; };
+	/** @param consumer Copied native consumer. @return Whether this file retains a thermal request/grant identity. */
+	const auto heat_consumer = [](const UtilityPowerConsumer &consumer) { return consumer.meter.domain == UtilityEnergyDomain::Heat; };
+	const bool heat_history = rows.heat_allocated || std::ranges::any_of(rows.producers, heat_source) || std::ranges::any_of(rows.consumers, heat_consumer);
+	if (((flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0) != heat_history) SlErrorCorrupt("Utility heat metadata/history mismatch"); // Explicit saved domain/phase history cannot be borrowed from the running world or omitted from its marker.
+
 	MultiLayerProfileSelection selection;
 	selection.id = preview ? static_cast<MultiLayerGameplayProfileID>(_load_check_data.gameplay_profile_id) : metadata == nullptr ? MultiLayerGameplayProfileID::Classic : metadata->profile.id;
 	if (ValidateUtilityPowerState(rows, selection, false, preview ? _load_check_data.map_layers : MultiLayerMap::GetLayerCount()) != UtilityPowerError::None) SlErrorCorrupt("Invalid utility power structural balances");
@@ -146,7 +156,8 @@ struct UPLHChunkHandler : ChunkHandler {
 			links += consumer.linked_producers.size();
 			shares += consumer.shares.size();
 		}
-		std::array<uint64_t, 12> header{5, state.interval, state.next_producer, state.next_consumer, state.allocated,
+		const uint64_t phases = (state.allocated ? 1U : 0U) | (state.heat_allocated ? 2U : 0U); // Independent once-only domains share a native epoch; grants never reconstruct allocation phase.
+		std::array<uint64_t, 12> header{6, state.interval, state.next_producer, state.next_consumer, phases,
 			state.producers.size(), state.consumers.size(), links, shares, state.operation_sequence, state.next_link, state.links.size()};
 		SlSetLength(96);
 		SlCopy<VarFileType::U64>(header);
@@ -158,6 +169,7 @@ struct UPLHChunkHandler : ChunkHandler {
 		const bool transfers = !IsSavegameVersionBefore(SaveLoadVersion::UtilityTransfers);
 		const bool effects = !IsSavegameVersionBefore(SaveLoadVersion::UtilityConsumerEffects);
 		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::UtilityCompanyLifecycle);
+		const bool thermal = !IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains);
 		const size_t length = transfers ? 96 : old ? 72 : 80;
 		// Each explicit version owns its exact header; only version381 lacks a
 		// saved mutation sequence because it had no actual-use operations.
@@ -167,7 +179,7 @@ struct UPLHChunkHandler : ChunkHandler {
 		SlCopy<VarFileType::U64>(fields);
 		// Version, identity sentinels, epoch/phase and whole-store bounds refuse
 		// before allocation, preserving source lineage and finite save memory.
-		if (header[0] != (lifecycle ? 5 : effects ? 4 : transfers ? 3 : old ? 1 : 2) || header[1] == 0 || header[1] == UINT64_MAX || header[2] >= UINT32_MAX || header[3] >= UINT32_MAX || header[4] > 1 || header[9] == UINT64_MAX || header[10] >= UINT32_MAX ||
+		if (header[0] != (thermal ? 6 : lifecycle ? 5 : effects ? 4 : transfers ? 3 : old ? 1 : 2) || header[1] == 0 || header[1] == UINT64_MAX || header[2] >= UINT32_MAX || header[3] >= UINT32_MAX || header[4] > (thermal ? 3U : 1U) || header[9] == UINT64_MAX || header[10] >= UINT32_MAX ||
 			header[5] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[6] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[5] > header[2] || header[6] > header[3] ||
 			header[7] > MAX_UTILITY_POWER_CONNECTIONS || header[8] > MAX_UTILITY_POWER_SHARES || header[11] > MAX_UTILITY_INTERVAL_ACCOUNTS || header[11] > header[10]) SlErrorCorrupt("Invalid utility power header bounds");
 		auto &presence = preview ? _load_check_data.utility_power_present : _utility_presence;
@@ -178,7 +190,8 @@ struct UPLHChunkHandler : ChunkHandler {
 		rows.interval = header[1];
 		rows.next_producer = static_cast<uint32_t>(header[2]);
 		rows.next_consumer = static_cast<uint32_t>(header[3]);
-		rows.allocated = header[4] != 0;
+		rows.allocated = (header[4] & 1U) != 0;
+		rows.heat_allocated = (header[4] & 2U) != 0;
 		rows.operation_sequence = header[9];
 		rows.next_link = static_cast<uint32_t>(header[10]);
 	}
@@ -209,9 +222,10 @@ struct UPLDChunkHandler : ChunkHandler {
 		// Canonical producer fields preserve publication/carry and retirement;
 		// consumer-only fields remain zero and cannot conceal generated energy.
 		for (const auto &source : state.producers) {
-			emit({0, source.meter.producer_id.base(), 0, source.owner.base(), to_underlying(source.meter.layer), to_underlying(source.kind), source.active,
+			UtilityWireRow wire{0, source.meter.producer_id.base(), 0, source.owner.base(), to_underlying(source.meter.layer), to_underlying(source.kind), source.active,
 				source.meter.accounting_interval, source.meter.generation_rate_w, source.meter.generation_energy_j, source.reserved_j, 0,
-				source.meter.economy_ticks, source.meter.remainder_mj, source.generated_lifetime_j, source.consumed_lifetime_j});
+				source.meter.economy_ticks, source.meter.remainder_mj, source.generated_lifetime_j, source.consumed_lifetime_j};
+			wire.domain = to_underlying(source.meter.domain); emit(wire);
 		}
 		// Original granted/unmet fields and exact slices are saved together;
 		// queries later derive remaining balance without renewing reservations.
@@ -220,6 +234,7 @@ struct UPLDChunkHandler : ChunkHandler {
 				consumer.meter.accounting_interval, consumer.capacity_j, consumer.meter.demand_energy_j, consumer.meter.granted_energy_j, consumer.meter.unmet_energy_j, 0, 0};
 			wire.town = consumer.town.base(); wire.town_bonus = consumer.town_bonus_percent;
 			wire.town_applied = consumer.town_effect_applied; wire.town_suspended = consumer.town_effect_suspended;
+			wire.domain = to_underlying(consumer.meter.domain);
 			emit(wire);
 		}
 		// Each explicitly saved edge remains attached to its actual consumer;
@@ -253,7 +268,15 @@ struct UPLDChunkHandler : ChunkHandler {
 		const bool transfers = !IsSavegameVersionBefore(SaveLoadVersion::UtilityTransfers);
 		const bool effects = !IsSavegameVersionBefore(SaveLoadVersion::UtilityConsumerEffects);
 		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::UtilityCompanyLifecycle);
-		if (description.size() != (effects ? 25 : transfers ? 21 : old ? 14 : 16)) SlErrorCorrupt("Invalid utility power field count");
+		if (description.size() != (!IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) ? 26 : effects ? 25 : transfers ? 21 : old ? 14 : 16)) SlErrorCorrupt("Invalid utility power field count");
+		if (!IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains)) {
+			// Current typed native quantities require every named scalar. A
+			// same-sized unknown replacement cannot default a Heat source into
+			// Electricity or erase its original ID/owner/lifetime/carry/role.
+			for (const auto &field : _utility_row_desc) {
+				if (std::ranges::find(description, field.name, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing typed utility field");
+			}
+		}
 		// A missing scalar may not default to a free grant, a zero consumption
 		// counter or a different owner/epoch during forward-compatible table read.
 		for (const auto &field : _utility_row_desc) {
@@ -284,12 +307,16 @@ struct UPLDChunkHandler : ChunkHandler {
 			// Only consumer rows carry a city offer; every serialized flag is an
 			// actual boolean and cannot hide a second growth authority elsewhere.
 			if ((wire.type != 1 && (wire.town != 0 || wire.town_bonus != 0 || wire.town_applied != 0 || wire.town_suspended != 0)) || wire.town_applied > 1 || wire.town_suspended > 1) SlErrorCorrupt("Invalid utility town fields");
+			// Source/consumer records own typed quantities. A subordinate
+			// connection, slice or electrical route cannot conceal another meter.
+			if (wire.domain > to_underlying(UtilityEnergyDomain::Heat) || (wire.type > 1 && wire.domain != 0)) SlErrorCorrupt("Invalid utility energy domain fields");
 			if (wire.type == 0) {
 				// Producer rows cannot carry a foreign reference or consumer-only
 				// payload, and liveness must be an actual boolean.
 				if (wire.reference != 0 || wire.active > 1 || wire.d != 0) SlErrorCorrupt("Invalid utility source wire fields");
 				UtilityPowerProducer source;
 				source.owner = CompanyID{wire.owner}; source.kind = static_cast<UtilityGenerationKind>(wire.kind); source.active = wire.active != 0;
+				source.meter.domain = static_cast<UtilityEnergyDomain>(wire.domain);
 				source.meter.producer_id = UtilityProducerID{wire.id}; source.meter.layer = static_cast<MapLayer>(wire.layer);
 				source.meter.accounting_interval = wire.epoch; source.meter.generation_rate_w = wire.a; source.meter.generation_energy_j = wire.b;
 				source.reserved_j = wire.c; source.meter.economy_ticks = wire.ticks; source.meter.remainder_mj = wire.remainder;
@@ -307,6 +334,7 @@ struct UPLDChunkHandler : ChunkHandler {
 				UtilityPowerConsumer consumer;
 				consumer.active = !lifecycle || wire.active != 0;
 				consumer.owner = CompanyID{wire.owner}; consumer.effect = static_cast<UtilityConsumerEffect>(wire.kind); consumer.capacity_j = wire.a;
+				consumer.meter.domain = static_cast<UtilityEnergyDomain>(wire.domain);
 				consumer.meter.consumer_id = UtilityConsumerID{wire.id}; consumer.meter.layer = static_cast<MapLayer>(wire.layer);
 				consumer.meter.accounting_interval = wire.epoch; consumer.meter.demand_energy_j = wire.b;
 				consumer.meter.granted_energy_j = wire.c; consumer.meter.unmet_energy_j = wire.d;

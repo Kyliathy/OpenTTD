@@ -5,11 +5,12 @@
  */
 
 /**
- * @file utility_power.h The one native electrical ledger, using frozen utility units and owner-allocated IDs.
+ * @file utility_power.h The one native utility identity/accounting owner, separating electrical and thermal quantities through frozen domains.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility authority
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint9.1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-v-utility-settlement-contract.md explicit publication/allocation/settlement/rotation order
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B typed shared heat before physical source/routing
  */
 
 #ifndef UTILITY_POWER_H
@@ -31,7 +32,7 @@ enum class UtilityPowerError : uint8_t {
 	InsufficientGrant, StaleMutation, Refused,
 };
 
-/** One native producer's canonical electrical meter; its feature still owns physical availability and generation inputs. */
+/** One native producer's immutable Heat/Electricity meter; its feature owns physical availability and generation inputs. */
 struct UtilityPowerProducer {
 	UtilityPowerAccount meter; ///< Frozen unit/interval/remainder fields, owned only by this ledger.
 	CompanyID owner = CompanyID::Invalid(); ///< Actual company owning the source.
@@ -85,7 +86,8 @@ struct UtilityPowerState {
 	uint64_t interval = 1; ///< Nonzero owner-issued accounting epoch, independent of render time.
 	uint32_t next_producer = 0; ///< Retired IDs cannot be manufactured or reused by consumers.
 	uint32_t next_consumer = 0; ///< Independent consumer identity allocator.
-	bool allocated = false; ///< Exactly one allocation phase closes generation publication for this interval.
+	bool allocated = false; ///< Exactly one electrical allocation closes electrical generation publication for this interval.
+	bool heat_allocated = false; ///< Independent once-only thermal allocation closes heat publication; both domains retain the same owner-issued interval/IDs.
 	uint64_t operation_sequence = 0; ///< Every accepted state change advances the saved retry/staleness identity; queries and estimates do not.
 	uint32_t next_link = 0; ///< Independent nonreused utility route identity allocator.
 	std::vector<UtilityPowerProducer> producers; ///< Stable owner-allocated source order.
@@ -114,6 +116,7 @@ enum class UtilityMutationKind : uint8_t { Consume, ReleaseUnused, TransferLayer
 struct UtilityMutationProposal {
 	UtilityPowerError error = UtilityPowerError::InvalidReference; ///< Only None authorizes commit revalidation.
 	UtilityMutationKind kind = UtilityMutationKind::Consume; ///< Exact requested settlement/release/transfer.
+	UtilityEnergyDomain domain = UtilityEnergyDomain::Electricity; ///< Typed prepared quantity; a changed domain invalidates the proposal and cannot borrow another grant.
 	UtilityGrantID grant; ///< Source reservation, including exact epoch.
 	CompanyID owner = CompanyID::Invalid(); ///< Actual company that prepared this operation.
 	uint64_t quantity_j = 0; ///< Positive whole quantity to settle once.
@@ -128,6 +131,10 @@ class UtilityMutationParticipant {
 public:
 	/** Destroy through the public complete-transaction boundary. */
 	virtual ~UtilityMutationParticipant() = default;
+	/** @return Domain of the actual whole physical benefit; existing electrical participants cannot consume a thermal reservation. */
+	virtual UtilityEnergyDomain EnergyDomain() const { return UtilityEnergyDomain::Electricity; }
+	/** @return Actual direct-recipe/generator benefit when this participant consumes Heat; electrical or unspecified participants expose no thermal role. */
+	virtual std::optional<UtilityHeatUse> ThermalUse() const { return std::nullopt; }
 	/** @param proposal Exact revalidated utility proposal. @return Whether the actual complete owner transaction still accepts; this check changes nothing. */
 	virtual bool Validate(const UtilityMutationProposal &proposal) const = 0;
 	/** @param proposal Exact checked utility quantity. @return Complete success or unchanged refusal; no utility API may be reentered during this whole owner commit. */
@@ -270,6 +277,63 @@ std::optional<UtilityConsumerID> RegisterUtilityPowerConsumer(CompanyID owner, M
 	uint64_t capacity_j, std::span<const UtilityProducerID> sources, bool execute = true);
 
 /**
+ * Register an actual Deep thermal source through the same native producer allocator, adding no energy.
+ * @param owner Existing asking company; its physical source owner must separately validate constructed collector/source availability.
+ * @param execute False predicts admission/identity without consuming a native slot.
+ * @return Shared native Heat producer ID, or unchanged refusal; no electrical/mirror/source quantity is fabricated.
+ */
+std::optional<UtilityProducerID> RegisterUtilityHeatProducer(CompanyID owner, bool execute = true);
+
+/**
+ * Register an immutable thermal consumer role with explicitly owned Deep source eligibility.
+ * @param owner Existing asking company, independent of translated facility names.
+ * @param use Direct recipe or electrical generator; both compete in the frozen stable ConsumerID order.
+ * @param capacity_j Bounded maximum thermal joules requested per native interval.
+ * @param sources Actual physical network owner's eligible same-company Deep Heat producers; coordinates alone supply no link.
+ * @param execute False checks/predicts identity without reserving a consumer or energy.
+ * @return Shared native Heat consumer ID, or unchanged whole admission refusal.
+ */
+std::optional<UtilityConsumerID> RegisterUtilityHeatConsumer(CompanyID owner, UtilityHeatUse use, uint64_t capacity_j,
+	std::span<const UtilityProducerID> sources, bool execute = true);
+
+/**
+ * Publish a validated physical source's thermal rate once in the native interval; the common ledger alone retains generated heat/carry.
+ * @param producer Actual registered Heat source belonging to the asking company.
+ * @param interval Exact current nonterminal native accounting epoch.
+ * @param rate_w Actual bounded post-availability vent heat rate; geothermal validates original source and completed machinery before calling.
+ * @param economy_ticks Actual synchronized duration at the frozen27-ms tick.
+ * @param execute False calculates admission without changing heat, carry, ID or publication history.
+ * @return Typed complete publication or unchanged refusal; electrical sources cannot enter this path.
+ */
+UtilityPowerError PublishUtilityHeatGeneration(UtilityProducerID producer, uint64_t interval, uint64_t rate_w, uint32_t economy_ticks, bool execute = true);
+
+/**
+ * Reserve thermal shares in stable shared ConsumerID/ProducerID order, separately from subsequent electrical allocation.
+ * @param interval Exact current native accounting epoch; heat can be allocated only once.
+ * @param requests Actual registered Heat consumers and feasible bounded quantities; roles/connectivity retain their canonical owners.
+ * @param execute False prepares complete domain admission without reserving or consuming any quantity.
+ * @return Whole global system allocation or unchanged refusal; no heat export or electrical substitution is admitted.
+ */
+UtilityPowerError AllocateUtilityHeat(uint64_t interval, std::span<const UtilityPowerRequest> requests, bool execute = true);
+
+/** @return Whether this native interval's independent thermal allocation has closed; querying never publishes or renews heat. */
+bool IsUtilityHeatAllocated();
+/** @return Whether thermal identity/phase history exists in the shared native owner; no snapshot or second registry is allocated. */
+bool HasUtilityHeatState();
+
+/** @param consumer Asking company's actual registered Heat consumer. @return Remaining current thermal reservation/unmet view, or absence; queries never allocate/use/renew heat. */
+std::optional<UtilityPowerAccount> GetUtilityHeatAllocation(UtilityConsumerID consumer);
+
+/**
+ * Prepare exact typed thermal use or unused release for the same whole-owner atomic settlement boundary.
+ * @param kind Consume or ReleaseUnused; thermal transfer through an electrical riser always refuses.
+ * @param grant Exact current shared consumer/epoch identity.
+ * @param quantity_j Positive bounded thermal joules; actual consumption requires a matching Heat physical participant at commit.
+ * @return Pure thermal proposal or unchanged refusal; no electricity grant can authorize this action.
+ */
+UtilityMutationProposal PrepareUtilityHeatMutation(UtilityMutationKind kind, UtilityGrantID grant, uint64_t quantity_j);
+
+/**
  * Publish one source's actual post-availability rate exactly once this interval.
  * Physical production/payment/mirror eligibility belongs to the caller; this native boundary is not a player command.
  * @param producer Registered source belonging to the current company.
@@ -298,6 +362,17 @@ UtilityPowerError AllocateUtilityPower(uint64_t interval, std::span<const Utilit
  * @return Current free-balance view derived from saved source slices, or no value for missing/foreign/unallocated state; settled use is never renewed.
  */
 std::optional<UtilityPowerAccount> GetUtilityAllocation(UtilityConsumerID consumer);
+
+/** @param producer Actual ledger-issued source ID. @return Borrowed immutable retained source, or nullptr; invalidated by ledger mutation. */
+const UtilityPowerProducer *GetUtilityPowerProducer(UtilityProducerID producer);
+
+/** @param consumer Actual ledger-issued consumer ID. @return Borrowed immutable retained consumer, or nullptr; invalidated by ledger mutation. */
+const UtilityPowerConsumer *GetUtilityPowerConsumer(UtilityConsumerID consumer);
+
+/** @return Sole ledger's current synchronized epoch identity, without copying accounts or renewing any publication. */
+uint64_t GetUtilityPowerInterval();
+/** @return Whether the current epoch's one global allocation is closed; views never allocate. */
+bool IsUtilityPowerAllocated();
 
 /**
  * Close the prior interval and begin generation for the next synchronized epoch.

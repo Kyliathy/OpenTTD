@@ -107,6 +107,16 @@ struct MLMDChunkHandler : ChunkHandler {
 		// Utility history requires exact epoch/fraction/grant transport; old files
 		// cannot request these records through a metadata bit alone.
 		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityPower) && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_POWER) != 0) SlErrorCorrupt("Unexpected utility power in old save version");
+		// A saved invoice requires the actual versioned inlet/path transport; older worlds retain empty paid service state.
+		if (IsSavegameVersionBefore(SaveLoadVersion::TubeExternalPower) && (schema.feature_flags & MULTILAYER_FEATURE_TUBE_POWER) != 0) SlErrorCorrupt("Unexpected tube power in old save version");
+		// Actual capsule/consumer associations require their explicitly versioned
+		// physical transport; genuine386 service-only worlds remain unbound.
+		if (IsSavegameVersionBefore(SaveLoadVersion::TubeMovementPower) && (schema.feature_flags & MULTILAYER_FEATURE_TUBE_VEHICLES) != 0) SlErrorCorrupt("Unexpected capsule power in old save version");
+		// Historical files cannot request a cold site identity without the
+		// versioned source/geometry transport; old absence creates no blueprint.
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalSiteClaims) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_SITES) != 0) SlErrorCorrupt("Unexpected geothermal sites in old save version");
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalCollectors) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS) != 0) SlErrorCorrupt("Unexpected geothermal collectors in old save version"); // Older blueprints cannot impersonate the later paid native construction family.
+		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0) SlErrorCorrupt("Unexpected native heat domain in old save version"); // Genuine earlier electrical worlds receive no implicit thermal identities, roles or grants.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		return schema;
 	}
