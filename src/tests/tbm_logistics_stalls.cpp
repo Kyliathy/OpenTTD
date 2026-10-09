@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "mock_environment.h"
 #include "layer_window_fixture.h"
@@ -55,11 +56,11 @@ TEST_CASE("A cancelled loaded cutter writes its real supported retreat state", "
 		// releasing only unfinished work and keeping a legal physical retreat.
 		if (project->phase != TBMPhase::Bore || job->cursor < 3 || job->partial_work_ticks == 0) return;
 		REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project->id, TBMProjectAction::Cancel).Succeeded());
-		CHECK(GetExcavationJob(project->job)->state == ExcavationJobState::Cancelled);
-		CHECK(GetExcavationJob(project->job)->partial_work_ticks == 0);
-		CHECK(GetTBMProject(project->id)->phase == TBMPhase::ReturnForExchange);
+		CHECK(GetExcavationJob(project->job)->state != ExcavationJobState::Cancelled);
+		CHECK(GetExcavationJob(project->job)->partial_work_ticks != 0);
+		CHECK(GetTBMProject(project->id)->phase == TBMPhase::ReturnToRelease);
 		if (prefix != nullptr) {
-			const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+			const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 			const auto path = directory / (std::string(prefix) + "-cancelled.sav");
 			REQUIRE_FALSE(std::filesystem::exists(path));
 			SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -112,7 +113,7 @@ TEST_CASE("Loaded source haulage saves and recovers a removed Surface origin", "
 		REQUIRE(tonnes > 0);
 		observed = true;
 		if (record_prefix == nullptr) return;
-		const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+		const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 		const auto path = directory / (std::string(record_prefix) + "-lost-origin.sav");
 		REQUIRE_FALSE(std::filesystem::exists(path));
 		SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -184,7 +185,7 @@ TEST_CASE("Loaded source haulage saves bounded receiver saturation and physicall
 			saturated = true;
 			stalled_cycle = assignment->exchanges;
 			if (record_prefix != nullptr) {
-				const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+				const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 				const auto path = directory / (std::string(record_prefix) + "-saturated-receiver.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));
 				SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -231,7 +232,7 @@ TEST_CASE("Assigned source haulage saves and recovers a detached empty wagon", "
 		CHECK(Train::Get(wagon)->cargo.TotalCount() == 0);
 		observed = true;
 		if (record_prefix == nullptr) return;
-		const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+		const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 		const auto path = directory / (std::string(record_prefix) + "-wrong-wagons.sav");
 		REQUIRE_FALSE(std::filesystem::exists(path));
 		SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -297,7 +298,7 @@ TEST_CASE("Source haulage saves short empties and cancels safely through its fin
 			stalled_cycle = assignment->exchanges;
 			observed = true;
 			if (record_prefix != nullptr) {
-				const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+				const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 				const auto path = directory / (std::string(record_prefix) + "-no-empties.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));
 				SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -332,7 +333,7 @@ TEST_CASE("Source haulage saves short empties and cancels safely through its fin
 	REQUIRE(project != nullptr);
 	const auto *job = GetExcavationJob(project->job);
 	REQUIRE(job != nullptr);
-	CHECK(job->state == ExcavationJobState::Cancelled);
+	CHECK(job->state != ExcavationJobState::Cancelled); // A final exchange alone does not settle the real loaded hauler.
 	uint remaining = 20000;
 	// Run ordinary physical delivery after the final exchange; a cancelled floor never discards its already paid spoil.
 	while (GetTBMExchangeAssignmentForHauler(world.hauler->index)->phase != TBMHaulerPhase::ReturnEmpties && remaining != 0) {
@@ -340,6 +341,8 @@ TEST_CASE("Source haulage saves short empties and cancels safely through its fin
 		--remaining;
 	}
 	REQUIRE(remaining != 0);
+	world.Tick(); // The cutter observes the now-settled delivery on its next ordinary frame.
+	CHECK(GetExcavationJob(project->job)->state == ExcavationJobState::Cancelled);
 	CHECK(GetSpoilReceiver(world.earth->index)->disposed_t + world.earth->accepted.front().waiting == job->completed_earth_t);
 	const auto *stone = GetSpoilReceiver(world.stone->index);
 	CHECK(stone->disposed_t + stone->crushed_t + world.stone->accepted.front().waiting == job->completed_rock_t);
@@ -394,7 +397,7 @@ TEST_CASE("Loaded source haulage saves and recovers a blocked physical line", "[
 			observed = true;
 			stalled_cycle = assignment->exchanges;
 			if (record_prefix != nullptr) {
-				const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+				const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 				const auto path = directory / (std::string(record_prefix) + "-blocked-line.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));
 				SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);

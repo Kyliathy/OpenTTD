@@ -27,7 +27,33 @@ struct Train;
 using TBMProjectID = StrongType::Typedef<uint32_t, struct TBMProjectIDTag, StrongType::Compare>;
 
 /** Saved successful work phases; an interruption preserves the phase being resumed. */
-enum class TBMPhase : uint8_t { Commissioning, TravelToFace, Bore, AdvanceSupport, ReturnForExchange, WaitForEmpties, Resume, Completed, Cancelled };
+enum class TBMPhase : uint8_t {
+	Commissioning, TravelToFace, Bore, AdvanceSupport, ReturnForExchange, WaitForEmpties, Resume, Completed, Cancelled,
+	ReturnToPark, ///< Return without cancelling the accepted job or unfinished geological work.
+	WaitToPark, ///< Whole consist is at its bay; unload existing spoil through actual wagon exchange.
+	Parked, ///< Whole empty consist is stopped in its actual bay, retaining resumable work.
+	ReturnToRelease, ///< Cancellation requested; preserve geometry/claims until physical withdrawal and haulage settlement.
+	WaitToRelease, ///< Whole cutter at its real bay, exchanging remaining actual spoil before cancellation.
+	ReleasePending, ///< Withdrawn empty cutter, or a lost cutter, awaiting final cargo/occupancy settlement before claims can end.
+	ReturnForHangar, ///< Ordinary halt order retained while loaded spoil returns to the real exchange bay.
+	WaitForHangar, ///< Exchange remaining spoil before the native order drives to its selected destination.
+	TravelToHangar, ///< Empty actual consist follows its ordinary depot order; cutting remains suspended.
+	ParkedHangar, ///< Whole empty consist arrived at its selected actual hangar; explicit Resume retains the job.
+	FollowOrders, ///< Native station/waypoint/depot list owns travel until an explicit work resume or hangar action.
+};
+
+/** @param phase Actual controller phase. @return Whether native travel returns to the exchange/hangar bay. */
+inline bool IsTBMReturning(TBMPhase phase) { return phase == TBMPhase::ReturnForExchange || phase == TBMPhase::ReturnToPark || phase == TBMPhase::ReturnToRelease || phase == TBMPhase::ReturnForHangar; }
+/** @param phase Actual controller phase. @return Whether actual empty wagons can complete the current bay exchange. */
+inline bool IsTBMWaitingForExchange(TBMPhase phase) { return phase == TBMPhase::WaitForEmpties || phase == TBMPhase::WaitToPark || phase == TBMPhase::WaitToRelease || phase == TBMPhase::WaitForHangar; }
+/** @param phase Actual controller phase. @return Whether cancellation is awaiting safe withdrawal and final haulage settlement. */
+inline bool IsTBMFinishing(TBMPhase phase) { return phase == TBMPhase::ReturnToRelease || phase == TBMPhase::WaitToRelease || phase == TBMPhase::ReleasePending; }
+/** @param phase Actual controller phase. @return Whether the machine is stored, optionally awaiting final release. */
+inline bool IsTBMStored(TBMPhase phase) { return phase == TBMPhase::Parked || phase == TBMPhase::ReleasePending || phase == TBMPhase::ParkedHangar; }
+/** @param phase Actual phase. @return Whether a native selected-hangar order has suspended work. */
+inline bool IsTBMHangarTransfer(TBMPhase phase) { return phase == TBMPhase::ReturnForHangar || phase == TBMPhase::WaitForHangar || phase == TBMPhase::TravelToHangar; }
+/** @param phase Actual controller phase. @return Whether unfinished work is suspended for return/parking, without a duplicate intent field. */
+inline bool IsTBMParking(TBMPhase phase) { return phase == TBMPhase::ReturnToPark || phase == TBMPhase::WaitToPark || IsTBMStored(phase) || IsTBMFinishing(phase) || IsTBMHangarTransfer(phase); }
 
 /** Saved resumable interruptions, independent of ordinary train orders and reversal flags. */
 enum class TBMBlockedReason : uint8_t {
@@ -35,6 +61,9 @@ enum class TBMBlockedReason : uint8_t {
 	Paused, ///< Player paused the project (CmdControlTBMProject); distinct from Stopped, which mirrors a stopped train.
 	IllegalTurn, ///< The next segment does not advance one tile within 45 degrees of the saved cutting heading (Group 10.2).
 	LogisticsStall, ///< A hauler of the project cannot dispose of or move its spoil (Plan 5 Group 9.3); new cutting waits, return and exchange go on.
+	MissingHangar, ///< The selected ordinary depot order lost its actual compatible destination.
+	OccupiedHangar, ///< Another real train currently occupies the selected portal magazine or active exchange bay.
+	MissingOrders, ///< Native travel was selected but its list/current destination no longer supplies a usable order.
 	End, ///< Validation bound; saved values are below it.
 };
 
@@ -236,6 +265,8 @@ struct TBMAreaRequest {
 	CompanyID company = CompanyID::Invalid(); ///< Owner of the resulting job.
 	StationID origin = StationID::Invalid(); ///< Surface origin of the resulting job.
 	std::vector<TileIndex> exchange_path; ///< Anchor-to-exchange backing path; empty selects the anchor.
+	ExcavationPlanIntent intent = ExcavationPlanIntent::Area; ///< Reviewed area coverage or exact straight centreline.
+	TileIndex tunnel_end = INVALID_TILE; ///< Exact endpoint for straight intent; ignored for area coverage.
 };
 
 /** Read-only preview shown before any command accepts the area. */
@@ -385,8 +416,9 @@ static constexpr size_t MAX_TBM_PERMANENT_PARTS = 4; ///< Cutter plus its articu
 enum class TBMProjectAction : uint8_t {
 	Pause, ///< Hold work in its current phase (saved as TBMBlockedReason::Paused).
 	Resume, ///< Clear a player pause; any lost reference becomes the blocked reason at once.
-	Cancel, ///< Recoverable cancellation (Group 17.1): the job releases its unfinished cells and keeps every cavity; the consist returns to its bay, gives any spoil away through the exchange, and the project ends Cancelled. A project whose cutter was deleted ends Cancelled at once, whatever its job.
-	Retire, ///< Erase a finished project whose consist stands withdrawn and empty, with no hauler, loaded set or Commissioning pair left (Group 17.2); its consist becomes an ordinary train.
+	Cancel, ///< Request final withdrawal/settlement; unfinished claims and partial work remain until the real train and haulage are clear. Then cancel through the geological owner, retaining paid cavities and all vehicles/cargo.
+	Retire, ///< Finish/cancel fully withdrawn settled work, release its haulers/claims and retain the actual native machine; parked unfinished work is admitted only after the complete release preflight.
+	ReturnAndPark, ///< Preserve the accepted job and partial work; physically return, exchange existing spoil and stop the whole consist at its actual bay.
 	End, ///< Validation bound.
 };
 
@@ -517,6 +549,21 @@ TBMCommissionResult CommissionTBMProject(const LayerPortalCommissionRequest &req
 TBMProjectError ControlTBMProject(TBMProjectID id, TBMProjectAction action, bool execute);
 
 /**
+ * Give an existing cutter's native order list control while preserving its exact geological job and cargo.
+ * Called only by synchronized order commands after their own list/index mutation succeeds.
+ * @param front Actual native train; ordinary or finished trains require no work-controller change.
+ * @return Whether an unfinished controller adopted the native list; final withdrawal remains protected.
+ */
+bool FollowTBMVehicleOrders(Train &front);
+
+/**
+ * Explain final release using the same complete preflight as the synchronized Retire action.
+ * @param id Actual project identity; this read-only query grants no command ownership.
+ * @return INVALID_STRING_ID when ready, otherwise a localized return, settlement or portal-recovery instruction.
+ */
+StringID GetTBMProjectReleaseProblem(TBMProjectID id);
+
+/**
  * Find the first reference this project has lost, in priority order cutter, consist, job, portal, origin, exchange.
  * @param project Record to check against the live owners.
  * @return The matching recoverable reason (MissingCutter, InvalidConsist, MissingProject, MissingPortal, MissingOrigin,
@@ -542,6 +589,8 @@ struct TBMPhaseInputs {
 	bool train_stopped = false; ///< The train is stopped (VehState::Stopped).
 	bool broken_down = false; ///< The train is broken down.
 	bool servicing = false; ///< The train follows an ordinary depot order for servicing.
+	bool service_finished = false; ///< An actual depot order ended; rejoin the face/bay physically instead of resuming work at the depot.
+	bool hangar_order = false; ///< A native halt order remains available after unloading at the original exchange bay.
 	bool at_face = false; ///< The cutter reached the current face (ends TravelToFace).
 	bool cut_committed = false; ///< The prepared cut at the face committed (ends Bore).
 	bool support_advanced = false; ///< The consist moved onto the new support (ends AdvanceSupport).
@@ -783,7 +832,7 @@ void ResetTBMSupportState();
 
 /**
  * @param tile Any tile.
- * @return Whether it carries support of a project that still exists and is unfinished.
+ * @return Whether actual occupancy, a geological claim or an unfinished project's retreat still needs this support.
  */
 bool IsTBMSupportInUse(TileIndex tile);
 
@@ -801,6 +850,25 @@ CommandCost CheckTBMSupportChange(TileIndex tile, DoCommandFlags flags);
  * @param track Removed piece.
  */
 void ReleaseTBMSupportPiece(TileIndex tile, Track track);
+
+/**
+ * Quote replacement of a completed tunnel's vacated terminal support by a real rail portal.
+ * Requires the whole actual cutter stopped on the retained approach side; all
+ * other work claims, route users, occupancy and reservations retain their guards.
+ * @param tile Proposed rock-layer endpoint containing this project's straight support.
+ * @param shaft Direction into the proposed shaft from that endpoint.
+ * @param railtype Requested portal gauge, which must match the existing support.
+ * @return Exact conversion/removal charge or an unchanged, actionable refusal.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group9
+ */
+CommandCost CheckTBMExitHandover(TileIndex tile, DiagDirection shaft, RailType railtype);
+
+/**
+ * Complete the prevalidated terminal-support handover after the reciprocal portal has published.
+ * @param tile The same endpoint, now a real owned portal of the quoted gauge.
+ * @return Nothing; remove only its old support metadata and old single rail infrastructure count.
+ */
+void CompleteTBMExitHandover(TileIndex tile);
 
 /**
  * Follow a change of the track's owner (company merger).
@@ -881,13 +949,20 @@ std::vector<TileIndex> GetTBMWorkCorridor(const TBMProject &project);
 bool IsTBMCorridorOccupied(const TBMProject &project);
 
 /**
- * Whether the train's movement is held by its project: a cutter at work (Bore), or waiting wholly in its bay for
- * empties (WaitForEmpties), stays still under the ordinary train controller. In AdvanceSupport it drives onto its
- * new support and stops at its end (R2MLVS3MP-M decision 4).
- * @param front Front engine.
- * @return Whether ordinary movement must hold this train.
+ * Hold work/wait phases and unsafe or paused project travel. Native depot orders retain service travel;
+ * after the visit, the controller physically rejoins its face or exchange bay before resuming work.
+ * @param front Actual front engine and attached consist.
+ * @return Whether both ordinary locomotive substeps must hold every attached part still.
  */
 bool IsTBMHoldingTrain(const Train &front);
+
+/**
+ * Derive a recoverable work-travel hold from current controller and rail authority.
+ * @param front Actual train head; ordinary trains and native depot/service travel retain their normal handling.
+ * @return Player pause, lost reference or unusable work target; None means this query imposes no travel hold.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4
+ */
+TBMBlockedReason GetTBMTravelHoldReason(const Train &front);
 
 /** Derived pathfinding destination for a cutter travelling on its own canonical support, never an ordinary saved order. */
 struct TBMCutterSteeringTarget {

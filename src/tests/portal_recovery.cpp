@@ -11,7 +11,7 @@
  * releases and clears it. Once its TBM is withdrawn, a pair connects for ordinary freight, and a consist spanning both
  * ends refuses the change and keeps its place (Group 9.3). No case leaves a half-pair.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 9 and 11
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  */
 
 #include "../stdafx.h"
@@ -36,8 +36,7 @@
 static void CancelToEnd(const TBMWorkRig &rig)
 {
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	REQUIRE(rig.Tick().phase == TBMPhase::WaitForEmpties);
-	REQUIRE(rig.Tick().phase == TBMPhase::Resume);
+	REQUIRE(rig.Tick().phase == TBMPhase::WaitToRelease);
 	REQUIRE(rig.Tick().phase == TBMPhase::Cancelled);
 }
 

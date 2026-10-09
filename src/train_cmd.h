@@ -68,6 +68,16 @@ bool IsTrainStoppedAtPortalSite(const Train &front);
 void BackUpTBMConsist(Train &front);
 
 /**
+ * Choose the physical direction for an explicit return from ordinary travel.
+ * The native pathfinder compares both real ends against the controller's bay;
+ * a moving train brakes before reversing and a whole stored train stays put.
+ * @param front Actual cutter with its return intent already published.
+ * @return Nothing; only native reservation/reversal state may change.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+ */
+void ChooseTBMReturnDirection(Train &front);
+
+/**
  * Exchange whole wagon units between two stationary consists that stand on one rearrangement tile, as one
  * transaction (Plan 5 Group 1.3/3). The final chains are tried first: the shared attachment rules (length and
  * coupling callbacks) and a capacity rule run on them. The capacity rule refuses any part whose rebuilt capacity

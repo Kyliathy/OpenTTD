@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../console_internal.h"
@@ -62,17 +63,17 @@ static bool ObserveUtilityFile(std::span<std::string_view> arguments)
 /** Publication, partial grants and source loss survive real versioned files without renewed energy or private-state repair. */
 TEST_CASE("Native utility authority survives actual publication and reservation files", "[.utility-power-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto directory = root / "src/tests/fixtures/utility";
+	const auto root = FindTestRepositoryRoot();
+	const auto directory = GetTestCaseArtifactPaths("utilities", "native-reload").saves;
 	const char *case_value = std::getenv("OTTD_UTILITY_FILE_CASE");
 	const char *input_value = std::getenv("OTTD_UTILITY_FILE_INPUT");
 	REQUIRE(case_value != nullptr);
 	REQUIRE(input_value != nullptr);
 	const std::string_view mode(case_value);
-	const auto input = std::filesystem::path(input_value);
+	const auto input = ResolveTestInputPath(input_value);
 	REQUIRE(std::filesystem::exists(input));
 	REQUIRE(std::filesystem::is_directory(directory));
-	const auto config = root / "build/native-art.cfg";
+	const auto config = GetTestRuntimeConfig();
 	bool observed = false;
 	std::exception_ptr failure;
 	/** Actual startup commands create/check/save accounts; this observer never runs an alternate simulation or allocator. */

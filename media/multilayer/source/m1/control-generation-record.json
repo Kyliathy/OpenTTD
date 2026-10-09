@@ -1,0 +1,121 @@
+{
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group78B; r2mlvs3mp-master-plan.md8.5. Retained image_gen source -> deterministic native controls. Testing deferred by user until2026-10-07 12:25:55 UTC; source staging is not packed/runtime acceptance.",
+  "schema_version": 1,
+  "date": "2026-10-07",
+  "source": {
+    "key": "ground-controls",
+    "path": "media/multilayer/source/m1/raw/ground-controls-v1.png",
+    "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f",
+    "tool": "image_gen.imagegen",
+    "cache_path": "C:/Users/Axonn/.codex/generated_images/01a11572-4520-7ba3-b43a-67cf4617b0e1/exec-5741f03e-7cad-4e16-b635-8ba6cdfa919d.png",
+    "prompt": "Use case: precise-object-edit\nAsset type: native OpenTTD M1 ground construction control icons.\nInput: retained native-art reference guide. Reuse the illustrated Underground/Deep layer cross sections, rail portal, selected yellow-and-blue cutter silhouette, and amber MENU padlock style. Existing Earth/Rock cargo icons stay unchanged, not included in this new sheet.\nOutput a true-alpha transparent PNG: exactly SEVEN columns by THREE rows, 21 independent square icon poses, generous transparent gutters. No text, numbers, labels, grid lines, button bevels, borders or background. Crisp chunky restrained TTD pixel art, each glyph designed to fit a 20x20 native canvas with a small margin and fixed center. Keep each family’s shape and position consistent across three rows. This is a menu/control atlas, never a world vehicle sheet.\nColumns, left to right:\n1 SURVEY: a simple steel magnifying glass over the existing brown Underground cutaway, clear at 20 pixels.\n2 COMMISSION/PROJECT: reuse the selected yellow cutter nose at a short gray rail-portal mouth; show assembly/commissioning, no padlock.\n3 FLOOR OUTLINE: a white/cyan isometric floor diamond outline with four marked corners and a tiny yellow cutter at one edge, all contained in the icon.\n4 LEGAL 45-DEGREE TURN: a chunky gold arrow advances horizontally then diagonally up-right, a clear 45-degree bend rather than a right-angle/U-turn; no pivot circle or numbers.\n5 WAGON EXCHANGE: two small gray hopper shapes with a pair of opposite amber coupling arrows; conveys stopped wagon exchange, no invisible cargo buffer.\n6 DEEP DATE LOCK: reuse the Deep blue-gray cross-section silhouette with a small amber menu padlock at its lower corner. No vehicle here.\n7 CALENDAR/FUTURE LOCK: a compact ivory calendar glyph with two blue binder tabs and an amber menu padlock; blank page, NO numeral or lettering.\nRows:\n1 ENABLED: original restrained gray/blue/brown/gold palette, readable active glyphs.\n2 DISABLED/REFUSAL: same glyph forms and centers, desaturated dark gray, with a tiny clear red diagonal refusal tick for columns1-5; columns6-7 retain the amber lock. No large red background.\n3 PRESSED/SELECTED: same active glyphs, slightly brighter cyan/gold selected edges, same center and outer footprint, no widget border.\nKeep the 7x3 grid complete; do not omit last icons or duplicate states. Padlocks ONLY on the Deep/calendar MENU icons, never on the world cutter body or the commissioning cutter glyph. Distinct silhouette meanings, transparent background, no painted checkerboard. Native reduction should retain readable symbols and a genuinely different disabled/selected state.",
+    "references": [
+      {
+        "path": "media/multilayer/guides/m1/ground-control-reference-guide.png",
+        "sha256": "6c20b45eaa79fa238a0b7b4d7af752a4bfed31776f4b7a4e51b94600e9da3fdf"
+      }
+    ],
+    "grid": [
+      7,
+      3
+    ],
+    "states": [
+      "enabled",
+      "disabled",
+      "pressed"
+    ],
+    "native_size": [
+      20,
+      20
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "selection": "Complete seven-family menu glyph sheet at fixed native centers. Reuses retained layer/portal/cutter/cargo palette and UI-only lock style; disabled refusal and selected highlights differ as authored source pixels."
+  },
+  "families": [
+    {
+      "asset_id": "control.survey",
+      "column": 0,
+      "meaning": "Survey actual geology",
+      "consumer_widget": "WID_UC_SURVEY",
+      "owner_source": "src/underground_gui.cpp",
+      "policy": "Read existing solid/excavated/survey/deposit/reserve state; no excavation side effect."
+    },
+    {
+      "asset_id": "control.excavation",
+      "column": 1,
+      "meaning": "Portal commissioning/project",
+      "consumer_widget": "WID_UC_PROJECT / PW_COMMISSION",
+      "owner_source": "src/underground_gui.cpp; src/layer_portal_gui.cpp",
+      "policy": "GetTBMPairControls and the actual portal commission command own permission and quotes."
+    },
+    {
+      "asset_id": "control.tbm-area",
+      "column": 2,
+      "meaning": "Canonical floor outline",
+      "consumer_widget": "WID_UC_AREA / WID_UC_AREA_CONFIRM",
+      "owner_source": "src/underground_gui.cpp",
+      "policy": "PreviewTBMCommissionArea supplies covered targets, swept turn envelope and remaining targets; SetConstructionPreview draws those exact world tiles."
+    },
+    {
+      "asset_id": "control.tbm-turn45",
+      "column": 3,
+      "meaning": "Legal advancing 45-degree turn",
+      "consumer_widget": "TBMAreaPreview::turn_envelope",
+      "owner_source": "src/excavation.h; src/tbm_area_preview.h",
+      "policy": "An advancing traversed segment is required; a menu arrow cannot rotate the cutter in place or authorize a 90-degree turn."
+    },
+    {
+      "asset_id": "control.exchange",
+      "column": 4,
+      "meaning": "Controlled native depot wagon exchange",
+      "consumer_widget": "WID_UC_EXCHANGE",
+      "owner_source": "src/underground_gui.cpp; src/tbm_exchange.h",
+      "policy": "Select an owned unfinished project and assign an actual rail depot via SetTBMExchangeBay; preserve real consists/cargo."
+    },
+    {
+      "asset_id": "control.deep-lock",
+      "column": 5,
+      "meaning": "Deep calendar/capability lock",
+      "consumer_widget": "WID_UC_MODEL_DATES / Deep access controls",
+      "owner_source": "src/underground_gui.cpp; src/map_layer.h",
+      "policy": "Deep date/capability gates remain authoritative across UI/commands; padlock is menu-only."
+    },
+    {
+      "asset_id": "control.future-lock",
+      "column": 6,
+      "meaning": "Model/calendar availability lock",
+      "consumer_widget": "PW_MODEL / WID_UC_MODEL_DATES",
+      "owner_source": "src/layer_portal_gui.cpp; src/underground_gui.cpp",
+      "policy": "Calendar/model availability comes from the existing content profile and capability query, not icon animation."
+    }
+  ],
+  "cargo_reuse": [
+    {
+      "asset_id": "cargo.ERTH",
+      "path": "logs/proofs/mlm/native-art/derived/cargo-earth.png",
+      "sha256": "a7432dd6853f691a6efbbdc7111c6713811899d380b49aad5abfa46a863e5b54"
+    },
+    {
+      "asset_id": "cargo.ROCK",
+      "path": "logs/proofs/mlm/native-art/derived/cargo-rock.png",
+      "sha256": "bcb2da7b1dc7491bdb3faddb60c053a7d098364ac195682aa2ad7aab8ef9cff2"
+    }
+  ],
+  "world_preview_reuse": {
+    "query": "PreviewTBMCommissionArea",
+    "owner": "SetConstructionPreview / GetConstructionPreviewTile",
+    "source": "src/underground_gui.cpp; src/construction_preview.h; src/viewport.cpp",
+    "floor": "White native tile highlight, actual covered floor",
+    "turn": "Blue native tile highlight, actual swept working/turn envelope",
+    "blocked": "Red native tile highlight, actual uncovered floor",
+    "cursor": "Existing SPR_CURSOR_QUERY / HT_RECT owner; classic cursor art is retained",
+    "policy": "Preserve native selection primitives and actual planner world tiles. New glyphs grant no construction or movement permission."
+  },
+  "verification": {
+    "status": "source_conversion_verified_runtime_pending",
+    "resume_after_utc": "2026-10-07 12:25:55 UTC"
+  }
+}

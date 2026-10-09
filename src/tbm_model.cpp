@@ -13,8 +13,10 @@
 #include "safeguards.h"
 
 static const TBMCutterModel _tbm_models[] = {
-	{0, 64, 1800, 1, 1, 400000, 120000, 12000, 2, 3},
-	{1, 48, 3200, 3, 2, 800000, 260000, 26000, 2, 3},
+	// R2TBMF Group5 doubles cutting time; traction, purchase and recurring
+	// charges retain their own tuning. Saved pre-394 fractions migrate once.
+	{0, 64, 1800, 1, 2, 400000, 120000, 12000, 2, 3},
+	{1, 48, 3200, 3, 4, 800000, 260000, 26000, 2, 3},
 };
 
 /** @copydoc GetDefaultTBMConsist */

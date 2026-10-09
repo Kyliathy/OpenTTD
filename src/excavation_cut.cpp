@@ -19,7 +19,10 @@ struct ExcavationCellTerms {
 	uint8_t earth, rock, standard_days, deep_days; ///< Tonnes and 74-tick economy work days per new cell.
 	uint16_t support_cost; ///< Explicit once-only temporary rail/lining charge, excluding controller running costs.
 };
-static constexpr std::array<ExcavationCellTerms, 4> _cut_terms = {{{6, 12, 1, 1, 30}, {4, 24, 2, 1, 50}, {2, 40, 3, 2, 80}, {1, 48, 0, 4, 120}}};
+// R2TBMF Group5B keeps native whole cargo units. Basalt retains the user-approved
+// minimum of one Earth tonne; all other Earth/Rock yields halve. Work, support
+// charges and finite mineral reserve debits retain their existing units.
+static constexpr std::array<ExcavationCellTerms, 4> _cut_terms = {{{3, 6, 1, 1, 30}, {2, 12, 2, 1, 50}, {1, 20, 3, 2, 80}, {1, 24, 0, 4, 120}}};
 
 /**
  * Quote explicitly previewed working cells through the actual terrain/seam owner and shared frozen terms.
@@ -27,19 +30,6 @@ static constexpr std::array<ExcavationCellTerms, 4> _cut_terms = {{{6, 12, 1, 1,
  * @param model_id Logical TBM whose layer/hardness capability applies.
  * @return Complete extra-work estimate, or stable zero-quantity refusal.
  */
-/**
- * Cutting difficulty of one rock cell: its deposit's frozen hardness, otherwise the layer default.
- * @param geology Read-only geological owner.
- * @param tile Rock-layer cell.
- * @return Hardness used by quotes and actual cuts alike.
- */
-GeologyHardness GetExcavationCellHardness(const GeologyWorldState &geology, TileIndex tile)
-{
-	const auto *deposit = geology.deposits.Get(geology.deposits.Find(tile));
-	if (deposit != nullptr) return deposit->hardness;
-	return GetTileLayer(tile) == MapLayer::DeepUnderground ? GeologyHardness::Hard : GeologyHardness::Soft;
-}
-
 ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id)
 {
 	if (tiles.empty()) return {};

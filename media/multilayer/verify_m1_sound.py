@@ -13,10 +13,11 @@ from pathlib import Path
 import re
 
 from activate_m1_art import read_evidence
+from evidence import CACHE, contained
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "media/multilayer/m1-sound-events.json"
-OUTPUT = ROOT / "media/multilayer/sprites/m1/sound-runtime.json"
+OUTPUT = ROOT / "logs/proofs/mlm/native-art/sound-runtime.json"
 
 
 def validate(manifest, evidence, capture):
@@ -64,7 +65,10 @@ def main():
     parser.add_argument("--capture", required=True)
     parser.add_argument("--selection-log", required=True)
     parser.add_argument("--publish", action="store_true")
+    parser.add_argument("--cache-only", action="store_true", help="write generated evidence without changing source status")
+    parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
+    output = contained(args.output if args.output.is_absolute() else ROOT / args.output, CACHE)
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     evidence_path = ROOT / args.evidence
     capture = json.loads((ROOT / args.capture).read_text(encoding="utf-8"))
@@ -81,15 +85,17 @@ def main():
         pass
     else:
         raise AssertionError("silent dispatched sound was accepted as playback")
-    if args.publish:
+    if args.publish or args.cache_only:
         report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md83.4; real native phase/selected baseset decode/mixer proof, no sample bytes redistributed",
                   "schema_version": 1, "provider": "original_dos (isolated fixture)", "provider_descriptor": "media/baseset/orig_dos.obs",
                   "runtime_provider": "player-selected sounds baseset", "evidence": args.evidence, "selection_log": args.selection_log,
                   "capture": args.capture, "source": capture["source"], "source_sha256": capture["source_sha256"],
                   "events": records, "simulation_owners_unchanged": True, "user_review": "deferred_until_integration"}
-        OUTPUT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-        manifest.update(runtime_verified=True, evidence=OUTPUT.relative_to(ROOT).as_posix())
-        MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        manifest.update(runtime_verified=True, evidence=output.relative_to(ROOT).as_posix())
+        if not args.cache_only:
+            MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print("M1 sound handoff: four actual idle/boring/backing/service events select the declared existing slots and produce decoded/mixed PCM; silent-output corruption refused; simulation owners unchanged")
 
 

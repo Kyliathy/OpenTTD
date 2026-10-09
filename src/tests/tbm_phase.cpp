@@ -90,7 +90,7 @@ TEST_CASE("Phase step guards exchange entry and inconsistent completion", "[tbm-
 	CHECK(ComputeTBMProjectDigest() == digest);
 }
 
-/** Stopped, broken-down, servicing and paused projects keep their phase and resume exactly where they were. */
+/** Stops and breakdowns hold work; service retains a travel phase so the machine must rejoin its face. */
 TEST_CASE("Resumable conditions hold the phase without losing it", "[tbm-phase]")
 {
 	TBMProjectRig rig;
@@ -98,7 +98,8 @@ TEST_CASE("Resumable conditions hold the phase without losing it", "[tbm-phase]"
 	inputs.at_face = true;
 	StepOnce(rig, {});
 	REQUIRE(StepOnce(rig, inputs).phase == TBMPhase::Bore);
-	// Each train condition holds Bore and accrues idle time; clearing it resumes Bore, not an earlier phase.
+	// Stops/breakdowns retain the face hold. Service records a physical rejoin,
+	// while all three conditions accrue idle time without advancing a cut.
 	for (int condition = 0; condition < 3; ++condition) {
 		TBMPhaseInputs held;
 		held.train_stopped = condition == 0;
@@ -108,10 +109,10 @@ TEST_CASE("Resumable conditions hold the phase without losing it", "[tbm-phase]"
 		const auto expected = condition == 0 ? TBMBlockedReason::Stopped : condition == 1 ? TBMBlockedReason::Breakdown : TBMBlockedReason::Servicing;
 		const auto idle = GetTBMProject(rig.project.id)->idle_ticks;
 		const auto &project = StepOnce(rig, held);
-		CHECK(project.phase == TBMPhase::Bore);
+		CHECK(project.phase == (held.servicing ? TBMPhase::TravelToFace : TBMPhase::Bore));
 		CHECK(project.blocked == expected);
 		CHECK(project.idle_ticks == idle + 1);
-		CHECK(StepOnce(rig, {}).blocked == TBMBlockedReason::None);
+		CHECK(StepOnce(rig, inputs).blocked == TBMBlockedReason::None);
 		CHECK(GetTBMProject(rig.project.id)->phase == TBMPhase::Bore);
 	}
 	// A player pause survives every step until Resume, whatever the train does.

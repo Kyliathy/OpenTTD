@@ -14,8 +14,13 @@ Examples:
 	.\play.ps1                              show the menu and ask for a number
 	.\play.ps1 1                            start menu entry 1 without asking
 	.\play.ps1 1 -Seed 1234                 a new game on a fixed map
-	.\play.ps1 demo                        the paused Underground mines / TBM checkpoint
+	.\play.ps1 demo                        current 50-cell TBM demo, ready to unpause
 	.\play.ps1 underground-mines           the same demo by its permanent menu name
+	.\play.ps1 tbm-work                    current 50-cell project, ready to unpause
+	.\play.ps1 tbm-plan                    paused 44-cell project for trying the extension preview
+	.\play.ps1 tbm-exit                    completed excavation, ready to build exit B
+	.\play.ps1 tbm-tunnel                  completed A-to-B tunnel; original TBM parked at B
+	.\play.ps1 underground-mines-legacy    preserved older bent-route demo
 	.\play.ps1 makinpr2-connected           a save by name from build\save, or the path of any .sav
 	.\play.ps1 3 -Config Debug              the Debug build: slow, but it stops at any failed internal check
 	.\play.ps1 -All                         also list the generated test saves
@@ -45,11 +50,27 @@ $exe = Join-Path $build "$Config\openttd.exe"
 $utf8 = New-Object System.Text.UTF8Encoding $false
 
 # Featured checkpoints have stable names and a guide, so recent autosaves cannot
-# push the intended demo out of the menu. This entry loads the preserved world.
+# push the intended demo out of the menu. Current stages retain the same real world/machine.
 $demoSaves = @(
-	@{ Name = 'underground-mines'; SaveName = 'underground-demo-390';
-		Snapshot = 'src\tests\fixtures\haulage\underground-demo-390.sav';
-		Text = 'Underground mines demo: paused TBM, spoil hauling and geology to explore';
+	@{ Name = 'underground-mines'; SaveName = 'underground-demo-tbm-399';
+		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-tbm-399.sav';
+		Text = 'Start here: current 50-cell TBM project and hauler, paused and ready';
+		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+	@{ Name = 'tbm-plan'; SaveName = 'underground-demo-planning-399';
+		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-planning-399.sav';
+		Text = 'Try planning: paused 44-cell project with room to preview six more cells';
+		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+	@{ Name = 'tbm-exit'; SaveName = 'underground-demo-exit-399';
+		Snapshot = 'src\tests\fixtures\haulage\far-exit\underground-demo-exit-399.sav';
+		Text = 'Build exit B: 50 cells finished, whole TBM stopped clear of the exit site';
+		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+	@{ Name = 'tbm-tunnel'; SaveName = 'underground-demo-tunnel-399';
+		Snapshot = 'src\tests\fixtures\haulage\far-exit\underground-demo-tunnel-399.sav';
+		Text = 'TBM fixes: public A-to-B freight tunnel, same TBM stored at exit B';
+		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+	@{ Name = 'underground-mines-legacy'; SaveName = 'underground-demo-tbm-ui-393';
+		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-tbm-ui-393.sav';
+		Text = 'Older map: preserved bent-route checkpoint for comparison';
 		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
 )
 
@@ -299,10 +320,10 @@ function Resolve-Choice([string]$Choice, $Entries) {
 		if ($number -ge 1 -and $number -le $Entries.Count) { return $Entries[$number - 1] }
 		return $null
 	}
-	# The short alias and permanent name select the same featured checkpoint,
+	# The short aliases and permanent name select the same featured checkpoint,
 	# regardless of how many newer player saves have appeared since the last run.
 	$menuName = $Choice
-	if ($Choice -eq 'demo') { $menuName = 'underground-mines' }
+	if ($Choice -in 'demo', 'tbm-work') { $menuName = 'underground-mines' }
 	foreach ($entry in $Entries) {
 		if ($entry.Name -eq $menuName) { return $entry }
 	}
@@ -375,11 +396,11 @@ $entries.Add((New-Entry $newSection 'Classic' "the four-layer map with free buil
 # Featured demos stay ahead of the changing recent-save list; missing artifacts
 # are not shown as launchable worlds and their explicit aliases fail clearly.
 foreach ($demo in $demoSaves) {
-	$file = Join-Path $saveDir "$($demo.SaveName).sav"
-	# Build/save is generated output. The retained repository snapshot keeps a
-	# committed demo launchable after rebuilding or removing that generated copy.
+	$file = Join-Path $PSScriptRoot $demo.Snapshot
+	# Featured demos reopen their verified starting state. A player's later
+	# same-named save cannot silently replace it; custom saves remain selectable by path.
 	if (-not (Test-Path -LiteralPath $file -PathType Leaf)) {
-		$file = Join-Path $PSScriptRoot $demo.Snapshot
+		$file = Join-Path $saveDir "$($demo.SaveName).sav"
 	}
 	if (Test-Path -LiteralPath $file -PathType Leaf) {
 		$entries.Add((New-Entry 'Demos (Multilayer Industry)' $demo.Name $demo.Text '' $file $demo.Guide))

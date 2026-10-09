@@ -1,5 +1,6 @@
 ##name English (UK)
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md task16.1; native job progress/footprint presentation.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -948,6 +949,7 @@ STR_NEWS_AIRCRAFT_IS_WAITING                                    :{WHITE}{VEHICLE
 
 # Order review system / warnings
 STR_NEWS_VEHICLE_HAS_TOO_FEW_ORDERS                             :{WHITE}{VEHICLE} has too few orders in the schedule
+STR_NEWS_TBM_OPERATION_PROBLEM                                 :{WHITE}{VEHICLE}: {STRING}
 STR_NEWS_VEHICLE_HAS_VOID_ORDER                                 :{WHITE}{VEHICLE} has an invalid order
 STR_NEWS_VEHICLE_HAS_DUPLICATE_ENTRY                            :{WHITE}{VEHICLE} has duplicate orders
 STR_NEWS_VEHICLE_HAS_INVALID_ENTRY                              :{WHITE}{VEHICLE} has an invalid station in its orders
@@ -2897,8 +2899,8 @@ STR_PORTAL_PHASE_COMMISSIONING                                  :waiting in the 
 STR_PORTAL_PHASE_TRAVEL                                         :driving to the face
 STR_PORTAL_PHASE_BORE                                           :boring
 STR_PORTAL_PHASE_ADVANCE                                        :moving onto its new track
-STR_PORTAL_PHASE_RETURN                                         :backing into the portal to swap its hoppers
-STR_PORTAL_PHASE_WAIT                                           :waiting in the portal for empty hoppers
+STR_PORTAL_PHASE_RETURN                                         :returning to the exchange bay
+STR_PORTAL_PHASE_WAIT                                           :waiting for empty hoppers
 STR_PORTAL_PHASE_RESUME                                         :going back to work
 STR_PORTAL_PHASE_COMPLETED                                      :finished
 STR_PORTAL_PHASE_CANCELLED                                      :cancelled
@@ -2922,7 +2924,7 @@ STR_PORTAL_HOLD_PAUSED                                          :paused
 STR_PORTAL_HOLD_ILLEGAL_TURN                                    :the route turns too sharply
 STR_PORTAL_HOLD_LOGISTICS                                       :the spoil is not being delivered
 STR_PORTAL_HAULER_RETURN_EMPTIES                                :bringing empty hoppers
-STR_PORTAL_HAULER_AWAIT_EXCHANGE                                :waiting in the portal for the swap
+STR_PORTAL_HAULER_AWAIT_EXCHANGE                                :waiting for a hopper exchange
 STR_PORTAL_HAULER_COLLECT_LOADED                                :taking the full hoppers
 STR_PORTAL_HAULER_VISIT_ORIGIN                                  :taking the spoil to the origin
 STR_PORTAL_HAULER_DISPOSE                                       :unloading at the origin
@@ -2945,7 +2947,7 @@ STR_PORTAL_STEP_DELIVER_LAST                                    :wait while the 
 STR_PORTAL_STEP_WAIT_FOR_HAULER                                 :wait until the hauler has left the portal
 STR_PORTAL_STEP_RELEASE_HAULER                                  :release the hauler
 STR_PORTAL_STEP_STOP_MACHINE                                    :stop the machine
-STR_PORTAL_STEP_RETIRE                                          :retire the project
+STR_PORTAL_STEP_RETIRE                                          :finish/cancel and release the settled project
 STR_PORTAL_STEP_SELL_MACHINE                                    :sell the machine standing in the portal
 STR_PORTAL_STEP_CONVERT_TRACK                                   :make the temporary track permanent
 STR_PORTAL_STEP_CONNECT                                         :connect the pair for ordinary trains
@@ -2959,11 +2961,11 @@ STR_PORTAL_PAUSE                                                :{BLACK}Pause
 STR_PORTAL_RESUME                                               :{BLACK}Resume
 STR_PORTAL_PAUSE_TOOLTIP                                        :{BLACK}Hold the project where it is, or let it go on
 STR_PORTAL_CANCEL                                               :{BLACK}Cancel
-STR_PORTAL_CANCEL_TOOLTIP                                       :{BLACK}Stop boring for good: the machine backs into the portal and hands its spoil to the hauler. Dug ground stays dug
+STR_PORTAL_CANCEL_TOOLTIP                                       :{BLACK}Return the machine and deliver its spoil, then cancel unfinished work once all trains and loads are clear. Work claims stay protected until then; dug ground stays dug
 STR_PORTAL_CANCEL_QUERY_CAPTION                                 :{WHITE}Cancel boring project
-STR_PORTAL_CANCEL_QUERY_TEXT                                    :{YELLOW}The machine stops digging for good and comes back to the portal. Dug ground stays dug. Cancel the project?
-STR_PORTAL_RETIRE                                               :{BLACK}Retire
-STR_PORTAL_RETIRE_TOOLTIP                                       :{BLACK}End a finished project once its machine stands stopped and empty in the portal and no hauler serves it. The portal is sealed again and the machine becomes an ordinary train
+STR_PORTAL_CANCEL_QUERY_TEXT                                    :{YELLOW}Return the machine and deliver its spoil, then cancel remaining work after safe withdrawal and settlement. Dug ground stays dug. Cancel the project?
+STR_PORTAL_RETIRE                                               :{BLACK}Finish/cancel and release
+STR_PORTAL_RETIRE_TOOLTIP                                       :{BLACK}After Return and park and spoil delivery, finish this project or cancel its remaining work. Release settled haulers and work claims; keep the same machine for reuse. Start or Resume instead to continue the retained work
 STR_PORTAL_ASSIGN_HAULER                                        :{BLACK}Assign hauler
 STR_PORTAL_ASSIGN_HAULER_TOOLTIP                                :{BLACK}Then click one of your trains, in the main view, a depot or a vehicle list. It fetches the full hoppers from the portal and brings empties
 STR_PORTAL_RELEASE_HAULER                                       :{BLACK}Release hauler
@@ -4730,6 +4732,28 @@ STR_VEHICLE_STATUS_AIRCRAFT_TOO_FAR                             :{ORANGE}Too far
 
 STR_VEHICLE_STATUS_HEADING_FOR_STATION_VEL                      :{LTBLUE}{1:VELOCITY} - Heading for {0:STATION}
 STR_VEHICLE_STATUS_NO_ORDERS_VEL                                :{LTBLUE}{VELOCITY} - No orders
+STR_TBM_VEHICLE_WORK_VEL                                       :{LTBLUE}{VELOCITY} - {STRING}
+STR_TBM_VEHICLE_WAIT_VEL                                       :{LTBLUE}{VELOCITY} - Waiting: {STRING}
+STR_TBM_OPERATION_WRONG_OWNER                                 :The train and excavation project have different owners
+STR_TBM_OPERATION_NO_RECEIVER                                 :Restore Earth and Rock acceptance at the project's origin
+STR_TBM_OPERATION_ORIGIN_ORDER                                :Add an order to the project's Surface origin station
+STR_TBM_PHASE_RETURN_PARK                                     :returning to park
+STR_TBM_PHASE_WAIT_PARK                                       :waiting for spoil exchange before parking
+STR_TBM_PHASE_PARKED                                          :parked; work retained
+STR_TBM_RETURN_PARK                                           :{BLACK}Return and park
+STR_TBM_RETURN_PARK_TOOLTIP                                   :{BLACK}Return the whole TBM to the shown hangar or exchange depot. Existing spoil must leave through real wagon exchange before parking. Keep unfinished work and support claims for Resume
+STR_TBM_VEHICLE_PARK_TOOLTIP                                  :{BLACK}Return and park at the project's hangar or exchange depot. Unload existing spoil by wagon exchange and preserve work. Ctrl+Click: visit an ordinary depot for service
+STR_TBM_RESUME_PARK_TOOLTIP                                   :{BLACK}Resume excavation, retaining the route and partial cut. After ordinary travel, rejoin through the working bay. Saved travel orders wait until you choose Follow order again
+STR_TBM_PARK_DESTINATION                                      :{BLACK}Park at: {STRING} ({NUM}, {NUM})
+STR_TBM_HANGAR_NAME                                           :{STRING} TBM hangar ({NUM}, {NUM})
+STR_TBM_CHOOSE_HANGAR                                         :Choose hangar
+STR_TBM_CHOOSE_HANGAR_TOOLTIP                                 :{BLACK}Choose an owned hangar for this machine. Existing spoil is unloaded through its exchange bay before parking. Ctrl-click the vehicle's hangar button for a service visit
+STR_TBM_HANGAR_CHOICE                                         :{STRING}: {RAW_STRING}
+STR_TBM_HANGAR_UNAVAILABLE_CHOICE                              :{RAW_STRING} ({STRING})
+STR_TBM_HANGAR_PARK                                           :Park at
+STR_TBM_HANGAR_SERVICE                                        :Service at
+STR_TBM_HANGAR_BUSY_SHORT                                     :occupied
+STR_TBM_HANGAR_UNFINISHED_SHORT                               :unfinished portal
 STR_VEHICLE_STATUS_HEADING_FOR_WAYPOINT_VEL                     :{LTBLUE}{1:VELOCITY} - Heading for {0:WAYPOINT}
 STR_VEHICLE_STATUS_HEADING_FOR_DEPOT_VEL                        :{ORANGE}{1:VELOCITY} - Heading for {0:DEPOT}
 STR_VEHICLE_STATUS_HEADING_FOR_DEPOT_SERVICE_VEL                :{LTBLUE}{1:VELOCITY} - Service at {0:DEPOT}
@@ -5278,6 +5302,7 @@ STR_ERROR_TBM_SUPPORT_IN_USE                                    :{WHITE}This tem
 # Cold geothermal reservations: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
 STR_ERROR_GEOTHERMAL_SITE_CLAIMED                               :{WHITE}Cancel the planned geothermal site before building or clearing here
 STR_INDUSTRY_NAME_GEOTHERMAL_COLLECTOR                          :Vent Collector
+STR_INDUSTRY_NAME_GEOTHERMAL_RISER                              :Electrical Riser
 STR_ERROR_TBM_SUPPORT_NONE                                      :{WHITE}There is no temporary support track here
 STR_ERROR_TBM_SUPPORT_CONVERT_FIRST                             :{WHITE}Convert or remove the temporary support track first
 STR_ERROR_TBM_EXCHANGE_CAPACITY_LOSS                            :{WHITE}The exchanged wagons would hold less cargo than they carry
@@ -5305,7 +5330,31 @@ STR_ERROR_TBM_HAULER_NOT_ASSIGNED                               :{WHITE}This tra
 STR_ERROR_TBM_PROJECT_CANT_PAUSE                                :{WHITE}The project is already paused or finished
 STR_ERROR_TBM_PROJECT_NOT_PAUSED                                :{WHITE}The project is not paused
 STR_ERROR_TBM_PROJECT_FINISHED                                  :{WHITE}The project is already finished
-STR_ERROR_TBM_PROJECT_CANT_RETIRE                               :{WHITE}Only a finished project retires, once its machine stands stopped and empty in the portal and no hauler serves it
+STR_ERROR_TBM_PROJECT_CANT_RETIRE                               :{WHITE}The project cannot release its work yet; check its machine, haulage and portal
+STR_ERROR_TBM_RELEASE_RETURN                                   :{WHITE}Return and park the whole machine first; every part must be stopped inside and empty
+STR_ERROR_TBM_RELEASE_HAULAGE                                  :{WHITE}Wait for spoil delivery and for every hauler to clear the exchange bay
+STR_ERROR_TBM_RELEASE_PORTAL                                   :{WHITE}Clear the portal's rock-side approach and resolve its other work claims before release
+STR_TBM_PHASE_RETURN_RELEASE                                   :returning to finish work
+STR_TBM_PHASE_WAIT_RELEASE                                     :exchanging final spoil
+STR_TBM_PHASE_RELEASE_PENDING                                  :waiting for final spoil delivery and a clear route
+STR_TBM_PHASE_RETURN_HANGAR                                    :returning spoil before the hangar visit
+STR_TBM_PHASE_UNLOAD_HANGAR                                    :exchanging spoil before the hangar visit
+STR_TBM_PHASE_TRAVEL_HANGAR                                    :travelling to the selected hangar
+STR_TBM_PHASE_PARKED_HANGAR                                    :parked at the selected hangar; work retained
+STR_TBM_PHASE_FOLLOW_ORDERS                                    :following vehicle orders; work retained
+STR_TBM_HOLD_MISSING_ORDERS                                    :No usable travel order; choose an order or resume excavation
+STR_TBM_FOLLOW_ORDERS                                         :Follow order
+STR_TBM_FOLLOW_ORDERS_TOOLTIP                                 :{BLACK}Suspend excavation and follow the selected native order. Resume work from Excavation projects when ready
+STR_ERROR_TBM_HANGAR_UNAVAILABLE                               :Choose an owned compatible rail depot or excavated portal hangar
+STR_ERROR_TBM_HANGAR_OCCUPIED                                  :The hangar is occupied; clear the other train or choose another hangar
+STR_ERROR_TBM_HANGAR_MISSING                                   :The selected hangar is unavailable; choose another hangar
+STR_ERROR_TBM_EXIT_UNFINISHED                                  :Complete the planned cuts before building this exit
+STR_ERROR_TBM_EXIT_STAGE                                       :Return the TBM a few tiles, then stop the whole train clear of the exit and its approach
+STR_ERROR_TBM_EXIT_GEOMETRY                                    :Place the exit at the end of the completed tunnel, with its mouth facing the approach
+STR_BUILD_RAIL_LAYER_PORTAL_HINT                               :{BLACK}Point at a portal site to see both endpoints, approaches and the full price
+STR_BUILD_RAIL_LAYER_PORTAL_QUOTE                              :{BLACK}{STRING} to {STRING} ({NUM}, {NUM}){}{COMPANY}{}{RAW_STRING}
+STR_BUILD_RAIL_LAYER_PORTAL_PRICE                              :Build: {CURRENCY_LONG}
+STR_BUILD_RAIL_LAYER_PORTAL_HANDOVER_PRICE                     :Build and hand over support: {CURRENCY_LONG}
 STR_INDUSTRY_NAME_EARTH_RECLAMATION_SITE                        :Earth Reclamation Site
 STR_INDUSTRY_NAME_ROCK_CRUSHER                                  :Rock Crusher
 STR_ERROR_NOT_ENOUGH_CASH_REQUIRES_CURRENCY                     :not enough cash - requires {CURRENCY_LONG}
@@ -6310,17 +6359,17 @@ STR_UNDERGROUND_MENU                                          :Underground Const
 STR_UNDERGROUND_CAPTION                                       :{WHITE}Underground Construction - {STRING}
 STR_UNDERGROUND_REQUIREMENTS                                  :{BLACK}Excavate the whole facility and approach before construction.
 STR_UNDERGROUND_LOCKED                                        :{BLACK}Deep construction becomes available in {NUM}.
-STR_UNDERGROUND_SELECT_TOOL                                   :{BLACK}Select a tool; placement uses the world tile you click.
+STR_UNDERGROUND_SELECT_TOOL                                   :{BLACK}Choose Projects to inspect work, or New area to plan excavation.
 STR_UNDERGROUND_INVALID_CONTEXT                               :{BLACK}Construction context unavailable.
 STR_UNDERGROUND_WRONG_LAYER                                   :{BLACK}This tool is for another layer. Select that layer's construction tools.
-STR_UNDERGROUND_SURVEY                                        :{BLACK}Survey geology
+STR_UNDERGROUND_SURVEY                                        :{BLACK}Survey
 STR_UNDERGROUND_SURVEY_TOOLTIP                                :{BLACK}Inspect rock state, mineral and remaining reserve. A survey grants no excavation or mining permission.
-STR_UNDERGROUND_PROJECT                                       :{BLACK}Excavation projects
-STR_UNDERGROUND_PROJECT_TOOLTIP                               :{BLACK}Click a rail portal to commission or control its TBM project. Actual spoil wagons and Surface disposal are required.
+STR_UNDERGROUND_PROJECT                                       :{BLACK}Projects
+STR_UNDERGROUND_PROJECT_TOOLTIP                               :{BLACK}Browse your excavation projects on this layer. Select their footprint, centre the map, open the machine or manage work at its portal.
 STR_UNDERGROUND_NEEDS_PORTAL                                   :{BLACK}Select a rail portal for excavation project controls.
 STR_UNDERGROUND_MINE                                          :{BLACK}Fund a mine
 STR_UNDERGROUND_MINE_TOOLTIP                                  :{BLACK}Choose the mineral's mine, then click its deposit. Machinery and loading space must already be excavated.
-STR_UNDERGROUND_EXCHANGE                                      :{BLACK}Set project exchange bay
+STR_UNDERGROUND_EXCHANGE                                      :{BLACK}Exchange bay
 STR_UNDERGROUND_EXCHANGE_TOOLTIP                              :{BLACK}Select an active project, then its source portal or compatible excavated rail depot. The full consist needs a straight rail approach.
 STR_UNDERGROUND_NEEDS_PROJECT                                 :{BLACK}No active project owned by your company on this layer.
 STR_UNDERGROUND_PROJECT_ENTRY                                 :Excavation project {NUM}
@@ -6331,13 +6380,13 @@ STR_UNDERGROUND_ROAD_TERMINAL                                 :{BLACK}Mine road 
 STR_UNDERGROUND_RAIL_SERVICE                                  :{BLACK}Train service depot
 STR_UNDERGROUND_ROAD_SERVICE                                  :{BLACK}Road service depot
 STR_UNDERGROUND_FACILITY_TOOLTIP                              :{BLACK}Excavate the full footprint and approach first. Vehicles must support the layer and track or road type. Servicing a TBM never permits buying one at an ordinary depot.
-STR_UNDERGROUND_SURVEY_RESULT                                 :{BLACK}{STRING}; {STRING}; reserve {COMMA} tonnes.
+STR_UNDERGROUND_SURVEY_RESULT                                 :{BLACK}{STRING}; {STRING}; reserve {COMMA} tonnes; hardness: {STRING}.
 STR_UNDERGROUND_SURVEY_SOLID                                  :Solid rock - excavation required
 STR_UNDERGROUND_SURVEY_WORKING                                :Reserved excavation work
 STR_UNDERGROUND_SURVEY_OPEN                                   :Excavated ground
 STR_UNDERGROUND_SURVEY_LEGACY                                 :Legacy open terrain
 STR_UNDERGROUND_SURVEY_NO_DEPOSIT                             :No mineral deposit
-STR_UNDERGROUND_AREA                                          :{BLACK}Plan an excavation area
+STR_UNDERGROUND_AREA                                          :{BLACK}New area
 STR_UNDERGROUND_AREA_TOOLTIP                                  :{BLACK}Click the rock-side rail portal, then drag the final floor. White marks final floor, blue marks extra working space and red marks uncovered cells. Previewing buys nothing and cuts no rock.
 STR_UNDERGROUND_AREA_SELECT_FLOOR                              :{BLACK}Drag the intended final floor on this layer.
 STR_UNDERGROUND_AREA_EMPTY                                    :{BLACK}No excavation area selected.
@@ -6348,6 +6397,42 @@ STR_UNDERGROUND_AREA_READY                                    :{BLACK}Complete p
 STR_UNDERGROUND_AREA_CONFIRM                                  :{BLACK}Commission the complete area plan
 STR_UNDERGROUND_MODEL_DATE                                    :{RAW_STRING} ({NUM})
 STR_UNDERGROUND_MODEL_CALENDAR                                :{BLACK}Cutter introduction dates: {RAW_STRING}
+STR_UNDERGROUND_DETAILS                                       :{BLACK}Requirements and cutter dates
+STR_UNDERGROUND_SURVEY_NEXT                                   :{BLACK}Click rock on this layer to inspect its geology. Escape cancels.
+STR_UNDERGROUND_AREA_NEEDS_PORTAL                             :{BLACK}Click an owned rail portal on this layer, then drag the floor to excavate.
+STR_UNDERGROUND_PORTAL_HAS_PROJECT                            :{BLACK}This portal already has a TBM project. Open Projects to inspect its work.
+STR_UNDERGROUND_NO_CUTTER                                     :{BLACK}No compatible cutter is available here. Check the cutter dates under Requirements.
+STR_UNDERGROUND_NO_ORIGIN                                     :{BLACK}Build an owned Surface freight station with Earth and Rock disposal before commissioning.
+STR_UNDERGROUND_EXCHANGE_NEXT                                 :{BLACK}Project {NUM}: click its source portal or a compatible excavated rail depot for the exchange bay.
+STR_UNDERGROUND_PROJECT_SELECTED                              :{BLACK}Project {NUM} selected. Its accepted floor and working space are highlighted. Escape clears selection.
+STR_TBM_PROJECTS_CAPTION                                      :{WHITE}Excavation projects - {STRING}
+STR_TBM_PROJECT_LIST_NAME                                     :Project {NUM}: {RAW_STRING}
+STR_TBM_PROJECT_LIST_PROGRESS                                 :{STRING}; {NUM}/{NUM} cuts complete
+STR_TBM_PROJECT_SELECT                                        :{BLACK}Select footprint
+STR_TBM_PROJECT_VEHICLE                                       :{BLACK}Open machine
+STR_TBM_PROJECT_CENTRE                                        :{BLACK}Centre map
+STR_TBM_PROJECT_CONTROLS                                      :{BLACK}Portal controls
+STR_TBM_PROJECT_EXTEND                                        :{BLACK}Extend work
+STR_TBM_PROJECT_PAUSE_EXTEND                                  :{BLACK}Pause and extend
+STR_TBM_PROJECT_EXTEND_TOOLTIP                                :{BLACK}Pause this machine and add an area after its accepted route. Existing work and wagon exchanges stay in place.
+STR_TBM_EXTEND_SELECT_FLOOR                                   :{BLACK}Project {NUM}: drag additional floor beyond the existing plan. Confirmed work stays paused until you resume it.
+STR_TBM_EXTEND_PRICE                                          :{BLACK}Extend {RAW_STRING}; additional cutting: {CURRENCY_LONG}.
+STR_TBM_REUSE_PRICE                                           :{BLACK}Reuse {RAW_STRING}; later cutting: {CURRENCY_LONG}.
+STR_TBM_EXTEND_READY                                          :{BLACK}Additional plan ready. Confirm to add work, then resume the project in its portal controls.
+STR_TBM_EXTEND_CONFIRM                                        :{BLACK}Add work to this machine
+STR_TBM_EXTEND_CANCELLED                                      :{BLACK}Planning closed. The machine stays paused; open Projects > Portal controls to resume it.
+STR_TBM_INTENT_AREA                                           :{BLACK}Area clearing
+STR_TBM_INTENT_TUNNEL                                         :{BLACK}Straight tunnel
+STR_TBM_WORK_TIME                                             :{BLACK}Cutting: about {COMMA} simulation ticks at this machine's rate. Travel and haulage waits are additional.
+STR_TBM_INTENT_TOOLTIP                                        :{BLACK}Area clearing covers a dragged floor. Straight tunnel advances the cutter centre to a clicked endpoint in its current heading. White: floor; blue: extra working space; red: uncovered. Numbers show the cutter's successive positions.
+STR_TBM_TUNNEL_SELECT_END                                     :{BLACK}Click the tunnel end straight ahead of the portal or accepted route. The cutter centre will reach that tile; its full width is charged as working space.
+STR_ERROR_TBM_TUNNEL_ALIGNMENT                                :{WHITE}Choose an endpoint straight ahead in this machine's accepted heading, or choose Area clearing to plan turns
+STR_ERROR_TBM_EXTEND_FAILED                                   :{WHITE}Cannot extend excavation work...
+STR_ERROR_TBM_EXTEND_REFERENCES                               :{WHITE}Restore this project's machine, original portal, Surface origin and exchange bay before extending its work
+STR_ERROR_TBM_EXTEND_PAUSE                                    :{WHITE}Pause this project before reviewing additional work
+STR_ERROR_TBM_EXTEND_ROUTE                                    :{WHITE}Select reachable floor with enough working space beyond the end of this machine's accepted route
+STR_ERROR_TBM_EXTEND_EMPTY                                    :{WHITE}The selected floor is already covered by this project; select additional ground to excavate
+STR_ERROR_TBM_EXTEND_STALE                                    :{WHITE}The project or its quoted work has changed; draw and review the additional area again
 STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY                       :This native freight design is unavailable for the current profile, calendar date, layer or cargo. Check its introduction date and supported refits.
 STR_ERROR_TBM_COMMISSION_RAIL_TURNS                            :This excavation route needs sharp rail bends. Allow 90-degree train turns in the game settings, or select a straight corridor.
 

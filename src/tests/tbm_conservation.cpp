@@ -86,7 +86,7 @@ TEST_CASE("Every committed tonne stays in one place from the face to the receive
 	CHECK(conserved());
 
 	// The commit moves the whole cut aboard at once, Earth and Rock apart.
-	for (uint64_t tick = 0; tick < estimate.work_ticks && rig.Job().cursor == 0; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None);
+	rig.BoreOneCut(); // The shared fixture uses the actual model rate and retained partial work.
 	REQUIRE(rig.Job().cursor == 1);
 	CHECK(CountSpoil(earth, rock) == SpoilLedger{estimate.earth_t, estimate.rock_t});
 	CHECK(estimate.earth_t != 0);
@@ -109,16 +109,17 @@ TEST_CASE("Every committed tonne stays in one place from the face to the receive
 	CHECK(rig.Job().partial_work_ticks != 0);
 	CHECK(conserved());
 
-	// Cancelling drops the unfinished work without making or losing material, and sends the spoil aboard back.
+	// Cancellation retains unfinished work until physical withdrawal and
+	// delivery, without making or losing material while the spoil travels back.
 	const SpoilLedger before_cancel = CountSpoil(earth, rock);
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(rig.Job().partial_work_ticks == 0);
+	CHECK(rig.Job().partial_work_ticks != 0);
 	CHECK(CountSpoil(earth, rock) == before_cancel);
 	CHECK(conserved());
-	REQUIRE(rig.Project().phase == TBMPhase::ReturnForExchange);
+	REQUIRE(rig.Project().phase == TBMPhase::ReturnToRelease);
 
 	// The exchange moves the wagons with their packets; no tonne is copied or lost.
-	REQUIRE(rig.Tick().phase == TBMPhase::WaitForEmpties);
+	REQUIRE(rig.Tick().phase == TBMPhase::WaitToRelease);
 	rig.Meet();
 	REQUIRE(rig.StepHauler().phase == TBMHaulerPhase::AwaitExchange);
 	REQUIRE(rig.StepHauler().phase == TBMHaulerPhase::CollectLoaded);

@@ -44,11 +44,15 @@
 
 Status: Groups 1-6 initial M0 Schema Foundation delivered, including metadata/editor/legacy round trips, reference hooks and canonical diagnostics. [Schema evidence](r2mlvs14-a-schema-foundation.md) records the focused validation. Later feature-phase save/network acceptance and the full plan remain unfinished. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 The complete economy survives saves, multiplayer joins and entity removal without corruption, duplication or dependence on the visible layer.
 
 ## State ownership register
+
+R2TBMF8 save handoff,2026-10-09:397 registers portal magazine storage in the existing native Depot pool and map identity fields, with ordinary native depot orders owning the selected destination.398 extends existing controller phase/reason fields for explicit ordinary-list control. Saved work anchors, cargo packets, work remainders and machinery identities remain with their original owners. Full loading cross-checks portal/depot identity and both directions of a paid starter-pocket job binding, including reused portals whose centre is open but surrounding cells are not. Actual397 return/parked files,398 moving-order and remote-reassignment files, nonmutating previews and malformed phase/reason/depot refusals are verified in [W](tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure) and its T/V handoffs. No fractional cargo transport was introduced.
 
 | Authoritative state | Feature owner | Derived data rebuilt after load |
 | --- | --- | --- |
@@ -70,6 +74,10 @@ The complete economy survives saves, multiplayer joins and entity removal withou
 Ordinary cargo packet/vehicle/station persistence should be reused where possible. Do not save a second independent count of the same physical cargo without a strict ownership/consistency rule.
 
 ## Public Handoff Contract
+
+R2TBMF10-11 handoff,2026-10-09: save399 adds the geological hardness algorithm/seed to GEOS wire2. Saves through398 retain legacy layer/deposit hardness with version0/seed0, including after resaving. Regional generation consumes no Surface RNG and rendering reads authoritative hardness. [Z](tbm-fixes/r2tbmf-z-geology-notes.md#group10-closure) records actual legacy/new files, malformed preview/full-load refusals, preserved native content and a real399 network map transfer followed by450 synchronized frames. The broader master multiplayer matrix remains separate. [ZB](tbm-fixes/r2tbmf-zb-final-notes.md) links real accepted, mid-work, local staging, B construction/commissioning, withdrawal/parking, release and public-freight files for one machine; cargo remains in whole native units.
+
+R2TBMF parking/release extension,2026-10-09:395 adds ReturnToPark/WaitToPark/Parked;396 adds ReturnToRelease/WaitToRelease/ReleasePending to the existing TBMP phase field. Earlier phase values, vehicle/job identities and394 work-rate migration retain their meanings. Both preview and full reading bound phases by the saved version. New cancellation preserves work/claims until physical withdrawal and delivery, while previously cancelled legacy work remains cancelled. Real395 parking and396 pending cancellation, release and public-connection loads retain actual vehicles and support same-machine reuse ([P](tbm-fixes/r2tbmf-p-parking-notes.md), [R](tbm-fixes/r2tbmf-r-release-notes.md#group7b-closure)); broader malformed/final network acceptance remains scoped to the fixing plan's final checks. No cargo fractions or new cargo fields are introduced.
 
 Delivered foundation owner: `src/multilayer_state.h`, publishing `MultiLayerStateSchema` and `ValidateMultiLayerStateReferences`. Ground and electrical producer save/preview/fixup/Null/lifecycle evidence is delivered through current385; real multiplayer and later capsule/thermal/orbital families remain pending. Downstream consumers use these public owners, not private pools or copied tables.
 
@@ -213,9 +221,9 @@ flowchart LR
 
 **Utility persistence gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Audit the r2mlvs12 ledger only after its live descriptors and tests exist: source epochs/lineage, grant balances, mutation sequence, consume/release/transfer state and fixed-scale remainders. Preserve recipe inventory-owner discriminants and completed-but-awaiting-materialization jobs too. Missing producers stop only their subscenarios; never reconstruct consumed energy from caches.
 
-**R2MLVS3MP scoped split, 2026-10-05.** Tasks 7.1-15.4 that span feature families are split into named portions: `-G` ground (master 6.5, closed at 11.2), `-T` tube/utility/first generator and riser (master 9.5/11.2) and `-O` orbital or later direct-heat (pending here, outside that queue). The exact rows and their gating exports are in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#plan-14-groups-7-15). Record evidence against the portion label; a task is checked only when all its portions pass.
+**R2MLVS3MP scoped split, 2026-10-05.** Tasks 7.1-15.4 that span feature families are split into named portions: `-G` ground (master 6.5, closed at 11.2), `-T` tube/utility/first generator and riser (master 9.5/11.2) and `-O` orbital or later direct-heat (pending here, outside that queue). The exact rows and their gating exports are in [r2mlvs3mp-e](portal-tbm/r2mlvs3mp-e-scoped-gates.md#plan-14-groups-7-15). Record evidence against the portion label; a task is checked only when all its portions pass.
 
-`-G` audit status (2026-10-05, R2MLVS3MP master 6.5): mapped row by row in [r2mlvs3mp-k](r2mlvs3mp-k-ground-persistence-audit.md), with the ground lifecycle table for 15.1 and owner hooks for 15.4. Its evidence passes at the R2MLVS3MP end-of-Group-7 milestone. Open ground gaps G1-G6 are recorded there: real-file round trips of the 377/378 families, raw vehicle-chain links, corridor claims, the receiver next interval, straddling and spanning saves, and deposit claimants. No task in Groups 7-15 is checked; the `-T` and `-O` portions are still pending.
+`-G` audit status (2026-10-05, R2MLVS3MP master 6.5): mapped row by row in [r2mlvs3mp-k](portal-tbm/r2mlvs3mp-k-ground-persistence-audit.md), with the ground lifecycle table for 15.1 and owner hooks for 15.4. Its evidence passes at the R2MLVS3MP end-of-Group-7 milestone. Open ground gaps G1-G6 are recorded there: real-file round trips of the 377/378 families, raw vehicle-chain links, corridor claims, the receiver next interval, straddling and spanning saves, and deposit claimants. No task in Groups 7-15 is checked; the `-T` and `-O` portions are still pending.
 
 ### Group 7 - Feature persistence integration
 
@@ -361,13 +369,13 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [ ] 15.3 For tube/utility references, table depot/interchange/power-link loss, vent claim changes and accounting grant cancellation. Distinguish derived disconnected networks from saved consumed resources.
 - [ ] 15.4 Require each feature owner to implement/test its table rows via public lifecycle hooks. This audit records missing coverage instead of duplicating private repair code.
 
-Delivered utility subset,2026-10-08: [public-hook lifecycle policy and coverage](r2mlvs3mp-z-utility-lifecycle-policy.md) records tested electrical cancellation/whole-owner refusal, source retirement/new ID, actual portal sealing/demolition/reconnection, interval expiry and real-town authority/ID reuse. Ledger/recipe fixtures pass521 assertions/six cases; actual saved/native/normal-game proof is linked in the handoff. Upcoming tube/vent/operating-generator and company takeover/removal hooks are explicitly pending. The full15.3/15.4 tasks remain unchecked; master9.5A closes this delivered preparation subset and9.5B returns after actual producers.
+Delivered utility subset,2026-10-08: [public-hook lifecycle policy and coverage](portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md) records tested electrical cancellation/whole-owner refusal, source retirement/new ID, actual portal sealing/demolition/reconnection, interval expiry and real-town authority/ID reuse. Ledger/recipe fixtures pass521 assertions/six cases; actual saved/native/normal-game proof is linked in the handoff. Upcoming tube/vent/operating-generator and company takeover/removal hooks are explicitly pending. The full15.3/15.4 tasks remain unchecked; master9.5A closes this delivered preparation subset and9.5B returns after actual producers.
 
 ### Local Mandatory Reading - Delivered electrical company lifecycle
 
 _Applies to Group15B; master11.2 reference ownership audit._
 
-Read this plan's Global/Entity lifecycle Area, `ChangeOwnershipOfCompanyItems` in `src/economy.cpp`, `UtilityPowerConsumer` and public lifecycle APIs in `src/utility_power.h`, source retirement/admission/validation in `src/utility_power.cpp`, and concrete UPLH/UPLD readers in `src/saveload/utility_power_sl.cpp`. Existing384 consumer wire `active` is reserved zero; reserve385/format5 to persist consumer retirement while explicitly reading381..384 as live consumers. Preserve actual lifetime settlement, original shares and monotonic IDs. Only unused grants expire; company reuse never reactivates tombstones. Read the corresponding row in [the lifecycle policy](r2mlvs3mp-z-utility-lifecycle-policy.md). Tube/thermal company owners remain under GP-TG.
+Read this plan's Global/Entity lifecycle Area, `ChangeOwnershipOfCompanyItems` in `src/economy.cpp`, `UtilityPowerConsumer` and public lifecycle APIs in `src/utility_power.h`, source retirement/admission/validation in `src/utility_power.cpp`, and concrete UPLH/UPLD readers in `src/saveload/utility_power_sl.cpp`. Existing384 consumer wire `active` is reserved zero; reserve385/format5 to persist consumer retirement while explicitly reading381..384 as live consumers. Preserve actual lifetime settlement, original shares and monotonic IDs. Only unused grants expire; company reuse never reactivates tombstones. Read the corresponding row in [the lifecycle policy](portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md). Tube/thermal company owners remain under GP-TG.
 
 ### Group 15B - Complete delivered electrical company ownership
 
@@ -376,7 +384,7 @@ Read this plan's Global/Entity lifecycle Area, `ChangeOwnershipOfCompanyItems` i
 - [X] 15B.2 Persist inactive consumer tombstones in explicit385/format5 transport; reject usable retired balances/links and retain genuine381..384 readers.
 - [X] 15B.3 Test actual company takeover/removal, deletion/ID reuse, stale proposal refusal and native save/preview/reload of retired settled accounts in focused fixtures. Publish the completed policy/evidence without claiming missing tube/thermal lifecycle.
 
-15B closure,2026-10-08: `ChangeUtilityPowerCompanyOwnership` is called by actual `ChangeOwnershipOfCompanyItems` before tile ownership changes. Current live lineage transfers; earlier inactive company incarnations retain their historical owners. Deletion keeps monotonic source/consumer IDs and consumed lifetime use, expires unused slices, clears town eligibility and makes stale tickets refuse. Version385/UPLH5 uses the existing104-byte/25-field active scalar for consumer retirement; explicit381..384 readers preserve their genuine source bytes. [437 owner assertions/12 cases](../../../../logs/r2mlvs3mp-z-a-company-owner-checks-3.log), [actual native retirement/two reloads/corrupt previews/physical takeover](../../../../logs/r2mlvs3mp-z-a-company-native-checks-2.log), [four retained readers](../../../../logs/r2mlvs3mp-z-a-company-legacy-readers.log), and [ordinary game loading/resaving](../../../../logs/r2mlvs3mp-z-a-company-normal-checks.log) pass. [Debug game/test](../../../../logs/r2mlvs3mp-z-a-company-lifecycle-build-5.log) and [optimized game/test](../../../../logs/r2mlvs3mp-z-a-company-optimized-build.log) build. [Lifecycle policy](r2mlvs3mp-z-utility-lifecycle-policy.md) and [public handoff](r2mlvs3mp-x-useful-power-handoff.md) now describe current385 authority. This completes the delivered company row, not missing capsule/thermal owners or real join.
+15B closure,2026-10-08: `ChangeUtilityPowerCompanyOwnership` is called by actual `ChangeOwnershipOfCompanyItems` before tile ownership changes. Current live lineage transfers; earlier inactive company incarnations retain their historical owners. Deletion keeps monotonic source/consumer IDs and consumed lifetime use, expires unused slices, clears town eligibility and makes stale tickets refuse. Version385/UPLH5 uses the existing104-byte/25-field active scalar for consumer retirement; explicit381..384 readers preserve their genuine source bytes. [437 owner assertions/12 cases](../../../../logs/r2mlvs3mp-z-a-company-owner-checks-3.log), [actual native retirement/two reloads/corrupt previews/physical takeover](../../../../logs/r2mlvs3mp-z-a-company-native-checks-2.log), [four retained readers](../../../../logs/r2mlvs3mp-z-a-company-legacy-readers.log), and [ordinary game loading/resaving](../../../../logs/r2mlvs3mp-z-a-company-normal-checks.log) pass. [Debug game/test](../../../../logs/r2mlvs3mp-z-a-company-lifecycle-build-5.log) and [optimized game/test](../../../../logs/r2mlvs3mp-z-a-company-optimized-build.log) build. [Lifecycle policy](portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md) and [public handoff](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md) now describe current385 authority. This completes the delivered company row, not missing capsule/thermal owners or real join.
 
 ### Local Mandatory Reading - Ground lifecycle and real network audit
 
@@ -386,7 +394,7 @@ Read this plan's Global/Entity lifecycle Area, current master11.3 and the comple
 
 ### Group 16 - Entity lifecycle and multiplayer
 
-Goal finalization exception GP-NJ:16.2 real peer scenarios are skipped under the user's multi-group-gap permission; the absent harness/trace/scenario boundaries are recorded in [the final closure audit](r2mlvs3mp-z-b-final-closure-audit.md#gp-nj-real-multiplayer-acceptance-requires-a-new-multi-group-harness). Orbital16.1 remains out of scope; independent ground lifecycle is verified below. No host/client pass is inferred.
+Goal finalization exception GP-NJ:16.2 real peer scenarios are skipped under the user's multi-group-gap permission; the absent harness/trace/scenario boundaries are recorded in [the final closure audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md#gp-nj-real-multiplayer-acceptance-requires-a-new-multi-group-harness). Orbital16.1 remains out of scope; independent ground lifecycle is verified below. No host/client pass is inferred.
 
 {{MEDIUM}}
 - [ ] 16.1 Exercise lost origin station, destroyed/removed exchange bay, mine depletion, launch center removal, asteroid deletion, module dependency removal and solar-farm replacement. No stale ID can silently bind to a newly allocated object.
@@ -395,7 +403,7 @@ Goal finalization exception GP-NJ:16.2 real peer scenarios are skipped under the
 
 ### Group 17 - Compare complete host and client simulation traces
 
-Goal finalization exception GP-NJ:17.1-17.3 are skipped for this goal because complete actual peer/frame traces and their harness require the three new groups documented in [the audit](r2mlvs3mp-z-b-final-closure-audit.md). They remain required and unchecked for engineering acceptance.
+Goal finalization exception GP-NJ:17.1-17.3 are skipped for this goal because complete actual peer/frame traces and their harness require the three new groups documented in [the audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md). They remain required and unchecked for engineering acceptance.
 
 {{HARD}}
 - [ ] 17.1 Run underground and orbital loops on a real host/client pair with identical commands and different selected layers/render settings. Collect canonical feature digests at agreed simulation ticks.
@@ -440,7 +448,7 @@ Goal finalization exception GP-TG:21.1-21.3 tube/thermal consumer/topology/date 
 {{SIMPLE}}
 - [ ] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [ ] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
-- [X] 22.1G Record current ground/electrical exports, native/repeated/normal-game/corrupt-load evidence and exact remaining network/thermal/orbital gaps in [the final audit](r2mlvs3mp-z-b-final-closure-audit.md).
+- [X] 22.1G Record current ground/electrical exports, native/repeated/normal-game/corrupt-load evidence and exact remaining network/thermal/orbital gaps in [the final audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md).
 - [X] 22.2G Update delivered map-layer/savegame/electrical handoffs through385; preserve full-plan and parent incompletion.
 
 Ground documentation closure:48-owner physical continuation, genuine370/381..384 compatibility, actual utility company hooks/ID-reuse and full-load Null cleanup retain their source inputs and owning matrix. GP-TG/GP-NJ skip absent thermal/capsule and live join rows for this goal only; original22.1/22.2 full-family claims remain pending.

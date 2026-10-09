@@ -175,13 +175,19 @@ static SpriteID GetLayerGroundSprite(MapLayerGround ground, TileIndex tile)
 }
 
 /** @copydoc DrawTileProc */
+/** Draw actual surface or layered ground with material-owned exposed walls. @param ti Renderer tile and geometry. @return None; changes only the raster. */
 static void DrawTile_Clear(TileInfo *ti)
 {
 	//Bedrock and vacuum replace the climate sprites. Natural ground keeps the grass, snow and desert drawing below.
 	MapLayerGround ground_kind = MultiLayerMap::GetRules(ti->tile).ground;
 	if (ground_kind != MapLayerGround::Natural) {
-		//Each generated floor retains its native colours, including deep blue basalt and Space stars.
+		// Rock material comes from geological authority; Space retains its native stars.
 		DrawGroundSprite(GetLayerGroundSprite(ground_kind, ti->tile), PAL_NONE);
+		// The floor and its exposed rock walls have separate material owners;
+		// transparent overlays preserve mixed-hardness boundaries and open joins.
+		for (const auto &edge : GetMultiLayerTerrainEdgeSprites(ti->tile)) {
+			if (edge) DrawGroundSprite(*edge, PAL_NONE);
+		}
 		return;
 	}
 

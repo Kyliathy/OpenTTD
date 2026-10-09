@@ -2,6 +2,8 @@
 
 Owner: [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md), Groups 1-6. Consumer: [r2mlvs1 Content Freeze](r2mlvs1-gameplay-contracts-and-content.md#public-handoff-contract). Architecture: [archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md). This foundation persists/validates metadata and publishes extension rules; later feature pools, mid-action serialization and multiplayer acceptance remain their owners' work.
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Group 1 - field and reference ownership
 
 | Family / feature owner | Saved authority | Derived cache / invalid-reference action |

@@ -5,12 +5,13 @@
  */
 
 /**
- * @file geothermal_definitions.cpp Canonical first collector IIDS/TIDS and explicit Deep input-only capability before paid native construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @file geothermal_definitions.cpp Canonical collector/riser IIDS/TIDS and explicit input-only capability before paid native construction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups1B/5B
  */
 
 #include "stdafx.h"
 #include "geothermal.h"
+#include "geothermal_riser.h"
 #include "multilayer_industry.h"
 #include "multilayer_content_identity.h"
 #include "industrytype.h"
@@ -41,17 +42,17 @@ static bool HasGeothermalMappingCapacity(const OverrideManagerBase &manager, std
 	return free >= needed;
 }
 
-/** @copydoc IsGeothermalCollectorDefinition */
-bool IsGeothermalCollectorDefinition(IndustryType type)
+/** @param type Native definition to validate. @param kind Frozen construction family. @param local_id Exact native family identity. @return Whether the whole native layout and stock contract match without changing any mapping. */
+static bool IsGeothermalConstructionDefinition(IndustryType type, MultiLayerGeothermalConstructionKind kind, uint16_t local_id)
 {
 	if (type >= NUM_INDUSTRYTYPES) return false;
 	const auto *spec = GetIndustrySpec(type);
-	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
+	const auto *terms = GetMultiLayerGeothermalConstruction(kind);
 	// Exact package/local identity, inert legacy production and the frozen
 	// single complete layout precede capability; a translated name or art mask
-	// cannot grant another definition this collector's construction/heat rights.
+	// cannot grant another definition this facility's construction rights.
 	if (!spec->enabled || spec->grf_prop.HasGrfFile() || spec->grf_prop.grfid != GeothermalDefinitionGrfID() ||
-		spec->grf_prop.local_id != GEOTHERMAL_COLLECTOR_LOCAL_ID || spec->callback_mask.Any() || spec->behaviour.Any() ||
+		spec->grf_prop.local_id != local_id || spec->callback_mask.Any() || spec->behaviour.Any() ||
 		spec->layouts.size() != 1 || spec->layouts.front().size() != terms->width * terms->height ||
 		std::ranges::any_of(spec->produced_cargo, IsValidCargoType)) return false;
 	CargoTypes expected, actual;
@@ -65,13 +66,13 @@ bool IsGeothermalCollectorDefinition(IndustryType type)
 	}
 	if (actual != expected || std::ranges::count_if(spec->accepts_cargo, IsValidCargoType) != terms->inputs.size()) return false; // Duplicate/extra stock slots cannot hide behind a collapsed cargo mask.
 	// Every native machinery cell belongs to this exact TIDS family and
-	// bounded3x3 position; missing/reordered/foreign tile definitions refuse.
+	// bounded complete position; missing/reordered/foreign tile definitions refuse.
 	for (size_t index = 0; index < spec->layouts.front().size(); ++index) {
 		const auto &cell = spec->layouts.front()[index];
 		if (cell.ti.x != index % terms->width || cell.ti.y != index / terms->width || cell.gfx >= NUM_INDUSTRYTILES) return false;
 		const auto *tile = GetIndustryTileSpec(cell.gfx);
 		if (!tile->enabled || tile->grf_prop.HasGrfFile() || tile->grf_prop.grfid != GeothermalDefinitionGrfID() ||
-			tile->grf_prop.local_id != GEOTHERMAL_COLLECTOR_LOCAL_ID + index || tile->callback_mask.Any()) return false;
+			tile->grf_prop.local_id != local_id + index || tile->callback_mask.Any()) return false;
 		CargoTypes tile_inputs;
 		// Actual per-tile acceptance must agree with the one native inventory;
 		// a missing/duplicate meaning or mutable multiplier cannot create another
@@ -82,9 +83,21 @@ bool IsGeothermalCollectorDefinition(IndustryType type)
 			if (tile->acceptance[slot] != 8) return false;
 			tile_inputs.Set(cargo);
 		}
-		if (tile_inputs != expected || std::ranges::count_if(tile->accepts_cargo, IsValidCargoType) != terms->inputs.size()) return false; // Every machinery cell accepts precisely the frozen three inputs once.
+		if (tile_inputs != expected || std::ranges::count_if(tile->accepts_cargo, IsValidCargoType) != terms->inputs.size()) return false; // Every machinery cell accepts precisely the frozen inputs once.
 	}
 	return true;
+}
+
+/** @copydoc IsGeothermalCollectorDefinition */
+bool IsGeothermalCollectorDefinition(IndustryType type)
+{
+	return IsGeothermalConstructionDefinition(type, MultiLayerGeothermalConstructionKind::Collector, GEOTHERMAL_COLLECTOR_LOCAL_ID);
+}
+
+/** @copydoc IsGeothermalRiserDefinition */
+bool IsGeothermalRiserDefinition(IndustryType type)
+{
+	return IsGeothermalConstructionDefinition(type, MultiLayerGeothermalConstructionKind::Riser, GEOTHERMAL_RISER_LOCAL_ID);
 }
 
 /** @copydoc GetGeothermalCollectorIndustryType */
@@ -103,22 +116,22 @@ const LayerIndustryCapability *GetGeothermalCollectorIndustryCapability(Industry
 	return &capability;
 }
 
-/** @copydoc InitialiseGeothermalCollectorDefinitions */
-bool InitialiseGeothermalCollectorDefinitions(const GRFConfigList &activated)
+/** @param activated Exact admitted package. @param kind Frozen construction family. @param local_id Reserved native industry/tile family. @param name Localized facility name. @return Complete canonical definition registration or unchanged preflight refusal; no actual facility is funded. */
+static bool InitialiseGeothermalConstructionDefinition(const GRFConfigList &activated, MultiLayerGeothermalConstructionKind kind, uint16_t local_id, StringID name)
 {
 	const auto &required = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content;
 	if (CheckMultiLayerContentIdentity(required, activated) != MultiLayerContentIdentityError::None) return false;
-	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
-	std::array<uint16_t, 9> tile_locals;
-	for (size_t index = 0; index < tile_locals.size(); ++index) tile_locals[index] = GEOTHERMAL_COLLECTOR_LOCAL_ID + static_cast<uint16_t>(index);
+	const auto *terms = GetMultiLayerGeothermalConstruction(kind);
+	std::vector<uint16_t> tile_locals(terms->width * terms->height);
+	for (size_t index = 0; index < tile_locals.size(); ++index) tile_locals[index] = local_id + static_cast<uint16_t>(index);
 	// Both canonical tables must hold the complete facility before installing
 	// its first tile; capacity estimates allocate neither mapping nor machinery.
-	if (!_industry_mngr.CanAllocateEntityID(GEOTHERMAL_COLLECTOR_LOCAL_ID, GeothermalDefinitionGrfID()) ||
+	if (!_industry_mngr.CanAllocateEntityID(local_id, GeothermalDefinitionGrfID()) ||
 		!HasGeothermalMappingCapacity(_industile_mngr, tile_locals, INVALID_INDUSTRYTILE)) return false;
-	const auto existing = _industry_mngr.GetID(GEOTHERMAL_COLLECTOR_LOCAL_ID, GeothermalDefinitionGrfID());
+	const auto existing = _industry_mngr.GetID(local_id, GeothermalDefinitionGrfID());
 	// A saved unpolished mapping may restore into disabled specs. An enabled
 	// foreign/malformed occupant must refuse before any of its shared slots change.
-	if (existing != IT_INVALID && GetIndustrySpec(existing)->enabled && !IsGeothermalCollectorDefinition(existing)) return false;
+	if (existing != IT_INVALID && GetIndustrySpec(existing)->enabled && !IsGeothermalConstructionDefinition(existing, kind, local_id)) return false;
 	CargoTypes inputs;
 	// Resolve the entire frozen delivered-input contract before the first
 	// definition write; a missing cargo cannot publish a partial collector.
@@ -152,9 +165,9 @@ bool InitialiseGeothermalCollectorDefinitions(const GRFConfigList &activated)
 		tile.anim_production = INDUSTRYTILE_NOANIM; tile.anim_next = INDUSTRYTILE_NOANIM; tile.anim_state = false;
 		tile.callback_mask = {}; tile.animation = {}; tile.special_flags = {}; tile.enabled = true;
 		tile.grf_prop = SubstituteGRFFileProps(art[index % art.size()].gfx); tile.grf_prop.override_id = INVALID_INDUSTRYTILE;
-		tile.grf_prop.grfid = GeothermalDefinitionGrfID(); tile.grf_prop.local_id = GEOTHERMAL_COLLECTOR_LOCAL_ID + index;
+		tile.grf_prop.grfid = GeothermalDefinitionGrfID(); tile.grf_prop.local_id = local_id + index;
 		_industile_mngr.SetEntitySpec(std::move(tile));
-		const auto gfx = _industile_mngr.GetID(GEOTHERMAL_COLLECTOR_LOCAL_ID + index, GeothermalDefinitionGrfID());
+		const auto gfx = _industile_mngr.GetID(local_id + index, GeothermalDefinitionGrfID());
 		if (gfx == INVALID_INDUSTRYTILE) return false;
 		layout.push_back({{static_cast<int8_t>(index % terms->width), static_cast<int8_t>(index / terms->width)}, gfx});
 	}
@@ -169,9 +182,37 @@ bool InitialiseGeothermalCollectorDefinitions(const GRFConfigList &activated)
 	std::fill(std::begin(spec.appear_creation), std::end(spec.appear_creation), 0);
 	spec.check_proc = IndustryCheck::None; spec.climate_availability = LandscapeTypes{LandscapeType::Temperate};
 	spec.behaviour = {}; spec.callback_mask = {}; spec.random_sounds = {}; spec.badges = {}; spec.enabled = true;
-	spec.name = STR_INDUSTRY_NAME_GEOTHERMAL_COLLECTOR;
+	spec.name = name;
 	spec.grf_prop = SubstituteGRFFileProps(0); spec.grf_prop.override_id = IT_INVALID;
-	spec.grf_prop.grfid = GeothermalDefinitionGrfID(); spec.grf_prop.local_id = GEOTHERMAL_COLLECTOR_LOCAL_ID;
+	spec.grf_prop.grfid = GeothermalDefinitionGrfID(); spec.grf_prop.local_id = local_id;
 	_industry_mngr.SetEntitySpec(std::move(spec));
-	return GetGeothermalCollectorIndustryType() != IT_INVALID;
+	return IsGeothermalConstructionDefinition(_industry_mngr.GetID(local_id, GeothermalDefinitionGrfID()), kind, local_id);
+}
+
+/** @copydoc InitialiseGeothermalCollectorDefinitions */
+bool InitialiseGeothermalCollectorDefinitions(const GRFConfigList &activated)
+{
+	return InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::Collector, GEOTHERMAL_COLLECTOR_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_COLLECTOR);
+}
+
+/** @copydoc InitialiseGeothermalRiserDefinitions */
+bool InitialiseGeothermalRiserDefinitions(const GRFConfigList &activated)
+{
+	return InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::Riser, GEOTHERMAL_RISER_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_RISER);
+}
+
+/** @copydoc GetGeothermalRiserIndustryType */
+IndustryType GetGeothermalRiserIndustryType()
+{
+	const auto type = _industry_mngr.GetID(GEOTHERMAL_RISER_LOCAL_ID, GeothermalDefinitionGrfID());
+	return IsGeothermalRiserDefinition(type) ? type : IT_INVALID;
+}
+
+/** @copydoc GetGeothermalRiserIndustryCapability */
+const LayerIndustryCapability *GetGeothermalRiserIndustryCapability(IndustryType type)
+{
+	if (!IsGeothermalRiserDefinition(type)) return nullptr;
+	static const LayerIndustryCapability capability{{MapLayer::Underground, MapLayer::DeepUnderground}, CT_INVALID, {},
+		GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Riser)->introduction_year, 0, 1, "facility.utility-riser"};
+	return &capability;
 }

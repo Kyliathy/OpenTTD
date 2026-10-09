@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include <cstdlib>
 #include <filesystem>
 #include "../3rdparty/catch2/catch.hpp"
@@ -39,10 +40,10 @@ static bool ObserveGeothermalCollector(std::span<std::string_view> arguments)
 /** Exact real native construction/shortage/completion files and independent corrupt preview retries preserve the original geological/electrical owners. */
 TEST_CASE("Native actual geothermal collector construction survives real files", "[.geothermal-collector-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path(), directory = root / "src/tests/fixtures/geothermal";
+	const auto root = FindTestRepositoryRoot(), directory = GetTestCaseArtifactPaths("geothermal", "native-reload").saves;
 	const char *input_text = std::getenv("OTTD_GEOTHERMAL_COLLECTOR_INPUT"), *mode_text = std::getenv("OTTD_GEOTHERMAL_COLLECTOR_CASE");
 	REQUIRE(input_text != nullptr); REQUIRE(mode_text != nullptr);
-	const std::filesystem::path input{input_text}; const std::string_view mode{mode_text};
+	const auto input = ResolveTestInputPath(input_text); const std::string_view mode{mode_text};
 	REQUIRE(std::filesystem::exists(input)); REQUIRE(std::filesystem::is_directory(directory));
 	bool observed = false; std::exception_ptr failure;
 	/** Inspect actual accepted native stocks/work/source identities; explicit boundary delivery is not evidence of a driven Surface bootstrap. */
@@ -107,7 +108,7 @@ TEST_CASE("Native actual geothermal collector construction survives real files",
 		observed = true; _exit_game = true;
 	};
 	AutoRestoreBackup observer(_geothermal_collector_observer, &inspect); IConsole::CmdRegister("geothermal_collector_check", ObserveGeothermalCollector);
-	const std::string config = (root / "build/native-art.cfg").string(), input_path = input.string();
+	const std::string config = (GetTestRuntimeConfig()).string(), input_path = input.string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input_path};
 	CHECK(openttd_main(arguments) == 0); if (failure) std::rethrow_exception(failure); CHECK(observed);

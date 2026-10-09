@@ -13,18 +13,34 @@ from utility_power_save_fixture import ROOT, DIRECTORY, utility_chunks
 from multilayer_state_fixture import log_path
 
 
-def run_case(mode, source, prefix="r2mlvs3mp-v"):
+from functools import partial
+from pathlib import Path
+import sys
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import log_path
+CONTEXT = current_run_context("utilities", "utility-power-save-fixture-2")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime()
+INPUTS = ROOT / "src/tests/fixtures/utility"
+DIRECTORY = CONTEXT.saves
+log_path = partial(log_path, context=CONTEXT)
+
+
+def run_case(mode, source, prefix="r2mlvs3mp-v", context=CONTEXT):
     """Load a real world and verify its directed physical/ledger state in an isolated process.
 
     @param mode Create four actual flow files or inspect one retained transfer phase.
     @param source Original paid native Deep loop or generated phase, never rewritten during load.
     @param prefix Owning focused group's unique log basename prefix.
+    @param context Explicit caller context for output/runtime ownership.
     @return None; retain bounded owning-plan native evidence and require successful complete acceptance.
     """
-    log = log_path(f"{prefix}-power-transfer-{mode}.log")
+    log = log_path(f"{prefix}-power-transfer-{mode}.log", context=context)
     environment = dict(os.environ, OTTD_UTILITY_FILE_CASE=mode, OTTD_UTILITY_FILE_INPUT=str(source))
     with log.open("wb") as sink:
-        subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-transfer-file]"],
+        run_native(context, [str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-transfer-file]"],
                        cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                        creationflags=subprocess.CREATE_NO_WINDOW, timeout=110, check=True)
     evidence = log.read_text(encoding="utf-8", errors="replace")
@@ -38,9 +54,9 @@ def main():
 
     @return None; preserve startup/source bytes and require exact authoritative chunks through every reload.
     """
-    source = ROOT / "src/tests/fixtures/haulage/m1-loop-deep-4-complete-loop.sav"
+    source = ROOT / "src/tests/fixtures/haulage/spoil-loop-deep/m1-loop-deep-4-complete-loop.sav"
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     existed = startup.exists()
     previous = startup.read_bytes() if existed else None
     DIRECTORY.mkdir(parents=True, exist_ok=True)

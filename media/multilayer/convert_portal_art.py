@@ -20,7 +20,7 @@ from sprite_quantize import front_mask
 
 RECORD = base.ASSETS / "portal-generation-record.json"
 REPORT = base.OUTPUT / "portal-details-manifest.json"
-REVIEW = base.ASSETS / "portal-details-review.png"
+REVIEW = base.REVIEW / "portal-details-review.png"
 DOORS = ["NE", "SE", "SW", "NW"]
 STATES = ["sealed", "commissioning", "connected"]
 
@@ -48,7 +48,7 @@ def derive():
     @throws ValueError If source hashes, phase names or world geometry disagree.
     """
     document = json.loads(RECORD.read_text(encoding="utf-8"))
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     outputs, files, cache = [], {}, {}
     identities = [row["asset_id"] for row in document["sources"]]
@@ -128,6 +128,8 @@ def publish(report, files):
     @param files Derived atlas paths mapped to their encoded bytes.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, data in files.items():
         path.write_bytes(data)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -152,7 +154,7 @@ def bind_manifest(report):
     @param report Exact real-phase endpoint/part atlas coverage from derive.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
-    path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    path = base.PUBLIC
     manifest = json.loads(path.read_text(encoding="utf-8"))
     sources = {row["asset_id"]: row for row in json.loads(RECORD.read_text(encoding="utf-8"))["sources"]}
     # Each declared building retains its public packing ownership and untouched

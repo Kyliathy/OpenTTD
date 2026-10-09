@@ -12,12 +12,29 @@ from geology_generation_fixture import read_stream, saved_geology_seed, surface_
 from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("geology", "geology-surface-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+
+
 def main():
     """Compare actual Classic/native Surface fields and load retained predecessor job state.
 
     @return None; preserve baseline, startup and configuration bytes exactly.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     baseline = save_path("r2mlvs2-e-classic.sav")
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     baseline_hash = hashlib.sha256(baseline.read_bytes()).hexdigest()
@@ -45,7 +62,7 @@ def main():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(baseline.read_bytes()).hexdigest() == baseline_hash
-    (AREA / "r2mlvs2-z-surface-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs2-z-surface-results.txt").write_text(
         "@see r2mlvs2-geology-and-excavation.md, Group 18.\n"
         "Current Classic/native generation matches all ten retained feature-disabled Surface field SHA256 values.\n"
         "Current writer also accepts the retained version-373 paused job without fabricating validated cut input.\n"

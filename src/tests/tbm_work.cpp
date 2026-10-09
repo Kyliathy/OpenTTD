@@ -27,12 +27,14 @@
  */
 static void WorkToLastTick(const TBMWorkRig &rig, const ExcavationCutResult &estimate)
 {
-	// The standard cutter works one tick per simulation tick, so the job's partial work counts the ticks exactly.
-	for (uint64_t tick = 1; tick < estimate.work_ticks; ++tick) {
+	// R2TBMF halves Standard cutting speed: every pair of simulation ticks
+	// earns one geological work unit, retaining the intervening half exactly.
+	for (uint64_t tick = 1; tick < estimate.work_ticks * 2; ++tick) {
 		const auto &project = rig.Tick();
 		REQUIRE(project.phase == TBMPhase::Bore);
 		REQUIRE(project.blocked == TBMBlockedReason::None);
-		REQUIRE(rig.Job().partial_work_ticks == tick);
+		REQUIRE(rig.Job().partial_work_ticks == tick / 2);
+		REQUIRE(project.work_remainder == tick % 2);
 	}
 }
 
@@ -125,8 +127,20 @@ TEST_CASE("Face work waits precisely at the boundary and resumes from the same c
 	const auto rock = rig.Wagons(TBMConsistRole::RockWagon);
 	const uint earth_capacity = earth[0]->cargo_cap + earth[1]->cargo_cap;
 	const uint rock_capacity = rock[0]->cargo_cap + rock[1]->cargo_cap;
-	REQUIRE(earth_capacity - estimate.earth_t + 1 <= earth[0]->cargo_cap);
-	REQUIRE(rock_capacity - estimate.rock_t + 1 <= rock[0]->cargo_cap);
+	/**
+	 * Declare initial whole cargo across real wagons to leave one tonne too
+	 * little space for the new smaller cut, without overfilling a single part.
+	 * @param wagons Actual dedicated cargo parts.
+	 * @param tonnes Initial cargo required for the boundary refusal.
+	 */
+	const auto preload = [&](const std::vector<Train *> &wagons, uint64_t tonnes) {
+		for (Train *wagon : wagons) {
+			const uint16_t amount = static_cast<uint16_t>(std::min<uint64_t>(tonnes, wagon->cargo_cap));
+			if (amount != 0) rig.Preload(wagon, amount);
+			tonnes -= amount;
+		}
+		REQUIRE(tonnes == 0);
+	};
 
 	/**
 	 * Run to the boundary, require the wait to hold, then clear it and require the cut.
@@ -159,13 +173,13 @@ TEST_CASE("Face work waits precisely at the boundary and resumes from the same c
 	};
 
 	SECTION("Earth full while Rock is free; freeing one tonne fills the Earth wagons exactly") {
-		rig.Preload(earth[0], static_cast<uint16_t>(earth_capacity - estimate.earth_t + 1));
+		preload(earth, earth_capacity - estimate.earth_t + 1);
 		check_wait(TBMBlockedReason::EarthFull, [&]() { earth[0]->cargo.Truncate(1); });
 		CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == earth_capacity);
 		CHECK(rig.Spoil(TBMConsistRole::RockWagon) == estimate.rock_t);
 	}
 	SECTION("Rock full while Earth is free; freeing one tonne fills the Rock wagons exactly") {
-		rig.Preload(rock[0], static_cast<uint16_t>(rock_capacity - estimate.rock_t + 1));
+		preload(rock, rock_capacity - estimate.rock_t + 1);
 		check_wait(TBMBlockedReason::RockFull, [&]() { rock[0]->cargo.Truncate(1); });
 		CHECK(rig.Spoil(TBMConsistRole::RockWagon) == rock_capacity);
 		CHECK(rig.Spoil(TBMConsistRole::EarthWagon) == estimate.earth_t);

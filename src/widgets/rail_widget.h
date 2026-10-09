@@ -105,6 +105,7 @@ enum BuildRailLayerPortalWidgets : WidgetID {
 	WID_BRLP_TARGET_SEL, ///< Native-only Underground destination selector.
 	WID_BRLP_TARGET_SURFACE, ///< Existing Underground-to-Surface rail destination.
 	WID_BRLP_TARGET_DEEP, ///< Profile-specific Underground-to-Deep rail destination.
+	WID_BRLP_QUOTE, ///< Actual clicked-layer destination, company and complete cost/refusal.
 };
 
 /** Widgets of the #BuildRailWaypointWindow class. */

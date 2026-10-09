@@ -1,0 +1,173 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs13-graphics-and-asset-pipeline.md Groups 10-11",
+    "master": "r2mlvs3mp-master-plan.md Group 8",
+    "conversion": "Deterministic conversion starts from immutable repository copies; raster pixels are authored by the built-in image tool."
+  },
+  "schema_version": 1,
+  "sources": [
+    {
+      "key": "deep_edges",
+      "asset_id": "terrain.edges.deep",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-e13de5d4-d0aa-498c-a048-bb55c8eafcce.png",
+      "path": "media/multilayer/source/m1/raw/terrain-deep-edges-v1.png",
+      "prompt": "Use case: sprite-sheet. Asset type: first-party OpenTTD Deep Underground cavity edge sprite original.\nThe reference image supplies ONLY the dense dark basalt material, cool blue-black floor, restrained pixel art, fixed isometric camera and top-left lighting. Create a NEW source sheet for neighbor-aware cavity rims, preserving the reference as an immutable original.\n\nTransparent PNG, exactly 16 independent equally sized sprites in a regular 4-column by 4-row grid. No labels, text, borders, checkerboard or visible grid. Transparent wide gutters. Every sprite is a thin flat 2:1 isometric ground diamond, the same geometry, position and scale within its cell. It must reduce clearly to 64x31 pixels. Keep all pixels including low rims INSIDE the diamond, no protruding tower or floor slab.\n\nAll cells contain the same dark excavated blue-gray floor. Add a low fractured dark blue-gray basalt rim with a readable medium gray highlight ONLY on the explicitly listed diamond edges. Edge positions refer to the SCREEN: upper-left from left vertex to top vertex; upper-right from top vertex to right vertex; lower-right from right vertex to bottom vertex; lower-left from bottom vertex to left vertex. Fixed top-left lighting for ALL cells. The rim is a narrow broken geological lip, two native pixels wide, with a dark inner cut line. Where two required edges meet, join the rim cleanly at the corner. Unlisted edges are completely flat and open, to join another excavated tile seamlessly.\n\nExact row-major order:\nRow 1: no rim; upper-left only; upper-right only; upper-left plus upper-right.\nRow 2: lower-right only; upper-left plus lower-right; upper-right plus lower-right; upper-left plus upper-right plus lower-right.\nRow 3: lower-left only; upper-left plus lower-left; upper-right plus lower-left; upper-left plus upper-right plus lower-left.\nRow 4: lower-right plus lower-left; upper-left plus lower-right plus lower-left; upper-right plus lower-right plus lower-left; all four edges.\n\nDraw each sprite in the SAME fixed camera; do not rotate the lighting or texture. No rails, vehicles, buildings, people, resource icons, orange stripes, tall walls, floating slab, external cast shadow or decorative background. Genuine transparent alpha outside each diamond. Crisp game pixels with restrained dark basalt and blue-charcoal palette, medium slate edge highlights; visibly distinct from ordinary Underground, silhouettes readable in grayscale. Only original game artwork.",
+      "grid": [
+        4,
+        4
+      ],
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/terrain-deep-v1.png",
+          "sha256": "c08d03f46e4d82c81d45b45f3a147af735a338da9ea6d14d8927b971bc71c64a"
+        }
+      ],
+      "mask_bits": [
+        "screen_upper_left",
+        "screen_upper_right",
+        "screen_lower_right",
+        "screen_lower_left"
+      ],
+      "native_canvas": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "selection": "Selected after native 1x/4x review: all explicit rim combinations and resource shapes/disclosure states readable; fixed canvases and anchors verified. Actual runtime review pending.",
+      "revision": "New supplemental source; existing originals immutable.",
+      "sha256": "1303bfde09688d17b342f6462dca3b3dd97f105083f108e1f8e2462a3b70638e"
+    },
+    {
+      "key": "deep_survey",
+      "asset_ids": [
+        "survey.LITH",
+        "survey.NORE",
+        "survey.COBT",
+        "survey.RARE",
+        "survey.URAN"
+      ],
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-a7b3cf97-1280-46a0-b60f-7e0b8b743870.png",
+      "path": "media/multilayer/source/m1/raw/survey-deep-v1.png",
+      "prompt": "Use case: sprite-sheet. Create original first-party OpenTTD DEEP UNDERGROUND geological survey-marker artwork, one coherent variant group.\nReference image supplies only the established sample-box information states, depleted circular cross cue, scale, fixed camera, top-left lighting and restrained game-pixel style. Create new Deep resource specimens; preserve the reference unchanged.\nExactly 15 small icons in a regular FIVE-column by THREE-row transparent PNG sheet. No text, labels, numbers, grid lines or background. Each icon centered in an equal cell with generous transparent gutters. Fixed 3/4 view, top-left lighting, crisp restrained TTD pixel art, readable in a 20x20 native canvas / 18x18 safe area. Distinct resource shapes that remain different in grayscale.\nColumns left to right:\n1 LITHIUM mineral: three slender pale pink/lilac prismatic crystals in a narrow upright fan.\n2 NICKEL ORE: a broad low olive-gray rock with small yellow-gray nodules and a flat top.\n3 COBALT ORE: a compact dark slate angular wedge with a short vivid blue exposed vein, diamond-like silhouette.\n4 RARE EARTH ORE: a low reddish violet disk-shaped coarse mineral cluster with two pale lilac granular spots, asymmetric wide silhouette.\n5 URANIUM ORE: one tall dark green-black rectangular stepped rock with a small dull olive/yellow-green vein; no unrealistic luminous glow.\nRows top to bottom:\nUNKNOWN: the same closed neutral-gray geological sample box with latch as the reference, no exposed resource identity.\nSURVEYED: uncovered distinct resource specimen alone, centered with subtle contact pixels.\nDEPLETED: the same resource specimen smaller and dimmer, with the same bold crossed empty circular sample ring from the reference behind it, indicating exhausted reserves without reliance on color.\nKeep common anchor across states, silhouettes clear and naturally separated. No terrain tiles, vegetation, rails, machinery, people, letters, question marks, glossy render, company livery or checkerboard. Genuine transparent alpha around every icon; restrained slate/lilac/olive/blue mineral accents. Original game sprites, not a concept scene.",
+      "grid": [
+        5,
+        3
+      ],
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/survey-underground-v1.png",
+          "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1"
+        }
+      ],
+      "resources": [
+        "LITH",
+        "NORE",
+        "COBT",
+        "RARE",
+        "URAN"
+      ],
+      "states": [
+        "unknown",
+        "surveyed",
+        "depleted"
+      ],
+      "native_canvas": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "selection": "Selected after native 1x/4x review: all explicit rim combinations and resource shapes/disclosure states readable; fixed canvases and anchors verified. Actual runtime review pending.",
+      "revision": "New supplemental source; existing originals immutable.",
+      "sha256": "8ecebd408dc3a67fb5a36ed7c054ed66fa318a495e3f874ba1b5e8ba535352bd"
+    },
+    {
+      "key": "underground_survey",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-4cd26409-33c4-4da9-8214-2830782da86f.png",
+      "path": "media/multilayer/source/m1/raw/survey-underground-v1.png",
+      "prompt": "Use case: sprite-sheet. Create original first-party OpenTTD UNDERGROUND geological survey-marker artwork, one coherent variant group.\nExactly 15 small icons in a regular FIVE-column by THREE-row transparent PNG sheet, no text, labels, numbers, grid lines or background. Each icon centered in an equal cell with generous alpha gutters. Fixed top-left lighting, crisp restrained TTD pixel art, 20x20 native target, fixed 3/4 viewpoint and a small grounded silhouette. Each resource has its own shape, readable in grayscale.\nColumns left to right are the stable resource meanings:\n1 COAL: two chunky black coal lumps with angular bright facets.\n2 IRON ORE: a compact dark rust-red lumpy iron-bearing rock, distinct rounded stepped silhouette.\n3 COPPER ORE: a thin triangular slate specimen with two turquoise copper veins.\n4 BAUXITE: an ochre cream-red rough porous cluster with three rounded lobes.\n5 SALT: a pale white cubic crystalline block with three squared stepped crystals.\nRows:\nTop UNKNOWN: a single common small closed gray geological sample box with latch; five copies have no revealed resource identity, to preserve unrevealed survey information.\nMiddle SURVEYED: each resource's distinct uncovered specimen alone, centered and readable, subtle dark contact pixels, no box.\nBottom DEPLETED: the same resource specimen much smaller and dimmer, plus a bold dark crossed empty circular sample ring behind it, so absence of reserves is clear without relying on hue.\nAll icons stay within the same native 18x18 safe area in their 20x20 canvas. No decorative terrain tile, people, letters, question marks, shiny 3D render, large gradients, company livery or checkerboard. True transparent alpha outside every icon. Conservative charcoal, slate, rust, turquoise, ochre and white; unknown/depleted cues must be readable in grayscale. This is a game sprite asset group, not a diagram or scene.",
+      "grid": [
+        5,
+        3
+      ],
+      "references": [],
+      "selection": "Selected after native 1x/4x review: all explicit rim combinations and resource shapes/disclosure states readable; fixed canvases and anchors verified. Actual runtime review pending.",
+      "revision": "New supplemental source; no retained original replaced.",
+      "resources": [
+        "COAL",
+        "IORE",
+        "CORE",
+        "BAUX",
+        "SALT"
+      ],
+      "states": [
+        "unknown",
+        "surveyed",
+        "depleted"
+      ],
+      "native_canvas": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "sha256": "543244dcee121cca6883c25201815bd96ac39ec8a2681b8ccdde8b20860a0ad1",
+      "asset_ids": [
+        "survey.COAL",
+        "survey.IORE",
+        "survey.CORE",
+        "survey.BAUX",
+        "survey.SALT"
+      ]
+    },
+    {
+      "key": "underground_edges",
+      "asset_id": "terrain.edges.underground",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-dcbc9927-7f7b-4d38-bf73-f95c9875a8b2.png",
+      "path": "media/multilayer/source/m1/raw/terrain-underground-edges-v1.png",
+      "prompt": "Use case: sprite-sheet. Asset type: first-party OpenTTD Underground cavity edge sprite original.\nThe reference image supplies ONLY the cool gray rock material, dark blue-gray floor, restrained pixel art, fixed isometric camera and top-left lighting. Create a NEW source sheet for neighbor-aware cavity rims, preserving the reference as an immutable original.\n\nTransparent PNG, exactly 16 independent equally sized sprites in a regular 4-column by 4-row grid. No labels, text, borders, checkerboard or visible grid. Transparent wide gutters. Every sprite is a thin flat 2:1 isometric ground diamond, the same geometry, position and scale within its cell. It must reduce clearly to 64x31 pixels. Keep all pixels including low rims INSIDE the diamond, no protruding tower or floor slab.\n\nAll cells contain the same dark excavated blue-gray floor. Add a low fractured light-gray rock rim ONLY on the explicitly listed diamond edges. Edge positions refer to the SCREEN: upper-left from left vertex to top vertex; upper-right from top vertex to right vertex; lower-right from right vertex to bottom vertex; lower-left from bottom vertex to left vertex. Fixed top-left lighting for ALL cells. The rim is a narrow broken geological lip, two native pixels wide, with a dark inner cut line. Where two required edges meet, join the rim cleanly at the corner. Unlisted edges are completely flat and open, to join another excavated tile seamlessly.\n\nExact row-major order:\nRow 1: no rim; upper-left only; upper-right only; upper-left plus upper-right.\nRow 2: lower-right only; upper-left plus lower-right; upper-right plus lower-right; upper-left plus upper-right plus lower-right.\nRow 3: lower-left only; upper-left plus lower-left; upper-right plus lower-left; upper-left plus upper-right plus lower-left.\nRow 4: lower-right plus lower-left; upper-left plus lower-right plus lower-left; upper-right plus lower-right plus lower-left; all four edges.\n\nDraw each sprite in the SAME fixed camera; do not rotate the lighting or texture. No rails, vehicles, buildings, people, resource icons, orange stripes, tall walls, floating slab, external cast shadow or decorative background. Genuine transparent alpha outside each diamond. Crisp game pixels with restrained slate/steel-gray palette, silhouettes readable in grayscale. Only original game artwork.",
+      "grid": [
+        4,
+        4
+      ],
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/terrain-underground-v1.png",
+          "sha256": "a44e24f593f745b871b0c2d48fcc6856aa3415f0ca28250aab0794f1cd6badac"
+        }
+      ],
+      "selection": "Selected after native 1x/4x review: all explicit rim combinations and resource shapes/disclosure states readable; fixed canvases and anchors verified. Actual runtime review pending.",
+      "revision": "New supplemental source; no original replaced.",
+      "mask_bits": [
+        "screen_upper_left",
+        "screen_upper_right",
+        "screen_lower_right",
+        "screen_lower_left"
+      ],
+      "native_canvas": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "sha256": "0ccaa18d0d37adcd4586e1b9d559a629d595aa39421b15a1a0f3b4f3c3b74ddd"
+    }
+  ]
+}

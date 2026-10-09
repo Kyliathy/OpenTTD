@@ -11,6 +11,7 @@
 #include "openttd.h"
 #include "excavation_state.h"
 #include "tile_map.h"
+#include "rail_map.h"
 #include "multilayer_content.h"
 #include "multilayer_state.h"
 #include "debug.h"
@@ -111,13 +112,14 @@ void AcceptLoadedGeologyState()
 /**
  * Publish a complete candidate only after deterministic mandatory generation succeeds.
  * @param world_seed Synchronized new-world generation input.
+ * @param hardness_version Current regional rule, or zero for explicitly historical generation evidence.
  * @return Refusal or complete accepted geology; Classic remains allocation-free.
  */
-GeologyError GenerateWorldGeology(uint32_t world_seed)
+GeologyError GenerateWorldGeology(uint32_t world_seed, uint16_t hardness_version)
 {
 	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return GeologyError::None;
 	const uint64_t seed = DeriveGeologySeed(world_seed);
-	auto generated = PrepareGeologyGeneration(seed);
+	auto generated = PrepareGeologyGeneration(seed, hardness_version);
 	if (generated.error != GeologyError::None) return generated.error;
 	_geology_world = std::move(generated.state);
 	SetMultiLayerGeologySeed(seed);
@@ -180,6 +182,128 @@ static ExcavationJob *MutableExcavationJob(ExcavationJobID id)
 	const auto it = std::lower_bound(_geology_world.jobs.begin(), _geology_world.jobs.end(), id, ExcavationJobBeforeID);
 	if (it == _geology_world.jobs.end()) return nullptr;
 	return it->id == id ? &*it : nullptr;
+}
+
+/** @copydoc AppendExcavationJob */
+ExcavationJobResult AppendExcavationJob(ExcavationJobID id, uint64_t expected_revision, const ExcavationOutline &outline,
+	std::span<const ExcavationCutGeometry> route, bool execute)
+{
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return {ExcavationError::InvalidPolicy};
+	const auto *job = MutableExcavationJob(id);
+	// Only the actual company can extend its live reservations; a stale quote
+	// or orphaned actor cannot acquire more rock by supplying an old job ID.
+	if (job == nullptr || !Company::IsValidID(job->company) || job->company != _current_company) return {ExcavationError::InvalidOwner};
+	if (job->revision != expected_revision || job->revision == UINT64_MAX) return {ExcavationError::StaleParticipant};
+	// Closed history has already settled its claims. Reusing its machine is a
+	// separate controller/portal operation, never an implicit history reset.
+	if (job->state == ExcavationJobState::Completed || job->state == ExcavationJobState::Cancelled) return {ExcavationError::AlreadyCompleted};
+	if (!ValidateExcavationJobReferences(*job)) return {ExcavationError::InvalidOwner};
+	const auto valid = ValidateExcavationJobGeometry(_geology_world, *job);
+	if (valid.error != ExcavationError::None) return {valid.error, id, valid.failure_tile};
+	// Saved backing/capacity proof and bounded real additions are required;
+	// an empty or oversized append cannot merely change an existing footprint.
+	if (!job->pass_terms || route.empty() || route.size() > MAX_EXCAVATION_ROUTE - job->route.size()) return {ExcavationError::InvalidRoute};
+	if (outline.error != ExcavationError::None) return {outline.error, id, outline.failure_tile};
+	if (outline.layer != GetTileLayer(job->commissioning_anchor)) return {ExcavationError::MixedLayers};
+	const auto requested = NormalizeExcavationOutline(outline.layer, outline.requested_tiles);
+	if (requested.error != ExcavationError::None) return {requested.error, id, requested.failure_tile};
+	const auto work = NormalizeExcavationOutline(outline.layer, outline.authorized_tiles);
+	if (work.error != ExcavationError::None) return {work.error, id, work.failure_tile};
+	ExcavationJob next = *job;
+	next.requested_tiles.insert(next.requested_tiles.end(), requested.requested_tiles.begin(), requested.requested_tiles.end());
+	next.authorized_tiles.insert(next.authorized_tiles.end(), work.requested_tiles.begin(), work.requested_tiles.end());
+	// Canonical unions retain every old accepted cell; extension cannot quietly
+	// revoke earlier work, support or the player's requested final floor.
+	for (auto *tiles : {&next.requested_tiles, &next.authorized_tiles}) {
+		std::ranges::sort(*tiles);
+		tiles->erase(std::unique(tiles->begin(), tiles->end()), tiles->end());
+	}
+	next.route.insert(next.route.end(), route.begin(), route.end());
+	// Validate the changed geometry before deriving its new static proof. The
+	// live job retains its old proof throughout preparation and every refusal.
+	next.pass_terms.reset();
+	const auto geometry = ValidateExcavationJobGeometry(_geology_world, next);
+	if (geometry.error != ExcavationError::None) return {geometry.error, id, geometry.failure_tile};
+	auto terms = *job->pass_terms;
+	std::set<TileIndex> cleared, footprint;
+	// Existing accepted cuts all precede the addition. Forecast their floor
+	// without replaying receipts, advancing the live cursor or clearing rock.
+	for (const auto &cut : job->route) cleared.insert(cut.swept_tiles.begin(), cut.swept_tiles.end());
+	for (TileIndex tile : next.authorized_tiles) {
+		if (_geology_world.terrain.Get(tile) == ExcavationState::Excavated) cleared.insert(tile);
+	}
+	uint64_t earth = 0, rock = 0;
+	// The previous final return stays in terms.exchange_after. New work starts
+	// after that physical empty-wagon exchange, independent of current cargo.
+	for (size_t index = 0; index < route.size(); ++index) {
+		const auto &cut = route[index];
+		for (TileIndex tile : cut.support_tiles) {
+			if (!cleared.contains(tile)) return {ExcavationError::MissingSupport, id, tile};
+		}
+		std::vector<TileIndex> fresh;
+		// Every appended sweep retains normal structure, seam and claim rules,
+		// even where the floor is already open and would produce zero spoil.
+		for (TileIndex tile : cut.swept_tiles) {
+			const auto claim = _geology_world.job_claims.find(tile);
+			if (claim != _geology_world.job_claims.end() && claim->second != id) return {ExcavationError::Conflict, id, tile};
+			const auto terrain = _geology_world.terrain.Get(tile);
+			if (!terrain) return {ExcavationError::InvalidTile, id, tile};
+			// An orphaned active bit cannot be adopted as this job's permission.
+			if (*terrain == ExcavationState::Excavating && claim == _geology_world.job_claims.end()) return {ExcavationError::ActiveCut, id, tile};
+			const auto type = GetTileType(tile);
+			if (type != TileType::Clear && type != TileType::Railway && type != TileType::LayerPortal) return {ExcavationError::Conflict, id, tile};
+			if (type == TileType::Railway && !IsPlainRailTile(tile)) return {ExcavationError::Conflict, id, tile}; // A depot is a building, not free swept clearance.
+			if (type != TileType::Clear && (GetTileOwner(tile) != job->company || !cleared.contains(tile))) return {ExcavationError::InvalidOwner, id, tile}; // Only owned open or already accepted support may precede the new cuts.
+			const auto *deposit = _geology_world.deposits.Get(_geology_world.deposits.Find(tile));
+			if (deposit != nullptr && deposit->claimant != CompanyID::Invalid() && deposit->claimant != job->company) return {ExcavationError::Conflict, id, tile}; // Another company's seam never becomes this project's working space.
+			footprint.insert(tile);
+			if (!cleared.contains(tile)) fresh.push_back(tile);
+		}
+		const auto quote = QuoteExcavationCells(fresh, job->model_id);
+		if (quote.error != ExcavationError::None) return {quote.error, id, quote.failure_tile};
+		if (quote.earth_t > terms.earth_capacity_t || quote.rock_t > terms.rock_capacity_t) return {ExcavationError::InsufficientCapacity, id, cut.cutter_position}; // One complete cut must fit each independent wagon group.
+		if (earth > terms.earth_capacity_t - quote.earth_t || rock > terms.rock_capacity_t - quote.rock_t) {
+			// Keep accepted old exchange points and add only necessary future
+			// returns; neither cargo group may borrow the other's free space.
+			terms.exchange_after.push_back(static_cast<uint16_t>(job->route.size() + index));
+			earth = 0;
+			rock = 0;
+		}
+		earth += quote.earth_t;
+		rock += quote.rock_t;
+		cleared.insert(cut.swept_tiles.begin(), cut.swept_tiles.end());
+	}
+	terms.exchange_after.push_back(static_cast<uint16_t>(next.route.size()));
+	terms.fingerprint = ComputeExcavationPassFingerprint(next, terms);
+	next.pass_terms = std::move(terms);
+	const auto complete = ValidateExcavationJobGeometry(_geology_world, next);
+	if (complete.error != ExcavationError::None) return {complete.error, id, complete.failure_tile};
+	size_t cells = 0, added_claims = 0;
+	// Existing completed history and this append share the same saved-memory
+	// budget as fresh jobs; extension must not bypass those world-wide limits.
+	for (const auto &existing : _geology_world.jobs) {
+		for (const auto &cut : existing.route) cells += cut.swept_tiles.size() + cut.support_tiles.size();
+	}
+	for (const auto &cut : route) cells += cut.swept_tiles.size() + cut.support_tiles.size();
+	for (TileIndex tile : footprint) added_claims += !_geology_world.job_claims.contains(tile);
+	if (cells > 262144 || added_claims + _geology_world.job_claims.size() > MAX_EXCAVATION_CLAIMS) return {ExcavationError::Limit};
+	if (!execute) return {ExcavationError::None, id};
+	++next.revision;
+	auto jobs = _geology_world.jobs;
+	auto claims = _geology_world.job_claims;
+	const auto target = std::lower_bound(jobs.begin(), jobs.end(), id, ExcavationJobBeforeID);
+	*target = std::move(next);
+	// Complete every allocation before publishing either owner container or
+	// any terrain bits, preserving an atomic refusal on preparation failure.
+	for (TileIndex tile : footprint) claims.emplace(tile, id);
+	_geology_world.jobs.swap(jobs);
+	_geology_world.job_claims.swap(claims);
+	for (TileIndex tile : footprint) {
+		if (_geology_world.terrain.Get(tile) != ExcavationState::Solid) continue;
+		const bool accepted = _geology_world.terrain.Set(tile, ExcavationState::Excavating);
+		assert(accepted);
+	}
+	return {ExcavationError::None, id};
 }
 
 /**
@@ -341,9 +465,10 @@ ExcavationError AdvanceExcavationWork(ExcavationJobID id, uint64_t ticks, const 
 /**
  * Release only unfinished geometry, preserving historical paid work and existing cavities.
  * @param id Exact owned reservation.
+ * @param execute False validates cancellation without changing work, claims or terrain.
  * @return Complete cancellation or unchanged refusal, without any inventory/cash refund.
  */
-ExcavationError CancelExcavationJob(ExcavationJobID id)
+ExcavationError CancelExcavationJob(ExcavationJobID id, bool execute)
 {
 	auto *job = MutableExcavationJob(id);
 	if (job == nullptr) return ExcavationError::InvalidJob;
@@ -351,6 +476,7 @@ ExcavationError CancelExcavationJob(ExcavationJobID id)
 	if (job->state == ExcavationJobState::Cancelled) return ExcavationError::None;
 	if (job->state == ExcavationJobState::Completed) return ExcavationError::AlreadyCompleted;
 	if (job->revision == UINT64_MAX) return ExcavationError::Limit;
+	if (!execute) return ExcavationError::None;
 	// Claims identify exactly this job's unfinished cells; committed/open ground is never refilled by cancellation.
 	for (auto it = _geology_world.job_claims.begin(); it != _geology_world.job_claims.end();) {
 		if (it->second != id) { ++it; continue; }

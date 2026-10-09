@@ -1,0 +1,6 @@
+Filters: [.utility-power-file]
+UTILITY_TICKET sequence=11 seal=15273421598411801467
+UTILITY_FILE case=settle digest=4C9393210D3AEADE actual_native_world=true
+===============================================================================
+All tests passed (21 assertions in 1 test case)
+

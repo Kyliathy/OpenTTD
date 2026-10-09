@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../console_internal.h"
@@ -40,12 +41,12 @@ static bool ObserveUtilityEffect(std::span<std::string_view> arguments)
 /** Actual metered city benefit/custom/expiry states survive normal native loading without reconsuming the offer. */
 TEST_CASE("Native town power effect and custom GS suppression survive actual save files", "[.utility-power-effect-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto directory = root / "src/tests/fixtures/utility";
+	const auto root = FindTestRepositoryRoot();
+	const auto directory = GetTestCaseArtifactPaths("utilities", "native-reload").saves;
 	const char *case_value = std::getenv("OTTD_UTILITY_FILE_CASE"), *input_value = std::getenv("OTTD_UTILITY_FILE_INPUT");
 	REQUIRE(case_value != nullptr); REQUIRE(input_value != nullptr);
 	const std::string_view mode(case_value);
-	const std::string input(input_value);
+	const std::string input = ResolveTestInputPath(input_value).string();
 	bool observed = false; std::exception_ptr failure;
 	/** Actual existing Surface town receives only an explicitly registered/settled native offer. */
 	std::function<void()> inspect = [&] {
@@ -146,7 +147,7 @@ TEST_CASE("Native town power effect and custom GS suppression survive actual sav
 	};
 	AutoRestoreBackup observer(_utility_effect_observer, &inspect);
 	IConsole::CmdRegister("utility_effect_check", ObserveUtilityEffect);
-	const std::string config = (root / "build/native-art.cfg").string();
+	const std::string config = (GetTestRuntimeConfig()).string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input};
 	CHECK(openttd_main(arguments) == 0);

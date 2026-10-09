@@ -9,7 +9,7 @@
  * without a hauler, a queued hauler, a lost origin, a lost route and a saturated origin are reported; a stall stops
  * new face work but never the return for exchange, the exchange or the haul of loaded spoil.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 9
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
  */
 
 #include "../stdafx.h"

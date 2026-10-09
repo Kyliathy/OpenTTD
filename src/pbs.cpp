@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file pbs.cpp PBS support routines. */
+/** @file pbs.cpp PBS support routines. @see docs/zz-reach2/architecture/pathfinder/archi-pathfinder-rail.md; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4 */
 
 #include "stdafx.h"
 #include "viewport_func.h"
@@ -222,9 +222,10 @@ void UnreserveRailTrack(TileIndex tile, Track t)
  * @param tile The start tile.
  * @param trackdir The start trackdir on the tile.
  * @param ignore_oneway Whether one way signals are to be ignored.
+ * @param front Actual train when following its own reservation; required for its private commissioning-portal admission.
  * @return The end of the path.
  */
-static PBSTileInfo FollowReservation(Owner o, RailTypes rts, TileIndex tile, Trackdir trackdir, bool ignore_oneway = false)
+static PBSTileInfo FollowReservation(Owner o, RailTypes rts, TileIndex tile, Trackdir trackdir, bool ignore_oneway = false, const Train *front = nullptr)
 {
 	TileIndex start_tile = tile;
 	Trackdir  start_trackdir = trackdir;
@@ -237,6 +238,12 @@ static PBSTileInfo FollowReservation(Owner o, RailTypes rts, TileIndex tile, Tra
 
 	/* Do not disallow 90 deg turns as the setting might have changed between reserving and now. */
 	CFollowTrackRail ft(o, rts);
+	// Company ownership alone cannot authorize a commissioning shaft. Preserve
+	// the actual train for its own reservation; anonymous owner queries retain
+	// their existing public-track semantics and gain no private work access.
+	if (front != nullptr) ft.Init(front, rts);
+	// Follow only existing connected reservations. Stop at a missing piece or
+	// an unreserved branch instead of claiming another train's possible route.
 	while (ft.Follow(tile, trackdir)) {
 		TrackdirBits reserved = ft.new_td_bits & TrackBitsToTrackdirBits(GetReservedTrackbits(ft.new_tile));
 
@@ -338,7 +345,7 @@ PBSTileInfo FollowTrainReservation(const Train *consist, Vehicle **train_on_res)
 	if (IsRailDepotTile(tile) && GetDepotReservationTrackBits(tile).None()) return PBSTileInfo(tile, trackdir, false);
 
 	FindTrainOnTrackInfo ftoti;
-	ftoti.res = FollowReservation(consist->owner, GetAllCompatibleRailTypes(consist->railtypes), tile, trackdir);
+	ftoti.res = FollowReservation(consist->owner, GetAllCompatibleRailTypes(consist->railtypes), tile, trackdir, false, consist);
 	ftoti.res.okay = IsSafeWaitingPosition(consist, ftoti.res.tile, ftoti.res.trackdir, true, _settings_game.pf.forbid_90_deg);
 	if (train_on_res != nullptr) {
 		CheckTrainsOnTrack(ftoti, ftoti.res.tile);

@@ -3,7 +3,7 @@
 Owner: [multilayer parent](r2mlvs-multilayer-vehicles-and-structures.md). Target queue:
 [portal/TBM master](r2mlvs3mp-master-plan.md). Architecture:
 [map layers](../../architecture/map-layers/archi-map-layers.md).
-Reconciled 2026-10-08 against live child checkboxes and [the final audit](r2mlvs3mp-z-b-final-closure-audit.md).
+Reconciled 2026-10-08 against live child checkboxes and [the final audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md).
 
 ## Current target leftovers
 

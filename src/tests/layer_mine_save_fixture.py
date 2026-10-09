@@ -15,6 +15,24 @@ from geology_generation_fixture import read_stream
 from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("mines", "layer-mine-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def owned_chunks(path):
     """Read immutable native mine/geology transport from an actual save.
 
@@ -31,7 +49,7 @@ def main():
 
     @return None; any loader failure or changed binding/reserve raises after restoring startup bytes.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     parser = argparse.ArgumentParser()
     parser.add_argument("--refusals-only", action="store_true", help="run only the malformed mine files")
     args = parser.parse_args()
@@ -74,7 +92,7 @@ def main():
                 table["edited"] = True
             encoded = b"".join(encode_chunk(row) if row.get("edited") else row["raw"]
                                for row in records if not row.get("remove")) + bytes(4)
-            candidate = save_path(f"r2mlvs6-dl-{name}-input.sav")
+            candidate = output_save_path(f"r2mlvs6-dl-{name}-input.sav")
             candidate.write_bytes(original_bytes[:8] + lzma.compress(encoded))
             try:
                 run_case(name, ["-g", candidate.as_posix()], error, accepted=False, prefix="r2mlvs6-dl")
@@ -83,7 +101,7 @@ def main():
                 assert refusal.returncode == 2, "unexpected process failure"
                 evidence = log_path(f"r2mlvs6-dl-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence, "expected mine refusal missing"
-                assert not save_path(f"r2mlvs6-dl-{name}.sav").exists(), "refused world was saved"
+                assert not output_save_path(f"r2mlvs6-dl-{name}.sav").exists(), "refused world was saved"
                 print(f"{name}: real game rejected corrupt mine transport", flush=True)
     finally:
         startup.write_bytes(original)

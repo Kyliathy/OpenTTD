@@ -11,6 +11,7 @@
 #include "tile_map.h"
 #include "rail_map.h"
 #include "company_func.h"
+#include "company_base.h"
 #include <queue>
 
 #include "safeguards.h"
@@ -140,18 +141,22 @@ static uint32_t PlanningDistance(TileIndex position, TileIndex target)
  * Check a complete candidate inside explicitly accepted work and actual terrain/claim/infrastructure authority.
  * @param cut Conservative full cutter/consist envelope.
  * @param authorized Canonical accepted work, including caller-approved approach space.
+ * @param continuing_job Actual owned job whose preceding accepted cuts will already be open; invalid for a fresh plan.
  * @return Stable first geometry/ownership refusal, or success.
  */
-static ExcavationFootprintResult CheckPlanningCut(const ExcavationCutGeometry &cut, std::span<const TileIndex> authorized)
+static ExcavationFootprintResult CheckPlanningCut(const ExcavationCutGeometry &cut, std::span<const TileIndex> authorized, ExcavationJobID continuing_job)
 {
 	const auto &geology = GetGeologyWorldState();
 	// Both cutter and every consist corner must remain authorized and free of another producer's active/owned solid work.
 	for (TileIndex tile : cut.swept_tiles) {
 		if (!std::binary_search(authorized.begin(), authorized.end(), tile)) return {ExcavationError::OutsideAuthorization, tile};
-		if (geology.job_claims.contains(tile)) return {ExcavationError::ActiveCut, tile};
+		const auto claim = geology.job_claims.find(tile);
+		// Only the same validated job's already accepted prefix may support its
+		// future extension. Another project's reservation never becomes free floor.
+		if (claim != geology.job_claims.end() && claim->second != continuing_job) return {ExcavationError::ActiveCut, tile};
 		const auto terrain = geology.terrain.Get(tile);
 		if (!terrain) return {ExcavationError::InvalidTile, tile};
-		if (*terrain == ExcavationState::Excavating) return {ExcavationError::ActiveCut, tile};
+		if (*terrain == ExcavationState::Excavating && (claim == geology.job_claims.end() || claim->second != continuing_job)) return {ExcavationError::ActiveCut, tile};
 		// Real support rail/portal occupancy is validated by the later controller; other structures are not implicit demolition permission.
 		if (GetTileType(tile) != TileType::Clear && GetTileType(tile) != TileType::Railway && GetTileType(tile) != TileType::LayerPortal) return {ExcavationError::Conflict, tile};
 		// A depot shares Railway's tile type but is a building with a constrained door. Its already open floor
@@ -193,9 +198,10 @@ static std::vector<TileIndex> NewPlanningCells(const ExcavationCutGeometry &cut,
  * @param limits Exact deterministic operation/depth/storage bounds.
  * @param result Whole-command proposal receiving a legal joined prefix and consumed budget.
  * @param solid_start The start pose is inside an unopened portal pocket: its first edge must go straight out of the door.
+ * @param continuing_job Validated existing job whose accepted prefix precedes this additional route.
  * @return True if this target is covered; false leaves a visible legal partial/refusal with no world mutation.
  */
-static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileIndex target, const ExcavationOutline &outline, const std::set<TileIndex> &cleared, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationRouteProposal &result, bool solid_start = false)
+static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileIndex target, const ExcavationOutline &outline, const std::set<TileIndex> &cleared, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationRouteProposal &result, bool solid_start, ExcavationJobID continuing_job)
 {
 	std::vector<ExcavationPlanningNode> nodes;
 	nodes.reserve(limits.states);
@@ -229,7 +235,7 @@ static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileInde
 			const auto heading = static_cast<Direction>((to_underlying(node.pose.heading) + turn + 8) % 8);
 			auto step = AdvanceExcavationPlanningPose(node.pose, heading);
 			if (step.error != ExcavationError::None) { failure = {step.error, step.failure_tile}; continue; }
-			const auto legal = CheckPlanningCut(step.cut, outline.authorized_tiles);
+			const auto legal = CheckPlanningCut(step.cut, outline.authorized_tiles, continuing_job);
 			if (legal.error != ExcavationError::None) { failure = legal; continue; }
 			const auto cells = NewPlanningCells(step.cut, cleared, node.pose.position, !leaving_housing);
 			const auto quote = QuoteExcavationCells(cells, model_id);
@@ -268,10 +274,14 @@ static bool SearchExcavationTarget(const ExcavationPlanningPose &start, TileInde
  * @param start Supported cutter and planned consist geometry.
  * @param model_id Immutable cutter capability.
  * @param limits Deterministic work/storage/route bounds.
+ * @param continuation Validated live same-company job, supplied only by the extension wrapper; its full accepted prefix precedes new work.
+ * @param intent Requested area coverage or exact straight advance.
+ * @param tunnel_end Exact cutter-centre endpoint for straight intent.
  * @return Full/visible partial proposal; claims, terrain, funds, cargo and RNG are unchanged.
  */
-ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits)
+static ExcavationRouteProposal PlanExcavationRouteInternal(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits, const ExcavationJob *continuation, ExcavationPlanIntent intent, TileIndex tunnel_end)
 {
+	if (intent > ExcavationPlanIntent::StraightTunnel) return {ExcavationError::InvalidRoute};
 	// Reject unsafe/unbounded operation settings before allocating any search node or reading caller geometry.
 	if (limits.states == 0 || limits.states > 8192 || limits.expansions == 0 || limits.expansions > 32768 || limits.depth == 0 || limits.depth > MAX_EXCAVATION_ROUTE || limits.segments == 0 || limits.segments > MAX_EXCAVATION_ROUTE) return {ExcavationError::Limit};
 	if (GetGeologyWorldState().generator_version != 1) return {ExcavationError::InvalidPolicy};
@@ -286,14 +296,16 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	const auto initial = AdvanceExcavationPlanningPose(start, start.heading);
 	if (initial.error != ExcavationError::None) return {initial.error, initial.failure_tile};
 	if (GetTileLayer(start.position) != outline.layer) return {ExcavationError::MixedLayers, start.position};
-	const auto model_probe = QuoteExcavationCells(std::array{start.position}, model_id);
-	if (model_probe.error != ExcavationError::None) return {model_probe.error, model_probe.failure_tile};
+	if (continuation == nullptr) {
+		const auto model_probe = QuoteExcavationCells(std::array{start.position}, model_id);
+		if (model_probe.error != ExcavationError::None) return {model_probe.error, model_probe.failure_tile};
+	}
 	// A start pose on an unopened portal housing is a solid start. Its issuer must be a current Sealed pair of this
 	// company; the cutter must face the door and the whole straddling consist must still be in the shaft.
 	ExcavationJob probe;
 	probe.commissioning_anchor = start.position;
 	probe.company = _current_company;
-	const auto starter = ResolveExcavationStarter(probe);
+	const auto starter = continuation == nullptr ? ResolveExcavationStarter(probe) : ExcavationStarterResult{};
 	if (starter.error != ExcavationError::None) return {starter.error, starter.failure_tile};
 	if (starter.required) {
 		if (start.heading != starter.exit_heading) return {ExcavationError::IllegalTurn, start.position};
@@ -303,6 +315,11 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	}
 	const auto &geology = GetGeologyWorldState();
 	std::set<TileIndex> cleared;
+	if (continuation != nullptr) {
+		// This is a forecast after all existing accepted cuts, not a second
+		// terrain store. Old unopened cells retain their live paid-work claims.
+		for (const auto &cut : continuation->route) cleared.insert(cut.swept_tiles.begin(), cut.swept_tiles.end());
+	}
 	// Actual open work cells form the initial virtual floor; no planning path may pre-excavate its future support in live storage.
 	for (TileIndex tile : work.requested_tiles) {
 		if (geology.terrain.Get(tile) == ExcavationState::Excavated) cleared.insert(tile);
@@ -310,7 +327,7 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	// Open starts need open initial support. A solid start's support is its unopened pocket: those cells stay
 	// out of the virtual floor so the first edge charges them as new rock.
 	for (TileIndex tile : initial.cut.support_tiles) {
-		if (geology.terrain.Get(tile) == ExcavationState::Excavated) {
+		if (cleared.contains(tile) || geology.terrain.Get(tile) == ExcavationState::Excavated) {
 			cleared.insert(tile);
 			continue;
 		}
@@ -318,12 +335,61 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 	}
 	ExcavationRouteProposal result;
 	result.end = start;
+	if (intent == ExcavationPlanIntent::StraightTunnel) {
+		// A tunnel means the centre reaches the chosen end in its current heading.
+		// Covering the end with the edge of the body, or turning to cheaper rock,
+		// would silently change the player's requested railway alignment.
+		if (!IsValidTile(tunnel_end) || GetTileLayer(tunnel_end) != outline.layer) return {ExcavationError::MixedLayers, tunnel_end};
+		const int dx = int(TileX(tunnel_end)) - int(TileX(start.position));
+		const int dy = int(TilePlaneY(tunnel_end)) - int(TilePlaneY(start.position));
+		const int steps = std::max(std::abs(dx), std::abs(dy));
+		const auto delta = TileIndexDiffCByDir(start.heading);
+		if (steps == 0 || dx != steps * delta.x || dy != steps * delta.y) return {ExcavationError::IllegalTurn, tunnel_end};
+		if (uint32_t(steps) > limits.segments || uint32_t(steps) > limits.depth || uint32_t(steps) > limits.expansions) return {ExcavationError::Limit, tunnel_end};
+		// Every straight edge uses the same complete advancing sweep, ownership
+		// checks and paid material quote as area search. No floor is opened here.
+		for (int index = 0; index < steps; ++index) {
+			auto step = AdvanceExcavationPlanningPose(result.end, start.heading);
+			const auto legal = step.error == ExcavationError::None ? CheckPlanningCut(step.cut, work.requested_tiles,
+				continuation == nullptr ? ExcavationJobID{UINT32_MAX} : continuation->id) : ExcavationFootprintResult{step.error, step.failure_tile};
+			++result.expansions;
+			if (legal.error != ExcavationError::None) {
+				result.error = legal.error;
+				result.failure_tile = legal.failure_tile;
+				break;
+			}
+			std::vector<TileIndex> fresh;
+			for (TileIndex tile : step.cut.swept_tiles) {
+				if (!cleared.contains(tile)) fresh.push_back(tile);
+			}
+			const auto quote = QuoteExcavationCells(fresh, model_id);
+			if (quote.error != ExcavationError::None) {
+				result.error = quote.error;
+				result.failure_tile = quote.failure_tile;
+				break;
+			}
+			result.estimate.new_cells += quote.new_cells; result.estimate.earth_t += quote.earth_t; result.estimate.rock_t += quote.rock_t;
+			result.estimate.support_units += quote.support_units; result.estimate.cost += quote.cost; result.estimate.work_ticks += quote.work_ticks;
+			cleared.insert(step.cut.swept_tiles.begin(), step.cut.swept_tiles.end());
+			result.route.push_back(std::move(step.cut));
+			result.end = std::move(step.next);
+		}
+		result.partial = result.end.position != tunnel_end;
+		// The route may explain a refused prefix, but only full endpoint arrival
+		// and complete requested-floor coverage can be confirmed by the TBM owner.
+		for (TileIndex tile : normalized.requested_tiles) {
+			(cleared.contains(tile) ? result.covered_targets : result.remaining_targets).push_back(tile);
+		}
+		if (!result.remaining_targets.empty()) result.partial = true;
+		return result;
+	}
 	// Select the lowest remaining final-floor cell, then recompute virtual coverage from complete accepted sweeps, never endpoint centres alone.
 	for (TileIndex target : normalized.requested_tiles) {
 		if (cleared.contains(target)) continue;
 		const size_t before = result.route.size();
 		// Only the very first edge of a solid start leaves the housing; later searches start from opened ground.
-		const bool reached = SearchExcavationTarget(result.end, target, work, cleared, model_id, limits, result, starter.required && result.route.empty());
+		const bool reached = SearchExcavationTarget(result.end, target, work, cleared, model_id, limits, result, starter.required && result.route.empty(),
+			continuation == nullptr ? ExcavationJobID{UINT32_MAX} : continuation->id);
 		for (size_t i = before; i < result.route.size(); ++i) {
 			std::vector<TileIndex> fresh;
 			for (TileIndex tile : result.route[i].swept_tiles) {
@@ -342,4 +408,40 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 		(cleared.contains(tile) ? result.covered_targets : result.remaining_targets).push_back(tile);
 	}
 	return result;
+}
+
+/** @copydoc PlanExcavationRoute */
+ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationPlanIntent intent, TileIndex tunnel_end)
+{
+	return PlanExcavationRouteInternal(outline, start, model_id, limits, nullptr, intent, tunnel_end);
+}
+
+/** @copydoc PlanExcavationJobExtension */
+ExcavationRouteProposal PlanExcavationJobExtension(ExcavationJobID id, const ExcavationOutline &outline, uint8_t planning_points, const ExcavationPlanningLimits &limits, ExcavationPlanIntent intent, TileIndex tunnel_end)
+{
+	const auto *job = GetExcavationJob(id);
+	// An extension must start from this company's actual accepted history;
+	// callers cannot make another claim traversable by presenting a copied ID.
+	if (job == nullptr || !Company::IsValidID(job->company) || job->company != _current_company) return {ExcavationError::InvalidOwner};
+	// Completed/cancelled work has released its claims; reusing that machine
+	// requires a new project through its real portal or hangar owner.
+	if (job->state == ExcavationJobState::Completed || job->state == ExcavationJobState::Cancelled) return {ExcavationError::AlreadyCompleted};
+	// A bounded native consist and a real accepted endpoint are prerequisites
+	// for reconstructing the tail; neither can be inferred from a clicked tile.
+	if (planning_points < 3 || planning_points > 16 || job->route.empty()) return {ExcavationError::InvalidRoute};
+	const auto valid = ValidateExcavationJobGeometry(GetGeologyWorldState(), *job);
+	if (valid.error != ExcavationError::None) return {valid.error, valid.failure_tile};
+	if (job->route.size() >= MAX_EXCAVATION_ROUTE) return {ExcavationError::Limit};
+	if (limits.segments > MAX_EXCAVATION_ROUTE) return {ExcavationError::Limit}; // Clamping remaining storage must not conceal an invalid caller budget.
+	ExcavationPlanningPose pose{job->commissioning_anchor, job->route.front().heading, std::vector<TileIndex>(planning_points, job->commissioning_anchor)};
+	// Replaying each accepted sweep proves the complete real consist's end
+	// history. A shorter fake train may not squeeze a new bend into less space.
+	for (const auto &cut : job->route) {
+		const auto step = AdvanceExcavationPlanningPose(pose, cut.heading);
+		if (step.error != ExcavationError::None || step.cut != cut) return {ExcavationError::InvalidRoute, cut.cutter_position};
+		pose = step.next;
+	}
+	auto bounded = limits;
+	bounded.segments = std::min<uint32_t>(bounded.segments, MAX_EXCAVATION_ROUTE - job->route.size());
+	return PlanExcavationRouteInternal(outline, pose, job->model_id, bounded, job, intent, tunnel_end);
 }

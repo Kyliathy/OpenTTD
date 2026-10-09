@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf.h Entry point for OpenTTD to YAPF. */
+/** @file yapf.h Native pathfinder entry points. @see docs/zz-reach2/architecture/pathfinder/archi-pathfinder-rail.md; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8 (actual portal-storage exits). */
 
 #ifndef YAPF_H
 #define YAPF_H
@@ -60,6 +60,15 @@ Trackdir YapfRoadVehicleChooseTrack(const RoadVehicle *v, TileIndex tile, DiagDi
  * @return         the best track for next turn
  */
 Track YapfTrainChooseTrack(const Train *v, TileIndex tile, DiagDirection enterdir, TrackBits tracks, bool &path_found, bool reserve_track, struct PBSTileInfo *target, TileIndex *dest);
+
+/**
+ * Select a real route from either side of a wholly stored portal train without changing its position.
+ * @param v Actual native train with its current ordinary order or retained work destination.
+ * @param portal Upper housing containing the complete train in native storage.
+ * @return Door/shaft departure direction, or Invalid when neither real path reaches the destination.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+ */
+DiagDirection YapfTrainChoosePortalExit(const Train *v, TileIndex portal);
 
 /**
  * Used when user sends road vehicle to the nearest depot or if road vehicle needs servicing using YAPF.

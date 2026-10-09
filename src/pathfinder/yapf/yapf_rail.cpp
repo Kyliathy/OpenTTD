@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_rail.cpp Native rail routing and actual layout invalidation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7 electrical topology follows eligible physical changes. */
+/** @file yapf_rail.cpp Native rail routing and actual layout invalidation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7 electrical topology follows eligible physical changes; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/pathfinder/archi-pathfinder-rail.md */
 
 #include "../../stdafx.h"
 #include "../../transport_tube.h"
@@ -453,7 +453,19 @@ public:
 		return result1;
 	}
 
-	inline Trackdir ChooseRailTrack(const Train *v, TileIndex, DiagDirection, TrackBits, bool &path_found, bool reserve_track, PBSTileInfo *target, TileIndex *dest)
+	/**
+	 * Find the native path from the actual reservation to the current destination.
+	 * @param v Actual train, including its private work-portal admission.
+	 * @param tile Legacy candidate tile; the real reserved endpoint supplies the search origin.
+	 * @param enterdir Legacy entry direction; the real reservation supplies its trackdir.
+	 * @param tracks Legacy candidate pieces; the track follower reads actual geometry.
+	 * @param[out] path_found Whether the destination or ordinary permitted signal wait was found.
+	 * @param reserve_track Whether to acquire the native reservation after a successful search.
+	 * @param[out] target Optional actual safe reservation endpoint.
+	 * @param[out] dest Optional final destination reached.
+	 * @return Native next trackdir, or Invalid; work travel callers must reject unsuccessful partial suggestions.
+	 */
+	inline Trackdir ChooseRailTrack(const Train *v, [[maybe_unused]] TileIndex tile, [[maybe_unused]] DiagDirection enterdir, [[maybe_unused]] TrackBits tracks, bool &path_found, bool reserve_track, PBSTileInfo *target, TileIndex *dest)
 	{
 		if (target != nullptr) target->tile = INVALID_TILE;
 		if (dest != nullptr) *dest = INVALID_TILE;
@@ -461,8 +473,11 @@ public:
 		/* set origin and destination nodes */
 		PBSTileInfo origin = FollowTrainReservation(v);
 		Yapf().SetOrigin(origin.tile, origin.trackdir, INVALID_TILE, Trackdir::Invalid, 1);
-		Yapf().SetTreatFirstRedTwoWaySignalAsEOL(true);
 		Yapf().SetDestination(v);
+		// Work travel must find its actual accepted target before selecting a
+		// branch. A partial search ending at a red signal is still not permission
+		// to take an arbitrary branch; ordinary train signal policy is unchanged.
+		Yapf().SetTreatFirstRedTwoWaySignalAsEOL(!Yapf().IsCutterSteeringDestination());
 
 		/* find the best path */
 		path_found = Yapf().FindPath(v);
@@ -501,6 +516,26 @@ public:
 		/* Treat the path as found if stopped on the first two way signal(s). */
 		path_found |= Yapf().stopped_on_first_two_way_signal;
 		return next_trackdir;
+	}
+
+	/**
+	 * Query the existing destination from both physical sides of portal storage.
+	 * @param v Actual stored train; native compatibility/order rules remain authoritative.
+	 * @param portal Its physical magazine.
+	 * @return Chosen real outgoing direction, or Invalid with no reservations or movement changed.
+	 */
+	static DiagDirection stChoosePortalExit(const Train *v, TileIndex portal)
+	{
+		Tpf pf;
+		pf.DisableCache(true); // Both possible origins are storage exits, independent of the head's saved orientation.
+		pf.SetOrigin(portal, DiagDirToDiagTrackdir(GetLayerPortalDoorDirection(portal)),
+			portal, DiagDirToDiagTrackdir(GetLayerPortalShaftDirection(portal)), 1);
+		pf.SetTreatFirstRedTwoWaySignalAsEOL(false);
+		pf.SetDestination(v);
+		if (!pf.FindPath(v)) return DiagDirection::Invalid;
+		Node *origin = pf.GetBestNode();
+		while (origin->parent != nullptr) origin = origin->parent; // The actual successful origin identifies the side every real part must leave through.
+		return TrackdirToExitdir(origin->GetTrackdir());
 	}
 
 	static bool stCheckReverseTrain(const Train *v, TileIndex t1, Trackdir td1, TileIndex t2, Trackdir td2, int reverse_penalty)
@@ -602,6 +637,12 @@ Track YapfTrainChooseTrack(const Train *v, TileIndex tile, DiagDirection enterdi
 		: CYapfRail::stChooseRailTrack(v, tile, enterdir, tracks, path_found, reserve_track, target, dest);
 
 	return (td_ret != Trackdir::Invalid) ? TrackdirToTrack(td_ret) : FindFirstTrack(tracks);
+}
+
+/** @copydoc YapfTrainChoosePortalExit */
+DiagDirection YapfTrainChoosePortalExit(const Train *v, TileIndex portal)
+{
+	return _settings_game.pf.forbid_90_deg ? CYapfRailNo90::stChoosePortalExit(v, portal) : CYapfRail::stChoosePortalExit(v, portal);
 }
 
 bool YapfTrainCheckReverse(const Train *v)

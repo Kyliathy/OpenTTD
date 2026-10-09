@@ -16,8 +16,12 @@
 #include "debug.h"
 #include "vehicle_func.h"
 #include "train.h"
+#include "train_cmd.h"
 #include "aircraft.h"
+#include "depot_base.h"
 #include "tbm.h"
+#include "tbm_hangar.h"
+#include "pathfinder/yapf/yapf.h"
 #include "tbm_exchange.h"
 #include "utility_power.h"
 #include "transport_tube.h"
@@ -156,14 +160,53 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
 	return LayerPortalWorkError::None;
 }
 
+/** @copydoc GetLayerPortalMagazineExit */
 DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front)
 {
 	if (!IsLayerPortalTile(tile) || GetLayerPortalTransportType(tile) != TransportType::Rail) return DiagDirection::Invalid;
 	const auto key = GetLayerPortalPairKey(tile);
 	const auto *work = GetLayerPortalWorkRecord(tile);
+	const auto *orders_project = GetTBMProjectForCutter(front.index);
+	const bool own_order_departure = orders_project != nullptr && orders_project->phase == TBMPhase::FollowOrders &&
+		orders_project->portal == tile && CheckLayerPortalWorkAccess(tile, front.index, orders_project->job) == LayerPortalWorkError::None;
+	if (key && *key == tile && (CanTBMUseHangarPortal(front, tile) || own_order_departure) && !IsTBMStagingHangarOrder(front)) {
+		const auto *project = GetTBMProjectForCutter(front.index);
+		const bool original_work = project != nullptr && project->portal == tile && project->phase != TBMPhase::FollowOrders && !front.current_order.IsType(OT_GOTO_DEPOT);
+		if (!original_work) {
+			const auto ordered = GetTBMOrderedHangar(front);
+			if (ordered.error == TBMHangarError::None && ordered.tile == tile) return ReverseDiagDir(DirToDiagDir(front.GetMovingFront()->GetMovingDirection()));
+			if (front.IsChainInDepot()) return YapfTrainChoosePortalExit(&front, tile);
+			if (project != nullptr && project->portal == tile && front.vehicle_flags.Test(VehicleFlag::DrivingBackwards)) return GetLayerPortalShaftDirection(tile); // Collect a backing tail before changing the original magazine's exit side.
+			// Stored parts retain the native departure orientation until each
+			// leaves. The head can already be turning several cells away; using
+			// its later heading here would strand a wagon inside this magazine.
+			for (const Train *part = &front; part != nullptr; part = part->Next()) {
+				if (part->tile == tile && part->track == Track::Depot) return DirToDiagDir(part->direction);
+			}
+			for (const Train *part = &front; part != nullptr; part = part->Next()) {
+				if (part->tile == tile) return DirToDiagDir(part->direction); // Finish the last part's actual upper housing traversal.
+			}
+			return DiagDirection::Invalid;
+		}
+	}
 	// Only the key of a pair that commissions work keeps a magazine; its rock end is a passage.
 	if (!key.has_value() || *key != tile || work == nullptr || work->state != LayerPortalWorkState::Commissioning) return DiagDirection::Invalid;
-	if (CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None) return GetLayerPortalShaftDirection(tile);
+	if (CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None) {
+		if (front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front)) {
+			// Backing from a face may leave trailing units in the work magazine.
+			// Collect the complete real chain through the shaft before changing
+			// its exit side; mixing an incoming shaft with a door-side release
+			// would make a follower inherit another part's depot-only track state.
+			if (front.vehicle_flags.Test(VehicleFlag::DrivingBackwards)) return GetLayerPortalShaftDirection(tile);
+			// Once withdrawn, ordinary magazine departure releases the stored
+			// whole chain through the outer door for the actual depot visit.
+			for (const Train *part = front.First(); part != nullptr; part = part->Next()) {
+				if (part->tile == tile && part->track == Track::Depot) return GetLayerPortalDoorDirection(tile);
+			}
+			return DiagDirection::Invalid;
+		}
+		return GetLayerPortalShaftDirection(tile);
+	}
 	if (IsTBMHaulerAdmittedAtBay(front, tile)) return GetLayerPortalDoorDirection(tile);
 	return DiagDirection::Invalid;
 }
@@ -180,6 +223,7 @@ bool IsLayerPortalMagazineBusy(TileIndex tile, const Train &front)
 	});
 }
 
+/** @copydoc GetLayerPortalAdmittedTrackdirs */
 TrackdirBits GetLayerPortalAdmittedTrackdirs(TileIndex tile, const Train &front, DiagDirection side)
 {
 	if (!IsLayerPortalTile(tile) || GetLayerPortalTransportType(tile) != TransportType::Rail) return {};
@@ -187,13 +231,18 @@ TrackdirBits GetLayerPortalAdmittedTrackdirs(TileIndex tile, const Train &front,
 	if (side != DiagDirection::Invalid && side != GetLayerPortalDoorDirection(tile)) return {};
 	if (CheckLayerPortalAvailability(tile) != LayerPortalWorkError::None) return {};
 	const auto *work = GetLayerPortalWorkRecord(tile);
+	if (CanTBMUseHangarPortal(front, tile)) {
+		if (front.tile != tile && IsLayerPortalMagazineBusy(tile, front)) return {};
+		return TrackBitsToTrackdirBits(DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)));
+	}
 	if (work == nullptr || work->state != LayerPortalWorkState::Commissioning) return {};
 	const bool cutter = CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None;
 	// A hauler reaches only the key of its own Source bay, and only through the door: it never passes the cutter.
 	const bool hauler = !cutter && side != DiagDirection::Invalid && IsTBMHaulerAdmittedAtBay(front, tile);
 	if (!cutter && !hauler) return {};
-	// A magazine that moves another train takes nobody in from outside until it is clear.
-	if (front.tile != tile && GetLayerPortalMagazineExit(tile, front) != DiagDirection::Invalid && IsLayerPortalMagazineBusy(tile, front)) return {};
+	// A source housing occupied by another moving train stays unavailable,
+	// including a servicing cutter that passes through instead of parking.
+	if (front.tile != tile && work->pair_key == tile && IsLayerPortalMagazineBusy(tile, front)) return {};
 	return TrackBitsToTrackdirBits(DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)));
 }
 
@@ -299,7 +348,31 @@ LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCo
 }
 
 /**
- * Validate and commit an empty pair state, releasing old reservations before hiding their track.
+ * Check a portal's public track while retaining whole trains in its existing native magazine.
+ * @param tile Physical endpoint, with ground-level occupancy only.
+ * @param company Owner of the requested connection.
+ * @return Whether the through-route is empty; stored trains remain protected from demolition elsewhere.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group7B
+ */
+static bool IsPortalThroughTrackClear(TileIndex tile, CompanyID company)
+{
+	const int height = GetTileMaxPixelZ(tile);
+	const auto key = GetLayerPortalPairKey(tile);
+	for (const Vehicle *vehicle : VehiclesOnTile(tile)) {
+		// Match ordinary ground occupancy; an overhead aircraft or disaster
+		// graphic never occupies this track. Only the upper rail housing has
+		// the existing depot-style magazine alongside its through passage.
+		if (vehicle->type == VehicleType::Disaster || (vehicle->type == VehicleType::Aircraft && vehicle->subtype == AIR_SHADOW) || vehicle->z_pos > height) continue;
+		if (vehicle->type != VehicleType::Train || !key || *key != tile || GetLayerPortalTransportType(tile) != TransportType::Rail) return false;
+		const Train *front = Train::From(vehicle)->First();
+		if (front->owner != company || front->vehstatus.Test(VehState::Crashed) || !IsTrainStoppedAtPortalSite(*front)) return false;
+		if (GetTBMProjectForCutter(front->index) != nullptr || GetTBMExchangeAssignmentForHauler(front->index) != nullptr) return false; // Active work and logistics must settle through their owners before public connection.
+	}
+	return true;
+}
+
+/**
+ * Validate and commit a pair with vacated public track, releasing old reservations before hiding its edge.
  * @param tile Either actual physical endpoint.
  * @param company Actual command company.
  * @param connected Whether ordinary traffic should be admitted.
@@ -318,12 +391,13 @@ LayerPortalWorkError ChangeLayerPortalConnection(TileIndex tile, CompanyID compa
 	const auto pair = GetLayerPortalPairTile(*key);
 	const auto availability = CheckLayerPortalAvailability(tile);
 	if (availability != LayerPortalWorkError::None) return availability;
-	// Both physical ends and approaches must be free before a cached path/reservation can lose or acquire an edge.
+	// Both public endpoints and approaches must be vacated before changing a
+	// routing edge. Whole withdrawn magazine trains retain their native storage.
 	for (TileIndex end : {*key, pair}) {
 		const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(end));
 		const auto door = TileAddWrap(end, step.x, step.y);
 		if (!IsValidTile(door)) return LayerPortalWorkError::InvalidPair;
-		if (EnsureNoVehicleOnGround(end).Failed() || EnsureNoVehicleOnGround(door).Failed()) return LayerPortalWorkError::Conflict; // Any occupying part preserves its current recoverable position and reservation.
+		if (!IsPortalThroughTrackClear(end, company) || EnsureNoVehicleOnGround(door).Failed()) return LayerPortalWorkError::Conflict; // A moving head or any outside tail still prevents topology changes.
 		if (connected && CheckExcavationConstruction(std::array{end, door}).Failed()) return LayerPortalWorkError::MissingExcavation; // Ordinary connection requires real open floor at both doors; shaft housing grants no clearing credit.
 
 		if (GetGeologyWorldState().job_claims.contains(end) || GetGeologyWorldState().job_claims.contains(door)) return LayerPortalWorkError::Conflict; // No ordinary connection may steal an actual active geological work claim.
@@ -335,7 +409,11 @@ LayerPortalWorkError ChangeLayerPortalConnection(TileIndex tile, CompanyID compa
 		if (connected) {
 			const auto transport = GetLayerPortalTransportType(end);
 			if (transport == TransportType::Rail) {
-				if (!IsPlainRailTile(door) || GetTileOwner(door) != company.base() || GetRailType(door) != GetRailType(end) || !GetTrackBits(door).Test(DiagDirToDiagTrack(GetLayerPortalShaftDirection(end)))) return LayerPortalWorkError::Conflict; // Open rock is insufficient: both actual owned rail approaches must supply the compatible shaft axis.
+				// A legal curve immediately outside the door is a real approach,
+				// just as for native train travel. Require a piece that joins the
+				// door, rather than an unrelated or necessarily straight track.
+				if (!IsPlainRailTile(door) || GetTileOwner(door) != company.base() || GetRailType(door) != GetRailType(end) ||
+						(GetTrackBits(door) & DiagdirReachesTracks(GetLayerPortalDoorDirection(end))).None()) return LayerPortalWorkError::Conflict;
 				if (work.state != LayerPortalWorkState::Connected && HasLayerPortalReservation(end)) return LayerPortalWorkError::Conflict; // Hidden/work reservations must be resolved by their controller before an ordinary edge appears.
 			} else {
 				if (!IsNormalRoadTile(door) || GetRoadOwner(door, RoadTramType::Road) != company.base() || GetRoadTypeRoad(door) != GetRoadTypeRoad(end) || GetRoadBits(door, RoadTramType::Road) != AxisToRoadBits(DiagDirToAxis(GetLayerPortalShaftDirection(end)))) return LayerPortalWorkError::Conflict; // Elevators/tunnels connect only actual same-owner road approaches, never an unexcavated or tube corridor.
@@ -370,7 +448,12 @@ LayerPortalWorkError ChangeLayerPortalConnection(TileIndex tile, CompanyID compa
  */
 LayerPortalWorkError CheckLayerPortalLifecycle(TileIndex tile)
 {
-	if (!GetLayerPortalPairKey(tile)) return LayerPortalWorkError::InvalidPair;
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key) return LayerPortalWorkError::InvalidPair;
+	if (IsLayerPortalHangarTile(*key)) {
+		const Depot *depot = Depot::GetIfValid(GetLayerPortalHangarDepotIndex(*key));
+		if (depot == nullptr || depot->xy != *key) return LayerPortalWorkError::InvalidReference;
+	}
 	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::Classic) return LayerPortalWorkError::None;
 	const auto *work = GetLayerPortalWorkRecord(tile);
 	if (work == nullptr) return LayerPortalWorkError::InvalidReference;
@@ -399,7 +482,14 @@ LayerPortalWorkError RetireLayerPortalWorkPair(TileIndex tile)
 	// identity still resolves; consumed electricity is never refunded.
 	InvalidateUtilityPowerLinksForPortal(tile);
 	InvalidateTubePowerForPortal(tile);
-	_portal_work.erase(*GetLayerPortalPairKey(tile));
+	const TileIndex key = *GetLayerPortalPairKey(tile);
+	if (IsLayerPortalHangarTile(key)) {
+		// Retire the genuine depot while its physical marker still resolves,
+		// so native destruction invalidates every ordinary order and backup.
+		delete Depot::Get(GetLayerPortalHangarDepotIndex(key));
+		SetLayerPortalHangarDepot(key, DepotID::Invalid());
+	}
+	_portal_work.erase(key);
 	return LayerPortalWorkError::None;
 }
 
@@ -444,7 +534,8 @@ static void UnbindLayerPortalWork(TileIndex key, LayerPortalWorkRecord &record)
 	NotifyLayerPortalRoutingChanged(key);
 }
 
-LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool execute)
+/** @copydoc CheckLayerPortalWorkWithdrawal */
+LayerPortalWorkError CheckLayerPortalWorkWithdrawal(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool after_cancel)
 {
 	const auto key = GetLayerPortalPairKey(tile);
 	if (!key) return LayerPortalWorkError::InvalidPair;
@@ -454,16 +545,31 @@ LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID
 	const auto &geology = GetGeologyWorldState();
 	const auto found = std::ranges::find(geology.jobs, job, &ExcavationJob::id);
 	// The work is over: a retired, completed or cancelled job no longer needs the pocket.
-	if (found != geology.jobs.end() && found->state != ExcavationJobState::Completed && found->state != ExcavationJobState::Cancelled) return LayerPortalWorkError::Conflict;
+	if (found != geology.jobs.end() && found->state != ExcavationJobState::Completed && found->state != ExcavationJobState::Cancelled) {
+		if (!after_cancel || CancelExcavationJob(job, false) != ExcavationError::None) return LayerPortalWorkError::Conflict; // A prepared cancellation must be admitted by the sole geological owner.
+	}
 	const TileIndex rock = GetLayerPortalPairTile(*key);
 	const auto step = TileIndexDiffCByDiagDir(GetLayerPortalDoorDirection(rock));
 	const TileIndex door = TileAddWrap(rock, step.x, step.y);
 	if (!IsValidTile(door)) return LayerPortalWorkError::InvalidPair;
 	// The rock side is empty, part and claim alike; the withdrawn consist may still stand in its Surface assembly state.
-	if (EnsureNoVehicleOnGround(rock).Failed() || EnsureNoVehicleOnGround(door).Failed() || geology.job_claims.contains(rock) || geology.job_claims.contains(door)) return LayerPortalWorkError::Conflict;
+	for (TileIndex cell : {rock, door}) {
+		if (EnsureNoVehicleOnGround(cell).Failed()) return LayerPortalWorkError::Conflict;
+		const auto claim = geology.job_claims.find(cell);
+		if (claim != geology.job_claims.end() && (!after_cancel || claim->second != job)) return LayerPortalWorkError::Conflict; // Only this operation's own cancelled claims may disappear; another project's claim is never released.
+	}
 	if (it->second.revision >= UINT64_MAX - 1) return LayerPortalWorkError::Limit;
+	return LayerPortalWorkError::None;
+}
+
+/** @copydoc WithdrawLayerPortalWorkPair */
+LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool execute)
+{
+	const auto check = CheckLayerPortalWorkWithdrawal(tile, job, cutter, false);
+	if (check != LayerPortalWorkError::None) return check;
 	if (!execute) return LayerPortalWorkError::None;
-	UnbindLayerPortalWork(*key, it->second);
+	const auto key = GetLayerPortalPairKey(tile);
+	UnbindLayerPortalWork(*key, _portal_work.at(*key));
 	return LayerPortalWorkError::None;
 }
 
@@ -593,6 +699,17 @@ LayerPortalWorkError ValidateLayerPortalWorkRecords(std::span<const LayerPortalW
 {
 	if (records.size() > MAX_LAYER_PORTAL_WORK_PAIRS) return LayerPortalWorkError::Limit;
 	if (!records.empty() && profile.id != MultiLayerGameplayProfileID::MultilayerIndustry) return LayerPortalWorkError::InvalidReference; // Classic stores implicit connected topology rather than acquiring new-profile project authority.
+	/** @param anchor Loaded initial work centre. @return Whether its complete pocket still needs the issuing portal's restricted paid start. */
+	const auto needs_starter = [&geology](TileIndex anchor) {
+		const auto state = geology.terrain.Get(anchor);
+		if (!state) return false;
+		if (*state != ExcavationState::Excavated) return true;
+		if (!IsLayerPortalTile(anchor)) return false;
+		const auto pocket = GetExcavationCutterEnvelope(anchor);
+		/** @param tile One staged pocket cell. @return Whether this cell still depends on the first paid cut. */
+		const auto unopened = [&geology](TileIndex tile) { return geology.terrain.Get(tile) != ExcavationState::Excavated; };
+		return pocket.empty() || std::ranges::any_of(pocket, unopened);
+	};
 	TileIndex previous = INVALID_TILE;
 	// Every typed saved key must resolve to exactly one existing reciprocal pair, without duplicate identity or hidden owner repair.
 	for (const auto &record : records) {
@@ -625,7 +742,7 @@ LayerPortalWorkError ValidateLayerPortalWorkRecords(std::span<const LayerPortalW
 		if (job->commissioning_anchor != pair || (job->cutter != VehicleID::Invalid() && job->cutter != record.cutter)) return LayerPortalWorkError::InvalidReference; // Saved work must start at this physical destination and preserve any actual controller binding already owned by geology.
 		// A commissioned job that has not yet opened its housing must still leave through the door and pay for the
 		// whole pocket in its first cut; a tampered first segment could otherwise skip unpaid starter rock.
-		if (job->cursor == 0 && geology.terrain.Get(pair) != ExcavationState::Excavated) {
+		if (job->cursor == 0 && needs_starter(pair)) {
 			const auto envelope = GetExcavationCutterEnvelope(pair);
 			if (envelope.empty() || CheckExcavationStarterGeometry(*job, DiagDirToDir(GetLayerPortalDoorDirection(pair)), envelope).error != ExcavationError::None) return LayerPortalWorkError::InvalidReference;
 		}
@@ -642,13 +759,12 @@ LayerPortalWorkError ValidateLayerPortalWorkRecords(std::span<const LayerPortalW
 			}
 		}
 	}
-	// Reverse binding: every unfinished job still at cursor 0 whose anchor housing rock is unopened depends on a solid
-	// start, so its issuing pair must still be Commissioning that job. A stale or missing issuer would let paid work
-	// resume without the restricted pocket that supports it.
+	// Reverse binding includes reused portals with an open centre but solid
+	// pocket edges. Their first cut still requires this exact issuer; a stale
+	// pair cannot let saved work resume using unsupported surrounding rock.
 	for (const auto &job : geology.jobs) {
 		if (job.state == ExcavationJobState::Completed || job.state == ExcavationJobState::Cancelled || job.cursor != 0) continue;
-		const auto anchor = geology.terrain.Get(job.commissioning_anchor);
-		if (!anchor || *anchor == ExcavationState::Excavated) continue;
+		if (!needs_starter(job.commissioning_anchor)) continue;
 		const auto key = GetLayerPortalPairKey(job.commissioning_anchor);
 		if (!key || *key == job.commissioning_anchor) return LayerPortalWorkError::InvalidReference;
 		const auto issuer = std::ranges::find(records, *key, &LayerPortalWorkRecord::pair_key);

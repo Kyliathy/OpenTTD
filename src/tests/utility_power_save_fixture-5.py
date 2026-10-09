@@ -16,6 +16,21 @@ from geology_generation_fixture import read_stream
 from multilayer_state_fixture import log_path
 
 
+from functools import partial
+from pathlib import Path
+import sys
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import log_path
+CONTEXT = current_run_context("utilities", "utility-power-save-fixture-5")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime()
+INPUTS = ROOT / "src/tests/fixtures/utility"
+DIRECTORY = CONTEXT.saves
+log_path = partial(log_path, context=CONTEXT)
+
+
 def effect_chunks(path):
     """Read exact energy and actual town transport, keeping their authorities separate.
 
@@ -40,7 +55,7 @@ def run_case(mode, source, baseline=None):
     if baseline is not None:
         environment["OTTD_UTILITY_TOWN_BASELINE"] = baseline
     with log.open("wb") as sink:
-        subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-effect-file]"],
+        run_native(CONTEXT, [str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-effect-file]"],
                        cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                        creationflags=subprocess.CREATE_NO_WINDOW, timeout=110, check=True)
     evidence = log.read_text(encoding="utf-8", errors="replace")
@@ -55,9 +70,9 @@ def main():
 
     @return None; preserve startup and original paid-world input and verify every generated phase on reload.
     """
-    source = ROOT / "src/tests/fixtures/haulage/m1-loop-underground-5-complete-loop.sav"
+    source = ROOT / "src/tests/fixtures/haulage/spoil-loop-underground/m1-loop-underground-5-complete-loop.sav"
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     existed = startup.exists()
     previous = startup.read_bytes() if existed else None
     DIRECTORY.mkdir(parents=True, exist_ok=True)

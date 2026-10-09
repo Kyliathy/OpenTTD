@@ -16,7 +16,11 @@
 
 #include "stdafx.h"
 #include "tbm.h"
+#include "tbm_hangar.h"
+#include "pbs.h"
 #include "tbm_cmd.h"
+#include "tbm_replanning.h"
+#include "tbm_area_preview.h"
 #include "tbm_exchange.h"
 #include "train_cmd.h"
 #include "command_func.h"
@@ -234,6 +238,79 @@ bool NormalizeTBMProjectReferences(TBMProject &project)
 }
 
 /**
+ * Check the complete physical consist before declaring it parked.
+ * @param project Actual job/vehicle/bay association.
+ * @return Whether every real part is stationary inside the bay and no cargo remains aboard.
+ */
+static bool IsTBMReadyToPark(const TBMProject &project)
+{
+	const Train *front = Train::GetIfValid(project.cutter);
+	if (front == nullptr) return false;
+	if (CheckTBMExchangeParticipant(*front, GetTBMExchangeBay(project), project.company) != TBMExchangeError::None) return IsTBMStored(project.phase) && IsTBMWholeInHangar(*front);
+	// The head's arrival cannot conceal an occupied tail or a loaded wagon;
+	// native bay admission has already checked every part's actual position.
+	for (const Train *part = front; part != nullptr; part = part->Next()) {
+		if (part->cargo.TotalCount() != 0) return false;
+	}
+	return true;
+}
+
+/** @copydoc BeginTBMHangarReturn */
+bool BeginTBMHangarReturn(Train &front)
+{
+	const auto *current = GetTBMProjectForCutter(front.index);
+	if (current == nullptr || IsTBMProjectFinished(current->phase) || IsTBMFinishing(current->phase) || !front.current_order.IsType(OT_GOTO_DEPOT) || current->revision >= UINT64_MAX - 1) return false;
+	TBMProject *project = FindTBMProject(current->id);
+	bool loaded = false;
+	for (const Train *part = &front; part != nullptr; part = part->Next()) loaded |= part->cargo.TotalCount() != 0; // Every attached packet must first return through its existing exchange owner.
+	if (HasTBMHangarHaltOrder(front)) {
+		project->phase = loaded ? (IsTBMWaitingForExchange(project->phase) ? TBMPhase::WaitForHangar : TBMPhase::ReturnForHangar) : TBMPhase::TravelToHangar;
+	} else {
+		// A replacement service order owns travel immediately and rejoins the
+		// existing exchange/face afterward. It cannot leave an obsolete parking
+		// phase waiting for a Halt that the native order no longer contains.
+		project->phase = loaded ? TBMPhase::ReturnForExchange : TBMPhase::TravelToFace;
+	}
+	project->blocked = TBMBlockedReason::None;
+	project->phase_ticks = 0;
+	++project->revision;
+	if (IsTBMReturning(project->phase)) ChooseTBMReturnDirection(front);
+	return true;
+}
+
+/** @copydoc CompleteTBMHangarArrival */
+bool CompleteTBMHangarArrival(const Train &front)
+{
+	const auto *current = GetTBMProjectForCutter(front.index);
+	if (current == nullptr || current->phase != TBMPhase::TravelToHangar || !HasTBMHangarHaltOrder(front) || !IsTBMWholeInHangar(front)) return false;
+	const auto destination = GetTBMOrderedHangar(front);
+	if (destination.error != TBMHangarError::None || destination.tile != front.tile) return false;
+	TBMProject *project = FindTBMProject(current->id);
+	project->phase = TBMPhase::ParkedHangar;
+	project->blocked = TBMBlockedReason::None;
+	project->phase_ticks = 0;
+	++project->revision;
+	return true;
+}
+
+/** @copydoc FollowTBMVehicleOrders */
+bool FollowTBMVehicleOrders(Train &front)
+{
+	const auto *current = GetTBMProjectForCutter(front.index);
+	if (current == nullptr || IsTBMProjectFinished(current->phase) || IsTBMFinishing(current->phase) || current->revision >= UINT64_MAX - 1) return false;
+	TBMProject *project = FindTBMProject(current->id);
+	FreeTrainTrackReservation(&front);
+	if (front.current_order.IsType(OT_LOADING)) front.LeaveStation(); // Finish native station handling before selecting another real travel leg.
+	front.current_order.Free();
+	front.SetDestTile(INVALID_TILE);
+	project->phase = TBMPhase::FollowOrders;
+	project->blocked = TBMBlockedReason::None;
+	project->phase_ticks = 0;
+	++project->revision;
+	return true;
+}
+
+/**
  * Validate one project against the live owners.
  * @param project Complete record with an allocated ID.
  * @return None or the first stable refusal.
@@ -242,7 +319,7 @@ TBMProjectError ValidateTBMProject(const TBMProject &project)
 {
 	if (project.id == TBMProjectID{UINT32_MAX}) return TBMProjectError::InvalidProject;
 	// Unknown phases or reasons cannot be resumed, and an unusable stamp cannot order later transitions.
-	if (to_underlying(project.phase) > to_underlying(TBMPhase::Cancelled) || to_underlying(project.blocked) >= to_underlying(TBMBlockedReason::End) || !IsValidDirection(project.heading) || project.revision == 0 || project.revision == UINT64_MAX) return TBMProjectError::InvalidProject;
+	if (to_underlying(project.phase) > to_underlying(TBMPhase::FollowOrders) || to_underlying(project.blocked) >= to_underlying(TBMBlockedReason::End) || !IsValidDirection(project.heading) || project.revision == 0 || project.revision == UINT64_MAX) return TBMProjectError::InvalidProject;
 	const auto *model = GetTBMCutterModel(project.model_id);
 	// The fractional work remainder is a numerator below the model's own divisor; anything else was never produced.
 	if (model == nullptr || project.work_remainder >= model->work_rate_denominator) return TBMProjectError::InvalidProject;
@@ -268,6 +345,7 @@ TBMProjectError ValidateTBMProject(const TBMProject &project)
 	if (!blocked && !IsTBMPortalLive(project)) return TBMProjectError::MissingPortal;
 	if (project.exchange_bay != INVALID_TILE && !IsValidTile(project.exchange_bay)) return TBMProjectError::MissingPortal;
 	if (!blocked && !IsTBMExchangeLive(project)) return TBMProjectError::MissingPortal;
+	if (IsTBMStored(project.phase) && project.cutter != VehicleID::Invalid() && !IsTBMReadyToPark(project)) return TBMProjectError::InvalidConsist; // A saved stored label cannot replace full physical withdrawal and empty wagons; a lost cutter retains only recoverable cancellation intent.
 	return TBMProjectError::None;
 }
 
@@ -330,13 +408,14 @@ TBMProjectError PublishTBMProject(TBMProject &project, bool execute)
 /**
  * @param front Cutter front engine.
  * @param project Its project.
- * @return Whether the whole consist stands withdrawn and empty: stopped, every part on one tile in the depot state,
+ * @return Whether the whole consist stands withdrawn and empty: stationary, every part on one tile in the depot state,
  *         that tile being the project's Source bay or a genuine rail depot, and no cargo aboard any part.
  */
 static bool IsTBMConsistWithdrawn(const Train &front, const TBMProject &project)
 {
+	if (IsTBMWholeInHangar(front)) return true;
 	const TileIndex tile = front.tile;
-	if (!front.vehstatus.Test(VehState::Stopped) || (tile != project.portal && !IsRailDepotTile(tile))) return false;
+	if (front.cur_speed != 0 || (tile != project.portal && !IsRailDepotTile(tile))) return false;
 	// Outside the work pocket and on one tile, with no spoil or other cargo leaving the project with the train.
 	for (const Train *part = &front; part != nullptr; part = part->Next()) {
 		if (part->tile != tile || part->track != Track::Depot || part->cargo.TotalCount() != 0) return false;
@@ -344,23 +423,51 @@ static bool IsTBMConsistWithdrawn(const Train &front, const TBMProject &project)
 	return true;
 }
 
+/** @copydoc GetTBMProjectReleaseProblem */
+StringID GetTBMProjectReleaseProblem(TBMProjectID id)
+{
+	const auto *project = GetTBMProject(id);
+	if (project == nullptr) return STR_ERROR_TBM_PROJECT_CANT_RETIRE;
+	AutoRestoreBackup actor(_current_company, project->company); // Pure owner preflights must also work during native ticks; the actual command checks its caller separately.
+	if (!IsTBMProjectFinished(project->phase) && !IsTBMStored(project->phase)) return STR_ERROR_TBM_RELEASE_RETURN;
+	const Train *front = Train::GetIfValid(project->cutter);
+	if (front != nullptr && !IsTBMConsistWithdrawn(*front, *project)) return STR_ERROR_TBM_RELEASE_RETURN;
+	if (front == nullptr && project->phase == TBMPhase::Parked) return STR_ERROR_TBM_RELEASE_RETURN;
+	if (GetTBMProjectSettlementBlocker(id).has_value()) return STR_ERROR_TBM_RELEASE_HAULAGE;
+	if (IsTBMCorridorOccupied(*project)) return STR_ERROR_TBM_RELEASE_PORTAL; // Another real train on accepted support must clear before this operation releases its work protection.
+	const auto *job = GetExcavationJob(project->job);
+	const bool cancel_job = job != nullptr && job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled;
+	if (cancel_job && CancelExcavationJob(project->job, false) != ExcavationError::None) return STR_ERROR_TBM_PROJECT_CANT_RETIRE;
+	const auto *record = IsTBMPortalKey(project->portal) ? GetLayerPortalWorkRecord(project->portal) : nullptr;
+	const bool bound = record != nullptr && record->state == LayerPortalWorkState::Commissioning && (record->project == project->job || record->cutter == project->cutter);
+	if (bound && CheckLayerPortalWorkWithdrawal(project->portal, project->job, project->cutter, cancel_job) != LayerPortalWorkError::None) return STR_ERROR_TBM_RELEASE_PORTAL;
+	return INVALID_STRING_ID;
+}
+
 /**
- * Erase a finished project so its consist becomes an ordinary train (Group 17.2).
+ * Finish/cancel and release fully withdrawn, settled work while retaining the actual native machine.
  * @param project Record of the command actor.
  * @param execute False validates only.
- * @return None, or Unavailable while the project is unfinished, a hauler serves it or a set of it carries spoil, its
- *         consist is not withdrawn and empty, or its Commissioning pair cannot be withdrawn yet.
+ * @return None, or Unavailable with all owners unchanged until the whole release operation is admitted.
  */
 static TBMProjectError RetireTBMProject(const TBMProject &project, bool execute)
 {
-	if (!IsTBMProjectFinished(project.phase) || !IsTBMProjectExchangeIdle(project.id)) return TBMProjectError::Unavailable;
-	if (const Train *front = Train::GetIfValid(project.cutter); front != nullptr && !IsTBMConsistWithdrawn(*front, project)) return TBMProjectError::Unavailable;
+	if (GetTBMProjectReleaseProblem(project.id) != INVALID_STRING_ID) return TBMProjectError::Unavailable;
 	// The pair Commissioning this project is withdrawn with it (r2mlvs3 Group 11.3), once its rock side is empty;
 	// otherwise the record would stay bound to an ordinary train that may then be sold.
 	const auto *record = IsTBMPortalKey(project.portal) ? GetLayerPortalWorkRecord(project.portal) : nullptr;
 	const bool bound = record != nullptr && record->state == LayerPortalWorkState::Commissioning && (record->project == project.job || record->cutter == project.cutter);
-	if (bound && WithdrawLayerPortalWorkPair(project.portal, project.job, project.cutter, false) != LayerPortalWorkError::None) return TBMProjectError::Unavailable;
 	if (!execute) return TBMProjectError::None;
+	// Every cargo, vehicle, claim, owner and portal revision has passed before
+	// any publication. These existing owner commits do not allocate or move a train.
+	[[maybe_unused]] const bool settled = ReleaseSettledTBMProjectHaulers(project.id, true);
+	assert(settled);
+	if (Train *front = Train::GetIfValid(project.cutter); front != nullptr) front->vehstatus.Set(VehState::Stopped); // Explicit finish retains the stationary whole native machine in storage after its controller is gone.
+	const auto *job = GetExcavationJob(project.job);
+	if (job != nullptr && job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled) {
+		[[maybe_unused]] const auto cancelled = CancelExcavationJob(project.job);
+		assert(cancelled == ExcavationError::None);
+	}
 	if (bound) {
 		[[maybe_unused]] const auto withdrawn = WithdrawLayerPortalWorkPair(project.portal, project.job, project.cutter, true);
 		assert(withdrawn == LayerPortalWorkError::None);
@@ -371,57 +478,98 @@ static TBMProjectError RetireTBMProject(const TBMProject &project, bool execute)
 	return TBMProjectError::None;
 }
 
+/** @copydoc ControlTBMProject */
 TBMProjectError ControlTBMProject(TBMProjectID id, TBMProjectAction action, bool execute)
 {
 	if (to_underlying(action) >= to_underlying(TBMProjectAction::End)) return TBMProjectError::InvalidProject;
 	TBMProject *project = FindTBMProject(id);
 	if (project == nullptr) return TBMProjectError::InvalidProject;
 	if (project->company != _current_company) return TBMProjectError::InvalidOwner;
-	if (action == TBMProjectAction::Retire) return RetireTBMProject(*project, execute); // The one control of a finished project.
+	if (action == TBMProjectAction::Retire) return RetireTBMProject(*project, execute); // Final release is separate from resumable parking, and also admits safely parked unfinished work.
 	if (IsTBMProjectFinished(project->phase)) return TBMProjectError::Unavailable;
+	TileIndex resume_bay = INVALID_TILE;
+	if (action == TBMProjectAction::Resume && project->phase == TBMPhase::FollowOrders) {
+		const auto bay = GetTBMExchangeBay(*project);
+		if (bay.error != TBMExchangeError::None || Command<Commands::SendTBMToHangar>::Do({}, project->cutter, bay.tile, true).Failed()) return TBMProjectError::Unavailable;
+		resume_bay = bay.tile; // A real native service visit collects the whole train before its normal working departure.
+	}
 	TBMProject next = *project;
 	switch (action) {
 		case TBMProjectAction::Pause:
-			if (project->blocked == TBMBlockedReason::Paused) return TBMProjectError::Unavailable;
+			if (project->blocked == TBMBlockedReason::Paused || IsTBMStored(project->phase)) return TBMProjectError::Unavailable; // Stored work is already suspended; its next deliberate action is Resume or final release.
 			next.blocked = TBMBlockedReason::Paused; // The phase is kept.
 			break;
 		case TBMProjectAction::Resume:
-			if (project->blocked != TBMBlockedReason::Paused) return TBMProjectError::Unavailable; // Controller-derived waits are not the player's to clear.
+			if (project->blocked != TBMBlockedReason::Paused && !IsTBMStored(project->phase) && project->phase != TBMPhase::FollowOrders) return TBMProjectError::Unavailable; // Native travel suspends work until this explicit handback.
+			if (project->phase == TBMPhase::FollowOrders) {
+				next.phase = TBMPhase::ReturnForExchange;
+				next.phase_ticks = 0;
+			}
+			if (IsTBMStored(project->phase)) {
+				if (!IsTBMReadyToPark(*project)) return TBMProjectError::Unavailable;
+				next.phase = TBMPhase::Resume; // Reuse native bay departure and accepted-face rejoin, preserving partial work.
+				next.phase_ticks = 0;
+			}
 			next.blocked = TBMBlockedReason::None;
 			NormalizeTBMProjectReferences(next); // A loss that happened during the pause becomes the reason at once.
+			break;
+		case TBMProjectAction::ReturnAndPark:
+			// Repeated requests do not reset a physical return, timer or exchange;
+			// missing machinery/bay must be recovered rather than fabricated.
+			if (IsTBMParking(project->phase) || GetLiveTBMCutter(*project) == nullptr || GetTBMExchangeBay(*project).error != TBMExchangeError::None) return TBMProjectError::Unavailable;
+			next.phase = IsTBMWaitingForExchange(project->phase) ? TBMPhase::WaitToPark : TBMPhase::ReturnToPark;
+			next.phase_ticks = 0;
+			next.blocked = TBMBlockedReason::None;
+			NormalizeTBMProjectReferences(next);
 			break;
 		case TBMProjectAction::Cancel: {
 			const auto *job = project->job == ExcavationJobID{UINT32_MAX} ? nullptr : GetExcavationJob(project->job);
 			const bool lost = project->cutter == VehicleID::Invalid();
 			const bool open = job != nullptr && job->state != ExcavationJobState::Cancelled && job->state != ExcavationJobState::Completed;
-			// An open job must be the project's own and still stampable. With its cutter live, a project without an open job
-			// has nothing to cancel; a project that lost its cutter can always be ended, whatever its job.
-			if (open && (job->company != project->company || job->revision == UINT64_MAX)) return TBMProjectError::Unavailable;
+			if (IsTBMFinishing(project->phase)) return TBMProjectError::Unavailable;
+			if (open && CancelExcavationJob(project->job, false) != ExcavationError::None) return TBMProjectError::Unavailable;
 			if (!open && !lost) return TBMProjectError::Unavailable;
-			// Without a cutter there is nothing to bring back: its train and anything aboard went when it was deleted.
-			// Otherwise a forward phase turns back to the bay; a return or an exchange already under way simply goes on.
-			if (lost) {
-				next.phase = TBMPhase::Cancelled;
-				next.phase_ticks = 0;
-			} else if (project->phase == TBMPhase::Commissioning || project->phase == TBMPhase::TravelToFace || project->phase == TBMPhase::Bore || project->phase == TBMPhase::AdvanceSupport) {
-				next.phase = TBMPhase::ReturnForExchange;
-				next.phase_ticks = 0;
-			}
-			next.blocked = TBMBlockedReason::None; // A pause gives way to the return.
-			if (execute && open) {
-				// Unfinished claimed cells return to rock; cavities, committed totals and the spoil aboard stay.
-				[[maybe_unused]] const auto cancelled = CancelExcavationJob(project->job);
-				assert(cancelled == ExcavationError::None);
-			}
-			NormalizeTBMProjectReferences(next); // A loss that happened meanwhile is the reason at once.
+			// Save only the player's final-release intent now. Work and future
+			// claims remain with geology until the complete physical withdrawal
+			// and real haulage settlement pass the same final-release preflight.
+			next.phase = lost || IsTBMStored(project->phase) ? TBMPhase::ReleasePending :
+				IsTBMWaitingForExchange(project->phase) ? TBMPhase::WaitToRelease : TBMPhase::ReturnToRelease;
+			next.phase_ticks = 0;
+			next.blocked = TBMBlockedReason::None;
+			NormalizeTBMProjectReferences(next);
 			break;
 		}
 		default:
 			return TBMProjectError::Unavailable;
 	}
 	if (!execute) return TBMProjectError::None;
+	const bool resume_orders = action == TBMProjectAction::Resume && project->phase == TBMPhase::FollowOrders;
+	if (IsTBMStored(project->phase) || resume_orders || action == TBMProjectAction::ReturnAndPark || action == TBMProjectAction::Cancel) {
+		// A requested return or departure explicitly starts the same machine;
+		// ordinary pause/resume elsewhere never overrides a player's stop flag.
+		Train *front = Train::GetIfValid(project->cutter);
+		if (front != nullptr) {
+			// This explicit work action supersedes a temporary native travel
+			// order. Preserve the ordinary order list and the geological job.
+			FreeTrainTrackReservation(front);
+			if (front->current_order.IsType(OT_LOADING)) front->LeaveStation();
+			front->current_order.MakeDummy();
+			front->SetDestTile(INVALID_TILE);
+			front->vehstatus.Reset(VehState::Stopped);
+		}
+	}
 	++next.revision;
 	*project = std::move(next);
+	if ((action == TBMProjectAction::ReturnAndPark || action == TBMProjectAction::Cancel) && IsTBMReturning(project->phase)) {
+		if (Train *front = Train::GetIfValid(project->cutter); front != nullptr) ChooseTBMReturnDirection(*front);
+	}
+	if (resume_orders) {
+		// The earlier estimate prepared the real facility/pool admission. Native
+		// depot travel and arrival preserve every part; existing exchange/resume
+		// phases then return the cutter to its face with its working end leading.
+		[[maybe_unused]] const auto travel = Command<Commands::SendTBMToHangar>::Do(DoCommandFlag::Execute, project->cutter, resume_bay, true);
+		assert(travel.Succeeded());
+	}
 	return TBMProjectError::None;
 }
 
@@ -559,9 +707,106 @@ CommandCost CmdControlTBMProject(DoCommandFlags flags, TBMProjectID project, TBM
 		case TBMProjectAction::Pause: return CommandCost(STR_ERROR_TBM_PROJECT_CANT_PAUSE);
 		case TBMProjectAction::Resume: return CommandCost(STR_ERROR_TBM_PROJECT_NOT_PAUSED);
 		case TBMProjectAction::Cancel: return CommandCost(STR_ERROR_TBM_PROJECT_FINISHED);
-		case TBMProjectAction::Retire: return CommandCost(STR_ERROR_TBM_PROJECT_CANT_RETIRE);
+		case TBMProjectAction::Retire: return CommandCost(GetTBMProjectReleaseProblem(project));
 		default: return CMD_ERROR;
 	}
+}
+
+/** @copydoc PreviewTBMExtension */
+TBMExtensionPreview PreviewTBMExtension(CompanyID company, TBMProjectID id, TileIndex area_start, TileIndex area_end, ExcavationPlanIntent intent)
+{
+	TBMExtensionPreview preview;
+	/** @param message Exact player-facing admission failure. @return Unaccepted quote retaining any useful preview geometry. */
+	const auto refuse = [&preview](StringID message) {
+		preview.result = CommandCost(message);
+		return preview;
+	};
+	const auto *project = GetTBMProject(id);
+	// A browser row cannot lend another company's machine or an orphaned
+	// project to the local player, even when its old ID still exists.
+	if (!Company::IsValidID(company) || project == nullptr || project->company != company) return refuse(STR_ERROR_TBM_EXTEND_REFERENCES);
+	AutoRestoreBackup actor(_current_company, company);
+	if (ValidateTBMProject(*project) != TBMProjectError::None) return refuse(STR_ERROR_TBM_EXTEND_REFERENCES);
+	if (project->revision >= UINT64_MAX - 1) return refuse(STR_ERROR_TBM_EXTEND_REFERENCES);
+	if (FindTBMProjectReferenceLoss(*project) != TBMBlockedReason::None) return refuse(STR_ERROR_TBM_EXTEND_REFERENCES);
+	const auto *job = GetLiveTBMJob(*project);
+	// Completed/cancelled history and an actively changing cut are separate
+	// workflows. Pause preserves the current partial cut for a stable quote.
+	if (job == nullptr || IsTBMProjectFinished(project->phase) || job->state == ExcavationJobState::Completed || job->state == ExcavationJobState::Cancelled) return refuse(STR_ERROR_TBM_PROJECT_FINISHED);
+	if (project->blocked != TBMBlockedReason::Paused) return refuse(STR_ERROR_TBM_EXTEND_PAUSE);
+	if (!IsTBMCutterAvailable(project->model_id, GetTileLayer(job->commissioning_anchor), GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date)) return refuse(STR_ERROR_TBM_COMMISSION_MODEL);
+	if (CheckTBMOriginAdmission(*project) != TBMExchangeError::None) return refuse(STR_ERROR_TBM_COMMISSION_RECEIVER);
+	const Train *front = GetLiveTBMCutter(*project);
+	const auto dimensions = MeasureTBMConsist(*front, *project);
+	// An exchange or refit cannot silently shrink either frozen cargo group
+	// while a new plan assumes the old return schedule is still safe.
+	if (dimensions.error != TBMAcquisitionError::None || !job->pass_terms || dimensions.earth_capacity_t != job->pass_terms->earth_capacity_t ||
+		dimensions.rock_capacity_t != job->pass_terms->rock_capacity_t) return refuse(STR_ERROR_TBM_COMMISSION_CONSIST);
+	std::vector<size_t> ends;
+	const auto retreat = GetTBMWorkRailPath(*job, job->cursor, ends);
+	if (retreat.empty()) return refuse(STR_PORTAL_HOLD_MISSING_SUPPORT);
+	// Every already paid piece of the original return path must remain usable;
+	// extending work cannot fix or hide missing/foreign support behind the cutter.
+	for (TileIndex tile : retreat) {
+		if (!IsTBMSupportUsable(*project, tile)) return refuse(STR_PORTAL_HOLD_MISSING_SUPPORT);
+	}
+	preview.job_revision = job->revision;
+	preview.cutter = project->cutter;
+	if (intent > ExcavationPlanIntent::StraightTunnel) return refuse(STR_ERROR_TBM_COMMISSION_AREA);
+	// Straight intent starts exactly where the accepted cutter path ends; it
+	// cannot smuggle an unrelated drag corner into an implied approach turn.
+	if (intent == ExcavationPlanIntent::StraightTunnel && area_start != job->route.back().cutter_position) return refuse(STR_ERROR_TBM_TUNNEL_ALIGNMENT);
+	preview.outline = intent == ExcavationPlanIntent::Area ? MakeTBMWorkOutline(job->commissioning_anchor, area_start, area_end, job->authorized_tiles) :
+		MakeTBMTunnelOutline(area_start, job->route.back().heading, area_end, job->authorized_tiles);
+	if (preview.outline.error == ExcavationError::IllegalTurn) return refuse(STR_ERROR_TBM_TUNNEL_ALIGNMENT);
+	if (preview.outline.error != ExcavationError::None) return refuse(STR_ERROR_TBM_COMMISSION_AREA);
+	preview.plan = PlanExcavationJobExtension(job->id, preview.outline, dimensions.planning_points, {}, intent, area_end);
+	// Partial or empty extensions must not be accepted as the player's whole
+	// requested area or merely bump the saved revision without useful work.
+	if (preview.plan.partial || !preview.plan.remaining_targets.empty()) return refuse(STR_ERROR_TBM_COMMISSION_PARTIAL);
+	if (preview.plan.error != ExcavationError::None) return refuse(STR_ERROR_TBM_EXTEND_ROUTE);
+	if (preview.plan.route.empty()) return refuse(STR_ERROR_TBM_EXTEND_EMPTY);
+	ExcavationJob combined = *job;
+	combined.route.insert(combined.route.end(), preview.plan.route.begin(), preview.plan.route.end());
+	if (!CheckTBMSupportRailTurns(combined)) return refuse(STR_ERROR_TBM_COMMISSION_RAIL_TURNS);
+	const auto admitted = AppendExcavationJob(job->id, job->revision, preview.outline, preview.plan.route, false);
+	if (admitted.error == ExcavationError::InsufficientCapacity) return refuse(STR_ERROR_TBM_COMMISSION_CONSIST);
+	if (admitted.error != ExcavationError::None) return refuse(STR_ERROR_TBM_EXTEND_ROUTE);
+	std::set<TileIndex> swept;
+	// The preview shows the actual additional body/tail sweep, not the entire
+	// previous job's work area or a rectangle mistaken for cutter movement.
+	for (const auto &cut : preview.plan.route) swept.insert(cut.swept_tiles.begin(), cut.swept_tiles.end());
+	std::ranges::set_difference(swept, preview.outline.requested_tiles, std::back_inserter(preview.working_space));
+	combined.requested_tiles.insert(combined.requested_tiles.end(), preview.outline.requested_tiles.begin(), preview.outline.requested_tiles.end());
+	combined.authorized_tiles = preview.outline.authorized_tiles;
+	std::ranges::sort(combined.requested_tiles);
+	combined.requested_tiles.erase(std::unique(combined.requested_tiles.begin(), combined.requested_tiles.end()), combined.requested_tiles.end());
+	preview.fingerprint = ComputeExcavationPassFingerprint(combined, *job->pass_terms);
+	MixTBMQuoteFingerprint(preview.fingerprint, to_underlying(intent));
+	// Bind reviewed geometry/quantities to stable participants. Idle-cost and
+	// phase timers keep running while paused and must not invalidate a quote.
+	for (uint64_t value : {uint64_t{id.base()}, uint64_t{project->cutter.base()}, uint64_t{project->origin.base()}, uint64_t{project->portal.base()},
+		uint64_t{project->exchange_bay.base()}, job->revision, preview.plan.estimate.earth_t, preview.plan.estimate.rock_t,
+		preview.plan.estimate.work_ticks, uint64_t(preview.plan.estimate.cost.base())}) MixTBMQuoteFingerprint(preview.fingerprint, value);
+	for (VehicleID part : project->permanent_parts) MixTBMQuoteFingerprint(preview.fingerprint, part.base());
+	preview.result = CommandCost();
+	return preview;
+}
+
+/** @copydoc CmdExtendTBMProject */
+CommandCost CmdExtendTBMProject(DoCommandFlags flags, TBMProjectID id, TileIndex area_start, TileIndex area_end, uint64_t expected_revision, uint64_t expected_fingerprint, ExcavationPlanIntent intent)
+{
+	const auto preview = PreviewTBMExtension(_current_company, id, area_start, area_end, intent);
+	if (preview.result.Failed()) return preview.result;
+	// A stale player quote never replans silently around changed terrain or
+	// acquires different work after the first confirmation already succeeded.
+	if (preview.job_revision != expected_revision || preview.fingerprint != expected_fingerprint) return CommandCost(STR_ERROR_TBM_EXTEND_STALE);
+	if (!flags.Test(DoCommandFlag::Execute)) return preview.result;
+	TBMProject *project = FindTBMProject(id);
+	const auto appended = AppendExcavationJob(project->job, expected_revision, preview.outline, preview.plan.route, true);
+	if (appended.error != ExcavationError::None) return CommandCost(STR_ERROR_TBM_EXTEND_STALE);
+	++project->revision; // Prepared geology is now published; this non-allocating controller stamp cannot leave a partial commit.
+	return CommandCost();
 }
 
 /**
@@ -577,6 +822,14 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 	if (IsTBMProjectFinished(project.phase)) {
 		step.error = TBMProjectError::Unavailable;
 		return step;
+	}
+	// A service trip leaves the accepted face/bay. Record the rejoin phase as
+	// soon as the order takes control: a later project pause can replace the
+	// displayed Servicing reason, but must never erase the required return trip.
+	if ((inputs.servicing || inputs.service_finished) && project.phase != TBMPhase::FollowOrders) {
+		const bool face = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport;
+		step.phase = IsTBMFinishing(project.phase) ? TBMPhase::ReturnToRelease : IsTBMParking(project.phase) ? TBMPhase::ReturnToPark : face ? TBMPhase::TravelToFace : TBMPhase::ReturnForExchange;
+		step.phase_changed = step.phase != project.phase;
 	}
 	/* Conditions hold the phase: reference loss first, then the player's pause, then the train's own state. */
 	const auto loss = FindTBMProjectReferenceLoss(project);
@@ -606,7 +859,7 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 	/* Edges. The ReturnForExchange entry guard needs the job's frozen pass terms, never a guess. */
 	const auto *job = GetLiveTBMJob(project);
 	const bool exchange_due = inputs.exchange_due && job != nullptr && job->pass_terms.has_value();
-	switch (project.phase) {
+	switch (step.phase) {
 		case TBMPhase::Commissioning:
 			step.phase = TBMPhase::TravelToFace; // Published, unblocked and started: leave the source site for the face.
 			break;
@@ -634,6 +887,35 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 		case TBMPhase::ReturnForExchange:
 			if (inputs.at_exchange) step.phase = TBMPhase::WaitForEmpties; // The consist stands wholly in its bay.
 			break;
+		case TBMPhase::ReturnToPark:
+			if (inputs.at_exchange) step.phase = TBMPhase::WaitToPark;
+			break;
+		case TBMPhase::ReturnForHangar:
+			if (inputs.at_exchange) step.phase = TBMPhase::WaitForHangar;
+			break;
+		case TBMPhase::WaitForHangar:
+			if (inputs.at_exchange && !inputs.exchange_due) {
+				if (inputs.hangar_order) step.phase = TBMPhase::TravelToHangar;
+				else step.blocked = TBMBlockedReason::MissingHangar;
+			}
+			break;
+		case TBMPhase::TravelToHangar:
+		case TBMPhase::ParkedHangar:
+		case TBMPhase::FollowOrders:
+			break; // Native whole-consist depot arrival, rather than a caller-supplied flag, completes the order.
+		case TBMPhase::WaitToPark:
+			if (inputs.at_exchange && !inputs.exchange_due) step.phase = TBMPhase::Parked; // Parking requires whole physical arrival and the actual load already exchanged.
+			break;
+		case TBMPhase::ReturnToRelease:
+			if (inputs.at_exchange) step.phase = TBMPhase::WaitToRelease;
+			break;
+		case TBMPhase::WaitToRelease:
+			if (inputs.at_exchange && !inputs.exchange_due) step.phase = TBMPhase::ReleasePending;
+			break;
+		case TBMPhase::ReleasePending:
+			break; // Actual whole-project settlement, not a caller-supplied arrival flag, admits cancellation below.
+		case TBMPhase::Parked:
+			break; // Only an explicit Resume or cancellation releases this work suspension.
 		case TBMPhase::WaitForEmpties:
 			// Only an executed exchange removes the spoil from the actual wagons, so "not due" means it happened.
 			if (!inputs.exchange_due) step.phase = TBMPhase::Resume;
@@ -665,6 +947,7 @@ TBMProjectError AdvanceTBMProjectPhase(TBMProjectID id, const TBMPhaseInputs &in
 	if (next.blocked != TBMBlockedReason::Paused) next.blocked = TBMBlockedReason::None;
 	const auto step = StepTBMProjectPhase(next, inputs);
 	if (step.error != TBMProjectError::None) return step.error;
+	if (IsTBMStored(step.phase) && next.cutter != VehicleID::Invalid() && !IsTBMReadyToPark(next)) return TBMProjectError::Unavailable; // A caller's arrival flag cannot replace actual full withdrawal and empty custody at publication.
 	const bool changed = step.phase != project->phase || step.blocked != project->blocked || next.cutter != project->cutter || next.job != project->job || next.origin != project->origin || next.portal != project->portal || next.exchange_bay != project->exchange_bay;
 	next.phase = step.phase;
 	next.blocked = step.blocked;
@@ -694,7 +977,14 @@ TBMPhaseInputs ObserveTBMPhaseInputs(const TBMProject &project)
 	if (front == nullptr) return inputs;
 	inputs.train_stopped = front->vehstatus.Test(VehState::Stopped);
 	inputs.broken_down = front->breakdown_ctr == 1;
-	inputs.servicing = front->current_order.IsType(OT_GOTO_DEPOT);
+	inputs.servicing = front->current_order.IsType(OT_GOTO_DEPOT) && !IsTBMHangarTransfer(project.phase);
+	inputs.hangar_order = HasTBMHangarHaltOrder(*front);
+	inputs.service_finished = project.blocked == TBMBlockedReason::Servicing && !inputs.servicing;
+	inputs.work_wait = GetTBMTravelHoldReason(*front);
+	// Native reservation retries still run while this visible work interruption
+	// is reported. Treating it as a physical hold query would suppress the retry
+	// that clears Stuck after another train leaves or the track is repaired.
+	if (inputs.work_wait == TBMBlockedReason::None && front->flags.Test(VehicleRailFlag::Stuck) && GetTBMCutterSteeringTarget(*front).has_value()) inputs.work_wait = TBMBlockedReason::Obstruction;
 	const auto *job = GetLiveTBMJob(project);
 	if (job != nullptr && job->cursor <= job->route.size()) {
 		const TileIndex approach = job->cursor == 0 ? job->commissioning_anchor : job->route[job->cursor - 1].cutter_position;
@@ -739,11 +1029,13 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 {
 	TBMProject *project = FindTBMProject(id);
 	if (project == nullptr) return TBMProjectError::InvalidProject;
-	if (IsTBMProjectFinished(project->phase)) return TBMProjectError::None; // Finished projects keep their history and do not step.
+	if (IsTBMProjectFinished(project->phase)) return TBMProjectError::None; // Historical controllers never reacquire a work assignment from a native travel order.
+	if (Train *front = Train::GetIfValid(project->cutter); front != nullptr && HasTBMHangarHaltOrder(*front) &&
+			!IsTBMHangarTransfer(project->phase) && project->phase != TBMPhase::ParkedHangar && !IsTBMFinishing(project->phase)) BeginTBMHangarReturn(*front); // Adopt a normal player/list halt order before this tick can begin another atomic cut.
 	auto inputs = ObserveTBMPhaseInputs(*project);
 	// The face works only when this step leaves the project unblocked in Bore with no exchange due, so a paused,
 	// stopped, broken-down, servicing or reference-lost project never cuts. An earlier work wait is retried.
-	const bool works = project->phase == TBMPhase::Bore && project->blocked != TBMBlockedReason::Paused && FindTBMProjectReferenceLoss(*project) == TBMBlockedReason::None && !inputs.train_stopped && !inputs.broken_down && !inputs.servicing && !inputs.exchange_due && !inputs.cancelled;
+	const bool works = project->phase == TBMPhase::Bore && project->blocked != TBMBlockedReason::Paused && FindTBMProjectReferenceLoss(*project) == TBMBlockedReason::None && !inputs.train_stopped && !inputs.broken_down && !inputs.servicing && !inputs.service_finished && !inputs.exchange_due && !inputs.cancelled;
 	if (works) {
 		const auto work = AdvanceTBMFaceWork(*project);
 		inputs.cut_committed = work.cut_committed;
@@ -756,11 +1048,35 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 			inputs.exchange_due = IsTBMExchangeDue(*project);
 		}
 	}
+	const TBMPhase previous_phase = project->phase;
 	const TBMProjectError error = AdvanceTBMProjectPhase(id, inputs);
 	// The return backs the consist along its support to the bay, cutter last and facing the face (R2MLVS3MP-M decision 5).
 	if (error == TBMProjectError::None) {
 		const TBMProject *stepped = FindTBMProject(id);
-		if (Train *front = Train::GetIfValid(stepped->cutter); front != nullptr && stepped->phase == TBMPhase::ReturnForExchange && stepped->blocked == TBMBlockedReason::None) BackUpTBMConsist(*front);
+		if (Train *front = Train::GetIfValid(stepped->cutter); front != nullptr) {
+			// Only an automatic departure from the working face mandates backing.
+			// Explicit travel interruptions already selected their direction from
+			// both actual ends; later ticks must not force them backwards again.
+			const bool leaving_face = previous_phase == TBMPhase::Bore || previous_phase == TBMPhase::AdvanceSupport ||
+				previous_phase == TBMPhase::TravelToFace || previous_phase == TBMPhase::Commissioning;
+			if (leaving_face && IsTBMReturning(stepped->phase) && stepped->blocked == TBMBlockedReason::None) BackUpTBMConsist(*front);
+			if (IsTBMStored(stepped->phase) && IsTBMReadyToPark(*stepped)) front->vehstatus.Set(VehState::Stopped); // Stop only after every actual part and its cargo passed parking admission.
+		}
+		if (stepped->phase == TBMPhase::ReleasePending && GetTBMProjectReleaseProblem(id) == INVALID_STRING_ID) {
+			// Cancellation is now safe. Keep the controller until the explicit
+			// final release action, so no train tick erases its own live owner.
+			const auto *job = GetExcavationJob(stepped->job);
+			if (job != nullptr && job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled) {
+				AutoRestoreBackup actor(_current_company, stepped->company);
+				[[maybe_unused]] const auto cancelled = CancelExcavationJob(stepped->job);
+				assert(cancelled == ExcavationError::None);
+			}
+			auto *pending = FindTBMProject(id);
+			pending->phase = job != nullptr && job->state == ExcavationJobState::Completed ? TBMPhase::Completed : TBMPhase::Cancelled;
+			pending->phase_ticks = 0;
+			pending->blocked = TBMBlockedReason::None;
+			++pending->revision;
+		}
 	}
 	return error;
 }

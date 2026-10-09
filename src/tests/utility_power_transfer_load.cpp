@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../console_internal.h"
@@ -41,12 +42,12 @@ static bool ObserveUtilityTransfer(std::span<std::string_view> arguments)
 /** Real portal flow is conserved across imported use, sealing, reconnection and complete native loading. */
 TEST_CASE("Native utility transfer preserves original generation through real portal topology and saves", "[.utility-power-transfer-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto directory = root / "src/tests/fixtures/utility";
+	const auto root = FindTestRepositoryRoot();
+	const auto directory = GetTestCaseArtifactPaths("utilities", "native-reload").saves;
 	const char *input_value = std::getenv("OTTD_UTILITY_FILE_INPUT");
 	const char *case_value = std::getenv("OTTD_UTILITY_FILE_CASE");
 	REQUIRE(input_value != nullptr); REQUIRE(case_value != nullptr);
-	const auto input = std::filesystem::path(input_value);
+	const auto input = ResolveTestInputPath(input_value);
 	const std::string_view mode(case_value);
 	REQUIRE(std::filesystem::exists(input));
 	bool observed = false;
@@ -184,7 +185,7 @@ TEST_CASE("Native utility transfer preserves original generation through real po
 	};
 	AutoRestoreBackup observer(_utility_transfer_observer, &inspect);
 	IConsole::CmdRegister("utility_transfer_check", ObserveUtilityTransfer);
-	const std::string config = (root / "build/native-art.cfg").string(), input_path = input.string();
+	const std::string config = (GetTestRuntimeConfig()).string(), input_path = input.string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input_path};
 	CHECK(openttd_main(arguments) == 0);

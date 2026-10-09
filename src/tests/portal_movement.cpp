@@ -9,7 +9,7 @@
  * step, on both allowed rail pairs: Surface to Underground and Underground to Deep. A train crosses the pair and comes
  * back, reverses while it spans the pair, and occupies the signal block that runs through it.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15 (15.2, 15.3)
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-m-movement-design.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 17 (actual calendar-gated entry)
  */
 

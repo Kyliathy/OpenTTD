@@ -16,6 +16,14 @@ import os
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
+import sys
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import save_native_capture, current_run_context, run_native, capture_path, report_provenance
+
+CONTEXT = current_run_context("construction", "layer-controls")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime()
 
 
 def main():
@@ -26,14 +34,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--job-inspection", action="store_true")
     parser.add_argument("--survey-gallery", action="store_true")
+    parser.add_argument("--configuration", choices=("Debug", "RelWithDebInfo"), default="Debug")
     args = parser.parse_args()
-    source = ROOT / "src/tests/fixtures/haulage/portal-native-deep-stopped.sav"
+    source = resolve_input_path(ROOT / "src/tests/fixtures/haulage/portal-commissioning/portal-native-deep-stopped.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    script = ROOT / "build/scripts/game_start.scr"
+    script = RUNTIME / "scripts/game_start.scr"
     script.parent.mkdir(parents=True, exist_ok=True)
     existed = script.exists()
     original = script.read_bytes() if existed else None
-    log = ROOT / "logs/r2mlvs13-cl-native-control-capture.log"
+    log = CONTEXT.logs / "r2mlvs13-cl-native-control-capture.log"
     environment = dict(os.environ)
     if args.job_inspection:
         environment["OTTD_M1_JOB_ART"] = "1"
@@ -46,13 +55,13 @@ def main():
     try:
         script.write_text("# @see r2mlvs13-graphics-and-asset-pipeline.md Group83B actual loaded UI observer.\nm1_control_art\n", encoding="utf-8")
         with log.open("wb") as sink:
-            subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.m1-control-art]"], cwd=ROOT / "build",
+            run_native(CONTEXT, [str(ROOT / "build" / args.configuration / "openttd_test.exe"), "[.m1-control-art]"], cwd=ROOT / "build",
                            stdout=sink, stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW,
                            env=environment, check=True, timeout=110)
         evidence = log.read_text(encoding="utf-8", errors="replace")
         assert "M1_CONTROL_RUNTIME frames=6 actual_widgets=true engines=5 cargo_icons=2" in evidence
         assert "All tests passed" in evidence
-        reviews = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/reviews"
+        reviews = CONTEXT.images
         names = [f"m1-controls-layer-{layer}" for layer in (1, 3)]
         names.extend(f"m1-survey-layer-{layer}" for layer in (1, 3))
         names.extend(("m1-controls-portal", "m1-purchase-cargo"))
@@ -69,11 +78,11 @@ def main():
         # Keep the actual window dimensions and every native RGB pixel. No
         # resizing, recoloring or repainting may conceal icon/text clipping.
         for name in names:
-            path = reviews / (name + ".ppm")
+            path = capture_path(CONTEXT, name + ".ppm")
             raster = Image.open(path)
             assert len(set(raster.get_flattened_data())) > 8, "actual native UI/survey raster is empty"
             output = path.with_suffix(".png")
-            raster.save(output)
+            save_native_capture(CONTEXT, raster, path, output)
             assert Image.open(output).tobytes() == raster.tobytes(), "conversion changed native raster pixels"
             frames.append({"path": output.relative_to(ROOT).as_posix(), "size": list(raster.size),
                            "sha256": hashlib.sha256(output.read_bytes()).hexdigest()})
@@ -84,7 +93,8 @@ def main():
                   "frames": frames, "simulation_owners_unchanged_during_render": True,
                   "all_selected_survey_resources": args.survey_gallery,
                   "user_review": "deferred_until_integration"}
-        (reviews / "m1-control-runtime.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        report_provenance(CONTEXT, report, __file__, args.configuration)
+        (CONTEXT.reports / "m1-control-runtime.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         print(f"Actual M1 control raster: {len(frames)} UI/active-seam frames, five real engine previews and two first-party cargo icons; source and owners unchanged", flush=True)
     finally:
         if existed:

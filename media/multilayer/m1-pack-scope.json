@@ -41,7 +41,9 @@
     "survey.RARE",
     "survey.URAN",
     "terrain.edges.underground",
-    "terrain.edges.deep"
+    "terrain.edges.deep",
+    "terrain.hardness",
+    "terrain.hardness-edges"
   ],
   "native_route": "native_action5_1c",
   "appended_start": 200,
@@ -68,7 +70,7 @@
   "png": "media/baseset/openttd/map_layers_m1.png",
   "nfo": "media/baseset/openttd/map_layers_m1.nfo",
   "header": "src/table/multilayer_sprite_assets.h",
-  "report": "media/multilayer/sprites/m1/packed-manifest.json",
+  "report": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
   "definition_policy": "Keep packed.namespace/offset as the existing definition/core owner. Add packed.route/native_offset/sprite_count for actual base-set art; the MLVI cargo definition package is never rewritten.",
   "order": [
     "state",

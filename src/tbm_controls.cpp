@@ -13,13 +13,65 @@
 
 #include "stdafx.h"
 #include "tbm_controls.h"
+#include "tbm_gui.h"
 #include "excavation.h"
 #include "layer_portal_cmd.h"
 #include "train.h"
 #include "company_func.h"
 #include "core/backup_type.hpp"
+#include "table/strings.h"
 
 #include "safeguards.h"
+
+/** @copydoc GetGeologyHardnessString */
+StringID GetGeologyHardnessString(GeologyHardness hardness)
+{
+	switch (hardness) {
+		case GeologyHardness::Soft: return STR_PORTAL_HARDNESS_SOFT;
+		case GeologyHardness::Mixed: return STR_PORTAL_HARDNESS_MIXED;
+		case GeologyHardness::Hard: return STR_PORTAL_HARDNESS_HARD;
+		case GeologyHardness::Basalt: return STR_PORTAL_HARDNESS_BASALT;
+		default: return STR_PORTAL_HARDNESS_UNKNOWN;
+	}
+}
+
+/** @copydoc GetTBMOrderProblem */
+std::optional<StringID> GetTBMOrderProblem(const Train &front)
+{
+	const auto *cutter_project = GetTBMProjectForCutter(front.index);
+	const auto *assignment = GetTBMExchangeAssignmentForHauler(front.index);
+	if (cutter_project == nullptr && assignment == nullptr) return std::nullopt; // Ordinary trains retain normal manual-order review.
+	const auto *project = cutter_project != nullptr ? cutter_project : GetTBMProject(assignment->project);
+	if (project == nullptr) return STR_PORTAL_HOLD_MISSING_PROJECT;
+	if (front.owner != project->company) return STR_TBM_OPERATION_WRONG_OWNER;
+	if (cutter_project != nullptr) {
+		const auto loss = FindTBMProjectReferenceLoss(*project);
+		return loss == TBMBlockedReason::None ? INVALID_STRING_ID : GetTBMHoldString(loss);
+	}
+	const auto origin = CheckTBMOriginAdmission(*project);
+	if (origin == TBMExchangeError::MissingOrigin) return STR_PORTAL_WAIT_LOST_ORIGIN;
+	if (origin != TBMExchangeError::None) return STR_TBM_OPERATION_NO_RECEIVER;
+	const auto bay = GetTBMExchangeBay(*project);
+	if (bay.error != TBMExchangeError::None || bay.tile != assignment->bay) return STR_PORTAL_HOLD_MISSING_EXCHANGE; // A stale bay reference cannot substitute for the actual empty-return destination.
+	const auto *set = GetTBMWagonSet(assignment->set);
+	if (set == nullptr || set->project != project->id) return STR_PORTAL_WAIT_WRONG_WAGONS; // A different project's wagons do not complete this managed cycle.
+	// Follow the real units, including every articulated part, so a detached
+	// or transferred wagon cannot be hidden by a still-present assignment row.
+	for (VehicleID id : set->wagons) {
+		const Train *unit = Train::GetIfValid(id);
+		if (unit == nullptr || unit->First() != &front) return STR_PORTAL_WAIT_WRONG_WAGONS;
+		for (const Train *part = unit; part != unit->GetNextUnit(); part = part->Next()) {
+			if (part->owner != project->company) return STR_TBM_OPERATION_WRONG_OWNER;
+		}
+	}
+	/** @param order Actual manual order. @return Whether it supplies the mandatory Surface origin leg. */
+	const auto visits_origin = [project](const Order &order) {
+		return order.IsType(OT_GOTO_STATION) && order.GetDestination().ToStationID() == project->origin;
+	};
+	if (!std::ranges::any_of(front.Orders(), visits_origin)) return STR_TBM_OPERATION_ORIGIN_ORDER;
+	if (front.vehicle_flags.Test(VehicleFlag::PathfinderLost) && CheckTBMExchangeParticipant(front, bay, project->company) != TBMExchangeError::None) return STR_PORTAL_WAIT_BLOCKED_LINE; // An admitted stationary magazine train has reached its managed destination; only a lost route away from it needs repair.
+	return INVALID_STRING_ID;
+}
 
 /**
  * @param train Front engine.
@@ -88,6 +140,8 @@ static TBMPlayerStep ChooseTBMProjectStep(const TBMPairControls &controls)
 		if (controls.retire) return TBMPlayerStep::Retire;
 		return controls.running ? TBMPlayerStep::StopMachine : TBMPlayerStep::FixHold;
 	}
+	if (project.phase == TBMPhase::Parked || project.phase == TBMPhase::ParkedHangar || project.phase == TBMPhase::FollowOrders) return TBMPlayerStep::Resume;
+	if (project.phase == TBMPhase::ReleasePending) return controls.retire ? TBMPlayerStep::Retire : TBMPlayerStep::DeliverLast;
 	if (project.blocked == TBMBlockedReason::Paused) return TBMPlayerStep::Resume;
 	if (!controls.running) return TBMPlayerStep::StartMachine;
 	if (controls.wait == TBMLogisticsWait::NoHauler) return TBMPlayerStep::AssignHauler;
@@ -161,6 +215,7 @@ static void DescribeTBMProject(TBMPairControls &controls)
 
 	controls.pause = ControlTBMProject(project.id, TBMProjectAction::Pause, false) == TBMProjectError::None;
 	controls.resume = ControlTBMProject(project.id, TBMProjectAction::Resume, false) == TBMProjectError::None;
+	controls.park = ControlTBMProject(project.id, TBMProjectAction::ReturnAndPark, false) == TBMProjectError::None;
 	controls.cancel = ControlTBMProject(project.id, TBMProjectAction::Cancel, false) == TBMProjectError::None;
 	controls.retire = ControlTBMProject(project.id, TBMProjectAction::Retire, false) == TBMProjectError::None;
 	controls.assign = CheckTBMProjectTakesHauler(project.id) == TBMExchangeError::None;
@@ -196,9 +251,9 @@ static void DescribeTBMPair(TileIndex key, CompanyID company, TBMPairControls &c
 		if (support.owner == company && GetTBMProject(support.project) == nullptr) controls.convertible.push_back(support.tile);
 	}
 	controls.connect = ChangeLayerPortalConnection(key, company, true, false) == LayerPortalWorkError::None;
-	if (controls.sellable != VehicleID::Invalid()) {
-		controls.step = TBMPlayerStep::SellMachine;
-	} else if (!controls.convertible.empty()) {
+	// Selling a retained machine is optional. Cleared public track can be
+	// connected while the complete stopped native consist stays in its magazine.
+	if (!controls.convertible.empty()) {
 		controls.step = TBMPlayerStep::ConvertTrack;
 	} else if (GetLayerPortalWorkState(key) == LayerPortalWorkState::Connected) {
 		controls.step = TBMPlayerStep::Connected;

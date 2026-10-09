@@ -10,7 +10,7 @@
  * breakdown and service are saved pauses; a finished project retires only once nothing depends on it; and a lost
  * origin or bay is a visible block that explicit reassignment clears.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 17
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  */
 
 #include "../stdafx.h"
@@ -56,13 +56,13 @@ TEST_CASE("Cancelling before the first cut ends the project at its bay", "[tbm-r
 	CHECK(rig.Job().state != ExcavationJobState::Cancelled);
 
 	REQUIRE(Control(id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(GetExcavationJob(job)->state == ExcavationJobState::Cancelled);
-	CHECK(CountClaims(job) == 0); // Its unfinished cells are free again.
-	CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
-	CHECK(Control(id, TBMProjectAction::Cancel).Failed()); // Nothing is left to cancel.
-	CHECK(rig.Tick().phase == TBMPhase::WaitForEmpties); // The consist stands in its Source bay.
-	CHECK(rig.Tick().phase == TBMPhase::Resume); // Nothing aboard, so no exchange is due.
+	CHECK(GetExcavationJob(job)->state != ExcavationJobState::Cancelled);
+	CHECK(CountClaims(job) != 0); // The request keeps future claims until the actual withdrawal check.
+	CHECK(rig.Project().phase == TBMPhase::ReturnToRelease);
+	CHECK(Control(id, TBMProjectAction::Cancel).Failed()); // The same pending intent cannot be queued twice.
+	CHECK(rig.Tick().phase == TBMPhase::WaitToRelease); // The consist stands in its Source bay.
 	CHECK(rig.Tick().phase == TBMPhase::Cancelled);
+	CHECK(CountClaims(job) == 0);
 	CHECK(rig.Project().blocked == TBMBlockedReason::None);
 	CHECK(ValidateTBMProject(rig.Project()) == TBMProjectError::None); // The cancelled record still loads.
 }
@@ -84,16 +84,17 @@ TEST_CASE("Cancelling during a partial cut keeps every cavity and releases only 
 	const Money cash = Company::Get(_current_company)->money;
 
 	REQUIRE(Control(rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(rig.Job().state == ExcavationJobState::Cancelled);
+	CHECK(rig.Job().state != ExcavationJobState::Cancelled);
 	CHECK(rig.Job().cursor == cursor); // The committed cut stays committed.
-	CHECK(rig.Job().partial_work_ticks == 0); // Unfinished work is not paid for and not kept.
-	CHECK(CountClaims(rig.project.job) == 0);
+	CHECK(rig.Job().partial_work_ticks != 0); // Retain partial work until the actual withdrawal and settlement finish.
+	CHECK(CountClaims(rig.project.job) != 0);
 	CHECK(GetGeologyWorldState().terrain.Get(first) == ExcavationState::Excavated);
 	CHECK(Company::Get(_current_company)->money == cash); // Neither a refund nor a charge.
-	CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
-	CHECK(rig.Tick().phase == TBMPhase::WaitForEmpties);
-	CHECK(rig.Tick().phase == TBMPhase::Resume);
+	CHECK(rig.Project().phase == TBMPhase::ReturnToRelease);
+	CHECK(rig.Tick().phase == TBMPhase::WaitToRelease);
 	CHECK(rig.Tick().phase == TBMPhase::Cancelled);
+	CHECK(rig.Job().partial_work_ticks == 0);
+	CHECK(CountClaims(rig.project.job) == 0);
 	CHECK(GetGeologyWorldState().terrain.Get(first) == ExcavationState::Excavated);
 }
 
@@ -105,9 +106,9 @@ TEST_CASE("A cancelled project gives its spoil away through the exchange first",
 	const auto estimate = rig.BoreOneCut();
 	const uint64_t spoil = estimate.earth_t + estimate.rock_t;
 	REQUIRE(Control(rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
-	CHECK(rig.Tick().phase == TBMPhase::WaitForEmpties);
-	CHECK(rig.Tick().phase == TBMPhase::WaitForEmpties); // The spoil aboard keeps the exchange due.
+	CHECK(rig.Project().phase == TBMPhase::ReturnToRelease);
+	CHECK(rig.Tick().phase == TBMPhase::WaitToRelease);
+	CHECK(rig.Tick().phase == TBMPhase::WaitToRelease); // The spoil aboard keeps the exchange due.
 	CHECK(TBMExchangeRig::Aboard(rig.front) == spoil);
 
 	rig.Meet();
@@ -116,8 +117,9 @@ TEST_CASE("A cancelled project gives its spoil away through the exchange first",
 	CHECK(collected.phase == TBMHaulerPhase::CollectLoaded); // No next pass, so the short empties do not refuse.
 	CHECK(TBMExchangeRig::Aboard(rig.hauler) == spoil);
 	CHECK(TBMExchangeRig::Aboard(rig.front) == 0);
-	CHECK(rig.Tick().phase == TBMPhase::Resume);
-	CHECK(rig.Tick().phase == TBMPhase::Cancelled);
+	CHECK(rig.Tick().phase == TBMPhase::ReleasePending);
+	CHECK(rig.Tick().phase == TBMPhase::ReleasePending);
+	CHECK(rig.Job().state != ExcavationJobState::Cancelled); // Swapping wagons is not final delivery of the hauler's real load.
 
 	// The finished project's last load still travels to the origin.
 	rig.PlaceOnTrack(rig.hauler, TileXYL(25, 20, MapLayer::Surface));
@@ -161,7 +163,8 @@ TEST_CASE("A finished project retires only when nothing depends on it", "[tbm-re
 	REQUIRE(ReleaseTBMHauler(rig.hauler->index, true) == TBMExchangeError::None);
 	CHECK(Control(id, TBMProjectAction::Retire).Failed()); // Its released set still carries the spoil.
 	for (Train *part = rig.hauler; part != nullptr; part = part->Next()) part->cargo.Truncate(); // Stand-in for disposal.
-	CHECK(Control(id, TBMProjectAction::Retire).Failed()); // A started train has not withdrawn.
+	CHECK(Control(id, TBMProjectAction::Retire).Failed()); // The released hauler still occupies the bay.
+	rig.PlaceOnTrack(rig.hauler, TileXYL(25, 20, MapLayer::Surface)); // Declared owner-fixture departure; native physical release is covered by tbm_release.cpp.
 	rig.front->vehstatus.Set(VehState::Stopped);
 	const TileIndex portal = rig.fixture.request.portal;
 	REQUIRE(GetLayerPortalWorkState(portal) == LayerPortalWorkState::Commissioning);
@@ -213,11 +216,10 @@ TEST_CASE("A deleted cutter frees its ID and its project still ends and retires"
 		CHECK_FALSE(IsTBMReplacementLocked(*part));
 	}
 
-	// Nothing is left to bring back, so cancellation ends the project at once, whatever its job's state.
+	// A lost cutter needs no withdrawal, but the surviving real haulage still has to settle before claims end.
 	REQUIRE(Control(id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(rig.Project().phase == TBMPhase::Cancelled);
-	const bool open = job_state != ExcavationJobState::Completed && job_state != ExcavationJobState::Cancelled;
-	CHECK(rig.Job().state == (open ? ExcavationJobState::Cancelled : job_state));
+	CHECK(rig.Project().phase == TBMPhase::ReleasePending);
+	CHECK(rig.Job().state == job_state);
 	CHECK(Control(id, TBMProjectAction::Retire).Failed()); // Its hauler still carries the spoil.
 	REQUIRE(ReleaseTBMHauler(rig.hauler->index, true) == TBMExchangeError::None);
 	for (Train *part = rig.hauler; part != nullptr; part = part->Next()) part->cargo.Truncate(); // Stand-in for disposal.
@@ -234,7 +236,7 @@ TEST_CASE("A cancelled project reloads mid-return and ends the same way", "[tbm-
 	rig.MakeOriginStationTile();
 	const auto estimate = rig.BoreOneCut();
 	REQUIRE(Control(rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	REQUIRE(rig.Tick().phase == TBMPhase::WaitForEmpties);
+	REQUIRE(rig.Tick().phase == TBMPhase::WaitToRelease);
 	rig.Meet();
 	REQUIRE(rig.StepHauler().phase == TBMHaulerPhase::AwaitExchange);
 	const auto projects = ComputeTBMProjectDigest();
@@ -245,12 +247,12 @@ TEST_CASE("A cancelled project reloads mid-return and ends the same way", "[tbm-
 	REQUIRE(keep.Load());
 	CHECK(ComputeTBMProjectDigest() == projects);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
-	CHECK(rig.Project().phase == TBMPhase::WaitForEmpties);
-	CHECK(rig.Job().state == ExcavationJobState::Cancelled);
+	CHECK(rig.Project().phase == TBMPhase::WaitToRelease);
+	CHECK(rig.Job().state != ExcavationJobState::Cancelled);
 	CHECK(rig.StepHauler().phase == TBMHaulerPhase::CollectLoaded);
 	CHECK(TBMExchangeRig::Aboard(rig.hauler) == estimate.earth_t + estimate.rock_t);
-	CHECK(rig.Tick().phase == TBMPhase::Resume);
-	CHECK(rig.Tick().phase == TBMPhase::Cancelled);
+	CHECK(rig.Tick().phase == TBMPhase::ReleasePending);
+	CHECK(rig.Tick().phase == TBMPhase::ReleasePending);
 }
 
 /** A deleted origin is forgotten at once, by the project and its pair alike; a station reusing its ID never rebinds. */

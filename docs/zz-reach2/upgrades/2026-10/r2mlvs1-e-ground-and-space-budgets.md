@@ -2,7 +2,20 @@
 
 Owner: [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md), Groups 13-14. Architecture: [archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md) and [archi-cargo-payment.md](../../architecture/economy/archi-cargo-payment.md). Inputs: [recipes, bootstrap and capability contract](r2mlvs1-d-recipes-and-bootstrap.md). These are initial tuning numbers and worked accounting examples; feature owners and Plan 15 still owe runtime geometry, transport, art and balance acceptance.
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Group 13 - excavation units, bounded spoil and legal heading budgets
+
+**Current runtime correction,2026-10-09 (R2TBMF5/5B):** the paper budgets below are retained historical assumptions, not current cutter tuning. Standard earns1/2 and Deep3/4 geological work ticks per simulation tick; purchase/upkeep and travel retain their runtime owners. Current whole-tonne Earth/Rock yields and uninterrupted per-cell simulation ticks are:
+
+| Hardness | Earth / Rock | Standard ticks | Deep ticks | Support/cell |
+| --- | --- | --- | --- | --- |
+| Soft | 3 / 6 | 148 | 99 | 30 |
+| Mixed | 2 / 12 | 296 | 99 | 50 |
+| Hard | 1 / 20 | 444 | 198 | 80 |
+| Basalt | 1 / 24 | refuse | 395 | 120 |
+
+Tick counts assume no pre-existing work remainder and round up only after accumulating the complete work amount; do not sum rounded per-cell times for a multi-cell cut. New whole-unit Basalt Earth is deliberately1, with no fractional cargo or carry. A 30-new-Soft-cell corridor therefore yields90 Earth/180 Rock and4,440 Standard active ticks; a35-cell chamber yields105/210 and5,180 active ticks. Overlap yields zero. Travel, exchange waits, actual full-consist fit and disposal determine complete project time/cost separately. [J](tbm-fixes/r2tbmf-j-pacing-notes.md) proves the rate migration, and [L](tbm-fixes/r2tbmf-l-spoil-notes.md) records actual combined fifty-cell haulage. The older money/yield ledgers below must not be used to retune runtime prices.
 
 Money below means the game's internal pre-inflation unit. One economy day is 74 synchronized ticks; calendar years only gate technology. Charge rates accrue as `rate * elapsed_ticks / 74`, retaining the numerator remainder 0..73 in the project so splitting a day cannot erase upkeep. Check products/sums in wide integers before commit. Work duration is per newly solid **cell**, with any swept-envelope cells included once; already excavated cells produce no spoil and charge only actual transit/idle time. Active and paused-project charges are separate from per-cell support and disposal. Idle charge applies to a commissioned active project waiting for haulage/materials, not an unassigned purchased cutter; conventional vehicle upkeep remains separately visible.
 

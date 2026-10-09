@@ -3,6 +3,8 @@
 Owner: [Underground Construction and Fleet](r2mlvs7-underground-construction-and-fleet.md).
 This ledger records completed behavior and the boundaries that remain pending.
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Retained evidence and diagnostic cleanup
 
 The 2026-10-06 handoff retains final evidence ec/ed/ee, ft/fu, gk/gl/gm and

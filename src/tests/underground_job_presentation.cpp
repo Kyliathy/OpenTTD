@@ -16,7 +16,9 @@
 #include "layer_window_fixture.h"
 #include "tbm_fixture.h"
 #include "../underground_gui.h"
+#include "../tbm_gui.h"
 #include "../widgets/underground_widget.h"
+#include "../widgets/tbm_widget.h"
 #include "../construction_preview.h"
 #include "../tilehighlight_func.h"
 #include "../table/strings.h"
@@ -37,8 +39,7 @@ TEST_CASE("Underground project inspection uses actual job footprint and progress
 	const auto job = rig.Job();
 	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto project = rig.Project();
-	window->OnClick({}, WID_UC_PROJECT, 1);
-	window->OnPlaceObject({}, job.commissioning_anchor);
+	InspectUndergroundProject(project.id);
 	window->OnPaint();
 	CHECK(window->GetWidgetString(WID_UC_JOB_PROGRESS, STR_UNDERGROUND_JOB_NONE) ==
 		GetString(STR_UNDERGROUND_JOB_PROGRESS, job.id.base(), job.cursor, job.route.size(), job.partial_work_ticks));
@@ -53,4 +54,40 @@ TEST_CASE("Underground project inspection uses actual job footprint and progress
 	ResetObjectToPlace();
 	window->OnPaint();
 	for (const TileIndex tile : job.authorized_tiles) CHECK(GetConstructionPreviewTile(tile) == ConstructionPreviewTile::None);
+}
+
+/** Browser rows and action eligibility follow current ownership; selection cannot allocate work or expose a foreign project. */
+TEST_CASE("TBM browser filters real jobs and revalidates stale ownership", "[tbm-project-browser]")
+{
+	MockEnvironment::Instance();
+	LoadGeneratedWindowTestLanguage();
+	TBMWorkRig rig(3);
+	LayerWindowTestUI browser_ui(WindowClass::TBMProjects, _current_company);
+	LayerWindowTestUI palette_ui(WindowClass::UndergroundConstruction, _current_company);
+	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState());
+	const auto project = rig.Project();
+	Window *browser = ShowTBMProjectsWindow(MapLayer::Underground);
+	REQUIRE(browser != nullptr);
+	browser->OnPaint();
+	CHECK(browser->GetScrollbar(WID_TP_SCROLL)->GetCount() == 1);
+	CHECK_FALSE(browser->IsWidgetDisabled(WID_TP_SELECT));
+	browser->OnClick({}, WID_TP_SELECT, 1);
+	CHECK(_thd.GetCallbackWnd()->window_class == WindowClass::UndergroundConstruction);
+	ResetObjectToPlace();
+	Window *empty = ShowTBMProjectsWindow(MapLayer::DeepUnderground);
+	REQUIRE(empty != nullptr);
+	empty->OnPaint();
+	CHECK(empty->GetScrollbar(WID_TP_SCROLL)->GetCount() == 0);
+	CHECK(empty->IsWidgetDisabled(WID_TP_SELECT));
+	{
+		AutoRestoreBackup spectator(_local_company, CompanyID::Invalid());
+		browser->OnPaint();
+		CHECK(browser->GetScrollbar(WID_TP_SCROLL)->GetCount() == 0);
+		CHECK(browser->IsWidgetDisabled(WID_TP_VEHICLE));
+		browser->OnClick({}, WID_TP_SELECT, 1);
+		CHECK(_thd.GetCallbackWnd() == nullptr);
+		CHECK(ShowTBMProjectsWindow(MapLayer::Underground) == nullptr);
+	}
+	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before);
+	CHECK(rig.Project() == project);
 }

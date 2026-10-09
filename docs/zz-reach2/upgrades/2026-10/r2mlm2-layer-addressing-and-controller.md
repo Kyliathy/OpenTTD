@@ -45,6 +45,8 @@
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: comment style, naming, file rules, build and test commands. |
 | [src/map_func.h](../../../../src/map_func.h) | 198-432 | `struct Map` and the free functions `TileXY`, `TileDiffXY`, `TileVirtXY`, `TileX`, `TileY`. This is the code being extended; `TileY`, `TileXY` and `TileVirtXY` keep their formulas (stacked semantics), only documentation and the `Map` statics change. |
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 Exported by the end of this plan (later plans consume these names unchanged):
@@ -146,7 +148,7 @@ _Applies to Groups 6-7._
 | [src/tests/tilearea.cpp](../../../../src/tests/tilearea.cpp) | 1-60 | Catch2 test shape that allocates a map directly with `Map::Allocate` and checks `TileX` / `TileY`; the new test file follows it. |
 | [src/tests/CMakeLists.txt](../../../../src/tests/CMakeLists.txt) | 1-23 | `add_test_files`: where `map_layer.cpp` is registered. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by Group 4. Every `MultiLayerMap` member named in `## Outcome and Boundaries` must exist before Group 6 starts; if one is missing, finish Group 4 first. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for the neutrality check in task 7.3. |
+| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for the neutrality check in task 7.3. |
 
 ### Group 6 - Unit tests
 
@@ -166,7 +168,7 @@ _Applies to Groups 6-7._
 
   Verified 2026-10-04: `openttd` and `openttd_test` build in Debug and RelWithDebInfo, exit 0, zero distinct compiler warnings. Both configurations pass 110/110 unit cases, including layered addressing and `tilearea`: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. This validates the current integrated tree; the earlier one-layer staging scenario is superseded and is not claimed as a fresh runtime pass.
 - [x] 7.2 Start, save and reload a new game in a Debug build; confirm no assert fires (the new `TileAdd` layer assert included). R2MLM1 Group 7B records actual new-game saves/reloads from all three non-surface layers, normal exit and unchanged complete map chunks.
-- [x] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan. Final Surface prefixes match all ten baseline chunks for both seeds and both sizes; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt), R2RVM2 task 18.1. The final games contain four planes; no claim is made that their entire payload equals a one-plane file.
+- [x] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan. Final Surface prefixes match all ten baseline chunks for both seeds and both sizes; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1. The final games contain four planes; no claim is made that their entire payload equals a one-plane file.
 
 ## Consult on Demand
 

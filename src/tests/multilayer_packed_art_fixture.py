@@ -15,7 +15,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
-OUTPUT = ROOT / "src/tests/fixtures/graphics/m1-packed-sprites.bin"
+OUTPUT = ROOT / "logs/proofs/mlm/native-art/expected/m1-packed-sprites.bin"
 
 
 def pixel_hash(pixels):
@@ -38,7 +38,7 @@ def main():
     @return None; print the exact actual source record count without loading a GRF.
     """
     directory = ROOT / "media/baseset/openttd"
-    report = json.loads((ROOT / "media/multilayer/sprites/m1/packed-manifest.json").read_text(encoding="utf-8"))
+    report = json.loads((ROOT / "logs/proofs/mlm/native-art/derived/packed-manifest.json").read_text(encoding="utf-8"))
     current = Image.open(directory / "map_layers_m1.png")
     legacy = Image.open(directory / "map_layers.png")
     rows = [line.split() for line in (directory / "map_layers.nfo").read_text(encoding="utf-8").splitlines()
@@ -57,11 +57,8 @@ def main():
     payload = b"MLVART1\0" + struct.pack("<HH", len(records), report["native_sprite_bound"])
     payload += b"".join(struct.pack("<HHHhhI", *record) for record in records)
     OUTPUT.write_bytes(payload)
-    # Native Windows startup searches for basesets beside its configuration.
-    # Keep the documented scratch source beside the plan and materialise only
-    # this executable fixture input in the existing repository build directory.
-    config = ROOT / "docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-q-native-art.cfg"
-    (ROOT / "build/native-art.cfg").write_bytes(config.read_bytes())
+    # Native tests materialize the immutable configuration through their shared
+    # runtime helper; producing pixel expectations must not modify build startup.
     print(f"Native art expectations: {len(records)} protected/selected sprites, bound {report['native_sprite_bound']}; actual application loading remains separate")
 
 

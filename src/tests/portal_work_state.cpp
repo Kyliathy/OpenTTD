@@ -293,8 +293,15 @@ TEST_CASE("Portal connection validates both approaches and actual occupied refer
 	CHECK(CmdChangeLayerPortalConnection({DoCommandFlag::Execute}, fixture.source, true).Failed());
 	fixture.OpenFloor();
 	CHECK(CmdChangeLayerPortalConnection({}, fixture.target, true).Failed());
-	// Floor alone is not an ordinary railway connection: both ends need their actual compatible axis approaches.
+	// Floor alone is not an ordinary railway connection: both ends need owned track that actually joins the door.
 	for (TileIndex end : {fixture.source, fixture.target}) MakeRailNormal(TileAddByDiagDir(end, GetLayerPortalDoorDirection(end)), _current_company, Track::Y, RAILTYPE_RAIL);
+	const TileIndex approach = TileAddByDiagDir(fixture.source, GetLayerPortalDoorDirection(fixture.source));
+	MakeRailNormal(approach, _current_company, Track::X, RAILTYPE_RAIL);
+	CHECK(CmdChangeLayerPortalConnection({}, fixture.source, true).Failed());
+	auto curves = DiagdirReachesTracks(GetLayerPortalDoorDirection(fixture.source));
+	curves.Reset(Track::Y);
+	REQUIRE(curves.Any());
+	MakeRailNormal(approach, _current_company, *curves.begin(), RAILTYPE_RAIL);
 	CHECK(CmdChangeLayerPortalConnection({}, fixture.target, true).Succeeded());
 	CHECK(GetLayerPortalWorkState(fixture.source) == LayerPortalWorkState::Sealed);
 	REQUIRE(CmdChangeLayerPortalConnection({DoCommandFlag::Execute}, fixture.target, true).Succeeded());

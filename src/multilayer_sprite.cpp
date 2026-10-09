@@ -105,7 +105,6 @@ std::optional<SpriteID> GetMultiLayerTerrainSprite(TileIndex tile)
 	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry || geology.generator_version == 0) return std::nullopt;
 	const auto state = geology.terrain.Get(tile);
 	if (!state) return std::nullopt;
-	const bool deep = GetTileLayer(tile) == MapLayer::DeepUnderground;
 	// Source mask order follows the screen diamond: upper-left, upper-right,
 	// lower-right, lower-left. TileAddWrap protects actual layer and map borders.
 	static constexpr std::array<TileIndexDiffC, 4> neighbors{{{0, -1}, {-1, 0}, {0, 1}, {1, 0}}};
@@ -118,21 +117,36 @@ std::optional<SpriteID> GetMultiLayerTerrainSprite(TileIndex tile)
 		// A renderer cannot present them as paid, buildable open joins.
 		if (!adjacent_state || *adjacent_state != ExcavationState::Excavated) solid_mask |= static_cast<uint8_t>(1U << bit);
 	}
-	if (*state == ExcavationState::Excavated) {
-		if (solid_mask != 0) {
-			// The authored sixteen-mask family includes its own cavity floor; use
-			// one complete ground tile instead of layering another opaque floor.
-			return GetMultiLayerSprite(deep ? MultiLayerSpriteAsset::TerrainEdgesDeep : MultiLayerSpriteAsset::TerrainEdgesUnderground,
-				{solid_mask, 0, 0, 0, 0});
-		}
-		return GetMultiLayerSprite(deep ? MultiLayerSpriteAsset::TerrainDeep : MultiLayerSpriteAsset::TerrainUnderground,
-			{3, GetMultiLayerTerrainTexture(TileX(tile), TilePlaneY(tile)), 0, 0, 0});
-	}
 	// Actual in-progress terrain is separate from a solid face adjoining paid
 	// floor. No render frame changes the packed state or the project's progress.
-	const uint8_t visual_state = *state == ExcavationState::Excavating ? 2 : solid_mask != 15 ? 1 : 0;
-	return GetMultiLayerSprite(deep ? MultiLayerSpriteAsset::TerrainDeep : MultiLayerSpriteAsset::TerrainUnderground,
-		{visual_state, GetMultiLayerTerrainTexture(TileX(tile), TilePlaneY(tile)), 0, 0, 0});
+	const uint8_t visual_state = *state == ExcavationState::Excavated ? 3 : *state == ExcavationState::Excavating ? 2 : solid_mask != 15 ? 1 : 0;
+	const auto hardness = GetExcavationCellHardness(geology, tile);
+	return GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness,
+		{static_cast<uint8_t>(to_underlying(hardness) * 4 + visual_state), 0, 0, 0, 0});
+}
+
+/** @copydoc GetMultiLayerTerrainEdgeSprites */
+std::array<std::optional<SpriteID>, 4> GetMultiLayerTerrainEdgeSprites(TileIndex tile)
+{
+	std::array<std::optional<SpriteID>, 4> result{};
+	const auto &geology = GetGeologyWorldState();
+	// Only actual paid open floor exposes neighboring walls. Profile-disabled
+	// worlds and work-in-progress cannot gain a visual claim to open ground.
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry ||
+		geology.generator_version == 0 || geology.terrain.Get(tile) != ExcavationState::Excavated) return result;
+	static constexpr std::array<TileIndexDiffC, 4> neighbors{{{0, -1}, {-1, 0}, {0, 1}, {1, 0}}};
+	// Each exposed face belongs to the adjacent uncut material. At the map
+	// fence only, use the floor's material without querying an invalid tile.
+	for (size_t side = 0; side < neighbors.size(); ++side) {
+		const auto delta = neighbors[side];
+		const TileIndex adjacent = TileAddWrap(tile, delta.x, delta.y);
+		const auto state = geology.terrain.Get(adjacent);
+		if (state == ExcavationState::Excavated) continue;
+		const auto hardness = GetExcavationCellHardness(geology, state ? adjacent : tile);
+		result[side] = GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardnessEdges,
+			{static_cast<uint8_t>(to_underlying(hardness) * 4 + side), 0, 0, 0, 0});
+	}
+	return result;
 }
 
 /** @copydoc GetMultiLayerPortalSprite */

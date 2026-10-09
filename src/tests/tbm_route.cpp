@@ -79,6 +79,7 @@ TEST_CASE("Sharp or repeated steps cannot turn the cutter", "[tbm-route]")
 	const Direction slight = ChangeDir(rig.proof.exit_heading, DirDiff::Left45);
 	rig.Reload(std::nullopt, [slight](TBMProject &project) { project.heading = slight; });
 	CHECK(rig.Tick().blocked == TBMBlockedReason::None);
+	CHECK(rig.Tick().blocked == TBMBlockedReason::None); // Two Standard simulation ticks earn one geological unit.
 	CHECK(rig.Job().partial_work_ticks == 1);
 }
 
@@ -101,7 +102,7 @@ TEST_CASE("Another vehicle in the swept envelope keeps the cut uncommitted", "[t
 
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	REQUIRE(estimate.error == ExcavationError::None);
-	for (uint64_t tick = 1; tick < estimate.work_ticks; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None);
+	for (uint64_t tick = 1; tick < estimate.work_ticks * 2; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None); // Reach the same atomic boundary at half speed.
 	const Money cash = GetCash();
 	// The intruder stands in the envelope when the cut becomes due.
 	intruder->tile = rig.Job().route[0].swept_tiles.front();
@@ -126,6 +127,7 @@ TEST_CASE("Backing never turns the cutter or enables backwards cuts", "[tbm-back
 	// The train's own facing is train state; turning every part round leaves the saved heading and the forward cut.
 	for (Train *part = rig.front; part != nullptr; part = part->Next()) part->direction = ReverseDir(part->direction);
 	CHECK(rig.Tick().blocked == TBMBlockedReason::None);
+	CHECK(rig.Tick().blocked == TBMBlockedReason::None); // Reversed display facing does not bypass the half-rate accumulator.
 	CHECK(rig.Project().heading == heading);
 	CHECK(rig.Job().partial_work_ticks == 1);
 	// A saved heading pointing backwards, as if backing had turned the cutter, is refused rather than cut.

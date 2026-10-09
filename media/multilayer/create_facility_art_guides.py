@@ -2,7 +2,7 @@
 
 @file create_facility_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 23 and 26
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-a-sprite-contract.md
+@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-a-sprite-contract.md
 These diagrams describe native placement; they never supply game artwork.
 """
 
@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, PngImagePlugin
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/mlvs"
+ASSETS = ROOT / "media/multilayer/guides/m1"
 DOORS = ["NE", "SE", "SW", "NW"]
 
 

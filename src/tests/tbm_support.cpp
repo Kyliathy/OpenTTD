@@ -174,7 +174,7 @@ TEST_CASE("Support refuses cells it may not lay on", "[tbm-support]")
 
 	/* Once the first cut laid its piece, passing there again reuses it instead of laying it twice. */
 	const auto estimate = EstimateExcavationCut(rig.project.job);
-	for (uint64_t tick = 0; tick < estimate.work_ticks; ++tick) rig.Tick();
+	rig.BoreOneCut(); // Cutting duration comes from the actual model, independently of support admission.
 	REQUIRE(rig.Job().cursor == 1);
 	const auto again = plan_for([](ExcavationJob &j) { j.cursor = 0; });
 	CHECK(again.error == TBMBlockedReason::None);
@@ -215,7 +215,7 @@ TEST_CASE("Laid support is company track with saved metadata", "[tbm-support]")
 	const auto railtype = GetRailType(rig.proof.destination);
 	const auto infrastructure = Company::Get(_current_company)->infrastructure.rail[railtype];
 	const auto estimate = EstimateExcavationCut(rig.project.job);
-	for (uint64_t tick = 0; tick < estimate.work_ticks; ++tick) rig.Tick();
+	rig.BoreOneCut();
 	REQUIRE(rig.Job().cursor == 1);
 	const TileIndex cell = rig.Job().route[0].cutter_position;
 	CHECK(Company::Get(_current_company)->infrastructure.rail[railtype] == infrastructure + 1);
@@ -247,7 +247,7 @@ static TileIndex BoreFirstCut(const TBMWorkRig &rig)
 {
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	REQUIRE(estimate.error == ExcavationError::None);
-	for (uint64_t tick = 0; tick < estimate.work_ticks; ++tick) rig.Tick();
+	rig.BoreOneCut();
 	REQUIRE(rig.Job().cursor == 1);
 	const TileIndex cell = rig.Job().route[0].cutter_position;
 	REQUIRE(GetTBMSupportTile(cell) != nullptr);
@@ -282,6 +282,7 @@ TEST_CASE("Support in use refuses ordinary rail tools until released", "[tbm-sup
 		CHECK(GetTBMSupportTile(cell) == nullptr);
 	}
 	SECTION("after the project ends, removal drops the metadata and the cavity stays open") {
+		REQUIRE(rig.Job().state == ExcavationJobState::Completed);
 		rig.Reload(TBMPhase::Completed);
 		CHECK_FALSE(IsTBMSupportInUse(cell));
 		CHECK(Command<Commands::RemoveRail>::Do(DoCommandFlag::Execute, cell, laid).Succeeded());
@@ -290,6 +291,7 @@ TEST_CASE("Support in use refuses ordinary rail tools until released", "[tbm-sup
 		CHECK(GetGeologyWorldState().terrain.Get(cell) == ExcavationState::Excavated);
 	}
 	SECTION("after the project ends, conversion keeps the track for its price") {
+		REQUIRE(rig.Job().state == ExcavationJobState::Completed);
 		rig.Reload(TBMPhase::Completed);
 		const Money price = GetTBMSupportTile(cell)->conversion_price;
 		const Money cash = Company::Get(_current_company)->money;

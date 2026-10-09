@@ -28,9 +28,6 @@
 
 #include "safeguards.h"
 
-/** Longest side of a commissioning floor rectangle, in tiles; the planner bounds the job itself. */
-static constexpr uint MAX_TBM_COMMISSION_AREA_SIDE = 64;
-
 /** @copydoc CommissionTBMProject */
 TBMCommissionResult CommissionTBMProject(const LayerPortalCommissionRequest &request, bool execute)
 {
@@ -122,11 +119,12 @@ TBMCommissionResult CommissionTBMProject(const LayerPortalCommissionRequest &req
  * @param area_start One corner of the floor, on the rock layer.
  * @param area_end The opposite corner.
  * @param accept_partial Whether a plan covering only part of the floor is accepted.
+ * @param intent Reviewed area coverage or straight advance from the housing.
  * @param[out] request The request, filled on success.
  * @param[out] preview Canonical area quote, including partial coverage on a partial-floor refusal.
  * @return Nothing on success, or the refusal message.
  */
-static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial, LayerPortalCommissionRequest &request, TBMAreaPreview &preview)
+static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial, ExcavationPlanIntent intent, LayerPortalCommissionRequest &request, TBMAreaPreview &preview)
 {
 	if (!GetLayerPortalPairKey(portal)) return STR_ERROR_TBM_COMMISSION_PORTAL;
 	LayerPortalCommissionRequest base;
@@ -155,48 +153,29 @@ static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex po
 	if (dimensions.error == TBMAcquisitionError::UnavailableModel) return STR_ERROR_TBM_COMMISSION_MODEL;
 	if (dimensions.error != TBMAcquisitionError::None) return STR_ERROR_TBM_COMMISSION_CONSIST;
 
-	/* The floor lies on the housing's own rock layer, as a bounded rectangle; the housing itself is never floor. */
-	const MapLayer layer = GetTileLayer(proof.destination);
-	if (!IsValidTile(area_start) || !IsValidTile(area_end) || GetTileLayer(area_start) != layer || GetTileLayer(area_end) != layer) return STR_ERROR_TBM_COMMISSION_AREA;
-	const uint x0 = std::min(TileX(area_start), TileX(area_end)), x1 = std::max(TileX(area_start), TileX(area_end));
-	const uint y0 = std::min(TilePlaneY(area_start), TilePlaneY(area_end)), y1 = std::max(TilePlaneY(area_start), TilePlaneY(area_end));
-	if (x1 - x0 >= MAX_TBM_COMMISSION_AREA_SIDE || y1 - y0 >= MAX_TBM_COMMISSION_AREA_SIDE) return STR_ERROR_TBM_COMMISSION_AREA;
-	std::vector<TileIndex> floor;
-	// Supply every bounded final-use floor cell once, excluding the existing portal housing.
-	for (uint y = y0; y <= y1; ++y) {
-		for (uint x = x0; x <= x1; ++x) {
-			const TileIndex tile = TileXYL(x, y, layer);
-			if (tile != proof.destination) floor.push_back(tile);
-		}
-	}
-	if (floor.empty()) return STR_ERROR_TBM_COMMISSION_AREA;
-	std::set<TileIndex> extra;
-	std::vector<TileIndex> centres = floor;
-	centres.push_back(proof.destination);
-	// The 3x3 cutter sweeps one cell beyond every floor cell and the housing it starts from; only that ring is offered.
-	for (TileIndex centre : centres) {
-		for (int dy = -1; dy <= 1; ++dy) {
-			for (int dx = -1; dx <= 1; ++dx) {
-				const TileIndex cell = TileAddWrap(centre, dx, dy);
-				if (IsValidTile(cell) && GetTileLayer(cell) == layer && !std::ranges::binary_search(floor, cell)) extra.insert(cell);
-			}
-		}
-	}
-	const auto requested = NormalizeExcavationOutline(layer, floor);
-	if (requested.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_AREA;
-	const std::vector<TileIndex> accepted(extra.begin(), extra.end());
+	if (intent > ExcavationPlanIntent::StraightTunnel) return STR_ERROR_TBM_COMMISSION_AREA;
+	// A straight tunnel leaves the real portal door in its accepted heading;
+	// a different start corner must not imply an unreviewed approach or turn.
+	if (intent == ExcavationPlanIntent::StraightTunnel && area_start != proof.destination) return STR_ERROR_TBM_TUNNEL_ALIGNMENT;
+	const auto outline = intent == ExcavationPlanIntent::Area ? MakeTBMWorkOutline(proof.destination, area_start, area_end) :
+		MakeTBMTunnelOutline(proof.destination, proof.exit_heading, area_end);
+	if (outline.error == ExcavationError::IllegalTurn) return STR_ERROR_TBM_TUNNEL_ALIGNMENT;
+	if (outline.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_AREA;
 
 	/* The canonical planner, pass and reservation quotes for this consist, as the area preview shows them. */
 	TBMAreaRequest area;
-	area.outline = AuthorizeExcavationOutline(requested, accepted, model_id);
+	area.outline = AuthorizeExcavationOutline(outline, outline.extra_tiles, model_id);
 	if (area.outline.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_AREA;
 	area.start = {proof.destination, proof.exit_heading, std::vector<TileIndex>(dimensions.planning_points, proof.destination)};
 	area.consist = {earth_wagons, rock_wagons};
 	area.model_id = model_id;
+	area.intent = intent;
+	area.tunnel_end = area_end;
 	area.company = company;
 	area.origin = origin;
 	preview = PreviewTBMArea(area);
 	if (preview.consist_error != TBMAcquisitionError::None) return STR_ERROR_TBM_COMMISSION_CONSIST;
+	if (preview.error == ExcavationError::InsufficientCapacity) return STR_ERROR_TBM_COMMISSION_CONSIST; // The player needs enough independent spoil capacity, not a different floor alignment.
 	if (preview.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_ROUTE;
 	if (preview.partial && !accept_partial) return STR_ERROR_TBM_COMMISSION_PARTIAL;
 	if (!CheckTBMSupportRailTurns(preview.proposal)) return STR_ERROR_TBM_COMMISSION_RAIL_TURNS;
@@ -230,15 +209,24 @@ static StringID GetTBMCommissionErrorMessage(const TBMCommissionResult &result)
 }
 
 /** @copydoc PreviewTBMCommissionArea */
-TBMCommissionAreaPreview PreviewTBMCommissionArea(CompanyID company, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial)
+TBMCommissionAreaPreview PreviewTBMCommissionArea(CompanyID company, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial, ExcavationPlanIntent intent)
 {
 	TBMCommissionAreaPreview quote;
-	if (const auto refusal = PlanTBMCommission(company, portal, model_id, earth_wagons, rock_wagons, origin, area_start, area_end, accept_partial, quote.request, quote.area)) {
+	if (const auto refusal = PlanTBMCommission(company, portal, model_id, earth_wagons, rock_wagons, origin, area_start, area_end, accept_partial, intent, quote.request, quote.area)) {
 		quote.purchase = CommandCost(*refusal);
 		return quote;
 	}
 	const auto commissioned = CommissionTBMProject(quote.request, false);
 	quote.purchase = commissioned.error == TBMAcquisitionError::None ? CommandCost(ExpensesType::NewVehicles, commissioned.cost) : CommandCost(GetTBMCommissionErrorMessage(commissioned));
+	if (quote.purchase.Succeeded()) {
+		quote.fingerprint = ComputeExcavationPassFingerprint(quote.request.proposal, *quote.request.proposal.pass_terms);
+		MixTBMQuoteFingerprint(quote.fingerprint, to_underlying(intent));
+		// A reviewed reuse may never become a fresh purchase because its machine
+		// moved or was sold. Geometry, quantities and capital are also reviewed.
+		for (uint64_t value : {uint64_t{company.base()}, uint64_t{portal.base()}, uint64_t{origin.base()}, uint64_t{model_id},
+			uint64_t{earth_wagons}, uint64_t{rock_wagons}, uint64_t{quote.request.reuse_cutter.base()}, uint64_t(quote.purchase.GetCost().base()),
+			quote.area.totals.earth_t, quote.area.totals.rock_t, quote.area.totals.work_ticks, uint64_t(quote.area.totals.cost.base())}) MixTBMQuoteFingerprint(quote.fingerprint, value);
+	}
 	return quote;
 }
 
@@ -247,6 +235,19 @@ CommandCost CmdCommissionTBM(DoCommandFlags flags, TileIndex portal, uint16_t mo
 {
 	const auto quote = PreviewTBMCommissionArea(_current_company, portal, model_id, earth_wagons, rock_wagons, origin, area_start, area_end, accept_partial);
 	if (quote.purchase.Failed()) return quote.purchase;
+	if (!flags.Test(DoCommandFlag::Execute)) return quote.purchase;
+	const auto commissioned = CommissionTBMProject(quote.request, true);
+	if (commissioned.error != TBMAcquisitionError::None) return CommandCost(GetTBMCommissionErrorMessage(commissioned));
+	return CommandCost(ExpensesType::NewVehicles, commissioned.cost);
+}
+
+/** @copydoc CmdConfirmTBMCommission */
+CommandCost CmdConfirmTBMCommission(DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons,
+	StationID origin, TileIndex area_start, TileIndex area_end, uint64_t expected_fingerprint, ExcavationPlanIntent intent)
+{
+	const auto quote = PreviewTBMCommissionArea(_current_company, portal, model_id, earth_wagons, rock_wagons, origin, area_start, area_end, false, intent);
+	if (quote.purchase.Failed()) return quote.purchase;
+	if (quote.fingerprint != expected_fingerprint) return CommandCost(STR_ERROR_TBM_EXTEND_STALE);
 	if (!flags.Test(DoCommandFlag::Execute)) return quote.purchase;
 	const auto commissioned = CommissionTBMProject(quote.request, true);
 	if (commissioned.error != TBMAcquisitionError::None) return CommandCost(GetTBMCommissionErrorMessage(commissioned));

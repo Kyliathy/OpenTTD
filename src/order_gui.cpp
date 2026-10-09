@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file order_gui.cpp GUI related to orders. */
+/** @file order_gui.cpp Native order editing and explicit TBM travel control. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/gui/archi-gui.md */
 
 #include "stdafx.h"
 #include "command_func.h"
@@ -31,6 +31,7 @@
 #include "vehiclelist.h"
 #include "error.h"
 #include "order_cmd.h"
+#include "tbm.h"
 #include "company_cmd.h"
 #include "core/string_consumer.hpp"
 #include "window_func.h"
@@ -691,6 +692,13 @@ private:
 	 */
 	void OrderClick_Skip()
 	{
+		if (const auto *project = this->vehicle->type == VehicleType::Train ? GetTBMProjectForCutter(this->vehicle->index) : nullptr;
+				project != nullptr && !IsTBMProjectFinished(project->phase)) {
+			if (this->vehicle->GetNumOrders() == 0) return;
+			const VehicleOrderID selected = this->OrderGetSel() < this->vehicle->GetNumOrders() ? this->OrderGetSel() : this->vehicle->cur_real_order_index;
+			Command<Commands::SkipToOrder>::Post(STR_ERROR_CAN_T_SKIP_TO_ORDER, this->vehicle->tile, this->vehicle->index, selected);
+			return; // This explicit handoff works for one retained order as well as a recurring native list.
+		}
 		/* Don't skip when there's nothing to skip */
 		if (_ctrl_pressed && this->vehicle->cur_implicit_order_index == this->OrderGetSel()) return;
 		if (this->vehicle->GetNumOrders() <= 1) return;
@@ -905,6 +913,7 @@ public:
 		}
 	}
 
+	/** Refresh native order actions and the explicit work-to-travel handoff for this actual vehicle. */
 	void UpdateButtonState()
 	{
 		if (this->vehicle->owner != _local_company) return; // No buttons are displayed with competitor order windows.
@@ -915,7 +924,10 @@ public:
 
 		/* Second row. */
 		/* skip */
-		this->SetWidgetDisabledState(WID_O_SKIP, this->vehicle->GetNumOrders() <= 1);
+		const auto *project = this->vehicle->type == VehicleType::Train ? GetTBMProjectForCutter(this->vehicle->index) : nullptr;
+		const bool work = project != nullptr && !IsTBMProjectFinished(project->phase);
+		this->SetWidgetDisabledState(WID_O_SKIP, work ? this->vehicle->GetNumOrders() == 0 || IsTBMFinishing(project->phase) : this->vehicle->GetNumOrders() <= 1);
+		this->GetWidget<NWidgetCore>(WID_O_SKIP)->SetToolTip(work ? STR_TBM_FOLLOW_ORDERS_TOOLTIP : STR_ORDERS_SKIP_TOOLTIP);
 
 		/* delete / stop sharing */
 		NWidgetStacked *delete_sel = this->GetWidget<NWidgetStacked>(WID_O_SEL_BOTTOM_MIDDLE);
@@ -1133,8 +1145,13 @@ public:
 		}
 	}
 
+	/** @param widget Actual order control. @param stringid Default native label. @return Localized control text for this vehicle's real authority. */
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
+		if (widget == WID_O_SKIP && this->vehicle->type == VehicleType::Train) {
+			const auto *project = GetTBMProjectForCutter(this->vehicle->index);
+			if (project != nullptr && !IsTBMProjectFinished(project->phase)) return GetString(STR_TBM_FOLLOW_ORDERS);
+		}
 		switch (widget) {
 			case WID_O_COND_VALUE: {
 				VehicleOrderID sel = this->OrderGetSel();

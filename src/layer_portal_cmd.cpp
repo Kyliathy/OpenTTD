@@ -39,6 +39,8 @@
 #include "map_layer_gui.h"
 #include "viewport_func.h"
 #include "tbm_exchange.h"
+#include "tbm_hangar.h"
+#include "tbm.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -419,7 +421,12 @@ static std::optional<VehicleEnterTileStates> RunLayerPortalMagazine(Train *part,
 		consist->cur_speed = 0;
 		consist->subspeed = 0;
 		// The bay services the boring machine at every visit, as a depot would; it never goes to one.
-		if (GetTBMProjectForCutter(consist->index) != nullptr) VehicleServiceInDepot(consist);
+		const auto ordered = GetTBMOrderedHangar(*consist);
+		if (!IsTBMStagingHangarOrder(*consist) && ordered.error == TBMHangarError::None && ordered.tile == tile) {
+			VehicleEnterDepot(consist); // Only the final actual part admits native service/halt completion at the selected hangar.
+		} else if (GetTBMProjectForCutter(consist->index) != nullptr) {
+			VehicleServiceInDepot(consist);
+		}
 	}
 	return VehicleEnterTileState::EnteredWormhole;
 }
@@ -432,7 +439,8 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 		const auto *work = GetLayerPortalWorkRecord(tile);
 		// Actual movement rechecks the entering part/project; cached paths, force-proceed and unrelated followers cannot bypass sealed authority.
 		// Besides the cutter's parts, an assigned hauler of the project's Source bay may use the key (R2MLVS3MP-M).
-		const bool admitted = work != nullptr && (CheckLayerPortalWorkAccess(tile, v->index, work->project) == LayerPortalWorkError::None || (v->type == VehicleType::Train && IsTBMHaulerAdmittedAtBay(*Train::From(v)->First(), tile)));
+		const bool admitted = (work != nullptr && CheckLayerPortalWorkAccess(tile, v->index, work->project) == LayerPortalWorkError::None) ||
+			(v->type == VehicleType::Train && (IsTBMHaulerAdmittedAtBay(*Train::From(v)->First(), tile) || CanTBMUseHangarPortal(*Train::From(v)->First(), tile)));
 		if (!admitted) return VehicleEnterTileState::CannotEnter;
 	}
 	TransportType transport = GetLayerPortalTransportType(tile);
@@ -586,6 +594,7 @@ struct NativePortalBuildProposal {
 	CommandCost cost{ExpensesType::Construction}; ///< Complete readonly clearing/housing quote.
 	TileIndex source = INVALID_TILE, target = INVALID_TILE; ///< Actual reciprocal physical endpoints.
 	bool target_solid = false; ///< Scoped metadata housing on persistent solid rock, never general excavation.
+	bool source_support = false, target_support = false; ///< Only a prevalidated vacated terminal TBM piece may replace plain-ground admission.
 	uint8_t clearing_count = 0; ///< Ordinary clear operations whose shared company budget must fit before either executes.
 };
 
@@ -595,18 +604,28 @@ struct NativePortalBuildProposal {
  * @param pair Actual destination endpoint on its supported plane.
  * @param shaft Source shaft direction; opposite end uses its reverse.
  * @param transport Actual rail/road family.
+ * @param railtype Requested rail gauge for a narrowly validated terminal-support handover.
  * @param flags Caller command policy; Execute is removed for all quotes.
  * @return Complete readonly proposal with cost/refusal.
  */
-static NativePortalBuildProposal PrepareNativePortalBuild(TileIndex tile, TileIndex pair, DiagDirection shaft, TransportType transport, DoCommandFlags flags)
+static NativePortalBuildProposal PrepareNativePortalBuild(TileIndex tile, TileIndex pair, DiagDirection shaft, TransportType transport, RailType railtype, DoCommandFlags flags)
 {
 	NativePortalBuildProposal result;
 	result.source = tile; result.target = pair;
 	if (!Company::IsValidID(_current_company)) { result.cost = CMD_ERROR; return result; }
 	if ((GetTileLayer(tile) == MapLayer::DeepUnderground || GetTileLayer(pair) == MapLayer::DeepUnderground) && !CheckDeepLayerAvailability(GetCurrentMultiLayerProfileSelection(), TimerGameCalendar::date)) { result.cost = CommandCost(STR_ERROR_EXCAVATION_DEEP_LOCKED); return result; } // Both build directions use the same saved calendar authority before any geometry/clearing quote.
-	// Native paired mutation supports prepared plain-ground end sites; existing infrastructure/objects must be explicitly cleared through their own safe commands first.
+	// Existing infrastructure stays protected. Only the support owner's
+	// complete terminal handover quote can replace that one rail endpoint.
 	for (TileIndex end : {tile, pair}) {
-		if (!IsValidTile(end) || !IsInnerTile(end) || GetTileType(end) != TileType::Clear) { result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result; }
+		if (!IsValidTile(end) || !IsInnerTile(end)) { result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result; }
+		if (transport == TransportType::Rail && GetTBMSupportTile(end) != nullptr) {
+			const auto handover = CheckTBMExitHandover(end, end == tile ? shaft : ReverseDiagDir(shaft), railtype);
+			if (handover.Failed()) { result.cost = handover; return result; }
+			result.cost.AddCost(handover.GetCost());
+			(end == tile ? result.source_support : result.target_support) = true;
+		} else if (GetTileType(end) != TileType::Clear) {
+			result.cost = CommandCost(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL); return result;
+		}
 		if (GetTileSlope(end) != SLOPE_FLAT) { result.cost = CommandCost(STR_ERROR_FLAT_LAND_REQUIRED); return result; }
 		if (IsBridgeAbove(end)) { result.cost = CommandCost(STR_ERROR_MUST_DEMOLISH_BRIDGE_FIRST); return result; }
 		if (!MultiLayerMap::GetRules(GetTileLayer(end)).allowed.Test(MapLayerConstruction::LayerPortal)) { result.cost = CommandCost(STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER); return result; }
@@ -640,10 +659,12 @@ static NativePortalBuildProposal PrepareNativePortalBuild(TileIndex tile, TileIn
 		if (CommandCost access = CheckExcavationConstruction(std::array{cell}); access.Failed()) { result.cost = access; return result; }
 	}
 	flags.Reset(DoCommandFlag::Execute);
-	const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, tile);
-	if (source_clear.Failed()) { result.cost = source_clear; return result; }
-	result.cost.AddCost(source_clear.GetCost()); ++result.clearing_count;
-	if (!result.target_solid) {
+	if (!result.source_support) {
+		const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, tile);
+		if (source_clear.Failed()) { result.cost = source_clear; return result; }
+		result.cost.AddCost(source_clear.GetCost()); ++result.clearing_count;
+	}
+	if (!result.target_solid && !result.target_support) {
 		const auto target_clear = Command<Commands::LandscapeClear>::Do(flags, pair);
 		if (target_clear.Failed()) { result.cost = target_clear; return result; }
 		result.cost.AddCost(target_clear.GetCost()); ++result.clearing_count;
@@ -689,9 +710,11 @@ static CommandCost BuildNativePortalPair(const NativePortalBuildProposal &propos
 	if (!capacity.Ready()) return CommandCost(STR_ERROR_TOO_MANY_OBJECTS);
 	const PortalBuildTileBackup source_backup(proposal.source), target_backup(proposal.target);
 	const auto clearing_budget = Company::Get(_current_company)->clear_limit;
-	const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, proposal.source);
-	if (source_clear.Failed()) return source_clear;
-	if (!proposal.target_solid) {
+	if (!proposal.source_support) {
+		const auto source_clear = Command<Commands::LandscapeClear>::Do(flags, proposal.source);
+		if (source_clear.Failed()) return source_clear;
+	}
+	if (!proposal.target_solid && !proposal.target_support) {
 		const auto target_clear = Command<Commands::LandscapeClear>::Do(flags, proposal.target);
 		if (target_clear.Failed()) {
 			source_backup.Restore(); target_backup.Restore();
@@ -713,6 +736,8 @@ static CommandCost BuildNativePortalPair(const NativePortalBuildProposal &propos
 	}
 	// Infrastructure and notifications follow both geometry and owner publication; a failed preparation leaves neither accounting nor a half-pair.
 	if (transport == TransportType::Rail) {
+		if (proposal.source_support) CompleteTBMExitHandover(proposal.source);
+		if (proposal.target_support) CompleteTBMExitHandover(proposal.target);
 		Company::Get(_current_company)->infrastructure.rail[railtype] += GetLayerPortalPieceCount(transport) * 2;
 		NotifyRailPortalChanged(proposal.source, _current_company);
 		NotifyRailPortalChanged(proposal.target, _current_company);
@@ -762,7 +787,7 @@ CommandCost CmdBuildLayerPortal(DoCommandFlags flags, TileIndex tile, TransportT
 	TileIndex pair = MultiLayerMap::TileInLayer(tile, target_layer);
 	DiagDirection pair_shaft = ReverseDiagDir(shaft_dir);
 	if (GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) {
-		return BuildNativePortalPair(PrepareNativePortalBuild(tile, pair, shaft_dir, transport_type, flags), flags, transport_type, shaft_dir, railtype, roadtype);
+		return BuildNativePortalPair(PrepareNativePortalBuild(tile, pair, shaft_dir, transport_type, railtype, flags), flags, transport_type, shaft_dir, railtype, roadtype);
 	}
 	if (CommandCost end = CheckPortalEnd(tile, shaft_dir); end.Failed()) return end;
 	if (CommandCost end = CheckPortalEnd(pair, pair_shaft); end.Failed()) return end;

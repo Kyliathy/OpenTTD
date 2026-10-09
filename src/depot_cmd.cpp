@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file depot_cmd.cpp %Command Handling for depots. */
+/** @file depot_cmd.cpp Native depot naming, including portal magazines. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/vehicles/archi-vehicles.md */
 
 #include "stdafx.h"
 #include "command_func.h"
@@ -61,7 +61,7 @@ CommandCost CmdRenameDepot(DoCommandFlags flags, DepotID depot_id, const std::st
 	if (flags.Test(DoCommandFlag::Execute)) {
 		if (reset) {
 			d->name.clear();
-			MakeDefaultName(d);
+			if (!IsLayerPortalHangarTile(d->xy)) MakeDefaultName(d); // Portal hangars use their explicit layer/coordinates instead of a fictional nearest underground town.
 		} else {
 			d->name = text;
 		}

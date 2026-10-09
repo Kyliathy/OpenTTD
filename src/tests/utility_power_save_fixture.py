@@ -19,6 +19,21 @@ ROOT = Path(__file__).resolve().parents[2]
 DIRECTORY = ROOT / "src/tests/fixtures/utility"
 
 
+from functools import partial
+from pathlib import Path
+import sys
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import log_path
+CONTEXT = current_run_context("utilities", "utility-power-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime()
+INPUTS = ROOT / "src/tests/fixtures/utility"
+DIRECTORY = CONTEXT.saves
+log_path = partial(log_path, context=CONTEXT)
+
+
 def utility_chunks(path):
     """Read actual versioned utility transport without interpreting private runtime state.
 
@@ -32,7 +47,7 @@ def utility_chunks(path):
     return selected
 
 
-def run_case(mode, source, suffix, ticket=None, prefix="r2mlvs3mp-u"):
+def run_case(mode, source, suffix, ticket=None, prefix="r2mlvs3mp-u", context=CONTEXT):
     """Load one actual world in an isolated native process and retain bounded owner evidence.
 
     @param mode Native observer operation for this publication/settlement/save boundary.
@@ -40,14 +55,15 @@ def run_case(mode, source, suffix, ticket=None, prefix="r2mlvs3mp-u"):
     @param suffix Unique owning-plan log suffix, including repeated load pass identity.
     @param ticket Original issuer sequence/seal for actual saved retry proof; absent otherwise.
     @param prefix Owning focused group's log prefix; only the basename reaches the shared log router.
+    @param context Explicit caller context for output/runtime ownership.
     @return Exact retained native evidence; failures preserve logs and raise.
     """
-    log = log_path(f"{prefix}-power-file-{suffix}.log")
+    log = log_path(f"{prefix}-power-file-{suffix}.log", context=context)
     environment = dict(os.environ, OTTD_UTILITY_FILE_CASE=mode, OTTD_UTILITY_FILE_INPUT=str(source))
     if ticket is not None:
         environment.update(OTTD_UTILITY_TICKET_SEQUENCE=ticket[0], OTTD_UTILITY_TICKET_SEAL=ticket[1])
     with log.open("wb") as sink:
-        subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-file]"],
+        run_native(context, [str(ROOT / "build/Debug/openttd_test.exe"), "[.utility-power-file]"],
                        cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                        creationflags=subprocess.CREATE_NO_WINDOW, timeout=110, check=True)
     evidence = log.read_text(encoding="utf-8", errors="replace")
@@ -104,9 +120,9 @@ def main():
 
     @return None; assertions require exact utility bytes and successful real owner acceptance.
     """
-    source = ROOT / "src/tests/fixtures/haulage/m1-loop-underground-5-complete-loop.sav"
+    source = ROOT / "src/tests/fixtures/haulage/spoil-loop-underground/m1-loop-underground-5-complete-loop.sav"
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     existed = startup.exists()
     previous = startup.read_bytes() if existed else None
     DIRECTORY.mkdir(parents=True, exist_ok=True)

@@ -11,10 +11,12 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../multilayer_sprite.h"
 #include "../underground_gui.h"
+#include "../tbm_gui.h"
 #include "../underground_vehicle.h"
 #include "../tbm.h"
 #include "../spoil_receiver.h"
@@ -52,10 +54,10 @@ static bool ObserveControlArt(std::span<std::string_view> arguments)
 /** The actual loader and real widget renderer must consume the baked UI families without changing any saved owner. */
 TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and seams", "[.m1-control-art]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto source = root / "src/tests/fixtures/haulage/portal-native-deep-stopped.sav";
-	const auto config = root / "build/native-art.cfg";
-	const auto reviews = root / "docs/zz-reach2/upgrades/2026-10/assets/reviews";
+	const auto root = FindTestRepositoryRoot();
+	const auto source = ResolveTestInputPath(root / "src/tests/fixtures/haulage/portal-commissioning/portal-native-deep-stopped.sav");
+	const auto config = GetTestRuntimeConfig();
+	const auto reviews = GetTestArtifactPaths("construction", "layer-controls").images;
 	REQUIRE(std::filesystem::exists(source));
 	REQUIRE(std::filesystem::exists(config));
 	std::filesystem::create_directories(reviews);
@@ -93,7 +95,7 @@ TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and se
 				REQUIRE(GetUndergroundSurveyOverlaySprite(tile).has_value());
 				window->OnPlaceObject({}, tile);
 				CaptureNativeArtWindow(*window, reviews / fmt::format("m1-controls-layer-{}.ppm", to_underlying(layer)));
-				CaptureNativeArtViewport(tile, ZoomLevel::Normal, reviews / fmt::format("m1-survey-layer-{}.ppm", to_underlying(layer)));
+				CaptureNativeArtViewport(tile, ZoomLevel::Normal, GetTestArtifactPaths("geology", "survey").images / fmt::format("m1-survey-layer-{}.ppm", to_underlying(layer)));
 				window->OnPlaceObjectAbort();
 				window->Close();
 				Window::DeleteClosedWindows();
@@ -109,16 +111,16 @@ TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and se
 					REQUIRE(seam != records.end());
 					Window *window = ShowUndergroundConstructionToolbar(seam->layer, policy);
 					REQUIRE(window != nullptr);
-					CaptureNativeArtWindow(*window, reviews / fmt::format("m1-survey-{}-controls.ppm", name));
+					CaptureNativeArtWindow(*window, GetTestArtifactPaths("geology", "survey").images / fmt::format("m1-survey-{}-controls.ppm", name));
 					window->OnClick({}, WID_UC_SURVEY, 1);
 					const TileIndex tile = TileXYL(seam->spans.front().first_x, seam->spans.front().y, seam->layer);
 					REQUIRE(GetUndergroundSurveyOverlaySprite(tile).has_value());
 					window->OnPlaceObject({}, tile);
-					CaptureNativeArtWindow(*window, reviews / fmt::format("m1-survey-{}-controls.ppm", name));
+					CaptureNativeArtWindow(*window, GetTestArtifactPaths("geology", "survey").images / fmt::format("m1-survey-{}-controls.ppm", name));
 					// Native and 2x world views preserve real seam boundaries and
 					// the canonical marker anchor; survey selection writes no reserves.
 					for (const ZoomLevel zoom : {ZoomLevel::Normal, ZoomLevel::In2x}) {
-						CaptureNativeArtViewport(tile, zoom, reviews / fmt::format("m1-survey-{}-zoom-{}.ppm", name, to_underlying(zoom)));
+						CaptureNativeArtViewport(tile, zoom, GetTestArtifactPaths("geology", "survey").images / fmt::format("m1-survey-{}-zoom-{}.ppm", name, to_underlying(zoom)));
 					}
 					window->OnPlaceObjectAbort();
 					window->Close();
@@ -136,8 +138,7 @@ TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and se
 				Window *window = ShowUndergroundConstructionToolbar(GetTileLayer(lower), policy);
 				REQUIRE(window != nullptr);
 				CaptureNativeArtWindow(*window, reviews / "m1-job-inspection-controls.ppm");
-				window->OnClick({}, WID_UC_PROJECT, 1);
-				window->OnPlaceObject({}, lower);
+				InspectUndergroundProject(projects.back().id);
 				CaptureNativeArtWindow(*window, reviews / "m1-job-inspection-controls.ppm");
 				CaptureNativeArtViewport(lower, ZoomLevel::Normal, reviews / "m1-job-inspection-footprint.ppm");
 				window->OnPlaceObjectAbort();
@@ -150,11 +151,11 @@ TEST_CASE("M1 control raster consumes actual loaded windows engines cargo and se
 			REQUIRE(pair.has_value());
 			Window *portal = FindWindowById(WindowClass::LayerPortal, pair->base());
 			REQUIRE(portal != nullptr);
-			CaptureNativeArtWindow(*portal, reviews / "m1-controls-portal.ppm");
+			CaptureNativeArtWindow(*portal, GetTestArtifactPaths("portals", "controls").images / "m1-controls-portal.ppm");
 			portal->Close();
 			Window::DeleteClosedWindows();
 			/** Actual ordinary purchase rendering plus actual loaded first-party cargo resolvers. */
-			CaptureNativeArtCanvas(640, 240, reviews / "m1-purchase-cargo.ppm", [&] {
+			CaptureNativeArtCanvas(640, 240, GetTestArtifactPaths("vehicles", "purchase-cargo").images / "m1-purchase-cargo.ppm", [&] {
 				// Draw each real engine through GetRailIcon's ordinary caller,
 				// proving native mapping/availability reaches the loaded renderer.
 				for (uint16_t model = 0; model < 5; ++model) {

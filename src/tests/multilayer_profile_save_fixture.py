@@ -13,6 +13,24 @@ from pathlib import Path
 from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path, prior_artifact
+CONTEXT = current_run_context("content", "multilayer-profile-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def metadata_variant(source, suffix, policy=None, schema_version=None, remove=False):
     """Change only an owned fixture's version-1 metadata transport, preserving original inputs.
 
@@ -39,7 +57,7 @@ def metadata_variant(source, suffix, policy=None, schema_version=None, remove=Fa
         stream[row:row + 2] = schema_version.to_bytes(2, "big")
     if remove:
         del stream[start:end]
-    target = save_path(f"r2mlvs1-h-{suffix}-input.sav")
+    target = output_save_path(f"r2mlvs1-h-{suffix}-input.sav")
     target.write_bytes(original[:8] + lzma.compress(stream))
     return target
 
@@ -51,16 +69,20 @@ def main():
     """
     source = save_path("r2mlvs14-b-native-new.sav")
     source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
-    package = ROOT / "build/newgrf/multilayer_industry.grf"
-    held = AREA / "r2mlvs1-h-held-package.grf"
+    package = RUNTIME / "newgrf/multilayer_industry.grf"
+    held = CONTEXT.directory / "scratch" / "r2mlvs1-h-held-package.grf"
     original_package = package.read_bytes()
-    startup = ROOT / "build/scripts/game_start.scr"
-    config = ROOT / "build/grftest.cfg"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config = RUNTIME / "grftest.cfg"
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     parser = argparse.ArgumentParser()
     parser.add_argument("--packages-only", action="store_true", help="repeat only the active saved-package refusal boundary")
+    parser.add_argument("--prior-run", help="exact earlier invocation supplying the skipped acceptance evidence")
     args = parser.parse_args()
+    # A partial run may reuse evidence only from an explicitly named invocation.
+    if args.packages_only and not args.prior_run:
+        parser.error("partial verification requires --prior-run")
     try:
         config.write_text("# @see r2mlvs1-gameplay-contracts-and-content.md, Group 21.\n"
                           "[game_creation]\nmap_x = 6\nmap_y = 6\nlandscape = temperate\n"
@@ -105,11 +127,11 @@ def main():
                     ("missing-metadata", "Missing required multilayer metadata chunk", False),
                     ("bad-policy", "Unknown multilayer policy flags", False))
         for name, expected, accepted in previous:
-            evidence = log_path(f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
+            evidence = prior_artifact(CONTEXT, args.prior_run, "logs", f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
             assert expected in evidence, (name, "prior boundary evidence missing")
-            assert save_path(f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
+            assert prior_artifact(CONTEXT, args.prior_run, "saves", f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
     scope = "Two package refusals rerun; five earlier editor/metadata boundaries verified from retained evidence.\n" if args.packages_only else "All seven boundaries executed in this run.\n"
-    (AREA / "r2mlvs1-h-saved-profile-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs1-h-saved-profile-results.txt").write_text(
         "R2MLVS1 Group 21: explicit saved editor policy/reload and five metadata/content refusals passed.\n" + scope +
         "Original package, configuration, startup and source save preserved.\n", encoding="utf-8")
 

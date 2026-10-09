@@ -317,6 +317,7 @@ struct TBMHaulerInputs {
 	bool set_aboard = true; ///< Every wagon of the carried set is a unit of the hauler.
 	bool set_empty = true; ///< No wagon of the carried set holds or expects cargo.
 	bool cutter_waiting = false; ///< The project's cutter waits for empties (WaitForEmpties).
+	bool exchange_finished = false; ///< Parked or finished work needs no further empties; actual haulers leave its bay for the origin.
 	bool lost = false; ///< The hauler's pathfinder is lost.
 	bool receiver_room = true; ///< At the origin, some receiver there has room for spoil the set carries.
 };
@@ -497,6 +498,22 @@ void ForgetTBMExchangeProject(TBMProjectID project);
  *         Group 17.2).
  */
 bool IsTBMProjectExchangeIdle(TBMProjectID project);
+
+/**
+ * Identify actual custody or occupancy preventing final project release.
+ * @param project Live project to settle.
+ * @return No value when every set is empty and every hauler is safely outside its bay after settlement;
+ *         otherwise the blocking native train, or Invalid for a missing custody reference.
+ */
+std::optional<VehicleID> GetTBMProjectSettlementBlocker(TBMProjectID project);
+
+/**
+ * Release all settled hauler assignments as part of an already prepared final project operation.
+ * @param project Project whose real empty haulers are outside their bays.
+ * @param execute False validates only; true ends assignments without moving or deleting their trains/packets.
+ * @return Whether complete settlement passed, leaving everything unchanged on refusal.
+ */
+bool ReleaseSettledTBMProjectHaulers(TBMProjectID project, bool execute);
 
 /**
  * Admit an ordinary rearrangement (CmdMoveRailVehicle): no part may leave or join the cutter consist of a project.

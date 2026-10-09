@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../spritecache.h"
@@ -86,9 +87,9 @@ static uint32_t HashArtPixels(const Sprite &sprite)
 /** Hidden isolated process: normal startup loads the actual distributed extra GRF, then one timer observes its real cache. */
 TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite", "[.m1-packed-art-load]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto fixture = root / "src/tests/fixtures/graphics/m1-packed-sprites.bin";
-	const auto config = root / "build/native-art.cfg";
+	const auto root = FindTestRepositoryRoot();
+	const auto fixture = root / "logs/proofs/mlm/native-art/expected/m1-packed-sprites.bin";
+	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Windows derives its local data search root from the configuration folder.
@@ -114,7 +115,7 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 			REQUIRE(std::string_view(magic.data(), magic.size()) == std::string_view{"MLVART1\0", 8});
 			const uint16_t count = ReadArtWord(input);
 			const uint16_t bound = ReadArtWord(input);
-			CHECK(count == 2377); // 66 protected M0 plus 2,311 selected M1 source sprites.
+			CHECK(count == 2409); // 66 protected M0 plus 2,343 selected M1 source sprites, including material floors/walls.
 			CHECK(bound == MAP_LAYER_SPRITE_COUNT);
 			// Each source declaration is checked against the real application-loaded
 			// sprite cache. Mock cache dimensions or a source-only parser cannot pass.
@@ -144,7 +145,7 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 			REQUIRE(GetSpriteCountForFile(origin->GetFilename(), SPR_MAP_LAYER_BASE, SPR_MAP_LAYER_BASE + bound) == count);
 			observed = true;
 			_exit_game = true; // End only this isolated read-only graphics observer.
-			fmt::print("M1_PACKED_ART_LOADED sprites={} native_bound={} protected=66 selected=2311 pixel_hashes=exact\n", count, bound);
+			fmt::print("M1_PACKED_ART_LOADED sprites={} native_bound={} protected=66 selected=2343 pixel_hashes=exact\n", count, bound);
 		} catch (...) {
 			// Assertion failures must leave native startup through normal shutdown;
 			// unwinding through its game loop would skip font/window destruction.

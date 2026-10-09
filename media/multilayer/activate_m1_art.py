@@ -14,13 +14,37 @@ import json
 from pathlib import Path
 
 import pack_m1_art as pack
+from evidence import CACHE, DEFAULT_MANIFEST, EvidenceSet
 
 ROOT = Path(__file__).resolve().parents[2]
-PUBLIC = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/multilayer_sprite_manifest.json"
-PACKED = ROOT / "media/multilayer/sprites/m1/packed-manifest.json"
-RUNTIME = ROOT / "media/multilayer/sprites/m1/runtime-manifest.json"
-CONTROL = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-control-runtime.json"
-TERRAIN = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/reviews/m1-terrain-runtime.json"
+PUBLIC = ROOT / "media/multilayer/contracts/multilayer_sprite_manifest.json"
+PACKED = CACHE / "derived/packed-manifest.json"
+RUNTIME = CACHE / "runtime-manifest.json"
+_ACTIVE_EVIDENCE = None
+
+
+def evidence():
+    """Obtain the explicitly selected proof set, requiring real generated evidence.
+
+    @return Content-bound selection; a missing cache fails with regeneration guidance.
+    """
+    global _ACTIVE_EVIDENCE
+    if _ACTIVE_EVIDENCE is None:
+        select_evidence(DEFAULT_MANIFEST)
+    return _ACTIVE_EVIDENCE
+
+
+def select_evidence(path):
+    """Select one named cache or review-run manifest for this validation process.
+
+    @param path Exact evidence manifest; no historical/latest discovery is performed.
+    @return Selected EvidenceSet with publication paths restricted to generated storage.
+    """
+    global _ACTIVE_EVIDENCE, PACKED, RUNTIME
+    _ACTIVE_EVIDENCE = EvidenceSet(path)
+    PACKED = _ACTIVE_EVIDENCE.output("packed")
+    RUNTIME = _ACTIVE_EVIDENCE.output("runtime")
+    return _ACTIVE_EVIDENCE
 
 
 def digest(path):
@@ -39,13 +63,18 @@ def binding_for(asset):
     @return Selector, actual consumer source/symbol, owner descriptions and focused evidence.
     @throws ValueError If no implemented runtime consumer is declared for that family.
     """
-    terrain = ["logs/r2mlvs13-be-terrain-portal-checks.log", "logs/r2mlvs13-bh-native-terrain-capture.log"]
-    controls = ["logs/r2mlvs13-cj-native-control-art-checks.log", "logs/r2mlvs13-cl-native-control-capture.log"]
-    trains = ["logs/r2mlvs13-bw-native-image-exchange-checks.log"]
-    facilities = ["logs/r2mlvs13-ce-native-facility-art-checks.log"]
-    if asset.startswith("terrain."):
+    terrain = [evidence().log("terrain-checks"), evidence().log("terrain-capture")]
+    controls = [evidence().log("control-checks"), evidence().log("control-capture")]
+    trains = [evidence().log("vehicle-checks")]
+    facilities = [evidence().log("facility-checks")]
+    if asset in ("terrain.hardness", "terrain.hardness-edges"):
+        selector = "GetMultiLayerTerrainEdgeSprites" if asset.endswith("edges") else "GetMultiLayerTerrainSprite"
+        values = (selector, "src/clear_cmd.cpp", "DrawTile_Clear", selector,
+                  ["GetGeologyWorldState.terrain", "GetExcavationCellHardness", "adjacent rock owns exposed walls"],
+                  [evidence().log("geology-checks"), evidence().log("geology-capture")])
+    elif asset.startswith("terrain."):
         values = ("GetMultiLayerTerrainSprite", "src/clear_cmd.cpp", "DrawTile_Clear", "GetMultiLayerTerrainSprite",
-                  ["GetGeologyWorldState.terrain", "layer-bounded TileAddWrap", "static tile texture"], terrain)
+                  ["GetGeologyWorldState.terrain", "layer-bounded TileAddWrap", "retained legacy family; superseded by terrain.hardness"], terrain)
     elif asset.startswith("survey."):
         values = ("GetMultiLayerSurveySprite", "src/viewport.cpp", "DrawTileSelection", "GetUndergroundSurveyOverlaySprite",
                   ["actual active survey cursor", "GeologyDeposit.resource", "GeologyDeposit.remaining_reserve", "existing Native public/free information"], controls)
@@ -75,10 +104,12 @@ def binding_for(asset):
                   ["actual CargoSpec label and GRFFile owner", "immutable first-party definition package"], controls)
     else:
         raise ValueError("no implemented selected consumer: " + asset)
-    selector, source, symbol, call, owners, evidence = values
-    return {"selector": selector, "selector_source": "src/multilayer_sprite.cpp",
+    selector, source, symbol, call, owners, log_paths = values
+    retained = asset in ("terrain.underground", "terrain.deep", "terrain.edges.underground", "terrain.edges.deep")
+    return {"retained_only": retained, "superseded_by": "terrain.hardness/terrain.hardness-edges" if retained else None,
+            "selector": selector, "selector_source": "src/multilayer_sprite.cpp",
             "consumer": {"source": source, "symbol": symbol, "call": call}, "state_authorities": owners,
-            "evidence": evidence, "simulation_independent": True,
+            "evidence": log_paths, "simulation_independent": True,
             "gallery_status": "final_m1_review_pending", "user_review": "deferred_until_integration"}
 
 
@@ -111,12 +142,14 @@ def validate(public, packed, rasters):
         assert path.read_bytes() == encoded, "actual packed source changed after runtime evidence"
     identity = packed["packed_grf"]
     assert identity["sha256"] == digest(ROOT / identity["path"]), "distributed native payload hash is stale"
+    assert identity["loader_log"] == evidence().log("packed-loader"), "loader log differs from selected proof"
     loaded = read_evidence(ROOT / identity["loader_log"])
-    assert "M1_PACKED_ART_LOADED sprites=2377 native_bound=2404 protected=66 selected=2311 pixel_hashes=exact" in loaded
+    assert "M1_PACKED_ART_LOADED sprites=2409 native_bound=2436 protected=66 selected=2343 pixel_hashes=exact" in loaded
     assert "All tests passed" in loaded
     # Native PNG and immutable save identities tie the real rendered controls
     # to their actual loaded world. A fabricated contact sheet cannot pass here.
     for raster in rasters:
+        evidence().validate_capture(raster)
         assert raster["simulation_owners_unchanged_during_render"]
         assert digest(ROOT / raster["source"]) == raster["source_sha256"], "runtime source save is stale"
         log = read_evidence(ROOT / raster["log"])
@@ -139,10 +172,10 @@ def validate(public, packed, rasters):
         consumer = (ROOT / binding["consumer"]["source"]).read_text(encoding="utf-8")
         assert binding["selector"] + "(" in selector, "declared selector is absent"
         assert binding["consumer"]["call"] + "(" in consumer, "declared native consumer is absent"
-        for evidence in binding["evidence"]:
-            assert "All tests passed" in read_evidence(ROOT / evidence), "consumer evidence failed: " + evidence
+        for log_path in binding["evidence"]:
+            assert "All tests passed" in read_evidence(ROOT / log_path), "consumer evidence failed: " + log_path
         result.append({"asset_id": asset, "native_offset": row["native_offset"], "sprite_count": row["sprite_count"], **binding})
-    assert len(result) == 40 and sum(row["sprite_count"] for row in result) == 2311, "selected runtime coverage is incomplete"
+    assert len(result) == 42 and sum(row["sprite_count"] for row in result) == 2343, "selected runtime coverage is incomplete"
     return result
 
 
@@ -157,13 +190,15 @@ def verified_gallery(public, packed, bindings):
     # A later binding refresh must not silently discard valid technical review,
     # or carry it across changed frames/payloads. The gallery owner revalidates
     # actual phases, source saves, distribution and all selected family links.
-    from review_m1_art import GALLERY, REPORTS, REVIEWS, read_json, validate as validate_gallery
+    import review_m1_art as gallery_owner
+    gallery_owner.configure(evidence())
+    from review_m1_art import GALLERY, REPORTS, read_json, validate as validate_gallery
     if not GALLERY.exists():
         return None
     try:
         record = read_json(GALLERY)
         candidate = {"packed_payload": packed["packed_grf"], "bindings": bindings}
-        rows, frames = validate_gallery(public, packed, candidate, [read_json(REVIEWS / name) for name in REPORTS])
+        rows, frames = validate_gallery(public, packed, candidate, [evidence().report(name) for name in REPORTS])
         assert record["technical_acceptance"] == "verified"
         assert record["packed_payload"] == packed["packed_grf"]
         assert record["families"] == rows and record["frames"] == frames
@@ -181,10 +216,13 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--publish", action="store_true")
+    parser.add_argument("--cache-only", action="store_true", help="publish generated metadata while preserving the public source contract")
+    parser.add_argument("--evidence-manifest", type=Path, default=DEFAULT_MANIFEST)
     args = parser.parse_args()
+    select_evidence(args.evidence_manifest)
     public = json.loads(PUBLIC.read_text(encoding="utf-8"))
     packed = json.loads(PACKED.read_text(encoding="utf-8"))
-    rasters = [json.loads(path.read_text(encoding="utf-8")) for path in (TERRAIN, CONTROL)]
+    rasters = [evidence().report(name) for name in ("geology", "control")]
     bindings = validate(public, packed, rasters)
     # Three bounded metadata corruptions must refuse before any publication:
     # stale public ranges, a substituted payload and altered actual PNG evidence.
@@ -202,14 +240,14 @@ def main():
         except AssertionError:
             continue
         raise AssertionError("runtime metadata corruption was accepted: " + fault)
-    if args.publish:
+    if args.publish or args.cache_only:
         gallery = verified_gallery(public, packed, bindings)
         if gallery is not None:
             for binding in bindings:
                 binding["gallery_status"] = "technical_review_verified_user_feedback_deferred"
         report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group83B; selected actual native consumers; final gallery/user review pending; sound proof in sound-runtime.json",
                   "schema_version": 1, "packed_payload": packed["packed_grf"], "selected_families": len(bindings),
-                  "selected_sprites": 2311, "bindings": bindings, "rasters": [TERRAIN.relative_to(ROOT).as_posix(), CONTROL.relative_to(ROOT).as_posix()],
+                  "selected_sprites": 2343, "bindings": bindings, "rasters": [evidence().selected("reports", name).relative_to(ROOT).as_posix() for name in ("geology", "control")],
                   "user_review": "deferred_until_integration"}
         if gallery is not None:
             report["gallery_manifest"] = gallery
@@ -219,12 +257,18 @@ def main():
         for family in public["assets"]:
             if family["asset_id"] not in selected:
                 continue
+            if selected[family["asset_id"]]["retained_only"]:
+                family["authoring"].update(runtime_activated=False, status="retained_source_and_packed_range")
+                family["runtime"] = {"status": "superseded_retained", "superseded_by": ["terrain.hardness", "terrain.hardness-edges"],
+                                     "binding_manifest": RUNTIME.relative_to(ROOT).as_posix()}
+                continue
             family["authoring"].update(runtime_activated=True, status="source_coverage_verified_runtime_bound")
             family["runtime"] = {"status": "bound_verified", "consumer": selected[family["asset_id"]]["consumer"],
                                  "binding_manifest": RUNTIME.relative_to(ROOT).as_posix(), "user_review": "deferred_until_integration"}
             if gallery is not None:
                 family["runtime"]["gallery"] = {"manifest": gallery, "technical_acceptance": "verified", "user_feedback": "deferred"}
-        PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
+        if not args.cache_only:
+            PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
         packed["runtime_activated"] = True
         packed["runtime_binding_manifest"] = RUNTIME.relative_to(ROOT).as_posix()
         packed["_documentation"] = "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/83B; selected native bytes and actual runtime bindings; final gallery/user review pending; sound proof in sound-runtime.json"
@@ -234,7 +278,7 @@ def main():
         else:
             packed.pop("gallery_manifest", None)
         PACKED.write_text(json.dumps(packed, indent=2) + "\n", encoding="utf-8")
-    print("Selected M1 runtime bindings: 40 families / 2311 sprites; actual consumer/range/payload/raster evidence and three corruption refusals pass; final gallery/user review pending; sound proof retained")
+    print("Selected M1 runtime bindings: 42 families / 2343 sprites; actual consumer/range/payload/raster evidence and three corruption refusals pass; final gallery/user review pending; sound proof retained")
 
 
 if __name__ == "__main__":

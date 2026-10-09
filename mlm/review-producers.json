@@ -1,0 +1,1194 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities.",
+  "schema_version": 2,
+  "review_root": "mlm/reviews",
+  "runtime_root": "mlm/runtime",
+  "log_root": "logs",
+  "producers": [
+    {
+      "producer": "src/tests/artifact_paths.cpp",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "routing-check"
+        },
+        {
+          "feature": "tbm",
+          "scenario": "routing-check"
+        }
+      ],
+      "test_tags": [
+        "[artifact-paths]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/depot_file_fixture.h",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/excavation_pass_save_fixture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "excavation-pass-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/excavation_pass_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/excavation_save_fixture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "excavation-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/excavation_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/geology_generation_fixture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "geology-generation-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/geology_generation_fixture.py"
+    },
+    {
+      "producer": "src/tests/geology_save_fixture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "geology-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/geology_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/geology_surface_fixture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "geology-surface-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/geology_surface_fixture.py"
+    },
+    {
+      "producer": "src/tests/geothermal_allocation_load.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.geothermal-allocation-file]",
+        "[.geothermal-topology-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/geothermal_collector_load.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.geothermal-collector-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/geothermal_heat_load.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.geothermal-heat-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/geothermal_save_fixture.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "geothermal-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/geothermal_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/geothermal_site_load.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.geothermal-site-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/geothermal_utility_load.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.geothermal-utility-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/layer_mine_save_fixture.py",
+      "features": [
+        {
+          "feature": "mines",
+          "scenario": "layer-mine-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/layer_mine_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/layer_processor_save_fixture.py",
+      "features": [
+        {
+          "feature": "processors",
+          "scenario": "layer-processor-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/layer_processor_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/multilayer_control_capture.py",
+      "features": [
+        {
+          "feature": "construction",
+          "scenario": "layer-controls"
+        },
+        {
+          "feature": "geology",
+          "scenario": "survey"
+        },
+        {
+          "feature": "portals",
+          "scenario": "controls"
+        },
+        {
+          "feature": "vehicles",
+          "scenario": "purchase-cargo"
+        }
+      ],
+      "test_tags": [
+        "[.m1-control-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_control_capture.py",
+      "native_writers": [
+        "src/tests/multilayer_control_runtime.cpp"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer_control_runtime.cpp",
+      "features": [
+        {
+          "feature": "construction",
+          "scenario": "layer-controls"
+        },
+        {
+          "feature": "geology",
+          "scenario": "survey"
+        },
+        {
+          "feature": "portals",
+          "scenario": "controls"
+        },
+        {
+          "feature": "vehicles",
+          "scenario": "purchase-cargo"
+        }
+      ],
+      "test_tags": [
+        "[.m1-control-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/multilayer_facility_capture.py",
+      "features": [
+        {
+          "feature": "facilities",
+          "scenario": "service-depots"
+        }
+      ],
+      "test_tags": [
+        "[.m1-facility-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_facility_capture.py",
+      "native_writers": [
+        "src/tests/multilayer_facility_runtime.cpp"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer_facility_runtime.cpp",
+      "features": [
+        {
+          "feature": "facilities",
+          "scenario": "service-depots"
+        }
+      ],
+      "test_tags": [
+        "[.m1-facility-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/multilayer_loader_fixture.py",
+      "features": [
+        {
+          "feature": "content",
+          "scenario": "multilayer-loader-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_loader_fixture.py"
+    },
+    {
+      "producer": "src/tests/multilayer_loop_capture.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "spoil-loop-deep"
+        },
+        {
+          "feature": "tbm",
+          "scenario": "spoil-loop-underground"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_loop_capture.py"
+    },
+    {
+      "producer": "src/tests/multilayer_profile_save_fixture.py",
+      "features": [
+        {
+          "feature": "content",
+          "scenario": "multilayer-profile-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_profile_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/multilayer_state_fixture.py",
+      "features": [
+        {
+          "feature": "state",
+          "scenario": "metadata"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_state_fixture.py"
+    },
+    {
+      "producer": "src/tests/multilayer_terrain_capture.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "terrain-hardness"
+        },
+        {
+          "feature": "portals",
+          "scenario": "picker"
+        }
+      ],
+      "test_tags": [
+        "[.m1-terrain-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer_terrain_capture.py",
+      "native_writers": [
+        "src/tests/multilayer_terrain_runtime.cpp"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer_terrain_runtime.cpp",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "terrain-hardness"
+        },
+        {
+          "feature": "portals",
+          "scenario": "picker"
+        }
+      ],
+      "test_tags": [
+        "[.m1-terrain-art]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/native_art_loop_fixture.h",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "spoil-loop-underground"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/portal_acceptance_save_fixture.py",
+      "features": [
+        {
+          "feature": "portals",
+          "scenario": "portal-acceptance-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/portal_acceptance_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/portal_save_fixture.py",
+      "features": [
+        {
+          "feature": "portals",
+          "scenario": "portal-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/portal_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/tbm_depot_save.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[tbm-depot-save-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_exit_replay.h",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "far-exit"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_feedback_runtime.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "planning"
+        }
+      ],
+      "test_tags": [
+        "[.tbm-feedback]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_hangar_input.h",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "hangar-orders"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_crash.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[tbm-logistics-crash-save]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_queue.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[tbm-logistics-queue-save]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_runtime.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[.tbm-logistics-runtime]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_save.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[tbm-logistics-save-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_save_fixture.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "tbm-logistics-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/tbm_logistics_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/tbm_logistics_stalls.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[tbm-logistics-cancel-save]",
+        "[tbm-logistics-empties-save]",
+        "[tbm-logistics-line-save]",
+        "[tbm-logistics-origin-save]",
+        "[tbm-logistics-receiver-save]",
+        "[tbm-logistics-wagons-save]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_motion_reload.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "motion"
+        }
+      ],
+      "test_tags": [
+        "[.tbm-motion-reload]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/tbm_planning_seed.cpp",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "planning"
+        }
+      ],
+      "test_tags": [
+        "[.tbm-planning-seed]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/transport_tube_power_load.cpp",
+      "features": [
+        {
+          "feature": "transport-tubes",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.transport-tube-power-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/underground_save_fixture.py",
+      "features": [
+        {
+          "feature": "vehicles",
+          "scenario": "underground-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/underground_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/utility_heat_load.cpp",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.utility-heat-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/utility_power_effect_load.cpp",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.utility-power-effect-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/utility_power_load.cpp",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.utility-power-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-1.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-1"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-1.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-2.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-2"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-2.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-3.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-3"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-3.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-4.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-4"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-4.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-5.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-5"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-5.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-6.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-6"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-6.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-7.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-7"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-7.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-8.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture-8"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture-8.py"
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture.py",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "utility-power-save-fixture"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/utility_power_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/utility_power_transfer_load.cpp",
+      "features": [
+        {
+          "feature": "utilities",
+          "scenario": "native-reload"
+        }
+      ],
+      "test_tags": [
+        "[.utility-power-transfer-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/demo_checkpoint.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "demo-checkpoint"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/demo_checkpoint.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/final_checks.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "final-integration"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/final_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/native_ground.py",
+      "features": [
+        {
+          "feature": "acceptance",
+          "scenario": "native-ground"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/native_ground.py"
+    },
+    {
+      "producer": "src/tests/multilayer/geology/native_checks.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "terrain-hardness"
+        },
+        {
+          "feature": "portals",
+          "scenario": "picker"
+        },
+        {
+          "feature": "construction",
+          "scenario": "layer-controls"
+        },
+        {
+          "feature": "geology",
+          "scenario": "survey"
+        },
+        {
+          "feature": "portals",
+          "scenario": "controls"
+        },
+        {
+          "feature": "vehicles",
+          "scenario": "purchase-cargo"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/geology/native_checks.py",
+      "native_writers": [
+        "src/tests/multilayer_terrain_runtime.cpp",
+        "src/tests/multilayer_control_runtime.cpp"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/geology/network_checks.py",
+      "features": [
+        {
+          "feature": "geology",
+          "scenario": "network"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/geology/network_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/exit_checks.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "far-exit"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/exit_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/hangar_acceptance.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "hangar-orders"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/hangar_acceptance.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/hangar_files.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "hangar-orders"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/hangar_files.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_advice.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "work-advice"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/native_advice.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_feedback.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "native-feedback"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/native_feedback.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_motion.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "motion"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/native_motion.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_parking.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "parking"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/native_parking.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_release.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "release"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/native_release.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/pacing_files.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "pacing"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/pacing_files.py"
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/whole_spoil.py",
+      "features": [
+        {
+          "feature": "tbm",
+          "scenario": "work-advice"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/tbm/whole_spoil.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_collector_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "geothermal-collector-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/geothermal_collector_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_site_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "geothermal-site-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/geothermal_site_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_allocation_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "heat-allocation-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/heat_allocation_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "heat-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/heat_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_topology_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "heat-topology-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/heat_topology_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/meter_file_checks.py",
+      "features": [
+        {
+          "feature": "transport-tubes",
+          "scenario": "meter-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/meter_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/power_file_checks.py",
+      "features": [
+        {
+          "feature": "transport-tubes",
+          "scenario": "power-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/power_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/readiness_file_checks.py",
+      "features": [
+        {
+          "feature": "transport-tubes",
+          "scenario": "readiness-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/readiness_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/recovery_file_checks.py",
+      "features": [
+        {
+          "feature": "transport-tubes",
+          "scenario": "recovery-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/recovery_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/thermal_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "thermal-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/thermal_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "utility-path-file-checks"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks.py"
+    },
+    {
+      "producer": "media/multilayer/tools/sprite_quantize.py",
+      "features": [
+        {
+          "feature": "multilayer-art",
+          "scenario": "quantizer-self-test"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B media/multilayer/tools/sprite_quantize.py"
+    },
+    {
+      "producer": "media/multilayer/tools/capture_art.ps1",
+      "features": [
+        {
+          "feature": "portals",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        },
+        {
+          "feature": "geology",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        },
+        {
+          "feature": "construction",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        }
+      ],
+      "test_tags": [],
+      "native_writers": [
+        "PrintWindow"
+      ],
+      "invocation": "PowerShell Start-Ottd / capture_art.ps1; caller supplies scenario and exact input"
+    },
+    {
+      "producer": "mlm/tools/run/ottd_window.ps1",
+      "features": [
+        {
+          "feature": "portals",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        },
+        {
+          "feature": "geology",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        },
+        {
+          "feature": "construction",
+          "scenario": "manual-art (explicit caller may choose another scenario)"
+        }
+      ],
+      "test_tags": [],
+      "native_writers": [
+        "PrintWindow"
+      ],
+      "invocation": "PowerShell Start-Ottd / capture_art.ps1; caller supplies scenario and exact input"
+    },
+    {
+      "producer": "mlm/tools/run/native_launch.py",
+      "features": [],
+      "context_policy": "explicit caller --feature/--scenario or inherited OTTD_TEST_FEATURE/SCENARIO; see CLI defaults",
+      "test_tags": []
+    },
+    {
+      "producer": "mlm/tools/run/window_context.py",
+      "features": [],
+      "context_policy": "explicit caller --feature/--scenario or inherited OTTD_TEST_FEATURE/SCENARIO; see CLI defaults",
+      "test_tags": []
+    },
+    {
+      "producer": "media/multilayer/regenerate_art_proofs.py",
+      "features": [
+        {
+          "feature": "multilayer-art",
+          "scenario": "native-proof"
+        }
+      ],
+      "test_tags": [],
+      "invocation": "python -B media/multilayer/regenerate_art_proofs.py <phase> --manifest <exact-manifest>",
+      "context_policy": "one explicit phase per bounded command; captured inputs and outputs remain owned by their declared child producer"
+    }
+  ],
+  "proof_cache": "logs/proofs/mlm/native-art",
+  "historical_inventory": "Producer source expressions before migration remain in the ignored cleanup inventory; they are not current commands."
+}

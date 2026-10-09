@@ -17,6 +17,7 @@
 
 #include "stdafx.h"
 #include "tbm_exchange.h"
+#include "tbm_hangar.h"
 #include "tbm_cmd.h"
 #include "train.h"
 #include "train_cmd.h"
@@ -472,7 +473,7 @@ TBMExchangeProposal DescribeTBMWagonExchange(const TBMExchangeRequest &request)
 	}
 	// The cutter needs a full set of empties for the next pass; after the final cut, or once its job is cancelled
 	// (Plan 4 Group 17.1), it only gives its spoil away.
-	const bool route_complete = job->cursor >= job->route.size() || job->state == ExcavationJobState::Cancelled;
+	const bool route_complete = job->cursor >= job->route.size() || job->state == ExcavationJobState::Cancelled || IsTBMFinishing(project->phase); // A requested final return needs only enough empties for safe withdrawal, even while geology retains claims until settlement.
 	if (!route_complete && (proposal.empty_earth_capacity_t < job->pass_terms->earth_capacity_t || proposal.empty_rock_capacity_t < job->pass_terms->rock_capacity_t)) return refuse(TBMExchangeError::InsufficientEmpties);
 	proposal.empty_units = earth_units;
 	proposal.empty_units.insert(proposal.empty_units.end(), rock_units.begin(), rock_units.end());
@@ -608,6 +609,7 @@ TBMExchangeError CheckTBMOriginAdmission(const TBMProject &project)
 	return TBMExchangeError::None;
 }
 
+/** @copydoc ObserveTBMHaulerInputs */
 TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment)
 {
 	TBMHaulerInputs inputs;
@@ -623,7 +625,8 @@ TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment)
 	if (project != nullptr) {
 		inputs.project_live = true;
 		inputs.origin_live = IsTBMOriginStation(*project);
-		inputs.cutter_waiting = project->phase == TBMPhase::WaitForEmpties;
+		inputs.cutter_waiting = IsTBMWaitingForExchange(project->phase);
+		inputs.exchange_finished = IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase);
 		const auto bay = GetTBMExchangeBay(*project);
 		inputs.at_bay = bay.tile == assignment.bay && CheckTBMExchangeParticipant(*hauler, bay, project->company) == TBMExchangeError::None;
 		// The origin visit is the head standing on a tile of the project's own origin station.
@@ -657,6 +660,7 @@ TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment)
 	return inputs;
 }
 
+/** @copydoc StepTBMHaulerPhase */
 TBMHaulerStep StepTBMHaulerPhase(const TBMExchangeAssignment &assignment, const TBMHaulerInputs &inputs)
 {
 	TBMHaulerStep step;
@@ -678,10 +682,12 @@ TBMHaulerStep StepTBMHaulerPhase(const TBMExchangeAssignment &assignment, const 
 	if (step.wait != TBMHaulerWait::None) return step;
 	switch (assignment.phase) {
 		case TBMHaulerPhase::ReturnEmpties:
-			if (inputs.at_bay && inputs.set_empty) step.phase = TBMHaulerPhase::AwaitExchange;
+			if (inputs.at_bay && inputs.set_empty) step.phase = inputs.exchange_finished ? TBMHaulerPhase::VisitOrigin : TBMHaulerPhase::AwaitExchange;
 			break;
 		case TBMHaulerPhase::AwaitExchange:
-			if (!inputs.at_bay) {
+			if (inputs.exchange_finished) {
+				step.phase = TBMHaulerPhase::VisitOrigin; // Empty queued haulers physically clear parked/finished work; no packet or wagon is fabricated by departure.
+			} else if (!inputs.at_bay) {
 				step.phase = TBMHaulerPhase::ReturnEmpties; // It left the bay without exchanging; it must come back.
 			} else if (inputs.cutter_waiting) {
 				step.exchange = true;
@@ -745,12 +751,18 @@ TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id)
 	return TBMExchangeError::None;
 }
 
+/** @copydoc IsTBMHaulerHeld */
 bool IsTBMHaulerHeld(const Train &front)
 {
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
+	if (assignment != nullptr) {
+		const auto *project = GetTBMProject(assignment->project);
+		if (project != nullptr && (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase))) return false; // The origin order clears the real bay after work stops needing empties.
+	}
 	return assignment != nullptr && assignment->phase == TBMHaulerPhase::AwaitExchange && assignment->wait != TBMHaulerWait::LostProject;
 }
 
+/** @copydoc IsTBMHaulerAdmittedAtBay */
 bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
 {
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
@@ -760,7 +772,7 @@ bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
 	if (project == nullptr || front.owner != project->company) return false;
 	const TBMExchangeBay bay = ResolveTBMExchangeBay(*project, tile);
 	if (bay.error != TBMExchangeError::None || bay.kind != TBMExchangeBayKind::Source) return false;
-	if (!IsTBMProjectFinished(project->phase)) return true;
+	if (!IsTBMProjectFinished(project->phase) && !IsTBMStored(project->phase)) return true;
 	// A finished project has no exchange left: the hauler may only finish leaving, never come back for one.
 	for (const Train *part = front.First(); part != nullptr; part = part->Next()) {
 		if (part->tile == tile) return true;
@@ -768,15 +780,18 @@ bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
 	return false;
 }
 
+/** @copydoc MayTBMTrainLeaveMagazine */
 bool MayTBMTrainLeaveMagazine(const Train &front)
 {
+	if (IsTBMCutterEngine(front.engine_type) && front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front)) return GetTBMOrderedHangar(front).error == TBMHangarError::None;
 	if (const TBMProject *project = GetTBMProjectForCutter(front.index); project != nullptr) {
+		if (project->phase == TBMPhase::FollowOrders) return front.current_order.IsGotoOrder() && GetTBMTravelHoldReason(front) == TBMBlockedReason::None;
 		return project->phase == TBMPhase::TravelToFace && project->blocked == TBMBlockedReason::None; // Off to the face.
 	}
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
 	if (assignment == nullptr) return false;
 	// A finished project has no exchange to wait for, so its hauler leaves whatever its phase.
-	if (const TBMProject *project = GetTBMProject(assignment->project); project != nullptr && IsTBMProjectFinished(project->phase)) return true;
+	if (const TBMProject *project = GetTBMProject(assignment->project); project != nullptr && (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase))) return true;
 	// A hauler waits in the bay while it returns empties or awaits its exchange; afterwards it takes the load out.
 	return assignment->phase != TBMHaulerPhase::ReturnEmpties && assignment->phase != TBMHaulerPhase::AwaitExchange;
 }
@@ -800,7 +815,7 @@ TileIndex GetTBMHaulerSteeringTarget(const Train &front)
 	if (bay.error != TBMExchangeError::None) return INVALID_TILE;
 	if (bay.kind == TBMExchangeBayKind::Source) {
 		if (!IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return INVALID_TILE;
-	} else if (IsTBMProjectFinished(project->phase)) {
+	} else if (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase)) {
 		return INVALID_TILE; // A final delivered load ends the depot obligation; ordinary orders take the hauler onward.
 	}
 	return assignment->bay;
@@ -824,7 +839,7 @@ TBMLogisticsWait GetTBMLogisticsWait(const TBMProject &project)
 	if (short_empties) return TBMLogisticsWait::NoEmpties;
 	if (occupied) return TBMLogisticsWait::OccupiedBay;
 	// A cutter on its way back for, or waiting for, empties needs a hauler to bring them.
-	if (!any && (project.phase == TBMPhase::ReturnForExchange || project.phase == TBMPhase::WaitForEmpties)) return TBMLogisticsWait::NoHauler;
+	if (!any && (IsTBMReturning(project.phase) || IsTBMWaitingForExchange(project.phase))) return TBMLogisticsWait::NoHauler;
 	return TBMLogisticsWait::None;
 }
 
@@ -1015,6 +1030,53 @@ void OnTBMExchangeTrainPartDeleted(const Train &part)
 	}
 }
 
+/** @copydoc GetTBMProjectSettlementBlocker */
+std::optional<VehicleID> GetTBMProjectSettlementBlocker(TBMProjectID project)
+{
+	const auto *owner = GetTBMProject(project);
+	if (owner == nullptr) return VehicleID::Invalid();
+	// Recorded loaded sets survive manual assignment release. They must also
+	// settle before retirement, including every articulated part's real load.
+	for (const auto &set : _tbm_wagon_sets) {
+		if (set.project != project) continue;
+		for (VehicleID id : set.wagons) {
+			const Train *unit = Train::GetIfValid(id);
+			if (unit == nullptr) return VehicleID::Invalid();
+			if (IsTBMUnitLoaded(*unit)) return unit->First()->index;
+			if (unit->First()->index != owner->cutter) {
+				for (const Train *part = unit->First(); part != nullptr; part = part->Next()) {
+					if (part->tile == owner->exchange_bay) return part->First()->index; // Manual assignment release cannot make a recorded hauler's remaining tail disappear from the bay.
+				}
+			}
+		}
+	}
+	for (const auto &assignment : _tbm_exchange_assignments) {
+		if (assignment.project != project) continue;
+		const Train *front = Train::GetIfValid(assignment.hauler);
+		if (front == nullptr) return VehicleID::Invalid();
+		if (front->owner != owner->company || front->vehstatus.Test(VehState::Crashed) || assignment.phase != TBMHaulerPhase::ReturnEmpties) return front->index;
+		// Releasing one hidden head must not remove an outside tail's magazine
+		// exit authority. The complete actual chain must already have left.
+		for (const Train *part = front; part != nullptr; part = part->Next()) {
+			if (part->tile == assignment.bay || part->cargo.TotalCount() != 0) return front->index;
+		}
+	}
+	return std::nullopt;
+}
+
+/** @copydoc ReleaseSettledTBMProjectHaulers */
+bool ReleaseSettledTBMProjectHaulers(TBMProjectID project, bool execute)
+{
+	const auto *owner = GetTBMProject(project);
+	if (owner == nullptr || owner->company != _current_company || GetTBMProjectSettlementBlocker(project).has_value()) return false;
+	if (!execute) return true;
+	// Validation covered the whole set before the first removal. Ending one
+	// assignment cannot change another train's position or empty packet custody.
+	while (const auto *assignment = GetTBMExchangeAssignment(project)) EndTBMExchangeAssignment(assignment->id);
+	return true;
+}
+
+/** @copydoc IsTBMProjectExchangeIdle */
 bool IsTBMProjectExchangeIdle(TBMProjectID project)
 {
 	if (std::ranges::any_of(_tbm_exchange_assignments, [project](const TBMExchangeAssignment &assignment) { return assignment.project == project; })) return false;

@@ -81,8 +81,8 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
  * (R2MLVS3MP-M decision 2). The rock end is a passage, never a magazine.
  * @param tile Rail portal end.
  * @param front Front engine of the train.
- * @return The shaft for the project's cutter consist, the door for an admitted hauler of its Source bay, or
- *         DiagDirection::Invalid when the tile is no magazine for this train.
+ * @return The shaft for work departure or complete backing withdrawal, the outer door for an admitted hauler or
+ *         forward departure of a stored servicing cutter, or Invalid for a servicing cutter's ordinary passage.
  */
 DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front);
 
@@ -261,6 +261,16 @@ LayerPortalWorkError TransferLayerPortalWorkPair(TileIndex tile, Owner new_owner
  * @return None, InvalidPair, Conflict (other binding, live job, occupied rock side) or Limit.
  */
 LayerPortalWorkError WithdrawLayerPortalWorkPair(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool execute);
+
+/**
+ * Prepare final withdrawal, optionally after the controller cancels this exact owned job.
+ * @param tile Either endpoint of the actual commissioning pair.
+ * @param job Geological owner whose live claims may be cancelled by the prepared operation.
+ * @param cutter Actual bound native cutter.
+ * @param after_cancel Whether to validate the state following an otherwise admitted geological cancellation.
+ * @return Pure unchanged admission or refusal; other jobs' claims and every occupying part remain protected.
+ */
+LayerPortalWorkError CheckLayerPortalWorkWithdrawal(TileIndex tile, ExcavationJobID job, VehicleID cutter, bool after_cancel);
 
 /**
  * Release whatever Commissioning binding a pair has, for company removal only: the company's trains are already

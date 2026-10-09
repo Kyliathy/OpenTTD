@@ -8,6 +8,7 @@
  * @file multilayer_sprite_selection.cpp Native M1 pose boundaries and presentation-only animation checks.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group81B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.6
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group9 current selected-art verification.
  */
 
 #include "../stdafx.h"
@@ -50,11 +51,17 @@ TEST_CASE("M1 native selectors refuse undeclared poses and preserve protected ra
 		CHECK_FALSE(GetMultiLayerSprite(asset, {0, 0, 0, range.tiles, 0}).has_value());
 		CHECK_FALSE(GetMultiLayerSprite(asset, {0, 0, 0, 0, range.parts}).has_value());
 	}
-	CHECK(selected.size() == 2311);
+	// Regional base/edge hardness adds two sixteen-pose families. Keep an
+	// independent complete-scope expectation so missing ranges cannot pass by
+	// reducing the very table traversed above.
+	CHECK(_multilayer_m1_sprite_ranges.size() == 42);
+	CHECK(selected.size() == 2343);
 	CHECK_FALSE(GetMultiLayerSprite(MultiLayerSpriteAsset::End, {}).has_value());
 	CHECK(GetMultiLayerSprite(MultiLayerSpriteAsset::VehicleModel00, {4, 3, 6, 0, 1}) == SPR_MAP_LAYER_BASE + 517);
 	CHECK(GetMultiLayerSprite(MultiLayerSpriteAsset::FacilityPortalSealed, {2, 0, 3, 1, 1}) == SPR_MAP_LAYER_BASE + 1265);
 	CHECK(GetMultiLayerSprite(MultiLayerSpriteAsset::FacilityRockReceiver, {3, 3, 0, 15, 1}) == SPR_MAP_LAYER_BASE + 2401);
+	CHECK(GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {0, 0, 0, 0, 0}) == SPR_MAP_LAYER_BASE + 2404);
+	CHECK(GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardnessEdges, {15, 0, 0, 0, 0}) == SPR_MAP_LAYER_BASE + 2435);
 }
 
 /** Actual feature owners stay byte-equivalent while cameras/clocks choose source-authored phases. */

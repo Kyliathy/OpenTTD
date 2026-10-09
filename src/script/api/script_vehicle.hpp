@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_vehicle.hpp Everything to query and build vehicles. */
+/**
+ * @file script_vehicle.hpp Vehicle queries, construction and native TBM hangar orders.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+ * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md
+ */
 
 #ifndef SCRIPT_VEHICLE_HPP
 #define SCRIPT_VEHICLE_HPP
@@ -515,6 +519,19 @@ public:
 	 * @return True if the current order was changed.
 	 */
 	static bool SendVehicleToDepotForServicing(VehicleID vehicle_id);
+
+	/**
+	 * Send an owned tunnel boring machine to a selected existing hangar.
+	 * Parking first unloads through its actual exchange bay and preserves the excavation job.
+	 * @param vehicle_id Actual primary TBM vehicle, including a retained released machine.
+	 * @param destination Explicit world tile of a rail depot or either eligible portal endpoint.
+	 * @param service True visits for service; false parks the whole empty machine.
+	 * @pre IsPrimaryVehicle(vehicle_id).
+	 * @game @pre ScriptCompanyMode::IsValid().
+	 * @return True when the synchronized native destination command succeeds.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+	 */
+	static bool SendTBMToHangar(VehicleID vehicle_id, TileIndex destination, bool service);
 
 	/**
 	 * Starts or stops the given vehicle depending on the current state.

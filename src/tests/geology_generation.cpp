@@ -8,10 +8,11 @@
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
-#include "../excavation.h"
+#include "../excavation_state.h"
 #include "../multilayer_state.h"
 #include "../multilayer_recipe.h"
 #include "../core/random_func.hpp"
+#include "../core/format.hpp"
 #include "../settings_type.h"
 
 #include "../safeguards.h"
@@ -162,4 +163,70 @@ TEST_CASE("Geology size refusal and Classic preserve accepted legacy authority",
 	CHECK(failed.error == GeologyError::UnsupportedMap);
 	CHECK(failed.state.deposits.Records().empty());
 	CHECK(failed.state.terrain.StorageBytes() == 0);
+}
+
+/** Regional rock is reproducible, coherent and independent of the frozen ore/vent generation and Surface RNG. */
+TEST_CASE("Regional hardness has bounded coherent distributions and isolated generation", "[geology-regional]")
+{
+	GeologyGenerationFixture fixture(512, 512, false);
+	const auto surface = SurfaceGeologyFixtureDigest();
+	const std::array random_before = {_random.state[0], _random.state[1], _interactive_random.state[0], _interactive_random.state[1]};
+	const auto seed = DeriveGeologySeed(1234);
+	const auto first = PrepareGeologyGeneration(seed);
+	const auto repeated = PrepareGeologyGeneration(seed);
+	const auto other = PrepareGeologyGeneration(DeriveGeologySeed(4321));
+	const auto legacy = PrepareGeologyGeneration(seed, 0);
+	REQUIRE(first.error == GeologyError::None);
+	REQUIRE(repeated.error == GeologyError::None);
+	REQUIRE(other.error == GeologyError::None);
+	REQUIRE(legacy.error == GeologyError::None);
+	CHECK(first.state.hardness_version == GEOLOGY_HARDNESS_VERSION);
+	CHECK(first.state.hardness_seed == DeriveGeologyHardnessSeed(seed));
+	CHECK(legacy.state.hardness_version == 0);
+	CHECK(legacy.state.hardness_seed == 0);
+	CHECK(GeneratedGeologyFixtureDigest(first.state) == GeneratedGeologyFixtureDigest(legacy.state));
+	REQUIRE(first.state.vents.size() == legacy.state.vents.size());
+	/** @param vent Actual generated natural field. @return Its complete scalar authority, independent of allocation or object padding. */
+	const auto vent_fields = [](const GeothermalVentField &vent) {
+		return std::array<uint64_t, 8>{vent.id.base(), vent.generation_version, to_underlying(vent.layer), vent.x, vent.y, vent.width, vent.height, vent.thermal_capacity_w};
+	};
+	// Vent records have no structural equality operator; compare their actual
+	// saved fields while keeping the unchanged thermal owner out of this edit.
+	for (size_t i = 0; i < first.state.vents.size(); ++i) CHECK(vent_fields(first.state.vents[i]) == vent_fields(legacy.state.vents[i]));
+	CHECK(PrepareGeologyGeneration(seed, GEOLOGY_HARDNESS_VERSION + 1).error != GeologyError::None);
+	// Aggregate field comparisons cover every playable cell without millions of
+	// redundant assertion records. Neighbor agreement verifies actual regions,
+	// rather than merely a per-cell random material histogram.
+	for (const MapLayer layer : {MapLayer::Underground, MapLayer::DeepUnderground}) {
+		std::array<uint32_t, 4> counts{};
+		uint32_t same_neighbor = 0, compared = 0, different_seed = 0, repeat_errors = 0, legacy_errors = 0;
+		for (uint y = 1; y < 510; ++y) {
+			for (uint x = 1; x < 510; ++x) {
+				const auto tile = TileXYL(x, y, layer);
+				const auto hardness = GetExcavationCellHardness(first.state, tile);
+				++counts[to_underlying(hardness)];
+				repeat_errors += hardness != GetExcavationCellHardness(repeated.state, tile);
+				different_seed += hardness != GetExcavationCellHardness(other.state, tile);
+				legacy_errors += GetExcavationCellHardness(legacy.state, tile) != (layer == MapLayer::Underground ? GeologyHardness::Soft : GeologyHardness::Hard);
+				same_neighbor += hardness == GetExcavationCellHardness(first.state, TileXYL(x + 1, y, layer));
+				++compared;
+			}
+		}
+		CHECK(repeat_errors == 0);
+		CHECK(legacy_errors == 0);
+		CHECK(same_neighbor > compared * 90 / 100);
+		CHECK(different_seed > compared / 4);
+		const std::array<int, 4> shares = layer == MapLayer::Underground ? std::array{60, 25, 14, 1} : std::array{5, 15, 60, 20};
+		for (size_t material = 0; material < counts.size(); ++material) {
+			const double percent = 100.0 * counts[material] / compared;
+			INFO("layer=" << to_underlying(layer) << " material=" << material << " share=" << percent);
+			CHECK(counts[material] > 0);
+			CHECK(percent > std::max(0, shares[material] - 8));
+			CHECK(percent < shares[material] + 8);
+		}
+		fmt::print("ROCK_REGIONS layer={} soft={} mixed={} hard={} basalt={} cells={} neighbor_equal={} different_seed={}\n",
+			to_underlying(layer), counts[0], counts[1], counts[2], counts[3], compared, same_neighbor, different_seed);
+	}
+	CHECK(SurfaceGeologyFixtureDigest() == surface);
+	CHECK(std::array{_random.state[0], _random.state[1], _interactive_random.state[0], _interactive_random.state[1]} == random_before);
 }

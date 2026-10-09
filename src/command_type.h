@@ -397,6 +397,9 @@ enum class Commands : uint8_t {
 	BuildGeothermalCollector, ///< fund actual native collector from a retained cold claim; append preserves existing command identities
 	BuildGeothermalUtilityLink, ///< install one paid Deep utility cell through the shared link issuer; see r2mlvs17 Group3B
 	RemoveGeothermalUtilityLink, ///< remove an owned installed cell with labour cost and no capital/energy refund
+	ExtendTBMProject, ///< append reviewed excavation to an actual paused cutter; preserves prior command identities
+	ConfirmTBMCommission, ///< confirm an exact portal area quote without silently replacing a reused machine
+	SendTBMToHangar, ///< choose a real owned hangar through an ordinary native depot order
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

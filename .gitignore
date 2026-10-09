@@ -10,3 +10,11 @@ docs/source/*
 /vcpkg_installed
 __pycache__/
 *.pyc
+
+# Multi-layer runtime and generated review runs are reproducible local output.
+# Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md
+# /logs above also owns logs/proofs; source media, tools and immutable inputs
+# retain their normal visibility. Keep the review routing contract reviewable.
+/mlm/runtime/
+/mlm/reviews/*
+!/mlm/reviews/README.md

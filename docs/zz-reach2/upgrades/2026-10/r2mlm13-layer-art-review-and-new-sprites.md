@@ -40,9 +40,11 @@
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 106-108 | `### AD-10 Graphics (owner: r2mlm6)`: map-layer sprites live in OpenTTD's extra GRF as Action 5 type `0x1C` behind `SPR_MAP_LAYER_BASE`. They are made with an AI image tool and quantised to the DOS palette by a repeatable script, and consumers draw named stand-ins until the constants exist. This plan keeps all of that and extends the r2mlm6 tools (D-1). |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: `//comment` with no space after `//`, a Javadoc block on every function and parameter, English-only strings, no created source, test or JSON file named `r2*`, never `git checkout`, `git reset` or `git stash`, never move or delete files, and the Build Tools 2022 toolchain with the standalone vcpkg (never Visual Studio Community). They bind every edit and build below. |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 569-672 | `### Commands used by every group` and `### Comment and header rules`: the exact configure, build (`/nodeReuse:false`, fully parallel) and unit-test commands, the PrintWindow-only window capture, the rule to tell the user before starting `openttd.exe`, and the file-header rule (`@see` a related `archi-*.md` or `r*.md` page on the `@file` line). "Build Debug" and "run the unit tests" below mean exactly these commands. |
+| [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | 569-672 | `### Commands used by every group` and `### Comment and header rules`: the exact configure, build (`/nodeReuse:false`, fully parallel) and unit-test commands, the PrintWindow-only window capture, the rule to tell the user before starting `openttd.exe`, and the file-header rule (`@see` a related `archi-*.md` or `r*.md` page on the `@file` line). "Build Debug" and "run the unit tests" below mean exactly these commands. |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 56-76 | `## Sprite Contract`: offsets 0 to 43, their sizes and anchors, the back and front parts, and that `dir` is the door side. `## Sprite Contract Extension` below continues it from offset 44. Every group produces, judges or wires sprites of these two tables. |
 | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 115-146, 206-215 | `### D-3 Three portal kinds, derived and never stored` and `### D-6 Stand-in art, replaced by r2mlm13`. A portal end's kind comes from its transport and its two layers, which is how the capture script names its scenes. D-6 lists the stand-ins this plan replaces, each marked with a comment naming r2mlm13 Group 9. |
+
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Outcome and Boundaries
 
@@ -53,7 +55,7 @@ When this plan is done:
 - Every r2mlm6 sprite has been judged in the running game, and the ones judged unfit have been regenerated and approved by the user.
 - The sprite contract has grown from 44 to 66 sprites (74 with a Deep Underground elevator housing): the Deep Underground icon and floor, and the road tunnel icon, cursor and portal art. The stand-ins of r2mlm12 D-6 are gone.
 - The r2mlm6 tools preview single sprites, cut back and front parts from one picture, and mirror directions. With r2mlm6's 44 rows they still rebuild its sheet byte for byte.
-- Captures are scripted. `tools/capture_art.ps1` photographs every scene of a gallery save, which later art work can reuse.
+- Captures are scripted. `media/multilayer/tools/capture_art.ps1` photographs every scene of a gallery save, which later art work can reuse.
 
 Unchanged by design:
 
@@ -75,14 +77,14 @@ Order: r2mlm12, then this plan, then r2mlm10. Groups 6 to 8 need a harness that 
 
 r2mlm6 owns the pipeline:
 - the prompt template (r2mlm6 task 2.5);
-- `tools/make_sprite_template.py` and `tools/sprite_quantize.py` (its `MANIFEST` is the live list of sprites);
+- `media/multilayer/tools/make_sprite_template.py` and `media/multilayer/tools/sprite_quantize.py` (its `MANIFEST` is the live list of sprites);
 - `media/baseset/openttd/map_layers.nfo` and `map_layers.png`;
 - Action 5 type `0x1C`;
 - the `SPR_MAP_LAYER_BASE` block in `src/table/sprites.h`.
 
 This plan extends those tools in Group 2 (a longer contract, previews of single sprites, back and front parts cut from one picture, mirrored directions) and never builds a second pipeline.
 
-**Review in the game.** Every delivered sprite is judged from PrintWindow captures of the running game. `tools/capture_art.ps1` (Group 3) takes them on a gallery save built once (Group 4):
+**Review in the game.** Every delivered sprite is judged from PrintWindow captures of the running game. `media/multilayer/tools/capture_art.ps1` (Group 3) takes them on a gallery save built once (Group 4):
 - toolbar icons at interface size 1x and 2x;
 - ground and structures at three zoom levels;
 - structures with a vehicle entering.
@@ -98,7 +100,7 @@ The user confirms the final picks.
 
 **One picture, two parts.** A structure is generated as one whole picture per door direction:
 - the back part is the whole picture, drawn as ground under vehicles;
-- the front part is the piece that must cover a vehicle, cut from the same picture by `front_mask` in `tools/sprite_quantize.py`.
+- the front part is the piece that must cover a vehicle, cut from the same picture by `front_mask` in `media/multilayer/tools/sprite_quantize.py`.
 
 Which piece the front part is depends on the door:
 - a door on SW or SE faces the viewer, so the front part is the wall standing on the mouth line;
@@ -156,7 +158,7 @@ _Applies to Group 1._
 | --- | --- | --- |
 | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 813-822 | `## Completion Conditions` of r2mlm12: the gameplay this plan draws for. Only these conditions are checked; r2mlm12's own reading lists are not loaded. |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 258-263 | `## Completion Conditions` of r2mlm6: the 44-sprite sheet this plan starts from. |
-| [tools/ottd_window.ps1](tools/ottd_window.ps1) | 1-8, 25-131 | The capture and input helper: `Start-Ottd`, `Save-OttdShot` (PrintWindow, game window only), `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`. Every screenshot in this plan uses it, and input is only ever posted to the game window, never sent through the user's mouse or keyboard. |
+| [mlm/tools/run/ottd_window.ps1](../../../../mlm/tools/run/ottd_window.ps1) | 1-8, 25-131 | The capture and input helper: `Start-Ottd`, `Save-OttdShot` (PrintWindow, game window only), `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`. Every screenshot in this plan uses it, and input is only ever posted to the game window, never sent through the user's mouse or keyboard. |
 
 ### Group 1 - Entry gate and baseline
 
@@ -169,7 +171,7 @@ Coding-stage override, 2026-10-04: the user resumed work while preparing their s
   Baseline before new art: both builds exit 0, zero compiler warnings, 110/110 unit cases in each configuration. Evidence: `build/build-capture-Debug.log`, `build/build-capture-RelWithDebInfo.log`, `build/ctest-capture-Debug.log`, `build/ctest-capture-RelWithDebInfo.log`.
 - [x] 1.3 Check whether this session has an image-generation tool that accepts reference images (r2mlm6 used Cursor's `GenerateImage`), and record the answer. If it has none, tell the user now: Groups 2 to 5 can run here, but Groups 6 to 8 must run in a session that has one, and Groups 9 to 11 come after them.
 
-  Confirmed by successful r2mlm6 generation: the built-in image tool accepts local reference images. Raw outputs and prompts are recorded under `assets/`; no API-key fallback is needed.
+  Confirmed by successful r2mlm6 generation: the built-in image tool accepts local reference images. Raw outputs and prompts are recorded under `media/multilayer/`; no API-key fallback is needed.
 - [s] 1.4 Confirm that `build/save/deep_pre_portals.sav` (r2mlm12 task 1.3), the `r2mlm12-a-...` captures of r2mlm12 task 1.4 and the `r2mlm12-b-...` captures of r2mlm12 task 9.1 exist, and list them under this task. Groups 4, 5 and 10 compare new captures with them.
 
   Skipped for the coding stage: the representative/gallery save and operator captures are not supplied yet. They remain prerequisites for the deferred visual checks.
@@ -191,15 +193,15 @@ flowchart LR
     G --> H["--compare and --composite review strips"]
     G --> I["map_layers.png and NFO lines (Group 9)"]
     I --> J["openttd.grf from the build"]
-    J --> K["capture_art.ps1 in the game"]
+    J --> K["media/multilayer/tools/capture_art.ps1 in the game"]
 ```
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 56-76 | `## Sprite Contract`: offsets 0 to 43, sizes, anchors, the back and front parts, and that `dir` is the door side. This plan's `## Sprite Contract Extension` continues it from offset 44. |
-| [tools/sprite_quantize.py](tools/sprite_quantize.py) | 19-35, 174-190, 266-298 | The 44-entry `CONTRACT` loop and the empty `MANIFEST` of `(offset, path, box)` rows, `quantise_file`, and `main` with its `len(MANIFEST) != 44` check and a `--preview` that needs the whole manifest. Group 2 changes exactly these. |
-| [tools/png_indexed.py](tools/png_indexed.py) | 22, 105-126 | `read_png` (width, height, colour type, palette, pixels), `write_rgb_png` and `write_indexed_png`: the only image calls the quantiser uses, so it runs without Pillow. |
-| [tools/make_sprite_template.py](tools/make_sprite_template.py) | 20-34 | `GUIDES` (boxes and anchors at 4x) and `REFERENCES` (base-set crops). Task 2.7 adds one reference row. |
+| [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) | 19-35, 174-190, 266-298 | The 44-entry `CONTRACT` loop and the empty `MANIFEST` of `(offset, path, box)` rows, `quantise_file`, and `main` with its `len(MANIFEST) != 44` check and a `--preview` that needs the whole manifest. Group 2 changes exactly these. |
+| [media/multilayer/tools/png_indexed.py](../../../../media/multilayer/tools/png_indexed.py) | 22, 105-126 | `read_png` (width, height, colour type, palette, pixels), `write_rgb_png` and `write_indexed_png`: the only image calls the quantiser uses, so it runs without Pillow. |
+| [media/multilayer/tools/make_sprite_template.py](../../../../media/multilayer/tools/make_sprite_template.py) | 20-34 | `GUIDES` (boxes and anchors at 4x) and `REFERENCES` (base-set crops). Task 2.7 adds one reference row. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | 75-101 | `GetLayerPortalDepth` (0 at the door edge) and `IsHiddenInLayerPortal` (hidden from the visibility frame on): why a mouth may stand no deeper than the frame (task 2.3). |
 | [src/tunnelbridge_cmd.cpp](../../../../src/tunnelbridge_cmd.cpp) | 1968 | `_tunnel_visibility_frame{12, 8, 8, 12}`, indexed by shaft direction (NE, SE, SW, NW), shared with vanilla tunnels. |
 | [media/baseset/openttd/openttdgui.nfo](../../../../media/baseset/openttd/openttdgui.nfo) | 188-189 | The vanilla convert-road icon (20 x 20) and its cursor (32 x 32) side by side in one PNG: the cursor is the icon's picture, which task 2.7 copies as a style reference. |
@@ -209,7 +211,7 @@ flowchart LR
 Delivered 2026-10-04. The existing r2mlm6 implementation uses Pillow, so this extends its keyed RGBA/BOX quantisation rather than introducing another image pipeline. Three-item rows retain their original behaviour. `CONTRACT` covers 66 offsets; Group 9 now publishes all 66 under the coding-stage override. Default output validates against `MAP_LAYER_SPRITE_COUNT`; scratch `--out` accepts contiguous subsets. `--manifest <JSON>` previews future candidate rows, and `--legacy44 --out <scratch>` reproduces the original 44-row sheet. The optional housing at 66..73 remains absent.
 
 {{MEDIUM}}
-- [x] 2.1 In `tools/sprite_quantize.py`, replace the `CONTRACT` loop with a table that covers this plan's offsets too:
+- [x] 2.1 In `media/multilayer/tools/sprite_quantize.py`, replace the `CONTRACT` loop with a table that covers this plan's offsets too:
   ```python
   #Contract order: r2mlm6 ## Sprite Contract, then r2mlm13 ## Sprite Contract Extension.
   #Each row is first offset, last offset, width, height, rel x and rel y. rel is the anchor before transparent margins are cropped.
@@ -381,19 +383,19 @@ Delivered 2026-10-04. The existing r2mlm6 implementation uses Pillow, so this ex
   - has its eight corners projected with `tile_to_sprite` and then moved up by their height, as `RemapCoords` does;
   - is drawn as the convex hull of those corners, in one bright palette colour.
 - [x] 2.7 Two smaller changes:
-  - add `--out <path>` to `sprite_quantize.py` (default `SHEET`). The full-manifest check applies to `SHEET` only; a scratch sheet may hold offsets 0 to n - 1, which is how task 2.8 replays the r2mlm6 sheet;
-  - add the row `("media/baseset/openttd/openttdgui_convert_road.png", 0, 0, 56, 32, "toolbar_icon_and_cursor.png")` to `REFERENCES` in `make_sprite_template.py`, run the script, and confirm with `git status` that only `assets/reference/toolbar_icon_and_cursor.png` is new and no guide changed.
+  - add `--out <path>` to `media/multilayer/tools/sprite_quantize.py` (default `SHEET`). The full-manifest check applies to `SHEET` only; a scratch sheet may hold offsets 0 to n - 1, which is how task 2.8 replays the r2mlm6 sheet;
+  - add the row `("media/baseset/openttd/openttdgui_convert_road.png", 0, 0, 56, 32, "toolbar_icon_and_cursor.png")` to `REFERENCES` in `media/multilayer/tools/make_sprite_template.py`, run the script, and confirm with `git status` that only `media/multilayer/guides/legacy/reference/toolbar_icon_and_cursor.png` is new and no guide changed.
 - [x] 2.8 Self-checks. Record each command and result under this task:
-  - with the unchanged 44 rows, `sprite_quantize.py --out <TEMP>/sheet44.png` is byte-identical to `media/baseset/openttd/map_layers.png`, and the lines it prints equal the real-sprite lines of `map_layers.nfo`;
-  - `--fit 28 docs/zz-reach2/upgrades/2026-10/assets/raw/rail_portal_surface_ne_back.png` prints a box and a `cut`. That picture's mound is taller than 48 / 64 of its width and carries a copied anchor cross, so expect a cut above 0;
+  - with the unchanged 44 rows, `media/multilayer/tools/sprite_quantize.py --out <TEMP>/sheet44.png` is byte-identical to `media/baseset/openttd/map_layers.png`, and the lines it prints equal the real-sprite lines of `map_layers.nfo`;
+  - `--fit 28 media/multilayer/source/legacy/raw/rail_portal_surface_ne_back.png` prints a box and a `cut`. That picture's mound is taller than 48 / 64 of its width and carries a copied anchor cross, so expect a cut above 0;
   - `--compare 1` on `layer_icon_underground.png` and `layer_icon_space.png` writes one sheet;
   - `--composite 32 2 12` on the same rail portal picture (its mouth faces the lower left, so its door is SW), and `--composite 30 1 12` on it with `@mirror`, write two strips in which the wall covers the box from the mouth on.
 
   Offline commands and results (all paths relative to the repository):
 
-  - `python -B tools/sprite_quantize.py --out build/sheet44.png` (using this plan's full `tools/` path): PNG byte-identical to `media/baseset/openttd/map_layers.png`; all 44 printed NFO sprite lines identical to the integrated NFO. SHA-256: `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`.
-  - `python -B tools/make_sprite_template.py`: every pre-existing guide and reference stayed byte-identical; only `assets/reference/toolbar_icon_and_cursor.png` was added.
-  - `python -B tools/sprite_quantize.py --fit 28 assets/raw/rail_portal_surface_ne_back.png` (full plan-relative paths): `box 185 175 870 652 cut 140`. The old picture is too tall; fitting detects the cut without stretching it.
+  - `python -B media/multilayer/tools/sprite_quantize.py --out build/sheet44.png` (using this plan's full `tools/` path): PNG byte-identical to `media/baseset/openttd/map_layers.png`; all 44 printed NFO sprite lines identical to the integrated NFO. SHA-256: `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`.
+  - `python -B media/multilayer/tools/make_sprite_template.py`: every pre-existing guide and reference stayed byte-identical; only `media/multilayer/guides/legacy/reference/toolbar_icon_and_cursor.png` was added.
+  - `python -B media/multilayer/tools/sprite_quantize.py --fit 28 media/multilayer/source/legacy/raw/rail_portal_surface_ne_back.png` (full plan-relative paths): `box 185 175 870 652 cut 140`. The old picture is too tall; fitting detects the cut without stretching it.
   - `--compare 1 build/art-tool-checks/compare1.png` with `layer_icon_underground.png` and `layer_icon_space.png`: PNG written and viewed at 1x/4x; boxes `(73,63,876,876)` and `(297,305,430,430)`, both cut 0.
   - `--composite 32 2 12 build/art-tool-checks/composite32.png` on the old rail picture and `--composite 30 1 12 build/art-tool-checks/composite30.png` on its `@mirror`: both strips written and viewed; shared fitted box/cut as above. The supplied picture is an old candidate, not a new art acceptance.
   - A nine-tile floor comparison was also written to `build/art-tool-checks/floor7.png`.
@@ -407,11 +409,11 @@ _Applies to Group 3._
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [tools/ottd_window.ps1](tools/ottd_window.ps1) | 1-8, 25-131 | The header and the existing functions. `Save-OttdShot` returns the client offset inside the capture; `Send-OttdKey` posts key down, an optional character and key up. Task 3.1 adds functions after them. |
+| [mlm/tools/run/ottd_window.ps1](../../../../mlm/tools/run/ottd_window.ps1) | 1-8, 25-131 | The header and the existing functions. `Save-OttdShot` returns the client offset inside the capture; `Send-OttdKey` posts key down, an optional character and key up. Task 3.1 adds functions after them. |
 | [src/console_cmds.cpp](../../../../src/console_cmds.cpp) | 313-412 | `ConZoomToLevel` (`zoomto <level>`: 0 is zoomed in 4x, 2 normal, 5 zoomed out 8x, within `gui.zoom_min` and `gui.zoom_max`) and `ConScrollToTile` (`scrollto [instant] <tile>`, any tile below `Map::Size()`, so a tile of any layer). |
 | [src/viewport.cpp](../../../../src/viewport.cpp) | 2595-2640 | `ScrollWindowTo`: a world point names its own layer, so scrolling to a tile of another layer switches the viewport to that layer and redraws the toolbar. |
 | [src/video/win32_v.cpp](../../../../src/video/win32_v.cpp) | 677-729 | `WM_CHAR` and `WM_KEYDOWN`. The console key is scan code 41 in `lParam` bits 16 to 23, whatever the layout. With no edit box in focus a key down is handled at once; with one in focus the game waits for the character, which its own `TranslateMessage` makes (line 1032). |
-| [tools/savegame_plane_digest.py](tools/savegame_plane_digest.py) | 1-28, 106-142 | The header and the chunk loop, where RIFF map planes are read. Task 3.4 hooks `--portals` in there. |
+| [mlm/tools/savegames/savegame_plane_digest.py](../../../../mlm/tools/savegames/savegame_plane_digest.py) | 1-28, 106-142 | The header and the chunk loop, where RIFF map planes are read. Task 3.4 hooks `--portals` in there. |
 | [src/tile_type.h](../../../../src/tile_type.h) | 48-63 | `TileType`: `LayerPortal` is value 11, stored in bits 7 to 4 of each `MAPT` byte. |
 | [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | 28-88 | The `m5` fields of an end: shaft in bits 1..0, transport in bits 3..2 (0 rail, 1 road), target layer in bits 6..5. The door is the reverse of the shaft (`d ^ 2`). |
 
@@ -424,7 +426,7 @@ Skipped task 3.8 under the resumed goal's operator allowance: `build/save/deep_p
 Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passes capture geometry, legacy shot offsets, crop bounds, console scan-code/messages, native Windows argument quoting and timed burst frame counts (`build/capture-tool-checks/powershell-checks.log`). Python checks pass median ranking within a crop, quoted CSV/header/relative folders, grid enlargement, all 32 synthetic portal ends covering three kinds/four directions/both elevator pairs, malformed-plane rejection, and byte-identical legacy digest output on `fd9_upgraded_1234_8x8.sav`. Current game unit checks: 110/110 Debug, after correcting the picker label's invalid background colour in r2mlm12 Group 5.
 
 {{MEDIUM}}
-- [x] 3.1 In `tools/ottd_window.ps1`, add these functions after `Send-OttdKey`, each with a comment block like the others, and list them in the header:
+- [x] 3.1 In `mlm/tools/run/ottd_window.ps1`, add these functions after `Send-OttdKey`, each with a comment block like the others, and list them in the header:
   ```powershell
   <#
   .SYNOPSIS Open or close the in-game console, as the key left of 1 does.
@@ -461,7 +463,7 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
   - `Get-OttdCentre($Process)`: the client centre in capture pixels, from `GetWindowRect` and `ClientToScreen`, taking the bottom border as wide as the side border. `scrollto` centres its tile there, because the main viewport fills the client area;
   - `Save-OttdCrop($Process, $Path, $Left, $Top, $Width, $Height)`: capture and keep one rectangle;
   - `Save-OttdBurst($Process, $Folder, $Seconds, $IntervalMs, $Left, $Top, $Width, $Height)`: `Save-OttdCrop` into `frame-0000.png` and on until the time is up. It returns the frame count.
-- [x] 3.2 Write `tools/contact_sheet.py` (Pillow, which r2mlm6 task 1.1 installed). It has a module docstring naming this plan, a docstring on every function, and a `grid` mode:
+- [x] 3.2 Write `media/multilayer/tools/contact_sheet.py` (Pillow, which r2mlm6 task 1.1 installed). It has a module docstring naming this plan, a docstring on every function, and a `grid` mode:
   ```python
   def grid(paths, columns, zoom, out):
       """One sheet with every picture enlarged by zoom and its file name under it.
@@ -485,8 +487,8 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
           draw.text((x + 2, y + cell_h - 13), os.path.splitext(os.path.basename(path))[0], fill=(255, 255, 255))
       sheet.save(out)
   ```
-  Usage: `python -B tools/contact_sheet.py grid <out.png> <columns> <zoom> <png> ...`.
-- [x] 3.3 Add a `pick` mode to `contact_sheet.py`: `pick <scenes.csv> <out folder> <count>`. Each CSV row is `burst folder,end name,left,top,right,bottom`. For each row it writes `<out folder>/<end name>.png`: a 2x grid of the `count` frames that differ most, inside that box, from the empty scene.
+  Usage: `python -B media/multilayer/tools/contact_sheet.py grid <out.png> <columns> <zoom> <png> ...`.
+- [x] 3.3 Add a `pick` mode to `media/multilayer/tools/contact_sheet.py`: `pick <scenes.csv> <out folder> <count>`. Each CSV row is `burst folder,end name,left,top,right,bottom`. For each row it writes `<out folder>/<end name>.png`: a 2x grid of the `count` frames that differ most, inside that box, from the empty scene.
   ```python
   def changed_frames(paths, box, count):
       """The burst frames in which something passes inside one box, most changed first.
@@ -505,7 +507,7 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
       ranked = sorted(range(len(paths)), key=lambda index: -scores[index])
       return [paths[index] for index in ranked[:count]]
   ```
-- [x] 3.4 Add `--portals --size-x <n> --size-y <n>` to `tools/savegame_plane_digest.py`. It keeps the `MAPT` and `MAP5` payloads from the chunk loop, then prints one line per portal end instead of the digests:
+- [x] 3.4 Add `--portals --size-x <n> --size-y <n>` to `mlm/tools/savegames/savegame_plane_digest.py`. It keeps the `MAPT` and `MAP5` payloads from the chunk loop, then prints one line per portal end instead of the digests:
   ```python
   def list_portals(planes, size_x, size_y):
       """Print one line per layer portal end of a save.
@@ -529,7 +531,7 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
           print(f"portal tile {index} layer {layer} x {x} y {y} shaft {names[m5 & 3]} door {names[(m5 & 3) ^ 2]} transport {transport} target {(m5 >> 5) & 3}")
   ```
   Update the module docstring's usage line.
-- [x] 3.5 Write `tools/capture_art.ps1` with a comment header naming this plan and Groups 3, 4, 9 and 10. Parameters: `-Build`, `-Config` (Debug), `-Cfg`, `-Save`, `-Out`, `-SizeX` and `-SizeY` (64), `-Zooms` (1, 2, 3), the UI click points of task 3.6, and `-NoUi` and `-NoTraffic` switches. It first takes static scenes of every portal end:
+- [x] 3.5 Write `media/multilayer/tools/capture_art.ps1` with a comment header naming this plan and Groups 3, 4, 9 and 10. Parameters: `-Build`, `-Config` (Debug), `-Cfg`, `-Save`, `-Out`, `-SizeX` and `-SizeY` (64), `-Zooms` (1, 2, 3), the UI click points of task 3.6, and `-NoUi` and `-NoTraffic` switches. It first takes static scenes of every portal end:
   ```powershell
   . "$PSScriptRoot\ottd_window.ps1"
   $layerNames = @('surface', 'underground', 'space', 'deep')
@@ -554,13 +556,13 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
   }
   ```
   It then takes floor scenes: the empty middle of the first loop, on layers 1, 2 and 3, at every zoom (`floor-<layer>-z<zoom>.png`).
-- [x] 3.6 Add the UI scenes to `capture_art.ps1`, skipped with `-NoUi`. Click points are client coordinates passed as parameters, found in task 3.8:
+- [x] 3.6 Add the UI scenes to `media/multilayer/tools/capture_art.ps1`, skipped with `-NoUi`. Click points are client coordinates passed as parameters, found in task 3.8:
   - `ui-toolbar-<layer>.png`: the top strip of the window, 24 pixels times the interface scale tall, after `scrollto` to a tile of each layer in display order;
   - `ui-layer-dropdown.png`: the window after `Send-OttdClick` on `-LayerButton`, then Escape (`Send-OttdKey $p 0x1B 0`);
   - `ui-road-toolbar.png` and `ui-rail-toolbar.png`: the window after a click on each toolbar's main-toolbar button;
   - `ui-cursor-<tool>.png`: for the road tunnel, road elevator and rail portal tools, a click on the tool, `Send-OttdHover` to the client centre, then a 96 x 96 crop there.
   - ASSUMPTION: the game draws its own cursor into the frame, so PrintWindow sees it. If not, record that, and judge cursors from `--compare` at 1x only.
-- [x] 3.7 Add the traffic scenes to `capture_art.ps1`, skipped with `-NoTraffic`. For each kind, and each layer that kind has ends on:
+- [x] 3.7 Add the traffic scenes to `media/multilayer/tools/capture_art.ps1`, skipped with `-NoTraffic`. For each kind, and each layer that kind has ends on:
   - scroll to the loop's middle tile on that layer, `zoomto 2`, `unpause`;
   - run `Save-OttdBurst` over a 720 x 400 rectangle at the centre for `-LapSeconds` (rail 40, road tunnel 50, elevator 100, at 400 ms), into `traffic-<kind>-<layer>/`, then `pause`;
   - for every end in that view, add a row to `<Out>/scenes.csv`, its box centred on the end's tile:
@@ -572,7 +574,7 @@ Verification: both PowerShell files parse; `build/verify_capture_mock.ps1` passe
   ```
   The bursts take about 300 MB in `build/art-captures/`. Nothing there is committed.
 - [s] 3.8 Dry run on `build/save/deep_pre_portals.sav` (r2mlm12 task 1.3), whose road portals load as road tunnels. Tell the user first, then:
-  - run `capture_art.ps1 -NoTraffic` at 1x into `build/art-captures/dry-run/`;
+  - run `media/multilayer/tools/capture_art.ps1 -NoTraffic` at 1x into `build/art-captures/dry-run/`;
   - check that a lower-end capture shows lower-layer ground (so `scrollto` switched layers), that the three zooms differ, and that each crop is centred on its tile;
   - find the UI click points in a full capture, and record them with the exact command under this task.
 
@@ -585,7 +587,7 @@ _Applies to Groups 4-5._
 | [src/table/settings/misc_settings.ini](../../../../src/table/settings/misc_settings.ini) | 318-325 | `gui_scale`, saved in `[misc]`: -1 is automatic, otherwise a percentage (100 is 1x, 200 is 2x). |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 56-76 | `## Sprite Contract`: what each offset 0 to 43 should show. With this plan's `## Sprite Contract Extension`, the list the verdicts of Group 5 cover. |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 145-184 | Task 3.6 and 4.8 records: the raw file of each offset and what went wrong before (the guide's box copied into a picture, the rail cursor drawn as a mouse pointer, icons unreadable at 20 x 20, back pictures holding the whole portal). The rubric of task 5.1 checks for each of these. |
-| [tools/capture_art.ps1](tools/capture_art.ps1), [tools/contact_sheet.py](tools/contact_sheet.py) | Live definitions; no fixed range | Produced by Group 3: the scene names, parameters and modes used below. |
+| [media/multilayer/tools/capture_art.ps1](../../../../media/multilayer/tools/capture_art.ps1), [media/multilayer/tools/contact_sheet.py](../../../../media/multilayer/tools/contact_sheet.py) | Live definitions; no fixed range | Produced by Group 3: the scene names, parameters and modes used below. |
 
 ### Group 4 - Art gallery and review captures
 
@@ -643,21 +645,21 @@ Task 4.1 delivered: `build/art_1x.cfg` and `art_2x.cfg` copy `scenario.cfg` and 
   ```
   A vehicle that runs the lap the other way still passes every portal. If one shuttles on one side instead, make sides y0 and x0 + 9 one-way in the lap's direction.
   - ASSUMPTION: this was already built previously (r2mlm12 Groups 4 to 7: Deep Underground, the road tunnel button, the elevator picker and the elevator ride). If not, re-assess at runtime.
-- [s] 4.3 Run `savegame_plane_digest.py build/save/art_gallery.sav --portals --size-x 64 --size-y 64` and paste the output under this task. It must list 24 ends:
+- [s] 4.3 Run `mlm/tools/savegames/savegame_plane_digest.py build/save/art_gallery.sav --portals --size-x 64 --size-y 64` and paste the output under this task. It must list 24 ends:
   - per loop, surface ends with doors SW, NE, SE and NW, and lower ends with doors NE, SW, NW and SE;
   - transport `rail` only for loop R;
   - targets 1 for loops R and T and 3 for loop E on the Surface, and 0 on every lower end.
 
   If an end is missing, ask the user to fix the gallery.
-- [s] 4.4 Tell the user, then run `capture_art.ps1` with `-Cfg art_1x.cfg` into `build/art-captures/review-1x/`: static, UI and traffic scenes.
+- [s] 4.4 Tell the user, then run `media/multilayer/tools/capture_art.ps1` with `-Cfg art_1x.cfg` into `build/art-captures/review-1x/`: static, UI and traffic scenes.
 - [s] 4.5 Run it again with `-Cfg art_2x.cfg -NoTraffic` into `build/art-captures/review-2x/`. At 2x only the interface changes, so the traffic bursts of task 4.4 are enough.
-- [s] 4.6 Make the review sheets with `contact_sheet.py grid` and save them in `assets/reviews/`:
-  - `assets/reviews/r2mlm13-b-icons.png`: the toolbar strips and the open dropdown at 1x and 2x;
-  - `assets/reviews/r2mlm13-b-toolbars.png`: the road and rail toolbars at 1x and 2x;
-  - `assets/reviews/r2mlm13-b-cursors.png`;
-  - `assets/reviews/r2mlm13-b-floors.png`: three layers by three zooms;
-  - `assets/reviews/r2mlm13-b-<kind>-z<zoom>.png`: eight ends per sheet, for each kind and zoom.
-- [s] 4.7 Run `contact_sheet.py pick build/art-captures/review-1x/scenes.csv build/art-captures/review-1x/picked 6`. Combine the picks of each kind into `assets/reviews/r2mlm13-b-entering-<kind>.png` in `assets/reviews/`. List every sheet of tasks 4.6 and 4.7 under this task, one line each.
+- [s] 4.6 Make the review sheets with `media/multilayer/tools/contact_sheet.py grid` and save them in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`:
+  - `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-icons.png`: the toolbar strips and the open dropdown at 1x and 2x;
+  - `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-toolbars.png`: the road and rail toolbars at 1x and 2x;
+  - `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-cursors.png`;
+  - `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-floors.png`: three layers by three zooms;
+  - `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-<kind>-z<zoom>.png`: eight ends per sheet, for each kind and zoom.
+- [s] 4.7 Run `media/multilayer/tools/contact_sheet.py pick build/art-captures/review-1x/scenes.csv build/art-captures/review-1x/picked 6`. Combine the picks of each kind into `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-entering-<kind>.png` in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`. List every sheet of tasks 4.6 and 4.7 under this task, one line each.
 
 ### Group 5 - Art review verdicts
 
@@ -679,10 +681,10 @@ Tasks 5.1 to 5.4 are explicitly skipped under the goal allowance, because the co
 
   | Offset | Constant | Sheet | Verdict | Reason |
   | --- | --- | --- | --- | --- |
-  | 0 | `SPR_IMG_MAP_LAYER_SURFACE` | `assets/reviews/r2mlm13-b-icons.png` | keep or regenerate | One line, naming the rubric column that failed |
+  | 0 | `SPR_IMG_MAP_LAYER_SURFACE` | `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-icons.png` | keep or regenerate | One line, naming the rubric column that failed |
 
   It covers offsets 0 to 43. The road tunnel ends are judged here too, but they still show the vanilla stand-in, and offsets 50 to 65 are new in any case.
-- [s] 5.3 Decide whether Deep Underground needs its own elevator housing (D-1, shared art). Look at the deep ends in `assets/reviews/r2mlm13-b-elevator-z2.png` on the stand-in deep floor. Record yes or no and why.
+- [s] 5.3 Decide whether Deep Underground needs its own elevator housing (D-1, shared art). Look at the deep ends in `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-b-elevator-z2.png` on the stand-in deep floor. Record yes or no and why.
 - [s] 5.4 Show the user the sheets of Group 4 and the verdict table. Ask them to confirm, to change verdicts, or to add reasons, since they asked for better-looking art. Record their answer under this task and update the table.
 - [x] 5.5 Write the work list for Groups 6 and 7 under this task:
   - every offset with a "regenerate" verdict, with its category and reason;
@@ -697,7 +699,7 @@ _Applies to Groups 6-8._
 
 - **Required:**
   - Groups 2 to 5 are checked, and task 5.5 holds the work list;
-  - this session has an image-generation tool that accepts reference images. r2mlm6 used Cursor's `GenerateImage` (`description`, `filename`, `reference_image_paths`, `aspect_ratio`). It saves outside the repository and wrote JPEG, so every result is converted to PNG and copied into `assets/raw/` (r2mlm6 task 3.6 records).
+  - this session has an image-generation tool that accepts reference images. r2mlm6 used Cursor's `GenerateImage` (`description`, `filename`, `reference_image_paths`, `aspect_ratio`). It saves outside the repository and wrote JPEG, so every result is converted to PNG and copied into `media/multilayer/source/legacy/raw/` (r2mlm6 task 3.6 records).
 - **How to verify:** read the checkboxes, and find the tool in this session's tool list.
 - **If absent:** stop Groups 6 to 8 and tell the user. They can run these groups in a session that has the tool; Groups 2 to 5 do not need it.
 - **Forbidden fallbacks:**
@@ -710,14 +712,14 @@ _Applies to Groups 6-8._
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 122-124 | Task 2.5's prompt template, the shared style text. The recipes of tasks 6.1, 6.5 and 7.1 are that template with the clauses this plan adds. |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 167, 172 | Task 4.2's mirroring rule (NE with NW, SE with SW; check the light stays top-left) and task 4.7's composite check. Task 7.6 applies the first and `--composite` automates the second. |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 145-184 | The prompts, references and chosen raw files so far, and what failed. Replacements start from these files. |
-| [docs/zz-reach2/upgrades/2026-10/assets/reference/](assets/reference/) | Live definitions; no fixed range | Style references at 4x, including `toolbar_icon_and_cursor.png` from task 2.7. They are passed as reference images. |
-| [tools/sprite_quantize.py](tools/sprite_quantize.py) | Live definitions; no fixed range | Produced by Group 2: `--fit`, `--compare`, `--composite`, `--out` and the `MANIFEST` options. Every candidate is judged through these before the user sees it. |
+| [media/multilayer/guides/legacy/reference/](../../../../media/multilayer/guides/legacy/reference) | Live definitions; no fixed range | Style references at 4x, including `toolbar_icon_and_cursor.png` from task 2.7. They are passed as reference images. |
+| [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) | Live definitions; no fixed range | Produced by Group 2: `--fit`, `--compare`, `--composite`, `--out` and the `MANIFEST` options. Every candidate is judged through these before the user sees it. |
 
 ### Group 6 - Icons, cursors and floors
 
 Closure, 2026-10-04, under the goal's explicit operator/gate allowance: Offset 45 is generated, fitted, compared with the elevator icon and integrated. Only its native vanilla-toolbar-crop operator comparison is skipped; the complete combined task is marked s rather than claiming that missing comparison passed. Each skipped row is marked `[s]`, never a passing test.
 
-Resumed 2026-10-04 at the user's request. Icons, the shared-raw cursor, and the three Deep Underground floor variants are generated, fitted and integrated. The first floor had the wrong diamond proportions; v2 corrected them; v3 reduced the repeating bright veins. All raw versions remain. Exact prompts and reference roles: [assets/extension-prompts.md](assets/extension-prompts.md), [assets/extension-prompts-round2.md](assets/extension-prompts-round2.md), [assets/extension-floor-prompts-round3.md](assets/extension-floor-prompts-round3.md). The third floor round is the provisional development pick; no fourth round is attempted before the user reviews it.
+Resumed 2026-10-04 at the user's request. Icons, the shared-raw cursor, and the three Deep Underground floor variants are generated, fitted and integrated. The first floor had the wrong diamond proportions; v2 corrected them; v3 reduced the repeating bright veins. All raw versions remain. Exact prompts and reference roles: [docs/zz-reach2/upgrades/2026-10/graphics/extension-prompts.md](graphics/extension-prompts.md), [docs/zz-reach2/upgrades/2026-10/graphics/extension-prompts-round2.md](graphics/extension-prompts-round2.md), [docs/zz-reach2/upgrades/2026-10/graphics/extension-floor-prompts-round3.md](graphics/extension-floor-prompts-round3.md). The third floor round is the provisional development pick; no fourth round is attempted before the user reviews it.
 
 Entry gate override: the resumed goal explicitly permits skipping the missing operator review in Groups 4 and 5. The built-in image tool has working reference-image support. New raw files are generated by that tool, never hand-painted, and then fitted/quantised by the one existing pipeline. Operator approval remains skipped rather than reported as received.
 
@@ -726,7 +728,7 @@ Entry gate override: the resumed goal explicitly permits skipping the missing op
 
   "Pixel art toolbar icon in the style of Transport Tycoon Deluxe. One bold subject, centred, filling the square. Thick dark outline, at most six flat colours, light from the top left. Pure magenta #FF00FF background, no text, no frame, no border, no anti-aliasing. It must stay readable when shrunk to 20 x 20 pixels. Subject: <subject>."
 
-  - Pass `assets/reference/toolbar_icon_and_cursor.png` as the only reference. Pass no guide: r2mlm6 records show the guide's box copied into the picture, and `--fit` now places the subject.
+  - Pass `media/multilayer/guides/legacy/reference/toolbar_icon_and_cursor.png` as the only reference. Pass no guide: r2mlm6 records show the guide's box copied into the picture, and `--fit` now places the subject.
   - Subjects:
 
     | Offset | Subject | Dominant colours | Must be told apart from |
@@ -755,20 +757,20 @@ Entry gate override: the resumed goal explicitly permits skipping the missing op
   - fit each variant inside its third of the sheet, with `--fit 47 <raw> <x,y,w,h>` for the left third, `--fit 48` for the middle and `--fit 49` for the right, and record the three boxes;
   - run `--compare 47` with this variant and the Underground floor's variant (its box from `MANIFEST` row 7) as candidates. Its 3 x 3 patches must show no seam, and Deep Underground must be clearly darker.
 - [x] 6.7 Allow at most three rounds per sprite, a round being one prompt change and one new picture. After the third, show the user the compare sheets and let them choose a candidate, or keep the old sprite.
-- [x] 6.8 Record each kept sprite under this task, in the format of r2mlm6 task 3.6: offset, raw file, references, subject text and box. Copy every compare sheet that decided a pick in `assets/reviews/` as `assets/reviews/r2mlm13-c-compare-<offset>.png`.
+- [x] 6.8 Record each kept sprite under this task, in the format of r2mlm6 task 3.6: offset, raw file, references, subject text and box. Copy every compare sheet that decided a pick in `mlm/reviews/<feature>/<scenario>/<run-id>/images/` as `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-c-compare-<offset>.png`.
 
-Development picks (all paths under `assets/raw/`; full subject text and references are in the prompt records linked above):
+Development picks (all paths under `media/multilayer/source/legacy/raw/`; full subject text and references are in the prompt records linked above):
 
 | Offset | Raw | Source box (x, y, w, h) | Review |
 | --- | --- | --- | --- |
-| 44 | `layer_icon_deep_underground.png` | 74, 109, 1105, 1105 | `assets/reviews/r2mlm13-c-compare-44.png`: four distinct layer silhouettes/colours at 20x20 |
-| 45 | `build_icon_road_tunnel.png` | 56, 70, 1139, 1139 | `assets/reviews/r2mlm13-c-compare-45.png`: tunnel/ramp beside elevator |
-| 46 | same raw as 45 | 78, 93, 1094, 1094 | `assets/reviews/r2mlm13-c-compare-46.png`: picture of the tool at 32x32 |
-| 47 | `deep_floor_sheet_v3.png` | 11, 288, 582, 282 | `assets/reviews/r2mlm13-c-compare-47.png`: beside Underground and three 3x3 patches |
+| 44 | `layer_icon_deep_underground.png` | 74, 109, 1105, 1105 | `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-44.png`: four distinct layer silhouettes/colours at 20x20 |
+| 45 | `build_icon_road_tunnel.png` | 56, 70, 1139, 1139 | `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-45.png`: tunnel/ramp beside elevator |
+| 46 | same raw as 45 | 78, 93, 1094, 1094 | `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-46.png`: picture of the tool at 32x32 |
+| 47 | `deep_floor_sheet_v3.png` | 11, 288, 582, 282 | `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-47.png`: beside Underground and three 3x3 patches |
 | 48 | same sheet | 609, 288, 582, 282 | same review |
 | 49 | same sheet | 1207, 286, 583, 284 | same review |
 
-Floor fit's nominal 64:31 boxes cut 1, 1 and 2 source rows in v3; the selected boxes include those rows, so no subject is cropped. V3 removes v2's bright vein network; `assets/reviews/r2mlm13-c-compare-47-v2.png` retains that comparison. Deep is clearly darker/bluer than Underground. The offline patch review exposed transparent gaps from the old footprint/filter threshold: 58, 50 and 51 uncovered pixels in each patch's central 32x32 region. The opt-in native projection removes all of them (0 for every variant); the updated 3x3 patches show continuous stone without edge seams. Game zoom checks remain in Group 10. User choice after the third round is skipped for development integration under the operator allowance, not recorded as approval.
+Floor fit's nominal 64:31 boxes cut 1, 1 and 2 source rows in v3; the selected boxes include those rows, so no subject is cropped. V3 removes v2's bright vein network; `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-47-v2.png` retains that comparison. Deep is clearly darker/bluer than Underground. The offline patch review exposed transparent gaps from the old footprint/filter threshold: 58, 50 and 51 uncovered pixels in each patch's central 32x32 region. The opt-in native projection removes all of them (0 for every variant); the updated 3x3 patches show continuous stone without edge seams. Game zoom checks remain in Group 10. User choice after the third round is skipped for development integration under the operator allowance, not recorded as approval.
 
 ### Group 7 - Structure art
 
@@ -784,7 +786,7 @@ Delivered for development on 2026-10-04. Each road tunnel direction is generated
   - Door SW clause: "The opening faces the lower left of the picture. The road starts at the lower-left edge of the tile and runs straight into the opening, which stands in the back half of the tile. No walls beside the road in front of the opening."
   - Door NE clause: "The opening faces the upper right, away from the viewer, so only the solid back and sides of the structure show, and they hide the road behind them. The road enters from the upper-right edge of the tile."
   - For a rail portal, "road" reads "railway track".
-  - References: `assets/reference/tunnel_portal.png` for scale. For a road tunnel, also the approved rail portal picture of the same layer, so stone, lamps and colours match.
+  - References: `media/multilayer/guides/legacy/reference/tunnel_portal.png` for scale. For a road tunnel, also the approved rail portal picture of the same layer, so stone, lamps and colours match.
   - Subjects:
 
     | Set | Offsets | Subject |
@@ -806,12 +808,12 @@ Delivered for development on 2026-10-04. Each road tunnel direction is generated
   - door NW: `--composite <offset> 3 1 ... <door NE raw>@mirror`.
 
   At 4x the brighter faces must be on the left. If a mirror looks lit from the right, generate that door as its own picture, with the mirror as the reference and "light from the top left, left faces brighter" added. Record which doors are mirrors and which have their own picture.
-- [x] 7.7 Allow at most three rounds per set; after the third, the user chooses. Copy every composite that decided a set in `assets/reviews/` as `assets/reviews/r2mlm13-c-composite-<set>-door-<dir>.png`. Record each set under this task, in the format of r2mlm6 task 4.8: raw files, references, subject, door clause, boxes, depth and mirrors.
+- [x] 7.7 Allow at most three rounds per set; after the third, the user chooses. Copy every composite that decided a set in `mlm/reviews/<feature>/<scenario>/<run-id>/images/` as `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-c-composite-<set>-door-<dir>.png`. Record each set under this task, in the format of r2mlm6 task 4.8: raw files, references, subject, door clause, boxes, depth and mirrors.
 - [s] 7.8 Only if task 5.3 said yes, make the Deep Underground elevator housing (offsets 66 to 73) the same way. Uncomment its `CONTRACT_RANGES` row, add its rows to `## Sprite Contract Extension`, and note under this task that Group 9 sets the count to 74.
 
-Exact prompts, subjects, door clauses and reference roles: [assets/extension-prompts-round2.md](assets/extension-prompts-round2.md) and [assets/extension-direction-prompts.md](assets/extension-direction-prompts.md). Surface SW's first fit lacked canvas padding; v2 corrects it. There was one padding correction and one relighting phase, within the three-round limit. Every chosen structure fit reports `cut 0`.
+Exact prompts, subjects, door clauses and reference roles: [docs/zz-reach2/upgrades/2026-10/graphics/extension-prompts-round2.md](graphics/extension-prompts-round2.md) and [docs/zz-reach2/upgrades/2026-10/graphics/extension-direction-prompts.md](graphics/extension-direction-prompts.md). Surface SW's first fit lacked canvas padding; v2 corrects it. There was one padding correction and one relighting phase, within the three-round limit. Every chosen structure fit reports `cut 0`.
 
-| Offsets | Raw under `assets/raw/` | Box (x, y, w, h) | Door / front |
+| Offsets | Raw under `media/multilayer/source/legacy/raw/` | Box (x, y, w, h) | Door / front |
 | --- | --- | --- | --- |
 | 50-51 | `road_tunnel_surface_door_ne.png` | 192, 64, 1065, 798 | NE, whole structure |
 | 52-53 | `road_tunnel_surface_door_se.png` | 350, 224, 749, 561 | SE, depth 10 |
@@ -822,18 +824,18 @@ Exact prompts, subjects, door clauses and reference roles: [assets/extension-pro
 | 62-63 | `road_tunnel_underground_door_sw.png` | 229, 178, 989, 741 | SW, depth 10 |
 | 64-65 | `road_tunnel_underground_door_nw.png` | 229, 120, 992, 744 | NW, whole structure |
 
-Both near-door sets were compared at depths 6, 8, 10 and 12. Depth 10 is the provisional choice: 8 exposes the synthetic box past the far side; 12 delays coverage. Far doors retain the whole front and show no approach floor behind their solid backs. Review strips: `assets/reviews/r2mlm13-c-composite-{surface,underground}-door-{ne,se,sw,nw}.png`. These are synthetic vehicle composites, not game captures; task 9.7 must confirm and may adjust the depths. `_tunnel_visibility_frame` is unchanged.
+Both near-door sets were compared at depths 6, 8, 10 and 12. Depth 10 is the provisional choice: 8 exposes the synthetic box past the far side; 12 delays coverage. Far doors retain the whole front and show no approach floor behind their solid backs. Review strips: `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-c-composite-{surface,underground}-door-{ne,se,sw,nw}.png`. These are synthetic vehicle composites, not game captures; task 9.7 must confirm and may adjust the depths. `_tunnel_visibility_frame` is unchanged.
 
 ### Group 8 - Approval and manifest
 
 Closure under the goal's operator/gate allowance, 2026-10-04: task 8.2's human sprite-by-sprite approval is explicitly skipped. The recorded selections and manifest are development picks; no human approval is inferred.
 
-Development integration is authorised by the resumed goal. Task 8.2's human approval is skipped for this coding stage; no sprite is recorded as user-approved. `assets/reviews/r2mlm13-d-replaced.png` now compares all sixteen Group 9B/9C foreground repairs before and after, over synthetic vehicle guides. `assets/reviews/r2mlm13-d-new.png` includes all 22 additions, adjacent icon/floor comparisons and all eight road-tunnel composites.
+Development integration is authorised by the resumed goal. Task 8.2's human approval is skipped for this coding stage; no sprite is recorded as user-approved. `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-replaced.png` now compares all sixteen Group 9B/9C foreground repairs before and after, over synthetic vehicle guides. `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-new.png` includes all 22 additions, adjacent icon/floor comparisons and all eight road-tunnel composites.
 
 {{SIMPLE}}
-- [x] 8.1 Make two approval sheets with `--compare` and `contact_sheet.py grid`, and save them in `assets/reviews/`:
-  - `assets/reviews/r2mlm13-d-replaced.png`: every replaced offset, old beside new, at 1x and 4x;
-  - `assets/reviews/r2mlm13-d-new.png`: offsets 44 to 65 (and 66 to 73), each beside the sprites it sits next to in the game, plus the road tunnel composites. Offset 44 sits beside 0 to 2, offset 45 beside 3, and offsets 47 to 49 beside 7 to 9.
+- [x] 8.1 Make two approval sheets with `--compare` and `media/multilayer/tools/contact_sheet.py grid`, and save them in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`:
+  - `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-replaced.png`: every replaced offset, old beside new, at 1x and 4x;
+  - `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-new.png`: offsets 44 to 65 (and 66 to 73), each beside the sprites it sits next to in the game, plus the road tunnel composites. Offset 44 sits beside 0 to 2, offset 45 beside 3, and offsets 47 to 49 beside 7 to 9.
 - [s] 8.2 Show the user both sheets and ask for approval sprite by sprite. Record the answers under this task. A rejected sprite goes back to Group 6 or 7 with the user's reason.
 - [x] 8.3 Update `MANIFEST`. Point each approved replacement at its new raw, and add rows 44 to 65 (and 66 to 73). For the surface road tunnel the rows read:
   ```python
@@ -847,10 +849,10 @@ Development integration is authorised by the resumed goal. Task 8.2's human appr
       (56, RAW + "road_tunnel_surface_door_ne.png", BOX_NE, {"part": "back", "door": 3, "mirror": True}),
       (57, RAW + "road_tunnel_surface_door_ne.png", BOX_NE, {"part": "front", "door": 3, "mirror": True}),
   ```
-  - `RAW` stands for the `assets/raw/` path, written out as the r2mlm6 rows write it. `BOX_SW`, `BOX_NE` and `DEPTH` are the values recorded in tasks 7.2 and 7.5, written as literals.
+  - `RAW` stands for the `media/multilayer/source/legacy/raw/` path, written out as the r2mlm6 rows write it. `BOX_SW`, `BOX_NE` and `DEPTH` are the values recorded in tasks 7.2 and 7.5, written as literals.
   - A door that task 7.6 gave its own picture uses that picture, without `mirror`.
   - ASSUMPTION: this was already built previously (task 2.2, the options item of a row). If not, re-assess at runtime.
-- [x] 8.4 Run `sprite_quantize.py --out <TEMP>/sheet_all.png --preview` and view `assets/preview.png`. Every offset 0 to 65 must be there, and none may be blank or cut.
+- [x] 8.4 Run `media/multilayer/tools/sprite_quantize.py --out <TEMP>/sheet_all.png --preview` and view `mlm/reviews/multilayer-art/authoring/import-20261009/images/preview.png`. Every offset 0 to 65 must be there, and none may be blank or cut.
 - [x] 8.5 Record under this task the `MANIFEST` rows changed and added, and the date of the user's approval.
 
 Recorded 2026-10-04: original rows 0..43 are preserved in `LEGACY_MANIFEST`; all sixteen live front rows 13..43 (odd offsets) now take solid coverage from panel 0 under Groups 9B/9C. Near fronts also retain their original panel-1 jambs at the shared anchor. Rows 44..65 are added as recorded in Groups 6 and 7. Cursor 46 shares raw 45. Floors 47..49 add `{"project_ground": True}`. Road backs/fronts share one source per door; all directions have their own lit raw. `MAP_LAYER_SPRITE_COUNT` is 66. All 66 sprites are nonblank and use no forbidden opaque DOS palette index. User approval date: **not received**. Optional rows 66..73 are not added.
@@ -876,7 +878,7 @@ Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The all-
 Delivered coding and offline integration on 2026-10-04. Runtime work was skipped while the save was absent. The supplied `makinpr2.sav` now permits task 9.4 and partial scene checks for 9.7; it does not contain every planned kind/direction. Pickers use `DrawLayerPortalPreview` to show the generated housing/mouth.
 
 {{MEDIUM}}
-- [x] 9.1 Run `sprite_quantize.py` (default `--out`) to write `media/baseset/openttd/map_layers.png` with all 66 sprites (or 74). Run it twice and confirm the PNG is byte-identical.
+- [x] 9.1 Run `media/multilayer/tools/sprite_quantize.py` (default `--out`) to write `media/baseset/openttd/map_layers.png` with all 66 sprites (or 74). Run it twice and confirm the PNG is byte-identical.
 - [x] 9.2 In `map_layers.nfo`, set the Action 5 count to 66 (or 74), and replace the real-sprite lines with the ones the script printed.
 - [x] 9.3 In `src/table/sprites.h`, after the r2mlm6 constants, add:
   ```cpp
@@ -927,7 +929,7 @@ Delivered coding and offline integration on 2026-10-04. Runtime work was skipped
   	}
   ```
   - ASSUMPTION: this was already built previously (r2mlm12 task 4.5's stand-in branch, and r2mlm12 task 5.2's button). If not, re-assess at runtime.
-- [s] 9.7 Tell the user, then run `capture_art.ps1 -NoUi` on the gallery into `build/art-captures/wired-1x/` and `contact_sheet.py pick` on its `scenes.csv`. In the road tunnel picks, a bus must disappear inside each mouth, not in front of it.
+- [s] 9.7 Tell the user, then run `media/multilayer/tools/capture_art.ps1 -NoUi` on the gallery into `build/art-captures/wired-1x/` and `media/multilayer/tools/contact_sheet.py pick` on its `scenes.csv`. In the road tunnel picks, a bus must disappear inside each mouth, not in front of it.
   - If it vanishes before the mouth or shows past it, change that sprite's `depth` in `MANIFEST`, then redo tasks 9.1 to 9.4.
   - Never edit `_tunnel_visibility_frame`: vanilla tunnels share it. A frame table of the portals' own would be a new decision for the user.
 - [x] 9.8 Build Debug and run the unit tests, and record the result.
@@ -943,7 +945,7 @@ _Applies to Group 9B._
 | File name | Authoritative symbols | Purpose |
 | --- | --- | --- |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | `## Sprite Contract`, task 4.7 | Existing 32 structure sprites have a common north-corner anchor; review their actual back/front registration and vehicle gap offline. |
-| [tools/sprite_quantize.py](tools/sprite_quantize.py) | `LEGACY_MANIFEST`, `MANIFEST`, `quantise_file`, `front_mask`, `paste_sprite` | Keep the original 44-row replay unchanged while correcting the eight live NE/NW front rows to use their generated whole backs. |
+| [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) | `LEGACY_MANIFEST`, `MANIFEST`, `quantise_file`, `front_mask`, `paste_sprite` | Keep the original 44-row replay unchanged while correcting the eight live NE/NW front rows to use their generated whole backs. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | `_layer_portal_front_bounds`, `DrawTile_LayerPortal` | Rail and elevator fronts use these bounds; road tunnels already have their own whole-picture fronts and bounds. |
 | [src/viewport.cpp](../../../../src/viewport.cpp), [src/sprite.h](../../../../src/sprite.h) | `AddSortableSpriteToDraw`, `SpriteBounds` | The sprite projects at `origin + offset`; whole far-facing fronts need bounds over the structure footprint. Near-facing offsets already compensate to the common north corner. |
 
@@ -959,7 +961,7 @@ Added 2026-10-04 after the offline r2mlm6 pair review. With the actual published
 - [x] 9B.3 Expand the NE/NW rail/elevator front bounds to the whole tile footprint while keeping the shared north-corner sprite origin. Rebuild the 66-row sheet, NFO and GRF through the existing pipeline; inspect all far-door before/after strips.
 - [x] 9B.4 Build both configurations, run the unit suite, record the hashes and update the review boards and affected plan records. Keep near-mouth occlusion and final sprite sorting in the deferred gallery checks.
 
-Validation, 2026-10-04: all sixteen published pairs composited by `build/review_existing_pairs.py`; eight far-door before strips preserved in `build/existing-pair-review/*-before.png`. All eight repaired strips inspected and compared in `assets/reviews/r2mlm13-d-replaced.png`. Near-facing bounds and raw files are unchanged. Both configurations build with zero compiler warnings and pass 110/110 unit cases (`build/build-front-coverage-*.log`, `build/ctest-front-coverage-*.log`). Live PNG SHA256 `44bfdaf219907152e4a66fbef8561c1f0d0d16acd64c41feb346a3c42ab9737a`; source/build GRF SHA256 `3511e78bcd5321fe5b98425387829ee1689c68a019402ebdc0da0de3e89b093d`; GRFID hash remains `4e719f6234afde045162553564691732`. Legacy replay SHA256 remains `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`. The supplied save subsequently loads in Debug, with Action 5 reporting offsets 0..65 and no unimplemented-type warning. Runtime mouth orientation and near-mouth sorting remain under investigation.
+Validation, 2026-10-04: all sixteen published pairs composited by `build/review_existing_pairs.py`; eight far-door before strips preserved in `build/existing-pair-review/*-before.png`. All eight repaired strips inspected and compared in `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-replaced.png`. Near-facing bounds and raw files are unchanged. Both configurations build with zero compiler warnings and pass 110/110 unit cases (`build/build-front-coverage-*.log`, `build/ctest-front-coverage-*.log`). Live PNG SHA256 `44bfdaf219907152e4a66fbef8561c1f0d0d16acd64c41feb346a3c42ab9737a`; source/build GRF SHA256 `3511e78bcd5321fe5b98425387829ee1689c68a019402ebdc0da0de3e89b093d`; GRFID hash remains `4e719f6234afde045162553564691732`. Legacy replay SHA256 remains `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`. The supplied save subsequently loads in Debug, with Action 5 reporting offsets 0..65 and no unimplemented-type warning. Runtime mouth orientation and near-mouth sorting remain under investigation.
 
 ### Area Mandatory Reading - Near-facing housing coverage
 
@@ -967,10 +969,10 @@ _Applies to Group 9C._
 
 | File name | Authoritative symbols | Purpose |
 | --- | --- | --- |
-| [tools/sprite_quantize.py](tools/sprite_quantize.py) | `quantise_file`, `front_mask`, `crop_source`, `LEGACY_MANIFEST` | Cut solid roof/wall coverage from the whole generated back, retain the existing near-door frame and preserve the original replay. |
+| [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) | `quantise_file`, `front_mask`, `crop_source`, `LEGACY_MANIFEST` | Cut solid roof/wall coverage from the whole generated back, retain the existing near-door frame and preserve the original replay. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp) | `DrawTile_LayerPortal`, `_layer_portal_front_bounds` | Native rail/road overlays are drawn over whole backs; solid near-facing housing must cover them without covering the approach. |
 | [src/table/railtypes.h](../../../../src/table/railtypes.h) | `_original_railtypes` | Track overlays retain the active rail type, including monorail and maglev. |
-| [tools/ottd_window.ps1](tools/ottd_window.ps1) | `Invoke-OttdConsole`, `Save-OttdShot`, `Save-OttdBurst` | Verify housing coverage and train passage using PrintWindow captures of the supplied representative save. |
+| [mlm/tools/run/ottd_window.ps1](../../../../mlm/tools/run/ottd_window.ps1) | `Invoke-OttdConsole`, `Save-OttdShot`, `Save-OttdBurst` | Verify housing coverage and train passage using PrintWindow captures of the supplied representative save. |
 
 ### Group 9C - Near-facing housing coverage
 
@@ -984,9 +986,9 @@ Added 2026-10-04 from `makinpr2.sav` captures. Native track overlays cross the s
 
 Implementation: near front offsets 15, 17, 23, 25, 31, 33, 39 and 41 now use panel 0 with `part=front`, `depth=1`, `full_span=True`, plus their original aligned `frame_panel=(1,2,"aligned")`. The cut plane extends across the canvas so the roof and side wall cover native track overlays; the original frame is quantised through the same function and placed at the common anchor. Existing road-tunnel rows keep their previous masks. No raw files or transport directions change.
 
-Static review: `capture_art.ps1` completes on `makinpr2-connected.sav` with `-SizeX 256 -SizeY 256 -Zooms 1,2,3 -NoUi -NoTraffic`, producing 63 PrintWindow captures in `build/makinpr2-review/static-repaired/` (18 portal ends and three floor layers, each at three zooms). `assets/reviews/r2mlm13-e-near-front-repair.png` compares Surface SW/SE before and after at the same scale. `assets/reviews/r2mlm13-e-repaired-portals.png` shows all eighteen ends at zoom 1. The solid facade now hides the stray track. This save supplies all rail directions, Surface elevator SE/SW and Deep elevator NE/NW; it supplies no road tunnels or other elevator directions, so full gallery acceptance remains open.
+Static review: `media/multilayer/tools/capture_art.ps1` completes on `makinpr2-connected.sav` with `-SizeX 256 -SizeY 256 -Zooms 1,2,3 -NoUi -NoTraffic`, producing 63 PrintWindow captures in `build/makinpr2-review/static-repaired/` (18 portal ends and three floor layers, each at three zooms). `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-near-front-repair.png` compares Surface SW/SE before and after at the same scale. `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-repaired-portals.png` shows all eighteen ends at zoom 1. The solid facade now hides the stray track. This save supplies all rail directions, Surface elevator SE/SW and Deep elevator NE/NW; it supplies no road tunnels or other elevator directions, so full gallery acceptance remains open.
 
-Validation: both configurations build, exit 0, zero compiler warnings (`build/build-near-front-final-{Debug,RelWithDebInfo}.log`). The only C++ edit in this group is its drawing documentation; the last functional C++ checks remain Group 9B's 110/110 unit passes in both configurations. All 66 sprites are nonblank and palette-valid; the legacy replay is byte-identical. Live PNG SHA256 `d3a93082ea33dda5759319a3833f86deca1fcf9119fcf2e6543d424f1420a4f1`; source/build GRF SHA256 `3817870b424be800cbf0bcee7a922f7f47e933be2d69594b2d5b9e4a8e17e115`; GRFID hash remains `4e719f6234afde045162553564691732`. A second logged Debug run captures 221 frames over 35 seconds, showing the train entering and emerging from the repaired Surface SW mouth; no body shows through the solid facade. See `build/makinpr2-review/near-front-traffic/`, `assets/reviews/r2mlm13-e-rail-sw-traffic.png` and `build/makinpr2-review/game-repaired.log`. Both logged game sessions quit normally, exit 0; no infrastructure cache mismatch or assertion failure was reported. No near-facing bounds adjustment was necessary.
+Validation: both configurations build, exit 0, zero compiler warnings (`build/build-near-front-final-{Debug,RelWithDebInfo}.log`). The only C++ edit in this group is its drawing documentation; the last functional C++ checks remain Group 9B's 110/110 unit passes in both configurations. All 66 sprites are nonblank and palette-valid; the legacy replay is byte-identical. Live PNG SHA256 `d3a93082ea33dda5759319a3833f86deca1fcf9119fcf2e6543d424f1420a4f1`; source/build GRF SHA256 `3817870b424be800cbf0bcee7a922f7f47e933be2d69594b2d5b9e4a8e17e115`; GRFID hash remains `4e719f6234afde045162553564691732`. A second logged Debug run captures 221 frames over 35 seconds, showing the train entering and emerging from the repaired Surface SW mouth; no body shows through the solid facade. See `build/makinpr2-review/near-front-traffic/`, `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-rail-sw-traffic.png` and `build/makinpr2-review/game-repaired.log`. Both logged game sessions quit normally, exit 0; no infrastructure cache mismatch or assertion failure was reported. No near-facing bounds adjustment was necessary.
 
 **Station/signal diagnosis from the supplied save.** `Little Sunpool Valley` (station 0) has its three rail tiles at Surface `(92..94,197)`; `Little Sunpool South` (station 1) has four at Underground `(80..83,197)`. The running railway is on row 198, with no connections to either platform. Train 1 has ordinary destination-stop orders (`Go non-stop to` both stations), so it passes the disconnected platforms and cannot reserve a route to them. In the test copy, added connected platforms at Surface `(92..94,198)` and Underground `(80..83,198)`, retaining the same station IDs. The train then visits both destinations and shows `Loading / Unloading` underground (`build/makinpr2-review/connected-lap/frame-0087.png`). Path signals of type 4 at Surface `(91,198)` and Underground `(85,198)` permit repeated cross-layer round trips (`build/makinpr2-review/signalled-lap/`). This supports a layout diagnosis; no station/pathfinder code was changed for this report. Underground catchment serving Surface houses remains the master plan's explicitly deferred metro feature.
 
@@ -1007,7 +1009,7 @@ _Applies to Group 10._
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [tools/capture_art.ps1](tools/capture_art.ps1), [tools/contact_sheet.py](tools/contact_sheet.py) | Live definitions; no fixed range | Produced by Group 3. Task 10.1 repeats the review captures of Group 4 with them. |
+| [media/multilayer/tools/capture_art.ps1](../../../../media/multilayer/tools/capture_art.ps1), [media/multilayer/tools/contact_sheet.py](../../../../media/multilayer/tools/contact_sheet.py) | Live definitions; no fixed range | Produced by Group 3. Task 10.1 repeats the review captures of Group 4 with them. |
 | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | 700-718 | `### Group 9 - In-game checks with screenshots`, whose task 9.1 photographed each layer with the stand-ins. Task 10.4 repeats that scene with the real art. |
 
 ### Group 10 - Final art check in the game
@@ -1017,16 +1019,16 @@ Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The full
 Runtime/operator tasks 10.1..10.4 are explicitly skipped under the goal allowance. The supplied save is reviewed in Groups 9B/9C and the capture results are recorded in task 10.6. The code audit is complete. The plan is closed under the allowance; full gallery and human art acceptance remain unverified.
 
 {{MEDIUM}}
-- [s] 10.1 Tell the user, then run `capture_art.ps1` on the gallery at 1x and 2x into `build/art-captures/final-1x/` and `build/art-captures/final-2x/`.
-- [s] 10.2 Make the sheets of tasks 4.6 and 4.7 again from these captures, named `r2mlm13-e-...`, and save them in `assets/reviews/`.
+- [s] 10.1 Tell the user, then run `media/multilayer/tools/capture_art.ps1` on the gallery at 1x and 2x into `build/art-captures/final-1x/` and `build/art-captures/final-2x/`.
+- [s] 10.2 Make the sheets of tasks 4.6 and 4.7 again from these captures, named `r2mlm13-e-...`, and save them in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`.
 - [s] 10.3 Compare the sheets with the verdicts of task 5.2 and the approvals of task 8.2. If a sprite now looks wrong in the game, return to Group 6 or 7 for it and record why.
-- [s] 10.4 Start a new 256x256 temperate Debug game (`build/scenario.cfg`), and show each of the four layers through the main toolbar dropdown. Capture each as `assets/reviews/r2mlm13-e-layer-<layer>.png`, and confirm against the captures of r2mlm12 task 9.1 that the Deep Underground icon and floor are the new sprites, not the stand-ins.
+- [s] 10.4 Start a new 256x256 temperate Debug game (`build/scenario.cfg`), and show each of the four layers through the main toolbar dropdown. Capture each as `mlm/reviews/<feature>/<scenario>/<run-id>/images/r2mlm13-e-layer-<layer>.png`, and confirm against the captures of r2mlm12 task 9.1 that the Deep Underground icon and floor are the new sprites, not the stand-ins.
 - [x] 10.5 Run `grep -rn "r2mlm13 Group 9" src` and confirm it prints nothing: every stand-in comment of r2mlm12 D-6 is gone.
 
   `rg "r2mlm13 Group 9|_road_tunnel_stand_in_roof_bounds" src` returns no matches.
 - [x] 10.6 Record every result of Group 10 under this task, with the sheet and capture file names.
 
-  Complete gallery/approval checks 10.1..10.4 are explicitly skipped under the goal allowance as recorded above. Actual supplied-save checks are in Groups 9B/9C: [r2mlm13-e-repaired-portals.png](assets/reviews/r2mlm13-e-repaired-portals.png), [r2mlm13-e-near-front-repair.png](assets/reviews/r2mlm13-e-near-front-repair.png), [r2mlm13-e-rail-sw-traffic.png](assets/reviews/r2mlm13-e-rail-sw-traffic.png). They cover 18 existing ends and three ground views at three zooms, plus a Surface-SW rail traffic burst. Missing road tunnels and elevator directions, the 1x/2x gallery matrix and human approval remain future validation. Current editor layer views are [scenario-layer-review.png](assets/reviews/scenario-layer-review.png); those are not historical stand-in comparison captures. Task 10.5's stand-in audit passes.
+  Complete gallery/approval checks 10.1..10.4 are explicitly skipped under the goal allowance as recorded above. Actual supplied-save checks are in Groups 9B/9C: [r2mlm13-e-repaired-portals.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-repaired-portals.png), [r2mlm13-e-near-front-repair.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-near-front-repair.png), [r2mlm13-e-rail-sw-traffic.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-e-rail-sw-traffic.png). They cover 18 existing ends and three ground views at three zooms, plus a Surface-SW rail traffic burst. Missing road tunnels and elevator directions, the 1x/2x gallery matrix and human approval remain future validation. Current editor layer views are [scenario-layer-review.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/scenario-layer-review.png); those are not historical stand-in comparison captures. Task 10.5's stand-in audit passes.
 
 ### Area Mandatory Reading - Plan records
 
@@ -1062,12 +1064,12 @@ Final records are reconciled under the goal's explicit operator allowance. Gener
 
 | Trigger | File name | Start at | Expand only when | Consultation purpose |
 | --- | --- | --- | --- | --- |
-| Task 3.1 or 3.8: a posted console command never reaches the console, or the console stays open in a capture | [src/video/win32_v.cpp](../../../../src/video/win32_v.cpp) | `case WM_DEADCHAR`, `case WM_CHAR` and `case WM_KEYDOWN` (673-729) | The scan-code-41 key down neither opens nor closes the console | Learn which messages the game needs on this keyboard layout (a dead console key needs two presses). Change only `ottd_window.ps1`, never the driver. |
+| Task 3.1 or 3.8: a posted console command never reaches the console, or the console stays open in a capture | [src/video/win32_v.cpp](../../../../src/video/win32_v.cpp) | `case WM_DEADCHAR`, `case WM_CHAR` and `case WM_KEYDOWN` (673-729) | The scan-code-41 key down neither opens nor closes the console | Learn which messages the game needs on this keyboard layout (a dead console key needs two presses). Change only `mlm/tools/run/ottd_window.ps1`, never the driver. |
 | Task 4.2: the user cannot build a gallery portal where the layout puts it | [r2mlm12-deep-underground-tunnels-and-elevators.md](r2mlm12-deep-underground-tunnels-and-elevators.md) | `### D-3 Three portal kinds, derived and never stored` | The error is not "flat land required" or a town in the way | Learn which pairs a kind allows. Move the loop to other flat land; the capture script reads positions from the save, so exact tiles do not matter. |
 | Task 7.5, 9.7 or 10.1: the composite looked right, but in the game a vehicle is drawn over a front part, or a front part covers a vehicle on a neighbouring tile | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | `## Sprite sort` (60-80) | The bounds equal vanilla's and the fault stays | Learn how parent boxes are sorted. Fix the bounds or the separator boxes in `DrawTile_LayerPortal`, never the sorter. |
 | Task 9.1 or 9.2: the quantiser refuses the manifest, or GRFCodec reports a sprite count mismatch | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | `### Group 5 - Quantisation tool` and `### Group 6 - GRF integration` | The script or NFO differs from what those groups describe | Learn the pipeline's intended contract. r2mlm6 stays the authority; fix this plan's additions, not the pipeline's design. |
 | Group 6 or 7: a generated image ignores the recipe (wrong box, a mouse pointer instead of a cursor, a frame or text) | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | Task 3.6 and task 4.8 records | A second try fails the same way | See which prompts and references failed before, and avoid repeating them. |
-| Any unit-test run of this plan takes longer than two minutes | [r2rvm-review-map.md](r2rvm-review-map.md) | `### Commands used by every group`, the ctest filter | The run is slow without new failures | Run only the `map_layer` cases. |
+| Any unit-test run of this plan takes longer than two minutes | [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | `### Commands used by every group`, the ctest filter | The run is slow without new failures | Run only the `map_layer` cases. |
 
 ## Planning Provenance
 
@@ -1082,10 +1084,10 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) | 185-192 | The visibility-frame check that task 9.7 follows without editing the shared frames. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp), [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | 75-130, 255-291; 28-88 | The depth and hiding rule behind `front_mask`, `DrawTile_LayerPortal`, and the `m5` fields that `--portals` decodes. |
 | [src/tunnelbridge_cmd.cpp](../../../../src/tunnelbridge_cmd.cpp), [src/sprite.h](../../../../src/sprite.h) | 1308-1449, 1968; 18-26 | Vanilla's split: the rear drawn as ground and the roof as a sortable sprite. `SpriteBounds` draws a sprite at its box origin plus offset, hence `catenary_bounds` offsets for north-corner art (task 9.6). The shared visibility frames are never edited. |
-| [tools/sprite_quantize.py](tools/sprite_quantize.py), [tools/make_sprite_template.py](tools/make_sprite_template.py), [tools/png_indexed.py](tools/png_indexed.py) | 19-35, 174-190, 266-298; 20-34; 22, 105-126 | The 44 written twice, a `--preview` that needs the whole manifest, the `(offset, path, box)` rows, and the guides and references: why Group 2 extends the tools rather than using them as they are. |
-| [assets/raw/](assets/raw/), [assets/icon_preview.png](assets/icon_preview.png) | `layer_icon_*.png`, `rail_portal_surface_ne_back.png`, the icon preview | The raw art the user prefers to the stand-ins, and its state at game size. The rail portal picture's copied anchor cross and its mound taller than its box are why `--fit` skips guide red and reports cut rows, and why no guide is sent with icons. |
+| [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py), [media/multilayer/tools/make_sprite_template.py](../../../../media/multilayer/tools/make_sprite_template.py), [media/multilayer/tools/png_indexed.py](../../../../media/multilayer/tools/png_indexed.py) | 19-35, 174-190, 266-298; 20-34; 22, 105-126 | The 44 written twice, a `--preview` that needs the whole manifest, the `(offset, path, box)` rows, and the guides and references: why Group 2 extends the tools rather than using them as they are. |
+| [media/multilayer/source/legacy/raw/](../../../../media/multilayer/source/legacy/raw), [mlm/reviews/multilayer-art/authoring/import-20261009/images/icon_preview.png](../../../../mlm/reviews/multilayer-art/authoring/import-20261009/images/icon_preview.png) | `layer_icon_*.png`, `rail_portal_surface_ne_back.png`, the icon preview | The raw art the user prefers to the stand-ins, and its state at game size. The rail portal picture's copied anchor cross and its mound taller than its box are why `--fit` skips guide red and reports cut rows, and why no guide is sent with icons. |
 | [src/console_cmds.cpp](../../../../src/console_cmds.cpp), [src/viewport.cpp](../../../../src/viewport.cpp), [src/video/win32_v.cpp](../../../../src/video/win32_v.cpp) | 313-412; 2595-2640; 259-283, 673-729, 1032 | `scrollto` and `zoomto`, the layer switch in `ScrollWindowTo`, the scan-code-41 console key, and `TranslateMessage` only while an edit box has focus. That is why captures are driven through the console, and why the console key is posted without a character (Group 3). |
-| [tools/savegame_plane_digest.py](tools/savegame_plane_digest.py), [src/tile_type.h](../../../../src/tile_type.h) | 1-28, 106-142; 48-63 | Where `--portals` hooks into the chunk loop, and `LayerPortal` = 11 in the type byte. |
+| [mlm/tools/savegames/savegame_plane_digest.py](../../../../mlm/tools/savegames/savegame_plane_digest.py), [src/tile_type.h](../../../../src/tile_type.h) | 1-28, 106-142; 48-63 | Where `--portals` hooks into the chunk loop, and `LayerPortal` = 11 in the type byte. |
 | [src/table/settings/misc_settings.ini](../../../../src/table/settings/misc_settings.ini), `build/scenario.cfg` | 318-325; `[misc]`, `[difficulty]`, `[game_creation]` | `gui_scale` in `[misc]`, and the setting names of the gallery configs of task 4.1. |
 | [media/baseset/openttd/openttdgui.nfo](../../../../media/baseset/openttd/openttdgui.nfo) | 178-191 | Vanilla 20 x 20 icons and the convert-road icon and cursor pair. A vanilla cursor is a picture of its tool, the reason D-1 derives cursors from icons. |
 
@@ -1093,7 +1095,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 
 Closed 2026-10-04 under the goal's operator/gate allowance, with each skip recorded at its owning group. Implementation and automated checks are complete: both configurations build without compiler warnings and pass 111/111 unit cases; full release CTest passes 115/115. Human art, cost and scenario decisions are not inferred. The original full runtime/approval criteria below remain future validation criteria.
 
-- Every task box of this plan is checked, and every retained capture and sheet it names exists in `assets/reviews/`.
+- Every task box of this plan is checked, and every retained capture and sheet it names exists in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`.
 - The sprite sheet holds 66 sprites (74 with a Deep Underground elevator housing), regenerated deterministically. With r2mlm6's 44 rows alone, the extended tools still rebuild r2mlm6's sheet byte for byte (task 2.8).
 - Every sprite has a recorded in-game verdict, and the user approved every replaced and every new sprite.
 - The stand-ins of r2mlm12 D-6 are replaced, and `grep -rn "r2mlm13 Group 9" src` prints nothing.

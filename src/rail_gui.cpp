@@ -46,6 +46,8 @@
 #include "timer/timer.h"
 #include "timer/timer_game_calendar.h"
 #include "picker_gui.h"
+#include "construction_preview.h"
+#include "tbm.h"
 
 #include "station_map.h"
 #include "tunnelbridge_map.h"
@@ -79,6 +81,50 @@ struct StationPickerSelection {
 };
 static StationPickerSelection _station_gui; ///< Settings of the station picker.
 static MapLayer _rail_portal_underground_target = MapLayer::Surface; ///< Client placement choice used only for an actual Underground click; never saved gameplay authority.
+static TileIndex _rail_portal_preview_tile = INVALID_TILE; ///< Client-only last actual hover tile, including its explicit viewport layer.
+static std::string _rail_portal_preview_text; ///< Read-only command quote/refusal rendered by the owning picker.
+
+/**
+ * Preview the exact existing portal command and both physical endpoints.
+ * @param owner Toolbar currently owning the native placement cursor.
+ * @param tile Actual hovered world tile, including extra-viewport addressing.
+ * @return Nothing; update only derived overlays and localized picker text.
+ */
+static void UpdateRailPortalPreview(Window *owner, TileIndex tile)
+{
+	if (!IsValidTile(tile) || !Company::IsValidID(_local_company) || _thd.GetCallbackWnd() != owner) return;
+	_rail_portal_preview_tile = tile;
+	AutoRestoreBackup actor(_current_company, _local_company);
+	const auto selection = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry ? _rail_portal_underground_target : MapLayer::Invalid;
+	const MapLayer target = MultiLayerMap::GetPortalTargetLayer(GetTileLayer(tile), LayerPortalKind::RailTunnel, selection);
+	std::vector<TileIndex> endpoints{tile}, approaches;
+	if (MultiLayerMap::IsValidLayer(target)) {
+		const TileIndex pair = MultiLayerMap::TileInLayer(tile, target);
+		endpoints.push_back(pair);
+		const auto step = TileIndexDiffCByDiagDir(_rail_portal_mouth_direction);
+		for (TileIndex door : {TileAddWrap(tile, step.x, step.y), TileAddWrap(pair, -step.x, -step.y)}) {
+			if (IsValidTile(door)) approaches.push_back(door);
+		}
+		auto quote = Command<Commands::BuildLayerPortal>::Do(DoCommandFlag::Auto, tile, TransportType::Rail, target,
+			ReverseDiagDir(_rail_portal_mouth_direction), _cur_railtype, INVALID_ROADTYPE);
+		std::string result;
+		if (quote.Failed()) {
+			const auto &encoded = quote.GetEncodedMessage();
+			result = encoded.empty() ? GetString(quote.GetErrorMessage() == INVALID_STRING_ID ? STR_ERROR_CAN_T_BUILD_LAYER_PORTAL : quote.GetErrorMessage()) : encoded.GetDecodedString();
+		} else {
+			const bool handover = GetTBMSupportTile(tile) != nullptr || GetTBMSupportTile(pair) != nullptr;
+			result = GetString(handover ? STR_BUILD_RAIL_LAYER_PORTAL_HANDOVER_PRICE : STR_BUILD_RAIL_LAYER_PORTAL_PRICE, quote.GetCost());
+		}
+		_rail_portal_preview_text = GetString(STR_BUILD_RAIL_LAYER_PORTAL_QUOTE, GetMapLayerName(GetTileLayer(tile)), GetMapLayerName(target),
+			TileX(tile), TilePlaneY(tile), _local_company, result);
+		SetConstructionPreview(owner, quote.Succeeded() ? std::span<const TileIndex>{endpoints} : std::span<const TileIndex>{}, approaches,
+			quote.Failed() ? std::span<const TileIndex>{endpoints} : std::span<const TileIndex>{});
+	} else {
+		_rail_portal_preview_text = GetString(STR_ERROR_CAN_T_BUILD_LAYER_PORTAL);
+		SetConstructionPreview(owner, {}, {}, endpoints);
+	}
+	SetWindowDirty(WindowClass::BuildDepot, TransportType::Rail);
+}
 
 
 static void HandleStationPlacement(TileIndex start, TileIndex end);
@@ -451,6 +497,7 @@ static void HandleAutoSignalPlacement()
 struct BuildRailToolbarWindow : Window {
 	RailType railtype = INVALID_RAILTYPE; ///< Rail type to build.
 	WidgetID last_user_action = INVALID_WIDGET; ///< Last started user action.
+	uint portal_preview_elapsed = 0; ///< Client refresh interval, independent of simulation progress.
 
 	BuildRailToolbarWindow(WindowDesc &desc, RailType railtype) : Window(desc), railtype(railtype)
 	{
@@ -638,7 +685,7 @@ struct BuildRailToolbarWindow : Window {
 			case WID_RAT_BUILD_SIGNALS: return HT_RECT;
 			case WID_RAT_BUILD_BRIDGE: return HT_RECT;
 			case WID_RAT_BUILD_TUNNEL: return HT_SPECIAL;
-			case WID_RAT_BUILD_LAYER_PORTAL: return HT_RECT;
+			case WID_RAT_BUILD_LAYER_PORTAL: return HT_SPECIAL;
 			case WID_RAT_CONVERT_RAIL: return HT_RECT | HT_DIAGONAL;
 			default: NOT_REACHED();
 		}
@@ -852,8 +899,12 @@ struct BuildRailToolbarWindow : Window {
 		}
 	}
 
+	/** Cancel native placement and its derived preview without changing any proposed world state. */
 	void OnPlaceObjectAbort() override
 	{
+		_rail_portal_preview_tile = INVALID_TILE;
+		_rail_portal_preview_text.clear();
+		ClearConstructionPreview();
 		if (this->IsWidgetLowered(WID_RAT_BUILD_STATION)) SetViewportCatchmentStation(nullptr, true);
 		if (this->IsWidgetLowered(WID_RAT_BUILD_WAYPOINT)) SetViewportCatchmentWaypoint(nullptr, true);
 
@@ -869,8 +920,15 @@ struct BuildRailToolbarWindow : Window {
 		CloseWindowByClass(WindowClass::BuildBridge);
 	}
 
+	/** @param pt Unused screen point. @param tile Actual hovered world tile. Preview the active portal or ordinary tunnel tool. */
+	/** @param pt Native cursor position. @param tile Explicit-layer hover tile. Derive the portal or ordinary tunnel preview without mutation. */
 	void OnPlacePresize([[maybe_unused]] Point pt, TileIndex tile) override
 	{
+		if (this->last_user_action == WID_RAT_BUILD_LAYER_PORTAL) {
+			UpdateRailPortalPreview(this, tile);
+			VpSetPresizeRange(tile, tile); // World-layer overlays describe the pair; a cross-plane rectangle would cover unrelated map cells.
+			return;
+		}
 		Command<Commands::BuildTunnel>::Do(DoCommandFlag::Auto, tile, TransportType::Rail, _cur_railtype, INVALID_ROADTYPE);
 		VpSetPresizeRange(tile, _build_tunnel_endtile == INVALID_TILE ? tile : _build_tunnel_endtile);
 	}
@@ -882,9 +940,16 @@ struct BuildRailToolbarWindow : Window {
 		return EventState::NotHandled;
 	}
 
-	void OnRealtimeTick([[maybe_unused]] uint delta_ms) override
+	/** @param delta_ms Client elapsed time; refresh derived quotes only, never cutting, movement or prices. */
+	/** @param delta_ms Elapsed native UI time. Refresh waypoint coverage and the live portal quote while this toolbar owns placement. */
+	void OnRealtimeTick(uint delta_ms) override
 	{
 		if (this->IsWidgetLowered(WID_RAT_BUILD_WAYPOINT)) CheckRedrawRailWaypointCoverage(this);
+		this->portal_preview_elapsed += delta_ms;
+		if (this->portal_preview_elapsed >= 250) {
+			this->portal_preview_elapsed = 0;
+			if (this->last_user_action == WID_RAT_BUILD_LAYER_PORTAL && _thd.GetCallbackWnd() == this && IsValidTile(_rail_portal_preview_tile)) UpdateRailPortalPreview(this, _rail_portal_preview_tile);
+		}
 	}
 
 	/**
@@ -1904,6 +1969,12 @@ static void ShowBuildTrainDepotPicker(Window *parent)
 
 /** Picker for the mouth a rail portal faces on the viewed layer. */
 struct BuildRailLayerPortalWindow : public PickerWindowBase {
+	/** @param widget Actual picker row. @param stringid Native fallback string. @return The same complete localized quote/refusal used by drawing. */
+	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
+	{
+		if (widget == WID_BRLP_QUOTE) return _rail_portal_preview_text.empty() ? GetString(STR_BUILD_RAIL_LAYER_PORTAL_HINT) : _rail_portal_preview_text;
+		return PickerWindowBase::GetWidgetString(widget, stringid);
+	}
 	/**
 	 * Open the mouth picker.
 	 * @param desc Window description.
@@ -1911,6 +1982,8 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	 */
 	BuildRailLayerPortalWindow(WindowDesc &desc, Window *parent) : PickerWindowBase(desc, parent)
 	{
+		_rail_portal_preview_tile = INVALID_TILE;
+		_rail_portal_preview_text.clear();
 		this->CreateNestedTree();
 		const bool native = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
 		if (!native) _rail_portal_underground_target = MapLayer::Surface;
@@ -1953,6 +2026,10 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 	 */
 	void DrawWidget(const Rect &r, WidgetID widget) const override
 	{
+		if (widget == WID_BRLP_QUOTE) {
+			DrawStringMultiLine(r.Shrink(WidgetDimensions::scaled.frametext), this->GetWidgetString(widget, STR_BUILD_RAIL_LAYER_PORTAL_HINT), TextColour::Black);
+			return;
+		}
 		if (!IsInsideMM(widget, WID_BRLP_MOUTH_NE, WID_BRLP_MOUTH_NW + 1)) return;
 		DrawPixelInfo tmp_dpi;
 		Rect ir = r.Shrink(WidgetDimensions::scaled.bevel);
@@ -1999,6 +2076,7 @@ struct BuildRailLayerPortalWindow : public PickerWindowBase {
 				this->SetDirty();
 				break;
 		}
+		if (this->parent != nullptr && IsValidTile(_rail_portal_preview_tile)) UpdateRailPortalPreview(this->parent, _rail_portal_preview_tile);
 	}
 };
 
@@ -2025,6 +2103,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_build_rail_portal_wi
 				NWidget(WWT_TEXTBTN, Colours::Grey, WID_BRLP_TARGET_DEEP), SetStringTip(STR_MAP_LAYER_DEEP_UNDERGROUND, STR_BUILD_RAIL_LAYER_PORTAL_TARGET_TOOLTIP),
 			EndContainer(),
 		EndContainer(),
+		NWidget(WWT_EMPTY, Colours::Invalid, WID_BRLP_QUOTE), SetMinimalSize(300, 66), SetFill(1, 0),
 	EndContainer(),
 };
 

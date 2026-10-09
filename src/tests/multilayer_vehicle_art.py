@@ -65,7 +65,7 @@ def audit(part, model_id):
     report, files = vehicles.derive()
     vehicles.check(report, files)
     model = next(row for row in report["atlases"] if row["asset_id"] == model_id)
-    public = json.loads((vehicles.base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((vehicles.base.PUBLIC).read_text(encoding="utf-8"))
     family = next(row for row in public["assets"] if row["asset_id"] == model["asset_id"])
     image = Image.open(ROOT / model["path"])
     selected = {(row["state"], row["frame"], row["direction"]): row for row in model["sprites"] if row["part"] == part}

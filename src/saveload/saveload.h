@@ -453,6 +453,12 @@ enum class SaveLoadVersion : uint16_t {
 	GeothermalHeatSources, ///< Saveload version: 391\n Actual completed collector references its single shared Heat meter; interval/carry/grants remain in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group2.
 	LocalUtilityLinks, ///< Saveload version: 392\n Shared native local-cell link identities, Heat/Electricity geometry/capacity/ownership and topology revision. See r2mlvs17-geothermal-energy-and-industry.md Group3B.
 	GeothermalHeatRoutes, ///< Saveload version: 393\n Exact physical Heat consumer ports and original source-slice paths; every quantity remains in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group3.
+	TBMHalfCuttingRate, ///< Saveload version: 394\n Halved TBM cutting rates; migrate old saved work fractions without changing partial geological work. See r2tbmf-tbm-fixes.md Group5.
+	TBMReturnParking, ///< Saveload version: 395\n Resumable return/exchange/park phases in the existing TBMP controller; no new cargo or job owner. See r2tbmf-tbm-fixes.md Group7.
+	TBMSettledRelease, ///< Saveload version: 396\n Preserve cancellation intent through actual withdrawal and haulage settlement before releasing geological claims. See r2tbmf-tbm-fixes.md Group7B.
+	TBMHangarDepots, ///< Saveload version: 397\n Real native depot identities for portal magazines; ordinary depot orders retain their existing encoding. See r2tbmf-tbm-fixes.md Group8.
+	TBMNativeOrderControl, ///< Saveload version: 398\n Explicit native-list control and missing-order hold in the existing TBM phase/reason fields; no duplicate order queue.
+	GeologyRegionalHardness, ///< Saveload version: 399\n GEOS stores the regional rock algorithm and immutable seed; earlier worlds retain uniform layer defaults and saved deposit hardness.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

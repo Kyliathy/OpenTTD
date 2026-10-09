@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include <cstdlib>
 #include <filesystem>
 #include "../3rdparty/catch2/catch.hpp"
@@ -38,10 +39,10 @@ static bool ObserveGeothermalSite(std::span<std::string_view> arguments)
 /** Native cold planning transport/recovery, with explicitly declared open test floor and no operating collector/generator or delivered construction claim. */
 TEST_CASE("Native cold geothermal site identity and cancellation survive actual files", "[.geothermal-site-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path(), directory = root / "src/tests/fixtures/geothermal";
+	const auto root = FindTestRepositoryRoot(), directory = GetTestCaseArtifactPaths("geothermal", "native-reload").saves;
 	const char *input_text = std::getenv("OTTD_GEOTHERMAL_SITE_INPUT"), *mode_text = std::getenv("OTTD_GEOTHERMAL_SITE_CASE");
 	REQUIRE(input_text != nullptr); REQUIRE(mode_text != nullptr);
-	const std::filesystem::path input{input_text}; const std::string_view mode{mode_text};
+	const auto input = ResolveTestInputPath(input_text); const std::string_view mode{mode_text};
 	REQUIRE(std::filesystem::exists(input)); REQUIRE(std::filesystem::is_directory(directory));
 	bool observed = false; std::exception_ptr failure;
 	/** Inspect the actual accepted world; cold fixture floor is declared input for persistence, while later real paid construction retains its independent acceptance. */
@@ -104,7 +105,7 @@ TEST_CASE("Native cold geothermal site identity and cancellation survive actual 
 	};
 	AutoRestoreBackup observer(_geothermal_site_observer, &inspect);
 	IConsole::CmdRegister("geothermal_site_check", ObserveGeothermalSite);
-	const std::string config = (root / "build/native-art.cfg").string(), input_path = input.string();
+	const std::string config = (GetTestRuntimeConfig()).string(), input_path = input.string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input_path};
 	CHECK(openttd_main(arguments) == 0); if (failure) std::rethrow_exception(failure); CHECK(observed);

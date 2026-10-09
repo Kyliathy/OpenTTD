@@ -10,7 +10,7 @@
  * the receivers' room, the fee is charged once for exactly that, there is no freight income, and the refused
  * remainder stays aboard or, on an unload order, goes onto the platform for onward transfer.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 8-9
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md, Bounded intake
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Bounded intake
  */
 
 #include "../stdafx.h"

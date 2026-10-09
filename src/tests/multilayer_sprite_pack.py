@@ -61,9 +61,10 @@ def main():
     public = json.loads(art.PUBLIC.read_text(encoding="utf-8"))
     scope = json.loads(art.SCOPE.read_text(encoding="utf-8"))
     ranges, bound = art.selected_ranges(public, scope)
-    assert len(ranges) == 40
-    assert sum(row["sprite_count"] for row in ranges) == 2311
-    assert bound == 2404
+    assert len(ranges) == 42
+    assert sum(row["sprite_count"] for row in ranges) == 2343
+    assert bound == 2436
+    assert ranges[-2]["native_offset"] == 2404 and ranges[-1]["native_offset"] == 2420
     verify_source_refusals(public)
     families = {row["asset_id"]: row for row in public["assets"]}
     documents, images = {}, {}
@@ -81,7 +82,7 @@ def main():
             restored.paste(cropped, (rx - family["anchor"][0], ry - family["anchor"][1]))
             x, y, sw, sh = pose["box"]
             assert restored.tobytes() == image.crop((x, y, x + sw, y + sh)).tobytes()
-    print("Selected M1 pack fixtures: 40 families / 2311 exact source poses; stable native ranges, crop/anchor round trips and source corruption refusals pass")
+    print("Selected M1 pack fixtures: 42 families / 2343 exact source poses; stable native ranges, crop/anchor round trips and source corruption refusals pass")
 
 
 if __name__ == "__main__":

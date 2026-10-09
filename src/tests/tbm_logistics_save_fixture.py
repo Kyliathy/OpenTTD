@@ -27,6 +27,22 @@ STATES = ("stopped", "await-exchange", "dispose-origin", "return-empties", "span
 STALL_STATES = ("lost-origin", "saturated-receiver", "blocked-line", "wrong-wagons", "no-empties", "occupied-bay", "crashed")
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("tbm", "tbm-logistics-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def table_header(reader):
     """Decode the writer's named fields and recursively appended struct headers.
 
@@ -187,14 +203,14 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
     @param complete_loop Require actual final Surface-origin disposal/empty return, including cancelled projects, instead of only the next exchange.
     @return None; missing physical progress, changed packets/costs or input edits fail.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     original_startup = startup.read_bytes()
     assert Path(input_prefix).name == input_prefix, "input must be a repository-local fixture basename"
-    source = FIXTURES / f"{input_prefix}-{state}.sav"
+    source = resolve_input_path(FIXTURES / f"{input_prefix}-{state}.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     run_id = uuid.uuid4().hex
-    outputs = [FIXTURES / f"acceptance-{input_prefix}-{state}-{run_id}-first",
-               FIXTURES / f"acceptance-{input_prefix}-{state}-{run_id}-second"]
+    outputs = [CONTEXT.saves / f"acceptance-{input_prefix}-{state}-{run_id}-first",
+               CONTEXT.saves / f"acceptance-{input_prefix}-{state}-{run_id}-second"]
     elapsed = []
     try:
         startup.write_text("# @see r2mlvs5-spoil-wagons-and-haulage.md, Group 13A actual loader continuation.\n"
@@ -212,7 +228,7 @@ def resume_case(state, evidence_prefix, input_prefix, repair_tile=None, repair_t
                 environment.update(OTTD_TBM_LOGISTICS_REPAIR_TILE=str(repair_tile), OTTD_TBM_LOGISTICS_REPAIR_TRACK=str(repair_track))
             log = log_path(f"{evidence_prefix}-{state}-{index + 1}.log")
             with log.open("wb") as sink:
-                subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
+                run_native(CONTEXT, [str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
                                cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                                creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=110)
             evidence = log.read_text(encoding="utf-8", errors="replace")
@@ -257,9 +273,9 @@ def visibility_case(input_prefix, evidence_prefix, output_prefix=None):
     assert Path(input_prefix).name == input_prefix, "visibility input must be a repository-local basename"
     output_prefix = output_prefix or input_prefix + "-view"
     assert Path(output_prefix).name == output_prefix, "visibility outputs must use a repository-local basename"
-    source = FIXTURES / f"{input_prefix}-stopped.sav"
+    source = resolve_input_path(FIXTURES / f"{input_prefix}-stopped.sav")
     original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     original_startup = startup.read_bytes()
     results = []
     try:
@@ -267,12 +283,12 @@ def visibility_case(input_prefix, evidence_prefix, output_prefix=None):
         # Each fresh application reconstructs the exact same complete native world. Only normal client camera/draw
         # calls differ; native commands, full GameLoop work/vehicle/disposal and accounting remain identical.
         for presentation in ("headless", "visible", "hidden"):
-            output = FIXTURES / f"{output_prefix}-{presentation}"
+            output = CONTEXT.saves / f"{output_prefix}-{presentation}"
             environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(source), OTTD_TBM_LOGISTICS_OUTPUT=str(output),
                                OTTD_TBM_LOGISTICS_COMPLETE_LOOP="1", OTTD_TBM_LOGISTICS_VIEW=presentation)
             log = log_path(f"{evidence_prefix}-{presentation}.log")
             with log.open("wb") as sink:
-                subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
+                run_native(CONTEXT, [str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
                                cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                                creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=110)
             evidence = log.read_text(encoding="utf-8", errors="replace")
@@ -300,9 +316,9 @@ def portal_case(input_name, output_prefix, evidence_prefix, expected_state):
     directory = ROOT / "src/tests/fixtures/portals"
     assert Path(input_name).name == input_name, "portal input must be an existing fixture basename"
     assert output_prefix and Path(output_prefix).name == output_prefix and not output_prefix.startswith("r2"), "fresh portal outputs must use a non-planning basename"
-    source = directory / input_name
+    source = resolve_input_path(directory / input_name)
     original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     original_startup = startup.read_bytes()
     fields = (b"MAPT", b"MAPH", b"MAPO", b"MAP2", b"M3LO", b"M3HI", b"MAP5", b"MAPE", b"MAP7", b"MAP8")
     widths = {b"MAP2": 2, b"MAP8": 2}
@@ -316,12 +332,12 @@ def portal_case(input_name, output_prefix, evidence_prefix, expected_state):
         # Native acceptance/save is the legal empty/legacy checkpoint. No missing hauler is invented to make these
         # real older worlds imitate a commissioning project; all original endpoint/ground bits must survive migration.
         for index in range(2):
-            output = directory / f"{output_prefix}-{index + 1}"
+            output = CONTEXT.saves / f"{output_prefix}-{index + 1}"
             input_path = source if index == 0 else loaded[0]
             environment = dict(os.environ, OTTD_TBM_LOGISTICS_SOURCE=str(input_path), OTTD_TBM_LOGISTICS_OUTPUT=str(output), OTTD_TBM_PORTAL_LOAD_ONLY="1")
             log = log_path(f"{evidence_prefix}-{index + 1}.log")
             with log.open("wb") as sink:
-                subprocess.run([str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
+                run_native(CONTEXT, [str(ROOT / "build/Debug/openttd_test.exe"), "[.tbm-logistics-runtime]", "--durations", "yes"],
                                cwd=ROOT / "build", env=environment, stdout=sink, stderr=subprocess.STDOUT,
                                creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=110)
             evidence = log.read_text(encoding="utf-8", errors="replace")

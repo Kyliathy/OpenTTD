@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, PngImagePlugin
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/mlvs"
+ASSETS = ROOT / "media/multilayer/guides/m1"
 
 
 def native_layer_icon(offset):
@@ -46,13 +46,13 @@ def create_guide():
 
     @return Repository PNG path, with existing source/template owner metadata.
     """
-    machinery = Image.open(ROOT / "media/multilayer/sprites/m1/purchase-model-00-authored.png").convert("RGBA")
-    locked = Image.open(ROOT / "media/multilayer/sprites/m1/purchase-model-01-authored.png").convert("RGBA")
+    machinery = Image.open(ROOT / "logs/proofs/mlm/native-art/derived/purchase-model-00-authored.png").convert("RGBA")
+    locked = Image.open(ROOT / "logs/proofs/mlm/native-art/derived/purchase-model-01-authored.png").convert("RGBA")
     references = [("Underground layer", native_layer_icon(1)), ("Rail portal", native_layer_icon(4)),
                   ("Deep layer", native_layer_icon(44)), ("Selected cutter", machinery.crop((0, 0, 20, 20))),
                   ("Existing UI lock", locked.crop((20, 0, 40, 20))),
-                  ("Earth cargo", Image.open(ROOT / "media/multilayer/sprites/m1/cargo-earth.png").convert("RGBA")),
-                  ("Rock cargo", Image.open(ROOT / "media/multilayer/sprites/m1/cargo-rock.png").convert("RGBA"))]
+                  ("Earth cargo", Image.open(ROOT / "logs/proofs/mlm/native-art/derived/cargo-earth.png").convert("RGBA")),
+                  ("Rock cargo", Image.open(ROOT / "logs/proofs/mlm/native-art/derived/cargo-rock.png").convert("RGBA"))]
     guide = Image.new("RGB", (7 * 184, 258), (44, 47, 51))
     draw = ImageDraw.Draw(guide)
     draw.text((12, 12), "RETAINED ART REFERENCE: exact native pixels; enlarge only for source-authoring clarity", fill="white")

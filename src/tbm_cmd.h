@@ -31,6 +31,33 @@ CommandCost CmdControlTBMProject(DoCommandFlags flags, TBMProjectID project, TBM
 DEF_CMD_TRAIT(Commands::ControlTBMProject, CmdControlTBMProject, CommandFlags{}, CommandType::VehicleManagement)
 
 /**
+ * Direct the same actual cutter to a chosen compatible native hangar.
+ * @param flags Estimate/execute policy; no depot identity is allocated during estimation.
+ * @param cutter Real owned front engine, assigned or retained after release.
+ * @param destination Actual depot or either endpoint of an eligible portal.
+ * @param service True requests an ordinary service visit; false unloads through the real bay and parks.
+ * @return Zero immediate cost for existing storage, or an unchanged admission/pool refusal.
+ */
+CommandCost CmdSendTBMToHangar(DoCommandFlags flags, VehicleID cutter, TileIndex destination, bool service);
+
+DEF_CMD_TRAIT(Commands::SendTBMToHangar, CmdSendTBMToHangar, CommandFlags{}, CommandType::VehicleManagement)
+
+/**
+ * Append reviewed work to the actual paused machine without another purchase.
+ * @param flags Estimate/execute policy; both paths revalidate the complete live quote.
+ * @param project Actual owned unfinished controller.
+ * @param area_start First explicit additional floor corner.
+ * @param area_end Opposite additional floor corner.
+ * @param expected_revision Geological revision reviewed by the caller.
+ * @param expected_fingerprint Exact geometry, quantities and participant fingerprint from the preview.
+ * @param intent Reviewed area coverage or exact straight continuation; part of the synchronized quote.
+ * @return Zero immediate cost or an actionable unchanged refusal; later actual cuts retain their normal charges.
+ */
+CommandCost CmdExtendTBMProject(DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint64_t expected_revision, uint64_t expected_fingerprint, ExcavationPlanIntent intent);
+
+DEF_CMD_TRAIT(Commands::ExtendTBMProject, CmdExtendTBMProject, CommandFlags{}, CommandType::VehicleManagement)
+
+/**
  * Convert released temporary support on one tile into permanent track (Group 9). The track stays; its support
  * metadata and traffic restriction go, for the recorded conversion price. Support still in use by an unfinished
  * project refuses.
@@ -114,6 +141,23 @@ CommandCost CmdSetSpoilReceiverMode(DoCommandFlags flags, IndustryID industry, S
  */
 CommandCost CmdCommissionTBM(DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial);
 
+/**
+ * Confirm the complete portal area quote, preserving its exact new/reused machine decision.
+ * @param flags Estimate/execute policy; both paths revalidate the reviewed quote.
+ * @param portal Owned commissioning housing.
+ * @param model_id Reviewed cutter model.
+ * @param earth_wagons Reviewed separate Earth hopper count.
+ * @param rock_wagons Reviewed separate Rock hopper count.
+ * @param origin Actual owned Surface disposal origin.
+ * @param area_start First explicit rock-floor corner.
+ * @param area_end Opposite floor corner.
+ * @param expected_fingerprint Reviewed geometry, price, participants and reuse identity.
+ * @param intent Reviewed area coverage or exact straight tunnel; part of the synchronized quote.
+ * @return Actual machinery price, or an unchanged refusal; a stale reuse cannot buy a second cutter.
+ */
+CommandCost CmdConfirmTBMCommission(DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons,
+	StationID origin, TileIndex area_start, TileIndex area_end, uint64_t expected_fingerprint, ExcavationPlanIntent intent);
+
 DEF_CMD_TRAIT(Commands::AssignTBMHauler, CmdAssignTBMHauler, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::ReleaseTBMHauler, CmdReleaseTBMHauler, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::SetTBMExchangeBay, CmdSetTBMExchangeBay, CommandFlags{}, CommandType::VehicleManagement)
@@ -121,5 +165,6 @@ DEF_CMD_TRAIT(Commands::ExchangeTBMWagons, CmdExchangeTBMWagons, CommandFlags{},
 DEF_CMD_TRAIT(Commands::SetTBMProjectOrigin, CmdSetTBMProjectOrigin, CommandFlags{}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::SetSpoilReceiverMode, CmdSetSpoilReceiverMode, CommandFlags{}, CommandType::OtherManagement)
 DEF_CMD_TRAIT(Commands::CommissionTBM, CmdCommissionTBM, CommandFlags{}, CommandType::VehicleConstruction)
+DEF_CMD_TRAIT(Commands::ConfirmTBMCommission, CmdConfirmTBMCommission, CommandFlags{}, CommandType::VehicleConstruction)
 
 #endif /* TBM_CMD_H */

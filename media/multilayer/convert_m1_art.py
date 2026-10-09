@@ -3,7 +3,8 @@
 Only crops, native-size resampling and palette conversion are performed here.
 AI image generation/editing remains owned by the built-in image tool. Nothing
 in this converter activates sprites, changes a GRF or touches gameplay code.
-See docs/zz-reach2/upgrades/2026-10/multilayer-m1-art-pass.md.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md.
 """
 
 import argparse
@@ -16,25 +17,35 @@ from PIL import Image, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "docs/zz-reach2/upgrades/2026-10/assets/mlvs"
-OUTPUT = ROOT / "media/multilayer/sprites/m1"
+ASSETS = ROOT / "media/multilayer/source/m1"
+OUTPUT = ROOT / "logs/proofs/mlm/native-art/derived"
+PUBLIC = ROOT / "media/multilayer/contracts/multilayer_sprite_manifest.json"
+REVIEW = ROOT / "logs/proofs/mlm/native-art/authoring"
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(ASSETS.parent.parent / "tools"))
+sys.path.insert(0, str(ROOT / "media/multilayer/tools"))
 from sprite_quantize import load_palette, nearest
 
-PALETTE, FORBIDDEN = load_palette(ROOT / "docs/zz-reach2/upgrades/2026-10/assets/dos_palette.txt")
+PALETTE, FORBIDDEN = load_palette(ROOT / "media/multilayer/palettes/dos_palette.txt")
 FORBIDDEN = FORBIDDEN | {0}
 PALETTE_BYTES = [channel for colour in PALETTE for channel in colour]
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
 
 def digest(path):
-    """Hash retained inputs and derived outputs without modifying them."""
+    """Hash retained inputs and derived outputs without modifying them.
+
+    @param path Existing source or generated artifact whose exact bytes identify it.
+    @return Lowercase SHA256 digest.
+    """
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def repository_path(value):
-    """Resolve a declared path and refuse an output outside this repository."""
+    """Resolve a declared artifact within this source checkout.
+
+    @param value Repository-relative path from the public source/generation contract.
+    @return Canonical contained path; callers still distinguish source from generated output.
+    """
     path = (ROOT / value).resolve()
     if not path.is_relative_to(ROOT):
         raise ValueError(f"asset path leaves the repository: {value}")
@@ -42,7 +53,13 @@ def repository_path(value):
 
 
 def bands(mask, axis, expected):
-    """Find sprite rows/columns from transparent gutters, never guessed cells."""
+    """Find declared sprite rows or columns from transparent source gutters.
+
+    @param mask Authored alpha/occupancy mask.
+    @param axis x for columns or y for rows.
+    @param expected Required cell count from the original generation record.
+    @return Ordered nonempty source intervals; ambiguous gutter coverage is refused.
+    """
     length = mask.height if axis == "y" else mask.width
     found = []
     start = None
@@ -69,7 +86,11 @@ def bands(mask, axis, expected):
 
 
 def source_cells(source):
-    """Keep the original alpha while measuring the existing 8bpp alpha cutoff."""
+    """Extract registered original sprite cells without inventing missing views.
+
+    @param source Immutable source record including path and declared grid.
+    @return Cell matrix and exact source crop boxes.
+    """
     path = repository_path(source["path"])
     image = Image.open(path).convert("RGBA")
     mask = image.getchannel("A").point(lambda value: 255 if value >= 128 else 0)
@@ -91,7 +112,12 @@ def source_cells(source):
 
 
 def quantize(image, cache):
-    """Use the existing deterministic DOS quantizer and reserved-index policy."""
+    """Map original RGB pixels to the permitted DOS palette deterministically.
+
+    @param image Authored RGBA image after declared crop/resampling.
+    @param cache Shared RGB-to-index memo preserving one conversion policy.
+    @return Indexed sprite with transparency and the canonical palette.
+    """
     values = []
     for red, green, blue, alpha in image.get_flattened_data():
         colour = (red, green, blue) if alpha >= 128 else None
@@ -108,7 +134,13 @@ def quantize(image, cache):
 
 
 def fit(image, size, maximum):
-    """Resample into a fixed canvas without stretching or inventing artwork."""
+    """Fit one source cell inside its declared native canvas.
+
+    @param image Original source cell.
+    @param size Native canvas dimensions.
+    @param maximum Maximum visible subject dimensions within that canvas.
+    @return Centered RGBA pose preserving the declared aspect ratio.
+    """
     scale = min(maximum[0] / image.width, maximum[1] / image.height)
     width = max(1, round(image.width * scale))
     height = max(1, round(image.height * scale))
@@ -119,7 +151,11 @@ def fit(image, size, maximum):
 
 
 def terrain(image):
-    """Apply the existing normal-zoom diamond mask to an authored ground cell."""
+    """Apply the existing normal-zoom diamond mask to authored ground.
+
+    @param image Original RGBA ground cell selected by its generation record.
+    @return Native 64x31 terrain preserving alpha inside the established diamond.
+    """
     result = image.resize((64, 31), Image.Resampling.BOX)
     mask = Image.new("L", result.size, 0)
     ImageDraw.Draw(mask).polygon(((31, 0), (63, 15), (31, 30), (0, 15)), fill=255)
@@ -130,7 +166,18 @@ def terrain(image):
 
 
 def atlas(name, asset_id, grid, size, anchor, entries, status, cache):
-    """Pack staged pixels with explicit state/view provenance and fixed anchors."""
+    """Pack staged pixels with explicit state/view provenance and fixed anchors.
+
+    @param name Stable generated atlas basename.
+    @param asset_id Public family identity associated with the source pixels.
+    @param grid Atlas columns and rows.
+    @param size Native canvas dimensions for each pose.
+    @param anchor Existing native draw anchor, unchanged by cache relocation.
+    @param entries Owned pose records carrying the pixels to quantize.
+    @param status Explicit source coverage status, independent of native acceptance.
+    @param cache Shared palette conversion memo.
+    @return Actual path/hash/geometry/pose record for the generated atlas.
+    """
     columns, rows = grid
     sheet = Image.new("P", (columns * size[0], rows * size[1]), 0)
     sheet.putpalette(PALETTE_BYTES)
@@ -147,8 +194,12 @@ def atlas(name, asset_id, grid, size, anchor, entries, status, cache):
             "palette": "dos_8bpp", "transparent_index": 0, "sprites": records}
 
 
-def build():
-    """Convert only declared retained sources; publish no runtime sprite IDs."""
+def build(cache_only=False):
+    """Regenerate staged source atlases from preserved original artwork.
+
+    @param cache_only Keep public source/provenance declarations unchanged when rebuilding ignored products.
+    @return Actual source-conversion report; native runtime acceptance remains separate.
+    """
     document = json.loads((ASSETS / "generation-record.json").read_text(encoding="utf-8"))
     sources = {source["key"]: source for source in document["sources"]}
     cells = {}
@@ -218,23 +269,30 @@ def build():
                    for row, state in enumerate(states) for column in range(4)]
         outputs.append(atlas(name, sources[key]["asset_id"], (4, len(states)), size, (-31, -33),
                              entries, "candidate_geometry_and_front_back_slicing_pending", cache))
-    report = {"schema_version": 1, "date": document["date"], "runtime_activated": False,
+    report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; deterministic source-conversion cache", "schema_version": 1, "date": document["date"], "runtime_activated": False,
               "source_record": (ASSETS / "generation-record.json").relative_to(ROOT).as_posix(),
               "pose_count": sum(len(output["sprites"]) for output in outputs), "atlases": outputs,
               "notes": ["Vehicle frame 0 only; missing animation frames are not duplicated.",
                         "Earth hopper NE/SW share the same correctly angled symmetrical-wagon source view.",
                         "Whole building candidates are not packed per-tile front/back sprites.",
                         "Cargo GRF identity and native Action5 offsets remain unchanged."]}
-    (ASSETS / "generation-record.json").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+    if not cache_only:
+        (ASSETS / "generation-record.json").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
     (OUTPUT / "atlas-manifest.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    make_review(outputs)
-    bind_manifest(document, report)
+    if not cache_only:
+        make_review(outputs)
+        bind_manifest(document, report)
     return report
 
 
 def bind_manifest(document, report):
-    """Replace planned source references without claiming packing or acceptance."""
-    path = ASSETS.parent / "multilayer_sprite_manifest.json"
+    """Bind authored source references without claiming native runtime acceptance.
+
+    @param document Original generation record and immutable source identities.
+    @param report Actual derived atlas/pose coverage.
+    @return None; explicitly publish source metadata through the single public manifest.
+    """
+    path = PUBLIC
     manifest = json.loads(path.read_text(encoding="utf-8"))
     sources = document["sources"]
     for output in report["atlases"]:
@@ -258,13 +316,18 @@ def bind_manifest(document, report):
                             "runtime_activated": False, "coverage_complete": complete_icon}
         # Keep the original planned offsets and null packed-payload hashes.
     manifest["authoring_pass"] = {"date": report["date"], "scope": "Plans 1-5 partial source authoring",
-                                  "record": "docs/zz-reach2/upgrades/2026-10/multilayer-m1-art-pass.md",
+                                  "record": "docs/zz-reach2/upgrades/2026-10/graphics/multilayer-m1-art-pass.md",
                                   "runtime_activated": False}
     path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
 
 def make_review(outputs):
-    """Show every converted pose at 4x nearest-neighbour scale for inspection."""
+    """Arrange converted source poses for inspection without changing their pixels.
+
+    @param outputs Actual generated atlas records with declared pose geometry.
+    @return None; write generated source review boards under the proof cache.
+    """
+    REVIEW.mkdir(parents=True, exist_ok=True)
     tiles = []
     for output in outputs:
         sprite = Image.open(ROOT / output["path"]).convert("RGBA")
@@ -279,7 +342,7 @@ def make_review(outputs):
         draw.text((12, y), label, fill="white")
         review.paste(image, (12, y + 20), image)
         y += image.height + 36
-    review.save(ASSETS / "native-review.png")
+    review.save(REVIEW / "native-review.png")
     # A compact selection remains legible in an ordinary image viewer. The full
     # gallery above retains all poses for detailed source/heading inspection.
     selected = []
@@ -304,11 +367,14 @@ def make_review(outputs):
         draw.text((12, y), label, fill="white")
         compact.paste(image, (12, y + 20), image)
         y += image.height + 36
-    compact.save(ASSETS / "summary-preview.png")
+    compact.save(REVIEW / "summary-preview.png")
 
 
 def check():
-    """Refuse missing/changed originals, wrong dimensions and reserved colors."""
+    """Refuse changed originals, missing poses, wrong dimensions and reserved colors.
+
+    @return None; failures identify the actual source or derived artifact.
+    """
     report = json.loads((OUTPUT / "atlas-manifest.json").read_text(encoding="utf-8"))
     sources = json.loads((ASSETS / "generation-record.json").read_text(encoding="utf-8"))["sources"]
     for source in sources:

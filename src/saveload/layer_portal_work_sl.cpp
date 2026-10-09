@@ -14,6 +14,7 @@
 #include "../excavation_state.h"
 #include "../multilayer_state.h"
 #include "../fios.h"
+#include "../depot_base.h"
 
 #include "../safeguards.h"
 
@@ -134,6 +135,10 @@ struct LPWHChunkHandler : ChunkHandler {
 				if (!IsLayerPortalTile(tile)) continue;
 				const auto key = GetLayerPortalPairKey(tile);
 				if (!key) SlErrorCorrupt("Invalid portal work topology");
+				if (IsLayerPortalHangarTile(tile)) {
+					const Depot *depot = Depot::GetIfValid(GetLayerPortalHangarDepotIndex(tile));
+					if (IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) || *key != tile || depot == nullptr || depot->xy != tile) SlErrorCorrupt("Missing portal hangar depot");
+				}
 				if (*key != tile) continue;
 				if (present) {
 					if (std::ranges::find(records, *key, &LayerPortalWorkRecord::pair_key) == records.end()) SlErrorCorrupt("Missing native portal work record");

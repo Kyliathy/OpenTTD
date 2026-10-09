@@ -173,7 +173,7 @@ def derive():
     @throws ValueError If public geometry or immutable source coverage disagrees.
     """
     document = json.loads(RECORD.read_text(encoding="utf-8"))
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     components = {row["key"]: indicator(row) for row in document["components"]}
     identities = [row["asset_id"] for row in document["families"]]
@@ -253,11 +253,13 @@ def publish(report, files):
     @param files Deterministic encoded native atlas bytes indexed by output path.
     @return None; write repository artifacts without activating runtime payloads.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, encoded in files.items():
         path.write_bytes(encoded)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     source_rows = {row["asset_id"]: row for row in json.loads(RECORD.read_text(encoding="utf-8"))["families"]}
-    public_path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    public_path = base.PUBLIC
     public = json.loads(public_path.read_text(encoding="utf-8"))
     # Source hashes/counts are published beside untouched packing identities;
     # native runtime and actual payload loading remain their later checkpoints.
@@ -308,8 +310,8 @@ def make_review(atlas, source):
         y = state_index * (canvas_size[1] * 3 + 32)
         draw.text((12, y + 6), atlas["asset_id"] + " " + state + " | " + "/".join(source["directions"]) + " | 4 authored display phases; runtime pending", fill="white")
         review.paste(frames[0], (12, y + 24))
-        frames[0].save(base.ASSETS / (source["key"] + "-" + state + "-review.gif"), save_all=True, append_images=frames[1:], duration=240, loop=0, optimize=False)
-    review.save(base.ASSETS / (source["key"] + "-details-review.png"))
+        frames[0].save(base.REVIEW / (source["key"] + "-" + state + "-review.gif"), save_all=True, append_images=frames[1:], duration=240, loop=0, optimize=False)
+    review.save(base.REVIEW / (source["key"] + "-details-review.png"))
 
 
 def check(report, files, asset_id=None):
@@ -321,7 +323,7 @@ def check(report, files, asset_id=None):
     @return None; print source handoff evidence or reject stale/invalid artifacts.
     """
     retained = json.loads(REPORT.read_text(encoding="utf-8"))
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     checked = []
     for atlas in report["atlases"]:
         if asset_id is not None and atlas["asset_id"] != asset_id:

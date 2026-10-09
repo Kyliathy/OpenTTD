@@ -171,7 +171,7 @@ TEST_CASE("Changing either viewport layer visibly cancels an unfinished undergro
 		SetViewportLayer(view, MapLayer::DeepUnderground);
 		CHECK(_thd.place_mode == HT_NONE);
 		CHECK_FALSE(tools->IsWidgetLowered(WID_UC_SURVEY));
-		CHECK(tools->GetWidgetString(WID_UC_STATUS, STR_UNDERGROUND_SELECT_TOOL).find("Select a tool") != std::string::npos);
+		CHECK(tools->GetWidgetString(WID_UC_STATUS, STR_UNDERGROUND_SELECT_TOOL) == GetString(STR_UNDERGROUND_SELECT_TOOL));
 		CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
 	}
 	CHECK(main->viewport->layer == MapLayer::DeepUnderground);

@@ -34,7 +34,7 @@ def derive():
         if base.digest(base.repository_path(reference["path"])) != reference["sha256"]:
             raise ValueError("locked purchase reference changed")
     cells, boxes = base.source_cells(locked)
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     outputs, files, cache = [], {}, {}
     # The five existing model identities keep their exact available previews.
@@ -82,10 +82,12 @@ def publish(report, files):
     @param files Encoded deterministic native atlas bytes by repository path.
     @return None; write source-stage artifacts without activating gameplay sprites.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, encoded in files.items():
         path.write_bytes(encoded)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    manifest_path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    manifest_path = base.PUBLIC
     public = json.loads(manifest_path.read_text(encoding="utf-8"))
     record = json.loads(RECORD.read_text(encoding="utf-8"))
     locked = record["locked_source"]
@@ -112,7 +114,7 @@ def publish(report, files):
         review.paste(image, (left, 65), image)
         large = image.resize((160, 80), Image.Resampling.NEAREST)
         review.paste(large, (left, 105), large)
-    review.save(base.ASSETS / "purchase-details-review.png")
+    review.save(base.REVIEW / "purchase-details-review.png")
 
 
 def check(report, files):

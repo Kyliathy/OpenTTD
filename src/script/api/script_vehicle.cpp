@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file script_vehicle.cpp Implementation of ScriptVehicle. */
+/**
+ * @file script_vehicle.cpp Implementation of ScriptVehicle and synchronized native TBM hangar orders.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+ * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md
+ */
 
 #include "../../stdafx.h"
 #include "script_engine.hpp"
@@ -24,6 +28,7 @@
 #include "../../roadveh_cmd.h"
 #include "../../train_cmd.h"
 #include "../../vehicle_cmd.h"
+#include "../../tbm_cmd.h"
 
 #include "table/strings.h"
 
@@ -217,6 +222,15 @@
 	EnforcePrecondition(false, IsPrimaryVehicle(vehicle_id));
 
 	return ScriptObject::Command<Commands::SendVehicleToDepot>::Do(vehicle_id, DepotCommandFlag::Service, {});
+}
+
+/** @copydoc ScriptVehicle::SendTBMToHangar */
+/* static */ bool ScriptVehicle::SendTBMToHangar(VehicleID vehicle_id, TileIndex destination, bool service)
+{
+	EnforceCompanyModeValid(false);
+	EnforcePrecondition(false, IsPrimaryVehicle(vehicle_id));
+	EnforcePrecondition(false, ScriptMap::IsValidTile(destination));
+	return ScriptObject::Command<Commands::SendTBMToHangar>::Do(vehicle_id, destination, service);
 }
 
 /* static */ bool ScriptVehicle::IsInDepot(VehicleID vehicle_id)

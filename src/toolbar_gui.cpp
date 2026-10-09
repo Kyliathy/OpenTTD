@@ -11,6 +11,7 @@
 #include "core/geometry_func.hpp"
 #include "gui.h"
 #include "spritecache.h"
+#include "multilayer_sprite.h"
 #include "window_gui.h"
 #include "window_func.h"
 #include "viewport_func.h"
@@ -1055,7 +1056,8 @@ static void UpdateAirportConstructionEntry(Window *w)
 	if (viewport == nullptr) return;
 	const bool underground = IsUndergroundConstructionLayer(viewport->layer);
 	auto *widget = w->GetWidget<NWidgetCore>(WID_TN_AIR);
-	widget->SetSprite(underground ? SPR_IMG_BUILDRAIL : SPR_IMG_BUILDAIR);
+	widget->SetSprite(underground ? GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlExcavation,
+		w->IsWidgetDisabled(WID_TN_AIR), w->IsWidgetLowered(WID_TN_AIR)).value_or(SPR_IMG_DYNAMITE) : SPR_IMG_BUILDAIR);
 	widget->SetToolTip(underground ? STR_UNDERGROUND_MENU : STR_TOOLBAR_TOOLTIP_BUILD_AIRPORTS);
 }
 
@@ -1066,7 +1068,8 @@ static CallBackFunction ToolbarBuildAirClick(Window *w)
 	const MapLayer layer = GetMainWindow()->viewport->layer;
 	// Capture the rock plane in the menu result so a later camera switch cannot change which toolbar opens.
 	const int selection = IsUndergroundConstructionLayer(layer) ? 100 + to_underlying(layer) : 0;
-	list.push_back(MakeDropDownListIconItem(IsUndergroundConstructionLayer(layer) ? SPR_IMG_BUILDRAIL : SPR_IMG_AIRPORT,
+	list.push_back(MakeDropDownListIconItem(IsUndergroundConstructionLayer(layer) ?
+		GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlExcavation, false, false).value_or(SPR_IMG_DYNAMITE) : SPR_IMG_AIRPORT,
 		PAL_NONE, IsUndergroundConstructionLayer(layer) ? STR_UNDERGROUND_MENU : STR_AIRCRAFT_MENU_AIRPORT_CONSTRUCTION, selection));
 	ShowDropDownList(w, std::move(list), selection, WID_TN_AIR, 140, GetToolbarDropDownOptions());
 	return CallBackFunction::None;
@@ -2562,7 +2565,9 @@ struct ScenarioEditorToolbarWindow : Window {
 	void OnPaint() override
 	{
 		const bool underground = IsUndergroundConstructionLayer(GetMainWindow()->viewport->layer);
-		this->GetWidget<NWidgetCore>(WID_TE_INDUSTRY)->SetSprite(underground ? SPR_IMG_BUILDRAIL : SPR_IMG_INDUSTRY);
+		this->GetWidget<NWidgetCore>(WID_TE_INDUSTRY)->SetSprite(underground ?
+			GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlExcavation, this->IsWidgetDisabled(WID_TE_INDUSTRY),
+				this->IsWidgetLowered(WID_TE_INDUSTRY)).value_or(SPR_IMG_DYNAMITE) : SPR_IMG_INDUSTRY);
 		this->GetWidget<NWidgetCore>(WID_TE_INDUSTRY)->SetToolTip(underground ? STR_UNDERGROUND_MENU : STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP);
 		this->SetWidgetDisabledState(WID_TE_DATE_BACKWARD, _settings_game.game_creation.starting_year <= CalendarTime::MIN_YEAR);
 		this->SetWidgetDisabledState(WID_TE_DATE_FORWARD, _settings_game.game_creation.starting_year >= CalendarTime::MAX_YEAR);

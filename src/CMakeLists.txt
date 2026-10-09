@@ -324,13 +324,22 @@ add_files(
     geothermal_utility.h
     geothermal_utility_cmd.h
     geothermal_utility.cpp
+    # Actual commissioned-riser admission: r2mlvs17-geothermal-energy-and-industry.md Group5B.
+    geothermal_riser.h
+    geothermal_riser.cpp
+    # Native project presentation: r2tbmf-tbm-fixes.md Group2.
+    tbm_gui.h
+    tbm_projects_gui.cpp
     tbm_acquisition.cpp
     tbm_area.cpp
     tbm_commission.cpp
     tbm_cmd.h
+    tbm_replanning.h
     tbm_area_preview.h
     tbm_controls.h
     tbm_controls.cpp
+    tbm_hangar.h
+    tbm_hangar.cpp
     tbm_exchange.h
     tbm_exchange.cpp
     spoil_receiver.h
@@ -341,6 +350,7 @@ add_files(
     geology.cpp
     geology_digest.cpp
     geology_generation.cpp
+    geology_hardness.cpp
     geology_state.cpp
     geothermal_geology.cpp
     excavation_state.h

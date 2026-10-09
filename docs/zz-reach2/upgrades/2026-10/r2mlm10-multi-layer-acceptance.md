@@ -43,6 +43,8 @@
 | [docs/zz-reach2/architecture/desync/archi-desync.md](../../architecture/desync/archi-desync.md) | 368-376 | `## Invariants`: same command stream, same RNG draws, no GUI-only state in the simulation. The multiplayer tests check exactly these with layers in play. |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 431-442 | `## Invariants a change must not break`: older saves keep loading, version enum order, chunk order. The savegame matrix checks them. |
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 - Evidence that the epic holds in multiplayer, across the savegame matrix, at acceptable performance and memory, and in the existing regression suite.
@@ -85,7 +87,7 @@ _Applies to Group 2._
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [docs/zz-reach2/architecture/savegame/archi-savegame.md](../../architecture/savegame/archi-savegame.md) | 290-322 | `## Load sequence`: `DoLoad`, `LoadCheck`, old TTO / TTD files through `LoadOldSaveGame`, then `AfterLoadGame`. Each matrix row exercises one path. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6. |
+| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6. |
 
 ### Group 2 - Savegame matrix
 
@@ -169,7 +171,7 @@ _Applies to Groups 5-6._
 | I-3 | Passing `Layer portal neighbour mapping and relocation` and `Layer portal kinds and pairs`; road/train movement uses `GetLayerPortalNextTile`. R2MLM13 Group 9C records actual connected-station train round trips | Full road/rail, queue and multi-year traffic matrices are operator skips; short train smoke is not a full traffic pass |
 | I-4 | Source audit: view state does not enter commands, ticks or simulation RNG. R2MLM1 Group 7B reads the layer only to normalise GUI VIEW metadata; actual main/editor switching and camera round trips pass | Multiplayer layer switching/join validation is skipped in Group 1; no desync pass is inferred from offline checks |
 | I-5 | Passing `Map::Allocate layer count`, `IterateLayer and RandomTileInLayer` and migrated spatial-helper tests; storage chunks contain four planes | Large-map memory/performance measurements are skipped in Groups 2/3 |
-| I-6 | All ten Surface chunk prefixes for both seeds (1234, 98765) and both sizes (256x256, 512x1024) match the immutable pre-epic reference; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt), R2RVM2 task 18.1 | None for the recorded generation fixtures |
+| I-6 | All ten Surface chunk prefixes for both seeds (1234, 98765) and both sizes (256x256, 512x1024) match the immutable pre-epic reference; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1 | None for the recorded generation fixtures |
 | I-7 | All four pre-epic saves upgrade to version 370 and round-trip all ten complete map chunks. R2MLM1 Group 7B verifies new games and the supplied portal/station fixture. R2MLM12 task 3.6 verifies authentic version-369 to 370 upgrade. Legacy TTD plays 31 Debug days and round-trips four planes (R2RVM2 Group 18B) | Autosave/in-shaft waits, editor-to-game and large-map rows are operator skips. Actual TTO custom-name failure reproduces pre-epic and is an explicit compatibility gap, not a pass |
 | I-8 | Passing `Layer portal neighbour mapping and relocation` and `Layer portal kinds and pairs` cover opposite shafts and supported layer pairs; the actual supplied-save inventory lists paired ends | Full occupied/reserved removal/conversion scenarios remain operator skips |
 

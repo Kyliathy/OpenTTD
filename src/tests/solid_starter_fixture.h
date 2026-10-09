@@ -10,7 +10,7 @@
  * train is a pool-owned placeholder for the Commissioning binding only; it is not a TBM, and no actual wagons exist.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 14B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  */
 
 #ifndef TESTS_SOLID_STARTER_FIXTURE_H

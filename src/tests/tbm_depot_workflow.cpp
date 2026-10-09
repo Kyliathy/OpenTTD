@@ -16,6 +16,7 @@
 #include "layer_window_fixture.h"
 #include "underground_depot_fixture.h"
 #include "../tbm_area_preview.h"
+#include "../vehicle_cmd.h"
 
 #include "../safeguards.h"
 
@@ -135,8 +136,14 @@ TEST_CASE("A withdrawn native machine recommissions unchanged for an actual depo
 	CHECK(Company::Get(_current_company)->money == money);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
 	CHECK(ComputeTBMProjectDigest() == projects);
-	workflow.Do<Commands::CommissionTBM>(workflow.world.portal, workflow.first.model_id, consist.earth_wagons, consist.rock_wagons,
-		workflow.world.origin->index, workflow.world.site, end, false);
+	// Confirmation is bound to the reviewed original machine and price; an
+	// altered token must refuse without acquiring any replacement parts.
+	CHECK(Command<Commands::ConfirmTBMCommission>::Do(DoCommandFlag::Execute, workflow.world.portal, workflow.first.model_id,
+		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, workflow.world.site, end, quote.fingerprint ^ uint64_t{1}, ExcavationPlanIntent::Area).Failed());
+	CHECK(Vehicle::GetNumItems() == vehicles);
+	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
+	workflow.Do<Commands::ConfirmTBMCommission>(workflow.world.portal, workflow.first.model_id, consist.earth_wagons, consist.rock_wagons,
+		workflow.world.origin->index, workflow.world.site, end, quote.fingerprint, ExcavationPlanIntent::Area);
 	const auto assigned = CaptureTBMProjects();
 	REQUIRE(assigned.size() == 1);
 	CHECK(assigned.front().cutter == workflow.first.cutter);
@@ -155,4 +162,33 @@ TEST_CASE("A withdrawn native machine recommissions unchanged for an actual depo
 	CHECK(GetTBMExchangeAssignmentForHauler(workflow.world.hauler->index)->bay == workflow.depot);
 	CHECK(Command<Commands::CommissionTBM>::Do(DoCommandFlag::Execute, workflow.world.portal, workflow.first.model_id,
 		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, workflow.world.site, end, false).Failed());
+}
+
+/** Selling a reviewed reuse candidate must invalidate its quote before another machine can be purchased. */
+TEST_CASE("A retired TBM quote cannot silently buy a replacement after sale", "[tbm-planning-command]")
+{
+	MockEnvironment::Instance();
+	LoadGeneratedWindowTestLanguage();
+	UndergroundDepotWorkflow workflow;
+	workflow.Prepare();
+	const auto consist = GetDefaultTBMConsist(MapLayer::Underground);
+	const TileIndex end = TileAddWrap(workflow.world.site, 2, 18);
+	const auto quote = PreviewTBMCommissionArea(_current_company, workflow.world.portal, workflow.first.model_id,
+		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, workflow.world.site, end, false);
+	REQUIRE(quote.purchase.Succeeded());
+	REQUIRE(quote.request.reuse_cutter == workflow.first.cutter);
+	workflow.Do<Commands::SellVehicle>(workflow.first.cutter, true, false, ClientID::Invalid);
+	// Removing the stored machine can also invalidate the portal's admission.
+	// Either current admission or the fingerprint must refuse the old quote;
+	// a test must not require the portal to become a valid fresh purchase site.
+	const auto money = Company::Get(_current_company)->money;
+	const auto vehicles = Vehicle::GetNumItems();
+	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
+	const auto projects = ComputeTBMProjectDigest();
+	CHECK(Command<Commands::ConfirmTBMCommission>::Do(DoCommandFlag::Execute, workflow.world.portal, workflow.first.model_id,
+		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, workflow.world.site, end, quote.fingerprint, ExcavationPlanIntent::Area).Failed());
+	CHECK(Company::Get(_current_company)->money == money);
+	CHECK(Vehicle::GetNumItems() == vehicles);
+	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
+	CHECK(ComputeTBMProjectDigest() == projects);
 }

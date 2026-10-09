@@ -38,36 +38,39 @@ static void StageTerrainCell(TileIndex tile, ExcavationState state)
 	AcceptLoadedGeologyState();
 }
 
-/** Real independent rock layers select static phases and screen-ordered neighbor rims without advancing work. */
+/** Real independent rock layers select material phases and screen-ordered neighbor walls without advancing work. */
 TEST_CASE("M1 terrain uses authoritative states and bounded screen edge masks", "[m1-terrain-portal]")
 {
 	ExcavationFixture world;
 	const TileIndex tile = TileXYL(20, 20, MapLayer::Underground);
 	const TileIndex deep = MultiLayerMap::TileInLayer(tile, MapLayer::DeepUnderground);
-	const auto texture = GetMultiLayerTerrainTexture(20, 20);
-	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainUnderground, {0, texture, 0, 0, 0}));
-	CHECK(GetMultiLayerTerrainSprite(deep) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainDeep, {0, texture, 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {0, 0, 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(deep) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {8, 0, 0, 0, 0}));
 	CHECK_FALSE(GetMultiLayerTerrainSprite(MultiLayerMap::TileInLayer(tile, MapLayer::Surface)).has_value());
 	CHECK_FALSE(GetMultiLayerTerrainSprite(INVALID_TILE).has_value());
 	// Only this fixture's generation/load owner stages exact geological cell
 	// conditions. The production sprite query receives no terrain-write access.
 	StageTerrainCell(tile, ExcavationState::Excavated);
-	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainEdgesUnderground, {15, 0, 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {3, 0, 0, 0, 0}));
 	static constexpr std::array<TileIndexDiffC, 4> neighbors{{{0, -1}, {-1, 0}, {0, 1}, {1, 0}}};
-	uint8_t mask = 15;
 	// Opening each true same-layer neighbor removes exactly its authored screen
 	// rim; aligned Deep tiles must remain solid throughout this surface-plane scene.
 	for (size_t bit = 0; bit < neighbors.size(); ++bit) {
 		const auto delta = neighbors[bit];
 		const TileIndex adjacent = TileAddWrap(tile, delta.x, delta.y);
 		StageTerrainCell(adjacent, ExcavationState::Excavated);
-		mask &= static_cast<uint8_t>(~(1U << bit));
-		if (mask != 0) CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainEdgesUnderground, {mask, 0, 0, 0, 0}));
-		CHECK(GetMultiLayerTerrainSprite(deep) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainDeep, {0, texture, 0, 0, 0}));
+		const auto walls = GetMultiLayerTerrainEdgeSprites(tile);
+		// Opening a neighbor removes only that exposed face; all remaining
+		// walls retain the uncut neighbor's canonical hardness and orientation.
+		for (size_t side = 0; side < walls.size(); ++side) {
+			if (side <= bit) CHECK_FALSE(walls[side].has_value());
+			else CHECK(walls[side] == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardnessEdges, {static_cast<uint8_t>(side), 0, 0, 0, 0}));
+		}
+		CHECK(GetMultiLayerTerrainSprite(deep) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {8, 0, 0, 0, 0}));
 	}
-	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainUnderground, {3, texture, 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {3, 0, 0, 0, 0}));
 	StageTerrainCell(tile, ExcavationState::Solid);
-	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainUnderground, {1, texture, 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(tile) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {1, 0, 0, 0, 0}));
 	CHECK(GetGeologyWorldState().terrain.Get(tile) == ExcavationState::Solid);
 	CHECK(GetGeologyWorldState().terrain.Get(deep) == ExcavationState::Solid);
 }
@@ -80,8 +83,7 @@ TEST_CASE("M1 work ground and commissioning portal read the actual project owner
 	const auto job = *GetExcavationJob(project.job);
 	const TileIndex cell = job.route.front().cutter_position;
 	REQUIRE(GetGeologyWorldState().terrain.Get(cell) == ExcavationState::Excavating);
-	CHECK(GetMultiLayerTerrainSprite(cell) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainUnderground,
-		{2, GetMultiLayerTerrainTexture(TileX(cell), TilePlaneY(cell)), 0, 0, 0}));
+	CHECK(GetMultiLayerTerrainSprite(cell) == GetMultiLayerSprite(MultiLayerSpriteAsset::TerrainHardness, {2, 0, 0, 0, 0}));
 	const TileIndex upper = rig.fixture.request.portal;
 	const uint8_t door = static_cast<uint8_t>(GetLayerPortalDoorDirection(upper));
 	REQUIRE(GetLayerPortalWorkState(upper) == LayerPortalWorkState::Commissioning);

@@ -1,0 +1,6 @@
+Filters: [.utility-power-effect-file]
+UTILITY_TOWN_BASELINE rate=11269
+UTILITY_TOWN_FILE case=create actual_town=true metered_use=true
+===============================================================================
+All tests passed (34 assertions in 1 test case)
+

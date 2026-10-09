@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../console_internal.h"
@@ -49,10 +50,10 @@ static bool ObserveFacilityArt(std::span<std::string_view> arguments)
 /** A real depot build on already paid-open ground must render all four native entrances without any render-time gameplay change. */
 TEST_CASE("M1 road service gallery uses actual commands on the completed paid excavation", "[.m1-facility-art]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto source = root / "src/tests/fixtures/haulage/m1-loop-underground-5-complete-loop.sav";
-	const auto config = root / "build/native-art.cfg";
-	const auto reviews = root / "docs/zz-reach2/upgrades/2026-10/assets/reviews";
+	const auto root = FindTestRepositoryRoot();
+	const auto source = ResolveTestInputPath(root / "src/tests/fixtures/haulage/spoil-loop-underground/m1-loop-underground-5-complete-loop.sav");
+	const auto config = GetTestRuntimeConfig();
+	const auto reviews = GetTestArtifactPaths("facilities", "service-depots").images;
 	REQUIRE(std::filesystem::exists(source));
 	REQUIRE(std::filesystem::exists(config));
 	bool observed = false;

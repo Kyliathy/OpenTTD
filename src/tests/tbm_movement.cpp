@@ -13,11 +13,12 @@
  * real trains, from the rig's project or one commissioned through the player's command ([tbm-loop]). Only the trains'
  * own ticks move them, through the game's vehicle step in the loop and whole-life tests; the TBM controller and the
  * hauler cycle run inside them. A Commissioning pair shows its track to the project's own trains only.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md, decisions 1-7
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-m-movement-design.md, decisions 1-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8 and 11 (paid support and bend reload)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4; physical travel holds and lost-target recovery.
  */
 
 #include "../stdafx.h"
@@ -27,6 +28,7 @@
 #include "../vehicle_cmd.h"
 #include "../track_func.h"
 #include "../signal_func.h"
+#include "../pathfinder/yapf/yapf_cache.h"
 #include "../town_kdtree.h"
 #include "../tbm_controls.h"
 #include "../table/strings.h"
@@ -177,6 +179,167 @@ public:
 		return true;
 	}
 };
+
+/** @param front Actual attached train. @return Every permanent/wagon pose, excluding speed so braking to a safe hold does not imply movement. */
+static auto CaptureTBMMovementPositions(const Train *front)
+{
+	std::vector<std::tuple<VehicleID, TileIndex, TrackBits, int, int, int, Direction>> positions;
+	// All attached parts must stay put when work travel is paused or unsafe;
+	// checking only the head would miss wagons rolling out of a magazine.
+	for (const Train *part = front; part != nullptr; part = part->Next()) {
+		positions.emplace_back(part->index, part->tile, part->track, part->x_pos, part->y_pos, part->z_pos, part->direction);
+	}
+	return positions;
+}
+
+/** Restore an explicitly injected fault on an unoccupied paid target, even when a physical assertion fails. */
+class TBMTargetTrackFault {
+	TileIndex tile; ///< Real vacated target whose native railway fields are changed for recovery characterization.
+	TrackBits tracks; ///< Actual laid pieces to restore after the temporary fault.
+	RailType railtype; ///< Actual compatible rail type before the fault.
+	Owner owner; ///< Actual project company before the fault.
+public:
+	/** @param tile Real plain-rail target; no train part is moved or edited by this scope. */
+	explicit TBMTargetTrackFault(TileIndex tile) : tile(tile), tracks(GetTrackBits(tile)), railtype(GetRailType(tile)), owner(GetTileOwner(tile)) {}
+	/** Restore only the injected infrastructure fields and invalidate derived pathfinder data. */
+	~TBMTargetTrackFault()
+	{
+		SetTrackBits(this->tile, this->tracks);
+		SetRailType(this->tile, this->railtype);
+		SetTileOwner(this->tile, this->owner);
+		YapfNotifyTrackLayoutChange(this->tile, Track::Invalid);
+	}
+};
+
+/** A project pause issued during real travel must hold every actual part and resume the same route. */
+TEST_CASE("Pausing a travelling TBM freezes the whole real consist", "[tbm-travel-hold]")
+{
+	PathfinderDefaults pathfinder;
+	TBMMovementRig rig(5);
+	rig.Start();
+	/** @return Whether the actual train has left storage and is moving toward its first face. */
+	const auto travelling = [&] { return rig.Project().phase == TBMPhase::TravelToFace && !rig.IsWhollyInMagazine() && rig.front->cur_speed != 0; };
+	rig.Drive(travelling);
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Pause).Succeeded());
+	const auto positions = CaptureTBMMovementPositions(rig.front);
+	const auto job = rig.Job();
+	const auto packets = GetTBMPacketOwners(rig.front);
+	rig.Run(64);
+	CHECK(CaptureTBMMovementPositions(rig.front) == positions);
+	CHECK(rig.front->cur_speed == 0);
+	CHECK(rig.Project().blocked == TBMBlockedReason::Paused);
+	CHECK(rig.Job() == job);
+	CHECK(GetTBMPacketOwners(rig.front) == packets);
+	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Resume).Succeeded());
+	/** @return Whether ordinary native motion has reached the unchanged accepted face after the player's resume. */
+	const auto arrived = [&] { return rig.Project().phase == TBMPhase::Bore; };
+	rig.Drive(arrived);
+	CHECK(rig.front->tile == rig.rock_end);
+}
+
+/** Missing or incompatible target infrastructure must hold travel visibly and recover without moving a train by hand. */
+TEST_CASE("A TBM waits for its actual paid target to become usable again", "[tbm-travel-hold]")
+{
+	PathfinderDefaults pathfinder;
+	TBMMovementRig rig(5);
+	rig.Start();
+	/** @return Whether the first cut is genuinely paid but its new target has not yet been entered by the moving head. */
+	const auto advancing = [&] { return rig.Project().phase == TBMPhase::AdvanceSupport && rig.Job().cursor == 1 && rig.front->tile != rig.Job().route.front().cutter_position; };
+	rig.Drive(advancing);
+	const TileIndex target = rig.Job().route.front().cutter_position;
+	REQUIRE(IsPlainRailTile(target));
+	for (const Train *part = rig.front; part != nullptr; part = part->Next()) REQUIRE(part->tile != target); // Fault injection may not alter track beneath any part.
+	const auto positions = CaptureTBMMovementPositions(rig.front);
+	const auto job = rig.Job();
+	const auto packets = GetTBMPacketOwners(rig.front);
+	{
+		TBMTargetTrackFault restore(target);
+		SECTION("missing laid piece") { SetTrackBits(target, {}); }
+		SECTION("foreign track owner") { SetTileOwner(target, OWNER_TOWN); }
+		SECTION("incompatible rail technology") { SetRailType(target, RAILTYPE_MAGLEV); }
+		YapfNotifyTrackLayoutChange(target, Track::Invalid);
+		CHECK_FALSE(GetTBMCutterSteeringTarget(*rig.front).has_value());
+		rig.Run(32);
+		CHECK(CaptureTBMMovementPositions(rig.front) == positions);
+		CHECK(rig.front->cur_speed == 0);
+		CHECK(rig.Project().blocked == TBMBlockedReason::MissingSupport);
+		CHECK(rig.Job() == job);
+		CHECK(GetTBMPacketOwners(rig.front) == packets);
+	}
+	/** @return Whether the normal controller recognizes restored support and physically arrives without a progress reset. */
+	const auto recovered = [&] { return rig.Project().phase == TBMPhase::Bore && rig.Project().blocked == TBMBlockedReason::None; };
+	rig.Drive(recovered);
+	CHECK(rig.front->tile == target);
+	CHECK(rig.Job().cursor == job.cursor);
+}
+
+/** An actual depot order interrupts a partial face safely and rejoins it by physical movement with the same work and cargo. */
+TEST_CASE("A TBM leaves its work hold for a real depot visit and returns to the face", "[tbm-travel-service]")
+{
+	PathfinderDefaults pathfinder;
+	TBMMovementRig rig(5);
+	const DiagDirection door = GetLayerPortalDoorDirection(rig.source);
+	const TileIndex approach = GetLayerPortalDoorTile(rig.source);
+	const TileIndex beyond = TileAddByDiagDir(approach, door);
+	const TileIndex depot = TileAddByDiagDir(beyond, door);
+	// The service destination is an actual constructed depot reached over
+	// real Surface rail, never a portal tile cast into a depot identity.
+	for (TileIndex tile : {approach, beyond}) REQUIRE(Command<Commands::BuildRail>::Do(DoCommandFlag::Execute, tile, RAILTYPE_RAIL, DiagDirToDiagTrack(door), false).Succeeded());
+	REQUIRE(Command<Commands::BuildRailDepot>::Do(DoCommandFlag::Execute, depot, RAILTYPE_RAIL, ReverseDiagDir(door)).Succeeded());
+	UpdateSignalsInBuffer();
+	rig.Start();
+	const bool loaded = GENERATE(false, true);
+	/** @return Whether native movement has reached the initial face or the next partially worked face with real spoil aboard. */
+	const auto boring = [&] { return rig.Project().phase == TBMPhase::Bore && rig.Job().cursor == (loaded ? 1U : 0U); };
+	rig.Drive(boring);
+	rig.Run(3);
+	const auto job = rig.Job();
+	const TileIndex face = rig.front->tile;
+	REQUIRE(job.partial_work_ticks != 0);
+	const auto packets = GetTBMPacketOwners(rig.front);
+	const auto cutter = rig.front->index;
+	bool halt = false;
+	bool pause = false;
+	SECTION("service and continue") {}
+	SECTION("halt then start from the depot") { halt = true; }
+	SECTION("pause work during service then resume from the depot") { pause = true; halt = true; }
+	const auto flags = halt ? DepotCommandFlags{} : DepotCommandFlags{DepotCommandFlag::Service};
+	REQUIRE(Command<Commands::SendVehicleToDepot>::Do(DoCommandFlag::Execute, cutter, flags, VehicleListIdentifier{}).Succeeded());
+	if (pause) REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Pause).Succeeded());
+	CHECK_FALSE(IsTBMHoldingTrain(*rig.front));
+	/** @return Whether every actual part is in the real depot after its ordinary arrival handling. */
+	const auto stored = [&] {
+		for (const Train *part = rig.front; part != nullptr; part = part->Next()) {
+			if (part->tile != depot || part->track != Track::Depot) return false;
+		}
+		return !rig.front->current_order.IsType(OT_GOTO_DEPOT);
+	};
+	/** @param done Actual physical arrival predicate. Drive native vehicle ticks, including ordinary depot arrival/service callbacks. */
+	const auto drive = [&](const std::function<bool()> &done) {
+		uint ticks = 0;
+		while (!done() && ticks < 20000) {
+			CallVehicleTicks();
+			REQUIRE_FALSE(rig.front->vehstatus.Test(VehState::Crashed));
+			rig.CheckPaidSupport();
+			++ticks;
+		}
+		INFO(rig.Describe());
+		REQUIRE(done());
+	};
+	drive(stored);
+	CHECK(rig.Job() == job);
+	CHECK(GetTBMPacketOwners(rig.front) == packets);
+	if (pause) REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Resume).Succeeded());
+	if (halt) REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, cutter, true).Succeeded());
+	/** @return Whether the original actual cutter has physically returned to its accepted work face. */
+	const auto rejoined = [&] { return rig.front->tile == face && rig.Project().phase == TBMPhase::Bore; };
+	drive(rejoined);
+	CHECK(rig.front->index == cutter);
+	CHECK(rig.Job().id == job.id);
+	CHECK(rig.Job().cursor == job.cursor);
+	CHECK(rig.Job().partial_work_ticks == job.partial_work_ticks);
+	CHECK(GetTBMPacketOwners(rig.front) == packets);
+}
 
 /** The whole route by real movement: out to the face, along the new support, back for each exchange, and out again. */
 TEST_CASE("A started cutter drives to its face, works its route and backs into its magazine", "[tbm-movement]")
@@ -338,8 +501,8 @@ TEST_CASE("Cancelling a consist that straddles the pair takes it back into its m
 	REQUIRE(beyond);
 
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Cancel).Succeeded());
-	CHECK(rig.Job().partial_work_ticks == 0);
-	CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
+	CHECK(rig.Job().partial_work_ticks != 0);
+	CHECK(rig.Project().phase == TBMPhase::ReturnToRelease);
 	if (stop_on_the_way) {
 		// Halfway back the player stops the train: the retreat holds, blocked, and nothing moves until it is started.
 		rig.Drive([&rig] { return rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards) && rig.front->cur_speed > 0; });
@@ -347,7 +510,7 @@ TEST_CASE("Cancelling a consist that straddles the pair takes it back into its m
 		rig.Drive([&rig] { return rig.front->cur_speed == 0; });
 		rig.Run(2);
 		CHECK(rig.Project().blocked == TBMBlockedReason::Stopped);
-		CHECK(rig.Project().phase == TBMPhase::ReturnForExchange);
+		CHECK(rig.Project().phase == TBMPhase::ReturnToRelease);
 		CHECK_FALSE(rig.IsWhollyInMagazine());
 		const auto held = PartPositions(rig.front);
 		rig.Run(200);
@@ -359,7 +522,7 @@ TEST_CASE("Cancelling a consist that straddles the pair takes it back into its m
 	CHECK_FALSE(rig.front->vehicle_flags.Test(VehicleFlag::DrivingBackwards));
 	if (spoil) {
 		// The spoil of the committed cut is still aboard, so the consist waits in its bay for empties before it ends.
-		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::WaitForEmpties; });
+		rig.Drive([&rig] { return rig.Project().phase == TBMPhase::WaitToRelease; });
 		CHECK(TBMExchangeRig::Aboard(rig.front) != 0);
 		for (Train *part = rig.front; part != nullptr; part = part->Next()) part->cargo.Truncate();
 	}
@@ -573,6 +736,7 @@ static std::string DescribeLoad(const Train *train)
 enum class LoopStart : uint8_t {
 	Straight, ///< The rig's own project of three straight cuts, put back to its commissioned state.
 	Bend, ///< The rig's own project on a bend whose spoil overflows one load, put back to its commissioned state.
+	UTurn, ///< A full advancing half-circle whose paid envelope is the only traversable underground floor.
 	Command, ///< A project commissioned through the player's command at a second Sealed pair, on its own planned route.
 };
 
@@ -583,6 +747,8 @@ enum class LoopStart : uint8_t {
 static std::vector<DirDiff> LoopTurns(LoopStart start)
 {
 	if (start == LoopStart::Bend) return {DirDiff::Same, DirDiff::Right45, DirDiff::Right45};
+	if (start == LoopStart::UTurn) return {DirDiff::Same, DirDiff::Same, DirDiff::Same, DirDiff::Right45, DirDiff::Same,
+		DirDiff::Right45, DirDiff::Same, DirDiff::Right45, DirDiff::Same, DirDiff::Right45, DirDiff::Same, DirDiff::Same};
 	return std::vector<DirDiff>(3, DirDiff::Same);
 }
 
@@ -843,6 +1009,70 @@ static void CheckDelivered(const SourceLoop &loop)
 	CHECK(loop.hauler->GetNumOrders() == 1);
 }
 
+/** A valid face target does not authorize a guessed junction branch when the paid path to it is broken. */
+TEST_CASE("A TBM holds at a junction until its actual work route is restored", "[tbm-travel-junction]")
+{
+	SourceLoop loop(LoopStart::Command);
+	/** @param done Actual native state to reach. @param limit Maximum physical ticks; every cargo operation stays with its real owner. */
+	const auto drive = [&](const std::function<bool()> &done, uint limit = 30000) {
+		uint ticks = 0;
+		while (!done() && ticks < limit) {
+			AdvanceSpoilReceiver(*loop.earth);
+			AdvanceSpoilReceiver(*loop.rock);
+			CallVehicleTicks();
+			REQUIRE_FALSE(loop.cutter->vehstatus.Test(VehState::Crashed));
+			REQUIRE_FALSE(loop.hauler->vehstatus.Test(VehState::Crashed));
+			REQUIRE(IsTrainOnItsTiles(loop.cutter));
+			++ticks;
+		}
+		INFO(DescribeProject(loop.Project()) << "\n" << DescribeTrain(loop.cutter));
+		REQUIRE(done());
+	};
+	/** @return Whether the real hauler exchange has sent the actual cutter back toward an already paid face. */
+	const auto resumed = [&] { return loop.Cycle().exchanges != 0 && loop.Project().phase == TBMPhase::TravelToFace && loop.Job().cursor >= 3; };
+	drive(resumed);
+	std::vector<size_t> ends;
+	const auto path = GetTBMWorkRailPath(loop.Job(), loop.Job().cursor, ends);
+	REQUIRE(path.size() >= 4);
+	const TileIndex junction = path[1], gap = path[2];
+	// Fault injection changes only two vacated, already paid pieces. Both real
+	// trains, their cargo and the accepted face target remain where they drove.
+	for (const Train *part : Train::Iterate()) REQUIRE((part->tile != junction && part->tile != gap));
+	const auto job = loop.Job();
+	const auto target = GetTBMCutterSteeringTarget(*loop.cutter);
+	REQUIRE(target.has_value());
+	{
+		TBMTargetTrackFault restore_junction(junction), restore_gap(gap);
+		TrackBits branches = DiagdirReachesTracks(DiagdirBetweenTiles(path[0], junction));
+		branches.Reset(GetTrackBits(junction));
+		REQUIRE(branches.Any());
+		SetTrackBits(junction, GetTrackBits(junction) | TrackBits{FindFirstTrack(branches)});
+		SetTrackBits(gap, {});
+		YapfNotifyTrackLayoutChange(junction, Track::Invalid);
+		YapfNotifyTrackLayoutChange(gap, Track::Invalid);
+		REQUIRE(GetTBMCutterSteeringTarget(*loop.cutter).has_value());
+		CHECK(GetTBMCutterSteeringTarget(*loop.cutter)->tile == target->tile);
+		/** @return Whether native pathfinding has refused the broken route and the controller displays that actual wait. */
+		const auto held = [&] { return loop.cutter->flags.Test(VehicleRailFlag::Stuck) && loop.Project().blocked == TBMBlockedReason::Obstruction; };
+		drive(held);
+		const auto positions = CaptureTBMMovementPositions(loop.cutter);
+		const auto packets = GetTBMPacketOwners(loop.cutter);
+		uint ticks = 0;
+		const uint wait = _settings_game.pf.wait_for_pbs_path * Ticks::DAY_TICKS + 2;
+		/** @return Whether a full ordinary automatic-turnaround interval has elapsed without moving the cutter. */
+		const auto waited = [&] { return ticks++ >= wait; };
+		drive(waited, wait + 2);
+		CHECK(CaptureTBMMovementPositions(loop.cutter) == positions);
+		CHECK(GetTBMPacketOwners(loop.cutter) == packets);
+		CHECK(loop.Job() == job);
+	}
+	/** @return Whether periodic native reservation retry reaches the original paid face after actual track repair. */
+	const auto recovered = [&] { return loop.Project().phase == TBMPhase::Bore && loop.Project().blocked == TBMBlockedReason::None; };
+	drive(recovered);
+	CHECK(loop.cutter->tile == target->tile);
+	CHECK(loop.Job().cursor == job.cursor);
+}
+
 /**
  * The source loop with both trains driving themselves: one order to the origin carries every load of the route, every
  * transition keeps the Earth/Rock ledger whole, and every committed tonne reaches a receiver (Plan 5 13.1).
@@ -864,6 +1094,60 @@ TEST_CASE("A cutter bores on with the empties of a mid-route exchange", "[tbm-lo
 	REQUIRE(loop.Job().pass_terms->exchange_after.size() >= 2);
 	loop.Run();
 	CheckDelivered(loop);
+}
+
+/** Every real part takes an advancing half-circle and backs along its paid envelope, with actual haulage between passes. */
+TEST_CASE("A whole TBM consist drives a constrained U-turn without pivoting or cutting backwards", "[tbm-travel-uturn]")
+{
+	SourceLoop loop(LoopStart::UTurn);
+	const auto route = loop.Job().route;
+	REQUIRE(route.back().heading == ReverseDir(route.front().heading));
+	std::set<TileIndex> paid;
+	uint ticks = 0;
+	bool backed = false;
+	std::set<VehicleID> turned;
+	// The only underground floor is the actual commissioned pocket plus each
+	// committed sweep. Keep checking every attached part while the hauler makes
+	// real exchanges; no fixture emptying or pose edits can complete this route.
+	while (!loop.Delivered() && ticks++ < 30000) {
+		const auto poses = CaptureTBMMovementPositions(loop.cutter);
+		const auto cursor = loop.Job().cursor;
+		const bool backwards = loop.cutter->vehicle_flags.Test(VehicleFlag::DrivingBackwards);
+		AdvanceSpoilReceiver(*loop.earth);
+		AdvanceSpoilReceiver(*loop.rock);
+		CallVehicleTicks();
+		REQUIRE_FALSE(loop.cutter->vehstatus.Test(VehState::Crashed));
+		REQUIRE(IsTrainOnItsTiles(loop.cutter));
+		REQUIRE(loop.IsConserved());
+		if (backwards) CHECK(loop.Job().cursor == cursor); // Withdrawal never authorizes a new cut.
+		backed |= backwards;
+		for (size_t cut = cursor; cut < loop.Job().cursor; ++cut) paid.insert(route[cut].swept_tiles.begin(), route[cut].swept_tiles.end());
+		for (const Train *part = loop.cutter; part != nullptr; part = part->Next()) {
+			// Storage and the sealed shaft have their own native movement contract;
+			// every ordinary underground part must stay on newly paid support.
+			if (GetTileLayer(part->tile) == MapLayer::Surface || IsLayerPortalTile(part->tile)) continue;
+			REQUIRE(paid.contains(part->tile));
+			REQUIRE(GetGeologyWorldState().terrain.Get(part->tile) == ExcavationState::Excavated);
+			REQUIRE(IsTBMSupportUsable(loop.Project(), part->tile));
+			/** @param pose Previously observed part pose. @return Native part identity, independent of exchanged chain order. */
+			const auto identity = [](const auto &pose) { return std::get<0>(pose); };
+			const auto previous = std::ranges::find(poses, part->index, identity);
+			REQUIRE(previous != poses.end());
+			if (part->direction == std::get<6>(*previous)) continue;
+			// Bends change facing only as the part physically advances, by at most
+			// 45 degrees per tick; a stationary rotation or sharp shortcut fails.
+			CHECK((part->x_pos != std::get<3>(*previous) || part->y_pos != std::get<4>(*previous)));
+			const uint diff = (to_underlying(part->direction) + 8 - to_underlying(std::get<6>(*previous))) % 8;
+			CHECK((diff == 1 || diff == 7));
+			turned.insert(part->index);
+		}
+	}
+	INFO(DescribeProject(loop.Project()) << "\n" << DescribeTrain(loop.cutter));
+	REQUIRE(loop.Delivered());
+	CHECK(loop.Job().cursor == route.size());
+	CHECK(backed);
+	for (VehicleID part : loop.Project().permanent_parts) CHECK(turned.contains(part)); // Every permanent component must actually negotiate the turn.
+	CHECK(loop.Received() == loop.Committed());
 }
 
 /**
@@ -956,7 +1240,7 @@ TEST_CASE("A project's whole life can be played from the portal window's control
 	// The refusals name their reasons: the machine can't haul its own spoil, an unfinished project can't retire, and
 	// a train that serves no project can't be released.
 	CHECK(Command<Commands::AssignTBMHauler>::Do(DoCommandFlag::Execute, project, loop.cutter->index).GetErrorMessage() == STR_ERROR_TBM_HAULER_TRAIN);
-	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Retire).GetErrorMessage() == STR_ERROR_TBM_PROJECT_CANT_RETIRE);
+	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Retire).GetErrorMessage() == STR_ERROR_TBM_RELEASE_RETURN);
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Resume).GetErrorMessage() == STR_ERROR_TBM_PROJECT_NOT_PAUSED);
 	CHECK(Command<Commands::ReleaseTBMHauler>::Do(DoCommandFlag::Execute, loop.hauler->index).GetErrorMessage() == STR_ERROR_TBM_HAULER_NOT_ASSIGNED);
 
@@ -1015,21 +1299,20 @@ TEST_CASE("A project's whole life can be played from the portal window's control
 	for (const TileIndex tile : c.convertible) REQUIRE(Command<Commands::ConvertTBMSupport>::Do(DoCommandFlag::Execute, tile).Succeeded());
 	c = controls();
 	CHECK(c.convertible.empty());
-	CHECK(c.step == TBMPlayerStep::StopMachine);
-	CHECK_FALSE(c.retire);
+	CHECK(c.step == TBMPlayerStep::Retire);
+	CHECK(c.retire); // Finish can stop an already stationary whole stored machine as part of the admitted release.
 	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, loop.cutter->index, false).Succeeded());
 	c = controls();
 	CHECK(c.step == TBMPlayerStep::Retire);
 	REQUIRE(c.retire);
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, project, TBMProjectAction::Retire).Succeeded());
 
-	// Retired: the machine still stands in the portal, now an ordinary train to sell.
+	// Retired: the actual machine remains selectable in its native magazine;
+	// opening completed public track no longer requires selling it.
 	c = controls();
 	CHECK_FALSE(c.project.has_value());
-	CHECK(c.step == TBMPlayerStep::SellMachine);
+	CHECK(c.step == TBMPlayerStep::Connect);
 	REQUIRE(c.sellable == loop.cutter->index);
-	REQUIRE(Command<Commands::SellVehicle>::Do(DoCommandFlag::Execute, c.sellable, true, false, ClientID::Invalid).Succeeded());
-	loop.cutter = nullptr;
 
 	// Both approaches are dug and built, so the pair connects for ordinary trains.
 	c = controls();

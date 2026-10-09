@@ -12,6 +12,7 @@
 #ifndef TESTS_DEPOT_FILE_FIXTURE_H
 #define TESTS_DEPOT_FILE_FIXTURE_H
 
+#include "test_artifact_paths.h"
 #include "underground_depot_fixture.h"
 #include "../saveload/saveload_func.h"
 #include "../table/sprites.h"
@@ -20,7 +21,7 @@
 /** Write immutable native saves after public owners report an actually reached depot scenario. */
 class DepotFileRecorder {
 	const char *prefix = std::getenv("OTTD_TBM_LOGISTICS_RECORD"); ///< Optional fresh basename; normal tests never overwrite inputs.
-	std::filesystem::path directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage"; ///< Existing owning feature directory.
+	std::filesystem::path directory = GetTestCaseArtifactPaths("tbm", "logistics").saves; ///< Fresh case-owned checkpoints; immutable input fixtures are never output destinations.
 public:
 	/** Validate the optional recorder's repository-local immutable input namespace. */
 	DepotFileRecorder()

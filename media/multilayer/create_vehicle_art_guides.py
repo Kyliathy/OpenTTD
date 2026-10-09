@@ -2,7 +2,7 @@
 
 @file create_vehicle_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18
-@see docs/zz-reach2/upgrades/2026-10/assets/multilayer_geometry_templates.svg
+@see media/multilayer/contracts/multilayer_geometry_templates.svg
 These labeled diagrams convey geometry only; they are never source game art.
 """
 
@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, PngImagePlugin
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "docs/zz-reach2/upgrades/2026-10/assets"
+ASSETS = ROOT / "media/multilayer"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
 
@@ -23,7 +23,7 @@ def create_guide():
     @return Repository guide PNG path, carrying owner/template provenance.
     @throws ValueError If a named approved geometry view is missing.
     """
-    template = ASSETS / "multilayer_geometry_templates.svg"
+    template = ASSETS / "contracts/multilayer_geometry_templates.svg"
     tree = ET.parse(template)
     views = {node.attrib.get("id"): node for node in tree.iter()}
     image = Image.new("RGB", (8 * 208, 230), (238, 241, 244))
@@ -46,7 +46,7 @@ def create_guide():
         draw.line((origin_x, origin_y - 6, origin_x, origin_y + 6), fill="black", width=2)
         draw.text((origin_x - 12, 184), direction, fill="black")
     draw.text((12, 210), "Native canvas 64x48, anchor (-32,-32); fixed top-left lighting. Support follows the same axis; it has no cutter head.", fill="black")
-    path = ASSETS / "mlvs/vehicle-direction-guide.png"
+    path = ROOT / "media/multilayer/guides/m1/vehicle-direction-guide.png"
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("Owner", "r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; geometry-only authoring reference")
     metadata.add_text("Template", template.relative_to(ROOT).as_posix())
@@ -66,12 +66,12 @@ def create_purchase_guide():
     # shape. Nearest enlargement exposes the exact tiny model identity for the
     # new locked presentation; labels remain outside selected sprite pixels.
     for index, label in enumerate(labels):
-        source = ROOT / f"media/multilayer/sprites/m1/purchase-model-{index:02}.png"
+        source = ROOT / f"logs/proofs/mlm/native-art/derived/purchase-model-{index:02}.png"
         original = Image.open(source).convert("RGBA")
         enlarged = original.resize((160, 160), Image.Resampling.NEAREST)
         image.paste(enlarged, (index * 220 + 30, 30), enlarged)
         draw.text((index * 220 + 15, 210), label, fill="white")
-    path = ASSETS / "mlvs/purchase-model-reference-guide.png"
+    path = ROOT / "media/multilayer/guides/m1/purchase-model-reference-guide.png"
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("Owner", "r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; retained available purchase pose reference")
     image.save(path, pnginfo=metadata)

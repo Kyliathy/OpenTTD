@@ -65,7 +65,7 @@ TEST_CASE("Excavation large-map storage and active job work budgets", "[excavati
 		Map::Allocate(width, height, 4);
 		for (auto layer : {MapLayer::Surface, MapLayer::Underground, MapLayer::Space, MapLayer::DeepUnderground}) MultiLayerMap::InitialiseLayer(layer);
 		const auto start = Clock::now();
-		REQUIRE(GenerateWorldGeology(420) == GeologyError::None);
+		REQUIRE(GenerateWorldGeology(420, 0) == GeologyError::None); // Preserve the frozen uniform-rock economics baseline.
 		const auto generated = Clock::now();
 		std::vector<TileIndex> starters;
 		std::vector<TileIndex> anchors;

@@ -17,6 +17,24 @@ PREFIX = "r2mlvs3-e"
 WORK_FORMAT = ">IBBIIIQ"
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("portals", "portal-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+variant = partial(variant, context=CONTEXT)
+
+
 def portal_state(records, connected=False):
     """Encode the existing public rail housing constructor and exact saved work row in an owned real-company world.
 
@@ -91,7 +109,7 @@ def main():
 
     @return None; preserve startup/config and supplied predecessor bytes exactly.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     prior = save_path("r2mlvs2-z-native-current.sav")
     prior_hash = hashlib.sha256(prior.read_bytes()).hexdigest()
@@ -124,7 +142,7 @@ def main():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(prior.read_bytes()).hexdigest() == prior_hash
-    (AREA / f"{PREFIX}-save-results.txt").write_text(
+    (CONTEXT.reports / f"{PREFIX}-save-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 2.\n"
         "Eleven actual cases passed: empty/company native, Sealed/Connected plus repeated reloads, retained old Native, four corruptions.\n"
         "LPWH/LPWK and four geology chunks remain byte-exact. Startup/config/predecessor bytes retained.\n"
@@ -136,7 +154,7 @@ def resume_refusals():
 
     @return None; preserve existing input/startup/config bytes and earlier successful evidence.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     sealed = save_path(f"{PREFIX}-sealed-input.sav")
     original_hash = hashlib.sha256(sealed.read_bytes()).hexdigest()
@@ -150,7 +168,7 @@ def resume_refusals():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(sealed.read_bytes()).hexdigest() == original_hash
-    (AREA / f"{PREFIX}-save-results.txt").write_text(
+    (CONTEXT.reports / f"{PREFIX}-save-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 2.\n"
         "Eleven actual cases passed across the creation/reload run and its focused refusal continuation.\n"
         "Sealed/Connected and repeated reloads retain exact LPWH/LPWK and GEOS/GDEP/GSPN/GVNT bytes.\n"

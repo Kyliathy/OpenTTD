@@ -14,6 +14,24 @@ from geology_generation_fixture import Reader, CHUNK_RIFF, CHUNK_RECORDS, read_s
 from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path, prior_artifact
+CONTEXT = current_run_context("geology", "geology-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def chunks(stream):
     """Collect immutable raw chunks and their payloads/rows for narrowly owned fixture mutations.
 
@@ -75,13 +93,14 @@ def encode_chunk(chunk):
     return chunk["name"] + bytes([chunk["kind"]]) + b"".join(gamma(len(row) + 1) + row for row in chunk["rows"]) + b"\0"
 
 
-def variant(source, name, mutation, prefix="r2mlvs2-g"):
+def variant(source, name, mutation, prefix="r2mlvs2-g", context=None):
     """Create one repository-owned variant without changing the supplied original source bytes.
 
     @param source Actual native geological output in a delivered 372-through-378 format, produced by the owning fixture.
     @param name Owning plan's lowercase evidence suffix.
     @param mutation Callable changing only targeted geological dictionaries; remove marks an omitted chunk.
     @param prefix Owning plan's chronological evidence prefix; defaults to the geological save group.
+    @param context Optional explicit feature of the calling fixture.
     @return New local evidence save, preserving every unrelated raw chunk.
     """
     original = source.read_bytes()
@@ -92,7 +111,7 @@ def variant(source, name, mutation, prefix="r2mlvs2-g"):
     mutation(records)
     encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]
                        for record in records if not record.get("remove")) + bytes(4)
-    path = save_path(f"{prefix}-{name}-input.sav")
+    path = output_save_path(f"{prefix}-{name}-input.sav", context=context or CONTEXT)
     path.write_bytes(original[:8] + lzma.compress(encoded))
     return path
 
@@ -164,8 +183,8 @@ def main():
 
     @return None; failed boundaries retain logs and always restore original inputs.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
-    config = ROOT / "build/grftest.cfg"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config = RUNTIME / "grftest.cfg"
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     older = (("native371", save_path("r2mlvs14-b-native-new.sav")),
@@ -173,7 +192,11 @@ def main():
     older_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for _, path in older}
     parser = argparse.ArgumentParser()
     parser.add_argument("--refusals-only", action="store_true", help="retain/verify accepted-load evidence and repeat only the current corrupt boundaries")
+    parser.add_argument("--prior-run", help="exact earlier invocation supplying the skipped acceptance evidence")
     args = parser.parse_args()
+    # A partial run may reuse evidence only from an explicitly named invocation.
+    if args.refusals_only and not args.prior_run:
+        parser.error("partial verification requires --prior-run")
     try:
         config.write_text("# @see r2mlvs2-geology-and-excavation.md, saved geology fixture.\n"
                           "[game_creation]\nmap_x = 6\nmap_y = 6\nlandscape = temperate\n"
@@ -197,7 +220,7 @@ def main():
             for name, path in older:
                 run_case(name, ["-g", path.as_posix()], "MLVS_GEOLOGY_LOADED generator=0 deposits=0 packed_bytes=0", prefix="r2mlvs2-g")
         else:
-            source = save_path("r2mlvs2-g-native.sav")
+            source = prior_artifact(CONTEXT, args.prior_run, "saves", "r2mlvs2-g-native.sav")
             source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
             # A partial rerun reports accepted boundaries only after their retained logs and saved outputs still prove success.
             for name, expected in (("native", "MLVS_GEOLOGY generator=1"),
@@ -206,9 +229,9 @@ def main():
                                    ("partial-reload", "MLVS_GEOLOGY_LOADED generator=1"),
                                    ("native371", "MLVS_GEOLOGY_LOADED generator=0"),
                                    ("legacy370", "MLVS_GEOLOGY_LOADED generator=0")):
-                evidence = log_path(f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
+                evidence = prior_artifact(CONTEXT, args.prior_run, "logs", f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert expected in evidence, (name, "prior acceptance evidence missing")
-                assert save_path(f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
+                assert prior_artifact(CONTEXT, args.prior_run, "saves", f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
         for kind, expected in (("reserved", "Reserved geology terrain encoding"),
                                ("truncated", "Invalid geology payload bounds"),
                                ("dimensions", "Invalid geology dimensions"),
@@ -223,7 +246,7 @@ def main():
         for path, digest in older_hashes.items():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, "supplied older save changed"
     scope = "Six earlier accepted-load boundaries verified from retained evidence; five refusals executed in this run.\n" if args.refusals_only else "All eleven boundaries executed in this run.\n"
-    (AREA / "r2mlvs2-g-save-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs2-g-save-results.txt").write_text(
         "R2MLVS2 Group 4: six actual geological/older loads and five corrupt/missing/reference refusals passed.\n"
         "Partial balance, survey information, cavity and all three owner chunks survived two reloads exactly.\n"
         "Original source/config/startup/older-save SHA256 preserved. Job transport belongs to Group 10.\n" + scope, encoding="utf-8")

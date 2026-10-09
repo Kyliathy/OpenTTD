@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file strings.cpp Handling of translated strings. */
+/** @file strings.cpp Handling of translated strings. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8 (native hangar names); docs/zz-reach2/architecture/gui/archi-gui.md */
 
 #include "stdafx.h"
 #include "currency_func.h"
@@ -13,6 +13,7 @@
 #include "town.h"
 #include "waypoint_base.h"
 #include "depot_base.h"
+#include "map_layer_gui.h"
 #include "industry.h"
 #include "newgrf_text.h"
 #include "fileio_func.h"
@@ -1642,6 +1643,11 @@ static void FormatString(StringBuilder &builder, std::string_view str_arg, Strin
 					if (!d->name.empty()) {
 						auto tmp_params = MakeParameters(d->name);
 						GetStringWithArgs(builder, STR_JUST_RAW_STRING, tmp_params);
+					} else if (IsLayerPortalHangarTile(d->xy)) {
+						// The same native depot order remains readable across layers,
+						// including maps without a town near this existing magazine.
+						auto tmp_params = MakeParameters(GetMapLayerName(GetTileLayer(d->xy)), TileX(d->xy), TilePlaneY(d->xy));
+						GetStringWithArgs(builder, STR_TBM_HANGAR_NAME, tmp_params);
 					} else {
 						auto tmp_params = MakeParameters(d->town->index, d->town_cn + 1);
 						GetStringWithArgs(builder, STR_FORMAT_DEPOT_NAME_TRAIN + 2 * to_underlying(vt) + (d->town_cn == 0 ? 0 : 1), tmp_params);

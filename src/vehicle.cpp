@@ -66,6 +66,9 @@
 #include "timer/timer_game_economy.h"
 #include "timer/timer_game_tick.h"
 #include "tbm_exchange.h"
+#include "tbm_hangar.h"
+#include "layer_portal_map.h"
+#include "pbs.h"
 
 #include "table/strings.h"
 
@@ -1602,7 +1605,11 @@ void VehicleEnterDepot(Vehicle *v)
 			Train *t = Train::From(v);
 			SetWindowClassesDirty(WindowClass::TrainList);
 			/* Clear path reservation */
-			SetDepotReservation(t->tile, false);
+			if (IsLayerPortalHangarTile(t->tile)) {
+				if (HasLayerPortalReservation(t->tile)) UnreserveRailTrack(t->tile, DiagDirToDiagTrack(GetLayerPortalShaftDirection(t->tile)));
+			} else {
+				SetDepotReservation(t->tile, false);
+			}
 			if (_settings_client.gui.show_track_reservation) MarkTileDirtyByTile(t->tile);
 
 			UpdateSignalsOnSegment(t->tile, DiagDirection::Invalid, t->owner);
@@ -1654,8 +1661,15 @@ void VehicleEnterDepot(Vehicle *v)
 
 	InvalidateWindowData(WindowClass::VehicleView, v->index);
 
-	if (v->current_order.IsType(OT_GOTO_DEPOT)) {
+	if (v->current_order.IsType(OT_GOTO_DEPOT) && !(v->type == VehicleType::Train && IsTBMStagingHangarOrder(*Train::From(v)))) {
 		const Order *real_order = v->GetOrder(v->cur_real_order_index);
+		// An explicit TBM destination remains authoritative through an
+		// intermediate depot. Nearest-depot orders keep their normal semantics.
+		if (v->type == VehicleType::Train && IsTBMCutterEngine(v->engine_type) &&
+				!v->current_order.GetDepotActionType().Test(OrderDepotActionFlag::NearestDepot)) {
+			const auto hangar = GetTBMOrderedHangar(*Train::From(v));
+			if (hangar.error != TBMHangarError::None || hangar.tile != v->tile) return;
+		}
 
 		/* Test whether we are heading for this depot. If not, do nothing.
 		 * Note: The target depot for nearest-/manual-depot-orders is only updated on junctions, but we want to accept every depot. */
@@ -1691,6 +1705,7 @@ void VehicleEnterDepot(Vehicle *v)
 			v->IncrementImplicitOrderIndex();
 		}
 		if (v->current_order.GetDepotActionType().Test(OrderDepotActionFlag::Halt)) {
+			if (v->type == VehicleType::Train) CompleteTBMHangarArrival(*Train::From(v)); // Observe the actual selected arrival before native completion consumes this order.
 			/* Vehicles are always stopped on entering depots. Do not restart this one. */
 			_vehicles_to_autoreplace[v->index] = false;
 			/* Invalidate last_loading_station. As the link from the station

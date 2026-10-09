@@ -11,6 +11,8 @@
 #include "underground_vehicle.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
+#include "tbm_gui.h"
+#include "tbm_cmd.h"
 #include "debug.h"
 #include "company_func.h"
 #include "gui.h"
@@ -3007,6 +3009,14 @@ static bool IsVehicleRefittable(const Vehicle *v)
 
 /** Window manager class for viewing a vehicle. */
 struct VehicleViewWindow : Window {
+	bool tbm_hangar_service = false; ///< Transient native menu choice; the synchronized order owns the resulting intent.
+
+	/** @param widget Menu anchor. @param index Actual world destination/action. @param selection Unused dropdown row. */
+	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int selection) override
+	{
+		const Vehicle *vehicle = Vehicle::GetIfValid(this->window_number);
+		if (widget == WID_VV_GOTO_DEPOT && vehicle != nullptr && vehicle->type == VehicleType::Train) SelectTBMHangarMenuItem(*Train::From(vehicle), index, this->tbm_hangar_service);
+	}
 private:
 	/** Display planes available in the vehicle view window. */
 	enum PlaneSelections : uint8_t {
@@ -3209,6 +3219,9 @@ public:
 
 		if (v->vehstatus.Test(VehState::Stopped) && (!mouse_over_start_stop || v->IsStoppedInDepot())) {
 			if (v->type != VehicleType::Train) return GetString(STR_VEHICLE_STATUS_STOPPED);
+			if (const auto *project = GetTBMProjectForCutter(v->index); project != nullptr && IsTBMStored(project->phase)) {
+				return GetString(STR_TBM_VEHICLE_WORK_VEL, PackVelocity(0, VehicleType::Train), GetTBMPhaseString(project->phase)); // Distinguish resumable parking from final delivery/claim settlement.
+			}
 			if (v->cur_speed != 0) return GetString(STR_VEHICLE_STATUS_TRAIN_STOPPING_VEL, PackVelocity(v->GetDisplaySpeed(), v->type));
 			if (Train::From(v)->gcache.cached_power == 0) return GetString(STR_VEHICLE_STATUS_TRAIN_NO_POWER);
 			return GetString(STR_VEHICLE_STATUS_STOPPED);
@@ -3227,6 +3240,10 @@ public:
 			} else if (v->type == VehicleType::Train && Train::From(v)->flags.Test(VehicleRailFlag::Stuck) && !v->current_order.IsType(OT_LOADING)) {
 				text_colour = ExtendedTextColour{TextColour::Orange, ExtendedTextColourFlag::Forced};
 			}
+		}
+
+		if (v->type == VehicleType::Train) {
+			if (const auto status = GetTBMVehicleStatus(*Train::From(v)); status.has_value()) return *status;
 		}
 
 		switch (v->current_order.GetType()) {
@@ -3310,6 +3327,14 @@ public:
 			}
 
 			case WID_VV_START_STOP: // start stop
+				if (v->type == VehicleType::Train) {
+					// Starting a deliberately parked cutter resumes its retained job;
+					// merely clearing Stopped would leave its work controller parked.
+					if (const auto *project = GetTBMProjectForCutter(v->index); project != nullptr && IsTBMStored(project->phase)) {
+						Command<Commands::ControlTBMProject>::Post(STR_ERROR_CAN_T_CONTROL_TBM_PROJECT, project->id, TBMProjectAction::Resume);
+						break;
+					}
+				}
 				StartStopVehicle(v, false);
 				break;
 
@@ -3343,6 +3368,11 @@ public:
 				break;
 
 			case WID_VV_GOTO_DEPOT: // goto hangar
+				if (v->type == VehicleType::Train && IsTBMCutterEngine(v->engine_type)) {
+					this->tbm_hangar_service = _ctrl_pressed;
+					ShowTBMHangarMenu(this, widget, *Train::From(v), this->tbm_hangar_service);
+					break;
+				}
 				Command<Commands::SendVehicleToDepot>::Post(GetCmdSendToDepotMsg(v), v->index, _ctrl_pressed ? DepotCommandFlag::Service : DepotCommandFlags{}, {});
 				break;
 			case WID_VV_REFIT: // refit
@@ -3442,6 +3472,14 @@ public:
 		 * Widget WID_VV_CLONE_VEH should then be shown, since cloning is allowed only while in depot and stopped.
 		 */
 		PlaneSelections plane = veh_stopped ? SEL_DC_CLONE : SEL_DC_GOTO_DEPOT;
+		if (v->type == VehicleType::Train) {
+			if (IsTBMCutterEngine(v->engine_type)) {
+				// Retained native machinery stays selectable after release. Its
+				// hangar menu includes destination, return and final-release actions.
+				plane = SEL_DC_GOTO_DEPOT;
+				this->GetWidget<NWidgetCore>(WID_VV_GOTO_DEPOT)->SetToolTip(STR_TBM_CHOOSE_HANGAR_TOOLTIP);
+			}
+		}
 		NWidgetStacked *nwi = this->GetWidget<NWidgetStacked>(WID_VV_SELECT_DEPOT_CLONE); // Selection widget 'send to depot' / 'clone'.
 		if (nwi->shown_plane + SEL_DC_BASEPLANE != plane) {
 			this->SelectPlane(plane);

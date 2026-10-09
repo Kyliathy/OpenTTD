@@ -283,8 +283,12 @@ public:
 		const auto estimate = EstimateExcavationCut(this->project.job);
 		REQUIRE(estimate.error == ExcavationError::None);
 		const uint32_t cursor = this->Job().cursor;
-		// One work tick per tick; the last one commits, so the cut takes exactly its work requirement in ticks.
-		for (uint64_t tick = 0; tick < estimate.work_ticks; ++tick) REQUIRE(this->Tick().blocked == TBMBlockedReason::None);
+		const auto &model = *GetTBMCutterModel(this->Project().model_id);
+		const uint64_t remaining = estimate.work_ticks - this->Job().partial_work_ticks;
+		const uint64_t ticks = remaining == 0 ? 1 : CeilDiv(remaining * model.work_rate_denominator - this->Project().work_remainder, uint64_t{model.work_rate_numerator});
+		// Drive the actual controller for its remaining fixed-point duration;
+		// a zero-material overlap still needs one atomic controller commit.
+		for (uint64_t tick = 0; tick < ticks; ++tick) REQUIRE(this->Tick().blocked == TBMBlockedReason::None);
 		REQUIRE(this->Job().cursor == cursor + 1);
 		return estimate;
 	}

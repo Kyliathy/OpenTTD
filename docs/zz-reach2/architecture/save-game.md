@@ -4,24 +4,24 @@
 
 The supplied-save inspection code and the corrected saves are retained. The platform and path-signal changes were made through the running game's construction tools and saved normally; there is no binary save-editing/replay script for those changes. The helpers below inspect saves, compare map data, control the game window and capture evidence. The format itself is documented in [savegame/archi-savegame.md](savegame/archi-savegame.md), and current layer behavior in [map-layers/archi-map-layers.md](map-layers/archi-map-layers.md).
 
-The Multilayer Vehicles and Structures test saves are retained beside their C++ and Python tests in [`src/tests/fixtures/`](../../../src/tests/fixtures/), under `content`, `state`, `geology`, `portals`, `mines` and `processors`. Processor `.sav.txt` checkpoints accompany the saves they describe. The Python fixtures share the `save_path` resolver in [`multilayer_state_fixture.py`](../../../src/tests/multilayer_state_fixture.py); both C++ save writers use their feature directories too. Planning screenshots and review boards are in [`assets/reviews/`](../upgrades/2026-10/assets/reviews/), while authored sprite assets retain their existing asset directories.
+The Multilayer Vehicles and Structures test saves are retained beside their C++ and Python tests in [`src/tests/fixtures/`](../../../src/tests/fixtures/), under `content`, `state`, `geology`, `portals`, `mines` and `processors`. Processor `.sav.txt` checkpoints accompany the saves they describe. The Python fixtures share the `save_path` resolver in [`multilayer_state_fixture.py`](../../../src/tests/multilayer_state_fixture.py); both C++ save writers use their feature directories too. Planning screenshots and review boards are in [`assets/reviews/`](../../../mlm/reviews), while authored sprite assets retain their existing asset directories.
 
 | Helper | Use |
 | --- | --- |
-| [inspect_layer_save.py](../upgrades/2026-10/tools/inspect_layer_save.py) | Reusable read-only version of the supplied-save diagnostic: record summaries, per-layer tile counts, rail/station fields and portal coordinates. Explicit dimensions replace the prototype's fixed 256 x 256/four-layer assumptions. |
-| [savegame_plane_digest.py](../upgrades/2026-10/tools/savegame_plane_digest.py) | Read/decompress saves, hash all ten map chunks, hash only a Surface prefix, or enumerate portal ends. Supports lzma, zlib and uncompressed containers. |
-| [ottd_window.ps1](../upgrades/2026-10/tools/ottd_window.ps1) | PrintWindow screenshots, game-window clicks/keys, console commands and timed image bursts. |
-| [capture_art.ps1](../upgrades/2026-10/tools/capture_art.ps1) | Read portal positions from a save and orchestrate static, toolbar and traffic captures. |
-| [run_game_logged.sh](../upgrades/2026-10/tools/run_game_logged.sh) | Launch a selected game build and retain debug output. |
+| [mlm/tools/savegames/inspect_layer_save.py](../../../mlm/tools/savegames/inspect_layer_save.py) | Reusable read-only version of the supplied-save diagnostic: record summaries, per-layer tile counts, rail/station fields and portal coordinates. Explicit dimensions replace the prototype's fixed 256 x 256/four-layer assumptions. |
+| [mlm/tools/savegames/savegame_plane_digest.py](../../../mlm/tools/savegames/savegame_plane_digest.py) | Read/decompress saves, hash all ten map chunks, hash only a Surface prefix, or enumerate portal ends. Supports lzma, zlib and uncompressed containers. |
+| [mlm/tools/run/ottd_window.ps1](../../../mlm/tools/run/ottd_window.ps1) | PrintWindow screenshots, game-window clicks/keys, console commands and timed image bursts. |
+| [media/multilayer/tools/capture_art.ps1](../../../media/multilayer/tools/capture_art.ps1) | Read portal positions from a save and orchestrate static, toolbar and traffic captures. |
+| [mlm/tools/run/run_game_logged.sh](../../../mlm/tools/run/run_game_logged.sh) | Launch a selected game build and retain debug output. |
 | [Original diagnostic prototype](../../../build/inspect_review_save.py) | The original save-specific inspection script, left in `build/`; also exports raw record bytes into the review folder. Use the reusable tool for routine inspection. |
 
 From the repository root, these commands only read the selected save and print results:
 
 ```powershell
-python -B docs/zz-reach2/upgrades/2026-10/tools/inspect_layer_save.py build/save/makinpr2-connected.sav --size-x 256 --size-y 256
-python -B docs/zz-reach2/upgrades/2026-10/tools/inspect_layer_save.py build/save/makinpr2-final-verification.sav --size-x 256 --size-y 256 --summary-only
-python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py build/save/makinpr2-connected.sav
-python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py build/save/makinpr2-connected.sav --portals --size-x 256 --size-y 256
+python -B mlm/tools/savegames/inspect_layer_save.py build/save/makinpr2-connected.sav --size-x 256 --size-y 256
+python -B mlm/tools/savegames/inspect_layer_save.py build/save/makinpr2-final-verification.sav --size-x 256 --size-y 256 --summary-only
+python -B mlm/tools/savegames/savegame_plane_digest.py build/save/makinpr2-connected.sav
+python -B mlm/tools/savegames/savegame_plane_digest.py build/save/makinpr2-connected.sav --portals --size-x 256 --size-y 256
 ```
 
 Tile layer values use storage order: Surface 0, Underground 1, Outer Space 2, Deep Underground 3. The inventory displays station tile IDs/fields, not decoded station names or a semantic dump of vehicle/order tables. Array/table record summaries include format/header records and are not object counts. Neither inspector writes a modified save.
@@ -33,7 +33,7 @@ Tile layer values use storage order: Surface 0, Underground 1, Outer Space 2, De
 | [makinpr2-final-verification.sav](../../../build/save/makinpr2-final-verification.sav) | Paused save from the final successful cross-layer train smoke run, using the corrected layout. |
 | [makinpr2-connected-graphics-tested.sav](../../../build/save/makinpr2-connected-graphics-tested.sav) | Earlier traffic state from the portal graphics checks. |
 
-The original save's SHA256 is `090f204f01cbbbd87cc5c1ae488fd06597bf079e2a8a7959d97e44dc1db4e30a`. Helpers under the plans' `tools/` directory are repository source artifacts; saves, logs, captures and the old diagnostic prototype remain local artifacts under `build/`. They are not bundled with the game or protected from removal of the build directory. The [art-review plan](../upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md) and [final review](../upgrades/2026-10/r2rvm2-review-map-2.md) record the fixture diagnosis and verification evidence.
+The original save's SHA256 is `090f204f01cbbbd87cc5c1ae488fd06597bf079e2a8a7959d97e44dc1db4e30a`. Helpers under the plans' `tools/` directory are repository source artifacts; saves, logs, captures and the old diagnostic prototype remain local artifacts under `build/`. They are not bundled with the game or protected from removal of the build directory. The [art-review plan](../upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md) and [final review](../upgrades/2026-10/map-layers/r2rvm2-review-map-2.md) record the fixture diagnosis and verification evidence.
 
 ## Historical S7 preparation notes
 
@@ -55,7 +55,7 @@ S7 save: what to build
 1. Start the Debug game from Git Bash in the repository folder:
 
 
-bash docs/zz-reach2/upgrades/2026-10/tools/run_game_logged.sh /d/Codez/Sandbox/OpenTTD/build Debug scenario-logs/s7-build.log -c scenario.cfg
+bash mlm/tools/run/run_game_logged.sh /d/Codez/Sandbox/OpenTTD/build Debug scenario-logs/s7-build.log -c scenario.cfg
 It opens the main menu. Start a new 256×256 temperate game; scenario.cfg already sets those.
 
 2. Setup:

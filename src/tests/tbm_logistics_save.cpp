@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "mock_environment.h"
 #include "layer_window_fixture.h"
@@ -38,7 +39,7 @@ TEST_CASE("Driven source logistics writes native waits and geometry snapshots", 
 		REQUIRE(std::filesystem::path(record_prefix).filename() == std::filesystem::path(record_prefix));
 		REQUIRE_FALSE(std::string_view(record_prefix).starts_with("r2"));
 	}
-	const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+	const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 	REQUIRE(std::filesystem::is_directory(directory.parent_path()));
 	std::filesystem::create_directories(directory);
 	std::set<std::string> written;

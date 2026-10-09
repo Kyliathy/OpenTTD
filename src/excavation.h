@@ -228,6 +228,7 @@ public:
 };
 
 static constexpr uint16_t GEOLOGY_GENERATOR_VERSION = 1; ///< Saved algorithm identity, independent of profile/package/save versions.
+static constexpr uint16_t GEOLOGY_HARDNESS_VERSION = 1; ///< Regional rock algorithm; zero preserves the historical uniform-layer rule.
 
 /** Stable natural thermal-source identity; invalid is all-ones, independent of mines or utility producers. */
 using GeothermalVentID = StrongType::Typedef<uint32_t, struct GeothermalVentIDTag, StrongType::Compare>;
@@ -266,9 +267,13 @@ uint64_t DeriveGeologySeed(uint32_t world_seed);
 /**
  * Prepare guaranteed seams, then bounded optional seams over the already initialized rock planes.
  * @param geology_seed Independent versioned local seed; no Surface random stream is inspected or changed.
+ * @param hardness_version Current regional rule, or zero when reconstructing an explicitly historical generation fixture.
  * @return Complete candidate or refusal, without changing map tiles or accepted live geology.
  */
-GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed);
+GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed, uint16_t hardness_version = GEOLOGY_HARDNESS_VERSION);
+
+/** @param geology_seed Existing independent geology root. @return Domain-separated immutable regional-rock seed, without advancing any random stream. */
+uint64_t DeriveGeologyHardnessSeed(uint64_t geology_seed);
 
 /** @return Read-only accepted geology; absence retains legacy free-ground behavior. */
 const GeologyWorldState &GetGeologyWorldState();
@@ -315,9 +320,10 @@ void ResetGeologyWorldState();
 /**
  * Generate and publish only for an accepted Multilayer candidate before company/script startup.
  * @param world_seed Synchronized world-generation input, never a new Random() draw.
+ * @param hardness_version Current regional rule; zero is explicitly historical generation for retained baseline fixtures.
  * @return Refusal or complete publication; Classic never allocates rock authority.
  */
-GeologyError GenerateWorldGeology(uint32_t world_seed);
+GeologyError GenerateWorldGeology(uint32_t world_seed, uint16_t hardness_version = GEOLOGY_HARDNESS_VERSION);
 
 /**
  * Hash actual geological/job authority using explicit widths/order, excluding spatial/claim caches and object padding.
@@ -414,6 +420,8 @@ struct ExcavationJob {
 /** Sole live geological authority; transient generation proposals use the same value layout before publication. */
 struct GeologyWorldState {
 	uint16_t generator_version = 0; ///< Zero means absent legacy geology; never retroactively generate solid rock on load.
+	uint16_t hardness_version = 0; ///< Zero retains saved legacy layer defaults; version1 defines immutable regional ordinary rock.
+	uint64_t hardness_seed = 0; ///< Saved regional field root; no per-cell cache, renderer RNG or second mineral reserve owner.
 	PackedExcavationState terrain; ///< Independent packed rock-plane state.
 	GeologyDepositStore deposits; ///< Finite sparse reserves/claims and rebuilt lookup.
 	std::vector<GeothermalVentField> vents; ///< Stable natural thermal sources, independent of mineral reserves.
@@ -513,9 +521,10 @@ ExcavationError PauseExcavationJob(ExcavationJobID id, ExcavationError reason);
 /**
  * Cancel only unfinished claimed cells, preserving existing cavities and committed statistics.
  * @param id Exact owned job; only its current company/deity may cancel.
+ * @param execute False validates without changing the job or any claimed terrain.
  * @return Success or unchanged refusal; no cash or cargo refund is created.
  */
-ExcavationError CancelExcavationJob(ExcavationJobID id);
+ExcavationError CancelExcavationJob(ExcavationJobID id, bool execute = true);
 
 /**
  * Release closed sparse history after the actual controller removes its dependent project references.
@@ -777,7 +786,7 @@ ExcavationOutline AuthorizeExcavationOutline(const ExcavationOutline &outline, s
 ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id);
 
 /**
- * Cutting difficulty of one rock cell, by the same rule quotes and cuts use (deposit hardness, else layer default).
+ * Cutting difficulty of one rock cell, by the same rule quotes and cuts use (frozen deposit hardness, else saved regional/legacy rock).
  * @param geology Read-only geological owner.
  * @param tile Rock-layer cell.
  * @return The cell's hardness.
@@ -798,6 +807,9 @@ struct ExcavationPlanningStep {
 	ExcavationPlanningPose next; ///< Shifted head/consist history after the legal advance.
 	ExcavationCutGeometry cut; ///< Conservative cutter/diagonal/consist sweep and old backed support.
 };
+
+/** Player-requested work shape; accepted jobs retain canonical geometry rather than a second saved route policy. */
+enum class ExcavationPlanIntent : uint8_t { Area, StraightTunnel };
 
 /** Deterministic operation bounds; elapsed CPU/wall time never selects different multiplayer routes. */
 struct ExcavationPlanningLimits {
@@ -834,9 +846,39 @@ ExcavationPlanningStep AdvanceExcavationPlanningPose(const ExcavationPlanningPos
  * @param start Actual supported cutter pose and planned consist history.
  * @param model_id Immutable TBM layer/hardness capability.
  * @param limits Deterministic per-target/state/depth and whole-command work bounds.
+ * @param intent Area coverage or an exact straight cutter-centre path.
+ * @param tunnel_end Exact straight endpoint; ignored for area coverage.
  * @return Legal full/visible partial proposal or refusal; physical driving remains Plan 4.
  */
-ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits = {});
+ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits = {}, ExcavationPlanIntent intent = ExcavationPlanIntent::Area, TileIndex tunnel_end = INVALID_TILE);
+
+/**
+ * Preview additional work after an actual owned job's complete accepted route.
+ * Existing accepted sweeps form virtual future floor only; this never opens or releases a cell.
+ * @param job Actual unfinished geological identity; foreign/closed/malformed jobs refuse.
+ * @param outline Additional requested floor and explicitly accepted working space.
+ * @param planning_points Measured native consist history length; replay must exactly reproduce existing sweeps.
+ * @param limits Deterministic search limits, further bounded by remaining saved-route capacity.
+ * @param intent Area coverage or straight continuation in the accepted endpoint's heading.
+ * @param tunnel_end Exact straight endpoint; ignored for area coverage.
+ * @return Only the additional route and its new quantities, or a stable refusal; current progress remains unchanged.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group3
+ */
+ExcavationRouteProposal PlanExcavationJobExtension(ExcavationJobID job, const ExcavationOutline &outline, uint8_t planning_points, const ExcavationPlanningLimits &limits = {}, ExcavationPlanIntent intent = ExcavationPlanIntent::Area, TileIndex tunnel_end = INVALID_TILE);
+
+/**
+ * Append canonical additional cuts to an unchanged unfinished job, retaining every existing work and exchange quantity.
+ * The caller's TBM owner must also validate its actual consist, paused controller and physical support layout.
+ * @param job Actual owned geological identity; no new ID is allocated.
+ * @param expected_revision Exact revision shown in the player's accepted quote.
+ * @param outline Additional requested floor and explicitly accepted working space.
+ * @param route Additional advancing cuts produced by the canonical continuation planner.
+ * @param execute False performs all admission checks without changing claims, terrain or progress.
+ * @return Same job identity on success, or a stable refusal with all existing state retained.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group3
+ */
+ExcavationJobResult AppendExcavationJob(ExcavationJobID job, uint64_t expected_revision, const ExcavationOutline &outline,
+	std::span<const ExcavationCutGeometry> route, bool execute);
 
 /** Complete readonly pass validation; returned terms become actual saved job input only through the reservation owner. */
 struct ExcavationPassResult {

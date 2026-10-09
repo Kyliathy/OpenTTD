@@ -26,7 +26,7 @@ def main():
     """
     report, files = art.derive()
     art.check(report, files)
-    public = json.loads((art.base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((art.base.PUBLIC).read_text(encoding="utf-8"))
     for atlas in report["atlases"]:
         family = next(row for row in public["assets"] if row["asset_id"] == atlas["asset_id"])
         assert family["authoring"]["native_sha256"] == atlas["sha256"]

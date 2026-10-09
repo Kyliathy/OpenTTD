@@ -17,6 +17,7 @@
 #include "../safeguards.h"
 
 static constexpr uint32_t GEOLOGY_HEADER_BYTES = 29; ///< Two U16, six U32 and one checked policy byte.
+static constexpr uint32_t GEOLOGY_REGIONAL_HEADER_BYTES = GEOLOGY_HEADER_BYTES + 10; ///< Since399, one regional U16 version and one U64 seed, without a per-cell hardness array.
 
 /** Bounded deposit scalar transport; compact spans live in GSPN rows, not an unbounded vector field. */
 struct GeologyDepositWire {
@@ -133,12 +134,16 @@ struct GEOSChunkHandler : ChunkHandler {
 		uint32_t spans = 0;
 		// Shape count is bounded by the owner cap; it validates later compact rows without serializing cache addresses.
 		for (const auto &deposit : snapshot.deposits) spans += static_cast<uint32_t>(deposit.spans.size());
-		std::array<uint16_t, 2> versions = {1, snapshot.generator_version};
+		std::array<uint16_t, 2> versions = {2, snapshot.generator_version};
 		std::array<uint32_t, 6> header = {snapshot.width, snapshot.height, snapshot.next_deposit_id, static_cast<uint32_t>(snapshot.packed.size()), static_cast<uint32_t>(snapshot.deposits.size()), spans};
-		SlSetLength(GEOLOGY_HEADER_BYTES + snapshot.packed.size());
+		std::array<uint16_t, 1> hardness_version{snapshot.hardness_version};
+		std::array<uint64_t, 1> hardness_seed{snapshot.hardness_seed};
+		SlSetLength(GEOLOGY_REGIONAL_HEADER_BYTES + snapshot.packed.size());
 		SlCopy<VarFileType::U16>(versions);
 		SlCopy<VarFileType::U32>(header);
 		SlWriteByte(snapshot.freeform_edges ? 1 : 0);
+		SlCopy<VarFileType::U16>(hardness_version);
+		SlCopy<VarFileType::U64>(hardness_seed);
 		// Inactive Classic/legacy transport has no buffer; SlCopy requires a non-null pointer even for zero-length copies.
 		if (!snapshot.packed.empty()) SlCopy<VarFileType::U8>(snapshot.packed);
 	}
@@ -152,14 +157,27 @@ struct GEOSChunkHandler : ChunkHandler {
 	GeologyStateSnapshot Read(bool preview, size_t length) const
 	{
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) SlErrorCorrupt("Unexpected geology chunk in old save version");
-		if (length < GEOLOGY_HEADER_BYTES) SlErrorCorrupt("Truncated geology header");
+		const bool regional_wire = !IsSavegameVersionBefore(SaveLoadVersion::GeologyRegionalHardness);
+		const uint32_t header_bytes = regional_wire ? GEOLOGY_REGIONAL_HEADER_BYTES : GEOLOGY_HEADER_BYTES;
+		if (length < header_bytes) SlErrorCorrupt("Truncated geology header");
 		std::array<uint16_t, 2> versions{};
 		std::array<uint32_t, 6> header{};
 		SlCopy<VarFileType::U16>(versions);
 		SlCopy<VarFileType::U32>(header);
 		const uint8_t flags = SlReadByte();
-		if (versions[0] != 1) SlErrorCorrupt("Unsupported geology wire version");
+		std::array<uint16_t, 1> hardness_version{};
+		std::array<uint64_t, 1> hardness_seed{};
+		if (regional_wire) {
+			SlCopy<VarFileType::U16>(hardness_version);
+			SlCopy<VarFileType::U64>(hardness_seed);
+		}
+		if (versions[0] != (regional_wire ? 2 : 1)) SlErrorCorrupt("Unsupported geology wire version");
 		if (versions[1] > GEOLOGY_GENERATOR_VERSION) SlErrorCorrupt("Unsupported geology generator version");
+		// The same bounds run in preview and full load. Old saves carry no
+		// regional fields; their zero defaults survive all later resaves.
+		if (hardness_version[0] > GEOLOGY_HARDNESS_VERSION ||
+				(hardness_version[0] == 0 && hardness_seed[0] != 0) ||
+				(versions[1] == 0 && hardness_version[0] != 0)) SlErrorCorrupt("Invalid geology hardness state");
 		if (flags > 1) SlErrorCorrupt("Invalid geology fence policy");
 		const uint32_t width = preview ? _load_check_data.map_size_x : Map::SizeX();
 		const uint32_t height = preview ? _load_check_data.map_size_y : Map::SizeY();
@@ -167,13 +185,15 @@ struct GEOSChunkHandler : ChunkHandler {
 		if (header[0] != width || header[1] != height || !CheckGeologyGenerationSize(width, height)) SlErrorCorrupt("Invalid geology dimensions");
 		const uint32_t expected_bytes = versions[1] == 0 ? 0 : width * height / 2;
 		// Exact length/caps prevent truncated payloads or attacker-controlled vector allocations before metadata validation.
-		if (header[3] != expected_bytes || length != GEOLOGY_HEADER_BYTES + expected_bytes || header[4] > MAX_GEOLOGY_DEPOSITS || header[5] > MAX_GEOLOGY_DEPOSITS * MAX_GEOLOGY_SPANS) SlErrorCorrupt("Invalid geology payload bounds");
+		if (header[3] != expected_bytes || length != header_bytes + expected_bytes || header[4] > MAX_GEOLOGY_DEPOSITS || header[5] > MAX_GEOLOGY_DEPOSITS * MAX_GEOLOGY_SPANS) SlErrorCorrupt("Invalid geology payload bounds");
 		if (versions[1] == 0) {
 			// Inactive legacy terrain has no hidden reserve, records or reused identity cursor.
 			if (header[2] != 0 || header[4] != 0 || header[5] != 0) SlErrorCorrupt("Invalid inactive geology header");
 		}
 		GeologyStateSnapshot snapshot;
 		snapshot.generator_version = versions[1];
+		snapshot.hardness_version = hardness_version[0];
+		snapshot.hardness_seed = hardness_seed[0];
 		snapshot.width = width;
 		snapshot.height = height;
 		snapshot.next_deposit_id = header[2];

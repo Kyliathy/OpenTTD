@@ -15,6 +15,23 @@ from multilayer_state_fixture import AREA, ROOT, run_case
 PREFIX = "r2mlvs2-u"
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("geology", "excavation-pass-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+variant = partial(variant, context=CONTEXT)
+
+
 def frozen_pass(records):
     """Attach canonical static proof to actual saved paused geometry.
 
@@ -98,7 +115,7 @@ def main():
 
     @return None; restore supplied startup/config bytes in finally.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
         config.write_text("# @see r2mlvs2-geology-and-excavation.md, frozen-pass fixture.\n"
@@ -123,7 +140,7 @@ def main():
     finally:
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
-    (AREA / f"{PREFIX}-pass-save-results.txt").write_text(
+    (CONTEXT.reports / f"{PREFIX}-pass-save-results.txt").write_text(
         "@see r2mlvs2-geology-and-excavation.md, Group 14.\n"
         "Six actual cases passed: native, active frozen pass, repeated reload, missing family, changed capacity proof, orphan parent.\n"
         "Nine job/pass/geological chunks stayed byte-exact across two reloads. Partial 77/cursor 0/revision 2 retained.\n"

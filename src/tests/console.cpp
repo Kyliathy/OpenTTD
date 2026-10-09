@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file console.cpp Tests for empty console input. @see docs/zz-reach2/upgrades/2026-10/r2rvm2-review-map-2.md */
+/** @file console.cpp Tests for empty console input. @see docs/zz-reach2/upgrades/2026-10/map-layers/r2rvm2-review-map-2.md */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

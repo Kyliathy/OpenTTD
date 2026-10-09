@@ -77,17 +77,17 @@ TEST_CASE("Excavation passes split only at supported complete-cut returns", "[ex
 	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto rng = _random;
 	ExcavationPassTerms terms;
-	terms.earth_capacity_t = 18;
-	terms.rock_capacity_t = 36;
+	terms.earth_capacity_t = 9;
+	terms.rock_capacity_t = 18;
 	const auto prepared = PrepareExcavationPass(fixture.job, terms);
 	REQUIRE(prepared.error == ExcavationError::None);
 	CHECK(prepared.terms.exchange_after == std::vector<uint16_t>{1, 2});
 	fixture.job.pass_terms = prepared.terms;
 	CHECK(GetExcavationRetreatPath(fixture.job, 2) == std::vector<TileIndex>{fixture.job.route[1].cutter_position, fixture.job.route[0].cutter_position, fixture.job.commissioning_anchor});
 	CHECK(fixture.job.route[1].heading == Direction::SW);
-	terms.earth_capacity_t = 17;
+	terms.earth_capacity_t = 8;
 	CHECK(PrepareExcavationPass(fixture.job, terms).error == ExcavationError::InsufficientCapacity);
-	terms.earth_capacity_t = 18; terms.rock_capacity_t = 35;
+	terms.earth_capacity_t = 9; terms.rock_capacity_t = 17;
 	CHECK(PrepareExcavationPass(fixture.job, terms).error == ExcavationError::InsufficientCapacity);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before);
 	CHECK(_random.state[0] == rng.state[0]);
@@ -99,12 +99,12 @@ TEST_CASE("Excavation reservation retains validated pass input", "[excavation-pa
 {
 	PassFixture fixture;
 	fixture.job.pass_terms = ExcavationPassTerms{};
-	fixture.job.pass_terms->rock_capacity_t = 35;
+	fixture.job.pass_terms->rock_capacity_t = 17;
 	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState());
 	CHECK(ReserveExcavationJob(fixture.job, true).error == ExcavationError::InsufficientCapacity);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before);
-	fixture.job.pass_terms->rock_capacity_t = 36;
-	fixture.job.pass_terms->earth_capacity_t = 18;
+	fixture.job.pass_terms->rock_capacity_t = 18;
+	fixture.job.pass_terms->earth_capacity_t = 9;
 	const auto reserved = ReserveExcavationJob(fixture.job, true);
 	REQUIRE(reserved.error == ExcavationError::None);
 	const auto *job = GetExcavationJob(reserved.id);

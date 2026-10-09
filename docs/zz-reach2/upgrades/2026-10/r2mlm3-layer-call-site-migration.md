@@ -45,6 +45,8 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by r2mlm2 Group 4. `MultiLayerMap::IterateLayer`, `TileInLayer`, `ProjectToSurface`, `RandomTileInLayer`, `GetLayerBase`, `IsTileInLayer` are the only allowed replacements; this plan adds no new layer API. |
 | [src/map_func.h](../../../../src/map_func.h) | Live definitions; no fixed range | Extended by r2mlm2 Group 1. `TilePlaneY`, `GetTileLayer`, `TileXYL`, `Map::PlaneSize`, `Map::WrapToLayer` are authoritative; `Map::WrapToMap` is deprecated and removed by task 2.8. |
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 Every use of a map-geometry API outside `src/map_func.h`, `src/map.cpp`, `src/tile_map.h` and `src/map_layer.*` is classified in `## Call-site Ledger` and, where needed, migrated. At one layer the game behaves exactly as before; at three layers no code silently falls into the wrong layer.
@@ -590,7 +592,7 @@ _Applies to Group 3._
 - [x] 3.5 `src/industry_cmd.cpp` and `src/object_cmd.cpp`: convert placement loops, `Map::MaxY()` bounds and budgets to surface plane semantics (C2, C3, C4).
 - [x] 3.6 `src/water_cmd.cpp` (`ConvertGroundTilesIntoWaterTiles` and the flood checks): surface-only (C2).
 - [x] 3.7 `src/disaster_vehicle.cpp`: target tiles, start positions and `Map::MaxY()` bounds use the surface plane (C2, C3).
-- [x] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4. All ten Surface prefixes match for all four final worlds; R2RVM2 task 18.1 and [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt).
+- [x] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4. All ten Surface prefixes match for all four final worlds; R2RVM2 task 18.1 and [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests).
 
 ### Area Mandatory Reading - Savegame conversions
 
@@ -666,7 +668,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [src/viewport.cpp](../../../../src/viewport.cpp) | 1195-1320 | `GetViewportY` and `ViewportAddLandscape`: the main C7 site, recorded only; its migration is r2mlm5 Group 2. |
 | [src/saveload/map_sl.cpp](../../../../src/saveload/map_sl.cpp) | 22-95 | `_map_desc`, `MAPSChunkHandler`, `MAPTChunkHandler`: the C8 pattern repeated by every plane chunk; recorded only, migrated by r2mlm4 Group 5. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). The neutrality reference for task 8.6. |
+| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). The neutrality reference for task 8.6. |
 
 ### Group 8 - Deferred records and verification
 
@@ -680,7 +682,7 @@ Closure, 2026-10-04: task 8.7's year-long player-route operator run is skipped u
 
   Verified 2026-10-04 against the integrated tree: both targets/configurations build with exit 0 and zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Surface digest and runtime checks remain open; this does not recreate the earlier one-layer staging build.
 - [x] 8.5 Add to `src/tests/map_layer.cpp` tests for the migrated helpers on a three-layer map: spiral search, `OrthogonalTileArea::Expand`, `GetTileSlopeZ` neighbours and `ProjectToSurface` all stay in the expected layer.
-- [x] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6). All four final worlds match every Surface chunk, R2RVM2 task 18.1; full digest lines are in [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt).
+- [x] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6). All four final worlds match every Surface chunk, R2RVM2 task 18.1; full digest lines are in [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests).
 - [s] 8.7 Play a new game for one in-game year at fast forward in a Debug build with towns, industries and a few player routes; confirm no assert fires.
 
 ## Consult on Demand

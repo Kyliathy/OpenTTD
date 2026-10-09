@@ -42,6 +42,7 @@
 #include "train.h"
 #include "train_cmd.h"
 #include "tbm.h"
+#include "tbm_hangar.h"
 #include "transport_tube.h"
 #include "tbm_exchange.h"
 #include "multilayer_sprite.h"
@@ -2368,7 +2369,7 @@ static void ReverseTrainDirection(Train *consist)
 
 	/* Check if we should back up or flip the train. A boring machine always backs up: flipping it end for end would put
 	 * its cutter behind its wagons (R2MLVS3MP-M decision 5). */
-	if (consist->vehicle_flags.Test(VehicleFlag::DrivingBackwards) || _settings_game.difficulty.train_flip_reverse_allowed == TrainFlipReversingAllowed::None || consist->Last()->CanLeadTrain() || GetTBMProjectForCutter(consist->index) != nullptr) {
+	if (consist->vehicle_flags.Test(VehicleFlag::DrivingBackwards) || _settings_game.difficulty.train_flip_reverse_allowed == TrainFlipReversingAllowed::None || consist->Last()->CanLeadTrain() || IsTBMCutterEngine(consist->engine_type)) {
 		/* The train will back up. */
 		consist->vehicle_flags.Flip(VehicleFlag::DrivingBackwards);
 
@@ -2447,6 +2448,7 @@ static void ReverseTrainDirection(Train *consist)
 	}
 }
 
+/** @copydoc BackUpTBMConsist */
 void BackUpTBMConsist(Train &front)
 {
 	if (!front.IsFrontEngine() || front.vehicle_flags.Test(VehicleFlag::DrivingBackwards) || IsWholeTrainInsideDepot(&front)) return;
@@ -2456,6 +2458,18 @@ void BackUpTBMConsist(Train &front)
 		return;
 	}
 	ReverseTrainDirection(&front);
+}
+
+/** @copydoc ChooseTBMReturnDirection */
+void ChooseTBMReturnDirection(Train &front)
+{
+	// A pending native reversal must finish once. Reissuing it on a second
+	// locomotive substep could undo the player's direction choice.
+	if (!front.IsFrontEngine() || front.flags.Test(VehicleRailFlag::Reversing) || IsWholeTrainInsideDepot(&front)) return;
+	if (!GetTBMCutterSteeringTarget(front).has_value() || !YapfTrainCheckReverse(&front)) return;
+	FreeTrainTrackReservation(&front);
+	if (front.cur_speed != 0) front.flags.Set(VehicleRailFlag::Reversing);
+	else ReverseTrainDirection(&front);
 }
 
 /**
@@ -2691,6 +2705,11 @@ static void CheckNextTrainTile(Train *consist)
  */
 static bool CheckTrainStayInMagazine(Train *v)
 {
+	const auto ordered = GetTBMOrderedHangar(*v);
+	if (!IsTBMStagingHangarOrder(*v) && ordered.error == TBMHangarError::None && ordered.tile == v->tile) {
+		VehicleEnterDepot(v); // A same-site order still completes through normal native whole-depot servicing and halt handling.
+		return true;
+	}
 	const DiagDirection exit = GetLayerPortalMagazineExit(v->tile, *v);
 	// A train that is no longer the project's (retired, released, or from a stale save) cannot pass the housing: it stays.
 	if (exit == DiagDirection::Invalid || !MayTBMTrainLeaveMagazine(*v)) return true;
@@ -3160,7 +3179,17 @@ public:
 	}
 };
 
-/* choose a track */
+/**
+ * Select or reserve a native railway branch for this actual consist.
+ * @param consist Actual front engine and order/work destination.
+ * @param tile Next candidate tile.
+ * @param enterdir Direction of entry into that tile.
+ * @param tracks Physically reachable native pieces.
+ * @param force_res Require a reservation even outside a path-signal block.
+ * @param[out] got_reservation Optional result of actual reservation acquisition.
+ * @param mark_stuck Allow the native retry mechanism to hold a failed route.
+ * @return Selected native piece, or Invalid when a work controller's destination cannot be reached safely.
+ */
 static Track ChooseTrainTrack(Train *consist, TileIndex tile, DiagDirection enterdir, TrackBits tracks, bool force_res, bool *got_reservation, bool mark_stuck)
 {
 	Track best_track = Track::Invalid;
@@ -3242,6 +3271,15 @@ static Track ChooseTrainTrack(Train *consist, TileIndex tile, DiagDirection ente
 		TileIndex new_tile = res_dest.tile;
 
 		Track next_track = DoTrainPathfind(consist, new_tile, dest_enterdir, tracks, path_found, do_track_reservation, &res_dest, &final_dest);
+		// An ordinary train may accept YAPF's suggested partial branch. A cutter
+		// must retain its accepted work destination; do not turn a failed search
+		// into wandering along whichever junction piece happens to sort first.
+		if (!path_found && GetTBMCutterSteeringTarget(*consist).has_value()) {
+			if (changed_signal) SetSignalStateByTrackdir(tile, TrackEnterdirToTrackdir(best_track, enterdir), SignalState::Red);
+			FreeTrainTrackReservation(consist);
+			if (mark_stuck) MarkTrainAsStuck(consist);
+			return Track::Invalid;
+		}
 		if (new_tile == tile) best_track = next_track;
 		consist->HandlePathfindingResult(path_found);
 	}
@@ -3844,6 +3882,14 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 					/* Currently the locomotive is active. Determine which one of the
 					 * available tracks to choose */
 					chosen_track = ChooseTrainTrack(first, gp.new_tile, enterdir, bits, false, nullptr, true);
+					if (chosen_track.None()) {
+						// No accepted work path means no physical step onto a guessed
+						// branch. Preserve every part and retry through native stuck handling.
+						first->cur_speed = 0;
+						first->subspeed = 0;
+						first->progress = 255;
+						return false;
+					}
 					assert(chosen_track.Any(bits | GetReservedTrackbits(gp.new_tile)));
 
 					if (first->force_proceed != TFP_NONE && IsPlainRailTile(gp.new_tile) && HasSignals(gp.new_tile)) {
@@ -4492,6 +4538,15 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 	/* exit if train is stopped */
 	if (consist->vehstatus.Test(VehState::Stopped) && consist->cur_speed == 0) return true;
 
+	// A TBM following its ordinary list must let the native order owner select
+	// the next leg before applying its missing-destination hold. Work-controlled
+	// trains retain the earlier hold and cannot acquire a stray list destination.
+	const auto *order_project = GetTBMProjectForCutter(consist->index);
+	const bool valid_order = !consist->current_order.IsType(OT_NOTHING) && consist->current_order.GetType() != OT_CONDITIONAL;
+	const bool list_controls = order_project != nullptr && order_project->phase == TBMPhase::FollowOrders;
+	const bool list_reverse = list_controls && ProcessOrders(consist);
+	if (list_controls && HasTBMHangarHaltOrder(*consist)) BeginTBMHangarReturn(*consist); // Adopt a native list Halt and its actual return direction before motion.
+
 	/* A cutter at work or waiting in its bay, or a hauler waiting there, holds still: their controllers own that
 	 * motion (r2mlvs4 Group 8, r2mlvs5 Group 6). */
 	if (IsTBMHoldingTrain(*consist) || IsTBMHaulerHeld(*consist)) {
@@ -4500,8 +4555,7 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 		return true;
 	}
 
-	bool valid_order = !consist->current_order.IsType(OT_NOTHING) && consist->current_order.GetType() != OT_CONDITIONAL;
-	if (ProcessOrders(consist) && CheckReverseTrain(consist)) {
+	if ((list_controls ? list_reverse : ProcessOrders(consist)) && !consist->flags.Test(VehicleRailFlag::Reversing) && CheckReverseTrain(consist)) {
 		consist->wait_counter = 0;
 		consist->cur_speed = 0;
 		consist->subspeed = 0;
@@ -4525,6 +4579,14 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 	consist->HandleLoading(mode);
 
 	if (consist->current_order.IsType(OT_LOADING)) return true;
+	// Ordinary order cleanup can end a service override after the early hold
+	// check. Recheck the actual work owner before a missing target could fall
+	// through to no-order movement in either native locomotive substep.
+	if (IsTBMHoldingTrain(*consist)) {
+		consist->cur_speed = 0;
+		consist->subspeed = 0;
+		return true;
+	}
 
 	// Each paid cut or exchange return changes the cutter's derived goal. Retire reservations to the previous goal before a reused chamber junction can steer it away from the current face.
 	if (const auto target = GetTBMCutterSteeringTarget(*consist); target.has_value()) {
@@ -4553,9 +4615,10 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 		++consist->wait_counter;
 
 		// Ordinary signal waits may reverse on their configured retry interval.
-		// A capsule's closed network retains its route and cargo until repair or an explicit player turnaround, including long waits.
+		// Capsules and project-driven cutters retain their destination and cargo
+		// until repair or explicit travel orders, including long signal waits.
 		bool turn_around = consist->wait_counter % (_settings_game.pf.wait_for_pbs_path * Ticks::DAY_TICKS) == 0 &&
-			_settings_game.pf.reverse_at_signals && !GetTubeVehicleCapability(consist->engine_type).has_value();
+			_settings_game.pf.reverse_at_signals && !GetTubeVehicleCapability(consist->engine_type).has_value() && !GetTBMCutterSteeringTarget(*consist).has_value();
 
 		if (!turn_around && consist->wait_counter % _settings_game.pf.path_backoff_interval != 0 && consist->force_proceed == TFP_NONE) return true;
 		if (!TryPathReserve(consist)) {
@@ -4575,6 +4638,15 @@ static bool TrainLocoHandler(Train *consist, bool mode)
 			consist->wait_counter = 0;
 			SetWindowWidgetDirty(WindowClass::VehicleView, consist->index, WID_VV_START_STOP);
 		}
+	}
+
+	// The second locomotive substep cannot bypass the first substep's failed
+	// work-route reservation. Keep native periodic retries alive above while
+	// all actual parts wait below, even after force-proceed requested a retry.
+	if (consist->flags.Test(VehicleRailFlag::Stuck) && GetTBMCutterSteeringTarget(*consist).has_value()) {
+		consist->cur_speed = 0;
+		consist->subspeed = 0;
+		return true;
 	}
 
 	if (consist->current_order.IsType(OT_LEAVESTATION)) {

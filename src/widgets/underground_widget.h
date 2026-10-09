@@ -14,7 +14,7 @@ enum UndergroundConstructionWidgets : WidgetID {
 	WID_UC_CAPTION, ///< Names the explicitly requested layer.
 	WID_UC_REQUIREMENTS, ///< Calendar and whole-footprint construction requirements.
 	WID_UC_SURVEY, ///< Inspect one world tile's public geological planning information.
-	WID_UC_PROJECT, ///< Select an actual portal for its commissioning/project controls.
+	WID_UC_PROJECT, ///< Browse actual owned projects and select their vehicle or footprint.
 	WID_UC_MINE, ///< Open the native industry's funding controls.
 	WID_UC_EXCHANGE, ///< Select a real project, then place its exchange at a validated bay.
 	WID_UC_RAIL, ///< Open conventional rail construction.
@@ -31,6 +31,13 @@ enum UndergroundConstructionWidgets : WidgetID {
 	WID_UC_AREA_FLOOR, ///< Final floor and actual additional swept work space.
 	WID_UC_MODEL_DATES, ///< Compatible cutter names and introduction years from the canonical catalogue.
 	WID_UC_JOB_PROGRESS, ///< Live selected job cut/partial-work progress; geology retains its sole cursor.
+	WID_UC_DETAILS, ///< Toggle optional construction requirements without changing the active tool.
+	WID_UC_DETAILS_STACK, ///< Requirements/calendar are hidden until requested.
+	WID_UC_QUOTE_STACK, ///< Actual quote/material/confirmation rows, hidden before a floor exists.
+	WID_UC_PROJECT_STACK, ///< Selected project progress, hidden until a real project is inspected.
+	WID_UC_INTENT_STACK, ///< Work intent is shown only while the area/tunnel placement tool owns the cursor.
+	WID_UC_INTENT, ///< Choose area coverage or exact straight cutter-centre continuation.
+	WID_UC_AREA_TIME, ///< Approximate uninterrupted cutting time at the actual cutter model's work rate.
 };
 
 #endif /* WIDGETS_UNDERGROUND_WIDGET_H */

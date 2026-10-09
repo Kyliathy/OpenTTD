@@ -36,8 +36,8 @@ public:
 	/** @return This fixture's exact activated package descriptors, read-only for native catalogue producer checks. */
 	const GRFConfigList &ActivatedContent() const { return this->package; }
 
-	/** Activate the exact required package/labels on an initialized 64x64 four-layer map. @param serialized_native_slots Use the distributed package's slot-12 custom-cargo boundary when writing a full game save. */
-	explicit ExcavationFixture(bool serialized_native_slots = false)
+	/** Activate an isolated native world. @param serialized_native_slots Match distributed cargo slots for native saves. @param hardness_version Zero preserves this fixture's historical geometry/rate baseline; regional acceptance explicitly selects the current version. @param world_seed Independent geological generation input. */
+	explicit ExcavationFixture(bool serialized_native_slots = false, uint16_t hardness_version = 0, uint32_t world_seed = 420)
 	{
 		SaveRandomSeeds(&this->seeds);
 		ResetGeologyWorldState();
@@ -80,7 +80,7 @@ public:
 		config->status = GRFStatus::Activated;
 		this->package.push_back(std::move(config));
 		REQUIRE(ActivateMultiLayerProfile(MultiLayerGameplayProfileID::MultilayerIndustry, LandscapeType::Temperate, this->package) == MultiLayerProfileError::None);
-		REQUIRE(GenerateWorldGeology(420) == GeologyError::None);
+		REQUIRE(GenerateWorldGeology(world_seed, hardness_version) == GeologyError::None);
 	}
 	/** Restore policy, registry, date, actor and RNG after this isolated focused world. */
 	~ExcavationFixture()

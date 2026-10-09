@@ -19,6 +19,23 @@ import subprocess
 from multilayer_state_fixture import log_path, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("content", "multilayer-loader-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def word(value):
     """Encode an unsigned little-endian word.
 
@@ -98,14 +115,14 @@ def run_roundtrips(root):
     @return Dictionary of checked candidate diagnostics.
     """
     area = root / "docs/zz-reach2/upgrades/2026-10"
-    fixtures = root / "src/tests/fixtures/content"
-    startup = root / "build/scripts/game_start.scr"
+    fixtures = CONTEXT.directory / "scratch"
+    startup = RUNTIME / "scripts/game_start.scr"
     original = startup.read_bytes()
-    config_proxy = root / "build/grftest.cfg"
+    config_proxy = RUNTIME / "grftest.cfg"
     original_config = config_proxy.read_bytes()
-    package_proxy = root / "build/newgrf/test_road_type.grf"
+    package_proxy = RUNTIME / "newgrf/test_road_type.grf"
     original_package = package_proxy.read_bytes()
-    runner = area / "tools/run_dedicated.sh"
+    runner = ROOT / "mlm/tools/run/run_dedicated.sh"
     package = fixtures / "multilayer_probe.grf"
     package.write_bytes(package_bytes())
     # Saved GRFs are rediscovered by identity from the runtime newgrf search directory.
@@ -129,7 +146,7 @@ def run_roundtrips(root):
             before = None
             # The second load reconstructs definitions using saved engine and industry mappings.
             for phase in ("new", "reload"):
-                saved = save_path(f"r2mlvs1-b-{mode}-{phase}.sav")
+                saved = output_save_path(f"r2mlvs1-b-{mode}-{phase}.sav")
                 saved.unlink(missing_ok=True)
                 script = fixtures / f"r2mlvs1-b-{mode}-{phase}.scr"
                 log = log_path(f"r2mlvs1-b-{mode}-{phase}.log", root)
@@ -146,7 +163,7 @@ def run_roundtrips(root):
                 command = ["C:/Program Files/Git/bin/bash.exe", runner.as_posix(),
                            (root / "build").as_posix(), "Debug", log.as_posix(),
                            "-X", "-c", config_proxy.name, *arguments]
-                subprocess.run(command, check=True, env=env, timeout=70)
+                run_native(CONTEXT, command, check=True, env=env, timeout=70)
                 evidence = log.read_text(encoding="utf-8", errors="replace")
                 assert saved.is_file(), f"fixture did not save: {saved}"
                 messages = re.findall(r"MLVS_PROBE (.*)", evidence)
@@ -173,7 +190,7 @@ def run_roundtrips(root):
         for mode in ("native", "bundled"):
             for phase in ("new", "reload"):
                 (fixtures / f"r2mlvs1-b-{mode}-{phase}.scr").unlink(missing_ok=True)
-    (area / "r2mlvs1-b-loader-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs1-b-loader-results.txt").write_text(
         "R2MLVS1 Group 3: dedicated definition round-trip evidence\n"
         + "\n".join(f"{mode}: {value!r}" for mode, value in results.items()) + "\n",
         encoding="utf-8",
@@ -188,10 +205,10 @@ def run_profiles(root):
     @return Checked label-to-slot maps for both supported Temperate profiles.
     """
     area = root / "docs/zz-reach2/upgrades/2026-10"
-    fixtures = root / "src/tests/fixtures/content"
-    startup = root / "build/scripts/game_start.scr"
-    config_proxy = root / "build/grftest.cfg"
-    package = root / "build/newgrf/multilayer_industry.grf"
+    fixtures = CONTEXT.directory / "scratch"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config_proxy = RUNTIME / "grftest.cfg"
+    package = RUNTIME / "newgrf/multilayer_industry.grf"
     original_script = startup.read_bytes()
     original_config = config_proxy.read_bytes()
     original_package = package.read_bytes()
@@ -213,7 +230,7 @@ def run_profiles(root):
         # Each case exercises one activation/refusal boundary; no broad map or vehicle regression runs here.
         for name, profile, climate, extra, refusal in cases:
             script = fixtures / f"r2mlvs1-c-{name}.scr"
-            saved = save_path(f"r2mlvs1-c-{name}.sav")
+            saved = output_save_path(f"r2mlvs1-c-{name}.sav")
             log = log_path(f"r2mlvs1-c-{name}.log", root)
             config = fixtures / f"r2mlvs1-c-{name}.cfg"
             saved.unlink(missing_ok=True)
@@ -240,10 +257,10 @@ def run_profiles(root):
             try:
                 env = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=1,grf=2,script=2")
                 env.pop("OTTD_MULTILAYER_LOADER_PROBE", None)
-                command = ["C:/Program Files/Git/bin/bash.exe", (area / "tools/run_dedicated.sh").as_posix(),
+                command = ["C:/Program Files/Git/bin/bash.exe", (ROOT / "mlm/tools/run/run_dedicated.sh").as_posix(),
                            (root / "build").as_posix(), "Debug", log.as_posix(),
                            "-X", "-c", config_proxy.name, "-G", "1234"]
-                subprocess.run(command, check=True, env=env, timeout=70)
+                run_native(CONTEXT, command, check=True, env=env, timeout=70)
                 evidence = log.read_text(encoding="utf-8", errors="replace")
                 if refusal is not None:
                     assert refusal in evidence, f"missing specific refusal for {name}"
@@ -270,7 +287,7 @@ def run_profiles(root):
         # Keep evidence and saves; disposable generated console source is reconstructed by this harness.
         for name, *_ in cases:
             (fixtures / f"r2mlvs1-c-{name}.scr").unlink(missing_ok=True)
-    (area / "r2mlvs1-c-profile-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs1-c-profile-results.txt").write_text(
         "R2MLVS1 Group 4: dedicated profile activation and four refusal cases\n"
         + json.dumps(results, indent=2) + "\n", encoding="utf-8")
     return results

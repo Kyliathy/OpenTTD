@@ -24,6 +24,8 @@ static GeologyStateSnapshot GeologySnapshotFixture()
 	REQUIRE(generated.error == GeologyError::None);
 	GeologyStateSnapshot snapshot;
 	snapshot.generator_version = generated.state.generator_version;
+	snapshot.hardness_version = generated.state.hardness_version;
+	snapshot.hardness_seed = generated.state.hardness_seed;
 	snapshot.width = Map::SizeX();
 	snapshot.height = Map::SizeY();
 	snapshot.freeform_edges = _settings_game.construction.freeform_edges;

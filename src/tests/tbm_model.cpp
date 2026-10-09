@@ -22,6 +22,12 @@ TEST_CASE("TBM models consume the native profile's immutable date and layer capa
 	const auto before = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1979}, 11, 31);
 	const auto unlock = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1);
 	REQUIRE(GetTBMCutterModels().size() == 2);
+	CHECK(GetTBMCutterModel(0)->work_rate_numerator == 1);
+	CHECK(GetTBMCutterModel(0)->work_rate_denominator == 2);
+	CHECK(GetTBMCutterModel(1)->work_rate_numerator == 3);
+	CHECK(GetTBMCutterModel(1)->work_rate_denominator == 4);
+	CHECK(GetTBMCutterModel(0)->travel_speed == 64);
+	CHECK(GetTBMCutterModel(1)->travel_speed == 48);
 	CHECK(IsTBMCutterAvailable(0, MapLayer::Underground, policy, before));
 	CHECK_FALSE(IsTBMCutterAvailable(0, MapLayer::DeepUnderground, policy, unlock));
 	CHECK_FALSE(IsTBMCutterAvailable(1, MapLayer::Underground, policy, before));

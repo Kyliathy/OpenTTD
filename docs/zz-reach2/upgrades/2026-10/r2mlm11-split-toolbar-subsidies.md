@@ -39,10 +39,12 @@
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`. The conventions bind every edit here: `//comment` with no space after `//`, a Javadoc block on every function this plan adds or edits, English-only strings, and never `git checkout`, `git reset` or `git stash`. The commands are the only allowed way to configure, build and test (Visual Studio Build Tools 2022, never Community). |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 356-358 | `#### L-2 Split toolbars lose Subsidies`: the finding this plan fixes. `arrange14` and `arrange15` have no `WID_TN_SUBSIDIES`. Only the Subsidies half is in scope. The Pause and Fast-forward half of the same finding stays open and must not be touched here. |
+| [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | 356-358 | `#### L-2 Split toolbars lose Subsidies`: the finding this plan fixes. `arrange14` and `arrange15` have no `WID_TN_SUBSIDIES`. Only the Subsidies half is in scope. The Pause and Fast-forward half of the same finding stays open and must not be touched here. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 90-95, 204 | `enum class ToolbarMode` and `static ToolbarMode _toolbar_mode`. Only `ToolbarSwitchClick` assigns `Upper` or `Lower`, and only `GetButtonArrangement` assigns `Normal`. A toolbar that has just split therefore still reports `Normal`. This is why D-2 tests whether the button is on screen and never reads `_toolbar_mode`. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 1478-1542 | `NWidgetToolbarContainer::AssignSizePosition`. It first sets `current_x = 0` on every child, then gives a width only to the buttons of the current arrangement page. D-2 reads exactly that signal. This plan relies on that behaviour and must not change this function. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 676-706 | `AddDropDownLeagueTableOptions` and `ToolbarGraphsClick`: upstream's precedent for listing a missing button's entries in another button's menu. Copy its shape (append to the list behind a condition, keep the existing dispatch). Do not copy its `_toolbar_mode != ToolbarMode::Normal` condition (D-2). |
+
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Outcome and Boundaries
 
@@ -152,7 +154,7 @@ Runtime closure, 2026-10-04: the lower-page menu checks at widths 14 and 15, vis
 - [x] 2.7 Widen until the toolbar is a single row: the Towns menu has no Subsidies entry, and the Subsidies button and F6 both open the list. Then narrow back to 14 buttons and confirm F6 still opens the list. Evidence: `full-towns.png`, `full-subsidies.png`, `full-f6.png`, `14-upper-f6.png`.
 - [x] 2.8 Confirm no assert fired during tasks 2.3 to 2.7. Under this task, record the interface size and the window widths used for 14, 15 and 16 buttons per page.
 
-  Debug new-game run, seed 4242, Interface size 250%, client height 600 pixels: widths 728, 780 and 832 select 14, 15 and 16 buttons; 1750 shows a single row. Both pages of 17..20 were captured at widths 884, 936, 988 and 1040. [toolbar-width-review.png](assets/reviews/toolbar-width-review.png) shows all arrangements; [subsidies-menu-review.png](assets/reviews/subsidies-menu-review.png) shows the actual menus and lists. Originals are in `build/toolbar-review/`, alongside `game.log`; the run exits normally with no assertion. Menu presence follows actual widget visibility. F6 remains available when neither Subsidies nor Towns is on the current page.
+  Debug new-game run, seed 4242, Interface size 250%, client height 600 pixels: widths 728, 780 and 832 select 14, 15 and 16 buttons; 1750 shows a single row. Both pages of 17..20 were captured at widths 884, 936, 988 and 1040. [toolbar-width-review.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/toolbar-width-review.png) shows all arrangements; [subsidies-menu-review.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/subsidies-menu-review.png) shows the actual menus and lists. Originals are in `build/toolbar-review/`, alongside `game.log`; the run exits normally with no assertion. Menu presence follows actual widget visibility. F6 remains available when neither Subsidies nor Towns is on the current page.
 
 ### Area Mandatory Reading - Plan records
 
@@ -160,8 +162,8 @@ _Applies to Group 3._
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | 1434 | Task 18.3, which starts "L-2: the Subsidies half belongs to r2mlm11". It was r2rvm task 14.3, "L-2: ask the user which button `arrange14` and `arrange15` should give up", when this plan was written, and moved to r2rvm2 when r2rvm was split. Task 3.1 records the user's answer there. |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 141-175 | `### Severity index`, row L-2 (line 165). Its Status column belongs to r2rvm's own status task; this plan does not fill it. |
+| [r2rvm2-review-map-2.md](map-layers/r2rvm2-review-map-2.md) | 1434 | Task 18.3, which starts "L-2: the Subsidies half belongs to r2mlm11". It was r2rvm task 14.3, "L-2: ask the user which button `arrange14` and `arrange15` should give up", when this plan was written, and moved to r2rvm2 when r2rvm was split. Task 3.1 records the user's answer there. |
+| [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | 141-175 | `### Severity index`, row L-2 (line 165). Its Status column belongs to r2rvm's own status task; this plan does not fill it. |
 | [r2mlm1-layer-toolbar-button.md](r2mlm1-layer-toolbar-button.md) | 120-127 | `### Group 4 - Toolbar arrangements`, task 4.3: the removal rule that dropped Subsidies from `arrange14` and `arrange15`. It gets a cross-reference note. |
 
 ### Group 3 - Plan records
@@ -190,7 +192,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 
 | File name | Sections or Line Ranges used while planning | Planning contribution |
 | --- | --- | --- |
-| [r2rvm-review-map.md](r2rvm-review-map.md), [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | r2rvm 165, 356-358; r2rvm2 1434 | Finding L-2 and its open decision task, which this plan answers with the user's choice. |
+| [r2rvm-review-map.md](map-layers/r2rvm-review-map.md), [r2rvm2-review-map-2.md](map-layers/r2rvm2-review-map-2.md) | r2rvm 165, 356-358; r2rvm2 1434 | Finding L-2 and its open decision task, which this plan answers with the user's choice. |
 | [r2mlm1-layer-toolbar-button.md](r2mlm1-layer-toolbar-button.md) | 120-127 | Task 4.3's removal order explained why Subsidies was dropped, and why the arrangements stay owned by r2mlm1. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 90-95, 204, 484-542, 676-706, 1233-1247, 1478-1542, 1578-1905, 2026, 2097-2110, 2117-2121, 2239-2282 | The `_toolbar_mode` writers (leading to D-2), the League precedent, the third-page risks at the `GetButtonArrangement` return and the editor's `arrange_switch` (D-1), the Towns button never being disabled, the per-layout button counts, and the F6 hotkey. |
 | [src/widget_type.h](../../../../src/widget_type.h) | 272 | `NWidgetBase::current_x` is public, so the helper needs no new accessor. |

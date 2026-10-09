@@ -19,7 +19,7 @@ from convert_terrain_art import png_bytes
 
 RECORD = base.ASSETS / "control-generation-record.json"
 REPORT = base.OUTPUT / "control-details-manifest.json"
-REVIEW = base.ASSETS / "ground-controls-details-review.png"
+REVIEW = base.REVIEW / "ground-controls-details-review.png"
 STATES = ["enabled", "disabled", "pressed"]
 
 
@@ -38,7 +38,7 @@ def derive():
     for reference in source["references"] + document["cargo_reuse"]:
         if base.digest(base.repository_path(reference["path"])) != reference["sha256"]:
             raise ValueError("immutable control/cargo reference changed")
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     selected = document["families"]
     if source["grid"] != [len(selected), 3] or source["states"] != STATES:
@@ -89,7 +89,7 @@ def bind_manifest(report, verified):
     @param verified True only after the explicit focused source check has passed.
     @return None; update only selected source/authoring fields in the public file.
     """
-    public_path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    public_path = base.PUBLIC
     public = json.loads(public_path.read_text(encoding="utf-8"))
     source = json.loads(RECORD.read_text(encoding="utf-8"))["source"]
     # A low-power bake does not silently claim test completion. The source path
@@ -114,6 +114,8 @@ def publish(report, files):
     @param files Exact native indexed PNG bytes mapped to repository outputs.
     @return None; bake review/native artifacts and mark their public status staged.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, encoded in files.items():
         path.write_bytes(encoded)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

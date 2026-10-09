@@ -51,6 +51,8 @@ enum class MultiLayerSpriteAsset : uint8_t {
 	CargoROCK, ///< cargo.ROCK.
 	TerrainEdgesUnderground, ///< terrain.edges.underground.
 	TerrainEdgesDeep, ///< terrain.edges.deep.
+	TerrainHardness, ///< terrain.hardness.
+	TerrainHardnessEdges, ///< terrain.hardness-edges.
 	End, ///< Number of selected family declarations.
 };
 
@@ -65,8 +67,8 @@ struct MultiLayerSpriteRange {
 	uint8_t parts; ///< Physical back/front or vehicle part count.
 };
 
-static constexpr uint16_t MULTILAYER_M1_SPRITE_COUNT = 2404; ///< Exclusive selected native block bound.
-static constexpr std::array<MultiLayerSpriteRange, 40> _multilayer_m1_sprite_ranges = {{
+static constexpr uint16_t MULTILAYER_M1_SPRITE_COUNT = 2436; ///< Exclusive selected native block bound.
+static constexpr std::array<MultiLayerSpriteRange, 42> _multilayer_m1_sprite_ranges = {{
 	{74, 12, 4, 3, 1, 1, 1}, // terrain.underground
 	{86, 12, 4, 3, 1, 1, 1}, // terrain.deep
 	{98, 3, 3, 1, 1, 1, 1}, // survey.COAL
@@ -107,6 +109,8 @@ static constexpr std::array<MultiLayerSpriteRange, 40> _multilayer_m1_sprite_ran
 	{2403, 1, 1, 1, 1, 1, 1}, // cargo.ROCK
 	{168, 16, 16, 1, 1, 1, 1}, // terrain.edges.underground
 	{184, 16, 16, 1, 1, 1, 1}, // terrain.edges.deep
+	{2404, 16, 16, 1, 1, 1, 1}, // terrain.hardness
+	{2420, 16, 16, 1, 1, 1, 1}, // terrain.hardness-edges
 }};
 
 #endif /* MULTILAYER_SPRITE_ASSETS_H */

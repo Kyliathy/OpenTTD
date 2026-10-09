@@ -14,6 +14,7 @@
 #include "map_layer.h"
 #include "rail_map.h"
 #include "road_map.h"
+#include "depot_type.h"
 
 /**
  * Whether this tile is one end of a layer portal.
@@ -96,6 +97,38 @@ inline TileIndex GetLayerPortalPairTile(Tile t)
 	assert(IsLayerPortalTile(pair));
 	assert(GetLayerPortalShaftDirection(pair) == ReverseDiagDir(GetLayerPortalShaftDirection(t)));
 	return pair;
+}
+
+/**
+ * Test the explicit native-depot identity marker on an existing rail magazine.
+ * Portal m4 bit0 declares that m2 holds an actual DepotID; older portals have no marker.
+ * @param t Physical tile, including ordinary non-portal tiles.
+ * @return Whether this housing declares a native hangar depot; pool/reference validation is separate.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
+ */
+inline bool IsLayerPortalHangarTile(Tile t)
+{
+	return IsLayerPortalTile(t) && GetLayerPortalTransportType(t) == TransportType::Rail && HasBit(t.m4(), 0);
+}
+
+/** @param t Registered rail housing. @return Its actual native DepotID, never a converted tile address. */
+inline DepotID GetLayerPortalHangarDepotIndex(Tile t)
+{
+	assert(IsLayerPortalHangarTile(t));
+	return DepotID{t.m2()};
+}
+
+/**
+ * Bind or clear the native identity of the existing upper magazine.
+ * @param t Upper rail housing; the caller owns depot-pool publication/removal.
+ * @param depot Actual allocated depot, or Invalid after native lifecycle cleanup.
+ */
+inline void SetLayerPortalHangarDepot(Tile t, DepotID depot)
+{
+	assert(IsLayerPortalTile(t) && GetLayerPortalTransportType(t) == TransportType::Rail);
+	assert(GetTileLayer(t) < GetLayerPortalTargetLayer(t));
+	AssignBit(t.m4(), 0, depot != DepotID::Invalid());
+	t.m2() = depot == DepotID::Invalid() ? 0 : depot.base();
 }
 
 /**

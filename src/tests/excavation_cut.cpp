@@ -148,8 +148,8 @@ TEST_CASE("Excavation complete cuts charge support and deliver independent spoil
 	const auto quote = PrepareExcavationCut(rig.Request(), rig.participant.Capture());
 	REQUIRE(quote.error == ExcavationError::None);
 	CHECK(quote.new_cells == 3);
-	CHECK(quote.earth_t == 18);
-	CHECK(quote.rock_t == 36);
+	CHECK(quote.earth_t == 9);
+	CHECK(quote.rock_t == 18);
 	CHECK(quote.support_units == 3);
 	CHECK(quote.cost == 90);
 	CHECK(quote.work_ticks == 222);
@@ -162,8 +162,8 @@ TEST_CASE("Excavation complete cuts charge support and deliver independent spoil
 	const auto committed = CommitExcavationCut(request, rig.participant);
 	REQUIRE(committed.error == ExcavationError::None);
 	CHECK(committed == quote);
-	CHECK(rig.participant.earth == 18);
-	CHECK(rig.participant.rock == 36);
+	CHECK(rig.participant.earth == 9);
+	CHECK(rig.participant.rock == 18);
 	CHECK(rig.participant.supports == 61);
 	CHECK(Company::Get(_current_company)->money == money - 90);
 	CHECK(GetExcavationJob(rig.id)->cursor == 1);
@@ -174,12 +174,12 @@ TEST_CASE("Excavation complete cuts charge support and deliver independent spoil
 	CHECK(rig.participant.commits == 1);
 	// Cancellation after a real coordinated cut preserves its paid/cargo receipt and completed cavity.
 	CHECK(CancelExcavationJob(rig.id) == ExcavationError::None);
-	CHECK(GetExcavationJob(rig.id)->completed_earth_t == 18);
-	CHECK(GetExcavationJob(rig.id)->completed_rock_t == 36);
+	CHECK(GetExcavationJob(rig.id)->completed_earth_t == 9);
+	CHECK(GetExcavationJob(rig.id)->completed_rock_t == 18);
 	CHECK(GetExcavationJob(rig.id)->completed_work_cost == 90);
 	CHECK(GetGeologyWorldState().terrain.Get(TileAddWrap(rig.anchor, 2, 0)) == ExcavationState::Excavated);
 	CHECK(GetGeologyWorldState().terrain.Get(TileAddWrap(rig.anchor, 3, 0)) == ExcavationState::Solid);
-	CHECK(rig.participant.earth == 18);
+	CHECK(rig.participant.earth == 9);
 	CHECK(Company::Get(_current_company)->money == money - 90);
 }
 

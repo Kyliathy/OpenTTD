@@ -66,6 +66,7 @@ struct TBMPairControls {
 	bool running = false; ///< The project's cutter is started.
 	bool pause = false; ///< The project accepts Pause now.
 	bool resume = false; ///< The project accepts Resume now.
+	bool park = false; ///< The existing whole consist may request physical return and resumable parking.
 	bool cancel = false; ///< The project accepts Cancel now.
 	bool retire = false; ///< The project accepts Retire now.
 	bool assign = false; ///< The project takes a hauler now.
@@ -83,5 +84,17 @@ struct TBMPairControls {
  * @return The controls; a pair without a project of the company only offers selling, converting and connecting.
  */
 TBMPairControls GetTBMPairControls(TileIndex key, CompanyID company);
+
+/**
+ * Review the actual work/haul assignment independently of manual station count.
+ * @param front Native train whose controller and current destinations are inspected read-only.
+ * @return No value for ordinary trains; INVALID_STRING_ID for a valid managed route;
+ * otherwise a localized actionable problem suitable for status or order advice.
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group6
+ */
+std::optional<StringID> GetTBMOrderProblem(const Train &front);
+
+/** @param hardness Authoritative geological identity. @return The shared localized name used by face status and ordinary ground surveys. */
+StringID GetGeologyHardnessString(GeologyHardness hardness);
 
 #endif /* TBM_CONTROLS_H */

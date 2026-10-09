@@ -5,15 +5,17 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file depot_sl.cpp Code handling saving and loading of depots. */
+/** @file depot_sl.cpp Native depot persistence, including registered portal magazines. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/savegame/archi-savegame.md */
 
 #include "../stdafx.h"
 
 #include "saveload.h"
+#include "saveload_error.hpp"
 #include "compat/depot_sl_compat.h"
 
 #include "../depot_base.h"
 #include "../town.h"
+#include "../layer_portal_cmd.h"
 
 #include "../safeguards.h"
 
@@ -29,6 +31,7 @@ static const SaveLoad _depot_desc[] = {
 	SaveLoad::Variable<VarFileType::I32>("build_date", SLE_OBJECT_ADDRESS(Depot, build_date), SaveLoadVersion::NewGRFDepotBuildDate),
 };
 
+/** Native depot identities and town references; portal storage reuses this existing pool and wire format. */
 struct DEPTChunkHandler : ChunkHandler {
 	DEPTChunkHandler() : ChunkHandler("DEPT", ChunkType::Table) {}
 
@@ -57,11 +60,19 @@ struct DEPTChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Restore native town pointers and validate both ends of a portal-backed depot identity after map loading. */
 	void FixPointers() const override
 	{
 		for (Depot *depot : Depot::Iterate()) {
 			SlObject(depot, _depot_desc);
 			if (IsSavegameVersionBefore(SaveLoadVersion::UniqueDepotNames)) depot->town = Town::Get((size_t)depot->town);
+			if (SlIsFixingPointers() && IsValidTile(depot->xy) && IsLayerPortalTile(depot->xy)) {
+				const auto key = GetLayerPortalPairKey(depot->xy);
+				// A depot may name only the real upper magazine with an explicit
+				// matching map identity. Old files cannot assert this new meaning.
+				if (IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) || !key || *key != depot->xy ||
+						!IsLayerPortalHangarTile(depot->xy) || GetLayerPortalHangarDepotIndex(depot->xy) != depot->index) SlErrorCorrupt("Invalid portal hangar depot");
+			}
 		}
 	}
 };

@@ -40,10 +40,12 @@
 | --- | --- | --- |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 61-74, 98-104, 114-127 | `### AD-1 Layer vocabulary`, `### AD-2 Stacked-plane addressing`, `### AD-8 Cross-layer movement only through layer portals`, `### AD-9 Savegame`, `### AD-12 Version-1 scope` and `## Cross-plan Invariants` I-1 to I-8. AD-1 makes every `MapLayer` value implicit in every saved `TileIndex`, so values are never reordered: that is why Deep Underground is appended as value 3 (D-1). AD-2 makes a layer one full stacked plane, so a fourth layer is a fourth plane and no command or pool gains a layer field. AD-8 makes `GetLayerPortalNextTile` the only cross-layer step and forbids wormhole state; the portal kinds of D-3 keep that. AD-12 limits version 1 to three layers; Group 11 amends AD-1, AD-8 and AD-12, and every group must keep I-1 to I-8 true. |
 | [r2mlm-multi-layered-map.md](r2mlm-multi-layered-map.md) | 141-170 | `## Engineering Conventions` and `## Build and Test Commands`: `//comment` with no space after `//`, a Javadoc block on every function and parameter, English-only strings, no created source, test or JSON file named `r2*`, never `git checkout`, `git reset` or `git stash`, never move or delete files, and the Build Tools 2022 toolchain with the standalone vcpkg (never Visual Studio Community). They bind every edit and build below. |
-| [r2rvm-review-map.md](r2rvm-review-map.md) | 569-672 | `### Commands used by every group` and `### Comment and header rules`: the exact configure, build (`/nodeReuse:false`, fully parallel) and unit-test commands, the `env -u NoDefaultCurrentDirectoryInExePath` rule for regression runs, the PrintWindow-only window capture, `tools/run_dedicated.sh`, the rule to tell the user before starting `openttd.exe`, and the file-header rule (`@see` a related `archi-*.md` or `r*.md` page on the `@file` line, so line numbers stay put). "Build Debug" and "run the unit tests" below mean exactly these commands. |
+| [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | 569-672 | `### Commands used by every group` and `### Comment and header rules`: the exact configure, build (`/nodeReuse:false`, fully parallel) and unit-test commands, the `env -u NoDefaultCurrentDirectoryInExePath` rule for regression runs, the PrintWindow-only window capture, `mlm/tools/run/run_dedicated.sh`, the rule to tell the user before starting `openttd.exe`, and the file-header rule (`@see` a related `archi-*.md` or `r*.md` page on the `@file` line, so line numbers stay put). "Build Debug" and "run the unit tests" below mean exactly these commands. |
 | [src/map_layer_type.h](../../../../src/map_layer_type.h) | 15-31 | `enum class MapLayer` and `MAX_MAP_LAYERS` with its `static_assert`: the one place the layer count is defined. Every live `Map::Allocate` call passes `MAX_MAP_LAYERS`. Group 2 changes it; every later group assumes four layers with `MapLayer::DeepUnderground == 3`. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 234-283 | `MultiLayerMap::IsStorableLayerCount`, `ValidateLayerCount`, `GetRules`, `InitialiseLayer` and `GetPortalTargetLayer`: the controller boundary. Layer meaning (counts, rules, pairing) is asked of `MultiLayerMap`; gameplay never adds `Map::PlaneSize()` to a tile by hand. `GetPortalTargetLayer(MapLayer)` is the one-to-one pair rule that Group 4 replaces with kind-aware pairing (D-3). |
 | [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | 63-88, 176-185 | `GetLayerPortalTargetLayer` (two bits of `m5`, so values 0 to 3), `GetLayerPortalPairTile` and `IsLayerPortalShaftExit`. The target field already holds value 3, so a Deep Underground end needs no new tile bit; the portal kind is derived from the transport and the two layers (D-3). |
+
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Outcome and Boundaries
 
@@ -225,7 +227,7 @@ _Applies to Group 1._
 **Coding-stage override, 2026-10-03.** The user directed this session to "do the coding" and defer testing until their save is ready. Code can be staged once the code/art prerequisites exist; this does not satisfy the runtime or human-review gate. The original acceptance gate below remains open. R2MLM6's 44 sprites and Action 5 integration now exist and build in Debug, and the R2MLM8/R2MLM9 drawing swaps are implemented. Their visibility checks and R2RVM2's scenario/decision tasks remain pending. No in-game capture or scenario is claimed here.
 
 - **Required:**
-  - every task of [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) is checked and its `## Completion Conditions` hold;
+  - every task of [r2rvm2-review-map-2.md](map-layers/r2rvm2-review-map-2.md) is checked and its `## Completion Conditions` hold;
   - [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) `## Completion Conditions` hold: 44 sprites in `map_layers.png` and `map_layers.nfo`, the `0x1C` row, the constants in `src/table/sprites.h`, and no missing-sprite warning;
   - [r2mlm8-bus-elevators.md](r2mlm8-bus-elevators.md) `### Group 7 - Elevator art` and [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) `### Group 7 - Portal art` are checked.
 - **How to verify:**
@@ -242,28 +244,28 @@ _Applies to Group 1._
 | --- | --- | --- |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 258-263 | `## Completion Conditions` of r2mlm6: the gate's art contract. Only these conditions are checked; r2mlm6's own reading lists are not loaded. |
 | [r2mlm8-bus-elevators.md](r2mlm8-bus-elevators.md), [r2mlm9-rail-layer-portals.md](r2mlm9-rail-layer-portals.md) | r2mlm8 173-178, r2mlm9 185-191 | `### Group 7 - Elevator art` and `### Group 7 - Portal art`: the swap tasks that retire the depot stand-ins in `DrawTile_LayerPortal`. Task 1.4 photographs what those groups delivered. |
-| [tools/ottd_window.ps1](tools/ottd_window.ps1) | 1-8, 25-131 | The capture and input helper: `Start-Ottd`, `Save-OttdShot` (PrintWindow, game window only), `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`. Every screenshot in this plan uses it, and input is only ever posted to the game window, never sent through the user's mouse or keyboard. |
-| [tools/run_game_logged.sh](tools/run_game_logged.sh) | 1-17 | Usage and output locations of the logged Debug game: the log in `build/scenario-logs/`, desync messages in `build/save/autosave/commands-out.log`, and crash files in `build/`. |
+| [mlm/tools/run/ottd_window.ps1](../../../../mlm/tools/run/ottd_window.ps1) | 1-8, 25-131 | The capture and input helper: `Start-Ottd`, `Save-OttdShot` (PrintWindow, game window only), `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`. Every screenshot in this plan uses it, and input is only ever posted to the game window, never sent through the user's mouse or keyboard. |
+| [mlm/tools/run/run_game_logged.sh](../../../../mlm/tools/run/run_game_logged.sh) | 1-17 | Usage and output locations of the logged Debug game: the log in `build/scenario-logs/`, desync messages in `build/save/autosave/commands-out.log`, and crash files in `build/`. |
 
 ### Group 1 - Entry gate and baseline
 
 Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The operator-created version-369 portal/vehicle fixture and its historical pre-change captures/report are skipped. The supplied save is version 370; no downgrade or synthetic replacement fixture is manufactured. Task 3.6 separately verifies an authentic bare three-layer save upgrade. Each skipped row is marked `[s]`, never a passing test.
 
-Coding baseline: `build/build-layer-art-Debug.log` builds both targets without compiler warnings; the existing unit-test baseline is 106/106 in `build/ctest-Debug.log`. A fresh runtime baseline and the user's version-369 portal save are pending. All six named capture/input functions exist in `tools/ottd_window.ps1`.
+Coding baseline: `build/build-layer-art-Debug.log` builds both targets without compiler warnings; the existing unit-test baseline is 106/106 in `build/ctest-Debug.log`. A fresh runtime baseline and the user's version-369 portal save are pending. All six named capture/input functions exist in `mlm/tools/run/ottd_window.ps1`.
 
 {{SIMPLE}}
 - [x] 1.1 Check the entry gate above and record each of its three conditions under this task, with the grep output. If one fails, stop here and tell the user which plan must finish first.
 
   Final closure check, 2026-10-04: R2RVM2 code/automated tasks are complete, with explicit user-scenario skips. R2MLM6 and both consumer art-swap groups deliver generated art; their operator acceptance cases are explicitly skipped under the goal allowance. The inherited human gates therefore do not block coding/closure. `rg -n 'SPR_MAP_LAYER_BASE|MAP_LAYER_SPRITE_COUNT' src/table/sprites.h` shows the base at line 385 and the live count 66 at 386, as extended by canonical AD-10/R2MLM13; the original 44-row replay is retained. `rg -n '_depot_gfx_table|_road_depot' src/layer_portal_cmd.cpp` has no matches. R2MLM13 tasks 9.4/10.5 record the actual all-offset load without missing-extra-sprite warnings. No skipped human prerequisite is claimed as passed.
 - [x] 1.2 Build Debug and RelWithDebInfo, and run the unit tests. Record the pass count under this task as this plan's baseline. Final current-tree evidence: both build targets/configurations exit 0 with zero compiler warnings, both pass 111/111 unit cases (`build/build-console-input-*.log`, `build/ctest-console-input-*.log`), and full release CTest passes 115/115 (`build/ctest-console-final-RelWithDebInfo.log`).
-- [s] 1.3 Find or ask for a version-369 save that holds at least one rail portal, one road portal and one road vehicle underground. Copy it, never move it, to `build/save/deep_pre_portals.sav`. If none exists, ask the user to build one in the Debug build of the gate's tree and save it under that name. Record its savegame version, read with `python -B docs/zz-reach2/upgrades/2026-10/tools/savegame_plane_digest.py`.
-- [s] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `tools/ottd_window.ps1`. Capture these, saved in `assets/reviews/` as `r2mlm12-a-...` PNGs:
+- [s] 1.3 Find or ask for a version-369 save that holds at least one rail portal, one road portal and one road vehicle underground. Copy it, never move it, to `build/save/deep_pre_portals.sav`. If none exists, ask the user to build one in the Debug build of the gate's tree and save it under that name. Record its savegame version, read with `python -B mlm/tools/savegames/savegame_plane_digest.py`.
+- [s] 1.4 Tell the user, then start the Debug game on `deep_pre_portals.sav` with `mlm/tools/run/ottd_window.ps1`. Capture these, saved in `mlm/reviews/<feature>/<scenario>/<run-id>/images/` as `r2mlm12-a-...` PNGs:
   - the main toolbar with the layer button on each layer;
   - the rail and road toolbars;
   - a rail portal and a road portal end on Surface and on Underground, at normal zoom;
   - the Underground and Space floors.
 - [s] 1.5 List the captures of task 1.4 under this task, one line each, with what it shows. r2mlm13 Groups 4, 5 and 10 compare its captures with them.
-- [x] 1.6 Confirm `tools/ottd_window.ps1` defines `Start-Ottd`, `Save-OttdShot`, `Send-OttdHover`, `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`, and record any function a later task needs that it lacks.
+- [x] 1.6 Confirm `mlm/tools/run/ottd_window.ps1` defines `Start-Ottd`, `Save-OttdShot`, `Send-OttdHover`, `Send-OttdClick`, `Send-OttdKey` and `Stop-Ottd`, and record any function a later task needs that it lacks.
 
 ### Area Mandatory Reading - Layer vocabulary, rules and savegame
 
@@ -322,7 +324,7 @@ Code delivered. Task 2.5 needed only its comment updated: the existing non-surfa
   - Underground still allows `TrainDepot` and `RoadDepot`.
 - [x] 3.4 Add the test case `InitialiseLayer deep underground ground and fence`, in the style of the underground case: inner tiles are rock clear tiles at height 0, the last row and column are void, and `_random` is unchanged.
 - [x] 3.5 Build Debug and run the unit tests. Every baseline test of task 1.2 and the new cases must pass. Record the result.
-- [x] 3.6 With the RelWithDebInfo build and `tools/run_dedicated.sh`, load `build/save/fd9_upgraded_1234_8x8.sav` (version 369, three layers) and save it as `deep_upgraded_1234_8x8`. Then compare both saves with `tools/savegame_plane_digest.py --tiles 65536`:
+- [x] 3.6 With the RelWithDebInfo build and `mlm/tools/run/run_dedicated.sh`, load `build/save/fd9_upgraded_1234_8x8.sav` (version 369, three layers) and save it as `deep_upgraded_1234_8x8`. Then compare both saves with `mlm/tools/savegames/savegame_plane_digest.py --tiles 65536`:
   - the surface digests are identical;
   - `MAPT` is four planes long (262144 at 8x8);
   - the savegame version is 370.
@@ -719,7 +721,7 @@ _Applies to Groups 9-10._
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [tools/run_game_logged.sh](tools/run_game_logged.sh) | 1-17 | How the Debug game is started for the user and where its output goes: `build/scenario-logs/`, `build/save/autosave/commands-out.log` (desync and `infrastructure cache mismatch`), and `crash*` files in `build/`. |
+| [mlm/tools/run/run_game_logged.sh](../../../../mlm/tools/run/run_game_logged.sh) | 1-17 | How the Debug game is started for the user and where its output goes: `build/scenario-logs/`, `build/save/autosave/commands-out.log` (desync and `infrastructure cache mismatch`), and `crash*` files in `build/`. |
 | [src/cachecheck.cpp](../../../../src/cachecheck.cpp) | 37-40, 60-72 | `CheckCaches` runs only at `desync=2` or above and logs `infrastructure cache mismatch`. It is the evidence that elevator and tunnel accounting stay right on four layers. |
 | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 181-187 | `## Completion Conditions` of the acceptance plan. Groups 9 and 10 prove only this plan's changes and must not duplicate its multiplayer, savegame-matrix or performance runs. |
 
@@ -745,14 +747,14 @@ Closure, 2026-10-04, under the goal's explicit operator/gate allowance: The full
   Save it again and confirm version 370 with the digest tool.
 - [x] 9.7 Record every result of Group 9 under this task, with the capture file names.
 
-  The complete operator matrix 9.1..9.6 is skipped as recorded above; no pass is inferred. Current four-layer main/editor views are in R2MLM1 Group 7 and [scenario-layer-review.png](assets/reviews/scenario-layer-review.png). R2MLM13 Group 9C records the supplied-save portal/traffic captures and coverage gaps. Task 3.6 verifies a real three-to-four-layer upgrade. Those named subsets do not replace the historical stand-in captures, construction refusal matrix or the requested pre-change portal save.
+  The complete operator matrix 9.1..9.6 is skipped as recorded above; no pass is inferred. Current four-layer main/editor views are in R2MLM1 Group 7 and [scenario-layer-review.png](../../../../mlm/reviews/map-layers/legacy-review/import-20261009/images/scenario-layer-review.png). R2MLM13 Group 9C records the supplied-save portal/traffic captures and coverage gaps. Task 3.6 verifies a real three-to-four-layer upgrade. Those named subsets do not replace the historical stand-in captures, construction refusal matrix or the requested pre-change portal save.
 
 ### Group 10 - Scenario runs with the user
 
 Closure, 2026-10-04, under the goal's explicit operator/gate allowance: User scenarios D1..D6 are skipped. The supplied-save rail crossing smoke is useful evidence but does not prove elevator timing, queues, wait-preserving saves or the complete road/rail comparison. No scenario pass is inferred from unit tests. Each skipped row is marked `[s]`, never a passing test.
 
 {{MEDIUM}}
-- [x] 10.1 Prepare the Debug runs with `tools/run_game_logged.sh` and `build/scenario.cfg`, as r2rvm2 task 17.1 did. Tell the user where the output appears. The current logged Debug setup is delivered by R2RVM2 task 17.1 and the supplied-save runs in R2MLM13 Group 9C: game logs under `build/makinpr2-review/`, desync command/cache output at `build/save/autosave/commands-out.log`. The user is notified before launches. This is setup evidence only; D1..D6 are separately skipped below.
+- [x] 10.1 Prepare the Debug runs with `mlm/tools/run/run_game_logged.sh` and `build/scenario.cfg`, as r2rvm2 task 17.1 did. Tell the user where the output appears. The current logged Debug setup is delivered by R2RVM2 task 17.1 and the supplied-save runs in R2MLM13 Group 9C: game logs under `build/makinpr2-review/`, desync command/cache output at `build/save/autosave/commands-out.log`. The user is notified before launches. This is setup evidence only; D1..D6 are separately skipped below.
 - [s] 10.2 D1, road tunnel: a bus route from a Surface stop through a road tunnel to an Underground stop. Pass: the bus keeps its speed through the tunnel and is hidden only inside the mouth.
 - [s] 10.3 D2, elevator from Underground to Deep Underground, in both directions. Pass:
   - the bus stops at the shaft and stays hidden for about 5 game days;
@@ -773,7 +775,7 @@ _Applies to Group 11._
 | [r2mlm7-layer-portal-foundation.md](r2mlm7-layer-portal-foundation.md) | 65, 70 | The Pair bullet (`|L - T| == 1`, "Version 1 builds only Surface and Underground pairs") and the Tile bits bullet (target in bits 6..5) of `## Portal Contract`. r2rvm2 task 18.4 rewrote other bullets of the same section; relocate by bullet name. |
 | [docs/zz-reach2/architecture/map-layers/archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md) | 5-64 | `## What a layer is`, `## Portals`, `## Savegame`, `## Code map` and `## Invariants` of the architecture page, which describe three layers and one road portal kind. |
 | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 60, 72-74, 86-96 | The entry gate (r2mlm8 and r2mlm9 only) and the multiplayer and savegame tasks that say "three layers" or "elevators". They must name r2mlm12 and four layers before r2mlm10 runs. |
-| [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | 1433 | Task 18.2, M-9: the user's answer on the memory of three full planes, which a fourth plane changes. |
+| [r2rvm2-review-map-2.md](map-layers/r2rvm2-review-map-2.md) | 1433 | Task 18.2, M-9: the user's answer on the memory of three full planes, which a fourth plane changes. |
 
 ### Group 11 - Plan records
 
@@ -819,7 +821,7 @@ Code documentation is updated for four layers and three portal kinds. Closure us
 | Task 10.5: the pathfinder sends buses on a long road detour instead of through an elevator, or through an elevator despite a much shorter road | [docs/zz-reach2/architecture/pathfinder/archi-pathfinder-road.md](../../architecture/pathfinder/archi-pathfinder-road.md) | The segment cost section | The route choice still looks wrong after task 6.4's constant | Check how segment costs add up. Tuning beyond the constant goes to Deferred Points (task 11.3). |
 | Task 8.4 to 8.7: a layer dropdown closes at once, or its button stays lowered | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | `ToolbarTownClick` and `MenuClickTown` | The layer button follows that pattern and still misbehaves | Copy the upstream menu-button shape. Do not change `PopupMainToolbarMenu` or the dropdown window code. |
 | Task 8.4: r2mlm11 has already edited `toolbar_gui.cpp` near the same lines | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | `## Outcome and Boundaries` | Its edits overlap a line this group changes | Learn which lines r2mlm11 owns, and keep both changes. |
-| Any unit-test run of this plan takes longer than two minutes | [r2rvm-review-map.md](r2rvm-review-map.md) | `### Commands used by every group`, the ctest filter | The run is slow without new failures | Run only the `map_layer` cases, or split the new cases into a separate test file named without `r2`. |
+| Any unit-test run of this plan takes longer than two minutes | [r2rvm-review-map.md](map-layers/r2rvm-review-map.md) | `### Commands used by every group`, the ctest filter | The run is slow without new failures | Run only the `map_layer` cases, or split the new cases into a separate test file named without `r2`. |
 
 ## Planning Provenance
 
@@ -835,7 +837,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 | [r2mlm10-multi-layer-acceptance.md](r2mlm10-multi-layer-acceptance.md) | 60-96, 181-187 | Its three-layer assumptions (task 11.6) and the boundary that keeps multiplayer, savegame-matrix and performance runs out of Group 10. |
 | [r2mlm11-split-toolbar-subsidies.md](r2mlm11-split-toolbar-subsidies.md) | 47-91, 101-104 | The dropdown precedent the user pointed to, and the Towns-menu boundary of D-5. |
 | [r2mlm13-layer-art-review-and-new-sprites.md](r2mlm13-layer-art-review-and-new-sprites.md) | `## Outcome and Boundaries`, Group 9 | The second half of this plan before the user split it on 2026-10-03: the art that replaces the stand-ins of D-6. |
-| [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) | Group 17 task 17.1, task 18.2 | The logged Debug game and output locations reused by Group 10, and the M-9 memory question that task 11.7 reopens. |
+| [r2rvm2-review-map-2.md](map-layers/r2rvm2-review-map-2.md) | Group 17 task 17.1, task 18.2 | The logged Debug game and output locations reused by Group 10, and the M-9 memory question that task 11.7 reopens. |
 | [src/map_layer_type.h](../../../../src/map_layer_type.h), [src/map_layer.h](../../../../src/map_layer.h), [src/map_layer.cpp](../../../../src/map_layer.cpp) | 15-31; 16-67, 234-283; 26-175 | The single count definition, the rules table, the depot kind shared by trains and roads (the split of D-2), the one-to-one pair rule, and the `/* static */` definition style of task 4.1. |
 | [src/saveload/map_sl.cpp](../../../../src/saveload/map_sl.cpp) | 25-95 | The missing-plane path that makes a 369 save gain Deep Underground without a map format change, and the RIFF-length note behind D-1's size check. |
 | [src/layer_portal_cmd.cpp](../../../../src/layer_portal_cmd.cpp), [src/layer_portal_map.h](../../../../src/layer_portal_map.h) | 53-154, 255-291, 382-445; 28-185 | Relocation over any band distance, hiding from the visibility frame on (so a waiting bus is hidden), the depot stand-ins the user saw as a garage and a hangar, the 2-bit target, and the command's M-11 guard. |
@@ -850,7 +852,7 @@ This table records what shaped the plan. It is not an execution reading queue, i
 
 Closed 2026-10-04 under the goal's operator/gate allowance, with each skip recorded at its owning group. Implementation and automated checks are complete: both configurations build without compiler warnings and pass 111/111 unit cases; full release CTest passes 115/115. Human art, cost and scenario decisions are not inferred. The original full runtime/approval criteria below remain future validation criteria.
 
-- Every task box of this plan is checked, and every retained capture it names exists in `assets/reviews/`.
+- Every task box of this plan is checked, and every retained capture it names exists in `mlm/reviews/<feature>/<scenario>/<run-id>/images/`.
 - New and loaded games have four layers. A version-369 save loads with a bedrock Deep Underground plane, saves as version 370, and keeps its surface digest.
 - Deep Underground accepts road, road stops, road depots, signs and elevators, and refuses rail, rail stations, train depots, signals, rail portals and road tunnels, with an error message.
 - Road tunnels join Surface and Underground and are driven through at speed. Elevators join Surface or Underground with Deep Underground. A bus stops in an elevator for 370 ticks, hidden. It survives a save and load mid-ride, cannot be turned round mid-ride, and never rides twice when its way out is blocked. Buses queue at an elevator without overlapping. Rail portals behave as before.

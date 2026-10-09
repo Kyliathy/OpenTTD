@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file order_cmd.cpp Handling of orders. */
+/** @file order_cmd.cpp Handling of orders. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group6; docs/zz-reach2/architecture/vehicles/archi-vehicles.md */
 
 #include "stdafx.h"
 #include "debug.h"
@@ -27,6 +27,8 @@
 #include "order_cmd.h"
 #include "train_cmd.h"
 #include "train.h"
+#include "tbm_controls.h"
+#include "tbm_hangar.h"
 
 #include "table/strings.h"
 
@@ -715,7 +717,13 @@ CommandCost CmdInsertOrder(DoCommandFlags flags, VehicleID veh, VehicleOrderID s
 
 					switch (v->type) {
 						case VehicleType::Train:
-							if (!IsRailDepotTile(dp->xy)) return CMD_ERROR;
+							if (IsLayerPortalHangarTile(dp->xy)) {
+								// Shared native travel orders confer no excavation role.
+								// Every recipient must independently be a compatible cutter.
+								for (const Vehicle *peer = v->FirstShared(); peer != nullptr; peer = peer->NextShared()) {
+									if (DescribeTBMHangar(*Train::From(peer), dp->xy).error != TBMHangarError::None) return CommandCost(STR_ERROR_TBM_HANGAR_UNAVAILABLE);
+								}
+							} else if (!IsRailDepotTile(dp->xy)) return CMD_ERROR;
 							break;
 
 						case VehicleType::Road:
@@ -837,7 +845,15 @@ CommandCost CmdInsertOrder(DoCommandFlags flags, VehicleID veh, VehicleOrderID s
 	if (v->orders == nullptr && !OrderList::CanAllocateItem()) return CommandCost(STR_ERROR_NO_MORE_SPACE_FOR_ORDERS);
 
 	if (flags.Test(DoCommandFlag::Execute)) {
+		const bool first_travel = v->type == VehicleType::Train && v->GetNumManualOrders() == 0 && new_order.IsGotoOrder();
 		InsertOrder(v, Order(new_order), sel_ord);
+		if (first_travel) {
+			// The first manual travel instruction suspends each shared peer's
+			// own job. A temporary depot visit keeps its already explicit priority.
+			for (Vehicle *peer = v->FirstShared(); peer != nullptr; peer = peer->NextShared()) {
+				if (!peer->current_order.IsType(OT_GOTO_DEPOT) || peer->current_order.GetDepotOrderType().Test(OrderDepotTypeFlag::PartOfOrders)) FollowTBMVehicleOrders(*Train::From(peer));
+			}
+		}
 	}
 
 	return CommandCost();
@@ -1042,7 +1058,11 @@ CommandCost CmdSkipToOrder(DoCommandFlags flags, VehicleID veh_id, VehicleOrderI
 {
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
 
-	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || !v->IsPrimaryVehicle() || sel_ord == v->cur_implicit_order_index || sel_ord >= v->GetNumOrders() || v->GetNumOrders() < 2) return CMD_ERROR;
+	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || !v->IsPrimaryVehicle() || sel_ord >= v->GetNumOrders()) return CMD_ERROR;
+	const auto *project = v->type == VehicleType::Train ? GetTBMProjectForCutter(v->index) : nullptr;
+	const bool work = project != nullptr && !IsTBMProjectFinished(project->phase);
+	if (work && (IsTBMFinishing(project->phase) || project->revision >= UINT64_MAX - 1)) return CommandCost(STR_ERROR_CAN_T_CONTROL_TBM_PROJECT);
+	if (!work && (sel_ord == v->cur_implicit_order_index || v->GetNumOrders() < 2)) return CMD_ERROR;
 
 	CommandCost ret = CheckOwnership(v->owner);
 	if (ret.Failed()) return ret;
@@ -1052,6 +1072,7 @@ CommandCost CmdSkipToOrder(DoCommandFlags flags, VehicleID veh_id, VehicleOrderI
 
 		v->cur_implicit_order_index = v->cur_real_order_index = sel_ord;
 		v->UpdateRealOrderIndex();
+		if (work) FollowTBMVehicleOrders(*Train::From(v)); // Selecting even the same single order explicitly gives native travel control back after work resume.
 
 		/* Unbunching data is no longer valid. */
 		v->ResetDepotUnbunching();
@@ -1509,6 +1530,16 @@ CommandCost CmdCloneOrder(DoCommandFlags flags, CloneOptions action, VehicleID v
 
 	CommandCost ret = CheckOwnership(dst->owner);
 	if (ret.Failed()) return ret;
+	if (action != CO_UNSHARE && dst->type == VehicleType::Train) {
+		const Vehicle *source = Vehicle::GetIfValid(veh_src);
+		if (source != nullptr && source->type == VehicleType::Train) {
+			for (const Order &order : source->Orders()) {
+				if (!order.IsType(OT_GOTO_DEPOT) || order.GetDepotActionType().Test(OrderDepotActionFlag::NearestDepot)) continue;
+				const Depot *depot = Depot::GetIfValid(order.GetDestination().ToDepotID());
+				if (depot != nullptr && IsLayerPortalHangarTile(depot->xy) && DescribeTBMHangar(*Train::From(dst), depot->xy).error != TBMHangarError::None) return CommandCost(STR_ERROR_TBM_HANGAR_UNAVAILABLE);
+			}
+		}
+	}
 
 	switch (action) {
 		case CO_SHARE: {
@@ -1627,6 +1658,8 @@ CommandCost CmdCloneOrder(DoCommandFlags flags, CloneOptions action, VehicleID v
 		case CO_UNSHARE: return DecloneOrder(dst, flags);
 		default: return CMD_ERROR;
 	}
+	if (flags.Test(DoCommandFlag::Execute) && dst->type == VehicleType::Train && dst->GetNumManualOrders() != 0 &&
+			(!dst->current_order.IsType(OT_GOTO_DEPOT) || dst->current_order.GetDepotOrderType().Test(OrderDepotTypeFlag::PartOfOrders))) FollowTBMVehicleOrders(*Train::From(dst));
 
 	return CommandCost();
 }
@@ -1684,7 +1717,17 @@ CommandCost CmdOrderRefit(DoCommandFlags flags, VehicleID veh, VehicleOrderID or
 
 
 /**
- * Check the orders of a vehicle, to see if there are invalid orders and stuff
+ * Identify vehicles whose live work assignment supplies a managed route leg.
+ * @param vehicle Native shared-order peer under review.
+ * @return Whether a real cutter/hauler controller currently belongs to this train.
+ */
+static bool HasTBMOrderController(const Vehicle &vehicle)
+{
+	return vehicle.type == VehicleType::Train && (GetTBMProjectForCutter(vehicle.index) != nullptr || GetTBMExchangeAssignmentForHauler(vehicle.index) != nullptr);
+}
+
+/**
+ * Review actual manual orders and managed route health at the normal advice interval.
  * @param v The vehicle to check.
  */
 void CheckOrders(const Vehicle *v)
@@ -1698,12 +1741,18 @@ void CheckOrders(const Vehicle *v)
 	/* Maybe ignore stopped vehicles. */
 	if (_settings_client.gui.order_review_system == OrderReviewSystem::ExcludeStopped && v->vehstatus.Test(VehState::Stopped)) return;
 
-	/* Do nothing if we're not the first vehicle in a share-chain. */
-	if (v->FirstShared() != v) return;
-
 	/* Only check every 20 days, so that we don't flood the message log */
 	if (v->owner == _local_company && v->day_counter % 20 == 0) {
 		StringID message = INVALID_STRING_ID;
+		const auto managed_problem = v->type == VehicleType::Train ? GetTBMOrderProblem(*Train::From(v)) : std::nullopt;
+		if (!managed_problem.has_value()) {
+			// Ordinary shared-order peers still receive one review. A managed
+			// head cannot suppress advice for the first ordinary peer sharing its
+			// one-station list; each managed train reviews its own live assignment.
+			const Vehicle *representative = v->FirstShared();
+			while (representative != nullptr && HasTBMOrderController(*representative)) representative = representative->NextShared();
+			if (representative != v) return;
+		}
 
 		/* Check the order list */
 		int n_st = 0;
@@ -1740,8 +1789,14 @@ void CheckOrders(const Vehicle *v)
 			}
 		}
 
-		/* Do we only have 1 station in our order list? */
-		if (n_st < 2 && message == INVALID_STRING_ID) message = STR_NEWS_VEHICLE_HAS_TOO_FEW_ORDERS;
+		// Preserve real invalid/dummy/duplicate manual-order advice. A managed
+		// route instead reports its missing destination/assignment facts, without
+		// mistaking the controller's empty-return leg for a missing station order.
+		if (message == INVALID_STRING_ID && managed_problem.has_value() && *managed_problem != INVALID_STRING_ID) {
+			AddVehicleAdviceNewsItem(AdviceType::Order, GetEncodedString(STR_NEWS_TBM_OPERATION_PROBLEM, v->index, *managed_problem), v->index);
+			return;
+		}
+		if (n_st < 2 && message == INVALID_STRING_ID && !managed_problem.has_value()) message = STR_NEWS_VEHICLE_HAS_TOO_FEW_ORDERS;
 
 #ifdef WITH_ASSERT
 		if (v->orders != nullptr) v->orders->DebugCheckSanity();
@@ -1772,6 +1827,10 @@ void RemoveOrderFromAllVehicles(OrderType type, DestinationID destination, bool 
 	for (Vehicle *v : Vehicle::Iterate()) {
 		if ((v->type == VehicleType::Aircraft && v->current_order.IsType(OT_GOTO_DEPOT) && !hangar ? OT_GOTO_STATION : v->current_order.GetType()) == type &&
 				(!hangar || v->type == VehicleType::Aircraft) && v->current_order.GetDestination() == destination) {
+			if (type == OT_GOTO_DEPOT && v->type == VehicleType::Train && IsTBMCutterEngine(v->engine_type)) {
+				v->vehstatus.Set(VehState::Stopped); // Loss of a selected facility cannot turn a retained machine into a wandering no-order train.
+				if (v->owner == _local_company) AddVehicleAdviceNewsItem(AdviceType::Order, GetEncodedString(STR_NEWS_TBM_OPERATION_PROBLEM, v->index, STR_ERROR_TBM_HANGAR_MISSING), v->index);
+			}
 			v->current_order.MakeDummy();
 			InvalidateWindowData(WindowClass::VehicleView, v->index);
 		}
@@ -2094,6 +2153,13 @@ bool UpdateOrderDest(Vehicle *v, const Order *order, int conditional_depth, bool
  */
 bool ProcessOrders(Vehicle *v)
 {
+	if (v->type == VehicleType::Train) {
+		const auto *project = GetTBMProjectForCutter(v->index);
+		// Only explicit native-list intent advances the list while work remains
+		// assigned. Resume/parking/withdrawal retain their own current operation;
+		// a saved list cannot silently restart itself after the player resumes work.
+		if (project != nullptr && !IsTBMProjectFinished(project->phase) && project->phase != TBMPhase::FollowOrders) return false;
+	}
 	switch (v->current_order.GetType()) {
 		case OT_GOTO_DEPOT:
 			/* Let a depot order in the orderlist interrupt. */

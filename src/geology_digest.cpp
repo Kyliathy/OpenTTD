@@ -51,6 +51,12 @@ uint64_t ComputeGeologyStateDigest(const GeologyWorldState &state)
 	GeologyDigestWriter writer;
 	writer.Value(0x47454f535f563031ULL, 8); // Domain GEOS_V01 prevents conflating this owner stream with metadata/other feature hashes.
 	writer.Value(state.generator_version, 2);
+	// Legacy worlds keep their existing diagnostic stream. New regional
+	// worlds include the complete immutable difficulty rule and seed.
+	if (state.hardness_version != 0) {
+		writer.Value(state.hardness_version, 2);
+		writer.Value(state.hardness_seed, 8);
+	}
 	writer.Value(Map::SizeX(), 4); writer.Value(Map::SizeY(), 4);
 	writer.Value(state.terrain.PlaneSize(), 4); writer.Value(state.terrain.Data().size(), 4);
 	// Packed cell bits are authoritative; no per-tile object, tile infrastructure field or cache order is included.

@@ -745,6 +745,7 @@ enum class WindowClass : uint16_t {
 
 	LayerPortal, ///< Native pair status/connection controls; window number is the actual canonical pair tile. Appended to preserve existing classes.
 	UndergroundConstruction, ///< Explicit rock-layer tool context; window number is the requested layer.
+	TBMProjects, ///< Actual owned project browser; explicit work-layer context (r2tbmf-tbm-fixes.md Group2).
 
 	Invalid = 0xFFFF, ///< Invalid window.
 };

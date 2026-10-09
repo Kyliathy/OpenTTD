@@ -11,9 +11,26 @@ import sys
 
 from multilayer_state_fixture import AREA, ROOT, log_path, run_case
 
-sys.path.insert(0, str(AREA / "tools"))
+sys.path.insert(0, str(ROOT / "mlm/tools/savegames"))
 from savegame_plane_digest import Reader, PLANE_BYTES, CHUNK_RIFF, CHUNK_RECORDS, read_stream
 from inspect_layer_save import read_chunks
+
+
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("geology", "geology-generation-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
 
 
 def saved_geology_seed(stream):
@@ -65,8 +82,8 @@ def main():
 
     @return None; failures retain logs and restore all existing configuration/startup bytes.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
-    config = ROOT / "build/grftest.cfg"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config = RUNTIME / "grftest.cfg"
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     saves = {}
@@ -90,7 +107,7 @@ def main():
     finally:
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
-    (AREA / "r2mlvs2-e-generation-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs2-e-generation-results.txt").write_text(
         "R2MLVS2 Group 3: native/repeated/Classic dedicated generation passed; saved roots and all ten Surface fields verified.\n"
         "Current MLVI supplies cargos, with no new Surface industry definitions; enabled geology leaves Surface unchanged.\n"
         + json.dumps({"roots": roots, "surface": digests["classic"]}, indent=2) + "\n", encoding="utf-8")

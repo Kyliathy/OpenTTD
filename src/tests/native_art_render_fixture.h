@@ -13,6 +13,7 @@
 #ifndef TESTS_NATIVE_ART_RENDER_FIXTURE_H
 #define TESTS_NATIVE_ART_RENDER_FIXTURE_H
 
+#include "test_artifact_paths.h"
 #include "../viewport_func.h"
 #include "../viewport_type.h"
 #include "../gfx_func.h"
@@ -57,7 +58,8 @@ static void CaptureNativeArtViewport(TileIndex tile, ZoomLevel zoom, const std::
 	// pixel target. No camera selection, vehicle movement or work step is injected.
 	ViewportDoDraw(view, view.virtual_left, view.virtual_top,
 		view.virtual_left + view.virtual_width, view.virtual_top + view.virtual_height);
-	std::ofstream output(path, std::ios::binary);
+	const auto capture_path = RequireTestArtifactWithin(path, FindTestRepositoryRoot() / "mlm/reviews");
+	std::ofstream output(capture_path, std::ios::binary);
 	REQUIRE(output.good());
 	output << "P6\n" << width << " " << height << "\n255\n";
 	// Retain every actual palette-resolved screen pixel. PNG conversion later
@@ -68,6 +70,8 @@ static void CaptureNativeArtViewport(TileIndex tile, ZoomLevel zoom, const std::
 		output.write(reinterpret_cast<const char *>(rgb.data()), rgb.size());
 	}
 	REQUIRE(output.good());
+	output.flush();
+	RecordNativeTestArtifact(capture_path, __func__);
 }
 
 /**
@@ -94,7 +98,8 @@ static void CaptureNativeArtPortalPreviews(MapLayer layer, MapLayer target, cons
 		DrawLayerPortalPreview(80 + view * 160, 80, LayerPortalKind::RailTunnel, static_cast<DiagDirection>(view), target);
 	}
 	SetViewportLayer(main, original_layer);
-	std::ofstream output(path, std::ios::binary);
+	const auto capture_path = RequireTestArtifactWithin(path, FindTestRepositoryRoot() / "mlm/reviews");
+	std::ofstream output(capture_path, std::ios::binary);
 	REQUIRE(output.good());
 	output << "P6\n" << width << " " << height << "\n255\n";
 	// Preserve actual palette-resolved picker pixels so roof/mouth clipping can
@@ -105,6 +110,8 @@ static void CaptureNativeArtPortalPreviews(MapLayer layer, MapLayer target, cons
 		output.write(reinterpret_cast<const char *>(rgb.data()), rgb.size());
 	}
 	REQUIRE(output.good());
+	output.flush();
+	RecordNativeTestArtifact(capture_path, __func__);
 }
 
 /**
@@ -127,7 +134,8 @@ static void CaptureNativeArtCanvas(int width, int height, const std::filesystem:
 	AutoRestoreBackup drawing(_cur_dpi, &dpi);
 	AutoRestoreBackup animation(_screen_disable_anim, true);
 	paint();
-	std::ofstream output(path, std::ios::binary);
+	const auto capture_path = RequireTestArtifactWithin(path, FindTestRepositoryRoot() / "mlm/reviews");
+	std::ofstream output(capture_path, std::ios::binary);
 	REQUIRE(output.good());
 	output << "P6\n" << width << " " << height << "\n255\n";
 	// Preserve every actual palette-resolved pixel; later conversion changes
@@ -138,6 +146,8 @@ static void CaptureNativeArtCanvas(int width, int height, const std::filesystem:
 		output.write(reinterpret_cast<const char *>(rgb.data()), rgb.size());
 	}
 	REQUIRE(output.good());
+	output.flush();
+	RecordNativeTestArtifact(capture_path, __func__);
 }
 
 /**

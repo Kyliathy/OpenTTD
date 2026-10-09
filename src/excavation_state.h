@@ -14,6 +14,8 @@
 /** Bounded descriptor transport; metadata owns seed/profile, Map owns live geometry, geology owns actual records. */
 struct GeologyStateSnapshot {
 	uint16_t generator_version = 0; ///< Zero is absent legacy terrain, version 1 is delivered generation.
+	uint16_t hardness_version = 0; ///< Regional rock schema; zero retains the legacy uniform-layer policy through resaves.
+	uint64_t hardness_seed = 0; ///< Exact procedural field root, owned by geology independently of terrain clearance and ore reserves.
 	uint32_t width = 0; ///< Copied geometry checked against Map, never another mutable geometry owner.
 	uint32_t height = 0; ///< Plane height.
 	uint32_t next_deposit_id = 0; ///< Monotonic identity cursor survives deletion.

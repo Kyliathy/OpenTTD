@@ -45,6 +45,8 @@
 | [docs/zz-reach2/architecture/gui/archi-viewport.md](../../architecture/gui/archi-viewport.md) | 147-153 | `## Invariants`: a viewport reads the map and emits sprites, and never mutates tiles, vehicles or companies. Holds for every task here. |
 | [src/map_layer_gui.cpp](../../../../src/map_layer_gui.cpp) | Live definitions; no fixed range | Produced by r2mlm1 Group 2 and bound to the controller by r2mlm2 Group 5. `SetViewportLayer` and `CycleMainViewportLayer` are the only entry points for switching; Group 1 replaces the interim body of `SetViewportLayer`. |
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 By the end of this plan pressing the layer button really switches the map:
@@ -84,7 +86,7 @@ Entry gate. Live games must allocate three layers (`InitializeGame` passes `MAX_
 - [x] 1.3 In `InitializeWindowViewport`, take the layer from `GetTileLayer(tile)` for a tile focus and from the vehicle's tile for a vehicle focus; keep the r2mlm1 copy of the main layer for `INVALID_TILE`.
 - [x] 1.4 In the follow-vehicle branch of `UpdateViewportPosition`, update `vp.layer` from the followed vehicle's tile and invalidate the toolbar when the window is the main window.
 - [x] 1.5 In `ScrollWindowTo`, set the viewport layer from `GetLayerOfWorldY(y)` before computing the destination, without the band translation.
-- [x] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band). R2MLM1 Group 7B verifies all three band translations with identical saved plane camera coordinates and actual Surface reload captures; [camera-save-review.png](assets/reviews/camera-save-review.png).
+- [x] 1.6 Build and check that cycling the layer keeps the same plane position on screen (the view looks at the same x, y in another band). R2MLM1 Group 7B verifies all three band translations with identical saved plane camera coordinates and actual Surface reload captures; [camera-save-review.png](../../../../mlm/reviews/multilayer-art/authoring/import-20261009/images/camera-save-review.png).
 
 ### Area Mandatory Reading - Band drawing
 
@@ -244,7 +246,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [r2mlm4-layer-world-lifecycle-and-savegame.md](r2mlm4-layer-world-lifecycle-and-savegame.md) | 147-147 | Task 4.8 of r2mlm4 and the gating matrix recorded beneath it during execution (the list grows below this line): the commands, kinds and allowed layers verified in task 8.4. Read only that task's list. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 2006-2186 | `MainToolbarWindow`: the icon and tooltip refresh added by r2mlm1 Group 5, now reflecting real switching. |
-| [docs/zz-reach2/upgrades/2026-10/tools/baseline-digests.txt](tools/baseline-digests.txt) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`); rendering changes must not alter saved surface data. |
+| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`); rendering changes must not alter saved surface data. |
 
 ### Group 8 - Button finish and verification
 
@@ -258,7 +260,7 @@ Closure, 2026-10-04: operator tasks 8.3..8.5 are skipped under the goal's allowa
 - [s] 8.3 Cycle the layer in a new game: each layer draws only itself, the plane position is kept, and the icon and tooltip follow.
 - [s] 8.4 In the Underground view, build road, rail, a bus stop, a rail station and a depot; confirm they appear only underground. Try every forbidden command from the r2mlm4 task 4.8 matrix in Underground and Space and confirm the layer error.
 - [s] 8.5 Open a news item or the station list for an underground station and confirm the main view jumps to the Underground layer.
-- [x] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match. Every Surface chunk matches for both seeds/sizes; [tools/final-layer-save-digests.txt](tools/final-layer-save-digests.txt), R2RVM2 task 18.1.
+- [x] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match. Every Surface chunk matches for both seeds/sizes; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1.
 
 ## Consult on Demand
 

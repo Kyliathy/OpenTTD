@@ -7,6 +7,7 @@
 /** @file transport_tube_power_load.cpp Actual native paid inlet/grant/use/recovery files, preserving the original paid excavation world. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups5-7 */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include <cstdlib>
 #include <filesystem>
 #include "../3rdparty/catch2/catch.hpp"
@@ -31,11 +32,11 @@ static bool ObserveTubePower(std::span<std::string_view> arguments)
 /** Real files establish physical and invoice persistence, independently of the copied unit-test staging boundary. */
 TEST_CASE("Native paid tube connection grant and fractional invoice survive actual files", "[.transport-tube-power-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto directory = root / "src/tests/fixtures/tubes";
+	const auto root = FindTestRepositoryRoot();
+	const auto directory = GetTestCaseArtifactPaths("transport-tubes", "native-reload").saves;
 	const char *input_text = std::getenv("OTTD_TUBE_POWER_INPUT"), *mode_text = std::getenv("OTTD_TUBE_POWER_CASE");
 	REQUIRE(input_text != nullptr); REQUIRE(mode_text != nullptr);
-	const std::filesystem::path input{input_text}; const std::string_view mode{mode_text};
+	const auto input = ResolveTestInputPath(input_text); const std::string_view mode{mode_text};
 	REQUIRE(std::filesystem::exists(input)); REQUIRE(std::filesystem::exists(directory));
 	bool observed = false; std::exception_ptr failure;
 	/** Inspect or construct service only after complete ordinary-world acceptance; no geology or private ledger write supplies it. */
@@ -244,7 +245,7 @@ TEST_CASE("Native paid tube connection grant and fractional invoice survive actu
 	};
 	AutoRestoreBackup observer(_tube_power_observer, &inspect);
 	IConsole::CmdRegister("tube_power_check", ObserveTubePower);
-	const std::string config = (root / "build/native-art.cfg").string(), input_path = input.string();
+	const std::string config = (GetTestRuntimeConfig()).string(), input_path = input.string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input_path};
 	CHECK(openttd_main(arguments) == 0);

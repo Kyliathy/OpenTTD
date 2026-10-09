@@ -9,7 +9,7 @@
  * Temperate industries in the first-party package's scope that are never generated, every tile drawing an original
  * substitute and accepting its spoil, stable saved identities across a reload, and Surface-only placement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md, What a receiver is
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, What a receiver is
  */
 
 #include "../stdafx.h"

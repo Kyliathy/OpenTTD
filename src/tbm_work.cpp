@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "tbm.h"
+#include "tbm_hangar.h"
 #include "tbm_exchange.h"
 #include "train.h"
 #include "cargopacket.h"
@@ -301,9 +302,10 @@ bool IsTBMExchangeDue(const TBMProject &project)
 {
 	const auto *job = project.job == ExcavationJobID{UINT32_MAX} ? nullptr : GetExcavationJob(project.job);
 	if (job == nullptr || !job->pass_terms.has_value()) return false;
-	// A cancelled job (Group 17.1) gives away whatever spoil is aboard; otherwise only a frozen breakpoint makes it due.
+	// Cancellation and requested parking must settle the real partial load;
+	// neither requires another cut merely to reach a planned pass breakpoint.
 	const bool cancelled = job->state == ExcavationJobState::Cancelled;
-	if (!cancelled && (job->cursor == 0 || !std::ranges::binary_search(job->pass_terms->exchange_after, static_cast<uint16_t>(job->cursor)))) return false;
+	if (!cancelled && !IsTBMParking(project.phase) && (job->cursor == 0 || !std::ranges::binary_search(job->pass_terms->exchange_after, static_cast<uint16_t>(job->cursor)))) return false;
 	const Train *front = Train::GetIfValid(project.cutter);
 	if (front == nullptr) return false;
 	const auto layout = InspectTBMConsist(*front, project);
@@ -450,12 +452,17 @@ TBMFaceWork AdvanceTBMFaceWork(const TBMProject &project)
 }
 
 /**
- * @param front Front engine.
- * @return Whether its project holds it still for work at the face.
+ * Hold the complete native train when work or unsafe project travel owns its motion.
+ * @param front Actual front engine; a real depot order retains ordinary service travel.
+ * @return Whether both native locomotive substeps must leave every attached part stationary.
  */
 bool IsTBMHoldingTrain(const Train &front)
 {
-	const TBMProject *project = GetTBMProjectForCutter(front.index);
-	// Work at the face, and waiting wholly in the bay for empties, both keep the consist where its controller put it.
-	return project != nullptr && (project->phase == TBMPhase::Bore || project->phase == TBMPhase::WaitForEmpties);
+	const TBMProject *project = GetTBMProjectForCutter(front.First()->index);
+	// A service/depot order safely interrupts work before the native train
+	// step. Holding Bore unconditionally would strand that legitimate visit.
+	if (project == nullptr) return false;
+	if (GetTBMTravelHoldReason(front) != TBMBlockedReason::None) return true;
+	if (front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front)) return false;
+	return project->phase == TBMPhase::Bore || IsTBMWaitingForExchange(project->phase) || IsTBMStored(project->phase);
 }

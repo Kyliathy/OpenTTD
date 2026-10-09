@@ -11,10 +11,12 @@
  * The work corridor and its occupancy serve Group 14.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8, 9 and 14
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B (canonical cutter steering)
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group9 (paid terminal exit handover)
  */
 
 #include "stdafx.h"
 #include "tbm.h"
+#include "tbm_hangar.h"
 #include "tbm_cmd.h"
 #include "tbm_exchange.h"
 #include "command_func.h"
@@ -146,15 +148,46 @@ bool CheckTBMSupportRailTurns(const ExcavationJob &job)
 	return true;
 }
 
+/**
+ * Admit only actual owned, compatible native rail as a work-travel destination.
+ * @param front Actual cutter whose cached native rail compatibility governs travel.
+ * @param project Existing work assignment and owner.
+ * @param tile Proposed physical destination.
+ * @param allow_depot Whether a validated exchange bay may be a real rail depot.
+ * @return Whether the target can still carry this machine; no track, reservations or orders are changed.
+ */
+static bool IsTBMTravelTargetUsable(const Train &front, const TBMProject &project, TileIndex tile, bool allow_depot)
+{
+	if (!IsValidTile(tile)) return false;
+	// A stolen/replaced facility or incompatible technology must not become a
+	// guessed no-order destination merely because an old tile index still exists.
+	const bool rail = IsPlainRailTile(tile) || (allow_depot && IsRailDepotTile(tile)) ||
+		(IsLayerPortalTile(tile) && GetLayerPortalTransportType(tile) == TransportType::Rail);
+	if (!rail || GetTileOwner(tile) != project.company || !front.compatible_railtypes.Test(GetRailType(tile))) return false;
+	return !IsPlainRailTile(tile) || GetTrackBits(tile).Any();
+}
+
 /** @copydoc GetTBMCutterSteeringTarget */
 std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &front)
 {
 	const auto *project = GetTBMProjectForCutter(front.First()->index);
 	// Ordinary trains and actual service visits follow player/depot orders; only project travel supplies a derived destination.
-	if (project == nullptr || front.current_order.IsType(OT_GOTO_DEPOT)) return std::nullopt;
-	if (project->phase == TBMPhase::ReturnForExchange) {
+	if (project == nullptr) return std::nullopt;
+	if (project->phase == TBMPhase::FollowOrders) return std::nullopt; // Native orders supply all travel targets while the geological job is suspended.
+	if (project->phase == TBMPhase::TravelToHangar) {
+		const auto destination = GetTBMOrderedHangar(front);
+		if (destination.error != TBMHangarError::None) return std::nullopt;
+		const TrackdirBits directions = destination.kind == TBMHangarKind::PortalMagazine ?
+			TrackBitsToTrackdirBits(DiagDirToDiagTrack(GetLayerPortalShaftDirection(destination.tile))) :
+			TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(GetRailDepotDirection(destination.tile))));
+		return TBMCutterSteeringTarget{destination.tile, directions}; // Destination remains authoritative in the actual native depot order.
+	}
+	if (front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front)) return std::nullopt;
+	if (FindTBMProjectReferenceLoss(*project) != TBMBlockedReason::None) return std::nullopt;
+	if (IsTBMReturning(project->phase)) {
 		const auto bay = GetTBMExchangeBay(*project);
 		if (bay.error != TBMExchangeError::None) return std::nullopt;
+		if (!IsTBMTravelTargetUsable(front, *project, bay.tile, true)) return std::nullopt;
 		const DiagDirection door = bay.kind == TBMExchangeBayKind::Source ? GetLayerPortalDoorDirection(bay.tile) : GetRailDepotDirection(bay.tile);
 		return TBMCutterSteeringTarget{bay.tile, TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(door)))};
 	}
@@ -164,7 +197,9 @@ std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &f
 	// Missing or malformed live geometry cannot authorize another route or a fabricated waypoint.
 	if (job == nullptr || job->cursor > job->route.size()) return std::nullopt;
 	const TileIndex target = job->cursor == 0 ? job->commissioning_anchor : job->route[job->cursor - 1].cutter_position;
+	if (!IsTBMTravelTargetUsable(front, *project, target, false)) return std::nullopt;
 	if (job->cursor == 0) {
+		if (!IsLayerPortalTile(target)) return std::nullopt; // The first face still needs its actual housing, not a replacement plain tile.
 		return TBMCutterSteeringTarget{target, TrackdirToTrackdirBits(DiagDirToDiagTrackdir(GetLayerPortalDoorDirection(target)))};
 	}
 	std::vector<size_t> ends;
@@ -181,6 +216,32 @@ std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &f
 		if (TrackdirToExitdir(trackdir) == exit && actual.Test(trackdir)) return TBMCutterSteeringTarget{target, TrackdirToTrackdirBits(trackdir)};
 	}
 	return std::nullopt;
+}
+
+/** @copydoc GetTBMTravelHoldReason */
+TBMBlockedReason GetTBMTravelHoldReason(const Train &front)
+{
+	const auto *project = GetTBMProjectForCutter(front.First()->index);
+	// Finished machinery and ordinary trains follow normal orders. A real
+	// depot order owns travel while service is in progress, even at a work face.
+	if (project == nullptr || IsTBMProjectFinished(project->phase)) return TBMBlockedReason::None;
+	if (front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front) && project->phase != TBMPhase::TravelToHangar) return TBMBlockedReason::None; // Existing ordinary service visits retain their precedence over a paused geological job.
+	if (project->blocked == TBMBlockedReason::Paused) return TBMBlockedReason::Paused;
+	if (project->phase == TBMPhase::FollowOrders) {
+		return front.current_order.IsGotoOrder() || front.current_order.IsType(OT_LOADING) || front.current_order.IsType(OT_LEAVESTATION) ?
+			TBMBlockedReason::None : TBMBlockedReason::MissingOrders;
+	}
+	if (project->phase == TBMPhase::TravelToHangar) {
+		const auto destination = GetTBMOrderedHangar(front);
+		if (destination.error == TBMHangarError::Occupied) return TBMBlockedReason::OccupiedHangar;
+		return destination.error == TBMHangarError::None ? TBMBlockedReason::None : TBMBlockedReason::MissingHangar;
+	}
+	const auto loss = FindTBMProjectReferenceLoss(*project);
+	if (loss != TBMBlockedReason::None) return loss;
+	// Work and magazine waits already have physical holds. Only real project
+	// travel needs a destination; an absent one may never invoke ordinary wandering.
+	if (project->phase != TBMPhase::TravelToFace && project->phase != TBMPhase::AdvanceSupport && !IsTBMReturning(project->phase)) return TBMBlockedReason::None;
+	return GetTBMCutterSteeringTarget(front) ? TBMBlockedReason::None : TBMBlockedReason::MissingSupport;
 }
 
 /**
@@ -326,14 +387,22 @@ bool IsTBMSupportTraversable(TileIndex tile, TBMSupportClass vehicle_class)
 
 /**
  * @param tile Any tile.
- * @return Whether the laying project still exists and is unfinished.
+ * @return Whether a real train, geological claim or unfinished project's retreat still requires this support.
  */
 bool IsTBMSupportInUse(TileIndex tile)
 {
 	const auto *support = GetTBMSupportTile(tile);
 	if (support == nullptr) return false;
+	if (HasVehicleOnTile(tile, [](const Vehicle *vehicle) { return vehicle->type == VehicleType::Train; }) || GetGeologyWorldState().job_claims.contains(tile)) return true; // Neither a hidden tail nor another job's claimed floor becomes convertible when the laying project ends.
 	const auto *project = GetTBMProject(support->project);
-	return project != nullptr && project->phase != TBMPhase::Completed && project->phase != TBMPhase::Cancelled;
+	if (project != nullptr && !IsTBMProjectFinished(project->phase)) return true;
+	// Reused old support can carry a later job's return route. Query that
+	// existing route owner only after the common original-owner guard clears.
+	for (const auto &other : CaptureTBMProjects()) {
+		if (IsTBMProjectFinished(other.phase)) continue;
+		if (std::ranges::binary_search(GetTBMWorkCorridor(other), tile)) return true;
+	}
+	return false;
 }
 
 /**
@@ -347,6 +416,58 @@ CommandCost CheckTBMSupportChange(TileIndex tile, DoCommandFlags flags)
 	if (flags.Test(DoCommandFlag::Bankrupt)) return CommandCost();
 	if (IsTBMSupportInUse(tile)) return CommandCost(STR_ERROR_TBM_SUPPORT_IN_USE);
 	return CommandCost();
+}
+
+/** @copydoc CheckTBMExitHandover */
+CommandCost CheckTBMExitHandover(TileIndex tile, DiagDirection shaft, RailType railtype)
+{
+	const auto *support = GetTBMSupportTile(tile);
+	if (support == nullptr || !IsPlainRailTile(tile)) return CommandCost(STR_ERROR_TBM_SUPPORT_NONE);
+	if (support->owner != _current_company || GetTileOwner(tile) != _current_company) return CommandCost(STR_ERROR_AREA_IS_OWNED_BY_ANOTHER);
+	const auto *project = GetTBMProject(support->project);
+	const auto *job = project == nullptr ? nullptr : GetExcavationJob(project->job);
+	if (job == nullptr || project->company != _current_company || job->state != ExcavationJobState::Completed || job->cursor != job->route.size()) return CommandCost(STR_ERROR_TBM_EXIT_UNFINISHED);
+	std::vector<size_t> ends;
+	const auto path = GetTBMWorkRailPath(*job, job->route.size(), ends);
+	const auto door_step = TileIndexDiffCByDiagDir(ReverseDiagDir(shaft));
+	const TileIndex door = TileAddWrap(tile, door_step.x, door_step.y);
+	// Replacing the terminal piece cannot sever the cutter from A. A branch,
+	// a reused middle tile or the wrong mouth direction is a different design
+	// and must not inherit this narrowly bounded handover.
+	if (path.size() < 4 || path.back() != tile || path[path.size() - 2] != door || std::ranges::count(path, tile) != 1 ||
+			GetRailType(tile) != railtype || HasSignals(tile) || GetTrackBits(tile) != TrackBits{DiagDirToDiagTrack(shaft)} || support->track != GetTrackBits(tile)) return CommandCost(STR_ERROR_TBM_EXIT_GEOMETRY);
+	const auto pocket = GetExcavationCutterEnvelope(tile);
+	if (pocket.empty()) return CommandCost(STR_ERROR_TBM_EXIT_GEOMETRY);
+	if (const auto floor = CheckExcavationConstruction(pocket); floor.Failed()) return floor;
+	if (GetRailReservationTrackBits(tile).Any() || EnsureNoVehicleOnGround(tile).Failed() || EnsureNoVehicleOnGround(door).Failed()) return CommandCost(STR_ERROR_TBM_EXIT_STAGE);
+	const Train *front = Train::GetIfValid(project->cutter);
+	if (front == nullptr || !front->vehstatus.Test(VehState::Stopped) || front->cur_speed != 0 ||
+			InspectTBMConsist(*front, *project).error != TBMBlockedReason::None) return CommandCost(STR_ERROR_TBM_EXIT_STAGE);
+	// Every real part must be locally staged on the retained approach. A
+	// stopped icon or an already withdrawn head cannot conceal an outside tail.
+	for (const Train *part = front; part != nullptr; part = part->Next()) {
+		const auto position = std::ranges::find(path, part->tile);
+		if (part->vehstatus.Test(VehState::Crashed) || position == path.end() || position >= path.end() - 2 || part->track == Track::Depot) return CommandCost(STR_ERROR_TBM_EXIT_STAGE);
+	}
+	for (const auto &other : CaptureTBMProjects()) {
+		// Another active route may still need this paid terminal for retreat.
+		if (other.id == project->id || IsTBMProjectFinished(other.phase)) continue;
+		if (std::ranges::binary_search(GetTBMWorkCorridor(other), tile)) return CommandCost(STR_ERROR_TBM_SUPPORT_IN_USE);
+	}
+	return CommandCost(ExpensesType::Construction, support->conversion_price + RailClearCost(railtype));
+}
+
+/** @copydoc CompleteTBMExitHandover */
+void CompleteTBMExitHandover(TileIndex tile)
+{
+	auto support = FindTBMSupport(tile);
+	assert(support != _tbm_support.end() && support->tile == tile && support->track.Count() == 1);
+	assert(IsLayerPortalTile(tile) && GetTileOwner(tile) == support->owner);
+	// The portal coordinator has already installed and published both real
+	// housings. Only the replaced single track piece leaves infrastructure;
+	// all remaining temporary support and the geological job stay protected.
+	Company::Get(support->owner)->infrastructure.rail[GetRailType(tile)] -= 1;
+	_tbm_support.erase(support);
 }
 
 /**

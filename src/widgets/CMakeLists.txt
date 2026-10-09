@@ -58,6 +58,7 @@ add_files(
     town_widget.h
     transparency_widget.h
     underground_widget.h
+    tbm_widget.h
     layer_portal_widget.h
     tree_widget.h
     vehicle_widget.h

@@ -3,7 +3,7 @@
 
 @file multilayer_sprite_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
+@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
 """
 
 import argparse
@@ -13,7 +13,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "docs/zz-reach2/upgrades/2026-10/assets"
+ASSETS = ROOT / "media/multilayer/contracts"
 MANIFEST = ASSETS / "multilayer_sprite_manifest.json"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 DOORS = ["NE", "SE", "SW", "NW"]
@@ -150,6 +150,14 @@ def build_manifest():
             row["packed"]["namespace"] = "native_map_layer_extension"
             row["packed"]["offset"] = next_offset
             next_offset += len(row["directions"]) * row["frames"] * len(row["states"]) * len(row["parts"]) * row["tile_variants"]
+    # Regional material art appends after the existing M1 block. It never
+    # shifts the original core reservations or any previously bound family.
+    for suffix, columns in (("hardness", ["solid", "cut_face", "excavating", "excavated"]),
+                            ("hardness-edges", ["upper_left", "upper_right", "lower_right", "lower_left"])):
+        family = record(f"terrain.{suffix}", 2, "terrain",
+                        [f"{material}_{column}" for material in ("soft", "mixed", "hard", "basalt") for column in columns])
+        family["packed"]["namespace"] = "native_geology_append"
+        rows.append(family)
     return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and r2mlvs1-e-ground-and-space-budgets.md",
             "schema_version": 1, "handoff": "M0_contract_only", "direction_convention": "engine_viewport",
             "legacy": {"live_count": 66, "preserved_offsets": [0, 65], "unactivated_reserved_offsets": [66, 73],

@@ -185,7 +185,7 @@ TEST_CASE("A late obstruction pauses at the previous safe support with a valid r
 
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	REQUIRE(estimate.error == ExcavationError::None);
-	for (uint64_t tick = 1; tick < estimate.work_ticks; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None);
+	for (uint64_t tick = 1; tick < estimate.work_ticks * 2; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None); // Reach the unchanged obstruction/commit boundary at half cutting speed.
 	CHECK(rig.Tick().blocked == TBMBlockedReason::Obstruction);
 	// The cutter is still at the first cut's position, and every cell back to the housing carries usable support.
 	CHECK(rig.Job().cursor == 1);
@@ -208,7 +208,7 @@ TEST_CASE("Reversing keeps the cutting heading and never cuts backwards", "[tbm-
 	CHECK(rig.Tick().blocked == TBMBlockedReason::None);
 	CHECK(rig.Project().heading == heading);
 	CHECK(rig.Job().cursor == 0);
-	CHECK(rig.Job().partial_work_ticks == 2); // Work continues on the same forward cut.
+	CHECK(rig.Job().partial_work_ticks == 1); // Two half-speed ticks continue the same forward cut.
 	CHECK(InspectTBMConsist(*rig.front, rig.Project()).error == TBMBlockedReason::None); // Roles do not follow the reversal.
 }
 
@@ -222,7 +222,7 @@ TEST_CASE("A reload during a bend continues the same cursor and ledger", "[tbm-c
 	const auto estimate = EstimateExcavationCut(rig.project.job);
 	REQUIRE(estimate.error == ExcavationError::None);
 	const uint64_t half = estimate.work_ticks / 2;
-	for (uint64_t tick = 0; tick < half; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None);
+	for (uint64_t tick = 0; tick < half * 2; ++tick) REQUIRE(rig.Tick().blocked == TBMBlockedReason::None); // Reach the same geological midpoint at half speed.
 	const auto projects = ComputeTBMProjectDigest();
 	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto earth = rig.Job().completed_earth_t;
@@ -232,7 +232,7 @@ TEST_CASE("A reload during a bend continues the same cursor and ledger", "[tbm-c
 	CHECK(rig.Job().cursor == 1);
 	CHECK(rig.Job().partial_work_ticks == half);
 	// The rest of the work takes exactly the remaining ticks, and the ledger grows by this cut alone.
-	for (uint64_t tick = half + 1; tick < estimate.work_ticks; ++tick) REQUIRE(rig.Tick().phase == TBMPhase::Bore);
+	for (uint64_t tick = half * 2 + 1; tick < estimate.work_ticks * 2; ++tick) REQUIRE(rig.Tick().phase == TBMPhase::Bore);
 	CHECK(rig.Tick().phase == TBMPhase::ReturnForExchange); // The wagons cannot take the third cut as well: a frozen breakpoint.
 	CHECK(rig.Job().cursor == 2);
 	CHECK(rig.Job().completed_earth_t == earth + estimate.earth_t);

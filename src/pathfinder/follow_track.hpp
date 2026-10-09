@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file follow_track.hpp Template track followers. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B semantic route domains. */
+/** @file follow_track.hpp Template track followers. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8 physical portal/depot geometry. */
 
 #ifndef  FOLLOW_TRACK_HPP
 #define  FOLLOW_TRACK_HPP
@@ -365,7 +365,7 @@ protected:
 				return false;
 			}
 		}
-		if (IsRailTT() && IsDepotTypeTile(this->new_tile, TT())) {
+		if (IsRailTT() && IsRailDepotTile(this->new_tile)) { // A registered portal magazine retains its two-sided portal track, not a dead-end depot entrance.
 			DiagDirection exitdir = GetRailDepotDirection(this->new_tile);
 			if (ReverseDiagDir(exitdir) != this->exitdir) {
 				this->err = ErrorCode::NoWay;
@@ -473,8 +473,9 @@ protected:
 	 */
 	inline bool ForcedReverse()
 	{
-		/* rail and road depots cause reversing */
-		if (!IsWaterTT() && IsDepotTypeTile(this->old_tile, TT())) {
+		// Only actual dead-end rail/road geometry forces reversal. A native
+		// depot identity on portal side storage cannot reverse its public track.
+		if ((IsRailTT() && IsRailDepotTile(this->old_tile)) || (IsRoadTT() && IsRoadDepotTile(this->old_tile))) {
 			DiagDirection exitdir = IsRailTT() ? GetRailDepotDirection(this->old_tile) : GetRoadDepotDirection(this->old_tile);
 			if (exitdir != this->exitdir) {
 				/* reverse */

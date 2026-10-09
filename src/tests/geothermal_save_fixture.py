@@ -12,6 +12,24 @@ from geology_save_fixture import chunks, geology_chunk, variant, read_stream
 from multilayer_state_fixture import AREA, ROOT, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("geothermal", "geothermal-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+variant = partial(variant, context=CONTEXT)
+
+
 def bad_vent(records, remove=False):
     """Introduce one exact owned thermal-family failure, preserving every mineral/terrain byte.
 
@@ -35,8 +53,8 @@ def main():
 
     @return None; preserve original startup/config and the retained geology-only predecessor.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
-    config = ROOT / "build/grftest.cfg"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config = RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     older = save_path("r2mlvs2-g-native.sav")
     older_hash = hashlib.sha256(older.read_bytes()).hexdigest()
@@ -61,7 +79,7 @@ def main():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(older.read_bytes()).hexdigest() == older_hash, "geology-only predecessor changed"
-    (AREA / "r2mlvs2-i-vent-results.txt").write_text(
+    (CONTEXT.reports / "r2mlvs2-i-vent-results.txt").write_text(
         "R2MLVS2 Group 6: natural-field new/reload, geology-only predecessor and capacity/missing-family refusals passed.\n"
         "Minerals, terrain and thermal ID/capacity remained exact; discovery produced no plant, freight or power grant.\n"
         "Original configuration/startup/predecessor bytes preserved. Runtime heat allocation remains Plan 17.\n", encoding="utf-8")

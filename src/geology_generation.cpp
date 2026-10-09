@@ -111,11 +111,13 @@ static GeologyDeposit MakeGeneratedDeposit(GeologyDepositID id, CargoLabel resou
 /**
  * Build guaranteed resources first, followed by bounded optional placements and deterministic fallbacks.
  * @param geology_seed Independent versioned root.
+ * @param hardness_version Regional rule; zero is explicit historical generation, never the normal new-game default.
  * @return Complete geological proposal or explicit refusal, without changing tiles/RNG/live authority.
  */
-GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed)
+GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed, uint16_t hardness_version)
 {
 	GeologyGenerationResult result;
+	if (hardness_version > GEOLOGY_HARDNESS_VERSION) { result.error = GeologyError::InvalidShape; return result; }
 	// Geology requires both rock planes and enough usable space before allocating/publishing any mandatory record.
 	if (!CheckGeologyGenerationSize(Map::SizeX(), Map::SizeY()) || !MultiLayerMap::IsValidLayer(MapLayer::DeepUnderground)) {
 		result.error = GeologyError::UnsupportedMap;
@@ -178,5 +180,7 @@ GeologyGenerationResult PrepareGeologyGeneration(uint64_t geology_seed)
 	}
 	if (!result.state.terrain.Reset(Map::PlaneSize())) { result.error = GeologyError::UnsupportedMap; return result; }
 	result.state.generator_version = GEOLOGY_GENERATOR_VERSION;
+	result.state.hardness_version = hardness_version;
+	result.state.hardness_seed = hardness_version == 0 ? 0 : DeriveGeologyHardnessSeed(geology_seed);
 	return result;
 }

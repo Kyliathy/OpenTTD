@@ -93,8 +93,10 @@ public:
 	 * @param layer Actual Underground or Deep target; existing upper excavated access is a scenario precondition.
 	 * @param paid_setup Invoice every initial logistics command and use the caller's declared native economy configuration.
 	 * @param full_save Reserve dense original EIDS identities and use the distributed cargo slots for actual game-file transport.
+	 * @param hardness_version Zero preserves historical workflow measurements; current regional cases select their saved algorithm explicitly.
+	 * @param world_seed Independent geological input for the actual generated world.
 	 */
-	explicit UndergroundWorkflowWorld(MapLayer layer = MapLayer::Underground, bool paid_setup = false, bool full_save = false) : ExcavationFixture(full_save), paid_setup(paid_setup), layer(layer), resource(layer == MapLayer::Underground ? CargoLabel{"COAL"} : CargoLabel{"RARE"})
+	explicit UndergroundWorkflowWorld(MapLayer layer = MapLayer::Underground, bool paid_setup = false, bool full_save = false, uint16_t hardness_version = 0, uint32_t world_seed = 420) : ExcavationFixture(full_save, hardness_version, world_seed), paid_setup(paid_setup), layer(layer), resource(layer == MapLayer::Underground ? CargoLabel{"COAL"} : CargoLabel{"RARE"})
 	{
 		// A measured project uses canonical native price calculation rather than the narrow GUI fixture's price overrides.
 		if (this->paid_setup) RecomputePrices();

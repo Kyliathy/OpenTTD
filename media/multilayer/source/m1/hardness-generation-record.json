@@ -1,0 +1,56 @@
+{
+  "_documentation": "R2TBMF Group10; first-party immutable built-in imagegen originals. Deterministic conversion is owned by media/multilayer/convert_hardness_art.py; no original is overwritten.",
+  "schema_version": 1,
+  "date": "2026-10-09",
+  "tool": "built_in_image_gen",
+  "materials": [
+    "soft",
+    "mixed",
+    "hard",
+    "basalt"
+  ],
+  "sources": [
+    {
+      "key": "base",
+      "asset_id": "terrain.hardness",
+      "path": "media/multilayer/source/m1/raw/terrain-hardness-v1.png",
+      "sha256": "bb532285021eb81591d4b23b39f84bcfe76ad08e24eb9a8f8381f0407fbe8b2e",
+      "grid": [
+        4,
+        4
+      ],
+      "columns": [
+        "solid",
+        "cut_face",
+        "excavating",
+        "excavated"
+      ],
+      "references": [],
+      "prompt": "Create ONE production sprite atlas for an OpenTTD-style isometric underground geology game. Transparent RGBA background. Exactly 4 columns and 4 rows, 16 separate complete ground-tile sprites, equal cells with generous transparent gutters and no labels or text. Every sprite is the same flat 2:1 isometric diamond footprint viewed from above, with top-left lighting, no perspective convergence, no detached pieces outside the diamond. Pixel-art materials designed to remain clearly distinct when reduced to 64x31 pixels and an old 8-bit game palette. Rows top to bottom are geological hardness: row 1 SOFT, warm pale sandy-beige sediment with broad rounded layered cracks; row 2 MIXED, medium olive-brown grey sediment with embedded darker angular stones; row 3 HARD, cool slate-blue granite with strong angular fractures and restrained bright facets; row 4 BASALT, very dark charcoal-violet rock with bold columnar/hexagonal fracture texture and readable light rims. Four columns left to right are excavation states: 1 continuous uncut solid rock surface filling the whole diamond, 2 the same material freshly exposed at a shallow rough cut face, 3 the same material partly excavated with a shallow chipped working face, 4 fully excavated compacted floor of that material with fine gravel and no walls. Keep each material's palette and broad texture unmistakably consistent across its row. Same diamond size, exact isometric orientation and aligned centre in every cell. Natural geological rock, no masonry bricks, no tools, no machines, no rails, no symbols, no letters, no grid lines, no surrounding scene, no cast shadow outside each diamond. The transparent background must be genuine alpha. This is a native game sprite atlas, not an illustration of an atlas."
+    },
+    {
+      "key": "edges",
+      "asset_id": "terrain.hardness-edges",
+      "path": "media/multilayer/source/m1/raw/terrain-hardness-edges-v1.png",
+      "sha256": "f9862fc182a40ccd8487fd75be37a1341dbc84af340bbd84c6678c0f6897383c",
+      "grid": [
+        4,
+        4
+      ],
+      "columns": [
+        "upper_left",
+        "upper_right",
+        "lower_right",
+        "lower_left"
+      ],
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/terrain-hardness-v1.png",
+          "sha256": "bb532285021eb81591d4b23b39f84bcfe76ad08e24eb9a8f8381f0407fbe8b2e"
+        }
+      ],
+      "key_policy": "Opaque magenta calibration floor supplies the full diamond bounds; remove pixels with red>=180, blue>=180 and green<=80 before native resampling. Preserve all other source alpha and apply the established ground diamond mask.",
+      "prompt": "Use the attached atlas solely as a style/material reference. Create a NEW production atlas of geological boundary overlays for the same OpenTTD-style game, on a genuinely transparent RGBA background. Exactly 4 columns by 4 rows, 16 separate sprites, equal cells with generous gutters, no text. Keep the reference's four material rows: pale sandy-beige SOFT sediment, olive-brown/grey MIXED rock with darker inclusions, cool slate-blue HARD fractured granite, dark charcoal-violet BASALT. Each cell represents the same 2:1 isometric diamond ground footprint as the reference. IMPORTANT calibration: fill the ENTIRE diamond floor with one perfectly flat opaque chroma-key magenta #FF00FF, except for the rock boundary. No pink lighting or reflections. The background OUTSIDE the diamond is fully transparent. The game converter removes that magenta floor, so only the authored rock boundary remains as an overlay. Draw ONE narrow shallow vertical cut-rock boundary INSIDE the diamond along exactly ONE edge per column: column1 upper-left edge (left vertex to top vertex), column2 upper-right edge (top vertex to right vertex), column3 lower-right edge (right vertex to bottom vertex), column4 lower-left edge (bottom vertex to left vertex). All other edges and the interior remain perfectly flat #FF00FF. The rock strip is only about one eighth of the diamond's height in thickness, hugs its edge, has a crisp rough cliff face with the appropriate material's texture, and does not spill outside the footprint. No complete enclosing walls, no loose stones, no shadows on the key-colour floor, no masonry, no outlines around the magenta portions. Identical full-diamond size and centred alignment in all 16 cells. Coherent upper-left lighting across all orientations, crisp pixel-art detail suitable for reduction to a 64x31 8-bit game tile. Preserve each row's recognizable brightness, colour and geological texture from the reference."
+    }
+  ]
+}

@@ -23,9 +23,13 @@
 #include "layer_portal_map.h"
 #include "tbm_cmd.h"
 #include "tbm_controls.h"
+#include "tbm_gui.h"
 #include "timer/timer.h"
 #include "timer/timer_window.h"
 #include "tbm_area_preview.h"
+#include "tbm_replanning.h"
+#include "train.h"
+#include "viewport_func.h"
 #include "construction_preview.h"
 #include "multilayer_sprite.h"
 #include "gfx_func.h"
@@ -92,16 +96,96 @@ struct UndergroundConstructionWindow : Window {
 	TBMConsistRequest area_consist; ///< Shared native defaults for the actual working rock layer; confirmation reuses the displayed quote's counts.
 	StationID area_origin = StationID::Invalid(); ///< Actual Surface disposal origin selected by common controls.
 	std::optional<TBMCommissionAreaPreview> area_quote; ///< Read-only canonical quantities and derived drawing geometry.
+	TBMProjectID area_project{UINT32_MAX}; ///< Existing-machine mode; invalid means the separate portal commissioning flow.
+	ExcavationPlanIntent area_intent = ExcavationPlanIntent::Area; ///< Explicit transient work shape, revalidated by the synchronized command.
+	std::optional<TBMExtensionPreview> extension_quote; ///< Additional-work quote for the actual paused machine, never another purchase.
 	TBMProjectID inspected_project{UINT32_MAX}; ///< Actual clicked project identity for live progress/footprint queries, not saved authority.
 	uint64_t inspected_revision = UINT64_MAX; ///< Derived overlay refresh stamp; never work permission or a second progress cursor.
+	bool details_visible = false; ///< Optional guidance only; it owns no technology or construction permission.
 	/** @param elapsed Unused presentation periods. Refresh the UI without stepping its actual job/controller owners. */
 	const IntervalTimer<TimerWindow> project_refresh = {std::chrono::seconds(1), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
 
 	/** @param desc Widget description. @param layer Requested rock plane. @param policy Accepted display policy. */
 	UndergroundConstructionWindow(WindowDesc &desc, MapLayer layer, const MultiLayerProfileSelection &policy) : Window(desc), layer(layer), policy(policy)
 	{
-		this->InitNested(layer);
 		this->status = GetString(STR_UNDERGROUND_SELECT_TOOL);
+		this->CreateNestedTree();
+		this->GetWidget<NWidgetStacked>(WID_UC_DETAILS_STACK)->SetDisplayedPlane(SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_QUOTE_STACK)->SetDisplayedPlane(SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_INTENT_STACK)->SetDisplayedPlane(SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_PROJECT_STACK)->SetDisplayedPlane(SZSP_NONE);
+		this->FinishInitNested(layer);
+	}
+
+	/** Refresh optional information planes only after real selection changes; empty labels cannot consume default map space. */
+	void RefreshInformationLayout()
+	{
+		this->GetWidget<NWidgetStacked>(WID_UC_DETAILS_STACK)->SetDisplayedPlane(this->details_visible ? 0 : SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_QUOTE_STACK)->SetDisplayedPlane(this->area_quote.has_value() || this->extension_quote.has_value() ? 0 : SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_PROJECT_STACK)->SetDisplayedPlane(GetTBMProject(this->inspected_project) != nullptr ? 0 : SZSP_NONE);
+		this->GetWidget<NWidgetStacked>(WID_UC_INTENT_STACK)->SetDisplayedPlane(this->selected_tool == WID_UC_AREA && _thd.GetCallbackWnd() == this ? 0 : SZSP_NONE); // Only an armed work tool needs an intent control.
+		this->ReInit();
+	}
+
+	/**
+	 * Adopt an actual browser selection and display its geological owner's current footprint.
+	 * @param id Actual owned project; stale/foreign identities leave the current tool untouched.
+	 */
+	void InspectProject(TBMProjectID id)
+	{
+		const auto *project = GetTBMProject(id);
+		// The list may have changed between click and callback. Recheck ownership
+		// and actual job layer before giving a presentation cursor to this window.
+		if (project == nullptr || project->company != _local_company) return;
+		const auto *job = GetExcavationJob(project->job);
+		if (job == nullptr || GetTileLayer(job->commissioning_anchor) != this->layer) return;
+		SetObjectToPlaceWnd(SPR_CURSOR_QUERY, PAL_NONE, HT_RECT, this);
+		this->selected_tool = WID_UC_PROJECT;
+		this->inspected_project = id;
+		this->inspected_revision = UINT64_MAX;
+		this->status = GetString(STR_UNDERGROUND_PROJECT_SELECTED, id.base());
+		this->RefreshInspectedFootprint();
+		this->RefreshInformationLayout();
+	}
+
+	/** @param id Actual owned unfinished controller. Arm additional floor input after centring its accepted endpoint, without changing its route or buying machinery. */
+	void PlanExtension(TBMProjectID id)
+	{
+		const auto *project = GetTBMProject(id);
+		// Stale or foreign browser selection must never become a new-machine
+		// request merely because the original controller disappeared.
+		if (project == nullptr || project->company != _local_company) return;
+		const auto *job = GetExcavationJob(project->job);
+		if (job == nullptr || job->route.empty() || GetTileLayer(job->commissioning_anchor) != this->layer) return;
+		ScrollMainWindowToTile(job->route.back().cutter_position, true);
+		SetObjectToPlaceWnd(SPR_CURSOR_QUERY, PAL_NONE, HT_RECT, this);
+		this->selected_tool = WID_UC_AREA;
+		this->area_project = id;
+		this->area_portal = project->portal;
+		this->area_quote.reset();
+		this->extension_quote.reset();
+		this->inspected_project = id;
+		this->LowerWidget(WID_UC_AREA);
+		this->status = this->WorkInputPrompt();
+		std::vector<TileIndex> working;
+		std::ranges::set_difference(job->authorized_tiles, job->requested_tiles, std::back_inserter(working));
+		SetConstructionPreview(this, job->requested_tiles, working);
+		this->RefreshInformationLayout();
+	}
+
+	/** @return Next input for the selected intent; a straight endpoint follows the actual housing or accepted route. */
+	std::string WorkInputPrompt() const
+	{
+		if (this->area_portal == INVALID_TILE) return GetString(STR_UNDERGROUND_AREA_NEEDS_PORTAL);
+		if (this->area_intent == ExcavationPlanIntent::StraightTunnel) return GetString(STR_TBM_TUNNEL_SELECT_END);
+		return this->area_project == TBMProjectID{UINT32_MAX} ? GetString(STR_UNDERGROUND_AREA_SELECT_FLOOR) : GetString(STR_TBM_EXTEND_SELECT_FLOOR, this->area_project.base());
+	}
+
+	/** @return Current command owner's read-only material/time estimate, or no quote before a floor has been selected. */
+	const ExcavationCutResult *AreaTotals() const
+	{
+		if (this->extension_quote) return &this->extension_quote->plan.estimate;
+		return this->area_quote ? &this->area_quote->area.totals : nullptr;
 	}
 
 	/** @param widget Control being rendered. @param stringid Default string. @return Localized context or ordinary widget text. */
@@ -109,7 +193,14 @@ struct UndergroundConstructionWindow : Window {
 	{
 		switch (widget) {
 			case WID_UC_CAPTION: return GetString(STR_UNDERGROUND_CAPTION, GetMapLayerName(this->layer));
-			case WID_UC_STATUS: return this->status;
+			case WID_UC_AREA: return GetString(this->area_project == TBMProjectID{UINT32_MAX} ? STR_UNDERGROUND_AREA : STR_TBM_PROJECT_EXTEND);
+			case WID_UC_INTENT: return GetString(this->area_intent == ExcavationPlanIntent::Area ? STR_TBM_INTENT_AREA : STR_TBM_INTENT_TUNNEL);
+			case WID_UC_AREA_CONFIRM: return GetString(this->extension_quote ? STR_TBM_EXTEND_CONFIRM : STR_UNDERGROUND_AREA_CONFIRM);
+			case WID_UC_STATUS:
+				// Locked tools must explain the actual calendar gate even while
+				// optional requirements are collapsed in the compact default view.
+				if (this->layer == MapLayer::DeepUnderground && !CheckDeepLayerAvailability(this->policy, TimerGameCalendar::date)) return this->GetWidgetString(WID_UC_REQUIREMENTS, STR_UNDERGROUND_REQUIREMENTS);
+				return this->status;
 			case WID_UC_JOB_PROGRESS: {
 				const auto *project = GetTBMProject(this->inspected_project);
 				// Missing/foreign projects cannot expose stale owned progress after
@@ -135,13 +226,34 @@ struct UndergroundConstructionWindow : Window {
 				return GetString(STR_UNDERGROUND_MODEL_CALENDAR, dates);
 			}
 			case WID_UC_AREA_PRICE:
+				if (this->extension_quote) {
+					const VehicleID cutter = this->extension_quote->cutter;
+					if (!Train::IsValidID(cutter)) return GetString(STR_ERROR_TBM_EXTEND_REFERENCES);
+					return GetString(STR_TBM_EXTEND_PRICE, GetString(STR_VEHICLE_NAME, cutter), this->extension_quote->plan.estimate.cost);
+				}
 				if (!this->area_quote) return GetString(STR_UNDERGROUND_AREA_EMPTY);
+				if (Train::IsValidID(this->area_quote->request.reuse_cutter)) return GetString(STR_TBM_REUSE_PRICE,
+					GetString(STR_VEHICLE_NAME, this->area_quote->request.reuse_cutter), this->area_quote->area.totals.cost);
 				return GetString(STR_UNDERGROUND_AREA_PRICE, this->area_quote->purchase.GetCost(), this->area_quote->area.totals.cost);
-			case WID_UC_AREA_MATERIAL:
-				if (!this->area_quote) return GetString(STR_UNDERGROUND_AREA_EMPTY);
-				return GetString(STR_UNDERGROUND_AREA_MATERIAL, this->area_quote->area.totals.earth_t,
-					this->area_quote->area.totals.rock_t, this->area_quote->area.totals.support_units, this->area_quote->area.totals.work_ticks);
+			case WID_UC_AREA_MATERIAL: {
+				const auto *totals = this->AreaTotals();
+				if (totals == nullptr) return GetString(STR_UNDERGROUND_AREA_EMPTY);
+				return GetString(STR_UNDERGROUND_AREA_MATERIAL, totals->earth_t, totals->rock_t, totals->support_units, totals->work_ticks);
+			}
+			case WID_UC_AREA_TIME: {
+				const auto *totals = this->AreaTotals();
+				const auto *project = GetTBMProject(this->area_project);
+				const auto *model = GetTBMCutterModel(project == nullptr ? this->area_model : project->model_id);
+				// No valid owner/rate means no invented completion time; the refusal
+				// remains in the status row and confirmation stays unavailable.
+				if (totals == nullptr || model == nullptr) return {};
+				const auto cuts = this->extension_quote ? this->extension_quote->plan.route.size() : this->area_quote->area.plan.route.size();
+				const auto ticks = std::max<uint64_t>(cuts, CeilDiv(totals->work_ticks * model->work_rate_denominator, uint64_t{model->work_rate_numerator}));
+				return GetString(STR_TBM_WORK_TIME, ticks);
+			}
 			case WID_UC_AREA_FLOOR:
+				if (this->extension_quote) return GetString(STR_UNDERGROUND_AREA_FLOOR, this->extension_quote->plan.covered_targets.size(),
+					this->extension_quote->working_space.size(), this->extension_quote->plan.estimate.new_cells, this->extension_quote->plan.remaining_targets.size());
 				if (!this->area_quote) return GetString(STR_UNDERGROUND_AREA_EMPTY);
 				return GetString(STR_UNDERGROUND_AREA_FLOOR, this->area_quote->area.plan.covered_targets.size(),
 					this->area_quote->area.turn_envelope.size(), this->area_quote->area.totals.new_cells, this->area_quote->area.plan.remaining_targets.size());
@@ -192,7 +304,8 @@ struct UndergroundConstructionWindow : Window {
 				// Turn art describes the canonical swept-envelope quote, including
 				// refusals. It adds no pivot command or substitute floor geometry.
 				return GetMultiLayerControlSprite(MultiLayerSpriteAsset::ControlTbmTurn45,
-					!this->area_quote || this->area_quote->purchase.Failed(), this->area_quote.has_value());
+					this->extension_quote ? this->extension_quote->result.Failed() : !this->area_quote || this->area_quote->purchase.Failed(),
+					this->extension_quote.has_value() || this->area_quote.has_value());
 			case WID_UC_STATUS: return GetMultiLayerSurveySprite(this->survey_tile, true);
 			default: return std::nullopt;
 		}
@@ -209,7 +322,14 @@ struct UndergroundConstructionWindow : Window {
 	 */
 	void UpdateWidgetSize(WidgetID widget, Dimension &size, const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
 	{
-		// The template initially carries the ordinary query cursor. Reserve the
+		// Contextual status wraps inside a bounded palette; a long localized
+		// refusal must not permanently stretch every construction button.
+		if (widget == WID_UC_STATUS) {
+			size.width = std::max<uint>(size.width, ScaleGUITrad(260));
+			size.height = std::max(size.height, 3 * GetCharacterHeight(FontSize::Normal) + padding.height);
+			return;
+		}
+		// The template initially carries a small base-set fallback. Reserve the
 		// complete native control cell before OnPaint selects its current state,
 		// so a disabled/pressed picture cannot overrun the actual button frame.
 		if (widget == WID_UC_SURVEY || widget == WID_UC_PROJECT || widget == WID_UC_AREA || widget == WID_UC_EXCHANGE) {
@@ -221,12 +341,13 @@ struct UndergroundConstructionWindow : Window {
 			}
 			return;
 		}
-		// Only custom informational rows need this space; buttons already measure
-		// their native picture and localized caption through the ordinary widget.
-		if (widget != WID_UC_REQUIREMENTS && widget != WID_UC_MODEL_DATES && widget != WID_UC_AREA_FLOOR && widget != WID_UC_STATUS) return;
-		const Dimension text = GetStringBoundingBox(this->GetWidgetString(widget, this->GetWidget<NWidgetCore>(widget)->GetString()));
-		size.width = std::max(size.width, text.width + ScaleGUITrad(24) + padding.width);
-		size.height = std::max(size.height, std::max<uint>(ScaleGUITrad(20), text.height) + padding.height);
+		// Optional guidance and quotes wrap instead of letting a long localized
+		// sentence stretch the entire construction palette across the map.
+		if (widget == WID_UC_REQUIREMENTS || widget == WID_UC_MODEL_DATES || widget == WID_UC_AREA_PRICE ||
+			widget == WID_UC_AREA_MATERIAL || widget == WID_UC_AREA_FLOOR || widget == WID_UC_AREA_TIME || widget == WID_UC_JOB_PROGRESS) {
+			size.width = std::max<uint>(size.width, ScaleGUITrad(260));
+			size.height = std::max<uint>(size.height, 2 * GetCharacterHeight(FontSize::Normal) + padding.height);
+		}
 	}
 
 	/**
@@ -238,7 +359,8 @@ struct UndergroundConstructionWindow : Window {
 	{
 		// Other widget families keep their normal renderer and existing input
 		// behavior. These four rows explicitly reserve their icon/text regions.
-		if (widget != WID_UC_REQUIREMENTS && widget != WID_UC_MODEL_DATES && widget != WID_UC_AREA_FLOOR && widget != WID_UC_STATUS) return;
+		if (widget != WID_UC_REQUIREMENTS && widget != WID_UC_MODEL_DATES && widget != WID_UC_AREA_PRICE &&
+			widget != WID_UC_AREA_MATERIAL && widget != WID_UC_AREA_FLOOR && widget != WID_UC_AREA_TIME && widget != WID_UC_STATUS && widget != WID_UC_JOB_PROGRESS) return;
 		const bool rtl = _current_text_dir == TD_RTL;
 		Rect text_rect = r;
 		if (const auto icon = this->GetWidgetIcon(widget)) {
@@ -246,7 +368,7 @@ struct UndergroundConstructionWindow : Window {
 			text_rect = r.Indent(ScaleGUITrad(24), rtl);
 		}
 		const std::string text = this->GetWidgetString(widget, this->GetWidget<NWidgetCore>(widget)->GetString());
-		DrawString(text_rect.left, text_rect.right, r.top + (r.Height() - GetCharacterHeight(FontSize::Normal)) / 2, text, TextColour::Black);
+		DrawStringMultiLine(text_rect, text, TextColour::Black);
 	}
 
 	/** Refresh calendar/company availability without modifying geological or vehicle state. */
@@ -260,15 +382,17 @@ struct UndergroundConstructionWindow : Window {
 			WID_UC_RAIL, WID_UC_ROAD, WID_UC_RAIL_STATION, WID_UC_ROAD_TERMINAL, WID_UC_RAIL_SERVICE, WID_UC_ROAD_SERVICE);
 		this->SetWidgetDisabledState(WID_UC_AREA, locked || spectator);
 		// Only a complete successful quote offers purchase; commands revalidate date, company and every reference.
-		this->SetWidgetDisabledState(WID_UC_AREA_CONFIRM, locked || spectator || !this->area_quote || this->area_quote->purchase.Failed());
+		const bool quoted = this->extension_quote ? this->extension_quote->result.Succeeded() : this->area_quote && this->area_quote->purchase.Succeeded();
+		this->SetWidgetDisabledState(WID_UC_AREA_CONFIRM, locked || spectator || !quoted);
 		this->SetWidgetDisabledState(WID_UC_SURVEY, locked);
 		// Scenario road tools retain their existing editor owner; company-only purchase/service controls stay unavailable.
 		this->SetWidgetDisabledState(WID_UC_ROAD, locked || (spectator && _game_mode != GameMode::Editor));
 		// Update only actual control pictures; the standard widget retains the
 		// localized caption, tooltip and hit testing for each existing command.
 		for (const WidgetID widget : {WID_UC_SURVEY, WID_UC_PROJECT, WID_UC_AREA, WID_UC_EXCHANGE}) {
-			this->GetWidget<NWidgetCore>(widget)->SetSprite(this->GetWidgetIcon(widget).value_or(SPR_CURSOR_QUERY));
+			this->GetWidget<NWidgetCore>(widget)->SetSprite(this->GetWidgetIcon(widget).value_or(SPR_IMG_DYNAMITE));
 		}
+		this->SetWidgetLoweredState(WID_UC_DETAILS, this->details_visible);
 		this->DrawWidgets();
 	}
 
@@ -276,6 +400,23 @@ struct UndergroundConstructionWindow : Window {
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		if (this->IsWidgetDisabled(widget)) return;
+		if (widget == WID_UC_INTENT) {
+			DropDownList list;
+			list.push_back(MakeDropDownListStringItem(GetString(STR_TBM_INTENT_AREA), to_underlying(ExcavationPlanIntent::Area)));
+			list.push_back(MakeDropDownListStringItem(GetString(STR_TBM_INTENT_TUNNEL), to_underlying(ExcavationPlanIntent::StraightTunnel)));
+			ShowDropDownList(this, std::move(list), to_underlying(this->area_intent), widget);
+			return;
+		}
+		if (widget == WID_UC_PROJECT) {
+			if (_thd.GetCallbackWnd() == this) ResetObjectToPlace();
+			ShowTBMProjectsWindow(this->layer);
+			return;
+		}
+		if (widget == WID_UC_DETAILS) {
+			this->details_visible = !this->details_visible;
+			this->RefreshInformationLayout();
+			return;
+		}
 		if (_thd.GetCallbackWnd() == this) ClearConstructionPreview();
 		this->survey_tile = INVALID_TILE;
 		this->inspected_project = TBMProjectID{UINT32_MAX};
@@ -285,19 +426,34 @@ struct UndergroundConstructionWindow : Window {
 				this->selected_tool = widget;
 				this->area_portal = INVALID_TILE;
 				this->area_quote.reset();
-				HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT);
-				this->status = GetString(STR_UNDERGROUND_NEEDS_PORTAL);
+				this->extension_quote.reset();
+				this->area_project = TBMProjectID{UINT32_MAX};
+				if (HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT)) this->status = GetString(STR_UNDERGROUND_AREA_NEEDS_PORTAL);
+				this->RefreshInformationLayout();
 				this->SetDirty();
 				break;
 			case WID_UC_AREA_CONFIRM:
+				if (this->extension_quote) {
+					const auto *project = GetTBMProject(this->area_project);
+					if (project == nullptr) break;
+					const TileIndex portal = project->portal;
+					if (Command<Commands::ExtendTBMProject>::Post(STR_ERROR_TBM_EXTEND_FAILED, this->area_project, this->area_start, this->area_end,
+						this->extension_quote->job_revision, this->extension_quote->fingerprint, this->area_intent)) {
+						ResetObjectToPlace();
+						ShowLayerPortalWindow(portal); // The real paused controller supplies the next Resume action, including after asynchronous command dispatch.
+					}
+					break;
+				}
 				// A UI quote is only a display snapshot; the owning command supplies current permission and purchase.
-				if (Command<Commands::CommissionTBM>::Post(STR_ERROR_CAN_T_COMMISSION_TBM, this->area_portal,
-					this->area_model, this->area_consist.earth_wagons, this->area_consist.rock_wagons, this->area_origin, this->area_start, this->area_end, false)) ResetObjectToPlace();
+				if (!this->area_quote) break;
+				if (Command<Commands::ConfirmTBMCommission>::Post(STR_ERROR_CAN_T_COMMISSION_TBM, this->area_portal,
+					this->area_model, this->area_consist.earth_wagons, this->area_consist.rock_wagons, this->area_origin, this->area_start, this->area_end,
+					this->area_quote->fingerprint, this->area_intent)) ResetObjectToPlace();
 				break;
 			case WID_UC_SURVEY:
-			case WID_UC_PROJECT:
 				this->selected_tool = widget;
-				HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT);
+				if (HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT)) this->status = GetString(STR_UNDERGROUND_SURVEY_NEXT);
+				this->RefreshInformationLayout();
 				MarkWholeScreenDirty(); // Cursor ownership also governs the read-only seam overlay in every viewport.
 				break;
 			case WID_UC_MINE: ShowBuildIndustryWindow(); break;
@@ -340,13 +496,28 @@ struct UndergroundConstructionWindow : Window {
 		}
 	}
 
-	/** @param widget Menu owner. @param index Actual selected project ID. @param click_result Dropdown detail, unused. */
+	/** @param widget Menu owner. @param index Selected work intent or actual project ID. @param click_result Dropdown detail, unused. */
 	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int click_result) override
 	{
+		if (widget == WID_UC_INTENT) {
+			// A delayed menu response cannot replace a different placement tool or
+			// preserve a quote made for another work shape.
+			if (index < 0 || index > to_underlying(ExcavationPlanIntent::StraightTunnel) || _thd.GetCallbackWnd() != this || this->selected_tool != WID_UC_AREA) return;
+			this->area_intent = static_cast<ExcavationPlanIntent>(index);
+			this->area_quote.reset();
+			this->extension_quote.reset();
+			ClearConstructionPreview();
+			this->status = this->WorkInputPrompt();
+			this->RefreshInformationLayout();
+			return;
+		}
 		if (widget != WID_UC_EXCHANGE) return;
 		this->exchange_project = TBMProjectID{static_cast<uint32_t>(index)};
 		this->selected_tool = widget;
+		this->RaiseWidget(widget); // A selected menu item is a new placement request, not a second click cancelling the dropdown button.
 		HandlePlacePushButton(this, widget, SPR_CURSOR_QUERY, HT_RECT);
+		this->status = GetString(STR_UNDERGROUND_EXCHANGE_NEXT, this->exchange_project.base());
+		this->SetDirty();
 	}
 
 	/** @param pt World position, unused. @param tile Actual clicked world tile supplied by main or extra view. */
@@ -363,17 +534,48 @@ struct UndergroundConstructionWindow : Window {
 			case WID_UC_AREA:
 				if (this->area_portal == INVALID_TILE) {
 					const auto key = GetLayerPortalPairKey(tile);
-					if (!key) {
-						this->status = GetString(STR_UNDERGROUND_NEEDS_PORTAL);
+					// Only an owned rail portal can start this new-machine flow;
+					// another housing must not silently select incompatible defaults.
+					if (!key || GetTileOwner(*key) != _local_company || GetLayerPortalTransportType(*key) != TransportType::Rail) {
+						this->status = GetString(STR_UNDERGROUND_AREA_NEEDS_PORTAL);
+						break;
+					}
+					if (GetTileLayer(GetLayerPortalPairTile(*key)) != this->layer) {
+						this->status = GetString(STR_UNDERGROUND_WRONG_LAYER);
+						break;
+					}
+					if (GetTBMPairControls(*key, _local_company).project) {
+						this->status = GetString(STR_UNDERGROUND_PORTAL_HAS_PROJECT);
 						break;
 					}
 					this->area_portal = *key;
 					this->area_model = GetLayerPortalDefaultTBMModel(*key);
 					this->area_consist = GetDefaultTBMConsist(GetTileLayer(GetLayerPortalPairTile(*key)));
 					this->area_origin = GetLayerPortalDefaultTBMOrigin(*key, _local_company);
-					this->status = GetString(STR_UNDERGROUND_AREA_SELECT_FLOOR);
+					if (this->area_model == UINT16_MAX) {
+						this->area_portal = INVALID_TILE;
+						this->status = GetString(STR_UNDERGROUND_NO_CUTTER);
+						break;
+					}
+					if (this->area_origin == StationID::Invalid()) {
+						this->area_portal = INVALID_TILE;
+						this->status = GetString(STR_UNDERGROUND_NO_ORIGIN);
+						break;
+					}
+					this->status = this->WorkInputPrompt();
 				} else {
-					VpStartPlaceSizing(tile, VPM_X_AND_Y, DDSP_DEMOLISH_AREA);
+					if (this->area_intent == ExcavationPlanIntent::StraightTunnel) {
+						TileIndex start = GetLayerPortalPairTile(this->area_portal);
+						if (this->area_project != TBMProjectID{UINT32_MAX}) {
+							const auto *project = GetTBMProject(this->area_project);
+							const auto *job = project == nullptr ? nullptr : GetExcavationJob(project->job);
+							if (job == nullptr || job->route.empty()) break; // A removed project cannot fall back to buying a new machine.
+							start = job->route.back().cutter_position;
+						}
+						this->QuoteWork(start, tile);
+					} else {
+						VpStartPlaceSizing(tile, VPM_X_AND_Y, DDSP_DEMOLISH_AREA);
+					}
 				}
 				break;
 			case WID_UC_SURVEY: {
@@ -392,7 +594,8 @@ struct UndergroundConstructionWindow : Window {
 				const auto *deposit = geology.deposits.Get(geology.deposits.Find(tile));
 				const CargoType cargo = deposit == nullptr ? INVALID_CARGO : GetCargoTypeByLabel(deposit->resource);
 				const StringID resource = IsValidCargoType(cargo) ? CargoSpec::Get(cargo)->name : STR_UNDERGROUND_SURVEY_NO_DEPOSIT;
-				this->status = GetString(STR_UNDERGROUND_SURVEY_RESULT, state, resource, deposit == nullptr ? 0 : deposit->remaining_reserve);
+				const StringID hardness = terrain ? GetGeologyHardnessString(GetExcavationCellHardness(geology, tile)) : STR_PORTAL_HARDNESS_UNKNOWN;
+				this->status = GetString(STR_UNDERGROUND_SURVEY_RESULT, state, resource, deposit == nullptr ? 0 : deposit->remaining_reserve, hardness);
 				break;
 			}
 			case WID_UC_PROJECT: {
@@ -439,14 +642,49 @@ struct UndergroundConstructionWindow : Window {
 	{
 		// Only an active area tool with a real portal can obtain a quote; stale release events cannot purchase work.
 		if (this->selected_tool != WID_UC_AREA || select_proc != DDSP_DEMOLISH_AREA || this->area_portal == INVALID_TILE || _thd.GetCallbackWnd() != this) return;
+		if (this->area_intent != ExcavationPlanIntent::Area) return; // A delayed rectangular release cannot overwrite a straight endpoint quote.
+		this->QuoteWork(start_tile, end_tile);
+	}
+
+	/**
+	 * Query the actual owner for the selected work shape without changing simulation state.
+	 * @param start_tile Rectangle corner, or exact current planned centre for a straight tunnel.
+	 * @param end_tile Opposite floor corner, or requested straight centre endpoint.
+	 */
+	void QuoteWork(TileIndex start_tile, TileIndex end_tile)
+	{
 		this->area_start = start_tile;
 		this->area_end = end_tile;
+		if (this->area_project != TBMProjectID{UINT32_MAX}) {
+			this->extension_quote = PreviewTBMExtension(_local_company, this->area_project, start_tile, end_tile, this->area_intent);
+			const auto &quote = *this->extension_quote;
+			this->ShowWorkPreview(quote.plan, quote.working_space);
+			this->status = quote.result.Failed() ? GetString(quote.result.GetErrorMessage()) : GetString(STR_TBM_EXTEND_READY);
+			this->RefreshInformationLayout();
+			this->SetDirty();
+			return;
+		}
 		this->area_quote = PreviewTBMCommissionArea(_local_company, this->area_portal, this->area_model, this->area_consist.earth_wagons, this->area_consist.rock_wagons,
-			this->area_origin, start_tile, end_tile, false);
+			this->area_origin, start_tile, end_tile, false, this->area_intent);
 		const auto &quote = *this->area_quote;
-		SetConstructionPreview(this, quote.area.plan.covered_targets, quote.area.turn_envelope, quote.area.plan.remaining_targets);
+		this->ShowWorkPreview(quote.area.plan, quote.area.turn_envelope);
 		this->status = quote.purchase.Failed() ? GetString(quote.purchase.GetErrorMessage()) : GetString(STR_UNDERGROUND_AREA_READY);
+		this->RefreshInformationLayout();
 		this->SetDirty();
+	}
+
+	/**
+	 * Present canonical route visits and their paid work envelope without granting clearance.
+	 * @param plan Actual planner result, including any refused/uncovered prefix.
+	 * @param working_space Actual swept cells outside requested final floor.
+	 */
+	void ShowWorkPreview(const ExcavationRouteProposal &plan, std::span<const TileIndex> working_space)
+	{
+		std::vector<TileIndex> path;
+		// Ordered positions, including revisits, show how the accepted cutter
+		// moves through a room instead of implying that its floor is a rail path.
+		for (const auto &cut : plan.route) path.push_back(cut.cutter_position);
+		SetConstructionPreview(this, plan.covered_targets, working_space, plan.remaining_targets, path);
 	}
 
 	/** Refresh the actual selected job's derived floor/working-space/uncovered overlay; no cell is reserved or cleared. */
@@ -484,13 +722,19 @@ struct UndergroundConstructionWindow : Window {
 	/** Release cursor ownership when the player cancels placement. */
 	void OnPlaceObjectAbort() override
 	{
+		const bool extending = this->area_project != TBMProjectID{UINT32_MAX};
 		this->RaiseButtons();
 		this->area_quote.reset();
+		this->extension_quote.reset();
+		this->area_project = TBMProjectID{UINT32_MAX};
 		this->area_portal = INVALID_TILE;
-		this->status = GetString(STR_UNDERGROUND_SELECT_TOOL);
+		// Cancelling a draft releases only the cursor. The real machine remains
+		// paused so the player can review another draft or deliberately resume.
+		this->status = GetString(extending ? STR_TBM_EXTEND_CANCELLED : STR_UNDERGROUND_SELECT_TOOL);
 		this->survey_tile = INVALID_TILE;
 		this->inspected_project = TBMProjectID{UINT32_MAX};
 		this->inspected_revision = UINT64_MAX;
+		this->RefreshInformationLayout();
 		this->SetDirty();
 		MarkWholeScreenDirty(); // Cancelling the actual cursor immediately removes its presentation overlay.
 	}
@@ -525,25 +769,50 @@ static constexpr std::initializer_list<NWidgetPart> _underground_widgets = {
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::DarkGreen),
 		NWidget(NWID_VERTICAL), SetPadding(WidgetDimensions::unscaled.framerect),
-			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_REQUIREMENTS), SetStringTip(STR_UNDERGROUND_REQUIREMENTS, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_MODEL_DATES), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_SURVEY), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_SURVEY, STR_UNDERGROUND_SURVEY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_PROJECT), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_PROJECT, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_AREA), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_AREA, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_MINE), SetStringTip(STR_UNDERGROUND_MINE, STR_UNDERGROUND_MINE_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_EXCHANGE), SetSpriteStringTip(SPR_CURSOR_QUERY, STR_UNDERGROUND_EXCHANGE, STR_UNDERGROUND_EXCHANGE_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL), SetStringTip(STR_UNDERGROUND_RAIL, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD), SetStringTip(STR_UNDERGROUND_ROAD, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL_STATION), SetStringTip(STR_UNDERGROUND_RAIL_STATION, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD_TERMINAL), SetStringTip(STR_UNDERGROUND_ROAD_TERMINAL, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL_SERVICE), SetStringTip(STR_UNDERGROUND_RAIL_SERVICE, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD_SERVICE), SetStringTip(STR_UNDERGROUND_ROAD_SERVICE, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_AREA_PRICE), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_AREA_MATERIAL), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_FLOOR), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_AREA_CONFIRM), SetStringTip(STR_UNDERGROUND_AREA_CONFIRM, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
-			NWidget(WWT_TEXT, Colours::Invalid, WID_UC_JOB_PROGRESS), SetStringTip(STR_UNDERGROUND_JOB_NONE, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(520, 20), SetFill(1, 0),
-			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_STATUS), SetStringTip(STR_UNDERGROUND_SELECT_TOOL, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(520, 20), SetFill(1, 0),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_IMGTEXTBTN, Colours::Grey, WID_UC_SURVEY), SetSpriteStringTip(SPR_IMG_DYNAMITE, STR_UNDERGROUND_SURVEY, STR_UNDERGROUND_SURVEY_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHIMGTEXTBTN, Colours::Grey, WID_UC_PROJECT), SetSpriteStringTip(SPR_IMG_DYNAMITE, STR_UNDERGROUND_PROJECT, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_IMGTEXTBTN, Colours::Grey, WID_UC_AREA), SetSpriteStringTip(SPR_IMG_DYNAMITE, STR_UNDERGROUND_AREA, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_MINE), SetStringTip(STR_UNDERGROUND_MINE, STR_UNDERGROUND_MINE_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(WWT_IMGTEXTBTN, Colours::Grey, WID_UC_EXCHANGE), SetSpriteStringTip(SPR_IMG_DYNAMITE, STR_UNDERGROUND_EXCHANGE, STR_UNDERGROUND_EXCHANGE_TOOLTIP), SetFill(1, 0),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL), SetStringTip(STR_UNDERGROUND_RAIL, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD), SetStringTip(STR_UNDERGROUND_ROAD, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL_STATION), SetStringTip(STR_UNDERGROUND_RAIL_STATION, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD_TERMINAL), SetStringTip(STR_UNDERGROUND_ROAD_TERMINAL, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_RAIL_SERVICE), SetStringTip(STR_UNDERGROUND_RAIL_SERVICE, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_ROAD_SERVICE), SetStringTip(STR_UNDERGROUND_ROAD_SERVICE, STR_UNDERGROUND_FACILITY_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(WWT_TEXTBTN, Colours::Grey, WID_UC_DETAILS), SetStringTip(STR_UNDERGROUND_DETAILS, STR_UNDERGROUND_REQUIREMENTS), SetFill(1, 0),
+			NWidget(NWID_SELECTION, Colours::Invalid, WID_UC_DETAILS_STACK),
+				NWidget(NWID_VERTICAL),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_REQUIREMENTS), SetStringTip(STR_UNDERGROUND_REQUIREMENTS, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(260, 20), SetFill(1, 0),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_MODEL_DATES), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+				EndContainer(),
+			EndContainer(),
+			NWidget(NWID_SELECTION, Colours::Invalid, WID_UC_INTENT_STACK),
+				NWidget(WWT_DROPDOWN, Colours::Grey, WID_UC_INTENT), SetStringTip(STR_TBM_INTENT_AREA, STR_TBM_INTENT_TOOLTIP), SetFill(1, 0),
+			EndContainer(),
+			NWidget(NWID_SELECTION, Colours::Invalid, WID_UC_QUOTE_STACK),
+				NWidget(NWID_VERTICAL),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_PRICE), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_MATERIAL), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_TIME), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_TBM_INTENT_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+					NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_AREA_FLOOR), SetStringTip(STR_UNDERGROUND_AREA_EMPTY, STR_UNDERGROUND_AREA_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+					NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_UC_AREA_CONFIRM), SetStringTip(STR_UNDERGROUND_AREA_CONFIRM, STR_UNDERGROUND_AREA_TOOLTIP), SetFill(1, 0),
+				EndContainer(),
+			EndContainer(),
+			NWidget(NWID_SELECTION, Colours::Invalid, WID_UC_PROJECT_STACK),
+				NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_JOB_PROGRESS), SetStringTip(STR_UNDERGROUND_JOB_NONE, STR_UNDERGROUND_PROJECT_TOOLTIP), SetMinimalSize(260, 20), SetFill(1, 0),
+			EndContainer(),
+			NWidget(WWT_EMPTY, Colours::Invalid, WID_UC_STATUS), SetStringTip(STR_UNDERGROUND_SELECT_TOOL, STR_UNDERGROUND_REQUIREMENTS), SetMinimalSize(260, 30), SetFill(1, 0),
 		EndContainer(),
 	EndContainer(),
 };
@@ -559,4 +828,28 @@ Window *ShowUndergroundConstructionToolbar(MapLayer layer, const MultiLayerProfi
 	if (!IsUndergroundConstructionLayer(layer) || !MultiLayerMap::IsValidLayer(layer) || profile == nullptr || policy.version != profile->version) return nullptr;
 	if (Window *window = BringWindowToFrontById(WindowClass::UndergroundConstruction, layer)) return window;
 	return new UndergroundConstructionWindow(_underground_desc, layer, policy);
+}
+
+/** @copydoc InspectUndergroundProject */
+void InspectUndergroundProject(TBMProjectID id)
+{
+	const auto *project = GetTBMProject(id);
+	// A removed or foreign controller cannot reopen a palette with stale work
+	// ownership merely because its old row was selected a moment earlier.
+	if (project == nullptr || project->company != _local_company) return;
+	const auto *job = GetExcavationJob(project->job);
+	if (job == nullptr) return;
+	Window *window = ShowUndergroundConstructionToolbar(GetTileLayer(job->commissioning_anchor), GetCurrentMultiLayerProfileSelection());
+	if (window != nullptr) static_cast<UndergroundConstructionWindow *>(window)->InspectProject(id);
+}
+
+/** @copydoc PlanUndergroundProjectExtension */
+void PlanUndergroundProjectExtension(TBMProjectID id)
+{
+	const auto *project = GetTBMProject(id);
+	if (project == nullptr || project->company != _local_company) return; // A stale/foreign row cannot arm work for another machine.
+	const auto *job = GetExcavationJob(project->job);
+	if (job == nullptr) return;
+	Window *window = ShowUndergroundConstructionToolbar(GetTileLayer(job->commissioning_anchor), GetCurrentMultiLayerProfileSelection());
+	if (window != nullptr) static_cast<UndergroundConstructionWindow *>(window)->PlanExtension(id);
 }

@@ -11,38 +11,81 @@ import hashlib
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
 FIXTURES = ROOT / "src/tests/fixtures"
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path, RunContext, identifier, contained
+from runner import current_run_context, run_native, console_executable
+CONTEXT = current_run_context("state", "metadata")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+_OUTPUTS = {}
 
 
-def log_path(name, root=ROOT):
-    """Route fixture output to the repository log directory shared by all plans.
+def prior_artifact(context, run_id, kind, name):
+    """Select exact earlier-stage evidence without guessing the latest run.
 
-    @param name Log basename retaining the owning plan's evidence prefix.
-    @param root Repository root containing the fixture's configured build.
-    @return Absolute log path, with its repository-local directory created.
+    @param context Current feature/scenario whose earlier run is being checked.
+    @param run_id Explicit prior invocation supplied by the operator.
+    @param kind Either saves or logs; this function never creates evidence.
+    @param name Exact expected basename, including refusal outputs allowed to be absent.
+    @return Canonical prior path; the caller checks existence or semantic refusal.
     """
-    # Reject directories and other artifact types so callers cannot recreate
-    # logs beside plans or relocate immutable saves through this shared route.
-    if Path(name).name != name or not name.endswith(".log"):
-        raise ValueError("fixture log must be a .log basename")
-    directory = root.resolve() / "logs"
-    directory.mkdir(parents=True, exist_ok=True)
-    return directory / name
+    # Only same-case evidence may support a partial rerun's aggregate claim.
+    # A malformed kind or basename must not select unrelated retained files.
+    if kind not in ("saves", "logs") or Path(name).name != name:
+        raise ValueError("prior evidence requires an exact save/log basename")
+    previous = RunContext(context.root, context.feature, context.scenario, identifier(run_id))
+    directory = previous.saves if kind == "saves" else previous.logs
+    return contained(directory / name, directory)
 
 
-def save_path(name):
-    """Locate a retained or generated save beside the tests for its feature.
+def log_path(name, root=ROOT, context=CONTEXT):
+    """Route captured diagnostics into the caller's explicit feature invocation.
+
+    @param name Log basename preserving its evidence identity.
+    @param root Expected repository root; a foreign checkout is refused.
+    @param context Calling feature's shared runtime/review identity.
+    @return New run-owned log path, separate from immutable historical evidence.
+    """
+    # Logs cannot redirect the current invocation or change file roles through
+    # directory syntax, a foreign checkout or an unexpected artifact suffix.
+    if root.resolve() != context.root or not name.endswith(".log"):
+        raise ValueError("fixture log must be a repository-owned .log basename")
+    return context.output("logs", name)
+
+
+def output_save_path(name, context=CONTEXT):
+    """Reserve a generated save without granting write access to old fixtures.
+
+    @param name New save basename used by this fixture stage.
+    @param context Explicit owning feature/scenario supplied by the caller.
+    @return New output path, remembered for same-process continuation reads.
+    """
+    if not name.endswith(".sav"):
+        raise ValueError("fixture output must be a .sav basename")
+    path = context.output("saves", name)
+    _OUTPUTS[(context.feature, context.scenario, name)] = path
+    return path
+
+
+def save_path(name, context=CONTEXT):
+    """Resolve an immutable save or an explicitly reserved same-process output.
 
     @param name Basename using the owning plan's established evidence prefix.
-    @return Repository-local feature fixture path; logs use log_path and reports remain in AREA.
+    @param context Explicit feature whose reserved outputs may be continued.
+    @return Exact input path; a reserved but absent output never falls back to history.
     """
     # Only owned save basenames may select a feature directory; arbitrary paths
     # must not overwrite retained inputs or place saves in the documentation tree.
     if Path(name).name != name or not name.endswith(".sav"):
         raise ValueError("fixture save must be a .sav basename")
+    key = (context.feature, context.scenario, name)
+    if key in _OUTPUTS:
+        return _OUTPUTS[key]
     families = (
         ("r2mlvs1-", "content"),
         ("r2mlvs2-", "geology"),
@@ -57,11 +100,11 @@ def save_path(name):
     # stays with the feature that owns its persistence contract.
     for prefix, family in families:
         if name.startswith(prefix):
-            return FIXTURES / family / name
+            return resolve_input_path(FIXTURES / family / name)
     raise ValueError(f"unknown fixture save owner: {name}")
 
 
-def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False):
+def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False, context=CONTEXT):
     """Run one repository-local dedicated boundary and retain its evidence.
 
     @param name Stable evidence suffix for this owned fixture.
@@ -70,31 +113,32 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     @param accepted Whether the candidate must reach startup/save; refusal must produce no save.
     @param prefix Owning plan's evidence prefix; saves live in feature fixture directories.
     @param single_player Use null-video nonnetworked mode and the actual start_ai command to create an owned company for portal fixtures; default preserves dedicated behavior.
+    @param context Explicit feature invocation used for runtime and evidence ownership.
     @return Saved output path; failure preserves supplied inputs through the caller's finally block.
     """
-    output = save_path(f"{prefix}-{name}.sav")
+    output = output_save_path(f"{prefix}-{name}.sav", context)
     script = output.with_suffix(".scr")
-    log = log_path(f"{prefix}-{name}.log")
+    log = log_path(f"{prefix}-{name}.log", context=context)
     output.unlink(missing_ok=True)
     company_setup = "start_ai\n" if single_player and "-g" not in arguments else ""  # New null-video worlds need an actual owner; loaded worlds retain their saved company without creating another.
     script.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md, metadata fixture.\n"
                       f'dump_info cargotypes\n{company_setup}save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
-    (ROOT / "build/scripts/game_start.scr").write_text(f'exec "{script.as_posix()}"\n', encoding="utf-8")
+    (context.runtime_dir / "scripts/game_start.scr").write_text(f'exec "{script.as_posix()}"\n', encoding="utf-8")
     env = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=3,grf=2,desync=5,script=2")
     env.pop("OTTD_MULTILAYER_LOADER_PROBE", None)
-    command = ["C:/Program Files/Git/bin/bash.exe", (AREA / "tools/run_dedicated.sh").as_posix(),
+    command = ["C:/Program Files/Git/bin/bash.exe", (ROOT / "mlm/tools/run/run_dedicated.sh").as_posix(),
                (ROOT / "build").as_posix(), "Debug", log.as_posix(), "-X", "-c", "grftest.cfg", *arguments]
     try:
         if single_player:
             # Null media suppresses automatic company creation. The nonnetworked start_ai command executes synchronously and supplies the actual owner.
-            console = ROOT / "build/Debug/openttd_console.exe"
+            console = console_executable(context, ROOT / "build/Debug/openttd.exe")
             game_arguments = arguments if "-g" in arguments else ["-g", *arguments]
             with log.open("wb") as sink:
-                subprocess.run([str(console), "-v", "null", "-s", "null", "-m", "null", "-x", "-X", "-d", env["OTTD_DEBUG"],
+                run_native(context, [str(console), "-v", "null", "-s", "null", "-m", "null", "-x", "-X", "-d", env["OTTD_DEBUG"],
                                 "-c", "grftest.cfg", *game_arguments], cwd=ROOT / "build", env=env, stdout=sink,
                                stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=70)
         else:
-            subprocess.run(command, check=True, env=env, timeout=70)
+            run_native(context, command, check=True, env=env, timeout=70)
         evidence = log.read_text(encoding="utf-8", errors="replace")
         assert expected in evidence, (name, "required metadata evidence missing")
         assert output.is_file() == accepted, (name, "acceptance/save boundary differs")
@@ -110,8 +154,8 @@ def main():
 
     @return None; failures raise after restoring pre-existing configuration/startup bytes.
     """
-    startup = ROOT / "build/scripts/game_start.scr"
-    config = ROOT / "build/grftest.cfg"
+    startup = RUNTIME / "scripts/game_start.scr"
+    config = CONTEXT.prepare_runtime("grftest.cfg")
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     legacy = [("surface", ROOT / "regression/gs_compat/test.sav"),
@@ -147,7 +191,7 @@ def main():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, "supplied legacy save changed"
     result_name = "r2mlvs1-i-final-metadata-results.txt" if args.smoke else "r2mlvs14-b-metadata-results.txt"
     result_scope = "R2MLVS1 normal build: selected native and supplied Classic loads passed.\n" if args.smoke else "R2MLVS14 M0 metadata: explicit native new/reload/reload, Surface/369/370 legacy loads passed.\n"
-    (AREA / result_name).write_text(
+    (CONTEXT.reports / result_name).write_text(
         result_scope +
         "Supplied legacy file SHA256 preserved. Feature payloads and multiplayer runtime remain pending.\n", encoding="utf-8")
 

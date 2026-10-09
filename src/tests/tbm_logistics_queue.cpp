@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "mock_environment.h"
 #include "layer_window_fixture.h"
@@ -82,7 +83,7 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 			peer_cycle = peer->exchanges;
 			occupied = true;
 			if (record_prefix != nullptr) {
-				const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+				const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 				const auto path = directory / (std::string(record_prefix) + "-occupied-bay.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));
 				SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);

@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "mock_environment.h"
 #include "layer_window_fixture.h"
@@ -34,7 +35,7 @@ TEST_CASE("Recurring depot logistics writes real stopped exchange disposal retur
 		REQUIRE(std::filesystem::path(prefix).filename() == std::filesystem::path(prefix));
 		REQUIRE_FALSE(std::string_view(prefix).starts_with("r2"));
 	}
-	const auto directory = std::filesystem::current_path().parent_path() / "src/tests/fixtures/haulage";
+	const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
 	REQUIRE(std::filesystem::is_directory(directory));
 	std::set<std::string> written;
 	/** Observe only actual command/tick outcomes; the writer never changes a physical train, packet, project or assignment. */

@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include <cstdlib>
 #include <filesystem>
 #include "../3rdparty/catch2/catch.hpp"
@@ -61,9 +62,9 @@ public:
 /** Actual old absence, connected whole reservations, paid use and native expiry preserve exact original source/path rights through ordinary files. */
 TEST_CASE("Connected native heat grants survive actual files and independent malformed previews", "[.geothermal-allocation-file][.geothermal-topology-file]")
 {
-	const auto root = std::filesystem::current_path().parent_path(), directory = root / "src/tests/fixtures/geothermal";
+	const auto root = FindTestRepositoryRoot(), directory = GetTestCaseArtifactPaths("geothermal", "native-reload").saves;
 	const char *input_text = std::getenv("OTTD_HEAT_ALLOCATION_INPUT"), *mode_text = std::getenv("OTTD_HEAT_ALLOCATION_CASE");
-	REQUIRE(input_text != nullptr); REQUIRE(mode_text != nullptr); const std::filesystem::path input{input_text}; const std::string_view mode{mode_text};
+	REQUIRE(input_text != nullptr); REQUIRE(mode_text != nullptr); const auto input = ResolveTestInputPath(input_text); const std::string_view mode{mode_text};
 	REQUIRE(std::filesystem::exists(input)); bool observed = false; std::exception_ptr failure;
 	/** Inspect fully accepted actual native owners; the retained predecessor's supplied construction floor/materials remain explicit boundary inputs. */
 	std::function<void()> inspect = [&] {
@@ -187,7 +188,7 @@ TEST_CASE("Connected native heat grants survive actual files and independent mal
 		observed = true; _exit_game = true;
 	};
 	AutoRestoreBackup observer(_heat_allocation_observer, &inspect); IConsole::CmdRegister("heat_allocation_check", ObserveHeatAllocation);
-	const std::string config = (root / "build/native-art.cfg").string(), input_path = input.string();
+	const std::string config = (GetTestRuntimeConfig()).string(), input_path = input.string();
 	std::array<std::string_view, 17> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos", "-s", "null", "-m", "null", "-x", "-X", "-c", config, "-g", input_path};
 	CHECK(openttd_main(arguments) == 0); if (failure) std::rethrow_exception(failure); CHECK(observed);
 }

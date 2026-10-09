@@ -8,7 +8,7 @@
  * @file movement_fixture.h Shared helpers for tests in which real trains drive themselves: the pathfinder settings at
  * their defaults, a train built in a depot through the real owners, a readable description of a train for failed
  * drives, and the check that every part stands on the tile its position names.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-m-movement-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-m-movement-design.md
  */
 
 #ifndef TESTS_MOVEMENT_FIXTURE_H

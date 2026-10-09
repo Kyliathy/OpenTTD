@@ -24,7 +24,7 @@ from sprite_quantize import crop_and_shift
 
 
 SCOPE = base.ROOT / "media/multilayer/m1-pack-scope.json"
-PUBLIC = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+PUBLIC = base.PUBLIC
 
 
 def required_keys(family):
@@ -420,15 +420,16 @@ def finalise_base_terrain():
     print("Base terrain source handoff: 24 preserved state/texture poses plus 62 edge/survey poses verified; historical partial flags reconciled, runtime pending")
 
 
-def bind_packed_payload():
+def bind_packed_payload(publish_source=True):
     """Bind selected native ranges only to a reproducibly built, actually loaded GRF.
 
+    @param publish_source Publish the public source binding only for an explicit authoring operation.
     @return None; publish actual payload identity while leaving runtime integration pending.
     @throws ValueError If source inputs, build proof, container checksum or actual loader evidence is stale.
     """
     report, files = derive()
     scope = json.loads(SCOPE.read_text(encoding="utf-8"))
-    path = base.ROOT / "media/multilayer/sprites/m1/packed-build-proof.json"
+    path = base.ROOT / "logs/proofs/mlm/native-art/packed-build-proof.json"
     proof = json.loads(path.read_text(encoding="utf-8"))
     grf = base.ROOT / "media/baseset/openttd.grf"
     sha = base.digest(grf)
@@ -451,7 +452,7 @@ def bind_packed_payload():
         # GRF container-v2 metadata uses the GRFID checksum, not whole-file MD5.
         raise ValueError("selected GRFID checksum differs from verified payload")
     loaded = base.repository_path(cached["loader_log"]).read_text(encoding="utf-8", errors="replace")
-    marker = "M1_PACKED_ART_LOADED sprites=2377 native_bound=2404 protected=66 selected=2311 pixel_hashes=exact"
+    marker = f"M1_PACKED_ART_LOADED sprites={66 + report['pose_count']} native_bound={report['native_sprite_bound']} protected=66 selected={report['pose_count']} pixel_hashes=exact"
     if marker not in loaded or "All tests passed" not in loaded:
         # A marker printed before a failed assertion cannot close actual loading.
         raise ValueError("selected packed artwork has no successful native loader evidence")
@@ -470,8 +471,9 @@ def bind_packed_payload():
         row = rows[family["asset_id"]]
         family["packed"].update(route=report["route"], native_offset=row["native_offset"], sprite_count=row["sprite_count"],
                                 source_payload=scope["report"], payload="media/baseset/openttd.grf", sha256=sha)
-    PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
-    print("Selected M1 packed handoff: 40 families / 2311 actual sprites, source-exact cached loading and immutable M0 verified; runtime consumers pending")
+    if publish_source:
+        PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
+    print("Selected M1 packed handoff: 42 families / 2343 actual sprites, source-exact cached loading and immutable M0 verified; runtime consumers pending")
 
 
 def main():

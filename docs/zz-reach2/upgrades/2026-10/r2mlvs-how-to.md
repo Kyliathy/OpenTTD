@@ -5,8 +5,10 @@ Player guidance for the delivered [portal/TBM master](r2mlvs3mp-master-plan.md),
 [map layers](../../architecture/map-layers/archi-map-layers.md). Updated 2026-10-08.
 Automated native worlds exercise the actual controls, paid cutting, carriage exchange, Surface disposal and recovery.
 Those worlds prepare their starting logistics: a complete normal-newgame bootstrap has not been demonstrated.
-Personal playtesting and art feedback remain deferred. [The final audit](r2mlvs3mp-z-b-final-closure-audit.md)
+Personal playtesting and art feedback remain deferred. [The final audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md)
 records the evidence and remaining limits.
+
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## In one paragraph
 
@@ -157,26 +159,40 @@ Switch the view to **Underground** and follow the machine:
   - anything holding the project (stopped, broken down, not enough money);
   - the Earth and Rock dug so far;
   - what the hauler is doing, and why it waits, if it does.
-- The machine is serviced in the portal every time it backs in, so it never wanders off to a depot. The hauler
-  services at its depot as usual.
-- **Pause / Resume** holds the project where it is. **Cancel** (asks first) stops digging for good: paid-open ground
-  remains open, unfinished cut progress is abandoned, the machine retreats and the actual carried spoil still goes
-  through exchange and Surface disposal. Cancellation does not erase wagons or refund completed excavation.
+- The machine can receive ordinary travel and depot service orders. These take precedence over new cutting,
+  retain partial work and follow legal open track. A service visit resumes work after completion; after explicit
+  **Follow order** travel, use **Resume work** to return to the retained excavation.
+- **Pause / Resume** holds work in place. **Return and park** withdraws to the chosen compatible hangar while
+  preserving the job. **Choose hangar** offers eligible owned portal magazines and native depots.
+- **Finish/cancel and release** requests final settlement. Future claims remain protected until the complete
+  machine has withdrawn and actual spoil has been delivered. Completed excavation and its costs remain recorded.
 - Ordinary trains can't use the portal while the project holds it; they turn back at the door.
 
 ## 9. Finish and open the tunnel
 
-When the corridor is done, the **Next:** line takes you through these steps, one at a time:
-1. *Wait while the hauler delivers the last load*, then **Release hauler**. After the end, the hauler never drives
-   back into the portal.
-2. **Make track permanent** turns the machine's temporary track into ordinary rail, for its conversion price.
-3. **Stop** the machine, then **Retire** the project. The portal is sealed again, and the machine becomes an ordinary
-   train standing inside it.
-4. **Sell machine**.
-5. **Connect** opens the portal to ordinary trains. Any train can now drive down into the tunnel the machine dug,
-   along the converted track, and back.
+When the corridor is done, use the project guidance to complete these steps:
 
-You can then commission another machine at another portal and dig elsewhere.
+1. **Return and park** at the original portal, a compatible depot or a selected alternative portal. The entire
+   train must arrive; a hidden engine with its tail outside is still occupying the route.
+2. Let the hauler deliver the last load and clear the work route. **Finish/cancel and release** checks both the
+   actual cutter and logistics before releasing their claims. A refusal identifies what still needs attention.
+3. **Make track permanent** converts released temporary support for its normal price. Build any required
+   conventional approaches, then **Connect** the portal for ordinary trains.
+
+The parked TBM keeps its identity and can take another eligible job. Its storage leaves the portal's public
+through-route usable; selling it is unnecessary.
+
+For a far exit B, complete its terminal excavation, back the whole cutter locally clear of the footprint and stop.
+Use rail portal construction from Underground with Surface selected, or the reciprocal Surface tool. Review and
+pay for both endpoints and approaches. Only safely vacated terminal support can be handed over. Connect B when
+its approaches are ready, choose it as the hangar and park the original machine there. Settle spoil at its existing
+origin, release the project, convert the remaining support and connect A. The [demo guide](d2um-underground-mines.md)
+provides `tbm-work` and `tbm-tunnel` saves from this same actual journey.
+
+Current cutting rates are Standard 1/2 and Deep 3/4 geological work ticks per simulation tick: twice the former
+active cutting time. Whole-tonne Earth/Rock yields per new cell are Soft 3/6, Mixed 2/12, Hard 1/20 and Basalt 1/24.
+Travel speed, support costs and disposal prices retain their own values. Surveyed material hardness matches the
+rock and face texture; new maps vary by saved geological region, while older maps retain their original difficulty.
 
 ## Limits today
 
@@ -184,17 +200,18 @@ You can then commission another machine at another portal and dig elsewhere.
   set; it has no arbitrary model/count picker. The synchronized script API accepts explicit compatible counts.
 - Deep unlocks on **1 January 1980**. Its upper Underground assembly and approach floor must first be excavated;
   the automated Deep loop supplies that predecessor explicitly, so it is not normal-newgame bootstrap proof.
-- The selected forty M1 art families are packed and loaded, including cutter/support, wagons, portals, receivers,
-  service depots and controls. [Native gallery](assets/reviews/m1-runtime-gallery.html) preserves the technical review;
+- The selected forty-two M1 art families are packed and loaded, including material terrain/faces, cutter/support, wagons, portals, receivers,
+  service depots and controls. [Native gallery](../../../../logs/proofs/mlm/native-art/gallery/m1-runtime-gallery.html) preserves the technical review;
   personal approval and later conventional/tube/geothermal/orbital art remain pending. Padlocks belong to locked
   purchase/control previews, not moving vehicle bodies.
-- Actual source-magazine and underground-depot exchange loops are tested. Arbitrary junction/signalling layouts,
-  a real multiplayer join, maximum-map performance and normal-newgame end-to-end acceptance remain unverified.
+- Actual source-magazine, underground-depot and fifty-cell A-to-B public freight loops are tested. Regional geology
+  also passed an actual multiplayer map transfer and 450 synchronized frames. Arbitrary junction/signalling layouts,
+  the broader multiplayer matrix, maximum-map performance and normal-newgame bootstrap remain separate acceptance.
 - Cutting and spoil disposal have measured costs and no spoil-profit income. Mineral-chain payback and full
   economic/performance tuning remain separate acceptance work.
-- Tube capsules, geothermal plant/riser final use and orbital gameplay are not delivered by this queue. Safely
-  withdrawn, open ground can serve delivered conventional construction; do not remove occupied support or expect
-  a tube/plant tool to finish an unsupported final-use scenario.
+- Tube capsules, geothermal plant/riser final use and orbital gameplay have separate acceptance records in the
+  master and their owning plans. Safely withdrawn open ground supports conventional construction; later systems
+  still require their own facilities, commands and completed acceptance.
 
 ## If something goes wrong
 
@@ -212,7 +229,8 @@ button needs its stated predecessor; buying another train does not repair a stal
 | Invalid turn, occupied swept space or uncovered area | Change the requested outline or clear the obstructing owned construction safely. Requote a complete plan; a 90-degree pivot on one tile cannot become a legal bend. |
 | Retreat blocked / occupied support | Clear the real obstruction and let the train back out. Do not demolish support under any part of the consist or bypass the refusal with ordinary track in solid rock. |
 | Deep locked | Wait until the calendar reaches 1980 and provide excavated upper access; changing the camera cannot unlock commands. |
-| Cancelled project | Finish retreat, actual spoil exchange/disposal and empty return before release/retirement. The remaining open floor stays available; cancellation does not resume drilling. |
+| Finish/cancel pending | Let the whole cutter withdraw and the hauler deliver spoil and clear the route. Release is permitted only after those owners settle; completed ground and cargo receipts stay intact. |
+| Unsupported Basalt ahead | Replan within supported material or use a compatible cutter. Return/parking and service remain available; the machine cannot cut backwards through unsupported rock. |
 
 Actual lost-origin recovery, partial-bend reload and cancelled final disposal/empty return are retained in
 [the ground persistence evidence matrix](r2mlvs14-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).

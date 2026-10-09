@@ -1,6 +1,10 @@
 # Savegame subsystem
 
+TBM update,2026-10-09: versions395/396 extend the existing TBMP phase byte for resumable parking and deferred final release. Earlier phase values and394 work-rate migration remain intact; preview/full readers reject phases newer than the file's version. Cancellation now preserves accepted work and claims until physical withdrawal and real cargo settlement. Released machines remain ordinary saved native vehicles after their controller is removed. Actual395 parking and396 pending/released/connected files, including same-machine reuse, are recorded in [R2TBMF P](../../upgrades/2026-10/tbm-fixes/r2tbmf-p-parking-notes.md) and [R2TBMF R](../../upgrades/2026-10/tbm-fixes/r2tbmf-r-release-notes.md#group7b-closure). Cargo quantities remain whole units.
+
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
+
+Further TBM updates through399:397 registers portal magazines in the actual Depot pool/map fields and retains selected native depot orders.398 extends existing work phases/reasons for explicit ordinary-list control; full load validates depot/pair/job references in both directions, including partially excavated reused starter pockets.399 adds only the regional hardness algorithm/seed to GEOS wire2 as documented below. Native packets remain whole units. [Final integrated files](../../upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md) preserve one actual machine from accepted work through exit B construction, selected parking, safe release and ordinary public freight. Earlier malformed and migration evidence remains linked in Plans4/14; broader master families are not implied complete.
 
 Updated against the current fork on 2026-10-08 through save version 385, including four-layer storage, sealed portals/Deep rail, profile metadata and bounded geology/job/pass/work, TBM/exchange/spoil-receiver, finite mine/processor and electrical-owner descriptors. [Map-layer architecture](../map-layers/archi-map-layers.md) explains gameplay/addressing. [Save-game working notes](../save-game.md) retain inspection helpers. [R2MLVS1 Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md), [R2MLVS14 Schema Foundation](../../upgrades/2026-10/r2mlvs14-a-schema-foundation.md) and [R2MLVS2 execution](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) own their contracts and evidence.
 
@@ -70,7 +74,7 @@ must still match before commit.
 Full loading stages numeric rows, then validates actual company/profile/map/portal/
 town references after ordinary reconstruction. Preview is independent. Read-time
 and fixup-time refusals run actual `Null` cleanup without publishing a candidate
-ledger. [Useful Power handoff](../../upgrades/2026-10/r2mlvs3mp-x-useful-power-handoff.md)
+ledger. [Useful Power handoff](../../upgrades/2026-10/portal-tbm/r2mlvs3mp-x-useful-power-handoff.md)
 and [Plan14 company/native evidence](../../upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md#group-15b---complete-delivered-electrical-company-ownership)
 retain genuine old-format readers, ordinary-game round trips and corruption cases.
 
@@ -80,7 +84,7 @@ Surface disposal/empty return. The strict reader compares48 actual owner familie
 plus clocks/RNG across repeated loads and subsequent legal transitions. A historical
 380 fixture's initial acceleration48 differs from current16; that exact-physics
 comparison remains failed and the input stays immutable. Local file/replay proof
-does not establish a real peer join. [Final audit](../../upgrades/2026-10/r2mlvs3mp-z-b-final-closure-audit.md)
+does not establish a real peer join. [Final audit](../../upgrades/2026-10/portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md)
 records network, bootstrap, performance and absent tube/thermal exceptions.
 
 ## The container
@@ -181,6 +185,8 @@ Canonical diagnostics append `PortalWorkRoot` after existing kind IDs. Sealed/Co
 Preview records schema/profile fields only in `_load_check_data` and checks the resolved package identity without touching live policy, cargo slots, seed roots or staging. The live profile has one owner in `multilayer_content.cpp`; saved snapshots are transport. `multilayer_state.cpp` supplies read-only reference hooks and an explicit ordered integer digest for desync diagnostics. Feature owners must extend descriptors, references, deletion rules and digest records when their actual state exists. Current fixtures cover metadata/editor round trips, exact-content/corrupt-metadata refusal and supplied Surface/369/370 saves; feature-phase saves and multiplayer acceptance remain future work.
 
 ## Geology, sparse jobs and frozen passes (372-374)
+
+Save399 (`GeologyRegionalHardness`) extends only the GEOS header to wire2: the existing29 bytes are followed by a U16 hardness algorithm and U64 immutable hardness seed before the packed terrain. Wire1 remains required for preceding saves; those load algorithm0/seed0, preserving measured legacy layer defaults and saved deposit hardness through subsequent399 resaves. Current new worlds select algorithm1. Unknown algorithms, a nonzero seed under algorithm0, regional fields under inactive geology, wrong wire versions and short/excess payloads refuse in both preview and full load. The regional fields join the existing geology digest only when active, preserving legacy diagnostic streams. Actual390/399/resaved files and ten preview/full-load corruptions are verified in [R2TBMF Z](../../upgrades/2026-10/tbm-fixes/r2tbmf-z-geology-notes.md); cargo remains ordinary whole units.
 
 `geology_sl.cpp` owns GEOS/GDEP/GSPN/GVNT; `excavation_sl.cpp` owns EXJS/XJOB/XJRT/XJTL/XPAS. Fixed headers and exact child counts bound allocation. Combined restoration validates finite reserves, typed parents, real company/optional vehicle/station references, packed terrain and exclusive unfinished claims before staged publication. Rebuilt spatial/claim lookups are absent from saves. Metadata feature bits 1/2/4/8 represent geology, vents, job history and frozen pass input, with explicit dependency checks.
 

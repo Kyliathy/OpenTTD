@@ -9,6 +9,7 @@
  * checked here and staged; they are validated against vehicles, geology, portal work and the map only after vehicles
  * are rebuilt at the end of AfterLoadGame. Orders are saved by their own chunks and are not part of this family.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 3 and 8
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group5; version394 preserves the value of old fractional work.
  */
 
 #include "../stdafx.h"
@@ -245,8 +246,24 @@ struct TBMPChunkHandler : ChunkHandler {
 			if (count >= MAX_TBM_PROJECTS || index != static_cast<int>(count)) SlErrorCorrupt("Invalid TBM project ordinal/count");
 			TBMProjectWire wire;
 			SlObject(&wire, description);
+			const TBMCutterModel *model = GetTBMCutterModel(wire.model);
+			if (model == nullptr) SlErrorCorrupt("Invalid TBM cutter model");
+			const bool old_rate = IsSavegameVersionBefore(SaveLoadVersion::TBMHalfCuttingRate);
+			const uint16_t divisor = old_rate ? (wire.model == 0 ? 1 : 2) : model->work_rate_denominator;
+			// Validate in the original units before migration, for preview and
+			// full load alike. Old Deep 1/2 becomes 2/4 exactly; completed cuts,
+			// integer partial work, cash and cargo are untouched. Current saves
+			// already use the new divisor and must never be scaled a second time.
+			if (wire.work_remainder >= divisor) SlErrorCorrupt("Invalid TBM work fraction");
+			if (old_rate) wire.work_remainder *= 2;
+			const auto max_phase = IsSavegameVersionBefore(SaveLoadVersion::TBMReturnParking) ? TBMPhase::Cancelled :
+				IsSavegameVersionBefore(SaveLoadVersion::TBMSettledRelease) ? TBMPhase::Parked :
+				IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) ? TBMPhase::ReleasePending :
+				IsSavegameVersionBefore(SaveLoadVersion::TBMNativeOrderControl) ? TBMPhase::ParkedHangar : TBMPhase::FollowOrders;
+			const auto max_block = IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) ? TBMBlockedReason::LogisticsStall :
+				IsSavegameVersionBefore(SaveLoadVersion::TBMNativeOrderControl) ? TBMBlockedReason::OccupiedHangar : TBMBlockedReason::MissingOrders;
 			// Identities increase strictly; company, phase, reason and heading are known values; tiles fit the map.
-			if (wire.id == UINT32_MAX || (count != 0 && wire.id <= previous) || wire.company >= MAX_COMPANIES || wire.phase > to_underlying(TBMPhase::Cancelled) || wire.blocked >= to_underlying(TBMBlockedReason::End) || wire.heading >= to_underlying(Direction::End) || wire.revision == 0 || !CheckTBMWireTile(wire.portal, preview) || !CheckTBMWireTile(wire.exchange, preview)) SlErrorCorrupt("Invalid TBM project fields");
+			if (wire.id == UINT32_MAX || (count != 0 && wire.id <= previous) || wire.company >= MAX_COMPANIES || wire.phase > to_underlying(max_phase) || wire.blocked > to_underlying(max_block) || wire.heading >= to_underlying(Direction::End) || wire.revision == 0 || !CheckTBMWireTile(wire.portal, preview) || !CheckTBMWireTile(wire.exchange, preview)) SlErrorCorrupt("Invalid TBM project fields");
 			if (wire.parts < 2 || wire.parts > MAX_TBM_PERMANENT_PARTS) SlErrorCorrupt("Invalid TBM project part count");
 			// Used slots name real vehicle IDs and unused slots stay invalid, so a hidden extra part cannot be smuggled in.
 			for (size_t i = 0; i < wire.part.size(); ++i) {

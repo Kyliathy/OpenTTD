@@ -18,6 +18,25 @@ FIELDS = ((b"MAPT", 1), (b"MAPO", 1), (b"MAP2", 2), (b"M3LO", 1),
           (b"M3HI", 1), (b"MAP5", 1), (b"MAPE", 1), (b"MAP7", 1), (b"MAP8", 2))
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("portals", "portal-acceptance-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+variant = partial(variant, context=CONTEXT)
+
+
 def housing(records, source, target, road, owner, source_layer, target_layer):
     """Encode only the existing public housing constructor's exact owned fixture fields.
 
@@ -69,7 +88,7 @@ def main():
 
     @return None; retain exact supplied inputs/startup/config bytes and repository-local evidence.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     originals = (ROOT / "build/save/camera-deep-repaired.sav", save_path("r2mlvs3-e-sealed-input.sav"))
     hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in originals}
     original_script, original_config = startup.read_bytes(), config.read_bytes()
@@ -90,7 +109,7 @@ def main():
             housing(records, source, target, road, 16, 0, target_layer)
             endpoints.extend((source, target))
         encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"] for record in records) + bytes(4)
-        authored = save_path(f"{PREFIX}-legacy-pairs-input.sav")
+        authored = output_save_path(f"{PREFIX}-legacy-pairs-input.sav")
         authored.write_bytes(originals[0].read_bytes()[:8] + lzma.compress(encoded))
         loaded = run_case("legacy-pairs", ["-g", authored.as_posix()], "MLVS_METADATA absent profile=0 version=0 legacy=true", prefix=PREFIX)
         repeated = run_case("legacy-repeat", ["-g", loaded.as_posix()], "profile=0 version=0 legacy=true", prefix=PREFIX)
@@ -117,7 +136,7 @@ def main():
         config.write_bytes(original_config)
         for path, digest in hashes.items():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
-    (AREA / f"{PREFIX}-save-results.txt").write_text(
+    (CONTEXT.reports / f"{PREFIX}-save-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.\n"
         "Five actual loads passed: unchanged original370, owned legacy rail/road/elevator plus repeat, ownerless Native road plus repeat.\n"
         "Legacy endpoints remain exact; Native work/geology chunks remain byte-exact. Supplied saves/startup/config retained.\n"
@@ -132,7 +151,7 @@ def resume_ownerless_migration():
     prefix = "r2mlvs3-u"
     source = save_path(f"{PREFIX}-ownerless-input.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
         version, stream = read_stream(source)
@@ -148,7 +167,7 @@ def resume_ownerless_migration():
                 record["remove"] = True
         encoded = b"".join(encode_chunk(record) if record.get("edited") else record["raw"]
                            for record in records if not record.get("remove")) + bytes(4)
-        authored = save_path(f"{prefix}-old-ownerless-input.sav")
+        authored = output_save_path(f"{prefix}-old-ownerless-input.sav")
         authored.write_bytes(b"OTTX" + (374 << 16).to_bytes(4, "big") + lzma.compress(encoded))
         loaded = run_case("old-ownerless", ["-g", authored.as_posix()], "MLVS_PORTAL_WORK_LOADED pairs=1", prefix=prefix)
         restored = {record["name"]: record for record in chunks(read_stream(loaded)[1])}
@@ -160,7 +179,7 @@ def resume_ownerless_migration():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
-    (AREA / f"{prefix}-migration-results.txt").write_text(
+    (CONTEXT.reports / f"{prefix}-migration-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.\n"
         "Actual version-374 Native ownerless road migrated to one explicitly Sealed/unassigned record; all geological bytes unchanged.\n"
         "Original retained input/startup/config bytes preserved. No company or usable excavation/traffic authority was invented.\n", encoding="utf-8")
@@ -203,7 +222,7 @@ def resume_deep_roundtrips():
     prefix = "r2mlvs3-x"
     source = save_path("r2mlvs3-e-native-company.sav")
     source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
         for name, connected in (("deep-sealed", False), ("deep-connected", True)):
@@ -222,7 +241,7 @@ def resume_deep_roundtrips():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
-    (AREA / f"{prefix}-deep-results.txt").write_text(
+    (CONTEXT.reports / f"{prefix}-deep-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16.\n"
         "Four actual Deep rail loads passed: separate Sealed/Connected Underground/Deep pairs and each repeated reload.\n"
         "Canonical key/reciprocal Deep topology and LPWH/LPWK/GEOS/GDEP/GSPN/GVNT remain exact; retained source/config/startup unchanged.\n"
@@ -237,7 +256,7 @@ def resume_original_portals():
     prefix = "r2mlvs3-y"
     sources = (ROOT / "build/save/makinpr2.sav", ROOT / "build/save/makinpr2-connected.sav")
     hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in sources}
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     try:
         # Genuine supplied worlds each contain five usable rail pairs and four Deep road elevators; authored old road-tunnel coverage remains separately labelled.
@@ -270,7 +289,7 @@ def resume_original_portals():
         config.write_bytes(original_config)
         for path, digest in hashes.items():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
-    (AREA / f"{prefix}-original-results.txt").write_text(
+    (CONTEXT.reports / f"{prefix}-original-results.txt").write_text(
         "@see r2mlvs3-sealed-portals-and-deep-rail.md, Group 16 task 16.3.\n"
         "Five actual loads passed: unchanged genuine makinpr2/original-connected version-370 worlds, each current repeat, and retained separately authored road-tunnel topology.\n"
         "Actual runtime dispatch preserves rail=5/5 and elevator=4/4 usable ordinary pairs, invalid=0; eighteen original endpoint field sets remain exact.\n"

@@ -13,7 +13,7 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 specification = importlib.util.spec_from_file_location("ground_acceptance_owner",
-    ROOT / "docs/zz-reach2/upgrades/2026-10/tools/multilayer_acceptance.py")
+    ROOT / "src/tests/multilayer/acceptance/native_ground.py")
 owner = importlib.util.module_from_spec(specification)
 specification.loader.exec_module(owner)
 
@@ -27,7 +27,7 @@ class GroundEvidenceBoundary(unittest.TestCase):
         @param self Test instance.
         @return None; a nonzero child cannot produce a passing command record.
         """
-        log = ROOT / "logs" / ("r2mlvs3mp-z-a-runner-failed-command-" + uuid.uuid4().hex + ".log")
+        log = owner.CONTEXT.logs / ("r2mlvs3mp-z-a-runner-failed-command-" + uuid.uuid4().hex + ".log")
         with self.assertRaisesRegex(owner.EvidenceError, "status 7"):
             owner.execute_command([sys.executable, "-c", "print('actual child refusal'); raise SystemExit(7)"],
                                   ROOT, log)
@@ -79,8 +79,8 @@ class GroundEvidenceBoundary(unittest.TestCase):
         @return None; mid-action and completed worlds cannot masquerade as matching-frame replay.
         """
         with self.assertRaisesRegex(owner.EvidenceError, "owner/clock mismatch"):
-            owner.compare_state_digest("src/tests/fixtures/haulage/source-native-deep-stopped.sav",
-                                       "src/tests/fixtures/haulage/source-native-deep-view-headless-complete-loop.sav")
+            owner.compare_state_digest("src/tests/fixtures/haulage/source-loop/source-native-deep-stopped.sav",
+                                       "src/tests/fixtures/haulage/source-loop/source-native-deep-view-headless-complete-loop.sav")
 
 
 if __name__ == "__main__":

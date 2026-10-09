@@ -8,7 +8,7 @@
  * @file portal_bootstrap.cpp Portal-issued solid-start proof and issuer refusals, all without mutation.
  * These are geometry-contract tests: no paid cut, live entry or wagon exchange is claimed here.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  */
 
 #include "../stdafx.h"

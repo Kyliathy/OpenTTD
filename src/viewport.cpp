@@ -1035,6 +1035,7 @@ const Town *_viewport_highlight_town; ///< Currently selected town for coverage 
 /** Active cursor owner's derived canonical floor/turn/refusal tiles; never saved or used by commands. */
 static Window *_construction_preview_owner = nullptr;
 static std::array<std::vector<TileIndex>, 3> _construction_preview_tiles; ///< Sorted draw lookup, independent of simulation state.
+static std::map<TileIndex, std::string> _construction_preview_route; ///< Derived ordered cutter visits; never a route or movement authority.
 
 /** @copydoc ClearConstructionPreview */
 void ClearConstructionPreview()
@@ -1043,11 +1044,12 @@ void ClearConstructionPreview()
 	_construction_preview_owner = nullptr;
 	// Remove every geometry role together so a cancelled/refused project cannot leave misleading floor highlights.
 	for (auto &tiles : _construction_preview_tiles) tiles.clear();
+	_construction_preview_route.clear();
 	MarkWholeScreenDirty();
 }
 
 /** @copydoc SetConstructionPreview */
-void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered)
+void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered, std::span<const TileIndex> route)
 {
 	// Only the current cursor window may replace derived geometry; a stale window cannot overwrite another tool.
 	if (owner == nullptr || _thd.GetCallbackWnd() != owner) return;
@@ -1060,7 +1062,24 @@ void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std
 		auto duplicates = std::ranges::unique(_construction_preview_tiles[i]);
 		_construction_preview_tiles[i].erase(duplicates.begin(), duplicates.end());
 	}
+	_construction_preview_route.clear();
+	// Revisited centres retain their ordered visit numbers, explaining area
+	// sweeps instead of presenting an unordered footprint as a straight path.
+	for (size_t index = 0; index < route.size(); ++index) {
+		auto &label = _construction_preview_route[route[index]];
+		if (!label.empty()) label += ",";
+		label += fmt::format("{}", index + 1);
+	}
 	MarkWholeScreenDirty();
+}
+
+/** @copydoc GetConstructionPreviewRouteLabel */
+std::string_view GetConstructionPreviewRouteLabel(TileIndex tile)
+{
+	// A changed camera/tool never leaves numbers belonging to another command.
+	if (_construction_preview_owner == nullptr || _thd.GetCallbackWnd() != _construction_preview_owner) return {};
+	const auto found = _construction_preview_route.find(tile);
+	return found == _construction_preview_route.end() ? std::string_view{} : found->second;
 }
 
 /** @copydoc GetConstructionPreviewTile */
@@ -1189,6 +1208,14 @@ static void DrawTileSelection(const TileInfo *ti)
 	// excavates a cell or surveys it in saved state. Center its 20px source cell
 	// inside the ordinary 64x32 tile diamond, preserving the packed crop anchor.
 	if (const auto marker = GetUndergroundSurveyOverlaySprite(ti->tile)) DrawGroundSprite(*marker, PAL_NONE, nullptr, -10, 6);
+	if (const auto label = GetConstructionPreviewRouteLabel(ti->tile); !label.empty()) {
+		// Number canonical cutter visits in screen space like native map signs.
+		// These derived labels explain the route; rendering never advances it.
+		const auto centre = RemapCoords(ti->x + TILE_SIZE / 2, ti->y + TILE_SIZE / 2, ti->z);
+		const uint width = GetStringBoundingBox(label, FontSize::Small).width + WidgetDimensions::scaled.fullbevel.Horizontal();
+		AddStringToDraw(centre.x - ScaleByZoom(width / 2, _vd.dpi.zoom), centre.y, Colours::Yellow,
+			{ViewportStringFlag::Small, ViewportStringFlag::ColourRect}, width) = label;
+	}
 
 	/* Draw a red error square? */
 	bool is_redsq = _thd.redsq == ti->tile;

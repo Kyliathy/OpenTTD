@@ -10,6 +10,7 @@
  * occupancy; only the first paid cut opens it.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 14B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; reused magazines charge every remaining starter-pocket cell.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 
@@ -59,7 +60,7 @@ static ExcavationError ToExcavationStarterError(LayerPortalWorkError error)
 }
 
 /**
- * Resolve a solid start only while the anchor housing's own rock cell is unopened.
+ * Resolve a paid portal start while any part of its initial cutter pocket remains unopened.
  * @param job Proposal or published job.
  * @return No start, current issuer with heading/pocket, or a stable refusal at the anchor.
  */
@@ -69,11 +70,21 @@ ExcavationStarterResult ResolveExcavationStarter(const ExcavationJob &job)
 	const auto &geology = GetGeologyWorldState();
 	if (geology.generator_version == 0 || !IsValidTile(job.commissioning_anchor)) return result;
 	const auto anchor = geology.terrain.Get(job.commissioning_anchor);
-	// An opened anchor (or a non-rock address, refused elsewhere) keeps the unchanged open-starter rules.
-	if (!anchor || *anchor == ExcavationState::Excavated) return result;
+	if (!anchor) return result; // Non-rock addresses retain their ordinary admission checks.
+	const auto pocket = GetExcavationCutterEnvelope(job.commissioning_anchor);
+	if (*anchor == ExcavationState::Excavated) {
+		// A used portal can have an open centre and door while its wider
+		// cutter pocket still contains rock. Only that real portal's issuer
+		// may authorize the normal paid first cut; ordinary open floor gains
+		// no permission to occupy or excavate its surrounding solid cells.
+		if (!IsTileType(job.commissioning_anchor, TileType::LayerPortal)) return result;
+		/** @param tile One actual pocket cell. @return Whether its excavation was already paid and completed. */
+		const auto open = [&geology](TileIndex tile) { return geology.terrain.Get(tile) == ExcavationState::Excavated; };
+		if (!pocket.empty() && std::ranges::all_of(pocket, open)) return result;
+	}
 	result.required = true;
 	result.failure_tile = job.commissioning_anchor;
-	result.pocket = GetExcavationCutterEnvelope(job.commissioning_anchor);
+	result.pocket = pocket;
 	if (result.pocket.empty()) {
 		result.error = ExcavationError::MissingSupport;
 		return result;

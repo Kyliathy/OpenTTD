@@ -28,6 +28,7 @@
 #include "tbm.h"
 #include "tbm_cmd.h"
 #include "tbm_controls.h"
+#include "tbm_gui.h"
 #include "station_base.h"
 #include "cargotype.h"
 #include "map_func.h"
@@ -128,7 +129,7 @@ StationID GetLayerPortalDefaultTBMOrigin(TileIndex tile, CompanyID company)
  * @param phase Project phase.
  * @return Its short description for the progress line.
  */
-static StringID GetTBMPhaseString(TBMPhase phase)
+StringID GetTBMPhaseString(TBMPhase phase)
 {
 	switch (phase) {
 		case TBMPhase::Commissioning: return STR_PORTAL_PHASE_COMMISSIONING;
@@ -139,6 +140,17 @@ static StringID GetTBMPhaseString(TBMPhase phase)
 		case TBMPhase::WaitForEmpties: return STR_PORTAL_PHASE_WAIT;
 		case TBMPhase::Resume: return STR_PORTAL_PHASE_RESUME;
 		case TBMPhase::Completed: return STR_PORTAL_PHASE_COMPLETED;
+		case TBMPhase::ReturnToPark: return STR_TBM_PHASE_RETURN_PARK;
+		case TBMPhase::WaitToPark: return STR_TBM_PHASE_WAIT_PARK;
+		case TBMPhase::Parked: return STR_TBM_PHASE_PARKED;
+		case TBMPhase::ReturnToRelease: return STR_TBM_PHASE_RETURN_RELEASE;
+		case TBMPhase::WaitToRelease: return STR_TBM_PHASE_WAIT_RELEASE;
+		case TBMPhase::ReleasePending: return STR_TBM_PHASE_RELEASE_PENDING;
+		case TBMPhase::ReturnForHangar: return STR_TBM_PHASE_RETURN_HANGAR;
+		case TBMPhase::WaitForHangar: return STR_TBM_PHASE_UNLOAD_HANGAR;
+		case TBMPhase::TravelToHangar: return STR_TBM_PHASE_TRAVEL_HANGAR;
+		case TBMPhase::ParkedHangar: return STR_TBM_PHASE_PARKED_HANGAR;
+		case TBMPhase::FollowOrders: return STR_TBM_PHASE_FOLLOW_ORDERS;
 		default: return STR_PORTAL_PHASE_CANCELLED;
 	}
 }
@@ -147,7 +159,7 @@ static StringID GetTBMPhaseString(TBMPhase phase)
  * @param reason Saved hold of a project, not None.
  * @return Its description for the hold line.
  */
-static StringID GetTBMHoldString(TBMBlockedReason reason)
+StringID GetTBMHoldString(TBMBlockedReason reason)
 {
 	switch (reason) {
 		case TBMBlockedReason::Stopped: return STR_PORTAL_HOLD_STOPPED;
@@ -168,6 +180,9 @@ static StringID GetTBMHoldString(TBMBlockedReason reason)
 		case TBMBlockedReason::Paused: return STR_PORTAL_HOLD_PAUSED;
 		case TBMBlockedReason::IllegalTurn: return STR_PORTAL_HOLD_ILLEGAL_TURN;
 		case TBMBlockedReason::LogisticsStall: return STR_PORTAL_HOLD_LOGISTICS;
+		case TBMBlockedReason::MissingHangar: return STR_ERROR_TBM_HANGAR_MISSING;
+		case TBMBlockedReason::OccupiedHangar: return STR_ERROR_TBM_HANGAR_OCCUPIED;
+		case TBMBlockedReason::MissingOrders: return STR_TBM_HOLD_MISSING_ORDERS;
 		default: return STR_PORTAL_HOLD_MISSING_PROJECT;
 	}
 }
@@ -176,7 +191,7 @@ static StringID GetTBMHoldString(TBMBlockedReason reason)
  * @param phase Hauler cycle phase.
  * @return Its description for the hauler line.
  */
-static StringID GetTBMHaulerPhaseString(TBMHaulerPhase phase)
+StringID GetTBMHaulerPhaseString(TBMHaulerPhase phase)
 {
 	switch (phase) {
 		case TBMHaulerPhase::ReturnEmpties: return STR_PORTAL_HAULER_RETURN_EMPTIES;
@@ -191,7 +206,7 @@ static StringID GetTBMHaulerPhaseString(TBMHaulerPhase phase)
  * @param wait Hauler hold, not None.
  * @return Its description for the hauler line.
  */
-static StringID GetTBMHaulerWaitString(TBMHaulerWait wait)
+StringID GetTBMHaulerWaitString(TBMHaulerWait wait)
 {
 	switch (wait) {
 		case TBMHaulerWait::Stopped: return STR_PORTAL_WAIT_STOPPED;
@@ -233,22 +248,6 @@ static StringID GetTBMPlayerStepString(TBMPlayerStep step)
 
 /** Lines of the project panel. */
 static constexpr int PORTAL_INFO_LINES = 11;
-
-/**
- * Translate the geological owner's hardness identity for the current face.
- * @param hardness Accepted rock hardness of the actual next cut.
- * @return Localized hardness description; no geological or work state is changed.
- */
-static StringID GetTBMHardnessString(GeologyHardness hardness)
-{
-	switch (hardness) {
-		case GeologyHardness::Soft: return STR_PORTAL_HARDNESS_SOFT;
-		case GeologyHardness::Mixed: return STR_PORTAL_HARDNESS_MIXED;
-		case GeologyHardness::Hard: return STR_PORTAL_HARDNESS_HARD;
-		case GeologyHardness::Basalt: return STR_PORTAL_HARDNESS_BASALT;
-		default: return STR_PORTAL_HARDNESS_UNKNOWN;
-	}
-}
 
 /** One status/control window per canonical pair, independent of the currently selected viewport layer. */
 class LayerPortalWindow : public Window {
@@ -385,7 +384,7 @@ public:
 			DrawString(tr, c.work.blocked == TBMBlockedReason::None ? GetString(STR_PORTAL_PROJECT_NO_HOLD) : GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(c.work.blocked)));
 			tr.top += line;
 			if (c.hardness.has_value()) {
-				DrawString(tr, GetString(STR_PORTAL_PROJECT_FACE, GetMapLayerName(GetTileLayer(c.work.face)), TileX(c.work.face), TilePlaneY(c.work.face), GetTBMHardnessString(*c.hardness)));
+				DrawString(tr, GetString(STR_PORTAL_PROJECT_FACE, GetMapLayerName(GetTileLayer(c.work.face)), TileX(c.work.face), TilePlaneY(c.work.face), GetGeologyHardnessString(*c.hardness)));
 			} else {
 				DrawString(tr, GetString(STR_PORTAL_PROJECT_NO_FACE));
 			}

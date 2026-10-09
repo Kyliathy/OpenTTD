@@ -19,6 +19,8 @@ GeologyStateSnapshot CaptureGeologyState()
 	GeologyStateSnapshot snapshot;
 	const auto &state = GetGeologyWorldState();
 	snapshot.generator_version = state.generator_version;
+	snapshot.hardness_version = state.hardness_version;
+	snapshot.hardness_seed = state.hardness_seed;
 	snapshot.width = Map::SizeX();
 	snapshot.height = Map::SizeY();
 	snapshot.next_deposit_id = state.deposits.NextID().base();
@@ -44,6 +46,11 @@ GeologyError PrepareGeologyRestoration(const GeologyStateSnapshot &snapshot, Geo
 	// Copied geometry/fence metadata must agree with the actual saved Map/settings owners.
 	if (snapshot.width != Map::SizeX() || snapshot.height != Map::SizeY() || snapshot.freeform_edges != _settings_game.construction.freeform_edges) return GeologyError::UnsupportedMap;
 	GeologyWorldState prepared;
+	// Unsupported algorithms and hidden regional state in a legacy/absent
+	// world must refuse before accepted jobs or their measured difficulty change.
+	if (snapshot.hardness_version > GEOLOGY_HARDNESS_VERSION ||
+			(snapshot.hardness_version == 0 && snapshot.hardness_seed != 0) ||
+			(snapshot.generator_version == 0 && snapshot.hardness_version != 0)) return GeologyError::InvalidShape;
 	if (snapshot.generator_version == 0) {
 		// Old/Classic terrain cannot acquire a hidden packed reserve or cursor through an inactive feature header.
 		if (!snapshot.packed.empty() || !snapshot.deposits.empty() || snapshot.next_deposit_id != 0 || !snapshot.vents.empty() || snapshot.next_vent_id != 0 || !snapshot.jobs.empty() || snapshot.next_job_id != 0) return GeologyError::InvalidShape;
@@ -67,6 +74,8 @@ GeologyError PrepareGeologyRestoration(const GeologyStateSnapshot &snapshot, Geo
 	prepared.vents = snapshot.vents;
 	prepared.next_vent_id = snapshot.next_vent_id;
 	prepared.generator_version = snapshot.generator_version;
+	prepared.hardness_version = snapshot.hardness_version;
+	prepared.hardness_seed = snapshot.hardness_seed;
 	prepared.jobs = snapshot.jobs;
 	prepared.next_job_id = snapshot.next_job_id;
 	// Rebuild exclusive unfinished cells and reject every orphan active packed bit before publishing any owner state.

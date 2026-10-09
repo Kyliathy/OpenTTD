@@ -18,6 +18,7 @@
 #include "direction_type.h"
 #include "engine_type.h"
 #include <optional>
+#include <array>
 
 /** Existing actual train owner; presentation never constructs a substitute vehicle. */
 struct Train;
@@ -94,6 +95,13 @@ inline uint8_t GetMultiLayerTerrainTexture(uint32_t x, uint32_t y)
  * @return One authored ground sprite, or no override for legacy/non-rock/invalid ground.
  */
 std::optional<SpriteID> GetMultiLayerTerrainSprite(TileIndex tile);
+
+/**
+ * Read the four exposed walls surrounding paid open floor from adjacent rock.
+ * @param tile Actual geological floor tile on its explicit layer.
+ * @return Optional upper-left, upper-right, lower-right and lower-left overlays; open joins have no wall.
+ */
+std::array<std::optional<SpriteID>, 4> GetMultiLayerTerrainEdgeSprites(TileIndex tile);
 
 /**
  * Query a rail portal's actual saved phase, door and independent endpoint.

@@ -115,5 +115,6 @@ TEST_CASE("Bankruptcy stops new cutting and keeps wagons, cavities and retreat",
 	// Recovered finances resume the same cut.
 	Company::Get(_current_company)->months_of_bankruptcy = 0;
 	CHECK(rig.Tick().blocked == TBMBlockedReason::None);
+	CHECK(rig.Tick().blocked == TBMBlockedReason::None); // At half cutting speed, two recovered ticks earn one geological unit.
 	CHECK(rig.Job().partial_work_ticks == 1);
 }

@@ -15,6 +15,24 @@ from geology_generation_fixture import read_stream
 from multilayer_state_fixture import AREA, ROOT, log_path, run_case, save_path
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("processors", "layer-processor-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def processor_chunks(path):
     """Read owner-specific scalar/counter transport and the existing packet descriptor bytes.
 
@@ -36,7 +54,7 @@ def main():
     parser.add_argument("--refusals-only", action="store_true", help="run only malformed processor files")
     parser.add_argument("--case", choices=("missing-input", "full-output", "in-transit"), help="focus one changed positive checkpoint, then malformed files")
     args = parser.parse_args()
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     original = startup.read_bytes()
     sources = [save_path(f"r2mlvs6-ds-processor-{name}.sav") for name in ("missing-input", "full-output", "in-transit")]
     hashes = {source: hashlib.sha256(source.read_bytes()).hexdigest() for source in sources}
@@ -80,7 +98,7 @@ def main():
                 error = "Invalid native processor state"
             encoded = b"".join(encode_chunk(row) if row.get("edited") else row["raw"]
                                for row in records if not row.get("remove")) + bytes(4)
-            candidate = save_path(f"r2mlvs6-ea-{name}-input.sav")
+            candidate = output_save_path(f"r2mlvs6-ea-{name}-input.sav")
             candidate.write_bytes(original_bytes[:8] + lzma.compress(encoded))
             try:
                 run_case(name, ["-g", candidate.as_posix()], error, accepted=False, prefix="r2mlvs6-ea")
@@ -89,7 +107,7 @@ def main():
                 assert refusal.returncode == 2
                 evidence = log_path(f"r2mlvs6-ea-{name}.log").read_text(encoding="utf-8", errors="replace")
                 assert error in evidence
-                assert not save_path(f"r2mlvs6-ea-{name}.sav").exists()
+                assert not output_save_path(f"r2mlvs6-ea-{name}.sav").exists()
     finally:
         startup.write_bytes(original)
         # Source writer output is supplied evidence, never the mutation destination.

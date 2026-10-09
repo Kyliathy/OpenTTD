@@ -16,6 +16,24 @@ PREFIX = "r2mlvs2-o"
 JOB_FORMAT = ">IBIIHIBBIQQQQqHHH"
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("geology", "excavation-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+save_path = partial(save_path, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT)
+variant = partial(variant, context=CONTEXT)
+
+
 def world_tile(x, y):
     """Encode a bounded owned fixture reference on the saved 64x64 Underground plane.
 
@@ -119,7 +137,7 @@ def main():
 
     @return None; restore startup/config and verify every supplied predecessor SHA256 in finally.
     """
-    startup, config = ROOT / "build/scripts/game_start.scr", ROOT / "build/grftest.cfg"
+    startup, config = RUNTIME / "scripts/game_start.scr", RUNTIME / "grftest.cfg"
     original_script, original_config = startup.read_bytes(), config.read_bytes()
     older = save_path("r2mlvs2-i-native.sav")
     older_hash = hashlib.sha256(older.read_bytes()).hexdigest()
@@ -150,7 +168,7 @@ def main():
         startup.write_bytes(original_script)
         config.write_bytes(original_config)
         assert hashlib.sha256(older.read_bytes()).hexdigest() == older_hash, "supplied predecessor changed"
-    (AREA / f"{PREFIX}-job-save-results.txt").write_text(
+    (CONTEXT.reports / f"{PREFIX}-job-save-results.txt").write_text(
         "R2MLVS2 Group 10B: new/active/repeated/geology-only predecessor and four targeted job failures passed.\n"
         "All eight geological/job chunks remained byte-exact through two actual active-progress reloads.\n"
         "Partial work remained 77, cursor 0, revision 2; competing/orphan/missing/dangling references refused.\n"

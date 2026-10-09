@@ -25,6 +25,7 @@ TEST_CASE("TBM presentation reads partial work and physical spoil without mutati
 	rig.Preload(rig.Wagons(TBMConsistRole::EarthWagon).front(), 7);
 	rig.Preload(rig.Wagons(TBMConsistRole::RockWagon).front(), 11);
 	rig.Tick();
+	rig.Tick(); // Standard's half-rate needs two simulation ticks for visible whole work.
 	REQUIRE(rig.Job().partial_work_ticks > 0);
 	REQUIRE(rig.Job().cursor == 0);
 	const auto estimate = EstimateExcavationCut(rig.Project().job);

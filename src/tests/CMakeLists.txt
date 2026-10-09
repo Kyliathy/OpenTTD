@@ -1,5 +1,9 @@
 # Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 add_test_files(
+    # Shared artifact ownership: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
+    test_artifact_paths.h
+    test_artifact_paths.cpp
+    artifact_paths.cpp
     alternating_iterator.cpp
     bitmath_func.cpp
     console.cpp
@@ -23,11 +27,25 @@ add_test_files(
     tbm_acquisition.cpp
     tbm_project.cpp
     tbm_area.cpp
+    tbm_replanning.cpp
+    tbm_planning_commands.cpp
+    tbm_planning_seed.cpp
+    tbm_planning_refusals.cpp
     tbm_commission.cpp
     tbm_commission_fixture.h
     tbm_economics.cpp
     tbm_logistics_save.cpp
     tbm_logistics_runtime.cpp
+    # Native GUI input and movement baseline: r2tbmf-tbm-fixes.md Group1.
+    tbm_feedback_runtime.cpp
+    tbm_motion_reload.cpp
+    tbm_pacing.cpp
+    tbm_advice.cpp
+    tbm_parking.cpp
+    tbm_release.cpp
+    tbm_hangar.cpp
+    tbm_exit.cpp
+    tbm_feedback_haul_fixture.h
     native_art_loop_fixture.h
     native_sound_runtime_fixture.h
     # Actual M1 base-set loading: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B.
@@ -90,6 +108,8 @@ add_test_files(
     portal_recovery.cpp
     geology_deposits.cpp
     geology_generation.cpp
+    geology_hardness.cpp
+    tbm_geology.cpp
     geology_state.cpp
     geothermal_geology.cpp
     flatset_type.cpp
@@ -149,6 +169,9 @@ add_test_files(
     geothermal_topology.cpp
     geothermal_heat_load.cpp
     geothermal_utility.cpp
+    # Complete native portal-riser admission: r2mlvs17-geothermal-energy-and-industry.md Group5B.
+    geothermal_riser.cpp
+    geothermal_riser_definition.cpp
     geothermal_utility_load.cpp
     geothermal_collector_load.cpp
     # Declared connected ground fixture: r2mlvs15-integrated-acceptance-and-balance.md Group2.

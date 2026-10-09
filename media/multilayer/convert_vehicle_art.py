@@ -2,7 +2,7 @@
 
 @file convert_vehicle_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18
-@see docs/zz-reach2/upgrades/2026-10/assets/mlvs/vehicle-generation-record.json
+@see media/multilayer/source/m1/vehicle-generation-record.json
 Originals/candidates stay immutable. Conversion performs native resampling,
 declared authored-component frame assembly and DOS palette packing. Missing
 states/animation are never filled by copying an unanimated frame.
@@ -20,7 +20,7 @@ from convert_terrain_art import png_bytes
 
 RECORD = base.ASSETS / "vehicle-generation-record.json"
 REPORT = base.OUTPUT / "vehicle-details-manifest.json"
-REVIEW = base.ASSETS / "vehicle-details-review.png"
+REVIEW = base.REVIEW / "vehicle-details-review.png"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 # Per-view safe envelopes retain the projected rail-unit proportions; the full
 # native canvas and public anchor stay identical. Runtime coupler review remains
@@ -186,7 +186,7 @@ def derive():
     @throws ValueError On altered original/reference bytes or unsupported poses.
     """
     document = json.loads(RECORD.read_text(encoding="utf-8"))
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     grouped = {}
     cache = {}
@@ -296,6 +296,8 @@ def publish(report, files):
     @param files Derived repository atlas paths and their encoded bytes.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, encoded in files.items():
         path.write_bytes(encoded)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -352,7 +354,7 @@ def publish_animation_reviews(report):
                     canvas.paste(large, (left, top + 58), large)
                 frames.append(canvas)
             name = model["asset_id"].replace(".", "-") + f"-{part}-{state}-animation-review.gif"
-            frames[0].save(base.ASSETS / name, save_all=True, append_images=frames[1:], duration=240, loop=0, disposal=2)
+            frames[0].save(base.REVIEW / name, save_all=True, append_images=frames[1:], duration=240, loop=0, disposal=2)
 
 
 def bind_manifest(report):
@@ -361,7 +363,7 @@ def bind_manifest(report):
     @param report Declared model poses and explicit missing combinations from derive.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
-    path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    path = base.PUBLIC
     manifest = json.loads(path.read_text(encoding="utf-8"))
     sources = json.loads(RECORD.read_text(encoding="utf-8"))["sources"]
     # A model's selected chassis, separate support and authored components share
@@ -454,7 +456,7 @@ def check(expected, files):
                 # Four supplied idle cue phases must survive the native palette;
                 # duplicated frame-zero pixels cannot conceal an unfilled frame.
                 raise ValueError("idle authored cue phases collapse into duplicate pixels")
-    public = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     # The public source handoff must describe exactly these baked poses. A stale
     # source count/hash can mislead packing into accepting a partial model or a

@@ -13,6 +13,7 @@
 #ifndef TESTS_NATIVE_ART_LOOP_FIXTURE_H
 #define TESTS_NATIVE_ART_LOOP_FIXTURE_H
 
+#include "test_artifact_paths.h"
 #include "native_art_render_fixture.h"
 #include "../multilayer_sprite.h"
 #include "../excavation_state.h"
@@ -182,7 +183,7 @@ public:
 	 * @param assignment Actual initial hauler assignment; subsequent exchange facts remain with that owner.
 	 */
 	NativeArtLoopProbe(const std::filesystem::path &output, const TBMExchangeAssignment &assignment) :
-		directory(std::filesystem::current_path().parent_path() / "docs/zz-reach2/upgrades/2026-10/assets/reviews"),
+		directory(GetTestCaseArtifactPaths("tbm", "spoil-loop-underground").images),
 		prefix(output.filename().string()), last_exchanges(assignment.exchanges)
 	{
 		std::filesystem::create_directories(this->directory);

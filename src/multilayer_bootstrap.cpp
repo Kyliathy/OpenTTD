@@ -19,7 +19,7 @@ static constexpr MultiLayerRecipeCargo _riser_inputs[] = {{CargoLabel{"STEL"}, 4
 static const MultiLayerGeothermalConstruction _geothermal_construction[] = {
 	{MultiLayerGeothermalConstructionKind::Collector, 3, 3, 180000, 296, TimerGameCalendar::Year{1980}, _collector_inputs},
 	{MultiLayerGeothermalConstructionKind::Powerhouse, 4, 4, 180000, 592, TimerGameCalendar::Year{1980}, _powerhouse_inputs},
-	{MultiLayerGeothermalConstructionKind::Riser, 2, 2, 120000, 296, TimerGameCalendar::Year{1980}, _riser_inputs},
+	{MultiLayerGeothermalConstructionKind::Riser, 2, 2, 120000, 296, TimerGameCalendar::Year{1980}, _riser_inputs, 200000},
 };
 
 /** @copydoc GetMultiLayerGeothermalConstruction */

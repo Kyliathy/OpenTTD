@@ -44,11 +44,13 @@
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 370-381 | The bridge-deck block and `SPR_NEWGRFS_BASE`: the newest Action 5 block, which the new block follows, and the base that must move behind it. |
 | [docs/zz-reach2/architecture/basesets/archi-basesets.md](../../architecture/basesets/archi-basesets.md) | 31-58 | `### Graphics`: the `extra` file is a NewGRF loaded at `SPR_OPENTTD_BASE`; sprites a base set does not supply are counted from `OPENTTD.GRF`. Explains why every new sprite must exist in `openttd.grf`. |
 
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
 ## Outcome and Boundaries
 
 - `media/baseset/openttd/map_layers.png` and `media/baseset/openttd/map_layers.nfo` holding the 44 sprites of `## Sprite Contract`, included from `openttd.nfo`, regenerated into `media/baseset/openttd.grf` and its `.hash`.
 - Action 5 type `0x1C` "Map layer graphics" in `_action5_types`, `SPR_MAP_LAYER_BASE` and named constants in `src/table/sprites.h`, `SPR_NEWGRFS_BASE` moved behind the block.
-- Repeatable tooling in `docs/zz-reach2/upgrades/2026-10/tools/`: `make_sprite_template.py` and `sprite_quantize.py`; raw AI outputs and prompts kept in `docs/zz-reach2/upgrades/2026-10/assets/`.
+- Repeatable tooling in `docs/zz-reach2/upgrades/2026-10/tools/`: `media/multilayer/tools/make_sprite_template.py` and `media/multilayer/tools/sprite_quantize.py`; raw AI outputs and prompts kept in `docs/zz-reach2/upgrades/2026-10/assets/`.
 - The stand-ins in r2mlm1, r2mlm5, r2mlm8 and r2mlm9 are switched to the constants by those plans' swap tasks, or by Group 7 when those plans are already done.
 
 This plan does not change gameplay code beyond constant definitions and the Action 5 table. It can run any time after r2mlm1. Groups 3 and 4 need a harness that can generate images; see their Area block.
@@ -116,9 +118,9 @@ _Applies to Group 2._
 ### Group 2 - Art specification and templates
 
 {{MEDIUM}}
-- [x] 2.1 Write `docs/zz-reach2/upgrades/2026-10/tools/extract_palette.py` that reads the PLTE chunk of `media/baseset/openttd/tunnel_portals.png` and writes the 256-colour DOS palette to `docs/zz-reach2/upgrades/2026-10/assets/dos_palette.txt`.
+- [x] 2.1 Write `media/multilayer/tools/extract_palette.py` that reads the PLTE chunk of `media/baseset/openttd/tunnel_portals.png` and writes the 256-colour DOS palette to `media/multilayer/palettes/dos_palette.txt`.
 - [x] 2.2 Record in that file the indices the quantiser must not use: 0 (transparent, except as transparency), the animated ranges used for water and lights, and the company-colour range; cite where each range was found.
-- [x] 2.3 Write `docs/zz-reach2/upgrades/2026-10/tools/make_sprite_template.py` producing one guide PNG per contract row group (icons, ground, elevator, portal) at 4x scale: the isometric tile diamond, the anchor point and the maximum box, on a magenta (`#FF00FF`) background.
+- [x] 2.3 Write `media/multilayer/tools/make_sprite_template.py` producing one guide PNG per contract row group (icons, ground, elevator, portal) at 4x scale: the isometric tile diamond, the anchor point and the maximum box, on a magenta (`#FF00FF`) background.
 - [x] 2.4 Copy the relevant existing sprites (tunnel portals, road stops, a road depot from the base set) at 4x into `docs/zz-reach2/upgrades/2026-10/assets/reference/` as style references for the AI prompts.
 - [x] 2.5 Write the prompt template under this task: subject, isometric 2:1 pixel art in the style of Transport Tycoon Deluxe, light from the top left, limited earthy palette, pure magenta background, no text, the guide PNG as a reference image, and the target box.
 
@@ -133,11 +135,11 @@ _Applies to Groups 3-4._
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [r2mlm6-layer-graphics-assets.md](r2mlm6-layer-graphics-assets.md) | 56-76 | `## Sprite Contract`: the sprite being generated, its box, anchor and direction convention. |
-| [docs/zz-reach2/upgrades/2026-10/assets/reference/](assets/reference/) | Live definitions; no fixed range | Produced by task 2.4. Passed to `GenerateImage` through `reference_image_paths` so style and scale match the game. |
+| [media/multilayer/guides/legacy/reference/](../../../../media/multilayer/guides/legacy/reference) | Live definitions; no fixed range | Produced by task 2.4. Passed to `GenerateImage` through `reference_image_paths` so style and scale match the game. |
 
 ### Group 3 - AI generation: icons and ground
 
-2026-10-03 replacement candidates and exact prompts: [assets/generation-prompts.md](assets/generation-prompts.md). The Space and elevator icons were regenerated with the built-in `image_gen.imagegen` tool. Both cursors now use their corresponding toolbar artwork at 32 x 32; the mistaken mouse-pointer image is preserved but no longer consumed. Offline palette preview: [assets/icon_preview_v2.png](assets/icon_preview_v2.png). In-game capture checks remain pending.
+2026-10-03 replacement candidates and exact prompts: [docs/zz-reach2/upgrades/2026-10/graphics/generation-prompts.md](graphics/generation-prompts.md). The Space and elevator icons were regenerated with the built-in `image_gen.imagegen` tool. Both cursors now use their corresponding toolbar artwork at 32 x 32; the mistaken mouse-pointer image is preserved but no longer consumed. Offline palette preview: [mlm/reviews/multilayer-art/authoring/import-20261009/images/icon_preview_v2.png](../../../../mlm/reviews/multilayer-art/authoring/import-20261009/images/icon_preview_v2.png). In-game capture checks remain pending.
 
 {{COMPLEX}}
 - [x] 3.1 Generate the three layer toolbar icons (contract offsets 0 to 2) with `GenerateImage`, one call per icon at `1:1`, using the guide and reference images; copy each result into `docs/zz-reach2/upgrades/2026-10/assets/raw/` with a contract-based name.
@@ -146,7 +148,7 @@ _Applies to Groups 3-4._
 - [x] 3.4 Generate the vacuum floor (offsets 10 to 11) as one 2-variant sheet.
 - [x] 3.5 Review every image at game size (downscale preview with the quantise script in dry-run mode once Group 5 exists, or a plain Pillow resize now); regenerate any icon that is unreadable at 20 x 20.
 
-  Offline review completed 2026-10-04 against the actual quantised manifest: the selected Space/elevator `_v2` icons resolve the first-pass readability problems, and both cursors use the tool picture. The four-layer 1x/4x comparison is `assets/reviews/r2mlm13-c-compare-44.png`; the retained-original-set board is `assets/reviews/r2mlm13-d-replaced.png`. Original floors were viewed at contract size and 4x. This closes the downscale review, not the separate in-game art checks.
+  Offline review completed 2026-10-04 against the actual quantised manifest: the selected Space/elevator `_v2` icons resolve the first-pass readability problems, and both cursors use the tool picture. The four-layer 1x/4x comparison is `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-c-compare-44.png`; the retained-original-set board is `mlm/reviews/map-layers/legacy-review/import-20261009/images/r2mlm13-d-replaced.png`. Original floors were viewed at contract size and 4x. This closes the downscale review, not the separate in-game art checks.
 - [x] 3.6 Record every prompt, the reference images used and the chosen output file under this task, so the art can be regenerated.
 
 Raw files are in `docs/zz-reach2/upgrades/2026-10/assets/raw/`. GenerateImage wrote JPEG; each file was copied to PNG there. The shared prompt is the Group 2 template. Chosen files:
@@ -163,13 +165,13 @@ Raw files are in `docs/zz-reach2/upgrades/2026-10/assets/raw/`. GenerateImage wr
 | 7-9 | `underground_floor_sheet.png` | `guide_ground.png` |
 | 10-11 | `space_floor_sheet.png` | `guide_ground.png` |
 
-A first-pass 4x quantise of the icons is `docs/zz-reach2/upgrades/2026-10/assets/icon_preview.png`. At that stage the rail cursor came back as a mouse pointer, and the Space and elevator icons were unreadable at 20 x 20. The selected replacements in the Group 3 introduction supersede those first-pass files; task 3.5 now records the completed offline review.
+A first-pass 4x quantise of the icons is `mlm/reviews/multilayer-art/authoring/import-20261009/images/icon_preview.png`. At that stage the rail cursor came back as a mouse pointer, and the Space and elevator icons were unreadable at 20 x 20. The selected replacements in the Group 3 introduction supersede those first-pass files; task 3.5 now records the completed offline review.
 
 ### Group 4 - AI generation: elevators and portals
 
 Closure, 2026-10-04: task 4.7's complete native-tile/vehicle-gap visual operator check is skipped under the goal's allowance. All sixteen directional pairs are generated and integrated. R2MLM13 Groups 9B/9C repair their fronts and record actual supplied-save captures, but the save lacks some elevator orientations, so no complete native-composite matrix pass is inferred. Raw attempts and chosen prompts remain retained.
 
-2026-10-03: all sixteen directional pairs are generated as aligned two-panel assets, supplying 32 separate contract sprites. Selected files are `assets/raw/<family>_<direction>_pair_v4.png`, where families are `elevator_surface`, `elevator_underground`, `rail_portal_surface` and `rail_portal_underground`, and directions are `ne`, `se`, `sw`, `nw`. The left/right source panels share their canvas and anchor. Exact prompts and guide paths: [assets/directional-prompts-v4.md](assets/directional-prompts-v4.md); guides are reproduced with `tools/make_portal_guides.py`. Each direction was generated independently to preserve top-left lighting. Earlier raw attempts are retained. Task 4.7 is pending the representative save and visual checks.
+2026-10-03: all sixteen directional pairs are generated as aligned two-panel assets, supplying 32 separate contract sprites. Selected files are `media/multilayer/source/legacy/raw/<family>_<direction>_pair_v4.png`, where families are `elevator_surface`, `elevator_underground`, `rail_portal_surface` and `rail_portal_underground`, and directions are `ne`, `se`, `sw`, `nw`. The left/right source panels share their canvas and anchor. Exact prompts and guide paths: [docs/zz-reach2/upgrades/2026-10/graphics/directional-prompts-v4.md](graphics/directional-prompts-v4.md); guides are reproduced with `media/multilayer/tools/make_portal_guides.py`. Each direction was generated independently to preserve top-left lighting. Earlier raw attempts are retained. Task 4.7 is pending the representative save and visual checks.
 
 {{COMPLEX}}
 - [x] 4.1 Generate the surface road elevator for the NE door direction as two images: back (floor, side walls, shaft roof) and front (door frame and front pillars only), both on the same guide so they align.
@@ -208,11 +210,11 @@ _Applies to Groups 5-6._
 2026-10-03: the manifest covers all 44 offsets exactly once. Pillow keys magenta before area filtering, preserves source alpha, and keeps shared margins for aligned pairs. `--write-nfo` reproduces the NFO; `--dry-run --preview` leaves the integrated sheet unchanged. The real sheet was generated twice with identical SHA-256 `0e67b6971a1cea1ee46cb8dac0f40fc2c1cd93135dfc52974c398db18a762d4f`.
 
 {{MEDIUM}}
-- [x] 5.1 Write `docs/zz-reach2/upgrades/2026-10/tools/sprite_quantize.py` with a Javadoc-style module docstring and per-function docstrings: key out magenta to index 0, downscale with area filtering to the contract size, quantise to the DOS palette excluding the forbidden indices, crop transparent margins and recompute `rel x` / `rel y`.
+- [x] 5.1 Write `media/multilayer/tools/sprite_quantize.py` with a Javadoc-style module docstring and per-function docstrings: key out magenta to index 0, downscale with area filtering to the contract size, quantise to the DOS palette excluding the forbidden indices, crop transparent margins and recompute `rel x` / `rel y`.
 - [x] 5.2 Make the script take a manifest (a Python list in the script, not JSON) mapping contract offsets to raw files, and write `media/baseset/openttd/map_layers.png` as one sheet with a 2-pixel gap between sprites.
 - [x] 5.3 Make the script emit the real-sprite lines (`-1 sprites/map_layers.png 8bpp x y w h relx rely normal`) in contract order to stdout.
-- [x] 5.4 Add a `--preview` mode that writes a 4x enlarged sheet to `docs/zz-reach2/upgrades/2026-10/assets/preview.png` for review.
-- [x] 5.5 Run the script twice and confirm the output PNG is byte-identical (determinism). `sprite_quantize.py --self-test` wrote two synthetic PNGs and they matched. The contract sheet is not written until `MANIFEST` lists all 44 raw sprites.
+- [x] 5.4 Add a `--preview` mode that writes a 4x enlarged sheet to `mlm/reviews/multilayer-art/authoring/import-20261009/images/preview.png` for review.
+- [x] 5.5 Run the script twice and confirm the output PNG is byte-identical (determinism). `media/multilayer/tools/sprite_quantize.py --self-test` wrote two synthetic PNGs and they matched. The contract sheet is not written until `MANIFEST` lists all 44 raw sprites.
 
 ### Group 6 - GRF integration
 

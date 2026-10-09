@@ -2,7 +2,7 @@
 
 @file convert_terrain_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 10-11 and 79
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-b-m1-authoring.md
+@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md
 Only deterministic crop, native resampling and DOS-palette conversion happen
 here. Built-in image generation owns raster authoring; runtime activation is
 reserved for the later owning integration groups.
@@ -20,7 +20,7 @@ import convert_m1_art as base
 
 RECORD = base.ASSETS / "terrain-generation-record.json"
 REPORT = base.OUTPUT / "terrain-details-manifest.json"
-REVIEW = base.ASSETS / "terrain-details-review.png"
+REVIEW = base.REVIEW / "terrain-details-review.png"
 STATES = ["unknown", "surveyed", "depleted"]
 RESOURCES = {"underground": ["COAL", "IORE", "CORE", "BAUX", "SALT"],
              "deep": ["LITH", "NORE", "COBT", "RARE", "URAN"]}
@@ -128,6 +128,8 @@ def publish(report, files):
     @param files Repository output paths mapped to deterministic PNG bytes.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
+    base.REVIEW.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.mkdir(parents=True, exist_ok=True)
     for path, data in files.items():
         path.write_bytes(data)
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -155,7 +157,7 @@ def bind_manifest(report):
     @param report Native atlas coverage and retained source references from derive.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
-    path = base.ASSETS.parent / "multilayer_sprite_manifest.json"
+    path = base.PUBLIC
     manifest = json.loads(path.read_text(encoding="utf-8"))
     sources = {row["path"]: row for row in json.loads(RECORD.read_text(encoding="utf-8"))["sources"]}
     # One marker sheet serves five already declared meanings; their rows retain
@@ -188,7 +190,7 @@ def check(expected, files):
     """
     if json.loads(REPORT.read_text(encoding="utf-8")) != expected:
         raise ValueError("terrain detail manifest disagrees with immutable sources")
-    manifest = json.loads((base.ASSETS.parent / "multilayer_sprite_manifest.json").read_text(encoding="utf-8"))
+    manifest = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in manifest["assets"]}
     # Each source state must remain a real nonempty authored pose. Comparing all
     # bytes also detects palette, alpha and crop changes hidden by similar previews.

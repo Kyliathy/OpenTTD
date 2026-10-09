@@ -11,6 +11,7 @@
  */
 
 #include "../stdafx.h"
+#include "test_artifact_paths.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../multilayer_sprite.h"
@@ -22,6 +23,9 @@
 #include "../console_func.h"
 #include "../console_internal.h"
 #include "native_art_render_fixture.h"
+#include "layer_save_fixture.h"
+#include "../saveload/saveload_func.h"
+#include <cstdlib>
 
 #include "../safeguards.h"
 
@@ -43,10 +47,13 @@ static bool ObserveTerrainArt(std::span<std::string_view> arguments)
 /** Isolated process: actual saved world, actual graphics loader, and actual extra-view raster rendering. */
 TEST_CASE("M1 terrain portal raster uses loaded world state without advancing its owners", "[.m1-terrain-art]")
 {
-	const auto root = std::filesystem::current_path().parent_path();
-	const auto source = root / "src/tests/fixtures/haulage/portal-native-deep-stopped.sav";
-	const auto config = root / "build/native-art.cfg";
-	const auto reviews = root / "docs/zz-reach2/upgrades/2026-10/assets/reviews";
+	const auto root = FindTestRepositoryRoot();
+	const char *input = std::getenv("OTTD_GEOLOGY_SOURCE");
+	const auto source = ResolveTestInputPath(input == nullptr ? root / "src/tests/fixtures/haulage/portal-commissioning/portal-native-deep-stopped.sav" : std::filesystem::path(input));
+	const char *output = std::getenv("OTTD_GEOLOGY_OUTPUT");
+	const std::string prefix = output == nullptr ? "m1-terrain" : std::filesystem::path(output).filename().string();
+	const auto config = GetTestRuntimeConfig();
+	const auto reviews = GetTestArtifactPaths("geology", "terrain-hardness").images;
 	REQUIRE(std::filesystem::exists(source));
 	REQUIRE(std::filesystem::exists(config));
 	std::filesystem::create_directories(reviews);
@@ -70,6 +77,17 @@ TEST_CASE("M1 terrain portal raster uses loaded world state without advancing it
 			REQUIRE(GetMultiLayerTerrainSprite(face).has_value());
 			const uint64_t geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 			const auto receivers = CaptureSpoilReceivers();
+			if (const char *bad = std::getenv("OTTD_GEOLOGY_BAD_PREVIEW")) {
+				CHECK(SaveOrLoad(bad, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
+				CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
+				CHECK(CaptureTBMProjects() == projects);
+				CHECK(CaptureSpoilReceivers() == receivers);
+				fmt::print("REGIONAL_PREVIEW refused=true reason={} unchanged=true\n", _load_check_data.error_msg);
+				observed = true;
+				_exit_game = true;
+				return;
+			}
+			REQUIRE(SaveOrLoad(source.string(), SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 			SavedRandomSeeds before;
 			SaveRandomSeeds(&before);
 			REQUIRE(BlitterFactory::SelectBlitter("8bpp-simple") != nullptr);
@@ -80,16 +98,16 @@ TEST_CASE("M1 terrain portal raster uses loaded world state without advancing it
 			for (MapLayer layer : {MapLayer::Underground, MapLayer::DeepUnderground}) {
 				const TileIndex centre = MultiLayerMap::TileInLayer(face, layer);
 				for (ZoomLevel zoom : {ZoomLevel::Normal, ZoomLevel::In2x}) {
-					const auto name = fmt::format("m1-terrain-layer-{}-zoom-{}.ppm", to_underlying(layer), to_underlying(zoom));
+					const auto name = fmt::format("{}-layer-{}-zoom-{}.ppm", prefix, to_underlying(layer), to_underlying(zoom));
 					CaptureNativeArtViewport(centre, zoom, reviews / name);
 				}
 			}
 			// Actual native picker scenes cover both independent endpoints and all
 			// four views of each depth family without inventing terrain/build rights.
-			CaptureNativeArtPortalPreviews(MapLayer::Surface, MapLayer::Underground, reviews / "m1-portal-picker-basic-upper.ppm");
-			CaptureNativeArtPortalPreviews(MapLayer::Underground, MapLayer::Surface, reviews / "m1-portal-picker-basic-lower.ppm");
-			CaptureNativeArtPortalPreviews(MapLayer::Underground, MapLayer::DeepUnderground, reviews / "m1-portal-picker-deep-upper.ppm");
-			CaptureNativeArtPortalPreviews(MapLayer::DeepUnderground, MapLayer::Underground, reviews / "m1-portal-picker-deep-lower.ppm");
+			CaptureNativeArtPortalPreviews(MapLayer::Surface, MapLayer::Underground, GetTestArtifactPaths("portals", "picker").images / (prefix + "-picker-basic-upper.ppm"));
+			CaptureNativeArtPortalPreviews(MapLayer::Underground, MapLayer::Surface, GetTestArtifactPaths("portals", "picker").images / (prefix + "-picker-basic-lower.ppm"));
+			CaptureNativeArtPortalPreviews(MapLayer::Underground, MapLayer::DeepUnderground, GetTestArtifactPaths("portals", "picker").images / (prefix + "-picker-deep-upper.ppm"));
+			CaptureNativeArtPortalPreviews(MapLayer::DeepUnderground, MapLayer::Underground, GetTestArtifactPaths("portals", "picker").images / (prefix + "-picker-deep-lower.ppm"));
 			REQUIRE(BlitterFactory::SelectBlitter("null") != nullptr);
 			GfxClearSpriteCache();
 			FontCache::ClearFontCaches(FONTSIZES_REQUIRED);
@@ -100,6 +118,15 @@ TEST_CASE("M1 terrain portal raster uses loaded world state without advancing it
 			CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
 			CHECK(CaptureTBMProjects() == projects);
 			CHECK(CaptureSpoilReceivers() == receivers);
+			if (output != nullptr) {
+				// A renderer resave belongs to the explicitly selected case, never its source fixture.
+				const auto path = RequireTestArtifactWithin(std::filesystem::path(output).concat("-resaved.sav"), GetTestCaseArtifactPaths("geology", "terrain-hardness").saves);
+				REQUIRE_FALSE(std::filesystem::exists(path));
+				REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);
+				CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
+			}
+			fmt::print("REGIONAL_NATIVE version={} seed={} digest={} source={}\n", GetGeologyWorldState().hardness_version,
+				GetGeologyWorldState().hardness_seed, geology, source.filename().string());
 			fmt::print("M1_TERRAIN_RUNTIME frames=8 picker_views=16 actual_viewport_render=true native_and_2x=true owners_unchanged=true\n");
 			observed = true;
 		} catch (...) {

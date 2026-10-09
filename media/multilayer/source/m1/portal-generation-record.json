@@ -1,0 +1,428 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs13-graphics-and-asset-pipeline.md Groups 12-13",
+    "phase_owner": "src/layer_portal_cmd.h LayerPortalWorkState",
+    "sorting_owner": "src/layer_portal_cmd.cpp DrawTile_LayerPortal",
+    "conversion": "Only deterministic crop/resampling/palette and established front masks follow selection."
+  },
+  "schema_version": 1,
+  "sources": [
+    {
+      "key": "portal_deep",
+      "asset_id": "facility.portal.deep-rail",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-110e523b-6164-4f4d-8d70-9e859c11c073.png",
+      "path": "media/multilayer/source/m1/raw/portal-underground-deep-v2.png",
+      "prompt": "Use case: stylized-concept. Asset type: first-party OpenTTD static rail layer portal game sprite source.\nUse the reference ONLY for its blocky dark basalt stone housing with restrained blue steel reinforcement, recessed square shaft doorway, restrained pixel style and top-left light. Create one NEW selected UNDERGROUND/DEEP rail portal family source sheet, exactly 24 sprites in a 4-column by 6-row transparent PNG grid. Wide alpha gutters. No text, labels, grid lines, visible checkerboard or background. All sprites have the same single world-tile diamond footprint, same fixed isometric camera, same ground contact point, same roof dimensions and fixed light. Native target 64x64, world north corner at pixel (31,33), tile floor spans the lower 64x31 diamond; housing rises at most 30 native pixels above that north corner. The bottom tip and left/right ground tips must stay aligned in every cell. No tracks painted into the ground: the engine owns rail overlays.\nA low square stone portal/shaft block occupies the REAR half of one tile, leaving a flat front approach. Square recessed opening, not a mountain tunnel or a two-tile building. Gray stone body, subtle steel door edging, tiny amber safety cue; no chimney, crane, trees or people.\nFour columns in exact engine door order:\nNE: opening faces upper-right edge, AWAY from viewer. See closed solid front/back exterior walls and flat roof. Do NOT show a near-facing dark doorway; only a rear roof notch/short approach on the upper-right edge and a small rear safety cue identify the actual far door.\nSE: opening faces lower-right edge, TOWARD viewer. Visible dark recessed door on right-facing wall, with clear flat approach.\nSW: opening faces lower-left edge, TOWARD viewer. Visible dark recessed door on left-facing wall, with clear flat approach.\nNW: opening faces upper-left edge, AWAY from viewer. See solid exterior walls and roof. No near-facing dark door; rear notch/approach is on upper-left edge.\nFixed top-left lighting even when the door changes. Far-facing columns genuinely show a rear-facing housing, not a rotated near doorway.\nReference roles: the Surface/Underground v2 sheet supplies EXACT geometry, four real view directions, row positions, native anchors and static phase differences. The Deep v1 sheet supplies ONLY dark basalt/blue steel material identity; its repeated near views are NOT the geometry reference. Match v2 cell layout and whole housing geometry; do not add machinery or alter doors.\nRows:\n1 Underground endpoint SEALED: dark-gray housing with red-and-white closed physical barricade at its door edge; tiny unlit amber cue.\n2 Underground endpoint COMMISSIONING: identical housing, a narrow guarded partly open door, lowered orange threshold and lit amber cue. Only a TBM work pocket is allowed; no broad ordinary-traffic opening.\n3 Underground endpoint CONNECTED: same housing, full clear squared opening, no barricade, small pale green status cue.\n4 Deep endpoint SEALED: same geometry and states as row 1, with darker slate surrounding rock/stone footing inside the tile.\n5 Deep endpoint COMMISSIONING: same geometry as row 2, darker slate footing.\n6 Deep endpoint CONNECTED: same geometry as row 3, darker slate footing.\nAll three states STATIC; don't add animation or unrelated buildings. Meaning of two endpoints is separate world tiles on different layers, never one adjacent two-tile structure. Each housing fills its own native tile; the far views must retain solid opaque roofs/walls that occlude an entering train. Crisp TTD-style native game art, grayscale-readable physical door differences, actual transparent alpha outside each sprite.",
+      "grid": [
+        4,
+        6
+      ],
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "states": [
+        "sealed",
+        "commissioning",
+        "connected"
+      ],
+      "endpoint_variants": [
+        "upper",
+        "lower"
+      ],
+      "frames": 1,
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/portal-surface-underground-v2.png",
+          "sha256": "f10d832d957c1fb29ec5aa0265ff5e8dc35eaeaf2352546fe8f3fe3b06c200e4",
+          "role": "exact geometry/state layout reference; immutable"
+        },
+        {
+          "path": "media/multilayer/source/m1/raw/portal-deep-v1.png",
+          "sha256": "f02fdcee6378002c77f51f943ccfde18e6bca8afc9495f75a5d5f296ccf9b37e",
+          "role": "basalt/blue-steel style reference; immutable"
+        }
+      ],
+      "selection": "Selected after native 1x/2x review: true NE/NW far walls, SE/SW near doors, all three static phases and separate upper/lower endpoint parts; explicit near aperture and full far coverage checks pass. Actual runtime vehicle sorting and user acceptance remain pending.",
+      "revision": "Sibling v2 source; v1 Deep source and atlas stay immutable.",
+      "native_canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "front_apertures": {
+        "upper": {
+          "commissioning": {
+            "SE": [
+              [
+                40,
+                40
+              ],
+              [
+                44,
+                38
+              ],
+              [
+                44,
+                44
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "SW": [
+              [
+                20,
+                39
+              ],
+              [
+                24,
+                41
+              ],
+              [
+                24,
+                45
+              ],
+              [
+                20,
+                43
+              ]
+            ]
+          },
+          "connected": {
+            "SE": [
+              [
+                35,
+                39
+              ],
+              [
+                48,
+                32
+              ],
+              [
+                48,
+                41
+              ],
+              [
+                35,
+                48
+              ]
+            ],
+            "SW": [
+              [
+                14,
+                32
+              ],
+              [
+                27,
+                39
+              ],
+              [
+                27,
+                48
+              ],
+              [
+                14,
+                41
+              ]
+            ]
+          }
+        },
+        "lower": {
+          "commissioning": {
+            "SE": [
+              [
+                40,
+                40
+              ],
+              [
+                44,
+                38
+              ],
+              [
+                44,
+                44
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "SW": [
+              [
+                20,
+                39
+              ],
+              [
+                24,
+                41
+              ],
+              [
+                24,
+                45
+              ],
+              [
+                20,
+                43
+              ]
+            ]
+          },
+          "connected": {
+            "SE": [
+              [
+                35,
+                39
+              ],
+              [
+                48,
+                32
+              ],
+              [
+                48,
+                41
+              ],
+              [
+                35,
+                48
+              ]
+            ],
+            "SW": [
+              [
+                14,
+                32
+              ],
+              [
+                27,
+                39
+              ],
+              [
+                27,
+                48
+              ],
+              [
+                14,
+                41
+              ]
+            ]
+          }
+        }
+      },
+      "front_mask_contract": "Established front_mask world edge; explicit source-reviewed native aperture polygons remove painted dark interior only from near fronts. Sealed barricades and far roofs/walls remain opaque. Pixels/anchors in original and back are unchanged.",
+      "sha256": "a0660a1a17656c97a47d57d01927e37e22a5cff914af78c2dcef37e0c8e75922"
+    },
+    {
+      "key": "portal_surface",
+      "asset_id": "facility.portal.sealed",
+      "date": "2026-10-07",
+      "tool": "image_gen.imagegen",
+      "cache_path": "C:/Users/Axonn/.codex/generated_images/01a10e0b-f627-70e0-ac4b-0fdb567cf4be/exec-12bf9a73-5116-4047-8b76-af2ec9c2883d.png",
+      "path": "media/multilayer/source/m1/raw/portal-surface-underground-v2.png",
+      "prompt": "Use case: stylized-concept. Asset type: first-party OpenTTD static rail layer portal game sprite source.\nUse the reference ONLY for its blocky cool-gray stone housing, recessed square shaft doorway, restrained pixel style and top-left light. Create one NEW selected SURFACE/UNDERGROUND rail portal family source sheet, exactly 24 sprites in a 4-column by 6-row transparent PNG grid. Wide alpha gutters. No text, labels, grid lines, visible checkerboard or background. All sprites have the same single world-tile diamond footprint, same fixed isometric camera, same ground contact point, same roof dimensions and fixed light. Native target 64x64, world north corner at pixel (31,33), tile floor spans the lower 64x31 diamond; housing rises at most 30 native pixels above that north corner. The bottom tip and left/right ground tips must stay aligned in every cell. No tracks painted into the ground: the engine owns rail overlays.\nA low square stone portal/shaft block occupies the REAR half of one tile, leaving a flat front approach. Square recessed opening, not a mountain tunnel or a two-tile building. Gray stone body, subtle steel door edging, tiny amber safety cue; no chimney, crane, trees or people.\nFour columns in exact engine door order:\nNE: opening faces upper-right edge, AWAY from viewer. See closed solid front/back exterior walls and flat roof. Do NOT show a near-facing dark doorway; only a rear roof notch/short approach on the upper-right edge and a small rear safety cue identify the actual far door.\nSE: opening faces lower-right edge, TOWARD viewer. Visible dark recessed door on right-facing wall, with clear flat approach.\nSW: opening faces lower-left edge, TOWARD viewer. Visible dark recessed door on left-facing wall, with clear flat approach.\nNW: opening faces upper-left edge, AWAY from viewer. See solid exterior walls and roof. No near-facing dark door; rear notch/approach is on upper-left edge.\nFixed top-left lighting even when the door changes. Far-facing columns genuinely show a rear-facing housing, not a rotated near doorway.\nRows:\n1 Surface endpoint SEALED: cool-gray housing with red-and-white closed physical barricade at its door edge; tiny unlit amber cue.\n2 Surface endpoint COMMISSIONING: identical housing, a narrow guarded partly open door, lowered orange threshold and lit amber cue. Only a TBM work pocket is allowed; no broad ordinary-traffic opening.\n3 Surface endpoint CONNECTED: same housing, full clear squared opening, no barricade, small pale green status cue.\n4 Underground endpoint SEALED: same geometry and states as row 1, with darker slate surrounding rock/stone footing inside the tile.\n5 Underground endpoint COMMISSIONING: same geometry as row 2, darker slate footing.\n6 Underground endpoint CONNECTED: same geometry as row 3, darker slate footing.\nAll three states STATIC; don't add animation or unrelated buildings. Meaning of two endpoints is separate world tiles on different layers, never one adjacent two-tile structure. Each housing fills its own native tile; the far views must retain solid opaque roofs/walls that occlude an entering train. Crisp TTD-style native game art, grayscale-readable physical door differences, actual transparent alpha outside each sprite.",
+      "grid": [
+        4,
+        6
+      ],
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "states": [
+        "sealed",
+        "commissioning",
+        "connected"
+      ],
+      "endpoint_variants": [
+        "upper",
+        "lower"
+      ],
+      "frames": 1,
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/portal-states-v1.png",
+          "sha256": "178d32f23271fcd27c15965ab67ee1d40a85f030d267d26b566098d1e6d49310",
+          "role": "material/style reference; immutable"
+        }
+      ],
+      "selection": "Selected after native 1x/2x review: true NE/NW far walls, SE/SW near doors, all three static phases and separate upper/lower endpoint parts; explicit near aperture and full far coverage checks pass. Actual runtime vehicle sorting and user acceptance remain pending.",
+      "revision": "Sibling v2 source; v1 original and atlas remain immutable.",
+      "native_canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "sha256": "f10d832d957c1fb29ec5aa0265ff5e8dc35eaeaf2352546fe8f3fe3b06c200e4",
+      "front_apertures": {
+        "upper": {
+          "commissioning": {
+            "SE": [
+              [
+                40,
+                40
+              ],
+              [
+                44,
+                38
+              ],
+              [
+                44,
+                44
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "SW": [
+              [
+                20,
+                39
+              ],
+              [
+                24,
+                41
+              ],
+              [
+                24,
+                45
+              ],
+              [
+                20,
+                43
+              ]
+            ]
+          },
+          "connected": {
+            "SE": [
+              [
+                35,
+                39
+              ],
+              [
+                48,
+                32
+              ],
+              [
+                48,
+                41
+              ],
+              [
+                35,
+                48
+              ]
+            ],
+            "SW": [
+              [
+                14,
+                32
+              ],
+              [
+                27,
+                39
+              ],
+              [
+                27,
+                48
+              ],
+              [
+                14,
+                41
+              ]
+            ]
+          }
+        },
+        "lower": {
+          "commissioning": {
+            "SE": [
+              [
+                40,
+                40
+              ],
+              [
+                44,
+                38
+              ],
+              [
+                44,
+                44
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "SW": [
+              [
+                20,
+                39
+              ],
+              [
+                24,
+                41
+              ],
+              [
+                24,
+                45
+              ],
+              [
+                20,
+                43
+              ]
+            ]
+          },
+          "connected": {
+            "SE": [
+              [
+                35,
+                39
+              ],
+              [
+                48,
+                32
+              ],
+              [
+                48,
+                41
+              ],
+              [
+                35,
+                48
+              ]
+            ],
+            "SW": [
+              [
+                14,
+                32
+              ],
+              [
+                27,
+                39
+              ],
+              [
+                27,
+                48
+              ],
+              [
+                14,
+                41
+              ]
+            ]
+          }
+        }
+      },
+      "front_mask_contract": "Established front_mask world edge; explicit source-reviewed native aperture polygons remove painted dark interior only from near fronts. Sealed barricades and far roofs/walls remain opaque. Pixels/anchors in original and back are unchanged."
+    }
+  ]
+}

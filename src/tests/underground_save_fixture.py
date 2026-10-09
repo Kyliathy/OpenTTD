@@ -20,6 +20,22 @@ AREA = ROOT / "docs/zz-reach2/upgrades/2026-10"
 FIXTURES = ROOT / "src/tests/fixtures/underground"
 
 
+# Each producer declares its feature; saved-input names never select output ownership.
+from functools import partial
+from pathlib import Path
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import resolve_input_path
+from runner import current_run_context, run_native
+from multilayer_state_fixture import output_save_path
+CONTEXT = current_run_context("vehicles", "underground-save-fixture")
+RUNTIME = CONTEXT.runtime_dir
+CONTEXT.prepare_runtime("grftest.cfg")
+output_save_path = partial(output_save_path, context=CONTEXT)
+log_path = partial(log_path, context=CONTEXT)
+
+
 def transport(path):
     """Read the real writer's engine, vehicle, cargo, order and controller descriptors.
 
@@ -40,9 +56,9 @@ def main():
     @return None; any missing native definition, association, cargo/order change or loader refusal fails.
     """
     source = FIXTURES / "native-fleet.sav"
-    output = FIXTURES / "native-fleet-roundtrip.sav"
+    output = CONTEXT.saves / "native-fleet-roundtrip.sav"
     log = log_path("r2mlvs7-cn-fleet-runtime-roundtrip.log")
-    startup = ROOT / "build/scripts/game_start.scr"
+    startup = RUNTIME / "scripts/game_start.scr"
     original_startup = startup.read_bytes()
     original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     version, before = transport(source)
@@ -55,7 +71,7 @@ def main():
         environment = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=3,grf=2,desync=5,script=2")
         environment.pop("OTTD_MULTILAYER_LOADER_PROBE", None)
         # The existing runner creates a hidden-console-compatible repository binary and preserves real startup/loader behavior.
-        subprocess.run(["C:/Program Files/Git/bin/bash.exe", (AREA / "tools/run_dedicated.sh").as_posix(),
+        run_native(CONTEXT, ["C:/Program Files/Git/bin/bash.exe", (ROOT / "mlm/tools/run/run_dedicated.sh").as_posix(),
                         (ROOT / "build").as_posix(), "Debug", log.as_posix(), "-X", "-c", "grftest.cfg",
                         "-g", source.as_posix()], env=environment, check=True, timeout=65)
         evidence = log.read_text(encoding="utf-8", errors="replace")

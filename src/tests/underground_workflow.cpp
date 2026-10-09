@@ -208,7 +208,8 @@ static TBMProjectID RunVisibleExcavation(UndergroundWorkflowWorld &world, Window
 	REQUIRE(CaptureTBMProjects().size() == 1);
 	const TBMProjectID project = CaptureTBMProjects().front().id;
 	const VehicleID cutter = GetTBMProject(project)->cutter;
-	ClickWorkflowControl(tools, WID_UC_PROJECT);
+	// The new project browser is independent of ordinary portal map navigation.
+	ResetObjectToPlace();
 	ClickUndergroundWorldTile(view, world.rock);
 	Window *portal = FindWindowById(WindowClass::LayerPortal, world.portal);
 	REQUIRE(portal != nullptr);

@@ -22,13 +22,17 @@ enum class ConstructionPreviewTile : uint8_t { None, Floor, WorkingSpace, Uncove
  * @param floor Canonical requested/covered final-use floor.
  * @param working_space Actual additional swept approach/turn cells from the canonical planner.
  * @param uncovered Requested cells the planner could not cover; refusal remains with the command owner.
+ * @param route Canonical successive cutter centres; displayed in order starting at1, without planning or reserving work.
  */
-void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered = {});
+void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered = {}, std::span<const TileIndex> route = {});
 
 /** Clear derived overlays when the cursor is cancelled, replaced or its viewport switches layers. */
 void ClearConstructionPreview();
 
 /** @param tile Actual world tile being drawn. @return Its presentation role for the active placement owner only. */
 ConstructionPreviewTile GetConstructionPreviewTile(TileIndex tile);
+
+/** @param tile Actual world tile. @return Read-only numbered visits for the active preview, or empty when cancelled/unrelated. */
+std::string_view GetConstructionPreviewRouteLabel(TileIndex tile);
 
 #endif /* CONSTRUCTION_PREVIEW_H */

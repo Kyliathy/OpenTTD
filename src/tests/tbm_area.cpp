@@ -94,7 +94,7 @@ TEST_CASE("Area preview quotes the canonical plan for the actual consist", "[tbm
 }
 
 /** Each stage refuses before the next one runs, with the world unchanged. */
-TEST_CASE("Area preview refuses impossible consists and mismatched starts", "[tbm-area]")
+TEST_CASE("Area preview validates whole-unit capacity and mismatched starts", "[tbm-area]")
 {
 	TBMAreaRig rig;
 	const auto before = rig.Digest();
@@ -112,10 +112,12 @@ TEST_CASE("Area preview refuses impossible consists and mismatched starts", "[tb
 		rig.area.start.heading = ChangeDir(rig.proof.exit_heading, DirDiff::Right90);
 		CHECK(PreviewTBMArea(rig.area).error != ExcavationError::None);
 	}
-	SECTION("one hopper of each kind cannot hold the pocket") {
+	SECTION("one hopper of each kind holds the reduced Soft pocket") {
 		rig.area.consist = {1, 1};
 		rig.area.start.history.resize(3, rig.proof.destination);
-		CHECK(PreviewTBMArea(rig.area).error == ExcavationError::InsufficientCapacity);
+		// Halved Soft spoil now fits the smallest legal pair; zero Rock
+		// capacity still refuses above, and independent limits are tested by passes.
+		CHECK(PreviewTBMArea(rig.area).error == ExcavationError::None);
 	}
 	CHECK(rig.Digest() == before);
 }
