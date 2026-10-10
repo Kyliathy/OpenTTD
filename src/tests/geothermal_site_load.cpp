@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_site_load.cpp Actual388 cold-site files on explicitly fixture-open floor, preserving original natural and electrical authorities.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; operating paid plant bootstrap remains10.6.
  */
 

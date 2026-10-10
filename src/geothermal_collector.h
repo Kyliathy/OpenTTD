@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_collector.h Actual native collector construction and source readiness; Industry owns every delivered cargo unit.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  */
 
 #ifndef GEOTHERMAL_COLLECTOR_H

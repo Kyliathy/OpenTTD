@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md */
+/** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -1762,7 +1762,7 @@ static void AfterLoadGRFs()
 	InitialiseUndergroundEngineDefinitions(_grfconfig); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
 	// Restore delivered paid inlets' canonical hidden guideways and any saved
 	// prototype EIDS references. New-world construction/fleet activation remains
-	// with Plan16's later controls; save restoration cannot substitute ordinary rail.
+	// with Plan17's later controls; save restoration cannot substitute ordinary rail.
 	const auto *tube_metadata = GetPendingMultiLayerStateSchema();
 	if (tube_metadata != nullptr && (tube_metadata->feature_flags & MULTILAYER_FEATURE_TUBE_POWER) != 0) {
 		InitialiseTubeRailType(_grfconfig);

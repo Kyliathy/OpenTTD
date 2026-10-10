@@ -79,7 +79,7 @@ struct MultiLayerGeothermalConstruction {
 	uint32_t work_ticks; ///< Cash-driven completed construction work; no first-build electricity requirement.
 	TimerGameCalendar::Year introduction_year; ///< Calendar availability, also constrained by shared Deep/portal policy.
 	std::span<const MultiLayerRecipeCargo> inputs; ///< Actual conventionally delivered cargo required before commissioning.
-	uint32_t transfer_capacity_w = 0; ///< Frozen directed electrical riser rate; collector/powerhouse construction does not grant export capacity (Plan17 Group5B).
+	uint32_t transfer_capacity_w = 0; ///< Frozen directed electrical riser rate; collector/powerhouse construction does not grant export capacity (Plan18 Group5B).
 };
 
 /** @param kind First collector/powerhouse/riser family. @return Frozen Plan1 Group19 contract, or nullptr for an unknown family; no runtime construction is authorized by reading it. */

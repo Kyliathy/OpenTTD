@@ -18,7 +18,7 @@ date/script cases and selected portal art have since passed in their owning plan
 - [ ] **Plan3 / 18.2:** Full target completion/index reconciliation remains dependent
   on12.1 and required acceptance. Delivered documentation is updated through18.2A,
   while the engineering plan and parent M1 remain incomplete.
-- [ ] **Plan4 / 15.1 and21.4:** Complete post-withdrawal tube-terminal/geothermal-plant
+- [ ] **Plan4 / 16.1 and21.4:** Complete post-withdrawal tube-terminal/geothermal-plant
   final non-rail use. Delivered geometry/safe support/recovery do not substitute for
   missing physical consumers. GP-TG is an explicit goal exception.
 - [ ] **Plan4 / 22.2:** Full completion/index reconciliation remains pending.
@@ -36,7 +36,7 @@ scenarios retain their own queue.
 
 Current385 bend/wagon-wait/spanning/lost-origin/cancelled final disposal files and
 genuine370/381..384 readers are delivered in
-[Plan14's ground matrix](r2mlvs14-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).
+[Plan15's ground matrix](r2mlvs15-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).
 The old380 initial acceleration mismatch remains a failed historical exact-physics
 comparison, with its input unchanged. Selected technical art and real sound-event
 playback are complete; deferred personal feedback is not approval.

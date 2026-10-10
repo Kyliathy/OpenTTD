@@ -3,7 +3,7 @@
 /**
  * @file layer_portal_work_wire.h Existing portal work scalars shared with independent dependent-family preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md Group2
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #ifndef LAYER_PORTAL_WORK_WIRE_H

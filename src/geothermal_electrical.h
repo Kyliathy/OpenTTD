@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_electrical.h Deterministic physical electrical routes through installed cable and original paid native risers.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19
  */
 

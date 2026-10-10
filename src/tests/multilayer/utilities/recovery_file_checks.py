@@ -2,7 +2,7 @@
 
 @file recovery_file_checks.py
 @see r2mlvs3mp-master-plan.md checkpoint10.2
-@see r2mlvs16-underground-transport-tubes.md Groups6-7
+@see r2mlvs17-underground-transport-tubes.md Groups6-7
 """
 
 import hashlib
@@ -127,7 +127,7 @@ def main():
     assert read_stream(retained)[0] == 386
     preserved = {f: hashlib.sha256(f.read_bytes()).hexdigest() for f in DIRECTORY.glob("meter387-*")}
     try:
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md6 actual native meter.\ntube_power_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md6 actual native meter.\ntube_power_check\n", encoding="utf-8")
         run_case("consumed", retained)
         assert authority(DIRECTORY / "recovery387-tube-power-consumed-reloaded.sav", False) == authority(retained, False)
         run_case("bind-service", retained)
@@ -151,7 +151,7 @@ def main():
         for corrupt in corrupt_bindings(admitted):
             run_case("preview", admitted, corrupt)
         output = DIRECTORY / "recovery387-tube-meter-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md6 ordinary metered capsule loading.\n"
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md6 ordinary metered capsule loading.\n"
                            "set savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         log = CONTEXT.logs / f"{PREFIX}-tube-meter-normal-loader.log"

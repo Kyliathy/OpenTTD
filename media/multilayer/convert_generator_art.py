@@ -2,7 +2,7 @@
 
 @file convert_generator_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups55-56.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Original pixels are sampled and losslessly partitioned; runtime activation remains separate.
 """
@@ -71,7 +71,7 @@ def native_base(key, document=None, spec=None):
     expected = {"footprint": [4, 4], "tile_cells": CELLS, "cell_size": [64, 64], "anchor": [-31, -33]}
     # A whole original represents one physical industry across sixteen native
     # cells. Neither raster registration nor future metadata grants construction.
-    if (spec["asset_id"] != asset_id or spec["consumer"] != 17 or spec["footprint"] != [4, 4]
+    if (spec["asset_id"] != asset_id or spec["consumer"] != 18 or spec["footprint"] != [4, 4]
             or spec["native_size"] != [64, 64] or spec["anchor"] != [-31, -33]
             or spec["geometry"] != "per_tile" or spec["tile_variants"] != 16
             or source.get("native_geometry") != expected or source.get("native_floor_corners") != FLOOR

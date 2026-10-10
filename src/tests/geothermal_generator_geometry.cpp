@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_generator_geometry.cpp Actual native physical descriptor/site boundary, without operating generator activation.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups55-56.
  */
 

@@ -7,7 +7,7 @@
 /**
  * @file layer_processor_sl.cpp Bounded recipe choice/work/counter transport; physical cargo stays in ordinary industry/packet chunks.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 
 #include "../stdafx.h"

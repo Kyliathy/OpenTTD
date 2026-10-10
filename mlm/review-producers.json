@@ -135,7 +135,7 @@
       "producer": "src/tests/multilayer/utilities/utility_path_file_checks.py",
       "features": [{ "feature": "utilities", "scenario": "native-reload" }],
       "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
-      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks.py --configuration RelWithDebInfo --phase write; add --geothermal-export for Plan17 feature caller; bounded companion files -1 through -4, preview-1, preview-2 and refusal"
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks.py --configuration RelWithDebInfo --phase write; add --geothermal-export for Plan18 feature caller; bounded companion files -1 through -4, preview-1, preview-2 and refusal"
     },
     {
       "producer": "src/tests/multilayer/utilities/utility_path_file_checks-1.py",

@@ -233,7 +233,7 @@ button needs its stated predecessor; buying another train does not repair a stal
 | Unsupported Basalt ahead | Replan within supported material or use a compatible cutter. Return/parking and service remain available; the machine cannot cut backwards through unsupported rock. |
 
 Actual lost-origin recovery, partial-bend reload and cancelled final disposal/empty return are retained in
-[the ground persistence evidence matrix](r2mlvs14-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).
+[the ground persistence evidence matrix](r2mlvs15-savegame-determinism-and-lifecycle.md#ground-persistence-evidence-matrix).
 If progress still appears stuck, save the game and record the exact status, company funds and train orders. Current
 saves retain the project, headings, support, assignments, wagon/packet identities and accounting. Preserve the
 original save when reporting the problem.

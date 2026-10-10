@@ -7,7 +7,7 @@
 /**
  * @file layer_mine_sl.cpp Bounded mine binding transport; geology and physical output retain their own chunks.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 
 #include "../stdafx.h"

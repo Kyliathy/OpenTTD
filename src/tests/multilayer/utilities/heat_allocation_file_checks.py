@@ -1,7 +1,7 @@
 """Actual393 physical Heat grant/use/expiry proof from retained paid392 native paths.
 
 @file heat_allocation_file_checks.py
-@see r2mlvs17-geothermal-energy-and-industry.md Group3.
+@see r2mlvs18-geothermal-energy-and-industry.md Group3.
 @see r2mlvs3mp-master-plan.md checkpoint10.3; actual operating plant output retains10.6.
 """
 
@@ -130,7 +130,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group3 connected Heat file boundary.\nheat_allocation_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group3 connected Heat file boundary.\nheat_allocation_check\n", encoding="utf-8")
         run_case("legacy-read", retained)
         assert authority(DIRECTORY / "fixture393-heat-allocation-legacy-read.sav") == authority(retained)
         run_case("fixture-grant", retained)
@@ -152,7 +152,7 @@ def main():
         for corrupt in corrupt_routes(grant):
             run_case("preview", grant, corrupt)
         output = DIRECTORY / "fixture393-heat-allocation-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group3 ordinary connected Heat reload.\nset savegame_format lzma\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group3 ordinary connected Heat reload.\nset savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         runner = ROOT / "mlm/tools/run/run_game_logged.sh"
         log = CONTEXT.logs / f"{PREFIX}-normal-loader.log"

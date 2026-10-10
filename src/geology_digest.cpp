@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file geology_digest.cpp Portable authoritative terrain/seam/vent/job diagnostics without hashing caches or padding. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md; r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file geology_digest.cpp Portable authoritative terrain/seam/vent/job diagnostics without hashing caches or padding. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md; r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #include "stdafx.h"
 #include "excavation.h"

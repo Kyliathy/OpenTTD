@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_collector_fixture.h Actual native funding/stock/work boundary fixture; explicitly supplied test floor does not prove transported paid excavation/bootstrap.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  */
 
 #ifndef TESTS_GEOTHERMAL_COLLECTOR_FIXTURE_H

@@ -3,7 +3,7 @@
 /**
  * @file utility_power_transfer.h Whole paid electrical path preparation and once-only shared-owner settlement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  */
 
 #ifndef UTILITY_POWER_TRANSFER_H

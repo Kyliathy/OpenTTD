@@ -6,8 +6,8 @@
 
 /**
  * @file geothermal_heat_load.cpp Real391 completed-collector meter references, reservations and native next-tick reload; physical links/generator retain later groups.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md independent preview
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md independent preview
  */
 
 #include "../stdafx.h"

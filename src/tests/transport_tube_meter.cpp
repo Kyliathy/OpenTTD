@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_meter.cpp Actual paid native ticks, admitted demand carry, complete invoice refusal and unpowered physical holds.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups6-7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.2
  */
 

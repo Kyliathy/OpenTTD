@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_state.h Versioned metadata and feature-owned geology/job/pass reference validation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md; r2mlvs2-geology-and-excavation.md */
+/** @file multilayer_state.h Versioned metadata and feature-owned geology/job/pass reference validation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md; r2mlvs2-geology-and-excavation.md */
 
 #ifndef MULTILAYER_STATE_H
 #define MULTILAYER_STATE_H
@@ -23,16 +23,16 @@ static constexpr uint32_t MULTILAYER_FEATURE_TBM_EXCHANGE = 128; ///< Hauler ass
 static constexpr uint32_t MULTILAYER_FEATURE_MINES = 256; ///< Finite mine bindings require the version-379 family and existing geology/industry inventories. See r2mlvs6-mines-and-resource-chains.md.
 static constexpr uint32_t MULTILAYER_FEATURE_PROCESSORS = 512; ///< Native recipe choice/work/counters require version-380 descriptors beside Industry stock. See r2mlvs6-mines-and-resource-chains.md.
 static constexpr uint32_t MULTILAYER_FEATURE_UTILITY_POWER = 1024; ///< Native electrical epochs, fractions and grants require version-381 transport. See r2mlvs12-solar-farms-mirrors-and-eti.md.
-static constexpr uint32_t MULTILAYER_FEATURE_TUBE_POWER = 2048; ///< Physical paid connections/invoices require version386 and their actual utility/portal owners. See r2mlvs16-underground-transport-tubes.md Group5.
-static constexpr uint32_t MULTILAYER_FEATURE_TUBE_VEHICLES = 4096; ///< Actual capsule bindings/history require version387 and actual physical paid sources. See r2mlvs16-underground-transport-tubes.md Group6.
-static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_SITES = 8192; ///< Cold planning history requires388 and original geology/vent authority; no operating collector is implied. See r2mlvs17-geothermal-energy-and-industry.md Group1.
+static constexpr uint32_t MULTILAYER_FEATURE_TUBE_POWER = 2048; ///< Physical paid connections/invoices require version386 and their actual utility/portal owners. See r2mlvs17-underground-transport-tubes.md Group5.
+static constexpr uint32_t MULTILAYER_FEATURE_TUBE_VEHICLES = 4096; ///< Actual capsule bindings/history require version387 and actual physical paid sources. See r2mlvs17-underground-transport-tubes.md Group6.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_SITES = 8192; ///< Cold planning history requires388 and original geology/vent authority; no operating collector is implied. See r2mlvs18-geothermal-energy-and-industry.md Group1.
 
-static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS = 16384; ///< Actual native collector construction requires389 and consumed cold/source references; no heat grant or power is implied. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS = 16384; ///< Actual native collector construction requires389 and consumed cold/source references; no heat grant or power is implied. See r2mlvs18-geothermal-energy-and-industry.md Group1B.
 
-static constexpr uint32_t MULTILAYER_FEATURE_UTILITY_HEAT = 32768; ///< Typed heat accounting requires390 and the same utility identity/balance owner; physical geothermal references retain Plan17.
-static constexpr uint32_t MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS = 65536; ///< Installed Deep Heat/Electricity cells require392 and the shared link issuer/geometry owner; no energy is implied. See r2mlvs17-geothermal-energy-and-industry.md Group3B.
-static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES = 131072; ///< Physical393 ports/current source paths require the original shared Heat and paid local link owners. See r2mlvs17-geothermal-energy-and-industry.md Group3.
-static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_RISERS = 262144; ///< Actual400 paid machinery/loss/tick references; native stock stays in Industry and no electrical transfer is implied. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
+static constexpr uint32_t MULTILAYER_FEATURE_UTILITY_HEAT = 32768; ///< Typed heat accounting requires390 and the same utility identity/balance owner; physical geothermal references retain Plan18.
+static constexpr uint32_t MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS = 65536; ///< Installed Deep Heat/Electricity cells require392 and the shared link issuer/geometry owner; no energy is implied. See r2mlvs18-geothermal-energy-and-industry.md Group3B.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES = 131072; ///< Physical393 ports/current source paths require the original shared Heat and paid local link owners. See r2mlvs18-geothermal-energy-and-industry.md Group3.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_RISERS = 262144; ///< Actual400 paid machinery/loss/tick references; native stock stays in Industry and no electrical transfer is implied. See r2mlvs18-geothermal-energy-and-industry.md Group5B.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -109,12 +109,12 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	MineRoot, ///< Appended finite bindings/work/counters; reserve and output keep their own owners. See r2mlvs6-mines-and-resource-chains.md.
 	ProcessorRoot, ///< Appended native choice/work/batch/material history, with stock read from Industry. See r2mlvs6-mines-and-resource-chains.md.
 	UtilityRoot, ///< Appended exact electrical epoch/meter/link/slice authority. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B.
-	TubePowerRoot, ///< Physical connection and paid invoice digest, excluding electrical balances. See r2mlvs16-underground-transport-tubes.md Group5.
-	TubeVehicleRoot, ///< Capsule binding/fraction/tick digest; packets and joules stay in their own roots. See r2mlvs16-underground-transport-tubes.md Group6.
-	GeothermalSiteRoot, ///< Cold planning identity/geometry/history, excluding natural capacity, delivered construction and all energy. See r2mlvs17-geothermal-energy-and-industry.md Group1.
-	GeothermalCollectorRoot, ///< Actual native construction/control/work/material-receipt digest; natural capacity and energy retain their own owners. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
-	GeothermalHeatRouteRoot, ///< Exact original physical ports/source paths, without copied energy quantities. See r2mlvs17-geothermal-energy-and-industry.md Group3.
-	GeothermalRiserRoot, ///< Actual original-housing machinery/work/receipt/loss, reading native stock/history once; no utility quantities. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
+	TubePowerRoot, ///< Physical connection and paid invoice digest, excluding electrical balances. See r2mlvs17-underground-transport-tubes.md Group5.
+	TubeVehicleRoot, ///< Capsule binding/fraction/tick digest; packets and joules stay in their own roots. See r2mlvs17-underground-transport-tubes.md Group6.
+	GeothermalSiteRoot, ///< Cold planning identity/geometry/history, excluding natural capacity, delivered construction and all energy. See r2mlvs18-geothermal-energy-and-industry.md Group1.
+	GeothermalCollectorRoot, ///< Actual native construction/control/work/material-receipt digest; natural capacity and energy retain their own owners. See r2mlvs18-geothermal-energy-and-industry.md Group1B.
+	GeothermalHeatRouteRoot, ///< Exact original physical ports/source paths, without copied energy quantities. See r2mlvs18-geothermal-energy-and-industry.md Group3.
+	GeothermalRiserRoot, ///< Actual original-housing machinery/work/receipt/loss, reading native stock/history once; no utility quantities. See r2mlvs18-geothermal-energy-and-industry.md Group5B.
 	End,
 };
 

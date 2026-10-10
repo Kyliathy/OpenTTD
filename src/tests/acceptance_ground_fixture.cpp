@@ -6,7 +6,7 @@
 
 /**
  * @file acceptance_ground_fixture.cpp Declared isolated connected three-plane fixture, saved through real native descriptors.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-integrated-acceptance-and-balance.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-integrated-acceptance-and-balance.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint11.1
  */
 

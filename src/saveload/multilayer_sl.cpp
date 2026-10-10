@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_sl.cpp One-row metadata load/preview/fixup scaffold; feature records remain owner-specific. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file multilayer_sl.cpp One-row metadata load/preview/fixup scaffold; feature records remain owner-specific. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #include "../stdafx.h"
 #include "saveload.h"

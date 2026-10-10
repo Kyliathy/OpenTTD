@@ -101,7 +101,7 @@ TEST_CASE("Loaded exchange stores refuse missing, reused or shared references", 
 		saved.Refuse();
 	}
 	SECTION("one set carried by two haulers") {
-		// Two heads may never claim one set's wagons (Plan 14 10.5), even when both are real haulers of the project.
+		// Two heads may never claim one set's wagons (Plan 15 10.5), even when both are real haulers of the project.
 		TBMExchangeAssignment twin = saved.assignments[0];
 		twin.id = TBMExchangeAssignmentID{saved.next_assignment};
 		twin.hauler = rig.BuildHauler(rig.depot, 1, 0)->index;

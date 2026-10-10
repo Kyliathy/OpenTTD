@@ -3,7 +3,7 @@
 /**
  * @file utility_power_lineage.h Bounded original-source parent/segment validation in the sole shared reservation owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  */
 
 #ifndef UTILITY_POWER_LINEAGE_H

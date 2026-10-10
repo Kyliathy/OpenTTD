@@ -2,7 +2,7 @@
 
 @file utility_power_save_fixture-4.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 8B
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md distributed loading
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md distributed loading
 """
 
 import hashlib

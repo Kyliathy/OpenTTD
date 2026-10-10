@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_readiness.cpp Actual native facility identity, model/cargo and pure physical inlet views.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48C actual platform geometry
  */
 

@@ -895,7 +895,7 @@ void ReleaseTBMProjectExchangeBay(TileIndex bay);
 void ChangeTBMOwnership(Owner old_owner, Owner new_owner);
 
 /**
- * Common deletion hook of the TBM owners (Plan 4/5, Plan 14 16.1), called from Vehicle::PreDestructor for every train
+ * Common deletion hook of the TBM owners (Plan 4/5, Plan 15 16.1), called from Vehicle::PreDestructor for every train
  * part on every deletion path but pool cleaning. The exchange store forgets the part first; a deleted cutter is then
  * cleared from its project (MissingCutter) and from its Commissioning pair at once, so a later train that reuses the
  * ID never inherits the project, its consist lock or its pair.
@@ -904,7 +904,7 @@ void ChangeTBMOwnership(Owner old_owner, Owner new_owner);
 void OnTBMTrainPartDeleted(const Train &part);
 
 /**
- * Station deletion hook of the TBM owners (Plan 4 Group 17, Plan 14 16.1), called from Station::~Station on every
+ * Station deletion hook of the TBM owners (Plan 4 Group 17, Plan 15 16.1), called from Station::~Station on every
  * deletion but pool cleaning. A project whose origin it was loses it at once (MissingOrigin), and so does a pair
  * naming it, so a later station that reuses the ID never becomes an origin and the pair's record still loads.
  * @param station Station about to be deleted.

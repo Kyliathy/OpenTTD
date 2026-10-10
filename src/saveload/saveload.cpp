@@ -7,7 +7,7 @@
 
 /**
  * @file saveload.cpp All actions handling saving and loading goes on in this file.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  *
  * The general actions are as follows for saving a game (loading is analogous):
  * <ol>
@@ -248,7 +248,7 @@ bool SlIsFixingPointers()
 /**
  * Read the stable handler registry, including the uniquely versioned MLMD scaffold.
  * @return Ordered legacy/feature handlers; no existing chunk identity or order is reinterpreted.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 {

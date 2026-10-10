@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_fixture.h Shared real capsule/rail/depot owners for bounded tube prototype and construction checks.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups1B-6
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups1B-6
  */
 
 #ifndef TESTS_TRANSPORT_TUBE_FIXTURE_H

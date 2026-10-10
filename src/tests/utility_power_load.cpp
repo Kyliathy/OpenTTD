@@ -7,7 +7,7 @@
 /**
  * @file utility_power_load.cpp Real native file proof for electrical publication, reservations and source-loss retry.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md feature-owned acceptance
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md feature-owned acceptance
  */
 
 #include "../stdafx.h"

@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_power_load.cpp Actual native paid inlet/grant/use/recovery files, preserving the original paid excavation world. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups5-7 */
+/** @file transport_tube_power_load.cpp Actual native paid inlet/grant/use/recovery files, preserving the original paid excavation world. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups5-7 */
 
 #include "../stdafx.h"
 #include "test_artifact_paths.h"

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file saveload.h Functions/types related to saving and loading games. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file saveload.h Functions/types related to saving and loading games. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #ifndef SAVELOAD_H
 #define SAVELOAD_H
@@ -427,7 +427,7 @@ enum class SaveLoadVersion : uint16_t {
 
 	MapLayers, ///< Saveload version: 369\n Map stores Surface, Underground and Space layers.
 	DeepUnderground, ///< Saveload version: 370\n Map stores Deep Underground; road vehicles store their elevator wait.
-	MultiLayerMetadata, ///< Saveload version: 371\n Explicit profile/schema/content identity, legacy/editor policy and feature seed roots. See r2mlvs14-savegame-determinism-and-lifecycle.md.
+	MultiLayerMetadata, ///< Saveload version: 371\n Explicit profile/schema/content identity, legacy/editor policy and feature seed roots. See r2mlvs15-savegame-determinism-and-lifecycle.md.
 	GeologyExcavation, ///< Saveload version: 372\n Independent packed rock/deposit/span authority and future excavation jobs. See r2mlvs2-geology-and-excavation.md.
 	ExcavationJobs, ///< Saveload version: 373\n Bounded sparse job/route/cell descriptors with rebuilt exclusive active claims. See r2mlvs2-geology-and-excavation.md.
 	ExcavationPasses, ///< Saveload version: 374\n Frozen independent wagon limits and complete-prefix backing/exchange input. See r2mlvs2-geology-and-excavation.md.
@@ -442,26 +442,26 @@ enum class SaveLoadVersion : uint16_t {
 	UtilityMutations, ///< Saveload version: 382\n Electrical operation sequence and lifetime generation/settlement counters. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 8.
 	UtilityTransfers, ///< Saveload version: 383\n Directed commissioned electrical links and original-source imported reservation slices. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 8.
 	UtilityConsumerEffects, ///< Saveload version: 384\n Native Surface town association, posted bounded offer and custom-GS suspension. See r2mlvs12-solar-farms-mirrors-and-eti.md Group 9.
-	UtilityCompanyLifecycle, ///< Saveload version: 385\n Consumer retirement uses the existing active wire scalar; older consumers migrate as active. See r2mlvs14-savegame-determinism-and-lifecycle.md Group15B.
-	TubeExternalPower, ///< Saveload version: 386\n Explicit tube inlet paths, commissioned references and fractional paid invoices. See r2mlvs16-underground-transport-tubes.md Group5.
-	TubeMovementPower, ///< Saveload version: 387\n Actual capsule-to-consumer bindings, admitted demand carry and one global/front tick history. See r2mlvs16-underground-transport-tubes.md Group6.
-	GeothermalSiteClaims, ///< Saveload version: 388\n Cold site geometry, natural-source references and retained planning identities; no delivered construction or energy. See r2mlvs17-geothermal-energy-and-industry.md Group1.
+	UtilityCompanyLifecycle, ///< Saveload version: 385\n Consumer retirement uses the existing active wire scalar; older consumers migrate as active. See r2mlvs15-savegame-determinism-and-lifecycle.md Group15B.
+	TubeExternalPower, ///< Saveload version: 386\n Explicit tube inlet paths, commissioned references and fractional paid invoices. See r2mlvs17-underground-transport-tubes.md Group5.
+	TubeMovementPower, ///< Saveload version: 387\n Actual capsule-to-consumer bindings, admitted demand carry and one global/front tick history. See r2mlvs17-underground-transport-tubes.md Group6.
+	GeothermalSiteClaims, ///< Saveload version: 388\n Cold site geometry, natural-source references and retained planning identities; no delivered construction or energy. See r2mlvs18-geothermal-energy-and-industry.md Group1.
 
-	GeothermalCollectors, ///< Saveload version: 389\n Actual native collector work/material receipt/source/control; stocks remain in Industry. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
+	GeothermalCollectors, ///< Saveload version: 389\n Actual native collector work/material receipt/source/control; stocks remain in Industry. See r2mlvs18-geothermal-energy-and-industry.md Group1B.
 
-	UtilityHeatDomains, ///< Saveload version: 390\n Shared native typed heat identities/roles/domain balances and independent thermal phase. See r2mlvs17-geothermal-energy-and-industry.md Group2B.
-	GeothermalHeatSources, ///< Saveload version: 391\n Actual completed collector references its single shared Heat meter; interval/carry/grants remain in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group2.
-	LocalUtilityLinks, ///< Saveload version: 392\n Shared native local-cell link identities, Heat/Electricity geometry/capacity/ownership and topology revision. See r2mlvs17-geothermal-energy-and-industry.md Group3B.
-	GeothermalHeatRoutes, ///< Saveload version: 393\n Exact physical Heat consumer ports and original source-slice paths; every quantity remains in UPLH/UPLD. See r2mlvs17-geothermal-energy-and-industry.md Group3.
+	UtilityHeatDomains, ///< Saveload version: 390\n Shared native typed heat identities/roles/domain balances and independent thermal phase. See r2mlvs18-geothermal-energy-and-industry.md Group2B.
+	GeothermalHeatSources, ///< Saveload version: 391\n Actual completed collector references its single shared Heat meter; interval/carry/grants remain in UPLH/UPLD. See r2mlvs18-geothermal-energy-and-industry.md Group2.
+	LocalUtilityLinks, ///< Saveload version: 392\n Shared native local-cell link identities, Heat/Electricity geometry/capacity/ownership and topology revision. See r2mlvs18-geothermal-energy-and-industry.md Group3B.
+	GeothermalHeatRoutes, ///< Saveload version: 393\n Exact physical Heat consumer ports and original source-slice paths; every quantity remains in UPLH/UPLD. See r2mlvs18-geothermal-energy-and-industry.md Group3.
 	TBMHalfCuttingRate, ///< Saveload version: 394\n Halved TBM cutting rates; migrate old saved work fractions without changing partial geological work. See r2tbmf-tbm-fixes.md Group5.
 	TBMReturnParking, ///< Saveload version: 395\n Resumable return/exchange/park phases in the existing TBMP controller; no new cargo or job owner. See r2tbmf-tbm-fixes.md Group7.
 	TBMSettledRelease, ///< Saveload version: 396\n Preserve cancellation intent through actual withdrawal and haulage settlement before releasing geological claims. See r2tbmf-tbm-fixes.md Group7B.
 	TBMHangarDepots, ///< Saveload version: 397\n Real native depot identities for portal magazines; ordinary depot orders retain their existing encoding. See r2tbmf-tbm-fixes.md Group8.
 	TBMNativeOrderControl, ///< Saveload version: 398\n Explicit native-list control and missing-order hold in the existing TBM phase/reason fields; no duplicate order queue.
 	GeologyRegionalHardness, ///< Saveload version: 399\n GEOS stores the regional rock algorithm and immutable seed; earlier worlds retain uniform layer defaults and saved deposit hardness.
-	GeothermalRisers, ///< Saveload version: 400\n Original portal-bound native riser work/material receipt/loss and tick transport; stock remains in Industry. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
-	PaidElectricalRiserLinks, ///< Saveload version: 401\n Shared electrical edge role retains actual paid native machinery and immutable rate; older numerical portal roles remain explicit. See r2mlvs17-geothermal-energy-and-industry.md Group5.
-	RockElectricalRelays, ///< Saveload version: 402\n Explicit local-cell plane permits paid Underground electrical relay cables; Heat and genuine older cells remain Deep-local. See r2mlvs17-geothermal-energy-and-industry.md Group5.
+	GeothermalRisers, ///< Saveload version: 400\n Original portal-bound native riser work/material receipt/loss and tick transport; stock remains in Industry. See r2mlvs18-geothermal-energy-and-industry.md Group5B.
+	PaidElectricalRiserLinks, ///< Saveload version: 401\n Shared electrical edge role retains actual paid native machinery and immutable rate; older numerical portal roles remain explicit. See r2mlvs18-geothermal-energy-and-industry.md Group5.
+	RockElectricalRelays, ///< Saveload version: 402\n Explicit local-cell plane permits paid Underground electrical relay cables; Heat and genuine older cells remain Deep-local. See r2mlvs18-geothermal-energy-and-industry.md Group5.
 	UtilityShareLineage, ///< Saveload version: 403\n Shared per-epoch slice/parent identities and bounded physical segments retain complete original electrical lineage; genuine older one-hop records migrate explicitly. See r2mlvs12-solar-farms-mirrors-and-eti.md Group8C.
 
 	MaxVersion, ///< Highest possible saveload version.

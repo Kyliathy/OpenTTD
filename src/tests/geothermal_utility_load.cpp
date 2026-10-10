@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_utility_load.cpp Actual392 paid native path files, genuine391 migration and independent malformed preview; no operating generator is inferred.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group3B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group3B
  */
 
 #include "../stdafx.h"

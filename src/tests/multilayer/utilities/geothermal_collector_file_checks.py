@@ -2,7 +2,7 @@
 
 @file geothermal_collector_file_checks.py
 @see r2mlvs3mp-master-plan.md checkpoint10.3; transported paid bootstrap remains10.6.
-@see r2mlvs17-geothermal-energy-and-industry.md Group1B.
+@see r2mlvs18-geothermal-energy-and-industry.md Group1B.
 """
 
 import hashlib
@@ -128,7 +128,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md1B actual construction boundary.\ngeothermal_collector_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md1B actual construction boundary.\ngeothermal_collector_check\n", encoding="utf-8")
         run_case("legacy-read", retained)
         assert authority(DIRECTORY / "fixture389-collector-legacy-read.sav") == authority(retained)
         run_case("fixture-fund", retained)
@@ -152,7 +152,7 @@ def main():
             run_case("preview", funded, corrupt)
         completed = DIRECTORY / "fixture389-collector-fixture-complete.sav"
         output = DIRECTORY / "fixture389-collector-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md1B ordinary completed collector loading.\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md1B ordinary completed collector loading.\n"
                            "set savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         log = CONTEXT.logs / f"{PREFIX}-collector-normal-loader.log"

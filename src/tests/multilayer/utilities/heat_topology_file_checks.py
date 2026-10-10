@@ -1,7 +1,7 @@
 """Actual393 native unused-right loss, retained use, fresh paid repair and legacy lost-path settlement.
 
 @file heat_topology_file_checks.py
-@see r2mlvs17-geothermal-energy-and-industry.md Group4.
+@see r2mlvs18-geothermal-energy-and-industry.md Group4.
 @see r2mlvs3mp-master-plan.md checkpoint10.3; operating plant output retains10.6.
 """
 
@@ -46,7 +46,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group4 actual unused-right topology boundary.\nheat_allocation_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group4 actual unused-right topology boundary.\nheat_allocation_check\n", encoding="utf-8")
         # Each independent native process uses its original accepted source,
         # route and stock owners; paid removal can expire only free slices,
         # while actual consumed history and physical references stay original.
@@ -82,7 +82,7 @@ def main():
         for corrupt in producer.corrupt_routes(split):
             producer.run_case("preview", split, corrupt)
         output = DIRECTORY / "fixture393-heat-topology-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group4 ordinary repaired allocation reload.\nset savegame_format lzma\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group4 ordinary repaired allocation reload.\nset savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         runner = ROOT / "mlm/tools/run/run_game_logged.sh"
         log = CONTEXT.logs / "r2mlvs3mp-z-q-heat-topology-normal-loader.log"

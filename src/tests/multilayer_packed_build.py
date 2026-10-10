@@ -1,8 +1,8 @@
 """Focused reproducible-build and generator-free actual-loader checks for M1 art.
 
 @file multilayer_packed_build.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.6
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
 Run each mode separately. All logs, configuration and generated data stay in the
 repository. The generator-free mode restores the original CMake configuration.
 """
@@ -59,7 +59,7 @@ def read_proof():
     """
     if PROOF.exists():
         return json.loads(PROOF.read_text(encoding="utf-8"))
-    return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B; actual build/load evidence, runtime bindings pending"}
+    return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C; actual build/load evidence, runtime bindings pending"}
 
 
 def write_proof(proof):
@@ -124,14 +124,20 @@ def reproducible(cmake, config, prefix):
     print("Two clean selected conversions and actual GRF builds are byte-identical", flush=True)
 
 
-def generator_free(cmake, config, prefix):
-    """Build and actually load cached artwork with package discovery disabled.
+def generator_free(cmake, config, prefix, load_native=True):
+    """Verify cached packaging and optionally native loading with discovery disabled.
 
     @param cmake Verified local CMake executable path.
     @param config Existing completed native configuration.
     @param prefix Repository log prefix preserving earlier evidence.
-    @return None; retain successful cached native load and restore generator discovery.
+    @param load_native True for compiled application loading; false for a packaging-only checkpoint.
+    @return None; retain only the proven packaging/loading scope and restore discovery.
     """
+    report = json.loads((ROOT / "logs/proofs/mlm/native-art/derived/packed-manifest.json").read_text(encoding="utf-8"))
+    selected = report["pose_count"]
+    bound = report["native_sprite_bound"]
+    protected = 66
+    total = protected + selected
     before = digest(GRF)
     # Package discovery is disabled through CMake's public switch. Cached tool
     # locations can remain present, but no native generator target may execute.
@@ -152,18 +158,28 @@ def generator_free(cmake, config, prefix):
         assert "Generating openttd.grf" not in output, "generator executed during cached build"
         assert digest(GRF) == before, "generator-free build changed distributed source payload"
         assert digest(ROOT / "build/baseset/openttd.grf") == before, "cached packaging copied stale artwork"
+        proof = read_proof()
+        proof.update(generator_free_packaging={"sha256": before, "selected_sprites": selected, "protected_sprites": protected,
+                                              "native_bound": bound, "generator_discovery_disabled": True,
+                                              "build_log": (CONTEXT.logs / f"{prefix}-generator-free-build.log").relative_to(ROOT).as_posix(),
+                                              "copied_payload": "build/baseset/openttd.grf", "native_loading_verified": False})
+        write_proof(proof)
+        if not load_native:
+            print(f"Generator-free checked-in packaging copies the exact {total}-sprite payload; native loading remains pending", flush=True)
+            return
         name = f"{prefix}-generator-free-load.log"
         CONTEXT.prepare_runtime()
         (CONTEXT.runtime_dir / "scripts/game_start.scr").write_text("# @see r2fc-file-cleanup.md; isolated packed-loader timer owns startup.\n", encoding="utf-8")
         loaded = execute([str(ROOT / "build" / config / "openttd_test.exe"), "[.m1-packed-art-load]"], name, ROOT / "build")
-        assert "M1_PACKED_ART_LOADED sprites=2409 native_bound=2436 protected=66 selected=2343 pixel_hashes=exact" in loaded
+        marker = f"M1_PACKED_ART_LOADED sprites={total} native_bound={bound} protected={protected} selected={selected} pixel_hashes=exact"
+        assert marker in loaded
         assert "All tests passed" in loaded, "native pixel/anchor observer did not pass"
         proof = read_proof()
-        proof.update(generator_free={"sha256": before, "selected_sprites": 2343, "protected_sprites": 66,
-                                     "native_bound": 2436, "loader_log": (CONTEXT.logs / name).relative_to(ROOT).as_posix(),
+        proof.update(generator_free={"sha256": before, "selected_sprites": selected, "protected_sprites": protected,
+                                     "native_bound": bound, "loader_log": (CONTEXT.logs / name).relative_to(ROOT).as_posix(),
                                      "generator_discovery_disabled": True})
         write_proof(proof)
-        print("Generator-free checked-in packaging loads all 2409 source-exact native sprites", flush=True)
+        print(f"Generator-free checked-in packaging loads all {total} source-exact native sprites", flush=True)
     finally:
         execute([cmake, "-S", ".", "-B", "build", "-DCMAKE_DISABLE_FIND_PACKAGE_Grfcodec=OFF"],
                 f"{prefix}-generator-restore.log")
@@ -175,7 +191,7 @@ def main():
     @return None; each mode records only successful independent evidence.
     """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("mode", choices=["reproducible", "generator-free"])
+    parser.add_argument("mode", choices=["reproducible", "generator-free", "generator-free-copy"])
     parser.add_argument("--cmake", required=True)
     parser.add_argument("--config", default="RelWithDebInfo")
     parser.add_argument("--prefix", default="r2tbmf-z-art")
@@ -184,7 +200,7 @@ def main():
     if args.mode == "reproducible":
         reproducible(args.cmake, args.config, args.prefix)
     else:
-        generator_free(args.cmake, args.config, args.prefix)
+        generator_free(args.cmake, args.config, args.prefix, load_native=args.mode == "generator-free")
 
 
 if __name__ == "__main__":

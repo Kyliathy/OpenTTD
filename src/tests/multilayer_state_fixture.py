@@ -2,7 +2,7 @@
 """Focused actual metadata round trips and unchanged legacy save loading.
 
 @file multilayer_state_fixture.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md
 """
 
@@ -121,7 +121,7 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     log = log_path(f"{prefix}-{name}.log", context=context)
     output.unlink(missing_ok=True)
     company_setup = "start_ai\n" if single_player and "-g" not in arguments else ""  # New null-video worlds need an actual owner; loaded worlds retain their saved company without creating another.
-    script.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md, metadata fixture.\n"
+    script.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md, metadata fixture.\n"
                       f'dump_info cargotypes\n{company_setup}save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
     (context.runtime_dir / "scripts/game_start.scr").write_text(f'exec "{script.as_posix()}"\n', encoding="utf-8")
     env = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=3,grf=2,desync=5,script=2")
@@ -166,7 +166,7 @@ def main():
     parser.add_argument("--smoke", action="store_true", help="load only an existing native and a supplied Classic save")
     args = parser.parse_args()
     try:
-        config.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md.\n"
+        config.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md.\n"
                           "[game_creation]\nmap_x = 6\nmap_y = 6\nlandscape = temperate\n"
                           "gameplay_profile = multilayer_industry\n"
                           "[network]\nserver_advertise = false\nserver_bind_addresses = 127.0.0.1\n", encoding="utf-8")
@@ -190,7 +190,7 @@ def main():
         for path, digest in hashes.items():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, "supplied legacy save changed"
     result_name = "r2mlvs1-i-final-metadata-results.txt" if args.smoke else "r2mlvs14-b-metadata-results.txt"
-    result_scope = "R2MLVS1 normal build: selected native and supplied Classic loads passed.\n" if args.smoke else "R2MLVS14 M0 metadata: explicit native new/reload/reload, Surface/369/370 legacy loads passed.\n"
+    result_scope = "R2MLVS1 normal build: selected native and supplied Classic loads passed.\n" if args.smoke else "R2MLVS15 M0 metadata: explicit native new/reload/reload, Surface/369/370 legacy loads passed.\n"
     (CONTEXT.reports / result_name).write_text(
         result_scope +
         "Supplied legacy file SHA256 preserved. Feature payloads and multiplayer runtime remain pending.\n", encoding="utf-8")

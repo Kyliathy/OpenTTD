@@ -6,8 +6,8 @@
 
 /**
  * @file geothermal_heat_route_sl.cpp Exact physical Heat ports and source paths; shared native utility chunks retain every quantity.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3-4
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md independent preview and complete acceptance
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3-4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md independent preview and complete acceptance
  */
 
 #include "../stdafx.h"

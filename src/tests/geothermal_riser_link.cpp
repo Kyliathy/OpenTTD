@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_riser_link.cpp Actual paid machinery admission, exclusive native electrical identity and retained loss/reload boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  */
 
 #include "../stdafx.h"

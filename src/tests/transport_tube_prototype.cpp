@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_prototype.cpp Actual native EIDS purchase, junction reservations and semantic route/entry refusals.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.1
  */
 

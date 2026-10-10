@@ -1,6 +1,6 @@
 ##name English (UK)
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md task16.1; native job progress/footprint presentation.
-# @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -5299,7 +5299,7 @@ STR_ERROR_EXCAVATION_SOLID_ROCK                                 :{WHITE}Excavate
 STR_ERROR_EXCAVATION_ACTIVE_CUT                                 :{WHITE}This footprint is reserved for excavation
 STR_ERROR_EXCAVATION_DEEP_LOCKED                                :{WHITE}Deep Underground construction requires 1980 or later
 STR_ERROR_TBM_SUPPORT_IN_USE                                    :{WHITE}This temporary support track is still in use by a boring project
-# Cold geothermal reservations: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
+# Cold geothermal reservations: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
 STR_ERROR_GEOTHERMAL_SITE_CLAIMED                               :{WHITE}Cancel the planned geothermal site before building or clearing here
 STR_INDUSTRY_NAME_GEOTHERMAL_COLLECTOR                          :Vent Collector
 STR_INDUSTRY_NAME_GEOTHERMAL_RISER                              :Electrical Riser

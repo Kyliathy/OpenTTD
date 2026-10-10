@@ -1,7 +1,7 @@
 """Focused normal-game rejection and real Null cleanup of malformed electrical transport.
 
 @file utility_power_save_fixture-8.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md Groups9-10
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md Groups9-10
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint11.2
 """
 
@@ -42,7 +42,7 @@ def main():
     previous = startup.read_bytes() if existed else None
     prefix = "r2mlvs3mp-z-a-utility-null-" + uuid.uuid4().hex
     try:
-        startup.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md10 partial-load rejection.\nquit\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md10 partial-load rejection.\nquit\n", encoding="utf-8")
         # Each process attempts an actual malformed world independently. The
         # production loader nulls partial references before rebuilding its menu;
         # this does not promise restoration of a previously running world.

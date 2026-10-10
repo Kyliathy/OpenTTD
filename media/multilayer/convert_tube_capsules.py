@@ -45,7 +45,7 @@ def native_pose(candidate, direction=None):
     # and orbital public families cannot acquire this native geometry merely
     # by supplying a plausible image/canvas or copying a view label.
     if (transform.get("direction", candidate.get("direction")) != direction or family is None
-            or family["consumer"] != 16 or family["kind"] != "vehicle"
+            or family["consumer"] != 17 or family["kind"] != "vehicle"
             or family["native_size"] != [64, 48] or family["anchor"] != [-32, -32]):
         raise ValueError("native capsule source view/model mismatch")
     image = Image.open(tube.base.repository_path(candidate["path"])).convert("RGBA")

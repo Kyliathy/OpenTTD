@@ -67,9 +67,11 @@ def build_manifest():
     for cargo in ("COAL", "IORE", "CORE", "BAUX", "SALT", "LITH", "NORE", "COBT", "RARE", "URAN"):
         rows.append(record(f"survey.{cargo}", 2, "icon", ["unknown", "surveyed", "depleted"]))
         rows.append(record(f"mine.{cargo}", 6, "building", ["construction", "working", "blocked", "depleted"], 4, (3, 3)))
+    # Consumer ordinals follow the split plan index: tubes17 and geothermal18.
+    # Native model IDs and all physical/state geometry retain their existing meaning.
     # The nineteen model IDs match the public content catalogue; purchase previews are separate explicit assets.
     for model in range(19):
-        owner = 4 if model < 2 else 5 if model < 5 else 7 if model < 9 else 16 if model < 14 else 9 if model in (14, 18) else 10 if model == 15 else 11
+        owner = 4 if model < 2 else 5 if model < 5 else 7 if model < 9 else 17 if model < 14 else 9 if model in (14, 18) else 10 if model == 15 else 11
         states = ["empty", "partial", "full", "service", "blocked"] if model not in (0, 1, 4, 16) else ["idle", "moving", "working", "blocked"]
         if 9 <= model <= 13:
             # Native capsule load and power/service condition are independent.
@@ -99,11 +101,11 @@ def build_manifest():
                   ("battery-works", 6, (4, 4)), ("electronics-works", 6, (4, 4)),
                   ("component-works", 6, (4, 4)), ("robotics-works", 6, (4, 4)),
                   ("mirror-kit-works", 6, (4, 4)), ("solar-farm", 12, (3, 2)), ("nuclear-plant", 12, (4, 4)),
-                  ("tube-terminal", 16, (1, 1)), ("tube-service", 16, (1, 1)), ("tube-interchange", 16, (3, 2)),
-                  ("vent-collector", 17, (3, 3)), ("vent-powerhouse", 17, (4, 4)),
-                  ("magma-powerhouse", 17, (4, 4)), ("heat-smelter", 17, (4, 4)),
-                  ("heat-battery-works", 17, (4, 4)), ("mantle-forge", 17, (4, 4)),
-                  ("utility-riser", 17, (2, 2)), ("launch-center", 9, (4, 4))]
+                  ("tube-terminal", 17, (1, 1)), ("tube-service", 17, (1, 1)), ("tube-interchange", 17, (3, 2)),
+                  ("vent-collector", 18, (3, 3)), ("vent-powerhouse", 18, (4, 4)),
+                  ("magma-powerhouse", 18, (4, 4)), ("heat-smelter", 18, (4, 4)),
+                  ("heat-battery-works", 18, (4, 4)), ("mantle-forge", 18, (4, 4)),
+                  ("utility-riser", 18, (2, 2)), ("launch-center", 9, (4, 4))]
     for name, owner, footprint in facilities:
         # A portal's real owner has exactly three saved work phases. Its housing
         # is static within each phase; controller waits have separate UI cues and
@@ -113,7 +115,7 @@ def build_manifest():
         # The delivered collector publishes Heat instead of requesting it.
         # Its four construction frames follow real native stages; consumer
         # shortage semantics remain with the other, separately owned families.
-        if owner == 17 and name != "vent-collector":
+        if owner == 18 and name != "vent-collector":
             states.append("heat_starved")
         # Native Surface spoil receivers expose one fixed industry layout. They
         # have no build rotation/entry direction; authored cells follow actual
@@ -146,7 +148,7 @@ def build_manifest():
         # the four Upper/Lower/Left/Right corner pieces. Neither travel reversal
         # nor a door label can stand in for a missing native shape.
         views = ["NE", "SE"] if shape == "straight" else ["N", "S", "W", "E"] if shape == "bend45" else ["none"] if shape in ("junction", "crossing") else DOORS
-        row = record(f"tube.{shape}", 16, "terrain", ["construction", "powered", "unpowered"], directions=views)
+        row = record(f"tube.{shape}", 17, "terrain", ["construction", "powered", "unpowered"], directions=views)
         if shape in ("straight", "bend45", "junction", "end", "crossing"):
             # Separate rear and foreground shells allow moving capsules to
             # keep their actual track path and intended near-rim occlusion.
@@ -160,7 +162,7 @@ def build_manifest():
             row["variant_semantics"] = "native_trackbits_topology"
             row["native_layouts"] = layouts
         rows.append(row)
-    vent = record("geothermal.vent", 17, "terrain", ["hidden", "surveyed", "excavated"], 4)
+    vent = record("geothermal.vent", 18, "terrain", ["hidden", "surveyed", "excavated"], 4)
     # Geology has one immutable natural rate and no thermal consumer or tapped
     # machinery state. Survey information and paid excavation control visibility;
     # installed collector connection/idle status belongs to its separate family.
@@ -170,7 +172,7 @@ def build_manifest():
                 empty_allowed_states=["hidden"], render_layer="ground_overlay_preserves_hardness_and_mineral_markers",
                 native_draw_offset=[0, 0])
     rows.append(vent)
-    rows.append(record("geothermal.conduit", 17, "terrain", ["construction", "connected", "unconnected"], directions=DOORS))
+    rows.append(record("geothermal.conduit", 18, "terrain", ["construction", "connected", "unconnected"], directions=DOORS))
     for name in ("nucleus", "dock", "storage", "workshop", "processor", "power", "fuel-store"):
         rows.append(record(f"module.{name}", 11, "building", ["blueprint", "partial", "complete", "blocked"], 2, (2, 2)))
     for name in ("nickel", "ice", "rare-earth"):

@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser_delivery.cpp Actual carrier-packet final delivery retains excess construction inputs and their feeder/payment provenance.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #include "../stdafx.h"

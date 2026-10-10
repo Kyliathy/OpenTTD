@@ -13,7 +13,7 @@ Before starting implementation and after every context compaction, read this sec
 | This plan | User requirements, evidence table, active group and completion conditions | Preserve every reported problem and distinguish observed behavior from an unverified diagnosis. |
 | R2MLVS parent | AD-3..AD-6; I-2..I-8, I-12..I-15 | Actual vehicles, paid excavation, explicit layer addressing, safe retreat, atomic stock/cash and deterministic work. Read affected decisions again only when their behavior changes. |
 | Plan2 / Plan3 / Plan4 / Plan5 | Public Handoff Contract or exported owner symbols relevant to the active group | One owner for geometry, commissioning, vehicle work, support, orders and wagon/cargo custody. |
-| Plan14 | Existing feature save/preview and lifecycle contract only when introducing persistent fields or changing old-save behavior | Real files must preserve active work, routes, work remainders and actual vehicles. |
+| Plan15 | Existing feature save/preview and lifecycle contract only when introducing persistent fields or changing old-save behavior | Real files must preserve active work, routes, work remainders and actual vehicles. |
 
 Execution rules:
 
@@ -322,7 +322,7 @@ Group10 closed after **1** compaction. [Notes Z](tbm-fixes/r2tbmf-z-geology-note
 
 ### Local Mandatory Reading - Integrated player acceptance and documentation
 
-Applies to Group11. Read the preceding groups' retained evidence, this plan's completion conditions and the precise affected public contracts in Plans1-5/7/13/14. Reuse actual captured saves and GUI flows. Do not preload or execute unrelated paused master/geothermal groups.
+Applies to Group11. Read the preceding groups' retained evidence, this plan's completion conditions and the precise affected public contracts in Plans1-5/7/13/15. Reuse actual captured saves and GUI flows. Do not preload or execute unrelated paused master/geothermal groups.
 
 ### Group 11 - Verify the complete player workflow and update the owning contracts
 

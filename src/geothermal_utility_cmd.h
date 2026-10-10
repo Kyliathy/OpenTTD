@@ -5,7 +5,7 @@
  */
 
 /** @file geothermal_utility_cmd.h Shared synchronized estimate/build/removal boundary for paid rock-layer utility cells.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3B-5
  */
 
 #ifndef GEOTHERMAL_UTILITY_CMD_H

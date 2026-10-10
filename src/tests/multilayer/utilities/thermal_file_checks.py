@@ -1,7 +1,7 @@
 """Actual391 collector-to-shared-meter saves and genuine389/390 migration.
 
 @file thermal_file_checks.py
-@see r2mlvs17-geothermal-energy-and-industry.md Group2.
+@see r2mlvs18-geothermal-energy-and-industry.md Group2.
 @see r2mlvs3mp-master-plan.md checkpoint10.3; physical links/operating generators retain later groups.
 """
 
@@ -136,7 +136,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group2 native source boundary.\nthermal_source_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group2 native source boundary.\nthermal_source_check\n", encoding="utf-8")
         run_case("legacy-read", earlier)
         assert authority(DIRECTORY / "fixture391-thermal-legacy-read.sav") == authority(earlier)
         run_case("legacy-read", retained)
@@ -157,7 +157,7 @@ def main():
         for corrupt in corrupt_sources(offer):
             run_case("preview", offer, corrupt)
         output = DIRECTORY / "fixture391-thermal-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md Group2 ordinary shared source load.\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md Group2 ordinary shared source load.\n"
                            "set savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         runner = ROOT / "mlm/tools/run/run_game_logged.sh"

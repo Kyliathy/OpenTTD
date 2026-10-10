@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_power_fixture.h Real 1970 portal/capsule owners for isolated paid service and metered movement tests. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups5-7 */
+/** @file transport_tube_power_fixture.h Real 1970 portal/capsule owners for isolated paid service and metered movement tests. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups5-7 */
 
 #ifndef TESTS_TRANSPORT_TUBE_POWER_FIXTURE_H
 #define TESTS_TRANSPORT_TUBE_POWER_FIXTURE_H

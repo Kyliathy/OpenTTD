@@ -5,7 +5,7 @@
  */
 
 /** @file geothermal_definitions.cpp Actual IIDS/TIDS collector identity, Deep/date separation and complete registration refusal.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  */
 
 #include "../stdafx.h"

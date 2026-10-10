@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file fios_gui.cpp GUIs for loading/saving games, scenarios, heightmaps, ... @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file fios_gui.cpp GUIs for loading/saving games, scenarios, heightmaps, ... @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #include "stdafx.h"
 #include "saveload/saveload_func.h"

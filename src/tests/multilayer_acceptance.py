@@ -1,7 +1,7 @@
 """Focused evidence-boundary refusal checks for the real ground acceptance runner.
 
 @file multilayer_acceptance.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-integrated-acceptance-and-balance.md Group5
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs16-integrated-acceptance-and-balance.md Group5
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint11.1
 """
 

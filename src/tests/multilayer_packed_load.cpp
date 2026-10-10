@@ -6,8 +6,8 @@
 
 /**
  * @file multilayer_packed_load.cpp Actual application-loader proof for packed M1 art and the preserved native M0 prefix.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.6
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
  */
 
 #include "../stdafx.h"
@@ -115,7 +115,9 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 			REQUIRE(std::string_view(magic.data(), magic.size()) == std::string_view{"MLVART1\0", 8});
 			const uint16_t count = ReadArtWord(input);
 			const uint16_t bound = ReadArtWord(input);
-			CHECK(count == 2409); // 66 protected M0 plus 2,343 selected M1 source sprites, including material floors/walls.
+			uint16_t selected = 0;
+			for (const auto &range : _multilayer_m1_sprite_ranges) selected += range.count;
+			CHECK(count == 66 + selected); // Complete selected scope, including newly appended collector poses, plus the protected M0 prefix.
 			CHECK(bound == MAP_LAYER_SPRITE_COUNT);
 			// Each source declaration is checked against the real application-loaded
 			// sprite cache. Mock cache dimensions or a source-only parser cannot pass.
@@ -145,7 +147,7 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 			REQUIRE(GetSpriteCountForFile(origin->GetFilename(), SPR_MAP_LAYER_BASE, SPR_MAP_LAYER_BASE + bound) == count);
 			observed = true;
 			_exit_game = true; // End only this isolated read-only graphics observer.
-			fmt::print("M1_PACKED_ART_LOADED sprites={} native_bound={} protected=66 selected=2343 pixel_hashes=exact\n", count, bound);
+			fmt::print("M1_PACKED_ART_LOADED sprites={} native_bound={} protected=66 selected={} pixel_hashes=exact\n", count, bound, selected);
 		} catch (...) {
 			// Assertion failures must leave native startup through normal shutdown;
 			// unwinding through its game loop would skip font/window destruction.

@@ -63,7 +63,7 @@ Validation rejects empty identity, empty activity, duplicate cargo roles within 
 
 Worked Component recipe (`COMP`): Steel 2 t **and** Refined Metals 2 t **and** Chemicals 1 kL make Components 2 t in 74 ticks; maximum four batches. With 296 ticks and stocks `(4,1,3)`, Refined Metals permit zero batches; `(4,1,3)` and output remain unchanged. With stocks `(4,6,3)`, two batches fit, proposing input deltas `(-4,-4,-2)`, output `+4`, work debit 148. The pure planner still leaves actual stocks unchanged. With the same inputs but Components stock 1,023/1,024, its single free tonne cannot fit a two-tonne product: zero batches and all materials/work are retained. At 1,022/1,024 exactly one batch fits. Consumers must display these pauses rather than discard partial products.
 
-The focused fixture covers these examples, depleted finite reserve, separate heat/power shortages, aggregate saturation, maximum batch bounds, invalid/ambiguous stock and malformed/overflowing definitions. Feature mutation/save/network integration remains with Plans 6/11/17 and Schema Foundation; declaring a saved choice here does not implement its serialization.
+The focused fixture covers these examples, depleted finite reserve, separate heat/power shortages, aggregate saturation, maximum batch bounds, invalid/ambiguous stock and malformed/overflowing definitions. Feature mutation/save/network integration remains with Plans 6/11/18 and Schema Foundation; declaring a saved choice here does not implement its serialization.
 
 ## Group 9 - manufacturing choices and first robot inputs
 

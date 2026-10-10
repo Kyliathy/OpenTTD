@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file command_type.h Types related to commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
+/** @file command_type.h Types related to commands. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B */
 
 #ifndef COMMAND_TYPE_H
 #define COMMAND_TYPE_H
@@ -395,12 +395,12 @@ enum class Commands : uint8_t {
 	SelectLayerIndustryRecipe, ///< choose one content-owned native material recipe; append preserves existing command identities
 
 	BuildGeothermalCollector, ///< fund actual native collector from a retained cold claim; append preserves existing command identities
-	BuildGeothermalUtilityLink, ///< install one paid Deep utility cell through the shared link issuer; see r2mlvs17 Group3B
+	BuildGeothermalUtilityLink, ///< install one paid Deep utility cell through the shared link issuer; see r2mlvs18 Group3B
 	RemoveGeothermalUtilityLink, ///< remove an owned installed cell with labour cost and no capital/energy refund
 	ExtendTBMProject, ///< append reviewed excavation to an actual paused cutter; preserves prior command identities
 	ConfirmTBMCommission, ///< confirm an exact portal area quote without silently replacing a reused machine
 	SendTBMToHangar, ///< choose a real owned hangar through an ordinary native depot order
-	BuildGeothermalRiser, ///< fund original-portal-bound native electrical machinery; r2mlvs17 Group5B, append preserves command identities
+	BuildGeothermalRiser, ///< fund original-portal-bound native electrical machinery; r2mlvs18 Group5B, append preserves command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

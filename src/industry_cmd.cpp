@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
+/** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B */
 
 #include "stdafx.h"
 #include "misc/history_type.hpp"
@@ -361,8 +361,8 @@ static void DrawTile_Industry(TileInfo *ti)
 {
 	IndustryGfx gfx = GetIndustryGfx(ti->tile);
 	Industry *ind = Industry::GetByTile(ti->tile);
-	if (const auto native_back = GetMultiLayerReceiverSprite(ti->tile, false, TimerGameTick::counter)) {
-		// Selected native receivers use their exact funded world cells and aligned
+	if (const auto native_back = GetMultiLayerIndustrySprite(ti->tile, false, TimerGameTick::counter)) {
+		// Selected native receivers/collectors use their exact funded world cells and aligned
 		// back/fronts. Existing foreign/climate industries retain their own resolver.
 		if (ti->tileh != SLOPE_FLAT) DrawFoundation(ti, Foundation::Leveled);
 		DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
@@ -371,7 +371,7 @@ static void DrawTile_Industry(TileInfo *ti)
 			const bool transparent = IsTransparencySet(TransparencyOption::Industries);
 			if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
 			DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
-			const SpriteID front = *GetMultiLayerReceiverSprite(ti->tile, true, TimerGameTick::counter);
+			const SpriteID front = *GetMultiLayerIndustrySprite(ti->tile, true, TimerGameTick::counter);
 			AddSortableSpriteToDraw(front, PAL_NONE, *ti, SpriteBounds{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}}, transparent);
 		}
 		return;

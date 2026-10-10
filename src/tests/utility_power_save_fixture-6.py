@@ -2,7 +2,7 @@
 
 @file utility_power_save_fixture-6.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 9
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md older-save policy
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md older-save policy
 """
 
 import hashlib
@@ -68,7 +68,7 @@ def main():
         original_effect_log = (ROOT / "src/tests/fixtures/utility/provenance/town-baseline-v384.log").read_text(encoding="utf-8", errors="replace")
         baseline = re.search(r"UTILITY_TOWN_BASELINE rate=(\d+)", original_effect_log)
         assert baseline is not None, "actual original town baseline is required"
-        startup.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md15B retained384 native effects.\nutility_effect_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md15B retained384 native effects.\nutility_effect_check\n", encoding="utf-8")
         environment = dict(os.environ, OTTD_UTILITY_FILE_CASE="applied", OTTD_UTILITY_FILE_INPUT=str(effects),
                            OTTD_UTILITY_TOWN_BASELINE=baseline[1])
         log = CONTEXT.logs / "r2mlvs3mp-z-a-legacy384-effects.log"

@@ -2,7 +2,7 @@
 
 @file create_geothermal_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups54C/55/56.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 These labelled blue diagrams are authoring references, never native game artwork.
 """

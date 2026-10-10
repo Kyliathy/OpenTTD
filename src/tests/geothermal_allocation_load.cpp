@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_allocation_load.cpp Actual393 connected shared grants/use/expiry and independent copied-file preview from a retained paid392 world.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3-4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3-4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; operating generator output retains10.6
  */
 

@@ -1,5 +1,5 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
-# Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+# Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -303,18 +303,18 @@ add_files(
     tbm_engine.cpp
     underground_vehicle.h
     underground_vehicle.cpp
-    # Native tube capability producer: docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md
+    # Native tube capability producer: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
     transport_tube.h
     transport_tube.cpp
     transport_tube_engine.cpp
-    # Physical capsule source contract: r2mlvs16-underground-transport-tubes.md Group10B.
+    # Physical capsule source contract: r2mlvs17-underground-transport-tubes.md Group10B.
     transport_tube_model.h
     transport_tube_construction.cpp
     transport_tube_power.cpp
     transport_tube_runtime.cpp
     transport_tube_topology.cpp
     transport_tube_readiness.cpp
-    # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
+    # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
     geothermal.h
     geothermal_type.h
     geothermal_site.cpp
@@ -336,7 +336,7 @@ add_files(
     utility_power_lineage.h
     utility_power_transfer.h
     utility_power_lineage.cpp
-    # Actual commissioned-riser admission: r2mlvs17-geothermal-energy-and-industry.md Group5B.
+    # Actual commissioned-riser admission: r2mlvs18-geothermal-energy-and-industry.md Group5B.
     geothermal_riser.h
     geothermal_riser.cpp
     geothermal_riser_construction.cpp

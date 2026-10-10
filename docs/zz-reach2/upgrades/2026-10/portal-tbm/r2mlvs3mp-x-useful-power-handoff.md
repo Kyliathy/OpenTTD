@@ -8,7 +8,7 @@ The native utility producer is implemented in [utility_power.h](../../../../../s
 
 ## Current paid-path extension
 
-The403 extension belongs to [Plan12 Group8C](../r2mlvs12-solar-farms-mirrors-and-eti.md#group-8c---preserve-original-electrical-lineage-across-paid-relay-paths). [Current native evidence and continuation](../r2mlvs12-c-paid-path-native-notes.md) distinguish its complete shared producer from Plan17's subsequent feature export and master10.6 operating generators/transported bootstrap. Earlier electrical385 evidence below describes its delivered prefix; it does not replace this current contract.
+The403 extension belongs to [Plan12 Group8C](../r2mlvs12-solar-farms-mirrors-and-eti.md#group-8c---preserve-original-electrical-lineage-across-paid-relay-paths). [Current native evidence and continuation](../r2mlvs12-c-paid-path-native-notes.md) distinguish its complete shared producer from Plan18's subsequent feature export and master10.6 operating generators/transported bootstrap. Earlier electrical385 evidence below describes its delivered prefix; it does not replace this current contract.
 
 Paid `UtilityLinkKind::ElectricalRiser` operations use [utility_power_transfer.h](../../../../../src/utility_power_transfer.h). The older `PrepareUtilityMutation(TransferLayer)` accepts genuine fixed-joule `ElectricalPortal` roles only. It refuses a paid watt-rate edge before numerical residual subtraction, including after that edge has already carried flow. Native risers retain actual complete machinery, original commissioned housings/incarnation, company/calendar and installed local cable; neither registration nor a numerical grant builds physical infrastructure.
 
@@ -35,7 +35,7 @@ Native403 `UtilityShareLineage` saves UPLH revision10/112bytes,29-field/115-byte
 
 ## Directed flow and effects
 
-`RegisterUtilityPowerLink` requires actual owned, date-valid Connected portal endpoints and their commissioning revision. Transfer debits only original local slices, credits an already requested destination within route capacity, and retains the original generator. Imports cannot be exported again in that interval. Physical sealing/demolition retires the route and expires only unused imports; settled use survives and the donor receives no refund. A rebuilt route gets a new ID. Physical riser construction, cost and supplies remain Plan 17.
+`RegisterUtilityPowerLink` requires actual owned, date-valid Connected portal endpoints and their commissioning revision. Transfer debits only original local slices, credits an already requested destination within route capacity, and retains the original generator. Imports cannot be exported again in that interval. Physical sealing/demolition retires the route and expires only unused imports; settled use survives and the donor receives no refund. A rebuilt route gets a new ID. Physical riser construction, cost and supplies remain Plan 18.
 
 | Consumer | Frozen demand | Accepted observable response |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ Native403 `UtilityShareLineage` saves UPLH revision10/112bytes,29-field/115-byte
 
 Save version **385**, `UtilityCompanyLifecycle`, transports `UPLH` revision5 (96 bytes) and `UPLD` (25 fields,104-byte rows). The existing active scalar now explicitly persists consumer retirement; genuine381..384 consumers migrate as active. Original meters/carry, reservations, settlement/lifetime totals, directed links/imports, operation sequence and actual town association/posted/suspended effect remain authoritative. Utility feature bit1024 and the field-wise UtilityRoot digest include consumer liveness. Full loading validates after physical company/profile/map/portal/town reconstruction; independent preview refuses malformed authority without changing the live ledger. Explicit readers preserve actual retained381..384 files, with no invented effect or renewed retired grant.
 
-Actual company takeover/removal calls `ChangeUtilityPowerCompanyOwnership` before tile/pool identity changes. Current live account/source lineage transfers on takeover; physical routes retire and unused imports expire without a refund. Deletion retains inactive IDs and exact settlement, clears town eligibility and expires unused original slices. A reused company ID cannot access an old consumer/source, and its later takeover cannot rewrite the former incarnation's tombstones. [Current lifecycle/native/normal-game evidence](../r2mlvs14-savegame-determinism-and-lifecycle.md#group-15b---complete-delivered-electrical-company-ownership) closes this delivered row while capsule/thermal producers remain pending.
+Actual company takeover/removal calls `ChangeUtilityPowerCompanyOwnership` before tile/pool identity changes. Current live account/source lineage transfers on takeover; physical routes retire and unused imports expire without a refund. Deletion retains inactive IDs and exact settlement, clears town eligibility and expires unused original slices. A reused company ID cannot access an old consumer/source, and its later takeover cannot rewrite the former incarnation's tombstones. [Current lifecycle/native/normal-game evidence](../r2mlvs15-savegame-determinism-and-lifecycle.md#group-15b---complete-delivered-electrical-company-ownership) closes this delivered row while capsule/thermal producers remain pending.
 
 Focused verification:
 
@@ -65,4 +65,4 @@ Focused verification:
 
 The focused C++ command uses `[utility-power-effects],[utility-power-recipe],[utility-power-mutation],[utility-power-ledger],[utility-power-epoch],[utility-power-stage]`; `[utility-power-company]` selects actual company lifecycle separately. Native scripts are `utility_power_save_fixture.py` and its bounded `-1` through `-7` files; `-4 --retired` runs ordinary-game retirement loading. Every supplied paid-world input and historical utility fixture remains unchanged; build/test/application logs live in `logs/`.
 
-Plans 6/16/17 may now consume this tested producer. Solar/mirror runtime, geothermal heat and construction, paid external source procurement, full fleet/job integration and their final sprites retain their owning pending tasks. This handoff does not complete those features or the whole Plan 12.
+Plans 6/17/18 may now consume this tested producer. Solar/mirror runtime, geothermal heat and construction, paid external source procurement, full fleet/job integration and their final sprites retain their owning pending tasks. This handoff does not complete those features or the whole Plan 12.

@@ -5,7 +5,7 @@
  */
 
 /** @file transport_tube_recovery.cpp Actual electrical loss, topology and paid source recovery with native cargo/stop ownership.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group7
  */
 
 #include "../stdafx.h"

@@ -116,7 +116,7 @@ def create_capsule_guides():
             draw.text((left + 24, top + 455), "Fixed engine projection; keep selected model and upper-left image lighting.", fill="black")
         path = ROOT / "media/multilayer/guides/ground" / ("capsule-" + "-".join(d.lower() for d in directions) + "-v1.png")
         metadata = PngImagePlugin.PngInfo()
-        metadata.add_text("Owner", "Plan13 Groups49-53; Plan16 staged10B; geometry-only source guide")
+        metadata.add_text("Owner", "Plan13 Groups49-53; Plan17 staged10B; geometry-only source guide")
         stream = io.BytesIO()
         board.save(stream, format="PNG", pnginfo=metadata)
         encoded = stream.getvalue()

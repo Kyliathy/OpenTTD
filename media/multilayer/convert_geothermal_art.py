@@ -737,7 +737,7 @@ def collector_base(key, document=None, spec=None):
     family = spec
     # Artwork cannot reinterpret the actual nine-cell TIDS industry as one
     # tile, change its anchor or acquire another producer's native footprint.
-    if (source["asset_id"] != "facility.vent-collector" or family["consumer"] != 17
+    if (source["asset_id"] != "facility.vent-collector" or family["consumer"] != 18
             or family["footprint"] != [3, 3] or family["tile_variants"] != 9
             or family["native_size"] != [64, 64] or family["anchor"] != [-31, -33]
             or family["geometry"] != "per_tile"):

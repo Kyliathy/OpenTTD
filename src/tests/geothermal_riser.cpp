@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser.cpp Real-map two-endpoint riser admission; fixture-open floors do not prove paid construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #include "../stdafx.h"

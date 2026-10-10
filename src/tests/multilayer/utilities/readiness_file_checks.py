@@ -2,7 +2,7 @@
 
 @file readiness_file_checks.py
 @see r2mlvs3mp-master-plan.md checkpoint10.2
-@see r2mlvs16-underground-transport-tubes.md Group8
+@see r2mlvs17-underground-transport-tubes.md Group8
 """
 
 import hashlib
@@ -44,7 +44,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md8 pure accepted-world readiness.\ntube_power_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md8 pure accepted-world readiness.\ntube_power_check\n", encoding="utf-8")
         # Each input keeps its actual energy/invoice/binding owner, with a
         # separate output prefix rather than overwriting either prior evidence.
         for source, bindings, prefix in inputs:

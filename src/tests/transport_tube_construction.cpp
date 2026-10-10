@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_construction.cpp Actual tube floor/depot/conversion/purchase/coupling command refusals.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.1
  */
 

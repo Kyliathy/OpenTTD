@@ -1,4 +1,4 @@
-# Metadata/geology/job transport: docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md and r2mlvs2-geology-and-excavation.md.
+# Metadata/geology/job transport: docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md and r2mlvs2-geology-and-excavation.md.
 # Native electrical transport: docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B.
 add_subdirectory(compat)
 
@@ -25,14 +25,14 @@ add_files(
     layer_processor_sl.cpp
     tbm_exchange_sl.cpp
     utility_power_sl.cpp
-    # Physical paid tube invoices: r2mlvs16-underground-transport-tubes.md Group5.
+    # Physical paid tube invoices: r2mlvs17-underground-transport-tubes.md Group5.
     transport_tube_power_sl.cpp
     transport_tube_vehicle_sl.cpp
-    # Cold planning transport: r2mlvs17-geothermal-energy-and-industry.md Group1.
+    # Cold planning transport: r2mlvs18-geothermal-energy-and-industry.md Group1.
     geothermal_site_sl.cpp
-    # Actual native construction transport: r2mlvs17-geothermal-energy-and-industry.md Group1B.
+    # Actual native construction transport: r2mlvs18-geothermal-energy-and-industry.md Group1B.
     geothermal_collector_sl.cpp
-    # Original paid portal-bound machinery: r2mlvs17-geothermal-energy-and-industry.md Group5B.
+    # Original paid portal-bound machinery: r2mlvs18-geothermal-energy-and-industry.md Group5B.
     geothermal_riser_sl.cpp
     geothermal_heat_route_sl.cpp
     gamelog_sl.cpp

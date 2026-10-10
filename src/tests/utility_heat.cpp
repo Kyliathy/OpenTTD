@@ -6,7 +6,7 @@
 
 /**
  * @file utility_heat.cpp Actual shared native identities/meters and typed thermal settlement boundaries; operating physical plants remain their geothermal owner.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group15
  */
 

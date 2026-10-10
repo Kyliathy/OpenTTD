@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_model.cpp Pure canonical geometry and actual prototype physical-part checks.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group10B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups50-53.
  */
 

@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser_lifecycle.cpp Actual native sealing, takeover, abandonment and original-housing demolition/rebuild boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 

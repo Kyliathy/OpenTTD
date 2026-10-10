@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md; r2mlvs12-solar-farms-mirrors-and-eti.md */
+/** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md; r2mlvs12-solar-farms-mirrors-and-eti.md */
 
 #include "stdafx.h"
 #include "multilayer_state.h"

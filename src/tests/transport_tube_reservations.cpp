@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_reservations.cpp Real capsule junction contention, layout recovery and physical turnaround.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups3/4/6 paid physical movement
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups3/4/6 paid physical movement
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.1
  */
 

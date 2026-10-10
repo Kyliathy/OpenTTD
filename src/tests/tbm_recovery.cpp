@@ -229,7 +229,7 @@ TEST_CASE("A deleted cutter frees its ID and its project still ends and retires"
 	CHECK(ValidateLayerPortalWorkRecords(CaptureLayerPortalWorkRecords(), GetCurrentMultiLayerProfileSelection(), GetGeologyWorldState()) == LayerPortalWorkError::None);
 }
 
-/** A cancelled project saved in the middle of its return reloads and ends the same way (Plan 14 13.2). */
+/** A cancelled project saved in the middle of its return reloads and ends the same way (Plan 15 13.2). */
 TEST_CASE("A cancelled project reloads mid-return and ends the same way", "[tbm-recovery]")
 {
 	TBMExchangeRig rig(2);

@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_site.cpp Pure whole-floor natural-source site admission before any collector/plant claim or delivered construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1
  */
 
 #include "stdafx.h"

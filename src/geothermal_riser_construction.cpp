@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser_construction.cpp Paid native riser machinery, delivered construction stock and synchronized labour.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 

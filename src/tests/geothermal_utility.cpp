@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_utility.cpp Actual command capital, shared identity, native coexistence and deterministic installed-path boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group3B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group3B
  */
 
 #include "../stdafx.h"

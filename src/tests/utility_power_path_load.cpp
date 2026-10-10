@@ -3,7 +3,7 @@
 /**
  * @file utility_power_path_load.cpp Actual paid multi-hop state on the retained Deep4 native world, with independent copied preview and full reload.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C.4
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5.4 feature export
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5.4 feature export
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md native artifact routing
  */
 

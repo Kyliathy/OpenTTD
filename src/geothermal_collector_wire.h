@@ -6,8 +6,8 @@
 
 /**
  * @file geothermal_collector_wire.h Independent construction and shared-meter reference transport; no private material or energy store.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 
 #ifndef GEOTHERMAL_COLLECTOR_WIRE_H

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file fios.h Declarations for savegames operations. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file fios.h Declarations for savegames operations. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #ifndef FIOS_H
 #define FIOS_H
@@ -105,7 +105,7 @@ struct LoadCheckData {
 	std::array<bool, 2> utility_path_present{}; ///< Independent403 shared lineage header/table presence, even for an empty segment family.
 	std::array<uint64_t, 3> utility_path_header{}; ///< Copied path revision, exact epoch and bounded reference count.
 	std::vector<UtilityPowerPathWire> utility_path_rows; ///< Unpublished ordered segment references; original quantities remain in utility_power_state.
-	std::array<bool, 2> tube_power_present{}; ///< Independent physical paid service header/table preview. See r2mlvs16-underground-transport-tubes.md Group5.
+	std::array<bool, 2> tube_power_present{}; ///< Independent physical paid service header/table preview. See r2mlvs17-underground-transport-tubes.md Group5.
 	std::array<uint32_t, 2> tube_power_expected{}; ///< Copied exact connection and path-cell counts.
 	std::vector<TubePowerConnection> tube_power_rows; ///< Unpublished preview invoices; no energy or movement authority.
 	std::array<bool, 2> tube_vehicle_present{}; ///< Independent387 capsule binding header/table preview.

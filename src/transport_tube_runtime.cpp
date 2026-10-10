@@ -6,9 +6,9 @@
 
 /**
  * @file transport_tube_runtime.cpp Common synchronized heat/electrical interval driver and one paid actual capsule front-tick participant.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups6-7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md canonical mandatory service units
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2 actual bounded collector offers
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2 actual bounded collector offers
  */
 
 #include "stdafx.h"

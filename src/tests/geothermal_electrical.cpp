@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_electrical.cpp Actual native relay geometry, paid cable coexistence and bounded pure electrical path opportunities.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  */
 
 #include "../stdafx.h"

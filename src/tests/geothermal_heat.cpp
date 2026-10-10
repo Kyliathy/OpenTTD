@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_heat.cpp Actual collector/shared-meter/clock boundaries; supplied floor and delivered materials remain explicit unit inputs.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; transported operating plant retains10.6
  */
 

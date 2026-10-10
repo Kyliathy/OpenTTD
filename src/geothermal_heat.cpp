@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_heat.cpp Pure typed generator/direct-processing admission; shared utility accounting retains every heat quantity.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups2-4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups2-4
  */
 
 #include "stdafx.h"

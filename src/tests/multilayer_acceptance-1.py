@@ -1,7 +1,7 @@
 """Bounded actual connected/feature-disabled native loading for ground acceptance readiness.
 
 @file multilayer_acceptance-1.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-integrated-acceptance-and-balance.md Group2
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs16-integrated-acceptance-and-balance.md Group2
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md genuine legacy ownership
 """
 
@@ -33,7 +33,7 @@ def main():
     existed = startup.exists()
     previous = startup.read_bytes() if existed else None
     try:
-        startup.write_text("# @see r2mlvs15-integrated-acceptance-and-balance.md Group2 actual accepted-world readiness.\nlogistics_probe\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs16-integrated-acceptance-and-balance.md Group2 actual accepted-world readiness.\nlogistics_probe\n", encoding="utf-8")
         # A genuine feature-disabled input and a clearly seeded native connected
         # fixture have different evidence meanings. Neither header injection nor
         # an expected state dictionary substitutes for their actual loaders.

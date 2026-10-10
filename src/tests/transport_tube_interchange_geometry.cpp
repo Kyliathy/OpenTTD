@@ -7,7 +7,7 @@
 /**
  * @file transport_tube_interchange_geometry.cpp Native joined facility cells before interchange source authoring.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48D.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group9.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
  * Geometry checks do not claim operating transfer, loading reservations or payment acceptance.
  */
 

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_rail.cpp Native rail routing and actual layout invalidation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7 electrical topology follows eligible physical changes; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/pathfinder/archi-pathfinder-rail.md */
+/** @file yapf_rail.cpp Native rail routing and actual layout invalidation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group7 electrical topology follows eligible physical changes; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; docs/zz-reach2/architecture/pathfinder/archi-pathfinder-rail.md */
 
 #include "../../stdafx.h"
 #include "../../transport_tube.h"

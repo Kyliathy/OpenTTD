@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_riser_save.cpp Exact staged construction ownership, malformed refusal and copied-coordinate boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #include "../stdafx.h"

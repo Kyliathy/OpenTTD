@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_topology.cpp Rebuildable owned guideway circuits, independent of grants, signals, cameras and routine accounting intervals.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47E physical end presentation
  */
 

@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_electrical_fixture.h Actual command-funded two-riser relay on explicitly supplied test floor/material inputs.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
  */
 
 #ifndef TESTS_GEOTHERMAL_ELECTRICAL_FIXTURE_H

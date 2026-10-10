@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_construction.cpp Pure tube floor, purchase and complete conversion admission.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md authoritative footprint owner
  */
 

@@ -2,7 +2,7 @@
 
 @file generator_source_checks.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md tasks55.1/55.2.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 These are source-conversion checks, not operating-generator or transported-bootstrap acceptance.
 """

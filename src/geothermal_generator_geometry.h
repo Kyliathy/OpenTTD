@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_generator_geometry.h Passive physical generator source geometry before operating native registration.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups55-56.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  */

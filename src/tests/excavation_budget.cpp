@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_budget.cpp Representative large-map sparse storage and bounded active-job work measurements. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 18; r2mlvs15-integrated-acceptance-and-balance.md */
+/** @file excavation_budget.cpp Representative large-map sparse storage and bounded active-job work measurements. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 18; r2mlvs16-integrated-acceptance-and-balance.md */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

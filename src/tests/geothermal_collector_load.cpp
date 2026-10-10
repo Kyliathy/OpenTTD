@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_collector_load.cpp Actual389 native construction files on explicitly supplied test floor/material deliveries; transported paid bootstrap remains master10.6.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints10.3/10.6
  */
 

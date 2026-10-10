@@ -1,10 +1,10 @@
 # Geothermal feature power export continuation
 
-Owner: [Plan17 Group5 tasks5.3-5.4](r2mlvs17-geothermal-energy-and-industry.md#group-5---export-metered-electricity-through-commissioned-portals), under [master10.3](r2mlvs3mp-master-plan.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Shared prerequisite: [verified403 paid-path producer](r2mlvs12-c-paid-path-native-notes.md), with [public contract](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md#current-paid-path-extension).
+Owner: [Plan18 Group5 tasks5.3-5.4](r2mlvs18-geothermal-energy-and-industry.md#group-5---export-metered-electricity-through-commissioned-portals), under [master10.3](r2mlvs3mp-master-plan.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Shared prerequisite: [verified403 paid-path producer](r2mlvs12-c-paid-path-native-notes.md), with [public contract](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md#current-paid-path-extension).
 
 ## Current scope
 
-Tasks5.3-5.4 areX; Groups5-7 and master10.3 are complete, with master10.4 selected ground asset integration next. Group5's final compaction count is2, separate from completed5B and Plan12/8C. For its completed feature scope read only the current public/physical/shared boundaries below. New execution follows master Global/current/Real tube-riser Area and Plan17 Global/nearest Local for the actual new group. Prior Plan12 native/build instructions are historical; its final producer is delivered.
+Tasks5.3-5.4 areX; Groups5-7 and master10.3 are complete, with master10.4 selected ground asset integration next. Group5's final compaction count is2, separate from completed5B and Plan12/8C. For its completed feature scope read only the current public/physical/shared boundaries below. New execution follows master Global/current/Real tube-riser Area and Plan18 Global/nearest Local for the actual new group. Prior Plan12 native/build instructions are historical; its final producer is delivered.
 
 `geothermal.h` declares `GeothermalPowerExportRequest`, `PrepareGeothermalPowerExport` and `ExportGeothermalPower`. Request contains only original grant/epoch, existing final destination, installed sending port, positive joule bound and optional unavailable physical references. The exact sealed proposal aliases the shared DTO; it adds no generation, carry, reservation, sequence or live resource owner.
 

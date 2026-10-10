@@ -6,7 +6,7 @@
 
 /**
  * @file utility_heat_load.cpp Real390 shared native heat/electric files and retained389 migration; declared accounting/expense participants do not prove an operating plant.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; actual transported generator remains10.6
  */
 

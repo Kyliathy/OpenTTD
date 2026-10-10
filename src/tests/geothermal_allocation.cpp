@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_allocation.cpp Actual paid collector/path/shared reservation and whole-expense allocation boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group3
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; actual operating plants retain10.6
  */
 

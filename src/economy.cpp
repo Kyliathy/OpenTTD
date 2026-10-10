@@ -9,7 +9,7 @@
 
 /**
  * @file economy.cpp Native company/economy lifecycle and ownership transfer.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md Group15B utility ownership
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md Group15B utility ownership
  */
 
 #include "stdafx.h"

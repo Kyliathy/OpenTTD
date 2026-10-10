@@ -5,8 +5,8 @@
  */
 
 /** @file geothermal_site_wire.h Copied cold planning coordinates for independent file preview, with no live map or energy authority.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 
 #ifndef GEOTHERMAL_SITE_WIRE_H

@@ -6,8 +6,8 @@
 
 /**
  * @file geothermal_collector_sl.cpp Independent389 construction and391 shared thermal source references; native stock, geology and the common energy ledger retain their quantities.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  */
 
 #include "../stdafx.h"

@@ -64,7 +64,7 @@ def family_spec(document, asset_id="vehicle.model-09"):
     # Only actual public tube designs may use this native state assembler.
     # A copied canvas or plausible display name cannot turn ordinary rolling
     # stock into a capsule or bind another model's purchase presentation.
-    if (family["consumer"] != 16 or family["kind"] != "vehicle"
+    if (family["consumer"] != 17 or family["kind"] != "vehicle"
             or asset_id != f"vehicle.model-{spec['model_id']:02}"):
         raise ValueError("foreign native capsule source family")
     state_map = {state: {"load": ["empty", "partial", "full"][index % 3],

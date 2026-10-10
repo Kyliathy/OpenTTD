@@ -5,7 +5,7 @@
  */
 
 /** @file geothermal_site.cpp Actual natural-source/profile-backed cold site quotes, with no heat/power or finished construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1
  */
 
 #include "../stdafx.h"

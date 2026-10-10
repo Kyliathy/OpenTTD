@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md (native crash cleanup), docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md (capsule movement and recovery) */
+/** @file train_cmd.cpp Handling of trains. @see docs/zz-reach2/architecture/vehicles/trains.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md (native crash cleanup), docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md (capsule movement and recovery) */
 
 #include "stdafx.h"
 #include "error.h"

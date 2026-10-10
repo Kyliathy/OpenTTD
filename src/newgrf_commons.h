@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file newgrf_commons.h This file simplifies and embeds a common mechanism of loading/saving and mapping of grf entities.  @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
+/** @file newgrf_commons.h This file simplifies and embeds a common mechanism of loading/saving and mapping of grf entities.  @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B */
 
 #ifndef NEWGRF_COMMONS_H
 #define NEWGRF_COMMONS_H

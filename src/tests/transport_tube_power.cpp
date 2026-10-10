@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_power.cpp Bounded1970 source/connection/tariff and saved-owner refusal cases. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group5 */
+/** @file transport_tube_power.cpp Bounded1970 source/connection/tariff and saved-owner refusal cases. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group5 */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

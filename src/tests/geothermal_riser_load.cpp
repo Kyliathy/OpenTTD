@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_riser_load.cpp Real native construction files, independent copied preview and ordinary accepted-world continuations.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3
  */
 

@@ -1,8 +1,8 @@
 """Pack the selected M1 source set into independent native Action 5 segments.
 
 @file pack_m1_art.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 79B/80B
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint 8.6
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 79B/80B/79C
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints 8.6/10.4B
 Existing M0 PNG/NFO and MLVI definition bytes are never rewritten. Source
 coverage must be verified before publication; --describe is layout preparation.
 """
@@ -62,10 +62,10 @@ def validate_family(family):
 
 
 def selected_ranges(public, scope):
-    """Preserve planned core IDs and append selected content art deterministically.
+    """Preserve published native IDs/enum order and append new source families.
 
     @param public Current public sprite contract; source and packed fields persist.
-    @param scope Exact selected family IDs, preserved ranges and native art route.
+    @param scope Selected IDs, frozen published range order and native art route.
     @return Ordered native family/range rows and the exclusive sprite bound.
     @throws ValueError If IDs duplicate, overlap or enter protected/unactivated slots.
     """
@@ -77,34 +77,79 @@ def selected_ranges(public, scope):
         # Later art starts after all published core slots, including unselected
         # future families. Selection cannot reclaim those existing public offsets.
         raise ValueError("M1 append start disagrees with published core range")
-    result, occupied = [], set()
-    cursor = scope["appended_start"]
-    # Stable public family order determines new native references. Source-atlas
-    # order and filesystem enumeration cannot change save-independent art IDs.
+    families = {}
+    # A public duplicate must not silently replace the geometry used by an old
+    # native range or allow two source owners to claim the same selected name.
     for family in public["assets"]:
         if family["asset_id"] not in selected:
             continue
+        if family["asset_id"] in families:
+            raise ValueError("duplicate public M1 family: " + family["asset_id"])
         validate_family(family)
+        families[family["asset_id"]] = family
+    if set(families) != selected:
+        raise ValueError("selected M1 family is absent from public contract")
+
+    preserved = scope["preserved_ranges"]
+    preserved_ids = [row["asset_id"] for row in preserved]
+    if len(preserved_ids) != len(set(preserved_ids)) or not set(preserved_ids).issubset(selected):
+        # A selection cannot drop/redeclare a previously shipped family and
+        # reclaim its native slots or shift its generated enum identity.
+        raise ValueError("missing/duplicate preserved M1 family")
+    frozen = {row["asset_id"]: row for row in preserved}
+    result, occupied = [], set()
+    cursor = max([scope["appended_start"]] + [row["native_offset"] + row["sprite_count"] for row in preserved])
+    order = preserved_ids + [asset_id for asset_id in scope["asset_ids"] if asset_id not in frozen]
+    # Shipped declaration order is part of the native selector contract. New
+    # families follow the explicit selection order, even when their public
+    # manifest rows occur before an existing appended family.
+    for asset_id in order:
+        family = families[asset_id]
+        packed = family["packed"]
         count = len(required_keys(family))
-        if family["packed"]["namespace"] == "native_map_layer_extension":
-            offset = family["packed"]["offset"]
-            if offset is None or offset < start or offset + count > core_end:
-                # Published core ranges remain exact even when only some
-                # families are delivered; no art can spill into later slots.
-                raise ValueError("invalid selected core range: " + family["asset_id"])
+        if asset_id in frozen:
+            old = frozen[asset_id]
+            offset = old["native_offset"]
+            if count != old["sprite_count"] or packed.get("native_offset") != offset or packed.get("sprite_count") != count:
+                # Existing world/UI sprite IDs retain both their extent and
+                # public binding; a changed source matrix needs a new family.
+                raise ValueError("published native range changed: " + asset_id)
+        elif packed["namespace"] == "native_map_layer_extension":
+            offset = packed["offset"]
         else:
             offset = cursor
             cursor += count
+        if packed["namespace"] == "native_map_layer_extension":
+            if offset is None or offset < start or offset + count > core_end:
+                # Published core ranges remain exact even when only some
+                # families are delivered; no art can spill into later slots.
+                raise ValueError("invalid selected core range: " + asset_id)
+            if packed["offset"] != offset:
+                raise ValueError("published core offset changed: " + asset_id)
+        else:
+            if offset < scope["appended_start"]:
+                raise ValueError("appended family enters protected/core slots: " + asset_id)
+        if packed.get("native_offset", offset) != offset or packed.get("sprite_count", count) != count:
+            # A repeated conversion must reproduce already published new
+            # ranges too; inserting another selection cannot relocate them.
+            raise ValueError("selected native binding changed: " + asset_id)
+        if "route" in packed and packed["route"] != scope["native_route"]:
+            # A definition-local ID cannot be treated as an existing native
+            # artwork binding belonging to a different payload route.
+            raise ValueError("selected native route changed: " + asset_id)
         numbers = set(range(offset, offset + count))
         if occupied & numbers:
-            raise ValueError("overlapping selected native range: " + family["asset_id"])
+            raise ValueError("overlapping selected native range: " + asset_id)
         occupied.update(numbers)
-        result.append({"asset_id": family["asset_id"], "native_offset": offset, "sprite_count": count,
+        result.append({"asset_id": asset_id, "native_offset": offset, "sprite_count": count,
                        "states": family["states"], "frames": family["frames"], "directions": family["directions"],
                        "tile_variants": family["tile_variants"], "parts": family["parts"],
                        "native_size": family["native_size"], "anchor": family["anchor"]})
-    if {row["asset_id"] for row in result} != selected:
-        raise ValueError("selected M1 family is absent from public contract")
+    # Published native families outside the selection still own their slots.
+    # Refuse silently dropping them instead of recycling their old numbers.
+    for family in public["assets"]:
+        if family["asset_id"] not in selected and family["packed"].get("route") == scope["native_route"]:
+            raise ValueError("published native family omitted: " + family["asset_id"])
     if cursor > 65535:
         raise ValueError("M1 native block exceeds Action 5 count range")
     return result, cursor
@@ -141,7 +186,17 @@ def source_poses(family, documents, images):
     report_path = authoring["atlas_manifest"]
     if report_path not in documents:
         documents[report_path] = json.loads(base.repository_path(report_path).read_text(encoding="utf-8"))
-    candidates = [row for row in documents[report_path]["atlases"] if row["path"] == authoring["native_atlas"]]
+    document = documents[report_path]
+    if "atlases" in document:
+        candidates = [row for row in document["atlases"] if row["path"] == authoring["native_atlas"]]
+    else:
+        if (document.get("schema_version") != 1 or document.get("asset_id") != asset_id
+                or document.get("path") != authoring["native_atlas"] or document.get("source_coverage_complete") is not True):
+            # Ground producers publish a single verified atlas directly. Only
+            # that explicit schema/identity/completion contract is accepted;
+            # an arbitrary report without an atlas list is not a fallback.
+            raise ValueError(asset_id + ": invalid verified single-atlas report " + report_path)
+        candidates = [document]
     if len(candidates) != 1:
         raise ValueError(asset_id + ": missing/ambiguous authoritative atlas " + report_path)
     atlas = candidates[0]
@@ -155,6 +210,8 @@ def source_poses(family, documents, images):
         validate_source_image(image, asset_id)
         images[atlas["path"]] = image
     image = images[atlas["path"]]
+    if list(image.size) != atlas["size"]:
+        raise ValueError(asset_id + ": source atlas dimensions changed")
     poses = {}
     # Supplemental survey sheets contain several independent public families.
     # Filter by explicit per-pose identity; an atlas neighbour is not coverage.
@@ -250,7 +307,7 @@ def format_nfo(entries, sprites, positions):
     @return UTF-8 NFO bytes including each true Action 5 type 1C offset block.
     """
     lines = ["// @file map_layers_m1.nfo Generated selected M1 source sprites.",
-             "// @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B",
+             "// @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C",
              "// @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md", ""]
     index = 0
     # Separate blocks skip both reserved 66..73 and undelivered future core
@@ -290,7 +347,7 @@ def format_header(ranges, bound):
     @return UTF-8 C++ declarations with plan, type and field documentation.
     """
     lines = ["/**", " * @file multilayer_sprite_assets.h Generated M1 native graphics ranges; do not edit.",
-             " * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/81B",
+             " * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/81B/79C",
              " * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md", " */",
              "#ifndef MULTILAYER_SPRITE_ASSETS_H", "#define MULTILAYER_SPRITE_ASSETS_H", "", "#include <array>", "#include <cstdint>", "",
              "/** Selected M1 graphics identities; saved engine/cargo/industry IDs stay with their existing owners. */",
@@ -349,7 +406,7 @@ def derive():
     for entry, sprite, origin in zip(entries, sprites, positions):
         _indices, width, height, rx, ry = sprite
         entry.update(box=[*origin, width, height], anchor=[rx, ry])
-    report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B; selected native base-set art, runtime pending",
+    report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C; selected native base-set art, runtime pending",
               "schema_version": 1, "route": scope["native_route"], "scope": scope["asset_ids"], "toolchain": scope["toolchain"],
               "legacy": legacy, "native_sprite_bound": bound, "pose_count": len(entries), "families": ranges, "sprites": entries,
               "png": {"path": scope["png"], "sha256": hashlib.sha256(png).hexdigest(), "size": list(sheet.size)},
@@ -473,7 +530,7 @@ def bind_packed_payload(publish_source=True):
                                 source_payload=scope["report"], payload="media/baseset/openttd.grf", sha256=sha)
     if publish_source:
         PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
-    print("Selected M1 packed handoff: 42 families / 2343 actual sprites, source-exact cached loading and immutable M0 verified; runtime consumers pending")
+    print(f"Selected M1 packed handoff: {len(report['families'])} families / {report['pose_count']} actual sprites, source-exact cached loading and immutable M0 verified; runtime consumers pending")
 
 
 def main():

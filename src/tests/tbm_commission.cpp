@@ -367,7 +367,7 @@ static TBMCutMeasure MeasureFirstCut(const TBMWorkRig &rig, TBMProjectID id)
 	return measure;
 }
 
-/** Time and full cost of the first cut of a standard and a Deep corridor, for r2mlvs15 (Plan 4 Group 20.1). */
+/** Time and full cost of the first cut of a standard and a Deep corridor, for r2mlvs16 (Plan 4 Group 20.1). */
 TEST_CASE("The first cut of a standard and a Deep corridor is measured", "[tbm-measure]")
 {
 	TBMDeepCommissionRig c;

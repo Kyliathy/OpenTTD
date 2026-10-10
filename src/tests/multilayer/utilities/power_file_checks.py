@@ -2,7 +2,7 @@
 
 @file power_file_checks.py
 @see r2mlvs3mp-master-plan.md checkpoint10.2
-@see r2mlvs16-underground-transport-tubes.md Group5
+@see r2mlvs17-underground-transport-tubes.md Group5
 """
 
 import hashlib
@@ -113,13 +113,13 @@ def main():
     hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     executable = str(ROOT / "build/Debug/openttd_test.exe")
     try:
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md5 prerequisites.\nutility_file_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md5 prerequisites.\nutility_file_check\n", encoding="utf-8")
         environment = dict(os.environ, OTTD_UTILITY_FILE_CASE="granted", OTTD_UTILITY_FILE_INPUT=str(inputs[1]))
         run_case("utility-retained-grant", [executable, "[.utility-power-file]"], environment)
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md5 prerequisites.\nutility_effect_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md5 prerequisites.\nutility_effect_check\n", encoding="utf-8")
         environment.update(OTTD_UTILITY_FILE_CASE="applied", OTTD_UTILITY_FILE_INPUT=str(inputs[2]), OTTD_UTILITY_TOWN_BASELINE="11269")
         run_case("utility-retained-effect", [executable, "[.utility-power-effect-file]"], environment)
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md5 paid native service.\ntube_power_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md5 paid native service.\ntube_power_check\n", encoding="utf-8")
         environment = dict(os.environ, OTTD_TUBE_POWER_CASE="create", OTTD_TUBE_POWER_INPUT=str(source))
         run_case("tube-power-file-create", [executable, "[.transport-tube-power-file]"], environment)
         # Reload each genuine phase independently. Exact physical invoice and
@@ -131,7 +131,7 @@ def main():
             run_case(f"tube-power-file-{phase}", [executable, "[.transport-tube-power-file]"], environment)
             assert service_chunks(DIRECTORY / f"tube-power-{phase}-reloaded.sav") == expected
         consumed = DIRECTORY / "tube-power-consumed.sav"
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md5 normal loaded invoice.\n"
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md5 normal loaded invoice.\n"
                            "set savegame_format lzma\n"
                            f'save "{(DIRECTORY / "tube-power-normal-resaved").as_posix()}"\nquit\n', encoding="utf-8")
         log = CONTEXT.logs / f"{PREFIX}-tube-power-normal-loader.log"
@@ -143,7 +143,7 @@ def main():
                        creationflags=subprocess.CREATE_NO_WINDOW, timeout=110, check=True)
         assert service_chunks(DIRECTORY / "tube-power-normal-resaved.sav") == service_chunks(consumed)
         print("tube-power-normal: ordinary game loader/writer preserves exact connection/invoice/ledger", flush=True)
-        startup.write_text("# @see r2mlvs16-underground-transport-tubes.md5 paid native service.\ntube_power_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs17-underground-transport-tubes.md5 paid native service.\ntube_power_check\n", encoding="utf-8")
         # Independent failed previews cannot pollute live physical/electrical
         # authority, and a valid retry must accept the original current file.
         for corrupt in corrupt_services(consumed):

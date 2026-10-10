@@ -489,7 +489,7 @@ LayerRecipeBatchReceipt CommitLayerRecipeBatch(const MultiLayerRecipe &recipe,
 | `participant.Inventory/Validate/Commit` | Same actual view, pure complete revalidation and one non-allocating/non-failing commit; refusal preserves all quantities, success advances saved revision. |
 | `receipt.error/batches` | Exact complete result; stale, foreign, modified or refused proposals grant no physical mutation. |
 
-r2mlvs11's SpaceStructure and r2mlvs17's geothermal facility can implement the
+r2mlvs11's SpaceStructure and r2mlvs18's geothermal facility can implement the
 same material view/participant rather than requiring an Industry pointer. Actual
 utility-token integration must wait for r2mlvs12's tested `UtilityGrantID`, epoch
 and Consume/ReleaseUnused/TransferLayer mutation handoff. Its plan explicitly

@@ -6,8 +6,8 @@
 
 /**
  * @file transport_tube_power_sl.cpp Bounded explicit physical inlet/path and fractional invoice transport; electrical accounts stay in UPLH/UPLD.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group5
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md schema ownership
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md schema ownership
  */
 
 #include "../stdafx.h"

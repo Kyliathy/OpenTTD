@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser_fixture.h Actual native funding and construction fixture with explicitly supplied excavated floor and Connected portal input.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #ifndef TESTS_GEOTHERMAL_RISER_FIXTURE_H

@@ -1,6 +1,6 @@
 # Public geothermal producer handoff
 
-Owner: [Plan17 Group7](r2mlvs17-geothermal-energy-and-industry.md#group-7---publish-heat-allocation-and-electrical-export-apis), under [master10.3](r2mlvs3mp-master-plan.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Delivered feature evidence: [electrical export](r2mlvs17-d-power-export-notes.md), [shared403 power contract](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md#current-paid-path-extension). Later operating acceptance: [first-plant specification](r2mlvs17-e-first-plant-bootstrap.md).
+Owner: [Plan18 Group7](r2mlvs18-geothermal-energy-and-industry.md#group-7---publish-heat-allocation-and-electrical-export-apis), under [master10.3](r2mlvs3mp-master-plan.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Delivered feature evidence: [electrical export](r2mlvs18-d-power-export-notes.md), [shared403 power contract](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md#current-paid-path-extension). Later operating acceptance: [first-plant specification](r2mlvs18-e-first-plant-bootstrap.md).
 
 ## Current execution
 
@@ -17,7 +17,7 @@ Callers include [geothermal.h](../../../../src/geothermal.h). It supplies the co
 | Public quantity/reference | Owner and meaning |
 | --- | --- |
 | Natural `GeothermalVentField.id` | Geology2 retains the original renewable rate-limited source; claims/collectors do not clone it. |
-| `GeothermalSiteID` / `GeothermalSiteClaim` | Plan17 cold-site owner retains original natural source, company and explicit excavated geometry. A claim is no paid building or energy offer. |
+| `GeothermalSiteID` / `GeothermalSiteClaim` | Plan18 cold-site owner retains original natural source, company and explicit excavated geometry. A claim is no paid building or energy offer. |
 | Collector/riser `IndustryID` | Native Industry owns machinery and actual accepted stock/history; feature records hold construction receipts/physical references. |
 | `UtilityProducerID`, `UtilityConsumerID`, `UtilityLinkID` | Common native utility owner issues identities. Source/consumer domain, role and explicit layer remain immutable. Installed link views create no private counters/capacity. |
 | `UtilityGrantID` | Exact current shared consumer/epoch. Domain comes from the actual native participant; a Heat action cannot spend electricity with a matching numeric ID. |
@@ -25,7 +25,7 @@ Callers include [geothermal.h](../../../../src/geothermal.h). It supplies the co
 | `GeothermalHeatAllocation` | Transient complete feasible demand/path/source proposal with exact epoch, ledger sequence and topology revision. Its shares are proposals; only the common owner publishes reservations. |
 | `GeothermalPowerExportRequest` / proposal | Original grant, explicit installed input, final requested consumer, joule bound and selected complete physical references. The proposal aliases the shared sealed DTO and creates no second live balance. |
 
-Profile1 owns immutable definitions/material/rate terms; geology2 owns natural fields; Plan17 owns actual physical sources/sites/construction/path eligibility and consumer integration. Plan12's shared native owner retains both domains' generation, allocations, consumed/released history, interval/carry, original parent slices and operation sequence. Allocation never uses selected viewport, catchment or coincident coordinates as a connection.
+Profile1 owns immutable definitions/material/rate terms; geology2 owns natural fields; Plan18 owns actual physical sources/sites/construction/path eligibility and consumer integration. Plan12's shared native owner retains both domains' generation, allocations, consumed/released history, interval/carry, original parent slices and operation sequence. Allocation never uses selected viewport, catchment or coincident coordinates as a connection.
 
 Generation integrates actual watts over synchronized27-ms ticks with saved0..999 millijoule carry. Demand/grant/use/release/export are whole joules in the exact saved epoch; technology unlocks use the calendar date. Physical path quotes cannot substitute a caller duration for an original source publication. Heat-to-electric conversion and its carry will belong to the actual operating generator transaction; this handoff does not implement it.
 

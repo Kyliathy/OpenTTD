@@ -137,8 +137,8 @@ Audit **all 17 numbered R2MLVS children**, linked execution/companion records, T
 
 - Parent placement; master's assisting-file/log rules, execution queue and separate post-demo fixture-pruning gate.
 - Plan 13's execution protocol, `Public Handoff Contract`, source/packing/capture/review tasks and sprite-contract companion. Repoint asset/tool ownership without changing schema authority.
-- Plan 15's `Public Handoff Contract`, `run_scenario`/`validate_art_manifest` links and verification tasks. Repoint the acceptance runner and its tests together.
-- Plans 1-7, 14, 16 and 17 wherever config, fixtures, outputs, captures or commands are consumed; audit Plans 8-12 too rather than assuming future work has no inherited placement rules.
+- Plan 16's `Public Handoff Contract`, `run_scenario`/`validate_art_manifest` links and verification tasks. Repoint the acceptance runner and its tests together.
+- Plans 1-7, 15, 17 and 17 wherever config, fixtures, outputs, captures or commands are consumed; audit Plans 8-12 too rather than assuming future work has no inherited placement rules.
 - Player/demo guides and capture/checkpoint records, including the native art and industry startup corrections. Preserve historical outcomes/provenance; label superseded commands and provide current equivalents without inventing new passes.
 
 Update policy text, public handoffs, reading tables, runnable examples, test/launcher assumptions, links and completion checks. Link repair alone does not complete reconciliation. Record which parent decision each changed producer consumes so later work cannot reintroduce a docs data home.
@@ -287,7 +287,7 @@ _Applies to Groups 1-2._
 | [convert_m1_art.py](../../../../media/multilayer/convert_m1_art.py) | 18-28; 36-41 | `ASSETS`, `OUTPUT`, palette import and `repository_path` distinguish original media, converted output and containment. Classify artifacts by role rather than extension. |
 | [Industry lifecycle notes](r2mlvs6-a-industry-lifecycle.md) | 666-675 | The startup diagnostic correction records docs config placement as an error, its content/language consequences and the move back to build-local startup. Use this evidence when documenting why the old layout arose; it does not prove which invocation created each empty directory. |
 | [Native art notes](portal-tbm/r2mlvs3mp-r-runtime-art-notes.md) | 15-15 | The Windows capture paragraph explains the `build/native-art.cfg` workaround and baseset discovery requirement. The replacement runtime contract must preserve that behavior while superseding the fixed build path. |
-| [Plan 15](r2mlvs15-integrated-acceptance-and-balance.md#public-handoff-contract) | 68-70 | `Public Handoff Contract` names the docs acceptance runner and its exported validation functions. Include this handoff and consuming tests in the plan-impact map; a script move alone leaves a stale public contract. |
+| [Plan 16](r2mlvs16-integrated-acceptance-and-balance.md#public-handoff-contract) | 68-70 | `Public Handoff Contract` names the docs acceptance runner and its exported validation functions. Include this handoff and consuming tests in the plan-impact map; a script move alone leaves a stale public contract. |
 
 ### Group 1 - Enumerate files and screenshot producers
 
@@ -532,7 +532,7 @@ Read a source only after its trigger occurs; expand only under the stated condit
 | Trigger | File name | Start at | Expand only when | Consultation purpose |
 | --- | --- | --- | --- | --- |
 | Sprite ranges or pixel/anchor identity change during path-only migration | [multilayer_sprite.h](../../../../src/multilayer_sprite.h) | `MultiLayerSpritePose` and `GetMultiLayerSprite`, 32-59 | Selected pose/range still differs after input paths and hashes are corrected | Confirm the native pose-to-sprite boundary; this does not authorize changing rendering or simulation semantics. |
-| An old save is classified as disposable although a migration test references it | [Savegame lifecycle](r2mlvs14-savegame-determinism-and-lifecycle.md#public-handoff-contract) | `Public Handoff Contract`, 74-82 | Version/phase ownership remains unresolved in the live loader test | Identify the compatibility obligation, then locate its live test; historical prose cannot establish a current pass. |
+| An old save is classified as disposable although a migration test references it | [Savegame lifecycle](r2mlvs15-savegame-determinism-and-lifecycle.md#public-handoff-contract) | `Public Handoff Contract`, 74-82 | Version/phase ownership remains unresolved in the live loader test | Identify the compatibility obligation, then locate its live test; historical prose cannot establish a current pass. |
 | Demo alias resolves to a missing/wrong checkpoint after relocation | [Demo guide](d2um-underground-mines.md#launch-it) | `Launch it` | Matching `$demoSaves` alias and input hash do not establish intended scenario identity | Clarify the user-facing checkpoint mapping; launcher code and exact bytes remain delivered behavior. |
 | Readiness/topology runner cannot import its relocated sibling | [Readiness checks](../../../../src/tests/multilayer/utilities/readiness_file_checks.py) and [Topology checks](../../../../src/tests/multilayer/utilities/heat_topology_file_checks.py) | Respective `main`, 17-46 and 20-86; mapped successors after Group 5 | Dynamic reference is corrected but required callable exports remain absent | Identify the recovery/allocation helper boundary; do not duplicate implementation to hide an import failure. |
 | Combined ground-acceptance report loses an art dependency or accepts wrong evidence | [Ground acceptance runner](../../../../src/tests/multilayer/acceptance/native_ground.py) | `validate_art_manifest`, 184-196; mapped `native_ground.py` after Group 5 | Artifact references resolve but semantic validation still differs | Reconcile aggregate acceptance with canonical validators; its report must not become a second sprite/proof authority. |
@@ -556,7 +556,7 @@ This is not an execution reading queue and must not be preloaded after context c
 | [Native art notes](portal-tbm/r2mlvs3mp-r-runtime-art-notes.md) | Windows capture paragraph, 15-15 | Records why startup moved to `build/native-art.cfg`; the new data-home design must preserve base-set/language discovery. |
 | [Packed-art fixture producer](../../../../src/tests/multilayer_packed_art_fixture.py) | `main`, 35-65 | Confirms the current template-to-build config copy and distinguishes source location from the runtime home. |
 | [Windows path setup](../../../../src/os/windows/win32.cpp); [native path setup](../../../../src/fileio.cpp) | `DetermineBasePaths`, 250-345; `DeterminePaths`, 925-1050 | Explains configuration-root selection and automatic creation of the nine native data trees; informed process-local `mlm/runtime/` and tests for directory recreation. |
-| [Plan 15](r2mlvs15-integrated-acceptance-and-balance.md) | `Public Handoff Contract`, 68-70 | Demonstrates that a docs-hosted helper is a public producer consumed by other plans/tests, requiring a handoff migration rather than only link repair. |
+| [Plan 16](r2mlvs16-integrated-acceptance-and-balance.md) | `Public Handoff Contract`, 68-70 | Demonstrates that a docs-hosted helper is a public producer consumed by other plans/tests, requiring a handoff migration rather than only link repair. |
 
 ## Completion Conditions
 

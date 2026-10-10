@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_industry_policy.cpp Whitelisted definition and complete excavated-site admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 3-4; r2mlvs17-geothermal-energy-and-industry.md Group1B, exclusive collector capability. */
+/** @file layer_industry_policy.cpp Whitelisted definition and complete excavated-site admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 3-4; r2mlvs18-geothermal-energy-and-industry.md Group1B, exclusive collector capability. */
 
 #include "stdafx.h"
 #include "multilayer_industry.h"

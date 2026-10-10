@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file follow_track.hpp Template track followers. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8 physical portal/depot geometry. */
+/** @file follow_track.hpp Template track followers. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group1B; docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8 physical portal/depot geometry. */
 
 #ifndef  FOLLOW_TRACK_HPP
 #define  FOLLOW_TRACK_HPP

@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_collector.cpp Actual capital/stock/once-per-tick native construction, shortage recovery and source readiness boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group54BB native construction-frame binding
  */
 

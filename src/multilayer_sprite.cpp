@@ -6,7 +6,7 @@
 
 /**
  * @file multilayer_sprite.cpp Read-only bindings from native terrain/portal owners to packed M1 art.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups82/83
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups82/83/79C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
@@ -27,6 +27,9 @@
 #include "industry.h"
 #include "industry_map.h"
 #include "spoil_receiver.h"
+#include "geothermal.h"
+#include "geothermal_collector.h"
+#include "utility_power.h"
 #include "sprite.h"
 #include "newgrf.h"
 
@@ -353,6 +356,66 @@ std::optional<SpriteID> GetMultiLayerReceiverSprite(TileIndex tile, bool front, 
 		}
 	}
 	return GetMultiLayerSprite(asset, {state, GetMultiLayerVisualFrame(asset, visual_ticks, false), 0, cell, static_cast<uint8_t>(front)});
+}
+
+/** @copydoc GetMultiLayerCollectorSprite */
+std::optional<SpriteID> GetMultiLayerCollectorSprite(TileIndex tile, bool front, uint64_t visual_ticks)
+{
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return std::nullopt;
+	if (!IsValidTile(tile)) return std::nullopt;
+	if (!IsTileType(tile, TileType::Industry)) return std::nullopt;
+	const Industry *industry = Industry::GetByTile(tile);
+	const auto *collector = GetGeothermalCollectorState(industry->index);
+	if (collector == nullptr) return std::nullopt;
+	if (!IsGeothermalCollectorDefinition(industry->type)) return std::nullopt;
+	const auto *claim = GetGeothermalSiteClaim(collector->site);
+	if (claim == nullptr) return std::nullopt;
+	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
+	// Only the actual paid collector footprint can consume its nine-cell source.
+	// A coincident source, wrong family or relocated native industry cannot select
+	// another site's orientation or expand artwork into neighboring world cells.
+	if (claim->site.kind != MultiLayerGeothermalConstructionKind::Collector || claim->site.tile != industry->location.tile ||
+		industry->location.w != terms->width || industry->location.h != terms->height) return std::nullopt;
+	const uint x = TileX(tile) - TileX(industry->location.tile);
+	const uint y = TilePlaneY(tile) - TilePlaneY(industry->location.tile);
+	const uint8_t view = static_cast<uint8_t>(claim->site.access);
+	// All four authored orientations use the native access side. Unsigned local
+	// coordinates also refuse cells before the origin, without a camera offset.
+	if (x >= industry->location.w || y >= industry->location.h || view >= 4) return std::nullopt;
+	const uint16_t cell = static_cast<uint16_t>(y * industry->location.w + x);
+	uint8_t state = 0;
+	uint8_t frame = GetIndustryConstructionStage(tile);
+	if (IsIndustryCompleted(tile)) {
+		frame = GetMultiLayerVisualFrame(MultiLayerSpriteAsset::FacilityVentCollector, visual_ticks, false);
+		state = IsGeothermalCollectorOperational(industry->index) ? 1 : 3;
+		if (state == 1) {
+			const auto *source = GetUtilityPowerProducer(collector->heat_producer);
+			if (source != nullptr) {
+				// A retired, foreign or wrong-domain meter blocks this machinery's
+				// real publication. Drawing may report it but never repair/rebind it.
+				if (!source->active || source->owner != collector->owner || source->meter.domain != UtilityEnergyDomain::Heat ||
+					source->meter.layer != MapLayer::DeepUnderground || source->kind != UtilityGenerationKind::Geothermal) {
+					state = 3;
+				} else if (source->meter.accounting_interval == GetUtilityPowerInterval() && source->meter.generation_energy_j != 0) {
+					// Working lamps read a genuine positive offer in the current
+					// shared interval; a visual clock or stale offer produces no Heat.
+					state = 2;
+				}
+			} else if (collector->heat_producer != UtilityProducerID{UINT32_MAX}) {
+				// Missing retained meter identity is a real publication refusal;
+				// a completed collector with no acquired meter yet remains ready.
+				state = 3;
+			}
+		}
+	}
+	return GetMultiLayerSprite(MultiLayerSpriteAsset::FacilityVentCollector, {state, frame, view, cell, static_cast<uint8_t>(front)});
+}
+
+/** @copydoc GetMultiLayerIndustrySprite */
+std::optional<SpriteID> GetMultiLayerIndustrySprite(TileIndex tile, bool front, uint64_t visual_ticks)
+{
+	const auto receiver = GetMultiLayerReceiverSprite(tile, front, visual_ticks);
+	return receiver.has_value() ? receiver : GetMultiLayerCollectorSprite(tile, front, visual_ticks);
 }
 
 /** @copydoc GetMultiLayerDepotFrontBounds */

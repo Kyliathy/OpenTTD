@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_topology.cpp Actual paid link loss/repaired allocation and native company lifecycle preserve original consumed heat.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.3; operating plants remain later producers
  */
 

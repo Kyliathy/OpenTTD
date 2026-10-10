@@ -2,8 +2,8 @@
 
 /**
  * @file geothermal_power_export.cpp Feature exports on actual paid native risers, installed cable and the sole shared electrical owner.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group7 public signature fixture
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group7 public signature fixture
  */
 
 #include "../stdafx.h"

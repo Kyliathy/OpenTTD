@@ -20,7 +20,7 @@ The earlier rule kept binaries in subdirectories beside plans for local authorin
 
 Runtime and review output is ignored by location; tooling, the producer catalogue and curated inputs remain reviewable for a later commit. The eleven obsolete October data/asset/tool trees must disappear and remain absent after native runs. Root `reviews/` is superseded for this multi-layer scope. No fixture pruning is implied: [master task12.6](r2mlvs3mp-master-plan.md#group-12---close-both-target-plans-with-evidence) still requires user demo acceptance and resolved feedback.
 
-Scope expanded on 2026-10-04: launch-center collection hubs and 20-tile orbital drops, Deep access from 1980, geothermal energy and later geothermal manufacturing, general-purpose TBM clearing with 45-degree turns, and underground tubes with five original vehicle designs. The 20-tile orbital radius, TBM turn limit and minimum five vehicles are requirements; the Surface collection radius, exact unlock date, model dates and futuristic recipes below are proposed defaults. Existing plan numbers remain stable; the new feature owners are r2mlvs16 and r2mlvs17.
+Scope expanded on 2026-10-04: launch-center collection hubs and 20-tile orbital drops, Deep access from 1980, geothermal energy and later geothermal manufacturing, general-purpose TBM clearing with 45-degree turns, and underground tubes with five original vehicle designs. The 20-tile orbital radius, TBM turn limit and minimum five vehicles are requirements; the Surface collection radius, exact unlock date, model dates and futuristic recipes below are proposed defaults. Existing plan numbers remain stable; the new feature owners are r2mlvs17 and r2mlvs18.
 
 ## Additions at a glance
 
@@ -98,7 +98,7 @@ The five tube capsules are original, distinct designs with their own stats, silh
 | Outer Space | **Processor module** | Converts asteroid materials into useful orbital supplies or cargo for Earth. |
 | Outer Space | **Solar mirror** | Launched, deployed and maintained structure that gives an eligible Surface solar farm a non-stacking +300% output bonus. |
 
-Tube and geothermal details are expanded in [r2mlvs16](r2mlvs16-underground-transport-tubes.md) and [r2mlvs17](r2mlvs17-geothermal-energy-and-industry.md). The [resource and content catalogue](#resource-and-content-catalogue) below maps individual mined resources to their consumers; architecture decisions define the placement, transport and accounting rules behind this overview.
+Tube and geothermal details are expanded in [r2mlvs17](r2mlvs17-underground-transport-tubes.md) and [r2mlvs18](r2mlvs18-geothermal-energy-and-industry.md). The [resource and content catalogue](#resource-and-content-catalogue) below maps individual mined resources to their consumers; architecture decisions define the placement, transport and accounting rules behind this overview.
 
 ## Outcome
 
@@ -136,10 +136,10 @@ flowchart LR
 | --- | --- |
 | At least five Underground mine resources transported to Surface | r2mlvs2, r2mlvs6, r2mlvs7 |
 | Another five Deep Underground resources | r2mlvs2, r2mlvs3, r2mlvs6 |
-| Deep Underground accessible from the 1980s; vents and later geothermal manufacturing | r2mlvs1, r2mlvs2, r2mlvs3, r2mlvs17 |
+| Deep Underground accessible from the 1980s; vents and later geothermal manufacturing | r2mlvs1, r2mlvs2, r2mlvs3, r2mlvs18 |
 | Rock must be dug before building; new tunnel's far end starts blocked | r2mlvs2, r2mlvs3, r2mlvs4 |
 | TBM turns at most 45 degrees per step and clears areas for any underground use | r2mlvs2, r2mlvs4 |
-| Underground transport tubes on excavated ground, with at least five original vehicles | r2mlvs16; controls in r2mlvs7 and art in r2mlvs13 |
+| Underground transport tubes on excavated ground, with at least five original vehicles | r2mlvs17; controls in r2mlvs7 and art in r2mlvs13/14 |
 | Rail-only TBM commissioning, high operating cost, Earth and Rock in its carriages | r2mlvs4 |
 | A secondary train takes those carriages to the originating Surface station | r2mlvs5 |
 | Waterside launch centers built through airport controls | r2mlvs9 |
@@ -150,8 +150,8 @@ flowchart LR
 | Underground airport controls replaced by underground construction systems and stations | r2mlvs7 |
 | Space construction replaces ordinary land construction | r2mlvs8, r2mlvs11 |
 | Rockets carry station components; stations assemble larger robots and processors | r2mlvs9, r2mlvs11 |
-| Specific graphics for all new vehicles, buildings and gameplay states | r2mlvs13, with integration in each consumer |
-| Saves, multiplayer, lifecycle, balance and complete gameplay verification | Each feature owner; r2mlvs14 and r2mlvs15 coordinate |
+| Specific graphics for all new vehicles, buildings and gameplay states | r2mlvs13 completed foundations/assets; r2mlvs14 remaining delivery, with integration in each consumer |
+| Saves, multiplayer, lifecycle, balance and complete gameplay verification | Each feature owner; r2mlvs15 and r2mlvs16 coordinate |
 
 ## Plan Index
 
@@ -160,32 +160,36 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
 | [X] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
-| [X] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | All producer tasks complete, including loaded terrain/survey/job art16.1. Canonical geology/guards/paid cut/planning/save conditions pass; combined bootstrap/network acceptance remains with14/15 | 1 Content Freeze; 14 Schema Foundation; scoped portal bootstrap from3; selected art from13 |
-| [~] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Actual commissioning/entry/backing/lifecycle, Deep dates/scripts, genuine370/current385 occupied saves and selected final portal art delivered. Pending12.1 real tube/riser and18.2 full closure; explicit 3MP exceptions do not complete engineering acceptance | 2; actual TBM roles/recovery from4, source exchange from5; tube/riser16/17 and art13; staged by3MP |
-| [~] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Paid actual cutting/support/turns/backing, source/recurring bay, current385 bend/recovery/cancel files, complete corridor costs and selected art/sound delivered. Pending15.1/21.4 full final non-rail use and22.2 completion; real join/bootstrap/full-performance exceptions remain unverified | 2 solid starter; 3 portal handoff; 1 wagon contract; 5 exchange/receivers; 13 art; staged by3MP |
-| [X] | [r2mlvs5-spoil-wagons-and-haulage.md](r2mlvs5-spoil-wagons-and-haulage.md) | All producer tasks/conditions complete: actual exchanged wagon IDs/packets, paid source/recurring-depot loops, custody/cost replay and24 wait/spanning/crash file families. Broader network/bootstrap/performance acceptance remains explicitly owned by3MP/14/15 | 4 |
+| [X] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | All producer tasks complete, including loaded terrain/survey/job art16.1. Canonical geology/guards/paid cut/planning/save conditions pass; combined bootstrap/network acceptance remains with15/16 | 1 Content Freeze; 15 Schema Foundation; scoped portal bootstrap from3; selected art from13 |
+| [~] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Actual commissioning/entry/backing/lifecycle, Deep dates/scripts, genuine370/current385 occupied saves and selected final portal art delivered. Pending12.1 real tube/riser and18.2 full closure; explicit 3MP exceptions do not complete engineering acceptance | 2; actual TBM roles/recovery from4, source exchange from5; tube/riser17/18 and art13/14; staged by3MP |
+| [~] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Paid actual cutting/support/turns/backing, source/recurring bay, current385 bend/recovery/cancel files, complete corridor costs and selected art/sound delivered. Pending15.1/21.4 full final non-rail use and22.2 completion; real join/bootstrap/full-performance exceptions remain unverified | 2 solid starter; 3 portal handoff; 1 wagon contract; 5 exchange/receivers; 13 completed art; 14 remaining art; staged by3MP |
+| [X] | [r2mlvs5-spoil-wagons-and-haulage.md](r2mlvs5-spoil-wagons-and-haulage.md) | All producer tasks/conditions complete: actual exchanged wagon IDs/packets, paid source/recurring-depot loops, custody/cost replay and24 wait/spanning/crash file families. Broader network/bootstrap/performance acceptance remains explicitly owned by3MP/15/16 | 4 |
 | [~] | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) | Delivered finite mine/shared recipe/native selected Surface producers; later receiver/thermal/final-art/combined acceptance tasks remain pending | 2, 5; 12 Useful Power Handoff for power consumers |
 | [~] | [r2mlvs7-underground-construction-and-fleet.md](r2mlvs7-underground-construction-and-fleet.md) | Delivered survey/area/conventional construction, fleet/admission/station/service owners; tube/geothermal controls and later art/acceptance remain pending | 3, 5, 6 |
-| [ ] | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) | Space simulation, orbital vehicle model, occupancy and construction controls | 1 Content Freeze; 14 Schema Foundation Handoff |
+| [ ] | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) | Space simulation, orbital vehicle model, occupancy and construction controls | 1 Content Freeze; 15 Schema Foundation Handoff |
 | [ ] | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) | Waterside airport-menu facility, launch queues, rockets and descent cargo | 8; cargo definitions from 1 |
 | [ ] | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) | Moving deposits, rendezvous, attachment, extraction and return missions | 9 |
 | [ ] | [r2mlvs11-orbital-stations-and-manufacturing.md](r2mlvs11-orbital-stations-and-manufacturing.md) | Delivered module construction, assembly docks, larger robots and processing | 9, 10; recipes from 6 |
 | [~] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | ETI Feasibility Handoff uses 1 Draft Content; Useful Power Handoff after 1 Content Freeze; mirrors after 9 |
-| [~] | [r2mlvs13-graphics-and-asset-pipeline.md](r2mlvs13-graphics-and-asset-pipeline.md) | Sprite manifest, generated art, repeatable packing and in-game review | Sprite Contract Handoff uses 1 Draft Content; integration follows consumers |
-| [~] | [r2mlvs14-savegame-determinism-and-lifecycle.md](r2mlvs14-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Schema Foundation Handoff uses 1 Draft Content; final audit after feature plans |
-| [~] | [r2mlvs15-integrated-acceptance-and-balance.md](r2mlvs15-integrated-acceptance-and-balance.md) | Ground schema2 runner, physical recovery/control/economics, selected technical art, bounded utility measurements and player/evidence documentation delivered; full scenario/acceptance scope remains pending | all required groups of1..14,16,17 |
-| [~] | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) | Native registry/prototype, construction/separation, actual junction/recovery and independent turning Groups1-4 delivered; paid power, terminals/full fleet and acceptance pending | 2..5; contracts from 1; 12 Useful Power Handoff; UI integration with 7 |
-| [ ] | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) | Deep vents, shared heat budgets, power export and future direct-heat factories | 2, 3, 6; utility schema from 1 and runtime Useful Power Handoff from 12 |
+| [X] | [Plan13 - Completed graphics foundations and assets](r2mlvs13-graphics-and-asset-pipeline.md) | All173 retained checked tasks: Sprite Contract, completed sources, selected M1 native art and collector payload | Original producer evidence retained; whole-profile obligations continue in14 |
+| [~] | [Plan14 - Remaining assets and runtime integration](r2mlvs14-remaining-assets-and-runtime-integration.md) | All169 remaining art tasks, including collector native display, unfinished generator states and full-profile review | 13 completed contract/source/payload; actual feature consumers; staged by3MP |
+| [~] | [r2mlvs15-savegame-determinism-and-lifecycle.md](r2mlvs15-savegame-determinism-and-lifecycle.md) | Schema foundation, migration, lifecycle policies and multiplayer coverage | Schema Foundation Handoff uses 1 Draft Content; final audit after feature plans |
+| [~] | [r2mlvs16-integrated-acceptance-and-balance.md](r2mlvs16-integrated-acceptance-and-balance.md) | Ground schema2 runner, physical recovery/control/economics, selected technical art, bounded utility measurements and player/evidence documentation delivered; full scenario/acceptance scope remains pending | all required groups of1..15,17,18 |
+| [~] | [r2mlvs17-underground-transport-tubes.md](r2mlvs17-underground-transport-tubes.md) | Native registry/prototype, construction/separation, actual junction/recovery and independent turning Groups1-4 delivered; paid power, terminals/full fleet and acceptance pending | 2..5; contracts from 1; 12 Useful Power Handoff; UI integration with 7 |
+| [ ] | [r2mlvs18-geothermal-energy-and-industry.md](r2mlvs18-geothermal-energy-and-industry.md) | Deep vents, shared heat budgets, power export and future direct-heat factories | 2, 3, 6; utility schema from 1 and runtime Useful Power Handoff from 12 |
+
+
+Graphics split,2026-10-10: Plan13 retains completed tasks and the canonical ImageGen prompt; [Plan14](r2mlvs14-remaining-assets-and-runtime-integration.md) owns the remaining tasks. Former persistence14, acceptance15, tubes16 and geothermal17 are now15,16,17 and18 respectively, including companion documents and live references. Task/group IDs, native/saved gameplay identities and immutable source provenance are unchanged. Historical prompts, fixture names and proof receipts retain their original numbering. The implementation goal remains paused after completed Plan13 task79C.2; resume Plan14 task79C.3 only when requested.
 
 Dependencies describe availability of the required code/contracts, not a requirement to close every acceptance task before starting a consumer. For example, r2mlvs4's combined haulage acceptance uses r2mlvs5; the TBM controller must exist before haulage implementation, but its final acceptance waits for that integration. This staging never marks unfinished checks complete.
 
-The ordered ground execution queue is [R2MLVS3MP - Portal and TBM execution master plan](r2mlvs3mp-master-plan.md). It covers full closure of Plans 3/4, with group links into their required producers. The immediate solid-starter reconciliation belongs jointly to Plan 3 Group 8B's narrow portal geometry handoff, Plan 2 Group 14B's canonical planner/reservation/cut extension and Plan 4 Group 2B/Groups 6-8's actual acquisition/material/support participants. Build saved controller foundations and real exchange/receivers before activating full commissioning; return for occupied saves, graphics, tube/riser boundaries and ground network/acceptance. Minimal Earth/Rock receivers belong to Plan 5 and do not wait for the mine economy. Full Plan 3 Group 12 needs the scoped Plan 16/17 consumers, so M1 alone does not close every original Plan 3 task. Ground-scoped Plans 14/15 audits do not wait for unrelated orbital producers or complete their whole-epic rows. Queue checkboxes coordinate execution; implementation completion remains recorded in each owning child.
+The ordered ground execution queue is [R2MLVS3MP - Portal and TBM execution master plan](r2mlvs3mp-master-plan.md). It covers full closure of Plans 3/4, with group links into their required producers. The immediate solid-starter reconciliation belongs jointly to Plan 3 Group 8B's narrow portal geometry handoff, Plan 2 Group 14B's canonical planner/reservation/cut extension and Plan 4 Group 2B/Groups 6-8's actual acquisition/material/support participants. Build saved controller foundations and real exchange/receivers before activating full commissioning; return for occupied saves, graphics, tube/riser boundaries and ground network/acceptance. Minimal Earth/Rock receivers belong to Plan 5 and do not wait for the mine economy. Full Plan 3 Group 12 needs the scoped Plan 17/18 consumers, so M1 alone does not close every original Plan 3 task. Ground-scoped Plans 15/16 audits do not wait for unrelated orbital producers or complete their whole-epic rows. Queue checkboxes coordinate execution; implementation completion remains recorded in each owning child.
 
 Queue progress, 2026-10-08: R2MLVS3MP's developable portal/TBM/ground/electrical work and selected M1 art are delivered, with final focused builds/compatibility checks and current player/evidence guidance. [Final audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md) records authorized exceptions for capsule/thermal/final-use expansion, real joins, normal-newgame bootstrap, full maximum-workload performance and personal art feedback. These exceptions permit goal finalization while Plans3/4 and M1 remain incomplete. The guide documents current area/corridor controls, actual wagon exchange, Deep capacity/date rules and recovery, including the absent replacement-origin GUI picker. Later milestones and whole supporting plans remain pending; no fixture or operator exception implies their completion.
 
-M0 order is explicit: r2mlvs1 Draft Content Handoff -> r2mlvs12 ETI Feasibility Handoff, r2mlvs13 Sprite Contract Handoff and r2mlvs14 Schema Foundation Handoff -> r2mlvs1 Content Freeze Handoff. These checkpoints are defined under each child's `Public Handoff Contract`; they consume draft definitions and do not depend on r2mlvs1's final closure. r2mlvs13/14 then accompany feature development; a feature owns its serialization and tests alongside its implementation, and r2mlvs14 audits the combined result. Engineering concurrency here does not request delegated agent work. After Content Freeze, r2mlvs12 publishes its tested Useful Power Handoff independently of rockets/mirrors; mines, tubes and geothermal consumers use that single runtime ledger and its public consume/release/export operations. r2mlvs6 publishes the shared inventory-view recipe executor for Surface, orbital and geothermal processing.
+M0 order is explicit: r2mlvs1 Draft Content Handoff -> r2mlvs12 ETI Feasibility Handoff, r2mlvs13 Sprite Contract Handoff and r2mlvs15 Schema Foundation Handoff -> r2mlvs1 Content Freeze Handoff. These checkpoints are defined under each child's `Public Handoff Contract`; they consume draft definitions and do not depend on r2mlvs1's final closure. r2mlvs13/14 and15 then accompany feature development; a feature owns its serialization and tests alongside its implementation, and r2mlvs15 audits the combined result. Engineering concurrency here does not request delegated agent work. After Content Freeze, r2mlvs12 publishes its tested Useful Power Handoff independently of rockets/mirrors; mines, tubes and geothermal consumers use that single runtime ledger and its public consume/release/export operations. r2mlvs6 publishes the shared inventory-view recipe executor for Surface, orbital and geothermal processing.
 
-Useful Power producer update (2026-10-08): [the native runtime handoff](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md) is delivered through Plan12 Groups7-9/master9.1, including atomic consumption/release/directed transfer, bounded work and real town effects, saved replay protection and normal-game loading. Plans6/16/17 consume this owner. Full solar/mirror, tube and geothermal implementations/art remain their subsequent tasks; no whole-plan index is completed by this producer handoff.
+Useful Power producer update (2026-10-08): [the native runtime handoff](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md) is delivered through Plan12 Groups7-9/master9.1, including atomic consumption/release/directed transfer, bounded work and real town effects, saved replay protection and normal-game loading. Plans6/17/18 consume this owner. Full solar/mirror, tube and geothermal implementations/art remain their subsequent tasks; no whole-plan index is completed by this producer handoff.
 
 ## Existing implementation and required changes
 
@@ -205,13 +209,13 @@ Inspected entry points: `src/map_layer.h`, `src/map_layer.cpp`, `src/map_layer_g
 
 ## Proposed architecture decisions
 
-### AD-1 - A complete, explicit gameplay profile (owners: 1, 12, 14)
+### AD-1 - A complete, explicit gameplay profile (owners: 1, 12, 15)
 
 New games may select **Multilayer Industry**. The profile supplies all required cargos, industries, vehicles and graphics with the game; it must work without an external industry set. It starts with a supported Temperate economy, with other climates requiring an explicit tested mapping. Classic games remain selectable. Existing saves retain their prior gameplay/content configuration by default; no silent cargo-table replacement or newly solid rock over existing infrastructure.
 
 Engine code owns excavation, jobs, moving objects, cross-layer transfer, wagon exchange and construction validation. A versioned first-party content package supplies definitions, recipes and art. **Execution decision, r2mlvs1 Group 3:** bundled NewGRF definitions use the existing staged loader and saved identity mappings; engine-owned behavior remains native. Group 4 delivers the first-party cargo-definition package and exact activation manifest; gameplay/vehicle/industry/art families remain with their feature owners. Missing required content causes a clear refusal rather than substitution of cargo meaning. External industry sets require named tested compatibility profiles, not arbitrary load order.
 
-### AD-2 - Excavation is persistent world state (owners: 2, 4, 14)
+### AD-2 - Excavation is persistent world state (owners: 2, 4, 15)
 
 Underground and Deep Underground begin as solid rock containing finite deposits. Survey information is an overlay; it does not create functioning mines inside rock. Construction requires the entire footprint and its approaches to be excavated. Bulldozing, auto-clear, area leveling, roads, stations, depots, industry funding and scripts cannot clear solid rock for money alone.
 
@@ -323,13 +327,13 @@ Apply the boost once to eligible produced power after base production/availabili
 
 ETI is an investigated integration option, not a required redistributable dependency. The detailed evidence and implementation decision are in r2mlvs12. The guaranteed fallback is an original Surface solar industry and a native useful-power consumer; do not leave mirrors without a gameplay effect if ETI cannot be bundled.
 
-### AD-14 - Persistence, ownership and failures are feature requirements (owner: 14; implemented by all)
+### AD-14 - Persistence, ownership and failures are feature requirements (owner: 15; implemented by all)
 
 Save excavation, reserves, work progress, wagon assignments, cargo provenance, mission phases, asteroid positions, assembly inventory, mirror assignments, settings and feature seeds. Use stable typed IDs and explicit versioned chunks; reserve actual version numbers when coding begins. Rebuild derived spatial/path caches after load. Save during every long-running action, not only at idle endpoints.
 
 Ownership changes, vehicle sales, industry/station closure, bankruptcy, command cancellation and removal of supporting structures must never orphan packets or duplicate resources. Refuse unsafe demolition before mutation, or implement a visible deterministic evacuation/reassignment policy. Multiplayer uses simulation ticks, integer arithmetic and stable iteration order. Camera state, hidden layers, frame rate and presentation animation never control progress.
 
-### AD-15 - Underground transport tubes and five original vehicles (owner: 16)
+### AD-15 - Underground transport tubes and five original vehicles (owner: 17)
 
 Transport tubes are sealed, powered guideways with dedicated terminals, service depots and self-propelled cargo capsules. They may be built only on TBM-excavated Underground or, after its unlock, Deep Underground tiles. They never excavate terrain. The proposed implementation uses a dedicated railtype/capability with existing reservation/pathfinding foundations, while presenting a separate tube toolset and fleet filter. Ordinary trains/TBMs cannot use tubes, and capsules cannot use ordinary rail, roads, rail portals or elevators. First-release tube networks stay within one layer; cargo changes mode at excavated interchanges before conventional freight crosses layers.
 
@@ -337,7 +341,7 @@ Create at least five distinct first-party vehicles, with their own models, silho
 
 Paid external electrical service available at a commissioned portal-side interchange bootstraps early tubes. Later geothermal plants can supply their demand through explicit utilities. No first capsule or tube depot requires output from an inaccessible Deep geothermal plant. Tubes handle mined/processed cargo; TBM spoil still travels in its actual wagons and is hauled to the originating Surface station as specified in AD-6.
 
-### AD-16 - Geothermal energy and future direct-heat industry (owner: 17)
+### AD-16 - Geothermal energy and future direct-heat industry (owner: 18)
 
 Deep Underground contains geothermal vent fields in addition to its five mineral types. A vent is a renewable but rate-limited thermal source with a stable identity; it is not an extra freight cargo or an infinite bonus for every building in range. Excavated collectors and utilities allocate a shared heat budget to generators and direct-heat consumers. Converting heat to electricity and consuming it in a smelter compete for the same budget; neither may count the same heat twice.
 
@@ -385,16 +389,16 @@ No new passenger service or surface-city catchment is required for this epic. Ex
 
 | Milestone | Demonstrable gameplay | Required owners |
 | --- | --- | --- |
-| M0 - Contracts | Content budget, feature settings, schema scaffolding, exact sprite manifest and an ETI feasibility decision | 1; initial 12, 13, 14 groups |
-| M1 - Excavation loop | Build a sealed rail portal; commission TBM; clear corridors/chambers with legal 45-degree turns; swap actual wagons; haul/dispose on Surface; return empties; save/reload | 2..5; feature persistence and M1 art |
-| M2 - Underground economy | All ten mine types feed Surface consumers; 1980 Deep unlock; complete underground fleet and five tube models across their dates; geothermal power and later direct-heat chains | 6, 7, 16, 17; remaining underground art |
+| M0 - Contracts | Content budget, feature settings, schema scaffolding, exact sprite manifest and an ETI feasibility decision | 1; initial12/13/15 handoffs; remaining art in14 |
+| M1 - Excavation loop | Build a sealed rail portal; commission TBM; clear corridors/chambers with legal 45-degree turns; swap actual wagons; haul/dispose on Surface; return empties; save/reload | 2..5;13/14 graphics,15 persistence and16 acceptance |
+| M2 - Underground economy | All ten mine types feed Surface consumers; 1980 Deep unlock; complete underground fleet and five tube models across their dates; geothermal power and later direct-heat chains | 6, 7, 17, 18; remaining underground art in14 |
 | M3 - Orbital return and solar | Waterside launch center; probe mines moving asteroid; drops cargo within 20 tiles; hub supplies nearby train/lorry stations; launched mirror gives 4x solar output | 8..10, 12; corresponding art |
 | M4 - Orbital industry | Rockets deliver core/modules; station assembles a heavy robot and processes asteroid cargo; outputs return to Earth or support construction | 11; corresponding art |
-| M5 - Integrated acceptance | Combined economy survives lifecycle changes, save/load, multiplayer and representative performance/art review | 13..15 final groups |
+| M5 - Integrated acceptance | Combined economy survives lifecycle changes, save/load, multiplayer and representative performance/art review | 14..16 final groups |
 
 M1 is the recommended first implementation target. Its excavation, wagon and financial constraints determine whether the underground game is enjoyable. Space work can use M0 contracts independently, but no milestone is presented as complete with missing gameplay graphics or untested cargo conservation.
 
-Milestones are engineering deliveries, not calendar eras: M2's tube/geothermal acceptance uses appropriate 1970..2045 fixtures and explicitly tests introductions. r2mlvs16/17 can develop against the early contracts while their UI/art/save integration follows the same staging as existing plans. r2mlvs15 runs last after both new plans; their higher numbers do not put acceptance ahead of them.
+Milestones are engineering deliveries, not calendar eras: M2's tube/geothermal acceptance uses appropriate 1970..2045 fixtures and explicitly tests introductions. r2mlvs17/18 can develop against the early contracts while their UI/art/save integration follows the same staging as existing plans. r2mlvs16 runs last after both new plans; their higher numbers do not put acceptance ahead of them.
 
 ## Cross-plan invariants
 
@@ -418,7 +422,7 @@ Milestones are engineering deliveries, not calendar eras: M2's tube/geothermal a
 
 ## Plan 1 M0 execution decisions
 
-Plan 1 is complete. Index marks for Plans 12/13/14 indicate only the prerequisite native feasibility/draft solar, sprite contract and Schema Foundation handoffs delivered for M0; all remaining feature tasks stay unchecked. M0 Content Freeze does not imply M1 or runtime feature acceptance.
+Plan 1 is complete. Index marks for Plans 12/13/15 indicate only the prerequisite native feasibility/draft solar, sprite contract and Schema Foundation handoffs delivered for M0; all remaining feature tasks stay unchecked. M0 Content Freeze does not imply M1 or runtime feature acceptance.
 
 Plan 1's [Content Freeze record](r2mlvs1-g-content-freeze.md) owns the compiled numerical/ownership tables and evidence. Native MLVI is selected, with 30 active cargos, 64/283 industry/tile envelopes and 275 logical designs. ETI v14 is unsupported for this profile; its pinned source/terms failures and unexecuted runtime checks remain explicit. Its first-party fallback is the shipped cargo package and tested native utility/effect contract; operational Useful Power is still Plan 12 work after Content Freeze.
 
@@ -445,7 +449,7 @@ The draft is executable using the defaults above. Record revisions here and upda
 | Existing worlds | Preserve legacy behavior; full profile enabled for new worlds first | Prevents breaking existing networks or replacing cargo definitions in saves |
 | Advanced station economy | Later M4 milestone within this plan | Keeps the first probe/solar loop independent of station manufacturing |
 
-Exact prices, drilling speeds, cargo capacities, drift intervals, module footprints, proposed technology dates and power-service benefits are tuning values. The required 20-tile orbital radius and 45-degree TBM turn limit are not silently changed during balancing. r2mlvs1 records initial numerical tables, and r2mlvs15 revises them against measured scenarios. Revisit the proposed 1980 unlock explicitly if the user changes the desired era.
+Exact prices, drilling speeds, cargo capacities, drift intervals, module footprints, proposed technology dates and power-service benefits are tuning values. The required 20-tile orbital radius and 45-degree TBM turn limit are not silently changed during balancing. r2mlvs1 records initial numerical tables, and r2mlvs16 revises them against measured scenarios. Revisit the proposed 1980 unlock explicitly if the user changes the desired era.
 
 ## Execution and evidence conventions
 
@@ -457,7 +461,7 @@ Use existing OpenTTD naming and build registration. Preserve the prior epic's co
 
 Raster source workflow, 2026-10-10: Plan13 owns the reusable [framed ImageGen prompt and safe-extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Future multi-view sheets use pure-magenta source borders, transparent gutters and measured rectangular crops; request separate files per view when separation or model consistency fails. Preserve each family's actual direction/state/footprint contract and immutable originals with exact prompts/reference hashes. Frames are excluded before native conversion. The first framed trial passed extraction but failed equipment identity, so this convention requires per-output review. Source approval, packed/decoded pixels and actual game rendering remain separate milestones; existing approved assets need no framing retrofit. Graphical child plans linked by R2MLVS3MP reference this shared policy beside their relevant tasks.
 
-Each feature adds meaningful tests for its state transitions, refusal paths and persistence. Run focused checks as it lands; r2mlvs15 runs the integrated Debug/RelWithDebInfo, save, multiplayer, art and performance scenarios. Record exact commands, content versions and artifacts. Historical 111/115 test counts are baseline evidence, not promised counts for this epic. Skipped checks remain explicitly unverified; final acceptance cannot reuse the predecessor's skips as passes.
+Each feature adds meaningful tests for its state transitions, refusal paths and persistence. Run focused checks as it lands; r2mlvs16 runs the integrated Debug/RelWithDebInfo, save, multiplayer, art and performance scenarios. Record exact commands, content versions and artifacts. Historical 111/115 test counts are baseline evidence, not promised counts for this epic. Skipped checks remain explicitly unverified; final acceptance cannot reuse the predecessor's skips as passes.
 
 Planning-format conversion, 2026-10-04: the seventeen indexed implementation plans now use the supplied execution protocol, chronological difficulty batches of at most eight tasks, thin Global Mandatory Reading, scoped Area Mandatory Reading with producer gates, Consult on Demand and Planning Provenance. Named handoffs above replace obsolete references to the drafts' three topic groups. The master remains the scope/index authority; implementation tasks remain only in their owning child plans, with Completion Conditions last.
 

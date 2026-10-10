@@ -5,8 +5,8 @@
  */
 
 /** @file transport_tube_vehicle_sl.cpp Saved387 capsule bindings and common interval tick, also driven by391 collectors without capsules.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group6
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group6
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2
  */
 
 #include "../stdafx.h"

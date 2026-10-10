@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_generator_geometry.cpp Canonical passive world layouts for1980/2000 geothermal source authoring.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups55-56.
  */
 

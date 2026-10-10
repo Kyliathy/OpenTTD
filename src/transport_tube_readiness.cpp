@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_readiness.cpp Read-only native tube facility, model/cargo and physical electrical readiness.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.2
  */
 

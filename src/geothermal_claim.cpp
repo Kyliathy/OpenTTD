@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_claim.cpp Bounded cold collector/plant planning claims, independent of completed construction and every energy/cargo owner.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1
  */
 
 #include "stdafx.h"

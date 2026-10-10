@@ -1,6 +1,6 @@
 # R2MLVS3MP-K - Ground persistence and lifecycle audit (master 6.5)
 
-This audit covers the `-G` ground portions of [Plan 14 Groups 7-15](../r2mlvs14-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration), as split in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#plan-14-groups-7-15). It maps each row to the code and tests that cover it and lists what is still missing. The `-T` and `-O` portions stay pending in Plan 14, so no Plan 14 task can be checked from this audit alone.
+This audit covers the `-G` ground portions of [Plan 15 Groups 7-15](../r2mlvs15-savegame-determinism-and-lifecycle.md#group-7---feature-persistence-integration), as split in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#plan-14-groups-7-15). It maps each row to the code and tests that cover it and lists what is still missing. The `-T` and `-O` portions stay pending in Plan 15, so no Plan 15 task can be checked from this audit alone.
 
 Status words:
 - **verified**: compiled and passed at the master Group 4 milestone burst.
@@ -88,7 +88,7 @@ Physical cargo is not a TBM family. Spoil packets live in ordinary vehicle and s
 | ID | Gap | Owner and next step |
 | --- | --- | --- |
 | G1 | No real-file round trip or failing load for the 377/378 families: the project, support, exchange and receiver chunks are proved only through staged copies. A saved file with a live project needs real commissioning. | Python save fixtures after master 6.6, then the occupied saves of master 7.4 (Plan 3 Group 16). |
-| G2 | The ordinary vehicle loader rebuilds `previous` and `first` from `next` without refusing two heads that link the same part. The TBM stores refuse every duplicate among themselves, but a corrupt raw chain is the vehicle loader's authority, and no TBM-local repair is added. | Plan 14 10.4 `-G`, kept open; a vehicle-loader check would also change Classic behaviour, so it needs its own decision. |
+| G2 | The ordinary vehicle loader rebuilds `previous` and `first` from `next` without refusing two heads that link the same part. The TBM stores refuse every duplicate among themselves, but a corrupt raw chain is the vehicle loader's authority, and no TBM-local repair is added. | Plan 15 10.4 `-G`, kept open; a vehicle-loader check would also change Classic behaviour, so it needs its own decision. |
 | G3 | Project corridor and retreat claims are not delivered, so there is no corridor cache to rebuild. | Plan 4 Group 14 (master 4.6) with master 7.3. |
 | G4 | Receiver reload compares the published rows and digest, not the next interval. The interval reads only saved fields and the industry stock, which are both compared. | A next-interval check with G1. |
 | G5 | No save of a 45-degree bend, a straddling consist or a spanning-layer hauler, because neither train can drive itself yet. | Master Group 7 (7.3, 7.4). |

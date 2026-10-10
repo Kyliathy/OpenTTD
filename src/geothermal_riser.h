@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser.h Physical admission, paid native machinery and original-portal lifecycle for electrical risers.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups5B-5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups5B-5
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 

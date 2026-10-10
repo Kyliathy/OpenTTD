@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/81B; r2mlvs3mp-master-plan.md8.6. Selected M1 source set only; preserve protected M0 and immutable MLVI definitions. See docs/zz-reach2/architecture/map-layers/archi-map-layers.md.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/81B/79C; r2mlvs3mp-master-plan.md8.6/10.4B. Preserve published range and enum order in preserved_ranges, protected M0 and immutable MLVI definitions. See docs/zz-reach2/architecture/map-layers/archi-map-layers.md.",
   "schema_version": 1,
   "asset_ids": [
     "terrain.underground",
@@ -43,7 +43,8 @@
     "terrain.edges.underground",
     "terrain.edges.deep",
     "terrain.hardness",
-    "terrain.hardness-edges"
+    "terrain.hardness-edges",
+    "facility.vent-collector"
   ],
   "native_route": "native_action5_1c",
   "appended_start": 200,
@@ -71,7 +72,7 @@
   "nfo": "media/baseset/openttd/map_layers_m1.nfo",
   "header": "src/table/multilayer_sprite_assets.h",
   "report": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
-  "definition_policy": "Keep packed.namespace/offset as the existing definition/core owner. Add packed.route/native_offset/sprite_count for actual base-set art; the MLVI cargo definition package is never rewritten.",
+  "definition_policy": "Keep packed.namespace/offset as the existing definition/core owner. Add packed.route/native_offset/sprite_count for actual base-set art; the MLVI cargo definition package is never rewritten. preserved_ranges freezes prior family declaration order/native offsets/counts; new families append without reclaiming published slots.",
   "order": [
     "state",
     "frame",
@@ -79,5 +80,217 @@
     "tile_variant",
     "part"
   ],
-  "verification_policy": "Require completed source coverage before publishing PNG/NFO/header. Describe/layout preparation is read-only; no low-power test/build execution."
+  "verification_policy": "Require completed source coverage before publishing PNG/NFO/header. Describe/layout preparation is read-only; no low-power test/build execution.",
+  "preserved_ranges": [
+    {
+      "asset_id": "terrain.underground",
+      "native_offset": 74,
+      "sprite_count": 12
+    },
+    {
+      "asset_id": "terrain.deep",
+      "native_offset": 86,
+      "sprite_count": 12
+    },
+    {
+      "asset_id": "survey.COAL",
+      "native_offset": 98,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.IORE",
+      "native_offset": 101,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.CORE",
+      "native_offset": 104,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.BAUX",
+      "native_offset": 107,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.SALT",
+      "native_offset": 110,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.LITH",
+      "native_offset": 113,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.NORE",
+      "native_offset": 116,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.COBT",
+      "native_offset": 119,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.RARE",
+      "native_offset": 122,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "survey.URAN",
+      "native_offset": 125,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "vehicle.model-00",
+      "native_offset": 200,
+      "sprite_count": 384
+    },
+    {
+      "asset_id": "purchase.model-00",
+      "native_offset": 584,
+      "sprite_count": 2
+    },
+    {
+      "asset_id": "vehicle.model-01",
+      "native_offset": 586,
+      "sprite_count": 384
+    },
+    {
+      "asset_id": "purchase.model-01",
+      "native_offset": 970,
+      "sprite_count": 2
+    },
+    {
+      "asset_id": "vehicle.model-02",
+      "native_offset": 972,
+      "sprite_count": 80
+    },
+    {
+      "asset_id": "purchase.model-02",
+      "native_offset": 1052,
+      "sprite_count": 2
+    },
+    {
+      "asset_id": "vehicle.model-03",
+      "native_offset": 1054,
+      "sprite_count": 80
+    },
+    {
+      "asset_id": "purchase.model-03",
+      "native_offset": 1134,
+      "sprite_count": 2
+    },
+    {
+      "asset_id": "vehicle.model-04",
+      "native_offset": 1136,
+      "sprite_count": 80
+    },
+    {
+      "asset_id": "purchase.model-04",
+      "native_offset": 1216,
+      "sprite_count": 2
+    },
+    {
+      "asset_id": "facility.portal.sealed",
+      "native_offset": 1218,
+      "sprite_count": 48
+    },
+    {
+      "asset_id": "facility.portal.deep-rail",
+      "native_offset": 1266,
+      "sprite_count": 48
+    },
+    {
+      "asset_id": "facility.exchange",
+      "native_offset": 1314,
+      "sprite_count": 128
+    },
+    {
+      "asset_id": "facility.rail-service",
+      "native_offset": 1442,
+      "sprite_count": 128
+    },
+    {
+      "asset_id": "facility.road-service",
+      "native_offset": 1570,
+      "sprite_count": 128
+    },
+    {
+      "asset_id": "facility.earth-receiver",
+      "native_offset": 1698,
+      "sprite_count": 192
+    },
+    {
+      "asset_id": "facility.rock-receiver",
+      "native_offset": 1890,
+      "sprite_count": 512
+    },
+    {
+      "asset_id": "control.survey",
+      "native_offset": 128,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.excavation",
+      "native_offset": 131,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.tbm-area",
+      "native_offset": 134,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.tbm-turn45",
+      "native_offset": 137,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.exchange",
+      "native_offset": 140,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.deep-lock",
+      "native_offset": 158,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "control.future-lock",
+      "native_offset": 161,
+      "sprite_count": 3
+    },
+    {
+      "asset_id": "cargo.ERTH",
+      "native_offset": 2402,
+      "sprite_count": 1
+    },
+    {
+      "asset_id": "cargo.ROCK",
+      "native_offset": 2403,
+      "sprite_count": 1
+    },
+    {
+      "asset_id": "terrain.edges.underground",
+      "native_offset": 168,
+      "sprite_count": 16
+    },
+    {
+      "asset_id": "terrain.edges.deep",
+      "native_offset": 184,
+      "sprite_count": 16
+    },
+    {
+      "asset_id": "terrain.hardness",
+      "native_offset": 2404,
+      "sprite_count": 16
+    },
+    {
+      "asset_id": "terrain.hardness-edges",
+      "native_offset": 2420,
+      "sprite_count": 16
+    }
+  ]
 }

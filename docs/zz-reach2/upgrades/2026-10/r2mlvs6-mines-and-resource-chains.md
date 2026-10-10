@@ -48,7 +48,7 @@ Status: Groups1-9, independent material/accounting tasks through16C and handoff/
 
 ## Outcome and Boundaries
 
-Make all ten proposed mine resources productive and transportable to useful Surface consumers. Deep mines obey the 1980 calendar unlock; r2mlvs17 adds geothermal power and later direct-heat receivers without replacing the five Deep mineral types or removing their Surface receivers.
+Make all ten proposed mine resources productive and transportable to useful Surface consumers. Deep mines obey the 1980 calendar unlock; r2mlvs18 adds geothermal power and later direct-heat receivers without replacing the five Deep mineral types or removing their Surface receivers.
 
 ## Public Handoff Contract
 
@@ -59,10 +59,10 @@ Delivered public owner: [`src/multilayer_industry.h`](../../../../src/multilayer
 | Mine definitions, geometry and finite production | Exact first-party IIDS/TIDS identities and label-resolved recipes; geological claims/reserve stay with `excavation.h`. Industry output owns physical mineral units. No name, artwork, viewport layer or generic cargo slot grants mine capability. |
 | Processor choice/work/batches | [`layer_industry_processor.h`](../../../../src/layer_industry_processor.h) publishes selected recipe, controller, work and historical counters. Every incoming/outgoing unit remains in existing `Industry::accepted`/`produced` slots. Exact final-delivery receipts retain refused cargo aboard the real vehicle. |
 | Baseline Steel reuse | [`layer_industry_baseline.h`](../../../../src/layer_industry_baseline.h) identifies the compatible original one-to-one Iron Ore/Steel receiver and bounds conversion/supply without duplicate cargo/industry/recipe IDs. Coal identity characterization grants no useful-power implementation. |
-| Shared complete batch commit | `LayerRecipeInventoryView` and `LayerRecipeCommitParticipant` expose one real stock owner. Proposals bind immutable definition, owner and saved revision; foreign/stale/repeated or partial commits refuse unchanged. `GetElectricalGrant` joins the actual whole participant to the delivered [utility ledger](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md). Scalar-only commitments refuse; direct heat still requires Plan17's actual participant. |
+| Shared complete batch commit | `LayerRecipeInventoryView` and `LayerRecipeCommitParticipant` expose one real stock owner. Proposals bind immutable definition, owner and saved revision; foreign/stale/repeated or partial commits refuse unchanged. `GetElectricalGrant` joins the actual whole participant to the delivered [utility ledger](portal-tbm/r2mlvs3mp-x-useful-power-handoff.md). Scalar-only commitments refuse; direct heat still requires Plan18's actual participant. |
 | Save/preview/activation | Version 379 `LMNH`/`LMNR` and version 380 `LPCH`/`LPCR`/`LPCC` transport bindings/choices/work/history only. Metadata bits 256/512 advertise actual owners. After final industry/geology rebuild, complete reference/role/stock validation precedes activation; claims/reserves are never recreated. Existing industry/station/vehicle/packet formats own cargo and provenance. Transient supply/batch proposals are never saved. |
 
-Keep one authority for these fields and commands. Later r2mlvs11/17 inventory owners consume the exported batch interface, and r2mlvs7/8/12/13 supply their own still-pending fleet/tube/grid/art implementations; this producer does not emulate them.
+Keep one authority for these fields and commands. Later r2mlvs11/18 inventory owners consume the exported batch interface, and r2mlvs7/8/12/13 supply their own still-pending fleet/tube/grid/art implementations; this producer does not emulate them.
 
 ## Implementation Tasks
 
@@ -173,7 +173,7 @@ Do not emulate an absent producer with copied private state, fake inventories/en
 | [src/cargotype.h](../../../../src/cargotype.h) | 211-223 | `SetupCargoForClimate`, `BuildCargoLabelMap`, `GetCargoTypeByLabel` separate stable labels from runtime slots; consumers must resolve the selected profile rather than hard-code cargo indices. |
 | [src/industry_cmd.cpp](../../../../src/industry_cmd.cpp) | 1152-1240 | `ProduceIndustryGoodsHelper` and `ProduceIndustryGoods` expose complete rate/callback production paths; augment output once before authoritative monthly accounting. |
 | `src/multilayer_industry.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) Groups 1-6, ending with Group 6's public-contract task, publish `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
-| `src/transport_tube.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) Groups 1-8, ending with Group 8's public-contract task, publish `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the tube-terminal cargo/refit integration in Group 14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/transport_tube.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs17-underground-transport-tubes.md](r2mlvs17-underground-transport-tubes.md) Groups 1-8, ending with Group 8's public-contract task, publish `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the tube-terminal cargo/refit integration in Group 14 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
 | [src/economy.cpp](../../../../src/economy.cpp) | 1134-1167 | Complete `TriggerIndustryProduction` distinguishes callbacks from independent-input conversion; the shared recipe executor must preserve all-input atomicity. |
 | [src/economy.cpp](../../../../src/economy.cpp) | 1022-1073 | Complete `DeliverGoodsToIndustry` exposes bounded intake; accept exact quantities before packet removal for finite processors. |
 | [src/cargoaction.cpp](../../../../src/cargoaction.cpp) | 107-119 | Complete `CargoDelivery::operator()` removes requested cargo; integrate accepted-count admission rather than discarding receiver overflow. |
@@ -194,7 +194,7 @@ const auto amount = min(work_allowance, remaining_reserve, output_room);
 // and ALL output slots; no input is consumed on a zero-batch result.
 ```
 
-The batch utility participant is an interface for r2mlvs17, not a second heat allocator. **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Actual tube-terminal integration additionally requires r2mlvs16 `TubeTerminal` and its cargo/refit behavior; verify those exports/tests only for that integration task, leave it pending if absent, and continue conventional mine/processor work. Do not create substitute tube inventory.
+The batch utility participant is an interface for r2mlvs18, not a second heat allocator. **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Actual tube-terminal integration additionally requires r2mlvs17 `TubeTerminal` and its cargo/refit behavior; verify those exports/tests only for that integration task, leave it pending if absent, and continue conventional mine/processor work. Do not create substitute tube inventory.
 
 **Useful-power integration gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Nuclear/Coal useful-power acceptance needs r2mlvs12's early `Useful Power Handoff`, including tested native grid publication/allocation. r2mlvs1's `UtilityPowerAccount` declaration alone is insufficient. Verify the public grid exports and focused consumer test; if absent, stop only power mutations/acceptance, continue material processors, and do not create a second local grid. This early handoff must not depend on rockets or mirrors.
 
@@ -276,22 +276,22 @@ Read Global/Resource production Area, `LayerRecipeInventoryView`/`LayerRecipeCom
 {{HARD}}
 - [X] 13.1 Extend the shared recipe proposal/whole participant with an optional authoritative electrical grant token/quantity and recipe selection. The future geothermal owner supplies heat in13B; the mine reserve API is not reused as a heat source.
 - [X] 13.2 Specify electrical prepare/commit/cancel ownership: no inputs or granted electricity are consumed if output capacity or one transported input is absent. A refused/retried batch cannot consume the grant twice. Thermal commits remain refused until13B supplies custody.
-- [X] 13.3A Publish read-only quantity/refusal fixtures for all six future 2010 smelter, 2030 battery and 2045 Forge choices. Supplied scalar heat/power may bound planning; commits refuse without native utility custody, and missing input/full output consume nothing. This is no claim that r2mlvs17 plants or actual grants exist.
+- [X] 13.3A Publish read-only quantity/refusal fixtures for all six future 2010 smelter, 2030 battery and 2045 Forge choices. Supplied scalar heat/power may bound planning; commits refuse without native utility custody, and missing input/full output consume nothing. This is no claim that r2mlvs18 plants or actual grants exist.
 - [X] 13.3B Validate the real typed electrical grant/epoch/consume/release/retry participant after r2mlvs12's tested native handoff; scalar fixtures cannot complete that integration. Actual heat/combined thermal integration remains13B.
-- [X] 13.4 Document the exact delivered public material/electrical batch fields/signatures for r2mlvs11/r2mlvs17 and the blocked thermal extension. Scheduling, allocation and buildings remain with those owners; no copied account grants runtime authority.
+- [X] 13.4 Document the exact delivered public material/electrical batch fields/signatures for r2mlvs11/r2mlvs18 and the blocked thermal extension. Scheduling, allocation and buildings remain with those owners; no copied account grants runtime authority.
 
 13 electrical closure (2026-10-08): [ground producer handoff](portal-tbm/r2mlvs3mp-y-ground-producer-handoff.md) publishes the exact ledger token/whole recipe transaction and caller-owned unused release policy. [Focused supply/recipe checks](../../../../logs/r2mlvs3mp-y-ground-supply-checks.log) pass1,489 assertions/16 cases, including complete electrical settlement, owner failures, missing transported input, full output, cancellation and stale retry. Actual Surface factories and packet transfers provide the complete first collector/plant/riser material bill. Nuclear/Coal useful-power sources, driven procurement/delivery and thermal custody remain their explicit tasks.
 
 ### Local Mandatory Reading - Actual geothermal heat participant
 
-_Applies to Group13B only after Plan17 delivers tested thermal grants and atomic custody._
+_Applies to Group13B only after Plan18 delivers tested thermal grants and atomic custody._
 
-Read Global/Resource production Area, only Plan17's actual grant/consume/release public owner and the shared recipe whole participant. Retain the delivered electrical path and mineral-reserve ownership. Require positive native thermal custody, complete stock/work/output admission and actual heat/electric retry/loss fixtures before permitting direct-heat commits.
+Read Global/Resource production Area, only Plan18's actual grant/consume/release public owner and the shared recipe whole participant. Retain the delivered electrical path and mineral-reserve ownership. Require positive native thermal custody, complete stock/work/output admission and actual heat/electric retry/loss fixtures before permitting direct-heat commits.
 
 ### Group 13B - Integrate the actual thermal owner
 
 {{HARD}}
-- [ ] 13B.1 Extend the shared whole recipe participant with Plan17's actual typed thermal grant; consume no scalar heat or geological mineral reserve.
+- [ ] 13B.1 Extend the shared whole recipe participant with Plan18's actual typed thermal grant; consume no scalar heat or geological mineral reserve.
 - [ ] 13B.2 Validate complete heat/electric/material commit, cancellation, loss and saved retry with that producer. Missing input/full output/owner refusal must preserve every resource.
 
 Evidence: [delivered batch API and blocked utility participant](r2mlvs6-a-industry-lifecycle.md#group-13-delivered-batch-api-and-blocked-utility-participant). Focused `[layer-recipe-heat-boundary]` passed 126 assertions in one case (`r2mlvs6-by-heat-contract-checks.log`). r2mlvs12's `Useful Power Handoff` confirms the missing owner of `UtilityGrantID`/atomic mutations. Tasks 13.1/13.2/13.3B stay unchecked; no substitute token, registry or grid was declared.
@@ -300,24 +300,24 @@ Evidence: [delivered batch API and blocked utility participant](r2mlvs6-a-indust
 
 _Applies to Group13C, staged by master10.6 before actual first-plant acceptance; it does not reopen the delivered9.3 manufacturing scope._
 
-Read Global/Resource production Area, Plan1's Group10 paid Surface seed contract in `r2mlvs1-d-recipes-and-bootstrap.md`, `GetMultiLayerSurfaceSupplies`, the native station/cargo/payment owner and actual construction receipt boundaries. Read only the first four construction labels and the [first-plant bootstrap specification](r2mlvs17-e-first-plant-bootstrap.md). Seed definitions and explicit manufacturing-fixture raw receipts are delivered; a runtime paid-order command is absent. Preserve one physical packet/inventory/payment owner, per-company caps and non-paying company-supply purpose. No thermal recipes or future orbital procurement are required for this group.
+Read Global/Resource production Area, Plan1's Group10 paid Surface seed contract in `r2mlvs1-d-recipes-and-bootstrap.md`, `GetMultiLayerSurfaceSupplies`, the native station/cargo/payment owner and actual construction receipt boundaries. Read only the first four construction labels and the [first-plant bootstrap specification](r2mlvs18-e-first-plant-bootstrap.md). Seed definitions and explicit manufacturing-fixture raw receipts are delivered; a runtime paid-order command is absent. Preserve one physical packet/inventory/payment owner, per-company caps and non-paying company-supply purpose. No thermal recipes or future orbital procurement are required for this group.
 
 ### Group 13C - Supply paid Surface bootstrap cargo
 
-Added2026-10-10 from Plan17 Group6's dependency audit. Execute this producer at master10.6 before claiming conventionally delivered first-plant materials. Existing material/electrical manufacturing acceptance remains complete; these new runtime procurement tasks are unchecked.
+Added2026-10-10 from Plan18 Group6's dependency audit. Execute this producer at master10.6 before claiming conventionally delivered first-plant materials. Existing material/electrical manufacturing acceptance remains complete; these new runtime procurement tasks are unchecked.
 
 {{HARD}}
 - [ ] 13C.1 Publish/test pure complete paid-order admission for actual owned Surface stations, current STEL/RFMT/ELEC/BATY seed dates/prices, per-company economy-day caps, bounded station space and real available funds. Estimate allocates no cargo/order identity, cap reservation or expense.
 - [ ] 13C.2 Implement ordinary native paid-order settlement and actual company-supply packet custody once through station/carrier/construction owners. Drive conventional delivery into the remaining actual construction bill; bought supplies earn no ordinary freight income/subsidy, and no paid order teleports stock to a hidden layer.
 - [ ] 13C.3 Persist actual order/cap/reservation/cargo references and integrate cancellation, station/company loss and takeover. Preserve shipped/consumed stock and paid history; a refunded order cannot retain usable cargo or recover a consumed bill, and reload/retry cannot buy or reserve twice.
-- [ ] 13C.4 Verify focused date/funds/cap/stock/refusal/retry/lifecycle/native/ordinary-loader cases and actual four-material delivery into the already implemented collector/riser receipt owners. Publish exact original inputs/receipts before Plan17 Group8; full powerhouse-bill delivery returns in master10.6 after that actual definition exists, avoiding a producer/recipient scheduling cycle.
+- [ ] 13C.4 Verify focused date/funds/cap/stock/refusal/retry/lifecycle/native/ordinary-loader cases and actual four-material delivery into the already implemented collector/riser receipt owners. Publish exact original inputs/receipts before Plan18 Group8; full powerhouse-bill delivery returns in master10.6 after that actual definition exists, avoiding a producer/recipient scheduling cycle.
 
 ### Group 14 - Resource production and consumers
 
 {{MEDIUM}}
 - [X] 14.1A Keep finite reserve extraction, delivered inputs, recipe consumption and output/dispatch separately accountable through their sole owners. Direct heat is neither mineral reserve nor freight and has no runtime mutation while its utility producer is absent.
 - [ ] 14.1B Complete all five Deep minerals' earlier useful Surface receivers after the Uranium useful-power gate is satisfied; current Lithium/Nickel/Cobalt/Rare Earth processors cannot count as Uranium acceptance.
-- [ ] 14.2 Integrate tube terminal cargo/refits with r2mlvs16. Mine/factory freight may transfer to tubes on its own layer and back to conventional transport for inter-layer movement; tubes neither replace mandatory TBM spoil-wagon hauling nor open a pre-1980 Deep route.
+- [ ] 14.2 Integrate tube terminal cargo/refits with r2mlvs17. Mine/factory freight may transfer to tubes on its own layer and back to conventional transport for inter-layer movement; tubes neither replace mandatory TBM spoil-wagon hauling nor open a pre-1980 Deep route.
 
 Scoped gate evidence: `src/transport_tube.h` and `src/utility_power.h` are absent. Only their dependent acceptance/integration tasks remain blocked; no tube inventory, heat source or grid is emulated. Existing geological debit, physical stock and exact packet receipts are characterized in the preceding focused checks.
 

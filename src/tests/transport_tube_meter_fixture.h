@@ -5,7 +5,7 @@
  */
 
 /** @file transport_tube_meter_fixture.h Actual command-built paid capsule route shared by metering and recovery tests.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups6-7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6-7
  */
 
 #ifndef TESTS_TRANSPORT_TUBE_METER_FIXTURE_H

@@ -1,8 +1,8 @@
 """Native riser construction persistence, independent preview and ordinary loading.
 
 @file geothermal_riser_file_checks.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5 paid electrical bindings.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5 paid electrical bindings.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md shared artifact routing.
 """
 
@@ -88,7 +88,7 @@ def read_case(configuration, source, mode, expected=0, corrupt=None, preview=Non
     # Every accepted-world reader owns this invocation's next startup command;
     # a preceding ordinary resave cannot silently replace the observer by quit.
     (CONTEXT.runtime_dir / "scripts/game_start.scr").write_text(
-        "# @see r2mlvs17-geothermal-energy-and-industry.md5 native observer.\ngeothermal_riser_check\n", encoding="utf-8")
+        "# @see r2mlvs18-geothermal-energy-and-industry.md5 native observer.\ngeothermal_riser_check\n", encoding="utf-8")
     suffix = corrupt.stem if corrupt is not None else source.stem
     return native(configuration, "[.geothermal-riser-file]", f"{mode}-{suffix}", environment)
 
@@ -242,7 +242,7 @@ def ordinary(configuration, source, label):
     """
     target = CONTEXT.saves / f"riser-ordinary-{label}.sav"
     startup = CONTEXT.runtime_dir / "scripts/game_start.scr"
-    startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md5B ordinary loader.\n"
+    startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md5B ordinary loader.\n"
                        "set savegame_format lzma\n"
                        f'save "{target.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
     executable = console_executable(CONTEXT, ROOT / "build" / configuration / "openttd.exe")
@@ -277,7 +277,7 @@ def main():
     startup = CONTEXT.runtime_dir / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md5B native observer.\ngeothermal_riser_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md5B native observer.\ngeothermal_riser_check\n", encoding="utf-8")
         native(options.configuration, "[.geothermal-riser-write]", "write-construction")
         funded = CONTEXT.saves / "riser-funded.sav"
         partial = CONTEXT.saves / "riser-partial.sav"

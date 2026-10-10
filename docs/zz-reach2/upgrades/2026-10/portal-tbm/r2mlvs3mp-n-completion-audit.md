@@ -83,7 +83,7 @@ both sweep 36 cells in nine cuts through two/three exchanges, taking
 cash and component invoices balance. A one-day stopped startup exposes real
 idle billing; receiver construction is separated from recurring Other fees.
 The focused economics/affected-workflow burst passes 27,534 assertions / four
-cases. Plan 15 received the measurements without checking its broader gates.
+cases. Plan 16 received the measurements without checking its broader gates.
 
 After compaction, reread the master's Global Mandatory Reading and the nearest
 Area for the actual next checkpoint, then that executing child's Global and

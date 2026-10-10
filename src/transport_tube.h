@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube.h Native guideway/capsule capability, explicit paid service and one metered front-tick boundary.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups1-8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups1-8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md tasks10.1-10.2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47E physical end presentation
  */

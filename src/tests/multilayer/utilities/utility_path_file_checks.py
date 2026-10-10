@@ -2,7 +2,7 @@
 
 @file utility_path_file_checks.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C.4.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5.4 feature caller.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5.4 feature caller.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md native artifact routing.
 """
 
@@ -259,7 +259,7 @@ def main(default_phase="reload-1a"):
     parser.add_argument("--phase", choices=("write", "reload-1a", "reload-1b", "reload-2a", "reload-2b", "preview-1", "preview-2", "refusal"), default=default_phase)
     parser.add_argument("--source-run", help="Explicit prior invocation holding paid-path-identities.json and actual paid-path files")
     parser.add_argument("--reference-run", help="Explicit prior writer whose original digests and thirty-five owner chunks must match a newly created writer batch")
-    parser.add_argument("--geothermal-export", action="store_true", help="Exercise Plan17 public export preparation/commit/replay in the actual native writer and reload continuation")
+    parser.add_argument("--geothermal-export", action="store_true", help="Exercise Plan18 public export preparation/commit/replay in the actual native writer and reload continuation")
     options = parser.parse_args()
     caller = "geothermal" if options.geothermal_export else "shared"
     print(f"PAID_PATH_RUN configuration={options.configuration} phase={options.phase} caller={caller} run={CONTEXT.run_id}", flush=True)

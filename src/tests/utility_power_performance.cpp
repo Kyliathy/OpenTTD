@@ -6,8 +6,8 @@
 
 /**
  * @file utility_power_performance.cpp Bounded actual electrical-owner workload, separate from rendering and network profiling.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-integrated-acceptance-and-balance.md Group21B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md Group15B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-integrated-acceptance-and-balance.md Group21B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md Group15B
  */
 
 #include "../stdafx.h"

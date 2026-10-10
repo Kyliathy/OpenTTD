@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_riser_wire.cpp Pure copied-coordinate validation and native controller conversion for riser construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #include "stdafx.h"

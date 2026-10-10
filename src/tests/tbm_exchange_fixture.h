@@ -9,7 +9,7 @@
  * with empty Earth and Rock hoppers, built and coupled in a real Surface depot, then placed in the project's bay, on
  * track or in a depot as its hauler cycle (Plan 5 Group 6) expects. Neither train can yet drive itself (master Group 7).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11 (staged store copies: Group 10)
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md, task 10.3 (packet custody audit)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md, task 10.3 (packet custody audit)
  * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
  */
 
@@ -59,7 +59,7 @@ inline std::map<VehicleID, TBMPacketList> GetTBMPacketOwners(const Train *head)
 }
 
 /**
- * Temporary packet custody audit (Plan 14 10.3): every cargo packet belongs to exactly one container, a vehicle's or a
+ * Temporary packet custody audit (Plan 15 10.3): every cargo packet belongs to exactly one container, a vehicle's or a
  * station's cargo list. The TBM stores name wagons, never packets, and receiver stock is a plain industry counter, so
  * neither can become a second owner of the same tonnes.
  */

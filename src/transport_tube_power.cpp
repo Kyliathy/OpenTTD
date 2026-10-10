@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube_power.cpp Physical paid tube connections and atomic invoices, using the sole native electrical ledger.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group5
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19
  */
 

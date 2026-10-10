@@ -8,7 +8,7 @@ Owner: [R2MLVS3MP](../r2mlvs3mp-master-plan.md). Targets: [Plan 3](../r2mlvs3-se
 
 - Parent AD-3..AD-6, I-1..I-17, Plan Index staging paragraph and Execution conventions.
 - Plan 3 and Plan 4 Global Mandatory Reading tables and Public Handoff Contracts; Plan 3 Groups 1-12 plus its execution notes; Plan 4 Groups 1-5 plus its execution notes (verified sealed-start refusal).
-- Plan 14 Groups 7-15 area and Plan 15 Groups 1-5 area (selected-family gate).
+- Plan 15 Groups 7-15 area and Plan 16 Groups 1-5 area (selected-family gate).
 - Stale/irrelevant for later groups: the Plan 3/4 "Continuation" paragraphs that say work is uncommitted. HEAD `5f40e4d755` now holds every Plan 2/3/4 change made so far.
 
 ## Build and test commands in use
@@ -83,11 +83,11 @@ Check these first when the build runs; they are the least certain compile points
 
 ## Group 1 - Verify reusable foundations
 
-- 1.1: Plan 1 Groups 1-23, Plan 2 Groups 1-14 and Plan 14 Groups 1-6 are all checked in their plans. Exports verified by `grep` (table in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#producer-exports-at-this-snapshot)). Plan 1/14 burst: 18 cases/715 assertions (b (`r2mlvs3mp-b-foundation-plan1-14-results.txt`; historical file unavailable)).
+- 1.1: Plan 1 Groups 1-23, Plan 2 Groups 1-14 and Plan 15 Groups 1-6 are all checked in their plans. Exports verified by `grep` (table in [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md#producer-exports-at-this-snapshot)). Plan 1/15 burst: 18 cases/715 assertions (b (`r2mlvs3mp-b-foundation-plan1-14-results.txt`; historical file unavailable)).
 - 1.1 finding: the first Plan 2 burst failed 1 case/3 assertions. `src/tests/excavation_guard.cpp` still expected `CmdBuildLayerPortal` into a solid door to refuse with `STR_ERROR_EXCAVATION_SOLID_ROCK`. Plan 3 Group 4/5 deliberately changed that: `PrepareNativePortalBuild` accepts a solid Clear door as a Sealed face. The test was not part of the Plan 3/4 bursts, so the stale expectation went unnoticed. The assertion now checks a pure quote that succeeds, allocates no pair and leaves packed geology and tiles unchanged. After the fix, Plan 2 burst: 44 cases/5,884 assertions (b (`r2mlvs3mp-b-foundation-plan2-results.txt`; historical file unavailable)).
 - 1.2: Plan 3 Groups 1-7 (except the correctly pending 5.3B), 10 and 14 are checked; Plan 4 Group 1 and prefixes 2.1A/2.1B/2.2 are checked. Portal/TBM burst: 28 cases/1,274 assertions (b (`r2mlvs3mp-b-foundation-plan3-4-results.txt`; historical file unavailable)). `[tbm-sealed-start-gate]` still proves the refusal; it is not a success.
 - 1.3: Plan 13 Groups 1-8 checked; `python src/tests/multilayer_sprite_contract.py` validates 141 families/58,059 required sprites read-only (c (`r2mlvs3mp-c-sprite-contract-results.txt`; historical file unavailable)). Templates are inputs, not runtime art.
-- 1.4: [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md) records every scoped portion and gate. Child plans now point to it: Plan 4 adds 4.2A/4.2B; Plan 14 and Plan 15 name `-G`/`-T`/`-O` portions.
+- 1.4: [r2mlvs3mp-e](r2mlvs3mp-e-scoped-gates.md) records every scoped portion and gate. Child plans now point to it: Plan 4 adds 4.2A/4.2B; Plan 15 and Plan 16 name `-G`/`-T`/`-O` portions.
 - Build: Debug `openttd_test` incremental build passes (a (`r2mlvs3mp-a-baseline-build.log`; historical file unavailable)). No full regression was run.
 
 ## Group 2 - Reconcile the solid starter (verified)
@@ -100,7 +100,7 @@ Check these first when the build runs; they are the least certain compile points
   - The site is validated once, while empty. `ValidateLayerPortalCommissioning` refuses any vehicle on the source, so per-part revalidation cannot work after the cutter exists.
 - Planner history size for a consist: ceil(length / 16) + 1, clamped to at least 3; above 16 refuses. Cutter plus two Earth and two Rock hoppers = 48 units = 4 points. The first segment is identical for any history of 3 or more points (all points start at the housing). Differences appear from cut index 3 on a straight route.
 - Unit tests start with `max_trains` and `max_train_length` at zero; the acquisition rig sets 500 and 7.
-- Supersession notes were added under Plan 4 Group 20 and Plan 15 Group 16: cut 0 charges 12 cells, not the 3 of a cleared area.
+- Supersession notes were added under Plan 4 Group 20 and Plan 16 Group 16: cut 0 charges 12 cells, not the 3 of a cleared area.
 
 ## Group 4 - Geometry, accounting and protected retreat (verified)
 
@@ -265,7 +265,7 @@ Context: compacted once while executing 6.1 and again during 6.5. Read Plan 5's 
     - the bankrupt `LandscapeClear` of a released rail pair (`assert` in `ChangeTileOwner_LayerPortal`);
     - `AutoRestoreBackup` with `OWNER_DEITY`;
     - `[portal-lifecycle]`'s assigned-pair owner test, which must still refuse unchanged.
-- 6.5 (Plan 14 Groups 7-15, `-G`), unbuilt. Audit: [r2mlvs3mp-k](r2mlvs3mp-k-ground-persistence-audit.md).
+- 6.5 (Plan 15 Groups 7-15, `-G`), unbuilt. Audit: [r2mlvs3mp-k](r2mlvs3mp-k-ground-persistence-audit.md).
   - `tbm.h`/`tbm_project.cpp`:
     - `OnTBMTrainPartDeleted`, now the only call in `Vehicle::PreDestructor`; it calls the exchange hook first;
     - `OnTBMStationDeleted`, called from `Station::~Station` (`station.cpp` includes `tbm.h`);
@@ -326,7 +326,7 @@ Build `openttd_test` and `openttd` (Debug). Then run these tags in short bursts 
 - Plan 5: `[tbm-exchange-bay]`, `[tbm-exchange-proposal]`, `[tbm-exchange-commit]`, `[tbm-exchange-origin]`, `[tbm-exchange-consumer]`, `[tbm-hauler-cycle]`, `[tbm-wagon-sets]`, `[spoil-receiver-definition]`, `[spoil-receiver-intake]`, `[spoil-receiver-delivery]`, `[spoil-receiver-leg]`, `[spoil-receiver-accounting]`, `[spoil-receiver-stall]`, `[spoil-receiver-load]`, `[tbm-exchange-load]`, `[tbm-exchange-lifecycle]`, `[tbm-exchange-acceptance]`.
 - Plan 4: every `tbm-*` tag, including `[tbm-recovery]`, `[tbm-commission]`, `[tbm-conservation]`, `[tbm-measure]`, `[tbm-sealed-start-gate]`.
 - Plan 3: every `portal-*` tag, including `[portal-recovery]`, `[portal-contract]`, `[portal-tbm-access]`.
-- Plans 2/14: every `excavation-*` and `geology-*` tag, and `[multilayer-state-foundation]` and `[multilayer-state-digest]`.
+- Plans 2/15: every `excavation-*` and `geology-*` tag, and `[multilayer-state-foundation]` and `[multilayer-state-digest]`.
 - Python save fixtures: the five that accept versions 377/378.
 
 ## Milestone build and burst (end of master Group 7, 2026-10-05)
@@ -372,7 +372,7 @@ Build `openttd_test` and `openttd` (Debug). Then run these tags in short bursts 
     save fixtures pass. Its 26 rewritten evidence files were restored from HEAD the same way.
 - Restore: the fixtures rewrote 50 tracked evidence files, none of them modified before the run. Each was restored from
   HEAD with `git cat-file --filters`, with no index or ref change.
-- Measurements for r2mlvs15: see the Plan 4 Group 20 status (standard 888 ticks, 360 charge, 216 t; Deep 1,184 ticks,
+- Measurements for r2mlvs16: see the Plan 4 Group 20 status (standard 888 ticks, 360 charge, 216 t; Deep 1,184 ticks,
   960 charge, 504 t).
 - Checked: master 5.1-5.8, 6.1-6.6, 7.2 and 7.6.
   - Plan 5 Groups 1-12.

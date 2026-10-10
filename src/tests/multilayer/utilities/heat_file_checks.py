@@ -1,7 +1,7 @@
 """Focused390 shared thermal/electrical owner files and genuine389 migration.
 
 @file heat_file_checks.py
-@see r2mlvs17-geothermal-energy-and-industry.md Group2B.
+@see r2mlvs18-geothermal-energy-and-industry.md Group2B.
 @see r2mlvs3mp-master-plan.md checkpoint10.3; operating transported generator remains10.6.
 """
 
@@ -135,7 +135,7 @@ def main():
     startup = RUNTIME / "scripts/game_start.scr"
     previous = startup.read_bytes() if startup.exists() else None
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md2B native shared typed accounting boundary.\nutility_heat_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md2B native shared typed accounting boundary.\nutility_heat_check\n", encoding="utf-8")
         run_case("legacy-read", retained)
         legacy = DIRECTORY / "fixture390-heat-legacy-read.sav"
         assert authority(legacy) == authority(retained)
@@ -152,7 +152,7 @@ def main():
         for corrupt in corrupt_heat(heat):
             run_case("preview", heat, corrupt)
         output = DIRECTORY / "fixture390-heat-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md2B ordinary shared heat accounting load.\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md2B ordinary shared heat accounting load.\n"
                            "set savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         log = CONTEXT.logs / f"{PREFIX}-heat-normal-loader.log"

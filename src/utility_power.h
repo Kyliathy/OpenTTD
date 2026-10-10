@@ -10,8 +10,8 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility authority
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint9.1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-v-utility-settlement-contract.md explicit publication/allocation/settlement/rotation order
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group2B typed shared heat before physical source/routing
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5 original paid electrical machinery references
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B typed shared heat before physical source/routing
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5 original paid electrical machinery references
  */
 
 #ifndef UTILITY_POWER_H

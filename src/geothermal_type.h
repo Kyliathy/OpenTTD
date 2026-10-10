@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_type.h Shared geothermal admission result without a dependency on the public producer facade.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups1/7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups1/7
  */
 
 #ifndef GEOTHERMAL_TYPE_H

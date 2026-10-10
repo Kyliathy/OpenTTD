@@ -1,7 +1,7 @@
 """Focused real company removal/ID reuse, retired-account preview and native repeated loading.
 
 @file utility_power_save_fixture-7.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md Group15B
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md Group15B
 @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md company rows
 """
 
@@ -45,7 +45,7 @@ def main():
     previous = startup.read_bytes() if existed else None
     prefix = "r2mlvs3mp-z-a-company-" + uuid.uuid4().hex
     try:
-        startup.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md15B actual company lifecycle.\nutility_file_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md15B actual company lifecycle.\nutility_file_check\n", encoding="utf-8")
         run_case("company-remove", source, "remove", prefix=prefix)
         retired = DIRECTORY / "utility-company-retired.sav"
         version, stream = read_stream(retired)
@@ -87,7 +87,7 @@ def main():
         transfer = importlib.util.module_from_spec(specification)
         specification.loader.exec_module(transfer)
         transfer.CONTEXT = CONTEXT
-        startup.write_text("# @see r2mlvs14-savegame-determinism-and-lifecycle.md15B real physical-route takeover.\nutility_transfer_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs15-savegame-determinism-and-lifecycle.md15B real physical-route takeover.\nutility_transfer_check\n", encoding="utf-8")
         transfer.run_case("company-takeover", transfer_source, context=CONTEXT, prefix=prefix)
         print("Company lifecycle: actual removal/reused company ID, format385/5 retirement, valid preview and two exact native reloads", flush=True)
     finally:

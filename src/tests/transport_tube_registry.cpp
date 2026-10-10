@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_registry.cpp Canonical tube allocation, collision/capacity refusal and capability reset. @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1 */
+/** @file transport_tube_registry.cpp Canonical tube allocation, collision/capacity refusal and capability reset. @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group1 */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

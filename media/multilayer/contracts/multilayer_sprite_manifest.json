@@ -77,7 +77,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 74,
         "sprite_count": 12,
@@ -160,7 +160,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 86,
         "sprite_count": 12,
@@ -242,7 +242,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 98,
         "sprite_count": 3,
@@ -385,7 +385,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 101,
         "sprite_count": 3,
@@ -528,7 +528,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 104,
         "sprite_count": 3,
@@ -671,7 +671,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 107,
         "sprite_count": 3,
@@ -814,7 +814,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 110,
         "sprite_count": 3,
@@ -957,7 +957,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 113,
         "sprite_count": 3,
@@ -1100,7 +1100,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 116,
         "sprite_count": 3,
@@ -1243,7 +1243,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 119,
         "sprite_count": 3,
@@ -1386,7 +1386,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 122,
         "sprite_count": 3,
@@ -1529,7 +1529,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 125,
         "sprite_count": 3,
@@ -1683,7 +1683,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 200,
         "sprite_count": 384,
@@ -1780,7 +1780,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 584,
         "sprite_count": 2,
@@ -1879,7 +1879,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 586,
         "sprite_count": 384,
@@ -1976,7 +1976,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 970,
         "sprite_count": 2,
@@ -2073,7 +2073,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 972,
         "sprite_count": 80,
@@ -2160,7 +2160,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1052,
         "sprite_count": 2,
@@ -2256,7 +2256,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1054,
         "sprite_count": 80,
@@ -2343,7 +2343,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1134,
         "sprite_count": 2,
@@ -2439,7 +2439,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1136,
         "sprite_count": 80,
@@ -2530,7 +2530,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1216,
         "sprite_count": 2,
@@ -3031,7 +3031,7 @@
     },
     {
       "asset_id": "vehicle.model-09",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "vehicle",
       "directions": [
         "N",
@@ -3171,7 +3171,7 @@
     },
     {
       "asset_id": "purchase.model-09",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "icon",
       "directions": [
         "none"
@@ -3244,7 +3244,7 @@
     },
     {
       "asset_id": "vehicle.model-10",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "vehicle",
       "directions": [
         "N",
@@ -3310,7 +3310,7 @@
         "sha256": null
       },
       "geometry_notes": {
-        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
         "vehicle_length_units": 8,
         "native_parts": 1,
         "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
@@ -3341,7 +3341,7 @@
     },
     {
       "asset_id": "purchase.model-10",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "icon",
       "directions": [
         "none"
@@ -3414,7 +3414,7 @@
     },
     {
       "asset_id": "vehicle.model-11",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "vehicle",
       "directions": [
         "N",
@@ -3480,7 +3480,7 @@
         "sha256": null
       },
       "geometry_notes": {
-        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
         "vehicle_length_units": 8,
         "native_parts": 1,
         "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
@@ -3526,7 +3526,7 @@
     },
     {
       "asset_id": "purchase.model-11",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "icon",
       "directions": [
         "none"
@@ -3599,7 +3599,7 @@
     },
     {
       "asset_id": "vehicle.model-12",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "vehicle",
       "directions": [
         "N",
@@ -3665,7 +3665,7 @@
         "sha256": null
       },
       "geometry_notes": {
-        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
         "vehicle_length_units": 8,
         "native_parts": 1,
         "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
@@ -3696,7 +3696,7 @@
     },
     {
       "asset_id": "purchase.model-12",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "icon",
       "directions": [
         "none"
@@ -3768,7 +3768,7 @@
     },
     {
       "asset_id": "vehicle.model-13",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "vehicle",
       "directions": [
         "N",
@@ -3834,7 +3834,7 @@
         "sha256": null
       },
       "geometry_notes": {
-        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
         "vehicle_length_units": 8,
         "native_parts": 1,
         "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
@@ -3866,7 +3866,7 @@
     },
     {
       "asset_id": "purchase.model-13",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "icon",
       "directions": [
         "none"
@@ -4578,7 +4578,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1218,
         "sprite_count": 48,
@@ -4672,7 +4672,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1266,
         "sprite_count": 48,
@@ -4767,7 +4767,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1314,
         "sprite_count": 128,
@@ -4975,7 +4975,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1442,
         "sprite_count": 128,
@@ -5064,7 +5064,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1570,
         "sprite_count": 128,
@@ -5150,7 +5150,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1698,
         "sprite_count": 192,
@@ -5238,7 +5238,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 1890,
         "sprite_count": 512,
@@ -5805,7 +5805,7 @@
     },
     {
       "asset_id": "facility.tube-terminal",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "building",
       "directions": [
         "NE",
@@ -5915,7 +5915,7 @@
     },
     {
       "asset_id": "facility.tube-service",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "building",
       "directions": [
         "NE",
@@ -5998,7 +5998,7 @@
     },
     {
       "asset_id": "facility.tube-interchange",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "building",
       "directions": [
         "NE",
@@ -6077,7 +6077,7 @@
           "facility.road-terminal"
         ],
         "partner_source_owner": "Selected Plan13 Groups24/25; existing native rail/road graphics prove geometry only until their final source handoff.",
-        "runtime_binding": "master10.7/Plan13 Group84 after actual operating transfer in master10.5/Plan16 Group9. No new inventory, station identity, floor, machinery or power grant."
+        "runtime_binding": "master10.7/Plan13 Group84 after actual operating transfer in master10.5/Plan17 Group9. No new inventory, station identity, floor, machinery or power grant."
       },
       "authoring": {
         "date": "2026-10-10",
@@ -6107,7 +6107,7 @@
     },
     {
       "asset_id": "facility.vent-collector",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6162,7 +6162,11 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_action5_1c",
+        "native_offset": 2436,
+        "sprite_count": 1152,
+        "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json"
       },
       "geometry_notes": {
         "approved_collector_ready_views_sha256": "3911c63117a8822079e63262464af70bfa80d4663e137fb7e74713ac084e872f",
@@ -6216,7 +6220,7 @@
     },
     {
       "asset_id": "facility.vent-powerhouse",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6365,7 +6369,7 @@
     },
     {
       "asset_id": "facility.magma-powerhouse",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6508,7 +6512,7 @@
     },
     {
       "asset_id": "facility.heat-smelter",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6568,7 +6572,7 @@
     },
     {
       "asset_id": "facility.heat-battery-works",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6628,7 +6632,7 @@
     },
     {
       "asset_id": "facility.mantle-forge",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6688,7 +6692,7 @@
     },
     {
       "asset_id": "facility.utility-riser",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "building",
       "directions": [
         "NE",
@@ -6807,7 +6811,7 @@
     },
     {
       "asset_id": "tube.straight",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "NE",
@@ -6913,7 +6917,7 @@
     },
     {
       "asset_id": "tube.bend45",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "N",
@@ -7064,7 +7068,7 @@
     },
     {
       "asset_id": "tube.junction",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "none"
@@ -7233,7 +7237,7 @@
     },
     {
       "asset_id": "tube.end",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "NE",
@@ -7337,7 +7341,7 @@
     },
     {
       "asset_id": "tube.crossing",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "none"
@@ -7421,7 +7425,7 @@
     },
     {
       "asset_id": "tube.conduit",
-      "consumer": 16,
+      "consumer": 17,
       "kind": "terrain",
       "directions": [
         "NE",
@@ -7520,7 +7524,7 @@
     },
     {
       "asset_id": "geothermal.vent",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "terrain",
       "directions": [
         "none"
@@ -7603,7 +7607,7 @@
     },
     {
       "asset_id": "geothermal.conduit",
-      "consumer": 17,
+      "consumer": 18,
       "kind": "terrain",
       "directions": [
         "NE",
@@ -8369,7 +8373,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 128,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 128,
         "sprite_count": 3,
@@ -8453,7 +8457,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 131,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 131,
         "sprite_count": 3,
@@ -8537,7 +8541,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 134,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 134,
         "sprite_count": 3,
@@ -8621,7 +8625,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 137,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 137,
         "sprite_count": 3,
@@ -8705,7 +8709,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 140,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 140,
         "sprite_count": 3,
@@ -9059,7 +9063,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 158,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 158,
         "sprite_count": 3,
@@ -9143,7 +9147,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 161,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 161,
         "sprite_count": 3,
@@ -9747,7 +9751,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 2402,
         "sprite_count": 1,
@@ -9829,7 +9833,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 2403,
         "sprite_count": 1,
@@ -10394,7 +10398,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 168,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 168,
         "sprite_count": 16,
@@ -10489,7 +10493,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 184,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 184,
         "sprite_count": 16,
@@ -10584,7 +10588,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 2404,
         "sprite_count": 16,
@@ -10681,7 +10685,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "4e27c95fc061b3327243bfcd5714ad4ac47248d997fe35f68eb20d43ad2abc9d",
+        "sha256": null,
         "route": "native_action5_1c",
         "native_offset": 2420,
         "sprite_count": 16,

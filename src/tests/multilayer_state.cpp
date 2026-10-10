@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_state.cpp Metadata structural/refusal/staging fixtures before feature pools exist. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-savegame-determinism-and-lifecycle.md */
+/** @file multilayer_state.cpp Metadata structural/refusal/staging fixtures before feature pools exist. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

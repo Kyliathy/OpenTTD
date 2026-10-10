@@ -56,7 +56,7 @@ Ordinary construction is unchanged: `CheckExcavatedFootprint` still has no pocke
 
 ## Capacity consequence
 
-Cut 0 charges 12 new cells instead of 3. Soft ground needs 72 t Earth and 144 t Rock, so a consist with one 64 t Earth and one 128 t Rock hopper refuses `InsufficientCapacity`. Two of each fit. This replaces the "cleared 3x3 commissioning area" assumption of [r2mlvs1-e](../r2mlvs1-e-ground-and-space-budgets.md) line 32; Plan 4 Group 20 and Plan 15 Group 16 must measure the larger first-cut cost.
+Cut 0 charges 12 new cells instead of 3. Soft ground needs 72 t Earth and 144 t Rock, so a consist with one 64 t Earth and one 128 t Rock hopper refuses `InsufficientCapacity`. Two of each fit. This replaces the "cleared 3x3 commissioning area" assumption of [r2mlvs1-e](../r2mlvs1-e-ground-and-space-budgets.md) line 32; Plan 4 Group 20 and Plan 16 Group 16 must measure the larger first-cut cost.
 
 ## Portal proof (Plan 3, consumed by Plan 4)
 

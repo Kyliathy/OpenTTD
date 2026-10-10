@@ -6,7 +6,7 @@
 
 /**
  * @file transport_tube.cpp Exact first-party rail capability in the existing canonical railtype registry.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups1/4
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups1/4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md pinned identity
  */
 

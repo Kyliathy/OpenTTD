@@ -2,7 +2,7 @@
 
 Owners: [TBM task 20.1](r2mlvs4-tunnel-boring-machines.md#group-20---recovery-presentation-and-acceptance)
 and [master checkpoint 7.8](r2mlvs3mp-master-plan.md).
-Recipient: [integrated economics Group 16](r2mlvs15-integrated-acceptance-and-balance.md#group-16---measure-complete-ground-project-economics).
+Recipient: [integrated economics Group 16](r2mlvs16-integrated-acceptance-and-balance.md#group-16---measure-complete-ground-project-economics).
 Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md).
 Measured: 2026-10-06, Debug test binary at `4d65cbd31d` plus these working changes.
 
@@ -90,7 +90,7 @@ script commissioning pass together: 27,534 assertions / four cases in about
 11 seconds ([s](r2mlvs4-s-project-and-workflow-checks.log)). No full regression
 was run.
 
-These results complete Plan 4 20.1 and master 7.8. Plan 15 receives the actual
+These results complete Plan 4 20.1 and master 7.8. Plan 16 receives the actual
 inputs while its runner, deliberate receiver-saturation, payback/sensitivity,
 performance and final-art tasks remain pending. Recurring underground-bay
 exchange and every wait-state file/replay remain master 7.1; a complete paid

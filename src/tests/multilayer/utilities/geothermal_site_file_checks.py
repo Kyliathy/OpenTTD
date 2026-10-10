@@ -2,7 +2,7 @@
 
 @file geothermal_site_file_checks.py
 @see r2mlvs3mp-master-plan.md checkpoint10.3
-@see r2mlvs17-geothermal-energy-and-industry.md Group1; actual paid operating plant remains10.6.
+@see r2mlvs18-geothermal-energy-and-industry.md Group1; actual paid operating plant remains10.6.
 """
 
 import hashlib
@@ -127,7 +127,7 @@ def main():
     retained = ROOT / "src/tests/fixtures/tubes/recovery387-tube-meter-recover-source.sav"
     original = hashlib.sha256(retained.read_bytes()).hexdigest()
     try:
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md1 cold planning persistence only.\ngeothermal_site_check\n", encoding="utf-8")
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md1 cold planning persistence only.\ngeothermal_site_check\n", encoding="utf-8")
         run_case("legacy-read", retained)
         assert authority(DIRECTORY / "fixture388-cold-site-legacy-read.sav", False) == authority(retained, False)
         run_case("fixture-create", retained)
@@ -144,7 +144,7 @@ def main():
         for corrupt in corrupt_sites(claimed):
             run_case("preview", claimed, corrupt)
         output = DIRECTORY / "fixture388-cold-site-normal-resaved.sav"
-        startup.write_text("# @see r2mlvs17-geothermal-energy-and-industry.md1 ordinary cold blueprint loading.\n"
+        startup.write_text("# @see r2mlvs18-geothermal-energy-and-industry.md1 ordinary cold blueprint loading.\n"
                            "set savegame_format lzma\n"
                            f'save "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
         log = CONTEXT.logs / f"{PREFIX}-geothermal-site-normal-loader.log"

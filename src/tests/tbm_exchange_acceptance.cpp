@@ -188,7 +188,7 @@ TEST_CASE("Two full cycles return the same wagons and dispose of every tonne", "
 	const auto cutter_units = Sorted(GetTBMChainIDs(rig.front));
 	const auto hauler_units = Sorted(GetTBMChainIDs(rig.hauler));
 	const size_t vehicles = Vehicle::GetNumItems();
-	const TBMPacketCustody custody; // Each tonne in one list until a receiver takes it (Plan 14 10.3).
+	const TBMPacketCustody custody; // Each tonne in one list until a receiver takes it (Plan 15 10.3).
 	uint64_t earth_cut = 0;
 	uint64_t rock_cut = 0;
 

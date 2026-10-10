@@ -3500,7 +3500,7 @@ bool AfterLoadGame()
 	if (!ValidateGeothermalUtilityLinks()) SlErrorCorrupt("Invalid installed rock utility geometry"); // Shared installed cells resolve actual native coexistence/collector/riser ports and owned electrical housings without repairing physical rights or energy.
 	if (!AcceptLoadedGeothermalHeatState()) SlErrorCorrupt("Invalid physical geothermal heat routes"); // Exact original shared slices and actual installed path geometry agree before usable physical rights publish.
 	RevalidateUtilityHeatRoutes(); // Actual native ownership expires only older lost-path unused rights; consumed history and healthy current source/path bytes remain unchanged.
-	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 14 14.3), so saved
+	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 15 14.3), so saved
 	// work/terrain/fleet differences cannot hide in metadata-only hashes.
 	LogMultiLayerStateDiagnostics(CaptureMultiLayerStateSchema());
 	AfterLoadStoryBook();

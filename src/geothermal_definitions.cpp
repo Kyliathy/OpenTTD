@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_definitions.cpp Canonical collector/riser IIDS/TIDS and explicit input-only capability before paid native construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups1B/5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups1B/5B
  */
 
 #include "stdafx.h"

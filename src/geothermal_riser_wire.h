@@ -2,7 +2,7 @@
 
 /**
  * @file geothermal_riser_wire.h Copied local-coordinate machinery transport for independent version400 preview.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  */
 

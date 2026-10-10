@@ -1,8 +1,8 @@
 """Focused selected-M1 source range, crop and corruption fixtures.
 
 @file multilayer_sprite_pack.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.6
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
 Read-only source fixtures; actual GRF loading is tested separately by its owner.
 """
 
@@ -61,10 +61,12 @@ def main():
     public = json.loads(art.PUBLIC.read_text(encoding="utf-8"))
     scope = json.loads(art.SCOPE.read_text(encoding="utf-8"))
     ranges, bound = art.selected_ranges(public, scope)
-    assert len(ranges) == 42
-    assert sum(row["sprite_count"] for row in ranges) == 2343
-    assert bound == 2436
-    assert ranges[-2]["native_offset"] == 2404 and ranges[-1]["native_offset"] == 2420
+    assert len(ranges) == 43
+    assert sum(row["sprite_count"] for row in ranges) == 3495
+    assert bound == 3588
+    assert ranges[-3]["native_offset"] == 2404 and ranges[-2]["native_offset"] == 2420
+    assert ranges[-1]["asset_id"] == "facility.vent-collector"
+    assert ranges[-1]["native_offset"] == 2436 and ranges[-1]["sprite_count"] == 1152
     verify_source_refusals(public)
     families = {row["asset_id"]: row for row in public["assets"]}
     documents, images = {}, {}
@@ -82,7 +84,7 @@ def main():
             restored.paste(cropped, (rx - family["anchor"][0], ry - family["anchor"][1]))
             x, y, sw, sh = pose["box"]
             assert restored.tobytes() == image.crop((x, y, x + sw, y + sh)).tobytes()
-    print("Selected M1 pack fixtures: 42 families / 2343 exact source poses; stable native ranges, crop/anchor round trips and source corruption refusals pass")
+    print("Selected M1 pack fixtures: 43 families / 3495 exact source poses; stable native ranges, crop/anchor round trips and source corruption refusals pass")
 
 
 if __name__ == "__main__":

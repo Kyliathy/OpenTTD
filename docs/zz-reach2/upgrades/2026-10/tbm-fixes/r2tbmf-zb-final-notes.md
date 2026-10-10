@@ -78,7 +78,7 @@ The [optimized correction build](../../../../../logs/r2tbmf-zb-optimized-correct
 
 The user still needs to assess the published checkpoint's usability, route clarity, material appearance and pacing; task11.5 stays open until that feedback arrives and any required corrections are handled. No complete-plan or master-resumption claim is made. Git writes remain prohibited by the user's workspace instructions.
 
-Documentation closure11.4: updated the actual player guide/demo/launcher, parent AD-5, frozen pacing/yield examples, Plans4/5/7/14 public handoffs and GUI/vehicle/save architecture. Existing Plan2/3/13 and map-layer handoffs already record delivered terminal handover and material rendering. The new checkpoint/guide links resolve to retained files. A read-only diff audit currently finds newly completed checkboxes in `r2tbmf-tbm-fixes.md` and `r2mlvs17-geothermal-energy-and-industry.md`; both names belong in the later commit message if Git writing becomes explicitly authorized. No commit was attempted and no geothermal work was resumed.
+Documentation closure11.4: updated the actual player guide/demo/launcher, parent AD-5, frozen pacing/yield examples, Plans4/5/7/15 public handoffs and GUI/vehicle/save architecture. Existing Plan2/3/13 and map-layer handoffs already record delivered terminal handover and material rendering. The new checkpoint/guide links resolve to retained files. A read-only diff audit currently finds newly completed checkboxes in `r2tbmf-tbm-fixes.md` and `r2mlvs18-geothermal-energy-and-industry.md`; both names belong in the later commit message if Git writing becomes explicitly authorized. No commit was attempted and no geothermal work was resumed.
 
 The user asked whether `assets/reviews` could be deleted before committing. At inspection it held124.5MiB, including66 raw PPMs/67.7MiB and343 tracked files. Running the game does not depend on the folder, but `activate_m1_art.py` / `review_m1_art.py` consume its JSON reports and hash-verified PNGs; plans also link captures. Wholesale deletion would remove those inputs/evidence. No review JSON references PPM files, making raw captures the first pruning candidates after reference review. No deletion was requested or performed. Later Debug capture files add further generated evidence; the quoted size is the inspection-time measurement.
 
@@ -90,7 +90,7 @@ Prepared commit message, conditional on the remaining player acceptance and an e
 Fix TBM excavation, parking and public tunnel workflows
 
 Record completed work in r2tbmf-tbm-fixes.md and
-r2mlvs17-geothermal-energy-and-industry.md.
+r2mlvs18-geothermal-energy-and-industry.md.
 
 Deliver compact project planning, deterministic movement, slower cutting with
 whole-unit spoil, managed-hauler advice, selected hangars, safe release, far-exit

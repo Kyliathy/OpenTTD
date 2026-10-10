@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_utility.cpp Paid rock-layer pipe/cable overlays and bounded paths; shared utility records retain installed identity and every resource quantity.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3B-5
  */
 
 #include "stdafx.h"

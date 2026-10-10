@@ -6,7 +6,7 @@
 
 /**
  * @file multilayer_sprite.h Pure native M1 presentation selectors; gameplay remains with the existing feature owners.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups81B/82/83
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups81B/82/83/79C
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 
@@ -154,6 +154,24 @@ std::optional<SpriteID> GetMultiLayerRoadDepotSprite(TileIndex tile, bool front,
  * @return Selected native receiver part, or no override for another industry.
  */
 std::optional<SpriteID> GetMultiLayerReceiverSprite(TileIndex tile, bool front, uint64_t visual_ticks);
+
+/**
+ * Query an actual paid collector's physical cell, construction stage and current Heat state.
+ * @param tile Existing native collector industry cell, independent of camera selection.
+ * @param front True for its aligned foreground, false for the source back/floor.
+ * @param visual_ticks Read-only equipment phase clock; paid construction uses its native stage.
+ * @return Exact packed collector pose, or no override for absent/foreign geometry.
+ */
+std::optional<SpriteID> GetMultiLayerCollectorSprite(TileIndex tile, bool front, uint64_t visual_ticks);
+
+/**
+ * Resolve an actual selected industry through its existing receiver or collector owner.
+ * @param tile Native industry cell; other industry families keep their usual resolver.
+ * @param front True for its aligned foreground part, false for its back/floor.
+ * @param visual_ticks Read-only equipment clock shared by both parts of one draw.
+ * @return Selected native industry pose or no override for another family/profile.
+ */
+std::optional<SpriteID> GetMultiLayerIndustrySprite(TileIndex tile, bool front, uint64_t visual_ticks);
 
 /**
  * Return the shared native depot mouth/roof sorting geometry.

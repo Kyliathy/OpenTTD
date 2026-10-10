@@ -82,7 +82,7 @@ def main():
     (CONTEXT.reports / "r2mlvs2-i-vent-results.txt").write_text(
         "R2MLVS2 Group 6: natural-field new/reload, geology-only predecessor and capacity/missing-family refusals passed.\n"
         "Minerals, terrain and thermal ID/capacity remained exact; discovery produced no plant, freight or power grant.\n"
-        "Original configuration/startup/predecessor bytes preserved. Runtime heat allocation remains Plan 17.\n", encoding="utf-8")
+        "Original configuration/startup/predecessor bytes preserved. Runtime heat allocation remains Plan 18.\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

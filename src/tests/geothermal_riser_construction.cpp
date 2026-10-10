@@ -6,7 +6,7 @@
 
 /**
  * @file geothermal_riser_construction.cpp Actual funding, material shortage and once-per-tick paid riser construction boundaries.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  */
 
 #include "../stdafx.h"
