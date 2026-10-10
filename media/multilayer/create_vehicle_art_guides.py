@@ -2,14 +2,18 @@
 
 @file create_vehicle_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups49-53.
 @see media/multilayer/contracts/multilayer_geometry_templates.svg
 These labeled diagrams convey geometry only; they are never source game art.
 """
 
 from pathlib import Path
+import io
+import math
 import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageDraw, PngImagePlugin
+from convert_tube_capsules import VECTORS
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -76,6 +80,54 @@ def create_purchase_guide():
     metadata.add_text("Owner", "r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18; retained available purchase pose reference")
     image.save(path, pnginfo=metadata)
     return path
+
+
+def create_capsule_guides():
+    """Expose four exact engine axes/front-versus-rear faces per source sheet.
+
+    @return Two immutable versioned geometry guide paths; no game art is drawn.
+    """
+    paths = []
+    # Small sheets keep true front/rear and shallow diagonal axes unambiguous.
+    # The source generator receives these diagrams alongside its own model,
+    # never as a substitute for an original missing physical view.
+    for directions in (("N", "NE", "S", "SW"), ("SE", "E", "NW", "W")):
+        board = Image.new("RGB", (1536, 1024), (235, 239, 243))
+        draw = ImageDraw.Draw(board)
+        for index, direction in enumerate(directions):
+            left, top = (index % 2) * 768, (index // 2) * 512
+            cx, cy = left + 384, top + 265
+            dx, dy = VECTORS[direction]
+            scale = 9
+            fx, fy = cx + dx * scale / 2, cy + dy * scale / 2
+            rx, ry = cx - dx * scale / 2, cy - dy * scale / 2
+            length = math.hypot(dx, dy)
+            px, py = -dy / length, dx / length
+            draw.rectangle((left + 8, top + 8, left + 759, top + 503), outline=(80, 90, 100), width=2)
+            draw.text((left + 24, top + 25), f"{direction}: GEOMETRY ONLY; WHITE LAMPS = FRONT, SQUARE COUPLING = REAR", fill="black")
+            draw.line((rx, ry, fx, fy), fill=(110, 116, 122), width=72)
+            draw.rectangle((rx - 13, ry - 13, rx + 13, ry + 13), fill=(20, 24, 28))
+            draw.ellipse((fx - 23, fy - 23, fx + 23, fy + 23), fill=(35, 40, 45))
+            for sign in (-1, 1):
+                x, y = fx + sign * px * 10, fy + sign * py * 10
+                draw.rectangle((x - 5, y - 5, x + 5, y + 5), fill="white")
+            draw.text((fx + 30, fy - 12), "FRONT", fill="black")
+            draw.text((rx + 22, ry + 12), "REAR", fill="black")
+            draw.text((left + 24, top + 455), "Fixed engine projection; keep selected model and upper-left image lighting.", fill="black")
+        path = ROOT / "media/multilayer/guides/ground" / ("capsule-" + "-".join(d.lower() for d in directions) + "-v1.png")
+        metadata = PngImagePlugin.PngInfo()
+        metadata.add_text("Owner", "Plan13 Groups49-53; Plan16 staged10B; geometry-only source guide")
+        stream = io.BytesIO()
+        board.save(stream, format="PNG", pnginfo=metadata)
+        encoded = stream.getvalue()
+        if path.exists():
+            if path.read_bytes() != encoded:
+                raise ValueError("immutable capsule guide needs a sibling version")
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(encoded)
+        paths.append(path)
+    return paths
 
 
 if __name__ == "__main__":

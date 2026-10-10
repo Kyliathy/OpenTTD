@@ -400,6 +400,7 @@ enum class Commands : uint8_t {
 	ExtendTBMProject, ///< append reviewed excavation to an actual paused cutter; preserves prior command identities
 	ConfirmTBMCommission, ///< confirm an exact portal area quote without silently replacing a reused machine
 	SendTBMToHangar, ///< choose a real owned hangar through an ordinary native depot order
+	BuildGeothermalRiser, ///< fund original-portal-bound native electrical machinery; r2mlvs17 Group5B, append preserves command identities
 
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };

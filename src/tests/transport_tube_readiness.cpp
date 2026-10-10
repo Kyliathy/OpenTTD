@@ -7,11 +7,13 @@
 /**
  * @file transport_tube_readiness.cpp Actual native facility identity, model/cargo and pure physical inlet views.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48C actual platform geometry
  */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "layer_window_fixture.h"
+#include "mock_fontcache.h"
 #include "transport_tube_meter_fixture.h"
 #include "../station_cmd.h"
 #include "../safeguards.h"
@@ -41,6 +43,10 @@ TEST_CASE("Tube public facility view retains native identity and exact capsule c
 /** A loading-platform view retains its canonical station ID/geometry and never copies or allocates an alternate packet buffer. */
 TEST_CASE("Tube public loading terminal uses actual station platform and cargo owner", "[transport-tube-readiness]")
 {
+	// Station construction measures its real name sign. Isolated geometry
+	// checks need their own font cache rather than relying on an earlier UI
+	// case to initialize it before Windows paragraph layout is entered.
+	MockFontCache::InitializeFontCaches();
 	LoadGeneratedWindowTestLanguage(); TubePrototypeRig rig;
 	const auto tile = TileXYL(50, 44, MapLayer::Underground);
 	rig.Open(std::array{tile, TileAddWrap(tile, 1, 0), TileAddWrap(tile, -1, 0), TileAddWrap(tile, 2, 0)});
@@ -52,6 +58,75 @@ TEST_CASE("Tube public loading terminal uses actual station platform and cargo o
 	CHECK(CanTubeTerminalServeVehicle(tile, _current_company, GetTubeEngine(9)));
 	CHECK(GetTubeNetworkReadiness(tile, _current_company)->inlets.empty());
 	CHECK(Station::GetNumItems() == stations); CHECK(CargoPacket::GetNumItems() == packets);
+}
+
+/**
+ * Freeze all eight actual default native platform graphics before selecting tube loading source cells.
+ * Real command-built axes/platform counts/lengths retain canonical station IDs and berth geometry.
+ */
+TEST_CASE("Tube loading artwork follows actual native platform cell roles", "[transport-tube-platform-geometry]")
+{
+	MockFontCache::InitializeFontCaches();
+	LoadGeneratedWindowTestLanguage();
+	TubePrototypeRig rig;
+	std::array<bool, 8> seen{};
+	uint layout_index = 0;
+	// Two real axes, one/two parallel platforms and short/long through berths
+	// exercise bare, small-building and both canopy-half roles. Layout cells
+	// remain native station tiles, never a fixed decorative two-by-two campus.
+	for (Axis axis : {Axis::X, Axis::Y}) {
+		for (uint8_t tracks : {1, 2}) {
+			for (uint8_t length : {1, 2, 5}) {
+				CAPTURE(axis, tracks, length);
+				// This fixture owns a64x64 plane. Keep every full five-cell
+				// berth and both approaches inside its actual boundary, with
+				// enough spacing to prevent automatic neighbouring joins.
+				const uint origin_x = 12 + (layout_index % 4) * 12;
+				const uint origin_y = 12 + (layout_index / 4) * 12;
+				const TileIndex tile = TileXYL(origin_x, origin_y, MapLayer::Underground);
+				// Open precisely the native platform cells and their two through
+				// approaches as explicit fixture input. A builder cannot excavate
+				// or acquire an extra stock/capacity cell through its source art.
+				for (uint platform = 0; platform < tracks; ++platform) {
+					for (int along = -1; along <= length; ++along) {
+						const int dx = axis == Axis::X ? along : static_cast<int>(platform);
+						const int dy = axis == Axis::X ? static_cast<int>(platform) : along;
+						rig.Open(std::array{TileAddWrap(tile, dx, dy)});
+					}
+				}
+				const auto stations = Station::GetNumItems();
+				const auto packets = CargoPacket::GetNumItems();
+				const Money money = Company::Get(_current_company)->money;
+				REQUIRE(CmdBuildRailStation({}, tile, rig.tube, axis, tracks, length, STAT_CLASS_DFLT, 0, NEW_STATION, false).Succeeded());
+				CHECK(Station::GetNumItems() == stations);
+				CHECK(Company::Get(_current_company)->money == money);
+				REQUIRE(CmdBuildRailStation(DoCommandFlag::Execute, tile, rig.tube, axis, tracks, length, STAT_CLASS_DFLT, 0, NEW_STATION, false).Succeeded());
+				CHECK(Station::GetNumItems() == stations + 1);
+				const StationID station = GetStationIndex(tile);
+				// Every built cell keeps the same canonical packet owner and its
+				// actual track-axis/berth length. Graphics roles come from the
+				// installed native map, independently of a planned source caption.
+				for (uint platform = 0; platform < tracks; ++platform) {
+					for (uint along = 0; along < length; ++along) {
+						const auto cell = TileAddWrap(tile, axis == Axis::X ? along : platform, axis == Axis::X ? platform : along);
+						const auto view = GetTubeTerminal(cell, _current_company);
+						REQUIRE(view.has_value());
+						CHECK(view->station == station);
+						CHECK(view->depot == DepotID::Invalid());
+						CHECK(view->platform_length_tiles == length);
+						CHECK(GetRailStationAxis(cell) == axis);
+						const StationGfx graphics = GetStationGfx(cell);
+						REQUIRE(graphics < seen.size());
+						seen[graphics] = true;
+					}
+				}
+				CHECK(CargoPacket::GetNumItems() == packets);
+				++layout_index;
+			}
+		}
+	}
+	CHECK(layout_index == 12);
+	CHECK(std::ranges::count(seen, true) == seen.size());
 }
 
 /** Source/financial readiness follows actual owned guideways and cash while remaining pure across repeated UI/camera-independent queries. */

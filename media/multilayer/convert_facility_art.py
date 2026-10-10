@@ -2,6 +2,7 @@
 
 @file convert_facility_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 23/26/37/38/79
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48B shared immutable service enclosure.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint 8.4
 Only authored source crops, palette conversion and registered equipment inserts
 are performed. Packed IDs, content identity and synchronized state are untouched.
@@ -166,13 +167,17 @@ def insert_indicator(housing, component, target):
     return pose
 
 
-def derive():
+def derive(document=None, source_record=RECORD, output_dir=base.OUTPUT):
     """Derive exact state/direction/cell/part/phase coverage from retained art.
 
+    @param document Optional explicit selected source/component records for bounded model reuse.
+    @param source_record Actual owning provenance path; defaults to the existing M1 record.
+    @param output_dir Actual repository proof directory; defaults to existing M1 derived art.
     @return Native source report and mapping of output paths to PNG bytes.
     @throws ValueError If public geometry or immutable source coverage disagrees.
     """
-    document = json.loads(RECORD.read_text(encoding="utf-8"))
+    if document is None:
+        document = json.loads(source_record.read_text(encoding="utf-8"))
     public = json.loads((base.PUBLIC).read_text(encoding="utf-8"))
     families = {row["asset_id"]: row for row in public["assets"]}
     components = {row["key"]: indicator(row) for row in document["components"]}
@@ -234,7 +239,7 @@ def derive():
                             sprites.append({"asset_id": source["asset_id"], "direction": direction, "tile_variant": tile,
                                             "world_cell": world_cell, "state": state, "frame": frame, "part": part,
                                             "anchor": [-31, -33], "source_cell": [column, state_index], "box": [x, y, 64, 64]})
-        path = base.OUTPUT / (source["key"] + "-authored.png")
+        path = output_dir / (source["key"] + "-authored.png")
         encoded = png_bytes(sheet)
         files[path] = encoded
         outputs.append({"asset_id": source["asset_id"], "path": path.relative_to(base.ROOT).as_posix(),
@@ -242,7 +247,7 @@ def derive():
                         "source_boxes": boxes, "footprint": source["footprint"], "tile_cells": tile_cells, "size": list(sheet.size),
                         "native_cell": [64, 64], "sprites": sprites})
     return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups23/26/37-38; source art only, native rendering pending",
-            "schema_version": 1, "runtime_activated": False, "source_record": RECORD.relative_to(base.ROOT).as_posix(),
+            "schema_version": 1, "runtime_activated": False, "source_record": source_record.relative_to(base.ROOT).as_posix(),
             "atlases": outputs, "pose_count": sum(len(row["sprites"]) for row in outputs)}, files
 
 

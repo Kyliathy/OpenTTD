@@ -16,10 +16,13 @@
 #include "network/core/tcp_content_type.h"
 #include "timer/timer_game_calendar.h"
 #include "utility_power.h"
+#include "utility_power_lineage.h"
 #include "geothermal_heat.h"
 #include "transport_tube.h"
 #include "geothermal_site_wire.h"
 #include "geothermal_collector_wire.h"
+#include "geothermal_riser_wire.h"
+#include "layer_portal_work_wire.h"
 #include "excavation.h"
 
 
@@ -40,6 +43,13 @@ enum class DirectoryCreateResult : uint8_t {
 
 using CompanyPropertiesMap = std::map<uint, std::unique_ptr<CompanyProperties>>;
 
+/** Copied native machinery identity/shape for independent dependent-family preview; no stock or Industry pool item is allocated. */
+struct NativeIndustryPreview {
+	uint16_t id = UINT16_MAX; ///< Actual serialized native pool ordinal.
+	uint32_t tile = UINT32_MAX; ///< Native serialized anchor in this file's explicit map geometry.
+	uint8_t width = 0, height = 0, type = UINT8_MAX; ///< Actual native floor and runtime definition, matched against the same file's IIDS mapping.
+};
+
 /**
  * Read-only save preview container; explicit metadata is transport, never live gameplay authority.
  */
@@ -51,6 +61,8 @@ struct LoadCheckData {
 	uint32_t map_size_x = 0;
 	uint32_t map_size_y = 0;
 	uint8_t map_layers = 1; ///< Layers stored in the file. Old files are one surface plane.
+	bool native_tick_present = false; ///< Version400 preview copied its own synchronized clock rather than borrowing live work time.
+	uint64_t native_tick_counter = 0; ///< Read-only saved native clock for exact construction tick-reference checks.
 	uint16_t multilayer_schema_version = 0; ///< Zero denotes legacy chunk absence in this preview only.
 	uint8_t gameplay_profile_id = 0; ///< Saved profile identity for exact preview content validation.
 	uint16_t gameplay_profile_version = 0; ///< Saved immutable profile revision.
@@ -73,6 +85,7 @@ struct LoadCheckData {
 	uint32_t excavation_pass_rows = 0; ///< Bounded copied pass count, never live input.
 	std::array<bool, 2> portal_work_present{}; ///< Independent native-work header/table preview presence.
 	uint32_t portal_work_expected = 0, portal_work_rows = 0; ///< Exact bounded copied row counts.
+	std::vector<PortalWorkWire> portal_work_records; ///< Copied original portal company/stamps for dependent preview; no live topology or routing is consulted.
 	std::array<bool, 3> tbm_project_present{}; ///< Independent TBM project header, project table and support table preview presence.
 	uint32_t tbm_project_expected = 0, tbm_project_rows = 0, tbm_project_next = 0; ///< Exact copied project counts and allocation cursor.
 	uint32_t tbm_support_expected = 0, tbm_support_rows = 0; ///< Exact copied temporary support counts.
@@ -86,9 +99,12 @@ struct LoadCheckData {
 	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
 	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.
 	std::array<bool, 2> utility_power_present{}; ///< Independent header/table preview; Plan 12 Group 7B.
-	std::array<uint64_t, 13> utility_power_header{}; ///< Copied utility identity/phase/counts and392 committed local topology revision; no live geometry is borrowed.
+	std::array<uint64_t, 14> utility_power_header{}; ///< Copied utility identity/phase/counts, committed local topology and403 shared slice cursor; no live geometry is borrowed.
 	std::array<uint32_t, 5> utility_power_rows{}; ///< Copied source/consumer/connection/share/directed-link counts.
 	UtilityPowerState utility_power_state; ///< Unpublished preview balances; never replaces live energy authority.
+	std::array<bool, 2> utility_path_present{}; ///< Independent403 shared lineage header/table presence, even for an empty segment family.
+	std::array<uint64_t, 3> utility_path_header{}; ///< Copied path revision, exact epoch and bounded reference count.
+	std::vector<UtilityPowerPathWire> utility_path_rows; ///< Unpublished ordered segment references; original quantities remain in utility_power_state.
 	std::array<bool, 2> tube_power_present{}; ///< Independent physical paid service header/table preview. See r2mlvs16-underground-transport-tubes.md Group5.
 	std::array<uint32_t, 2> tube_power_expected{}; ///< Copied exact connection and path-cell counts.
 	std::vector<TubePowerConnection> tube_power_rows; ///< Unpublished preview invoices; no energy or movement authority.
@@ -102,11 +118,16 @@ struct LoadCheckData {
 	std::array<bool, 2> geothermal_collector_present{}; ///< Independent389 actual construction header/table presence.
 	uint32_t geothermal_collector_expected = 0; ///< Copied bounded actual native participant count.
 	std::vector<GeothermalCollectorWire> geothermal_collector_rows; ///< Copied work/control/receipt transport; Industry remains the stock/machinery owner.
+	std::array<bool, 2> geothermal_riser_present{}; ///< Independent400 native machinery header/table presence.
+	uint32_t geothermal_riser_expected = 0; ///< Exact bounded paid machinery count.
+	std::vector<GeothermalRiserWire> geothermal_riser_rows; ///< Copied original geometry/work/receipt/loss markers; native materials remain in INDY.
 	std::array<bool, 2> geothermal_heat_route_present{}; ///< Independent393 physical header/table presence.
 	std::array<uint32_t, 3> geothermal_heat_route_expected{}; ///< Exact copied port/path/cell cardinalities.
 	uint64_t geothermal_heat_route_interval = 0; ///< Copied native grant epoch; preview never allocates.
 	std::vector<GeothermalHeatRouteWire> geothermal_heat_route_rows; ///< Copied physical references only; no running-world geometry or quantities.
 	std::vector<uint16_t> native_industry_preview_ids; ///< Copied current-format native INDY identities for independent actual construction references; no industry is allocated by preview.
+	std::vector<NativeIndustryPreview> native_industry_preview_rows; ///< Copied400 native floor/type identity, without material buffers or gameplay publication.
+	std::vector<uint8_t> native_riser_preview_types; ///< Same-file canonical riser IIDS mappings, never a live or duplicate content catalogue.
 
 	TimerGameCalendar::Date current_date{};
 

@@ -75,13 +75,16 @@ GeothermalRiserAdmission PrepareGeothermalRiser(const GeothermalRiserRequest &re
 	if (CheckExcavationConstructionArea(request.tile, terms->width, terms->height, request.access).Failed()) {
 		result.error = GeothermalError::Footprint; return result;
 	}
+	const auto public_approach = GetLayerPortalDoorTile(request.portal);
+	if (!IsValidTile(public_approach)) { result.error = GeothermalError::Endpoint; return result; }
 	// All four machinery cells remain separately excavated and unoccupied. Neither
 	// funding nor a quote may overwrite paid transport, active retreat, utilities,
-	// another blueprint or a vehicle to make room for electrical equipment.
+	// another blueprint or a vehicle to make room for electrical equipment. The
+	// public approach stays reserved even if its track was temporarily removed.
 	for (uint y = 0; y < terms->height; ++y) {
 		for (uint x = 0; x < terms->width; ++x) {
 			const auto tile = TileAddWrap(request.tile, x, y);
-			if (!IsTileType(tile, TileType::Clear) || GetTileSlope(tile) != SLOPE_FLAT || IsBridgeAbove(tile) || EnsureNoVehicleOnGround(tile).Failed() ||
+			if (tile == public_approach || !IsTileType(tile, TileType::Clear) || GetTileSlope(tile) != SLOPE_FLAT || IsBridgeAbove(tile) || EnsureNoVehicleOnGround(tile).Failed() ||
 				GetTBMSupportTile(tile) != nullptr || GetGeothermalSiteClaimForTile(tile) != nullptr || HasGeothermalUtilityCell(tile)) {
 				result.error = GeothermalError::Occupied; result.failure_tile = tile; return result;
 			}

@@ -71,6 +71,10 @@ def build_manifest():
     for model in range(19):
         owner = 4 if model < 2 else 5 if model < 5 else 7 if model < 9 else 16 if model < 14 else 9 if model in (14, 18) else 10 if model == 15 else 11
         states = ["empty", "partial", "full", "service", "blocked"] if model not in (0, 1, 4, 16) else ["idle", "moving", "working", "blocked"]
+        if 9 <= model <= 13:
+            # Native capsule load and power/service condition are independent.
+            # A held or serviced capsule must retain its visible actual load.
+            states = ["empty", "partial", "full", "service-empty", "service-partial", "service-full", "blocked-empty", "blocked-partial", "blocked-full"]
         space_states = {14: ["ready", "preparing", "ascent", "orbit", "recovery", "blocked", "service"],
                         15: ["free", "rendezvous", "attached", "mining", "full", "return", "service", "blocked"],
                         16: ["idle", "moving", "working", "service", "blocked"],
@@ -95,7 +99,7 @@ def build_manifest():
                   ("battery-works", 6, (4, 4)), ("electronics-works", 6, (4, 4)),
                   ("component-works", 6, (4, 4)), ("robotics-works", 6, (4, 4)),
                   ("mirror-kit-works", 6, (4, 4)), ("solar-farm", 12, (3, 2)), ("nuclear-plant", 12, (4, 4)),
-                  ("tube-terminal", 16, (2, 2)), ("tube-service", 16, (3, 2)), ("tube-interchange", 16, (3, 2)),
+                  ("tube-terminal", 16, (1, 1)), ("tube-service", 16, (1, 1)), ("tube-interchange", 16, (3, 2)),
                   ("vent-collector", 17, (3, 3)), ("vent-powerhouse", 17, (4, 4)),
                   ("magma-powerhouse", 17, (4, 4)), ("heat-smelter", 17, (4, 4)),
                   ("heat-battery-works", 17, (4, 4)), ("mantle-forge", 17, (4, 4)),
@@ -106,7 +110,10 @@ def build_manifest():
         # cannot introduce a fourth saved phase or fictitious animation frames.
         portal = name.startswith("portal.")
         states = ["sealed", "commissioning", "connected"] if portal else ["construction", "ready", "working", "blocked"]
-        if owner == 17:
+        # The delivered collector publishes Heat instead of requesting it.
+        # Its four construction frames follow real native stages; consumer
+        # shortage semantics remain with the other, separately owned families.
+        if owner == 17 and name != "vent-collector":
             states.append("heat_starved")
         # Native Surface spoil receivers expose one fixed industry layout. They
         # have no build rotation/entry direction; authored cells follow actual
@@ -114,16 +121,55 @@ def build_manifest():
         receiver = name in ("earth-receiver", "rock-receiver")
         row = record(f"facility.{name}", owner, "building", states, 1 if portal else 4, footprint,
                      directions=["none"] if receiver else DOORS)
+        if name == "vent-collector":
+            row["state_owner"] = "Actual native collector construction/completion, IsGeothermalCollectorOperational and current shared Heat publication; no Heat consumer or copied energy balance"
+            row["frame_owner"] = {"construction": "native_industry_construction_stage_0_to_3_while_uncompleted",
+                                  "ready": "original_equipment_glass_phase_0_to_3",
+                                  "working": "original_equipment_glass_phase_0_to_3",
+                                  "blocked": "original_equipment_glass_phase_0_to_3"}
+            row["construction_stages"] = [0, 1, 2, 3]
         if receiver:
             row["state_owner"] = "Native industry construction; ready=idle, working=existing bounded processing, blocked=full stock/aggregate or interval refusal"
             row["layout_owner"] = "InstallSpoilReceiverDefinition; one fixed native Surface layout"
+        if name == "tube-terminal":
+            # Native platforms have two real track axes and four default tile
+            # roles per axis. Roles are alternatives for one built cell, not
+            # four world cells or four depot-style directed entrances.
+            row.update(directions=["NE", "SE"], tile_variants=4, variant_semantics="native_station_graphics_role",
+                       native_graphics={"NE": [0, 2, 4, 6], "SE": [1, 3, 5, 7]})
         if portal:
             row["state_owner"] = "LayerPortalWorkState; controller blocked reason is independent presentation"
             row["endpoint_variants"] = ["upper", "lower"]
         rows.append(row)
     for shape in ("straight", "bend45", "junction", "end", "crossing", "conduit"):
-        rows.append(record(f"tube.{shape}", 16, "terrain", ["construction", "powered", "unpowered"], directions=DOORS))
-    rows.append(record("geothermal.vent", 17, "terrain", ["hidden", "surveyed", "tapped", "heat_starved"], 4))
+        # Native guideway views name installed geometry: two straight axes or
+        # the four Upper/Lower/Left/Right corner pieces. Neither travel reversal
+        # nor a door label can stand in for a missing native shape.
+        views = ["NE", "SE"] if shape == "straight" else ["N", "S", "W", "E"] if shape == "bend45" else ["none"] if shape in ("junction", "crossing") else DOORS
+        row = record(f"tube.{shape}", 16, "terrain", ["construction", "powered", "unpowered"], directions=views)
+        if shape in ("straight", "bend45", "junction", "end", "crossing"):
+            # Separate rear and foreground shells allow moving capsules to
+            # keep their actual track path and intended near-rim occlusion.
+            row["parts"] = ["back", "front"]
+        if shape == "junction":
+            # Topology is a native TrackBits variant, not a housing rotation.
+            # Six singles, X/Y crossing and the two independent parallel-curve
+            # pairs retain their own families; every shared-edge layout remains.
+            layouts = [mask for mask in range(1, 64) if mask.bit_count() >= 2 and mask not in (3, 12, 48)]
+            row["tile_variants"] = len(layouts)
+            row["variant_semantics"] = "native_trackbits_topology"
+            row["native_layouts"] = layouts
+        rows.append(row)
+    vent = record("geothermal.vent", 17, "terrain", ["hidden", "surveyed", "excavated"], 4)
+    # Geology has one immutable natural rate and no thermal consumer or tapped
+    # machinery state. Survey information and paid excavation control visibility;
+    # installed collector connection/idle status belongs to its separate family.
+    vent.update(state_owner="GeothermalVentField membership, active same-layer/date-valid public survey and canonical paid ExcavationState; no thermal demand or copied source balance",
+                frame_owner="original_thermal_detail_phase_0_to_3_visual_only",
+                hidden_policy="fully_transparent_no_source_pixels",
+                empty_allowed_states=["hidden"], render_layer="ground_overlay_preserves_hardness_and_mineral_markers",
+                native_draw_offset=[0, 0])
+    rows.append(vent)
     rows.append(record("geothermal.conduit", 17, "terrain", ["construction", "connected", "unconnected"], directions=DOORS))
     for name in ("nucleus", "dock", "storage", "workshop", "processor", "power", "fuel-store"):
         rows.append(record(f"module.{name}", 11, "building", ["blueprint", "partial", "complete", "blocked"], 2, (2, 2)))
@@ -191,6 +237,80 @@ def validate_manifest(document):
         if row["kind"] == "vehicle" and row["directions"] != DIRECTIONS:
             # Moving designs require every engine view, not rotated substitutes for absent silhouettes.
             raise ValueError("incomplete vehicle directions")
+        if row["asset_id"] == "facility.vent-collector":
+            # Native stage3 may still be unfinished. The completion flag,
+            # rather than its final-looking hardware, permits source operation;
+            # an extra starvation state would invent a thermal consumer.
+            if (row["states"] != ["construction", "ready", "working", "blocked"] or row["frames"] != 4
+                    or row.get("construction_stages") != [0, 1, 2, 3]
+                    or row.get("frame_owner", {}).get("construction") != "native_industry_construction_stage_0_to_3_while_uncompleted"):
+                raise ValueError("collector native construction/source state coverage mismatch")
+        if row["asset_id"] == "geothermal.vent":
+            # Natural information cannot reveal a field through unsurveyed solid
+            # rock, become a Heat consumer, replace hardness or suppress minerals.
+            if (row["states"] != ["hidden", "surveyed", "excavated"] or row["frames"] != 4
+                    or row["native_size"] != [64, 31] or row["anchor"] != [-31, 0]
+                    or row.get("hidden_policy") != "fully_transparent_no_source_pixels"
+                    or row.get("empty_allowed_states") != ["hidden"]
+                    or row.get("render_layer") != "ground_overlay_preserves_hardness_and_mineral_markers"
+                    or row.get("native_draw_offset") != [0, 0]):
+                raise ValueError("natural vent visibility/native overlay contract mismatch")
+        if row["asset_id"] == "tube.straight":
+            # Native X/Y topology and actual foreground occlusion require
+            # both independently authored axes and both aligned shell parts;
+            # reversing travel cannot stand in for a missing geometric view.
+            if row["directions"] != ["NE", "SE"] or row["parts"] != ["back", "front"]:
+                raise ValueError("straight tube native axis/part coverage mismatch")
+        if row["asset_id"] == "tube.bend45":
+            # Corners follow actual Upper/Lower/Left/Right track ownership;
+            # arbitrary NE/SE/SW/NW doors would hide a missing native curve.
+            if row["directions"] != ["N", "S", "W", "E"] or row["parts"] != ["back", "front"]:
+                raise ValueError("curved tube native corner/part coverage mismatch")
+        if row["asset_id"] == "tube.junction":
+            # A shell is selected by the complete installed native topology;
+            # arbitrary door rotations or omitted shared-edge layouts could
+            # paint an absent arm or silently drop a legal junction.
+            layouts = [mask for mask in range(1, 64) if mask.bit_count() >= 2 and mask not in (3, 12, 48)]
+            if (row["directions"] != ["none"] or row["parts"] != ["back", "front"]
+                    or row["tile_variants"] != 54 or row.get("native_layouts") != layouts
+                    or row.get("variant_semantics") != "native_trackbits_topology"):
+                raise ValueError("tube junction native topology/part coverage mismatch")
+        if row["asset_id"] == "tube.end":
+            # A directed physical endpoint has four genuine camera views,
+            # unlike an undirected straight axis. Both cap parts keep the
+            # existing native mouth anchor; art never supplies passability.
+            if row["directions"] != DOORS or row["parts"] != ["back", "front"]:
+                raise ValueError("tube end native facing/part coverage mismatch")
+        if row["asset_id"] == "tube.crossing":
+            # Native X/Y has one fixed camera geometry, independent of travel
+            # reversal. Both parts must leave both real routes visible; door
+            # rotations would fabricate extra crossing views and hide occlusion.
+            if row["directions"] != ["none"] or row["parts"] != ["back", "front"]:
+                raise ValueError("tube crossing native topology/part coverage mismatch")
+        if row["asset_id"] == "tube.conduit":
+            # The real utility corridor uses four center-to-edge branches on
+            # the existing floor. A foreground shell would hide capsules;
+            # missing branches would misrepresent an installed physical path.
+            if row["directions"] != DOORS or row["parts"] != ["body"]:
+                raise ValueError("tube conduit native branch/ground coverage mismatch")
+        if row["asset_id"] == "facility.tube-service":
+            # The actual native tube depot has one physical cell and four
+            # directed entrances. Draft multi-tile artwork cannot silently
+            # enlarge its buildable floor, capacity or approach geometry.
+            if (row["directions"] != DOORS or row["parts"] != ["back", "front"]
+                    or row["footprint"] != [1, 1] or row["tile_variants"] != 1):
+                raise ValueError("tube service native depot geometry mismatch")
+        if row["asset_id"] in ("facility.tube-terminal", "facility.tube-interchange"):
+            # Real native station commands choose all eight default graphics
+            # across two axes/four roles. An invented campus footprint or door
+            # rotation cannot replace a missing through-platform source cell.
+            # Joined interchange tube cells retain these same physical roles;
+            # their conventional partners keep separate native cells/families.
+            if (row["directions"] != ["NE", "SE"] or row["parts"] != ["back", "front"]
+                    or row["footprint"] != [1, 1] or row["tile_variants"] != 4
+                    or row.get("variant_semantics") != "native_station_graphics_role"
+                    or row.get("native_graphics") != {"NE": [0, 2, 4, 6], "SE": [1, 3, 5, 7]}):
+                raise ValueError("tube terminal native axis/cell-role mismatch")
         width, height = row["native_size"]
         if width <= 0 or height <= 0:
             # Empty canvases cannot provide native-size construction/purchase feedback.
@@ -201,10 +321,11 @@ def validate_manifest(document):
             # Every first-deliverable family shares the same palette/transparency contract.
             raise ValueError("unsupported palette")
         if row["kind"] == "building":
-            # Native receivers have one fixed world layout; depot/portal families
-            # still require all four real entry views and foreground cuts.
+            # Native receivers have one fixed world layout; tube platforms use
+            # two true axes. Depot/portal families retain four real entrances.
             receiver = row["asset_id"] in ("facility.earth-receiver", "facility.rock-receiver")
-            expected_directions = ["none"] if receiver else DOORS
+            platform = row["asset_id"] in ("facility.tube-terminal", "facility.tube-interchange")
+            expected_directions = ["none"] if receiver else ["NE", "SE"] if platform else DOORS
             if row["directions"] != expected_directions:
                 raise ValueError("incomplete building directions")
         if row["source"]["status"] == "planned":
@@ -323,14 +444,42 @@ def main():
     document = json.loads(MANIFEST.read_text(encoding="utf-8"))
     count = validate_manifest(document)
     # Mutated independent inputs ensure the validator refuses missing views, duplicates and fictitious final-source claims.
-    for mutation in ("duplicate", "directions", "source"):
+    for mutation in ("duplicate", "directions", "source", "tube_axis", "tube_front", "tube_corner", "tube_curve_front", "tube_junction_layout", "tube_junction_rotation", "tube_end_facing", "tube_end_front", "tube_crossing_rotation", "tube_crossing_front", "tube_conduit_branch", "tube_conduit_ground", "vent_shortage", "vent_hidden"):
         broken = json.loads(json.dumps(document))
         if mutation == "duplicate":
             broken["assets"].append(broken["assets"][0])
         elif mutation == "directions":
             next(row for row in broken["assets"] if row["kind"] == "vehicle")["directions"].pop()
-        else:
+        elif mutation == "source":
             broken["assets"][0]["source"]["path"] = "missing_final_sprite.png"
+        elif mutation == "tube_axis":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.straight")["directions"] = DOORS
+        elif mutation == "tube_front":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.straight")["parts"] = ["body"]
+        elif mutation == "tube_corner":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.bend45")["directions"] = DOORS
+        elif mutation == "tube_curve_front":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.bend45")["parts"] = ["body"]
+        elif mutation == "tube_junction_layout":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.junction")["native_layouts"].pop()
+        elif mutation == "tube_junction_rotation":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.junction")["directions"] = DOORS
+        elif mutation == "tube_end_facing":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.end")["directions"] = ["NE", "SE"]
+        elif mutation == "tube_end_front":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.end")["parts"] = ["body"]
+        elif mutation == "tube_crossing_rotation":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.crossing")["directions"] = DOORS
+        elif mutation == "tube_crossing_front":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.crossing")["parts"] = ["body"]
+        elif mutation == "tube_conduit_branch":
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.conduit")["directions"] = ["NE", "SE"]
+        elif mutation == "vent_shortage":
+            next(row for row in broken["assets"] if row["asset_id"] == "geothermal.vent")["states"].append("heat_starved")
+        elif mutation == "vent_hidden":
+            next(row for row in broken["assets"] if row["asset_id"] == "geothermal.vent")["hidden_policy"] = "visible_unknown_badge"
+        else:
+            next(row for row in broken["assets"] if row["asset_id"] == "tube.conduit")["parts"] = ["back", "front"]
         try:
             validate_manifest(broken)
         except ValueError:

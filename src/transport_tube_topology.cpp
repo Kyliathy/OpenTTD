@@ -7,6 +7,7 @@
 /**
  * @file transport_tube_topology.cpp Rebuildable owned guideway circuits, independent of grants, signals, cameras and routine accounting intervals.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group7
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47E physical end presentation
  */
 
 #include "stdafx.h"
@@ -17,10 +18,46 @@
 #include "pathfinder/follow_track.hpp"
 #include "company_func.h"
 #include "core/backup_type.hpp"
+#include "tile_cmd.h"
 #include <map>
 #include <set>
 
 #include "safeguards.h"
+
+/** @copydoc GetTubeGuidewayEnds */
+DiagDirectionIndexArray<bool> GetTubeGuidewayEnds(TileIndex tile)
+{
+	DiagDirectionIndexArray<bool> ends{};
+	// Only an actual plain canonical tube tile owns these end decorations.
+	// Facilities supply their own housing, and invalid/ordinary cells must not
+	// acquire a painted tube mouth or a new gameplay connection from this view.
+	if (!IsValidTile(tile) || !IsPlainRailTile(tile) || !IsTubeRailType(GetRailType(tile))) return ends;
+	// Both directions of every installed native piece describe its physical
+	// mouths. Reversal and multiple pieces sharing an edge add no second end.
+	for (Trackdir direction : GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs) {
+		ends[TrackdirToExitdir(direction)] = true;
+	}
+	// Check only the four immediate same-layer neighbours. Native track status
+	// with an explicit entry side distinguishes a real depot door from its back
+	// wall; no grant, vehicle route, reservation, signal or camera is consulted.
+	for (uint index = 0; index < 4; ++index) {
+		const auto port = static_cast<DiagDirection>(index);
+		if (!ends[port]) continue;
+		const auto delta = TileIndexDiffCByDiagDir(port);
+		const TileIndex neighbour = TileAddWrap(tile, delta.x, delta.y);
+		// A missing tile, different rock plane or conventional guideway cannot
+		// provide a matching physical tube mouth merely through adjacency.
+		if (!IsValidTile(neighbour) || GetTileLayer(neighbour) != GetTileLayer(tile) ||
+				!IsTubeRailType(GetTileRailType(neighbour))) continue;
+		const auto entry = ReverseDiagDir(port);
+		for (Trackdir direction : GetTileTrackStatus(neighbour, TransportType::Rail, RoadTramType::Invalid, entry).trackdirs) {
+			if (TrackdirToExitdir(direction) != entry) continue;
+			ends[port] = false;
+			break;
+		}
+	}
+	return ends;
+}
 
 static constexpr size_t MAX_TUBE_CIRCUIT_NODES = 65536; ///< Bounded native trackdir work per installed service; oversized circuits refuse whole readiness.
 

@@ -8,6 +8,7 @@
  * @file transport_tube.h Native guideway/capsule capability, explicit paid service and one metered front-tick boundary.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Groups1-8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md tasks10.1-10.2
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47E physical end presentation
  */
 
 #ifndef TRANSPORT_TUBE_H
@@ -48,6 +49,15 @@ RailType GetTubeRailType();
  * @return Whether its exact UTUB registry row was admitted by the native producer; a label or alternate alone is insufficient.
  */
 bool IsTubeRailType(RailType type);
+
+/**
+ * Describe physically unconnected mouths of one actual plain tube guideway tile.
+ * @param tile Explicit world tile; invalid, ordinary and facility tiles return no end decorations.
+ * @return Native NE/SE/SW/NW end flags derived from installed track endpoints and adjacent tube entry geometry.
+ * Depot doors use their actual entry side. Signals, reservations, ownership, power and route/turn permissions
+ * do not close a physical mouth here. This read-only presentation query grants no movement or construction.
+ */
+DiagDirectionIndexArray<bool> GetTubeGuidewayEnds(TileIndex tile);
 
 /** Derived prototype capability; catalogue/EIDS/rail owners remain authoritative and this view is never saved. */
 struct TubeVehicleCapability {

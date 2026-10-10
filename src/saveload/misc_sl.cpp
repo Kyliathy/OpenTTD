@@ -123,6 +123,7 @@ static const SaveLoad _date_desc[] = {
 };
 
 static const SaveLoad _date_check_desc[] = {
+	SaveLoad::Variable<VarFileType::U64>("tick_counter", SLE_GLOBAL_ADDRESS(_load_check_data.native_tick_counter), SaveLoadVersion::GeothermalRisers),
 	SaveLoad::Variable<VarFileType::U16>("date", SLE_GLOBAL_ADDRESS(_load_check_data.current_date), SaveLoadVersion::MinVersion, SaveLoadVersion::BigDates),
 	SaveLoad::Variable<VarFileType::I32>("date", SLE_GLOBAL_ADDRESS(_load_check_data.current_date), SaveLoadVersion::BigDates),
 };
@@ -142,9 +143,11 @@ struct DATEChunkHandler : ChunkHandler {
 		SlGlobList(_date_desc);
 	}
 
-	void LoadCommon(const SaveLoadTable &slt, const SaveLoadCompatTable &slct) const
+	/** @param slt Native or copied-preview field descriptors. @param slct Existing older-format compatibility table. @param preview Select read-only copied native clock presence for version400 construction references. */
+	void LoadCommon(const SaveLoadTable &slt, const SaveLoadCompatTable &slct, bool preview = false) const
 	{
 		const std::vector<SaveLoad> oslt = SlCompatTableHeader(slt, slct);
+		if (preview) _load_check_data.native_tick_present = std::ranges::find(oslt, "tick_counter", &SaveLoad::name) != oslt.end(); // Exact same-file clock presence, never a live TimerGameTick read.
 
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;
 		SlGlobList(oslt);
@@ -159,7 +162,7 @@ struct DATEChunkHandler : ChunkHandler {
 
 	void LoadCheck(size_t) const override
 	{
-		this->LoadCommon(_date_check_desc, _date_check_sl_compat);
+		this->LoadCommon(_date_check_desc, _date_check_sl_compat, true);
 
 		if (IsSavegameVersionBefore(SaveLoadVersion::BigDates)) {
 			_load_check_data.current_date += CalendarTime::DAYS_TILL_ORIGINAL_BASE_YEAR;

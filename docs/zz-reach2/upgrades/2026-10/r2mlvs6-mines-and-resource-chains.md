@@ -296,6 +296,22 @@ Read Global/Resource production Area, only Plan17's actual grant/consume/release
 
 Evidence: [delivered batch API and blocked utility participant](r2mlvs6-a-industry-lifecycle.md#group-13-delivered-batch-api-and-blocked-utility-participant). Focused `[layer-recipe-heat-boundary]` passed 126 assertions in one case (`r2mlvs6-by-heat-contract-checks.log`). r2mlvs12's `Useful Power Handoff` confirms the missing owner of `UtilityGrantID`/atomic mutations. Tasks 13.1/13.2/13.3B stay unchecked; no substitute token, registry or grid was declared.
 
+### Local Mandatory Reading - Paid Surface bootstrap cargo
+
+_Applies to Group13C, staged by master10.6 before actual first-plant acceptance; it does not reopen the delivered9.3 manufacturing scope._
+
+Read Global/Resource production Area, Plan1's Group10 paid Surface seed contract in `r2mlvs1-d-recipes-and-bootstrap.md`, `GetMultiLayerSurfaceSupplies`, the native station/cargo/payment owner and actual construction receipt boundaries. Read only the first four construction labels and the [first-plant bootstrap specification](r2mlvs17-e-first-plant-bootstrap.md). Seed definitions and explicit manufacturing-fixture raw receipts are delivered; a runtime paid-order command is absent. Preserve one physical packet/inventory/payment owner, per-company caps and non-paying company-supply purpose. No thermal recipes or future orbital procurement are required for this group.
+
+### Group 13C - Supply paid Surface bootstrap cargo
+
+Added2026-10-10 from Plan17 Group6's dependency audit. Execute this producer at master10.6 before claiming conventionally delivered first-plant materials. Existing material/electrical manufacturing acceptance remains complete; these new runtime procurement tasks are unchecked.
+
+{{HARD}}
+- [ ] 13C.1 Publish/test pure complete paid-order admission for actual owned Surface stations, current STEL/RFMT/ELEC/BATY seed dates/prices, per-company economy-day caps, bounded station space and real available funds. Estimate allocates no cargo/order identity, cap reservation or expense.
+- [ ] 13C.2 Implement ordinary native paid-order settlement and actual company-supply packet custody once through station/carrier/construction owners. Drive conventional delivery into the remaining actual construction bill; bought supplies earn no ordinary freight income/subsidy, and no paid order teleports stock to a hidden layer.
+- [ ] 13C.3 Persist actual order/cap/reservation/cargo references and integrate cancellation, station/company loss and takeover. Preserve shipped/consumed stock and paid history; a refunded order cannot retain usable cargo or recover a consumed bill, and reload/retry cannot buy or reserve twice.
+- [ ] 13C.4 Verify focused date/funds/cap/stock/refusal/retry/lifecycle/native/ordinary-loader cases and actual four-material delivery into the already implemented collector/riser receipt owners. Publish exact original inputs/receipts before Plan17 Group8; full powerhouse-bill delivery returns in master10.6 after that actual definition exists, avoiding a producer/recipient scheduling cycle.
+
 ### Group 14 - Resource production and consumers
 
 {{MEDIUM}}
@@ -308,6 +324,8 @@ Scoped gate evidence: `src/transport_tube.h` and `src/utility_power.h` are absen
 ### Area Mandatory Reading - Presentation and acceptance
 
 _Applies to Groups 15-17._
+
+**Raster source workflow.** Mine, processor and Surface receiver originals follow Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction) when created or corrected. Use pure-magenta source frames, transparent clearance and verified rectangular crops, or separate view files. Preserve each facility's native footprint, equipment inventory and construction/production states across genuine orientations. Exclude frames before conversion. Crop safety and model approval precede source selection; final mine/receiver acceptance still requires packed assets and actual game rendering.
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_industry.h`: `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.

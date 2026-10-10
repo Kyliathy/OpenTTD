@@ -68,6 +68,8 @@ The content profile defines one physical form per cargo label: Chemicals are liq
 
 Partial public owner: [`src/transport_tube.h`](../../../../src/transport_tube.h) publishes tested registry/prototype queries and `TubeVehicleCapability`, `CanTubeTrainEnterTile`, `CheckTubeConstruction`, `CheckTubeConstructionArea`, `CheckTubeVehicleAdmission` and `CheckTubeRailConversion`. Group5 adds `ConnectTubeExternalPower`, `PublishTubeExternalPower`, `ConsumeTubeExternalPower`, `CloseTubeExternalPower` and saved physical/invoice queries, consuming the existing utility authority. Native metering adds `ComputeTubePowerDemand`, `BindTubePowerVehicle`, `ReconnectTubePowerVehicle`, separate power waits and rebuildable owned connectivity; actual387 bindings preserve admitted demand fractions and once-tick history. Group8 publishes `TubeTerminal`, `GetTubeTerminal`, `CanTubeTerminalServeVehicle` and `GetTubeNetworkReadiness` over actual native station/depot identities, cargo/date admission and stable physically reachable paid inlets. Queries allocate no grants, move no packets and create no invoices. Only model9 is prototyped; full operational terminals/fleet remain later obligations. Saved386/387 inlets restore hidden canonical guideway/prototype definitions; new-world controls and full operational fleet/terminal activation remain pending.
 
+Physical source geometry is separately published by [`transport_tube_model.h`](../../../../src/transport_tube_model.h): `TubeVehicleGeometry` borrows the canonical capability and exposes native rail length/part count through `GetTubeVehicleGeometry`. Staged10B verifies all five descriptors and actual model9 construction. Descriptor availability does not establish an installed engine, purchase/refit/date admission, model balance or operating fleet acceptance; those remain Groups10-12.
+
 ## Implementation Tasks
 
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
@@ -279,7 +281,7 @@ Group8 closure,2026-10-08: public native facility views retain actual station/de
 
 ### Area Mandatory Reading - Terminals, fleet and controls
 
-_Applies to Groups 9-12._
+_Applies to Groups 9-12, including staged10B._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/transport_tube.h`: `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
@@ -311,6 +313,23 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 - [ ] 9.1 Build fully excavated tube loading terminals and powered service depots with explicit tube approach/berth capacity. Reuse canonical station/cargo identities where appropriate rather than a duplicate invisible stock store.
 - [ ] 9.2 Connect tube-to-rail/road interchange through layer-local packet transfer and compatible loading facilities. Joining facilities cannot let capsules traverse conventional tracks or grant same-XY cross-layer catchment.
 - [ ] 9.3 Define bounded stock/reservations, empty returns and transfer payment semantics; verify full receiving buffers retain cargo and the final cross-layer leg uses a conventional carrier.
+
+### Local Mandatory Reading - Capsule physical geometry before source art
+
+_Applies to staged Group10B; supplements Terminals, fleet and controls Area._
+
+Master10.4/Plan13 Groups50-53 need native geometry before their source art, while operating fleet activation remains master10.5. Read this plan's Global/Terminals fleet Area, canonical `LayerVehicleCapability` / `GetMultiLayerVehicleCapabilities`, actual `InitialiseTubeEngineDefinitions`, `RailVehicleInfo::shorten_factor` and `Train::ConsistChanged` length ownership. Publish only a passive borrowed-catalogue physical descriptor for one full native rail part per capsule; the existing model9 producer must consume it. Querying future model geometry cannot allocate/activate an engine, bypass dates/rail domains or copy a cargo/energy registry. Original Group10 definitions/stats/model validation remain unchecked. Use a narrow public header to avoid unnecessary broad root-header rebuilds.
+
+### Group 10B - Freeze canonical capsule physical geometry for source authoring
+
+Staged2026-10-10 before Plan13 task50.1 under master10.4. This bounded producer supplies source geometry only; it does not execute or close the operating fleet work in original Group10.
+
+{{MEDIUM}}
+- [X] 10B.1 Publish canonical catalogue-based immutable capsule geometry with borrowed capability, full native length and one physical part; reject non-tube/unknown logical models without mutation.
+- [X] 10B.2 Bind the existing model9 native definition to that geometry without changing its price/cargo/physics/identity or activating models10-13.
+- [X] 10B.3 Verify pure all-model queries and actual command-bought prototype length/part count in one focused producer burst, then hand geometry to Plan13 Groups50-53. Full definitions/purchase/refit/date/art/runtime validation remain original Group10/master10.5.
+
+10B closure,2026-10-10: [`transport_tube_model.h`](../../../../src/transport_tube_model.h) publishes callable `GetTubeVehicleGeometry` over the sole canonical catalogue, with one full native8-unit part for each of the five designs. Model9 initialization explicitly consumes that spacing; actual command purchase proves one part and matching native cached length. Queries before/after installation preserve engine/vehicle/packet counts, funds and utility state, reject other movement domains/unknown IDs, and leave models10-13 uninstalled. Game/test targets build in both configurations; the combined model/prototype/readiness/platform/interchange burst passes2,111 assertions/twelve cases in each. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-model-geometry-01/verification.json) bind14 sources and four binaries. No new save state or operating fleet activation was added. Original Group10 stays unchecked and must consume this geometry when its definitions arrive. Plan13 task50.1 source may now proceed.
 
 ### Group 10 - Register the five original capsule definitions
 
@@ -346,6 +365,8 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 ### Area Mandatory Reading - Art, persistence and acceptance
 
 _Applies to Groups 13-18._
+
+**Raster source workflow.** New or corrected guideway, junction, terminal, service/depot and capsule originals use Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Use pure-magenta source frames, transparent clearance and verified rectangular crops, or separate view files. Preserve canonical guideway connectivity and every capsule direction/load/service pose; a four-view sheet does not redefine those matrices. Review model identity, cell joins and foreground apertures separately from crop safety. Exclude frames before native conversion; actual loaded movement and occlusion remain required.
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/transport_tube.h`: `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.

@@ -28,6 +28,16 @@ const MultiLayerLocalUtilityLinkContract *GetMultiLayerLocalUtilityLinkContract(
 	return found == _local_utility_terms.end() ? nullptr : &*found;
 }
 
+/** @copydoc IsMultiLayerLocalUtilityLayer */
+bool IsMultiLayerLocalUtilityLayer(UtilityEnergyDomain domain, MapLayer layer)
+{
+	if (GetMultiLayerLocalUtilityLinkContract(domain) == nullptr) return false;
+	if (layer == MapLayer::DeepUnderground) return true;
+	// Electrical relays need paid cable between separate Underground housings;
+	// thermal proximity must never establish an inter-layer heat network.
+	return domain == UtilityEnergyDomain::Electricity && layer == MapLayer::Underground;
+}
+
 /**
  * Integrate bounded rates while carrying fractional joules across synchronized intervals.
  * @param rate_w Watts from the producer after its one source-specific availability modifier.

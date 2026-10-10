@@ -32,6 +32,7 @@ static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS = 16384; ///<
 static constexpr uint32_t MULTILAYER_FEATURE_UTILITY_HEAT = 32768; ///< Typed heat accounting requires390 and the same utility identity/balance owner; physical geothermal references retain Plan17.
 static constexpr uint32_t MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS = 65536; ///< Installed Deep Heat/Electricity cells require392 and the shared link issuer/geometry owner; no energy is implied. See r2mlvs17-geothermal-energy-and-industry.md Group3B.
 static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES = 131072; ///< Physical393 ports/current source paths require the original shared Heat and paid local link owners. See r2mlvs17-geothermal-energy-and-industry.md Group3.
+static constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_RISERS = 262144; ///< Actual400 paid machinery/loss/tick references; native stock stays in Industry and no electrical transfer is implied. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
 
 /** Serialization/preview snapshot; the accepted profile remains owned by multilayer_content.cpp. */
 struct MultiLayerStateSchema {
@@ -113,6 +114,7 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	GeothermalSiteRoot, ///< Cold planning identity/geometry/history, excluding natural capacity, delivered construction and all energy. See r2mlvs17-geothermal-energy-and-industry.md Group1.
 	GeothermalCollectorRoot, ///< Actual native construction/control/work/material-receipt digest; natural capacity and energy retain their own owners. See r2mlvs17-geothermal-energy-and-industry.md Group1B.
 	GeothermalHeatRouteRoot, ///< Exact original physical ports/source paths, without copied energy quantities. See r2mlvs17-geothermal-energy-and-industry.md Group3.
+	GeothermalRiserRoot, ///< Actual original-housing machinery/work/receipt/loss, reading native stock/history once; no utility quantities. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
 	End,
 };
 

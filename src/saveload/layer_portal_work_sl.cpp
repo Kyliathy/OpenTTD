@@ -10,6 +10,7 @@
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../layer_portal_cmd.h"
+#include "../layer_portal_work_wire.h"
 #include "../layer_portal_map.h"
 #include "../excavation_state.h"
 #include "../multilayer_state.h"
@@ -17,14 +18,6 @@
 #include "../depot_base.h"
 
 #include "../safeguards.h"
-
-/** Exact 26-byte scalar transport; geometry and actor roles retain their real owners. */
-struct PortalWorkWire {
-	uint32_t key = UINT32_MAX; ///< Canonical physical endpoint reference.
-	uint8_t state = 0, company = 255; ///< Checked work phase and actual company identity.
-	uint32_t project = UINT32_MAX, cutter = VehicleID::Invalid().base(), origin = StationID::Invalid().base(); ///< Explicit actual owner references.
-	uint64_t revision = 1; ///< Saved monotonic transition stamp.
-};
 
 static const SaveLoad _portal_work_desc[] = {
 	SaveLoad::Variable<VarFileType::U32>("key", SLE_OBJECT_ADDRESS(PortalWorkWire, key)),
@@ -194,6 +187,7 @@ struct LPWKChunkHandler : ChunkHandler {
 			if (!CheckPortalWireKey(wire.key, preview) || (count != 0 && wire.key <= previous) || wire.state > 2 || (wire.company >= MAX_COMPANIES && wire.company != CompanyID::Invalid().base()) || wire.origin > StationID::Invalid().base() || wire.revision == 0 || wire.revision == UINT64_MAX) SlErrorCorrupt("Invalid portal work fields"); // Invalid company is an explicit ownerless-road candidate only; full actual topology/phase validation must prove that exception before publication.
 			previous = wire.key;
 			if (!preview) _portal_rows.push_back({TileIndex{wire.key}, static_cast<LayerPortalWorkState>(wire.state), CompanyID{wire.company}, ExcavationJobID{wire.project}, VehicleID{wire.cutter}, StationID{static_cast<StationID::BaseType>(wire.origin)}, wire.revision});
+			else _load_check_data.portal_work_records.push_back(wire); // Dependent preview resolves only this file's original portal stamp/company, never the running world.
 			++count;
 		}
 		auto &presence = preview ? _load_check_data.portal_work_present : _portal_presence;

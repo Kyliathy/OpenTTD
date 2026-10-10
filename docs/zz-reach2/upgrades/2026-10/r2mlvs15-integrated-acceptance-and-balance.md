@@ -433,6 +433,8 @@ Goal finalization exception GP-PF: full dense excavation/orbital workload23.1 an
 
 _Applies to Groups 27-33._
 
+**Raster source review.** Corrections requested by this area's art review go through Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). For framed multi-view originals, require the retained prompt/references, measured non-overlapping crops, complete subject clearance and exclusion of separator frames from native sprites. Check hardware identity and required direction/state coverage separately. The framed trial passed extraction but failed model identity; neither its source preview nor another clean sheet can replace packed/decoded hashes and actual loaded runtime captures in Groups27-29.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/tests/multilayer/acceptance/native_ground.py`: `run_scenario`, `capture_ledger`, `compare_state_digest`, `validate_art_manifest`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 27-33. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

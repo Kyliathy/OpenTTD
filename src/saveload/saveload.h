@@ -459,6 +459,10 @@ enum class SaveLoadVersion : uint16_t {
 	TBMHangarDepots, ///< Saveload version: 397\n Real native depot identities for portal magazines; ordinary depot orders retain their existing encoding. See r2tbmf-tbm-fixes.md Group8.
 	TBMNativeOrderControl, ///< Saveload version: 398\n Explicit native-list control and missing-order hold in the existing TBM phase/reason fields; no duplicate order queue.
 	GeologyRegionalHardness, ///< Saveload version: 399\n GEOS stores the regional rock algorithm and immutable seed; earlier worlds retain uniform layer defaults and saved deposit hardness.
+	GeothermalRisers, ///< Saveload version: 400\n Original portal-bound native riser work/material receipt/loss and tick transport; stock remains in Industry. See r2mlvs17-geothermal-energy-and-industry.md Group5B.
+	PaidElectricalRiserLinks, ///< Saveload version: 401\n Shared electrical edge role retains actual paid native machinery and immutable rate; older numerical portal roles remain explicit. See r2mlvs17-geothermal-energy-and-industry.md Group5.
+	RockElectricalRelays, ///< Saveload version: 402\n Explicit local-cell plane permits paid Underground electrical relay cables; Heat and genuine older cells remain Deep-local. See r2mlvs17-geothermal-energy-and-industry.md Group5.
+	UtilityShareLineage, ///< Saveload version: 403\n Shared per-epoch slice/parent identities and bounded physical segments retain complete original electrical lineage; genuine older one-hop records migrate explicitly. See r2mlvs12-solar-farms-mirrors-and-eti.md Group8C.
 
 	MaxVersion, ///< Highest possible saveload version.
 };

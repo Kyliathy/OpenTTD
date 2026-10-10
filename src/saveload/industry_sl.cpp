@@ -15,6 +15,7 @@
 
 #include "../industry.h"
 #include "../fios.h"
+#include "../geothermal_riser.h"
 #include "newgrf_sl.h"
 
 #include "../safeguards.h"
@@ -233,13 +234,29 @@ struct INDYChunkHandler : ChunkHandler {
 	void LoadCheck(size_t len) const override
 	{
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalCollectors)) { ChunkHandler::LoadCheck(len); return; }
-		const auto desc = SlTableHeader({});
+		static const SaveLoad preview_desc[] = {
+			SaveLoad::Variable<VarFileType::U32>("location.tile", SLE_OBJECT_ADDRESS(NativeIndustryPreview, tile)),
+			SaveLoad::Variable<VarFileType::U8>("location.w", SLE_OBJECT_ADDRESS(NativeIndustryPreview, width)),
+			SaveLoad::Variable<VarFileType::U8>("location.h", SLE_OBJECT_ADDRESS(NativeIndustryPreview, height)),
+			SaveLoad::Variable<VarFileType::U8>("type", SLE_OBJECT_ADDRESS(NativeIndustryPreview, type)),
+		};
+		const bool machinery = !IsSavegameVersionBefore(SaveLoadVersion::GeothermalRisers);
+		const auto desc = machinery ? SlTableHeader(preview_desc) : SlTableHeader({});
+		if (machinery) {
+			// Native identity/shape fields must come from this file; defaults
+			// cannot hide a paid facility behind a missing type or anchor column.
+			for (const auto &field : preview_desc) {
+				if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native industry preview field");
+			}
+		}
 		auto &ids = _load_check_data.native_industry_preview_ids;
 		// Copy only real serialized native pool identities. Unknown native fields
 		// are skipped by the descriptor reader, never decoded into running pools.
 		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
 			if (index >= 64000 || (!ids.empty() && index <= ids.back())) SlErrorCorrupt("Invalid native industry preview identity"); // Native pool bounds and canonical order prevent duplicate/oversized construction references.
-			SlObject(nullptr, desc); ids.push_back(static_cast<uint16_t>(index));
+			NativeIndustryPreview row; row.id = static_cast<uint16_t>(index);
+			SlObject(machinery ? &row : nullptr, desc); ids.push_back(row.id);
+			if (machinery) _load_check_data.native_industry_preview_rows.push_back(row); // Copy native shape/type only; accepted stocks/history stay in their actual transport and full-load validation.
 		}
 	}
 
@@ -323,8 +340,39 @@ struct INDYChunkHandler : ChunkHandler {
 	}
 };
 
+/** Canonical native industry mappings, copied independently only when version400 dependent machinery needs definition identity. */
 struct IIDSChunkHandler : NewGRFMappingChunkHandler {
+	/** Register the existing native allocator's mapping family without changing its on-disk format. */
 	IIDSChunkHandler() : NewGRFMappingChunkHandler("IIDS", _industry_mngr) {}
+	/** @param len Older files retain ordinary skip behavior; current preview copies exact riser mappings without mutating the running native manager. */
+	void LoadCheck(size_t len) const override
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalRisers)) { ChunkHandler::LoadCheck(len); return; }
+		static const SaveLoad copied[] = {
+			SaveLoad::Variable<VarFileType::Label>("grfid", SLE_OBJECT_ADDRESS(EntityIDMapping, grfid)),
+			SaveLoad::Variable<VarFileType::U16>("entity_id", SLE_OBJECT_ADDRESS(EntityIDMapping, entity_id)),
+			SaveLoad::Variable<VarFileType::U16>("substitute_id", SLE_OBJECT_ADDRESS(EntityIDMapping, substitute_id)),
+		};
+		const auto desc = SlTableHeader(copied);
+		if (desc.size() != std::size(copied)) SlErrorCorrupt("Invalid native industry preview mapping fields");
+		// Exact existing mapping columns prevent default local IDs from hiding
+		// omitted construction or impersonating a different native definition.
+		for (const auto &field : copied) {
+			if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native industry mapping field");
+		}
+		const auto grfid = GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content->package.grfid;
+		int previous = -1;
+		// Native IDs and exact package/local meanings resolve from this file's
+		// mapping, so a missing machinery row cannot hide behind a cleared feature.
+		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
+			if (index <= previous || index >= NUM_INDUSTRYTYPES) SlErrorCorrupt("Invalid native industry preview mapping");
+			EntityIDMapping row{}; SlObject(&row, desc); previous = index;
+			if (row.grfid == grfid && row.entity_id == GEOTHERMAL_RISER_LOCAL_ID) {
+				if (!_load_check_data.native_riser_preview_types.empty()) SlErrorCorrupt("Duplicate native riser definition mapping");
+				_load_check_data.native_riser_preview_types.push_back(static_cast<uint8_t>(index)); // Copied definition identity only; preview installs no catalogue or native pool.
+			}
+		}
+	}
 };
 
 struct TIDSChunkHandler : NewGRFMappingChunkHandler {

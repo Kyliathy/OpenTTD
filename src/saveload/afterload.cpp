@@ -30,6 +30,7 @@
 #include "../utility_power.h"
 #include "../geothermal_heat.h"
 #include "../geothermal_collector.h"
+#include "../geothermal_riser.h"
 #include "../geothermal_utility.h"
 #include "../transport_tube.h"
 #include "../vehicle_func.h"
@@ -3487,6 +3488,7 @@ bool AfterLoadGame()
 	if (!AcceptLoadedSpoilReceivers()) SlErrorCorrupt("Invalid spoil receiver state");
 	if (!AcceptLoadedLayerMines()) SlErrorCorrupt("Invalid finite mine state");
 	if (!AcceptLoadedLayerProcessors()) SlErrorCorrupt("Invalid native processor state");
+	if (!AcceptLoadedGeothermalRisers()) SlErrorCorrupt("Invalid native geothermal riser authority"); // Paid electrical links resolve original complete native machinery before the shared utility owner publishes their physical references.
 	// Utility grants bind actual companies and saved layers; accept only after
 	// physical owners and the profile have completed their load fixups.
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
@@ -3495,7 +3497,7 @@ bool AfterLoadGame()
 	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority"); // Actual saved vehicles and paid sources resolve before native ticks.
 	if (!AcceptLoadedGeothermalSiteClaims()) SlErrorCorrupt("Invalid cold geothermal site authority"); // Original geology, actual company, full floor and shared date resolve before planning rights publish.
 	if (!AcceptLoadedGeothermalCollectors()) SlErrorCorrupt("Invalid native geothermal collector authority"); // Consumed blueprint, actual native floor/stock/receipt/work and company resolve before heat readiness publishes.
-	if (!ValidateGeothermalUtilityLinks()) SlErrorCorrupt("Invalid installed Deep utility geometry"); // Shared installed cells resolve actual native coexistence/collector ports without repairing physical rights or energy.
+	if (!ValidateGeothermalUtilityLinks()) SlErrorCorrupt("Invalid installed rock utility geometry"); // Shared installed cells resolve actual native coexistence/collector/riser ports and owned electrical housings without repairing physical rights or energy.
 	if (!AcceptLoadedGeothermalHeatState()) SlErrorCorrupt("Invalid physical geothermal heat routes"); // Exact original shared slices and actual installed path geometry agree before usable physical rights publish.
 	RevalidateUtilityHeatRoutes(); // Actual native ownership expires only older lost-path unused rights; consumed history and healthy current source/path bytes remain unchanged.
 	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 14 14.3), so saved

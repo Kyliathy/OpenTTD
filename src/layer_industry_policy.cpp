@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "multilayer_industry.h"
 #include "geothermal.h"
+#include "geothermal_riser.h"
 #include "geothermal_utility.h"
 #include "industry.h"
 #include "industrytype.h"
@@ -133,6 +134,7 @@ const LayerIndustryCapability *GetLayerIndustryCapability(IndustryType type)
 	if (!spec->enabled || spec->grf_prop.HasGrfFile() || spec->grf_prop.grfid != LayerIndustryGrfID()) return nullptr;
 	const uint16_t local = spec->grf_prop.local_id;
 	if (local == GEOTHERMAL_COLLECTOR_LOCAL_ID) return GetGeothermalCollectorIndustryCapability(type);
+	if (local == GEOTHERMAL_RISER_LOCAL_ID) return GetGeothermalRiserIndustryCapability(type); // Exact input-only1980 machinery may use either rock layer, without inheriting vent or production authority.
 	// Supported Surface processing stays explicit even though ordinary external industries also retain Surface permission.
 	if (local >= LAYER_PROCESSOR_LOCAL_BASE && local < LAYER_PROCESSOR_LOCAL_BASE + ProcessorCapabilities().size()) {
 		const auto &capability = ProcessorCapabilities()[local - LAYER_PROCESSOR_LOCAL_BASE];

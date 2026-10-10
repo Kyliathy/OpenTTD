@@ -77,6 +77,7 @@ void LoadCheckData::Clear()
 
 	this->map_size_x = this->map_size_y = 256; // Default for old savegames which do not store mapsize.
 	this->map_layers = 1; // Old files are one surface plane.
+	this->native_tick_present = false; this->native_tick_counter = 0;
 	this->multilayer_schema_version = 0;
 	this->gameplay_profile_id = 0;
 	this->gameplay_profile_version = 0;
@@ -114,6 +115,7 @@ void LoadCheckData::Clear()
 	this->utility_power_header.fill(0);
 	this->utility_power_rows.fill(0);
 	this->utility_power_state = {};
+	this->utility_path_present.fill(false); this->utility_path_header.fill(0); this->utility_path_rows.clear(); // Each403 preview owns its complete parent/path family; a previous file cannot supply missing lineage.
 	this->tube_power_present.fill(false);
 	this->tube_power_expected.fill(0);
 	this->tube_power_rows.clear();
@@ -121,6 +123,9 @@ void LoadCheckData::Clear()
 	this->tube_vehicle_tick = UINT64_MAX; this->tube_vehicle_rows.clear();
 	this->geothermal_site_present.fill(false); this->geothermal_site_expected = 0; this->geothermal_site_rows.clear();
 	this->geothermal_collector_present.fill(false); this->geothermal_collector_expected = 0; this->geothermal_collector_rows.clear();
+	this->geothermal_riser_present.fill(false); this->geothermal_riser_expected = 0; this->geothermal_riser_rows.clear();
+	this->portal_work_records.clear(); // A second preview cannot borrow an earlier file's original portal incarnation.
+	this->native_industry_preview_rows.clear(); this->native_riser_preview_types.clear(); // Definition/floor references belong exclusively to the selected file.
 	// Each copied Heat preview owns fresh physical transport. A rejected file
 	// cannot supply header presence, ports or route cells to the next selection.
 	this->geothermal_heat_route_present.fill(false); this->geothermal_heat_route_expected.fill(0);

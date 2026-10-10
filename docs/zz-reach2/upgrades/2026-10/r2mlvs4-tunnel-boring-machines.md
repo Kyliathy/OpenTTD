@@ -412,6 +412,8 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 _Applies to Groups 16-22._
 
+**Raster source workflow.** New or corrected cutter, support, wagon and controller-status originals follow Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Use pure-magenta source frames, transparent gutters and verified rectangular crops, or separate view files. Preserve every required vehicle direction, articulated alignment and work-state frame; a four-view batch is only part of an eight-direction family. Exclude frames before conversion and verify model continuity independently of crop safety. Loaded animation and sound acceptance retain their actual controller owners.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/tbm.h`: `TBMProject`, `TBMWorkState`, `ValidateTBMAreaRoute`, `AdvanceTBMWork`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 16-22. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

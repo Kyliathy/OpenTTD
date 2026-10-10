@@ -5,8 +5,10 @@
  */
 
 /**
- * @file geothermal.h Natural-source cold planning and native collector definitions; geothermal_collector.h owns actual delivered construction, separate from shared heat/electricity.
+ * @file geothermal.h Public geothermal sites, shared Heat allocation, installed utilities and metered electrical export.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group5 electrical export
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group7 public handoff
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19
  */
 
@@ -18,6 +20,10 @@
 #include "direction_type.h"
 #include "industry_type.h"
 #include "newgrf_config.h"
+#include "utility_power_transfer.h"
+#include "geothermal_type.h"
+#include "geothermal_heat.h"
+#include "geothermal_utility.h"
 
 /** Existing canonical industry admission record; geothermal adds explicit capability while native pools retain identity and cargo. */
 struct LayerIndustryCapability;
@@ -32,9 +38,6 @@ IndustryType GetGeothermalCollectorIndustryType();
 bool IsGeothermalCollectorDefinition(IndustryType type);
 /** @param type Actual canonical industry definition. @return Borrowed immutable collector Deep/date capability, or nullptr for absent/foreign/malformed definitions. */
 const LayerIndustryCapability *GetGeothermalCollectorIndustryCapability(IndustryType type);
-
-/** Site/claim failure, with no generated heat, paid construction, cargo debit or world mutation on refusal. */
-enum class GeothermalError : uint8_t { None, InvalidOwner, Unavailable, InvalidKind, InvalidVent, Footprint, Endpoint, Occupied, Claimed, Limit, Refused };
 
 /** Explicit player-selected source/site; world addressing and the natural source owner remain authoritative. */
 struct GeothermalSiteRequest {
@@ -105,5 +108,31 @@ void ChangeGeothermalSiteCompanyOwnership(Owner old_owner, Owner new_owner);
 void ResetGeothermalSiteLoadStaging();
 /** Validate complete independent copied cold-site map/natural-source transport without changing live claims or energy. */
 void ValidateGeothermalSiteLoadPreview();
+
+/** Requested export of already allocated electricity; the feature holds references and a quantity bound, never another generation/reservation account. */
+struct GeothermalPowerExportRequest {
+	UtilityGrantID grant; ///< Exact existing source reservation and shared accounting epoch.
+	UtilityConsumerID destination{UINT32_MAX}; ///< Existing same-company final electrical request; intermediate accounts need no invented demand.
+	TileIndex source_port = INVALID_TILE; ///< Explicit installed input cell; an imported source must continue from its original arriving housing.
+	uint64_t maximum_j = 0; ///< Positive upper bound in joules; actual original publication, final room and physical residuals determine the admitted whole quantity.
+	std::vector<UtilityLinkID> excluded; ///< Optional unavailable original cells/paid edges for deterministic physical discovery; this hint creates no capacity or replacement identity.
+};
+
+/** Exact shared sealed whole-path proposal; naming the feature's action does not duplicate error, quantity, path, retry sequence or energy ownership. */
+using GeothermalPowerExportProposal = UtilityPathTransferProposal;
+
+/**
+ * Discover one deterministic installed paid path and prepare its currently admissible whole export without mutation.
+ * @param request Existing source grant, final requested destination, installed sending port, positive joule bound and optional unavailable physical references.
+ * @return Exact shared sealed proposal for the maximum admitted quantity up to the bound on the selected path, or unchanged refusal. Caller durations are not accepted; the shared owner uses original publications. This preparation does not split an action across separately committed paths.
+ */
+GeothermalPowerExportProposal PrepareGeothermalPowerExport(const GeothermalPowerExportRequest &request);
+
+/**
+ * Revalidate and settle every original crossing and final availability together through the sole shared utility owner.
+ * @param proposal Exact successful prepared feature action, retaining original source/epoch and complete physical references.
+ * @return One atomic transfer/sequence receipt or unchanged failure. Modified, stale or repeated proposals cannot debit a source or credit a destination; no generation, intermediate grant, money or heat is created by export.
+ */
+UtilityMutationReceipt ExportGeothermalPower(const GeothermalPowerExportProposal &proposal);
 
 #endif /* GEOTHERMAL_H */

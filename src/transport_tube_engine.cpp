@@ -8,10 +8,12 @@
  * @file transport_tube_engine.cpp Native capsule prototype and exclusive physical movement domain.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md canonical catalogue
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group10B physical source geometry
  */
 
 #include "stdafx.h"
 #include "transport_tube.h"
+#include "transport_tube_model.h"
 #include "engine_base.h"
 #include "rail.h"
 #include "train.h"
@@ -22,6 +24,18 @@
 
 static constexpr uint16_t TUBE_PROTOTYPE_MODEL = 9; ///< First delivered capsule; later models require their own producer groups.
 static constexpr uint16_t TUBE_ENGINE_LOCAL = 0x8000 + TUBE_PROTOTYPE_MODEL; ///< Extend the native EIDS namespace after conventional models4..8.
+
+/** @copydoc GetTubeVehicleGeometry */
+std::optional<TubeVehicleGeometry> GetTubeVehicleGeometry(uint16_t model_id)
+{
+	const auto catalogue = GetMultiLayerVehicleCapabilities();
+	const auto found = std::ranges::find(catalogue, model_id, &LayerVehicleCapability::model_id);
+	// Only the canonical tube movement domain supplies capsule geometry.
+	// Ordinary/orbital models cannot acquire tube identity through an art query,
+	// and missing future engine definitions are never allocated by this lookup.
+	if (found == catalogue.end() || found->transport != MultiLayerVehicleTransport::Tube) return std::nullopt;
+	return TubeVehicleGeometry{&*found, VEHICLE_LENGTH, 1};
+}
 
 /** @return The immutable first capsule's shared profile capability; no duplicate model/cargo registry is created. */
 static const LayerVehicleCapability &GetPrototypeCatalogue()
@@ -64,7 +78,9 @@ bool InitialiseTubeEngineDefinitions(const GRFConfigList &activated)
 	// Definition installation requires both prior canonical rail admission and
 	// exact content. This prototype cannot activate itself through a foreign GRF.
 	if (tube == INVALID_RAILTYPE || CheckMultiLayerContentIdentity(required, activated) != MultiLayerContentIdentityError::None) return false;
-	const auto &capability = GetPrototypeCatalogue();
+	const auto geometry = GetTubeVehicleGeometry(TUBE_PROTOTYPE_MODEL);
+	if (!geometry) return false;
+	const auto &capability = *geometry->catalogue;
 	// Resolve every allowed cargo before allocating a definition. Missing inputs
 	// refuse unchanged rather than partially publishing a refit policy.
 	for (const auto label : capability.cargo_labels) {
@@ -105,7 +121,12 @@ bool InitialiseTubeEngineDefinitions(const GRFConfigList &activated)
 	engine->reliability = 0xFFFF;
 	engine->reliability_spd_dec = 16;
 	auto &rail = engine->VehInfo<RailVehicleInfo>();
+	// Native spacing comes from the same physical source contract used by
+	// authoring. The delivered single-headed prototype still has one actual part;
+	// publishing geometry for later designs does not install their definitions.
+	assert(geometry->native_parts == 1);
 	rail.railveh_type = RailVehicleType::Singlehead;
+	rail.shorten_factor = VEHICLE_LENGTH - geometry->vehicle_length_units;
 	rail.railtypes = {tube};
 	rail.intended_railtypes = rail.railtypes;
 	rail.engclass = EngineClass::Maglev;

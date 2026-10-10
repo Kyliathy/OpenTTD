@@ -125,6 +125,50 @@
       "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
     },
     {
+      "producer": "src/tests/utility_power_path_load.cpp",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "test_tags": ["[.utility-power-path-file]"],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks-1.py --configuration RelWithDebInfo"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks.py --configuration RelWithDebInfo --phase write; add --geothermal-export for Plan17 feature caller; bounded companion files -1 through -4, preview-1, preview-2 and refusal"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-1.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks-1.py --configuration Debug"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-2.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks-2.py --configuration Debug"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-3.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks-3.py --configuration Debug"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-4.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_path_file_checks-4.py --configuration Debug"
+    },
+    {
+      "producer": "src/tests/geothermal_riser_load.cpp",
+      "features": [{ "feature": "geothermal", "scenario": "riser-native-files" }],
+        "test_tags": ["[.geothermal-riser-write]", "[.geothermal-riser-file]", "[.geothermal-relay-write]"],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/geothermal_riser_file_checks.py --configuration RelWithDebInfo --phase reload"
+    },
+    {
       "producer": "src/tests/geothermal_heat_load.cpp",
       "features": [
         {
@@ -773,6 +817,13 @@
       "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
     },
     {
+      "producer": "src/tests/multilayer/utilities/utility_lineage_file_checks.py",
+      "features": [{ "feature": "utilities", "scenario": "native-reload" }],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "python -B src/tests/multilayer/utilities/utility_lineage_file_checks.py --configuration RelWithDebInfo --phase reload; selectable preview-1, preview-2 and refusal"
+    },
+    {
       "producer": "src/tests/multilayer/acceptance/demo_checkpoint.py",
       "features": [
         {
@@ -987,6 +1038,13 @@
       "test_tags": [],
       "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
       "invocation": "python -B src/tests/multilayer/utilities/geothermal_collector_file_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_riser_file_checks.py",
+      "features": [{ "feature": "geothermal", "scenario": "riser-native-files" }],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+        "invocation": "python -B src/tests/multilayer/utilities/geothermal_riser_file_checks.py --configuration RelWithDebInfo --phase relay-reload; selectable reload, preview-1, preview-2, refusal, ordinary, link-reload, link-preview, link-refusal, relay-preview and relay-refusal; --prior-riser selects explicit native400 and --prior-link explicit native401 compatibility inputs"
     },
     {
       "producer": "src/tests/multilayer/utilities/geothermal_site_file_checks.py",

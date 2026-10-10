@@ -23,6 +23,7 @@
 #include "multilayer_industry.h"
 #include "layer_industry_processor.h"
 #include "geothermal.h"
+#include "geothermal_riser.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1772,6 +1773,7 @@ static void AfterLoadGRFs()
 	if (InitialiseLayerMineDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native catalogue reuses saved IIDS/TIDS; installation creates no geological reserve.
 	if (InitialiseLayerProcessorDefinitions(_grfconfig)) SortIndustryTypes(); // Material factories use published all-input recipes, never inherited independent-input multipliers.
 	if (InitialiseGeothermalCollectorDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native collector catalogue restores IIDS/TIDS only; cold claims and paid construction remain independent owners.
+	if (InitialiseGeothermalRiserDefinitions(_grfconfig)) SortIndustryTypes(); // Install only exact native definitions; original-portal funding and actual material/work remain separate command participants.
 }
 
 #ifdef WITH_MULTILAYER_LOADER_PROBE

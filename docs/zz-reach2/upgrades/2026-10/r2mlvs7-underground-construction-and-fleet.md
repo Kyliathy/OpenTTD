@@ -306,6 +306,8 @@ Scoped gate: `src/transport_tube.h` remains absent. Group 8 stays unchecked; the
 
 _Applies to Groups 9-12._
 
+**Raster source workflow.** New or corrected fleet, station/depot, toolbar and cursor originals use Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Separate batched views/states with pure-magenta source frames, transparent gutters and verified rectangular crops, or generate individual files. Vehicle families retain all manifest directions/load states; UI assets retain their own dimensions and matrix. Exclude frames before conversion and review model consistency independently. A clean source sheet does not close the actual loaded fleet/control tasks below.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/underground_gui.h`: `ShowUndergroundConstructionToolbar`, `BuildUndergroundVehicleFilter`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 9-12. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

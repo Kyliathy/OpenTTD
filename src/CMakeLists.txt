@@ -1,4 +1,5 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -264,6 +265,7 @@ add_files(
     landscape_type.h
     layer_portal_cmd.cpp
     layer_portal_work.cpp
+    layer_portal_work_wire.h
     layer_portal_bootstrap.cpp
     layer_portal_gui.cpp
     underground_gui.cpp
@@ -305,6 +307,8 @@ add_files(
     transport_tube.h
     transport_tube.cpp
     transport_tube_engine.cpp
+    # Physical capsule source contract: r2mlvs16-underground-transport-tubes.md Group10B.
+    transport_tube_model.h
     transport_tube_construction.cpp
     transport_tube_power.cpp
     transport_tube_runtime.cpp
@@ -312,10 +316,13 @@ add_files(
     transport_tube_readiness.cpp
     # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
     geothermal.h
+    geothermal_type.h
     geothermal_site.cpp
     geothermal_claim.cpp
     geothermal_site_wire.h
     geothermal_definitions.cpp
+    geothermal_generator_geometry.h
+    geothermal_generator_geometry.cpp
     geothermal_collector_wire.h
     geothermal_collector.h
     geothermal_collector.cpp
@@ -324,9 +331,17 @@ add_files(
     geothermal_utility.h
     geothermal_utility_cmd.h
     geothermal_utility.cpp
+    geothermal_electrical.h
+    geothermal_electrical.cpp
+    utility_power_lineage.h
+    utility_power_transfer.h
+    utility_power_lineage.cpp
     # Actual commissioned-riser admission: r2mlvs17-geothermal-energy-and-industry.md Group5B.
     geothermal_riser.h
     geothermal_riser.cpp
+    geothermal_riser_construction.cpp
+    geothermal_riser_wire.h
+    geothermal_riser_wire.cpp
     # Native project presentation: r2tbmf-tbm-fixes.md Group2.
     tbm_gui.h
     tbm_projects_gui.cpp

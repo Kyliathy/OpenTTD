@@ -338,6 +338,8 @@ Read master AD-2/AD-5 and the live `CheckExcavatedFootprint`/`CommitExcavationCu
 
 _Applies to Groups 16-19._
 
+**Raster source workflow.** For new or corrected terrain, edge, survey and excavation-overlay originals, use Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Multi-cell sheets need pure-magenta source frames, transparent gutters and verified rectangular crops. Keep the terrain connectivity/state matrix and native diamonds; four building views do not replace those requirements. Exclude frames before conversion, and retain separate source/model, packed and runtime proof.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/excavation.h`: `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 16-19. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

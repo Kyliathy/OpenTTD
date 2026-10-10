@@ -5,8 +5,8 @@
  */
 
 /**
- * @file geothermal_utility.cpp Paid Deep pipe/cable overlays and bounded paths; shared utility records retain installed identity and every resource quantity.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-4
+ * @file geothermal_utility.cpp Paid rock-layer pipe/cable overlays and bounded paths; shared utility records retain installed identity and every resource quantity.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-5
  */
 
 #include "stdafx.h"
@@ -15,6 +15,9 @@
 #include "geothermal_utility_cmd.h"
 #include "command_func.h"
 #include "geothermal_collector.h"
+#include "geothermal_riser.h"
+#include "layer_portal_cmd.h"
+#include "layer_portal_map.h"
 #include "company_base.h"
 #include "company_func.h"
 #include "industry.h"
@@ -76,6 +79,7 @@ static void EnsureGeothermalUtilityCache()
 			std::array adjacent{TileAddWrap(tile, -1, 0), TileAddWrap(tile, 0, -1), TileAddWrap(tile, 1, 0), TileAddWrap(tile, 0, 1)};
 			std::ranges::sort(adjacent);
 			for (const auto next : adjacent) {
+				if (!IsValidTile(next) || GetTileLayer(next) != GetTileLayer(tile)) continue; // Native plane boundaries cannot connect cables without a separately paid riser.
 				const auto cell = _utility_cells.find(std::tuple{owner, domain, next});
 				if (cell == _utility_cells.end() || _utility_components.contains(cell->second)) continue; // Only same-owner/domain installed cardinal neighbors enter their component once.
 				_utility_components.emplace(cell->second, root); pending.push_back(next);
@@ -96,11 +100,28 @@ std::optional<GeothermalUtilityLink> GetGeothermalUtilityLink(TileIndex tile, Ut
 }
 
 /** @copydoc GetGeothermalUtilityPortOwner */
-std::optional<CompanyID> GetGeothermalUtilityPortOwner(TileIndex tile)
+std::optional<CompanyID> GetGeothermalUtilityPortOwner(TileIndex tile, UtilityEnergyDomain domain)
 {
 	if (!IsValidTile(tile)) return std::nullopt;
+	if (IsLayerPortalTile(tile)) {
+		if (domain != UtilityEnergyDomain::Electricity) return std::nullopt;
+		const auto *work = GetLayerPortalWorkRecord(tile);
+		// Cable attachment retains paid physical geometry during sealing. Only
+		// an operational paid riser may subsequently carry inter-layer power.
+		if (work == nullptr || !Company::IsValidID(work->company) || GetTileOwner(tile) != work->company ||
+			GetTileOwner(GetLayerPortalPairTile(tile)) != work->company) return std::nullopt;
+		return work->company;
+	}
 	if (!IsTileType(tile, TileType::Industry)) return std::nullopt;
 	const auto *industry = Industry::GetByTile(tile);
+	if (domain == UtilityEnergyDomain::Electricity) {
+		const auto *riser = GetGeothermalRiserState(industry->index);
+		// Preparatory cable may attach to funded machinery, but only its exact
+		// retained boundary port. The native Industry owner remains neutral;
+		// this paid association alone owns the controller, as for collectors.
+		if (riser != nullptr && riser->site.port == tile && Company::IsValidID(riser->site.owner) &&
+			IsGeothermalRiserDefinition(industry->type)) return riser->site.owner;
+	}
 	const auto *state = GetGeothermalCollectorState(industry->index);
 	if (state == nullptr) return std::nullopt;
 	const auto *claim = GetGeothermalSiteClaim(state->site);
@@ -139,16 +160,17 @@ GeothermalUtilityAdmission PrepareGeothermalUtilityLink(TileIndex tile, UtilityE
 		!CheckDeepLayerAvailability(profile, TimerGameCalendar::date)) return result;
 	if (!Company::IsValidID(_current_company)) { result.error = GeothermalError::InvalidOwner; return result; }
 	if (result.terms == nullptr) { result.error = GeothermalError::InvalidKind; return result; }
-	// Every installation remains Deep-local and fully excavated. Protected
-	// cuts, cold machinery reservations and TBM support are never replaced.
-	if (!IsValidTile(tile) || GetTileLayer(tile) != MapLayer::DeepUnderground || CheckExcavatedFootprint(std::array{tile}).error != ExcavationError::None ||
+	// Heat stays Deep-local; electrical relays also require paid Underground
+	// floor. Protected cuts, cold reservations and support are never replaced.
+	if (!IsValidTile(tile) || !IsMultiLayerLocalUtilityLayer(domain, GetTileLayer(tile)) || CheckExcavatedFootprint(std::array{tile}).error != ExcavationError::None ||
 		GetTBMSupportTile(tile) != nullptr || GetGeothermalSiteClaimForTile(tile) != nullptr) { result.error = GeothermalError::Footprint; return result; }
 	if (EnsureNoVehicleOnGround(tile).Failed()) { result.error = GeothermalError::Occupied; return result; }
 	if (!CanConstructOverGeothermalUtility(tile)) { result.error = GeothermalError::InvalidOwner; return result; }
-	// Native road/rail/tube tiles keep all metadata. Generic machinery, shafts,
-	// foreign transport and reserved tracks provide no installable utility port.
-	if (IsTileType(tile, TileType::Industry)) {
-		if (GetGeothermalUtilityPortOwner(tile) != std::optional<CompanyID>{_current_company}) { result.error = GeothermalError::Endpoint; return result; }
+	// Native transport keeps all metadata. Only declared machinery ports and
+	// electrically attached owned housings admit cable over special tiles.
+	if (IsTileType(tile, TileType::Industry) || IsLayerPortalTile(tile)) {
+		if (GetGeothermalUtilityPortOwner(tile, domain) != std::optional<CompanyID>{_current_company}) { result.error = GeothermalError::Endpoint; return result; }
+		if (IsLayerPortalTile(tile) && GetLayerPortalTransportType(tile) == TransportType::Rail && GetLayerPortalReservationTrackBits(tile).Any()) { result.error = GeothermalError::Occupied; return result; } // A reserved rail housing cannot be rewired beneath its admitted traffic; road housings have no rail reservation field.
 	} else if (!IsTileType(tile, TileType::Clear) && !IsTileType(tile, TileType::Railway) && !IsTileType(tile, TileType::Road)) {
 		result.error = GeothermalError::Occupied; return result;
 	} else if (IsTileType(tile, TileType::Railway) || IsTileType(tile, TileType::Road)) {
@@ -202,7 +224,7 @@ std::optional<GeothermalUtilityPath> FindGeothermalUtilityPath(CompanyID owner, 
 	// camera or implicit same-coordinate edge between independent planes.
 	if (_game_mode != GameMode::Normal || profile.id != MultiLayerGameplayProfileID::MultilayerIndustry || profile.legacy ||
 		!Company::IsValidID(owner) || GetMultiLayerLocalUtilityLinkContract(domain) == nullptr || !CheckDeepLayerAvailability(profile, TimerGameCalendar::date) ||
-		!IsValidTile(source) || !IsValidTile(destination) || GetTileLayer(source) != MapLayer::DeepUnderground || GetTileLayer(destination) != MapLayer::DeepUnderground) return std::nullopt;
+		!IsValidTile(source) || !IsValidTile(destination) || !IsMultiLayerLocalUtilityLayer(domain, GetTileLayer(source)) || GetTileLayer(destination) != GetTileLayer(source)) return std::nullopt;
 	EnsureGeothermalUtilityCache();
 	if (!_utility_cells.contains(std::tuple{owner, domain, source}) || !_utility_cells.contains(std::tuple{owner, domain, destination})) return std::nullopt;
 	const auto source_id = _utility_cells.at(std::tuple{owner, domain, source}), destination_id = _utility_cells.at(std::tuple{owner, domain, destination});
@@ -226,6 +248,7 @@ std::optional<GeothermalUtilityPath> FindGeothermalUtilityPath(CompanyID owner, 
 		std::array adjacent{TileAddWrap(tile, -1, 0), TileAddWrap(tile, 0, -1), TileAddWrap(tile, 1, 0), TileAddWrap(tile, 0, 1)};
 		std::ranges::sort(adjacent);
 		for (const auto next : adjacent) {
+			if (!IsValidTile(next) || GetTileLayer(next) != GetTileLayer(tile)) continue; // Local routing cannot cross native planes; only explicit operational riser edges can do so.
 			if (!_utility_cells.contains(std::tuple{owner, domain, next}) || previous.contains(next)) continue; // Only installed same-company/domain neighbors enter this route once.
 			if (unavailable.contains(_utility_cells.at(std::tuple{owner, domain, next}))) continue; // Full interior cells cannot grant another share; sorted BFS chooses an installed residual alternative.
 			previous.emplace(next, tile); pending.push_back(next);
@@ -258,10 +281,10 @@ bool ValidateGeothermalUtilityLinks()
 	for (const auto &link : GetUtilityPowerLinks()) {
 		if (link.kind != UtilityLinkKind::LocalCell || !link.active) continue;
 		const auto tile = link.source_endpoint;
-		if (!IsValidTile(tile) || GetTileLayer(tile) != MapLayer::DeepUnderground || CheckExcavatedFootprint(std::array{tile}).error != ExcavationError::None ||
+		if (!IsValidTile(tile) || GetTileLayer(tile) != link.local_layer || !IsMultiLayerLocalUtilityLayer(link.local_domain, link.local_layer) || CheckExcavatedFootprint(std::array{tile}).error != ExcavationError::None ||
 			GetTBMSupportTile(tile) != nullptr || GetGeothermalSiteClaimForTile(tile) != nullptr) return false;
-		if (IsTileType(tile, TileType::Industry)) {
-			if (GetGeothermalUtilityPortOwner(tile) != std::optional<CompanyID>{link.local_owner}) return false;
+		if (IsTileType(tile, TileType::Industry) || IsLayerPortalTile(tile)) {
+			if (GetGeothermalUtilityPortOwner(tile, link.local_domain) != std::optional<CompanyID>{link.local_owner}) return false;
 		} else if (IsTileType(tile, TileType::Railway) || IsTileType(tile, TileType::Road)) {
 			if (GetTileOwner(tile) != link.local_owner) return false;
 		} else if (!IsTileType(tile, TileType::Clear)) return false;

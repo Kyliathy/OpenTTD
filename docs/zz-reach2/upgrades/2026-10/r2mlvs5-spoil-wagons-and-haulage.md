@@ -239,6 +239,8 @@ flowchart LR
 
 _Applies to Groups 10-14._
 
+**Raster source workflow.** New or corrected hauler, hopper, exchange-bay and Surface receiver originals use Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction). Use pure-magenta source frames, transparent gutters and mechanically verified rectangular crops, or separate view files. Preserve the full direction/load/occupancy matrix and actual vehicle/facility geometry; exclude frames before native conversion. Review model consistency separately, and retain source, packed and loaded logistics evidence as distinct results. Approved existing sources need no regeneration.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/tbm_exchange.h`: `TBMExchangeAssignment`, `ValidateTBMWagonExchange`, `ExecuteTBMWagonExchange`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 10-14. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

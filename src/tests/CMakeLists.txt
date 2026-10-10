@@ -1,4 +1,5 @@
 # Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Passive generator/site source boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group8B.
 add_test_files(
     # Shared artifact ownership: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
     test_artifact_paths.h
@@ -147,9 +148,13 @@ add_test_files(
     # Canonical tube registry boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md
     transport_tube_registry.cpp
     transport_tube_prototype.cpp
+    # Physical source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs16-underground-transport-tubes.md Group10B.
+    transport_tube_model.cpp
     transport_tube_fixture.h
     transport_tube_construction.cpp
     transport_tube_reservations.cpp
+    # Native junction source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47D
+    transport_tube_art_geometry.cpp
     transport_tube_power_fixture.h
     transport_tube_power.cpp
     transport_tube_power_load.cpp
@@ -157,10 +162,13 @@ add_test_files(
     transport_tube_meter_fixture.h
     transport_tube_recovery.cpp
     transport_tube_readiness.cpp
+    # Native interchange source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48D.
+    transport_tube_interchange_geometry.cpp
     # Actual cold site admission: docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1.
     geothermal_site.cpp
     geothermal_site_load.cpp
     geothermal_definitions.cpp
+    geothermal_generator_geometry.cpp
     geothermal_collector_fixture.h
     geothermal_collector.cpp
     geothermal_heat.cpp
@@ -169,9 +177,22 @@ add_test_files(
     geothermal_topology.cpp
     geothermal_heat_load.cpp
     geothermal_utility.cpp
+    geothermal_electrical.cpp
+    geothermal_power_export.cpp
+    utility_power_lineage.cpp
+    utility_power_transfer.cpp
+    utility_power_path_load.cpp
+    geothermal_electrical_fixture.h
     # Complete native portal-riser admission: r2mlvs17-geothermal-energy-and-industry.md Group5B.
     geothermal_riser.cpp
     geothermal_riser_definition.cpp
+    geothermal_riser_fixture.h
+    geothermal_riser_construction.cpp
+    geothermal_riser_lifecycle.cpp
+    geothermal_riser_delivery.cpp
+    geothermal_riser_save.cpp
+    geothermal_riser_link.cpp
+    geothermal_riser_load.cpp
     geothermal_utility_load.cpp
     geothermal_collector_load.cpp
     # Declared connected ground fixture: r2mlvs15-integrated-acceptance-and-balance.md Group2.

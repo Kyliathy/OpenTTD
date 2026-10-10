@@ -32,6 +32,8 @@ add_files(
     geothermal_site_sl.cpp
     # Actual native construction transport: r2mlvs17-geothermal-energy-and-industry.md Group1B.
     geothermal_collector_sl.cpp
+    # Original paid portal-bound machinery: r2mlvs17-geothermal-energy-and-industry.md Group5B.
+    geothermal_riser_sl.cpp
     geothermal_heat_route_sl.cpp
     gamelog_sl.cpp
     goal_sl.cpp

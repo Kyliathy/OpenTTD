@@ -7,6 +7,7 @@
 /**
  * @file geothermal_collector.cpp Actual capital/stock/once-per-tick native construction, shortage recovery and source readiness boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group54BB native construction-frame binding
  */
 
 #include "../stdafx.h"
@@ -15,7 +16,48 @@
 #include "../utility_power.h"
 #include "../landscape_cmd.h"
 #include "../multilayer_state.h"
+#include "../industry_map.h"
 #include "../safeguards.h"
+
+/**
+ * Verify all real construction-frame transitions while final-looking stage3 retains unfinished paid work until completion.
+ * @return No result; the scoped actual-native fixture restores caller state.
+ */
+TEST_CASE("Geothermal native construction frames preserve the separate paid completion gate", "[geothermal-collector][geothermal-art-state]")
+{
+	GeothermalCollectorRig rig;
+	REQUIRE(rig.Fund().Succeeded());
+	auto &industry = rig.Collector();
+	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
+	REQUIRE(terms->work_ticks == 296);
+	// Actual native accepted stock supplies the whole bill. Art/frame queries
+	// cannot consume it, earn work, publish heat or settle another capital charge.
+	for (const auto &input : terms->inputs) REQUIRE(rig.Deliver(input.label, input.quantity) == input.quantity);
+	const auto cash = Company::Get(_current_company)->money;
+	static constexpr std::pair<uint16_t, uint8_t> checkpoints[] = {{0, 0}, {73, 0}, {74, 1}, {147, 1}, {148, 2}, {221, 2}, {222, 3}, {295, 3}, {296, 3}};
+	uint16_t previous = 0;
+	// Check both sides of each real native quarter, using the actual industry
+	// dispatcher instead of setting construction flags or the saved work counter.
+	for (const auto &[work, stage] : checkpoints) {
+		rig.Tick(static_cast<uint16_t>(work - previous)); previous = work;
+		const auto *state = GetGeothermalCollectorState(industry.index); REQUIRE(state != nullptr);
+		CHECK(state->work_ticks == work); CHECK(Company::Get(_current_company)->money == cash);
+		const bool completed = work == 296;
+		CHECK(IsGeothermalCollectorOperational(industry.index) == completed);
+		// All nine physical cells share the same paid progress and completion.
+		// Stage3 is deliberately observable before the separate completed flag.
+		for (const auto &cell : GetIndustrySpec(industry.type)->layouts.front()) {
+			const auto tile = TileAddWrap(industry.location.tile, cell.ti.x, cell.ti.y);
+			CHECK(GetIndustryConstructionStage(tile) == stage); CHECK(IsIndustryCompleted(tile) == completed);
+		}
+		if (!completed) {
+			const auto before = ComputeUtilityPowerDigest();
+			CHECK(PublishGeothermalCollectorHeat(industry.index, GetUtilityPowerInterval(), 1, false) == UtilityPowerError::Refused);
+			CHECK(ComputeUtilityPowerDigest() == before);
+			CHECK(state->heat_producer == UtilityProducerID{UINT32_MAX});
+		}
+	}
+}
 
 /** Ordinary command estimates preserve all owners, while actual execution settles full capital once and consumes only the original cold reservation. */
 TEST_CASE("Geothermal actual native funding settles capital once without completing construction", "[geothermal-collector]")

@@ -56,6 +56,7 @@
 #include "../utility_power.h"
 #include "../transport_tube.h"
 #include "../geothermal_collector.h"
+#include "../geothermal_riser.h"
 #include "../geothermal_heat.h"
 #include "../error.h"
 #include "../strings_type.h"
@@ -269,6 +270,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _tube_vehicle_chunk_handlers;
 	extern const ChunkHandlerTable _geothermal_site_chunk_handlers;
 	extern const ChunkHandlerTable _geothermal_collector_chunk_handlers;
+	extern const ChunkHandlerTable _geothermal_riser_chunk_handlers;
 	extern const ChunkHandlerTable _geothermal_heat_route_chunk_handlers;
 	extern const ChunkHandlerTable _name_chunk_handlers;
 	extern const ChunkHandlerTable _cheat_chunk_handlers;
@@ -323,6 +325,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_tube_vehicle_chunk_handlers,
 		_geothermal_site_chunk_handlers,
 		_geothermal_collector_chunk_handlers,
+		_geothermal_riser_chunk_handlers,
 		_geothermal_heat_route_chunk_handlers,
 		_name_chunk_handlers,
 		_cheat_chunk_handlers,
@@ -3353,6 +3356,7 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateTubePowerVehicleLoadPreview();
 		ValidateGeothermalSiteLoadPreview();
 		ValidateGeothermalCollectorLoadPreview();
+		ValidateGeothermalRiserLoadPreview();
 		ValidateGeothermalHeatRouteLoadPreview();
 		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {

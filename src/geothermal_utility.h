@@ -5,15 +5,16 @@
  */
 
 /**
- * @file geothermal_utility.h Paid native Deep utility installation and deterministic physical paths, using shared link identities.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-4
+ * @file geothermal_utility.h Paid native rock-layer utility installation and deterministic physical paths, using shared link identities.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups3B-5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group7 public facade
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md paid utility-cell extension
  */
 
 #ifndef GEOTHERMAL_UTILITY_H
 #define GEOTHERMAL_UTILITY_H
 
-#include "geothermal.h"
+#include "geothermal_type.h"
 #include "utility_power.h"
 #include "command_type.h"
 
@@ -22,7 +23,7 @@ struct GeothermalUtilityLink {
 	UtilityLinkID id{UINT32_MAX}; ///< Issued shared identity, never a feature-local counter.
 	CompanyID owner = CompanyID::Invalid(); ///< Actual active infrastructure controller.
 	UtilityEnergyDomain domain = UtilityEnergyDomain::Heat; ///< Separate layer-local network.
-	TileIndex tile = INVALID_TILE; ///< Installed excavated Deep cell.
+	TileIndex tile = INVALID_TILE; ///< Installed excavated rock cell; Heat stays Deep-local.
 	uint64_t capacity_w = 0; ///< Frozen physical rate; neither an energy store nor source generation.
 };
 
@@ -42,8 +43,8 @@ struct GeothermalUtilityPath {
 
 /** @param tile Explicit world cell. @param domain Actual network. @return Active installed cell view or absence; proximity/queries never build a connection. */
 std::optional<GeothermalUtilityLink> GetGeothermalUtilityLink(TileIndex tile, UtilityEnergyDomain domain);
-/** @param tile Actual native industry cell. @return Owner of its declared funded collector port or absence; a cold plan/generic industry provides no port. */
-std::optional<CompanyID> GetGeothermalUtilityPortOwner(TileIndex tile);
+/** @param tile Actual native machinery or portal cell. @param domain Installed network; only electricity can attach to a riser port or owned portal housing. @return Actual declared port owner or absence; a cold plan/generic industry provides no port. */
+std::optional<CompanyID> GetGeothermalUtilityPortOwner(TileIndex tile, UtilityEnergyDomain domain = UtilityEnergyDomain::Heat);
 /** @param tile Actual world cell. @param domain Installed network. @param remove Quote removal rather than construction. @return Full date/company/floor/port/cash/occupancy admission without mutation. */
 GeothermalUtilityAdmission PrepareGeothermalUtilityLink(TileIndex tile, UtilityEnergyDomain domain, bool remove = false);
 /**

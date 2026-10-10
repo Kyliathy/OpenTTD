@@ -321,6 +321,8 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 _Applies to Groups 13-18._
 
+**Raster source workflow.** Portal housing, door-state, commissioning and picker art uses Plan13's [framed ImageGen prompt and extraction checks](r2mlvs13-graphics-and-asset-pipeline.md#framed-imagegen-sheets-and-safe-extraction) for new or corrected originals. Separate whole directional views with pure-magenta source frames and transparent clearance; verify every rectangular crop and the same physical model before native slicing. Exclude frames before conversion. A safe source sheet does not establish loaded portal states or crossing occlusion; existing approved originals need no regeneration.
+
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/layer_portal_cmd.h`: `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 13-18. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.

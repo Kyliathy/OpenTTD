@@ -17,6 +17,8 @@
 #include "../layer_portal_cmd.h"
 #include "../layer_portal_map.h"
 #include "../rail_map.h"
+#include "../rail.h"
+#include "../road.h"
 #include "../core/random_func.hpp"
 
 #include "../safeguards.h"
@@ -34,6 +36,9 @@ public:
 	explicit GeothermalRiserRig(bool direct_elevator = false, MapLayer source_layer = MapLayer::DeepUnderground)
 	{
 		ResetUtilityPowerState(); ResetLayerPortalWorkState();
+		// Pure native housing fixtures still need the real transport-type
+		// registry; test order cannot supply road-elevator or rail meanings.
+		ResetRailTypes(); ResetRoadTypes();
 		this->request.owner = _current_company;
 		this->request.portal = TileXYL(20, 20, source_layer);
 		this->request.tile = this->request.port = TileXYL(21, 20, source_layer);
@@ -133,6 +138,7 @@ TEST_CASE("Riser admission refuses foreign sealed locked and incomplete sites", 
 	SECTION("missing access") { rig.request.access = DiagDirection::Invalid; }
 	SECTION("nonadjacent port") { rig.request.port = TileAddWrap(rig.request.tile, 1, 1); }
 	SECTION("occupied rail floor") { MakeRailNormal(rig.request.tile, _current_company, TrackBits{Track::X}, RAILTYPE_RAIL); }
+	SECTION("vacant public approach") { rig.request.tile = rig.request.port = GetLayerPortalDoorTile(rig.request.portal); }
 	SECTION("map edge") { rig.request.tile = TileXYL(Map::MaxX() - 1, 20, MapLayer::DeepUnderground); }
 	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto utility = ComputeUtilityPowerDigest();

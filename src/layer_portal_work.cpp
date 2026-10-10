@@ -24,6 +24,7 @@
 #include "pathfinder/yapf/yapf.h"
 #include "tbm_exchange.h"
 #include "utility_power.h"
+#include "geothermal_riser.h"
 #include "transport_tube.h"
 #include "track_func.h"
 #include "pbs.h"
@@ -436,7 +437,9 @@ LayerPortalWorkError ChangeLayerPortalConnection(TileIndex tile, CompanyID compa
 			if (HasLayerPortalReservation(end)) UnreserveRailTrack(end, DiagDirToDiagTrack(GetLayerPortalShaftDirection(end)));
 		}
 	}
+	const auto previous_revision = work.revision;
 	work.state = target_state; ++work.revision;
+	RevalidateGeothermalRiserPortal(tile, company, previous_revision); // The same actual pair may seal/reopen without repurchasing machinery or restoring expired utility grants.
 	NotifyLayerPortalRoutingChanged(*key);
 	return LayerPortalWorkError::None;
 }
@@ -482,6 +485,7 @@ LayerPortalWorkError RetireLayerPortalWorkPair(TileIndex tile)
 	// identity still resolves; consumed electricity is never refunded.
 	InvalidateUtilityPowerLinksForPortal(tile);
 	InvalidateTubePowerForPortal(tile);
+	RetireGeothermalRiserPortal(tile); // Original-housing loss is permanent even if a rebuilt pair reuses the same coordinates and numeric stamp.
 	const TileIndex key = *GetLayerPortalPairKey(tile);
 	if (IsLayerPortalHangarTile(key)) {
 		// Retire the genuine depot while its physical marker still resolves,
@@ -513,9 +517,12 @@ LayerPortalWorkError TransferLayerPortalWorkPair(TileIndex tile, Owner new_owner
 	if (new_owner != OWNER_NONE && !Company::IsValidID(new_owner)) return LayerPortalWorkError::InvalidOwner; // A transfer cannot bind a record to an invented/deleted company.
 	if (new_owner == OWNER_NONE && GetLayerPortalTransportType(tile) != TransportType::Road) return LayerPortalWorkError::InvalidOwner; // Bankruptcy removes rail housings; only existing road policy retains ownerless shafts.
 	if (it->second.revision >= UINT64_MAX - 1) return LayerPortalWorkError::Limit;
+	const auto previous_owner = it->second.company;
+	const auto previous_revision = it->second.revision;
 	it->second.company = new_owner == OWNER_NONE ? CompanyID::Invalid() : CompanyID{new_owner};
 	if (new_owner == OWNER_NONE) it->second.state = LayerPortalWorkState::Sealed;
 	++it->second.revision;
+	RevalidateGeothermalRiserPortal(tile, previous_owner, previous_revision); // Native takeover keeps paid stock/work on this same physical pair; removed or stale attachments remain retired.
 	return LayerPortalWorkError::None;
 }
 

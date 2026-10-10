@@ -7,6 +7,7 @@
 /**
  * @file utility_power_transfer_load.cpp Real commissioned portal flow, original-source imports and topology-loss file proof.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 8
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C exact parent/segment native transport
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md actual Connected/lifecycle authority
  */
 
@@ -16,6 +17,10 @@
 #include "../openttd.h"
 #include "../console_internal.h"
 #include "../utility_power.h"
+#include "../utility_power_lineage.h"
+#include "../fios.h"
+#include "../timer/timer_game_tick.h"
+#include "../core/random_func.hpp"
 #include "../economy_func.h"
 #include "../layer_portal_cmd.h"
 #include "../layer_portal_map.h"
@@ -97,6 +102,34 @@ TEST_CASE("Native utility transfer preserves original generation through real po
 				}
 				CHECK(ValidateUtilityPowerState(after, GetCurrentMultiLayerProfileSelection()) == UtilityPowerError::None);
 				save("utility-company-route-takeover.sav");
+			} else if (mode == "lineage-independent") {
+				REQUIRE_FALSE(HasUtilityPowerState());
+				const char *candidate = std::getenv("OTTD_UTILITY_LINEAGE_PREVIEW"); REQUIRE(candidate != nullptr);
+				const auto before = ComputeUtilityPowerDigest(), clock = TimerGameTick::counter;
+				const auto random = std::array{_random.state[0], _random.state[1]}; const auto width = Map::SizeX(), height = Map::SizeY();
+				REQUIRE(SaveOrLoad(candidate, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+				CHECK(_load_check_data.utility_power_state.next_share == 2); REQUIRE(_load_check_data.utility_path_rows.size() == 1);
+				CHECK(_load_check_data.utility_power_state.consumers[1].shares.front().parent == UtilityShareID{0});
+				CHECK(ComputeUtilityPowerDigest() == before); CHECK(TimerGameTick::counter == clock); CHECK(Map::SizeX() == width); CHECK(Map::SizeY() == height);
+				CHECK(std::array{_random.state[0], _random.state[1]} == random);
+			} else if (mode == "lineage-preview" || mode == "lineage-refusal") {
+				// The accepted source has actual generated/imported quantities.
+				// Corrupt copies may neither borrow its paths during preview nor
+				// leave partly accepted lineage after a failed native full load.
+				const char *bad = std::getenv("OTTD_UTILITY_LINEAGE_CORRUPT"); REQUIRE(bad != nullptr);
+				const auto before = ComputeUtilityPowerDigest(), clock = TimerGameTick::counter;
+				const auto random = std::array{_random.state[0], _random.state[1]};
+				if (mode == "lineage-preview") {
+					CHECK(SaveOrLoad(bad, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
+					CHECK(ComputeUtilityPowerDigest() == before); CHECK(TimerGameTick::counter == clock); CHECK(std::array{_random.state[0], _random.state[1]} == random);
+					REQUIRE(SaveOrLoad(input.string(), SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+					CHECK(_load_check_data.utility_power_state.next_share == 2); CHECK(_load_check_data.utility_path_rows.size() == 1);
+				} else {
+					REQUIRE(SaveOrLoad(bad, SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::ReInit);
+					CHECK(CaptureUtilityPowerState().next_share == 0); CHECK(CaptureUtilityPowerState().producers.empty());
+					REQUIRE(SaveOrLoad(input.string(), SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+				}
+				CHECK(ComputeUtilityPowerDigest() == before);
 			} else if (mode == "create") {
 				REQUIRE_FALSE(HasUtilityPowerState());
 				TileIndex endpoint = INVALID_TILE;
@@ -162,16 +195,20 @@ TEST_CASE("Native utility transfer preserves original generation through real po
 				CHECK(ValidateUtilityPowerState(CaptureUtilityPowerState(), GetCurrentMultiLayerProfileSelection()) == UtilityPowerError::None);
 				save("utility-transfer-rebuilt.sav");
 			} else {
+				const auto phase = mode.starts_with("legacy-") ? mode.substr(7) : mode;
 				const auto state = CaptureUtilityPowerState();
 				REQUIRE(state.producers.size() == 1); REQUIRE(state.consumers.size() == 2);
-				REQUIRE(state.links.size() == (mode == "rebuilt" ? 3 : 2));
+				REQUIRE(state.links.size() == (phase == "rebuilt" ? 3 : 2));
 				CHECK(state.producers.front().meter.generation_energy_j == 81);
 				CHECK(state.links.front().flow_j == 40);
 				CHECK(state.consumers[1].shares.front().producer == UtilityProducerID{0});
 				CHECK(state.consumers[1].shares.front().imported_link == UtilityLinkID{0});
-				const uint64_t available = mode == "transferred" ? 40 : mode == "consumed" ? 30 : mode == "rebuilt" ? 5 : 0;
+				CHECK(state.next_share == (phase == "rebuilt" ? 3 : 2));
+				CHECK(state.consumers[0].shares.front().id == UtilityShareID{0}); CHECK(state.consumers[1].shares.front().parent == UtilityShareID{0});
+				CHECK(state.consumers[1].shares.front().segment == std::vector{UtilityLinkID{0}});
+				const uint64_t available = phase == "transferred" ? 40 : phase == "consumed" ? 30 : phase == "rebuilt" ? 5 : 0;
 				CHECK(GetUtilityAllocation(UtilityConsumerID{1})->granted_energy_j == available);
-				CHECK(state.producers.front().consumed_lifetime_j == (mode == "transferred" ? 0 : 10));
+				CHECK(state.producers.front().consumed_lifetime_j == (phase == "transferred" ? 0 : 10));
 				CHECK(PrepareUtilityMutation(UtilityMutationKind::TransferLayer, {UtilityConsumerID{1}, 1}, 1, UtilityConsumerID{0}, UtilityLinkID{1}).error != UtilityPowerError::None);
 				CHECK(ValidateUtilityPowerState(state, GetCurrentMultiLayerProfileSelection()) == UtilityPowerError::None);
 				save(fmt::format("utility-transfer-{}-reloaded.sav", mode));

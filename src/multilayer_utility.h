@@ -114,7 +114,7 @@ struct UtilityHeatConversion {
 /** Source family before its one source-specific availability/mirror calculation. */
 enum class UtilityGenerationKind : uint8_t { SolarFarm, Geothermal, Nuclear, Coal, External, OrbitalPanel };
 
-/** Frozen paid Deep utility-cell definition; capacities are rates, never stored energy or an implicit generator. */
+/** Frozen paid rock-layer utility-cell definition; capacities are rates, never stored energy or an implicit generator. */
 struct MultiLayerLocalUtilityLinkContract {
 	UtilityEnergyDomain domain; ///< Heat and electricity travel in distinct layer-local networks.
 	uint64_t capacity_w; ///< Installed bottleneck rate; synchronized routing converts it to interval joules.
@@ -124,6 +124,9 @@ struct MultiLayerLocalUtilityLinkContract {
 
 /** @param domain Actual Heat/Electricity network. @return Immutable original-content cell terms or nullptr for an unknown domain; no availability, money or identity changes. */
 const MultiLayerLocalUtilityLinkContract *GetMultiLayerLocalUtilityLinkContract(UtilityEnergyDomain domain);
+
+/** @param domain Actual installed network. @param layer Explicit native plane. @return Whether that network may install local cells here: Heat stays Deep; electricity also supplies Underground relays. */
+bool IsMultiLayerLocalUtilityLayer(UtilityEnergyDomain domain, MapLayer layer);
 
 /** Native consumer response; optional Surface processing does not block the pre-grid manufacturing bootstrap. */
 enum class UtilityConsumerEffect : uint8_t {

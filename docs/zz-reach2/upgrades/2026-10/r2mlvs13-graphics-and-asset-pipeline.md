@@ -50,7 +50,9 @@ Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). M1 dispatc
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/table/sprites.h](../../../../src/table/sprites.h) | 380-409 | Complete Map Layer sprite constants and `SPR_NEWGRFS_BASE` bound the published block; preserve 0..65 and resolve any accepted live extension before allocating new IDs. |
 
-Status: Groups 1-8 M0 contract and the master's selected forty-family M1 source/packing/native-consumer/crossing/loop/sound/gallery slice are complete. Group 85B records selected technical gallery/distribution acceptance; unselected later families and full-profile gallery obligations remain pending. User personal art review is deferred as requested. Evidence: [sprite contract and geometry](graphics/r2mlvs13-a-sprite-contract.md) and [selected gallery acceptance](portal-tbm/r2mlvs3mp-t-gallery-acceptance.md). Parent completion is unchanged. Final art is required for milestone acceptance.
+For any new raster generation/edit or source-layout correction, also read [Framed ImageGen sheets and safe extraction](#framed-imagegen-sheets-and-safe-extraction). This policy applies throughout the source-authoring groups, including groups with a closer family-specific Local Mandatory Reading block. Existing approved originals retain their provenance and do not require regeneration.
+
+Status: master10.4 is active; tube guideway/facility/capsule source Groups47-53 and collector/natural source54 are complete. Plan17 staged8B native generator geometry is verified;Staged79C.1 collector packing/runtime integration is current; unfinished55.3 resumes after its actual display proof. [Current selected-ground continuation](r2mlvs13-c-selected-ground-art.md) owns geometry/source progress. Groups 1-8 M0 contract and the master's selected forty-family M1 source/packing/native-consumer/crossing/loop/sound/gallery slice are complete. Group 85B records selected technical gallery/distribution acceptance; unselected later families and full-profile gallery obligations remain pending. User personal art review is deferred as requested. Evidence: [sprite contract and geometry](graphics/r2mlvs13-a-sprite-contract.md) and [selected gallery acceptance](portal-tbm/r2mlvs3mp-t-gallery-acceptance.md). Parent completion is unchanged. Final art is required for milestone acceptance.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -197,6 +199,69 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
 
 **Conversion sketch.** Asset generation selects original pixels; deterministic processing begins from those retained originals. A later runtime correction updates source/manifest and reruns conversion, never patches only the distributed binary.
+
+#### Framed ImageGen sheets and safe extraction
+
+Owner: this plan's source-authoring/conversion groups; consumers: the feature plans' graphics tasks and Plan15 art review. Adopt this layout for future multi-view raster requests, with one image per view as the fallback when a sheet fails separation or model consistency. It is a source-layout convention; required directions, states, native dimensions, anchors and foreground parts still come from the family's manifest and actual consumer geometry. Eight-direction vehicles need all eight genuine views, for example in two explicitly labelled four-view batches; terrain, icons and other matrices keep their own contract. Do not regenerate approved sources merely to add frames.
+
+**Evidence and limits, 2026-10-10.** The Vent-Tap stage 2 trial allows four fixed rectangular crops with zero clipped opaque model pixels and zero opaque magenta pixels inside the crops. The NW view nevertheless adds a second exchanger, so the whole trial remains unapproved and runtime-inactive. This supports rectangular extraction; every generated output still requires layout and model checks. The [layout receipt](../../../../logs/graphics/geothermal-source/20261010-venttap-layout-01/verification.json) records the measured windows; [the immutable generation record](../../../../media/multilayer/source/ground/geothermal-generation-record.json), candidate `venttap-construction-2-bordered-v1`, retains the exact executed prompt, references, original hash and rejection. Its [layout guide](../../../../media/multilayer/guides/ground/generator-venttap-construction-2-bordered-v1.png) is a layout reference, never gameplay artwork.
+
+**Reusable ImageGen prompt.** This copyable template preserves the successful trial's framing instructions. Fill every placeholder from the current family brief. For an edit, attach the approved views as edit targets and the frame guide as a layout-only reference; inspect local targets first under the imagegen skill. For a new model, use `stylized-concept`, describe genuine reference roles and omit claims of approved edit targets. Match the view labels and camera to the actual engine contract.
+
+```text
+Use case: precise-object-edit.
+Asset: <asset_id and model>; requested state: <one construction stage or equipment state>.
+Input images: Images 1-4 are the approved <NE,SE,SW,NW> model edit targets;
+Image 5 is the exact four-cell magenta-frame layout reference, for layout only.
+
+Create a SAFE BORDERED source sheet, 1536x1024, with four complete views of
+the same physical model in a 2x2 grid: NE top-left, SE top-right,
+SW bottom-left, NW bottom-right. Keep four straight opaque PURE MAGENTA
+#FF00FF rectangular frames, approximately 6px thick:
+NE(24,24)-(744,488), SE(792,24)-(1512,488),
+SW(24,536)-(744,1000), NW(792,536)-(1512,1000).
+Magenta is a source separator outside every model.
+
+Each whole subject must fit comfortably inside its corresponding inner
+rectangle with at least 32px transparent clearance to its frame:
+NE(56,56)-(712,456), SE(824,56)-(1480,456),
+SW(56,568)-(712,968), NW(824,568)-(1480,968).
+Reduce each model uniformly as necessary: roughly 560px floor width,
+maximum 350px whole-subject height. No floor corner, machine, halo,
+shadow or other subject pixel may touch a frame, enter a gutter,
+cross the panel boundary or overlap another view.
+Use real transparency throughout the background, margins and gutters;
+keep the magenta frames visible.
+
+Change only <the declared construction/state differences>.
+Preserve <the exact equipment inventory, counts, placement and silhouette>
+in every physical orientation. Preserve <native footprint and contact points>,
+<camera, normally fixed 2:1 isometric>, <light direction, normally upper-left>
+and <approved materials and palette accents>.
+Do not add, duplicate, remove, mirror or replace equipment beyond the
+declared state change. Produce genuine directional views of the same model.
+No text, labels, numbers, guide symbols, decorative background or extra props.
+Four independent, fully separated cutouts; safe separation takes priority
+over making the subjects large.
+```
+
+Use the built-in `image_gen` tool with `transparent_background=true`; the prompt's requested canvas is not a promise of the returned dimensions. Retain the original RGBA output immutably, plus the complete substituted prompt, tool, view/state labels, reference roles/hashes and selected/rejected status in the family's generation record. Copy project originals into the repository under the existing asset owner. Keep construction/state changes model-specific; the magenta layout does not authorize procedural substitutes for missing authored views or states.
+
+| View | Frame corners requested | Safe source crop in the 1536x1024 trial |
+| --- | --- | --- |
+| NE | (24,24)-(744,488) | [32,32,736,480) |
+| SE | (792,24)-(1512,488) | [800,32,1504,480) |
+| SW | (24,536)-(744,1000) | [32,544,736,992) |
+| NW | (792,536)-(1512,1000) | [800,544,1504,992) |
+
+Crop notation is `[left,top,right,bottom)`, with right/bottom exclusive. These source windows exclude the frames; native per-tile slicing happens later. The inner rectangles in the prompt reserve additional subject clearance inside these crop windows. Do not copy source coordinates into native anchors or assume another generated sheet obeys this layout.
+
+Before selecting a sheet or passing it to conversion:
+
+1. Check the actual dimensions, alpha, frame locations and transparent gutters. Record measured non-overlapping rectangular source windows and the alpha/color thresholds used by the check. Verify that every visible model pixel lies inside its own window, all separator pixels lie outside the windows, and no opaque separator magenta enters any extracted view. Inspect faint edges and shadows for clipping too. A requested frame or successful crop of a different sheet is insufficient.
+2. Compare all views with the approved model: equipment counts and positions, genuine orientation, requested construction/state differences, footprint, camera/light and native-scale readability. Reject a sheet that adds hardware or changes identity even when its cropping passes.
+3. Extract ordinary rectangles that exclude the source frames, preserving the model alpha. Then apply the established palette, registration, native-cell and foreground-part conversion checks. Do not rescue overlapping subjects with guessed pixel masks, erase magenta across the whole image, or ship separator frames. On failure, regenerate a corrected framed sheet or request one isolated view per image with the same geometry references.
+4. Keep extraction/model approval, complete source coverage, packed/decoded sprite proof and actual game rendering as separate results. Source checks alone do not close runtime tasks. Follow the master's bounded source-to-game checkpoints before starting another large authoring batch.
 
 ```mermaid
 flowchart LR
@@ -665,84 +730,348 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 47 - Author tube guideways and junctions
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4. Execute47B-47G below in order, then close the original aggregate tasks only when all six native families satisfy them. These bounded groups preserve the entire original scope while separating geometry/source reviews; [selected ground art notes](r2mlvs13-c-selected-ground-art.md) hold the single current continuation.
 
 {{HARD}}
-- [ ] 47.1 For tube guideways and junctions, derive a single-model brief from its approved manifest/template: sealed shells that leave moving capsules readable. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 47.2 Produce the required directions/rotations for tube guideways and junctions from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 47.3 Add straight/45-degree bend/junction/end and powered/unpowered pieces for tube guideways and junctions, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 47.1 For tube guideways and junctions, derive a single-model brief from its approved manifest/template: sealed shells that leave moving capsules readable. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 47.2 Produce the required directions/rotations for tube guideways and junctions from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 47.3 Add straight/45-degree bend/junction/end and powered/unpowered pieces for tube guideways and junctions, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+### Local Mandatory Reading - Native straight tube originals
+
+_Applies to Group47B; supplements the Source generation and reproducible conversion Area._
+
+Read Global/AD-1/map ownership/protected sprite block, `tube.straight` in the actual manifest, the current brief in [selected ground art notes](r2mlvs13-c-selected-ground-art.md), native `Track::X/Y` and `UTUB` registry geometry, and the shared quantizer's anchor/palette policy. The installed imagegen skill and persistent CODEX_HOME authorization are verified. Use actual engine edge contacts and a clear moving-capsule channel. Reuse existing source/provenance conventions; do not reread M1's completed authoring/native diary or invent another track/power owner.
+
+Context has compacted 1 times while executing this group.
+
+### Group 47B - Freeze native straight geometry and author its originals
+
+{{HARD}}
+- [X] 47B.1 Freeze the two undirected native axes,64x31 canvas/anchor and back/front channel clearance. Publish the geometry brief/template, select an immutable built-in-generated straight base and record exact prompt/reference/output provenance before variants.
+- [X] 47B.2 Author the independent NE/SW and NW/SE views from that selected form with fixed contacts/light; reversed traversal reuses its original axis rather than a rotated substitute.
+- [X] 47B.3 Complete construction/powered/unpowered coverage, native/enlarged contact review, aligned back/front masks and source/palette/anchor validation. Publish the retained original/selected frame mapping for later deterministic packing.
+
+47B closure,2026-10-10: three immutable built-in originals supply six independently authored state/axis frames and twelve aligned back/front poses. Exact source/reference/prompt provenance and reviewed crops live in `media/multilayer/source/ground/tube-generation-record.json`; `convert_tube_art.py --straight` deterministically rebuilds the indexed atlas and native/enlarged/three-tile contact review. Native centreline checks corrected powered X/Y registration to(-1,1)/(-1,0), without changing retained originals. [Nine focused source/refusal cases](../../../../logs/graphics/tube-source/20261010-straight-01/source-checks.log) and [public manifest validation](../../../../logs/graphics/tube-source/20261010-straight-01/contract-2.log) pass. The public source contract is authored; packed offsets/payload and runtime activation remain unchanged. [Source atlas and review mapping](../../../../logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json) identifies all twelve poses. Group47's whole six-family scope remains unchecked;47C is next.
+
+### Local Mandatory Reading - Native curved tube originals
+
+_Applies to Group47C._
+
+Read Global/Source generation Area, completed47B style/clearance, only `tube.bend45`, native Upper/Lower/Left/Right endpoints and the matching curve guides. Preserve fixed light/anchors and actual traversed45-degree geometry; do not rotate flat straight art into a curve.
+
+### Group 47C - Author the four native curved tracks
+
+{{HARD}}
+- [X] 47C.1 Freeze actual four-corner endpoints and select a provenance-retained curved-shell base using the approved straight style.
+- [X] 47C.2 Author all four engine corner views with exact native contacts and consistent capsule clearance.
+- [X] 47C.3 Complete three-state/back-front coverage and native contact/palette/anchor review before conversion handoff.
+
+47C closure,2026-10-10: four selected immutable originals supply twelve actual state/corner frames and24 aligned back/front source poses. Native views are N=Upper, S=Lower, W=Left, E=Right; their actual vehicle chords/adjacent straight mouths are recorded in the public geometry notes. Exact prompts, reference/source hashes, rejected incomplete rims, excluded model-changing cell and explicit uneven-gutter selections live in `tube-generation-record.json`. `convert_tube_curves.py` reproducibly rebuilds the indexed atlas and all-state native/enlarged/two-neighbour contact review. Low end couplings draw beneath capsules; exact facing-rim source subsets leave every actual native chord clear in the foreground. [Nine corner-source checks](../../../../logs/graphics/tube-source/20261010-curves-01/source-checks.log), [nine shared straight checks](../../../../logs/graphics/tube-source/20261010-curves-01/straight-shared-checks.log), [1,051 native geometry assertions/two cases](../../../../logs/graphics/tube-source/20261010-curves-01/native-geometry.log) and [public manifest validation](../../../../logs/graphics/tube-source/20261010-curves-01/contract.log) pass. [Complete source mapping/contact identities](../../../../logs/proofs/mlm/native-art/ground/tube-curves-atlas-manifest.json) retain all24 poses. Source metadata is authored; existing packed identities/payload and runtime activation are untouched. Whole Group47 remains pending for47D-47G;47D is next.
+
+### Local Mandatory Reading - Native tube junction originals
+
+_Applies to Group47D._
+
+Read Global/Source generation Area, completed47B-C, only `tube.junction` and actual native TrackBits combinations. Freeze composition so the shell cannot paint connections absent from the installed native tracks.
+
+### Group 47D - Author native junction shells
+
+{{HARD}}
+- [X] 47D.1 Freeze actual junction composition/ports and select an immutable provenance-retained base with no invented arm.
+- [X] 47D.2 Author required native views/composable parts from that base with fixed anchors and clear capsule paths.
+- [X] 47D.3 Complete three-state/back-front coverage and actual combination contact/palette/anchor review before conversion handoff.
+
+47D closure,2026-10-10: every54 shared-edge native TrackBits layout has three states and aligned back/front source parts:324 poses. The selected X/Upper base and all variants reuse the six previously authored native casing shapes; conversion trims only pixels crossed by another installed track and leaves all actual native channels clear in front. No source pixel is painted/rotated, and no absent contributor/mouth is added. Crossing3 and independent parallel curves12/48 retain their own render cases. Six all-state native/enlarged/neighbour contact pages were inspected. [Twelve focused source/refusal checks](../../../../logs/graphics/tube-source/20261010-junctions-01/source-checks.log) pass in37 seconds. Actual native quote/execute construction of all63 nonempty layouts and unchanged dedicated tube turn policy pass2,233 assertions/three cases in both [optimized](../../../../logs/graphics/tube-source/20261010-junctions-01/native-rel.log) and [Debug](../../../../logs/graphics/tube-source/20261010-junctions-01/native-debug.log). [Public contract validation](../../../../logs/graphics/tube-source/20261010-junctions-01/contract.log) passes145 families/55,295 required sprites. [Source/proof mapping](../../../../logs/proofs/mlm/native-art/ground/tube-junction-atlas-manifest.json) binds every original contributor and contact page; `convert_tube_junctions.py --check` regenerates them exactly. Source metadata is authored; packing/runtime remain pending and existing payload/IDs are unchanged. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-junctions-01/verification.json) bind11 sources, seven unchanged originals, eight source artifacts and both test binaries. Whole Group47 stays pending for47E-47G;47E is next.
+
+### Local Mandatory Reading - Native tube end originals
+
+_Applies to Group47E._
+
+Read Global/Source generation Area, completed guideway style, only `tube.end`, native `GetTubeGuidewayEnds` in `transport_tube.h` / `transport_tube_topology.cpp` and the `[transport-tube-end-geometry]` fixture in `transport_tube_art_geometry.cpp`. A painted cap must not replace a physical end or create a passable guideway.
+
+Context has compacted 1 times while executing this group.
+
+### Group 47E - Author native tube end pieces
+
+{{HARD}}
+- [X] 47E.1 Freeze actual one-ended ports and select an immutable provenance-retained end-shell base.
+- [X] 47E.2 Author the four actual engine-facing end views with common contact/anchor/light.
+- [X] 47E.3 Complete three-state/back-front coverage and native contact/palette/anchor review before conversion handoff.
+
+47E closure,2026-10-10: four independently authored physical NE/SE/SW/NW plates and two original state sheets supply all24 source poses. The known repeated-facing sheet remains rejected. Explicit source selections preserve actual native mouth positions, correct face planes and fixed light; all-state native/enlarged/approach contacts were reviewed. [Twelve source/refusal cases](../../../../logs/graphics/tube-source/20261010-ends-01/source-checks.log) pass in7 seconds, including wrong actual face plane at a correctly positioned port, oversized stub, changed original, substituted lifecycle, painted pixels and false provenance. The bounded native `GetTubeGuidewayEnds` presentation query and both game/test targets build in both configurations; each focused endpoint burst passes408 assertions/two cases. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-ends-01/verification.json) bind eight sources, six selected originals, three source artifacts and four binaries. Public validation passes145 families/55,307 required sprites. Exact regeneration uses `convert_tube_ends.py --check`; source is authored, packing/runtime remain pending. Whole47 remains pending for47F-G.
+
+### Local Mandatory Reading - Native tube crossing originals
+
+_Applies to Group47F._
+
+Read Global/Source generation Area, completed guideway style, only `tube.crossing` and native X/Y crossing geometry. Preserve native reservation/access ownership and show only actual connections.
+
+### Group 47F - Author native X/Y crossings
+
+{{HARD}}
+- [X] 47F.1 Freeze actual crossing ports/clearance and select an immutable provenance-retained base.
+- [X] 47F.2 Author required crossing views/parts with common contacts, fixed light and readable capsule occupancy.
+- [X] 47F.3 Complete three-state/back-front coverage and native contact/palette/anchor review before conversion handoff.
+
+47F closure,2026-10-10: actual native `TRACK_BIT_CROSS` has one fixed X/Y camera layout and two aligned parts, not four door rotations. Three original authored straight sources supply all six crossing state/part poses through exact original pixel selection/trim; both native channels remain clear and no corner/painted arm is added. All-state native/enlarged/four-neighbour contacts were inspected. [Eleven source/refusal cases](../../../../logs/graphics/tube-source/20261010-crossings-01/source-checks.log) pass in10 seconds; the shared selector's [twelve junction checks](../../../../logs/graphics/tube-source/20261010-crossings-01/shared-junction-checks.log) pass in35 seconds. Actual native all63 layout admission/classification remains the already delivered47D evidence; no C++ change/build was needed. Public validation passes145 families/55,301 required sprites after correcting the draft crossing matrix. `convert_tube_crossings.py --check` regenerates exact source/provenance/contact proof; [acceptance identities](../../../../logs/graphics/tube-source/20261010-crossings-01/verification.json) retain six source files, three immutable originals and three artifacts. Source is authored; packed/runtime identities remain unchanged/pending.47G is next; original whole47 remains unchecked.
+
+### Local Mandatory Reading - Native tube service conduit originals
+
+_Applies to Group47G._
+
+Read Global/Source generation Area, completed guideway style, only `tube.conduit` and actual `TubePowerConnection::utility_path`, `CaptureTubePowerConnections`, `CheckTubePowerTopology` in `transport_tube_power.cpp`, and `[transport-tube-power]` fixtures. Placement follows existing active same-layer physical corridors, not guideway TrackBits or catchment. Shared `GetUtilityPowerProducer` owns electrical status; source pixels never issue service capacity, generation, grant or a second utility installation. This is a floor-level cable overlay drawn beneath vehicles/buildings, so it has one ground body rather than an invented foreground wall.
+
+### Group 47G - Author tube service conduit presentation
+
+{{HARD}}
+- [X] 47G.1 Freeze actual service-path geometry/status ownership and select an immutable provenance-retained conduit base.
+- [X] 47G.2 Author required native conduit views/parts with common contacts/light and readable guideway occupancy.
+- [X] 47G.3 Complete three-state ground-overlay coverage and native contact/palette/anchor review; verify the complete47 family source handoff before closing original47.1-47.3. Native floor-level conduit uses one body below vehicles/buildings; all casing families retain their aligned back/front parts.
+
+47G/original47 source closure,2026-10-10: actual `TubePowerConnection::utility_path` supplies the corridor geometry; two original low cable axes and their independent construction/unpowered frames supply12 physical center-to-edge ground branches. Floor bodies draw beneath vehicles/buildings rather than inventing a foreground wall. All-state native/enlarged/straight/turn/neighbour contacts were reviewed. [Thirteen source/refusal cases](../../../../logs/graphics/tube-source/20261010-conduits-01/source-checks.log) pass in5 seconds. Existing actual paid-service topology/invoice/save boundaries pass1,066 assertions/seven cases in each configuration without a C++ rebuild. [Complete source handoff](../../../../logs/graphics/tube-source/20261010-conduits-01/verification.json) verifies all six families: straight12, bends24, junction324, ends24, crossing6 and conduit12, totaling402 source poses. All six conversion commands regenerate exact source/provenance/contact proof read-only; public validation passes145 families/55,301 required sprites. Every packed identity matches the unchanged committed contract.47B-G and original47.1-47.3 areX for source delivery; actual packing/runtime remain the later master10.4/10.7 checkpoints.48.1 is next.
+
+### Local Mandatory Reading - Actual tube facility source ownership
+
+_Applies to Group48 and48B-48D; supplements Source generation Area._
+
+Read `GetTubeTerminal` / `GetTubeNetworkReadiness` in `transport_tube_readiness.cpp`, tube branches in `CmdBuildTrainDepot` / `CmdBuildRailStation`, and only the executing facility's manifest/source. Actual depots occupy one tile/four directed entrances; terminal platforms follow native axis/length cells, and interchanges retain canonical same-layer station/packet owners. Draft2x2/3x2 footprints are not delivered producers. Geometry/source work cannot complete pending Plan16 Group9 operating interchange/cargo acceptance. Preserve existing selected M1 source pixels and packed identities; reuse a retained compatible model before generating duplicate imagery.
 
 ### Group 48 - Author tube terminals and service/interchange facilities
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4. Execute48B service,48C loading platform and48D interchange source in order, then close the original aggregate tasks only after all three actual families pass. The earlier finalization skip is historical. Actual operating facilities/cargo acceptance remain master10.5/Plan16 Group9.
 
 {{HARD}}
-- [ ] 48.1 For tube terminals and service/interchange facilities, derive a single-model brief from its approved manifest/template: distinct powered terminal/depot/rail-road transfer templates. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 48.2 Produce the required directions/rotations for tube terminals and service/interchange facilities from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 48.3 Add approach/occupied/unpowered fronts and backs for tube terminals and service/interchange facilities, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 48.1 For tube terminals and service/interchange facilities, derive a single-model brief from its approved manifest/template: distinct powered terminal/depot/rail-road transfer templates. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 48.2 Produce the required directions/rotations for tube terminals and service/interchange facilities from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 48.3 Add approach/occupied/unpowered fronts and backs for tube terminals and service/interchange facilities, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+### Local Mandatory Reading - One-tile tube service enclosure
+
+_Applies to Group48B._
+
+Read this plan's Global/Source generation Area and Actual tube facility source ownership Local. Inspect only `facility.tube-service`, actual `CmdBuildTrainDepot` / `GetRailDepotDirection`, `GetTubeTerminal`, and the retained `facility.rail-service` source plus its `facility-status` original component in `source/m1/facility-generation-record.json` / `convert_facility_art.py`. One compatible native service enclosure may be reused without recolouring or replacing original pixels. Four true entrances, four genuine lifecycle source rows and four actual indicator phases retain native64x64/anchor(-31,-33), with one physical tile and aligned back/front. Blocked includes actual electrical service refusal/unpowered; source art cannot close a physical track or grant service.
+
+### Group 48B - Supply one-tile tube service source
+
+{{HARD}}
+- [X] 48B.1 Freeze actual one-tile depot/approach geometry and select a compatible immutable source enclosure with explicit reuse provenance.
+- [X] 48B.2 Deliver four actual entrance views and all construction/ready/occupied/blocked-power states through retained original model/status components.
+- [X] 48B.3 Verify128 aligned state/view/phase/back-front source poses, native contacts/foreground/palette and exact regeneration; preserve M1 payload/identities and leave operating/runtime acceptance pending.
+
+48B closure,2026-10-10: the actual native tube service depot occupies one cell with four entrances; its incompatible historical3x2 draft is corrected. The complete retained native rail-service enclosure and status component supply128 source poses without new raster generation/recolouring or changed M1 pixels. All actual view/state/back-front/phase contacts were reviewed. [Ten focused source/refusal checks](../../../../logs/graphics/tube-source/20261010-service-01/source-checks.log) pass in30 seconds, including exact unchanged M1 regeneration, missing view/phase/front, false model ancestry, six-cell geometry and painted source pixels. Actual native depot/finance/topology readiness passes245 assertions/two cases per configuration. The initial separate loading-platform fixture crash is retained;48C has since supplied explicit font setup and943 assertions/four native cases pass per configuration. Public validation passes145 families/54,661 required sprites. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-service-01/verification.json) bind nine sources, two unchanged originals, three artifacts and four binaries. `convert_tube_facilities.py --check` regenerates exact proof; only source is authored, packing/operating/runtime remain pending. Whole48 stays unchecked for48C-D.
+
+### Local Mandatory Reading - Native tube loading platform source
+
+_Applies to Group48C._
+
+Read Global/Source generation Area and Actual tube facility source ownership Local. Inspect only `facility.tube-terminal`, actual `CmdBuildRailStation`, native station tile graphics/axes/platform length, `GetTubeTerminal` and corresponding construction/readiness fixtures. Freeze per-cell through approaches and real layouts before generation; generic four-door/multi-tile drafts cannot replace native platform geometry. Canonical station packets/capacity remain their existing owner.
+
+### Group 48C - Supply native tube loading platform source
+
+{{HARD}}
+- [X] 48C.1 Freeze actual native platform axes/cell roles/approaches and select an immutable compact loading model.
+  Geometry portion verified2026-10-10: twelve real quote/execute layouts retain native station/cargo identities and all eight default graphics roles across two axes;943 assertions/four focused cases pass in both configurations. Explicit mock font setup removes the isolated platform sign-layout crash; the first matrix attempt outside the64x64 fixture boundary is retained and corrected. [Geometry identities](../../../../logs/graphics/tube-source/20261010-platforms-01/geometry-verification.json) bind the producer/test sources and both test binaries. Public geometry is one per-cell canvas/two axes/four role variants. Immutable `tube-terminal-platform-x-base-v1.png` now supplies the selected ready X/bare-role base: all four side contacts, exact low foreground, native/enlarged and three-cell joins were reviewed. Remaining actual axis/roles/states/phases belong to48C.2; complete source/packing/runtime are still pending.
+- [X] 48C.2 Deliver required actual platform views/variants and construction/ready/occupied/power-wait states from that model.
+- [X] 48C.3 Verify native cell contacts/foreground/palette/phase coverage and exact source handoff without claiming operating cargo acceptance.
+
+48C closure,2026-10-10: twelve real native station layouts expose both axes/four default graphics roles per cell, with original station/cargo identity and berth length;943 assertions/four cases pass in each configuration after explicit font-fixture setup. Six immutable model originals supply16 actual construction/installed cells; the misplaced X construction booth remains excluded and a fixed-position original supplies that cell. Original M1 lamp artwork supplies four genuine state/phase components inside existing opaque rear-ledge fittings. Installed ready/working/blocked models remain exact outside those nine source pixels; no painted cargo/vehicle or private power owner appears. All256 state/axis/role/phase/back-front poses and both full contact pages were reviewed. [Thirteen source/refusal checks](../../../../logs/graphics/tube-source/20261010-platforms-01/source-checks.log) pass in18 seconds, including actual native-route obstruction, model/component ancestry, excluded booth, missing role/phase/part, false state reuse, changed original and transparent cue refusal. Public validation passes145 families/54,405 required sprites. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-platforms-01/verification.json) bind11 sources, seven unchanged model/component originals, four artifacts and both test binaries. `convert_tube_terminals.py --check` regenerates exact source/provenance/contact proof. Every packed identity is preserved; operating/packing/runtime acceptance remains pending.48C isX and48D is next; whole48 stays unchecked.
+
+### Local Mandatory Reading - Native tube interchange source
+
+_Applies to Group48D._
+
+Read Global/Source generation Area and Actual tube facility source ownership Local. Inspect only `facility.tube-interchange`, actual same-layer station joining/loading/road-stop/cargo packet owners and delivered Plan16 Group9 producer scope. A connected visual campus cannot create a second inventory, permit mixed tube/conventional tracks or cross-layer catchment. Missing operating transfer does not authorize fabricated geometry or runtime acceptance; stage its exact producer before dependent authoring if necessary.
+
+### Group 48D - Supply native tube interchange source
+
+{{HARD}}
+- [X] 48D.1 Freeze actual existing interchange facility cells and shared station/packet identity; complete a bounded geometry producer first if absent.
+- [X] 48D.2 Deliver native tube contact views/parts and lifecycle/status phases using the compatible original platform cells. Conventional rail/road contacts remain with their selected source families in Groups24/25; the native joined station has no additional fixed campus building.
+- [X] 48D.3 Verify complete native interchange source/contact/foreground/palette handoff and close original48.1-48.3 only when48B-48D all pass.
+
+48D closure,2026-10-10: eight real combinations of two native platform axes/four freight road-stop entrances share one canonical same-layer StationID/goods owner. Tube/conventional berths retain separate rail types; actual capsules refuse conventional rail/road. Quote/execute cross-layer joins refuse without tile/station/packet/funds mutation, and independent nearby stations retain distinct goods owners. The combined interchange/platform/readiness burst passes1,803 assertions/six cases in each configuration. No new production registry, inventory or station command was needed. Interchange tube cells reuse the exact256-pose original platform atlas and both native contact pages; rail/road partners keep their selected Groups24/25 source owners. Seven focused source/refusal checks pass in14 seconds, including fictitious campus, mixed tracks, cross-layer/private-stock identity, incompatible model, changed original, missing front and false runtime claims. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-interchange-01/verification.json) bind16 sources, seven unchanged originals, four artifacts and both test binaries. `convert_tube_interchanges.py --check` regenerates exact proof. Public validation passes145 families/53,893 required sprites after actual geometry reconciliation; all packed metadata matches HEAD.48B-D and original48 areX for source. Operating cargo transfer, partner-family source, packing and runtime retain their dispatched tasks.49.1 is next.
+
+### Local Mandatory Reading - Native capsule model source
+
+_Applies to Groups49-53; supplements Source generation Area._
+
+Read Global/Source generation Area, only the executing model's public body/purchase manifest and retained content model/cargo/capability row, then its actual native engine/direction/length/sprite consumers. Preserve AD-15's five distinct physical models and fixed camera/light; a service/load state changes only actual authored fittings/load portions. Verify the already delivered model9 prototype for Mole-70. Later models require a bounded geometry contract before dependent authoring if their native definitions are absent; source acceptance never activates their dates, refits, purchase or operating transfer. Those runtime owners remain master10.5/Plan16 Groups9-12.
 
 ### Group 49 - Author Mole-70
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4 after complete47/48 source. The earlier finalization skip is historical. Actual model9 prototype/cargo/direction/full-length geometry is delivered; no native engine change is needed for source authoring.
 
 {{HARD}}
-- [ ] 49.1 For Mole-70, derive a single-model brief from its approved manifest/template: low segmented amber hopper ribs. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 49.2 Produce the required directions/rotations for Mole-70 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 49.3 Add eight-direction empty/loaded/service and purchase frames for Mole-70, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 49.1 For Mole-70, derive a single-model brief from its approved manifest/template: low segmented amber hopper ribs. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 49.2 Produce the required directions/rotations for Mole-70 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 49.3 Add eight-direction empty/loaded/service and purchase frames for Mole-70, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+49.1/49.2 source geometry,2026-10-10: actual model9 native EIDS/cargo/route producer checks pass331 assertions/seven cases without a new build. Three immutable originals supply eight genuine empty physical views, preserving the selected E base. The initial sheet's repeated south face and steep diagonal cells remain excluded; a corrected four-view original supplies true S/SE/SW/NW faces. Explicit source crops, native sampling/registration and fixed64x48/anchor(-32,-32) preserve the real full-length chassis and stable upper-left materials. All eight native views/adjacent contacts were reviewed through `convert_tube_capsules.py --model-views`; the low capsule uses smaller end/diagonal envelopes within the existing native bounds. [Base geometry identities](../../../../logs/graphics/tube-source/20261010-mole-01/base-view-verification.json) retain originals, sources, eight-view proof and the tested producer binary.49.3 closure below supplies the complete load/status/phase/purchase handoff; this earlier eight-view proof alone never established that coverage.
+
+49.3 closure,2026-10-10: native cargo and service/power conditions are independent, so the corrected source contract has nine load-preserving states rather than five ambiguous rows. Three actual loads remain visible through operating/service/blocked modes. Sixteen existing same-view Rock donor cells regenerate from the immutable M1 original; their cargo material fills only approved recessed compartments, preserving all ribs/chassis alpha. Genuine M1 glass phases0/2 change only the existing nose fitting, and the original blue side plaque alone receives canonical company remap. The own-model empty purchase silhouette retains exact pixels when the original calendar-lock badge is added below it. All144 body/two purchase poses and four contact pages were reviewed. Fifteen focused source/refusal cases pass in25 seconds; the added unchanged-original/shifted-registration refusal passes in6 seconds. Final publication revalidates and exactly regenerates every artifact through `convert_tube_capsule_states.py --check`. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-mole-01/verification.json) bind25 sources, six unchanged originals, seven artifacts and the unchanged tested native producer binary. Public validation passes145 families/53,957 required sprites; all packed metadata matches HEAD.49 isX for source. Operating fleet, packing and runtime remain pending;50.1 must establish actual model10 geometry before Crate-75 authoring. All handles are terminal.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 50 - Author Crate-75
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4 after complete49 source. Plan16 staged10B now publishes/tests canonical full native8-unit/one-part physical geometry for models9-13 through `GetTubeVehicleGeometry`; only model9 is installed. This resolves source geometry without activating future engines or closing the original operating fleet tasks. Preserve distinct square green clamped-package geometry and actual cargo forms.
 
 {{HARD}}
-- [ ] 50.1 For Crate-75, derive a single-model brief from its approved manifest/template: square green clamped containers. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 50.2 Produce the required directions/rotations for Crate-75 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 50.3 Add eight-direction empty/loaded/service and purchase frames for Crate-75, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 50.1 For Crate-75, derive a single-model brief from its approved manifest/template: square green clamped containers. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 50.2 Produce the required directions/rotations for Crate-75 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 50.3 Add eight-direction empty/loaded/service and purchase frames for Crate-75, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+50.1 source geometry,2026-10-10: the verified staged10B producer supplies full native8-unit/one-part spacing before model10 activation. The selected immutable `crate-base-e-v1.png` supplies a flat rectangular green caddy, six actual silver corner/divider clamps and two empty package bays, unlike the rounded amber bulk hull. Explicit32x12 native source sampling/translation(0,-4) retains64x48/anchor(-32,-32) and reviewed E contacts. The monochrome source masks differ from Mole-70's base at125 of341 opaque union pixels, before colour. [Base identities](../../../../logs/graphics/tube-source/20261010-crate-01/base-view-verification.json) retain the original, native proof and current source inputs. The general native-view helper accepts only the public tube vehicle families; complete Mole source still regenerates exactly. All five capsule source rows now preserve three loads through service/blocking,145 families/54,213 required sprites overall.50.2 must supply genuine missing faces; public Crate source remains planned, and no operating engine/purchase/runtime claim is made.
+
+50.2/50.3 closure,2026-10-10: two native-proportion originals supply seven genuine missing headings while the selected E base stays exact. The first narrower four-view draft and the duplicate E remain excluded. All eight native contacts, fixed upper-left materials and true front/rear faces were reviewed. An independent original supplies eight same-view sealed package lids/straps, clipped only to the actual recessed bays: partial fills the rear bay, full both, and all loads survive service/power waits. Genuine M1 lamp phases and the calendar-lock component are reused; the Crate purchase badge sits one pixel lower to preserve every opaque preview pixel. All144 body/two purchase poses and four contact pages pass review. Twenty focused Crate cases pass in23 seconds; sixteen shared-converter Mole compatibility cases, including exact existing proof regeneration, pass in28 seconds. Public validation passes145 families/54,213 sprites; every packed field matches HEAD. [Source acceptance identities](../../../../logs/graphics/tube-source/20261010-crate-01/verification.json) retain23 sources, six immutable originals and seven artifacts.50 isX for source; packing/runtime remain pending. No C++ build was needed.51.1 is next; all handles are terminal.
 
 ### Group 51 - Author Cistern-80
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4 after complete50 source. The earlier finalization skip is historical. Plan16 staged10B supplies canonical native8-unit/one-part geometry before model11 operating activation. Preserve distinct cyan twin tanks/pressure bands and actual liquid CHEM/PROP cargo meaning; visible level/service fittings never create a fluid stock or power owner.
 
 {{HARD}}
-- [ ] 51.1 For Cistern-80, derive a single-model brief from its approved manifest/template: cyan twin tanks and pressure bands. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 51.2 Produce the required directions/rotations for Cistern-80 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 51.3 Add eight-direction fluid-level/service and purchase frames for Cistern-80, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 51.1 For Cistern-80, derive a single-model brief from its approved manifest/template: cyan twin tanks and pressure bands. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 51.2 Produce the required directions/rotations for Cistern-80 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 51.3 Add eight-direction fluid-level/service and purchase frames for Cistern-80, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+51.1 source geometry,2026-10-10: the selected immutable E original has two parallel pale cyan pressure tanks on one compact skid, three dark pressure bands, genuine vertical sight glass, separate blue plaque and front-lamp/rear-coupling fittings. Reviewed32x14 native sampling/translation(0,-4) preserves full8-unit/one-part geometry,64x48/anchor(-32,-32). Before colour, its source mask differs from Mole at196/397 union pixels and Crate at119/421. [Base identities](../../../../logs/graphics/tube-source/20261010-cistern-01/base-view-verification.json) retain the original, native review and actual physical producer inputs.51.2 must retain E unchanged and supply genuine other faces; whole source, liquid-level variants, packing and runtime remain pending.
+
+51.2 source geometry,2026-10-10: two additional immutable originals supply genuine N/NE/S/SW and SE/NW/W; the duplicate E stays excluded and the selected base stays exact. Native end14x24, diagonal24x20 and side32x14 projections/contact registration preserve one full part, both tanks, all three bands and fixed light. The eight-view contact page was reviewed. [Direction identities](../../../../logs/graphics/tube-source/20261010-cistern-01/direction-view-verification.json) retain three originals and exact crop/registration/proof inputs.51.3 shows level changes only through actual visible original sight glass in NE/E/SE/SW/NW; opaque N/S/W views keep their sealed hull. An invisible internal liquid level cannot justify painting a fictional window. Complete state/purchase source remains pending.
+
+51.3 closure,2026-10-10: original half/full cyan liquid material fills only the actual lower/upper sight-glass pixels in the five visible headings. Opaque N/S/W views retain their sealed tank through all three native loads; their cargo metadata and service/power state remain independent. Genuine M1 status phases and calendar lock are reused. Explicit original plaque crops keep cyan tank shadows out of company remap, and a uniform smaller own-model purchase fit preserves its body above the badge. All144 body/two purchase poses and four contact pages were reviewed. Twenty-one focused source/refusal cases pass22.828 seconds; exact complete Mole/Crate regeneration passes in15.156/14.080 seconds. Public145-family/54,213-sprite validation passes; all packed fields match HEAD. [Source acceptance identities](../../../../logs/graphics/tube-source/20261010-cistern-01/verification.json) retain25 sources, six unchanged originals and seven artifacts.51 isX for source; packing/runtime remain pending. No C++ build.52.1 is next; all handles are terminal.
 
 ### Group 52 - Author Shield-85
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4 after complete51 source. The earlier finalization skip is historical. Staged Plan16 10B supplies canonical native8-unit/one-part geometry before model12 activation. Preserve the distinct short pale shielded octagonal body and sealed URAN/RARE cargo; source fittings never create a cargo inventory or unlock an operating engine.
 
 {{HARD}}
-- [ ] 52.1 For Shield-85, derive a single-model brief from its approved manifest/template: short pale shielded octagonal body. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 52.2 Produce the required directions/rotations for Shield-85 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 52.3 Add eight-direction sealed-load/service and purchase frames for Shield-85, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 52.1 For Shield-85, derive a single-model brief from its approved manifest/template: short pale shielded octagonal body. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 52.2 Produce the required directions/rotations for Shield-85 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 52.3 Add eight-direction sealed-load/service and purchase frames for Shield-85, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+52.1 source geometry,2026-10-10: the first oblique draft is retained/excluded; a genuinely rerendered horizontal E original supplies the pale sealed octagonal armour, dark end braces, two distinct original framed roof-meter tiles, front lamps/rear coupling and separate blue plaque. Reviewed32x14 native sampling/translation(0,-4),64x48/anchor(-32,-32), preserves actual full8-unit/one-part contacts. Monochrome masks differ from Mole at188/401, Crate at87/413 and Cistern at42/411 union pixels. [Base identities](../../../../logs/graphics/tube-source/20261010-shield-01/base-view-verification.json) retain the selected original and native contact/source inputs.52.2 must preserve E and supply genuine other directions.52.3 may reuse genuine M1 amber glass in the two original roof-load fittings, one/both lit for partial/full sealed URAN/RARE cargo, with separate actual service/power cues. Source creates no mineral inventory or operating model12. Whole source/packing/runtime remain pending.
+
+52.2/52.3 closure,2026-10-10: two immutable originals supply seven genuine other headings, preserving the selected E and excluding duplicate E. Eight native contacts, original octagonal armour, two separate roof-glass fittings and fixed light pass review. Actual sealed cargo illuminates rear/both roof fittings for partial/full using genuine M1 amber glass, keeping opaque armour, source alpha and every other pixel exact. Independent M1 mode phases and original calendar lock preserve loads through service/power waits. All144 body/two purchase poses and four contacts were reviewed. Nineteen focused source/refusal cases pass17.617 seconds; exact complete Cistern regeneration passes10.636 seconds. Public145/54,213 validation passes and every packed field matches HEAD. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-shield-01/verification.json) retain26 sources, five unchanged originals and seven artifacts.52 isX for source; operating/packing/runtime remain pending. No C++ build.53.1 is next; all handles are terminal.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 53 - Author Forge-05
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Resumed2026-10-10 under master10.4 after complete52 source. The earlier finalization skip is historical. Plan16 staged10B supplies canonical native8-unit/one-part geometry before model13 activation. Preserve a distinct broad dark braced machinery frame and actual STEL/RFMT/SCMP/RBPT heavy cargo meaning. Source authoring does not unlock the2005 engine, allocate heavy cargo or claim runtime clearance.
 
 {{HARD}}
-- [ ] 53.1 For Forge-05, derive a single-model brief from its approved manifest/template: broad dark braced machinery frame. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 53.2 Produce the required directions/rotations for Forge-05 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 53.3 Add eight-direction heavy-load/service and purchase frames for Forge-05, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 53.1 For Forge-05, derive a single-model brief from its approved manifest/template: broad dark braced machinery frame. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 53.2 Produce the required directions/rotations for Forge-05 from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 53.3 Add eight-direction heavy-load/service and purchase frames for Forge-05, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+53.1 source geometry,2026-10-10: the selected genuine horizontal E original has a broad dark open frame, reinforced end portals/diagonal struts, thin top brace, two empty grey saddles and restrained orange clamps. Native32x18 sampling/translation(0,-4),64x48/anchor(-32,-32), and full8-unit/one-part contacts pass review. Original and native load apertures are truly transparent. Monochrome mask differences are Mole138/341, Crate173/421, Cistern188/449 and Shield198/462 union pixels. [Base identities](../../../../logs/graphics/tube-source/20261010-forge-01/base-view-verification.json) retain the original, native proof and physical source inputs.53.2 preserves E and supplies genuine other views.53.3 must author actual heavy modules inside the existing rear/both open cargo volumes; only those approved apertures may gain load alpha, with every brace, clamp, beam and foreground fitting preserved. The existing contained-load alpha rule needs a bounded model13 extension rather than flattening heavy modules to floor paint. Whole source/packing/runtime remain pending.
+
+53.2/53.3 closure,2026-10-10: three immutable hull originals supply all eight genuine native views with the selected E preserved and duplicate E excluded. A separate original heavy-module sheet supplies eight actual same-view solid loads; its bottom diagonal labels are registered to their observed axes, with no raster rotation. Approved rear/both volume masks allow original module alpha only inside actual open cargo apertures, skip transparent donor pixels and draw farther modules first. Frame, orange clamps and foreground remain exact. Actual front equipment lamps and own-model purchase/calendar lock retain all quantities independently. All144 body/two purchase poses and four contact pages pass review. Twenty-two focused cases pass46.778 seconds, and exact Shield compatibility passes9.354 seconds. Original-space clamp projection covers downsampled brown end-view hardware; the initial brightness-only test diagnostic remains retained. Public145/54,213 validation and unchanged packed metadata pass. [Acceptance identities](../../../../logs/graphics/tube-source/20261010-forge-01/verification.json) bind24 sources, six unchanged originals and seven artifacts.53 isX for source; engine activation, packing and runtime remain pending. No C++ build.54.1 is next; all handles are terminal.
+
+### Local Mandatory Reading - Native vent and collector source
+
+_Applies to Group54 and54B-54C; supplements Source generation Area._
+
+Read only the public `facility.vent-collector` and `geothermal.vent` manifest rows, AD-16, `GeothermalVentField`/`FindGeothermalVentField`, and actual `GetMultiLayerGeothermalConstruction(Collector)`, `GetGeothermalCollectorIndustryType`, `IsGeothermalCollectorDefinition`, native TIDS layout and `GeothermalCollectorState`. Collector source uses the delivered3x3/nine-cell industry and retained claim/access/endpoint; it cannot become one oversized single-tile building. Natural field geometry belongs to geology and may cover multiple tiles; its per-tile art does not allocate another source. Inspect `GetMultiLayerTerrainSprite`, `GetMultiLayerSurveySprite` and actual viewport anchors before proposing vent visibility. Current survey sprites cover mineral seams, so vent source acceptance cannot claim a delivered vent overlay. Native collector readiness, shared Heat offers and natural capacity keep their existing owners. Reuse genuine M1 component originals where suitable; final packing/runtime remain their dispatched tasks.
 
 ### Group 54 - Author vent field and collector
 
 Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
-- [ ] 54.1 For vent field and collector, derive a single-model brief from its approved manifest/template: natural source versus installed bounded heat capture. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 54.2 Produce the required directions/rotations for vent field and collector from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 54.3 Add survey/excavated/connected/idle states for vent field and collector, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 54.1 For vent field and collector, derive a single-model brief from its approved manifest/template: natural source versus installed bounded heat capture. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 54.2 Produce the required directions/rotations for vent field and collector from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 54.3 Add survey/excavated/connected/idle states for vent field and collector, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+Resumed2026-10-10 after complete47-53 source. The earlier finalization skip is historical.54B supplies the actual collector;54C supplies the distinct natural source. Original54.1-54.3 are nowX after both named source scopes pass below. Actual native construction confirms3x3/nine cells and1980 capability; no geometry mutation is needed. The natural field is a saved bounded rectangle, default4x4, with immutable rate and an independent identity. Source artwork creates neither a new vent nor an operating generator.
+
+### Local Mandatory Reading - Collector construction and equipment state
+
+_Applies to Group54B; supplements Source generation Area and the Native vent/collector Local._
+
+Read only the collector public manifest and approved whole-view source records, `GeothermalCollectorState`, `AdvanceGeothermalCollector`, `IsGeothermalCollectorOperational` and `PublishGeothermalCollectorHeat`, actual native `GetIndustryConstructionStage`/`IsIndustryCompleted`, and the shared `UtilityPowerProducer`/account publication fields. The nine native TIDS cells share one IndustryID; one whole original view supplies lossless per-cell sprite sections, not independent machinery or inventories. Construction uses real stages0..3 at74-tick quarters and completes separately at296 paid work ticks; native stage3 can still be unfinished. Construction frames follow these four native stages, while completed modes use authored equipment-glass phases. The collector is a Heat producer; reconcile the generic copied heat-starved art state before dependent authoring. Its native availability/publication owns work/source status, while the common ledger alone owns energy. Compose genuine original glass/state parts on the whole native scene before partitioning; preserve the approved ready view elsewhere. Source coverage creates no materials, work, heat or operating generator. Actual loaded rendering and plant runtime remain the later dispatched checkpoints.
+
+### Group 54B - Author the native nine-cell collector
+
+{{HARD}}
+- [X] 54B.1 Freeze actual3x3/TIDS/per-cell geometry and select a distinct low bounded-heat collector base at native scale, retaining original prompt/reference/provenance.
+- [X] 54B.2 Supply genuine four access-side views and all nine physical cells, preserving projected joins, native anchors and actual endpoint meaning.
+- [X] 54B.3 Complete54BB construction and54BC equipment-state/source groups below. Supply actual native construction stages0..3, ready/working/blocked phases and front/back parts from original machinery/components. The collector is a Heat producer; the copied heat-starved consumer state is removed. Keep this aggregate unchecked until both bounded groups pass.
+
+54B.1 closure,2026-10-10: actual collector IIDS/TIDS construction and natural-field checks pass6,516 assertions/eight cases in the existing optimized binary. The selected original has three capped boreheads, copper/insulated manifold, central pressure drum and instrument cabinet on the complete3x3 floor. Measured native192x98 sampling on256x192 campus reference preserves nine64x64 cells/anchor(-31,-33); it does not supply a single-tile substitute. Actual `RemapCoords` confirms world X runs SW/down-left and Y SE/down-right; referencev2 corrects the initial diagram labels before cell authoring. Selected view metadata is SE despite the retained original filename's initial NE label. Native decorative valve artwork never overrides the claim's actual endpoint. [Base identities](../../../../logs/graphics/geothermal-source/20261010-collector-01/base-view-verification.json) bind18 sources, two original images and three reviewed artifacts. The draft and exact builtin-imagegen prompts/reference/cache hashes remain retained.54B.2 is completed below through lossless native sections of four whole original models, retaining all native endpoint choices. Complete source, states, packing and runtime remain pending. No C++ build; all handles are terminal.
+
+54B.2 closure,2026-10-10: four genuinely rerendered whole original models supply NE/SE/SW/NW, with coherent three-borehead/manifold/drum/cabinet forms and fixed camera/light. Independent-tile drafts exposed joint/role errors; all originals and diagnostics are retained. Selected whole models are losslessly sectioned across the actual nine64x64/anchor(-31,-33) TIDS canvases. All cells share one native IndustryID; sprite sections add no machinery, inventory or Heat owner. Every visible original native pixel occurs exactly once, and decoded native PNG pieces reconstruct the original bitmap exactly. Correct palette-zero transparency preserves assembly. Final ready registrations are SE192x97 at(33,61), and NE/SW/NW192x96 at(33,63); full measured crops and approval hashes are public/retained. Twelve focused source/refusal cases pass6.254 seconds; public145/54,213 and every packed identity match HEAD. [Ready acceptance](../../../../logs/graphics/geothermal-source/20261010-collector-01/ready-view-verification.json) binds27 sources, four selected originals and18 artifacts, with nine unselected originals retained. All four native contacts and the comparison page were reviewed.54B.2 isX for ready views only; construction, equipment states/phases/front parts remain54B.3. No C++ build or live image/test handle.
+
+### Local Mandatory Reading - Four native collector construction frames
+
+_Applies to Group54BB; supplements the Collector construction/state Local._
+
+Read only `AdvanceGeothermalCollector`, `GetIndustryConstructionStage`/`IsIndustryCompleted`, frozen296-tick construction terms, the actual collector-stage boundary fixture, and the public collector frame-owner metadata. Native stages0..3 cover0..73,74..147,148..221,222..295 paid work ticks; completion is separate at296. Frame3 may reuse the final hardware because the native getter also returns3 after completion, but unfinished machinery still cannot publish Heat. Preserve selected whole-view geometry, lossless nine-cell sections and fixed camera/light. Author true incomplete whole models for stages0..2; source frames do not create materials, work or energy.
+
+Context has compacted 1 times while executing this group.
+
+### Group 54BB - Author the four real collector construction frames
+
+{{HARD}}
+- [X] 54BB.1 Reconcile the public four-state/four-frame contract with actual native stages/completion and Heat-producer ownership; verify the focused real native boundary and preserve all existing packed identities.
+- [X] 54BB.2 Author/select genuine four-view construction-stage0 originals on the actual3x3 footprint, retaining prompts/references/cache/hash and native registration.
+- [X] 54BB.3 Author/select genuine four-view stages1/2, then bind stage3 to the approved final hardware under construction status. Review all native stage/view contacts and freeze the actual construction source registrations.
+
+54BB.1 closure,2026-10-10: actual native stages0..3 cover four74-tick quarters, while IsIndustryCompleted becomes true only at296. The earlier three-stage continuation note is corrected. Both incremental builds and the focused collector/definition/geology burst pass6,782 assertions/nine cases per configuration, including stage3 refusal of Heat publication before completion. The public collector now has four real states; construction frames select native stage, completed frames select genuine glass phase. Removing the copied Heat-consumer shortage state leaves145 families/53,925 required sprites; packed identities remain unchanged. [Binding identities](../../../../logs/graphics/geothermal-source/20261010-collector-01/state-binding-verification.json) retain native sources and both game/test binaries. Production C++ is unchanged.No build/test handle is live; the next original-source scope is recorded below.
+
+54BB.2 closure,2026-10-10: four immutable original stage0 views show the marked native3x3 site, three bore pads, central drum outline and genuine framed amber marker at the corresponding cabinet side. All four native contacts and36 lossless cell sections were reviewed. Complete prompts, original/reference/cache identities and measured crops/positions are retained; [stage0 identities](../../../../logs/graphics/geothermal-source/20261010-collector-01/construction-0-verification.json) bind31 source/artifact files. Ready approval remains unchanged. No C++ build/test ran. Intermediate stages are completed below; complete composed source/packing/runtime remain pending.
+
+54BB closure,2026-10-10: twelve genuine incomplete originals supply stages0..2 in all four views; stage3 deliberately aliases four frozen final hardware originals while completion remains separate. All16 native model contacts/144 cell sections were reviewed. Public construction-registration approval is frozen. Seventeen focused original/PNG/alpha/registration/refusal checks pass21.038 seconds; the contract passes145 families/53,925 sprites and all packed metadata matches HEAD. [Construction identities](../../../../logs/graphics/geothermal-source/20261010-collector-01/construction-verification.json) retain96 files plus unchanged native sources/four binaries from54BB.1. No C++ rebuild/retest.54BC.1 composes final equipment glass and back/front source; hardware review alone does not complete54B.3 or activate runtime.
+
+### Local Mandatory Reading - Collector equipment-state source composition
+
+_Applies to Group54BC; supplements the Collector construction/state Local._
+
+Read approved ready and construction source records, the public collector frame-owner map, actual collector completion/availability/publication and `UtilityPowerProducer.meter` interval/generation fields. Read only the genuine M1 facility-status component and the lossless collector partition implementation for composition. Construction frame selects native stage; completed frames select original glass phase. Apply actual glass in the whole native scene before per-cell partition; preserve every other original pixel/alpha. A blocked producer or unused offer does not create thermal demand, starvation, another vent or copied stock. Packing and loaded runtime remain later checkpoints.
+
+### Group 54BC - Complete collector equipment states and publish source
+
+{{HARD}}
+- [X] 54BC.1 Compose exact construction/ready/working/blocked coverage, four real frames per state, four views, nine native cells and back/front parts from original models/glass; preserve native mode and completion ownership.
+- [X] 54BC.2 Review all native stage/state/phase contacts and run focused exact-source/alpha/cue/provenance/refusal checks, consuming54BB.1 native boundary evidence without unnecessary rebuilds or full regressions.
+- [X] 54BC.3 Publish complete deterministic source/approval identities and public metadata, verify the manifest and unchanged packed payload, then close54B.3 while retaining all packing/runtime obligations.
+
+54BC closure,2026-10-10: complete1,152-pose source covers four states/four native frames/four genuine views/nine physical cells/aligned back-front parts. Construction selects actual stages with genuine amber glass phase0; completed states retain all four authored green/cyan/red phases. Only16 reviewed glass interiors change; every other original indexed pixel and all alpha stay exact. Solid native industry cells retain full sortable coverage without a vehicle aperture. All four full state/phase contacts were reviewed. Fifteen focused source/refusal cases pass54.701 seconds; seventeen model/partition compatibility cases pass21.941 seconds. Exact atlas/mapping/all contacts regenerate through `convert_geothermal_art.py --check`; source metadata is authored and complete. [Collector acceptance identities](../../../../logs/graphics/geothermal-source/20261010-collector-01/collector-source-verification.json) retain47 source/artifact files and reused unchanged native sources/four binaries. Public145/53,925 and all packed metadata match HEAD. No C++ rebuild/retest.54B.3 isX;54C.1 natural vent is next. Original54.1-54.3 still require both source families; packing, actual loaded rendering and operating generation remain later checkpoints.
+
+### Local Mandatory Reading - Natural vent presentation
+
+_Applies to Group54C; supplements Source generation Area._
+
+Read `GeothermalVentField`, `FindGeothermalVentField`, the public `geothermal.vent` row, actual `GetMultiLayerTerrainSprite`/`GetMultiLayerSurveySprite` and their viewport anchors. Geology owns the bounded multi-tile field and immutable rate; per-tile art allocates no new source. Current mineral survey sprites do not deliver a vent overlay. Reconcile hidden/surveyed/paid-excavated visibility and the copied shortage label before authoring, preserving solid terrain and the difference between natural source information and installed collector machinery. Collector/native heat internals are unnecessary for these natural-surface pixels except their published availability boundary.
+
+### Group 54C - Author the natural vent source
+
+{{HARD}}
+- [X] 54C.1 Freeze geology-owned field/per-tile visibility geometry and select the natural basalt/thermal source base, distinct from installed collector machinery.
+- [X] 54C.2 Supply the public native tile presentations with fixed light/anchor and explicit field ownership, preserving the difference between surveyed information and paid excavation.
+- [X] 54C.3 Complete genuine phase/state source and focused checks. Hidden presentation must not reveal a source through solid unsurveyed ground; downstream heat shortage cannot change geology's capacity or create another grant.
+
+54C/54 source closure,2026-10-10: the natural source has hidden/surveyed/paid-excavated presentation; connected/idle/blocked equipment belongs to the separate completed collector. One original sheet supplies eight genuinely authored visible phases; four hidden poses select verified alpha-zero padding. All sparse64x31/anchor(-31,0) detail stays inside its native diamond and preserves the existing hardness floor. Actual sampled detail is60x29 at(2,1), with no pixel clipping. All twelve poses were reviewed over four native hardness floors. Sixteen focused source/visibility/alpha/provenance/refusal cases pass1.953 seconds; exact atlas/mapping/contact regeneration and145/53,921 public validation pass. [Natural source identities](../../../../logs/graphics/geothermal-source/20261010-vent-01/verification.json) retain31 files plus reused unchanged native sources/four binaries. All packed metadata and actual GRF match HEAD. No C++ rebuild/retest. Combined54 source is complete: collector1,152 poses plus natural12. Actual native vent visibility alongside mineral marks, packing and loaded runtime remain10.7; no operating generator is inferred.55.1 geometry is next.
+
+### Local Mandatory Reading - Actual dated generator source geometry
+
+_Applies to Groups55-56; supplements Source generation Area._
+
+Read only the two public generator manifest rows, `MultiLayerGeothermalConstructionKind`/`GetMultiLayerGeothermalConstruction`, `PrepareGeothermalSite`, current registered IIDS/TIDS in `src/geothermal_definitions.cpp`, and verified Plan17 Group8B/`GetGeothermalGeneratorGeometry`; operating Group8 remains pending. Actual paid footprint/native cell layout and profile-owned construction terms must precede dependent originals; historical manifest sketches alone do not establish a delivered native type. If a dated geometry producer is missing, supply a bounded passive producer in its owning Plan17 group before authoring, retaining whole operating activation/transported bootstrap for master10.6. Reuse fixed camera/light and genuine original status components after geometry is proven; never substitute the collector body or silently activate an unfunded generator.
+
+For resumed55.3 and later generator originals, use the [framed-sheet prompt and extraction checks](#framed-imagegen-sheets-and-safe-extraction). The bordered stage2 trial passed layout extraction but failed model identity; it remains excluded. Collector packing/display79C remains ahead of further generator authoring in the master queue.
 
 ### Group 55 - Author Vent-Tap Powerhouse
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Dispatched under resumed master10.4. Plan17 staged8B verifies both dated4x4/sixteen-cell native geometries before55.1. Tasks55.1-55.2 are complete; unfinished55.3 is temporarily deferred behind the explicitly staged collector packing/display proof79C at master10.4B. Whole operating generator/transported bootstrap remains master10.6.
 
 {{HARD}}
-- [ ] 55.1 For Vent-Tap Powerhouse, derive a single-model brief from its approved manifest/template: 1980 plant footprint and electrical output equipment. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 55.2 Produce the required directions/rotations for Vent-Tap Powerhouse from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 55.1 For Vent-Tap Powerhouse, derive a single-model brief from its approved manifest/template: 1980 plant footprint and electrical output equipment. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 55.2 Produce the required directions/rotations for Vent-Tap Powerhouse from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 55.3 Add construction/working/heat-starved states for Vent-Tap Powerhouse, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+55.1-55.2 source closure,2026-10-10: four genuine whole originals preserve the selected turbine hall, single turbine/alternator, exchanger and electrical switchgear under actual physical turns. Each is losslessly divided into sixteen native64x64 cells; the unchanged camera/anchors and model continuity are reviewed at native and enlarged scale. A duplicate-view sheet and wrong-axis SW draft remain retained/excluded. Thirteen focused source/provenance/registration/geometry/refusal checks pass8.512 seconds; public145/53,921 validation passes. [Selected-view identities](../../../../logs/graphics/geothermal-source/20261010-venttap-01/verification.json) and [four-view contact](../../../../logs/proofs/mlm/native-art/ground/venttap-ready-views.png) retain exact originals, prompts and review artifacts. Construction and all five equipment-state source55.3 remain pending; packing/runtime/operating bootstrap are unchanged. No C++ rebuild or native retest.
 
 ### Group 56 - Author Magma-Loop Power Station
 
@@ -962,6 +1291,24 @@ Context has compacted 1 times while executing this group.
 - [X] 81B.1 Expose presentation-only frame/texture selection to native consumers. Actual stopped wagon load/phase, reversed motion, depot occupancy and receiver stock use their existing owners; clocks/cameras never advance cutting, exchange or processing.
 
 81B closure (2026-10-07): `multilayer_sprite.h` supplies pure validated pose, animation-phase and stable floor-texture selection over the one generated range authority. Invalid family/state/frame/view/cell/part indices refuse; stopped hopper wheels remain frame zero while actual load level stays a separate caller-owned state. [Native boundary/owner checks](../../../../logs/r2mlvs13-aw-visual-selector-checks.log) pass 9,541 assertions / two cases, covering all 2,311 unique poses, explicit reversed/portal/receiver references and unchanged native receiver/project/funds/RNG owners across widely separated visual clocks. The native world fixture explicitly loads language before sorted cargo definitions. [Packed public schema](../../../../logs/r2mlvs13-ax-packed-public-contract.log) validates all 143 families / 54,939 profile requirements. Actual rendering consumers and sound remain the next checkpoint; this closes only the selected simulation-independence scope.
+
+### Local Mandatory Reading - Delivered collector packing and actual display
+
+_Applies to staged Group79C; consumes only the source-complete collector before unfinished generator source work._
+
+Read this plan's Global, the Source generation Area's packing exports and only collector-relevant runtime ownership from the Runtime integration Area. Inspect `m1-pack-scope.json`, the public `facility.vent-collector` row and `collector-source-manifest.json`; source completeness and native anchors/cells must be real. Read `pack_m1_art.selected_ranges`, `source_poses`, `format_header`, `derive`, `publish` and `bind_packed_payload`, the base-set PNG/NFO/CMake routes and current generated native ranges. Preserve protected0..65, reserved slots, all existing42-family ranges, both generated and checked-in payload paths and immutable MLVI gameplay definitions.
+
+For display, read `GetMultiLayerSprite`, `GetMultiLayerReceiverSprite`, native `DrawTile_Industry`, `GetIndustryConstructionStage`/`IsIndustryCompleted`, `GetGeothermalCollectorState`, `IsGeothermalCollectorOperational` and the actual collector/claim/shared-Heat state owners needed by the selected state. Reuse actual industry location/access/work/input/Heat records; do not invent a graphics-owned stock or operating generator. Inspect existing focused native sprite-loading and collector save/constructor fixtures only. A normal-game capture must disclose fixture-supplied materials and cannot claim the later Surface-transported bootstrap.
+
+### Group 79C - Pack and display the delivered collector
+
+Explicitly staged by master10.4B after verified source54, before further unfinished55-56 originals. This closes only the collector subset of packing/runtime obligations; original whole Groups79-84 and aggregate master10.4 remain pending for their other selected families.
+
+{{HARD}}
+- [ ] 79C.1 Append the complete1,152-pose collector family to the selected native packing scope. Verify original/atlas provenance, all four states/frames/views, nine actual cells and aligned back/front parts; preserve every old range and exact original palette/anchor semantics.
+- [ ] 79C.2 Emit deterministic PNG/NFO/header/public mappings and the actual GRF through the existing generated and checked-in packaging routes. Independently decode the newly packed pixels/anchors and protect existing native sprites; metadata alone does not prove payload inclusion.
+- [ ] 79C.3 Bind the packed family to real native collector industry cells and construction/completion/current Heat states in the actual industry draw path. Visual clocks change presentation only; camera/animation selection must preserve work, cargo, funds, claims, Heat and RNG. Do not activate an operating powerhouse or replace its missing producer.
+- [ ] 79C.4 After the packing and consumer changes, build both configurations once and run a focused combined source/packing/loading/selection/collector burst. Load a current native collector world in the ordinary game and capture the actual construction/completed machinery plus native source-pixel identities, with fixture staging disclosed. Close master10.4B only after this loaded evidence passes, then resume55.3. No full regression or transported first-plant claim is required by this art slice.
 
 ### Group 79 - Convert and pack from stable originals
 

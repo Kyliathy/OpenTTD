@@ -3048,8 +3048,12 @@
         "empty",
         "partial",
         "full",
-        "service",
-        "blocked"
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -3081,15 +3085,88 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mole-views-v1.png",
+        "sha256": "98713b7ea83278d5977e72251e29b645794ea237dab80e496d0ca25a28c61c6b",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "Actual native Train cargo/capacity and TubePowerVehicle wait / GetTubePowerPhase, source contract Plan13 Group49.3.",
+        "state_map": {
+          "empty": {
+            "load": "empty",
+            "mode": "operating"
+          },
+          "partial": {
+            "load": "partial",
+            "mode": "operating"
+          },
+          "full": {
+            "load": "full",
+            "mode": "operating"
+          },
+          "service-empty": {
+            "load": "empty",
+            "mode": "service"
+          },
+          "service-partial": {
+            "load": "partial",
+            "mode": "service"
+          },
+          "service-full": {
+            "load": "full",
+            "mode": "service"
+          },
+          "blocked-empty": {
+            "load": "empty",
+            "mode": "blocked"
+          },
+          "blocked-partial": {
+            "load": "partial",
+            "mode": "blocked"
+          },
+          "blocked-full": {
+            "load": "full",
+            "mode": "blocked"
+          }
+        },
+        "state_semantics": {
+          "cargo_owner": "Actual Train::cargo.StoredCount()/cargo_cap;0 empty,1..capacity-1 partial,capacity full. Visual buckets never move packets.",
+          "mode_owner": "Actual GetTubePowerPhase DepotService, GetTubePowerVehicle wait!=None/missing binding, and native reservation wait. Blocked has priority over service; player stopping alone is not a power failure.",
+          "load_preservation": "Service and blocked each retain all three actual cargo forms; cue glass alone changes mode/phase. No erased loaded hold or private status/cargo owner.",
+          "partial_hold": "Original same-view partial Rock aggregate occupies the rear compartment only.",
+          "full_hold": "Original same-view full Rock aggregate occupies both compartments; this is generic unlabelled granular bulk, never a liquid/sealed isotope substitute.",
+          "animation": "Two genuine original indicator phases0/2; draw selection must keep stationary frames stable and cannot advance simulation."
+        },
+        "approved_components_sha256": "df8c20c68d1eacce7af152c656518473d1b0b7955faa39d89e086fa3ab6c8fb7",
+        "required_source_poses": 144,
+        "runtime_binding": "master10.7/Plan13 Group84 after operating fleet master10.5. Source art never changes cargo, service or electricity.",
+        "approved_model_views_sha256": "b86a1ed9e245e225c2ba7c859a5067feb9e2031ef5a3968ab10d7daa023ed5d9"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/mole-views-v1.png",
+          "media/multilayer/source/ground/raw/mole-base-e-v1.png",
+          "media/multilayer/source/ground/raw/mole-missing-views-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/hopper-rock-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/mole-authored.png",
+        "native_sha256": "634a9503dd676632b52d0d3df9d806c651455b7d87840692fc1afe2c2770509f",
+        "staged_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3134,15 +3211,35 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mole-base-e-v1.png",
+        "sha256": "dbf51aa59a2313fb11412fbe67885e85573f1826d7e8819d739acb8a28acfb61",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/mole-views-v1.png",
+          "media/multilayer/source/ground/raw/mole-base-e-v1.png",
+          "media/multilayer/source/ground/raw/mole-missing-views-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/hopper-rock-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/mole-purchase-authored.png",
+        "native_sha256": "f83802ea356328cea8b460ef5d5437c4235fd73e5a5f287143c1f75f92f3df88",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3164,8 +3261,12 @@
         "empty",
         "partial",
         "full",
-        "service",
-        "blocked"
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -3197,15 +3298,45 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/crate-native-n-ne-s-sw-v1.png",
+        "sha256": "135edbc4ddaa157e3905ac75f4b21e806b859dff83174c7c825a071ba188f195",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "vehicle_length_units": 8,
+        "native_parts": 1,
+        "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
+        "engine_activation": "Operating model10 remains absent until master10.5; source art never grants date/cargo/purchase eligibility.",
+        "runtime_binding": "master10.7/Plan13 Group84 after complete operating fleet.",
+        "approved_components_sha256": "12d74bd20ecbc827bab228398303fa1323ae36f164b5ca4f51f74ee9e1531f62",
+        "approved_model_views_sha256": "3daef4e801752e6aa42444042fa3a4ec8e8c28766933a8f52ae1b590cc97593d"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/crate-native-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/crate-base-e-v1.png",
+          "media/multilayer/source/ground/raw/crate-native-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/crate-packages-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/crate-authored.png",
+        "native_sha256": "415c1a97d4405076d77bd6db7c6ba9654eef9ae0196a61c70fe62fb4890a8550",
+        "staged_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3250,15 +3381,35 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/crate-base-e-v1.png",
+        "sha256": "ef82883eda756c92a9169d87f2903b936713d4409b9bf7baab41db58dd967d56",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/crate-native-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/crate-base-e-v1.png",
+          "media/multilayer/source/ground/raw/crate-native-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/crate-packages-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/crate-purchase-authored.png",
+        "native_sha256": "9d2eab5fda39dc40fcd3b9347a92ba970668a1e7366bc76bf77e77226d69f508",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3280,8 +3431,12 @@
         "empty",
         "partial",
         "full",
-        "service",
-        "blocked"
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -3313,15 +3468,60 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cistern-n-ne-s-sw-v1.png",
+        "sha256": "fbcf056d122a528e5365de4afd740e24a5a73e4e4073a5c0e85b025cb31216f3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "vehicle_length_units": 8,
+        "native_parts": 1,
+        "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
+        "engine_activation": "Operating model11 remains absent until master10.5; source art never grants date/cargo/purchase eligibility.",
+        "runtime_binding": "master10.7/Plan13 Group84 after complete operating fleet.",
+        "approved_components_sha256": "806b59a97983ead83249d8f068f5664c727ec3c715cc39839e3e825e4aa50096",
+        "approved_model_views_sha256": "2dd9b53725051cd09a586f80d307accfeb8cd76ff0cbd050e2758cbd7ff7c116",
+        "fluid_level_visibility": {
+          "visible_original_gauge_directions": [
+            "NE",
+            "E",
+            "SE",
+            "SW",
+            "NW"
+          ],
+          "occluded_original_gauge_directions": [
+            "N",
+            "S",
+            "W"
+          ],
+          "policy": "CHEM/PROP remains inside opaque pressure tanks. Actual original sight-glass directions show genuine empty/partial/full material; hidden end/back views retain the same sealed shell. Source never paints contents through an opaque tank or invents another cargo ledger."
+        }
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/cistern-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/cistern-base-e-v1.png",
+          "media/multilayer/source/ground/raw/cistern-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/cistern-level-glass-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/cistern-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/cistern-authored.png",
+        "native_sha256": "21e8bda7b67252d1746d02fea4e7a403edce2af95264930a5efabcdb8b1e9af1",
+        "staged_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3366,15 +3566,35 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cistern-base-e-v1.png",
+        "sha256": "4214ab0aeeec608cc7b1c2b8721c3d24ca800be1b45124f747b8d2416664f1cd",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/cistern-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/cistern-base-e-v1.png",
+          "media/multilayer/source/ground/raw/cistern-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/cistern-level-glass-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/cistern-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/cistern-purchase-authored.png",
+        "native_sha256": "02b237750884bc07c918898abebc59823c418c6b1bac7af288667c3899de2725",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3396,8 +3616,12 @@
         "empty",
         "partial",
         "full",
-        "service",
-        "blocked"
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -3429,15 +3653,45 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/shield-n-ne-s-sw-v1.png",
+        "sha256": "b11a49b36cf2184e3b946a2ef855e20c5947ee6041a3c8897f3330522cb6d6ec",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "vehicle_length_units": 8,
+        "native_parts": 1,
+        "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
+        "engine_activation": "Operating model12 remains absent until master10.5; source art never grants date/cargo/purchase eligibility.",
+        "runtime_binding": "master10.7/Plan13 Group84 after complete operating fleet.",
+        "approved_components_sha256": "34912d6659141b0659ecaee8916358afb532a2be4c48cc523c510179a7193f5c",
+        "approved_model_views_sha256": "625fd6064b4f2b78d5a94d4a792d631a87c153926144c27bbaf6f90dabf203e3",
+        "sealed_load_presentation": "Sealed native URAN/RARE remains inside opaque armour. Two genuine original roof glass fittings indicate the actual native empty/partial/full bucket: none/rear/both illuminated with unchanged genuine M1 amber glass. No loose mineral, stock creation or vehicle-body repaint."
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/shield-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/shield-base-e-v1.png",
+          "media/multilayer/source/ground/raw/shield-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/shield-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/shield-authored.png",
+        "native_sha256": "fdb99ba79edc2fd9241c6af06887571036b93cacc5059b3b662b887db9262d9c",
+        "staged_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3482,15 +3736,34 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/shield-base-e-v1.png",
+        "sha256": "ebe6f2ad2901559c0ef98f3761791351d34996cd28ca4386f2a59376e13373db",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/shield-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/shield-base-e-v1.png",
+          "media/multilayer/source/ground/raw/shield-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/shield-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/shield-purchase-authored.png",
+        "native_sha256": "93d9fe30536ecbc48e178b6aed40ad939ba765636332a4e4223d31da90c2b581",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3512,8 +3785,12 @@
         "empty",
         "partial",
         "full",
-        "service",
-        "blocked"
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -3545,15 +3822,46 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/forge-n-ne-s-sw-v1.png",
+        "sha256": "4795a5122d6fe557e905cb8339a5eb81fb07d8377c5bba98d41977f93f14ee1d",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan16 staged10B producer checked in both configurations.",
+        "vehicle_length_units": 8,
+        "native_parts": 1,
+        "load_preservation": "Actual cargo bucket is independent of service/blocked condition, retaining all three loads through nine source states.",
+        "engine_activation": "Operating model13 remains absent until master10.5; source art never grants date/cargo/purchase eligibility.",
+        "runtime_binding": "master10.7/Plan13 Group84 after complete operating fleet.",
+        "approved_components_sha256": "893ff9562c04465c0196ea6eb143d12c7bc0d7e10a7e5af0e6ad81852d726091",
+        "approved_model_views_sha256": "7cdae180bf2139378cb8cf044640adcc89e64727ac08780ab5cd6566b1177cfc",
+        "heavy_load_presentation": "Genuine same-view heavy slab/machinery modules fill rear/both volumes, add alpha only inside approved open-frame apertures, and cover only authorized pad-top material. Original dark structural/foreground pixels and visible pad edges remain exact. Fixed module boxes and far-to-near order preserve projection/occlusion; transparent donor pixels never erase the carrier."
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/forge-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/forge-base-e-v1.png",
+          "media/multilayer/source/ground/raw/forge-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/forge-heavy-modules-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/forge-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/forge-authored.png",
+        "native_sha256": "926d6ef10013f99eaede950028db55223788034ede03b616e8e61241737fa088",
+        "staged_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3598,15 +3906,35 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/forge-base-e-v1.png",
+        "sha256": "4a2129a717448b7883862f1f2c10913938da4d42dca1976d0ceab6527e0a9f8c",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_original_capsule_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/forge-n-ne-s-sw-v1.png",
+          "media/multilayer/source/ground/raw/forge-base-e-v1.png",
+          "media/multilayer/source/ground/raw/forge-se-e-nw-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/forge-heavy-modules-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/forge-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/forge-purchase-authored.png",
+        "native_sha256": "473c33f21cd2c186fa9e9d68e2c33a119d1c47f502623aee7bfb83ab0075693b",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -5481,9 +5809,7 @@
       "kind": "building",
       "directions": [
         "NE",
-        "SE",
-        "SW",
-        "NW"
+        "SE"
       ],
       "frames": 4,
       "states": [
@@ -5497,8 +5823,8 @@
         64
       ],
       "footprint": [
-        2,
-        2
+        1,
+        1
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -5523,15 +5849,68 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+        "sha256": "b991c09dbf49b4e8d6855ffc956b474277dda07c71e4875ab58bbc10f054e417",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_station_graphics_role",
+      "native_graphics": {
+        "NE": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "SE": [
+          1,
+          3,
+          5,
+          7
+        ]
+      },
+      "geometry_notes": {
+        "owner": "CmdBuildRailStation / RailStationTileLayout / GetRailStationAxis / GetStationGfx / GetTubeTerminal; Plan13 Group48C",
+        "axis_map": {
+          "NE": "native Axis::X / NE-SW through berth",
+          "SE": "native Axis::Y / NW-SE through berth"
+        },
+        "native_cell_roles": [
+          "bare platform",
+          "small rear building",
+          "canopy A / rear pillars",
+          "canopy B / front pillars"
+        ],
+        "role_semantics": "Four alternative default native graphics roles on one world tile per axis, not a fixed2x2 campus. Actual station may have variable length/parallel platforms.",
+        "physical_identity": "All actual joined same-layer cells retain the canonical StationID/packets and native platform-length capacity. No separate terminal inventory or floor owner.",
+        "source_status": "Complete original model/component source published; operating/packing/runtime pending.",
+        "runtime_binding": "master10.7/Plan13 Group84; only default native station graphics0..7. Operating terminal/interchange cargo acceptance remains master10.5."
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_platform_role_state_phase_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-construction-x-booth-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-x-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-x-roles-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-y-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-y-roles-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-terminal-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-terminal-authored.png",
+        "native_sha256": "e721dc881ecd240face91bbfb2de137815b7cd8804aff5baab9b16f1629a4d15",
+        "staged_pose_count": 256,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -5556,8 +5935,8 @@
         64
       ],
       "footprint": [
-        3,
-        2
+        1,
+        1
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -5575,22 +5954,46 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 6,
+      "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/m1/raw/exchange-bay-one-tile-v2.png",
+        "sha256": "9afa6979c7b847d70e9b53c0814aedcb0be4e41b1859e76f5429849d60c202a1",
+        "provenance": "first_party_retained_compatible_model_reuse",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "CmdBuildTrainDepot / GetRailDepotDirection / GetTubeTerminal; Plan13 Group48B",
+        "physical_geometry": "one native depot cell and its actual single directed entrance; four genuine views at native64x64/anchor(-31,-33)",
+        "source_reuse": "Existing immutable native one-tile rail-service enclosure; same physical depot/service owner. No recolouring or duplicate model generation. Tube rail capability, guideways and external service remain separate actual owners.",
+        "state_owner": "construction=preview; ready=actual empty admissible depot; working=actual capsule occupancy/metered service; blocked=actual electrical/service refusal including unpowered. Presentation grants no construction, charge, repair or track permission.",
+        "runtime_binding": "master10.7/Plan13 Group84; operating terminal/interchange/five-model acceptance remains master10.5"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_one_tile_service_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "source_reuse": {
+          "record": "media/multilayer/source/m1/facility-generation-record.json",
+          "asset_id": "facility.rail-service",
+          "component": "facility-status"
+        },
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-service-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-service-authored.png",
+        "native_sha256": "105466e8f5d9a349b60412262bfc00c4e39d6b2cf0622f8bea140652e50fa1a0",
+        "staged_pose_count": 128,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -5599,9 +6002,7 @@
       "kind": "building",
       "directions": [
         "NE",
-        "SE",
-        "SW",
-        "NW"
+        "SE"
       ],
       "frames": 4,
       "states": [
@@ -5615,8 +6016,8 @@
         64
       ],
       "footprint": [
-        3,
-        2
+        1,
+        1
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -5634,22 +6035,74 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 6,
+      "tile_variants": 4,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+        "sha256": "b991c09dbf49b4e8d6855ffc956b474277dda07c71e4875ab58bbc10f054e417",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_station_graphics_role",
+      "native_graphics": {
+        "NE": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "SE": [
+          1,
+          3,
+          5,
+          7
+        ]
+      },
+      "geometry_notes": {
+        "owner": "Native CmdBuildRailStation / CmdBuildRoadStop / CheckStationSpread / canonical StationID; Plan13 Group48D",
+        "role_semantics": "Same actual one-cell tube platform roles as facility.tube-terminal. Interchange is a same-layer joined station arrangement, not an additional fixed3x2 building.",
+        "physical_identity": "Tube and conventional berths and truck stops retain separate native transport cells and one joined StationID/goods owner. Nearby independent stations and cross-layer cells do not share that identity.",
+        "partner_families": [
+          "facility.rail-station",
+          "facility.road-terminal"
+        ],
+        "partner_source_owner": "Selected Plan13 Groups24/25; existing native rail/road graphics prove geometry only until their final source handoff.",
+        "runtime_binding": "master10.7/Plan13 Group84 after actual operating transfer in master10.5/Plan16 Group9. No new inventory, station identity, floor, machinery or power grant."
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_joined_platform_reuse_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-construction-x-booth-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-x-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-x-roles-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-y-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-y-roles-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-interchange-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-interchange-authored.png",
+        "native_sha256": "e721dc881ecd240face91bbfb2de137815b7cd8804aff5baab9b16f1629a4d15",
+        "staged_pose_count": 256,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "reuse_family": "facility.tube-terminal",
+        "partner_families": [
+          "facility.rail-station",
+          "facility.road-terminal"
+        ]
       }
     },
     {
@@ -5667,8 +6120,7 @@
         "construction",
         "ready",
         "working",
-        "blocked",
-        "heat_starved"
+        "blocked"
       ],
       "native_size": [
         64,
@@ -5701,15 +6153,65 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/collector-construction-0-ne-v1.png",
+        "sha256": "ea8eda879a49155c9065c7c88a047f163920c87cfe0275c34484da779c019bc3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "approved_collector_ready_views_sha256": "3911c63117a8822079e63262464af70bfa80d4663e137fb7e74713ac084e872f",
+        "source_partition": "Four genuine whole original views; lossless unique-pixel sections over all nine actual TIDS cells,64x64/anchor(-31,-33),native RemapCoords(Y-X,X+Y). Source approval creates no stock, source identity or runtime activation.",
+        "approved_collector_construction_views_sha256": "48b1b7e5d29ac4b32a9473f7deecaab2c8c3fd522bdc564943d8279a51d384a6",
+        "approved_collector_equipment_sha256": "a0ce12b3803dacb966e624a0080a48ffba92e06f0ab9cfe913fff90b2c428d2a"
+      },
+      "frame_owner": {
+        "construction": "native_industry_construction_stage_0_to_3_while_uncompleted",
+        "ready": "original_equipment_glass_phase_0_to_3",
+        "working": "original_equipment_glass_phase_0_to_3",
+        "blocked": "original_equipment_glass_phase_0_to_3"
+      },
+      "state_owner": "Actual native collector construction/completion, IsGeothermalCollectorOperational and current shared Heat publication; no Heat consumer or copied energy balance",
+      "construction_stages": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_collector_state_phase_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/geothermal-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/collector-construction-0-ne-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-0-se-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-0-sw-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-0-nw-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-1-ne-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-1-se-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-1-sw-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-1-nw-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-2-ne-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-2-se-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-2-sw-v1.png",
+          "media/multilayer/source/ground/raw/collector-construction-2-nw-v1.png",
+          "media/multilayer/source/ground/raw/collector-campus-ne-v1.png",
+          "media/multilayer/source/ground/raw/collector-base-ne-v1.png",
+          "media/multilayer/source/ground/raw/collector-campus-sw-v2.png",
+          "media/multilayer/source/ground/raw/collector-campus-nw-v2.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/collector-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/collector-authored.png",
+        "native_sha256": "6ed3fe17942a12ca84889d5ba859aa866ace6e294ca8c0a8d94d187ef198b09f",
+        "staged_pose_count": 1152,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -5770,6 +6272,95 @@
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "native_generator_geometry": {
+          "function": "GetGeothermalGeneratorGeometry",
+          "header": "src/geothermal_generator_geometry.h",
+          "model": "VentTap",
+          "introduction_year": 1980,
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "construction_stages": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "first_build_contract_kind": "Powerhouse",
+          "native_activation_from_descriptor": false,
+          "native_evidence": "logs/geothermal/generator-geometry/20261010-native-01/verification.json"
+        },
+        "approved_generator_registrations": {
+          "venttap-campus-ne-v1": "f9af91a2a5d091947afb9d7d430497f33d8e924f7ae2cb64bf9b0fe9c5b0c7e1",
+          "venttap-base-se-v1": "b9ee658962a3babb151949bb3143ee5ab4ccf025e7dbbeb2e570a93c9612d5ce",
+          "venttap-campus-sw-v2": "796ea67e7ebcb8ae4ff8db5e9d01e01dc08769c8057bf50aa7a536f1de7195bd",
+          "venttap-campus-nw-v1": "317eae28a8ed5ab9c7ba74ddc41cb89c5fa98c83e8af8de25d513586fe23fce3"
+        }
       }
     },
     {
@@ -5830,6 +6421,89 @@
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "native_generator_geometry": {
+          "function": "GetGeothermalGeneratorGeometry",
+          "header": "src/geothermal_generator_geometry.h",
+          "model": "MagmaLoop",
+          "introduction_year": 2000,
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "construction_stages": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "first_build_contract_kind": null,
+          "native_activation_from_descriptor": false,
+          "native_evidence": "logs/geothermal/generator-geometry/20261010-native-01/verification.json"
+        }
       }
     },
     {
@@ -6137,9 +6811,7 @@
       "kind": "terrain",
       "directions": [
         "NE",
-        "SE",
-        "SW",
-        "NW"
+        "SE"
       ],
       "frames": 1,
       "states": [
@@ -6167,7 +6839,8 @@
         31
       ],
       "parts": [
-        "body"
+        "back",
+        "front"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -6177,15 +6850,65 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "Plan13 Group47B; native Track::X/Y and RemapCoords",
+        "axes": {
+          "NE": [
+            "NE",
+            "SW"
+          ],
+          "SE": [
+            "NW",
+            "SE"
+          ]
+        },
+        "reversed_traversal": "same_original_axis",
+        "port_pixels": {
+          "NE": [
+            47,
+            8
+          ],
+          "SE": [
+            47,
+            24
+          ],
+          "SW": [
+            15,
+            24
+          ],
+          "NW": [
+            15,
+            8
+          ]
+        },
+        "foreground": "low near shell only; central capsule channel remains transparent"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_axis_state_part_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-straight-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-straight-y-base-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+        "native_sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92",
+        "staged_pose_count": 12,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6193,10 +6916,10 @@
       "consumer": 16,
       "kind": "terrain",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "N",
+        "S",
+        "W",
+        "E"
       ],
       "frames": 1,
       "states": [
@@ -6224,7 +6947,8 @@
         31
       ],
       "parts": [
-        "body"
+        "back",
+        "front"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -6234,15 +6958,108 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-curve-states-v1.png",
+        "sha256": "995c9bed314b6390d2e87b7a1294e1425ccf1a7c19054c16782f5a8a9eedd8e0",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "Plan13 Group47C; native Track::Upper/Lower/Left/Right, VehicleEnterTileCoordinates and RemapCoords",
+        "corners": {
+          "N": {
+            "track": "Upper",
+            "ports": [
+              "NW",
+              "NE"
+            ],
+            "native_chord": [
+              [
+                17,
+                7
+              ],
+              [
+                45,
+                7
+              ]
+            ]
+          },
+          "S": {
+            "track": "Lower",
+            "ports": [
+              "SW",
+              "SE"
+            ],
+            "native_chord": [
+              [
+                17,
+                23
+              ],
+              [
+                45,
+                23
+              ]
+            ]
+          },
+          "W": {
+            "track": "Left",
+            "ports": [
+              "NW",
+              "SW"
+            ],
+            "native_chord": [
+              [
+                15,
+                8
+              ],
+              [
+                15,
+                22
+              ]
+            ]
+          },
+          "E": {
+            "track": "Right",
+            "ports": [
+              "NE",
+              "SE"
+            ],
+            "native_chord": [
+              [
+                47,
+                8
+              ],
+              [
+                47,
+                22
+              ]
+            ]
+          }
+        },
+        "reversed_traversal": "same_original_corner",
+        "source_geometry": "low peripheral corner casing with alpha-clear actual native capsule chord; independent view rendering with fixed light"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_corner_state_part_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-curve-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-curve-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-curve-views-v2.png",
+          "media/multilayer/source/ground/raw/tube-curve-n-unpowered-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-curves-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-curves-authored.png",
+        "native_sha256": "6d26a47d8020e9a86ef091c02c1c9325528c273088322813153a211df10182d8",
+        "staged_pose_count": 24,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6250,10 +7067,7 @@
       "consumer": 16,
       "kind": "terrain",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 1,
       "states": [
@@ -6281,25 +7095,140 @@
         31
       ],
       "parts": [
-        "body"
+        "back",
+        "front"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 54,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original",
+        "conversion": "composition_of_retained_authored_primitives"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_trackbits_topology",
+      "native_layouts": [
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "geometry_notes": {
+        "owner": "Plan13 Group47D; actual flat native TrackBits and canonical TrackdirToExitdir tables",
+        "native_track_order": [
+          "X",
+          "Y",
+          "Upper",
+          "Lower",
+          "Left",
+          "Right"
+        ],
+        "composition": "Compose only installed authored native casings; trim a casing where another installed track chord crosses it. Foreground leaves all actual installed capsule paths clear. Never generate or paint a missing track/arm.",
+        "selected_base_native_bits": 5,
+        "selected_base_tracks": [
+          "X",
+          "Upper"
+        ],
+        "excluded_cases": {
+          "empty": 0,
+          "single_tracks": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32
+          ],
+          "crossing": 3,
+          "independent_parallel_curves": [
+            12,
+            48
+          ]
+        },
+        "reversed_traversal": "same_original_installed_topology",
+        "runtime_binding": "later scoped Plan13 Group84/master10.7; this source contract does not grant movement or reserve tracks"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_topology_state_part_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-curve-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-straight-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-straight-y-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-curve-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-curve-views-v2.png",
+          "media/multilayer/source/ground/raw/tube-curve-n-unpowered-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-junction-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-junction-authored.png",
+        "native_sha256": "1d1549ba54880b3b1c564b2b0b921e1469dae7962bc8431d211af82f5ef7ac62",
+        "staged_pose_count": 324,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6338,7 +7267,8 @@
         31
       ],
       "parts": [
-        "body"
+        "back",
+        "front"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -6348,15 +7278,61 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-end-positive-states-v1.png",
+        "sha256": "ffdf52069100f88c9c85fb8be58eb5689f6a4bf153ab8a2ab1a1e0b1310e797f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "Plan13 Group47E; GetTubeGuidewayEnds / native TrackdirToExitdir and adjacent entry-side track status",
+        "view_semantics": "unconnected physical NE/SE/SW/NW edge mouth, not vehicle heading or power/permission state",
+        "port_pixels": {
+          "NE": [
+            47,
+            8
+          ],
+          "SE": [
+            47,
+            24
+          ],
+          "SW": [
+            15,
+            24
+          ],
+          "NW": [
+            15,
+            8
+          ]
+        },
+        "source_extent": "small low pressure cap local to selected mouth; no new guideway stub or floor slab",
+        "selection": "Only actual plain canonical tube cells; native neighbour entry-side status preserves depot doors and same-layer physical tracks. Signals, reservations, ownership, power and sharp-turn waits do not close physical mouths.",
+        "native_query": "GetTubeGuidewayEnds",
+        "runtime_binding": "later Plan13 Group84/master10.7; source art grants no track, construction or movement"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_end_state_part_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/tube-end-positive-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-end-negative-states-v1.png",
+          "media/multilayer/source/ground/raw/tube-end-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-end-se-v1.png",
+          "media/multilayer/source/ground/raw/tube-end-sw-v1.png",
+          "media/multilayer/source/ground/raw/tube-end-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-end-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-end-authored.png",
+        "native_sha256": "a41671f46355e053a1b6c01ed723a42e7862af51f983ec37285501991c2d7392",
+        "staged_pose_count": 24,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6364,10 +7340,7 @@
       "consumer": 16,
       "kind": "terrain",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 1,
       "states": [
@@ -6395,7 +7368,8 @@
         31
       ],
       "parts": [
-        "body"
+        "back",
+        "front"
       ],
       "geometry": "per_view",
       "tile_variants": 1,
@@ -6405,15 +7379,44 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_source_composition",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "Native TRACK_BIT_CROSS / DrawTrackBitsOverlay; Plan13 Group47F",
+        "trackbits": 3,
+        "view_semantics": "one native X/Y crossing; travel reversal creates no new view",
+        "ports": {
+          "X": [
+            "NE",
+            "SW"
+          ],
+          "Y": [
+            "NW",
+            "SE"
+          ]
+        },
+        "source_composition": "Only original installed X/Y casing pixels; trim each rim at the other actual native chord, front leaves both routes clear. No corner contributor, rotated source or painted floor.",
+        "runtime_binding": "master10.7/Plan13 Group84; native reservation/access/turn rules remain authoritative"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_crossing_state_part_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-crossing-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-crossing-authored.png",
+        "native_sha256": "909fabe41d8793c7cd93aabf814c988f7966b8856b5f8c4b1454923992b963e8",
+        "staged_pose_count": 6,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6462,15 +7465,57 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-conduit-states-v1.png",
+        "sha256": "80b06d3f46525b465ece239700dc936e3cd4b05fc2dcde790f1f7ac0e7816db0",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "geometry_notes": {
+        "owner": "TubePowerConnection::utility_path / CaptureTubePowerConnections; Plan13 Group47G",
+        "view_semantics": "four original center-to-edge physical utility corridor branches NE/SE/SW/NW; not capsule headings or rail curves",
+        "center_pixel": [
+          31,
+          16
+        ],
+        "port_pixels": {
+          "NE": [
+            47,
+            8
+          ],
+          "SE": [
+            47,
+            24
+          ],
+          "SW": [
+            15,
+            24
+          ],
+          "NW": [
+            15,
+            8
+          ]
+        },
+        "composition": "Select only the actual previous/next adjacent same-layer path cells; multiple saved physical corridors may overlap without creating another installation. Original X/Y halves retain fixed light and exact source pixels.",
+        "draw_order": "ground body below vehicles and facility buildings; no foreground wall or opaque floor slab",
+        "status_owner": "Physical active original portal revision/path; electrical status uses existing GetUtilityPowerProducer. Construction is command preview only. Unpowered never opens/closes a guideway.",
+        "runtime_binding": "master10.7/Plan13 Group84; no source pixel creates a path, grant, generation or private registry"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_native_conduit_branch_state_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/tube-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/tube-conduit-atlas-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/tube-conduit-authored.png",
+        "native_sha256": "77e6e9f8a67149fb6c2c554dabc7c682bf5872ebdbd5ed9bb5f716b4a24ea527",
+        "staged_pose_count": 12,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6484,8 +7529,7 @@
       "states": [
         "hidden",
         "surveyed",
-        "tapped",
-        "heat_starved"
+        "excavated"
       ],
       "native_size": [
         64,
@@ -6517,15 +7561,44 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/vent-natural-phases-v1.png",
+        "sha256": "0bc2af7dab8661cf2391258da4aaeaa18a5b92ba5a201b21c956d8a1d157c20b",
+        "provenance": "first_party_original_natural_overlay",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "frame_owner": "original_thermal_detail_phase_0_to_3_visual_only",
+      "state_owner": "GeothermalVentField membership, active same-layer/date-valid public survey and canonical paid ExcavationState; no thermal demand or copied source balance",
+      "hidden_policy": "fully_transparent_no_source_pixels",
+      "empty_allowed_states": [
+        "hidden"
+      ],
+      "render_layer": "ground_overlay_preserves_hardness_and_mineral_markers",
+      "native_draw_offset": [
+        0,
+        0
+      ],
+      "geometry_notes": {
+        "approved_natural_vent_source_sha256": "e4271646a6004d7d8776260d53b0ff43c563e78d421f91cdca5ce3a49c62347e"
+      },
+      "authoring": {
+        "date": "2026-10-10",
+        "status": "complete_natural_vent_overlay_source_native_binding_pending",
+        "source_record": "media/multilayer/source/ground/geothermal-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/vent-natural-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vent-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/vent-authored.png",
+        "native_sha256": "2a7d8300b17570c382de208c296e1e5f3ec2bfa49fb8e16fad973a30faa091e1",
+        "staged_pose_count": 12,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {

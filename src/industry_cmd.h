@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file industry_cmd.h Command definitions related to industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Group1B */
+/** @file industry_cmd.h Command definitions related to industries. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md Groups1B/5B */
 
 #ifndef INDUSTRY_CMD_H
 #define INDUSTRY_CMD_H
@@ -52,6 +52,18 @@ CommandCost CmdBuildLayerMine(DoCommandFlags flags, TileIndex tile, IndustryType
 CommandCost CmdBuildGeothermalCollector(DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed);
 
 /**
+ * Fund original-portal-bound riser machinery through ordinary once-only capital settlement.
+ * @param flags Pure whole estimate or complete execution.
+ * @param tile Native2x2 machinery anchor on an excavated rock plane.
+ * @param portal Actual sending housing of the existing Connected reciprocal pair.
+ * @param port Machinery boundary cell cardinally adjoining that housing.
+ * @param access Excavated construction/loading approach direction.
+ * @param seed Synchronized native creation seed; estimates consume no simulation RNG.
+ * @return Full120,000 capital charge or unchanged refusal; delivered materials and296 native labour ticks remain required before electrical use.
+ */
+CommandCost CmdBuildGeothermalRiser(DoCommandFlags flags, TileIndex tile, TileIndex portal, TileIndex port, DiagDirection access, uint32_t seed);
+
+/**
  * Select one supported native alternative without moving or consuming any delivered/produced stock.
  * @param flags Estimate or execution.
  * @param industry Existing native processor identity.
@@ -71,6 +83,7 @@ CommandCost CmdIndustrySetProduction(DoCommandFlags flags, IndustryID ind_id, ui
 
 DEF_CMD_TRAIT(Commands::BuildIndustry, CmdBuildIndustry, CommandFlag::Deity, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildGeothermalCollector, CmdBuildGeothermalCollector, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::BuildGeothermalRiser, CmdBuildGeothermalRiser, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildLayerMine, CmdBuildLayerMine, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::SelectLayerIndustryRecipe, CmdSelectLayerIndustryRecipe, CommandFlag::Deity, CommandType::OtherManagement)
 DEF_CMD_TRAIT(Commands::IndustrySetFlags, CmdIndustrySetFlags, CommandFlag::Deity, CommandType::OtherManagement)
