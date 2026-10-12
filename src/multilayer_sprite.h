@@ -157,6 +157,7 @@ std::optional<SpriteID> GetMultiLayerReceiverSprite(TileIndex tile, bool front, 
 
 /**
  * Query an actual paid collector's physical cell, construction stage and current Heat state.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
  * @param tile Existing native collector industry cell, independent of camera selection.
  * @param front True for its aligned foreground, false for the source back/floor.
  * @param visual_ticks Read-only equipment phase clock; paid construction uses its native stage.

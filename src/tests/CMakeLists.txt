@@ -1,5 +1,8 @@
 # Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 # Passive generator/site source boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
+# Actual collector rendering: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C.
+# Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
+# Native Surface processor geometry/state: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 add_test_files(
     # Shared artifact ownership: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
     test_artifact_paths.h
@@ -56,6 +59,8 @@ add_test_files(
     multilayer_terrain_runtime.cpp
     multilayer_train_art.cpp
     multilayer_facility_selection.cpp
+    multilayer_collector_selection.cpp
+    multilayer_collector_runtime.cpp
     multilayer_control_selection.cpp
     multilayer_control_runtime.cpp
     multilayer_facility_runtime.cpp
@@ -126,6 +131,8 @@ add_test_files(
     layer_mine_definition.cpp
     processor_fixture.h
     layer_processor.cpp
+    layer_processor_definition.cpp
+    layer_processor_presentation.cpp
     layer_processor_delivery.cpp
     processor_spoil_delivery.cpp
     layer_baseline_receiver.cpp
@@ -229,6 +236,9 @@ add_test_files(
     underground_workflow.cpp
     underground_filter.cpp
     underground_facility.cpp
+    conventional_station_art.cpp
+    # Actual bay/through command and drawing proof: r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
+    conventional_terminal_art.cpp
     underground_engine.cpp
     underground_fleet.cpp
     underground_loading.cpp

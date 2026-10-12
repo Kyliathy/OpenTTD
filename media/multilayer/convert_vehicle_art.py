@@ -2,6 +2,7 @@
 
 @file convert_vehicle_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group 19
 @see media/multilayer/source/m1/vehicle-generation-record.json
 Originals/candidates stay immutable. Conversion performs native resampling,
 declared authored-component frame assembly and DOS palette packing. Missing
@@ -179,9 +180,11 @@ def nearest_component_pose(subject, direction):
     return image
 
 
-def derive():
+def derive(asset_ids=None):
     """Convert declared authored poses without fabricating missing combinations.
 
+    @param asset_ids Optional set of existing family IDs for a focused audit;
+        None retains the complete M1 conversion and its published report shape.
     @return Native partial coverage manifest and exact output PNG bytes.
     @throws ValueError On altered original/reference bytes or unsupported poses.
     """
@@ -192,10 +195,21 @@ def derive():
     cache = {}
     fixed_images = {}
     sources = {source["key"]: source for source in document["sources"]}
+    selected_sources = document["sources"]
+    selected_candidates = document["candidates"]
+    if asset_ids is not None:
+        # A family audit must refuse a typo or an empty selection rather than
+        # report success without checking the requested locomotive's originals.
+        requested = set(asset_ids)
+        available = {source["asset_id"] for source in selected_sources}
+        if not requested or not requested <= available:
+            raise ValueError("focused vehicle conversion requires existing source families")
+        selected_sources = [source for source in selected_sources if source["asset_id"] in requested]
+        selected_candidates = [source for source in selected_candidates if source["asset_id"] in requested]
     coverage = set()
     # Rejects are provenance, never accepted input cells. Hash verification still
     # protects their retained bytes so later revision history stays auditable.
-    for source in document["sources"] + document["candidates"]:
+    for source in selected_sources + selected_candidates:
         if base.digest(base.repository_path(source["path"])) != source["sha256"]:
             raise ValueError("immutable vehicle source/candidate changed")
         for reference in source["references"]:
@@ -203,7 +217,7 @@ def derive():
                 raise ValueError("immutable vehicle reference changed")
     # Every selected cell carries its real part, heading, state and authored frame.
     # Coverage remains sparse until each required combination genuinely exists.
-    for source in document["sources"]:
+    for source in selected_sources:
         family = families[source["asset_id"]]
         if source["part"] not in family["parts"]:
             raise ValueError("vehicle source invents another physical part")
@@ -388,15 +402,27 @@ def bind_manifest(report):
     path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
 
-def check(expected, files):
+def check(expected, files, asset_ids=None):
     """Verify reproducibility, reserved colors, source sparsity and transparency.
 
     @param expected Coverage derived freshly from immutable selected originals.
     @param files Expected encoded atlas bytes regenerated without writes.
+    @param asset_ids Optional family selection used by derive; compare only that
+        slice of the existing report without publishing a partial replacement.
     @throws ValueError If partial coverage or native pixels disagree with records.
     @return None; publish or verify the declared repository-owned source artifacts.
     """
-    if json.loads(REPORT.read_text(encoding="utf-8")) != expected:
+    published = json.loads(REPORT.read_text(encoding="utf-8"))
+    if asset_ids is not None:
+        # A focused check consumes the same shared report, preserving unrelated
+        # families and preventing a scoped run from replacing the public atlas.
+        requested = set(asset_ids)
+        actual = {row["asset_id"] for row in expected["atlases"]}
+        if not requested or actual != requested:
+            raise ValueError("focused vehicle check lost its requested families")
+        published["atlases"] = [row for row in published["atlases"] if row["asset_id"] in requested]
+        published["pose_count"] = sum(len(row["sprites"]) for row in published["atlases"])
+    if published != expected:
         raise ValueError("vehicle coverage manifest disagrees with originals")
     # Each model must regenerate exactly from its selected cells while retaining
     # honest missing-pose counts; rejection history cannot silently fill a gap.
@@ -466,7 +492,7 @@ def check(expected, files):
         authoring = family["authoring"]
         if authoring["native_sha256"] != atlas["sha256"] or authoring["staged_pose_count"] != len(atlas["sprites"]) or authoring["missing_pose_count"] != atlas["missing_pose_count"] or authoring["coverage_complete"] != atlas["coverage_complete"]:
             raise ValueError("public vehicle source handoff is stale: " + atlas["asset_id"])
-    print(f"Vehicle source conversion: {len(expected['atlases'])} models / {expected['pose_count']} authored poses; exact regeneration, palette, alpha and sparse coverage pass; runtime pending")
+    print(f"Vehicle source conversion: {len(expected['atlases'])} models / {expected['pose_count']} authored poses; exact regeneration, palette, alpha and sparse coverage pass; source-only audit")
 
 
 def main():

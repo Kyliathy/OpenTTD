@@ -1,7 +1,9 @@
-"""Review retained dated generator originals on the verified native world floor.
+"""Review and compose retained dated generator originals on the verified native floor.
 
 @file convert_generator_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups55-56.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group55B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group56 MagmaLoop source.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Original pixels are sampled and losslessly partitioned; runtime activation remains separate.
@@ -9,11 +11,13 @@ Original pixels are sampled and losslessly partitioned; runtime activation remai
 
 import argparse
 import hashlib
+import io
 import json
 
 from PIL import Image, ImageDraw
 
 import convert_tube_art as tube
+import convert_facility_art as facilities
 
 
 RECORD = tube.ROOT / "media/multilayer/source/ground/geothermal-generation-record.json"
@@ -22,6 +26,9 @@ CELLS = [[x, y] for y in range(4) for x in range(4)]
 ORIGINS = [(129 + 32 * (y - x), 31 + 16 * (x + y)) for x, y in CELLS]
 FLOOR = [[160, 64], [288, 128], [160, 192], [32, 128]]
 MODELS = {"facility.vent-powerhouse": ("VentTap", 1980), "facility.magma-powerhouse": ("MagmaLoop", 2000)}
+STATES = facilities.STATES + ["heat_starved"]
+DIRECTIONS = ("NE", "SE", "SW", "NW")
+FOREGROUND = "solid_native_industry_cell_full_original_sections_no_vehicle_aperture"
 
 
 def indexed_canvas(size):
@@ -45,6 +52,10 @@ def registration_signature(source):
     fields = ("key", "asset_id", "direction", "path", "sha256", "native_crop",
               "native_subject_size", "native_position", "native_floor_corners", "native_geometry")
     selected = {field: source[field] for field in fields}
+    # An incomplete original's paid construction stage is part of its identity.
+    # Ready registrations keep their existing signature and final hardware role.
+    if "construction_stage" in source:
+        selected["construction_stage"] = source["construction_stage"]
     return hashlib.sha256(json.dumps(selected, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
@@ -192,6 +203,79 @@ def ready_models(asset_id, document=None, public=None):
     return models
 
 
+def construction_models(asset_id, stages=(0, 1, 2), document=None, public=None):
+    """Resolve only reviewed incomplete hardware for the requested native stages.
+
+    @param asset_id Exact dated generator family with verified physical geometry.
+    @param stages Explicit distinct subset of incomplete stages0..2; stage3 deliberately aliases ready hardware later.
+    @param document Optional independent source-record snapshot for focused refusal checks.
+    @param public Optional matching public Sprite Contract snapshot.
+    @return Ordered stage/view mapping to whole original, sixteen lossless pieces and source provenance.
+    @throws ValueError If an original/stage/view is missing, unreviewed, substituted or moved after approval.
+    """
+    # Partial authoring may review supplied stages, but absent stage2 cannot be
+    # silently completed by copying another stage or the installed ready model.
+    if not stages or len(set(stages)) != len(stages) or any(stage not in (0, 1, 2) for stage in stages):
+        raise ValueError("generator needs distinct incomplete construction stages")
+    if document is None:
+        document = json.loads(RECORD.read_text(encoding="utf-8"))
+    if public is None:
+        public = json.loads(tube.PUBLIC.read_text(encoding="utf-8"))
+    spec = next(row for row in public["assets"] if row["asset_id"] == asset_id)
+    family = next(row for row in document["families"] if row["asset_id"] == asset_id)
+    approved = spec.get("geometry_notes", {}).get("approved_generator_registrations", {})
+    models = {}
+    # Every requested paid stage owns four independently registered physical
+    # views. Source approval and native cell conservation precede composition.
+    for stage in stages:
+        selections = family.get("construction_frame_sources", {}).get(str(stage), {})
+        if set(selections) != {"NE", "SE", "SW", "NW"} or len(set(selections.values())) != 4:
+            raise ValueError("generator construction stage needs four distinct reviewed views")
+        for direction in ("NE", "SE", "SW", "NW"):
+            key = selections[direction]
+            source = tube.retained_candidate(key, document)
+            # A completed model or another stage/orientation cannot impersonate
+            # earned incomplete work merely through a matching source filename.
+            if source.get("construction_stage") != stage or source.get("direction") != direction:
+                raise ValueError("generator construction source has wrong native stage or view")
+            if approved.get(key) != registration_signature(source):
+                raise ValueError("generator construction registration differs from reviewed original")
+            campus, checked = native_base(key, document, spec)
+            pieces, provenance = partition_model(campus, checked)
+            models[(stage, direction)] = (campus, pieces, provenance)
+    return models
+
+
+def review_construction_views(asset_id, stages=(0, 1, 2)):
+    """Publish explicit incomplete-stage contacts without claiming full state coverage.
+
+    @param asset_id Exact dated generator whose construction sources were reviewed.
+    @param stages Explicit incomplete stages to display; missing stages refuse.
+    @return Native source/contact receipt path under the reproducible proof cache.
+    """
+    models = construction_models(asset_id, stages)
+    tube.REVIEW.mkdir(parents=True, exist_ok=True)
+    stem = MODELS[asset_id][0].lower() + "-construction-" + "-".join(map(str, stages))
+    page = Image.new("RGB", (2640, 500 * len(stages)), (235, 239, 243))
+    draw = ImageDraw.Draw(page)
+    # Adjacent true orientations expose axis/placement drift at the same native
+    # scale. Each row remains one earned construction stage, never runtime art.
+    for index, ((stage, direction), (campus, unused, source)) in enumerate(models.items()):
+        ox, oy = (index % 4) * 660, (index // 4) * 500
+        rgba = campus.convert("RGBA").resize((640, 448), Image.Resampling.NEAREST)
+        page.paste(rgba, (ox + 10, oy + 30), rgba.getchannel("A"))
+        draw.text((ox + 12, oy + 8), f"{direction} / native stage{stage} unfinished / sixteen exact cells", fill=(30, 40, 50))
+    target = tube.REVIEW / (stem + ".png")
+    page.save(target)
+    report = {"_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md55B; scoped incomplete model source, no operating/packed activation",
+              "asset_id": asset_id, "stages": list(stages), "views": {f"{stage}:{direction}": row[2] for (stage, direction), row in models.items()},
+              "contact": {"path": target.relative_to(tube.ROOT).as_posix(), "sha256": hashlib.sha256(target.read_bytes()).hexdigest()},
+              "source_coverage_complete": False, "runtime_activated": False}
+    receipt = tube.REVIEW / (stem + ".json")
+    receipt.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    return receipt
+
+
 def review_ready_views(asset_id):
     """Bake a combined native/enlarged continuity review of the four selected views.
 
@@ -277,17 +361,399 @@ def review_model(key):
     return receipt
 
 
-def main():
-    """Review explicitly selected originals without selecting or activating them.
+def generator_equipment_signature(asset_id, document=None):
+    """Freeze authored glass ancestry, physical fittings and native frame meaning.
 
-    @return None; print the exact review receipt path after all partition checks pass.
+    @param asset_id Exact dated generator family whose hardware is already reviewed.
+    @param document Optional independent retained-source snapshot for refusal checks.
+    @return SHA256 of original component identities and the complete equipment policy.
+    @throws ValueError If components, phase coverage, fittings or native work meaning disagree.
+    """
+    if document is None:
+        document = json.loads(RECORD.read_text(encoding="utf-8"))
+    family = next(row for row in document["families"] if row["asset_id"] == asset_id)
+    components = json.loads(tube.base.repository_path(family["indicator_record"]).read_text(encoding="utf-8"))
+    component = next(row for row in components["components"] if row["key"] == family["indicator_key"])
+    heat = next(row for row in document["components"] if row["key"] == family["heat_starved_indicator_key"])
+    facilities.verify_original(component)
+    facilities.verify_original(heat)
+    keys = set(family["whole_view_selections"].values())
+    keys.update(key for views in family["construction_frame_sources"].values() for key in views.values())
+    # Construction frames represent paid quarters, while completed frames are
+    # visual phases. Neither final hardware nor a lamp phase completes paid work.
+    if (component["states"] != facilities.STATES or component["frames"] != 4 or component["grid"] != [4, 4]
+            or heat["states"] != ["heat_starved"] or heat["frames"] != 4 or len(heat["glass_boxes"]) != 4
+            or set(family["indicator_targets"]) != keys or family["construction_indicator_phase"] != 0
+            or family["construction_frame_sources"].get("3") != family["whole_view_selections"]
+            or family["foreground_policy"] != FOREGROUND):
+        raise ValueError("generator equipment/native-frame coverage mismatch")
+    if asset_id == "facility.vent-powerhouse":
+        if family["construction_ticks"] != {"total": 592, "stage_length": 148, "stages": [0, 1, 2, 3], "completion_separate": True}:
+            raise ValueError("generator construction changes native paid work quarters")
+    # Reviewed glass interiors are at most three native pixels across. This
+    # protects the existing mounting, metal casing and every floor contact.
+    for target in family["indicator_targets"].values():
+        if (len(target) != 4 or not all(type(value) is int for value in target)
+                or not 1 <= target[2] <= 3 or not 1 <= target[3] <= 3
+                or not 0 <= target[0] <= CANVAS[0] - target[2]
+                or not 0 <= target[1] <= CANVAS[1] - target[3]):
+            raise ValueError("generator glass leaves native fitting")
+    selected = {name: family[name] for name in ("indicator_record", "indicator_key", "heat_starved_indicator_key",
+                "indicator_targets", "construction_indicator_phase", "construction_ticks", "construction_stage3_policy",
+                "foreground_policy", "frame_owner", "state_owner")}
+    selected["component"] = {name: component[name] for name in ("path", "sha256", "references", "states", "frames", "grid")}
+    selected["heat_component"] = {name: heat[name] for name in ("path", "sha256", "references", "states", "frames", "glass_boxes")}
+    return hashlib.sha256(json.dumps(selected, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def generator_glass_phases(family, document):
+    """Resolve real authored glass for the four common modes and Heat shortage.
+
+    @param family Reviewed generator family naming the two immutable component owners.
+    @param document Retained-source snapshot containing the additional Heat component.
+    @return State mapping to four opaque3x3 RGBA phases and their original ancestry.
+    @throws ValueError If Heat crops overlap, escape their original or omit opaque glass.
+    """
+    record = json.loads(tube.base.repository_path(family["indicator_record"]).read_text(encoding="utf-8"))
+    shared = next(row for row in record["components"] if row["key"] == family["indicator_key"])
+    phases = facilities.indicator(shared)
+    result = {state: (phases[index], shared) for index, state in enumerate(facilities.STATES)}
+    heat = next(row for row in document["components"] if row["key"] == family["heat_starved_indicator_key"])
+    facilities.verify_original(heat)
+    selected = []
+    with Image.open(tube.base.repository_path(heat["path"])) as original:
+        original = original.convert("RGBA")
+        # Each phase owns its own measured rectangle. An adjacent highlight or
+        # a transparent gutter cannot masquerade as a genuinely authored phase.
+        for index, box in enumerate(heat["glass_boxes"]):
+            left, top, right, bottom = box
+            if not (0 <= left < right <= original.width and 0 <= top < bottom <= original.height):
+                raise ValueError("generator Heat glass crop leaves original")
+            for previous in heat["glass_boxes"][:index]:
+                if max(left, previous[0]) < min(right, previous[2]) and max(top, previous[1]) < min(bottom, previous[3]):
+                    raise ValueError("generator Heat glass crops overlap")
+            glass = original.crop(box)
+            if glass.getchannel("A").getextrema()[0] < 128:
+                raise ValueError("generator Heat glass is transparent")
+            selected.append(glass.resize((3, 3), Image.Resampling.BOX))
+    result["heat_starved"] = (selected, heat)
+    return result
+
+
+def generator_source_inputs(asset_id, document=None, public=None):
+    """Resolve the complete reviewed hardware and equipment without activating it.
+
+    @param asset_id Exact dated generator source family, independent of IndustryIDs.
+    @param document Optional source snapshot; mutations never fall back to disk state.
+    @param public Optional matching public Sprite Contract snapshot.
+    @return Family, public row, state glass mapping and sixteen unique hardware models.
+    @throws ValueError If coverage, frozen approval or native frame ownership disagrees.
+    """
+    if document is None:
+        document = json.loads(RECORD.read_text(encoding="utf-8"))
+    if public is None:
+        public = json.loads(tube.PUBLIC.read_text(encoding="utf-8"))
+    family = next(row for row in document["families"] if row["asset_id"] == asset_id)
+    spec = next(row for row in public["assets"] if row["asset_id"] == asset_id)
+    # Full source needs all actual modes and sixteen native cells. Metadata
+    # cannot reinterpret an incomplete matrix or introduce a vehicle aperture.
+    if (family["states"] != STATES or spec["states"] != STATES or family["directions"] != list(DIRECTIONS)
+            or spec["directions"] != list(DIRECTIONS) or family["frames"] != 4 or spec["frames"] != 4
+            or family["parts"] != ["back", "front"] or spec["parts"] != family["parts"]
+            or family["frame_owner"] != spec["frame_owner"] or family["state_owner"] != spec["state_owner"]
+            or set(family["construction_frame_sources"]) != {"0", "1", "2", "3"}):
+        raise ValueError("generator native state/frame ownership mismatch")
+    if generator_equipment_signature(asset_id, document) != spec["geometry_notes"].get("approved_generator_equipment_sha256"):
+        raise ValueError("generator equipment differs from approved original fittings")
+    ready = ready_models(asset_id, document, public)
+    incomplete = construction_models(asset_id, document=document, public=public)
+    models = {row[2]["key"]: row for row in list(ready.values()) + list(incomplete.values())}
+    return family, spec, generator_glass_phases(family, document), models
+
+
+def compose_generator_glass(original, pieces, component, target):
+    """Replace only the reviewed glass pixels in their existing native cell owner.
+
+    @param original Approved indexed320x224 whole model with fixed native opacity.
+    @param pieces Sixteen independently validated lossless64x64 original sections.
+    @param component Genuine authored opaque3x3 RGBA glass phase.
+    @param target Reviewed x,y,width,height interior of the original cabinet lamp.
+    @return Whole composed pose and sixteen copied sections, exact outside the fitting.
+    @throws ValueError If glass becomes transparent or its original cell ownership changes.
+    """
+    x, y, width, height = target
+    # A component can replace opaque glass only. It cannot paint a missing
+    # mounting, repair clipped machinery or spill across the native canvas.
+    if (original.mode != "P" or original.size != CANVAS or len(pieces) != 16
+            or not 1 <= width <= 3 or not 1 <= height <= 3
+            or not 0 <= x <= CANVAS[0] - width or not 0 <= y <= CANVAS[1] - height
+            or component.getchannel("A").getextrema()[0] < 128):
+        raise ValueError("generator glass leaves native fitting or loses opacity")
+    glass = tube.base.quantize(component.resize((width, height), Image.Resampling.BOX), {})
+    pose, sections = original.copy(), [piece.copy() for piece in pieces]
+    # Static hardware is partitioned once. Updating only its tiny owned glass
+    # avoids rescanning the whole campus for each visual phase, while retaining
+    # the exact same physical ownership rule and checking the stored original.
+    for dy in range(height):
+        for dx in range(width):
+            px, py = x + dx, y + dy
+            value, before = glass.getpixel((dx, dy)), original.getpixel((px, py))
+            if value == 0 or before == 0:
+                raise ValueError("generator glass fitting is not opaque")
+            owners = [index for index, (ox, oy) in enumerate(ORIGINS)
+                      if 0 <= px - ox < 64 and 0 <= py - oy < 64 and pieces[index].getpixel((px - ox, py - oy)) != 0]
+            if len(owners) != 1:
+                raise ValueError("generator glass has no unique original cell owner")
+            ox, oy = ORIGINS[owners[0]]
+            if pieces[owners[0]].getpixel((px - ox, py - oy)) != before:
+                raise ValueError("generator glass cell differs from original hardware")
+            pose.putpixel((px, py), value)
+            sections[owners[0]].putpixel((px - ox, py - oy), value)
+    pose.info["transparency"] = 0
+    return pose, sections
+
+
+def build_generator(asset_id, document=None, public=None):
+    """Compose the exact five-state2560-pose source from retained original pixels.
+
+    @param asset_id Dated generator with complete reviewed original hardware and glass.
+    @param document Optional independent source snapshot for focused refusal checks.
+    @param public Optional corresponding public contract snapshot.
+    @return Complete source mapping and deterministic indexed atlas PNG bytes.
+    """
+    family, spec, phases, models = generator_source_inputs(asset_id, document, public)
+    atlas = indexed_canvas((8192, 1280))
+    sprites = []
+    # Native construction selects four incomplete stages, including final
+    # hardware under amber before completion. Actual dated work timing remains
+    # feature-owned; the passive2000 source descriptor supplies no invoice.
+    # Other states preserve ready hardware and
+    # select only genuine visual glass phases; no quantity or work timer changes.
+    for state_index, state in enumerate(STATES):
+        for frame in range(4):
+            for view, direction in enumerate(DIRECTIONS):
+                stage = frame if state == "construction" else None
+                key = family["construction_frame_sources"][str(frame)][direction] if stage is not None else family["whole_view_selections"][direction]
+                original, pieces, source = models[key]
+                phase = family["construction_indicator_phase"] if stage is not None else frame
+                glass, component = phases[state]
+                target = family["indicator_targets"][key]
+                unused, sections = compose_generator_glass(original, pieces, glass[phase], target)
+                for tile, piece in enumerate(sections):
+                    # Native solid industry cells retain identical back/front
+                    # sections, matching the delivered collector convention.
+                    # There is no invented transport aperture or new floor cut.
+                    for part_index, part in enumerate(("back", "front")):
+                        x, y = (view * 32 + tile * 2 + part_index) * 64, (state_index * 4 + frame) * 64
+                        atlas.paste(piece, (x, y))
+                        sprites.append({"asset_id": asset_id, "state": state, "frame": frame, "direction": direction,
+                                        "tile_variant": tile, "world_cell": CELLS[tile], "part": part, "anchor": [-31, -33],
+                                        "box": [x, y, 64, 64], "source_key": key, "source": source["path"],
+                                        "source_sha256": source["sha256"], "native_crop": source["native_crop"],
+                                        "native_subject_size": source["native_subject_size"], "native_position": source["native_position"],
+                                        "native_construction_stage": stage,
+                                        "indicator": {"path": component["path"], "sha256": component["sha256"],
+                                                      "state": state, "frame": phase, "target": target}})
+    stem = MODELS[asset_id][0].lower()
+    report = {"_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md55B; archi-map-layers.md; source only, packing/operation pending",
+              "schema_version": 1, "asset_id": asset_id, "source_record": RECORD.relative_to(tube.ROOT).as_posix(),
+              "path": (tube.REVIEW / (stem + "-authored.png")).relative_to(tube.ROOT).as_posix(), "size": [8192, 1280],
+              "native_cell": [64, 64], "anchor": [-31, -33], "pose_count": len(sprites), "sprites": sprites,
+              "frame_owner": family["frame_owner"], "state_owner": family["state_owner"], "foreground_policy": FOREGROUND,
+              "construction_ticks": family["construction_ticks"], "source_coverage_complete": True, "runtime_activated": False,
+              "approved_equipment_sha256": spec["geometry_notes"]["approved_generator_equipment_sha256"]}
+    return report, tube.indexed_png(atlas)
+
+
+def assemble_generator_pose(report, atlas, state, frame, direction, part="back"):
+    """Reconstruct actual stored cells through their verified native world origins.
+
+    @param report Complete source mapping with canonical world-cell and atlas boxes.
+    @param atlas Decoded indexed8192x1280 source atlas.
+    @param state One of the five actual presentation modes.
+    @param frame Native paid construction quarter or completed equipment phase.
+    @param direction Genuine NE/SE/SW/NW physical model view.
+    @param part Aligned back or sortable front sections to inspect.
+    @return Complete indexed320x224 pose assembled from sixteen actual sections.
+    """
+    pose = indexed_canvas(CANVAS)
+    # Each original pixel has one physical cell owner; world geometry controls
+    # assembly, independent of source-sheet order or overlapping sprite canvases.
+    for row in report["sprites"]:
+        if (row["state"], row["frame"], row["direction"], row["part"]) != (state, frame, direction, part):
+            continue
+        x, y, width, height = row["box"]
+        piece = atlas.crop((x, y, x + width, y + height))
+        pose.paste(piece, ORIGINS[row["tile_variant"]], piece.convert("RGBA").getchannel("A"))
+    return pose
+
+
+def validate_generator(report, encoded, document=None, public=None):
+    """Refuse false coverage, provenance, ownership and altered original source pixels.
+
+    @param report Complete source mapping submitted for conversion or packing.
+    @param encoded Actual indexed atlas PNG bytes, never a declared hash alone.
+    @param document Optional independent source record for malformed-input checks.
+    @param public Optional matching Sprite Contract snapshot.
+    @return None; successful source validation grants no packed range or operation.
+    @throws ValueError If any required pose, encoded pixel or source policy differs.
+    """
+    if document is None:
+        document = json.loads(RECORD.read_text(encoding="utf-8"))
+    families = [row for row in document["families"] if row["asset_id"] == report["asset_id"]]
+    # Source identity and native encoding cannot be redirected to another asset
+    # merely by editing the report's top-level fields or its completion flags.
+    if (len(families) != 1 or report["asset_id"] not in MODELS or report["size"] != [8192, 1280]
+            or report["native_cell"] != [64, 64] or report["anchor"] != [-31, -33]
+            or report["source_coverage_complete"] is not True or report["runtime_activated"] is not False):
+        raise ValueError("generator source family/native canvas identity mismatch")
+    family = families[0]
+    required = {(state, frame, direction, tile, part) for state in STATES for frame in range(4)
+                for direction in DIRECTIONS for tile in range(16) for part in ("back", "front")}
+    actual = [(row["state"], row["frame"], row["direction"], row["tile_variant"], row["part"]) for row in report["sprites"]]
+    # Unique semantic identities establish full coverage. A padded count, missing
+    # native cell or duplicate direction cannot stand in for an authored pose.
+    if len(actual) != len(required) or set(actual) != required or report["pose_count"] != len(required):
+        raise ValueError("incomplete generator state/stage/view/cell/part coverage")
+    candidates = {row["key"]: row for row in document["candidates"]}
+    # Cheap independent ancestry checks precede a full source rebuild. They
+    # distinguish paid construction stages from visual phases and bind every
+    # cell to its real original, equipment fitting and physical world location.
+    for row in report["sprites"]:
+        construction = row["state"] == "construction"
+        key = family["construction_frame_sources"][str(row["frame"])][row["direction"]] if construction else family["whole_view_selections"][row["direction"]]
+        source = candidates[key]
+        phase = 0 if construction else row["frame"]
+        stage = row["frame"] if construction else None
+        if (row["asset_id"] != family["asset_id"] or row["source_key"] != key or row["source"] != source["path"]
+                or row["source_sha256"] != source["sha256"] or row["native_construction_stage"] != stage
+                or row["indicator"]["state"] != row["state"] or row["indicator"]["frame"] != phase
+                or row["indicator"]["target"] != family["indicator_targets"][key]
+                or row["world_cell"] != CELLS[row["tile_variant"]] or row["anchor"] != [-31, -33]):
+            raise ValueError("generator false original/frame/equipment provenance")
+    with Image.open(io.BytesIO(encoded)) as atlas:
+        # Native source must retain transparent zero and the canonical palette;
+        # animated/remap indices cannot change authored equipment during display.
+        if (atlas.mode != "P" or atlas.size != (8192, 1280) or atlas.info.get("transparency") != 0
+                or atlas.getpalette()[:768] != tube.base.PALETTE_BYTES
+                or set(atlas.get_flattened_data()) & (tube.base.FORBIDDEN - {0})):
+            raise ValueError("generator native palette/canvas mismatch")
+    expected, pixels = build_generator(report["asset_id"], document, public)
+    # Regeneration binds every encoded pixel to immutable hardware and genuine
+    # component ancestry. Correct-looking art with forged metadata still refuses.
+    if report["sprites"] != expected["sprites"] or encoded != pixels:
+        raise ValueError("generator source changes original model/component pixels or ancestry")
+    for field, value in expected.items():
+        # Presentation labels may explain a report, but every semantic field
+        # must match regenerated source ownership and its frozen approval.
+        if field != "_documentation" and report[field] != value:
+            raise ValueError("generator source changes native ownership or approval")
+
+
+def generator_contact_pages(report, encoded):
+    """Display all paid stages and genuine equipment phases in every physical view.
+
+    @param report Complete source mapping, retaining the original source ancestry.
+    @param encoded Actual source PNG whose stored cells supply every review pose.
+    @return Direction-indexed deterministic PNG pages for scoped model review.
+    """
+    pages = {}
+    with Image.open(io.BytesIO(encoded)) as atlas:
+        # Per-view matrices expose every construction and operating presentation
+        # without losing a native section or confusing visual phases with work.
+        for direction in DIRECTIONS:
+            page = Image.new("RGB", (2640, 2500), (235, 239, 243))
+            draw = ImageDraw.Draw(page)
+            for state_index, state in enumerate(STATES):
+                for frame in range(4):
+                    pose = assemble_generator_pose(report, atlas, state, frame, direction).convert("RGBA")
+                    x, y = frame * 660, state_index * 500
+                    label = f"{direction} {state}: " + (f"native stage{frame}, unfinished" if state == "construction" else f"original glass phase{frame}")
+                    draw.text((x + 10, y + 8), label, fill=(30, 40, 50))
+                    draw.text((x + 10, y + 24), "Sixteen actual cells; source only; packing/operating activation pending", fill=(30, 40, 50))
+                    large = pose.resize((640, 448), Image.Resampling.NEAREST)
+                    page.paste(large, (x + 10, y + 42), large.getchannel("A"))
+            stream = io.BytesIO()
+            page.save(stream, format="PNG")
+            pages[direction] = stream.getvalue()
+    return pages
+
+
+def publish_generator(asset_id, check=False, bind=False):
+    """Publish deterministic reviewed source artifacts and optionally its public handoff.
+
+    @param asset_id Exact generator family to compose; other family metadata stays exact.
+    @param check True compares existing source/mapping/contact bytes read-only.
+    @param bind True publishes only source coverage after the caller's model review.
+    @return Complete report path beneath the reproducible native-art proof cache.
+    @throws ValueError If regeneration differs from retained proof or check requests a write.
+    """
+    # A verification invocation must never become a source-publication write.
+    if check and bind:
+        raise ValueError("generator read-only check cannot publish source metadata")
+    report, encoded = build_generator(asset_id)
+    validate_generator(report, encoded)
+    tube.REVIEW.mkdir(parents=True, exist_ok=True)
+    report.update(sha256=hashlib.sha256(encoded).hexdigest(), contact_pages=[])
+    files = {tube.base.repository_path(report["path"]): encoded}
+    stem = MODELS[asset_id][0].lower()
+    # A complete handoff includes every physical view's entire state/phase
+    # matrix. Missing or stale contact pages invalidate deterministic proof.
+    for direction, pixels in generator_contact_pages(report, encoded).items():
+        path = tube.REVIEW / (stem + "-" + direction.lower() + "-state-contact.png")
+        files[path] = pixels
+        report["contact_pages"].append({"direction": direction, "path": path.relative_to(tube.ROOT).as_posix(),
+                                        "sha256": hashlib.sha256(pixels).hexdigest()})
+    target = tube.REVIEW / (stem + "-source-manifest.json")
+    serialized = json.dumps(report, indent=2) + "\n"
+    if check:
+        # Packing consumers need the exact mapping and every reviewed contact
+        # to regenerate together, rather than accepting only the atlas hash.
+        if any(path.read_bytes() != pixels for path, pixels in files.items()) or target.read_text(encoding="utf-8") != serialized:
+            raise ValueError("generator source proof needs deterministic regeneration")
+    else:
+        for path, pixels in files.items():
+            path.write_bytes(pixels)
+        target.write_text(serialized, encoding="utf-8")
+    if bind:
+        public = json.loads(tube.PUBLIC.read_text(encoding="utf-8"))
+        spec = next(row for row in public["assets"] if row["asset_id"] == asset_id)
+        first = report["sprites"][0]
+        spec["source"] = {"status": "authored", "path": first["source"], "sha256": first["source_sha256"],
+                          "provenance": "first_party_original_model_and_component_assembly", "rights": "first_party_generated_original"}
+        originals = list(dict.fromkeys(row["source"] for row in report["sprites"]))
+        originals.extend(path for path in dict.fromkeys(row["indicator"]["path"] for row in report["sprites"]) if path not in originals)
+        spec["authoring"] = {"date": "2026-10-11", "status": "complete_native_generator_source_packing_operation_pending",
+                             "source_record": report["source_record"], "originals": originals,
+                             "atlas_manifest": target.relative_to(tube.ROOT).as_posix(), "native_atlas": report["path"],
+                             "native_sha256": report["sha256"], "staged_pose_count": 2560,
+                             "coverage_complete": True, "runtime_activated": False}
+        tube.PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
+    return target
+
+
+def main():
+    """Review explicit originals or compose the reviewed complete source handoff.
+
+    @return None; print the exact receipt path; operating and packed activation stay separate.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--candidate", help="Retained dated generator original/view key")
     mode.add_argument("--ready-views", choices=tuple(MODELS), help="Four selected completed-equipment views")
+    mode.add_argument("--construction-views", choices=tuple(MODELS), help="Explicit reviewed incomplete construction stages")
+    mode.add_argument("--asset", choices=tuple(MODELS), help="Compose the complete reviewed generator source")
+    parser.add_argument("--stages", nargs="+", type=int, default=[0, 1, 2], help="Incomplete native stages for construction review")
+    operation = parser.add_mutually_exclusive_group()
+    operation.add_argument("--check", action="store_true", help="Read-only deterministic full-source verification")
+    operation.add_argument("--publish", action="store_true", help="Bind reviewed complete source, leaving packing/runtime pending")
     arguments = parser.parse_args()
-    print(review_ready_views(arguments.ready_views) if arguments.ready_views else review_model(arguments.candidate))
+    if arguments.asset:
+        print(publish_generator(arguments.asset, arguments.check, arguments.publish))
+    elif arguments.construction_views:
+        print(review_construction_views(arguments.construction_views, tuple(arguments.stages)))
+    else:
+        print(review_ready_views(arguments.ready_views) if arguments.ready_views else review_model(arguments.candidate))
 
 
 if __name__ == "__main__":

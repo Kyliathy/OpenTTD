@@ -1,0 +1,366 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group25B",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Compiled native source geometry and command/loading boundaries; explicit fixture-open floors, no free paid excavation or driven-road claim"
+  },
+  "schema_version": 1,
+  "owner": "GetStationTileLayout(StationType::Truck, graphics)",
+  "part_order": [
+    "parent-0",
+    "parent-1",
+    "parent-2"
+  ],
+  "native_source_hash_policy": "utf8_lf",
+  "native_source_sha256": {
+    "src/conventional_terminal_art.h": "b931f7d043a6d7128a9dd94f197a67818ad6f2f9f4f03ec38a40cfcff3e52ae6",
+    "src/conventional_terminal_art.cpp": "51a35edaae8a579ac3c6484068aa345cb5c1de203173ddca958add17e87ef2a5",
+    "src/station_cmd.cpp": "0ea3ce3dacfae56aea80004c0a56a32668cf74ca017fade50dddbcec4ab3405c",
+    "src/station_map.h": "50a60d4e7d06094c5db20c93ba7cf47a726f03ac7dbd76a526e10a2086b20291",
+    "src/table/station_land.h": "9cc43366b49b36e72c32b0943bdfed632a2219088c804f3bfdf6a474c4ee3f1d",
+    "src/sprite.h": "10ac43f1118403a3048ad0d2d329e971ad1dc4b7efdf519e073eef4cd016cff5",
+    "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b",
+    "src/excavation_guard.cpp": "04c747f6562ec826dc58fa3c71113c113ef5e549924f924f4b24c94b6eec7ff1",
+    "src/tests/conventional_terminal_art.cpp": "b080b339d6f93541f8093b359dad09628766d97258f922f5406c06cbc8506e54"
+  },
+  "native_proof": {
+    "log": "logs/graphics/road-terminal/20261012-geometry-01/native-checks.log",
+    "log_sha256": "3574bacf03d1f8153239cf27c94a24d95671a29ecd8dbe635f564ef9701f2f8d",
+    "binary": "build/Debug/openttd_test.exe",
+    "binary_sha256": "c2e56eeebdb993f9e2f84becf2cc943be806635eef0d96e440a97db699e49753",
+    "exit_code": 0,
+    "assertions": 4850,
+    "test_cases": 5,
+    "fixture": "Actual bay/through variable footprint normal commands on both rock layers; native purchased-truck packet loading uses explicit fixture arrival, not driven route acceptance"
+  },
+  "layouts": [
+    {
+      "graphics": 0,
+      "direction": "NE",
+      "drive_through": false,
+      "entrance": "NE",
+      "axis": null,
+      "parents": [
+        {
+          "origin": [
+            0,
+            15,
+            0
+          ],
+          "extent": [
+            13,
+            1,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            13,
+            0,
+            0
+          ],
+          "extent": [
+            3,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            2,
+            0,
+            0
+          ],
+          "extent": [
+            11,
+            1,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "graphics": 1,
+      "direction": "SE",
+      "drive_through": false,
+      "entrance": "SE",
+      "axis": null,
+      "parents": [
+        {
+          "origin": [
+            15,
+            3,
+            0
+          ],
+          "extent": [
+            1,
+            13,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            3,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            3,
+            0
+          ],
+          "extent": [
+            1,
+            11,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "graphics": 2,
+      "direction": "SW",
+      "drive_through": false,
+      "entrance": "SW",
+      "axis": null,
+      "parents": [
+        {
+          "origin": [
+            3,
+            0,
+            0
+          ],
+          "extent": [
+            13,
+            1,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            3,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            3,
+            15,
+            0
+          ],
+          "extent": [
+            11,
+            1,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "graphics": 3,
+      "direction": "NW",
+      "drive_through": false,
+      "entrance": "NW",
+      "axis": null,
+      "parents": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            1,
+            13,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            13,
+            0
+          ],
+          "extent": [
+            16,
+            3,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            15,
+            2,
+            0
+          ],
+          "extent": [
+            1,
+            11,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "graphics": 4,
+      "direction": "X",
+      "drive_through": true,
+      "entrance": null,
+      "axis": "X",
+      "parents": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            3,
+            16
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            13,
+            0
+          ],
+          "extent": [
+            16,
+            3,
+            16
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ]
+    },
+    {
+      "graphics": 5,
+      "direction": "Y",
+      "drive_through": true,
+      "entrance": null,
+      "axis": "Y",
+      "parents": [
+        {
+          "origin": [
+            13,
+            0,
+            0
+          ],
+          "extent": [
+            3,
+            16,
+            16
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            3,
+            16,
+            16
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ]
+    }
+  ]
+}

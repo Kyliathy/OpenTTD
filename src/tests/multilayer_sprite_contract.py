@@ -3,6 +3,12 @@
 
 @file multilayer_sprite_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups60B-60C.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20C.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24C.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 @see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
 """
 
@@ -10,9 +16,16 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "media/multilayer"))
+from tools.ground_fleet_contract import cargo_geometry, mine_truck_cargo_geometry, variant_contract
+from tools.ground_station_contract import station_contract, validate_station_contract
+from tools.ground_terminal_contract import terminal_contract, validate_terminal_contract
+from tools.ground_mine_contract import SELECTED as SELECTED_MINES, mine_contract, validate_mine_contract
+from tools.ground_processor_contract import SELECTED as SELECTED_PROCESSORS, processor_contract, validate_processor_contract
 ASSETS = ROOT / "media/multilayer/contracts"
 MANIFEST = ASSETS / "multilayer_sprite_manifest.json"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -66,7 +79,13 @@ def build_manifest():
         rows.append(record(f"terrain.{depth}", 2, "terrain", ["solid", "cut_face", "excavating", "excavated"], 3))
     for cargo in ("COAL", "IORE", "CORE", "BAUX", "SALT", "LITH", "NORE", "COBT", "RARE", "URAN"):
         rows.append(record(f"survey.{cargo}", 2, "icon", ["unknown", "surveyed", "depleted"]))
-        rows.append(record(f"mine.{cargo}", 6, "building", ["construction", "working", "blocked", "depleted"], 4, (3, 3)))
+        mine = record(f"mine.{cargo}", 6, "building", ["construction", "working", "blocked", "depleted"], 4, (3, 3))
+        # Selected mines have one actual installed native layout. Pending
+        # unselected families retain their draft until their own dispatch;
+        # source art cannot invent a saved four-way machinery orientation.
+        if cargo in SELECTED_MINES:
+            mine.update(mine_contract(cargo))
+        rows.append(mine)
     # Consumer ordinals follow the split plan index: tubes17 and geothermal18.
     # Native model IDs and all physical/state geometry retain their existing meaning.
     # The nineteen model IDs match the public content catalogue; purchase previews are separate explicit assets.
@@ -90,11 +109,28 @@ def build_manifest():
             states.extend(["reversing", "service"])
         elif model == 4:
             states.append("service")
-        rows.append(record(f"vehicle.model-{model:02}", owner, "vehicle", states, 4 if model < 2 else 2, (0, 0)))
+        body = record(f"vehicle.model-{model:02}", owner, "vehicle", states, 4 if model < 2 else 2, (0, 0))
+        if model == 5:
+            # Actual model05 carries bulk, protected and heavy freight. Cargo
+            # labels select visual variants without changing native refit stock.
+            body.update(variant_contract(), cargo_geometry=cargo_geometry())
+        if model == 6:
+            # Actual URAN/RARE capability shares a single closed exterior. Only
+            # packet-backed external fill cues change; cargo never opens a hatch.
+            body.update(variant_contract(6))
+        if model == 7:
+            # Actual mine trucks carry ten bulk cargos, including genuine
+            # Earth/Rock; road traffic counters own their separate status cues.
+            body.update(variant_contract(7), cargo_geometry=mine_truck_cargo_geometry())
+        if model == 8:
+            # Both actual covered cargos share this own closed road body;
+            # packet indicators and road controller facts own its state cues.
+            body.update(variant_contract(8))
+        rows.append(body)
         rows.append(record(f"purchase.model-{model:02}", owner, "icon", ["available", "locked"]))
     # Each facility has an explicit footprint and back/front pair; local-ID packing belongs to its feature owner.
     facilities = [("portal.sealed", 3, (2, 1)), ("portal.deep-rail", 3, (2, 1)),
-                  ("exchange", 5, (1, 1)), ("rail-station", 7, (3, 2)), ("road-terminal", 7, (2, 2)),
+                  ("exchange", 5, (1, 1)), ("rail-station", 7, (1, 1)), ("road-terminal", 7, (1, 1)),
                   ("rail-service", 7, (1, 1)), ("road-service", 7, (1, 1)),
                   ("earth-receiver", 6, (2, 3)), ("rock-receiver", 6, (4, 4)),
                   ("metal-refinery", 6, (4, 4)), ("chemical-works", 6, (4, 4)),
@@ -115,7 +151,9 @@ def build_manifest():
         # The delivered collector publishes Heat instead of requesting it.
         # Its four construction frames follow real native stages; consumer
         # shortage semantics remain with the other, separately owned families.
-        if owner == 18 and name != "vent-collector":
+        # Collectors publish Heat and risers carry electricity. Neither owns
+        # thermal demand, so a heat-starved pose would report a false failure.
+        if owner == 18 and name not in ("vent-collector", "utility-riser"):
             states.append("heat_starved")
         # Native Surface spoil receivers expose one fixed industry layout. They
         # have no build rotation/entry direction; authored cells follow actual
@@ -123,6 +161,19 @@ def build_manifest():
         receiver = name in ("earth-receiver", "rock-receiver")
         row = record(f"facility.{name}", owner, "building", states, 1 if portal else 4, footprint,
                      directions=["none"] if receiver else DOORS)
+        # Compiled39B selected Surface machinery has one actual fixed layout.
+        # Native sixteen-cell/state ownership replaces only these draft views.
+        if row["asset_id"] in SELECTED_PROCESSORS:
+            row.update(processor_contract(row["asset_id"]))
+        if name == "rail-station":
+            # Ordinary stations select modular native roles on two axes. The
+            # compiled descriptor preserves actual elevated roof sorting and
+            # distinguishes installed loading from atomic command previews.
+            row.update(station_contract())
+        if name == "road-terminal":
+            # Native truck stops have four directed bays and two through axes,
+            # with three/two independent parents per one-tile modular cell.
+            row.update(terminal_contract())
         if name == "vent-collector":
             row["state_owner"] = "Actual native collector construction/completion, IsGeothermalCollectorOperational and current shared Heat publication; no Heat consumer or copied energy balance"
             row["frame_owner"] = {"construction": "native_industry_construction_stage_0_to_3_while_uncompleted",
@@ -130,6 +181,18 @@ def build_manifest():
                                   "working": "original_equipment_glass_phase_0_to_3",
                                   "blocked": "original_equipment_glass_phase_0_to_3"}
             row["construction_stages"] = [0, 1, 2, 3]
+        if name == "utility-riser":
+            # The actual native machinery definition has one fixed row-major
+            # layout. Its independently saved access/portal port do not rotate
+            # that layout or authorize four fictitious housing orientations.
+            row.update(directions=["none"],
+                       layout_owner="InitialiseGeothermalConstructionDefinition; one fixed native row-major2x2 layout; access and actual boundary port do not rotate machinery",
+                       state_owner="GeothermalRiserState paid construction, IsGeothermalRiserOperational and actual original electrical link readiness; no Heat consumer",
+                       frame_owner={"construction": "native_industry_construction_stage_0_to_3_while_uncompleted",
+                                    "ready": "original_equipment_glass_phase_0_to_3",
+                                    "working": "original_equipment_glass_phase_0_to_3",
+                                    "blocked": "original_equipment_glass_phase_0_to_3"},
+                       construction_stages=[0, 1, 2, 3], energy_domain="Electricity")
         if receiver:
             row["state_owner"] = "Native industry construction; ready=idle, working=existing bounded processing, blocked=full stock/aggregate or interval refusal"
             row["layout_owner"] = "InstallSpoilReceiverDefinition; one fixed native Surface layout"
@@ -172,7 +235,22 @@ def build_manifest():
                 empty_allowed_states=["hidden"], render_layer="ground_overlay_preserves_hardness_and_mineral_markers",
                 native_draw_offset=[0, 0])
     rows.append(vent)
-    rows.append(record("geothermal.conduit", 18, "terrain", ["construction", "connected", "unconnected"], directions=DOORS))
+    conduit = record("geothermal.conduit", 18, "terrain", ["construction", "connected", "unconnected"], directions=DOORS)
+    # Actual native links are independent, coexisting per-cell domains with
+    # cardinal adjacency. Four physical half-branches describe every neighbour
+    # mask, including an isolated capped installation, without a private path.
+    conduit.update(tile_variants=2, variant_semantics="native_utility_energy_domain",
+                   native_domains=["Heat", "Electricity"],
+                   branch_owner="GetGeothermalUtilityLink; same-company same-domain same-layer cardinal installed neighbour; no energy/flow inference",
+                   state_owner="construction=noninstalled command preview; connected=actual matching neighbour; unconnected=capped absent/removed/foreign neighbour, including idle isolated cells",
+                   render_layer="floor_overlay_below_vehicles_and_buildings",
+                   geometry_notes={"center_pixels": {"Heat": [31, 14], "Electricity": [31, 18]},
+                                   "port_pixels": {"Heat": {"NE": [47, 6], "SE": [47, 22], "SW": [15, 22], "NW": [15, 6]},
+                                                   "Electricity": {"NE": [47, 10], "SE": [47, 26], "SW": [15, 26], "NW": [15, 10]}},
+                                   "native_neighbour_pitch": {"NE": [32, -16], "SE": [32, 16], "SW": [-32, 16], "NW": [-32, -16]},
+                                   "composition": "four branches per installed domain cell; connected or capped according to actual adjacency; Heat then Electricity; no foreground",
+                                   "domain_layers": {"Heat": ["DeepUnderground"], "Electricity": ["Underground", "DeepUnderground"]}})
+    rows.append(conduit)
     for name in ("nucleus", "dock", "storage", "workshop", "processor", "power", "fuel-store"):
         rows.append(record(f"module.{name}", 11, "building", ["blueprint", "partial", "complete", "blocked"], 2, (2, 2)))
     for name in ("nickel", "ice", "rare-earth"):
@@ -239,6 +317,32 @@ def validate_manifest(document):
         if row["kind"] == "vehicle" and row["directions"] != DIRECTIONS:
             # Moving designs require every engine view, not rotated substitutes for absent silhouettes.
             raise ValueError("incomplete vehicle directions")
+        if row["asset_id"] == "vehicle.model-05":
+            # The complete native refit catalogue, packet-backed state priority
+            # and approved hold geometry prevent ore-only art from hiding real
+            # protected/heavy cargo or repainting the wagon's contact hardware.
+            expected = variant_contract()
+            if any(row.get(key) != value for key, value in expected.items()):
+                raise ValueError("ordinary wagon cargo variants or native state ownership changed")
+            if row.get("cargo_geometry") != cargo_geometry():
+                raise ValueError("ordinary wagon cargo aperture or foreground changed")
+        if row["asset_id"] == "vehicle.model-06":
+            # A plausible covered body cannot inherit another wagon's cargo,
+            # introduction policy or exposed-load presentation contract.
+            if any(row.get(key) != value for key, value in variant_contract(6).items()):
+                raise ValueError("sealed wagon cargo or native state ownership changed")
+        if row["asset_id"] == "vehicle.model-07":
+            # A road truck cannot inherit rail hold/depot facts or omit native
+            # bulk refits merely because its base body shares the same canvas.
+            if any(row.get(key) != value for key, value in variant_contract(7).items()):
+                raise ValueError("mine truck cargo or native road state ownership changed")
+            if row.get("cargo_geometry") != mine_truck_cargo_geometry():
+                raise ValueError("mine truck cargo aperture changed")
+        if row["asset_id"] == "vehicle.model-08":
+            # A sealed road carrier must retain its own real cargo meanings and
+            # road status owner, rather than inherit rail facts or an open hold.
+            if any(row.get(key) != value for key, value in variant_contract(8).items()):
+                raise ValueError("sealed road cargo or native state ownership changed")
         if row["asset_id"] == "facility.vent-collector":
             # Native stage3 may still be unfinished. The completion flag,
             # rather than its final-looking hardware, permits source operation;
@@ -257,6 +361,36 @@ def validate_manifest(document):
                     or row.get("render_layer") != "ground_overlay_preserves_hardness_and_mineral_markers"
                     or row.get("native_draw_offset") != [0, 0]):
                 raise ValueError("natural vent visibility/native overlay contract mismatch")
+        if row["asset_id"] == "facility.utility-riser":
+            # Paid riser machinery has four native cells and electrical-only
+            # readiness; a thermal wait or flattened layout invents behaviour.
+            if (row["states"] != ["construction", "ready", "working", "blocked"]
+                    or row["frames"] != 4 or row["footprint"] != [2, 2]
+                    or row["tile_variants"] != 4 or row.get("energy_domain") != "Electricity"
+                    or row["directions"] != ["none"]
+                    or row.get("construction_stages") != [0, 1, 2, 3]):
+                raise ValueError("riser electrical construction/state contract mismatch")
+        if row["asset_id"] == "geothermal.conduit":
+            # Distinct domains may share native floor without sharing energy.
+            # Separate offset contacts keep both installations readable and
+            # close at the actual32/16 native neighbour pitch in every direction.
+            if (row["directions"] != DOORS or row["parts"] != ["body"] or row["frames"] != 1
+                    or row["states"] != ["construction", "connected", "unconnected"]
+                    or row["tile_variants"] != 2 or row.get("native_domains") != ["Heat", "Electricity"]
+                    or row.get("variant_semantics") != "native_utility_energy_domain"
+                    or row["native_size"] != [64, 31] or row["anchor"] != [-31, 0]
+                    or row.get("render_layer") != "floor_overlay_below_vehicles_and_buildings"):
+                raise ValueError("utility conduit domain/branch/ground contract mismatch")
+            notes = row.get("geometry_notes", {})
+            expected_centers = {"Heat": [31, 14], "Electricity": [31, 18]}
+            if notes.get("center_pixels") != expected_centers:
+                raise ValueError("utility conduit coexistence center mismatch")
+            # Opposing contacts must meet exactly across adjacent native cells;
+            # independent domain anchors must never be merged during conversion.
+            for domain, center in expected_centers.items():
+                for direction, (dx, dy) in zip(DOORS, ((16, -8), (16, 8), (-16, 8), (-16, -8))):
+                    if notes.get("port_pixels", {}).get(domain, {}).get(direction) != [center[0] + dx, center[1] + dy]:
+                        raise ValueError("utility conduit neighbour contact mismatch")
         if row["asset_id"] == "tube.straight":
             # Native X/Y topology and actual foreground occlusion require
             # both independently authored axes and both aligned shell parts;
@@ -313,6 +447,16 @@ def validate_manifest(document):
                     or row.get("variant_semantics") != "native_station_graphics_role"
                     or row.get("native_graphics") != {"NE": [0, 2, 4, 6], "SE": [1, 3, 5, 7]}):
                 raise ValueError("tube terminal native axis/cell-role mismatch")
+        if row["asset_id"] == "facility.rail-station":
+            validate_station_contract(row)
+        if row["asset_id"] == "facility.road-terminal":
+            validate_terminal_contract(row)
+        # Compiled27B geometry replaces only dispatched mine drafts. Exact
+        # native cell/state ownership must survive later source publication.
+        if row["asset_id"] in {f"mine.{resource}" for resource in SELECTED_MINES}:
+            validate_mine_contract(row)
+        if row["asset_id"] in SELECTED_PROCESSORS:
+            validate_processor_contract(row)
         width, height = row["native_size"]
         if width <= 0 or height <= 0:
             # Empty canvases cannot provide native-size construction/purchase feedback.
@@ -323,11 +467,18 @@ def validate_manifest(document):
             # Every first-deliverable family shares the same palette/transparency contract.
             raise ValueError("unsupported palette")
         if row["kind"] == "building":
-            # Native receivers have one fixed world layout; tube platforms use
-            # two true axes. Depot/portal families retain four real entrances.
-            receiver = row["asset_id"] in ("facility.earth-receiver", "facility.rock-receiver")
-            platform = row["asset_id"] in ("facility.tube-terminal", "facility.tube-interchange")
-            expected_directions = ["none"] if receiver else ["NE", "SE"] if platform else DOORS
+            # Native selected mines, receivers and paid electrical risers have one fixed world
+            # layout; conventional/tube platforms use two true axes. Depot/portal families
+            # retain four real entrances. Saved riser access is not a rotation.
+            fixed_layout = (row["asset_id"] in ("facility.earth-receiver", "facility.rock-receiver", "facility.utility-riser")
+                            or row["asset_id"] in {f"mine.{resource}" for resource in SELECTED_MINES}
+                            or row["asset_id"] in SELECTED_PROCESSORS)
+            platform = row["asset_id"] in ("facility.rail-station", "facility.tube-terminal", "facility.tube-interchange")
+            # Truck-stop bays retain real entrance directions; through stops
+            # add two distinct undirected native layouts rather than four
+            # copied travel views or a fixed multi-tile terminal campus.
+            terminal = row["asset_id"] == "facility.road-terminal"
+            expected_directions = ["NE", "SE", "SW", "NW", "X", "Y"] if terminal else ["none"] if fixed_layout else ["NE", "SE"] if platform else DOORS
             if row["directions"] != expected_directions:
                 raise ValueError("incomplete building directions")
         if row["source"]["status"] == "planned":
@@ -446,7 +597,7 @@ def main():
     document = json.loads(MANIFEST.read_text(encoding="utf-8"))
     count = validate_manifest(document)
     # Mutated independent inputs ensure the validator refuses missing views, duplicates and fictitious final-source claims.
-    for mutation in ("duplicate", "directions", "source", "tube_axis", "tube_front", "tube_corner", "tube_curve_front", "tube_junction_layout", "tube_junction_rotation", "tube_end_facing", "tube_end_front", "tube_crossing_rotation", "tube_crossing_front", "tube_conduit_branch", "tube_conduit_ground", "vent_shortage", "vent_hidden"):
+    for mutation in ("duplicate", "directions", "source", "tube_axis", "tube_front", "tube_corner", "tube_curve_front", "tube_junction_layout", "tube_junction_rotation", "tube_end_facing", "tube_end_front", "tube_crossing_rotation", "tube_crossing_front", "tube_conduit_branch", "tube_conduit_ground", "vent_shortage", "vent_hidden", "utility_domains", "utility_contact", "riser_shortage", "riser_cells", "wagon_refits", "wagon_state_owner", "wagon_aperture"):
         broken = json.loads(json.dumps(document))
         if mutation == "duplicate":
             broken["assets"].append(broken["assets"][0])
@@ -480,6 +631,20 @@ def main():
             next(row for row in broken["assets"] if row["asset_id"] == "geothermal.vent")["states"].append("heat_starved")
         elif mutation == "vent_hidden":
             next(row for row in broken["assets"] if row["asset_id"] == "geothermal.vent")["hidden_policy"] = "visible_unknown_badge"
+        elif mutation == "utility_domains":
+            next(row for row in broken["assets"] if row["asset_id"] == "geothermal.conduit")["native_domains"] = ["Heat", "Heat"]
+        elif mutation == "utility_contact":
+            next(row for row in broken["assets"] if row["asset_id"] == "geothermal.conduit")["geometry_notes"]["port_pixels"]["Electricity"]["NE"][1] -= 4
+        elif mutation == "riser_shortage":
+            next(row for row in broken["assets"] if row["asset_id"] == "facility.utility-riser")["states"].append("heat_starved")
+        elif mutation == "riser_cells":
+            next(row for row in broken["assets"] if row["asset_id"] == "facility.utility-riser")["tile_variants"] = 1
+        elif mutation == "wagon_refits":
+            next(row for row in broken["assets"] if row["asset_id"] == "vehicle.model-05")["native_cargo_labels"].pop()
+        elif mutation == "wagon_state_owner":
+            next(row for row in broken["assets"] if row["asset_id"] == "vehicle.model-05")["native_state_policy"]["cargo_owner"] = "art-local inventory"
+        elif mutation == "wagon_aperture":
+            next(row for row in broken["assets"] if row["asset_id"] == "vehicle.model-05")["cargo_geometry"]["bulk_full_polygons"]["E"][0][1] += 1
         else:
             next(row for row in broken["assets"] if row["asset_id"] == "tube.conduit")["parts"] = ["back", "front"]
         try:

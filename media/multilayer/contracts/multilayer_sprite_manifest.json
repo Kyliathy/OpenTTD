@@ -77,7 +77,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 74,
         "sprite_count": 12,
@@ -160,7 +160,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 86,
         "sprite_count": 12,
@@ -242,7 +242,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 98,
         "sprite_count": 3,
@@ -279,10 +279,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -322,15 +319,159 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/coal-machinery-a-v2.png",
+        "sha256": "1cd7965c2374e3052f256418846236eeb4296e8edebf9cae85b37cc16316cf90",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "base_review_manifest": "logs/proofs/mlm/native-art/ground/coal-mine-base-manifest.json",
+        "selected_base_nonempty_parts": 18,
+        "selected_base_native_cells": 9,
+        "selected_base_native_layout": 0,
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-discharge-chute-v2.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/coal-machinery-b-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/coal-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/coal-mine-source-authored.png",
+        "native_sha256": "eefb74a5a04d21da94634d8db946a677fb1f35a7a5ce922cecc6feae47346624",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0
       }
     },
     {
@@ -385,7 +526,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 101,
         "sprite_count": 3,
@@ -422,10 +563,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -465,15 +603,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/iron-machinery-a-v2.png",
+        "sha256": "13b031d8d1fbfb9a7e57add2870812be66cd6147990595007c6d1f3cb686dfa3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/iron-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/iron-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/iron-machinery-b-v1.png",
+          "media/multilayer/source/ground/raw/iron-output-bunker-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/iron-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/iron-mine-source-authored.png",
+        "native_sha256": "97aa3ce61539dd73f2125e6214b96b7318731a7e1f6928de7e33343a49c19e02",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -528,7 +808,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 104,
         "sprite_count": 3,
@@ -565,10 +845,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -608,15 +885,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/copper-machinery-a-v1.png",
+        "sha256": "5ddfde1ffc481a44147b46d6d03d10712321e5d0fd8f879992e04b7f40380d2c",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/copper-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/copper-machinery-a-v1.png",
+          "media/multilayer/source/ground/raw/copper-output-bunker-v1.png",
+          "media/multilayer/source/ground/raw/copper-transfer-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/copper-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/copper-mine-source-authored.png",
+        "native_sha256": "6323e39899c7f5c3efc343e04648cdfd5f47f1dd1705a7a2a0c30ec6da636803",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -671,7 +1090,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 107,
         "sprite_count": 3,
@@ -814,7 +1233,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 110,
         "sprite_count": 3,
@@ -851,10 +1270,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -894,15 +1310,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/salt-machinery-a-v1.png",
+        "sha256": "c849f0626b98699a769319868748bfbbe33447b3732568d6f382d4aa52ad00f6",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/salt-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/salt-machinery-a-v1.png",
+          "media/multilayer/source/ground/raw/salt-output-bunker-v1.png",
+          "media/multilayer/source/ground/raw/salt-transfer-v4.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/salt-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/salt-mine-source-authored.png",
+        "native_sha256": "b590fa3d816d73211c9093b1a9082594c88935adb6f9fc92e1de8123fc46ba4c",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -957,7 +1515,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 113,
         "sprite_count": 3,
@@ -994,10 +1552,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -1037,15 +1592,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/lithium-machinery-a-v1.png",
+        "sha256": "f05d12f670f5e366487ba12aeda765439843470c77ea4d80daf9b757530b19a6",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/lithium-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/lithium-machinery-a-v1.png",
+          "media/multilayer/source/ground/raw/lithium-output-bunker-v1.png",
+          "media/multilayer/source/ground/raw/lithium-transfer-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/lithium-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/lithium-mine-source-authored.png",
+        "native_sha256": "75cf9be0e1e83f907f01edd8d0dfbe8609c19d6413a45960a5170ae6a605f682",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -1100,7 +1797,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 116,
         "sprite_count": 3,
@@ -1243,7 +1940,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 119,
         "sprite_count": 3,
@@ -1280,10 +1977,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -1323,15 +2017,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cobalt-machinery-a-v2.png",
+        "sha256": "903f0de8f3de67bbdc6ab575b7421127cde3cabb4023d97f50ab3b71054efc9a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/cobalt-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/cobalt-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/cobalt-output-bunker-v1.png",
+          "media/multilayer/source/ground/raw/cobalt-transfer-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/cobalt-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/cobalt-mine-source-authored.png",
+        "native_sha256": "345d42ed75d595ecf1da7b779c353a62298c8c8c0a0df7206449b16417d72ad2",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -1386,7 +2222,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 122,
         "sprite_count": 3,
@@ -1423,10 +2259,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -1466,15 +2299,157 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/rare-earth-machinery-a-v1.png",
+        "sha256": "da8a4cd2e07d2420a9b27ba7aa3bc2c2593dae6e2ce7dcc75497a21d7a885754",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "loading_cells": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "layout_owner": "InitialiseLayerMineDefinitions/GetLayerMineIndustryType exact IIDS/TIDS; one fixed3x3 machinery layout",
+      "approach_owner": "ValidateMineDepositClaim requires separate2x2 excavated loading floor; no machinery or painted source extends onto it",
+      "source_part_policy": "Existing DrawTile_Industry selected-family branch draws back at native ground origin and front at origin(0,0,0), extent(16,16,20), offset(0,0,0); native mine binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual first-party mine capability, physical layer and valid LayerMineState/geological binding; MissingState/foreign definitions grant no source/runtime authority",
+        "construction": "Native incomplete machinery; each queried tile GetIndustryConstructionStage selects0..3, completed cells retain final3 until the whole mine completes",
+        "working": "GetLayerMineOperationalStatus::Operating reads the sole native mine, geological reserve and Industry output owners",
+        "blocked": "Actual Unavailable/Abandoned/Paused/OutputFull/AwaitPickup/Stopped status retains machinery, reserve and all physical output",
+        "depleted": "Actual Depleted phase or zero geological remaining_reserve; final stored Industry output stays visible and accounted",
+        "world_states": [
+          "construction",
+          "working",
+          "blocked",
+          "depleted"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; blocked/depleted static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "depleted": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_mine_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+        "source_slots_required": 288,
+        "nonempty_source_parts_required": 288,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-transfer-v3.png",
+          "media/multilayer/source/ground/raw/coal-depleted-glass-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/rare-earth-discharge-chute-v1.png",
+          "media/multilayer/source/ground/raw/rare-earth-machinery-a-v1.png",
+          "media/multilayer/source/ground/raw/rare-earth-output-bunker-v1.png",
+          "media/multilayer/source/ground/raw/rare-earth-transfer-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "source_record": "media/multilayer/source/ground/mine-generation-record.json",
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/rare-earth-mine-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/rare-earth-mine-source-authored.png",
+        "native_sha256": "c47eb65630413cb15baaf7b65546989b8ca084a0cb55f419d28125bac3a21c0d",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 288,
+        "structurally_absent_parts": 0,
+        "selected_base_nonempty_parts": 18
       }
     },
     {
@@ -1529,7 +2504,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 125,
         "sprite_count": 3,
@@ -1683,7 +2658,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 200,
         "sprite_count": 384,
@@ -1780,7 +2755,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 584,
         "sprite_count": 2,
@@ -1879,7 +2854,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 586,
         "sprite_count": 384,
@@ -1976,7 +2951,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 970,
         "sprite_count": 2,
@@ -2073,7 +3048,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 972,
         "sprite_count": 80,
@@ -2160,7 +3135,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1052,
         "sprite_count": 2,
@@ -2256,7 +3231,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1054,
         "sprite_count": 80,
@@ -2343,7 +3318,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1134,
         "sprite_count": 2,
@@ -2439,7 +3414,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1136,
         "sprite_count": 80,
@@ -2530,7 +3505,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1216,
         "sprite_count": 2,
@@ -2610,22 +3585,702 @@
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 17,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "explicit_mask",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mineral-wagon-empty-n-ne-se-s-v1.png",
+        "sha256": "9164bdf2df8c109399504b6f18315a7c30752d775142bf1ae10d6775a15b8cd2",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_vehicle_cargo_label",
+      "native_cargo_labels": [
+        "COAL",
+        "IORE",
+        "CORE",
+        "BAUX",
+        "SALT",
+        "LITH",
+        "NORE",
+        "COBT",
+        "RARE",
+        "RFMT",
+        "STEL",
+        "SCMP",
+        "RBPT",
+        "ELEC",
+        "BATY",
+        "SMIK",
+        "GOOD"
+      ],
+      "native_state_policy": {
+        "cargo_owner": "Train::cargo.StoredCount()/Train::cargo_cap",
+        "cargo_label_owner": "CargoSpec::Get(train.cargo_type)->label; validate GetUndergroundEngineCapability(model05)",
+        "empty": "StoredCount()==0",
+        "partial": "0<StoredCount()<cargo_cap",
+        "full": "cargo_cap>0 and StoredCount()>=cargo_cap",
+        "service_empty": "StoredCount()==0 and train.IsInDepot() and IsRailDepotTile(train.tile)",
+        "blocked_empty": "StoredCount()==0 and head->flags.Test(VehicleRailFlag::Stuck), after service priority",
+        "priority": [
+          "packet-backed partial/full",
+          "actual rail depot service when empty",
+          "actual head reservation hold when empty",
+          "empty"
+        ],
+        "frame_owner": "empty/partial/full wheel phases only while head actually moves; service/blocked lamp phases keep gear static",
+        "native_length": 8,
+        "shorten_factor": 0
+      },
+      "cargo_geometry": {
+        "bulk_full_polygons": {
+          "N": [
+            [
+              27,
+              19
+            ],
+            [
+              35,
+              19
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              27,
+              27
+            ]
+          ],
+          "NE": [
+            [
+              36,
+              24
+            ],
+            [
+              39,
+              26
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              23,
+              30
+            ]
+          ],
+          "E": [
+            [
+              20,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              43,
+              32
+            ],
+            [
+              20,
+              32
+            ]
+          ],
+          "SE": [
+            [
+              25,
+              24
+            ],
+            [
+              40,
+              31
+            ],
+            [
+              37,
+              32
+            ],
+            [
+              23,
+              25
+            ]
+          ],
+          "S": [
+            [
+              27,
+              19
+            ],
+            [
+              35,
+              19
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              27,
+              27
+            ]
+          ],
+          "SW": [
+            [
+              36,
+              24
+            ],
+            [
+              39,
+              26
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              23,
+              30
+            ]
+          ],
+          "W": [
+            [
+              20,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              43,
+              32
+            ],
+            [
+              20,
+              32
+            ]
+          ],
+          "NW": [
+            [
+              25,
+              24
+            ],
+            [
+              40,
+              31
+            ],
+            [
+              37,
+              32
+            ],
+            [
+              23,
+              25
+            ]
+          ]
+        },
+        "bulk_partial_polygons": {
+          "N": [
+            [
+              27,
+              24
+            ],
+            [
+              35,
+              24
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              27,
+              27
+            ]
+          ],
+          "NE": [
+            [
+              30,
+              27
+            ],
+            [
+              33,
+              29
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              23,
+              30
+            ]
+          ],
+          "E": [
+            [
+              20,
+              31
+            ],
+            [
+              31,
+              31
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              20,
+              32
+            ]
+          ],
+          "SE": [
+            [
+              25,
+              24
+            ],
+            [
+              32,
+              27
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              23,
+              25
+            ]
+          ],
+          "S": [
+            [
+              27,
+              19
+            ],
+            [
+              35,
+              19
+            ],
+            [
+              35,
+              23
+            ],
+            [
+              27,
+              23
+            ]
+          ],
+          "SW": [
+            [
+              36,
+              24
+            ],
+            [
+              39,
+              26
+            ],
+            [
+              33,
+              29
+            ],
+            [
+              30,
+              27
+            ]
+          ],
+          "W": [
+            [
+              32,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              43,
+              32
+            ],
+            [
+              32,
+              32
+            ]
+          ],
+          "NW": [
+            [
+              32,
+              27
+            ],
+            [
+              40,
+              31
+            ],
+            [
+              37,
+              32
+            ],
+            [
+              29,
+              29
+            ]
+          ]
+        },
+        "protected_load_envelopes": {
+          "N": [
+            [
+              27,
+              14
+            ],
+            [
+              35,
+              14
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              27,
+              27
+            ]
+          ],
+          "NE": [
+            [
+              36,
+              18
+            ],
+            [
+              39,
+              20
+            ],
+            [
+              39,
+              26
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              23,
+              30
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "E": [
+            [
+              20,
+              25
+            ],
+            [
+              43,
+              25
+            ],
+            [
+              43,
+              32
+            ],
+            [
+              20,
+              32
+            ]
+          ],
+          "SE": [
+            [
+              25,
+              18
+            ],
+            [
+              40,
+              25
+            ],
+            [
+              40,
+              31
+            ],
+            [
+              37,
+              32
+            ],
+            [
+              23,
+              25
+            ],
+            [
+              23,
+              19
+            ]
+          ],
+          "S": [
+            [
+              27,
+              14
+            ],
+            [
+              35,
+              14
+            ],
+            [
+              35,
+              27
+            ],
+            [
+              27,
+              27
+            ]
+          ],
+          "SW": [
+            [
+              36,
+              18
+            ],
+            [
+              39,
+              20
+            ],
+            [
+              39,
+              26
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              23,
+              30
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "W": [
+            [
+              20,
+              25
+            ],
+            [
+              43,
+              25
+            ],
+            [
+              43,
+              32
+            ],
+            [
+              20,
+              32
+            ]
+          ],
+          "NW": [
+            [
+              25,
+              18
+            ],
+            [
+              40,
+              25
+            ],
+            [
+              40,
+              31
+            ],
+            [
+              37,
+              32
+            ],
+            [
+              23,
+              25
+            ],
+            [
+              23,
+              19
+            ]
+          ]
+        },
+        "foreground_rim_lines": {
+          "N": [
+            [
+              [
+                26,
+                28
+              ],
+              [
+                36,
+                28
+              ]
+            ]
+          ],
+          "NE": [
+            [
+              [
+                39,
+                27
+              ],
+              [
+                26,
+                33
+              ]
+            ],
+            [
+              [
+                26,
+                33
+              ],
+              [
+                22,
+                31
+              ]
+            ]
+          ],
+          "E": [
+            [
+              [
+                19,
+                33
+              ],
+              [
+                44,
+                33
+              ]
+            ]
+          ],
+          "SE": [
+            [
+              [
+                23,
+                26
+              ],
+              [
+                37,
+                33
+              ]
+            ],
+            [
+              [
+                37,
+                33
+              ],
+              [
+                40,
+                31
+              ]
+            ]
+          ],
+          "S": [
+            [
+              [
+                26,
+                28
+              ],
+              [
+                36,
+                28
+              ]
+            ]
+          ],
+          "SW": [
+            [
+              [
+                39,
+                27
+              ],
+              [
+                26,
+                33
+              ]
+            ],
+            [
+              [
+                26,
+                33
+              ],
+              [
+                22,
+                31
+              ]
+            ]
+          ],
+          "W": [
+            [
+              [
+                19,
+                33
+              ],
+              [
+                44,
+                33
+              ]
+            ]
+          ],
+          "NW": [
+            [
+              [
+                23,
+                26
+              ],
+              [
+                37,
+                33
+              ]
+            ],
+            [
+              [
+                37,
+                33
+              ],
+              [
+                40,
+                31
+              ]
+            ]
+          ]
+        },
+        "bulk_alpha_extension": false,
+        "partial_must_fit_full_aperture": true,
+        "protected_alpha_extension": "only inside the approved raised envelope, behind retained front rim",
+        "bulk_material_policy": "authored isotropic granule interiors; no directional hardware, recoloring or synthetic body view",
+        "partial_policy": "rear B-end occupied portion; visual category for any positive nonfull packet count, not a second volume ledger"
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_wagon_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-e-v2.png",
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-coal-iore-core-baux-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-salt-lith-nore-cobt-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/crate-packages-v1.png",
+          "media/multilayer/source/ground/raw/forge-heavy-modules-v1.png",
+          "media/multilayer/source/ground/raw/wagon-metal-ingots-n-ne-e-se-v2.png",
+          "media/multilayer/source/ground/raw/wagon-metal-ingots-s-sw-w-nw-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-05-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/vehicle-model-05-authored.png",
+        "native_sha256": "5b5a69c91b53df18c6995723a6c1bfa79a1b5a10d8c3d67fa75214cf40ff9671",
+        "staged_pose_count": 1360,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2670,15 +4325,42 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mineral-wagon-empty-e-v2.png",
+        "sha256": "6c6beb2fd012588eabbb1a652e587014d2c0495e168247e8b71e183870be4b11",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_wagon_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-e-v2.png",
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/mineral-wagon-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-coal-iore-core-baux-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-salt-lith-nore-cobt-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/crate-packages-v1.png",
+          "media/multilayer/source/ground/raw/forge-heavy-modules-v1.png",
+          "media/multilayer/source/ground/raw/wagon-metal-ingots-n-ne-e-se-v2.png",
+          "media/multilayer/source/ground/raw/wagon-metal-ingots-s-sw-w-nw-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-05-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/purchase-model-05-authored.png",
+        "native_sha256": "2940cfc7b62641539e964435b043102840462883cbef9ed1416c56c9037a67da",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2733,15 +4415,62 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-wagon-empty-n-ne-se-s-v1.png",
+        "sha256": "ce8764de5ddc19614a767118d94abd67e7d20fe37f6a0ca71958971ae8010837",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "sealed_native_cargo_exterior",
+      "native_cargo_labels": [
+        "URAN",
+        "RARE"
+      ],
+      "native_state_policy": {
+        "cargo_owner": "Train::cargo.StoredCount()/Train::cargo_cap",
+        "cargo_label_owner": "CargoSpec::Get(train.cargo_type)->label; validate GetUndergroundEngineCapability(model06)",
+        "empty": "StoredCount()==0",
+        "partial": "0<StoredCount()<cargo_cap",
+        "full": "cargo_cap>0 and StoredCount()>=cargo_cap",
+        "service_empty": "StoredCount()==0 and train.IsInDepot() and IsRailDepotTile(train.tile)",
+        "blocked_empty": "StoredCount()==0 and head->flags.Test(VehicleRailFlag::Stuck), after service priority",
+        "priority": [
+          "packet-backed partial/full",
+          "actual rail depot service when empty",
+          "actual head reservation hold when empty",
+          "empty"
+        ],
+        "frame_owner": "empty/partial/full wheel phases only while head actually moves; service/blocked lamp phases keep gear static",
+        "native_length": 8,
+        "shorten_factor": 0
+      },
+      "sealed_load_policy": "URAN/RARE share the closed original body; external empty/partial/full indicator follows actual packets only, never visible loose cargo or an open hatch",
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_sealed_wagon_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-06-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/vehicle-model-06-authored.png",
+        "native_sha256": "c668458428f86ed0821686dd457815d79ebde5879cc1a3b92bf5840f1f6941ee",
+        "staged_pose_count": 80,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2786,15 +4515,38 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-wagon-empty-e-v1.png",
+        "sha256": "44a6f8fafa1e0ad04c8651f4452dc6f4fa2528ea98910bc005a51b0fa734cd1a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_sealed_wagon_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-wagon-empty-w-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-06-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/purchase-model-06-authored.png",
+        "native_sha256": "ff0dc580ee2cb9b0d5ee0e45f744ed0995f7ccf3e9741bc9cdb53d584850ad25",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2842,22 +4594,476 @@
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 10,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "explicit_mask",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mine-truck-empty-n-v1.png",
+        "sha256": "270f47bb6ad2d17ca908bab53add6cfd8fd5beae11ce5f2e4b8996e27c33af1b",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_vehicle_cargo_label",
+      "native_cargo_labels": [
+        "COAL",
+        "IORE",
+        "CORE",
+        "BAUX",
+        "SALT",
+        "LITH",
+        "NORE",
+        "COBT",
+        "ERTH",
+        "ROCK"
+      ],
+      "native_state_policy": {
+        "cargo_owner": "RoadVehicle::cargo.StoredCount()/RoadVehicle::cargo_cap",
+        "cargo_label_owner": "CargoSpec::Get(road_vehicle.cargo_type)->label; validate GetUndergroundEngineCapability(model07)",
+        "empty": "StoredCount()==0",
+        "partial": "0<StoredCount()<cargo_cap",
+        "full": "cargo_cap>0 and StoredCount()>=cargo_cap",
+        "service_empty": "StoredCount()==0 and road_vehicle.IsInDepot() and IsRoadDepotTile(road_vehicle.tile)",
+        "blocked_empty": "StoredCount()==0 and head->blocked_ctr>0 and head->cur_speed==0 and !head->vehstatus.Test(VehState::Stopped) and !head->vehstatus.Test(VehState::Crashed), after service priority",
+        "priority": [
+          "packet-backed partial/full",
+          "actual road depot service when empty",
+          "actual stopped head traffic-block counter when empty",
+          "empty"
+        ],
+        "frame_owner": "empty/partial/full tyre phases only while road head actually moves and is neither Stopped nor Crashed; service/blocked lamp phases keep tyres static",
+        "native_length": 8,
+        "shorten_factor": 0
+      },
+      "cargo_geometry": {
+        "bulk_full_polygons": {
+          "N": [
+            [
+              28,
+              26
+            ],
+            [
+              34,
+              26
+            ],
+            [
+              34,
+              30
+            ],
+            [
+              28,
+              30
+            ]
+          ],
+          "NE": [
+            [
+              24,
+              31
+            ],
+            [
+              32,
+              27
+            ],
+            [
+              34,
+              27
+            ],
+            [
+              28,
+              31
+            ]
+          ],
+          "E": [
+            [
+              18,
+              31
+            ],
+            [
+              38,
+              31
+            ],
+            [
+              38,
+              31
+            ],
+            [
+              18,
+              31
+            ]
+          ],
+          "SE": [
+            [
+              25,
+              24
+            ],
+            [
+              27,
+              24
+            ],
+            [
+              34,
+              28
+            ],
+            [
+              32,
+              28
+            ]
+          ],
+          "S": [
+            [
+              28,
+              20
+            ],
+            [
+              34,
+              20
+            ],
+            [
+              34,
+              24
+            ],
+            [
+              28,
+              24
+            ]
+          ],
+          "SW": [
+            [
+              29,
+              28
+            ],
+            [
+              36,
+              24
+            ],
+            [
+              38,
+              24
+            ],
+            [
+              31,
+              28
+            ]
+          ],
+          "W": [
+            [
+              26,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              26,
+              31
+            ]
+          ],
+          "NW": [
+            [
+              28,
+              27
+            ],
+            [
+              30,
+              27
+            ],
+            [
+              38,
+              32
+            ],
+            [
+              36,
+              32
+            ]
+          ]
+        },
+        "bulk_partial_polygons": {
+          "N": [
+            [
+              28,
+              28
+            ],
+            [
+              34,
+              28
+            ],
+            [
+              34,
+              30
+            ],
+            [
+              28,
+              30
+            ]
+          ],
+          "NE": [
+            [
+              24,
+              31
+            ],
+            [
+              28,
+              29
+            ],
+            [
+              32,
+              29
+            ],
+            [
+              28,
+              31
+            ]
+          ],
+          "E": [
+            [
+              18,
+              31
+            ],
+            [
+              27,
+              31
+            ],
+            [
+              27,
+              31
+            ],
+            [
+              18,
+              31
+            ]
+          ],
+          "SE": [
+            [
+              25,
+              24
+            ],
+            [
+              27,
+              24
+            ],
+            [
+              30,
+              26
+            ],
+            [
+              28,
+              26
+            ]
+          ],
+          "S": [
+            [
+              28,
+              20
+            ],
+            [
+              34,
+              20
+            ],
+            [
+              34,
+              22
+            ],
+            [
+              28,
+              22
+            ]
+          ],
+          "SW": [
+            [
+              33,
+              26
+            ],
+            [
+              36,
+              24
+            ],
+            [
+              38,
+              24
+            ],
+            [
+              35,
+              26
+            ]
+          ],
+          "W": [
+            [
+              35,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              43,
+              31
+            ],
+            [
+              35,
+              31
+            ]
+          ],
+          "NW": [
+            [
+              32,
+              30
+            ],
+            [
+              34,
+              30
+            ],
+            [
+              38,
+              32
+            ],
+            [
+              36,
+              32
+            ]
+          ]
+        },
+        "foreground_rim_lines": {
+          "N": [
+            [
+              [
+                27,
+                31
+              ],
+              [
+                35,
+                31
+              ]
+            ]
+          ],
+          "NE": [
+            [
+              [
+                29,
+                32
+              ],
+              [
+                36,
+                28
+              ]
+            ]
+          ],
+          "E": [
+            [
+              [
+                17,
+                32
+              ],
+              [
+                39,
+                32
+              ]
+            ]
+          ],
+          "SE": [
+            [
+              [
+                24,
+                25
+              ],
+              [
+                35,
+                30
+              ]
+            ]
+          ],
+          "S": [
+            [
+              [
+                27,
+                25
+              ],
+              [
+                35,
+                25
+              ]
+            ]
+          ],
+          "SW": [
+            [
+              [
+                32,
+                29
+              ],
+              [
+                40,
+                25
+              ]
+            ]
+          ],
+          "W": [
+            [
+              [
+                25,
+                32
+              ],
+              [
+                44,
+                32
+              ]
+            ]
+          ],
+          "NW": [
+            [
+              [
+                27,
+                29
+              ],
+              [
+                38,
+                34
+              ]
+            ]
+          ]
+        },
+        "bulk_alpha_extension": false,
+        "partial_must_fit_full_aperture": true,
+        "bulk_material_policy": "original opaque isotropic grain/stone interiors only; no source heap outline, rail body, recoloring or hardware",
+        "partial_policy": "rear B-end occupied floor portion, opposite the yellow A/front cab; visual packet category, never a second volume ledger",
+        "bed_policy": "original lowered open road bed, fixed cab/steel/tyres/alpha/contact; no tipping animation or changed road length"
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_mine_truck_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-bulk-coal-iore-core-baux-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-salt-lith-nore-cobt-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-n-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/m1/raw/cargo-earth-v1.png",
+          "media/multilayer/source/m1/raw/cargo-rock-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-07-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/vehicle-model-07-authored.png",
+        "native_sha256": "c6272d6a4fd7534097d91dcf65956230f51150887843e3a8bb6a2926415c2fa7",
+        "staged_pose_count": 800,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2902,15 +5108,41 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mine-truck-empty-e-v1.png",
+        "sha256": "54fc81417c209b49ef75482cad6897d061bae350a59b090feb7901fc3fec8e49",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_mine_truck_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-bulk-coal-iore-core-baux-v1.png",
+          "media/multilayer/source/ground/raw/wagon-bulk-salt-lith-nore-cobt-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-n-v1.png",
+          "media/multilayer/source/ground/raw/mine-truck-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/m1/raw/cargo-earth-v1.png",
+          "media/multilayer/source/m1/raw/cargo-rock-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-07-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/purchase-model-07-authored.png",
+        "native_sha256": "a4cc1afb8238a6dc0947b9fc9e9bd019d80b16728cf6ab1f3a266d04219ac366",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -2965,15 +5197,62 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v2.png",
+        "sha256": "36716ea6147c6f84edd36e8383e175ca4ceb0c4fbca965fec481fd886a9a9b2a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "sealed_native_cargo_exterior",
+      "native_cargo_labels": [
+        "URAN",
+        "RARE"
+      ],
+      "native_state_policy": {
+        "cargo_owner": "RoadVehicle::cargo.StoredCount()/RoadVehicle::cargo_cap",
+        "cargo_label_owner": "CargoSpec::Get(road_vehicle.cargo_type)->label; validate GetUndergroundEngineCapability(model08)",
+        "empty": "StoredCount()==0",
+        "partial": "0<StoredCount()<cargo_cap",
+        "full": "cargo_cap>0 and StoredCount()>=cargo_cap",
+        "service_empty": "StoredCount()==0 and road_vehicle.IsInDepot() and IsRoadDepotTile(road_vehicle.tile)",
+        "blocked_empty": "StoredCount()==0 and head->blocked_ctr>0 and head->cur_speed==0 and !head->vehstatus.Test(VehState::Stopped) and !head->vehstatus.Test(VehState::Crashed), after service priority",
+        "priority": [
+          "packet-backed partial/full",
+          "actual road depot service when empty",
+          "actual stopped head traffic-block counter when empty",
+          "empty"
+        ],
+        "frame_owner": "empty/partial/full tyre phases only while road head actually moves and is neither Stopped nor Crashed; service/blocked lamp phases keep tyres static",
+        "native_length": 8,
+        "shorten_factor": 0
+      },
+      "sealed_load_policy": "URAN/RARE share the closed original body; external empty/partial/full indicator follows actual packets only, never visible loose cargo or an open hatch",
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_sealed_road_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v2.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-08-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/vehicle-model-08-authored.png",
+        "native_sha256": "767787d2bd1f650a9abc78e66abe914cf0363258b3ea8cef005a1fcedb1eb16e",
+        "staged_pose_count": 80,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -3018,15 +5297,38 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-road-empty-e-v1.png",
+        "sha256": "0d7138f87aa21ca619b0287083b5f7003888f1c9838cc32c769358a528be4d12",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_original_sealed_road_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/fleet-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/wagon-gear-n-ne-e-se-v1.png",
+          "media/multilayer/source/ground/raw/wagon-gear-s-sw-w-nw-v1.png",
+          "media/multilayer/source/ground/raw/wagon-status-lenses-v2.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-e-v1.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v1.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v2.png",
+          "media/multilayer/source/ground/raw/sealed-road-empty-sw-w-nw-e-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/m1/raw/ground-controls-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/vehicle-model-08-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/purchase-model-08-authored.png",
+        "native_sha256": "e93a7472f18fb45d71467ccbd990494560e432b105bcb45770cd934e504abeb1",
+        "staged_pose_count": 2,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -4578,7 +6880,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1218,
         "sprite_count": 48,
@@ -4672,7 +6974,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1266,
         "sprite_count": 48,
@@ -4767,7 +7069,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1314,
         "sprite_count": 128,
@@ -4806,9 +7108,7 @@
       "kind": "building",
       "directions": [
         "NE",
-        "SE",
-        "SW",
-        "NW"
+        "SE"
       ],
       "frames": 4,
       "states": [
@@ -4822,8 +7122,8 @@
         64
       ],
       "footprint": [
-        3,
-        2
+        1,
+        1
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -4838,66 +7138,9 @@
       ],
       "parts": [
         "back",
-        "front"
-      ],
-      "geometry": "per_tile",
-      "tile_variants": 6,
-      "palette": "dos_8bpp",
-      "transparent_index": 0,
-      "company_colors": "none",
-      "preview": "native_build_pose",
-      "animation_colors": "forbidden",
-      "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
-      },
-      "packed": {
-        "namespace": "MLVI",
-        "offset": null,
-        "sha256": null
-      }
-    },
-    {
-      "asset_id": "facility.road-terminal",
-      "consumer": 7,
-      "kind": "building",
-      "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
-      ],
-      "frames": 4,
-      "states": [
-        "construction",
-        "ready",
-        "working",
-        "blocked"
-      ],
-      "native_size": [
-        64,
-        64
-      ],
-      "footprint": [
-        2,
-        2
-      ],
-      "footprint_semantics": "world_tiles",
-      "anchor": [
-        -31,
-        -33
-      ],
-      "bounds": [
-        0,
-        0,
-        64,
-        64
-      ],
-      "parts": [
-        "back",
-        "front"
+        "front",
+        "roof",
+        "glass"
       ],
       "geometry": "per_tile",
       "tile_variants": 4,
@@ -4907,15 +7150,537 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/station-loader-x-base-v4.png",
+        "sha256": "0a1cca1abfe2ebf36f600ed45015a7f8d97bd772bc61d93fb9a2e1f0928d3cf3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_station_graphics_role",
+      "native_graphics": {
+        "NE": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "SE": [
+          1,
+          3,
+          5,
+          7
+        ]
+      },
+      "geometry_descriptor": "media/multilayer/contracts/conventional-station-geometry.json",
+      "layout_owner": "RailStationTileLayout<StationType::Rail>; variable platform count/length on native AxisX/Y, no fixed multi-tile building",
+      "approach_owner": "CmdBuildRailStation/CheckExcavationConstructionArea; entire native footprint and both end approaches of every platform, before allocation/clearing",
+      "direction_axes": {
+        "NE": {
+          "axis": "X",
+          "approaches": [
+            "NE",
+            "SW"
+          ]
+        },
+        "SE": {
+          "axis": "Y",
+          "approaches": [
+            "NW",
+            "SE"
+          ]
+        }
+      },
+      "nullable_parts": {
+        "roof": [
+          0,
+          1
+        ],
+        "glass": [
+          0,
+          1
+        ]
+      },
+      "roof_owner": "Separate native structure parent at world z16; absent on platform/loading-building roles; never merged into a low foreground wall or opaque glass composite",
+      "ground_owner": "Actual RailType ground/overlay, reservation and catenary; station originals contain no track, train or replacement floor",
+      "native_state_policy": {
+        "construction": "Build preview only; ordinary CmdBuildRailStation is atomic and has no installed construction stage",
+        "ready": "Eligible installed native tile with no actual loading train part on that tile",
+        "working": "Actual Station::loading_vehicles Train chain has a physical part on the queried station tile; no station-wide or off-platform extrapolation",
+        "blocked": "Refused construction preview only; default station tile flags have no persistent Blocked state",
+        "world_states": [
+          "ready",
+          "working"
+        ],
+        "preview_states": [
+          "construction",
+          "blocked"
+        ],
+        "frame_owner": "construction/ready/blocked fixed phase0 aliases; atomic default station build preview has no construction stages. Working uses existing synchronized TimerGameTick::counter presentation phases only, without cargo/work mutation",
+        "frame_aliases": {
+          "construction": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_station_source_runtime_pending",
+        "source_record": "media/multilayer/source/ground/station-generation-record.json",
+        "base_candidate": "station-loader-x-base-v4",
+        "base_source": "media/multilayer/source/ground/raw/station-loader-x-base-v4.png",
+        "base_source_sha256": "0a1cca1abfe2ebf36f600ed45015a7f8d97bd772bc61d93fb9a2e1f0928d3cf3",
+        "base_review_manifest": "logs/proofs/mlm/native-art/ground/station-loader-x-base-manifest.json",
+        "base_ready_nonempty_parts": 2,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Native packing, decoded-pixel loader and ordinary-game rendering under master10.4D",
+        "base_native_graphics": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "base_views_manifest": "logs/proofs/mlm/native-art/ground/station-base-views-manifest.json",
+        "ready_base_nonempty_parts": 8,
+        "ready_base_structurally_absent_parts": 8,
+        "ready_native_graphics": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "canopy_views_manifest": "logs/proofs/mlm/native-art/ground/station-canopy-views-manifest.json",
+        "ready_nonempty_parts": 24,
+        "ready_structurally_absent_parts": 8,
+        "originals": [
+          "media/multilayer/source/ground/raw/station-loader-x-base-v4.png",
+          "media/multilayer/source/ground/raw/station-independent-parents-v2.png",
+          "media/multilayer/source/ground/raw/station-loader-y-rear-v1.png",
+          "media/multilayer/source/ground/raw/station-canopy-supports-v1.png",
+          "media/multilayer/source/ground/raw/station-canopy-roofs-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/station-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/station-source-authored.png",
+        "native_sha256": "f8ae1e4881306d796964faf45be9450126ecf8418e2b74699aa2a0efd01337f6",
+        "staged_pose_count": 512,
+        "nonempty_source_parts": 384,
+        "structurally_absent_parts": 128
+      },
+      "glass_owner": "Actual native roof child, separate original source with screen offset(0,0), transparency modifier and PALETTE_TO_TRANSPARENT; attached to the roof parent, no independent sorting box",
+      "native_child_parts": {
+        "glass": {
+          "parent": "roof",
+          "screen_offset": [
+            0,
+            0
+          ],
+          "transparent": true,
+          "palette": "PALETTE_TO_TRANSPARENT"
+        }
+      },
+      "native_packed_anchors": {
+        "0": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -53,
+            -44
+          ],
+          "roof": null,
+          "glass": null
+        },
+        "1": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -9,
+            -44
+          ],
+          "roof": null,
+          "glass": null
+        },
+        "2": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -53,
+            -44
+          ],
+          "roof": null,
+          "glass": null
+        },
+        "3": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -9,
+            -44
+          ],
+          "roof": null,
+          "glass": null
+        },
+        "4": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -53,
+            -44
+          ],
+          "roof": [
+            -31,
+            -17
+          ],
+          "glass": [
+            0,
+            0
+          ]
+        },
+        "5": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -9,
+            -44
+          ],
+          "roof": [
+            -31,
+            -17
+          ],
+          "glass": [
+            0,
+            0
+          ]
+        },
+        "6": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -53,
+            -44
+          ],
+          "roof": [
+            -31,
+            -17
+          ],
+          "glass": [
+            0,
+            0
+          ]
+        },
+        "7": {
+          "back": [
+            -31,
+            -33
+          ],
+          "front": [
+            -9,
+            -44
+          ],
+          "roof": [
+            -31,
+            -17
+          ],
+          "glass": [
+            0,
+            0
+          ]
+        }
+      },
+      "native_anchor_renderer_sha256": {
+        "src/landscape.h": "55af88f0e33d10f9ed0ba3d33581314aea3010292cf8c29c7b9ffc5d987e8ece",
+        "src/viewport.cpp": "eb1ed57078b19d58f2f145ee4a606dacdb24e960903e98739cdda2e2033cfe60",
+        "src/viewport_func.h": "3398ec2214906c58bb934e4b4956aa0aad3f75c51ad6d649c88bc9536f25bd98",
+        "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b"
+      },
+      "native_anchor_policy": "Source frames share(-31,-33). Packed parent offsets compensate actual RemapCoords(origin+offset); relative native glass uses packed(0,0) from roof image left/top. Preserve original three sorting boxes and native child displacement; decoded/ordinary-game proof remains master10.4D."
+    },
+    {
+      "asset_id": "facility.road-terminal",
+      "consumer": 7,
+      "kind": "building",
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW",
+        "X",
+        "Y"
+      ],
+      "frames": 4,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -31,
+        -33
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "parts": [
+        "parent-0",
+        "parent-1",
+        "parent-2"
+      ],
+      "geometry": "per_tile",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "native_build_pose",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/terminal-se-loader-v1.png",
+        "sha256": "7528f900831ab4cb3e21e320f9bcd389927f52e574b8e5f7782824709ec4e361",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null
+      },
+      "direction_semantics": "native_bay_entrance_or_drive_through_axis",
+      "variant_semantics": "single_native_stop_cell",
+      "native_graphics": {
+        "NE": 0,
+        "SE": 1,
+        "SW": 2,
+        "NW": 3,
+        "X": 4,
+        "Y": 5
+      },
+      "geometry_descriptor": "media/multilayer/contracts/conventional-terminal-geometry.json",
+      "nullable_parts_by_direction": {
+        "parent-2": [
+          "X",
+          "Y"
+        ]
+      },
+      "layout_owner": "GetStationTileLayout(StationType::Truck, graphics); four directed bays with three native parents, two drive-through axes with two native parents; no elevated roof or child",
+      "footprint_owner": "CmdBuildRoadStop variable width/length groups real one-tile RoadStop records into native Station; no fixed2x2 source campus",
+      "approach_owner": "CheckExcavationConstructionArea validates complete footprint plus bay entrance boundary or both through ends before clearing/allocation",
+      "ground_owner": "Native truck-stop ground, road type overlays/catenary and vehicle turning/lane controller remain independent; no pavement, road marking, truck or ground baked into building source parents",
+      "parent_order": "parent-0/parent-1/parent-2 follow the exact native sequence. Their physical front/back role varies by genuine bay direction; through parent-2 is absent",
+      "native_packed_anchors": {
+        "NE": {
+          "parent-0": [
+            -61,
+            -48
+          ],
+          "parent-1": [
+            -5,
+            -46
+          ],
+          "parent-2": [
+            -27,
+            -35
+          ]
+        },
+        "SE": {
+          "parent-0": [
+            -7,
+            -51
+          ],
+          "parent-1": [
+            -31,
+            -33
+          ],
+          "parent-2": [
+            -37,
+            -36
+          ]
+        },
+        "SW": {
+          "parent-0": [
+            -25,
+            -36
+          ],
+          "parent-1": [
+            -31,
+            -33
+          ],
+          "parent-2": [
+            -55,
+            -51
+          ]
+        },
+        "NW": {
+          "parent-0": [
+            -31,
+            -33
+          ],
+          "parent-1": [
+            -57,
+            -46
+          ],
+          "parent-2": [
+            -5,
+            -50
+          ]
+        },
+        "X": {
+          "parent-0": [
+            -31,
+            -33
+          ],
+          "parent-1": [
+            -57,
+            -46
+          ],
+          "parent-2": null
+        },
+        "Y": {
+          "parent-0": [
+            -5,
+            -46
+          ],
+          "parent-1": [
+            -31,
+            -33
+          ],
+          "parent-2": null
+        }
+      },
+      "native_anchor_renderer_sha256": {
+        "src/landscape.h": "55af88f0e33d10f9ed0ba3d33581314aea3010292cf8c29c7b9ffc5d987e8ece",
+        "src/viewport.cpp": "eb1ed57078b19d58f2f145ee4a606dacdb24e960903e98739cdda2e2033cfe60",
+        "src/viewport_func.h": "3398ec2214906c58bb934e4b4956aa0aad3f75c51ad6d649c88bc9536f25bd98",
+        "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b"
+      },
+      "native_anchor_policy": "Common64x64 source(-31,-33); packed image offsets compensate RemapCoords(native origin+offset). Preserve every original sorting parent and native ground owner; decoded/game proof remains10.4D",
+      "native_state_policy": {
+        "construction": "Atomic native build preview only; no installed construction stages or work owner",
+        "ready": "Eligible installed native truck-stop tile without a physical actual loading road-vehicle part on that tile",
+        "working": "Actual Station.loading_vehicles RoadVehicle chain contains a physical part on queried tile; no station-wide loading extrapolation or art-local cargo",
+        "blocked": "Refused construction preview only; no persistent default road-stop Blocked state",
+        "world_states": [
+          "ready",
+          "working"
+        ],
+        "preview_states": [
+          "construction",
+          "blocked"
+        ],
+        "frame_owner": "construction/ready/blocked phase0 aliases; working existing synchronized TimerGameTick::counter controls presentation only",
+        "frame_aliases": {
+          "construction": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_terminal_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/conventional-terminal-geometry.json",
+        "source_slots_required": 288,
+        "structurally_absent_parts": 32,
+        "nonempty_source_parts_required": 256,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Native packing, decoded-pixel loader and ordinary-game rendering under master10.4D",
+        "source_record": "media/multilayer/source/ground/terminal-generation-record.json",
+        "base_native_graphics": 1,
+        "base_review_manifest": "logs/proofs/mlm/native-art/ground/terminal-se-base-manifest.json",
+        "selected_base_nonempty_parts": 3,
+        "ready_review_manifest": "logs/proofs/mlm/native-art/ground/terminal-ready-views-manifest.json",
+        "selected_ready_nonempty_parts": 16,
+        "selected_ready_native_views": 6,
+        "selected_ready_structurally_absent_parts": 2,
+        "originals": [
+          "media/multilayer/source/ground/raw/terminal-se-base-v1.png",
+          "media/multilayer/source/ground/raw/terminal-se-loader-v1.png",
+          "media/multilayer/source/ground/raw/terminal-equipment-v1.png",
+          "media/multilayer/source/ground/raw/terminal-rails-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/terminal-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/terminal-source-authored.png",
+        "native_sha256": "22ba5c2fa6a31cdabd1403b8cf4f03590ca93b1fd67f3676ae2ee18cf5350fb0",
+        "staged_pose_count": 288,
+        "nonempty_source_parts": 256
       }
     },
     {
@@ -4975,7 +7740,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1442,
         "sprite_count": 128,
@@ -5064,7 +7829,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1570,
         "sprite_count": 128,
@@ -5150,7 +7915,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1698,
         "sprite_count": 192,
@@ -5178,7 +7943,7 @@
         "consumer": {
           "source": "src/industry_cmd.cpp",
           "symbol": "DrawTile_Industry",
-          "call": "GetMultiLayerReceiverSprite"
+          "call": "GetMultiLayerIndustrySprite"
         },
         "binding_manifest": "logs/proofs/mlm/native-art/runtime-manifest.json",
         "user_review": "deferred_until_integration"
@@ -5238,7 +8003,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 1890,
         "sprite_count": 512,
@@ -5266,7 +8031,7 @@
         "consumer": {
           "source": "src/industry_cmd.cpp",
           "symbol": "DrawTile_Industry",
-          "call": "GetMultiLayerReceiverSprite"
+          "call": "GetMultiLayerIndustrySprite"
         },
         "binding_manifest": "logs/proofs/mlm/native-art/runtime-manifest.json",
         "user_review": "deferred_until_integration"
@@ -5277,10 +8042,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -5320,15 +8082,176 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/metal-refinery-machinery-a-v2.png",
+        "sha256": "f648af11666b862a3f98c9857b3327afa731f3fd8e82a15c76c729f928fd8537",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "layout_owner": "InstallLayerProcessorDefinition/GetLayerProcessorIndustryType exact IIDS/TIDS; one fixed4x4 layout",
+      "source_part_policy": "Existing DrawTile_Industry selected branch: original back at ground origin; front origin(0,0,0), extent(16,16,20), offset(0,0,0); native processor binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual selected first-party processor, valid native LayerProcessorState and supported recipe; MissingState/InvalidState grant no authored pose authority",
+        "construction": "Each actual owned tile GetIndustryConstructionStage selects0..3; already complete cells stay3 while IsLayerIndustryComplete waits for the whole industry",
+        "ready": "GetLayerProcessorOperationalStatus::Idle: actual required input cannot supply a complete batch, independently of banked work; final output remains physical",
+        "working": "GetLayerProcessorOperationalStatus::Working: shared CaptureLayerProcessorInventory/common PlanMultiLayerRecipeBatches admit one batch's actual all-input/output prerequisites; presentation earns no work",
+        "blocked": "Actual OutputFull/Paused/Stopped/Unavailable; Industry input/output and existing recipe/work/history remain unchanged",
+        "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory",
+        "world_states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; ready/blocked static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "complete_native_processor_source_runtime_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+        "source_slots_required": 512,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "source_record": "media/multilayer/source/ground/processor-generation-record.json",
+        "base_coverage_complete": true,
+        "selected_base_nonempty_parts": 32,
+        "base_native_atlas": "logs/proofs/mlm/native-art/ground/metal-refinery-base-atlas.png",
+        "base_native_sha256": "05f67fffd8f8228210affcb7d1c479c7cab5cbd95bc52258bbf56b019b16b35e",
+        "base_atlas_manifest": "logs/proofs/mlm/native-art/ground/metal-refinery-base-manifest.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-filter-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-chute-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-crusher-v1.png",
+          "media/multilayer/source/ground/raw/coal-dust-filter-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-final-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-ledge-v3.png",
+          "media/multilayer/source/ground/raw/metal-refinery-dispatch-ledge-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-empty-chute-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-b-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-c-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/metal-refinery-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/metal-refinery-source-authored.png",
+        "native_sha256": "14ceb33f39144943c7153f4559eb4ab0b5edefd54bb1f2805eee4f0dfa6aa36c",
+        "staged_pose_count": 512,
+        "nonempty_source_parts": 512,
+        "structurally_absent_parts": 0
       }
     },
     {
@@ -5336,10 +8259,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -5379,15 +8299,145 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/chemical-works-day-tank-v1.png",
+        "sha256": "c849036e029e996e6e9bcd77a7b95cfd15b5b549c16897b8e619bf84021e162d",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "layout_owner": "InstallLayerProcessorDefinition/GetLayerProcessorIndustryType exact IIDS/TIDS; one fixed4x4 layout",
+      "source_part_policy": "Existing DrawTile_Industry selected branch: original back at ground origin; front origin(0,0,0), extent(16,16,20), offset(0,0,0); native processor binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual selected first-party processor, valid native LayerProcessorState and supported recipe; MissingState/InvalidState grant no authored pose authority",
+        "construction": "Each actual owned tile GetIndustryConstructionStage selects0..3; already complete cells stay3 while IsLayerIndustryComplete waits for the whole industry",
+        "ready": "GetLayerProcessorOperationalStatus::Idle: actual required input cannot supply a complete batch, independently of banked work; final output remains physical",
+        "working": "GetLayerProcessorOperationalStatus::Working: shared CaptureLayerProcessorInventory/common PlanMultiLayerRecipeBatches admit one batch's actual all-input/output prerequisites; presentation earns no work",
+        "blocked": "Actual OutputFull/Paused/Stopped/Unavailable; Industry input/output and existing recipe/work/history remain unchanged",
+        "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory",
+        "world_states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; ready/blocked static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "completed_base_selected_full_source_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+        "source_slots_required": 512,
+        "coverage_complete": false,
+        "runtime_activated": false,
+        "remaining": "40C genuine full512 construction/operating source; master10.4D packing/native binding/decoded pixels/ordinary game",
+        "source_record": "media/multilayer/source/ground/processor-generation-record.json",
+        "base_coverage_complete": true,
+        "selected_base_nonempty_parts": 32,
+        "base_native_atlas": "logs/proofs/mlm/native-art/ground/chemical-works-base-atlas.png",
+        "base_native_sha256": "fc5aa819dd50dffd0807c807bbaab89e5963b3f758fb695ae97da6a393fa6e84",
+        "base_atlas_manifest": "logs/proofs/mlm/native-art/ground/chemical-works-base-manifest.json"
       }
     },
     {
@@ -5395,10 +8445,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -5447,6 +8494,129 @@
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "layout_owner": "InstallLayerProcessorDefinition/GetLayerProcessorIndustryType exact IIDS/TIDS; one fixed4x4 layout",
+      "source_part_policy": "Existing DrawTile_Industry selected branch: original back at ground origin; front origin(0,0,0), extent(16,16,20), offset(0,0,0); native processor binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual selected first-party processor, valid native LayerProcessorState and supported recipe; MissingState/InvalidState grant no authored pose authority",
+        "construction": "Each actual owned tile GetIndustryConstructionStage selects0..3; already complete cells stay3 while IsLayerIndustryComplete waits for the whole industry",
+        "ready": "GetLayerProcessorOperationalStatus::Idle: actual required input cannot supply a complete batch, independently of banked work; final output remains physical",
+        "working": "GetLayerProcessorOperationalStatus::Working: shared CaptureLayerProcessorInventory/common PlanMultiLayerRecipeBatches admit one batch's actual all-input/output prerequisites; presentation earns no work",
+        "blocked": "Actual OutputFull/Paused/Stopped/Unavailable; Industry input/output and existing recipe/work/history remain unchanged",
+        "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory",
+        "world_states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; ready/blocked static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "native_geometry_verified_originals_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+        "source_slots_required": 512,
+        "coverage_complete": false,
+        "runtime_activated": false,
+        "remaining": "Actual selected sixteen-cell originals and native construction/ready/working/blocked poses; selected packing/native rendering remains master10.4D"
       }
     },
     {
@@ -5454,10 +8624,7 @@
       "consumer": 6,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
@@ -5506,6 +8673,129 @@
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
+      "variant_semantics": "actual_native_machinery_cell_row_major",
+      "native_layout": 0,
+      "native_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "layout_owner": "InstallLayerProcessorDefinition/GetLayerProcessorIndustryType exact IIDS/TIDS; one fixed4x4 layout",
+      "source_part_policy": "Existing DrawTile_Industry selected branch: original back at ground origin; front origin(0,0,0), extent(16,16,20), offset(0,0,0); native processor binding remains master10.4D",
+      "source_height_limit": 20,
+      "native_state_policy": {
+        "eligibility": "Actual selected first-party processor, valid native LayerProcessorState and supported recipe; MissingState/InvalidState grant no authored pose authority",
+        "construction": "Each actual owned tile GetIndustryConstructionStage selects0..3; already complete cells stay3 while IsLayerIndustryComplete waits for the whole industry",
+        "ready": "GetLayerProcessorOperationalStatus::Idle: actual required input cannot supply a complete batch, independently of banked work; final output remains physical",
+        "working": "GetLayerProcessorOperationalStatus::Working: shared CaptureLayerProcessorInventory/common PlanMultiLayerRecipeBatches admit one batch's actual all-input/output prerequisites; presentation earns no work",
+        "blocked": "Actual OutputFull/Paused/Stopped/Unavailable; Industry input/output and existing recipe/work/history remain unchanged",
+        "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory",
+        "world_states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; ready/blocked static phase0 aliases",
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "authoring": {
+        "date": "2026-10-12",
+        "status": "native_geometry_verified_originals_pending",
+        "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+        "source_slots_required": 512,
+        "coverage_complete": false,
+        "runtime_activated": false,
+        "remaining": "Actual selected sixteen-cell originals and native construction/ready/working/blocked poses; selected packing/native rendering remains master10.4D"
       }
     },
     {
@@ -6162,11 +9452,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 2436,
         "sprite_count": 1152,
-        "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "approved_collector_ready_views_sha256": "3911c63117a8822079e63262464af70bfa80d4663e137fb7e74713ac084e872f",
@@ -6189,7 +9480,7 @@
       ],
       "authoring": {
         "date": "2026-10-10",
-        "status": "complete_native_collector_state_phase_source_runtime_pending",
+        "status": "source_coverage_verified_runtime_bound",
         "source_record": "media/multilayer/source/ground/geothermal-generation-record.json",
         "originals": [
           "media/multilayer/source/ground/raw/collector-construction-0-ne-v1.png",
@@ -6215,7 +9506,25 @@
         "native_sha256": "6ed3fe17942a12ca84889d5ba859aa866ace6e294ca8c0a8d94d187ef198b09f",
         "staged_pose_count": 1152,
         "coverage_complete": true,
-        "runtime_activated": false
+        "runtime_activated": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry",
+          "call": "GetMultiLayerIndustrySprite"
+        },
+        "binding_manifest": "logs/proofs/mlm/native-art/runtime-manifest.json",
+        "scoped_evidence": [
+          "logs/graphics/collector-integration/20261010-runtime-01/focused-Debug.log",
+          "logs/graphics/collector-integration/20261010-runtime-01/focused-RelWithDebInfo.log",
+          "mlm/reviews/geothermal/collector-art/20261010-collector-runtime-01/reports/native-Debug.json",
+          "mlm/reviews/geothermal/collector-art/20261010-collector-runtime-01/reports/collector-construction-1-ordinary-Debug.json",
+          "mlm/reviews/geothermal/collector-art/20261010-collector-runtime-01/reports/collector-ready-ordinary-Debug.json",
+          "mlm/reviews/geothermal/collector-art/20261010-collector-runtime-01/reports/collector-ready-ordinary-RelWithDebInfo.json"
+        ],
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6267,10 +9576,11 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
+        "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
@@ -6363,8 +9673,48 @@
           "venttap-campus-ne-v1": "f9af91a2a5d091947afb9d7d430497f33d8e924f7ae2cb64bf9b0fe9c5b0c7e1",
           "venttap-base-se-v1": "b9ee658962a3babb151949bb3143ee5ab4ccf025e7dbbeb2e570a93c9612d5ce",
           "venttap-campus-sw-v2": "796ea67e7ebcb8ae4ff8db5e9d01e01dc08769c8057bf50aa7a536f1de7195bd",
-          "venttap-campus-nw-v1": "317eae28a8ed5ab9c7ba74ddc41cb89c5fa98c83e8af8de25d513586fe23fce3"
-        }
+          "venttap-campus-nw-v1": "317eae28a8ed5ab9c7ba74ddc41cb89c5fa98c83e8af8de25d513586fe23fce3",
+          "venttap-construction-0-ne-v1": "46f9f755d952549c5060f6245fdf87c4d8f459f6041ee597852d1df7d588b6a4",
+          "venttap-construction-0-se-v1": "c4eaa6c1283041db58c2b1bf318933a8f81777cf7e567555d4dc586c2f15adbf",
+          "venttap-construction-0-sw-v1": "fb020a531cc0289ec4a2c29c71a98fe6461e77aa96309985ede77f7bf1ff023d",
+          "venttap-construction-0-nw-v1": "b35125f98c532353d56594031e055612f9dcf9e191287d9d83bd002983a062d6",
+          "venttap-construction-1-ne-v1": "698cd4d73c03ab23fd6b23c48d0899a71119023dfb75b130dd9fcf7dde215083",
+          "venttap-construction-1-se-v1": "51048988547033a50de440410802a05129671c0c84745cfd7bcb82f5339559a1",
+          "venttap-construction-1-sw-v1": "4563f77ae25d319dcb48996cb9472a5b80cedd7591d66b215e6525209320a856",
+          "venttap-construction-1-nw-v1": "5d86efe94bce48509fbba21c4839257a73e41224e742bc027de72cc6e8be65dc",
+          "venttap-construction-2-ne-v3": "6cf002dab3edc60198fff7f391ede1a80c98b743ed64698fe5fa829237c629fd",
+          "venttap-construction-2-se-v1": "3365a28c0d4fddd3439fd1f3a50111311a069227e5b40d12ce35a867ff43b771",
+          "venttap-construction-2-sw-v1": "176a66f70db9778e94b554e7628b77e8e5edad9df2940641c7f63ee625e6ced9",
+          "venttap-construction-2-nw-v1": "f200fb86ba81de96f061329736e1efbace2a27ce4ed9ccde330ef0eda2e9a94d"
+        },
+        "approved_generator_equipment_sha256": "622b26e782460dfa95edec64196db58754f8af5c19fa2ff64e7e87f33aa51eef"
+      },
+      "frame_owner": "construction:native_paid_work_stage148ticks;completed:visual_equipment_phase_only",
+      "state_owner": "native_work_completion_then_operating_shared_Heat_readiness;no_art_quantity_authority",
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_generator_source_packing_operation_pending",
+        "source_record": "media/multilayer/source/ground/geothermal-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
+          "media/multilayer/source/ground/raw/venttap-construction-1-views-v1.png",
+          "media/multilayer/source/ground/raw/venttap-construction-2-ne-v3.png",
+          "media/multilayer/source/ground/raw/venttap-construction-2-se-v1.png",
+          "media/multilayer/source/ground/raw/venttap-construction-2-sw-v1.png",
+          "media/multilayer/source/ground/raw/venttap-construction-2-nw-v1.png",
+          "media/multilayer/source/ground/raw/venttap-campus-ne-v1.png",
+          "media/multilayer/source/ground/raw/venttap-base-se-v1.png",
+          "media/multilayer/source/ground/raw/venttap-campus-sw-v2.png",
+          "media/multilayer/source/ground/raw/venttap-campus-nw-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/generator-heat-starved-glass-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/venttap-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/venttap-authored.png",
+        "native_sha256": "adc560b8c17b55b97cfb91595b3c2ac8c71cc2c64a765b6a4aa3b10e2cc546ec",
+        "staged_pose_count": 2560,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6416,10 +9766,11 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/magma-construction-0-ne-v1.png",
+        "sha256": "acfcfd0b7a2231dd91e4d0460d066f65e2423a1cf0fc9f40bcfece3c52094e50",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
@@ -6507,7 +9858,60 @@
           "first_build_contract_kind": null,
           "native_activation_from_descriptor": false,
           "native_evidence": "logs/geothermal/generator-geometry/20261010-native-01/verification.json"
-        }
+        },
+        "approved_generator_registrations": {
+          "magma-base-se-v1": "1eb259dde4ff1a3b1a4986a183aa5b493ebd23a9c98cb5384c7ff0c0a824c82e",
+          "magma-campus-ne-v1": "c41431103e1d21b2c3ca67f45580bb455a284eb14976193f24b9ac6aecea3103",
+          "magma-campus-sw-v1": "a1206d5c144ce4466f92536011322868191f24f6204f4eff41a1513a7405b7cf",
+          "magma-campus-nw-v1": "06449ec9473e20c8e0a1554e954852769139ab47be58581c7d411f58f9255652",
+          "magma-campus-ne-v2": "3dcd2d0cd198efcdc50e0b514d395da957f8bf07bbf9820180b3cebcc5e067e8",
+          "magma-construction-0-ne-v1": "9911908e768d92226387e06f23b3226f3c87aa2215a6a25e6577ba37989601cd",
+          "magma-construction-0-se-v1": "4693cd94c99f1e702149be9973ca418ae8c59d47fcc16092af59a287fad2a53a",
+          "magma-construction-0-sw-v1": "02bd6bb0eb573569df3af4799caf6a06dd772237a94035dcc0e8bbc9223902ba",
+          "magma-construction-0-nw-v1": "744f904a7e100ef0f657b52e652da9edd93c409419680071040fc6a680579144",
+          "magma-construction-1-ne-v1": "5f9e4df76ba1a6aa270098f8de8ba08a1deccc852d0e06582a765be1e0f80cf7",
+          "magma-construction-1-se-v1": "442f2ec752cbec8827c0d15494c67acbd89d01dc9af5185bc0aad6cec1fa5f5e",
+          "magma-construction-1-sw-v1": "e2a1f045495e38c209eefbb62fc6dc43285e470acaf86e92812081c6ca9fd9da",
+          "magma-construction-1-nw-v1": "187f95d4d60f82a559698060817bbb57dd351db3e0df13ca14637245c12f64d2",
+          "magma-construction-2-ne-v1": "4cdfa3196a7c3dd2bbae0a3b64cd9a532dd72705f524c44bba6a2becde49fcff",
+          "magma-construction-2-se-v1": "525c4122cc3f0cb3dc2286f3141bb0b5f793ad7614633440996eacece78f59b8",
+          "magma-construction-2-sw-v1": "8adbcd8fe801ecc543f16e31824319ad9fe180b6a9d500a3071d2e22b15b4589",
+          "magma-construction-2-nw-v1": "9bc0caae958bec7f36c97a3f9847be701598fb8f0927b826ca65d62507133f04"
+        },
+        "approved_generator_equipment_sha256": "84465bdf0ac6eac17bb30aad0b19d34570eb3e7d23fb2b3c6513b8b0ca1ad939"
+      },
+      "frame_owner": "construction:native_incomplete_hardware_stage;completed:visual_equipment_phase_only",
+      "state_owner": "native_work_completion_then_operating_shared_Heat_readiness;no_art_quantity_authority",
+      "authoring": {
+        "date": "2026-10-11",
+        "status": "complete_native_generator_source_packing_operation_pending",
+        "source_record": "media/multilayer/source/ground/geothermal-generation-record.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/magma-construction-0-ne-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-0-se-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-0-sw-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-0-nw-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-1-ne-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-1-se-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-1-sw-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-1-nw-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-2-ne-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-2-se-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-2-sw-v1.png",
+          "media/multilayer/source/ground/raw/magma-construction-2-nw-v1.png",
+          "media/multilayer/source/ground/raw/magma-campus-ne-v2.png",
+          "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "media/multilayer/source/ground/raw/magma-campus-sw-v1.png",
+          "media/multilayer/source/ground/raw/magma-campus-nw-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "media/multilayer/source/ground/raw/generator-heat-starved-glass-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/magmaloop-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/magmaloop-authored.png",
+        "native_sha256": "0a2c2b3db02a158a902bcef4e90a3eb54852a55a1c71150465d27aeb32d86283",
+        "staged_pose_count": 2560,
+        "coverage_complete": true,
+        "runtime_activated": false
       }
     },
     {
@@ -6695,18 +10099,14 @@
       "consumer": 18,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 4,
       "states": [
         "construction",
         "ready",
         "working",
-        "blocked",
-        "heat_starved"
+        "blocked"
       ],
       "native_size": [
         64,
@@ -6739,15 +10139,115 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/utility-riser-authored.png",
         "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "rights": "first_party_original_imagegen",
+        "sha256": "25b8146abb0649587d190f49d7cdce6ca04851161f0d95db28e50a616a322778",
+        "manifest": "logs/proofs/mlm/native-art/ground/utility-riser-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "state_owner": "GeothermalRiserState paid construction, IsGeothermalRiserOperational and actual original electrical link readiness; no Heat consumer",
+      "frame_owner": {
+        "construction": "native_industry_construction_stage_0_to_3_while_uncompleted",
+        "ready": "original_equipment_glass_phase_0_to_3",
+        "working": "original_equipment_glass_phase_0_to_3",
+        "blocked": "original_equipment_glass_phase_0_to_3"
+      },
+      "construction_stages": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "energy_domain": "Electricity",
+      "layout_owner": "InitialiseGeothermalConstructionDefinition; one fixed native row-major2x2 layout; access and actual boundary port do not rotate machinery",
+      "geometry_notes": {
+        "world_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "cell_origins": [
+          [
+            65,
+            15
+          ],
+          [
+            33,
+            31
+          ],
+          [
+            97,
+            31
+          ],
+          [
+            65,
+            47
+          ]
+        ],
+        "whole_canvas": [
+          192,
+          144
+        ],
+        "floor_corners": [
+          [
+            96,
+            48
+          ],
+          [
+            160,
+            80
+          ],
+          [
+            96,
+            112
+          ],
+          [
+            32,
+            80
+          ]
+        ],
+        "construction_ticks": {
+          "total": 296,
+          "stage_length": 74,
+          "stages": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "completion_separate": true
+        },
+        "portal_attachment": "actual original commissioned portal outside2x2 floor; declared site.port is one real boundary machinery cell; source art creates no endpoint/shaft/floor",
+        "electrical_path": "actual paid cable attaches only at site.port; capacity200000W, no Heat transfer",
+        "foreground_policy": "solid native industry footprint; back owns original opaque pixels, front empty; no capsule/vehicle track through machinery",
+        "approved_riser_registrations": {
+          "utility-riser-ready-v2": "960c8e2c30eca828493dcf674638d6c621311b696a48e8326c5405c7f030675f",
+          "utility-riser-construction-0-v1": "720afe39032b10920addb570d685104eca055bef0f93eba37d0626f05878100f",
+          "utility-riser-construction-1-v1": "0aa0a5f31b152552f53a35dc64071851df3dcab5a0792d885d8e9f7c869ac14a",
+          "utility-riser-construction-2-v1": "811a3d317e9d2fdad6678b10e4b9f20597bda1dbfe94d1560c964af7d0797476"
+        },
+        "approved_riser_equipment": "60ba11c9239fe37c7d38bb9496fb1a92d12d4d265b93942b812721c10db32672"
       }
     },
     {
@@ -7644,22 +11144,126 @@
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 2,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/utility-conduit-authored.png",
         "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "rights": "first_party_original_imagegen",
+        "sha256": "595946cd1a98d27037a1918b6383558bb7c7cad25b06be2134ebe859ad50c978",
+        "manifest": "logs/proofs/mlm/native-art/ground/utility-conduit-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
         "sha256": null
+      },
+      "variant_semantics": "native_utility_energy_domain",
+      "native_domains": [
+        "Heat",
+        "Electricity"
+      ],
+      "branch_owner": "GetGeothermalUtilityLink; same-company same-domain same-layer cardinal installed neighbour; no energy/flow inference",
+      "state_owner": "construction=noninstalled command preview; connected=actual matching neighbour; unconnected=capped absent/removed/foreign neighbour, including idle isolated cells",
+      "render_layer": "floor_overlay_below_vehicles_and_buildings",
+      "geometry_notes": {
+        "center_pixels": {
+          "Heat": [
+            31,
+            14
+          ],
+          "Electricity": [
+            31,
+            18
+          ]
+        },
+        "port_pixels": {
+          "Heat": {
+            "NE": [
+              47,
+              6
+            ],
+            "SE": [
+              47,
+              22
+            ],
+            "SW": [
+              15,
+              22
+            ],
+            "NW": [
+              15,
+              6
+            ]
+          },
+          "Electricity": {
+            "NE": [
+              47,
+              10
+            ],
+            "SE": [
+              47,
+              26
+            ],
+            "SW": [
+              15,
+              26
+            ],
+            "NW": [
+              15,
+              10
+            ]
+          }
+        },
+        "native_neighbour_pitch": {
+          "NE": [
+            32,
+            -16
+          ],
+          "SE": [
+            32,
+            16
+          ],
+          "SW": [
+            -32,
+            16
+          ],
+          "NW": [
+            -32,
+            -16
+          ]
+        },
+        "composition": "four branches per installed domain cell; connected or capped according to actual adjacency; Heat then Electricity; no foreground",
+        "domain_layers": {
+          "Heat": [
+            "DeepUnderground"
+          ],
+          "Electricity": [
+            "Underground",
+            "DeepUnderground"
+          ]
+        },
+        "approved_utility_registrations": {
+          "utility-heat-connected-x-v1": "b112173fcbb8d3ab0d7a3d6412a48e50e2d30ce268eb07a11b14761b4700f80e",
+          "utility-electricity-connected-x-v1": "421ad37bc34ff7018036dc31ef50be90ec2bca1f221b2822451cff3622fd5ec8",
+          "utility-heat-connected-y-v1": "34dc07c1f698bfede269c2d58e3eca11e211bd12d9f2f5bf527b3463e5a362f6",
+          "utility-electricity-connected-y-v1": "4a6ebdb0c94401c356b4d936ce9538e801e14b1f03172a19601c10e2530d6a94",
+          "utility-heat-unconnected-x-v1": "d56a0a50659d8614025e034982368256f68ef35fe516ec2e70c993311388f17d",
+          "utility-electricity-unconnected-x-v1": "afe3e7c5c24c994770ada946291b42f70f4146e9f6b6083541289fb46b14fea0",
+          "utility-heat-unconnected-y-v1": "f49d83226eecb2487131f9ce3a1a36202b5d062a7c86e4339e4aa8b6ee0b92d1",
+          "utility-electricity-unconnected-y-v1": "26e12b563d623092084b2699c0dad01bac25ac2f1f96de477f88949301f43262",
+          "utility-heat-construction-x-v1": "c8f03fb2b8cfff32496e25d2908e85d758ccebb95620a0bc21d743686ecf6759",
+          "utility-heat-construction-y-v1": "a448e86cef5271ed8e6210e637520e73e69f90e8d6978388a5289b788607fe42",
+          "utility-electricity-construction-x-v1": "b5091d67cf3dc3b6a458d4126d1261be366ac78491b60374d688d96430d99747",
+          "utility-electricity-construction-y-v1": "32f1314ff82597306f78a08b29f0acb0f8e009c15fa7a7943087931dd68d4888"
+        }
       }
     },
     {
@@ -8373,7 +11977,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 128,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 128,
         "sprite_count": 3,
@@ -8457,7 +12061,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 131,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 131,
         "sprite_count": 3,
@@ -8541,7 +12145,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 134,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 134,
         "sprite_count": 3,
@@ -8625,7 +12229,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 137,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 137,
         "sprite_count": 3,
@@ -8709,7 +12313,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 140,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 140,
         "sprite_count": 3,
@@ -8946,15 +12550,26 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/control-tube-authored.png",
         "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "rights": "first_party_original_imagegen",
+        "sha256": "6c673433974d8ec41202755cad336157750dbfb8ce6d2e549b390b3f47d842b9",
+        "manifest": "logs/proofs/mlm/native-art/ground/control-tube-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 152,
         "sha256": null
+      },
+      "geometry_notes": {
+        "approved_control_registrations": {
+          "control-tube-enabled-v1": "ad154838ef99acee47956ba87d142960eb6c3960f4861c026820e98ebddbebd9",
+          "control-tube-disabled-v1": "af22882e8cb3bdb98c6abc2bf511cb69ef94370d798971369dbb5528c5a2396f",
+          "control-tube-pressed-v1": "1362a2f7bfb45d7eb5f77452dc207318cbbbe0962193c4d60ceab1d0e907f533"
+        }
       }
     },
     {
@@ -9000,15 +12615,26 @@
       "preview": "native_icon_or_overlay",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/control-geothermal-authored.png",
         "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "rights": "first_party_original_imagegen",
+        "sha256": "3e172610c442fb8a851878d1274bdecfa20e69a74e2412708bb70f033523ef3e",
+        "manifest": "logs/proofs/mlm/native-art/ground/control-geothermal-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
       },
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 155,
         "sha256": null
+      },
+      "geometry_notes": {
+        "approved_control_registrations": {
+          "control-geothermal-enabled-v1": "60d45967a911a50e0f35e45b45215614edde3640c79a19bf3b3d2ae9d3ac550d",
+          "control-geothermal-disabled-v1": "3601e55fed656b42995e19009e9294537385365bf5c8343937ef6fb39da1107c",
+          "control-geothermal-pressed-v1": "53afae6d4e642ed811774f3345c070da62f3ad7e2e43b2b5e95f2a0d3fd8082e"
+        }
       }
     },
     {
@@ -9063,7 +12689,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 158,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 158,
         "sprite_count": 3,
@@ -9147,7 +12773,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 161,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 161,
         "sprite_count": 3,
@@ -9751,7 +13377,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 2402,
         "sprite_count": 1,
@@ -9833,7 +13459,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 2403,
         "sprite_count": 1,
@@ -10398,7 +14024,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 168,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 168,
         "sprite_count": 16,
@@ -10493,7 +14119,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 184,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 184,
         "sprite_count": 16,
@@ -10588,7 +14214,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 2404,
         "sprite_count": 16,
@@ -10685,7 +14311,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": null,
+        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
         "route": "native_action5_1c",
         "native_offset": 2420,
         "sprite_count": 16,

@@ -2,6 +2,7 @@
 
 @file activate_m1_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
 Binding metadata never substitutes for the later crossing/loop/sound gallery or
 the user's deferred personal review. Source art and gameplay definitions stay immutable.
@@ -94,8 +95,13 @@ def binding_for(asset):
         values = ("GetMultiLayerRoadDepotSprite", "src/road_cmd.cpp", "DrawTile_Road", "GetMultiLayerRoadDepotSprite",
                   ["actual road depot/vehicle occupancy", "custom roadtype resolver/transparency"], facilities)
     elif asset in ("facility.earth-receiver", "facility.rock-receiver"):
-        values = ("GetMultiLayerReceiverSprite", "src/industry_cmd.cpp", "DrawTile_Industry", "GetMultiLayerReceiverSprite",
+        values = ("GetMultiLayerReceiverSprite", "src/industry_cmd.cpp", "DrawTile_Industry", "GetMultiLayerIndustrySprite",
                   ["actual Industry cells/construction", "GetSpoilReceiver/stock/room", "existing interval/aggregate bounds", "foreign resolver/transparency"], facilities)
+    elif asset == "facility.vent-collector":
+        values = ("GetMultiLayerCollectorSprite", "src/industry_cmd.cpp", "DrawTile_Industry", "GetMultiLayerIndustrySprite",
+                  ["actual consumed site and native cells", "GetIndustryConstructionStage/IsIndustryCompleted", "IsGeothermalCollectorOperational",
+                   "current shared Heat producer/interval; no graphics-owned energy"],
+                  [evidence().log("collector-checks"), evidence().log("collector-capture")])
     elif asset.startswith("control."):
         values = ("GetMultiLayerControlSprite", "src/underground_gui.cpp", "UndergroundConstructionWindow::GetWidgetIcon", "GetMultiLayerControlSprite",
                   ["actual disabled/lowered widgets", "CheckDeepLayerAvailability/IsTBMCutterAvailable", "canonical area_quote/turn_envelope"], controls)
@@ -126,6 +132,105 @@ def read_evidence(path):
     return encoded.decode(encoding, errors="replace")
 
 
+def collector_integration(native_path, normal_paths, check_paths, publish=False):
+    """Append the proven collector binding while preserving delivered runtime families.
+
+    @param native_path Explicit current native fourteen-frame observer report.
+    @param normal_paths Explicit ordinary-game construction/completion reports from that observer's checkpoints.
+    @param check_paths Focused successful selector/collector/Heat check logs from both configurations.
+    @param publish Publish the verified public binding and generated runtime metadata when true.
+    @return None; fail before publication on stale pixels, sources, saves, builds or ownership evidence.
+    """
+    native_path = pack.base.repository_path(str(native_path))
+    normal_paths = [pack.base.repository_path(str(path)) for path in normal_paths]
+    check_paths = [pack.base.repository_path(str(path)) for path in check_paths]
+    public = json.loads(PUBLIC.read_text(encoding="utf-8"))
+    packed = json.loads(PACKED.read_text(encoding="utf-8"))
+    expected, outputs = pack.derive()
+    assert packed["families"] == expected["families"] and packed["sprites"] == expected["sprites"]
+    for path, encoded in outputs.items():
+        assert path.read_bytes() == encoded, "collector runtime source differs from packed inputs"
+    payload = packed["packed_grf"]
+    assert digest(ROOT / payload["path"]) == payload["sha256"], "collector runtime payload changed"
+    loader = read_evidence(ROOT / payload["loader_log"])
+    marker = (f"M1_PACKED_ART_LOADED sprites={66 + packed['pose_count']} native_bound={packed['native_sprite_bound']} "
+              f"protected=66 selected={packed['pose_count']} pixel_hashes=exact")
+    assert marker in loader and "All tests passed" in loader, "collector pixels were not actually loaded"
+    native = json.loads(native_path.read_text(encoding="utf-8"))
+    normals = [json.loads(path.read_text(encoding="utf-8")) for path in normal_paths]
+    assert len(native["frames"]) == 14 and native["simulation_owners_unchanged_during_render"]
+    native_log = read_evidence(ROOT / native["log"])
+    assert "All tests passed" in native_log and "COLLECTOR_ART_RUNTIME frames=14 construction_stages=4 completed=true current_heat=true" in native_log
+    saves = {row["path"]: row["sha256"] for row in native["saves"]}
+    # Ordinary captures must load this observer's actual checkpoints, including
+    # unfinished and completed machinery. A similar-looking external scene or
+    # source contact sheet cannot establish native collector display.
+    assert any("construction-" in row["source"] for row in normals)
+    assert any("collector-ready.sav" in row["source"] for row in normals)
+    for report in [native, *normals]:
+        assert report["fixture_floor"] and report["fixture_material_delivery"] and not report["transported_bootstrap"]
+        assert digest(ROOT / report["source"]) == report["source_sha256"], "collector capture source changed"
+        executable = report.get("test_executable", report.get("game_executable"))
+        assert digest(ROOT / executable["path"]) == executable["sha256"], "collector executable changed after capture"
+        for frame in report["frames"]:
+            path = pack.base.repository_path(frame["path"])
+            assert path.is_relative_to(ROOT / "mlm/reviews/geothermal/collector-art"), "collector frame has another owner"
+            assert digest(path) == frame["sha256"], "collector native pixels changed"
+    for report in normals:
+        assert saves.get(report["source"]) == report["source_sha256"], "ordinary scene is not this native checkpoint"
+        assert report["native_owner_chunks_exact"], "ordinary capture changed native construction/stock/Heat owners"
+        assert report["native_hardware"]["pixels_exact"], "ordinary frame lacks exact native machinery pixels"
+        hardware = report["native_hardware"]["native_frame"]
+        assert digest(ROOT / hardware["path"]) == hardware["sha256"], "native machinery comparison frame changed"
+        assert digest(ROOT / report["resave"]["path"]) == report["resave"]["sha256"]
+    assert {"focused-Debug.log", "focused-RelWithDebInfo.log"}.issubset({path.name for path in check_paths})
+    for path in check_paths:
+        assert "All tests passed" in read_evidence(path), "collector focused checks failed"
+    selector = (ROOT / "src/multilayer_sprite.cpp").read_text(encoding="utf-8")
+    consumer = (ROOT / "src/industry_cmd.cpp").read_text(encoding="utf-8")
+    assert "GetMultiLayerCollectorSprite(" in selector and "GetMultiLayerIndustrySprite(" in consumer
+    runtime = json.loads(RUNTIME.read_text(encoding="utf-8"))
+    ranges = {row["asset_id"]: row for row in packed["families"]}
+    # The existing delivered prefix keeps its original per-family evidence and
+    # source geometry. The new loader proves the complete appended payload;
+    # collector evidence adds one consumer rather than reclassifying old art.
+    for row in runtime["bindings"]:
+        assert row["native_offset"] == ranges[row["asset_id"]]["native_offset"]
+        assert row["sprite_count"] == ranges[row["asset_id"]]["sprite_count"]
+    asset = "facility.vent-collector"
+    family = next(row for row in public["assets"] if row["asset_id"] == asset)
+    assert family["packed"]["sha256"] == payload["sha256"]
+    binding = {"asset_id": asset, "native_offset": ranges[asset]["native_offset"], "sprite_count": ranges[asset]["sprite_count"],
+               "retained_only": False, "selector": "GetMultiLayerCollectorSprite", "selector_source": "src/multilayer_sprite.cpp",
+               "consumer": {"source": "src/industry_cmd.cpp", "symbol": "DrawTile_Industry", "call": "GetMultiLayerIndustrySprite"},
+               "state_authorities": ["GetGeothermalCollectorState", "GetGeothermalSiteClaim.site.access", "GetIndustryConstructionStage/IsIndustryCompleted",
+                                     "IsGeothermalCollectorOperational", "GetUtilityPowerProducer/GetUtilityPowerInterval"],
+               "evidence": [path.relative_to(ROOT).as_posix() for path in [*check_paths, native_path, *normal_paths]],
+               "simulation_independent": True, "gallery_status": "scoped_native_and_ordinary_display_verified", "user_review": "deferred_until_integration"}
+    runtime["bindings"] = [row for row in runtime["bindings"] if row["asset_id"] != asset] + [binding]
+    assert set(ranges) == {row["asset_id"] for row in runtime["bindings"]}, "runtime family coverage differs from packed selection"
+    runtime.update(packed_payload=payload, selected_families=len(runtime["bindings"]), selected_sprites=packed["pose_count"])
+    runtime["_documentation"] = "Owner: r2mlvs13-graphics-and-asset-pipeline.md83B and r2mlvs14-remaining-assets-and-runtime-integration.md79C; retained M1 bindings plus scoped collector native/ordinary display; user feedback pending"
+    # Receiver state remains with its existing selector. The shared industry
+    # dispatch now selects that producer and the collector through one draw call.
+    receiver_ids = {"facility.earth-receiver", "facility.rock-receiver"}
+    for row in runtime["bindings"]:
+        if row["asset_id"] in receiver_ids:
+            row["consumer"]["call"] = "GetMultiLayerIndustrySprite"
+    family["authoring"].update(runtime_activated=True, status="source_coverage_verified_runtime_bound")
+    family["runtime"] = {"status": "bound_verified", "consumer": binding["consumer"], "binding_manifest": RUNTIME.relative_to(ROOT).as_posix(),
+                         "scoped_evidence": binding["evidence"], "user_review": "deferred_until_integration"}
+    for row in public["assets"]:
+        if row["asset_id"] in receiver_ids:
+            row["runtime"]["consumer"]["call"] = "GetMultiLayerIndustrySprite"
+    packed.update(runtime_activated=True, runtime_binding_manifest=RUNTIME.relative_to(ROOT).as_posix())
+    if publish:
+        RUNTIME.write_text(json.dumps(runtime, indent=2) + "\n", encoding="utf-8")
+        PUBLIC.write_text(json.dumps(public, indent=2) + "\n", encoding="utf-8")
+        PACKED.write_text(json.dumps(packed, indent=2) + "\n", encoding="utf-8")
+    print(f"Collector runtime binding: {len(runtime['bindings'])} preserved/appended families, exact loaded pixels, fourteen native frames and {len(normals)} ordinary scenes; transported bootstrap and user feedback pending")
+
+
 def validate(public, packed, rasters):
     """Verify exact native ranges, actual loader identity and retained consumer/raster evidence.
 
@@ -144,7 +249,9 @@ def validate(public, packed, rasters):
     assert identity["sha256"] == digest(ROOT / identity["path"]), "distributed native payload hash is stale"
     assert identity["loader_log"] == evidence().log("packed-loader"), "loader log differs from selected proof"
     loaded = read_evidence(ROOT / identity["loader_log"])
-    assert "M1_PACKED_ART_LOADED sprites=2409 native_bound=2436 protected=66 selected=2343 pixel_hashes=exact" in loaded
+    marker = (f"M1_PACKED_ART_LOADED sprites={66 + expected['pose_count']} native_bound={expected['native_sprite_bound']} "
+              f"protected=66 selected={expected['pose_count']} pixel_hashes=exact")
+    assert marker in loaded, "actual loader coverage differs from selected runtime families"
     assert "All tests passed" in loaded
     # Native PNG and immutable save identities tie the real rendered controls
     # to their actual loaded world. A fabricated contact sheet cannot pass here.
@@ -175,7 +282,7 @@ def validate(public, packed, rasters):
         for log_path in binding["evidence"]:
             assert "All tests passed" in read_evidence(ROOT / log_path), "consumer evidence failed: " + log_path
         result.append({"asset_id": asset, "native_offset": row["native_offset"], "sprite_count": row["sprite_count"], **binding})
-    assert len(result) == 42 and sum(row["sprite_count"] for row in result) == 2343, "selected runtime coverage is incomplete"
+    assert len(result) == len(packed["families"]) and sum(row["sprite_count"] for row in result) == packed["pose_count"], "selected runtime coverage is incomplete"
     return result
 
 
@@ -218,7 +325,13 @@ def main():
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--cache-only", action="store_true", help="publish generated metadata while preserving the public source contract")
     parser.add_argument("--evidence-manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--collector-native", type=Path, help="explicit scoped native collector report")
+    parser.add_argument("--collector-normal", type=Path, action="append", default=[], help="explicit ordinary collector report; repeat per scene")
+    parser.add_argument("--collector-checks", type=Path, action="append", default=[], help="focused collector check log; supply both configurations")
     args = parser.parse_args()
+    if args.collector_native is not None:
+        collector_integration(args.collector_native, args.collector_normal, args.collector_checks, args.publish)
+        return
     select_evidence(args.evidence_manifest)
     public = json.loads(PUBLIC.read_text(encoding="utf-8"))
     packed = json.loads(PACKED.read_text(encoding="utf-8"))
@@ -247,7 +360,7 @@ def main():
                 binding["gallery_status"] = "technical_review_verified_user_feedback_deferred"
         report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Group83B; selected actual native consumers; final gallery/user review pending; sound proof in sound-runtime.json",
                   "schema_version": 1, "packed_payload": packed["packed_grf"], "selected_families": len(bindings),
-                  "selected_sprites": 2343, "bindings": bindings, "rasters": [evidence().selected("reports", name).relative_to(ROOT).as_posix() for name in ("geology", "control")],
+                  "selected_sprites": packed["pose_count"], "bindings": bindings, "rasters": [evidence().selected("reports", name).relative_to(ROOT).as_posix() for name in ("geology", "control")],
                   "user_review": "deferred_until_integration"}
         if gallery is not None:
             report["gallery_manifest"] = gallery
@@ -278,7 +391,7 @@ def main():
         else:
             packed.pop("gallery_manifest", None)
         PACKED.write_text(json.dumps(packed, indent=2) + "\n", encoding="utf-8")
-    print("Selected M1 runtime bindings: 42 families / 2343 sprites; actual consumer/range/payload/raster evidence and three corruption refusals pass; final gallery/user review pending; sound proof retained")
+    print(f"Selected M1 runtime bindings: {len(bindings)} families / {packed['pose_count']} sprites; actual consumer/range/payload/raster evidence and three corruption refusals pass; final gallery/user review pending; sound proof retained")
 
 
 if __name__ == "__main__":

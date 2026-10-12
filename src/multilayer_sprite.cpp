@@ -7,6 +7,7 @@
 /**
  * @file multilayer_sprite.cpp Read-only bindings from native terrain/portal owners to packed M1 art.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups82/83/79C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
@@ -368,13 +369,14 @@ std::optional<SpriteID> GetMultiLayerCollectorSprite(TileIndex tile, bool front,
 	const auto *collector = GetGeothermalCollectorState(industry->index);
 	if (collector == nullptr) return std::nullopt;
 	if (!IsGeothermalCollectorDefinition(industry->type)) return std::nullopt;
+	if (GetTileLayer(tile) != MapLayer::DeepUnderground) return std::nullopt;
 	const auto *claim = GetGeothermalSiteClaim(collector->site);
 	if (claim == nullptr) return std::nullopt;
 	const auto *terms = GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Collector);
 	// Only the actual paid collector footprint can consume its nine-cell source.
 	// A coincident source, wrong family or relocated native industry cannot select
 	// another site's orientation or expand artwork into neighboring world cells.
-	if (claim->site.kind != MultiLayerGeothermalConstructionKind::Collector || claim->site.tile != industry->location.tile ||
+	if (claim->active || claim->site.kind != MultiLayerGeothermalConstructionKind::Collector || claim->site.tile != industry->location.tile ||
 		industry->location.w != terms->width || industry->location.h != terms->height) return std::nullopt;
 	const uint x = TileX(tile) - TileX(industry->location.tile);
 	const uint y = TilePlaneY(tile) - TilePlaneY(industry->location.tile);

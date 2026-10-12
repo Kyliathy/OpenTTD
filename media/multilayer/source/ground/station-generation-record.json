@@ -1,0 +1,1543 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Immutable built-in original source selection; compiled native geometry controls placements; no packing/runtime activation"
+  },
+  "schema_version": 1,
+  "geometry_descriptor": "media/multilayer/contracts/conventional-station-geometry.json",
+  "families": {
+    "facility.rail-station": {
+      "brief": {
+        "model": "Modular ordinary underground freight platforms, compact mine-loader housing and independent elevated canopy halves",
+        "native_cell": [
+          1,
+          1
+        ],
+        "axes": [
+          "X",
+          "Y"
+        ],
+        "source_directions": [
+          "NE",
+          "SE"
+        ],
+        "roles": [
+          "platform",
+          "loading-building",
+          "canopy-rear",
+          "canopy-front"
+        ],
+        "parts": [
+          "back",
+          "front",
+          "roof",
+          "glass"
+        ],
+        "native_canvas": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "model_inventory": "Two steel platform strips, each5 world units wide, separated by the native6-unit railway corridor; loader housing on rear strip only in native role1. Canopy roles retain their own rear/front supports and separate roof parent atz16. Ordinary rail ground/track/catenary/trains are never baked into originals.",
+        "palette_style": "Restrained blue-gray steel, dark slate loader panels, yellow safety-edge line; upper-left light and native2:1 isometric camera. Match completed conventional fleet scale.",
+        "state_policy": "Construction and refused blocked views are preview-only. Installed ready/working use actual native loading trains. Deterministic source phases add no cargo, station state or clock.",
+        "source_strategy": "Select genuine X base, genuine Y model view, bare/platform and canopy modules, then truthful preview/loading fittings. Reuse retained M1 material/status originals only where geometry agrees.",
+        "coverage_required": 512,
+        "packing_runtime_pending": true,
+        "selected_loader_inventory": "One long blue-gray corrugated roof, one small roof vent, three louvered facade panels between two outside support posts, one inset amber glass near the u12 end, and one contained square loading nozzle near the u2 end. Native longitudinal u runs NE->SW on AxisX and NW->SE on AxisY; v points from rear edge toward the track. One plain steel front platform with yellow inner-edge safety line. No separate canopy parent in loading-building role.",
+        "base_native_transform": "Uniform BOX resampling of full alpha16 source bounds to64x50, placed at(0,14) on64x64/anchor(-31,-33); no painted pixels, missing corners, flat-image rotation or nonuniform source warp.",
+        "nullable_roof_and_glass_slots": 128,
+        "glass_policy": "Separate retained original glass source, attached to native elevated roof at screen(0,0) with actual transparency modifier and PALETTE_TO_TRANSPARENT. No fourth sorting box, opaque roof/glass composite or unaligned stock-child fallback.",
+        "view_conversion_policy": "Each independent native parent uses its actual common64x64/anchor(-31,-33), registered from a complete measured original component. BOX sampling selects original pixels only. The actual native rear/front owners fix rail-gap placement; no coupled scene crop may relocate a platform. Preserve approved X base pixels exactly. Y front native box[0,42,43,64] avoids rail-centre spill without cropping or erasing original pixels.",
+        "canopy_inventory": "Two genuine square posts on the native supported strip at u2/u14, v3 rear orv13 front, deckz2 to roofz16; original capped tops/yellow foot collars and one amber lens on u2. Complementary sloped A/B steel roof halves on both genuine axes with exactly four original opaque cyan panes, supplied separately as the one native transparent glass child.",
+        "canopy_conversion_policy": "Complete measured rectangles exclude source frames; register each whole original support against native contacts, and each whole original roof by width-preserving BOX resampling on64x64. Select authored original cyan glass by the disclosed material thresholds; structural roof+glass exactly reconstruct all original indexed roof pixels. All other platform pixels reuse exact approved bare sources. No source repaint, flat-image view rotation or native sorting-box changes."
+      },
+      "status": "complete_native_station_source_runtime_pending",
+      "selected": {
+        "loading-building:X:ready:0": "station-loader-x-base-v4"
+      },
+      "candidates": [
+        "station-loader-x-base-v1",
+        "station-loader-x-base-v2",
+        "station-loader-x-base-v3",
+        "station-loader-x-base-v4",
+        "station-loader-y-base-v1",
+        "station-loader-y-base-v2",
+        "station-loader-y-base-v3",
+        "station-independent-parents-v1",
+        "station-independent-parents-v2",
+        "station-loader-y-rear-v1",
+        "station-canopy-supports-v1",
+        "station-canopy-roofs-v1"
+      ],
+      "reuse_assessment": {
+        "date": "2026-10-11",
+        "sources": [
+          "media/multilayer/source/ground/raw/tube-terminal-platform-x-base-v1.png",
+          "media/multilayer/source/ground/raw/tube-terminal-platform-y-base-v1.png"
+        ],
+        "silhouette_reuse": false,
+        "reason": "Inspected originals have tall blue casing walls and end crosspieces. Conventional source model requires flat steel platform decks and an open ordinary rail corridor; compatible neutral/status materials may be reused separately."
+      },
+      "ready_base_parts": [
+        {
+          "graphics": 0,
+          "part": "back",
+          "source": "station-independent-parents-v2",
+          "component": "back-x-bare"
+        },
+        {
+          "graphics": 0,
+          "part": "front",
+          "retained_base": "station-loader-x-base-v4"
+        },
+        {
+          "graphics": 1,
+          "part": "back",
+          "source": "station-independent-parents-v2",
+          "component": "back-y-bare"
+        },
+        {
+          "graphics": 1,
+          "part": "front",
+          "source": "station-independent-parents-v2",
+          "component": "front-y"
+        },
+        {
+          "graphics": 2,
+          "part": "back",
+          "retained_base": "station-loader-x-base-v4"
+        },
+        {
+          "graphics": 2,
+          "part": "front",
+          "retained_base": "station-loader-x-base-v4"
+        },
+        {
+          "graphics": 3,
+          "part": "back",
+          "source": "station-loader-y-rear-v1",
+          "component": "loader-y-back"
+        },
+        {
+          "graphics": 3,
+          "part": "front",
+          "source": "station-independent-parents-v2",
+          "component": "front-y"
+        }
+      ],
+      "selected_ready_graphics": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "remaining": "Native packing, decoded-pixel loader and ordinary-game rendering under master10.4D",
+      "canopy_sources": [
+        {
+          "graphics": 4,
+          "supports": [
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx4-u2",
+              "longitudinal": 2
+            },
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx4-u14",
+              "longitudinal": 14
+            }
+          ],
+          "roof": {
+            "source": "station-canopy-roofs-v1",
+            "component": "roof-gfx4"
+          }
+        },
+        {
+          "graphics": 5,
+          "supports": [
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx5-u2",
+              "longitudinal": 2
+            },
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx5-u14",
+              "longitudinal": 14
+            }
+          ],
+          "roof": {
+            "source": "station-canopy-roofs-v1",
+            "component": "roof-gfx5"
+          }
+        },
+        {
+          "graphics": 6,
+          "supports": [
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx6-u2",
+              "longitudinal": 2
+            },
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx6-u14",
+              "longitudinal": 14
+            }
+          ],
+          "roof": {
+            "source": "station-canopy-roofs-v1",
+            "component": "roof-gfx6"
+          }
+        },
+        {
+          "graphics": 7,
+          "supports": [
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx7-u2",
+              "longitudinal": 2
+            },
+            {
+              "source": "station-canopy-supports-v1",
+              "component": "post-gfx7-u14",
+              "longitudinal": 14
+            }
+          ],
+          "roof": {
+            "source": "station-canopy-roofs-v1",
+            "component": "roof-gfx7"
+          }
+        }
+      ],
+      "state_component_geometry": {
+        "native_canvas": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "state_owner": {
+          "construction": "Build preview only; ordinary CmdBuildRailStation is atomic and has no installed construction stage",
+          "ready": "Eligible installed native tile with no actual loading train part on that tile",
+          "working": "Actual Station::loading_vehicles Train chain has a physical part on the queried station tile; no station-wide or off-platform extrapolation",
+          "blocked": "Refused construction preview only; default station tile flags have no persistent Blocked state",
+          "world_states": [
+            "ready",
+            "working"
+          ],
+          "preview_states": [
+            "construction",
+            "blocked"
+          ],
+          "frame_owner": "construction/ready/blocked fixed phase0 aliases; atomic default station build preview has no construction stages. Working uses existing synchronized TimerGameTick::counter presentation phases only, without cargo/work mutation",
+          "frame_aliases": {
+            "construction": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "ready": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "working": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "blocked": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "cue_targets": {
+          "0": {
+            "part": "back",
+            "points": [
+              [
+                4,
+                46
+              ],
+              [
+                5,
+                46
+              ]
+            ]
+          },
+          "1": {
+            "part": "back",
+            "points": [
+              [
+                57,
+                46
+              ],
+              [
+                58,
+                46
+              ]
+            ]
+          },
+          "2": {
+            "part": "back",
+            "points": [
+              [
+                4,
+                46
+              ],
+              [
+                5,
+                46
+              ]
+            ]
+          },
+          "3": {
+            "part": "back",
+            "points": [
+              [
+                57,
+                46
+              ],
+              [
+                58,
+                46
+              ]
+            ]
+          },
+          "4": {
+            "part": "back",
+            "points": [
+              [
+                4,
+                46
+              ],
+              [
+                5,
+                46
+              ]
+            ]
+          },
+          "5": {
+            "part": "back",
+            "points": [
+              [
+                57,
+                46
+              ],
+              [
+                58,
+                46
+              ]
+            ]
+          },
+          "6": {
+            "part": "front",
+            "points": [
+              [
+                31,
+                61
+              ],
+              [
+                32,
+                61
+              ]
+            ]
+          },
+          "7": {
+            "part": "front",
+            "points": [
+              [
+                30,
+                61
+              ],
+              [
+                31,
+                61
+              ]
+            ]
+          }
+        },
+        "mounting_policy": "Two original glass pixels inset into reviewed opaque outer platform/equipment fascia, clear of all actual train-centre contacts. Only the existing opaque material changes; no new alpha, housing, footprint or source movement.",
+        "phase_aliases": {
+          "construction": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "native_presentation_owner_sha256": {
+          "src/newgrf_station.cpp": "e9c0dbb0d19a51937652c08e9242b4dabd81e78d71458d2839377270dd189997",
+          "src/rail_gui.cpp": "265e00b9e340f86782416e3947dccd3ab5b45eb530da9d12b3f173835d0e993e",
+          "src/economy.cpp": "5ee2c2b449fd9e0c9cc0fa3cfe5a5b06462bf840661c51e3720a24df3a9fb3c5",
+          "src/vehicle.cpp": "8701e5bd9717412616486442c305487c11f52b0ba01bece54bbe05ab3a8ed499",
+          "src/station_base.h": "84afc66f2dbcf50c6d2f2348302289b9cd07002c76c1968a53dc9a91ae802498",
+          "src/timer/timer_game_tick.h": "9b2c19319b97ab83958789122fea5f081c654c3eacab1a4dd804c959ba5576c2"
+        }
+      },
+      "state_component_source": {
+        "source_record": "media/multilayer/source/m1/facility-generation-record.json",
+        "source_key": "facility-status",
+        "path": "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+        "sha256": "a70f38222cf3c52583f36ae384890609d35dcf1f2fa3e56c7f31548ca831fe45",
+        "selection": "Retain original inset glass material only, BOX reduce each actual state/frame glass to2x1; native source-frame aliases select onlyphase0 for construction/ready/blocked. No foreign housing or procedural recolor.",
+        "geometry_sha256": "55238629a0f50bc6d5ce974ba921dea1541fe82b56bf7477c760f3d8ab0e5823"
+      },
+      "approved_state_component_geometry_sha256": "55238629a0f50bc6d5ce974ba921dea1541fe82b56bf7477c760f3d8ab0e5823",
+      "approved_state_component_source_sha256": "fbdf0f0a54f344b9f4dba7d18bcca313b4252ec1dc2f440f2dc9d3776fbbe077",
+      "source_coverage_complete": true,
+      "atlas_manifest": "logs/proofs/mlm/native-art/ground/station-source-manifest.json",
+      "native_atlas": "logs/proofs/mlm/native-art/ground/station-source-authored.png",
+      "native_sha256": "f8ae1e4881306d796964faf45be9450126ecf8418e2b74699aa2a0efd01337f6"
+    }
+  },
+  "candidates": [
+    {
+      "id": "station-loader-x-base-v1",
+      "path": "media/multilayer/source/ground/raw/station-loader-x-base-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-4dc7a0b0-2af3-406f-8805-adfc0a47b380.png",
+      "tool": "image_gen",
+      "prompt": "Use case: stylized-concept.\nAsset: facility.rail-station, original conventional underground mine freight station, native loading-building role, genuine Axis X / NE-SW rail orientation. Create ONE complete isolated transparent source sprite; this is the base physical model, not a whole station campus.\nSource layout: 1024x1024 square PNG, true alpha background. One straight opaque PURE MAGENTA #FF00FF rectangular source frame about6px thick at(24,24)-(1000,1000). Every subject/shadow pixel must stay inside(120,120)-(904,904), with at least64px genuinely transparent clearance to the frame. No text, labels, numbers, arrows, diagrams, grid, decorative background or other props. Magenta is only a separator outside the model. Keep the entire subject, all four platform ends and tiny details fully inside the frame.\nArt: crisp restrained classic transport-game pixel art, fixed elevated orthographic 2:1 isometric camera and upper-left light, readable when reduced to64x64 pixels. View shows a single square native world tile as a diamond, whose footprint is approximately640px wide by320px deep. Do not paint a complete diamond floor.\nPhysical native geometry: TWO SEPARATE narrow rectangular steel platform strips, running parallel along the NE-SW railway axis, from upper-right to lower-left in the picture. Each strip is5/16 of the tile width; a perfectly open transparent6/16-wide railway corridor separates them. Rear strip is along the picture's far upper-left side of the corridor; front strip is along its near lower-right side. The two platform strips have exactly the same length, perfectly square straight ends and matching shallow thickness. Restrained gray/blue steel deck panels with a single continuous yellow safety stripe along each edge facing the rail gap. Keep both platforms inside their shared single-tile square footprint. No crosswalk, rails, sleepers, track bed, floor plate, gate, cables or object connecting the strips. Their middle corridor must stay truly transparent.\nOn the REAR strip ONLY place ONE compact elongated dark slate and blue-gray industrial mine-loader/control housing, entirely within that narrow strip, parallel to the platform length. One simple slightly sloping steel roof, louvered side panels, a small inset amber status glass on the rail-facing wall, and one compact squared loading chute/nozzle contained at the platform edge. No second building, huge mine tower, crane, piles, loose cargo, overhead canopy or building on the front strip. The rear loader is about15 native world height units tall, just under the tile's16-unit width, so its whole silhouette is low and compact. Platform deck is about2 native units tall. Keep the loader safely on its own platform and never bridge into the clear6-unit track corridor.\nThe whole sprite is the rear platform/loader plus the separate plain front platform. Show the full original model and preserve its actual two-strip geometry. It must tile end-to-end with other native station cells. No vehicle, train, person, landscape, rock wall or baked cast shadow across the transparent railway channel. Background and all gaps are genuinely transparent.",
+      "references": [],
+      "selection": {
+        "status": "rejected",
+        "reason": "First candidate lets the near platform approach the right source frame and scatters opaque magenta inside the margin; safe whole-model extraction is unproven. Preserve it as the model edit reference only.",
+        "scope": "X loading-building base; no source pose delivery"
+      },
+      "sha256": "228a7ca0a130f4dff87ef53e93c109dd331dc24488af3730525609e7598229b7",
+      "image_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "station-loader-x-base-v2",
+      "path": "media/multilayer/source/ground/raw/station-loader-x-base-v2.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-e88efe0f-cefa-4c34-b63c-001a07f5df31.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nAsset: conventional underground rail freight station, genuine X/NE-SW loading-building tile; isolated-view fallback after unsafe framed extraction.\nInput images: Image1 is the unapproved first model candidate, used as the physical design/material reference and edit target. Image2 is a GEOMETRY-ONLY native renderer reference: blue is the rear platform/building volume, ochre is the separate front strip, red is the actual rail axis. The colored geometry and background are NOT artwork to copy.\nCreate ONE clean isolated transparent PNG, square canvas. Remove the magenta frame and EVERY magenta stray pixel completely through a new generated edit. No frame, border, labels, lettering, guide colors, red line, floor diamond, background, arrows, noise or unrequested props.\nReduce the complete model uniformly so the entire subject occupies only about65% of canvas width. Keep at least120px of completely transparent margin on all four sides, including around the full end faces, shadows and every tiny fitting. Do not crop or conceal any platform end.\nPreserve the first model's two separate steel platform strips, single elongated dark slate/blue-gray loader housing on the REAR strip only, one sloping segmented roof with its same two compact roof vent boxes, same louvered wall inventory, one inset amber status glass and one square loading nozzle. Keep the near front platform plain. Preserve the same light from upper-left and crisp classic transport-game sprite style. Never duplicate the building, add tracks, vehicles, cargo, cranes, ground, crosswalks or a bridge across the gap.\nCorrect the physical geometry to Image2 under an exact 2:1 isometric camera: tile-world X projects down-left with screen vector(-2,+1), Y projects down-right with(+2,+1), height projects straight up. TWO equal-length strips run NE-SW upper-right to lower-left; each is5 world units wide, along a shared16-world-unit length. Separate them by6 clear world units, forming ONE square16x16 tile footprint. Ground spacing must project at exactly2:1, not a long rectangular station campus. Rear building is entirely on the far upper-left strip; near front strip is along the lower-right side. No building part bridges into the track corridor. All floor corners and strip ends stay inside the reference tile footprint. The tall native box is a maximum allowed envelope; retain the actual compact low house from the first design.\nBoth yellow safety stripes belong on the long INNER edges facing the transparent railway gap. In particular move the near front strip's yellow line onto its far upper-left edge facing that gap, rather than its outer lower-right rim. Keep both outer edges plain steel.\nShow the whole genuine original model. Background, all margins and the railway gap must be true alpha transparency. No painted or baked shadow across the rail channel. This is a game source cutout that will reduce to64x64 pixels, so keep silhouette and platform ends exceptionally clear.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/station-loader-x-base-v1.png",
+          "role": "unapproved model edit target",
+          "sha256": "228a7ca0a130f4dff87ef53e93c109dd331dc24488af3730525609e7598229b7"
+        },
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-loader-x-geometry-v1.png",
+          "role": "native geometry reference only",
+          "sha256": "d02a8b29708cdb8825eb806caedb2b97c1a748c8af11fab109a5cd58b45deee1"
+        }
+      ],
+      "selection": {
+        "status": "rejected",
+        "reason": "The isolated edit removes the unsafe frame, but preserves the first candidate's approximate station geometry and near outer safety stripe. It does not establish native strip contacts/2:1 placement. Retained as materials/model reference only.",
+        "scope": "No approved native pose or runtime delivery"
+      },
+      "sha256": "e75a2a65a94330c4855a0bd513285e18a4a6fbe6d10e58cfc571933b54f4e384",
+      "image_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "id": "station-loader-x-base-v3",
+      "path": "media/multilayer/source/ground/raw/station-loader-x-base-v3.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-5f6499dc-3447-42db-9482-0a637739608c.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nAsset: ONE native conventional rail station loading-building cell, AxisX / NE-SW.\nImage1 is the exact native geometry diagram and primary edit target. Keep its projected object coordinates, proportions and square16x16 tile footprint rigorously. Image2 supplies ONLY blue-gray steel materials and industrial loader design; do NOT copy its platform placement, strip lengths, view angle or camera.\nTransform Image1 into finished original classic transport-game pixel art, with a TRUE transparent background. Keep the native model at exactly the SAME position and SIZE as the colored geometry in Image1, comfortably surrounded by its generous blank margins. Do not zoom, enlarge, crop or rotate the diagram. No frame or border.\nThe diagram's blue elevated rectangle is the top envelope of ONE elongated mine-loader housing over the REAR platform strip. Render a single dark-slate blue-gray louvered industrial housing with a slightly sloping segmented steel roof, two small roof ventilation fittings, one little inset amber status glass and one short square loading nozzle, following this blue rectangular roof position and its native straight vertical support lines. Seat the housing on its own5-world-unit-wide REAR strip along the far upper-left side of the railway, entirely within that strip. It may use less height than the diagram's maximum but must preserve the same base contacts and exact projected floor bounds.\nThe ochre/gold rectangle is the SECOND, plain FRONT platform strip. Render a gray steel deck within EXACTLY that projected parallelogram, with square ends and shallow2-world-unit thickness. It runs parallel to the rear housing, NE-SW from upper-right to lower-left. Do not move it farther right, stretch it longer or alter its angle. Both strips are exactly16 units long and5 units wide, separated by6 empty native world units.\nThe gray diamond and red line are guide-only: REMOVE them completely and leave the entire central railway corridor transparent. There is no diamond floor, track, sleepers, train, ground plane or bridge between the two separate platform strips. Keep a true exact2:1 orthographic isometric camera: native world X is screen(-2,+1), native Y is(+2,+1), native height is straight up.\nUse restrained blue-gray steel and dark slate panels, crisp legible transport-game pixel edges and upper-left light. Add thin yellow safety stripes only on the INNER long platform edges that face the transparent railway gap: the rear strip's lower-right long edge, and the FRONT strip's upper-left long edge. Outer long edges stay plain gray steel. Do not paint the whole gold rectangle yellow.\nOutput contains only the two complete separated platforms and the single rear loader housing. No huge station campus, canopy, second building, duplicated machinery, cargo, people, text, labels, symbols, arrows, guide lines, bright guide colors, floor background, magenta pixels or shadows cast into the open corridor. All model pixels must stay well inside the generous Image1 margins. Preserve EVERY visible strip end.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-loader-x-inset-geometry-v1.png",
+          "role": "primary native geometry edit target",
+          "sha256": "c26822c6f6a2fc51063f97687ff180d6dca586f766a5357bef3e6a48955dfeff"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/station-loader-x-base-v2.png",
+          "role": "unapproved model/material reference",
+          "sha256": "e75a2a65a94330c4855a0bd513285e18a4a6fbe6d10e58cfc571933b54f4e384"
+        }
+      ],
+      "selection": {
+        "status": "rejected",
+        "reason": "The first model/material reference still dominates; native floor contacts and 2:1 camera are not established. No selected pose.",
+        "scope": "X loading-building base only; no complete source family or runtime activation"
+      },
+      "sha256": "e4beb193d290670eca0aadb925183af8fc3c00850f25ae5e18aafb45e1dbafd8",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        138,
+        347,
+        1138,
+        1064
+      ],
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "id": "station-loader-x-base-v4",
+      "path": "media/multilayer/source/ground/raw/station-loader-x-base-v4.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-5bb3b78d-5ecb-4398-840e-31379f855bcd.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nPrimary edit target: the attached native station geometry drawing.\nReplace ONLY its colored geometric shapes with a finished original pixel-art underground freight station module while keeping ALL vertex locations, angles, scale and silhouette-envelope coordinates EXACTLY where the diagram has them. Treat this as painting materials onto a rigid native-game template, not as composing a new scene. Do not reframe, zoom in, enlarge or change camera. Output one transparent square cutout with the same generous margins as the input.\nThe native object is a single square16x16 world-tile station cell. Keep exact2:1 pixel isometric geometry. In the attached1024x1024 reference the square floor diamond's corners are approximately top(504,520), left(256,648), bottom(504,776), right(760,648). Those are the actual floor contacts; do not elongate the diamond. DO NOT PAINT THE DIAMOND FLOOR; its gray color is only a coordinate guide.\nThere are two independent strips within this diamond, separated by a completely transparent6-unit-wide rail channel.\nRear strip world rectangle x0..16,y0..5 has ground corners approximately(504,520),(248,648),(328,688),(584,560).\nFront strip world rectangle x0..16,y11..16 has ground corners approximately(680,608),(424,736),(504,776),(760,648). It is the gold shape in the reference. Paint a plain shallow gray steel platform on exactly that gold parallelogram, never on the gray middle. Its long axis is from upper-right to lower-left with slope exactlyone-half. A subtle yellow safety stripe on the inner long edge faces the corridor.\nOn the rear strip, the reference's BLUE top rectangle marks the top of one simple elongated industrial mine-loader housing. Ground-to-roof height is15 native units, or120px in this reference, so its maximum roof corners are approximately(504,400),(248,528),(328,568),(584,440). Render a compact dark slate/blue-gray metal housing entirely in this rear strip and within these exact floor/roof bounds. One slightly sloping steel roof, a small rooftop vent, louvered side panels, one inset amber status glass and one small squared loading nozzle contained inside the rear strip. No second building, canopy, loose cargo or crane. Platforms are only2 native units thick, or16px in the reference.\nStyle: original classic transport-game pixel art, crisp sprite contours, restrained blue-gray industrial materials, dark slate panels, thin yellow safety-edge trim and light from upper-left. Clear silhouette when reduced to64x64. Use details proportionate to the exact small template.\nREMOVE the reference's gray floor, red line, blue/gold guide colors, guide edges and background entirely. All margins, the central rail channel and the rest of the canvas must be genuinely transparent. No magenta, frame, labels, lettering, arrows, rails, sleepers, vehicles, people, track bed, ground plane, connecting crosswalk or shadow across the central gap. Keep the COMPLETE two strips and every platform end inside the template's generous margins.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-loader-x-inset-geometry-v1.png",
+          "role": "only edit target, exact native placement reference",
+          "sha256": "c26822c6f6a2fc51063f97687ff180d6dca586f766a5357bef3e6a48955dfeff"
+        }
+      ],
+      "selection": {
+        "status": "approved_base_silhouette",
+        "scope": "Task24.1 X/graphics2 loading-building ready phase0 only; source family incomplete and runtime pending",
+        "reason": "Guide-only rerender gives two genuine2:1 native platform strips and a distinct loader facade. All four native ledge contacts, empty rail centre, independent original parents and native1x/4x/three-neighbor placement are verified.",
+        "source_layout": "One isolated transparent file, canonical fallback after unsafe framed/model candidates",
+        "source_window": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "alpha_crop_threshold": 16,
+        "measured_subject_bbox": [
+          244,
+          332,
+          1045,
+          954
+        ],
+        "minimum_transparent_clearance": 209,
+        "opaque_magenta_pixels": 0,
+        "native_scale_review": "Reviewed native1x, enlarged4x, independent back/front and adjacent X cells; no ordinary-game/native-activation claim"
+      },
+      "sha256": "0a1cca1abfe2ebf36f600ed45015a7f8d97bd772bc61d93fb9a2e1f0928d3cf3",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        244,
+        332,
+        1045,
+        954
+      ],
+      "opaque_magenta_pixels": 0,
+      "native_transform": {
+        "axis": "X",
+        "role": 1,
+        "state": "ready",
+        "frame": 0,
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "resampling": "BOX",
+        "alpha_crop_threshold": 16,
+        "measured_alpha16_bbox": [
+          244,
+          332,
+          1045,
+          954
+        ],
+        "native_box": [
+          0,
+          14,
+          64,
+          64
+        ],
+        "registration_policy": "Uniform source scaling; all visible source pixels retained; bottom contact at native row63; actual four ledge contacts and empty native centre independently checked"
+      }
+    },
+    {
+      "id": "station-loader-y-base-v1",
+      "path": "media/multilayer/source/ground/raw/station-loader-y-base-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-eac2cc89-b7e8-4f5c-98d8-d0551274b52f.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nAsset: genuine Y/NW-SE view of the selected conventional underground freight loading-building model.\nPrimary edit target: the attached exact NATIVE Y-axis station geometry drawing. The long platform/house axis runs from UPPER-LEFT toward LOWER-RIGHT, unlike the X-axis model. Replace ONLY its colored geometry with finished original pixel-art machinery. Preserve ALL projected vertex positions, angles, square tile size, source scale and margins. Do not rotate or mirror a flat image, copy the X view, enlarge, zoom or reframe.\nOutput ONE square transparent original cutout at the same position and scale as the diagram, with generous blank margins. Native world X projects screen(-2,+1), world Y projects(+2,+1), height goes straight up: exact2:1 orthographic isometric camera, fixed upper-left light.\nIn the1024x1024 reference the shared16x16 floor diamond has approximate corners top(504,520), left(256,648), bottom(504,776), right(760,648). Gray diamond and red rail line are ONLY guides and must disappear completely from the finished output. No diamond floor.\nRear strip is native x0..5,y0..16: ground corners(504,520),(760,648),(680,688),(424,560). The BLUE upper rectangle is its house roof envelope, with approximate roof corners(504,400),(760,528),(680,568),(424,440),15 native units above the floor.\nPut ONE elongated dark slate/blue-gray industrial loader facade entirely on this far upper-right strip. Preserve the selected physical inventory: ONE corrugated slightly sloping roof; ONE small ventilation box near its longitudinal middle; THREE louvered facade panels; TWO outside square support posts with small yellow collars; ONE inset amber status glass near the longitudinalu12 end; and ONE compact squared loading nozzle nearu2. Here longitudinalu is native worldY, from NW/upper-left u0 toward SE/lower-right u16. Thus the glass belongs near the LOWER-RIGHT end of the facing wall, and the nozzle near the UPPER-LEFT end. This is the genuine Y view of that same physical model. No duplicate glass, vent, roof, chute or extra machinery.\nThe ochre rectangle is a SEPARATE plain FRONT platform on native x11..16,y0..16, along the near lower-left side of the corridor. Its exact ground corners are approximately(328,608),(584,736),(504,776),(248,648). Replace it with a shallow2-unit gray steel deck, square ends, and a thin yellow safety stripe along ONLY its INNER upper-right long edge facing the open railway gap. Outer lower-left edge stays plain gray. Keep the strip exactly parallel to the rear housing and exactly16 units long/5 units wide. Do not stretch it into a long campus or connect the two strips.\nThe entire native6-unit railway channel between the two platforms stays truly transparent. No rails, sleepers, floor, vehicle, ground plane, crosswalk, gate, shaft or shadow crossing that gap. All model pixels fit comfortably inside the diagram's margins.\nStyle must match restrained original classic transport-game pixel art: blue-gray corrugated steel, dark slate three-panel loader facade, light gray plain platform, small amber glass and thin yellow safety details; readable at64x64 pixels. No text, labels, numbers, arrows, diagrams, guide colors, red line, magenta, frame, border, landscape, people, loose cargo or other props. Render only the complete TWO separated platform components and ONE rear loader housing, with all platform ends visible and a true transparent background.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-loader-y-inset-geometry-v1.png",
+          "role": "only native Y geometry edit target",
+          "sha256": "b6d55f14fb7f1d8716988b3153c6b1d25e2fac3372c84a67df555d55e397c392"
+        }
+      ],
+      "native_axis": "Y",
+      "selection": {
+        "status": "rejected",
+        "reason": "Genuine Y geometry is present, but amber glass moved onto the SE end face, nozzle has no visible opening and the front deck loses its four panel divisions. Correct to the approved physical inventory before selection.",
+        "scope": "No approved native source pose"
+      },
+      "sha256": "4710776c11b5c16937a948fe488d04ae30900266c17ce0e18f843736d4dff56c",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        182,
+        335,
+        1078,
+        1016
+      ],
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "id": "station-loader-y-base-v2",
+      "path": "media/multilayer/source/ground/raw/station-loader-y-base-v2.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-fee32884-459b-4a9f-ac3d-c0aa3de525bd.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nEdit target: the attached genuine Y/NW-SE conventional station loader source. Preserve its exact footprint, two separate platforms, camera, scale, contact points, blue-gray steel, upper-left light, transparent background and generous margins. The long axis continues upper-left to lower-right. Do not rotate, mirror, reframe, zoom or move either platform.\nMake ONLY these model-continuity corrections:\n1. MOVE the single amber status glass off the small vertical RIGHT END FACE. That end face must become plain dark blue-gray metal. Put the same ONE small rectangular amber glass on the LONG TRACK-FACING FACADE instead, near its LOWER-RIGHT/SE end, just inside the right outside support post. It must face the open railway channel, like the selected X model's amber pane. Keep THREE louver panels on that long facade, making a little room on the last plain facade panel for the amber glass. Never leave the old end-face glass or duplicate the glass.\n2. The compact gray square loading nozzle near the UPPER-LEFT/NW end must have a visibly OPEN dark rectangular mouth on its outer lower-left face, with a thin yellow corner/rim detail and blue-gray steel top/sides. It is the same compact open box/nozzle used in the selected model, contained entirely at the rear platform edge. Do not add another box or extend anything into the railway channel.\n3. The separate plain FRONT platform needs FOUR equal gray steel deck panels along its length: add exactly THREE subtle cross-seams across that deck at the quarter, half and three-quarter positions. Keep the same continuous thin yellow safety stripe along its inner upper-right edge facing the gap. Do not turn the deck into a wall or add supports.\nPreserve the ONE corrugated roof, ONE small roof vent near the longitudinal middle, THREE louvers, TWO outside square posts with yellow collars and the exact native two-strip geometry. No extra equipment, duplicate window, changed roof, canopy, platform crosspiece, floor, rail, vehicle, person, words, labels, magenta or frame. Entire central railway corridor and all background/margins remain true alpha transparency. Keep all platform ends visible. The result is still ONE genuine Y-view original game sprite, matching the approved X physical inventory, with no other changes.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/station-loader-y-base-v1.png",
+          "role": "genuine Y edit target; hardware continuity correction",
+          "sha256": "4710776c11b5c16937a948fe488d04ae30900266c17ce0e18f843736d4dff56c"
+        }
+      ],
+      "native_axis": "Y",
+      "selection": {
+        "status": "rejected",
+        "reason": "Hardware continuity corrected, but uniform native registration fails actual Y rail-centre/ledge geometry; widen the short-side layout before selecting.",
+        "scope": "No approved native pose"
+      },
+      "sha256": "9195a2c3535f8136e07b03dba291bfdb53049997e640634a65567ec2459c9c4d",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        180,
+        330,
+        1078,
+        1017
+      ],
+      "opaque_magenta_pixels": 0,
+      "native_probe": {
+        "uniform_native_box": [
+          0,
+          15,
+          64,
+          64
+        ],
+        "contacts": [
+          {
+            "point": [
+              9,
+              44
+            ],
+            "opaque_within2": 25
+          },
+          {
+            "point": [
+              21,
+              38
+            ],
+            "opaque_within2": 0
+          },
+          {
+            "point": [
+              41,
+              60
+            ],
+            "opaque_within2": 15
+          },
+          {
+            "point": [
+              53,
+              54
+            ],
+            "opaque_within2": 5
+          }
+        ],
+        "centre_channel_opaque_pixels": 42,
+        "status": "failed"
+      }
+    },
+    {
+      "id": "station-loader-y-base-v3",
+      "path": "media/multilayer/source/ground/raw/station-loader-y-base-v3.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-cbfe086e-ac69-41c6-a4cc-6ce332b9ad9b.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nTarget: the attached Y/NW-SE conventional freight loader original. Its hardware inventory is correct, but its physical long-axis proportions are too elongated for a square native station tile.\nMake a single precise geometry correction: SHORTEN the entire model along its NW-SE longitudinal axis by approximately27%, while preserving its perpendicular strip widths, the perpendicular rail-gap width and the vertical height. Redraw the true Y-view geometry with the same2:1 isometric camera; do not simply scale the whole picture in width/height, rotate or mirror it. Both steel strips and the one rear housing must remain exactly parallel and equal-length, and occupy a compact SQUARE16x16 world-tile footprint. Every long rectangular strip is exactly16 world units long by5 units wide, so its long-edge-to-short-edge ratio is3.2, rather than the current overly long narrow bars. The empty rail gap is6 native world units wide.\nKeep the same genuine Y orientation: longitudinal axis runs upper-left to lower-right. WorldY projects(+2,+1), worldX projects(-2,+1), height straight up. Native floor is a square diamond under this exact2:1 camera, never an elongated campus. Keep the entire model comfortably centered within a transparent square canvas with at least96px completely transparent margin on every side. All ends remain fully visible.\nPreserve ONE corrugated blue-gray roof, ONE small roof vent, THREE louver panels on the long facing facade, TWO outside posts with yellow collars, ONE amber glass on the long facing facade near the LOWER-RIGHT/SE end, and ONE square visibly open loading nozzle near the UPPER-LEFT/NW end. The end face stays plain steel with NO second amber glass. The compact house is15 native height units, platforms2 units tall.\nPreserve the plain front platform's FOUR gray steel deck panels with three subtle quarter-length cross-seams, and the continuous thin yellow stripe along its INNER upper-right long edge facing the open gap. Keep the rear loader entirely on the far upper-right strip and the front platform entirely on the near lower-left strip.\nNo equipment additions/removals, no changed material palette, no second roof/vent/glass/nozzle, no canopy, people, loose cargo, words, labels, guide marks, magenta, frame, rail, sleepers, floor plate, ground diamond, crosswalk or anything bridging the two strips. The railway channel and all background/margins remain genuinely transparent, including any shadows. Preserve original classic transport-game pixel-art style and upper-left lighting. This is a compact independently rendered Y-view original, to be registered at64x64.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/station-loader-y-base-v2.png",
+          "role": "unapproved Y whole-pose geometry edit target",
+          "sha256": "9195a2c3535f8136e07b03dba291bfdb53049997e640634a65567ec2459c9c4d"
+        }
+      ],
+      "native_axis": "Y",
+      "selection": {
+        "status": "rejected",
+        "reason": "The coupled edit moves the front platform toward the loader and still cannot establish the required native6-unit rail gap. Retain as a failed whole-pose candidate; author separate native parent originals instead.",
+        "scope": "No approved native pose or source coverage"
+      },
+      "sha256": "aba3d00904d13f416c57d690eaee50c371ba643d423b972b75f3c1dcf451d5ff",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        297,
+        380,
+        951,
+        947
+      ],
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "id": "station-independent-parents-v1",
+      "path": "media/multilayer/source/ground/raw/station-independent-parents-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-5c0931ec-9b81-4da9-adf5-94259dc92cf2.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nAsset: conventional underground freight station; FOUR INDEPENDENT NATIVE SPRITE PARENTS, not whole station scenes.\nPrimary edit target: the attached exact four-cell native-parent geometry sheet. Keep the four separate source cells, shown camera angles, component proportions and source layout. Replace the blue diagram objects with finished original classic transport-game pixel artwork. There is EXACTLY ONE independent component per cell. Never add the other platform to any component, connect two cells, duplicate a building or render a whole station campus.\nSAFE BORDERED SOURCE SHEET:1536x1024,2x2 grid, true alpha background. Keep four straight opaque PURE MAGENTA #FF00FF rectangular frames about6px thick at top-left(24,24)-(744,488), top-right(792,24)-(1512,488), bottom-left(24,536)-(744,1000), bottom-right(792,536)-(1512,1000). Magenta is ONLY a source separator outside all components. Keep every component, shadow and tiny fitting comfortably within its frame with at least32px transparent clearance, no clipped ends or overlapping views. Keep subjects approximately at their reference positions/scale; do not enlarge them to fill the cells. No labels, words, numbers, arrows, guide lines, background or blue diagram colors.\nTOP-LEFT: one genuine Y/NW-SE REAR LOADER COMPONENT ONLY. It runs from upper-left to lower-right, exactly16 world units long and5 wide, height15. A single dark slate/blue-gray corrugated roof, ONE small roof vent near the middle, THREE louvered panels on the long track-facing facade, TWO outside square support posts with yellow collars, ONE inset amber glass on that long facing facade near the LOWER-RIGHT/SE end, and ONE small visibly OPEN square loading nozzle with a thin yellow rim near the UPPER-LEFT/NW end. The short SE end face stays plain steel with no second glass. A narrow gray rear platform is entirely under this housing. Keep the exact compact proportions of the blue reference volume. Do NOT include a separate front platform, rail gap, floor diamond, canopy or second object in this cell.\nTOP-RIGHT: one genuine Y/NW-SE FRONT PLATFORM ONLY. A shallow2-world-unit gray steel deck,16 units long by5 wide, running upper-left to lower-right. FOUR equal deck panels with THREE subtle cross-seams along its length. Thin yellow safety stripe ONLY on its INNER upper-right long edge; outer lower-left rim plain gray. Square ends, compact3.2 long-edge/short-edge ratio. No house, vent, tall wall, other platform, rail, crosspiece or support columns.\nBOTTOM-LEFT: one genuine X/NE-SW BARE REAR PLATFORM ONLY. Same shallow gray steel16x5x2 deck, now running upper-right to lower-left exactly as the reference. FOUR equal deck panels, THREE cross-seams. Yellow safety stripe only on its INNER lower-right long edge; outer upper-left edge plain gray. One tiny recessed amber status glass in the low inner vertical deck fascia at midlength, entirely inside the2-unit base; no tall cabinet or post. No other platform, house, rails or tube casing.\nBOTTOM-RIGHT: one genuine Y/NW-SE BARE REAR PLATFORM ONLY. Same shallow16x5x2 gray steel deck, running upper-left to lower-right. FOUR panels, THREE cross-seams. Yellow stripe only on its INNER lower-left long edge; outer upper-right edge plain gray. The same ONE tiny recessed amber status glass in the low inner-facing vertical deck fascia at midlength; no tall cabinet/post or other component.\nAll four components are the SAME restrained blue-gray/light-gray steel station design under fixed upper-left light, with exact2:1 orthographic isometric camera: worldX screen(-2,+1), worldY(+2,+1), height straight up. Long-edge/short-edge ratio is exactly3.2 for each16x5 strip. Never stretch these into long narrow rectangles. These are genuine different native views, not mirrored or rotated flat copies. Crisp original transport-game pixel art, readable at64x64.\nEvery complete component is an independent transparent cutout. No floor plate or diamond, bridge, track, vehicle, cargo, rock wall, landscape, people, extra props, halo, diagonal cast shadow, colored guide fill or background. Preserve the generous reference margins and complete square ends. Exactly four separate source components in four magenta frames, true alpha everywhere else.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-independent-parent-sheet-v1.png",
+          "role": "four independent native parent geometry targets",
+          "sha256": "af9bad75e5bce7290be72cf70d97d2be05a9dcf46bbe728392e33cd31f87b7f1"
+        }
+      ],
+      "native_axes": [
+        "X",
+        "Y"
+      ],
+      "selection": {
+        "status": "rejected",
+        "reason": "Measured alpha proves the visible colored haze is transparent RGB: all four canonical crops have zero opaque magenta and generous alpha16 clearance. The Y loader has only two louvers, so model identity still refuses. The earlier background-opacity interpretation is corrected.",
+        "scope": "Four independent source parts remain pending"
+      },
+      "sha256": "cee385da8db7fbd64119e99ba23dbf82de6ec00a4eef78740110a26a24f8f76a",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        24,
+        23,
+        1513,
+        1000
+      ],
+      "opaque_magenta_pixels": 59103
+    },
+    {
+      "id": "station-independent-parents-v2",
+      "path": "media/multilayer/source/ground/raw/station-independent-parents-v2.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-bcb110c1-351d-46e1-bab3-7cd92e3117f3.png",
+      "tool": "image_gen",
+      "prompt": "Use case: background-extraction.\nEdit the attached four-component station source sheet. Keep the exact four independent objects, their native Y/X camera orientations, size, placement, steel palette, four deck panels, tiny amber lenses and all platform ends.\nRemove EVERY trace of background color, haze, glow, shadow and magenta spill around the objects. All non-object pixels and all gutters must be TRUE ZERO-ALPHA TRANSPARENT, including the large blank areas INSIDE each rectangle. No vignette, colored fog, bloom, halo, gray plate or backdrop.\nRetain only four CRISP solid PURE MAGENTA #FF00FF rectangular source frames,6px thick, at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Magenta exists ONLY in those thin frame lines. The background on both sides of every line and between every line/object is completely transparent. Every object has at least32px of fully transparent clearance to its frame. No words or labels.\nMake ONE hardware correction to the top-left Y loader: give its long facing facade exactly THREE narrow louver panels, not two, between the same two outside posts. Keep the one open nozzle near the upper-left end, one amber glass on the long facade near lower-right, one corrugated roof and one small roof vent. Do not duplicate anything or change its overall footprint.\nTop-right remains the Y front platform, bottom-left the X bare rear platform with its tiny mid-fascia amber lens, bottom-right the Y bare rear platform with that same single lens. Keep their correct individual yellow safety-edge sides, four steel deck panels/three cross-seams, full cutout silhouettes and actual2:1 isometric camera. No extra platform, rail, floor, crosspiece, house, cargo or person in any cell. Exactly four independent sharp transparent sprite cutouts and four thin magenta source frames,1536x1024.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/station-independent-parents-v1.png",
+          "role": "four-component edit target; alpha/third-louver correction",
+          "sha256": "cee385da8db7fbd64119e99ba23dbf82de6ec00a4eef78740110a26a24f8f76a"
+        }
+      ],
+      "native_axes": [
+        "X",
+        "Y"
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "reason": "Measured source windows exclude the shifted opaque frames; all three selected platform components have zero opaque magenta and alpha16 clearance22/77/77px. Top-left loader remains excluded; use its separate original.",
+        "scope": "Only the explicitly listed independent native components; ready0 graphics0..3 partial source, no canopy/state/runtime closure",
+        "native_review": "Native1x/4x X/Y bare/loader comparison, all four ledge contacts, exact parent ownership and zero rail-centre/checked foreground train-centre obstruction pass."
+      },
+      "sha256": "1454c891478fdcbc9b8d20eb71e1a9d13ebdbda5b211c8f03558c100f0069786",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        26,
+        33,
+        1511,
+        988
+      ],
+      "opaque_magenta_pixels": 89655,
+      "components": [
+        {
+          "id": "front-y",
+          "axis": "Y",
+          "native_roles": [
+            0,
+            1,
+            2
+          ],
+          "part": "front",
+          "source_window": [
+            816,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            114,
+            156,
+            529,
+            402
+          ],
+          "native_box": [
+            0,
+            42,
+            43,
+            64
+          ],
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16
+        },
+        {
+          "id": "back-x-bare",
+          "axis": "X",
+          "native_roles": [
+            0,
+            3
+          ],
+          "part": "back",
+          "source_window": [
+            48,
+            560,
+            720,
+            968
+          ],
+          "measured_alpha16_bbox": [
+            118,
+            83,
+            524,
+            331
+          ],
+          "native_box": [
+            0,
+            31,
+            43,
+            55
+          ],
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16
+        },
+        {
+          "id": "back-y-bare",
+          "axis": "Y",
+          "native_roles": [
+            0,
+            3
+          ],
+          "part": "back",
+          "source_window": [
+            816,
+            560,
+            1488,
+            968
+          ],
+          "measured_alpha16_bbox": [
+            149,
+            83,
+            555,
+            331
+          ],
+          "native_box": [
+            21,
+            31,
+            64,
+            55
+          ],
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16
+        }
+      ],
+      "excluded_components": [
+        "loader-y-back"
+      ]
+    },
+    {
+      "id": "station-loader-y-rear-v1",
+      "path": "media/multilayer/source/ground/raw/station-loader-y-rear-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-8eaddd1e-3048-46c5-bb59-b1a4d309bef4.png",
+      "tool": "image_gen",
+      "prompt": "Use case: precise-object-edit.\nExtract ONLY the TOP-LEFT Y/NW-SE loader from the attached sheet into ONE independent square transparent original. Remove the frames, all three platform-only objects and all background. Preserve the genuine Y orientation, upper-left lighting, blue-gray corrugated steel, one roof vent, THREE louver panels, two square support posts with yellow collars, one open yellow-rimmed nozzle near upper-left/NW, and one amber status glass on the long facade near lower-right/SE. No second window or equipment.\nCorrect the loader height to match the selected native model: its rear footprint is16 world units LONG by5 units WIDE, and the main facade is about15 world units HIGH, rather than a squat10-unit box. Raise the roof and lengthen the existing wall/posts while preserving their floor contacts and roof-plan dimensions. The roof has a gentle longitudinal pitch: the NW/upper-left end is about18 units above its floor, descending to about13 units at the SE/lower-right end. Keep all three louver panels and the glass inside the two outside posts; the posts support the outside ends of that facade. Keep one narrow rear platform under the housing, within the same16x5 footprint.\nUse an exact2:1 orthographic pixel-isometric camera. The long Y axis goes upper-left to lower-right with screen slopeone-half; native X goes down-left at slopeone-half; height goes straight up. Show a genuinely redrawn taller Y model, not a rotated/mirrored X view or uniformly enlarged copy.\nThe whole complete loader must fit comfortably inside a square canvas with at least128px genuinely transparent margin on all four sides. No magenta frame, halo, haze, cast-shadow background or colored matte. Background/margins are zero-alpha transparent. No other platform, floor diamond, track, vehicle, cargo, people, canopy, word, label, symbol or extra prop. Keep the small roof vent, square open nozzle, single amber glass and all three louvers readable when this original is reduced to a roughly45x40 native pixel parent.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/station-independent-parents-v2.png",
+          "role": "Y loader design/extraction edit target; independent rear original only",
+          "sha256": "1454c891478fdcbc9b8d20eb71e1a9d13ebdbda5b211c8f03558c100f0069786"
+        }
+      ],
+      "native_axis": "Y",
+      "native_role": 1,
+      "native_part": "back",
+      "selection": {
+        "status": "approved_native_components",
+        "reason": "Independent genuine Y rear original has one roof/vent, three louvers, two posts, one open nozzle and one facade glass; verify native placement/continuity with the approved X model before selection.",
+        "scope": "Only the explicitly listed independent native components; ready0 graphics0..3 partial source, no canopy/state/runtime closure",
+        "native_review": "Native1x/4x X/Y bare/loader comparison, all four ledge contacts, exact parent ownership and zero rail-centre/checked foreground train-centre obstruction pass."
+      },
+      "sha256": "4fe191535354c0170250613c652f4b6947e423c626ca5a9e8c2eff41cfbad631",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        169,
+        226,
+        1090,
+        1059
+      ],
+      "opaque_magenta_pixels": 0,
+      "components": [
+        {
+          "id": "loader-y-back",
+          "axis": "Y",
+          "native_roles": [
+            1
+          ],
+          "part": "back",
+          "source_window": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_alpha16_bbox": [
+            169,
+            226,
+            1090,
+            1059
+          ],
+          "native_box": [
+            21,
+            18,
+            64,
+            55
+          ],
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16
+        }
+      ]
+    },
+    {
+      "id": "station-canopy-supports-v1",
+      "path": "media/multilayer/source/ground/raw/station-canopy-supports-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-3a7592a6-bc13-410d-b457-7be8feae51ed.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.rail-station canopy support originals for native graphics4,5,6,7, ready0.\nImage 1 is a GEOMETRY-ONLY edit target: four framed panels showing exactly two freestanding slender square steel posts per panel. Preserve their exact locations, height, thickness and diagonal pair orientation. Turn only the gray post volumes into authored OpenTTD-style industrial sprite artwork; remove the pale background to real transparency.\n\nCreate a SAFE BORDERED 1536x1024 source sheet. Preserve four pure magenta #FF00FF rectangular frames approximately6px thick: (24,24)-(744,488), (792,24)-(1512,488), (24,536)-(744,1000), (792,536)-(1512,1000). Each subject has at least32px transparent clearance from its frame. Transparent background, gutters and gaps between posts.\n\nPanel order: top-left rear-support AxisX; top-right rear-support AxisY; bottom-left front-support AxisX; bottom-right front-support AxisY. These are four genuine independently lit native views, not a rotated flat cutout. EXACTLY TWO POSTS in each frame, no connecting beam, no deck, no floor pad beyond a tiny square foot plate, no roof, no train or railway. Keep the reference pair spacing and relative heights; only the camera projection makes one post appear higher on screen.\n\nRestrained blue-gray industrial steel, readable pixel-art edges, square cross section, a small capped top and a narrow yellow collar near each foot. One tiny inset amber equipment lens on the u2 post: top-left panel RIGHT/HIGH post, top-right LEFT/HIGH post, bottom-left RIGHT/HIGH post, bottom-right LEFT/HIGH post. Other post plain. Light upper-left in every view, no glow halo, no cast background shadows. Native2:1 isometric proportions. Crisp game sprite material detail rather than photorealism. Do not add hardware, extra posts, diagonal braces, text, labels, symbols or decoration. Keep complete subjects well within the frames; no source pixels touch frames.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-canopy-supports-sheet-v1.png",
+          "role": "geometry-only edit target; exact native post positions and independent X/Y views",
+          "sha256": "abf287832a3accc069bacf6608a304c8ccc11095c8e140f699756a99ba0f7edf"
+        }
+      ],
+      "native_graphics": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "date": "2026-10-12",
+        "reason": "Four genuine native role/axis views pass original inventory, measured alpha/frame clearance, native deck/roof/corner contacts and separate four-pane glass source checks. Source-only; runtime pending10.4D."
+      },
+      "sha256": "fab97333ef050acaf24ebe98a938fc8983ac0aa932f7551326e1193c4c013493",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        24,
+        23,
+        1513,
+        1001
+      ],
+      "opaque_magenta_pixels": 59747,
+      "components": [
+        {
+          "id": "post-gfx4-u2",
+          "axis": "X",
+          "native_roles": [
+            2
+          ],
+          "part": "back",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            357,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            62,
+            93,
+            118,
+            252
+          ],
+          "native_box": [
+            30,
+            21,
+            36,
+            38
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 2
+        },
+        {
+          "id": "post-gfx4-u14",
+          "axis": "X",
+          "native_roles": [
+            2
+          ],
+          "part": "back",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            357,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            191,
+            190,
+            247,
+            344
+          ],
+          "native_box": [
+            6,
+            33,
+            12,
+            50
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 14
+        },
+        {
+          "id": "post-gfx5-u2",
+          "axis": "Y",
+          "native_roles": [
+            2
+          ],
+          "part": "back",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            48,
+            1179,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            245,
+            93,
+            301,
+            252
+          ],
+          "native_box": [
+            26,
+            21,
+            32,
+            38
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 2
+        },
+        {
+          "id": "post-gfx5-u14",
+          "axis": "Y",
+          "native_roles": [
+            2
+          ],
+          "part": "back",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            1179,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            62,
+            190,
+            119,
+            345
+          ],
+          "native_box": [
+            50,
+            33,
+            56,
+            50
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 14
+        },
+        {
+          "id": "post-gfx6-u2",
+          "axis": "X",
+          "native_roles": [
+            3
+          ],
+          "part": "front",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            397,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            62,
+            119,
+            119,
+            274
+          ],
+          "native_box": [
+            50,
+            31,
+            56,
+            48
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 2
+        },
+        {
+          "id": "post-gfx6-u14",
+          "axis": "X",
+          "native_roles": [
+            3
+          ],
+          "part": "front",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            397,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            230,
+            214,
+            287,
+            368
+          ],
+          "native_box": [
+            26,
+            43,
+            32,
+            60
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 14
+        },
+        {
+          "id": "post-gfx7-u2",
+          "axis": "Y",
+          "native_roles": [
+            3
+          ],
+          "part": "front",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            560,
+            1139,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            205,
+            119,
+            262,
+            274
+          ],
+          "native_box": [
+            6,
+            31,
+            12,
+            48
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 2
+        },
+        {
+          "id": "post-gfx7-u14",
+          "axis": "Y",
+          "native_roles": [
+            3
+          ],
+          "part": "front",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            1139,
+            560,
+            1488,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            62,
+            214,
+            119,
+            368
+          ],
+          "native_box": [
+            30,
+            43,
+            36,
+            60
+          ],
+          "inventory": "one square steel post, capped top, yellow foot collar; inset amber lens only on u2",
+          "longitudinal": 14
+        }
+      ]
+    },
+    {
+      "id": "station-canopy-roofs-v1",
+      "path": "media/multilayer/source/ground/raw/station-canopy-roofs-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-f3ac0113-893d-4681-96fe-28ef6b7e2c22.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.rail-station elevated canopy roof and glass originals, native graphics4,5,6,7, ready0.\nImage 1 is a GEOMETRY-ONLY edit target: four magenta-framed panels, each containing ONE sloping roof half with exactly FOUR cyan panes in a2x2 grid. Preserve each panel's exact projected corners, slope, proportions and pane count. Replace only the flat diagram materials with authored industrial OpenTTD-style sprite artwork. Preserve the four different geometry views. Remove pale background to real transparency.\n\nSAFE BORDERED1536x1024 source sheet: four pure magenta #FF00FF rectangular frames6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Each complete roof, all edges and all thin structural depth, stays at least32px clear of its frame. Real transparent background, margins and gutters.\n\nTop-left: A rear half AxisX, low rear eave/high front ridge. Top-right: A rear half AxisY, genuine perpendicular world view. Bottom-left: B front half AxisX, high rear ridge/low front eave. Bottom-right: B front half AxisY. A/B are complementary halves of the same modular gabled station canopy, with the reference geometry controlling the slope. Keep reference corner positions and the long/short projected edge slopes exactly.\n\nOne low-profile blue-gray steel perimeter frame with one longitudinal and one cross rib creates EXACTLY FOUR pale cool-cyan opaque glass panes,2x2. Every pane is a SINGLE unbroken flat inset area, narrow dark steel boundary, very subtle cyan highlight, no white glare or environment reflection. Paint pane pixels fully opaque: the GAME supplies glass transparency using a separate child sprite; do not make the panes alpha-transparent. Source transparency is only outside the roof. Neutral gray/slate steel structure; pane interiors use distinctly cyan blue-green colors so original glass pixels can be selected separately without painting them. No cyan structural steel.\n\nCrisp restrained pixel-art edges, native2:1 isometric projection and upper-left illumination in EVERY view. Thin square steel underside edge about one tenth roof height, slight rivet detailing. No posts, platforms, buildings, track, train, floor, background shadow, labels, text, glass mullions beyond the central cross, extra panes or extra hardware. Four independent complete cutouts. Do not rotate a flat sprite to fake another view. Preserve the diagram silhouettes rather than replacing them with a symmetric flat diamond.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-station-canopy-roofs-sheet-v1.png",
+          "role": "geometry-only edit target; native complementary roof planes and four glass apertures",
+          "sha256": "8e0145f8f928faa618dfc856420c588b1b84f1a7c82c7231b8de242d34c9042c"
+        }
+      ],
+      "native_graphics": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "date": "2026-10-12",
+        "reason": "Four genuine native role/axis views pass original inventory, measured alpha/frame clearance, native deck/roof/corner contacts and separate four-pane glass source checks. Source-only; runtime pending10.4D."
+      },
+      "sha256": "d1afdea3a963eb6ae851ec010ca1b70acadb29eb7f53c6328ef1418f2042a382",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        23,
+        23,
+        1513,
+        1001
+      ],
+      "opaque_magenta_pixels": 63508,
+      "components": [
+        {
+          "id": "roof-gfx4",
+          "axis": "X",
+          "native_roles": [
+            2
+          ],
+          "part": "roof",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            125,
+            123,
+            592,
+            308
+          ],
+          "native_box": [
+            0,
+            16,
+            64,
+            41
+          ],
+          "inventory": "one complementary sloped half, neutral steel perimeter and central cross, four opaque cyan panes",
+          "glass_material_selection": {
+            "alpha_min": 128,
+            "green_min": 100,
+            "green_minus_red_min": 25,
+            "blue_minus_red_min": 25
+          }
+        },
+        {
+          "id": "roof-gfx5",
+          "axis": "Y",
+          "native_roles": [
+            2
+          ],
+          "part": "roof",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            102,
+            123,
+            554,
+            307
+          ],
+          "native_box": [
+            0,
+            16,
+            64,
+            42
+          ],
+          "inventory": "one complementary sloped half, neutral steel perimeter and central cross, four opaque cyan panes",
+          "glass_material_selection": {
+            "alpha_min": 128,
+            "green_min": 100,
+            "green_minus_red_min": 25,
+            "blue_minus_red_min": 25
+          }
+        },
+        {
+          "id": "roof-gfx6",
+          "axis": "X",
+          "native_roles": [
+            3
+          ],
+          "part": "roof",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            132,
+            57,
+            540,
+            331
+          ],
+          "native_box": [
+            0,
+            6,
+            64,
+            49
+          ],
+          "inventory": "one complementary sloped half, neutral steel perimeter and central cross, four opaque cyan panes",
+          "glass_material_selection": {
+            "alpha_min": 128,
+            "green_min": 100,
+            "green_minus_red_min": 25,
+            "blue_minus_red_min": 25
+          }
+        },
+        {
+          "id": "roof-gfx7",
+          "axis": "Y",
+          "native_roles": [
+            3
+          ],
+          "part": "roof",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            560,
+            1488,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            136,
+            61,
+            530,
+            329
+          ],
+          "native_box": [
+            0,
+            6,
+            64,
+            50
+          ],
+          "inventory": "one complementary sloped half, neutral steel perimeter and central cross, four opaque cyan panes",
+          "glass_material_selection": {
+            "alpha_min": 128,
+            "green_min": 100,
+            "green_minus_red_min": 25,
+            "blue_minus_red_min": 25
+          }
+        }
+      ]
+    }
+  ]
+}

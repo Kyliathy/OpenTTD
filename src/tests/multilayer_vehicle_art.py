@@ -3,6 +3,7 @@
 @file multilayer_vehicle_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task 8.3
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 14-18
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group 19
 This focused source audit does not claim packed loading or gameplay acceptance.
 """
 
@@ -30,13 +31,16 @@ def native_bytes(image, box):
     return image.crop((box[0], box[1], box[0] + box[2], box[1] + box[3])).tobytes()
 
 
-def audit_registration_refusals():
+def audit_registration_refusals(model_id):
     """Reject malformed sheet registrations before pixels can fill coverage.
 
+    @param model_id Actual family whose source registration is being checked.
     @return None; fail if an empty, overlapping or out-of-bounds crop is accepted.
     """
     record = json.loads(vehicles.RECORD.read_text(encoding="utf-8"))
-    original = next(row for row in record["sources"] if "source_cell_boxes" in row)
+    # Exercise this model's explicit view windows: an unrelated cutter's crop
+    # cannot prove the freight locomotive's heading and contact registration.
+    original = next(row for row in record["sources"] if row["asset_id"] == model_id and "source_cell_boxes" in row)
     # A broken cell table can silently borrow another heading or clip equipment.
     # Corrupt each independent boundary without touching immutable source files.
     for corruption in ("missing", "overlap", "outside"):
@@ -62,8 +66,22 @@ def audit(part, model_id):
     @param model_id Public rail model family selected for this focused burst.
     @return None; print precise coverage and fail on lost or duplicated phases.
     """
-    report, files = vehicles.derive()
-    vehicles.check(report, files)
+    report, files = vehicles.derive({model_id})
+    vehicles.check(report, files, asset_ids={model_id})
+    # An empty selection or an unknown family must not turn a focused audit
+    # into a zero-work success. A report for another family also fails closed.
+    for rejected in (set(), {"vehicle.model-missing"}):
+        try:
+            vehicles.derive(rejected)
+        except ValueError:
+            continue
+        raise ValueError("focused source audit accepted an absent family")
+    try:
+        vehicles.check(report, files, asset_ids={"vehicle.model-missing"})
+    except ValueError:
+        pass
+    else:
+        raise ValueError("focused source audit accepted a mismatched report")
     model = next(row for row in report["atlases"] if row["asset_id"] == model_id)
     public = json.loads((vehicles.base.PUBLIC).read_text(encoding="utf-8"))
     family = next(row for row in public["assets"] if row["asset_id"] == model["asset_id"])
@@ -96,8 +114,8 @@ def audit(part, model_id):
                 backward = selected[("reversing", frame_count - 1 - frame, direction)]["box"]
                 if native_bytes(image, forward) != native_bytes(image, backward):
                     raise ValueError("backing does not reuse the same real rolling phase")
-    print(f"{model_id} {part}: {len(selected)}/{len(required)} poses complete; original chassis/alpha/contacts preserved; runtime pending")
-    audit_registration_refusals()
+    print(f"{model_id} {part}: {len(selected)}/{len(required)} poses complete; original chassis/alpha/contacts preserved; source-only audit")
+    audit_registration_refusals(model_id)
 
 
 def main():

@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups54-56/master10.4; r2mlvs17-geothermal-energy-and-industry.md Group8B; archi-map-layers.md. Retained original source art and native geometry, with operating/runtime authority explicitly separate.",
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md Groups54-56/master10.4; r2mlvs17-geothermal-energy-and-industry.md Group8B; archi-map-layers.md. Retained original source art and native geometry, with operating/runtime authority explicitly separate. Powerhouse incomplete-source review: r2mlvs14-remaining-assets-and-runtime-integration.md55B.",
   "schema_version": 1,
   "candidates": [
     {
@@ -3770,7 +3770,7 @@
     {
       "key": "venttap-construction-0-ne-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 0,
       "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
       "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
@@ -3927,12 +3927,14 @@
       "native_position": [
         33,
         42
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-0-ne-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-0-se-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 0,
       "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
       "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
@@ -4089,12 +4091,14 @@
       "native_position": [
         33,
         61
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-0-se-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-0-sw-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 0,
       "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
       "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
@@ -4251,12 +4255,14 @@
       "native_position": [
         33,
         63
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-0-sw-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-0-nw-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 0,
       "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
       "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
@@ -4413,12 +4419,14 @@
       "native_position": [
         33,
         62
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-0-nw-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-1-ne-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 1,
       "path": "media/multilayer/source/ground/raw/venttap-construction-1-views-v1.png",
       "sha256": "09f98a80983f3b2e55959f082ebcfaa12d8d1754462752cb41c1002a34991288",
@@ -4574,13 +4582,16 @@
       ],
       "native_position": [
         33,
-        51
-      ]
+        50
+      ],
+      "registration_review": "Measured unfrozen stage1 NE placement corrected upward one pixel: prior128,175 source pixel had no native cell; all original indexed pixels now fit all16 cells. Original source bytes/crop/scale unchanged.",
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-1-ne-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-1-se-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 1,
       "path": "media/multilayer/source/ground/raw/venttap-construction-1-views-v1.png",
       "sha256": "09f98a80983f3b2e55959f082ebcfaa12d8d1754462752cb41c1002a34991288",
@@ -4737,12 +4748,14 @@
       "native_position": [
         33,
         58
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-1-se-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-1-sw-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 1,
       "path": "media/multilayer/source/ground/raw/venttap-construction-1-views-v1.png",
       "sha256": "09f98a80983f3b2e55959f082ebcfaa12d8d1754462752cb41c1002a34991288",
@@ -4899,12 +4912,14 @@
       "native_position": [
         33,
         58
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-1-sw-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-1-nw-v1",
       "asset_id": "facility.vent-powerhouse",
-      "status": "native_construction_review_pending",
+      "status": "native_incomplete_model_reviewed",
       "construction_stage": 1,
       "path": "media/multilayer/source/ground/raw/venttap-construction-1-views-v1.png",
       "sha256": "09f98a80983f3b2e55959f082ebcfaa12d8d1754462752cb41c1002a34991288",
@@ -5061,7 +5076,9 @@
       "native_position": [
         33,
         58
-      ]
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-1-nw-v1-review.json",
+      "model_identity_review": "Approved original construction hardware: fixed4x4 floor and correct physical equipment roles/axes/access-side cabinet; stage0 foundations only, stage1 one incomplete hall/turbine/alternator/exchanger with original positions."
     },
     {
       "key": "venttap-construction-2-views-draft-v1",
@@ -5158,6 +5175,3411 @@
       "rejection_reason": "Magenta frames allow four plain rectangular source crops, but the NW model adds a second exchanger and fails approved equipment identity.",
       "source_coverage_complete": false,
       "runtime_activated": false
+    },
+    {
+      "key": "venttap-construction-2-ne-v1",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "rejected_floor_clearance",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-ne-v1.png",
+      "sha256": "2efbcc26b5e919ab3cdbf7955369b7dc0496e8c7b365c4081a56f15f32ed06c9",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-1769f9c1-45cb-41f0-8813-699d15c82675.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view NE.\nInput image1: exact approved completed NE model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-campus-ne-v1.png",
+          "role": "approved completed NE edit target",
+          "sha256": "b120a7f7155a3f41424894967da8b8380cb57d4ef3add6f9a8ef63fabcd3e144"
+        }
+      ],
+      "direction": "NE",
+      "excluded_views": [
+        "NE"
+      ],
+      "size": [
+        1774,
+        887
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          13,
+          1663,
+          887
+        ],
+        "16": [
+          184,
+          15,
+          1577,
+          883
+        ],
+        "128": [
+          185,
+          16,
+          1576,
+          883
+        ]
+      }
+    },
+    {
+      "key": "venttap-construction-2-ne-v2",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "rejected_roof_scope_and_loose_pipe",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-ne-v2.png",
+      "sha256": "b070ca9b1f9bdf4b6c31117cd93cfd1c65185a2a04828434ab177d5bf6a63b30",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-d706d53f-ce30-4f09-acc7-29ff45727c13.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view NE.\nInput image1: exact approved completed NE model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.\nRequired canvas/framing: landscape 1536x1024. Reduce the whole subject uniformly to floor width about1100px, whole subject height at most780px, CENTERED with at least100px fully transparent margin above and below and at least100px on both sides. All FOUR diamond floor tips must be pointed and completely visible; never truncate or flatten the near/bottom floor corner. Generous empty border takes precedence over subject size. The previous output clipped its bottom floor tip; start again from this approved complete edit target.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-campus-ne-v1.png",
+          "role": "approved completed NE edit target",
+          "sha256": "b120a7f7155a3f41424894967da8b8380cb57d4ef3add6f9a8ef63fabcd3e144"
+        }
+      ],
+      "direction": "NE",
+      "excluded_views": [
+        "NE"
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          23,
+          1490,
+          1007
+        ],
+        "16": [
+          85,
+          69,
+          1451,
+          1003
+        ],
+        "128": [
+          86,
+          70,
+          1451,
+          1003
+        ]
+      }
+    },
+    {
+      "key": "venttap-construction-2-ne-v3",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "native_incomplete_model_reviewed",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-ne-v3.png",
+      "sha256": "932ec02ae7a255fdb399c0b35bd02a845cb87dfa90521c4cd432bd35ef36090a",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-7497c72a-131f-4d15-a785-d9eba25c87f6.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view NE.\nInput image1: exact approved completed NE model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.\nRequired canvas/framing: landscape1536x1024. Uniformly reduce and center the complete model, with at least64px of alpha-zero clearance around EVERY floor tip and the highest insulator. The near/bottom floor corner must be pointed and entirely inside the image. No flattening/truncation at the canvas edge. Keep both end sections of the hall roof installed; expose only the middle structural roof bay, on BOTH roof slopes. The short return-pipe spool is absent from its existing position, leaving disconnected ends; do not add a loose pipe or any other object.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-campus-ne-v1.png",
+          "role": "approved completed NE edit target",
+          "sha256": "b120a7f7155a3f41424894967da8b8380cb57d4ef3add6f9a8ef63fabcd3e144"
+        }
+      ],
+      "direction": "NE",
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          73,
+          23,
+          1464,
+          1008
+        ],
+        "16": [
+          76,
+          62,
+          1462,
+          1004
+        ],
+        "128": [
+          76,
+          62,
+          1461,
+          1004
+        ]
+      },
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_crop": [
+        76,
+        62,
+        1462,
+        1004
+      ],
+      "native_subject_size": [
+        256,
+        133
+      ],
+      "native_position": [
+        33,
+        58
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-2-ne-v3-review.json",
+      "model_identity_review": "Reviewed whole and native: one hall/turbine/shaft-coupled alternator/exchanger/switchgear; physical orientation and complete four-corner floor retained; central roof framing exposed and copper connection incomplete; all sixteen cells nonempty and lossless. Opaque model clears canvas edges; faint alpha below the canonical128 threshold is retained in immutable source bytes."
+    },
+    {
+      "key": "venttap-construction-2-se-v1",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "native_incomplete_model_reviewed",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-se-v1.png",
+      "sha256": "d978eb6bd65d8ec3e6c7f13ee8c8477c82bf169619c76faef1ce4b75a996d96e",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-92586b2b-0746-4845-b631-ace9976d804e.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view SE.\nInput image1: exact approved completed SE model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.\nRequired canvas/framing: landscape1536x1024. Uniformly reduce and center the complete model, with at least64px of alpha-zero clearance around EVERY floor tip and the highest insulator. The near/bottom floor corner must be pointed and entirely inside the image. No flattening/truncation at the canvas edge. Keep both end sections of the hall roof installed; expose only the middle structural roof bay, on BOTH roof slopes. The short return-pipe spool is absent from its existing position, leaving disconnected ends; do not add a loose pipe or any other object.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-base-se-v1.png",
+          "role": "approved completed SE edit target",
+          "sha256": "d0a63e996582c2d3a02ff45bb68ab446cb5e7031530b60182b8d4b22cb57a98d"
+        }
+      ],
+      "direction": "SE",
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          111,
+          1423,
+          962
+        ],
+        "16": [
+          115,
+          113,
+          1421,
+          959
+        ],
+        "128": [
+          116,
+          114,
+          1421,
+          959
+        ]
+      },
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_crop": [
+        115,
+        113,
+        1421,
+        959
+      ],
+      "native_subject_size": [
+        256,
+        133
+      ],
+      "native_position": [
+        33,
+        57
+      ],
+      "registration_review": "Measured unfrozen placement at(33,57) preserves all original sampled pixels and all sixteen native cells; y58 leaked a lower floor-edge pixel beyond its actual cell canvas.",
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-2-se-v1-review.json",
+      "model_identity_review": "Reviewed whole and native: one hall/turbine/shaft-coupled alternator/exchanger/switchgear; physical orientation and complete four-corner floor retained; central roof framing exposed and copper connection incomplete; all sixteen cells nonempty and lossless. Opaque model clears canvas edges; faint alpha below the canonical128 threshold is retained in immutable source bytes."
+    },
+    {
+      "key": "venttap-construction-2-sw-v1",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "native_incomplete_model_reviewed",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-sw-v1.png",
+      "sha256": "564bf3e38c4464be6af8705f339c12c16a7d2e70a55c2a556e89fa932a349bf1",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-88dba3e1-77d5-4a43-ad88-ff6dd5783126.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view SW.\nInput image1: exact approved completed SW model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.\nRequired canvas/framing: landscape1536x1024. Uniformly reduce and center the complete model, with at least64px of alpha-zero clearance around EVERY floor tip and the highest insulator. The near/bottom floor corner must be pointed and entirely inside the image. No flattening/truncation at the canvas edge. Keep both end sections of the hall roof installed; expose only the middle structural roof bay, on BOTH roof slopes. The short return-pipe spool is absent from its existing position, leaving disconnected ends; do not add a loose pipe or any other object.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-campus-sw-v2.png",
+          "role": "approved completed SW edit target",
+          "sha256": "e4a04708253a778bcbf3484401fb4ce4e51ec8f46e3c742147403cac6dded224"
+        }
+      ],
+      "direction": "SW",
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          62,
+          66,
+          1468,
+          1024
+        ],
+        "16": [
+          65,
+          69,
+          1466,
+          1016
+        ],
+        "128": [
+          65,
+          70,
+          1465,
+          1016
+        ]
+      },
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_crop": [
+        65,
+        69,
+        1466,
+        1016
+      ],
+      "native_subject_size": [
+        256,
+        133
+      ],
+      "native_position": [
+        33,
+        57
+      ],
+      "registration_review": "Measured unfrozen placement at(33,57) preserves all original sampled pixels and all sixteen native cells; y58 leaked a lower floor-edge pixel beyond its actual cell canvas.",
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-2-sw-v1-review.json",
+      "model_identity_review": "Reviewed whole and native: one hall/turbine/shaft-coupled alternator/exchanger/switchgear; physical orientation and complete four-corner floor retained; central roof framing exposed and copper connection incomplete; all sixteen cells nonempty and lossless. Opaque model clears canvas edges; faint alpha below the canonical128 threshold is retained in immutable source bytes."
+    },
+    {
+      "key": "venttap-construction-2-nw-v1",
+      "asset_id": "facility.vent-powerhouse",
+      "status": "native_incomplete_model_reviewed",
+      "construction_stage": 2,
+      "path": "media/multilayer/source/ground/raw/venttap-construction-2-nw-v1.png",
+      "sha256": "5b156e8e015839251e3ca494f3c2cf1cb1467a7ec9c2ffc35d10bbbcc66a798d",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-bf432e6c-571d-4907-aea2-e9c9d1ce35cc.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.vent-powerhouse, 1980 Vent-Tap Powerhouse; native construction stage2; physical view NW.\nInput image1: exact approved completed NW model EDIT TARGET, not a style suggestion.\nCreate ONE isolated full-model transparent RGBA cutout in the same fixed2:1 camera and upper-left light. Keep its existing thin flat4x4 paved floor, all four floor corners, exact equipment positions/axes and physical orientation. Keep exactly ONE hall, ONE turbine, ONE shaft-coupled alternator, ONE horizontal exchanger and ONE separate switchgear cabinet. Do not add or duplicate machinery.\nChange only the declared incomplete-construction details: expose the same central structural roof bay across both roof slopes with actual rafters, and leave one short existing copper return-pipe spool uninstalled with its original two end positions retained. The remaining recognizable walls and all mounted machinery keep their existing identity, count, materials and placement. Keep the original equipment cabinet's amber glass.\nKeep the whole floor and tallest machinery entirely inside the image with generous alpha-zero clearance on every edge. Preserve pale steel, graphite, copper and ochre materials; crisp low-detail game readability. No other view, text, labels, grids, symbols, workers, vehicles, smoke, steam, exterior shadow, halo, background or additional equipment. Do not rotate/mirror a bitmap. The final image must preserve the approved model's identity and complete footprint.\nRequired canvas/framing: landscape1536x1024. Uniformly reduce and center the complete model, with at least64px of alpha-zero clearance around EVERY floor tip and the highest insulator. The near/bottom floor corner must be pointed and entirely inside the image. No flattening/truncation at the canvas edge. Keep both end sections of the hall roof installed; expose only the middle structural roof bay, on BOTH roof slopes. The short return-pipe spool is absent from its existing position, leaving disconnected ends; do not add a loose pipe or any other object.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/venttap-campus-nw-v1.png",
+          "role": "approved completed NW edit target",
+          "sha256": "654c5f9536715a18a9687746a719b419a126ca8c597223ad0a41f3e5c1a1bfdb"
+        }
+      ],
+      "direction": "NW",
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          108,
+          1453,
+          948
+        ],
+        "16": [
+          89,
+          110,
+          1451,
+          946
+        ],
+        "128": [
+          90,
+          111,
+          1450,
+          946
+        ]
+      },
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_crop": [
+        89,
+        110,
+        1451,
+        946
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_model_review": "logs/proofs/mlm/native-art/ground/venttap-construction-2-nw-v1-review.json",
+      "model_identity_review": "Reviewed whole and native: one hall/turbine/shaft-coupled alternator/exchanger/switchgear; physical orientation and complete four-corner floor retained; central roof framing exposed and copper connection incomplete; all sixteen cells nonempty and lossless. Opaque model clears canvas edges; faint alpha below the canonical128 threshold is retained in immutable source bytes."
+    },
+    {
+      "key": "magma-base-se-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "direction": "SE",
+      "status": "selected_whole_ready_view",
+      "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+      "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-ac7f22e6-2ad3-4c8b-ac27-a5c8bfc57f41.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: first-party OpenTTD facility.magma-powerhouse, fictional2000 Magma-Loop Power Station, BASE SILHOUETTE physical SE view. One whole connected facility on a complete thin flat4x4 paved floor; actual native sixteen-cell footprint and64x64 sections, whole model reduces to256px floor width. This is source artwork only, no labels or guide graphics.\nDesign: distinct advanced CLOSED-LOOP plant. Exactly TWO squat vertical cylindrical blue-grey heat-exchanger vessels side by side in the FAR/RIGHT half, with broad dark metal collars, low copper U-shaped supply/return piping and short capped top fittings. Exactly ONE broad angular enclosed turbine-alternator housing in the NEAR/RIGHT half, graphite with pale steel chamfered panels and restrained ochre braces; no separate exposed alternator. Exactly ONE small low flat-roof steel control/service hut in the FAR/LEFT half. Exactly ONE separate electrical switchgear cabinet at the NEAR/LEFT corner, two short pale ceramic insulators and an amber glass status lamp facing the viewer. Heat inlet/return ends stay at the right service edge; floor cable conduit connects the switchgear to the generator housing. Keep coherent physical connections, no loose equipment or duplicate machines. Clearly distinct from an old pitched-roof hall and exposed shaft plant.\nFixed2:1 isometric camera with exact symmetric diamond floor, fixed upper-left lighting. Low chunky machinery with crisp game-art surfaces, pale steel, graphite, desaturated steel-blue, copper and restrained ochre. No brand/company remap material. Every machine fits comfortably on the floor, no raised pedestal, transport aperture or tall tower. Native readability is more important than small photoreal detail.\nONE isolated transparent RGBA cutout. Requested canvas1536x1024. Keep complete four POINTED floor corners and every machine inside the image, with at least64px generous alpha-zero clearance on EVERY edge. Uniformly reduce the subject as needed. No background, halo, shadow outside the floor, smoke, steam, cooling cloud, people, vehicles, tracks, roads, text, numbers, labels, arrows, grids, separator frames or extra plant views. Actual transparency beyond the floor/equipment; never flatten or crop the near/bottom diamond tip.",
+      "references": [],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "native_crop": [
+        87,
+        82,
+        1453,
+        936
+      ],
+      "native_subject_size": [
+        256,
+        149
+      ],
+      "native_position": [
+        33,
+        42
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-base-se-v1-review.json",
+      "model_identity_review": "Reviewed genuine physical model turn: two vertical loop vessels, one enclosed integrated turbo-generator, one low flat control hut and one two-insulator switchgear; fixed camera/light, complete four-corner4x4 floor and all sixteen lossless native cells. No extra machinery or bitmap rotation."
+    },
+    {
+      "key": "magma-campus-ne-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "direction": "NE",
+      "status": "rejected_inconsistent_vessel_proportions",
+      "path": "media/multilayer/source/ground/raw/magma-campus-ne-v1.png",
+      "sha256": "c1ce561e8bc2c35edce761e19ba6725c0ac7c3484c50260a497218c8bb3261f3",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-b6ade403-f11a-4b68-8bdb-1536d03816e5.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse, fictional2000 Magma-Loop Power Station, genuine NE whole-model orientation.\nInput image1: approved completed SE whole-model identity EDIT TARGET. Input image2: authoritative NE physical placement diagram, GEOMETRY ONLY, never artwork.\nRerender the exact same physical equipment one quarter turn counterclockwise on its square floor under a FIXED2:1 isometric camera and fixed upper-left light. Do not copy the SE composition, rotate/mirror its raster or turn the light/camera. Match the guide: the separate two-insulator switchgear with amber lamp is at the FAR/TOP corner; the low flat-roof control hut is on the RIGHT half; the TWO cylindrical closed-loop vessels and their copper heat interface are on the NEAR/BOTTOM half; the ONE broad angular integrated enclosed turbine-alternator housing with ochre braces is on the LEFT half, long axis now up-right/down-left. All physical machinery and connections turn together; show genuine newly visible rear/service faces.\nPreserve EXACTLY TWO blue-grey squat vertical vessels, ONE angular integrated turbine-alternator housing, ONE flat-roof control hut, ONE separate switchgear. Keep original dimensions, dark collars, short top fittings, copper closed-loop routing, graphite/pale-steel panels and restrained ochre braces. Do not add a separate turbine/alternator, extra vessels, control huts or pipe equipment. Keep the same full thin flat4x4 paved floor, complete symmetric pointed corners and16 native floor cells, no raised pedestal or transport aperture.\nONE isolated transparent RGBA whole model, requested1536x1024 canvas. Uniformly reduce the entire subject to leave at least64px alpha-zero clearance around every floor corner and tallest fitting. Full subject comfortably inside all edges; never crop/flatten the bottom tip. Low chunky crisp game readability at256px native floor width. No labels, diagram colors/lines, text, numbers, workers, vehicles, track, road, smoke, steam, background, halo, external shadow or additional views.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "role": "approved SE whole-model identity edit target",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71"
+        },
+        {
+          "path": "media/multilayer/guides/ground/generator-magmaloop-ne-v1.png",
+          "role": "NE physical equipment placement only",
+          "sha256": "9784edd55f348716639f08a98d39291f4c54e8c8b88f45c6140ae56f7cf1a442"
+        }
+      ],
+      "excluded_views": [
+        "NE"
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          82,
+          46,
+          1454,
+          993
+        ],
+        "16": [
+          85,
+          48,
+          1451,
+          991
+        ],
+        "128": [
+          86,
+          49,
+          1451,
+          990
+        ]
+      },
+      "native_crop": [
+        85,
+        48,
+        1451,
+        991
+      ],
+      "native_subject_size": [
+        256,
+        136
+      ],
+      "native_position": [
+        33,
+        54
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "registration_review": "Measured unfrozen NE placement moves upward one pixel from(33,55); original sampled pixel128,175 otherwise leaves its native cell. Crop/scale/original bytes unchanged.",
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-campus-ne-v1-review.json",
+      "model_identity_review": "Combined ready-view comparison reveals noticeably shortened NE vessels after native floor registration. Retain immutable source, exclude from selection; genuine corrective NE edit required."
+    },
+    {
+      "key": "magma-campus-sw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "direction": "SW",
+      "status": "selected_whole_ready_view",
+      "path": "media/multilayer/source/ground/raw/magma-campus-sw-v1.png",
+      "sha256": "d875bdf8be21f0ec397526be7d2808994bc37b336a874c918083b4dd21399aa5",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-b0a6f8a1-a453-4650-ad69-40084f3e1944.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse, fictional2000 Magma-Loop Power Station, genuine SW whole-model orientation.\nInput image1: approved completed SE whole-model identity EDIT TARGET. Input image2: authoritative SW physical placement diagram, GEOMETRY ONLY, never artwork.\nRerender the exact same physical equipment one quarter turn clockwise on its square floor under a FIXED2:1 isometric camera and fixed upper-left light. Do not copy the SE composition, rotate/mirror its raster or turn the light/camera. Match the guide: the separate two-insulator switchgear with amber lamp is at the NEAR/BOTTOM corner; the low flat-roof control hut is on the LEFT half; the TWO cylindrical closed-loop vessels and their copper heat interface are on the FAR/TOP half; the ONE broad angular integrated enclosed turbine-alternator housing with ochre braces is on the RIGHT half, long axis now up-right/down-left. All physical machinery and connections turn together; show genuine newly visible rear/service faces.\nPreserve EXACTLY TWO blue-grey squat vertical vessels, ONE angular integrated turbine-alternator housing, ONE flat-roof control hut, ONE separate switchgear. Keep original dimensions, dark collars, short top fittings, copper closed-loop routing, graphite/pale-steel panels and restrained ochre braces. Do not add a separate turbine/alternator, extra vessels, control huts or pipe equipment. Keep the same full thin flat4x4 paved floor, complete symmetric pointed corners and16 native floor cells, no raised pedestal or transport aperture.\nONE isolated transparent RGBA whole model, requested1536x1024 canvas. Uniformly reduce the entire subject to leave at least64px alpha-zero clearance around every floor corner and tallest fitting. Full subject comfortably inside all edges; never crop/flatten the bottom tip. Low chunky crisp game readability at256px native floor width. No labels, diagram colors/lines, text, numbers, workers, vehicles, track, road, smoke, steam, background, halo, external shadow or additional views.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "role": "approved SE whole-model identity edit target",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71"
+        },
+        {
+          "path": "media/multilayer/guides/ground/generator-magmaloop-sw-v1.png",
+          "role": "SW physical equipment placement only",
+          "sha256": "278c458f90219c97f9378a7cf935b214dccd4d7576092fa6d84bb2f69ae8d198"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          43,
+          29,
+          1469,
+          1000
+        ],
+        "16": [
+          186,
+          141,
+          1351,
+          924
+        ],
+        "128": [
+          187,
+          142,
+          1350,
+          923
+        ]
+      },
+      "native_crop": [
+        186,
+        141,
+        1351,
+        924
+      ],
+      "native_subject_size": [
+        256,
+        133
+      ],
+      "native_position": [
+        33,
+        58
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-campus-sw-v1-review.json",
+      "model_identity_review": "Reviewed genuine physical model turn: two vertical loop vessels, one enclosed integrated turbo-generator, one low flat control hut and one two-insulator switchgear; fixed camera/light, complete four-corner4x4 floor and all sixteen lossless native cells. No extra machinery or bitmap rotation."
+    },
+    {
+      "key": "magma-campus-nw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "direction": "NW",
+      "status": "selected_whole_ready_view",
+      "path": "media/multilayer/source/ground/raw/magma-campus-nw-v1.png",
+      "sha256": "406f45a3ffc291e87d8ae38ead0c843969675a748610cf15e270823010a95f94",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-8f412394-190a-4a66-b258-08ed8aa0bb0f.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse, fictional2000 Magma-Loop Power Station, genuine NW whole-model orientation.\nInput image1: approved completed SE whole-model identity EDIT TARGET. Input image2: authoritative NW physical placement diagram, GEOMETRY ONLY, never artwork.\nRerender the exact same physical equipment one half turn,180degrees on its square floor under a FIXED2:1 isometric camera and fixed upper-left light. Do not copy the SE composition, rotate/mirror its raster or turn the light/camera. Match the guide: the separate two-insulator switchgear with amber lamp is at the RIGHT corner; the low flat-roof control hut is on the NEAR/BOTTOM half; the TWO cylindrical closed-loop vessels and their copper heat interface are on the LEFT half; the ONE broad angular integrated enclosed turbine-alternator housing with ochre braces is on the FAR/TOP half, long axis down-right/up-left. This is the OPPOSITE physical side from SE; show rear equipment faces and the control hut's actual back wall. All physical machinery and connections turn together; show genuine newly visible rear/service faces.\nPreserve EXACTLY TWO blue-grey squat vertical vessels, ONE angular integrated turbine-alternator housing, ONE flat-roof control hut, ONE separate switchgear. Keep original dimensions, dark collars, short top fittings, copper closed-loop routing, graphite/pale-steel panels and restrained ochre braces. Do not add a separate turbine/alternator, extra vessels, control huts or pipe equipment. Keep the same full thin flat4x4 paved floor, complete symmetric pointed corners and16 native floor cells, no raised pedestal or transport aperture.\nONE isolated transparent RGBA whole model, requested1536x1024 canvas. Uniformly reduce the entire subject to leave at least64px alpha-zero clearance around every floor corner and tallest fitting. Full subject comfortably inside all edges; never crop/flatten the bottom tip. Low chunky crisp game readability at256px native floor width. No labels, diagram colors/lines, text, numbers, workers, vehicles, track, road, smoke, steam, background, halo, external shadow or additional views.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "role": "approved SE whole-model identity edit target",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71"
+        },
+        {
+          "path": "media/multilayer/guides/ground/generator-magmaloop-nw-v1.png",
+          "role": "NW physical equipment placement only",
+          "sha256": "0f786ade77531677beee94b5feb2c24af9dc90b10173f3b60ab8f7ee37b928fe"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          64,
+          146,
+          1455,
+          982
+        ],
+        "16": [
+          92,
+          148,
+          1446,
+          966
+        ],
+        "128": [
+          92,
+          148,
+          1445,
+          966
+        ]
+      },
+      "native_crop": [
+        92,
+        148,
+        1446,
+        966
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-campus-nw-v1-review.json",
+      "model_identity_review": "Reviewed genuine physical model turn: two vertical loop vessels, one enclosed integrated turbo-generator, one low flat control hut and one two-insulator switchgear; fixed camera/light, complete four-corner4x4 floor and all sixteen lossless native cells. No extra machinery or bitmap rotation."
+    },
+    {
+      "key": "magma-campus-ne-v2",
+      "asset_id": "facility.magma-powerhouse",
+      "direction": "NE",
+      "status": "selected_whole_ready_view",
+      "path": "media/multilayer/source/ground/raw/magma-campus-ne-v2.png",
+      "sha256": "d27effb8253af9ab6ae243b116ce398c90ab942424083df83c4c2347857608ac",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-2cf63dff-a161-47c4-b013-fd9f5fff3580.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse, Magma-Loop Power Station; corrected NE whole model.\nImage1 is the NE physical arrangement EDIT TARGET. Image2 is the approved SE MODEL DIMENSIONS reference. Keep Image1's physical NE arrangement, equipment positions, exact4x4 floor, camera, light, generator housing, flat control hut, switchgear, cables and copper connections unchanged.\nChange ONLY the TWO cylindrical heat-exchanger vessels so their actual vertical proportions match the taller approved vessels in Image2. Their blue-grey straight cylindrical bodies are too short/squat in Image1. Increase each straight body height by roughly one third while keeping its diameter, bottom mounting position and dark collars/ochre braces unchanged. Raise its top lid and short fittings accordingly, preserving the closed-loop copper connections. Both must remain the same pair of vessels as Image2, now seen from the NE side. Exactly TWO vessels, ONE integrated angular enclosed turbine-generator, ONE low flat control hut, ONE separate two-insulator amber-lamp switchgear. No extra hardware or loose components.\nPreserve fixed2:1 isometric projection and upper-left lighting. ONE complete transparent RGBA cutout;1536x1024 canvas, generous alpha-zero clearance around all four pointed floor corners and all machinery. Reduce the whole model uniformly as necessary, never crop the floor tip. Pale steel, graphite, desaturated steel-blue, copper, ochre; crisp native256px floor-width readability. No text, labels, guide lines, additional views, vehicles, workers, smoke, steam, background, glow, halo or exterior shadow. Do not rotate or mirror a bitmap.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-ne-v1.png",
+          "role": "NE placement correction edit target; original vessel height unapproved",
+          "sha256": "c1ce561e8bc2c35edce761e19ba6725c0ac7c3484c50260a497218c8bb3261f3"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "role": "approved whole-model dimensions and vessel-height reference",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          82,
+          45,
+          1516,
+          1000
+        ],
+        "16": [
+          85,
+          48,
+          1453,
+          996
+        ],
+        "128": [
+          85,
+          48,
+          1452,
+          995
+        ]
+      },
+      "native_crop": [
+        85,
+        48,
+        1453,
+        996
+      ],
+      "native_subject_size": [
+        256,
+        136
+      ],
+      "native_position": [
+        33,
+        54
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-campus-ne-v2-review.json",
+      "model_identity_review": "Corrected genuine NE model retains the selected whole arrangement and taller cylindrical body proportions. One native/enlarged/cell review preserves all sixteen source sections. Previous NEv1 remains excluded for short vessels."
+    },
+    {
+      "key": "magma-construction-0-ne-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 0,
+      "direction": "NE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-0-ne-v1.png",
+      "sha256": "acfcfd0b7a2231dd91e4d0460d066f65e2423a1cf0fc9f40bcfece3c52094e50",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-99d1bc44-78c4-425b-b6be-84c0da64fcac.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; actual incomplete native construction stage0; physical view NE.\nImage1 is the exact approved completed NE whole model EDIT TARGET.\nCreate ONE genuine foundation-stage edit of this exact model. Keep its thin flat4x4 paved floor, all four pointed corners, physical orientation, equipment mounting positions, fixed2:1 camera and upper-left light.\nStage0 shows ONLY the original equipment foundation pads and low mounting anchors where the TWO vertical vessels, ONE integrated turbine-generator and ONE small flat-roof control hut will be built. Remove the installed vessel bodies, generator housing and hut walls/roof; preserve their original low plinth footprints, clear paired vessel mounting pads and one generator mounting frame. No finished machines, empty cylinder shells or finished hut. Keep the ONE separate original two-insulator switchgear/site cabinet fully recognizable at its existing physical corner, with amber glass; retain its low floor conduits and only short disconnected capped copper heat stubs. No complete heat loop or extra equipment.\nPale steel/graphite/ochre/copper original material identity, chunky crisp game readability at256px native floor width. ONE isolated transparent RGBA cutout,1536x1024, at least64px alpha-zero clearance around every full floor corner and site cabinet. Uniformly reduce as necessary, never clip/flatten a floor tip. No workers, vehicles, loose supplies, scaffolding towers, transport, background, halo, external shadow, steam, smoke, labels, guide lines, text or additional views. No bitmap rotation/mirroring. Incomplete original construction only, no invented operating machinery.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-ne-v2.png",
+          "sha256": "d27effb8253af9ab6ae243b116ce398c90ab942424083df83c4c2347857608ac",
+          "role": "exact approved completed NE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          81,
+          45,
+          1498,
+          1010
+        ],
+        "16": [
+          85,
+          48,
+          1459,
+          1007
+        ],
+        "128": [
+          85,
+          48,
+          1458,
+          1007
+        ]
+      },
+      "native_crop": [
+        85,
+        48,
+        1459,
+        1007
+      ],
+      "native_subject_size": [
+        256,
+        136
+      ],
+      "native_position": [
+        33,
+        54
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-0-ne-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-0-se-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 0,
+      "direction": "SE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-0-se-v1.png",
+      "sha256": "a5acd4d452c25c39adf6e0e8b6f27724e747bc37a5a82a617d5deb7b7bc01eb9",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-1f7d418b-d4f5-448a-aaea-973b7fbd9d89.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; actual incomplete native construction stage0; physical view SE.\nImage1 is the exact approved completed SE whole model EDIT TARGET.\nCreate ONE genuine foundation-stage edit of this exact model. Keep its thin flat4x4 paved floor, all four pointed corners, physical orientation, equipment mounting positions, fixed2:1 camera and upper-left light.\nStage0 shows ONLY the original equipment foundation pads and low mounting anchors where the TWO vertical vessels, ONE integrated turbine-generator and ONE small flat-roof control hut will be built. Remove the installed vessel bodies, generator housing and hut walls/roof; preserve their original low plinth footprints, clear paired vessel mounting pads and one generator mounting frame. No finished machines, empty cylinder shells or finished hut. Keep the ONE separate original two-insulator switchgear/site cabinet fully recognizable at its existing physical corner, with amber glass; retain its low floor conduits and only short disconnected capped copper heat stubs. No complete heat loop or extra equipment.\nPale steel/graphite/ochre/copper original material identity, chunky crisp game readability at256px native floor width. ONE isolated transparent RGBA cutout,1536x1024, at least64px alpha-zero clearance around every full floor corner and site cabinet. Uniformly reduce as necessary, never clip/flatten a floor tip. No workers, vehicles, loose supplies, scaffolding towers, transport, background, halo, external shadow, steam, smoke, labels, guide lines, text or additional views. No bitmap rotation/mirroring. Incomplete original construction only, no invented operating machinery.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71",
+          "role": "exact approved completed SE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          52,
+          116,
+          1491,
+          993
+        ],
+        "16": [
+          56,
+          150,
+          1489,
+          991
+        ],
+        "128": [
+          56,
+          150,
+          1488,
+          991
+        ]
+      },
+      "native_crop": [
+        56,
+        150,
+        1489,
+        991
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-0-se-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-0-sw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 0,
+      "direction": "SW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-0-sw-v1.png",
+      "sha256": "606eaaf84e23e8105ff7826c762e05002503d79e88666c7794c32102a97194f1",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-8d5d19c7-a9a6-4d02-b78f-b2bf16ddcf37.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; actual incomplete native construction stage0; physical view SW.\nImage1 is the exact approved completed SW whole model EDIT TARGET.\nCreate ONE genuine foundation-stage edit of this exact model. Keep its thin flat4x4 paved floor, all four pointed corners, physical orientation, equipment mounting positions, fixed2:1 camera and upper-left light.\nStage0 shows ONLY the original equipment foundation pads and low mounting anchors where the TWO vertical vessels, ONE integrated turbine-generator and ONE small flat-roof control hut will be built. Remove the installed vessel bodies, generator housing and hut walls/roof; preserve their original low plinth footprints, clear paired vessel mounting pads and one generator mounting frame. No finished machines, empty cylinder shells or finished hut. Keep the ONE separate original two-insulator switchgear/site cabinet fully recognizable at its existing physical corner, with amber glass; retain its low floor conduits and only short disconnected capped copper heat stubs. No complete heat loop or extra equipment.\nPale steel/graphite/ochre/copper original material identity, chunky crisp game readability at256px native floor width. ONE isolated transparent RGBA cutout,1536x1024, at least64px alpha-zero clearance around every full floor corner and site cabinet. Uniformly reduce as necessary, never clip/flatten a floor tip. No workers, vehicles, loose supplies, scaffolding towers, transport, background, halo, external shadow, steam, smoke, labels, guide lines, text or additional views. No bitmap rotation/mirroring. Incomplete original construction only, no invented operating machinery.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-sw-v1.png",
+          "sha256": "d875bdf8be21f0ec397526be7d2808994bc37b336a874c918083b4dd21399aa5",
+          "role": "exact approved completed SW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          21,
+          1516,
+          1000
+        ],
+        "16": [
+          106,
+          130,
+          1427,
+          967
+        ],
+        "128": [
+          106,
+          131,
+          1427,
+          966
+        ]
+      },
+      "native_crop": [
+        106,
+        130,
+        1427,
+        967
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-0-sw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-0-nw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 0,
+      "direction": "NW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-0-nw-v1.png",
+      "sha256": "8b45ab3231a4f4aa4df2fc290bfdbdf8346941db28aaf7d26f08a2f9fae26305",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-f5b689e3-f94a-4ec4-9d6e-f8a3b465231c.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; actual incomplete native construction stage0; physical view NW.\nImage1 is the exact approved completed NW whole model EDIT TARGET.\nCreate ONE genuine foundation-stage edit of this exact model. Keep its thin flat4x4 paved floor, all four pointed corners, physical orientation, equipment mounting positions, fixed2:1 camera and upper-left light.\nStage0 shows ONLY the original equipment foundation pads and low mounting anchors where the TWO vertical vessels, ONE integrated turbine-generator and ONE small flat-roof control hut will be built. Remove the installed vessel bodies, generator housing and hut walls/roof; preserve their original low plinth footprints, clear paired vessel mounting pads and one generator mounting frame. No finished machines, empty cylinder shells or finished hut. Keep the ONE separate original two-insulator switchgear/site cabinet fully recognizable at its existing physical corner, with amber glass; retain its low floor conduits and only short disconnected capped copper heat stubs. No complete heat loop or extra equipment.\nPale steel/graphite/ochre/copper original material identity, chunky crisp game readability at256px native floor width. ONE isolated transparent RGBA cutout,1536x1024, at least64px alpha-zero clearance around every full floor corner and site cabinet. Uniformly reduce as necessary, never clip/flatten a floor tip. No workers, vehicles, loose supplies, scaffolding towers, transport, background, halo, external shadow, steam, smoke, labels, guide lines, text or additional views. No bitmap rotation/mirroring. Incomplete original construction only, no invented operating machinery.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-nw-v1.png",
+          "sha256": "406f45a3ffc291e87d8ae38ead0c843969675a748610cf15e270823010a95f94",
+          "role": "exact approved completed NW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          17,
+          1470,
+          990
+        ],
+        "16": [
+          85,
+          140,
+          1449,
+          984
+        ],
+        "128": [
+          86,
+          140,
+          1448,
+          983
+        ]
+      },
+      "native_crop": [
+        85,
+        140,
+        1449,
+        984
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-0-nw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-1-ne-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 1,
+      "direction": "NE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-1-ne-v1.png",
+      "sha256": "caa69c9018dc5f8b7ef7d2a256bfe01224bdeed96fbf8b50e566a35444887e93",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-8fda44dc-f381-44cf-a34a-ae283cdabee0.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage1; physical view NE.\nImage1 is the exact approved completed NE whole model EDIT TARGET.\nCreate ONE partially assembled hardware edit, retaining the original thin flat4x4 floor, all four pointed corners, fixed2:1 camera/light and all original equipment positions/axes.\nStage1: the TWO vertical vessels are unfinished open cylindrical lower shells on their original two plinths, without lids/top fittings or connected copper loop. The ONE integrated turbine-generator has its original angular mounting ribs/frame with ONE incomplete internal rotor core, not a finished outer steel housing and not extra separate machinery. The ONE small flat-roof control hut has low unfinished wall/frame uprights, NO ROOF. Keep the ONE original separate two-insulator switchgear/site cabinet at its exact physical corner and its amber glass. Retain original floor conduits; only short disconnected capped copper stubs, no complete heat circuit. Equipment counts/footprints stay fixed: two vessel shells, one integrated generator frame, one control hut frame, one switchgear. No extra machine, loose hardware, workers or scaffolding.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky native256px floor-width readability. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around all full floor corners and the highest cabinet fitting. No cropping/flattening floor tips, external shadow, halo, background, smoke, steam, vehicle, text, labels, guide lines or additional views. No raster rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-ne-v2.png",
+          "sha256": "d27effb8253af9ab6ae243b116ce398c90ab942424083df83c4c2347857608ac",
+          "role": "exact approved completed NE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          34,
+          1455,
+          1000
+        ],
+        "16": [
+          85,
+          37,
+          1453,
+          998
+        ],
+        "128": [
+          86,
+          37,
+          1452,
+          998
+        ]
+      },
+      "native_crop": [
+        85,
+        37,
+        1453,
+        998
+      ],
+      "native_subject_size": [
+        256,
+        138
+      ],
+      "native_position": [
+        33,
+        52
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-1-ne-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-1-se-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 1,
+      "direction": "SE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-1-se-v1.png",
+      "sha256": "bc7ed88d86404000b86a4507a4646a07a4b227029e2574dca7c1bcdeb6f1fcef",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-159c737f-c8d7-466f-800d-b12af541ef47.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage1; physical view SE.\nImage1 is the exact approved completed SE whole model EDIT TARGET.\nCreate ONE partially assembled hardware edit, retaining the original thin flat4x4 floor, all four pointed corners, fixed2:1 camera/light and all original equipment positions/axes.\nStage1: the TWO vertical vessels are unfinished open cylindrical lower shells on their original two plinths, without lids/top fittings or connected copper loop. The ONE integrated turbine-generator has its original angular mounting ribs/frame with ONE incomplete internal rotor core, not a finished outer steel housing and not extra separate machinery. The ONE small flat-roof control hut has low unfinished wall/frame uprights, NO ROOF. Keep the ONE original separate two-insulator switchgear/site cabinet at its exact physical corner and its amber glass. Retain original floor conduits; only short disconnected capped copper stubs, no complete heat circuit. Equipment counts/footprints stay fixed: two vessel shells, one integrated generator frame, one control hut frame, one switchgear. No extra machine, loose hardware, workers or scaffolding.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky native256px floor-width readability. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around all full floor corners and the highest cabinet fitting. No cropping/flattening floor tips, external shadow, halo, background, smoke, steam, vehicle, text, labels, guide lines or additional views. No raster rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71",
+          "role": "exact approved completed SE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          41,
+          31,
+          1470,
+          991
+        ],
+        "16": [
+          78,
+          124,
+          1465,
+          959
+        ],
+        "128": [
+          79,
+          124,
+          1464,
+          958
+        ]
+      },
+      "native_crop": [
+        78,
+        124,
+        1465,
+        959
+      ],
+      "native_subject_size": [
+        256,
+        142
+      ],
+      "native_position": [
+        33,
+        49
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-1-se-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-1-sw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 1,
+      "direction": "SW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-1-sw-v1.png",
+      "sha256": "6985e20a7eac33d8df6299986fcf6b6cf552f13935e5dae2e04be09d5651de8a",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-f4751d73-92d2-4ef2-935e-eb65367cf82a.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage1; physical view SW.\nImage1 is the exact approved completed SW whole model EDIT TARGET.\nCreate ONE partially assembled hardware edit, retaining the original thin flat4x4 floor, all four pointed corners, fixed2:1 camera/light and all original equipment positions/axes.\nStage1: the TWO vertical vessels are unfinished open cylindrical lower shells on their original two plinths, without lids/top fittings or connected copper loop. The ONE integrated turbine-generator has its original angular mounting ribs/frame with ONE incomplete internal rotor core, not a finished outer steel housing and not extra separate machinery. The ONE small flat-roof control hut has low unfinished wall/frame uprights, NO ROOF. Keep the ONE original separate two-insulator switchgear/site cabinet at its exact physical corner and its amber glass. Retain original floor conduits; only short disconnected capped copper stubs, no complete heat circuit. Equipment counts/footprints stay fixed: two vessel shells, one integrated generator frame, one control hut frame, one switchgear. No extra machine, loose hardware, workers or scaffolding.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky native256px floor-width readability. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around all full floor corners and the highest cabinet fitting. No cropping/flattening floor tips, external shadow, halo, background, smoke, steam, vehicle, text, labels, guide lines or additional views. No raster rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-sw-v1.png",
+          "sha256": "d875bdf8be21f0ec397526be7d2808994bc37b336a874c918083b4dd21399aa5",
+          "role": "exact approved completed SW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          41,
+          70,
+          1480,
+          962
+        ],
+        "16": [
+          155,
+          148,
+          1403,
+          959
+        ],
+        "128": [
+          156,
+          149,
+          1403,
+          959
+        ]
+      },
+      "native_crop": [
+        155,
+        148,
+        1403,
+        959
+      ],
+      "native_subject_size": [
+        256,
+        135
+      ],
+      "native_position": [
+        33,
+        55
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "registration_review": "Measured unfrozen stage1 SW y56 leaked128,175; upward1 preserves original crop/scale/bytes and all sixteen cells.",
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-1-sw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-1-nw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 1,
+      "direction": "NW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-1-nw-v1.png",
+      "sha256": "ab54d20a81ce2da5adff047c3fbe8029124fba21f333d93d6c0b952eeb46824d",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-7e723b72-bb32-4513-ba4e-522821a89058.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage1; physical view NW.\nImage1 is the exact approved completed NW whole model EDIT TARGET.\nCreate ONE partially assembled hardware edit, retaining the original thin flat4x4 floor, all four pointed corners, fixed2:1 camera/light and all original equipment positions/axes.\nStage1: the TWO vertical vessels are unfinished open cylindrical lower shells on their original two plinths, without lids/top fittings or connected copper loop. The ONE integrated turbine-generator has its original angular mounting ribs/frame with ONE incomplete internal rotor core, not a finished outer steel housing and not extra separate machinery. The ONE small flat-roof control hut has low unfinished wall/frame uprights, NO ROOF. Keep the ONE original separate two-insulator switchgear/site cabinet at its exact physical corner and its amber glass. Retain original floor conduits; only short disconnected capped copper stubs, no complete heat circuit. Equipment counts/footprints stay fixed: two vessel shells, one integrated generator frame, one control hut frame, one switchgear. No extra machine, loose hardware, workers or scaffolding.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky native256px floor-width readability. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around all full floor corners and the highest cabinet fitting. No cropping/flattening floor tips, external shadow, halo, background, smoke, steam, vehicle, text, labels, guide lines or additional views. No raster rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-nw-v1.png",
+          "sha256": "406f45a3ffc291e87d8ae38ead0c843969675a748610cf15e270823010a95f94",
+          "role": "exact approved completed NW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          33,
+          1476,
+          984
+        ],
+        "16": [
+          90,
+          118,
+          1446,
+          981
+        ],
+        "128": [
+          90,
+          118,
+          1445,
+          981
+        ]
+      },
+      "native_crop": [
+        90,
+        118,
+        1446,
+        981
+      ],
+      "native_subject_size": [
+        256,
+        134
+      ],
+      "native_position": [
+        33,
+        57
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-1-nw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-2-ne-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 2,
+      "direction": "NE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-2-ne-v1.png",
+      "sha256": "9cec104247f99f2ae1c715107ff755aac6929d23c3235c78560e25c96bc135d3",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-ca54f862-f7aa-40da-9728-72251aafa8dd.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage2; physical view NE.\nImage1 is the exact approved completed NE whole model EDIT TARGET. Keep its full thin flat4x4 floor, complete four pointed corners, equipment positions/axes/dimensions, fixed2:1 camera and upper-left light.\nChange ONLY these late-construction details: leave ONE central upper service panel uninstalled on the integrated turbine-generator housing, exposing its existing structural frame and a little copper rotor through that opening; all end panels and ochre braces stay installed. Leave ONE central flat-roof panel uninstalled on the small control hut, showing real framing below. The TWO vertical vessels are mounted with their original lids and short fittings, but ONE short existing copper return-pipe spool remains uninstalled, with its two original flange ends in place. No loose pipe or extra machinery. Preserve original vessel heights/proportions, all dark collars, panels and mounting positions. Keep exactly TWO vessels, ONE integrated angular enclosed turbine-generator, ONE flat-roof control hut and ONE separate two-insulator switchgear with its original amber glass. All machinery remains recognizably the same unfinished physical model.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky game readability at256px native floor width. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around every full floor corner and highest fitting. Never crop/flatten a floor tip. No labels, text, guide lines, workers, vehicles, loose supplies, scaffolds, additional views, steam, smoke, background, glow, halo or exterior shadow. No bitmap rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-ne-v2.png",
+          "sha256": "d27effb8253af9ab6ae243b116ce398c90ab942424083df83c4c2347857608ac",
+          "role": "exact approved completed NE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          66,
+          12,
+          1470,
+          1011
+        ],
+        "16": [
+          68,
+          14,
+          1467,
+          1009
+        ],
+        "128": [
+          69,
+          15,
+          1466,
+          1009
+        ]
+      },
+      "native_crop": [
+        68,
+        14,
+        1467,
+        1009
+      ],
+      "native_subject_size": [
+        256,
+        136
+      ],
+      "native_position": [
+        33,
+        54
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-2-ne-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-2-se-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 2,
+      "direction": "SE",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-2-se-v1.png",
+      "sha256": "3eae204057e18c616097bf7f2e4cc4429569b106241e405f4e43ee21939346f2",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-855da786-fc99-408b-b5ef-4f2ea7319e95.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage2; physical view SE.\nImage1 is the exact approved completed SE whole model EDIT TARGET. Keep its full thin flat4x4 floor, complete four pointed corners, equipment positions/axes/dimensions, fixed2:1 camera and upper-left light.\nChange ONLY these late-construction details: leave ONE central upper service panel uninstalled on the integrated turbine-generator housing, exposing its existing structural frame and a little copper rotor through that opening; all end panels and ochre braces stay installed. Leave ONE central flat-roof panel uninstalled on the small control hut, showing real framing below. The TWO vertical vessels are mounted with their original lids and short fittings, but ONE short existing copper return-pipe spool remains uninstalled, with its two original flange ends in place. No loose pipe or extra machinery. Preserve original vessel heights/proportions, all dark collars, panels and mounting positions. Keep exactly TWO vessels, ONE integrated angular enclosed turbine-generator, ONE flat-roof control hut and ONE separate two-insulator switchgear with its original amber glass. All machinery remains recognizably the same unfinished physical model.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky game readability at256px native floor width. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around every full floor corner and highest fitting. Never crop/flatten a floor tip. No labels, text, guide lines, workers, vehicles, loose supplies, scaffolds, additional views, steam, smoke, background, glow, halo or exterior shadow. No bitmap rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-base-se-v1.png",
+          "sha256": "47c90942d51c0955ff662ccb1b49f9bf139c501b03b1629aad4e12122fb9cd71",
+          "role": "exact approved completed SE edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          83,
+          23,
+          1456,
+          986
+        ],
+        "16": [
+          87,
+          82,
+          1454,
+          942
+        ],
+        "128": [
+          88,
+          82,
+          1453,
+          941
+        ]
+      },
+      "native_crop": [
+        87,
+        82,
+        1454,
+        942
+      ],
+      "native_subject_size": [
+        256,
+        149
+      ],
+      "native_position": [
+        33,
+        42
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-2-se-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-2-sw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 2,
+      "direction": "SW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-2-sw-v1.png",
+      "sha256": "6cfa23534bf93fba50a2d63b5a4a3e918220dfb0b048a9648346404673702d53",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-a93883ad-0385-4740-9571-efc36e56b7fe.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage2; physical view SW.\nImage1 is the exact approved completed SW whole model EDIT TARGET. Keep its full thin flat4x4 floor, complete four pointed corners, equipment positions/axes/dimensions, fixed2:1 camera and upper-left light.\nChange ONLY these late-construction details: leave ONE central upper service panel uninstalled on the integrated turbine-generator housing, exposing its existing structural frame and a little copper rotor through that opening; all end panels and ochre braces stay installed. Leave ONE central flat-roof panel uninstalled on the small control hut, showing real framing below. The TWO vertical vessels are mounted with their original lids and short fittings, but ONE short existing copper return-pipe spool remains uninstalled, with its two original flange ends in place. No loose pipe or extra machinery. Preserve original vessel heights/proportions, all dark collars, panels and mounting positions. Keep exactly TWO vessels, ONE integrated angular enclosed turbine-generator, ONE flat-roof control hut and ONE separate two-insulator switchgear with its original amber glass. All machinery remains recognizably the same unfinished physical model.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky game readability at256px native floor width. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around every full floor corner and highest fitting. Never crop/flatten a floor tip. No labels, text, guide lines, workers, vehicles, loose supplies, scaffolds, additional views, steam, smoke, background, glow, halo or exterior shadow. No bitmap rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-sw-v1.png",
+          "sha256": "d875bdf8be21f0ec397526be7d2808994bc37b336a874c918083b4dd21399aa5",
+          "role": "exact approved completed SW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          0,
+          0,
+          1433,
+          1000
+        ],
+        "16": [
+          116,
+          105,
+          1431,
+          987
+        ],
+        "128": [
+          117,
+          106,
+          1430,
+          986
+        ]
+      },
+      "native_crop": [
+        116,
+        105,
+        1431,
+        987
+      ],
+      "native_subject_size": [
+        256,
+        133
+      ],
+      "native_position": [
+        33,
+        58
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-2-sw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
+    },
+    {
+      "key": "magma-construction-2-nw-v1",
+      "asset_id": "facility.magma-powerhouse",
+      "construction_stage": 2,
+      "direction": "NW",
+      "status": "native_incomplete_model_reviewed",
+      "path": "media/multilayer/source/ground/raw/magma-construction-2-nw-v1.png",
+      "sha256": "a6e98ccc1eebcbc17b0922b9a697d34c7dd7275469b3f02df7f1457136076707",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-06b91490-3e39-42cd-9b26-53ba747e64c4.png",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.magma-powerhouse,2000 Magma-Loop; genuine incomplete native construction stage2; physical view NW.\nImage1 is the exact approved completed NW whole model EDIT TARGET. Keep its full thin flat4x4 floor, complete four pointed corners, equipment positions/axes/dimensions, fixed2:1 camera and upper-left light.\nChange ONLY these late-construction details: leave ONE central upper service panel uninstalled on the integrated turbine-generator housing, exposing its existing structural frame and a little copper rotor through that opening; all end panels and ochre braces stay installed. Leave ONE central flat-roof panel uninstalled on the small control hut, showing real framing below. The TWO vertical vessels are mounted with their original lids and short fittings, but ONE short existing copper return-pipe spool remains uninstalled, with its two original flange ends in place. No loose pipe or extra machinery. Preserve original vessel heights/proportions, all dark collars, panels and mounting positions. Keep exactly TWO vessels, ONE integrated angular enclosed turbine-generator, ONE flat-roof control hut and ONE separate two-insulator switchgear with its original amber glass. All machinery remains recognizably the same unfinished physical model.\nPale steel, graphite, desaturated blue-grey, copper and ochre; crisp chunky game readability at256px native floor width. ONE isolated transparent RGBA whole model, requested1536x1024. Uniformly reduce as needed for at least64px alpha-zero clearance around every full floor corner and highest fitting. Never crop/flatten a floor tip. No labels, text, guide lines, workers, vehicles, loose supplies, scaffolds, additional views, steam, smoke, background, glow, halo or exterior shadow. No bitmap rotation/mirroring.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/magma-campus-nw-v1.png",
+          "sha256": "406f45a3ffc291e87d8ae38ead0c843969675a748610cf15e270823010a95f94",
+          "role": "exact approved completed NW edit target"
+        }
+      ],
+      "excluded_views": [],
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha_bounds_by_threshold": {
+        "1": [
+          57,
+          39,
+          1486,
+          990
+        ],
+        "16": [
+          60,
+          119,
+          1482,
+          986
+        ],
+        "128": [
+          60,
+          119,
+          1481,
+          985
+        ]
+      },
+      "native_crop": [
+        60,
+        119,
+        1482,
+        986
+      ],
+      "native_subject_size": [
+        256,
+        128
+      ],
+      "native_position": [
+        33,
+        63
+      ],
+      "native_floor_corners": [
+        [
+          160,
+          64
+        ],
+        [
+          288,
+          128
+        ],
+        [
+          160,
+          192
+        ],
+        [
+          32,
+          128
+        ]
+      ],
+      "native_geometry": {
+        "footprint": [
+          4,
+          4
+        ],
+        "tile_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "cell_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ]
+      },
+      "native_model_review": "logs/proofs/mlm/native-art/ground/magma-construction-2-nw-v1-review.json",
+      "model_identity_review": "Reviewed genuine unfinished model: paired vessel pads/open shells/mounted vessels, one integrated generator foundation/frame/late casing, one control hut foundation/frame/roof gap and one original switchgear. All16 native cells preserve original sampled pixels; correct physical orientation/counts and floor corners."
     }
   ],
   "families": [
@@ -5829,7 +9251,7 @@
     },
     {
       "asset_id": "facility.vent-powerhouse",
-      "status": "ready_views_verified_states_pending",
+      "status": "complete_original_native_state_phase_source_packing_operation_pending",
       "native_geometry_provider": {
         "function": "GetGeothermalGeneratorGeometry",
         "header": "src/geothermal_generator_geometry.h",
@@ -6010,7 +9432,7 @@
         "front"
       ],
       "runtime_activated": false,
-      "source_coverage_complete": false,
+      "source_coverage_complete": true,
       "base_source": "venttap-base-se-v1",
       "design_brief": {
         "model": "1980 Vent-Tap Powerhouse",
@@ -6045,11 +9467,157 @@
       "base_review": "logs/proofs/mlm/native-art/ground/venttap-base-se-v1-review.json",
       "ready_view_review": "logs/proofs/mlm/native-art/ground/venttap-ready-views.json",
       "native_axis_policy": "SE/NW: exchanger and turbine shaft down-right/up-left, hall ridge up-right/down-left. NE/SW: exchanger and shaft up-right/down-left, hall ridge down-right/up-left. Genuine physical model turns keep camera/light fixed.",
-      "foreground_policy": "Whole solid equipment sections retain paired back/front contract; no vehicle aperture is invented. Final state mapping remains task55.3."
+      "foreground_policy": "solid_native_industry_cell_full_original_sections_no_vehicle_aperture",
+      "construction_frame_sources": {
+        "0": {
+          "NE": "venttap-construction-0-ne-v1",
+          "SE": "venttap-construction-0-se-v1",
+          "SW": "venttap-construction-0-sw-v1",
+          "NW": "venttap-construction-0-nw-v1"
+        },
+        "1": {
+          "NE": "venttap-construction-1-ne-v1",
+          "SE": "venttap-construction-1-se-v1",
+          "SW": "venttap-construction-1-sw-v1",
+          "NW": "venttap-construction-1-nw-v1"
+        },
+        "2": {
+          "NE": "venttap-construction-2-ne-v3",
+          "SE": "venttap-construction-2-se-v1",
+          "SW": "venttap-construction-2-sw-v1",
+          "NW": "venttap-construction-2-nw-v1"
+        },
+        "3": {
+          "NE": "venttap-campus-ne-v1",
+          "SE": "venttap-base-se-v1",
+          "SW": "venttap-campus-sw-v2",
+          "NW": "venttap-campus-nw-v1"
+        }
+      },
+      "construction_hardware_coverage_complete": true,
+      "construction_view_review": "logs/proofs/mlm/native-art/ground/venttap-construction-0-1-2.json",
+      "construction_stage3_policy": "approved_ready_hardware_under_amber_construction_glass_phase0; not_completed_until_native_work592",
+      "construction_indicator_phase": 0,
+      "construction_ticks": {
+        "total": 592,
+        "stage_length": 148,
+        "stages": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "completion_separate": true
+      },
+      "indicator_record": "media/multilayer/source/m1/facility-generation-record.json",
+      "indicator_key": "facility-status",
+      "heat_starved_indicator_key": "generator-heat-starved-glass",
+      "indicator_targets": {
+        "venttap-construction-0-ne-v1": [
+          145,
+          65,
+          2,
+          2
+        ],
+        "venttap-construction-0-se-v1": [
+          74,
+          128,
+          2,
+          2
+        ],
+        "venttap-construction-0-sw-v1": [
+          165,
+          161,
+          2,
+          2
+        ],
+        "venttap-construction-0-nw-v1": [
+          263,
+          118,
+          2,
+          2
+        ],
+        "venttap-construction-1-ne-v1": [
+          134,
+          73,
+          2,
+          2
+        ],
+        "venttap-construction-1-se-v1": [
+          81,
+          136,
+          2,
+          2
+        ],
+        "venttap-construction-1-sw-v1": [
+          171,
+          161,
+          2,
+          2
+        ],
+        "venttap-construction-1-nw-v1": [
+          238,
+          123,
+          2,
+          2
+        ],
+        "venttap-construction-2-ne-v3": [
+          134,
+          77,
+          1,
+          2
+        ],
+        "venttap-construction-2-se-v1": [
+          82,
+          134,
+          2,
+          2
+        ],
+        "venttap-construction-2-sw-v1": [
+          155,
+          155,
+          2,
+          2
+        ],
+        "venttap-construction-2-nw-v1": [
+          256,
+          114,
+          2,
+          2
+        ],
+        "venttap-campus-ne-v1": [
+          134,
+          77,
+          2,
+          2
+        ],
+        "venttap-base-se-v1": [
+          83,
+          134,
+          2,
+          2
+        ],
+        "venttap-campus-sw-v2": [
+          155,
+          156,
+          2,
+          2
+        ],
+        "venttap-campus-nw-v1": [
+          255,
+          114,
+          2,
+          2
+        ]
+      },
+      "frame_owner": "construction:native_paid_work_stage148ticks;completed:visual_equipment_phase_only",
+      "state_owner": "native_work_completion_then_operating_shared_Heat_readiness;no_art_quantity_authority",
+      "state_source_manifest": "logs/proofs/mlm/native-art/ground/venttap-source-manifest.json",
+      "source_evidence": "logs/graphics/geothermal-source/20261011-venttap-states-01/verification.json"
     },
     {
       "asset_id": "facility.magma-powerhouse",
-      "status": "native_geometry_verified_originals_pending",
+      "status": "complete_original_native_state_phase_source_packing_operation_pending",
       "native_geometry_provider": {
         "function": "GetGeothermalGeneratorGeometry",
         "header": "src/geothermal_generator_geometry.h",
@@ -6230,7 +9798,232 @@
         "front"
       ],
       "runtime_activated": false,
-      "source_coverage_complete": false
+      "source_coverage_complete": true,
+      "base_source": "magma-base-se-v1",
+      "whole_view_selections": {
+        "NE": "magma-campus-ne-v2",
+        "SE": "magma-base-se-v1",
+        "SW": "magma-campus-sw-v1",
+        "NW": "magma-campus-nw-v1"
+      },
+      "base_review": "logs/proofs/mlm/native-art/ground/magma-base-se-v1-review.json",
+      "source_mode": "whole_connected_original_lossless_native_cells",
+      "design_brief": {
+        "model": "2000 Magma-Loop Power Station",
+        "native_geometry_provider": "GetGeothermalGeneratorGeometry(MagmaLoop)",
+        "equipment": [
+          "two squat vertical closed-loop heat-exchanger vessels",
+          "one angular enclosed integrated turbine-alternator with ochre braces",
+          "one low flat-roof control/service hut",
+          "one separate two-insulator electrical switchgear with amber lamp"
+        ],
+        "camera": "fixed2:1 world projection; upper-left light",
+        "source_only": true,
+        "operating_terms": "Plan18 Group8 pending; no1980 invoice/work-duration inheritance",
+        "physical_floor": "verified native4x4/sixteen cells overrides earlier larger-footprint prose"
+      },
+      "ready_view_review": "logs/proofs/mlm/native-art/ground/magmaloop-ready-views.json",
+      "construction_frame_sources": {
+        "0": {
+          "NE": "magma-construction-0-ne-v1",
+          "SE": "magma-construction-0-se-v1",
+          "SW": "magma-construction-0-sw-v1",
+          "NW": "magma-construction-0-nw-v1"
+        },
+        "1": {
+          "NE": "magma-construction-1-ne-v1",
+          "SE": "magma-construction-1-se-v1",
+          "SW": "magma-construction-1-sw-v1",
+          "NW": "magma-construction-1-nw-v1"
+        },
+        "2": {
+          "NE": "magma-construction-2-ne-v1",
+          "SE": "magma-construction-2-se-v1",
+          "SW": "magma-construction-2-sw-v1",
+          "NW": "magma-construction-2-nw-v1"
+        },
+        "3": {
+          "NE": "magma-campus-ne-v2",
+          "SE": "magma-base-se-v1",
+          "SW": "magma-campus-sw-v1",
+          "NW": "magma-campus-nw-v1"
+        }
+      },
+      "construction_hardware_coverage_complete": true,
+      "construction_stage3_policy": "approved_ready_hardware_under_amber_construction_glass_phase0;completion_owned_by_Plan18_operating_generator",
+      "construction_indicator_phase": 0,
+      "construction_ticks": {
+        "total": null,
+        "stage_length": null,
+        "stages": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "completion_separate": true,
+        "owner": "Plan18_Group8_operating2000_terms_pending"
+      },
+      "construction_view_review": "logs/proofs/mlm/native-art/ground/magmaloop-construction-0-1-2.json",
+      "indicator_record": "media/multilayer/source/m1/facility-generation-record.json",
+      "indicator_key": "facility-status",
+      "heat_starved_indicator_key": "generator-heat-starved-glass",
+      "indicator_targets": {
+        "magma-construction-0-ne-v1": [
+          160,
+          63,
+          2,
+          2
+        ],
+        "magma-construction-0-se-v1": [
+          70,
+          112,
+          2,
+          2
+        ],
+        "magma-construction-0-sw-v1": [
+          155,
+          154,
+          2,
+          2
+        ],
+        "magma-construction-0-nw-v1": [
+          251,
+          104,
+          2,
+          2
+        ],
+        "magma-construction-1-ne-v1": [
+          160,
+          62,
+          2,
+          2
+        ],
+        "magma-construction-1-se-v1": [
+          71,
+          111,
+          2,
+          2
+        ],
+        "magma-construction-1-sw-v1": [
+          155,
+          151,
+          2,
+          2
+        ],
+        "magma-construction-1-nw-v1": [
+          254,
+          99,
+          2,
+          2
+        ],
+        "magma-construction-2-ne-v1": [
+          160,
+          63,
+          2,
+          2
+        ],
+        "magma-construction-2-se-v1": [
+          70,
+          112,
+          2,
+          2
+        ],
+        "magma-construction-2-sw-v1": [
+          158,
+          155,
+          2,
+          2
+        ],
+        "magma-construction-2-nw-v1": [
+          251,
+          105,
+          2,
+          2
+        ],
+        "magma-campus-ne-v2": [
+          160,
+          63,
+          2,
+          2
+        ],
+        "magma-base-se-v1": [
+          70,
+          113,
+          2,
+          2
+        ],
+        "magma-campus-sw-v1": [
+          157,
+          155,
+          2,
+          2
+        ],
+        "magma-campus-nw-v1": [
+          252,
+          105,
+          2,
+          2
+        ]
+      },
+      "foreground_policy": "solid_native_industry_cell_full_original_sections_no_vehicle_aperture",
+      "frame_owner": "construction:native_incomplete_hardware_stage;completed:visual_equipment_phase_only",
+      "state_owner": "native_work_completion_then_operating_shared_Heat_readiness;no_art_quantity_authority",
+      "state_source_manifest": "logs/proofs/mlm/native-art/ground/magmaloop-source-manifest.json",
+      "source_evidence": "logs/graphics/geothermal-source/20261011-magmaloop-states-01/verification.json"
+    }
+  ],
+  "components": [
+    {
+      "key": "generator-heat-starved-glass",
+      "path": "media/multilayer/source/ground/raw/generator-heat-starved-glass-v1.png",
+      "sha256": "a2a2443c1d75debaaea563a98b4f1afe75c24cdceb79ad00170734c3ebfa4a7f",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-1b69d266-e097-4167-9f93-3080ce328824.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: OpenTTD facility.vent-powerhouse heat-starved status glass, four genuine authored equipment phases.\nInput image1 is a STYLE REFERENCE ONLY for square charcoal-rim industrial indicator glass. Do not reproduce its 4x4 grid or its amber/green/cyan/red rows.\nCreate exactly FOUR separated front-facing square lamps in ONE HORIZONTAL ROW, left to right phases0,1,2,3. Transparent1536x512 canvas with generous alpha-zero margins and gutters. Each lamp has the same thin square charcoal metal rim and entirely opaque filled square PURPLE/VIOLET glass interior. Crisp chunky low-detail game pixel-art; all four glass regions remain recognizable after reduction to3x3 native pixels. Phase0 deep dim violet, no highlight. Phase1 saturated medium violet with one small pale upper-left square highlight. Phase2 brighter violet with a wide pale-lavender upper half. Phase3 nearly white-lavender interior with strongly purple glass border. Four distinct actual material phases, never identical duplicates. Keep identical square silhouette and filled glass footprint in all four. Purple communicates unavailable geothermal heat, separate from the existing red blocked and cyan working glass. Change only the authored glass interior between phases. No text, labels, digits, arrows, grids, magenta separators, walls, cables, machinery, extra lamps, background, checkerboard paint, glow, rays or shadows. Actual transparency outside each fully opaque square lamp; leave all four fully inside the image.",
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+          "sha256": "a70f38222cf3c52583f36ae384890609d35dcf1f2fa3e56c7f31548ca831fe45",
+          "role": "square industrial status-glass style only"
+        }
+      ],
+      "size": [
+        2172,
+        724
+      ],
+      "states": [
+        "heat_starved"
+      ],
+      "frames": 4,
+      "glass_boxes": [
+        [
+          257,
+          244,
+          474,
+          455
+        ],
+        [
+          738,
+          244,
+          954,
+          455
+        ],
+        [
+          1219,
+          244,
+          1434,
+          455
+        ],
+        [
+          1699,
+          244,
+          1915,
+          455
+        ]
+      ],
+      "status": "authored_glass_reviewed",
+      "selection": "Four disjoint measured opaque glass rectangles; preserve original inner glass and sample3x3, no procedural recoloring."
     }
   ]
 }

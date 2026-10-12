@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C.",
   "schema_version": 2,
   "review_root": "mlm/reviews",
   "runtime_root": "mlm/runtime",
@@ -1245,6 +1245,32 @@
       "test_tags": [],
       "invocation": "python -B media/multilayer/regenerate_art_proofs.py <phase> --manifest <exact-manifest>",
       "context_policy": "one explicit phase per bounded command; captured inputs and outputs remain owned by their declared child producer"
+    },
+    {
+      "producer": "src/tests/multilayer_collector_runtime.cpp",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "collector-art"
+        }
+      ],
+      "test_tags": [
+        "[.collector-art-runtime]"
+      ],
+      "context_policy": "explicit collector feature/scenario and inherited invocation; separate bounded native or ordinary-game process",
+      "invocation": "Run through src/tests/multilayer/collector_runtime_checks.py native; explicit fixture floor/materials, no transported bootstrap"
+    },
+    {
+      "producer": "src/tests/multilayer/collector_runtime_checks.py",
+      "features": [
+        {
+          "feature": "geothermal",
+          "scenario": "collector-art"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit collector feature/scenario and inherited invocation; separate bounded native or ordinary-game process",
+      "invocation": "python -B src/tests/multilayer/collector_runtime_checks.py native | normal --source <exact-current-save> --centre <native-reported-tile>"
     }
   ],
   "proof_cache": "logs/proofs/mlm/native-art",

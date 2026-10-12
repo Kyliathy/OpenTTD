@@ -4,7 +4,12 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_mine_definition.cpp Exact installed ten-resource catalogue and genuine native layouts/funding. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 9 */
+/**
+ * @file layer_mine_definition.cpp Exact installed ten-resource catalogue and genuine native layouts/funding.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group9.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md, Group27B.
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -13,13 +18,22 @@
 
 #include "../safeguards.h"
 
+/** Explicit missing native floor used to distinguish machinery from the separate loading approach. */
+enum class MineFloorHoldout : uint8_t { None, Machinery, Loading };
+
 /** Shared world fixture installs the real catalogue over the same native IIDS identity and opens its actual manifest footprint. */
 class MineDefinitionRig : public MineAdmissionRig {
 	decltype(_industile_mngr.mappings) tile_mappings = _industile_mngr.mappings; ///< Restore caller TIDS identities after catalogue checks.
 
 public:
-	/** @param index Published resource whose real installed definition will be funded. */
-	explicit MineDefinitionRig(size_t index = 0) : MineAdmissionRig(index)
+	TileIndex held_floor = INVALID_TILE; ///< Deliberately solid actual cell, never excised from the required site.
+
+	/**
+	 * Install actual catalogue geometry without permitting normal construction to open rock.
+	 * @param index Published resource whose real installed definition will be funded.
+	 * @param holdout Optional machinery/loading cell kept solid outside the parent's smaller historical fixture.
+	 */
+	explicit MineDefinitionRig(size_t index = 0, MineFloorHoldout holdout = MineFloorHoldout::None) : MineAdmissionRig(index)
 	{
 		const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 		REQUIRE(InitialiseLayerMineDefinitions(this->ActivatedContent()));
@@ -34,6 +48,15 @@ public:
 				const TileIndex tile = TileAddWrap(this->request.tile, x, y);
 				REQUIRE(IsValidTile(tile));
 				this->site.push_back(tile);
+				// Hold out cells beyond the parent's historical two-wide/four-long
+				// floor. They remain required by the real nine-cell native layout
+				// or its loading approach; estimates cannot silently omit them.
+				if ((holdout == MineFloorHoldout::Machinery && x == 2 && y == 2) ||
+						(holdout == MineFloorHoldout::Loading && x == 0 && y == 4)) {
+					REQUIRE(GetGeologyWorldState().terrain.Get(tile) != ExcavationState::Excavated);
+					this->held_floor = tile;
+					continue;
+				}
 				if (GetGeologyWorldState().terrain.Get(tile) != ExcavationState::Excavated) missing_floor.push_back(tile);
 			}
 		}
@@ -43,6 +66,38 @@ public:
 	/** Restore actual caller tile identities; the parent destroys fixture industries before resetting their definitions. */
 	~MineDefinitionRig() { _industile_mngr.mappings = std::move(this->tile_mappings); }
 };
+
+/**
+ * Emit geometry from actual installed definitions and the pure whole-site admission owner.
+ * @param resource Content-owned mineral label resolved by this native funding fixture.
+ * @param spec Real installed IIDS definition with its exact native layout and TIDS cells.
+ * @param admission Complete successful native machinery/loading projection before funding.
+ */
+static void PrintMineArtGeometry(CargoLabel resource, const IndustrySpec &spec, const LayerMineAdmission &admission)
+{
+	fmt::print("MINE_ART_GEOMETRY {{\"resource\":\"{}\",\"industry_local_id\":{},\"layout_count\":{},\"cells\":[",
+		resource.AsString(), spec.grf_prop.local_id, spec.layouts.size());
+	bool first = true;
+	// Preserve actual native order and ownership, rather than constructing a
+	// guessed rectangle from the plan's nine-cell count or legacy substitute art.
+	for (const auto &cell : spec.layouts.front()) {
+		const auto *tile = GetIndustryTileSpec(cell.gfx);
+		fmt::print("{}{{\"cell\":[{},{}],\"tile_local_id\":{},\"substitute_graphics\":{}}}", first ? "" : ",",
+			cell.ti.x, cell.ti.y, tile->grf_prop.local_id, tile->grf_prop.subst_id);
+		first = false;
+	}
+	fmt::print("],\"machinery_count\":{},\"loading\":[", admission.machinery.size());
+	first = true;
+	const TileIndex origin = admission.machinery.front();
+	// Loading floor belongs to admission, not to a painted source courtyard.
+	// Export actual world-relative cells without copying its private algorithm.
+	for (const TileIndex tile : admission.loading) {
+		fmt::print("{}[{},{}]", first ? "" : ",", static_cast<int>(TileX(tile)) - static_cast<int>(TileX(origin)),
+			static_cast<int>(TilePlaneY(tile)) - static_cast<int>(TilePlaneY(origin)));
+		first = false;
+	}
+	fmt::print("]}}\n");
+}
 
 /** Existing IIDS/TIDS mappings and cargo labels resolve all ten definitions without any geology/industry generation. */
 TEST_CASE("Native mine catalogue registers all ten exact resources and art families", "[layer-mine-definition]")
@@ -69,9 +124,16 @@ TEST_CASE("Native mine catalogue registers all ten exact resources and art famil
 		CHECK(capability->asset_id == fmt::format("mine.{}", record.resource.AsString()));
 		CHECK(names.insert(spec->name).second);
 		CHECK(spec->produced_cargo[0] == GetCargoTypeByLabel(record.resource));
+		CHECK(spec->layouts.size() == 1);
 		CHECK(spec->layouts.front().size() == 9);
+		std::set<std::pair<int, int>> positions;
 		// All nine native tiles keep one declared saved identity and a visible original art substitute until the r2mlvs13 family is packed.
 		for (const auto &cell : spec->layouts.front()) {
+			CHECK(positions.emplace(cell.ti.x, cell.ti.y).second);
+			CHECK(cell.ti.x >= 0);
+			CHECK(cell.ti.x < 3);
+			CHECK(cell.ti.y >= 0);
+			CHECK(cell.ti.y < 3);
 			CHECK(cell.gfx >= NEW_INDUSTRYTILEOFFSET);
 			const IndustryTileSpec *tile = GetIndustryTileSpec(cell.gfx);
 			CHECK(tile->enabled);
@@ -97,6 +159,11 @@ TEST_CASE("Each installed mine funds actual machinery and uses common finite pro
 	MineDefinitionRig rig(index);
 	const auto &recipe = GetMultiLayerMineRecipes()[index];
 	rig.PrepareFunding();
+	const auto admission = ValidateMineDepositClaim(rig.request);
+	REQUIRE(admission.error == LayerIndustryError::None);
+	CHECK(admission.machinery.size() == 9);
+	CHECK(admission.loading.size() == 4);
+	PrintMineArtGeometry(recipe.resource, *GetIndustrySpec(rig.request.type), admission);
 	REQUIRE(rig.Fund(DoCommandFlag::Execute).Succeeded());
 	Industry *industry = *Industry::Iterate().begin();
 	CHECK(industry->location.w == 3);
@@ -117,4 +184,32 @@ TEST_CASE("Each installed mine funds actual machinery and uses common finite pro
 		TimerGameCalendar::date = TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1979}, 11, 31);
 		CHECK(ProduceLayerMineCargo(*industry, 74, true).error == LayerIndustryError::Unavailable);
 	}
+}
+
+/** Actual native machinery and loading-floor refusals preserve all existing paid terrain, money and identities. */
+TEST_CASE("Selected native mines require complete machinery and separate loading floor before allocation", "[layer-mine-art-geometry]")
+{
+	const size_t index = GENERATE(0, 1, 2, 4, 5, 7, 8);
+	const auto holdout = GENERATE(MineFloorHoldout::Machinery, MineFloorHoldout::Loading);
+	MineDefinitionRig rig(index, holdout);
+	rig.PrepareFunding();
+	REQUIRE(IsValidTile(rig.held_floor));
+	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
+	const auto cash = Company::Get(_current_company)->money;
+	const auto seeds = _random, interactive = _interactive_random;
+	const auto industries = Industry::GetNumItems();
+	CHECK(ValidateMineDepositClaim(rig.request).error == LayerIndustryError::Footprint);
+	CHECK(rig.Fund({}).Failed());
+	CHECK(rig.Fund(DoCommandFlag::Execute).Failed());
+	CHECK(Industry::GetNumItems() == industries);
+	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
+	CHECK(Company::Get(_current_company)->money == cash);
+	CHECK(_random.state[0] == seeds.state[0]);
+	CHECK(_random.state[1] == seeds.state[1]);
+	CHECK(_interactive_random.state[0] == interactive.state[0]);
+	CHECK(_interactive_random.state[1] == interactive.state[1]);
+	// Only explicit fixture excavation repairs the required floor. A normal
+	// construction estimate remains pure and cannot grant a free starter room.
+	rig.Open(std::array{rig.held_floor});
+	CHECK(ValidateMineDepositClaim(rig.request).error == LayerIndustryError::None);
 }

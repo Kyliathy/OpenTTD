@@ -1,5 +1,7 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 # Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
+# Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
+# Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -303,6 +305,11 @@ add_files(
     tbm_engine.cpp
     underground_vehicle.h
     underground_vehicle.cpp
+    conventional_station_art.h
+    conventional_station_art.cpp
+    # Native truck-stop geometry producer: r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
+    conventional_terminal_art.h
+    conventional_terminal_art.cpp
     # Native tube capability producer: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
     transport_tube.h
     transport_tube.cpp
@@ -393,6 +400,8 @@ add_files(
     layer_industry_definitions.cpp
     layer_industry_processor.h
     layer_industry_processor.cpp
+    layer_processor_presentation.h
+    layer_processor_presentation.cpp
     layer_industry_baseline.h
     layer_industry_baseline.cpp
     station_supply.h

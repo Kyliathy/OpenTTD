@@ -4,11 +4,12 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_industry_processor.cpp Native material processing over the existing Industry input/output inventories. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 10/16B */
+/** @file layer_industry_processor.cpp Native material processing over the existing Industry input/output inventories. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 10/16B. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B shared pure snapshot. */
 
 #include "stdafx.h"
 #include "geothermal_collector.h"
 #include "layer_industry_processor.h"
+#include "layer_processor_presentation.h"
 #include "layer_industry_baseline.h"
 #include "industry.h"
 #include "company_base.h"
@@ -249,19 +250,6 @@ bool LayerProcessorHasStoredCargo(const Industry &industry)
 		std::ranges::any_of(industry.produced, [](const auto &slot) { return slot.waiting != 0; });
 }
 
-/**
- * Determine operational availability from actual construction, saved choice and the calendar owner.
- * @param industry Actual native facility.
- * @param recipe Its current immutable choice.
- * @return Whether the facility may run now; inactive stocks/work stay in their existing owners.
- */
-static bool IsLayerProcessorActive(const Industry &industry, const MultiLayerManufacturingRecipe &recipe)
-{
-	return _game_mode == GameMode::Normal && _pause_mode.None() && industry.prod_level != PRODLEVEL_CLOSURE &&
-		GetTileLayer(industry.location.tile) == recipe.layer && IsLayerIndustryComplete(industry) &&
-		TimerGameCalendar::ConvertDateToYMD(TimerGameCalendar::date).year >= recipe.introduction_year;
-}
-
 /** @copydoc GetLayerProcessorInputRoom */
 uint32_t GetLayerProcessorInputRoom(const Industry &industry, CargoType cargo)
 {
@@ -329,24 +317,7 @@ public:
 	/** @return Pure actual stock/work/choice snapshot; this material adapter has no utility grants. */
 	LayerRecipeInventorySnapshot Capture() const override
 	{
-		LayerRecipeInventorySnapshot snapshot;
-		snapshot.recipe = this->state.recipe;
-		snapshot.layer = GetTileLayer(this->industry.location.tile);
-		snapshot.revision = this->state.revision;
-		snapshot.active = IsLayerProcessorActive(this->industry, this->record);
-		snapshot.work_ticks = this->state.work_ticks;
-		// Retain all delivered alternatives and all product slots; the selected recipe consumes only its declared roles.
-		for (const auto &slot : this->industry.accepted) {
-			if (!IsValidCargoType(slot.cargo)) { snapshot.active = false; return snapshot; } // Changed runtime slots refuse a batch before dereferencing cargo definitions.
-			snapshot.inputs.push_back({CargoSpec::Get(slot.cargo)->label, slot.waiting, this->record.input_capacity});
-		}
-		for (const auto &slot : this->industry.produced) {
-			if (!IsValidCargoType(slot.cargo)) { snapshot.active = false; return snapshot; }
-			const uint32_t history_room = UINT16_MAX - slot.history[THIS_MONTH].production;
-			snapshot.outputs.push_back({CargoSpec::Get(slot.cargo)->label, slot.waiting,
-				std::min<uint32_t>(this->record.output_capacity, slot.waiting + history_room)});
-		}
-		return snapshot;
+		return CaptureLayerProcessorInventory(this->industry, this->state, this->record);
 	}
 	/** @return This exact actual inventory view. */
 	const LayerRecipeInventoryView &Inventory() const override { return *this; }

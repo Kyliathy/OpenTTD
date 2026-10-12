@@ -1,0 +1,995 @@
+{
+  "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md60B/60C; r2mlvs18-geothermal-energy-and-industry.md installed path/riser contracts; archi-map-layers.md. Immutable ImageGen originals and reviewed native source geometry; packing/runtime pending.",
+  "schema_version": 1,
+  "candidates": [
+    {
+      "key": "utility-heat-connected-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-heat-connected-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-3a47acb2-c322-4e52-bf67-5c34916834b8.png",
+      "prompt": "Use case: stylized-concept. Asset: original OpenTTD geothermal Heat utility conduit, connected X-axis whole straight model. One isolated floor-level copper thermal pipe, diagonal from lower-left SW to upper-right NE at exact 2:1 isometric slope: every 2 units right travels 1 unit up. Show a single long slim copper-brown insulated cylinder with two small dark steel union collars at opposing ends and ONE compact central steel sleeve; total three fittings. End sockets are open matching connectors, ready to join neighbouring pipes. The two halves have the same length and the central sleeve sits at their exact midpoint. Extremely low narrow hardware, no pedestal, no raised building or trench. Copper/ochre body, dark graphite collars, pale steel highlights; crisp chunky game-sprite shading lit from upper left. Geometry must stay within a narrow strip: pipe diameter about 1/16 of full length, collars no wider than 1/10 length. No bends, vertical riser, valve wheel, tall flange or extra branches. The whole straight reduces to a36x22-pixel native silhouette, contacts32 pixels apart horizontally and16 vertically. Show complete model with transparent holes and at least64px genuine transparent clearance on every side, centered in a landscape image. Transparent background, no ground tile/slab, no shadows outside the object, no guide, lettering, labels, border, magenta, watermarks or other props. This is independently authored source art, not a UI diagram. Whole-model geometry comes first; connected status does not signify energy flow.",
+      "references": [],
+      "domain": "Heat",
+      "axis": "X",
+      "state": "connected",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "c44f0eb4c2d29fac694eef0ab37fddb32dae2836760bd15b06de63813c0616d2",
+      "native_transform": {
+        "source_crop": [
+          481,
+          355,
+          1126,
+          671
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-connected-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-connected-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-30affd1d-96cb-451d-8e25-1483734ee5de.png",
+      "prompt": "Use case: stylized-concept. Asset: original OpenTTD geothermal electrical utility conduit, connected X-axis whole straight model. One isolated floor-level BLUE insulated electricity cable bundle, diagonal from lower-left SW to upper-right NE at exact 2:1 isometric slope: every2 units right travels1 unit up. Show a single very slim dark navy sheath containing two closely bound blue wires with restrained cyan upper highlights. Two small pale steel socket collars at opposing ends and ONE compact pale steel central sleeve; total three fittings. End sockets are open matching electrical connectors ready to join neighbours. The two halves have equal length with central sleeve at exact midpoint. Distinguish from an orange copper Heat pipe by blue insulation, paired narrow conductors and silver sockets; no copper thermal body. Extremely low hardware, cable diameter about1/20 of full length, collars no wider than1/10 length. Crisp chunky industrial game-sprite shading, upper-left light, readable reduced to a36x22 native silhouette with contacts32 pixels horizontally and16 vertically apart. No bends, tall junction box, power pole, battery, plug lead or extra branches. Transparent background, complete isolated object centered in landscape canvas with at least64px transparent clearance all sides. No ground slab, track, cast shadow outside cable, guide, text, labels, border, magenta, watermark or extra props. A physical connected cable does not signify current electricity flow.",
+      "references": [],
+      "domain": "Electricity",
+      "axis": "X",
+      "state": "connected",
+      "size": [
+        1619,
+        971
+      ],
+      "sha256": "0a3b1da8b88bde1d4b8cdb1e7b088bd4824c67e24797064eadf76d3a5ce0c3d9",
+      "native_transform": {
+        "source_crop": [
+          437,
+          322,
+          1185,
+          751
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-heat-connected-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-heat-connected-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-aa2619fc-e09c-4c55-859d-1056272b476b.png",
+      "prompt": "Use case: precise-object-edit. Asset: geothermal Heat utility conduit connected Y-axis. Image1 is the selected copper Heat model/material reference. Image2 is a BLUE GEOMETRY-ONLY Y-axis guide. Create ONE genuine new physical view of the same slim copper pipe along Y, from UPPER-LEFT NW to LOWER-RIGHT SE, exact2:1 isometric slope, every2 right travels1 DOWN. This is the opposite native diagonal from Image1: show its newly visible faces and keep fixed upper-left lighting rather than mirroring/rotating a flat raster. Preserve one copper-brown insulated pipe, two dark steel open end union collars and exactly ONE compact central sleeve at the equal-halves midpoint. Three fittings total, same slim diameter, no extra supports. Reproduce only the line direction/contact proportions from Image2; do not draw the blue line, diamond, words, circles or backdrop. Floor-level low hardware, slender enough for36x22 native pixels, contact centres32x16 apart. Transparent isolated complete cutout centered with at least64px clear margins. No floor/slab, cast shadow outside object, tall hub, bend, valve, vertical riser, labels, border, magenta or other props. Connected couplings show physical adjacency only, not flow. One whole model, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-x-v1.png",
+          "sha256": "c44f0eb4c2d29fac694eef0ab37fddb32dae2836760bd15b06de63813c0616d2",
+          "role": "approved model/material reference; genuinely authored new Y-axis"
+        },
+        {
+          "path": "media/multilayer/guides/ground/utility-heat-y-geometry-v1.png",
+          "sha256": "f3c0ba0d2c9bd5b727b9c779e0ded2765570925e326e553a0f6f2b3235928cff",
+          "role": "axis and contact geometry only"
+        }
+      ],
+      "domain": "Heat",
+      "axis": "Y",
+      "state": "connected",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "6cf63b8c285e266916e49f5b96ab3fd370f2df30c73664e546213a7ad41d7d92",
+      "native_transform": {
+        "source_crop": [
+          439,
+          270,
+          1167,
+          728
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-connected-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-connected-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-f88aee61-b839-4bd2-ba86-1f69f6e715d5.png",
+      "prompt": "Use case: precise-object-edit. Asset: geothermal electrical utility connected Y-axis. Image1 is the selected blue twin-conductor cable model reference; Image2 is its Y-axis GEOMETRY ONLY guide. Create ONE genuine new physical view of the SAME low slim blue insulated cable bundle, UPPER-LEFT NW to LOWER-RIGHT SE at exact2:1 slope: every2 right travels1 DOWN. Opposite native diagonal from Image1. Render newly visible faces with the SAME fixed upper-left lighting; do not mirror/rotate an image. Preserve dark navy sheath/two close blue wires with cyan highlights, TWO pale steel open end sockets and ONE compact pale steel middle sleeve at exact midpoint: three fittings total. Same diameter, length and materials. Match only Image2's axis/contact geometry, never its blue guide/diamond/text/circles/background. Slender floor-level object readable at36x22 native pixels, contact centres32x16 apart. Transparent isolated whole cutout, at least64px transparent clearance all sides. No extra branches, plug lead, tall box, pole, ground slab, track, external cast shadow, labels, border, magenta or props. Physical connection is not flow. One model, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-x-v1.png",
+          "sha256": "0a3b1da8b88bde1d4b8cdb1e7b088bd4824c67e24797064eadf76d3a5ce0c3d9",
+          "role": "approved model/material reference; genuinely authored new Y-axis"
+        },
+        {
+          "path": "media/multilayer/guides/ground/utility-electricity-y-geometry-v1.png",
+          "sha256": "8a0dfbc652c562da386894cd5be5f30823b1d100e91f2176c774f1a7600d3ea6",
+          "role": "axis and contact geometry only"
+        }
+      ],
+      "domain": "Electricity",
+      "axis": "Y",
+      "state": "connected",
+      "size": [
+        1620,
+        971
+      ],
+      "sha256": "d22d39345e0c25f0e62f79c8156dffc99d574079f45b833e79310f764046c569",
+      "native_transform": {
+        "source_crop": [
+          425,
+          303,
+          1209,
+          756
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-heat-unconnected-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed_fittings_only",
+      "path": "media/multilayer/source/ground/raw/utility-heat-unconnected-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-6caac019-53cf-4ed0-b7dd-c659b2cc431d.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Heat utility, unconnected X-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. Change ONLY both opposing open sockets into closed copper-brown insulated END CAPS seated inside the same dark steel end union collars. Keep the central sleeve and every main pipe section exactly as in Image1. Small closed faces should read distinctly from open black sockets at native scale. Do not break, move or remove the body.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs LOWER-LEFT SW to UPPER-RIGHT NE; every2 right travels1 UP.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-x-v1.png",
+          "sha256": "c44f0eb4c2d29fac694eef0ab37fddb32dae2836760bd15b06de63813c0616d2",
+          "role": "approved connected original edit target; preserve body, cap only the end fittings"
+        }
+      ],
+      "domain": "Heat",
+      "axis": "X",
+      "state": "unconnected",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "2cbe07d3a04935f1da4cb4a04ec7f8fd11dbfdf79f42ed751745b536d8f685c1",
+      "native_transform": {
+        "source_crop": [
+          481,
+          354,
+          1127,
+          674
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-unconnected-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed_fittings_only",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-unconnected-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-034fafbf-3b20-4ef4-9021-7545a34e56fc.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Electricity utility, unconnected X-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. Change ONLY both opposing open electrical sockets into solid pale steel END CAPS covering the conductor holes inside the same collars. Keep blue twin insulated wires, central sleeve and every main cable section exactly as in Image1. Closed pale faces should read distinctly from open dark sockets at native scale. Do not break, move or remove the body.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs LOWER-LEFT SW to UPPER-RIGHT NE; every2 right travels1 UP.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-x-v1.png",
+          "sha256": "0a3b1da8b88bde1d4b8cdb1e7b088bd4824c67e24797064eadf76d3a5ce0c3d9",
+          "role": "approved connected original edit target; preserve body, cap only the end fittings"
+        }
+      ],
+      "domain": "Electricity",
+      "axis": "X",
+      "state": "unconnected",
+      "size": [
+        1620,
+        971
+      ],
+      "sha256": "5a9247becf848295cc470a35f5493d59f271f71ba663e658bb003c2d1a7bb911",
+      "native_transform": {
+        "source_crop": [
+          436,
+          324,
+          1185,
+          750
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-heat-unconnected-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed_fittings_only",
+      "path": "media/multilayer/source/ground/raw/utility-heat-unconnected-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-c1005f9a-db6c-4ea6-871d-84bd6c636fc4.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Heat utility, unconnected Y-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. Change ONLY both opposing open sockets into closed copper-brown insulated END CAPS seated inside the same dark steel end union collars. Keep the central sleeve and every main pipe section exactly as in Image1. Small closed faces should read distinctly from open black sockets at native scale. Do not break, move or remove the body.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs UPPER-LEFT NW to LOWER-RIGHT SE; every2 right travels1 DOWN.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-y-v1.png",
+          "sha256": "6cf63b8c285e266916e49f5b96ab3fd370f2df30c73664e546213a7ad41d7d92",
+          "role": "approved connected original edit target; preserve body, cap only the end fittings"
+        }
+      ],
+      "domain": "Heat",
+      "axis": "Y",
+      "state": "unconnected",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "53bd2a26c9712754ad50ce230a1bd62f49852d722aec589f15cdd096ded73901",
+      "native_transform": {
+        "source_crop": [
+          445,
+          271,
+          1161,
+          727
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-unconnected-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed_fittings_only",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-unconnected-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-bd29e1e7-bcd4-41d0-a697-5ba4701fde2b.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Electricity utility, unconnected Y-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. Change ONLY both opposing open electrical sockets into solid pale steel END CAPS covering the conductor holes inside the same collars. Keep blue twin insulated wires, central sleeve and every main cable section exactly as in Image1. Closed pale faces should read distinctly from open dark sockets at native scale. Do not break, move or remove the body.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs UPPER-LEFT NW to LOWER-RIGHT SE; every2 right travels1 DOWN.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-y-v1.png",
+          "sha256": "d22d39345e0c25f0e62f79c8156dffc99d574079f45b833e79310f764046c569",
+          "role": "approved connected original edit target; preserve body, cap only the end fittings"
+        }
+      ],
+      "domain": "Electricity",
+      "axis": "Y",
+      "state": "unconnected",
+      "size": [
+        1619,
+        971
+      ],
+      "sha256": "b986642b67e0ad366056726a93ba9b64217c169e0ea1f1c18c7f24cc8cb31822",
+      "native_transform": {
+        "source_crop": [
+          423,
+          300,
+          1209,
+          756
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-heat-construction-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-heat-construction-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-8ec3b26e-33b6-4bcf-a8e0-5492dcb16ea0.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Heat utility, construction X-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. For the noninstalled construction preview ONLY: leave the short section immediately to the right of the middle sleeve visibly uninsulated, exposing a pale steel core and the open dark collar ring. The remaining copper insulated body and both open end unions stay complete. A small incomplete insulation seam should read as a lighter construction patch, with NO glow or status icon. No extra loose parts.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs LOWER-LEFT SW to UPPER-RIGHT NE; every2 right travels1 UP.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-x-v1.png",
+          "sha256": "c44f0eb4c2d29fac694eef0ab37fddb32dae2836760bd15b06de63813c0616d2",
+          "role": "approved connected original edit target; expose only the declared short insulation section for noninstalled preview"
+        }
+      ],
+      "domain": "Heat",
+      "axis": "X",
+      "state": "construction",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "9792370d9bd461aa92ab795279cf53f87a1ce394a429a3bf2bd0b48e4bf38ac8",
+      "native_transform": {
+        "source_crop": [
+          478,
+          351,
+          1105,
+          669
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-heat-construction-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-heat-construction-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-f9d53c07-9f45-4f14-a7bd-3ae807b39b2c.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Heat utility, construction Y-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. For the noninstalled construction preview ONLY: leave the short section immediately to the right of the middle sleeve visibly uninsulated, exposing a pale steel core and the open dark collar ring. The remaining copper insulated body and both open end unions stay complete. A small incomplete insulation seam should read as a lighter construction patch, with NO glow or status icon. No extra loose parts.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs UPPER-LEFT NW to LOWER-RIGHT SE; every2 right travels1 DOWN.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-y-v1.png",
+          "sha256": "6cf63b8c285e266916e49f5b96ab3fd370f2df30c73664e546213a7ad41d7d92",
+          "role": "approved connected original edit target; expose only the declared short insulation section for noninstalled preview"
+        }
+      ],
+      "domain": "Heat",
+      "axis": "Y",
+      "state": "construction",
+      "size": [
+        1606,
+        979
+      ],
+      "sha256": "2b395dc63f38b2f59db830011cc12b04cfc6ca674c4a051e34347c4d06cf383e",
+      "native_transform": {
+        "source_crop": [
+          428,
+          265,
+          1171,
+          732
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          4
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-construction-x-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-construction-x-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-7238a7c8-d7ef-4de1-8090-573f34c09d85.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Electricity utility, construction X-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. For the noninstalled construction preview ONLY: remove the BLUE insulation from a short section immediately to the right of the middle sleeve, visibly exposing two pale steel inner conductors within the open collar ring. The remaining twin blue cable and both open end sockets stay complete. A short light bare-conductor section should read as installation work, with NO sparks/glow or status icon. No extra loose parts.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs LOWER-LEFT SW to UPPER-RIGHT NE; every2 right travels1 UP.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-x-v1.png",
+          "sha256": "0a3b1da8b88bde1d4b8cdb1e7b088bd4824c67e24797064eadf76d3a5ce0c3d9",
+          "role": "approved connected original edit target; expose only the declared short insulation section for noninstalled preview"
+        }
+      ],
+      "domain": "Electricity",
+      "axis": "X",
+      "state": "construction",
+      "size": [
+        1619,
+        971
+      ],
+      "sha256": "d49510ac6cd06f1e4905a414aec3b38976593a67956d144a21ea4b8c46a8d442",
+      "native_transform": {
+        "source_crop": [
+          436,
+          320,
+          1186,
+          752
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-electricity-construction-y-v1",
+      "asset_id": "geothermal.conduit",
+      "status": "selected_native_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-electricity-construction-y-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-84d5b2cd-c8da-482e-b93c-17f5af6d2ffc.png",
+      "prompt": "Use case: precise-object-edit. Asset: original OpenTTD geothermal Electricity utility, construction Y-axis. Image1 is the approved connected physical model edit target. Preserve its exact object position, 2:1 isometric direction, three-fitting inventory, equal two halves, diameter, materials, camera and fixed upper-left light. Keep a single low straight conduit, not a vehicle or building. For the noninstalled construction preview ONLY: remove the BLUE insulation from a short section immediately to the right of the middle sleeve, visibly exposing two pale steel inner conductors within the open collar ring. The remaining twin blue cable and both open end sockets stay complete. A short light bare-conductor section should read as installation work, with NO sparks/glow or status icon. No extra loose parts.. This must be a genuine independently generated state source while preserving the original model identity. Same slender geometry readable at36x22 native pixels, contacts32x16 apart. Transparent whole isolated cutout with at least64px clear margins. No new bends/branches, loose extra pieces, tall hub, slab, track, ground, cast shadow outside object, diagram, text, border, magenta or props. The conduit runs UPPER-LEFT NW to LOWER-RIGHT SE; every2 right travels1 DOWN.. One whole model, no sheet. Physical connected/unconnected is topology only, never power/heat flow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-y-v1.png",
+          "sha256": "d22d39345e0c25f0e62f79c8156dffc99d574079f45b833e79310f764046c569",
+          "role": "approved connected original edit target; expose only the declared short insulation section for noninstalled preview"
+        }
+      ],
+      "domain": "Electricity",
+      "axis": "Y",
+      "state": "construction",
+      "size": [
+        1619,
+        971
+      ],
+      "sha256": "871ec0251c3d2d9f8d274879bc97980eb82bb5edebf6d9dbad8560846b314ee2",
+      "native_transform": {
+        "source_crop": [
+          422,
+          301,
+          1211,
+          756
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "native_subject_size": [
+          36,
+          22
+        ],
+        "native_position": [
+          13,
+          8
+        ],
+        "resampling": "BOX"
+      },
+      "review": "utility-conduit-originals-contact.png: inventory/axis/light/contact/native silhouette reviewed; capped donor contributes only opaque5x5 end fitting pixels, exact connected body/alpha retained"
+    },
+    {
+      "key": "utility-riser-ready-v1",
+      "asset_id": "facility.utility-riser",
+      "status": "rejected_floor_seams_show_three_by_three_world_grid",
+      "path": "media/multilayer/source/ground/raw/utility-riser-ready-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-ed54d4a1-36e2-428e-89db-2340466a5115.png",
+      "prompt": "Use case: stylized-concept. Asset: original OpenTTD paid electrical utility riser machinery, ONE fixed ready2x2 world-tile model. A compact LOW electrical transition substation beside an existing separate portal: do NOT draw a portal, shaft, tunnel, hole or vertical pipe. Entire model rests on an EXACT two-by-two square world-tile paved pad, in OpenTTD fixed2:1 isometric view. Floor diamond top/bottom tips centered, left/right corners level, width exactly twice floor depth. Four equal subtly separated floor diamonds, not a long rectangle or six cells. ONE squat flat-roof graphite/grey switch cabinet toward rear/top quarter, with a tiny amber glass lamp on its near face. ONE compact ribbed pale-steel electrical transformer box toward left quarter. TWO short pale ceramic insulator posts on ONE low blue cable junction frame toward right quarter. Near/front quarter is a low service apron with restrained blue cable channels joining the three existing units. Exactly this inventory; no generator/turbine, tank, thermal copper manifold, cooling tower, chimney, pole, moving vehicle, freight, people, tree or decoration. Low pale steel/graphite industrial surfaces, dark BLUE insulated cable channels, restrained ochre corner safety stripes. The machinery does not create electricity; it links actual electrical participants. All equipment and contacts remain inside the2x2 pad; no built-in directional portal cable or painted connection to an absent building. All four outer edges remain simple service margins usable by separately installed cable at the actual saved boundary port. Flat pad flush with map plane, no raised beveled foundation block. Whole campus should be squat: reduce to128px floor width and64px floor depth with maximum total silhouette height80px. Crisp chunky original game-sprite shading, upper-left fixed lighting, readable native silhouette and simple opaque materials. Whole-model transparent cutout, complete floor/machinery, at least64px genuinely transparent clearance every side. No backdrop, external cast shadow, labels, letters, numbers, border, magenta, guide symbols or watermark. Single whole ready model, not a sheet.",
+      "references": [],
+      "direction": "none",
+      "stage": "ready",
+      "size": [
+        1774,
+        887
+      ],
+      "sha256": "75d175fdce3a75e86c3fea580d80ca783324eb6507b97714b53c814c4d9c0740",
+      "native_transform": {
+        "source_crop": [
+          475,
+          229,
+          1284,
+          715
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          192,
+          144
+        ],
+        "native_subject_size": [
+          128,
+          80
+        ],
+        "native_position": [
+          33,
+          31
+        ],
+        "resampling": "BOX"
+      }
+    },
+    {
+      "key": "utility-riser-ready-v2",
+      "asset_id": "facility.utility-riser",
+      "status": "selected_native_hardware_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-riser-ready-v2.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-d689d9ed-424e-4b2a-b1e6-608254306c6a.png",
+      "prompt": "Use case: precise-object-edit. Image1 is an electrical riser model DRAFT with correct equipment but WRONG3x3 pavement divisions. Image2 is the authoritative BLUE GEOMETRY ONLY guide of FOUR equal world tiles in a2x2 pad. Correct ONLY the pavement subdivision in Image1: replace all small-grid seams with EXACTLY TWO straight crossing internal seams, joining the midpoints of opposing diamond edges and crossing at pad center, as in Image2. The resulting whole pad contains exactly FOUR equal large diamond cells, no small inset tile grid or extra paving seams anywhere. Keep the external floor diamond shape, exact camera, position, machinery inventory and relative positions unchanged: one rear flat-roof switch cabinet with tiny amber lamp, one left ribbed steel transformer, two right short ceramic insulators on one blue frame, near service apron and blue channels. Do not move, resize, add or remove any equipment. Fixed upper-left lighting and palette unchanged. The pad remains a flush2:1 isometric two-by-two world floor,128x64 native pixels, whole silhouette roughly128x80. Blue lines/words/cell numbers/guide background from Image2 are reference only and must NOT appear. Original crisp chunky game-sprite shaded materials. Complete isolated transparent cutout, generous64px clear margin, no backdrop/extra cast shadow/labels/border/magenta. Do not add a portal, shaft or external connecting cable. One entire model; floor subdivision correction only.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v1.png",
+          "role": "equipment/model edit target; rejected only for wrong floor subdivision",
+          "sha256": "75d175fdce3a75e86c3fea580d80ca783324eb6507b97714b53c814c4d9c0740"
+        },
+        {
+          "path": "media/multilayer/guides/ground/utility-riser-native-geometry-v1.png",
+          "role": "actual four equal native machinery cells; geometry only",
+          "sha256": "551bde98ab90fad90cdabdab592567715b7abe96e56160ef3c697d39e8316d08"
+        }
+      ],
+      "direction": "none",
+      "stage": "ready",
+      "size": [
+        1568,
+        1003
+      ],
+      "sha256": "2f1df67842cbbcd5aa5a3f5e36afcea653256932622c6bb7e62548f9e21142a2",
+      "native_transform": {
+        "source_crop": [
+          245,
+          214,
+          1319,
+          855
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          192,
+          144
+        ],
+        "native_subject_size": [
+          128,
+          76
+        ],
+        "native_position": [
+          33,
+          34
+        ],
+        "resampling": "BOX"
+      },
+      "registration_note": "Unfrozen y35 leaked native right-edge129,95; move complete original up one before approval; no original pixels erased.",
+      "review": "Fixed four-cell floor and equipment count retained; real incomplete casing/frame/insulator assembly; stage1 cabling may already be laid, no rendered gap claimed; every original indexed pixel partitions/reconstructs exactly. Small amber glass interior reviewed separately."
+    },
+    {
+      "key": "utility-riser-construction-0-v1",
+      "asset_id": "facility.utility-riser",
+      "status": "selected_native_hardware_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-riser-construction-0-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-d35d31f7-aaf8-4496-82a3-a9d8446db810.png",
+      "prompt": "Use case: precise-object-edit. Asset: electrical utility riser construction 0, ONE fixed native2x2 whole model. Image1 is the selected READY model edit target. Preserve EXACT four-cell floor (only two crossing internal seams), floor corners, flush pad height, fixed2:1 camera, upper-left light, hardware positions and native128x64 footprint. The complete inventory remains ONE rear flat-roof switch cabinet, ONE left ribbed electrical transformer, TWO short right ceramic insulators on ONE blue frame, and front service apron with blue electrical channels. Change only their construction completeness as specified: Earliest paid foundation: keep the complete4-cell pad and footprint, but rear cabinet is only a low open steel base/frame and the existing small amber control plate, NO cabinet walls/roof; left transformer is a shallow empty ribbed base tray, NO closed upper casing; right blue junction frame has TWO low insulator mounting sockets, NO tall ceramic insulators yet. Blue channels are short disconnected in-place sections with clear small gaps. No scaffold.. Keep a tiny amber reflective glass fitting on the same rear control front plate, available for later source status selection; it is not a new power source. This is real unfinished physical hardware, not a ready model with scaffold or coloured wash. No extra machine, spare parts, crates, pipes, workers, vehicle, portal, shaft, hole, thermal equipment, text, border or guide. Same floor/model identity and contacts. Whole transparent isolated cutout, at least64px real transparent clearance all sides, no backdrop or cast shadows beyond pad. Crisp chunky native game-sprite shading, restrained steel/graphite/blue/ochre materials. One original model, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v2.png",
+          "role": "selected ready physical model edit target; change only genuine construction completeness",
+          "sha256": "2f1df67842cbbcd5aa5a3f5e36afcea653256932622c6bb7e62548f9e21142a2"
+        }
+      ],
+      "direction": "none",
+      "stage": 0,
+      "size": [
+        1568,
+        1003
+      ],
+      "sha256": "7d38658f4f0b0889b857c1c80b0504152280828877763a1bc5740e467115203d",
+      "native_transform": {
+        "source_crop": [
+          242,
+          311,
+          1308,
+          857
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          192,
+          144
+        ],
+        "native_subject_size": [
+          128,
+          66
+        ],
+        "native_position": [
+          33,
+          44
+        ],
+        "resampling": "BOX"
+      },
+      "review": "Fixed four-cell floor and equipment count retained; real incomplete casing/frame/insulator assembly; stage1 cabling may already be laid, no rendered gap claimed; every original indexed pixel partitions/reconstructs exactly. Small amber glass interior reviewed separately."
+    },
+    {
+      "key": "utility-riser-construction-1-v1",
+      "asset_id": "facility.utility-riser",
+      "status": "selected_native_hardware_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-riser-construction-1-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-7b51caa1-43bc-45dd-9b57-ee4858c69b28.png",
+      "prompt": "Use case: precise-object-edit. Asset: electrical utility riser construction 1, ONE fixed native2x2 whole model. Image1 is the selected READY model edit target. Preserve EXACT four-cell floor (only two crossing internal seams), floor corners, flush pad height, fixed2:1 camera, upper-left light, hardware positions and native128x64 footprint. The complete inventory remains ONE rear flat-roof switch cabinet, ONE left ribbed electrical transformer, TWO short right ceramic insulators on ONE blue frame, and front service apron with blue electrical channels. Change only their construction completeness as specified: Intermediate assembly: rear cabinet has erected open vertical wall frames and the original small front amber control plate, clearly NO roof and one large open side; left transformer has its tall ribbed steel side cage but NO upper lid; right blue junction frame carries both ceramic insulator bodies but their top terminal caps are missing. Blue channel pieces remain visibly disconnected at two short collar joints. No scaffold.. Keep a tiny amber reflective glass fitting on the same rear control front plate, available for later source status selection; it is not a new power source. This is real unfinished physical hardware, not a ready model with scaffold or coloured wash. No extra machine, spare parts, crates, pipes, workers, vehicle, portal, shaft, hole, thermal equipment, text, border or guide. Same floor/model identity and contacts. Whole transparent isolated cutout, at least64px real transparent clearance all sides, no backdrop or cast shadows beyond pad. Crisp chunky native game-sprite shading, restrained steel/graphite/blue/ochre materials. One original model, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v2.png",
+          "role": "selected ready physical model edit target; change only genuine construction completeness",
+          "sha256": "2f1df67842cbbcd5aa5a3f5e36afcea653256932622c6bb7e62548f9e21142a2"
+        }
+      ],
+      "direction": "none",
+      "stage": 1,
+      "size": [
+        1568,
+        1003
+      ],
+      "sha256": "3e4d4d6840a089faf5b17028b657a7766ae170eed30adb19892637b058df7981",
+      "native_transform": {
+        "source_crop": [
+          241,
+          212,
+          1320,
+          857
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          192,
+          144
+        ],
+        "native_subject_size": [
+          128,
+          76
+        ],
+        "native_position": [
+          33,
+          34
+        ],
+        "resampling": "BOX"
+      },
+      "review": "Fixed four-cell floor and equipment count retained; real incomplete casing/frame/insulator assembly; stage1 cabling may already be laid, no rendered gap claimed; every original indexed pixel partitions/reconstructs exactly. Small amber glass interior reviewed separately."
+    },
+    {
+      "key": "utility-riser-construction-2-v1",
+      "asset_id": "facility.utility-riser",
+      "status": "selected_native_hardware_reviewed",
+      "path": "media/multilayer/source/ground/raw/utility-riser-construction-2-v1.png",
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-2256e33b-60bd-4f11-b6f7-707a48fbf0d8.png",
+      "prompt": "Use case: precise-object-edit. Asset: electrical utility riser construction 2, ONE fixed native2x2 whole model. Image1 is the selected READY model edit target. Preserve EXACT four-cell floor (only two crossing internal seams), floor corners, flush pad height, fixed2:1 camera, upper-left light, hardware positions and native128x64 footprint. The complete inventory remains ONE rear flat-roof switch cabinet, ONE left ribbed electrical transformer, TWO short right ceramic insulators on ONE blue frame, and front service apron with blue electrical channels. Change only their construction completeness as specified: Almost assembled: rear cabinet has its correct flat roof and complete front doors/amber lamp plate, but ONE right-side access panel is still visibly open/absent; left ribbed transformer is fully cased and both right insulators are complete. Preserve one short unjoined BLUE cable channel coupling gap near the front-right apron. Everything else matches the ready model, with no extra equipment or scaffold.. Keep a tiny amber reflective glass fitting on the same rear control front plate, available for later source status selection; it is not a new power source. This is real unfinished physical hardware, not a ready model with scaffold or coloured wash. No extra machine, spare parts, crates, pipes, workers, vehicle, portal, shaft, hole, thermal equipment, text, border or guide. Same floor/model identity and contacts. Whole transparent isolated cutout, at least64px real transparent clearance all sides, no backdrop or cast shadows beyond pad. Crisp chunky native game-sprite shading, restrained steel/graphite/blue/ochre materials. One original model, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v2.png",
+          "role": "selected ready physical model edit target; change only genuine construction completeness",
+          "sha256": "2f1df67842cbbcd5aa5a3f5e36afcea653256932622c6bb7e62548f9e21142a2"
+        }
+      ],
+      "direction": "none",
+      "stage": 2,
+      "size": [
+        1568,
+        1003
+      ],
+      "sha256": "311c6566623c40ec81a50aea00a80c5c3f7fd4dca02aa1a4c61666acb2a2884e",
+      "native_transform": {
+        "source_crop": [
+          242,
+          212,
+          1319,
+          857
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          192,
+          144
+        ],
+        "native_subject_size": [
+          128,
+          76
+        ],
+        "native_position": [
+          33,
+          34
+        ],
+        "resampling": "BOX"
+      },
+      "review": "Fixed four-cell floor and equipment count retained; real incomplete casing/frame/insulator assembly; stage1 cabling may already be laid, no rendered gap claimed; every original indexed pixel partitions/reconstructs exactly. Small amber glass interior reviewed separately."
+    }
+  ],
+  "families": [
+    {
+      "asset_id": "geothermal.conduit",
+      "source_coverage_complete": true,
+      "runtime_activated": false,
+      "axis_selections": [
+        {
+          "domain": "Heat",
+          "state": "connected",
+          "axis": "X",
+          "source": "utility-heat-connected-x-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "connected",
+          "axis": "X",
+          "source": "utility-electricity-connected-x-v1"
+        },
+        {
+          "domain": "Heat",
+          "state": "connected",
+          "axis": "Y",
+          "source": "utility-heat-connected-y-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "connected",
+          "axis": "Y",
+          "source": "utility-electricity-connected-y-v1"
+        },
+        {
+          "domain": "Heat",
+          "state": "unconnected",
+          "axis": "X",
+          "source": "utility-heat-unconnected-x-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "unconnected",
+          "axis": "X",
+          "source": "utility-electricity-unconnected-x-v1"
+        },
+        {
+          "domain": "Heat",
+          "state": "unconnected",
+          "axis": "Y",
+          "source": "utility-heat-unconnected-y-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "unconnected",
+          "axis": "Y",
+          "source": "utility-electricity-unconnected-y-v1"
+        },
+        {
+          "domain": "Heat",
+          "state": "construction",
+          "axis": "X",
+          "source": "utility-heat-construction-x-v1"
+        },
+        {
+          "domain": "Heat",
+          "state": "construction",
+          "axis": "Y",
+          "source": "utility-heat-construction-y-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "construction",
+          "axis": "X",
+          "source": "utility-electricity-construction-x-v1"
+        },
+        {
+          "domain": "Electricity",
+          "state": "construction",
+          "axis": "Y",
+          "source": "utility-electricity-construction-y-v1"
+        }
+      ],
+      "brief": {
+        "owner": "GetGeothermalUtilityLink; cardinal same-company/domain/layer adjacency",
+        "domains": {
+          "Heat": "one slim copper-brown insulated thermal pipe with dark steel unions",
+          "Electricity": "one slim blue insulated cable bundle with pale steel sockets; distinct from copper pipe"
+        },
+        "contact_geometry_owner": "shared public geothermal.conduit.geometry_notes",
+        "topology": "four center-to-edge branches per installed cell; actual matching neighbours connected, others capped; isolated paid cell stays visible; two domains coexist",
+        "states": {
+          "construction": "noninstalled command preview: incomplete hardware with same contacts",
+          "connected": "open matching couplings to actual adjacent paid same-domain cells; not energy flow",
+          "unconnected": "closed/capped couplings when adjacent matching cell is absent, removed or foreign; no fictitious damage state"
+        },
+        "foreground": "floor body below vehicles/buildings; no wall, slab or excavation",
+        "source_layout": "one complete isolated original per domain/state/physical axis; transparent clearance and measured rectangular crop; no raster rotations",
+        "native_boundary": "logs/graphics/utility-source/20261011-conduit-01/native-boundary.log:761 assertions in7 cases"
+      },
+      "cap_selection_policy": "only opaque original5x5 end fittings at frozen public port centers; every other connected-body indexed pixel and all opacity unchanged"
+    },
+    {
+      "asset_id": "facility.utility-riser",
+      "source_coverage_complete": true,
+      "runtime_activated": false,
+      "whole_selections": {
+        "ready": "utility-riser-ready-v2",
+        "0": "utility-riser-construction-0-v1",
+        "1": "utility-riser-construction-1-v1",
+        "2": "utility-riser-construction-2-v1"
+      },
+      "brief": {
+        "native_owner": "InitialiseGeothermalConstructionDefinition and GeothermalRiserState; fixed row-major2x2/four64x64 cells, single none view",
+        "hardware": "one low flat-roof switch cabinet with tiny amber lamp; one ribbed electrical transformer box; two short ceramic insulators on one low blue cable frame; front service apron and blue connecting channels",
+        "port": "actual site.port can be any valid boundary machinery cell adjoining the original commissioned portal; separate paid cable may attach there; artwork creates no port, housing, shaft or floor",
+        "work": "four native stages0..3,74 ticks each, separate296-tick completed flag; material/capital history stays native Industry",
+        "states": "construction=actual unpaid/unfinished machinery; ready=completed idle original electrical association; working=actual existing transfer presentation; blocked=actual paid machinery/original portal/link unavailable; no Heat starvation",
+        "foreground": "solid native industry footprint; back original pixels, front empty; no vehicle path through machinery",
+        "guide": "media/multilayer/guides/ground/utility-riser-native-geometry-v1.png",
+        "native_boundary": "logs/graphics/utility-source/20261011-riser-01/native-boundary.log:4172 assertions/10 cases"
+      },
+      "indicator_record": "media/multilayer/source/m1/facility-generation-record.json",
+      "indicator_key": "facility-status",
+      "indicator_targets": {
+        "0": [
+          101,
+          59,
+          2,
+          2
+        ],
+        "1": [
+          99,
+          50,
+          2,
+          2
+        ],
+        "2": [
+          99,
+          50,
+          2,
+          2
+        ],
+        "3": [
+          99,
+          50,
+          2,
+          2
+        ]
+      },
+      "construction_indicator_phase": 0,
+      "construction_stage3_policy": "ready_hardware_under_amber_phase0_until_native_completion"
+    }
+  ]
+}

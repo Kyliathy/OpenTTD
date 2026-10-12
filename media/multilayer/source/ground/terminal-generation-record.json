@@ -1,0 +1,1196 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group25",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Immutable genuine native truck-stop original source provenance; no packed/runtime activation"
+  },
+  "schema_version": 1,
+  "geometry_descriptor": "media/multilayer/contracts/conventional-terminal-geometry.json",
+  "families": {
+    "facility.road-terminal": {
+      "brief": {
+        "model": "One modular underground mine loading terminal, with directed U-shaped bays and compatible two-sided through loading forms",
+        "native_cell": [
+          1,
+          1
+        ],
+        "native_graphics": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW",
+          "X",
+          "Y"
+        ],
+        "parts": [
+          "parent-0",
+          "parent-1",
+          "parent-2"
+        ],
+        "native_canvas": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "base_direction": "SE",
+        "base_graphics": 1,
+        "bay_inventory": "One slim blue-gray loading housing on the native far-end3-unit strip: corrugated roof below maximumz10, one small low roof vent, three louver panels, two outside posts, one inset amber glass near longitudinal12 and one contained square loading nozzle near longitudinal2. Two low independent safety rails on the native1-unit side strips, each with three capped square posts, one yellow upper safety rail and a dark lower beam; no floor slab or enclosing canopy.",
+        "bay_source_strategy": "Genuine original independent native parents; first sheet SE parent0 near rail, parent1 loading housing, parent2 far rail, plus assembled reference model. Exact native positions are registered independently, never inferred from a generated whole-scene gap.",
+        "palette_style": "Restrained blue-gray/slate steel, yellow safety accents and inset amber equipment glass, upper-left light and native2:1 camera, matching selected station/fleet materials",
+        "ground_owner": "Native truck stop tarmac, road overlays/catenary, both real bay turning paths and through lanes remain feature-owned; never painted in the building source originals",
+        "state_policy": "Atomic build/refusal preview-only; installed ready/working require actual loading RoadVehicle part on queried tile. Static aliases except original working equipment-glass phases; no independent cargo or clock.",
+        "coverage_required": 288,
+        "nonempty_required": 256,
+        "structural_absences": 32,
+        "runtime_pending": true,
+        "selected_rail_height_note": "Original open railings have taller capped posts than the initial4-unit source-envelope sketch. Uniform-aspect registration preserves actual native strip contacts; all artwork remains within the unchanged10-unit native sorting envelope, with both real truck entrance lanes clear. No opaque side-wall panel replaces the open railings."
+      },
+      "status": "complete_native_terminal_source_runtime_pending",
+      "candidates": [
+        "terminal-se-base-v1",
+        "terminal-se-base-v2",
+        "terminal-se-loader-v1",
+        "terminal-equipment-v1",
+        "terminal-rails-v1"
+      ],
+      "selected": {
+        "SE:ready:0": {
+          "parent-0": "terminal-se-base-v1/rail-near-se",
+          "parent-1": "terminal-se-loader-v1/loader-se",
+          "parent-2": "terminal-se-base-v1/rail-far-se"
+        }
+      },
+      "remaining": "Native packing, decoded-pixel loader and ordinary-game rendering under master10.4D",
+      "base_parts": [
+        {
+          "source": "terminal-se-base-v1",
+          "component": "rail-near-se",
+          "part": "parent-0"
+        },
+        {
+          "source": "terminal-se-loader-v1",
+          "component": "loader-se",
+          "part": "parent-1"
+        },
+        {
+          "source": "terminal-se-base-v1",
+          "component": "rail-far-se",
+          "part": "parent-2"
+        }
+      ],
+      "approved_base_component_geometry_sha256": "29b1a8010ba7837d4eadd05b2c7884acbc60196e10c96d482f1ac0e0f5264ef1",
+      "selected_base_graphics": 1,
+      "base_source_parts": 3,
+      "source_coverage_complete": true,
+      "ready_parts": [
+        {
+          "graphics": 0,
+          "part": "parent-0",
+          "source": "terminal-rails-v1",
+          "component": "rail-x13-ne"
+        },
+        {
+          "graphics": 0,
+          "part": "parent-1",
+          "source": "terminal-equipment-v1",
+          "component": "loader-ne"
+        },
+        {
+          "graphics": 0,
+          "part": "parent-2",
+          "source": "terminal-rails-v1",
+          "component": "rail-x11-ne"
+        },
+        {
+          "graphics": 1,
+          "source": "terminal-se-base-v1",
+          "component": "rail-near-se",
+          "part": "parent-0"
+        },
+        {
+          "graphics": 1,
+          "source": "terminal-se-loader-v1",
+          "component": "loader-se",
+          "part": "parent-1"
+        },
+        {
+          "graphics": 1,
+          "source": "terminal-se-base-v1",
+          "component": "rail-far-se",
+          "part": "parent-2"
+        },
+        {
+          "graphics": 2,
+          "part": "parent-0",
+          "source": "terminal-rails-v1",
+          "component": "rail-x13-sw"
+        },
+        {
+          "graphics": 2,
+          "part": "parent-1",
+          "source": "terminal-equipment-v1",
+          "component": "loader-sw"
+        },
+        {
+          "graphics": 2,
+          "part": "parent-2",
+          "source": "terminal-rails-v1",
+          "component": "rail-x11-sw"
+        },
+        {
+          "graphics": 3,
+          "part": "parent-0",
+          "source": "terminal-se-base-v1",
+          "component": "rail-near-nw"
+        },
+        {
+          "graphics": 3,
+          "part": "parent-1",
+          "source": "terminal-equipment-v1",
+          "component": "loader-nw"
+        },
+        {
+          "graphics": 3,
+          "part": "parent-2",
+          "source": "terminal-se-base-v1",
+          "component": "rail-far-nw"
+        },
+        {
+          "graphics": 4,
+          "part": "parent-0",
+          "source": "terminal-se-loader-v1",
+          "component": "loader-through-x"
+        },
+        {
+          "graphics": 4,
+          "part": "parent-1",
+          "source": "terminal-rails-v1",
+          "component": "rail-x16-through"
+        },
+        {
+          "graphics": 5,
+          "part": "parent-0",
+          "source": "terminal-equipment-v1",
+          "component": "loader-through-y"
+        },
+        {
+          "graphics": 5,
+          "part": "parent-1",
+          "source": "terminal-rails-v1",
+          "component": "rail-y16-through"
+        }
+      ],
+      "approved_ready_component_geometry_sha256": "07255e17670b43ca6d344a9abeb831f88d33e1f16b2835264986e1eca6a6e2fe",
+      "ready_review_manifest": "logs/proofs/mlm/native-art/ground/terminal-ready-views-manifest.json",
+      "state_component_geometry": {
+        "native_canvas": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "state_owner": {
+          "construction": "Atomic native build preview only; no installed construction stages or work owner",
+          "ready": "Eligible installed native truck-stop tile without a physical actual loading road-vehicle part on that tile",
+          "working": "Actual Station.loading_vehicles RoadVehicle chain contains a physical part on queried tile; no station-wide loading extrapolation or art-local cargo",
+          "blocked": "Refused construction preview only; no persistent default road-stop Blocked state",
+          "world_states": [
+            "ready",
+            "working"
+          ],
+          "preview_states": [
+            "construction",
+            "blocked"
+          ],
+          "frame_owner": "construction/ready/blocked phase0 aliases; working existing synchronized TimerGameTick::counter controls presentation only",
+          "frame_aliases": {
+            "construction": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "ready": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "working": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "blocked": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "phase_aliases": {
+          "construction": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "cue_targets": {
+          "0": null,
+          "1": {
+            "part": "parent-1",
+            "points": [
+              [
+                10,
+                44
+              ]
+            ]
+          },
+          "2": {
+            "part": "parent-1",
+            "points": [
+              [
+                30,
+                33
+              ]
+            ]
+          },
+          "3": null,
+          "4": {
+            "part": "parent-0",
+            "points": [
+              [
+                10,
+                44
+              ]
+            ]
+          },
+          "5": null
+        },
+        "hidden_front_policy": "NE/NW/Y front equipment is genuinely hidden; all phases preserve the approved original outside rear wall. No relocated lamps or recolored rear wall.",
+        "native_presentation_owner_sha256": {
+          "src/station_cmd.cpp": "0ea3ce3dacfae56aea80004c0a56a32668cf74ca017fade50dddbcec4ab3405c",
+          "src/road_gui.cpp": "46bbd1f44fc491ad4fe1cfdcdfaf49950eb69c200f973cb4bb5483d5a3f3ce61",
+          "src/roadveh_cmd.cpp": "2e28b6273f3ce9e75e99234ee647a14bc48d8f2ae37604c758573697e2b6f658",
+          "src/economy.cpp": "5ee2c2b449fd9e0c9cc0fa3cfe5a5b06462bf840661c51e3720a24df3a9fb3c5",
+          "src/vehicle.cpp": "8701e5bd9717412616486442c305487c11f52b0ba01bece54bbe05ab3a8ed499",
+          "src/station_base.h": "84afc66f2dbcf50c6d2f2348302289b9cd07002c76c1968a53dc9a91ae802498",
+          "src/timer/timer_game_tick.h": "9b2c19319b97ab83958789122fea5f081c654c3eacab1a4dd804c959ba5576c2"
+        }
+      },
+      "state_component_source": {
+        "source_record": "media/multilayer/source/m1/facility-generation-record.json",
+        "source_key": "facility-status",
+        "path": "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+        "sha256": "a70f38222cf3c52583f36ae384890609d35dcf1f2fa3e56c7f31548ca831fe45",
+        "selection": "Retain original inset glass material only, BOX reduce each genuine state/frame glass to1x1. Native aliases select phase0 for static previews/ready; only actual visible front fittings change. No foreign housing, procedural recolor or relocated rear cue.",
+        "geometry_sha256": "761e32779dd86bf455def5c88f37ce64ce178d08732cafc6db906d88663bdb8e"
+      },
+      "approved_state_component_geometry_sha256": "761e32779dd86bf455def5c88f37ce64ce178d08732cafc6db906d88663bdb8e",
+      "approved_state_component_source_sha256": "15ad20e1daa6c9e61e9c64f129abac43eadb256c7416c19f3fff337bacd72c04",
+      "atlas_manifest": "logs/proofs/mlm/native-art/ground/terminal-source-manifest.json",
+      "native_atlas": "logs/proofs/mlm/native-art/ground/terminal-source-authored.png",
+      "native_sha256": "22ba5c2fa6a31cdabd1403b8cf4f03590ca93b1fd67f3676ae2ee18cf5350fb0"
+    }
+  },
+  "candidates": [
+    {
+      "id": "terminal-se-base-v1",
+      "path": "media/multilayer/source/ground/raw/terminal-se-base-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-3d318f46-5398-4ed0-aa44-3e893a20b3da.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.road-terminal original SE-facing mine truck loading bay, native graphics1, ready0.\nImage1 is a GEOMETRY-ONLY edit target: four framed technical diagrams. Change the flat gray solids to authored industrial game sprites, preserving their exact projected endpoints, widths, heights and orientations. No part may move beyond its reference envelope. Remove pale reference background to true transparency.\n\nSAFE BORDERED1536x1024 sheet with four pure magenta #FF00FF rectangles6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep at least32px transparent clearance around every subject. Real transparency in all background, margins, gutters and openings, no painted ground or background shadows.\n\nTop-left: ONLY the SE bay near-side safety rail matching the top-left guide; long diagonal from upper-left to lower-right. Exactly THREE short capped square steel posts, connected by one yellow upper safety rail and one charcoal lower beam. Narrow bolted steel feet, no deck, wall, roof or building. Keep entire rail inside the guide silhouette.\nTop-right: ONLY the slim mine loading housing matching the top-right guide, long diagonal rising from lower-left to upper-right. Blue-gray/slate corrugated roof, ONE low small roof vent, EXACTLY THREE louver panels across the long front facade, TWO outside support posts, ONE inset amber glass near the longitudinal12 end, ONE contained square loading-nozzle opening near longitudinal2. The front facade faces the bay lower-right. Keep the nozzle recessed/contained inside this housing; no hose/arm projecting into the roadway. Roof plus vent stay within guide maximum height. No side safety rails, ground or paving.\nBottom-left: ONLY the SE bay opposite-side safety rail matching the bottom-left guide, shorter than the top-left rail, diagonal upper-left to lower-right. Same THREE capped square posts, yellow upper rail, charcoal lower beam and small bolted feet. No housing, floor, wall or roof.\nBottom-right: the ASSEMBLED same SE model: one housing plus its two low rails in the exact U-shaped arrangement shown, OPEN toward lower-right. All central bay and entrance remain transparent. Same hardware count and locations as the independent components. This cell is a model reference; do not add any other structure.\n\nRestrained OpenTTD pixel-art materials, crisp simple native-scale detail, real2:1 isometric camera and consistent upper-left light. Blue-gray industrial steel with yellow safety accents and amber inset glass. The two low rails are open railings, not opaque wall panels. Three independent parent cutouts plus one assembled model, fully separated. No labels/text/numbers/symbols, trucks, tracks, road paint, pavement, floor slab, enclosing canopy, extra vent, extra equipment, glow halos or decorative background. Preserve geometry and generous source clearance rather than enlarging the model.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-terminal-se-parent-sheet-v1.png",
+          "role": "geometry-only edit target, exact native SE parents0/1/2 and assembledmodel",
+          "sha256": "c155284e05f88869faa6515855da5ca79c7d2dca6a6a6c30e07d8d46370c2550"
+        }
+      ],
+      "native_graphics": 1,
+      "native_direction": "SE",
+      "selection": {
+        "status": "approved_native_components",
+        "date": "2026-10-12",
+        "reason": "Explicit selected components pass native contacts, original inventory and source alpha/frame checks. Sheet housing/whole reference remains excluded; isolated loader supplies correct3-louver inventory."
+      },
+      "excluded_components": [
+        "parent-1-loader",
+        "whole-model"
+      ],
+      "sha256": "3a9afdc0c972706892c71e4c3369c2957e964ba9d1094edc5111a18022a51171",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        24,
+        23,
+        1513,
+        1001
+      ],
+      "opaque_magenta_pixels": 62144,
+      "components": [
+        {
+          "id": "rail-near-se",
+          "direction": "SE",
+          "native_graphics": [
+            1
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            175,
+            174,
+            410,
+            346
+          ],
+          "native_box": [
+            5,
+            43,
+            34,
+            64
+          ],
+          "inventory": "three capped square posts, yellow upper safety rail, dark lower beam and original bolted feet"
+        },
+        {
+          "id": "rail-far-se",
+          "direction": "SE",
+          "native_graphics": [
+            1
+          ],
+          "part": "parent-2",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            267,
+            149,
+            463,
+            300
+          ],
+          "native_box": [
+            35,
+            29,
+            60,
+            48
+          ],
+          "inventory": "three capped square posts, yellow upper safety rail, dark lower beam and original bolted feet"
+        },
+        {
+          "id": "rail-near-nw",
+          "direction": "NW",
+          "native_graphics": [
+            3
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            175,
+            174,
+            410,
+            346
+          ],
+          "native_box": [
+            29,
+            25,
+            58,
+            46
+          ],
+          "inventory": "three capped square posts, yellow upper safety rail, dark lower beam and original bolted feet",
+          "kind": "rail",
+          "reuse_of": {
+            "source": "terminal-se-base-v1",
+            "component": "rail-near-se",
+            "graphics": 1,
+            "part": "parent-0",
+            "screen_translation": [
+              24,
+              -18
+            ]
+          }
+        },
+        {
+          "id": "rail-far-nw",
+          "direction": "NW",
+          "native_graphics": [
+            3
+          ],
+          "part": "parent-2",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            267,
+            149,
+            463,
+            300
+          ],
+          "native_box": [
+            3,
+            43,
+            28,
+            62
+          ],
+          "inventory": "three capped square posts, yellow upper safety rail, dark lower beam and original bolted feet",
+          "kind": "rail",
+          "reuse_of": {
+            "source": "terminal-se-base-v1",
+            "component": "rail-far-se",
+            "graphics": 1,
+            "part": "parent-2",
+            "screen_translation": [
+              -32,
+              14
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "terminal-se-base-v2",
+      "path": "media/multilayer/source/ground/raw/terminal-se-base-v2.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-a1786b48-5398-4616-af3e-026386c93398.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.road-terminal SE loading housing candidate correction.\nImage1 is the retained candidate edit target, not yet approved. Change ONLY the louver count on the TOP-RIGHT standalone housing. It currently has TWO broad rectangular louver panels between the small amber glass on its lower-left end and the square open loading nozzle on its upper-right end. Replace those TWO panels with EXACTLY THREE narrower, evenly sized louver panels in the SAME available facade span. Count them: first louver, second louver, third louver. Do not add a fourth. Keep all three clearly separated by dark vertical mounting borders.\n\nPreserve top-right housing outer silhouette, native perspective, position, length, width, height, corrugated roof, exactlyONE roof vent, TWO outside support posts, amber glass location, square open nozzle location, source alpha and upper-left lighting. Do not move, resize, recolor or change the glass/nozzle/vent to make space; subdivide only the existing louver span.\n\nKeep the TOP-LEFT rail and BOTTOM-LEFT rail unchanged; they already have correct3-post inventory. The bottom-right assembled reference may receive the same three-louver facade correction only, with its housing/rails and open bay unchanged. Preserve all four magenta source frames and their positions, wide transparent source margins/gutters/background, no extra labels/text, floor, road, truck, canopy, panel, post, machinery or glow. Preserve real transparency.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/terminal-se-base-v1.png",
+          "role": "retained candidate edit target, louver-count correction only",
+          "sha256": "3a9afdc0c972706892c71e4c3369c2957e964ba9d1094edc5111a18022a51171"
+        }
+      ],
+      "native_graphics": 1,
+      "native_direction": "SE",
+      "selection": {
+        "status": "rejected_model_inventory",
+        "reason": "Retains only2 louvers and measured alpha16 source windows have0 clearance with1755/1780/1206 opaque magenta pixels; entirely rejected before conversion."
+      },
+      "excluded_components": [
+        "parent-0-rail",
+        "parent-1-loader",
+        "parent-2-rail"
+      ],
+      "sha256": "2a6db76f5ba631ad9172e0c7c5daf491ac6d18aab793f74a3a6e055b2e7830c5",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "opaque_magenta_pixels": 312179
+    },
+    {
+      "id": "terminal-se-loader-v1",
+      "path": "media/multilayer/source/ground/raw/terminal-se-loader-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-00e179db-8d24-446e-bec8-20ee16736e38.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.road-terminal native SE bay loading housing, ONE isolated parent original.\nImage1 is a GEOMETRY-ONLY edit target showing a slim industrial housing and EXACTLY THREE distinct outlined facade apertures. Replace EACH of these THREE outlined apertures with ONE genuine louver panel. There must be exactlyTHREE: left panel, middle panel, right panel, all independently outlined and readable. Do not merge any pair or reduce to two broad panels.\n\nKeep the exact guide silhouette, narrow native3-unit strip, long16-unit alignment, projected corners and upper-left isometric camera. Add only model detail WITHIN this envelope: restrained blue-gray corrugated steel roof with ONE small low vent; THREE louver panels in their marked positions; TWO short outside support posts; ONE small inset amber glass just LEFT of the three panels; ONE recessed square open loading nozzle just RIGHT of the three panels. The nozzle is contained in the wall and does not protrude into the truck bay. Roof+vent fit the guide maximumheight. No railings, floor, tarmac, trucks, pavement, extra cabinet, beam, roof canopy, machinery, text or labels.\n\nONE complete isolated cutout on real transparent background, centered with at least128px transparent clearance on all four sides. No magenta frame is needed for this single file. Preserve complete feet/roof/nozzle; no clipped pixels or shadows outside the subject. Crisp OpenTTD pixel-art style, native2:1 isometric projection and upper-left illumination, dark slate panels, restrained yellow/amber equipment accents. Replace the pale reference backdrop with true transparency; no checkerboard paint, glow, haze, cloud or decorative background.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-terminal-se-loader-inset-v1.png",
+          "role": "geometry-only edit target with three explicit native facade apertures",
+          "sha256": "2b0f13cd1013606a01f77103b998fe726a5feec14401e4d5c240fbc7a8bbab4a"
+        }
+      ],
+      "native_graphics": 1,
+      "native_direction": "SE",
+      "selection": {
+        "status": "approved_native_components",
+        "date": "2026-10-12",
+        "reason": "Explicit selected components pass native contacts, original inventory and source alpha/frame checks. Sheet housing/whole reference remains excluded; isolated loader supplies correct3-louver inventory."
+      },
+      "sha256": "7528f900831ab4cb3e21e320f9bcd389927f52e574b8e5f7782824709ec4e361",
+      "image_size": [
+        1254,
+        1254
+      ],
+      "measured_alpha16_bbox": [
+        387,
+        452,
+        881,
+        826
+      ],
+      "opaque_magenta_pixels": 0,
+      "components": [
+        {
+          "id": "loader-se",
+          "direction": "SE",
+          "native_graphics": [
+            1
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_alpha16_bbox": [
+            387,
+            452,
+            881,
+            826
+          ],
+          "native_box": [
+            0,
+            23,
+            38,
+            52
+          ],
+          "inventory": "one low vent, three louver panels, two outside posts, one amber glass and one recessed square nozzle opening"
+        },
+        {
+          "id": "loader-through-x",
+          "direction": "X",
+          "native_graphics": [
+            4
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_alpha16_bbox": [
+            387,
+            452,
+            881,
+            826
+          ],
+          "native_box": [
+            0,
+            23,
+            38,
+            52
+          ],
+          "inventory": "one low vent, three louver panels, two outside posts, one amber glass and one recessed square nozzle opening",
+          "kind": "housing",
+          "reuse_of": {
+            "source": "terminal-se-loader-v1",
+            "component": "loader-se",
+            "graphics": 1,
+            "part": "parent-1",
+            "screen_translation": [
+              0,
+              0
+            ]
+          },
+          "front_visible": true
+        }
+      ]
+    },
+    {
+      "id": "terminal-equipment-v1",
+      "path": "media/multilayer/source/ground/raw/terminal-equipment-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-3a231336-cbb4-4b06-ba1a-da1466fcce46.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.road-terminal remaining original native housing and rail components.\nInput1 is the GEOMETRY-ONLY edit target controlling four independent native component shapes and positions. Input2 is the approved SE housing, model/material reference only. Input3 is the approved SE rail sheet, rail material/three-post reference only; its housing has wrong louver count and must not supply model details.\n\nSAFE BORDERED1536x1024 source sheet, four pure magenta #FF00FF rectangles6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Every complete subject must stay at least32px clear of its frame; background, gutters and openings truly transparent. Remove the pale guide background. No colored haze or opaque shadows.\n\nTOP-LEFT: the genuine NE housing REAR view, matching guide1 top-left diagonal from upper-left to lower-right. The inner loading facade faces AWAY from camera and is hidden. Visible outside BACK is plain slate corrugated/ribbed steel, no visible louvers, amber glass or nozzle. Preserve one corrugated roof, ONE low roof vent at center and TWO short outside posts, matching approved housing. No added back windows/panels/doors.\nTOP-RIGHT: genuine SW FRONT view, matching top-right guide. All THREE outlined apertures become THREE separate louver panels, never two. Long housing slopes from upper-left to lower-right in screen space. ONE inset amber glass at the UPPER-LEFT facade end, THREE narrow louver panels in their marked middle positions, ONE recessed square open nozzle at the LOWER-RIGHT end. This is the approved SE model genuinely rotated in world space, not a flat mirrored image. TWO short outside posts, one corrugated roof and ONE centered low vent. Keep all equipment inside the guide envelope.\nBOTTOM-LEFT: genuine NW housing REAR view, matching lower-left guide diagonal from lower-left to upper-right. Loading facade is on its hidden side. Visible outside BACK plain slate ribbed steel with no visible louvers, amber glass, nozzle, windows or doors. Same one roof/one low centered vent/two short posts.\nBOTTOM-RIGHT: ONLY one genuine world-X13-unit safety rail matching the guide, diagonal upper-right to lower-left. EXACTLY THREE capped square steel posts connected by yellow upper rail and charcoal lower beam, small bolted feet, transparent open gaps, consistent with approved reference3 material. No housing, floor or opaque wall panel.\n\nPreserve reference1 silhouettes, positions, widths/heights, native2:1 projection and upper-left light; genuine camera/world views with correct visible faces. Restrained OpenTTD pixel-art blue-gray steel, yellow safety accents, inset amber glass only where visible. No road/pavement/floor, truck, station ground, text, labels, glow, extra props, additional hardware or enclosing canopy. Four complete separate cutouts.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-terminal-equipment-parents-v1.png",
+          "role": "geometry-only edit target, NE/SW/NW housing and X13 rail layouts",
+          "sha256": "440cbabc1ce1f4f136dc371e1031b4f9cd230e59cc2160fbf2c783a9c4a8e74e"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/terminal-se-loader-v1.png",
+          "role": "approved SE housing, model/material style only",
+          "sha256": "7528f900831ab4cb3e21e320f9bcd389927f52e574b8e5f7782824709ec4e361"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/terminal-se-base-v1.png",
+          "role": "approved rails style only; failed2-louver housing excluded as model",
+          "sha256": "3a9afdc0c972706892c71e4c3369c2957e964ba9d1094edc5111a18022a51171"
+        }
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "reason": "Six native view comparison verifies genuine physical orientation, model inventory, clean complete crops and native contacts. Equipment rail-x13 remains excluded for incorrect world axis; corrected rails original supplies all four required genuine rail components."
+      },
+      "excluded_components": [
+        "rail-x13"
+      ],
+      "sha256": "5fc496a88366d8be0a1cd3eaa54b54834b3c6bc6d2ad2dec6dd4f3f9235630b8",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        23,
+        23,
+        1513,
+        1001
+      ],
+      "opaque_magenta_pixels": 59394,
+      "components": [
+        {
+          "id": "loader-ne",
+          "direction": "NE",
+          "native_graphics": [
+            0
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            154,
+            75,
+            517,
+            375
+          ],
+          "native_box": [
+            0,
+            35,
+            38,
+            64
+          ],
+          "kind": "housing",
+          "front_visible": false,
+          "inventory": "one corrugated roof, one low vent, two outside posts; true frontfacade visibility from native entrance"
+        },
+        {
+          "id": "loader-sw",
+          "direction": "SW",
+          "native_graphics": [
+            2
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            134,
+            76,
+            525,
+            391
+          ],
+          "native_box": [
+            25,
+            23,
+            64,
+            52
+          ],
+          "kind": "housing",
+          "front_visible": true,
+          "inventory": "one corrugated roof, one low vent, two outside posts; true frontfacade visibility from native entrance"
+        },
+        {
+          "id": "loader-nw",
+          "direction": "NW",
+          "native_graphics": [
+            3
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            169,
+            50,
+            555,
+            371
+          ],
+          "native_box": [
+            25,
+            35,
+            64,
+            64
+          ],
+          "kind": "housing",
+          "front_visible": false,
+          "inventory": "one corrugated roof, one low vent, two outside posts; true frontfacade visibility from native entrance"
+        },
+        {
+          "id": "loader-through-y",
+          "direction": "Y",
+          "native_graphics": [
+            5
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            154,
+            75,
+            517,
+            375
+          ],
+          "native_box": [
+            0,
+            35,
+            38,
+            64
+          ],
+          "kind": "housing",
+          "front_visible": false,
+          "inventory": "one corrugated roof, one low vent, two outside posts; true frontfacade visibility from native entrance",
+          "reuse_of": {
+            "source": "terminal-equipment-v1",
+            "component": "loader-ne",
+            "graphics": 0,
+            "part": "parent-1",
+            "screen_translation": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "terminal-rails-v1",
+      "path": "media/multilayer/source/ground/raw/terminal-rails-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-6964d6ba-a4f3-4a43-9960-65b901d097d6.png",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.road-terminal four independent genuine safety-rail originals.\nImage1 is the ONLY edit target and controls exact post-line orientation, positions, lengths and heights. Paint the gray geometry envelopes as open steel safety railings: exactly THREE capped square blue-gray posts, one yellow upper rail, one charcoal lower beam and tiny bolted feet. Real transparent gaps, no opaque wall panel. Keep the guide's native2:1 geometry. Do not change diagonal slope to match a generic fence image.\n\nCRITICAL ORIENTATION:\nTOP-LEFT X13 rail: the RIGHT END is HIGHER on screen than the LEFT END. Entire rail rises from LOWER-LEFT to UPPER-RIGHT, exactly like the top-left guide.\nTOP-RIGHT X11 rail: RIGHT END HIGHER, same rising diagonal, shorter than top-left.\nBOTTOM-LEFT X16 through rail: RIGHT END HIGHER, same rising diagonal, longest X rail.\nBOTTOM-RIGHT Y16 through rail: LEFT END HIGHER, opposite diagonal descending from UPPER-LEFT to LOWER-RIGHT, exactly like bottom-right guide.\nThese are genuinely lit world-axis views with upper-left lighting throughout, not rotated flat copies. Match each specific geometry panel; the first THREE panels rise to the RIGHT. Every panel has exactlyTHREE posts: first, middle, last; no fourth post.\n\nSAFE BORDERED1536x1024 source sheet: four pure magenta #FF00FF rectangular frames6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Preserve frames and at least32px real transparent clearance around each complete subject. Background, gutters, margins and all open railing gaps fully transparent. No glow, haze, colored cloud, cast ground shadow or painted checkerboard.\n\nRestrained OpenTTD pixel-art steel and yellow safety materials, square solid charcoal lower beam and narrow yellow upper bar, short capped posts with small dark bolted foot plates, crisp simple native-size detail. No housings, buildings, ground, floor slab, road, truck, text, labels, extra equipment, posts or enclosing canopy. Do not copy a generic descending-right railing into the three rising-right source cells.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/conventional-terminal-rails-parents-v2.png",
+          "role": "geometry-only edit target, true X13/X11/X16/Y16 source rail orientation",
+          "sha256": "c9e3c2f8afef4512c227c6167df468188422e7c2149c65f03f5bb5df1d314986"
+        }
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "reason": "Six native view comparison verifies genuine physical orientation, model inventory, clean complete crops and native contacts. Equipment rail-x13 remains excluded for incorrect world axis; corrected rails original supplies all four required genuine rail components."
+      },
+      "sha256": "7b7adad81a37bf7bd90da4caa93f83c7319a0a296f9bb6774f5d77cf7e3d8e99",
+      "image_size": [
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        24,
+        23,
+        1513,
+        1000
+      ],
+      "opaque_magenta_pixels": 62334,
+      "components": [
+        {
+          "id": "rail-x13-ne",
+          "direction": "NE",
+          "native_graphics": [
+            0
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            160,
+            94,
+            522,
+            335
+          ],
+          "native_box": [
+            36,
+            40,
+            64,
+            61
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet"
+        },
+        {
+          "id": "rail-x11-ne",
+          "direction": "NE",
+          "native_graphics": [
+            0
+          ],
+          "part": "parent-2",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            226,
+            125,
+            445,
+            292
+          ],
+          "native_box": [
+            5,
+            27,
+            30,
+            46
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet"
+        },
+        {
+          "id": "rail-x16-through",
+          "direction": "X",
+          "native_graphics": [
+            4
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            560,
+            720,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            99,
+            73,
+            571,
+            360
+          ],
+          "native_box": [
+            29,
+            40,
+            64,
+            64
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet"
+        },
+        {
+          "id": "rail-y16-through",
+          "direction": "Y",
+          "native_graphics": [
+            5
+          ],
+          "part": "parent-1",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            560,
+            1488,
+            976
+          ],
+          "measured_alpha16_bbox": [
+            166,
+            73,
+            548,
+            335
+          ],
+          "native_box": [
+            29,
+            25,
+            64,
+            50
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet"
+        },
+        {
+          "id": "rail-x13-sw",
+          "direction": "SW",
+          "native_graphics": [
+            2
+          ],
+          "part": "parent-0",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            48,
+            48,
+            720,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            160,
+            94,
+            522,
+            335
+          ],
+          "native_box": [
+            0,
+            28,
+            28,
+            49
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet",
+          "reuse_of": {
+            "source": "terminal-rails-v1",
+            "component": "rail-x13-ne",
+            "graphics": 0,
+            "part": "parent-0",
+            "screen_translation": [
+              -36,
+              -12
+            ]
+          }
+        },
+        {
+          "id": "rail-x11-sw",
+          "direction": "SW",
+          "native_graphics": [
+            2
+          ],
+          "part": "parent-2",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "source_window": [
+            816,
+            48,
+            1488,
+            472
+          ],
+          "measured_alpha16_bbox": [
+            226,
+            125,
+            445,
+            292
+          ],
+          "native_box": [
+            33,
+            43,
+            58,
+            62
+          ],
+          "kind": "rail",
+          "front_visible": null,
+          "inventory": "three capped square posts, yellow upper rail, charcoal lower beam, open gaps, bolted feet",
+          "reuse_of": {
+            "source": "terminal-rails-v1",
+            "component": "rail-x11-ne",
+            "graphics": 0,
+            "part": "parent-2",
+            "screen_translation": [
+              28,
+              16
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

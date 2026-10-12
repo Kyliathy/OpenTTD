@@ -1,0 +1,347 @@
+{
+  "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md78C; completed Plan13 ground78B control style; Plan17/18 native command ownership; archi-map-layers.md. Immutable six-state originals; source only, packing/runtime pending.",
+  "schema_version": 1,
+  "candidates": [
+    {
+      "key": "control-tube-enabled-v1",
+      "asset_id": "control.tube",
+      "state": "enabled",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-tube-enabled-v1.png",
+      "sha256": "a7dbf8d1e1d5ca4a06c10f85da625e6880b921580818ee7ad1620550a9e7c0bf",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-67219841-0454-415e-9622-c3fa60122f20.png",
+      "prompt": "Use case: precise-object-edit. Asset: ONE original OpenTTD tube-construction toolbar glyph, ENABLED state. Image1 is the approved existing M1 ground-control sheet: STYLE and pixel shading only; copy no existing glyph. Image2 is approved tube guideway hardware: model/material identity reference only. Derive ONE compact square menu glyph of a SHORT open-top U-shaped tube guideway section, viewed isometrically with its near mouth visible. TWO parallel low graphite steel side rims with pale steel edge caps, dark BLUE inner liner joining around a U-shaped near end, open dark center channel, tiny restrained green status fitting on one rim. Simplify to strong chunky facets and a readable20x20 native silhouette, using the same crisp restrained TTD pixel style as Image1. Retain actual open-channel tube identity; no full closed arch, no ordinary railway sleepers, cutter, capsule, wheels, freight, power source or text. This is a category menu icon, not a new world building or a vehicle view. Only ONE isolated enabled glyph, square composition, fixed center and generous at least64px real transparent margin on every side. No button tile/bevel, circular badge, background, lettering, number, padlock, red refusal mark, border, magenta, glow or cast shadow outside object. Native footprint maximum18x18 inside20x20; steel/blue palette, fixed upper-left light.",
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/ground-controls-v1.png",
+          "role": "approved menu style reference; no glyph copied",
+          "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/tube-straight-base-v1.png",
+          "role": "approved physical feature model/material reference; simplify into category menu glyph",
+          "sha256": "5cb68174834cddee2ac77c4ba3340ec204590db08db14d3bd6583b76827e3464"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          331,
+          456,
+          956,
+          921
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          13
+        ],
+        "native_position": [
+          1,
+          3
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    },
+    {
+      "key": "control-geothermal-enabled-v1",
+      "asset_id": "control.geothermal",
+      "state": "enabled",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-geothermal-enabled-v1.png",
+      "sha256": "75ccd4c2f074859e6f0ec4a029a6255c0c24fe2bf143ef0ea6a8d10e72a7808f",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-d56b3892-8503-4ede-9c19-35b38784d0f7.png",
+      "prompt": "Use case: precise-object-edit. Asset: ONE original OpenTTD geothermal-construction toolbar glyph, ENABLED state. Image1 is the approved existing M1 ground-control sheet: STYLE and pixel shading only, copy no existing glyph. Image2 is the approved geothermal collector hardware: material/model identity reference only. Derive ONE compact square menu glyph showing a single squat pale steel collector borehead with one COPPER insulated elbow rising from it and turning toward a short matching pipe coupling; a small dark basalt rock wedge underneath suggests a geothermal source. This is a simplified category symbol, not the complete three-borehead campus or a second live collector. Strong copper/ochre versus graphite/steel silhouette, clearly distinct from a blue tube or magnifying glass. Crisp chunky restrained TTD pixel shading matching Image1, fixed upper-left light, few broad opaque facets readable at20x20. No steam/glowing plume, lightning, generator/turbine, tall chimney, solar panel, operating power claim, vehicle, freight or decorative props. ONE enabled glyph, square composition, fixed center with at least64px genuinely transparent margin all sides. Maximum18x18 native object inside20x20 canvas. No button tile/bevel, circle badge, letters, numbers, padlock, red refusal mark, frame, magenta, background or external cast shadow.",
+      "references": [
+        {
+          "path": "media/multilayer/source/m1/raw/ground-controls-v1.png",
+          "role": "approved menu style reference; no glyph copied",
+          "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/collector-base-ne-v1.png",
+          "role": "approved physical feature model/material reference; simplify into category menu glyph",
+          "sha256": "d4c125675fec2d3159ac9dc7cf0e2642b94e1584f0e2fc029b261a2dfbce276e"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          392,
+          456,
+          878,
+          878
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          16
+        ],
+        "native_position": [
+          1,
+          2
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    },
+    {
+      "key": "control-tube-disabled-v1",
+      "asset_id": "control.tube",
+      "state": "disabled",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-tube-disabled-v1.png",
+      "sha256": "98838039afe3e7618e5613cf987ee75038b42687adfc04deed57eb60301175b7",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-80e31e28-8f10-4f6a-8864-bc3757f2e7e0.png",
+      "prompt": "Use case: precise-object-edit. Asset: control.tube toolbar glyph, DISABLED state. Image1 is the approved enabled original edit target. Preserve EXACT model identity, equipment count, silhouette, camera, orientation, framing, image position, diameter/proportions and original pixel-grid style. Change only the UI refusal presentation: desaturate the SAME physical glyph into darker restrained greys, with one crisp narrow RED diagonal refusal slash running over it from lower-left to upper-right. Keep the red mark inside the original glyph's outer square bounds; no big red background or external badge. The complete underlying model stays present and recognizable. This is a menu state only, never a world machinery failure, physical construction change or operating power claim. Maintain strong chunky broad pixels readable on the same20x20 native canvas with18px maximum visible footprint and fixed center. ONE isolated complete glyph, true transparent background and at least64px transparent clearance every side. Keep the SAME upper-left light. No added model parts, labels, numbers, text, padlock, frame, magenta, bevel, background or external shadow. Do not shift or crop the target. One independently authored state original, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/control-tube-enabled-v1.png",
+          "role": "selected enabled menu glyph edit target; preserve model/position, change declared UI state only",
+          "sha256": "a7dbf8d1e1d5ca4a06c10f85da625e6880b921580818ee7ad1620550a9e7c0bf"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          329,
+          455,
+          957,
+          923
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          13
+        ],
+        "native_position": [
+          1,
+          3
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    },
+    {
+      "key": "control-tube-pressed-v1",
+      "asset_id": "control.tube",
+      "state": "pressed",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-tube-pressed-v1.png",
+      "sha256": "8a1e860ffef6cbee53e099e0f33db4880b695a1c8616e085ba8a4d590f2e806f",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-61a13eab-016a-4a47-a04e-23bcf795917a.png",
+      "prompt": "Use case: precise-object-edit. Asset: control.tube toolbar glyph, PRESSED state. Image1 is the approved enabled original edit target. Preserve EXACT model identity, equipment count, silhouette, camera, orientation, framing, image position, diameter/proportions and original pixel-grid style. Change only the UI SELECTED presentation: keep the same active material palette and physical model but add stronger pale upper-left edge highlights and restrained CYAN selected-edge accents on its existing metal/blue surfaces (retain warm copper on the geothermal pipe). Do not add a glow, external outline, badge, button or background. The selected appearance must differ visibly from enabled after20x20 native reduction. This is a menu state only, never a world machinery failure, physical construction change or operating power claim. Maintain strong chunky broad pixels readable on the same20x20 native canvas with18px maximum visible footprint and fixed center. ONE isolated complete glyph, true transparent background and at least64px transparent clearance every side. Keep the SAME upper-left light. No added model parts, labels, numbers, text, padlock, frame, magenta, bevel, background or external shadow. Do not shift or crop the target. One independently authored state original, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/control-tube-enabled-v1.png",
+          "role": "selected enabled menu glyph edit target; preserve model/position, change declared UI state only",
+          "sha256": "a7dbf8d1e1d5ca4a06c10f85da625e6880b921580818ee7ad1620550a9e7c0bf"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          331,
+          457,
+          957,
+          922
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          13
+        ],
+        "native_position": [
+          1,
+          3
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    },
+    {
+      "key": "control-geothermal-disabled-v1",
+      "asset_id": "control.geothermal",
+      "state": "disabled",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-geothermal-disabled-v1.png",
+      "sha256": "3eada50dedcb3e98d9fc8457854f30279c4fd5335c0cbda9209c9e76b530f710",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-289b790a-bee4-493c-9930-5d17a62ca685.png",
+      "prompt": "Use case: precise-object-edit. Asset: control.geothermal toolbar glyph, DISABLED state. Image1 is the approved enabled original edit target. Preserve EXACT model identity, equipment count, silhouette, camera, orientation, framing, image position, diameter/proportions and original pixel-grid style. Change only the UI refusal presentation: desaturate the SAME physical glyph into darker restrained greys, with one crisp narrow RED diagonal refusal slash running over it from lower-left to upper-right. Keep the red mark inside the original glyph's outer square bounds; no big red background or external badge. The complete underlying model stays present and recognizable. This is a menu state only, never a world machinery failure, physical construction change or operating power claim. Maintain strong chunky broad pixels readable on the same20x20 native canvas with18px maximum visible footprint and fixed center. ONE isolated complete glyph, true transparent background and at least64px transparent clearance every side. Keep the SAME upper-left light. No added model parts, labels, numbers, text, padlock, frame, magenta, bevel, background or external shadow. Do not shift or crop the target. One independently authored state original, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/control-geothermal-enabled-v1.png",
+          "role": "selected enabled menu glyph edit target; preserve model/position, change declared UI state only",
+          "sha256": "75ccd4c2f074859e6f0ec4a029a6255c0c24fe2bf143ef0ea6a8d10e72a7808f"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          392,
+          456,
+          880,
+          879
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          16
+        ],
+        "native_position": [
+          1,
+          2
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    },
+    {
+      "key": "control-geothermal-pressed-v1",
+      "asset_id": "control.geothermal",
+      "state": "pressed",
+      "status": "selected_native_state_reviewed",
+      "path": "media/multilayer/source/ground/raw/control-geothermal-pressed-v1.png",
+      "sha256": "f466664eeafc7e107c9278482d6e11b1992fbb96b01a143ed02ee901afa291da",
+      "size": [
+        1254,
+        1254
+      ],
+      "tool": "image_gen",
+      "tool_generated_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1278e-b7ae-7590-9ee3-74ae267f4596\\exec-819c2e7b-447f-4888-8d6c-c10853c309b4.png",
+      "prompt": "Use case: precise-object-edit. Asset: control.geothermal toolbar glyph, PRESSED state. Image1 is the approved enabled original edit target. Preserve EXACT model identity, equipment count, silhouette, camera, orientation, framing, image position, diameter/proportions and original pixel-grid style. Change only the UI SELECTED presentation: keep the same active material palette and physical model but add stronger pale upper-left edge highlights and restrained CYAN selected-edge accents on its existing metal/blue surfaces (retain warm copper on the geothermal pipe). Do not add a glow, external outline, badge, button or background. The selected appearance must differ visibly from enabled after20x20 native reduction. This is a menu state only, never a world machinery failure, physical construction change or operating power claim. Maintain strong chunky broad pixels readable on the same20x20 native canvas with18px maximum visible footprint and fixed center. ONE isolated complete glyph, true transparent background and at least64px transparent clearance every side. Keep the SAME upper-left light. No added model parts, labels, numbers, text, padlock, frame, magenta, bevel, background or external shadow. Do not shift or crop the target. One independently authored state original, no sheet.",
+      "references": [
+        {
+          "path": "media/multilayer/source/ground/raw/control-geothermal-enabled-v1.png",
+          "role": "selected enabled menu glyph edit target; preserve model/position, change declared UI state only",
+          "sha256": "75ccd4c2f074859e6f0ec4a029a6255c0c24fe2bf143ef0ea6a8d10e72a7808f"
+        }
+      ],
+      "native_transform": {
+        "source_crop": [
+          392,
+          455,
+          877,
+          879
+        ],
+        "crop_alpha_threshold": 16,
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "native_subject_size": [
+          18,
+          16
+        ],
+        "native_position": [
+          1,
+          2
+        ],
+        "resampling": "BOX"
+      },
+      "review": "feature-controls-contact.png: matching complete model identity, centered native20x20 canvas and equal per-family bounds; enabled material colours, desaturated red refusal and original cyan/pale pressed highlights remain distinct."
+    }
+  ],
+  "families": [
+    {
+      "asset_id": "control.tube",
+      "source_coverage_complete": true,
+      "runtime_activated": false,
+      "state_selections": {
+        "enabled": "control-tube-enabled-v1",
+        "disabled": "control-tube-disabled-v1",
+        "pressed": "control-tube-pressed-v1"
+      },
+      "brief": "Open-top graphite/steel U-shaped tube channel, blue liner and restrained green equipment fitting. Category menu glyph, no capsule or railway portal. Existing M1 chunky style. Native20x20, center maximum18x18; no world rotations.",
+      "availability_owner": "CheckTubeConstruction; exact active profile, actual same-rock-layer complete excavated footprint, native tube introduction date and shared Deep1980 gate; icon creates no admission.",
+      "native_guard_evidence": "logs/graphics/feature-controls/20261011-source-01/native-command-guards.log:524 assertions/4 scoped command guard cases",
+      "ui_contract_owner": 7
+    },
+    {
+      "asset_id": "control.geothermal",
+      "source_coverage_complete": true,
+      "runtime_activated": false,
+      "state_selections": {
+        "enabled": "control-geothermal-enabled-v1",
+        "disabled": "control-geothermal-disabled-v1",
+        "pressed": "control-geothermal-pressed-v1"
+      },
+      "brief": "Simplified single pale steel collector borehead with copper elbow and basalt wedge, derived from actual collector hardware. Category symbol, not whole three-borehead machinery. Existing M1 chunky style. Native20x20/maximum18x18; no world rotations or generator source.",
+      "availability_owner": "PrepareGeothermalSite/PrepareGeothermalCollectorConstruction/PrepareGeothermalUtilityLink and paid riser admission own actual floor/date/company/source; menu glyph supplies no operating plant or utility grant.",
+      "native_guard_evidence": "logs/graphics/feature-controls/20261011-source-01/native-command-guards.log:524 assertions/4 scoped command guard cases",
+      "ui_contract_owner": 7
+    }
+  ],
+  "state_policy": {
+    "enabled": "native command availability; original restrained material colours",
+    "disabled": "same model in authored dark greys with UI-only red refusal slash; no world-state mutation",
+    "pressed": "same enabled model and position with authored pale/cyan/gold selected edge highlights; no bevel/background/border"
+  },
+  "source_layout": "One isolated original per family/state, true alpha and measured rectangular crop. No sheet overlap, raster rotation or algorithmic recolour. Existing ground21 states and runtime unchanged.",
+  "packing_boundary": "Existing public optional native_map_layer_extension declarations152/155 are preserved, not packed/runtime evidence; source publication changes no packed field."
+}

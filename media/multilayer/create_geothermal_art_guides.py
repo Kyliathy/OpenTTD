@@ -2,6 +2,7 @@
 
 @file create_geothermal_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups54C/55/56.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group56 distinct MagmaLoop source.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 These labelled blue diagrams are authoring references, never native game artwork.
@@ -130,6 +131,16 @@ def create_generator_direction_guide(model, direction):
              (0, 2): "EXCHANGER", (0, 3): "HEAT PORT", (1, 2): "EXCHANGER", (1, 3): "EXCHANGER",
              (2, 1): "TURBINE", (2, 2): "ALTERNATOR", (3, 1): "TURBINE", (3, 2): "ALTERNATOR",
              (3, 0): "SWITCHGEAR"}
+    equipment = "One low hall, one turbine, one alternator, one exchanger, one switchgear. Same selected model."
+    if model == "MagmaLoop":
+        # The2000 source is a distinct closed-loop design. Its two vertical
+        # vessels and single enclosed turbo-generator must turn together; the
+        # older exposed turbine/alternator guide would add nonexistent machinery.
+        roles = {(0, 0): "CONTROL", (1, 0): "CONTROL", (0, 1): "CONTROL", (1, 1): "CONTROL",
+                 (0, 2): "LOOP-A", (0, 3): "HEAT PORT", (1, 2): "LOOP-B", (1, 3): "RETURN",
+                 (2, 1): "TURBOGEN", (2, 2): "TURBOGEN", (3, 1): "TURBOGEN", (3, 2): "TURBOGEN",
+                 (3, 0): "SWITCHGEAR"}
+        equipment = "Two vertical loop vessels; one enclosed turbo-generator; one flat control hut; one switchgear."
     # Label the same logical equipment after each physical model turn. This
     # prevents a plausible unchanged hall from masquerading as a new view.
     for base_y in range(4):
@@ -140,10 +151,10 @@ def create_generator_direction_guide(model, direction):
             cx, cy = 768 + 128 * (y - x), 384 + 64 * (x + y)
             corners = [(cx, cy - 64), (cx + 128, cy), (cx, cy + 64), (cx - 128, cy)]
             label = roles.get((base_x, base_y), "ACCESS")
-            fill = (217, 232, 247) if label == "HALL" else (239, 231, 212)
+            fill = (217, 232, 247) if label in ("HALL", "CONTROL") else (239, 231, 212)
             draw.polygon(corners, fill=fill, outline=(45, 105, 180), width=2)
             draw.text((cx - 34, cy - 6), label, fill=(25, 45, 75))
-    draw.text((28, 910), "One low hall, one turbine, one alternator, one exchanger, one switchgear. Same selected model.", fill=(25, 45, 75))
+    draw.text((28, 910), equipment, fill=(25, 45, 75))
     draw.text((28, 934), "Fixed 2:1 camera and upper-left light; true alpha cutout. Labels/blue reference geometry never enter artwork.", fill=(25, 45, 75))
     target = ROOT / ("media/multilayer/guides/ground/generator-" + model.lower() + "-" + direction.lower() + "-v1.png")
     target.parent.mkdir(parents=True, exist_ok=True)

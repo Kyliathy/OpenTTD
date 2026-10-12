@@ -2,6 +2,7 @@
 
 @file multilayer_packed_build.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
 Run each mode separately. All logs, configuration and generated data stay in the
 repository. The generator-free mode restores the original CMake configuration.
@@ -185,13 +186,51 @@ def generator_free(cmake, config, prefix, load_native=True):
                 f"{prefix}-generator-restore.log")
 
 
+def load_copied_payload(config, prefix):
+    """Complete a retained generator-free copy proof after its native loader is built.
+
+    @param config Current native executable configuration to load the copied bytes.
+    @param prefix Diagnostic basename under this invocation's repository logs.
+    @return None; record actual pixel/anchor loading only for the exact previously verified copy.
+    """
+    proof = read_proof()
+    copied = proof["generator_free_packaging"]
+    sha = digest(GRF)
+    assert copied["generator_discovery_disabled"] and copied["sha256"] == sha
+    assert digest(ROOT / copied["copied_payload"]) == sha, "retained cached payload changed before native loading"
+    CONTEXT.prepare_runtime()
+    startup = CONTEXT.runtime_dir / "scripts/game_start.scr"
+    original = startup.read_bytes() if startup.exists() else None
+    try:
+        startup.write_text("# @see r2mlvs14-remaining-assets-and-runtime-integration.md79C; retained copied-payload loader owns startup.\n", encoding="utf-8")
+        name = f"{prefix}-generator-free-load-{config}.log"
+        loaded = execute([str(ROOT / "build" / config / "openttd_test.exe"), "[.m1-packed-art-load]"], name, ROOT / "build")
+        marker = (f"M1_PACKED_ART_LOADED sprites={copied['protected_sprites'] + copied['selected_sprites']} "
+                  f"native_bound={copied['native_bound']} protected={copied['protected_sprites']} "
+                  f"selected={copied['selected_sprites']} pixel_hashes=exact")
+        assert marker in loaded and "All tests passed" in loaded
+        assert digest(GRF) == sha and digest(ROOT / copied["copied_payload"]) == sha
+        # Configuration discovery was disabled for the retained copy operation.
+        # Loading does not rerun CMake or imply that discovery stayed disabled;
+        # it proves that those exact previously copied bytes reach native pixels.
+        proof["generator_free"] = dict(copied, loader_log=(CONTEXT.logs / name).relative_to(ROOT).as_posix(), native_loading_verified=True,
+                                       loading_configuration=config, loading_follows_verified_copy=True)
+        write_proof(proof)
+        print(f"Retained generator-free payload actually loads all {copied['protected_sprites'] + copied['selected_sprites']} source-exact sprites in {config}", flush=True)
+    finally:
+        if original is None:
+            startup.unlink(missing_ok=True)
+        else:
+            startup.write_bytes(original)
+
+
 def main():
     """Dispatch one focused proof mode to keep native checks below two minutes.
 
     @return None; each mode records only successful independent evidence.
     """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("mode", choices=["reproducible", "generator-free", "generator-free-copy"])
+    parser.add_argument("mode", choices=["reproducible", "generator-free", "generator-free-copy", "generator-free-load"])
     parser.add_argument("--cmake", required=True)
     parser.add_argument("--config", default="RelWithDebInfo")
     parser.add_argument("--prefix", default="r2tbmf-z-art")
@@ -199,6 +238,8 @@ def main():
     assert Path(args.prefix).name == args.prefix
     if args.mode == "reproducible":
         reproducible(args.cmake, args.config, args.prefix)
+    elif args.mode == "generator-free-load":
+        load_copied_payload(args.config, args.prefix)
     else:
         generator_free(args.cmake, args.config, args.prefix, load_native=args.mode == "generator-free")
 
