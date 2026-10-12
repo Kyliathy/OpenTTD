@@ -1092,7 +1092,7 @@
         }
       },
       "asset_id": "facility.chemical-works",
-      "status": "completed_base_selected_full_source_pending",
+      "status": "complete_native_processor_source_runtime_pending",
       "view": "none",
       "roles": [
         "empty-four-leg-salt-hopper",
@@ -1277,7 +1277,8 @@
         "chemical-works-construction-2-reactor-v1",
         "chemical-works-construction-2-tank-v1",
         "chemical-works-construction-2-vat-v1",
-        "chemical-works-construction-2-exchanger-v1"
+        "chemical-works-construction-2-exchanger-v1",
+        "chemical-works-construction-2-filter-v1"
       ],
       "partial_base_cells": [
         {
@@ -1318,9 +1319,9 @@
       ],
       "verification_baseline": "logs/graphics/chemical-works/20261012-base-01/before.json",
       "base_coverage_complete": true,
-      "source_coverage_complete": false,
+      "source_coverage_complete": true,
       "runtime_activated": false,
-      "remaining": "40C genuine full512 construction/operating source; master10.4D packing/native binding/decoded pixels/ordinary game",
+      "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
       "approved_model_sha256": "3f92bd6cab7efd90dc77f4713fbcfcbdc6dc9fdc27b43c9b2d2e71bfcf7816ca",
       "base_cells": [
         {
@@ -1443,9 +1444,434 @@
             "variant": 6,
             "source": "chemical-works-construction-2-exchanger-v1",
             "component": "cell-6"
+          },
+          {
+            "variant": 7,
+            "source": "chemical-works-construction-2-filter-v1",
+            "component": "cell-7"
           }
         ]
-      }
+      },
+      "construction_cells": {
+        "1": [
+          {
+            "variant": 2,
+            "source": "chemical-works-construction-1-a-v2",
+            "component": "cell-2"
+          },
+          {
+            "variant": 3,
+            "source": "chemical-works-construction-1-a-v2",
+            "component": "cell-3"
+          },
+          {
+            "variant": 4,
+            "source": "chemical-works-construction-1-a-v1",
+            "component": "cell-4"
+          },
+          {
+            "variant": 5,
+            "source": "chemical-works-construction-1-a-v1",
+            "component": "cell-5"
+          },
+          {
+            "variant": 6,
+            "source": "chemical-works-construction-1-b-v1",
+            "component": "cell-6"
+          },
+          {
+            "variant": 7,
+            "source": "chemical-works-construction-1-b-v1",
+            "component": "cell-7"
+          },
+          {
+            "variant": 12,
+            "source": "chemical-works-construction-1-scrubber-v3",
+            "component": "cell-12"
+          }
+        ],
+        "2": [
+          {
+            "variant": 2,
+            "source": "chemical-works-construction-2-tank-v1",
+            "component": "cell-2"
+          },
+          {
+            "variant": 3,
+            "source": "chemical-works-construction-2-a-v1",
+            "component": "cell-3"
+          },
+          {
+            "variant": 4,
+            "source": "chemical-works-construction-2-vat-v1",
+            "component": "cell-4"
+          },
+          {
+            "variant": 5,
+            "source": "chemical-works-construction-2-reactor-v1",
+            "component": "cell-5"
+          },
+          {
+            "variant": 6,
+            "source": "chemical-works-construction-2-exchanger-v1",
+            "component": "cell-6"
+          },
+          {
+            "variant": 7,
+            "source": "chemical-works-construction-2-filter-v1",
+            "component": "cell-7"
+          },
+          {
+            "variant": 12,
+            "source": "chemical-works-construction-2-b-v1",
+            "component": "cell-12"
+          }
+        ]
+      },
+      "approved_construction_component_geometry_sha256": "ab1fdcccc93d4f178e1d59fd20dae565a270133eb15eafef260c818bd80053c0",
+      "operating_component_geometry": {
+        "hut_variant": 11,
+        "world_cell": [
+          3,
+          2
+        ],
+        "cue_target": [
+          30,
+          43,
+          3,
+          3
+        ],
+        "source_record": "media/multilayer/source/m1/facility-generation-record.json",
+        "component": "facility-status",
+        "component_path": "media/multilayer/source/m1/raw/facility-status-phases-v1.png",
+        "component_sha256": "a70f38222cf3c52583f36ae384890609d35dcf1f2fa3e56c7f31548ca831fe45",
+        "component_geometry_sha256": "9ab4acd00d56d57b874438566fa2871865ac0a0da28ab7fbac26f997f28c6ded",
+        "states": [
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frame_aliases": {
+          "construction": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ready": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "working": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "blocked": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory"
+      },
+      "approved_operating_component_geometry_sha256": "166c809ca47e0567f6e8d65a14f361d5956c68169611435b2025924658d60770",
+      "construction_reuse": {
+        "apparatus": [
+          {
+            "stage": 1,
+            "target_variant": 0,
+            "target_world_cell": [
+              0,
+              0
+            ],
+            "source_family": "mine.COAL",
+            "source_selection": {
+              "variant": 0,
+              "source": "coal-construction-1-a-v1",
+              "component": "cell-0"
+            },
+            "source_sha256": "36c57707fae4659fffc498d6747f7722ac2c424d0a5ba04eaa321589ae035b39",
+            "component_geometry_sha256": "27e65bd43dc1d89fa7b26666436623ae8f6e4a4ad6015ed4466c30dc5bcbd12f",
+            "physical_role": "empty-four-leg-salt-hopper",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 1,
+            "target_variant": 1,
+            "target_world_cell": [
+              1,
+              0
+            ],
+            "source_family": "mine.COAL",
+            "source_selection": {
+              "variant": 1,
+              "source": "coal-construction-1-a-v1",
+              "component": "cell-1"
+            },
+            "source_sha256": "36c57707fae4659fffc498d6747f7722ac2c424d0a5ba04eaa321589ae035b39",
+            "component_geometry_sha256": "37cc5b5d95bb30a281dd84f2cd6ba4c632f28d7e33b9389e0e4fba283a9246d5",
+            "physical_role": "empty-world-X-salt-feed-belt",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 1,
+            "target_variant": 9,
+            "target_world_cell": [
+              1,
+              2
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 10,
+              "source": "metal-refinery-construction-1-b-v1",
+              "component": "cell-10"
+            },
+            "source_sha256": "a8a0609c43dad19f8a4ca7d5ff6d0b428a96b1ce45a9853d83469752c3ee0767",
+            "component_geometry_sha256": "5500cd7edf01e2b9f3d7e4e386a896f34856aa5e593c5a086582e66ba8a53c06",
+            "physical_role": "low-air-cooling-cabinet",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 1,
+            "target_variant": 13,
+            "target_world_cell": [
+              1,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 13,
+              "source": "metal-refinery-construction-1-floor-v2",
+              "component": "cell-13"
+            },
+            "source_sha256": "3684fccbd3213297cd46258f7b346a984f3f8ca5af4479a75251bbe0bcfbae16",
+            "component_geometry_sha256": "2be05e1ed4c2b6a2991265d174d6d230cbfe11e4e575678d8c18dd6220407955",
+            "physical_role": "low-forced-air-blower",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 1,
+            "target_variant": 14,
+            "target_world_cell": [
+              2,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 14,
+              "source": "metal-refinery-construction-1-floor-v1",
+              "component": "cell-14"
+            },
+            "source_sha256": "2c319f6e7c657eee00f4c9a6370cc50b08c557b3843fa912245ca1121fd66533",
+            "component_geometry_sha256": "a6f168d6b5c48fb92fbf19e880b1fb5206575e1b3db4dd3cb12b364bfdea9378",
+            "physical_role": "empty-dispatch-ledge",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 1,
+            "target_variant": 15,
+            "target_world_cell": [
+              3,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 15,
+              "source": "metal-refinery-construction-1-c-v1",
+              "component": "cell-15"
+            },
+            "source_sha256": "6866e9c6392fa9d6848984c3f45b19e91a563142a73f2fdf42179e6e94914ecd",
+            "component_geometry_sha256": "1dd5ca67aff143addf97f05b15e4e15e6c81d0aa31d96c23b1018ab3ef16f343",
+            "physical_role": "low-tool-store",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 0,
+            "target_world_cell": [
+              0,
+              0
+            ],
+            "source_family": "mine.COAL",
+            "source_selection": {
+              "variant": 0,
+              "source": "coal-construction-2-a-v1",
+              "component": "cell-0"
+            },
+            "source_sha256": "cd934e4b2f24080022829f30115197f9efbd7b57126726e60dc2327fbe53b991",
+            "component_geometry_sha256": "3f84cb14df741a400f86033f6e0ac1128e0c55fc4de330b17e1837c31e5725ab",
+            "physical_role": "empty-four-leg-salt-hopper",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 1,
+            "target_world_cell": [
+              1,
+              0
+            ],
+            "source_family": "mine.COAL",
+            "source_selection": {
+              "variant": 1,
+              "source": "coal-construction-2-a-v1",
+              "component": "cell-1"
+            },
+            "source_sha256": "cd934e4b2f24080022829f30115197f9efbd7b57126726e60dc2327fbe53b991",
+            "component_geometry_sha256": "139655950fa2ff572539ea210e12e395c61d4b50dbd1a506969a8d5db15c2f67",
+            "physical_role": "empty-world-X-salt-feed-belt",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 9,
+            "target_world_cell": [
+              1,
+              2
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 10,
+              "source": "metal-refinery-construction-2-b-v1",
+              "component": "cell-10"
+            },
+            "source_sha256": "01509671eb45ace1f312acbc84d877ba9bcdd10a219543409a6adffddbdea5fb",
+            "component_geometry_sha256": "a5ceb4f7f348356ed5880ba2191ad6e1a61f2c17480f187ad09fdb9d5315a862",
+            "physical_role": "low-air-cooling-cabinet",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 13,
+            "target_world_cell": [
+              1,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 13,
+              "source": "metal-refinery-construction-2-c-v1",
+              "component": "cell-13"
+            },
+            "source_sha256": "f04c978286135839b36ab9f7414021cf0462ecb27e0d1e6df8f6e9c7cde8aa6d",
+            "component_geometry_sha256": "9a0f5547a8c65ac6e9309b1d0deb8474666482c04cb99f675eac3b4c06c72c2c",
+            "physical_role": "low-forced-air-blower",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 14,
+            "target_world_cell": [
+              2,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 14,
+              "source": "metal-refinery-construction-2-ledge-v3",
+              "component": "cell-14"
+            },
+            "source_sha256": "4d640504ddb57bdaaf9e449f0acca7d922508d06fa13d84b772d5ffcc73f83f0",
+            "component_geometry_sha256": "431e456741535e7545f71461b8912b90d10445ac4ec5b613a331dcbbafad2b94",
+            "physical_role": "empty-dispatch-ledge",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          },
+          {
+            "stage": 2,
+            "target_variant": 15,
+            "target_world_cell": [
+              3,
+              3
+            ],
+            "source_family": "facility.metal-refinery",
+            "source_selection": {
+              "variant": 15,
+              "source": "metal-refinery-construction-2-final-v2",
+              "component": "cell-15"
+            },
+            "source_sha256": "44734f8e7839fa3459ba694c2a8c190c032583edb253f4aefee394c6bd9c3042",
+            "component_geometry_sha256": "202ded9978cdf6fe1caa38ff9b53c97d6d8e42b384573c253aebd45673e5513b",
+            "physical_role": "low-tool-store",
+            "inventory": "Same-stage compatible empty individual apparatus; no cargo or work"
+          }
+        ],
+        "local_aliases": {
+          "8": 5,
+          "10": 3
+        },
+        "foundation_targets": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "hut_target": 11,
+        "donor_m1_reuse": {
+          "source_record": "media/multilayer/source/m1/facility-generation-record.json",
+          "source_family": "facility.earth-receiver",
+          "source_path": "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "source_sha256": "60676db7ef226f705f826ddc52dc71fcc9f5eed7ca9e87dc5065dded184c94fa",
+          "source_native_atlas": "logs/proofs/mlm/native-art/derived/earth-receiver-authored.png",
+          "source_native_sha256": "b7c862edabba8151aa940ffa474e4adbb788c658d54c06c6cf4d6e47583456b5",
+          "native_canvas": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "source_state": "construction",
+          "source_frame": 0,
+          "foundation_source_variant": 4,
+          "hut_source_variant": 5,
+          "foundation_targets": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "hut_target": 7,
+          "stage_owner": "GetIndustryConstructionStage, actual per-cell0..3; phase3 retains exact completed base; no sprite-local progress",
+          "reuse_policy": "One real compatible construction yard supports actual paid stage0 foundations; exact unfinished hut is phase1cell7 only. No soil bank, shaft, foreign machine or extra industry tile is copied.",
+          "phase_component": "facility-status",
+          "phase_component_sha256": "a70f38222cf3c52583f36ae384890609d35dcf1f2fa3e56c7f31548ca831fe45",
+          "cue_target": [
+            30,
+            43,
+            3,
+            3
+          ],
+          "finishing_hut_body_state": "ready",
+          "finishing_hut_glass_state": "construction",
+          "finishing_hut_glass_frame": 2
+        }
+      },
+      "approved_construction_reuse_sha256": "491899d930c87aa046d2bb515e7185f7a0cb94c534b724f1bd7596fdb3bbdd6d",
+      "atlas_manifest": "logs/proofs/mlm/native-art/ground/chemical-works-source-manifest.json",
+      "native_atlas": "logs/proofs/mlm/native-art/ground/chemical-works-source-authored.png",
+      "native_sha256": "932005b05bf184611e8f3a845397a5f5e80d7539e9aa9be1c16a1ef9637cc193"
     }
   },
   "candidates": [
@@ -8256,6 +8682,101 @@
           "native_box": [
             1,
             21,
+            63,
+            64
+          ],
+          "construction_stage": 2
+        }
+      ],
+      "processor_asset_id": "facility.chemical-works",
+      "excluded_variants": [],
+      "unfinished_empty": true
+    },
+    {
+      "id": "chemical-works-construction-2-filter-v1",
+      "date": "2026-10-12",
+      "tool": "image_gen.imagegen",
+      "path": "media/multilayer/source/ground/raw/chemical-works-construction-2-filter-v1.png",
+      "cache_path": "C:\\Users\\Axonn\\.codex\\generated_images\\01a12ede-7d98-7773-8a7e-3f657758dc28\\exec-54282131-1f15-44b7-9202-5f680ff9c948.png",
+      "sha256": "9d2cda1e2c224caa909a4fd58638cec30e4c826fce44ac96168b2b12cf54f043",
+      "prompt": "Use case: precise-object-edit.\nAsset: facility.chemical-works cell7, CONSTRUCTION STAGE2 finishing filter press.\nImage1 is the exact approved completed LOW filter press edit target. Preserve its ONE compact LOW pack of exactly SIX short installed filter plates, TWO end clamps, ONE existing front actuator body and its short shaft, FOUR short feet, gray/slate steel, yellow fitting, the ENTIRE existing symmetric thin 2:1 concrete floor, exact isometric camera and upper-left light. Keep the same compact physical model; do not raise, lengthen, tilt, rotate or add equipment.\nThe ONLY unfinished change: the yellow HANDWHEEL at the top of the existing front actuator is NOT INSTALLED yet. Leave its existing short vertical mounting spindle exposed within the same position, retaining the complete front actuator, all six plates, both end clamps, connecting rods and all four feet. No loose removed wheel on the ground, no missing plates or open filter stack. This must read as the original complete press awaiting its final handwheel, not damaged machinery.\nReturn ONE isolated complete RGBA cutout on a genuinely transparent square canvas about1254x1254 with at least100px alpha-zero clearance on every side. Preserve all four floor corners and centered south tip. Uniform whole-subject source scaling only; preserve floor projection and apparatus proportions. Remove the reference's purple/magenta preview backdrop completely; no background, haze, halo, magenta frame, checkerboard, shadow beyond the floor, text/labels/guide marks, worker/tools/props, cargo or watermark. All completed apparatus stays intact except the declared absent handwheel.",
+      "references": [
+        {
+          "path": "media/multilayer/guides/ground/chemical-works-cell-7-completed-reference-v1.png",
+          "sha256": "3c1bb2626d3b3e8c868f9c59d3d09abd997b4bb0ec281165aa09855203f368ec"
+        }
+      ],
+      "image_size": [
+        1254,
+        1254
+      ],
+      "variants": [
+        7
+      ],
+      "alpha_measure_threshold": 16,
+      "measurements": [
+        {
+          "variant": 7,
+          "source_window": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_alpha16_bbox": [
+            104,
+            300,
+            1192,
+            1115
+          ],
+          "minimum_alpha16_clearance": 62,
+          "opaque_magenta_pixels": 0
+        }
+      ],
+      "selection": {
+        "status": "approved_native_components",
+        "reason": "Six short installed plates, original compact clamp/feet/floor retained; final handwheel genuinely uninstalled",
+        "approved_variants": [
+          7
+        ],
+        "refused_variants": {}
+      },
+      "construction_stage": 2,
+      "components": [
+        {
+          "id": "cell-7",
+          "variant": 7,
+          "world_cell": [
+            3,
+            1
+          ],
+          "direction": "none",
+          "native_size": [
+            64,
+            64
+          ],
+          "anchor": [
+            -31,
+            -33
+          ],
+          "resampling": "BOX",
+          "alpha_crop_threshold": 16,
+          "whole_original_uniform_scale": true,
+          "source_window": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_alpha16_bbox": [
+            104,
+            300,
+            1192,
+            1115
+          ],
+          "native_box": [
+            1,
+            18,
             63,
             64
           ],

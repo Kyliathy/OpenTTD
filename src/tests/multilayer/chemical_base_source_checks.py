@@ -203,7 +203,7 @@ class ChemicalBaseSourceChecks(unittest.TestCase):
         """
         plant.validate_public_base(self.public, self.report)
         for key, value in (("selected_base_nonempty_parts", 31), ("base_native_atlas", "foreign.png"),
-                           ("coverage_complete", True), ("runtime_activated", True)):
+                           ("native_sha256", "0" * 64), ("runtime_activated", True)):
             public = copy.deepcopy(self.public)
             public["authoring"][key] = value
             with self.assertRaises(ValueError):
@@ -217,8 +217,7 @@ class ChemicalBaseSourceChecks(unittest.TestCase):
         with self.assertRaises(ValueError):
             plant.validate_public_base(public, self.report)
         self.assertTrue(self.family["base_coverage_complete"])
-        self.assertFalse(self.family["source_coverage_complete"])
-        self.assertFalse(self.public["authoring"]["coverage_complete"])
+        self.assertEqual(self.family["source_coverage_complete"], self.public["authoring"]["coverage_complete"])
         self.assertFalse(self.public["authoring"]["runtime_activated"])
 
     def test_all_prior_metal_mine_raw_native_code_and_public_owners_stay_exact(self):
@@ -229,7 +228,8 @@ class ChemicalBaseSourceChecks(unittest.TestCase):
         """
         self.assertEqual(plant.mine.base.digest(plant.mine.RECORD), self.before["mine_record_sha256"])
         for row in self.before["preserved_identities"]:
-            self.assertEqual(plant.mine.base.digest(ROOT / row["path"]), row["sha256"], row["path"])
+            import convert_chemical_states as states
+            states.validate_preserved_identity(row)
         for name, signature in self.before["processor_family_sha256"].items():
             self.assertEqual(plant.mine.signature(self.record["families"][name]), signature, name)
         for source in self.record["candidates"]:

@@ -14,7 +14,7 @@ Examples:
 	.\play.ps1                              show the menu and ask for a number
 	.\play.ps1 1                            start menu entry 1 without asking
 	.\play.ps1 1 -Seed 1234                 a new game on a fixed map
-	.\play.ps1 demo                        current 50-cell TBM demo, ready to unpause
+	.\play.ps1 demo                        finite Coal mine and cross-layer freight, ready to unpause
 	.\play.ps1 underground-mines           the same demo by its permanent menu name
 	.\play.ps1 tbm-work                    current 50-cell project, ready to unpause
 	.\play.ps1 tbm-plan                    paused 44-cell project for trying the extension preview
@@ -50,28 +50,44 @@ $exe = Join-Path $build "$Config\openttd.exe"
 $utf8 = New-Object System.Text.UTF8Encoding $false
 
 # Featured checkpoints have stable names and a guide, so recent autosaves cannot
-# push the intended demo out of the menu. Current stages retain the same real world/machine.
+# push the intended demo out of the menu. Mine/TBM stages share one world; collectors use their own review world.
 $demoSaves = @(
-	@{ Name = 'underground-mines'; SaveName = 'underground-demo-tbm-399';
-		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-tbm-399.sav';
-		Text = 'Start here: current 50-cell TBM project and hauler, paused and ready';
-		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-	@{ Name = 'tbm-plan'; SaveName = 'underground-demo-planning-399';
-		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-planning-399.sav';
-		Text = 'Try planning: paused 44-cell project with room to preview six more cells';
-		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-	@{ Name = 'tbm-exit'; SaveName = 'underground-demo-exit-399';
-		Snapshot = 'src\tests\fixtures\haulage\far-exit\underground-demo-exit-399.sav';
-		Text = 'Build exit B: 50 cells finished, whole TBM stopped clear of the exit site';
-		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-	@{ Name = 'tbm-tunnel'; SaveName = 'underground-demo-tunnel-399';
-		Snapshot = 'src\tests\fixtures\haulage\far-exit\underground-demo-tunnel-399.sav';
-		Text = 'TBM fixes: public A-to-B freight tunnel, same TBM stored at exit B';
-		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-	@{ Name = 'underground-mines-legacy'; SaveName = 'underground-demo-tbm-ui-393';
-		Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-tbm-ui-393.sav';
-		Text = 'Older map: preserved bent-route checkpoint for comparison';
-		Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'underground-mines'; SaveName = 'mine-haulage-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\mine-haulage-403.sav';
+        Text = 'Start here: finite Coal mine, mineral train and Surface delivery, paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'mine-build'; SaveName = 'mine-build-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\mine-build-403.sav';
+        Text = 'Earlier mine checkpoint: paid machinery construction and complete freight route';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'tbm-work'; SaveName = 'tbm-work-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\tbm-work-403.sav';
+        Text = 'Excavation: current 50-cell TBM project and spoil hauler, ready to unpause';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'tbm-plan'; SaveName = 'tbm-plan-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\tbm-plan-403.sav';
+        Text = 'Try planning: paused 44-cell project with room to preview six more cells';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'tbm-exit'; SaveName = 'tbm-exit-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\tbm-exit-403.sav';
+        Text = 'Build exit B: 50 cells finished, whole TBM stopped clear of the exit site';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'tbm-tunnel'; SaveName = 'tbm-tunnel-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\tbm-tunnel-403.sav';
+        Text = 'Public A-to-B tunnel: original TBM parked at B, ordinary train running';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'collector-build'; SaveName = 'collector-build-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\collector-build-403.sav';
+        Text = 'Deep collector: actual paid construction stages and newly delivered game art';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'collector-ready'; SaveName = 'collector-ready-403';
+        Snapshot = 'src\tests\fixtures\demos\underground\collector-ready-403.sav';
+        Text = 'Deep collector: completed machinery at its natural vent; no operating powerhouse';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'underground-mines-legacy'; SaveName = 'underground-demo-tbm-ui-393';
+        Snapshot = 'src\tests\fixtures\haulage\planning\underground-demo-tbm-ui-393.sav';
+        Text = 'Older map: preserved bent-route checkpoint for comparison';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
 )
 
 #The saves we have, with what each holds. They predate the gameplay profiles, so they load as Classic games.
@@ -323,12 +339,12 @@ function Resolve-Choice([string]$Choice, $Entries) {
 	# The short aliases and permanent name select the same featured checkpoint,
 	# regardless of how many newer player saves have appeared since the last run.
 	$menuName = $Choice
-	if ($Choice -in 'demo', 'tbm-work') { $menuName = 'underground-mines' }
+	if ($Choice -in 'demo', 'mine-haulage') { $menuName = 'underground-mines' }
 	foreach ($entry in $Entries) {
 		if ($entry.Name -eq $menuName) { return $entry }
 	}
 	if ($menuName -eq 'underground-mines') {
-		throw 'The Underground mines demo save is missing from build\save and src\tests\fixtures\haulage. See docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md.'
+		throw 'The Underground mines demo save is missing from build\save and src\tests\fixtures\demos\underground. See docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md.'
 	}
 	#A name is looked up in build\save first, then taken as a path of its own.
 	foreach ($candidate in @((Join-Path $saveDir $Choice), (Join-Path $saveDir "$Choice.sav"), $Choice)) {
@@ -463,7 +479,7 @@ $commandLine = (@($arguments) | ForEach-Object { ConvertTo-NativeArgument $_ }) 
 
 if ($choice.Guide -ne '') {
 	Write-Host "Demo guide: $($choice.Guide)" -ForegroundColor Cyan
-	Write-Host 'Starts paused. Inspect the portal and its TBM, then unpause. Save your experiments under a new name.'
+	Write-Host 'Starts paused. Follow the guide for this checkpoint and switch to its Underground or Deep layer. Save your experiments under a new name.'
 }
 
 #The Multilayer Industry profile refuses any NewGRF but its own package, and play.cfg keeps those picked in the game.

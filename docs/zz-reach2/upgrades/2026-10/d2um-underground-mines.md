@@ -1,12 +1,10 @@
 # Underground mines demo
 
-Player walkthrough for the delivered [portal/TBM master](r2mlvs3mp-master-plan.md), its [demo checkpoint](portal-tbm/r2mlvs3mp-z-l-demo-checkpoint.md) and the active [TBM fixes](r2tbmf-tbm-fixes.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Updated 2026-10-09.
+Player walkthrough for the [portal/TBM master](r2mlvs3mp-master-plan.md). Updated **2026-10-12**, after commit `0840083c4054` and completion of the interrupted chemical works source task40C. Repository checkpoint tag: **`demo3`**.
 
-The default demo now contains the current TBM fixes: a reviewed **50-cell straight tunnel**, regional geology, the same actual machine and an assigned spoil hauler. Both trains and the project are ready; the game starts paused. Unpause to watch cutting and haulage. Additional checkpoints let you try planning, build the far exit, or inspect the completed public tunnel immediately.
+The default demo now starts with **a working Underground Coal mine and a mineral train delivering to a Surface power station**. The same world retains the completed50-cell public tunnel and the original TBM parked at its far exit. Separate checkpoints cover excavation planning, active spoil haulage, far-exit construction and the newly delivered Deep collector graphics. All eight current checkpoints start paused.
 
-**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
-
-## Launch it
+## Start here
 
 From PowerShell:
 
@@ -15,97 +13,132 @@ cd D:\Codez\Sandbox\OpenTTD
 .\play.ps1 demo
 ```
 
-The longer name works too:
+`underground-mines` and `mine-haulage` select the same starting point. Run `.\play.ps1` without arguments to see the permanent **Demos (Multilayer Industry)** entries above recent saves.
 
-```powershell
-.\play.ps1 underground-mines
-```
+1. Before experimenting, **Save game** under your own name, for example `underground-mines-my-run`.
+2. Choose **Underground** with the main toolbar's layer selector. The ordinary loader starts on Surface; the saved camera is aligned with the mine's Underground position. **N** also cycles layers.
+3. Find the Coal mine at **Underground(8,9)** and its loading station at **(8,12)**. Click the mine to inspect its actual output and finite deposit; click the station and open its train list to find the coal shuttle.
+4. Unpause. Watch coal collect, the mineral wagon fill, and the train use the connected portal at **(12,12)**. Switch to Surface to follow delivery to the station at **(15,12)**, beside the power station at **(15,14)**. Then watch the empty return.
+5. Reopen your personal copy with `.\play.ps1 underground-mines-my-run`.
 
-Or run `.\play.ps1` without arguments and choose **underground-mines** under **Demos (Multilayer Industry)**. The demo has its own permanent entry above the recent saves, so you do not have to hunt for it among autosaves. The launcher prints this guide's path before starting the game.
+The default executable is the rebuilt **RelWithDebInfo** game. `-Config Debug` selects the Debug executable when reporting a problem. Both use repository-local `build/play.cfg`; your saves go into `build/save`. Featured entries prefer the retained repository snapshot, so a same-named personal/generated save cannot silently replace the reviewed starting state.
 
-The default is the optimized **RelWithDebInfo** build. To use the Debug build when reporting a problem:
+## Pick a checkpoint
 
-```powershell
-.\play.ps1 demo -Config Debug
-```
-
-Both choices use `build/play.cfg` and load [underground-demo-tbm-399.sav](../../../../src/tests/fixtures/haulage/planning/underground-demo-tbm-399.sav). Featured demos prefer their retained repository snapshot, so a same-named save in `build/save` cannot silently replace the reviewed starting state. A generated copy is used only if the retained snapshot is missing. Your own saves go into `build/save` and can be selected by name or path. The [original390 save](../../../../src/tests/fixtures/haulage/planning/underground-demo-390.sav) and [repaired393 checkpoint](../../../../src/tests/fixtures/haulage/planning/underground-demo-tbm-ui-393.sav) are preserved.
-
-The game starts **paused**. Before experimenting, use **Save game** to make your own copy, for example `underground-mines-my-run`. This preserves the original demo for another tour. Existing saves can be reopened by name: `.\play.ps1 underground-mines-my-run`.
-
-## Get your bearings
-
-Choose how much of the journey to play. All current checkpoints follow the **same machine and world** and start paused:
-
-| Command | Starting point | First action |
+| Command | What is ready | What to do |
 | --- | --- | --- |
-| `.\play.ps1 demo` | 0/50 cuts, accepted work and ready hauler | Open Projects, then unpause. `underground-mines` and `tbm-work` are aliases for this same checkpoint. |
-| `.\play.ps1 tbm-plan` | Earlier44-cell job with stopped trains | Choose Extend work (Pause and extend if running), select Straight tunnel, and preview up to six more cells. |
-| `.\play.ps1 tbm-exit` | All50 cells cut; entire cutter stopped clear of the exit site | Build B from Underground, then choose its hangar and park the machine. |
-| `.\play.ps1 tbm-tunnel` | Completed public A-to-B route; original cutter parked at B | Unpause and follow Train#1 through both portals. Train#2 is retained in B's magazine. |
-| `.\play.ps1 underground-mines-legacy` | Preserved older bent-route demo | Compare the repaired interface and original saved geology on your older world. |
+| `.\play.ps1 demo` | Finite Coal mine, mineral train, connected rail portal and Surface receiver; one actual delivery has already succeeded | Select Underground, inspect the mine/station, then unpause and follow the next load. `mine-haulage` is an alias. |
+| `.\play.ps1 mine-build` | Earlier state of that same mine route, with paid machinery still under construction | Select Underground at(8,9), unpause and watch completion, extraction and the first full load. |
+| `.\play.ps1 tbm-work` | Original50-cell TBM job at0/50 cuts, accepted work and enabled spoil hauler | Open Underground Construction -> Projects, open the machine and unpause. |
+| `.\play.ps1 tbm-plan` | Earlier44-cell job with stopped trains | Pause and extend the existing job with a straight endpoint up to six cells farther ahead. |
+| `.\play.ps1 tbm-exit` | All50 cells cut; whole cutter stopped clear of the far exit | Build exit B at Underground(13,60), park the same machine there and release the route. |
+| `.\play.ps1 tbm-tunnel` | Completed public A-to-B tunnel; original TBM parked at B | Follow Train#1 through both connected portals; Train#2 remains stored at B. |
+| `.\play.ps1 collector-build` | Paid Deep collector at construction stage1, with its actual construction materials already received | Choose Deep Underground; inspect machinery around(51,34), then unpause to watch the remaining stages. |
+| `.\play.ps1 collector-ready` | Same collector complete at its natural vent | Choose Deep Underground around(51,34); inspect its actual new machinery and status glass. |
+| `.\play.ps1 underground-mines-legacy` | Preserved older bent-route checkpoint | Compare the original saved geology and repaired TBM controls. |
 
-The completed tunnel has released its excavation project; find its parked machine through the train list. The planning/work/exit checkpoints still have a project in **Projects**. Exact native evidence is in [the final checkpoint](tbm-fixes/r2tbmf-zb-final-notes.md).
+The eight refreshed snapshots and their source/build identities are recorded in [the checkpoint manifest](../../../../src/tests/fixtures/demos/underground/demo-checkpoints.json). They use current native format403. Original390/393/399 inputs remain preserved. The mine checkpoints extend the completed-tunnel world; the collector checkpoints are a separate compact review world.
 
-1. Use the main toolbar's **layer selector**, or **N**, to switch between Surface and Underground. Surface has the hauling infrastructure; Underground has the excavation. Deep Underground is a separate layer, with access gated until **1 January 1980** in the game calendar.
-2. Open **Underground Construction -> Projects**, select the project for **Train#2**, and choose **Open machine**. Its vehicle window's centre-view control finds the actual cutter, including while it is at the Surface magazine. **Train#1** is its automatic hauler.
-3. Choose **Portal controls** from Projects. The portal window shows **Next:** guidance, waits and controls. **Machine** opens the cutter's vehicle window; use that to follow its progress.
-4. Unpause the game and watch a complete cycle. You can pause the whole game to inspect it, or use the project's **Pause / Resume** controls to hold the excavation while the rest of the world runs.
+**Prepared conditions:** the mine workshop has explicitly prepared excavated floor. Mine machinery, locomotive, wagon, stations, portal and Surface receiver were bought through native commands; coal comes only from the original natural deposit. The live preparation run reduced its reserve from20,000 to19,856 tonnes and earned delivery income. The collector world has prepared floor and fixture-delivered construction materials; its native capital/work/material receipt and rendered stages are real. These starting conditions shorten the tour. A transported first geothermal plant build remains pending.
 
-While viewing Underground, the main toolbar button that opens airport construction on Surface becomes a **TBM icon** for **Underground Construction**. Its compact palette contains **Survey**, **Projects**, **New area** and **Fund a mine**. **Projects** opens the actual owned jobs on this layer, with phase, progress and hold reason; select a footprint, centre the map, open its machine or open the portal controls. **Requirements and cutter dates** expands optional guidance. Escape clears the active tool and footprint.
+## Completed features you can demonstrate
 
-The default checkpoint starts before the first of50 accepted cuts. Its project and both trains are already enabled, so only the global game pause needs releasing. Use the toolbar's fast-forward control if you want to shorten the wait. The separate `tbm-exit` checkpoint skips directly to the far-exit work. If anything waits, read the portal's reason before changing the layout; the recovery table in [the full how-to](r2mlvs-how-to.md#if-something-goes-wrong) explains the supported remedies.
+These are delivered scopes, rather than completion of the entire master or graphics profile.
 
-For the planning demo, select **Extend work** (or **Pause and extend** if running), choose **Straight tunnel**, then click an endpoint ahead of the accepted route. Six extra cells reach Underground(13,60); review the numbered path, added floor, working space, cost and spoil before confirming. Try cancelling and quoting again first. After **Add work to this machine**, resume the project, start both trains if stopped, and unpause the game. The default50-cell demo already includes this extension and ends near the map boundary.
+| Completed feature | Where to see it |
+| --- | --- |
+| Layer switching and separate Surface/Underground/Deep world state | Every checkpoint. Deep access/operation is gated until1 January1980; use the selector to choose the intended layer. |
+| Surveyed material deposits, saved regional hardness and finite reserves | Mine tour and Underground Construction -> Survey. Soft/Mixed/Hard/Basalt affect excavation; surveying creates no cargo. |
+| Paid TBM commissioning, actual machinery/support wagons and a saved excavation project | `tbm-work`, Projects and its portal controls. |
+| Straight/area excavation preview and extending the same machine's accepted work | `tbm-plan`; numbered cutter positions, extra working floor, spoil, time and cost appear before confirmation. |
+| Paid cuts, protected temporary support, actual Earth/Rock cargo and the repeated Surface disposal/empty-return loop | Unpause `tbm-work` and follow both trains. |
+| Pause/resume, return/park, selected hangar, safe release and paid permanent-track conversion | Projects/portal controls; `tbm-exit` provides the far-exit handover. |
+| Connected cross-layer public rail and ordinary freight after safe TBM withdrawal | `tbm-tunnel` and the new coal shuttle in `demo`. |
+| Ten resource-specific native mine definitions, matching-seam funding and finite extraction | The prepared Coal mine; try another properly excavated site using the instructions below. Seven selected mine artwork families have completed source art, with final packing still pending. |
+| Conventional locomotive, mineral/sealed wagons and open/sealed road freight capability with cargo/date/layer checks | The coal shuttle demonstrates locomotive/mineral-wagon movement, loading and unloading. Other carriers can be purchased/refitted in compatible owned depots. |
+| Native Surface metal refinery, chemical, battery and electronics recipes with real input/output stock | Fund compatible Surface sites and deliver their required cargo. The default Coal route uses the original power-station coal receiver, rather than one of these processing chains. |
+| Actual paid/material-built Deep collector, native construction stages and completed game graphics | `collector-build` and `collector-ready`; construction advances through its actual labour owner. |
+| Current-format save/reload for the demo's natural resources, jobs, vehicles, cargo, industry and utility owners | Save your run mid-action and reopen it; the prepared checkpoints also passed ordinary load/resave checks. |
 
-## The things I am particularly keen for you to see
+Further completed foundations include paid external electrical service for prototype tubes, bounded native Heat routing/allocation, paid portal-bound electrical riser construction/links and shared energy lineage. Their focused native tests establish those boundaries. Normal tube/geothermal construction tools, the complete tube fleet/terminals and an operating transported-input geothermal powerhouse still need their later master integrations; this tour does not provide those unfinished player flows.
 
-- **The full spoil loop.** Watch the cutter fill its actual Earth/Rock wagons, retreat, exchange with the hauler, and resume. Then follow the hauler to the Surface receivers and back with empties. The moving cargo and wagons are the actual game objects, and disposal costs money.
-- **Excavation that earns its floor.** Compare solid rock, cut faces and the open cavity. Ordinary rail should refuse solid terrain and become possible where the TBM has paid to excavate. Temporary support stays protected while the machine still needs it.
-- **A machine that has to fit.** The default demo follows its accepted straight route and backs along support for exchange. Use `underground-mines-legacy` to inspect the retained bends. A right-angle change needs advancing bends and enough space; the machine cannot simply spin on one tile to reach any requested area.
-- **A useful excavation preview.** Once you have an eligible sealed portal for another project, open **Underground Construction -> New area**, click that layer's portal and drag a floor area. Inspect the requested floor, extra turning clearance, uncovered cells, spoil, support and cost estimates before confirming. Previewing alone should spend nothing. A portal that already has a project directs you to **Projects**; select **Pause and extend**, drag additional floor beyond its accepted route, review the machine and quote, then **Add work to this machine**. The work-intent dropdown also offers **Straight tunnel**: click an endpoint directly ahead of the accepted route. Numbered map labels show successive cutter positions; blue cells show charged extra working space. Review the quoted cutting time and spoil before confirming. Resume in the portal controls. Escape cancels the draft and leaves the machine paused; it does not discard previous work or buy another TBM.
-- **Readable geology.** Open **Underground Construction -> Survey** and compare the displayed Soft, Mixed, Hard or Basalt hardness with the floor and rock-face texture. New maps have saved material regions; your old demo retains its original geological difficulty. Mineral markers and reserves remain separate. Surveying spends nothing and produces no cargo.
-- **Recovery you can understand.** Try pausing/resuming the project and saving/reloading your personal copy during a wait. The cutter, loaded wagons, open floor and progress should agree with what you saved. I would especially like to know whether the **Next:** text helps you understand what to do.
+## Tour the mine and conventional freight
 
-The straight-corridor shortcut in the portal window accepts **2 to 60 cells**. The area tool handles larger reachable plans, subject to map space and the planner's limits. A large rectangle is a request to plan, not a promise that the machinery can safely clear every tile.
+The `demo` checkpoint starts immediately after a successful delivered load, so the train may initially be on Surface. Use the **loading station's train list** or the company's train list to open its vehicle window. Its centre-view control follows the actual train across layers; its orders identify the mine loading stop and Surface unloading stop.
 
-Cutting takes twice the former active time. Each newly cleared cell produces whole tonnes of Earth/Rock: Soft **3/6**, Mixed **2/12**, Hard **1/20**, Basalt **1/24**. Basalt keeps its minimum one tonne of Earth. Travel speed and support/disposal prices are unchanged; haulage and other waits still affect the time you observe.
+Compare the mine's output, waiting station cargo, wagon load and remaining reserve over several journeys. Cargo should move through those owners; reloading should preserve it. The Surface station must continue accepting Coal for delivery income. Keep the powered locomotive and compatible mineral wagon together, retain both station orders and leave the portal connected.
 
-## Return, keep the machine and build the far exit
+Use `mine-build` to see the beginning instead. The route and train are enabled already; release the global pause and allow actual machinery construction to finish before expecting ore. Mine and freight presentation currently includes existing substitute graphics. The recently authored selected mine/wagon/station models still await their packing/runtime milestone.
 
-**Pause** holds work in place. **Return and park** preserves it for later. **Choose hangar** selects compatible owned storage, including another eligible portal; the same native train travels there after any necessary spoil delivery. Ordinary service orders safely interrupt cutting and retain progress. **Finish/cancel and release** ends the project after the complete machine and logistics are safely clear. Read its blocking reason if the action is unavailable.
+The completed old A-to-B tunnel also remains in this mine world: A is at(13,10), B at(13,60), and its original TBM is stored at B. The dedicated Coal portal at(12,12) is separate from that route. Nothing in the Coal tour requires selling or replacing the retained TBM.
 
-To make an A-to-B connection, finish the accepted terminal excavation, then back the whole cutter a few cells clear of B's intended footprint and stop it. On Underground, open rail portal construction, select Surface and review both endpoints, orientation, approach and price. The reciprocal Surface-to-Underground placement works too. The command permits only the safe, vacated terminal handover; it cannot remove occupied support or excavate free rock.
+## Tour excavation and the spoil loop
 
-In **tbm-exit**, the excavation and local withdrawal are already done. The exit site is Underground(13,60), at the completed tunnel end; A is at(13,10). Leave the cutter stopped while placing B, and choose the mouth orientation that joins the retained approach. The picker previews both endpoint footprints and explains a wrong orientation. Then follow the remaining steps below and unpause for actual train travel.
+Open `.\play.ps1 tbm-work`, select Underground, then:
 
-Build B, use **Connect** when its real approaches permit it, then choose B as the TBM's hangar and **Return and park**. Let its actual hauler settle remaining spoil through the assigned origin. Once the whole machine is stored and the release guidance allows it, **Finish/cancel and release**, pay to **Make track permanent** where needed, and **Connect** A. Ordinary trains can then use the tunnel while the TBM remains stored at B. Neither selling it nor purchasing a replacement is part of this sequence.
+1. Open **Underground Construction -> Projects** and select the project for **Train#2**. **Open machine** opens the actual cutter; its centre-view control follows it even while it is in the Surface magazine. **Train#1** is the spoil hauler.
+2. Choose **Portal controls**. Read **Next:** and the current wait reason before changing the layout.
+3. Unpause and watch cutting, retreat, wagon exchange, Surface disposal and empty return. The accepted project and both trains are already enabled. Fast-forward shortens the wait.
+4. Pause the project independently of the whole game, resume it, then save/reload your own copy during a wait. Compare the physical wagons, floor and project progress.
 
-## Try an underground mine
+On Underground, the main toolbar's airport-construction position becomes the **TBM icon** for **Underground Construction**. Its palette contains **Survey**, **Projects**, **New area** and **Fund a mine**. **Requirements and cutter dates** expands optional guidance; Escape clears the active draft/footprint.
 
-For a first attempt, Coal or Iron Ore gives you a familiar Surface receiver. Copper Ore, Bauxite and Salt are also Underground resources. Deep Underground adds Lithium Ore, Nickel Ore, Cobalt Ore, Rare Earth concentrate and Uranium Ore after its date gate.
+For `tbm-plan`, choose **Extend work** or **Pause and extend**, then **Straight tunnel** and an endpoint directly ahead. Six more cells reach Underground(13,60). Review the numbered route, charged working space, cost, cutting time and spoil before **Add work to this machine**. Start both trains if stopped, resume the project and unpause. Cancelling the draft leaves earlier accepted work intact and buys no second TBM.
 
-1. **Survey a matching deposit.** Decide which resource you want to mine, and find its seam on the intended layer.
-2. **Excavate a real site.** A mine needs its **3 x 3 machinery footprint** plus an adjoining **2 x 2 loading approach** already excavated. A narrow railway corridor is not automatically wide enough. Finish or use an appropriate TBM project, withdraw safely, and release/remove temporary support from the machinery cells so they are clear, flat floor.
-3. **Fund the matching mine.** In Underground Construction, choose **Fund a mine**, select the resource's mine and click its matching deposit. Funding rechecks the whole site, seam contact, claim, date and funds. A refusal should tell you what prevents placement; the mine cannot dig its own foundation for free.
-4. **Give it a freight route.** Build an ordinary station in the mine's catchment and compatible track/depot on excavated ground. Buy conventional freight equipment compatible with that cargo, with orders to collect at the mine and unload at its Surface receiver. Mineral wagons carry compatible ores; hazardous Uranium needs a compatible sealed carrier.
-5. **Connect the layers safely.** An active TBM work pocket is reserved for its operation. Use **Return and park**, settle spoil, then **Finish/cancel and release**. Pay for necessary support conversion and **Connect** the portal. Keep the same machine for reuse. The [full how-to](r2mlvs-how-to.md#9-finish-and-open-the-tunnel) has the sequence.
-6. **Watch extraction and delivery.** Look for actual mine output, station cargo and vehicle loading. The geological reserve should decrease as ore is extracted. Save and reload your copy to check that reserve, cargo and the route remain consistent.
+For an area preview, use an eligible sealed portal with no active project, choose **New area** and drag the requested floor. A portal with existing work directs you to **Projects** and the extension flow. Blue cells show charged extra working space; requested rectangles still need a physically reachable machine plan. The straight-corridor shortcut accepts2?60 cells; larger area plans have separate bounded planner limits.
 
-On Surface, the material chain includes the original Steel receiver plus metal refinery, chemical, battery and electronics works. Mines require matching resources and unlocked dates; Surface processors require transported inputs. There is still selected industry/freight art to finish, so some new facilities or vehicles can reuse existing graphics at this checkpoint.
+Look for these details:
 
-## What to tell me afterwards
+- Newly open floor must be earned before ordinary rail can use solid rock. Occupied temporary support remains protected.
+- The cutter advances/backtracks with its whole consist; it cannot spin on one tile. Use the legacy bent route to inspect legal advancing bends.
+- Soft/Mixed/Hard/Basalt cut yields are respectively Earth/Rock3/6,2/12,1/20 and1/24 tonnes. Cutting takes twice the former active time; travel and haulage waits remain separate.
+- Surface disposal charges money. Pausing or reloading should not remove loaded spoil or buy free cuts.
 
-The most useful feedback is concrete: what you clicked, what happened and what you expected. Please include your saved copy's name if something gets stuck.
+## Build the far exit and retain the TBM
 
-- Could you find the demo, cutter, portal and correct layer without hunting?
-- Did the excavation and exchange loop run, and were waiting reasons understandable?
-- Did the terrain, wagons, cutter motion and sounds communicate what was happening?
-- Was the area preview useful enough to judge space and cost before commissioning?
-- Could you survey and fund a mine on a properly cleared site, then move its ore with conventional freight?
-- Did pause/resume and reload preserve the state you expected?
-- Are the cutting pace and rock textures readable, and can you build B, park the same machine and release the tunnel without selling it?
+`tbm-exit` skips the cutting wait. All50 cuts are complete and the whole machine is stopped clear of **Underground(13,60)**. A remains at(13,10).
 
-## Tubes and geothermal at this checkpoint
+1. Leave the cutter stopped. From Underground rail portal construction, choose Surface and preview B at(13,60). Select the mouth orientation that joins the retained approach; inspect both endpoint footprints and the price.
+2. Build B and **Connect** it when its actual approaches permit.
+3. Choose B as the machine's hangar, then **Return and park**. Let the original hauler settle remaining spoil through its assigned origin.
+4. Once the whole machine is stored and release guidance allows it, **Finish/cancel and release** the project.
+5. Pay to **Make track permanent** where needed, then **Connect** A. The stored TBM remains available for later use.
 
-Tube and geothermal work have separate delivery and acceptance records in [the master plan](r2mlvs3mp-master-plan.md), which remains paused during TBM finalization. Use those records for their current status. This walkthrough and its retained checkpoints cover excavation, spoil haulage and conventional public rail.
+`.\play.ps1 tbm-tunnel` starts after this sequence, with an ordinary train already running between both ends. The released project is no longer in Projects; find the parked machine through the train list. **Pause** holds current work, **Return and park** preserves it for later, and **Finish/cancel and release** ends it safely. The [full how-to](r2mlvs-how-to.md#if-something-goes-wrong) explains recovery reasons.
+
+## Tour the newly delivered Deep collector
+
+```powershell
+.\play.ps1 collector-build
+# Or skip to the completed machinery:
+.\play.ps1 collector-ready
+```
+
+Choose **Deep Underground** in the layer selector. The collector occupies the area around **(51,34)**; its machinery anchor is(50,33). If necessary, open the industry list and centre on the collector.
+
+In `collector-build`, inspect the incomplete hardware before unpausing. All actual recipe inputs have already been received and committed, and74 of296 native labour ticks are complete. Unpause to watch the remaining paid construction stages and completed apparatus. Pause again to compare the construction silhouette and status glass. `collector-ready` provides the complete state immediately.
+
+This is the newly packed collector artwork in the real game, rather than a source-art contact sheet. Its natural vent/claim and bounded Heat accounting are implemented. An operating powerhouse, useful geothermal electrical export, normal geothermal toolbar and transported first-plant supply tour are still pending. Do not expect this collector-only world to power a finished factory/tube system.
+
+## Try another mine or material chain
+
+Underground resources are **Coal, Iron Ore, Copper Ore, Bauxite and Salt**. Deep resources are **Lithium Ore, Nickel Ore, Cobalt Ore, Rare Earth concentrate and Uranium Ore**, after the1980 gate. A geothermal vent is a separate renewable heat source.
+
+1. **Survey a matching seam** on the intended layer.
+2. **Excavate a real site** with the TBM: a mine needs3x3 machinery cells and an adjoining2x2 loading approach. The narrow50-cell corridor alone is insufficient. Withdraw safely and release/remove temporary support from the machinery footprint.
+3. **Fund the matching mine** from Underground Construction -> Fund a mine. Funding rechecks floor, seam, exclusive claim, date, owner and money; it cannot excavate its own foundation.
+4. **Build compatible freight infrastructure** on open floor. Connect an ordinary station/depot/route to a genuine receiver, preserving portal approaches and machinery loading access.
+5. **Buy/refit compatible vehicles** and assign collection/unloading orders. Ordinary mineral wagons cover compatible ores; Uranium requires a sealed carrier. Follow the date/layer/cargo refusals rather than changing a vehicle's meaning through appearance.
+6. **Watch reserve, stock and cargo**, then save/reload during loading or travel. On Surface, try supplying the implemented refinery/chemical/battery/electronics recipes with actual transported inputs.
+
+## Latest work that is complete as source art
+
+The interrupted **chemical works40C** task is now complete: genuine unfinished/finishing apparatus plus original status components supply all512 required parts; the completed model stays unchanged. The [source review](../../../../logs/proofs/mlm/native-art/ground/chemical-works-source-review.png) and [construction comparison](../../../../logs/proofs/mlm/native-art/ground/chemical-works-source-construction-cells.png) show that finished source work.
+
+Other completed selected source families include the ordinary/sealed mineral wagons, open/sealed mine trucks, conventional station/terminal, seven selected mines, metal refinery, Vent-Tap/Magma-Loop generators, utility conduits/riser and tube/geothermal control icons. **Those sources still need the later packing/native-display checkpoint.** Battery and electronics source families remain next in the selected queue. No completion box was added for unfinished game integration.
+
+## Verification and feedback
+
+The preparation helper loads the old TBM worlds and new native mine/collector scenes through the ordinary rebuilt game, pauses them and independently reloads each saved result. Current-format resource/project/cargo owners remain exact. Old399 TBM files migrate only their empty utility schema to403 while retaining original epoch/IDs/quantities. Graphical checks cover the mine and both collector stages; collector machinery matches exact native pixels. Additional loaded-world continuation passes in both Debug and RelWithDebInfo: the Coal shuttle returns empty and earns another delivery while reserves fall19,856->19,797; the partial collector advances74->296 labour ticks without added materials. [Verification receipt](../../../../logs/underground-demo-verification.json) records current results and identities. These automated checks leave your personal playtest open.
+
+Please note the checkpoint and your personal save name if anything gets stuck. Useful feedback is whether you could find the correct layer, follow actual mine output and freight, understand a wait/refusal, extend the TBM plan, build B without discarding the machine, see the collector's construction changes, and save/reload without losing progress or cargo.

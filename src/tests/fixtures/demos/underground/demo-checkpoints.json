@@ -1,0 +1,607 @@
+{
+  "owner": "docs/zz-reach2/upgrades/2026-10/d2um-underground-mines.md",
+  "date": "2026-10-12",
+  "source_commit": "0840083c4054",
+  "game": {
+    "path": "build/RelWithDebInfo/openttd.exe",
+    "sha256": "bc95a371b1c09c56c8d4ffcdcd0d745a1b90c65c3b114f3d592dc7a04dac2a06"
+  },
+  "native_inputs": {
+    "path": "mlm/reviews/acceptance/underground-demo/20261012-071706-2e0fcad4bf/reports/native-inputs.json",
+    "sha256": "5750d143a2215e7a2f8b48c23eb38c7491cec7dd9c2df20fed27dee2b0f0c759"
+  },
+  "mine_proof": {
+    "mine_x": "8",
+    "mine_y": "9",
+    "centre": "4680",
+    "train": "11",
+    "loading": "2",
+    "unloading": "3",
+    "reserve_before": "20000",
+    "reserve_after": "19856",
+    "profit": "26380",
+    "ticks": "6532",
+    "fixture_floor": "true",
+    "fixture_cargo": "false"
+  },
+  "mine_fixture_floor": true,
+  "mine_fixture_cargo": false,
+  "collector_fixture_floor": true,
+  "collector_fixture_materials": true,
+  "transported_first_plant_bootstrap": false,
+  "user_playtest": "pending",
+  "checkpoints": [
+    {
+      "name": "tbm-work",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/tbm-work-403.sav",
+        "sha256": "060a81a3fe4dd1c54245f67d1f800c918257f47c797ab54dbb70d20789333137"
+      },
+      "layer": "Underground",
+      "x": 13,
+      "y": 10,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "src/tests/fixtures/haulage/planning/underground-demo-tbm-399.sav",
+          "sha256": "1669002c38dc808e17bb5d2436fc39eb5cc4dbc3d3576f85dc893ca46bdfd41f"
+        },
+        "source_version": 399,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW"
+        ],
+        "verified_empty_utility_schema_migration": [
+          "UPLD",
+          "UPLH"
+        ],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-work.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/tbm-work.sav",
+          "sha256": "060a81a3fe4dd1c54245f67d1f800c918257f47c797ab54dbb70d20789333137"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-work-reloaded.log"
+      }
+    },
+    {
+      "name": "tbm-plan",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/tbm-plan-403.sav",
+        "sha256": "44b930f034a79359d71d920d233b2ceb25addface452f0c4ed01f8245b00d895"
+      },
+      "layer": "Underground",
+      "x": 13,
+      "y": 10,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "src/tests/fixtures/haulage/planning/underground-demo-planning-399.sav",
+          "sha256": "b8b3ccba313225f213ef323cdaf54eb01d1f2cc1584d97704c0bea3a1ad62565"
+        },
+        "source_version": 399,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW"
+        ],
+        "verified_empty_utility_schema_migration": [
+          "UPLD",
+          "UPLH"
+        ],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-plan.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/tbm-plan.sav",
+          "sha256": "44b930f034a79359d71d920d233b2ceb25addface452f0c4ed01f8245b00d895"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-plan-reloaded.log"
+      }
+    },
+    {
+      "name": "tbm-exit",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/tbm-exit-403.sav",
+        "sha256": "1f9e844c002b0c21ba20fc5aa0f0730b2fae24b284619a1f9250d549521c0ae6"
+      },
+      "layer": "Underground",
+      "x": 13,
+      "y": 60,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "src/tests/fixtures/haulage/far-exit/underground-demo-exit-399.sav",
+          "sha256": "e742b9901b25503f8ce2dedc77e233a205d5df5b726c9950adf8b3a71d609168"
+        },
+        "source_version": 399,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW"
+        ],
+        "verified_empty_utility_schema_migration": [
+          "UPLD",
+          "UPLH"
+        ],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-exit.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/tbm-exit.sav",
+          "sha256": "1f9e844c002b0c21ba20fc5aa0f0730b2fae24b284619a1f9250d549521c0ae6"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-exit-reloaded.log"
+      }
+    },
+    {
+      "name": "tbm-tunnel",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/tbm-tunnel-403.sav",
+        "sha256": "be48cfd3391d13858f17f512dce4fe35c7eafeeda1aa9f0f1845dd61da55e56c"
+      },
+      "layer": "Underground",
+      "x": 13,
+      "y": 35,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "src/tests/fixtures/haulage/far-exit/underground-demo-tunnel-399.sav",
+          "sha256": "3626b195b6c9c78ffc5796f197ae40621e03304e04df59d5d6f64140ca563a60"
+        },
+        "source_version": 399,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW"
+        ],
+        "verified_empty_utility_schema_migration": [
+          "UPLD",
+          "UPLH"
+        ],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-tunnel.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/tbm-tunnel.sav",
+          "sha256": "be48cfd3391d13858f17f512dce4fe35c7eafeeda1aa9f0f1845dd61da55e56c"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/tbm-tunnel-reloaded.log"
+      }
+    },
+    {
+      "name": "mine-build",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/mine-build-403.sav",
+        "sha256": "6bd6e95e30176908bf2e87fabfbe54864df0d253b550bcd237720220c1625de9"
+      },
+      "layer": "Underground",
+      "x": 8,
+      "y": 9,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "mlm/reviews/mines/underground-demo/20261012-071706-2e0fcad4bf/saves/underground-mine-construction.sav",
+          "sha256": "6bd6e95e30176908bf2e87fabfbe54864df0d253b550bcd237720220c1625de9"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/mine-build.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/mine-build.sav",
+          "sha256": "6bd6e95e30176908bf2e87fabfbe54864df0d253b550bcd237720220c1625de9"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/mine-build-reloaded.log"
+      }
+    },
+    {
+      "name": "mine-haulage",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/mine-haulage-403.sav",
+        "sha256": "04b90a26658bc08dbd15ed43cefd0c5ad6de00d26f5a4fd7846e6467a35abcee"
+      },
+      "layer": "Underground",
+      "x": 8,
+      "y": 9,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "mlm/reviews/mines/underground-demo/20261012-071706-2e0fcad4bf/saves/underground-mine-haulage.sav",
+          "sha256": "04b90a26658bc08dbd15ed43cefd0c5ad6de00d26f5a4fd7846e6467a35abcee"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/mine-haulage.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/mine-haulage.sav",
+          "sha256": "04b90a26658bc08dbd15ed43cefd0c5ad6de00d26f5a4fd7846e6467a35abcee"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/mine-haulage-reloaded.log"
+      }
+    },
+    {
+      "name": "collector-build",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/collector-build-403.sav",
+        "sha256": "4a39813ea326c4a337d889bda8c78648dd0479b26f3735c9e581e10706b1b9e9"
+      },
+      "layer": "Deep Underground",
+      "x": 51,
+      "y": 34,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "mlm/reviews/geothermal/collector-art/20261012-071706-2e0fcad4bf/saves/collector-construction-1.sav",
+          "sha256": "0a989fd497fe62f917406aec755401a042081a0452a2dc05f4741eabd8f180c6"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/collector-build.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/collector-build.sav",
+          "sha256": "4a39813ea326c4a337d889bda8c78648dd0479b26f3735c9e581e10706b1b9e9"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/collector-build-reloaded.log"
+      }
+    },
+    {
+      "name": "collector-ready",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/underground/collector-ready-403.sav",
+        "sha256": "d2b90543f1563a9089c497590bdf113421ad83e2d2657f80758c88746f5b412e"
+      },
+      "layer": "Deep Underground",
+      "x": 51,
+      "y": 34,
+      "paused": true,
+      "ordinary_load": {
+        "source": {
+          "path": "mlm/reviews/geothermal/collector-art/20261012-071706-2e0fcad4bf/saves/collector-ready.sav",
+          "sha256": "7e8372dcca9093d2f17505e343d67bc96f3b0571eec8af47c07a5aecd3af36b5"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/collector-ready.log"
+      },
+      "ordinary_reload": {
+        "source": {
+          "path": "mlm/reviews/acceptance/underground-demo/20261012-071959-c70e0ece46/saves/collector-ready.sav",
+          "sha256": "d2b90543f1563a9089c497590bdf113421ad83e2d2657f80758c88746f5b412e"
+        },
+        "source_version": 403,
+        "version": 403,
+        "unchanged_owner_chunks": [
+          "GCBD",
+          "GCBH",
+          "GCSD",
+          "GCSH",
+          "GEOS",
+          "GVNT",
+          "INDY",
+          "LMNH",
+          "LMNR",
+          "TBMH",
+          "TBMP",
+          "TBMS",
+          "TBXA",
+          "TBXH",
+          "TBXS",
+          "TBXW",
+          "UPLD",
+          "UPLH"
+        ],
+        "verified_empty_utility_schema_migration": [],
+        "log": "logs/acceptance/underground-demo/20261012-071959-c70e0ece46/collector-ready-reloaded.log"
+      }
+    }
+  ]
+}

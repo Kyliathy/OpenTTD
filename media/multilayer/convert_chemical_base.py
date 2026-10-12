@@ -219,13 +219,22 @@ def validate_public_base(public, report):
             or authoring.get("base_native_atlas") != report.get("base_native_atlas")
             or authoring.get("base_native_sha256") != report.get("base_native_sha256")
             or authoring.get("base_atlas_manifest") != MANIFEST.relative_to(ROOT).as_posix()
-            or authoring.get("coverage_complete") is not False or authoring.get("runtime_activated") is not False
+            or authoring.get("runtime_activated") is not False
             or public["packed"]["offset"] is not None or public["packed"]["sha256"] is not None):
         raise ValueError("chemical completed base/public source binding or activation changed")
     if mine.base.digest(mine.base.repository_path(public["source"]["path"])) != public["source"].get("sha256"):
         raise ValueError("chemical public immutable original changed")
     if mine.base.digest(mine.base.repository_path(report["base_native_atlas"])) != report["base_native_sha256"]:
         raise ValueError("chemical public live completed base atlas changed")
+    if authoring.get("coverage_complete") is True:
+        import convert_chemical_states as states
+        try:
+            full_report = json.loads(states.MANIFEST.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as error:
+            raise ValueError("chemical later full source lacks its live512-slot handoff") from error
+        states.validate_public_source(public, full_report)
+    elif authoring.get("coverage_complete") is not False:
+        raise ValueError("chemical public source coverage is not an explicit owner claim")
 
 
 def publish_base(record, document, report):

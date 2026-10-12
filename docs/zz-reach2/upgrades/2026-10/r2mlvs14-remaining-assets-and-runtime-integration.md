@@ -4,7 +4,7 @@ Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). Dispatch: 
 
 Split,2026-10-10: this continuation owns all169 previously unchecked tasks. Original task/group IDs remain stable, including mixed55.3 and79C.3-79C.4. Completed tasks and evidence remain in Plan13. Existing persistence, acceptance, tube and geothermal Plans14-17 are now15-18. This reorganization grants no implementation or art acceptance.
 
-**Collector Group79C is complete under master10.4B; Vent-Tap55.3/55B and Magma-Loop56 source are complete. Current dispatch is master10.4C / selected Group40C chemical works construction/operating source (base40B complete; Metal39/39C/39D full512 source complete) after native39B (all seven selected mine sources complete: Rare35/Cobalt34/Lithium32/Salt31/Copper29/Iron28/Coal27 and geometry27B verified; terminal/station source complete); all selected ordinary/sealed wagon and open/sealed road sources20-22 are complete; Group19 locomotive reuse, related78C and Group60 utilities/risers are complete.** Both collector native configurations, actual loaded pixels, scoped selection/construction/Heat checks and ordinary-game construction/completion display pass. Keep the master's selected-family scope and ordering; later-family and whole-profile obligations remain intact.
+**Collector Group79C/master10.4B and chemical works40C source are complete. The user requested an underground demo before continuing the selected source queue. Next implementation is Group41 battery works under master10.4C.** Vent-Tap55.3/55B, Magma-Loop56, utilities/risers60, controls78C, selected fleet19-22, station/terminal24-25, all seven selected mines and Metal39/39C/39D retain their completed source evidence. Collector native loading and ordinary-game display are delivered; later source families still require master10.4D packing/runtime integration.
 
 ## Global Mandatory Reading
 
@@ -690,7 +690,7 @@ Selected source dispatch resumed,2026-10-12, after complete Metal39D. The histor
 {{HARD}}
 - [X] 40.1 For chemical works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
 - [X] 40.2 Produce the required directions/rotations for chemical works from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 40.3 Add construction/working/full/idle states for chemical works, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 40.3 Add construction/working/full/idle states for chemical works, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 
 ### Group 40B - Select the genuine completed chemical works base
@@ -711,10 +711,12 @@ Read Global/Source generation Area, completed40B's physical model/original regis
 ### Group 40C - Complete genuine chemical works construction and operating source
 
 {{HARD}}
-- [ ] 40C.1 Author/select matching genuine construction stages for new chemical apparatus and bind compatible individual foundation/unfinished originals through explicit stage/geometry ancestry.
-- [ ] 40C.2 Assemble derived ready/working/full-or-paused original status cues without changing apparatus/floor or introducing stock/work authority; preserve actual native per-tile construction and phase aliases.
-- [ ] 40C.3 Publish/review complete512-slot chemical works source and pass focused provenance/coverage/refusal/preservation checks; mark original40.3 only after full source proof. Native packing/display remain10.4D.
+- [X] 40C.1 Author/select matching genuine construction stages for new chemical apparatus and bind compatible individual foundation/unfinished originals through explicit stage/geometry ancestry.
+- [X] 40C.2 Assemble derived ready/working/full-or-paused original status cues without changing apparatus/floor or introducing stock/work authority; preserve actual native per-tile construction and phase aliases.
+- [X] 40C.3 Publish/review complete512-slot chemical works source and pass focused provenance/coverage/refusal/preservation checks; mark original40.3 only after full source proof. Native packing/display remain10.4D.
 
+
+Group40C closure,2026-10-12: all three staged tasks and original40.3 areX. The interrupted commit retained13/14 new construction cells; one built-in ImageGen edit completes the finishing filter press with six installed plates and its final handwheel absent. Fourteen genuine new stage components, twelve exact individual same-stage donor mappings, local aliases8->5/10->3 and original M1 foundation/hut/glass supply all512 nonempty source parts at2048x1024. Completed32-part base pixels remain exact; working changes only the existing3x3 glass fitting through four original phases; ready/blocked retain static0 aliases. All17 focused chemical base/state cases pass in27.245s, including corrupt ancestry/stage/coverage/payload refusals and preservation of499 prior artifacts,144 other public rows, the complete Metal family and completed candidates. [Source receipt](../../../../logs/graphics/chemical-works/20261012-states-01/verification.json) retains prompt/reference/cache/raw identities and reviewed source outputs. The earlier diagnostic run exposed an unchanged test mutation; the corrected foreign-family refusal and final burst pass. Source closure preceded the separately requested demo rebuild. Packed ranges/runtime remain absent. At the user's request, prepare [the underground demo](d2um-underground-mines.md) next; resume selected Group41 afterwards. No further source family is dispatched by this demo request.
 
 ### Group 41 - Author Surface battery works
 
