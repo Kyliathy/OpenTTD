@@ -38,7 +38,7 @@
 {
 	EnforceDeityOrCompanyModeValid(false);
 	const Vehicle *v = ::Vehicle::GetIfValid(vehicle_id);
-	return v != nullptr && IsCompanyBuildableVehicleType(v) && (v->owner == ScriptObject::GetCompany() || ScriptCompanyMode::IsDeity()) && (v->IsPrimaryVehicle() || (v->type == ::VehicleType::Train && ::Train::From(v)->IsFreeWagon()));
+	return v != nullptr && IsCompanyBuildableVehicleType(v) && v->type != ::VehicleType::Space && (v->owner == ScriptObject::GetCompany() || ScriptCompanyMode::IsDeity()) && (v->IsPrimaryVehicle() || (v->type == ::VehicleType::Train && ::Train::From(v)->IsFreeWagon()));
 }
 
 /* static */ bool ScriptVehicle::IsPrimaryVehicle(VehicleID vehicle_id)

@@ -79,6 +79,13 @@ void ResetMultiLayerStateSchema();
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md
  */
 void SetMultiLayerGeologySeed(uint64_t seed);
+/** Publish the completed independently generated orbital seed through metadata. */
+void SetMultiLayerOrbitalSeed(uint64_t seed);
+
+/** Version404 persistent moving finite field; no cargo/launch feature is implied. */
+inline constexpr uint32_t MULTILAYER_FEATURE_ASTEROIDS = 524288;
+inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_CENTERS = 1048576; ///< Native facility or retired-generation history, version407.
+inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_HUBS = 2097152; ///< Explicit freight links or retired-link history, version408.
 
 /**
  * Stage one structurally validated save row until activated content can be checked.
@@ -115,6 +122,10 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	GeothermalCollectorRoot, ///< Actual native construction/control/work/material-receipt digest; natural capacity and energy retain their own owners. See r2mlvs18-geothermal-energy-and-industry.md Group1B.
 	GeothermalHeatRouteRoot, ///< Exact original physical ports/source paths, without copied energy quantities. See r2mlvs18-geothermal-energy-and-industry.md Group3.
 	GeothermalRiserRoot, ///< Actual original-housing machinery/work/receipt/loss, reading native stock/history once; no utility quantities. See r2mlvs18-geothermal-energy-and-industry.md Group5B.
+	AsteroidFieldRoot, ///< Appended finite-body/motion/survey canonical digest; no view or derived index state.
+	SpaceVehicleRoot, ///< Native fleet missions, cargo packets and owned operating accounts; appended identity.
+	LaunchCenterRoot, ///< Native station anchor/rotation/generation, excluding derived lookups.
+	LaunchHubRoot, ///< Native exclusive member relationships and monotonic link history.
 	End,
 };
 

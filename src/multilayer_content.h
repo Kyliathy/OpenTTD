@@ -14,6 +14,15 @@
 #include "map_layer_type.h"
 #include "cargotype.h"
 #include "timer/timer_game_calendar.h"
+#include <array>
+
+/** Immutable single-cargo finite resource definitions; class order is saved. */
+struct MultiLayerAsteroidDefinition {
+	CargoLabel cargo;
+	uint32_t small_min, small_max;
+};
+const std::array<MultiLayerAsteroidDefinition, 3> &GetMultiLayerAsteroidDefinitions();
+uint32_t GetMultiLayerAsteroidPopulation(uint32_t width, uint32_t height, uint8_t density);
 
 /** Stable layer capability mask, using saved layer IDs rather than UI display order. */
 using MultiLayerCapabilities = EnumBitSet<MapLayer, uint8_t>;

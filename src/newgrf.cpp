@@ -8,6 +8,7 @@
 /** @file newgrf.cpp Base of all NewGRF support and exact native catalogue installation. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md */
 
 #include "stdafx.h"
+#include "space_vehicle.h"
 #include "core/backup_type.hpp"
 #include "core/container_func.hpp"
 #include "company_manager_face.h"
@@ -1759,7 +1760,8 @@ static void AfterLoadGRFs()
 	_gted.clear();
 	_grm_sprites.clear();
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
-	InitialiseUndergroundEngineDefinitions(_grfconfig); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
+	InitialiseUndergroundEngineDefinitions(_grfconfig);
+	InitialiseSpaceEngineDefinition(); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
 	// Restore delivered paid inlets' canonical hidden guideways and any saved
 	// prototype EIDS references. New-world construction/fleet activation remains
 	// with Plan17's later controls; save restoration cannot substitute ordinary rail.

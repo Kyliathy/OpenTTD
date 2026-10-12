@@ -1,10 +1,28 @@
-# Underground mines demo
+# Multilayer demo - underground mines and Outer Space
 
-Player walkthrough for the [portal/TBM master](r2mlvs3mp-master-plan.md). Updated **2026-10-12**, after commit `0840083c4054` and completion of the interrupted chemical works source task40C. Repository checkpoint tag: **`demo3`**.
+Bundled player walkthrough for the [underground master](r2mlvs3mp-master-plan.md) and [asteroids/probes plan](r2mlvs10-asteroids-and-mining-probes.md). Updated **2026-10-12**. The underground baseline is tagged **`demo3`**; the later Space work is in the current workspace. Further implementation is paused for this playtest.
 
 The default demo now starts with **a working Underground Coal mine and a mineral train delivering to a Surface power station**. The same world retains the completed50-cell public tunnel and the original TBM parked at its far exit. Separate checkpoints cover excavation planning, active spoil haulage, far-exit construction and the newly delivered Deep collector graphics. All eight current checkpoints start paused.
 
-## Start here
+## Choose your tour
+
+From the repository root, use the default **RelWithDebInfo** build:
+
+```powershell
+.\play.ps1 demo          # Underground mine, freight and Surface coal delivery
+.\play.ps1 space         # Moving asteroids and three native mining probes
+.\play.ps1 space-hub     # New Surface launch center and linked freight stations
+```
+
+These are **separate prepared worlds**. Switching the old underground world's
+camera to Space does not generate asteroids. Load `space` for mining, or
+`space-hub` for the newly delivered facility. All open paused; save a personal
+copy before experimenting. `-Config Debug` selects the slower checked build.
+
+A useful tour order is `demo` -> `space-mining` -> `space-holds` -> `space-hub`.
+Each command starts the chosen checkpoint; it does not merge worlds or cargo.
+
+## Start the underground tour
 
 From PowerShell:
 
@@ -27,6 +45,11 @@ The default executable is the rebuilt **RelWithDebInfo** game. `-Config Debug` s
 
 | Command | What is ready | What to do |
 | --- | --- | --- |
+| `.\play.ps1 space` | Three native company mining probes approaching moving asteroids in1990 | Unpause on Outer Space; click a body/probe and inspect its mission and hold. |
+| `.\play.ps1 space-mining` | Probes already attached and extracting their three resource classes | Watch finite reserves fall and20-tonne holds fill. |
+| `.\play.ps1 space-holds` | Three full native probe holds at orbital staging | Inspect cargo, saved costs and ageing; cargo delivery to Earth is still pending. |
+| `.\play.ps1 space-hub` | Paid Surface launch center, joined rail and explicitly linked separate train/lorry stations | Select **Surface**, find the center at **(16,4)**, then open a member station's **Launch hub** selector and toggle **Collection area**. This world contains the older survey preview. |
+| `.\play.ps1 space-survey` / `space-attached` | Older ownerless survey-preview controllers, approaching/already attached | Watch drift, attachment and departure; they create no cargo or company survey knowledge. |
 | `.\play.ps1 demo` | Finite Coal mine, mineral train, connected rail portal and Surface receiver; one actual delivery has already succeeded | Select Underground, inspect the mine/station, then unpause and follow the next load. `mine-haulage` is an alias. |
 | `.\play.ps1 mine-build` | Earlier state of that same mine route, with paid machinery still under construction | Select Underground at(8,9), unpause and watch completion, extraction and the first full load. |
 | `.\play.ps1 tbm-work` | Original50-cell TBM job at0/50 cuts, accepted work and enabled spoil hauler | Open Underground Construction -> Projects, open the machine and unpause. |
@@ -47,6 +70,12 @@ These are delivered scopes, rather than completion of the entire master or graph
 
 | Completed feature | Where to see it |
 | --- | --- |
+| Moving finite asteroids with three resource classes, sizes, headings and reflected edges | `space`, `space-mining`; Nickel Ore, Water Ice and Rare Earth concentrate. |
+| Native owned mining probes, pursuit, exclusive attachment, timed extraction and actual cargo holds | `space-mining`; select a probe/body in the inspector. |
+| Synchronized assign/recall, compatible loaded retargeting, upkeep, cargo ageing and save/reload | `space`; use **Mine selected asteroid** / **Recall selected probe**. |
+| Saved Sparse/Normal/Dense asteroid population setting | New Multilayer Industry worlds; Classic generates no field. |
+| Waterside Surface launch-center construction, rotated footprint, native joining/removal and protected water access | `space-hub`, or Surface airport controls from1990. The pad art is temporary. |
+| Explicit same-company train/lorry hub links, whole-footprint20-tile range and separate collection overlay | `space-hub`; separate stations retain their IDs, while joined facilities share native center storage. Actual handling remains pending. |
 | Layer switching and separate Surface/Underground/Deep world state | Every checkpoint. Deep access/operation is gated until1 January1980; use the selector to choose the intended layer. |
 | Surveyed material deposits, saved regional hardness and finite reserves | Mine tour and Underground Construction -> Survey. Soft/Mixed/Hard/Basalt affect excavation; surveying creates no cargo. |
 | Paid TBM commissioning, actual machinery/support wagons and a saved excavation project | `tbm-work`, Projects and its portal controls. |
@@ -61,6 +90,91 @@ These are delivered scopes, rather than completion of the entire master or graph
 | Current-format save/reload for the demo's natural resources, jobs, vehicles, cargo, industry and utility owners | Save your run mid-action and reopen it; the prepared checkpoints also passed ordinary load/resave checks. |
 
 Further completed foundations include paid external electrical service for prototype tubes, bounded native Heat routing/allocation, paid portal-bound electrical riser construction/links and shared energy lineage. Their focused native tests establish those boundaries. Normal tube/geothermal construction tools, the complete tube fleet/terminals and an operating transported-input geothermal powerhouse still need their later master integrations; this tour does not provide those unfinished player flows.
+
+## Tour Space: moving asteroids and mining probes
+
+```powershell
+.\play.ps1 space-mining
+```
+
+1. The mining saves open **paused on Outer Space in1990**. Unpause and use
+   fast-forward. If the view is lost, select Outer Space and run `space_view`
+   in the game console to recenter the field and open its inspector.
+2. Click an asteroid to select its class, position and initial/remaining reserve.
+   Click a probe or its inspector row to select the actual company vehicle.
+3. Watch pursuit, attachment and extraction. Each probe starts on a different
+   class. **Mine selected asteroid** assigns the selected body to the selected
+   owned probe; assigning two probes to one body demonstrates exclusive mining.
+4. Try **Recall selected probe** during partial mining. It detaches and returns
+   with cargo intact. A partially loaded probe can retarget only to compatible
+   cargo; a full hold refuses further extraction.
+5. Switch to another layer while running, then return. Motion, work, costs and
+   cargo ageing continue while hidden; the global pause freezes simulation.
+6. Save a personal copy mid-approach/mining/return and reload it. Use
+   `space-holds` to inspect full holds immediately.
+
+Each extraction credits **2 tonnes per74 working ticks**, up to a **20-tonne**
+hold. Mining costs500 internal pounds/day; travel/waiting/holding costs100/day,
+with saved fractional accrual. The demo explicitly purchased three probes for
+120,000 total and predeployed them; it does not demonstrate Earth launches.
+Mining and return to staging pay no delivery income.
+
+The sprites are temporary: [asteroid/probe sheet](../../../../media/baseset/openttd/space_preview.png).
+The older `space-survey` / `space-attached` saves show repeated surveying motions
+without extraction, ownership or completed company scans.
+
+## Tour the new Surface launch hub
+
+```powershell
+.\play.ps1 space-hub
+```
+
+The checkpoint opens paused on **Outer Space** because it retains the older
+survey preview. Select **Surface** in the layer selector and find the real paid
+launch center at **Surface(16,4)**, with freight links already prepared. You can
+also locate it through your company's station list using the airport filter.
+Open the station window of a separate rail or lorry station nearby. Its
+**Launch hub** dropdown identifies the selected center;
+**Collection area** shows its circular20-tile Surface service area and linked
+station tiles. Select **No launch hub** to unlink, then select the center again.
+
+The center's joined rail uses the same StationID and native station cargo storage.
+Separate members keep their own IDs. Eligibility requires the same company,
+Surface rail/lorry facilities, and **every station footprint tile** inside the
+circle. Extending a member outside retires its link; station-name position and
+ordinary catchment do not determine eligibility. Up to32 separate stations can
+link to one center. Joining does not move its anchor or enlarge orbital range.
+
+To try construction in your own copy, open **Surface airport construction ->
+Space Launch Center**. Use **Rotate**, choose flat clear land beside an orthogonal
+edge of flat navigable sea/river/canal, and build. The footprint is4x3 or3x4;
+availability starts in1990 for Multilayer Industry. Construction charges500,000
+plus clearing; removal costs10,000. Removing the last qualifying water edge is
+refused. Demolishing the center retains joined rail, and rebuilding creates a
+new reference. Ordinary aircraft do not use this facility.
+
+**Prepared conditions:** this checkpoint uses explicitly prepared terrain/water
+and native paid facility/rail/lorry commands. It has no free orbital dock, Core,
+rocket or cargo. Its Space field contains the older survey-preview controllers;
+load `space-mining` separately for native mining. The
+[hub checkpoint manifest](../../../../src/tests/fixtures/demos/space/hub-checkpoint.json)
+records the source and exact saved identity.
+
+## Space limits for this playtest
+
+Full probe holds **stay in orbit**. The Surface center and freight memberships
+are implemented; physical rocket commissioning, cargo descent/pods, timed
+Surface handling and paid repeat/service missions are still pending. Linking a
+station does not yet send cargo to it.
+
+The later mining/survey/construction roles, typed vehicle order queues,
+survey-gated resource quantities, material-delivered orbital construction and
+Steel/Goods processing/reuse are planned requirements. The current inspector
+still shows reserves without a completed scan. Temporary art remains in use.
+
+A known cosmetic regression can give an older station a probe-like name. It is
+still a station: use its location and facility/vehicle lists to identify it. This
+saved-name compatibility fix is recorded for the development resume.
 
 ## Tour the mine and conventional freight
 
@@ -138,6 +252,14 @@ The interrupted **chemical works40C** task is now complete: genuine unfinished/f
 Other completed selected source families include the ordinary/sealed mineral wagons, open/sealed mine trucks, conventional station/terminal, seven selected mines, metal refinery, Vent-Tap/Magma-Loop generators, utility conduits/riser and tube/geothermal control icons. **Those sources still need the later packing/native-display checkpoint.** Battery and electronics source families remain next in the selected queue. No completion box was added for unfinished game integration.
 
 ## Verification and feedback
+
+The current Space/launch-hub cycle builds both configurations and checks native
+construction, selection, station extension, ordinary/repeated reload and corrupt
+transport rejection. Mining checkpoints preserve exact native replay through two
+independent2,200-tick continuations each. All eight underground snapshots preserve
+27 checked owner chunks in both executable configurations. The retained mine,
+Space mining/survey and new hub saves remain separate, immutable starting points.
+
 
 The preparation helper loads the old TBM worlds and new native mine/collector scenes through the ordinary rebuilt game, pauses them and independently reloads each saved result. Current-format resource/project/cargo owners remain exact. Old399 TBM files migrate only their empty utility schema to403 while retaining original epoch/IDs/quantities. Graphical checks cover the mine and both collector stages; collector machinery matches exact native pixels. Additional loaded-world continuation passes in both Debug and RelWithDebInfo: the Coal shuttle returns empty and earns another delivery while reserves fall19,856->19,797; the partial collector advances74->296 labour ticks without added materials. [Verification receipt](../../../../logs/underground-demo-verification.json) records current results and identities. These automated checks leave your personal playtest open.
 

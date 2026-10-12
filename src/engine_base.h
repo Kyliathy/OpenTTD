@@ -76,7 +76,7 @@ public:
 
 private:
 	/** Vehicle-type specific information. */
-	std::variant<std::monostate, RailVehicleInfo, RoadVehicleInfo, ShipVehicleInfo, AircraftVehicleInfo> vehicle_info{};
+	std::variant<std::monostate, RailVehicleInfo, RoadVehicleInfo, ShipVehicleInfo, AircraftVehicleInfo, SpaceVehicleInfo> vehicle_info{};
 
 public:
 	Engine(EngineID index, VehicleType type, uint16_t local_id);

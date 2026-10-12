@@ -118,7 +118,7 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 			uint16_t selected = 0;
 			for (const auto &range : _multilayer_m1_sprite_ranges) selected += range.count;
 			CHECK(count == 66 + selected); // Complete selected scope, including newly appended collector poses, plus the protected M0 prefix.
-			CHECK(bound == MAP_LAYER_SPRITE_COUNT);
+			CHECK(bound == MULTILAYER_M1_SPRITE_COUNT); // This retained fixture owns M0/M1; the separate Space preview is checked by its native scene.
 			// Each source declaration is checked against the real application-loaded
 			// sprite cache. Mock cache dimensions or a source-only parser cannot pass.
 			for (uint i = 0; i < count; ++i) {

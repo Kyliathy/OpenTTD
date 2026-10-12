@@ -2056,6 +2056,7 @@ static WindowDesc _build_vehicle_desc(
 
 void ShowBuildVehicleWindow(TileIndex tile, VehicleType type)
 {
+	if (type == VehicleType::Space) return; // Orbital commissioning requires the future launch facility.
 	/* We want to be able to open both Available Train as Available Ships,
 	 *  so if tile == INVALID_TILE (Available XXX Window), use 'type' as unique number.
 	 *  As it always is a low value, it won't collide with any real tile

@@ -385,7 +385,9 @@ static const SpriteID SPR_BRIDGE_DECKS_ROAD = SPR_BRIDGE_DECKS_BASE + 18;
  * @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  */
 static constexpr SpriteID SPR_MAP_LAYER_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT; ///< First Map Layer sprite.
-static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = MULTILAYER_M1_SPRITE_COUNT; ///< Original 66, reserved/planned slots and selected M1 native art; legacy offsets stay unchanged.
+static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = MULTILAYER_M1_SPRITE_COUNT + 11; ///< Existing selected slots plus the independent initial Space preview.
+static constexpr SpriteID SPR_SPACE_PREVIEW_ASTEROID = SPR_MAP_LAYER_BASE + MULTILAYER_M1_SPRITE_COUNT; ///< Three classes by three sizes; final Plan13 families remain pending.
+static constexpr SpriteID SPR_SPACE_PREVIEW_PROBE = SPR_SPACE_PREVIEW_ASTEROID + 9; ///< Travel and attached survey poses.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SURFACE = SPR_MAP_LAYER_BASE + 0; ///< Surface toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_UNDERGROUND = SPR_MAP_LAYER_BASE + 1; ///< Underground toolbar icon.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SPACE = SPR_MAP_LAYER_BASE + 2; ///< Space toolbar icon.

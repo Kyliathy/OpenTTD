@@ -1,0 +1,16 @@
+// Code-authored initial Space preview. Final Plan13 families remain pending.
+// @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
+//@@WARNING DISABLE 44
+   -1 * 0 05 9C 0B FF 04 0E // 11 sprites at appended offset3588
+//@@WARNING ENABLE 44
+   -1 sprites/space_preview.png 8bpp 2 2 20 16 -10 -8 normal
+   -1 sprites/space_preview.png 8bpp 2 66 36 26 -18 -13 normal
+   -1 sprites/space_preview.png 8bpp 2 130 64 44 -32 -22 normal
+   -1 sprites/space_preview.png 8bpp 2 194 20 16 -10 -8 normal
+   -1 sprites/space_preview.png 8bpp 2 258 36 26 -18 -13 normal
+   -1 sprites/space_preview.png 8bpp 2 322 64 44 -32 -22 normal
+   -1 sprites/space_preview.png 8bpp 2 386 20 16 -10 -8 normal
+   -1 sprites/space_preview.png 8bpp 2 450 36 26 -18 -13 normal
+   -1 sprites/space_preview.png 8bpp 2 514 64 44 -32 -22 normal
+   -1 sprites/space_preview.png 8bpp 1 577 39 23 -20 -12 normal
+   -1 sprites/space_preview.png 8bpp 1 641 39 23 -20 -12 normal

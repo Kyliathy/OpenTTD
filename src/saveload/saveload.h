@@ -464,6 +464,11 @@ enum class SaveLoadVersion : uint16_t {
 	RockElectricalRelays, ///< Saveload version: 402\n Explicit local-cell plane permits paid Underground electrical relay cables; Heat and genuine older cells remain Deep-local. See r2mlvs18-geothermal-energy-and-industry.md Group5.
 	UtilityShareLineage, ///< Saveload version: 403\n Shared per-epoch slice/parent identities and bounded physical segments retain complete original electrical lineage; genuine older one-hop records migrate explicitly. See r2mlvs12-solar-farms-mirrors-and-eti.md Group8C.
 
+	AsteroidField, ///< Saveload version: 404\n Persistent finite moving asteroids and explicitly predeployed survey-preview controllers. See Plan8/Plan10 GroupP1.
+	SpaceMiningVehicles, ///< Saveload version: 405\n Native Space company vehicles, finite mining leases and canonical asteroid cargo provenance.
+	AsteroidPopulation, ///< Saveload version: 406\n Saved synchronized new-game asteroid population column.
+	LaunchCenters, ///< Saveload version: 407\n Native Surface launch-center anchors, rotations and monotonic reference generation.
+	LaunchCollectionHubs, ///< Saveload version: 408\n Exclusive native Surface freight membership with monotonic link generations.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

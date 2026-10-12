@@ -235,7 +235,7 @@ Direction GetDirectionTowards(const Vehicle *v, int x, int y);
  */
 inline bool IsCompanyBuildableVehicleType(VehicleType type)
 {
-	return type < VehicleType::CompanyEnd;
+	return IsCompanyVehicleType(type);
 }
 
 /**

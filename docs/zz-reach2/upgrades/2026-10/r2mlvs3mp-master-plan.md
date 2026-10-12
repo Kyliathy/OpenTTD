@@ -14,6 +14,20 @@ There are also scheduling cycles inside the existing plans: Plan 4 Group 2 needs
 
 ## Scope and authority
 
+**Paused by user, 2026-10-12:** underground work is parked at the committed
+`demo3` checkpoint (`c99b6f0d55e7`). Plans8/10 GroupP1 deliver the visible persistent
+Space field; GroupP2 adds native paid probes, finite extraction, conserved holds,
+operating costs and mission controls. The next Space producer is Plan9's Surface
+launch center and linked orbital cargo-drop zone, saved descent and handling;
+full probe holds currently remain orbital. Resume this underground queue only
+when requested; its incomplete tasks retain their existing status. See the
+[Space walkthrough](d3sp-space-survey.md) and child-plan evidence.
+The current [Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+adds Earth-launched mining/survey/construction probes, survey-gated reserves,
+ordered missions, Steel/Goods station construction and orbital production/reuse.
+Its new content freeze and implementation tasks are pending in Plans1/8-11;
+this does not resume the underground queue.
+
 **Resumed after TBM fixes and file cleanup,2026-10-10:** the user requested finalization of this master. Commit `cbd9dc18a1` contains the TBM engineering fixes, completed R2FC migration and Plan18 riser admission5B.1 with partial native definitions for5B.2. Execution resumed at Plan18 task5B.2 under master10.3; follow the current cursor below as its verified tasks advance. Preserve the completed producers and supported older-save compatibility; earlier pause instructions describe the previous queue. TBM task11.5 still records required player feedback, and fixture pruning12.6 retains its demo-acceptance gate. Current workspace instructions prohibit all Git writes.
 
 This is an execution queue. Each checkbox links to owning groups; those child checkboxes and public contracts remain the implementation authority. Mark a master checkpoint X only when its exact linked scope and required evidence pass. For a mixed-family child task, split its scope into a named B/C subgroup or record its completed portion before implementation; leave the original whole task/group unchecked until every portion passes.

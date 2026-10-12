@@ -48,6 +48,14 @@ Status: shared paid electrical prerequisite8C.1-8C.4 is verified and published t
 
 ## Outcome and Boundaries
 
+**Space material revision,2026-10-12:** mirror hardware follows the common
+[Steel/Goods construction contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+and its revised6t payload recipe. Earth assembly consumes materials once;
+deployment retains that paid payload identity. Later orbital manufacture
+requires completed facilities and actual stock. The old SMIK/RFMT-only mirror
+build is superseded; existing solar output/assignment and Surface farm rules
+remain unchanged. New recipe/version acceptance is pending Plan1 Group12B.
+
 Surface solar farms receive useful additional power from launched orbital mirrors. Each supported farm has at most one +300% bonus, for 4x baseline output.
 
 ## Investigation record

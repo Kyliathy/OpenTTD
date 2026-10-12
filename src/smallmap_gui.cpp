@@ -633,7 +633,7 @@ uint32_t GetSmallMapOwnerPixels(TileIndex tile, TileType t, IncludeHeightmap inc
 
 /** Vehicle colours in #SmallMapType::Vehicles mode. Indexed by #VehicleType. */
 static constexpr VehicleTypeIndexArray<PixelColour, VehicleType::End> _vehicle_type_colours = {
-	PC_RED, PC_YELLOW, PC_LIGHT_BLUE, PC_WHITE, PC_BLACK, PC_RED
+	PC_RED, PC_YELLOW, PC_LIGHT_BLUE, PC_WHITE, PC_BLACK, PC_RED, PC_LIGHT_BLUE
 };
 
 /** Class managing the smallmap window. */

@@ -19,6 +19,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.nfo
+                         ${CMAKE_CURRENT_SOURCE_DIR}/space_preview.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttd.nfo
@@ -45,6 +46,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/foundations.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.png
+                         ${CMAKE_CURRENT_SOURCE_DIR}/space_preview.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttdgui.png

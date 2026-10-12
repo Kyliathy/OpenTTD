@@ -52,6 +52,19 @@ The complete economy survives saves, multiplayer joins and entity removal withou
 
 ## State ownership register
 
+**Additional Space authority,2026-10-12:** consume the
+[revised Space contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
+Persist native probe role and typed order queue/index; current target and
+generation; scan work and per-company body knowledge; embodied paid payload;
+blueprint deliveries/reservations/consumption; selected Steelworks/Goodsworks
+recipe, utility/work remainder and output provenance. Each cargo quantity has
+one owner across vehicle, construction job, completed station and descent.
+Profile changes and appended fields require explicit old-save handling: no
+free scan/stock/build, no retroactive material bill, and no inherited knowledge
+when a CompanyID is reused. Compare interrupted scan, first-Core delivery,
+processor output, local assembly and export-versus-build reservations through
+ordinary reload and network join. These remain pending feature acceptance.
+
 R2TBMF8 save handoff,2026-10-09:397 registers portal magazine storage in the existing native Depot pool and map identity fields, with ordinary native depot orders owning the selected destination.398 extends existing controller phase/reason fields for explicit ordinary-list control. Saved work anchors, cargo packets, work remainders and machinery identities remain with their original owners. Full loading cross-checks portal/depot identity and both directions of a paid starter-pocket job binding, including reused portals whose centre is open but surrounding cells are not. Actual397 return/parked files,398 moving-order and remote-reassignment files, nonmutating previews and malformed phase/reason/depot refusals are verified in [W](tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure) and its T/V handoffs. No fractional cargo transport was introduced.
 
 | Authoritative state | Feature owner | Derived data rebuilt after load |

@@ -18,6 +18,7 @@
 #include "../train.h"
 #include "../roadveh.h"
 #include "../ship.h"
+#include "../space_vehicle.h"
 #include "../aircraft.h"
 #include "../timetable.h"
 #include "../station_base.h"
@@ -226,7 +227,7 @@ void UpdateOldAircraft()
 static void CheckValidVehicles()
 {
 	size_t total_engines = Engine::GetPoolSize();
-	VehicleTypeIndexArray<EngineID> first_engine = { EngineID::Invalid(), EngineID::Invalid(), EngineID::Invalid(), EngineID::Invalid() };
+	VehicleTypeIndexArray<EngineID> first_engine = { EngineID::Invalid(), EngineID::Invalid(), EngineID::Invalid(), EngineID::Invalid(), EngineID::Invalid() };
 
 	for (const Engine *e : Engine::IterateType(VehicleType::Train)) { first_engine[VehicleType::Train] = e->index; break; }
 	for (const Engine *e : Engine::IterateType(VehicleType::Road)) { first_engine[VehicleType::Road] = e->index; break; }
@@ -471,6 +472,12 @@ void AfterLoadVehiclesPhase2(bool part_of_load)
 				break;
 			}
 
+			case VehicleType::Space:
+				v->vcache.cached_cargo_age_period = Ticks::CARGO_AGING_TICKS;
+				// Common post-load initialization below inserts hashes once, after
+				// resetting bounding boxes. Inserting here creates a viewport cycle.
+				break;
+
 			case VehicleType::Ship:
 				Ship::From(v)->UpdateCache();
 				break;
@@ -503,6 +510,7 @@ void AfterLoadVehiclesPhase2(bool part_of_load)
 		switch (v->type) {
 			case VehicleType::Road:
 			case VehicleType::Train:
+			case VehicleType::Space:
 			case VehicleType::Ship:
 				v->GetImage(v->direction, EngineImageType::OnMap, &v->sprite_cache.sprite_seq);
 				break;
@@ -1106,6 +1114,30 @@ public:
 	}
 };
 
+class SlVehicleSpace : public DefaultSaveLoadHandler<SlVehicleSpace, Vehicle> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Struct<SlVehicleCommon>("common"),
+		SaveLoad::Variable<VarFileType::I32>("position.x", SLE_OBJECT_ADDRESS(SpaceVehicle, position.x)),
+		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(SpaceVehicle, position.y)),
+		SaveLoad::Variable<VarFileType::I32>("home.x", SLE_OBJECT_ADDRESS(SpaceVehicle, home.x)),
+		SaveLoad::Variable<VarFileType::I32>("home.y", SLE_OBJECT_ADDRESS(SpaceVehicle, home.y)),
+		SaveLoad::Variable<VarFileType::U32>("mission.target", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.target)),
+		SaveLoad::Variable<VarFileType::I32>("mission.attachment_offset.x", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.attachment_offset.x)),
+		SaveLoad::Variable<VarFileType::I32>("mission.attachment_offset.y", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.attachment_offset.y)),
+		SaveLoad::Variable<VarFileType::U8>("mission.phase", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.phase)),
+		SaveLoad::Variable<VarFileType::U32>("mission.approach_ticks_left", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.approach_ticks_left)),
+		SaveLoad::Variable<VarFileType::U16>("mission.work_ticks", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.work_ticks)),
+		SaveLoad::Variable<VarFileType::U8>("mission.travel_remainder", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.travel_remainder)),
+		SaveLoad::Variable<VarFileType::U8>("mission.cost_remainder", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.cost_remainder)),
+		SaveLoad::Variable<VarFileType::U32>("extracted_units", SLE_OBJECT_ADDRESS(SpaceVehicle, extracted_units)),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	void Save(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetDescription()); }
+	void Load(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetLoadDescription()); }
+	void FixPointers(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetDescription()); }
+};
+
 static const SaveLoad _vehicle_desc[] = {
 	SaveLoad::SaveByte("type", SLE_OBJECT_ADDRESS(Vehicle, type)),
 	SaveLoad::Struct<SlVehicleTrain>("train"),
@@ -1114,6 +1146,7 @@ static const SaveLoad _vehicle_desc[] = {
 	SaveLoad::Struct<SlVehicleAircraft>("aircraft"),
 	SaveLoad::Struct<SlVehicleEffect>("effect"),
 	SaveLoad::Struct<SlVehicleDisaster>("disaster"),
+	SaveLoad::Struct<SlVehicleSpace>("space", SaveLoadVersion::SpaceMiningVehicles),
 };
 
 struct VEHSChunkHandler : ChunkHandler {
@@ -1137,6 +1170,7 @@ struct VEHSChunkHandler : ChunkHandler {
 		int index;
 
 		_cargo_count = 0;
+		uint32_t space_count = 0;
 
 		while ((index = SlIterateArray()) != -1) {
 			Vehicle *v;
@@ -1149,6 +1183,10 @@ struct VEHSChunkHandler : ChunkHandler {
 				case VehicleType::Aircraft: v = Aircraft::CreateAtIndex(VehicleID(index)); break;
 				case VehicleType::Effect: v = EffectVehicle::CreateAtIndex(VehicleID(index)); break;
 				case VehicleType::Disaster: v = DisasterVehicle::CreateAtIndex(VehicleID(index)); break;
+				case VehicleType::Space:
+					if (IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles)) SlErrorCorrupt("Space vehicle in historical save");
+					if (++space_count > MAX_SPACE_VEHICLES) SlErrorCorrupt("Too many native Space vehicles");
+					v = SpaceVehicle::CreateAtIndex(VehicleID(index)); break;
 				case VehicleType::Invalid: // Savegame shouldn't contain invalid vehicles
 				default: SlErrorCorrupt("Invalid vehicle type");
 			}

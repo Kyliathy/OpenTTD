@@ -42,13 +42,150 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/vehicle_func.h](../../../../src/vehicle_func.h) | 192-204 | `VehicleServiceInDepot`, `CallVehicleTicks`, `ResetVehicleHash`, `ViewportAddVehicles` are public tick/service/spatial-render boundaries for orbital vehicles. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+Status: paused for demo at the user request,2026-10-12; full Groups1-22 remain required. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+
+## Current dispatch - Full-plan completion, 2026-10-12
+
+The active objective is to finalize this entire plan. P1/P2 are delivered
+increments, not completion of the original Groups1-22. Group2.1's saved
+population control and Plan9's native empty Surface launch center are delivered.
+The next producers are explicit Surface freight membership/handling and paid
+rocket commissioning; generation/motion evidence and deployment/drop/descent
+continue toward the full loop. The user's latest revision also requires
+Groups8B/8C: survey and construction roles, ordered missions and survey-gated
+resource disclosure, followed by Steel/Goods orbital construction and reuse.
+Paid service/repeat, final art, recovery, network replay and useful Surface
+delivery remain required. Underground work stays paused. Every unfinished
+original task remains unchecked; the added requirements are pending too.
+
+**Demo break,2026-10-12:** the current Plan9 native facility/membership/UI batch is
+verified in both builds (`logs/launch-hub-verification.json`). Further implementation
+is paused at the user's request. The [bundled underground/Space walkthrough](d2um-underground-mines.md)
+provides mining, full-hold and new `space-hub` checkpoints. Native handling/descent,
+Earth commissioning, survey/construction roles, paid service/repeat and the rest
+of this plan remain pending. Resume with saved-name compatibility correction,
+then the actual packet handling/lifecycle producers. Retain the user instruction
+to batch at least two feature groups between builds/tests.
+
+### Area Mandatory Reading - Moving field preview
+
+_Applies to GroupP1 only._ Read this Global block, parent AD-9/AD-11 and
+I-3/I-5/I-7/I-9, Plan8 GroupP1 and its shared Group10 geometry defaults,
+`map_layer.h` ownership preamble, `core/random_func.hpp` randomizers,
+`timer_game_calendar.h` technology clock, and this plan's Groups1-3 tables.
+Verify the existing profile/content and state-foundation boundary tests. The
+field consumes actual `OrbitalBodyID`/`SpaceMotion` exports and focused motion
+tests from Plan8P1; do not invent a second coordinate or resource authority.
+
+### Group P1 - Populate and show the first moving Space field
+
+{{HARD}}
+
+- [X] P1.1 Implement the three canonical classes, sizes, finite reserve sampling and exact population table from Groups1-2 with independent content/placement/motion RNG streams. Normal is the preview default; a player population dropdown remains Group2.1.
+- [X] P1.2 Generate selected-profile new worlds only, using the shared band and four-tile grid, stable class IDs0/1/2 for starter targets, bounded capacity checks and no reload/depletion respawning. Persist generation inputs and all generated records.
+- [X] P1.3 Bind the Group3 speed/heading/fraction tables to the shared synchronized motion producer. Verify exact counts/classes/reserves, seed repeatability, maximum field size, boundaries and hidden/save-reload continuation.
+- [X] P1.4 Prepare predeployed model15 survey probes through Plan8's preview controller and a player walkthrough. Demonstrate moving-target pursuit, exclusive attachment and repeated departure without claiming extraction, paid launches, return pods, service or Surface delivery.
+
+**Delivered preview,2026-10-12:** the content catalogue publishes the exact13
+population rows and three cargo/reserve definitions. `asteroid.cpp` generates
+one field in new Multilayer Industry worlds, with independent RNG domains and
+central starter classes0/1/2; actual waterside launch access remains Group2.2.
+`space.cpp` supplies the shared integer band/reflection producer; survey work
+cannot debit reserves or create packets. The real new-world hook produces10
+bodies/no probes for Normal64x64 and an empty field for Classic. Both featured
+1990 checkpoints preserve exact orbital state through ordinary load/resave and
+2,000 native ticks in both RelWithDebInfo and Debug, including hidden Space and
+saved attachment. Maximum14,336-body generation and clustered index movement
+pass the focused fixtures. Native and ordinary graphical evidence is under
+`mlm/reviews/space/`; retained inputs are hash-bound in
+`src/tests/fixtures/demos/space/demo-checkpoints.json` and results in
+`logs/space-preview-verification.json`. Start with `play.ps1 space-survey`; see the
+[completed-feature list and controls](d3sp-space-survey.md).
+
+The preview does not satisfy Groups8-22's mining/economic acceptance. Reserves
+remain unchanged by survey work. Final authored/packed Plan13 space families and
+native company fleet integration retain their separate delivery gates.
+
+### Area Mandatory Reading - Native orbital mining increment
+
+_Applies to Group P2 only._ This staged producer revision follows the user's
+request to continue functionality after P1. Read the Global section, parent
+AD-9/AD-11, the delivered P1 exports, and
+[native compatibility matrix](space-vehicle-compatibility.md). Entry producers:
+state/content focused gates, canonical Vehicle/Engine/EIDS/CAPA ownership,
+`space.h` Q16 geometry and the one `AsteroidField`. Consume actual native owners;
+no second fleet, engine or cargo registry is allowed. This increment exports
+`SpaceVehicle`, `SpaceMission`, `CmdSetSpaceMission` and finite body leases.
+Explicit test/demo setup retires survey records and debits native purchases;
+it is not rocket commissioning. Cargo remains in the vehicle at orbital home.
+Missing launch-center/structure/descent producers stay outside P2; the original
+full-fleet/full-loop entry gates and checkboxes remain in force.
+
+Context has compacted 1 times while executing this group.
+
+### Group P2 - Native owned probes and finite orbital extraction
+
+{{HARD}}
+
+- [X] P2.1 Preserve historical vehicle bytes and fleet window identities; add explicit dense company indexing, canonical Space engine/class and versioned VEHS/ASTR/CAPA persistence. Reject unsupported ordinary purchase/order/clone/script/NewGRF paths.
+- [X] P2.2 Pursue moving bodies with a frozen adaptive timeout, lease one slot in native VehicleID order, mine 2 tonnes per 74 working ticks into a 20-tonne canonical packet hold, debit finite reserves and native company operating costs, and return with cargo intact.
+- [X] P2.3 Provide synchronized owner-validated assign/recall commands and a native Space inspector. Prepare purchased fleet snapshots; identify retained cargo and pending launch/descent/service work in the walkthrough.
+- [X] P2.4 Verify actual native contention, all resource classes, conservation/full-hold refusal/fleet bounds, cancellation/retargeting, costs/cargo age, paused/hidden ticks, old-save compatibility and exact reload continuation in both build configurations.
+
+**Delivered native mining handoff, 2026-10-12:** `SpaceVehicle` is saved native
+vehicle type6, with dense company slot4 and canonical Engine/EIDS, group/unit,
+operating-account and VehicleCargoList/CAPA owners. Historical bytes0..5 and
+old fleet-window numbers retain their meanings. `SpaceMission` and
+`CmdSetSpaceMission` provide owner-validated moving-target pursuit, bounded
+approach, exclusive native-ID leases, partial extraction and recall/retarget.
+The field ticks before native vehicles; each extraction credits packets before
+debiting finite reserves. Version405 saves body leases, native mission/hold
+state and Asteroid provenance. Load validation rejects orphan leases, duplicate
+packet ownership, legacy-byte aliases and fleets above the64-probe bound.
+
+Focused state/content/motion/index tests pass 3,818 assertions in nine cases in
+RelWithDebInfo and Debug. All three checkpoints pass ordinary exact orbital
+resave and two independent 2,200-tick native continuations per configuration;
+ASTR/VEHS/CAPA/PLYR outputs match exactly. Native setup tests in both builds
+exercise paid purchases, simultaneous arrival, loaded recall, incompatible
+retarget refusal, resumed mining, costs, ageing and reserve/hold conservation.
+Paused and hidden-view checks pass. All three corrupt-save cases reject in both
+builds; all eight underground demos preserve27 native owner chunks each.
+Ordinary graphical inspector captures pass for approach, partial work and full
+holds in both builds. Older404 survey and new-world population checks remain
+supported. See `src/tests/fixtures/demos/space/mining-checkpoints.json`,
+`logs/space-mining-verification.json` and the [walkthrough](d3sp-space-survey.md).
+
+This handoff exports native orbital mining only. The explicit demo purchase
+retires preview controllers and charges120,000 for three probes; it does not
+commission rockets. Full20-tonne holds wait at orbital staging. The next producer
+is Plan9's Surface launch center and20-tile circular drop zone, then saved
+cargo descent and Surface handling. No delivery income, automatic repeat,
+service producer, free Surface facility or final space-art completion is claimed.
+Original full-fleet/full-loop groups retain their own pending acceptance gates.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Outcome and Boundaries
 
-Slowly moving asteroids are finite deposits. A launched robot intercepts, attaches, mines and returns within the 20-tile orbital drop radius of its home launch center to send cargo down for train/lorry collection.
+Slowly moving asteroids are finite deposits. Earth-launched mining, survey and
+construction probes are native vehicles with orders. Survey completion reveals
+resource quantities to the owning company; mining converts finite reserves into
+held cargo. Returns use the home center's20-tile drop region or a completed
+orbital station. Steel/Goods may arrive from Earth or be produced by constructed
+orbital processors, then be reused for infrastructure/probes or dropped to Earth.
+
+**User revision,2026-10-12:** the canonical
+[Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+and [revised numerical defaults](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
+supersede the old material/bootstrap rows. Plan9 owns initial Earth commissioning;
+Plan8 owns native typed order/vehicle/blueprint identity; this plan owns probe
+actions and survey disclosure; Plan11 owns delivered construction, orbital
+processing and later local assembly. Every new build needs both Steel and Goods.
+Placing a Fund Industry-style blueprint only reserves a site. The initial Core
+is built by construction probes with delivered materials, not a free orbital
+reference or preassembled Core bypass. Existing P1/P2 evidence proves neither
+these additions nor completed scans: preview controllers have no company owner.
 
 ## Public Handoff Contract
 
@@ -66,9 +203,19 @@ Groups are chronological and contain consecutive tasks of one difficulty. Each d
 
 _Applies to Groups 1-7._
 
-**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/space.h`: `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`; `src/launch_center.h`: `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease`.
+**Entry gate (dependency correction, 2026-10-12).** Field generation and motion consume
+`src/multilayer_content.h` selected-profile/asteroid definition exports and
+`src/space.h` `OrbitalBodyID`, `SpaceMotion`, `SpaceTravelBand`, reflection and
+spatial-query producers. P1's focused generation/motion/state/content tests prove
+these producers. They do not consume a spacecraft, orbital structure, launch,
+cargo owner or descent job. Group2.2's legal launch-site accessibility separately
+requires the actual Plan9 placement predicate; that task cannot close before it
+exists. Groups8-22 retain their deployment/release/service/acceptance obligations.
+This corrects the former circular prerequisite without changing any gameplay or
+completion requirement. The canonical native probe/mission types are in
+`src/space_vehicle.h`, rather than `src/space.h`; no duplicate types are allowed.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
-If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-7. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+If a consumed required export is absent, stop the implementation, mutation and runtime claims that depend on it. Independent field inputs may proceed; launch-site accessibility still waits for its named producer. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
 Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
 
 | File name | Line Ranges | Description |
@@ -127,10 +274,34 @@ The average size multiplier is 1.8. Even the smallest rich body supports five fu
 
 **Configuration:** author these class/size/reserve records in planned `src/multilayer_asteroid_catalogue.cpp`, exposed as immutable typed definitions through [src/multilayer_content.h](../../../../src/multilayer_content.h), following the [logical vehicle catalogue](../../../../src/multilayer_vehicle_catalogue.cpp) style. Cargo meanings remain in [media/multilayer/cargo_catalogue.json](../../../../media/multilayer/cargo_catalogue.json). During planning, edit these tables; implementation transfers their values into the definition records. No configuration code is delivered by this document.
 
-- [ ] 1.1 Define metallic/Nickel, carbonaceous/Water Ice and rich/Rare Earth body records using r2mlvs8 `OrbitalBodyID`, fixed-point position, shape/visual size and attachment-slot capacity.
-- [ ] 1.2 Resolve the single class output from the Resource-content defaults through the selected cargo profile, reusing terrestrial Nickel Ore and Rare Earth meanings. Implement the 100% mineable-content and 1:1 reserve-debit policy; save initial/remaining reserve per cargo and generated composition. A visual sprite variant cannot change the cargo.
-- [ ] 1.3 Give each class a fixture with one slot, finite reserve and a compatible probe hold. Separate authoritative mining fields from derived spatial/render data.
+- [X] 1.1 Define metallic/Nickel, carbonaceous/Water Ice and rich/Rare Earth body records using r2mlvs8 `OrbitalBodyID`, fixed-point position, shape/visual size and attachment-slot capacity.
+- [X] 1.2 Resolve the single class output from the Resource-content defaults through the selected cargo profile, reusing terrestrial Nickel Ore and Rare Earth meanings. Implement the 100% mineable-content and 1:1 reserve-debit policy; save initial/remaining reserve per cargo and generated composition. A visual sprite variant cannot change the cargo.
+- [X] 1.3 Give each class a fixture with one slot, finite reserve and a compatible probe hold. Separate authoritative mining fields from derived spatial/render data.
 - [ ] 1.4 Add the class/size/reserve definition records at the planned content-catalogue location and expose them through the selected profile. Implement the Resource-content defaults' inclusive sampling and multipliers; verify per-class full-hold counts, expected reserves and extraction durations against the 20-tonne/2-tonne-per-74-tick probe budget. Group 2 combines these reserves with its exact population table into a whole-field resource budget.
+
+**1.1-1.3 producer evidence, 2026-10-12:** `AsteroidBody` uses the shared
+`OrbitalBodyID`/`SpaceMotion`, immutable class and size, saved initial/remaining
+whole-tonne reserve and one native `VehicleID` lease. The three catalogue outputs
+resolve to selected-profile NORE/WICE/RARE; size/art cannot change composition.
+ASTR preserves each generated class/reserve and CAPA preserves compatible cargo
+with actual extraction-plane provenance. Native mining fixtures operate all
+three class holds, enforce one attachment lease, debit one reserve unit per hold
+unit and retain cargo through recall and reload. The version406 regression run
+passes all three retained phases and independent exact native replays in
+RelWithDebInfo (`logs/asteroid-population-mining-regression.log`). Spatial buckets
+and drawing remain derived. Group1.4 still requires the complete public size and
+resource-tuning records; this closes no launch, service or delivery requirement.
+
+**Resource-budget evidence for1.4 (scope still pending):** the independent
+canonical-definition fixture checks all three literal cargo labels and reserve
+ranges, full-hold counts and weighted means. Seed `0x20261012` on Normal256x256
+produces160 bodies (96/48/16), with95,050 t NORE,99,715 t WICE and4,018 t RARE:
+198,783 t actual, inside78,400..627,200 t; the distribution mean is211,680 t.
+Native continuation checks count actual Mining steps against74 per2 tonnes,
+subtract saved partial progress and charge recalled uncommitted work before
+resuming. The focused suite including launch geometry passes4,581 assertions in
+11 cases in RelWithDebInfo. Public size/motion tuning records and the remaining
+full producer acceptance keep1.4 and the later handoff groups unchecked.
 
 ### Group 2 - Generate the field from the population defaults
 
@@ -182,7 +353,21 @@ The smallest map has 105 admissible 4-tile grid positions, enough for its 14-bod
 
 The travel band only constrains placement and capacity; it does not recalculate the selected count. Generate exactly the table count or report that the chosen geometry cannot fit it. These defaults apply to Multilayer Industry; Classic has no asteroid field. Targets continue drifting before the player launches, so missions use their current positions and Group 8's adaptive approach timeout. The 32-tile starter preference is not a guarantee for every later center.
 
-- [ ] 2.1 Implement the exact map-size/count table and class shares in Population defaults. Add the synchronized saved new-game population dropdown at its named location; verify every Sparse/Normal/Dense cell and same-area rectangular maps. There is no tiles-per-body density formula or silent count reduction.
+- [X] 2.1 Implement the exact map-size/count table and class shares in Population defaults. Add the synchronized saved new-game population dropdown at its named location; verify every Sparse/Normal/Dense cell and same-area rectangular maps. There is no tiles-per-body density formula or silent count reduction.
+**2.1 implementation evidence, 2026-10-12:** `game_creation.asteroid_density`
+is a synchronized, NewgameOnly, version406 saved setting with Sparse=0,
+Normal=1, Dense=2. Both random-map and heightmap generation windows expose the
+selector; Classic disables it while retaining the user's selection. Existing
+fields continue from ASTR without regeneration. The focused population fixture
+checks all147 dimension/density combinations against the13 explicit rows,
+including same-area rectangles. Production generation/reload checks cover all
+three choices for selected-profile and Classic worlds; PATS retains the chosen
+column despite a different local config, ASTR stays exact, and Classic has no
+bodies. The native widget fixture selects every value and verifies disabled and
+restored states. Command: `python -B src/tests/multilayer/acceptance/asteroid_population_checks.py`.
+RelWithDebInfo evidence is under `mlm/reviews/space/population-verify/`; Debug and
+full network acceptance remain part of the overall completion queue.
+
 - [ ] 2.2 Implement the Population defaults' seeded 4-tile grid placement, spacing and three starter targets within the shared travel band. Validate legal launch-site access and publish the actual initial approach-distance bound, using the 32-tile preference when feasible and Group 3's adaptive timeout for more distant targets. Validate tiny-map capacity and refuse unsupported geometry rather than silently losing a class. Discovery and the first mission require no orbital station; building a launch center must not create extra bodies.
 - [ ] 2.3 Generate the complete body list, class/content and initial positions from the saved Space feature seed, generation version and selected tuning without Surface RNG draws. Save the generated records and generation inputs; load, view changes and target selection never reroll them. Group 3 extends this generator with seeded initial motion before producer readiness.
 - [ ] 2.4 Test repeat generation for the same seed/version/settings and changed-seed fixtures: exact total/per-class counts, reserve bounds and aggregate budget, spacing/band validity, geometric starter accessibility/approach-distance bounds and bounded generation work. Include tiny/narrow-map capacity refusal and maximum-population cases; actual motion/interception checks follow in Group 3.
@@ -253,7 +438,7 @@ Choose the speed once at generation, independently of class and size. Group 8's 
 
 ### Area Mandatory Reading - Probe mission controller
 
-_Applies to Groups 8-13._
+_Applies to Groups 8-13, including8B/8C._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
@@ -306,20 +491,56 @@ Implement one transition family per group. Failure paths retain the last authori
 | Initial return pods | 2; one expended per completed cargo return. |
 | Service interval | After two cargo-return batches. |
 | Service time / materials | 2 economy days; RFMT 1 + ELEC 1. |
-| Replacement pod | 1 t shell; SCMP 1 + 2,000 money + one day of Surface assembly. |
+| Replacement pod | 2t shell; STEL1 + GOOD2 +2,000 money +74 ticks of Surface assembly. |
 | Cargo descent time | 2 economy days. |
 | Separate elapsed-travel-time endurance cutoff | None; pods, service state and the saved approach deadline constrain missions. |
 
-The [r2mlvs1 launch/probe budget](r2mlvs1-e-ground-and-space-budgets.md#group-14---launch-returns-and-surface-supplied-orbital-assembly) remains the authority for shared hold, work, cost and service values. r2mlvs9 owns paid pod replacement and cargo descent. No orbital station is required for the basic loop.
+The [revised Space budget](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
+is authoritative for body/pod materials and masses; a pod now uses STEL1 +
+GOOD2 and weighs2t. The unchanged launch/probe schedules govern shared hold,
+work, cost and service. r2mlvs9 owns paid replacement and descent. No orbital
+station is required for the basic loop. The old SCMP-only pod recipe must be
+replaced in the catalogue, not exposed as a second construction route.
 
 **Configuration:** extend logical model 15 (Mining probe) through [src/multilayer_vehicle_catalogue.cpp](../../../../src/multilayer_vehicle_catalogue.cpp) / [src/multilayer_content.h](../../../../src/multilayer_content.h). The r2mlvs9 hull and this controller consume the same model's tuning. These are typed content definitions, following the existing vehicle catalogue style; implementation still needs to add the physical tuning fields.
 
 **Timeout rule:** measure upward-rounded Q16 distance `D_fp` to the current approach point when rendezvous begins, then save `max(1480, ceil(D_fp * 74 / (3 * 65536)) + 148)` ticks as that attempt's deadline. This allows at least 20 days, or travel at a conservative 3-tile/day closing speed plus two days. Target-position updates cannot keep extending the deadline. Group 15 must verify the controller meets this allowance on unblocked paths. A 32-tile approach needs 632 ticks under ideal straight pursuit or 790 ticks under the conservative bound, within the 1,480-tick minimum.
 
-Charge travel/wait upkeep in addition to the existing 26,420-money two-return collection ledger: add `100 * assigned_idle_ticks / 74`, retaining the accrual remainder. A saved descent job owns and charges its cargo once.
+Charge travel/wait upkeep in addition to the revised25,900-money two-return
+collection ledger: add `100 * assigned_idle_ticks / 74`, retaining the accrual
+remainder. A saved descent job owns and charges its cargo once.
 
 - [ ] 8.1 Consume the minimal probe hull/carry/deployment identity already delivered by r2mlvs9; add mining capability to that same engine/unit rather than create another probe registry or launch mechanism.
 - [ ] 8.2 Bind the Mining-probe defaults to the existing model's tuning and add home-center/body-target commands, hold/refit choice, speed, extraction rate, upkeep, timeout and service budget. Use Group 3's body-speed bounds and the canonical r2mlvs1 cost/service budget. Validate missing target as an idle/unassigned state before a mission begins.
+
+### Local Mandatory Reading - Additional probe roles and orders
+
+_Applies to Groups8B/8C._ Read the Global and Probe mission controller Area
+blocks, the shared Space economy revision and revised numerical tables,
+parent AD-9/AD-11/AD-12, actual `SpaceVehicle`/`SpaceMission` ownership in
+`src/space_vehicle.h`, `AsteroidBody` in `src/asteroid.h`, and the current native
+command/save validation. Initial role deployment requires Plan9's tested
+commissioning handoff. Construction mutation/unload additionally requires
+Plan11's tested blueprint/inventory owners; missing producers permit contract
+and pure fixture work, not free deployment or a parallel cargo registry.
+
+### Group 8B - Implement survey probes and typed ordered missions
+
+{{HARD}}
+
+- [ ] 8B.1 Add survey19 and construction20 without renumbering models0..18 or native vehicle kinds. Expose role/recipe-specific Earth launch-center commissioning; enable orbital manufacture only through a completed Assembly's same material gate. Version the content/save contract explicitly.
+- [ ] 8B.2 Add synchronized owner-validated typed order queues for Visit, Survey, Mine, Deliver/Construct, orbital Unload and Return/Service. Save order index, target generation, work and blocked reason; role-invalid actions refuse without cargo/reserve/money mutation. Ground StationID orders cannot truncate32-bit body IDs.
+- [ ] 8B.3 Implement148-working-tick moving-body scans and saved per-company knowledge. Hide initial/remaining quantities through one disclosure query in every player-facing body view until completion. Cancellation, hidden views and old preview surveys grant nothing; unsurveyed mining remains legal. Scans do not occupy the exclusive mining lease.
+- [ ] 8B.4 Verify Visit(bodyA) then Mine(bodyB), role refusals, two companies with different knowledge, partial/cancelled/completed scans, company-ID reuse, old unsurveyed migration and exact save/network continuation. No UI/tooltips/scripts may expose undiscovered amounts.
+
+### Group 8C - Deliver construction materials and reuse orbital products
+
+{{HARD}}
+
+- [ ] 8C.1 Implement the Earth-launched construction probe's20t mass-limited STEL/GOOD hold, paid material-built body and generation-checked blueprint orders. Count Goods crates with the canonical weight; preserve payload/cargo ownership through launch and role-specific refits.
+- [ ] 8C.2 Deliver actual packets to an empty Core blueprint through Plan11's saved construction job; advance bounded construction work and consume each required input once. Support missing-material waits, multiple trips/probes and cancellation without needing a pre-existing dock/storage/Assembly.
+- [ ] 8C.3 Allow explicit unloading of mined ore at completed orbital processors and loading of their Steel/Goods for construction or Plan9 authorized drop/descent. Distinguish construction reservation from transport ownership; competing builds/export cannot claim the same quantity.
+- [ ] 8C.4 Exercise Earth-only probe commissioning, two-material first-station delivery, constructed Steelworks/Goodsworks, imported versus locally produced construction stock, later local probe assembly and product Earth collection. Save interrupted orders/jobs and compare next-step conservation and command replay; no free station, input, launch or duplicate payment.
 
 ### Group 9 - Deploy and pursue a moving target
 
@@ -383,7 +604,7 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 ### Group 14 - UI, art and acceptance
 
 {{MEDIUM}}
-- [ ] 14.1 Add asteroid selection, initial/remaining per-cargo reserve and composition, trajectory direction and speed in the published units, assignment controls and mission status. Show clear attachment/mining and return-pod states using r2mlvs13 art.
+- [ ] 14.1 Add asteroid selection with survey-gated initial/remaining per-cargo quantities, class/composition, trajectory direction and speed, role-aware order editing and mission status. Show Unknown before a company scan completes, plus scan progress, construction deliveries, attachment/mining and return-pod states using r2mlvs13 art.
 
 ### Group 15 - Test interception and exclusive attachment
 
@@ -458,3 +679,10 @@ This is not an execution reading queue. Do not preload it after context compacti
 Population, resource content, trajectory and speed match the editable tables in their owning groups and have deterministic fixtures, including supported map-size/class coverage, aggregate initial resource budgets and basic-probe interception bounds. Generated state and subsequent saved motion survive reload without rerolling or replenishment.
 
 Asteroid movement is observable, slow and deterministic. Probes physically attach and mine moving bodies, then return into the correct center's 20-tile drop zone and deliver accountable Surface cargo through its collection hub. The first useful mission completes without an orbital station, and all interrupted states can recover.
+
+The additional8B/8C requirements are part of completion: three Earth-launchable
+probe roles with saved typed orders, completed-scan-only company knowledge,
+Steel/Goods-delivered station construction, mined-ore processing into both
+materials, exclusive orbital reuse or Earth export, and later material-paid
+local probe assembly. Current P1/P2 snapshots remain immutable regression inputs;
+they do not bypass the mature commissioning or disclosure rules.

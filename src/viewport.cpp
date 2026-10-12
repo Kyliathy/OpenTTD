@@ -61,6 +61,8 @@
  */
 
 #include "stdafx.h"
+#include "launch_center.h"
+#include "asteroid.h"
 #include "core/backup_type.hpp"
 #include "landscape.h"
 #include "viewport_func.h"
@@ -1032,6 +1034,39 @@ const Waypoint *_viewport_highlight_waypoint; ///< Currently selected waypoint f
 const Waypoint *_viewport_highlight_waypoint_rect; ///< Currently selected waypoint for rectangle highlight
 const Town *_viewport_highlight_town; ///< Currently selected town for coverage area highlight
 
+static LaunchCenterRef _viewport_launch_collection;
+
+bool IsViewportLaunchCollection(StationID center, uint64_t generation)
+{
+	return _viewport_launch_collection == LaunchCenterRef{center, generation} && ResolveLaunchCenter(_viewport_launch_collection) != nullptr;
+}
+
+void SetViewportLaunchCollection(StationID center, uint64_t generation, bool selected)
+{
+	const LaunchCenterRef ref{center, generation};
+	if (selected && ResolveLaunchCenter(ref) == nullptr) return;
+	if (!selected && _viewport_launch_collection != ref) return;
+	const auto old = _viewport_launch_collection;
+	_viewport_launch_collection = selected ? ref : LaunchCenterRef{};
+	if (old.station != StationID::Invalid()) SetWindowDirty(WindowClass::StationView, old.station);
+	if (center != StationID::Invalid()) SetWindowDirty(WindowClass::StationView, center);
+	MarkWholeScreenDirty();
+}
+
+LaunchCollectionHighlight GetViewportLaunchCollectionTile(TileIndex tile)
+{
+	const auto *center = ResolveLaunchCenter(_viewport_launch_collection);
+	const auto point = GetLaunchCenterPlaneReference(tile);
+	if (center == nullptr || !point) return LaunchCollectionHighlight::None;
+	const auto anchor = GetLaunchCenterPlaneReference(center->launch_center->tile);
+	if (!anchor || !IsInsideLaunchCenterCollectionArea(*point, *anchor)) return LaunchCollectionHighlight::None;
+	if (IsTileType(tile, TileType::Station)) {
+		const auto membership = GetLaunchHubMembership(GetStationIndex(tile));
+		if (GetStationIndex(tile) == center->index || (membership && membership->center == _viewport_launch_collection)) return LaunchCollectionHighlight::Member;
+	}
+	return LaunchCollectionHighlight::Area;
+}
+
 /** Active cursor owner's derived canonical floor/turn/refusal tiles; never saved or used by commands. */
 static Window *_construction_preview_owner = nullptr;
 static std::array<std::vector<TileIndex>, 3> _construction_preview_tiles; ///< Sorted draw lookup, independent of simulation state.
@@ -1105,6 +1140,11 @@ static TileHighlightType GetTileHighlightType(TileIndex t)
 		case ConstructionPreviewTile::WorkingSpace: return TileHighlightType::Blue;
 		case ConstructionPreviewTile::Uncovered: return TileHighlightType::Red;
 		case ConstructionPreviewTile::None: break;
+	}
+	switch (GetViewportLaunchCollectionTile(t)) {
+		case LaunchCollectionHighlight::Member: return TileHighlightType::White;
+		case LaunchCollectionHighlight::Area: return TileHighlightType::Blue;
+		case LaunchCollectionHighlight::None: break;
 	}
 	if (_viewport_highlight_station != nullptr) {
 		if (IsTileType(t, TileType::Station) && GetStationIndex(t) == _viewport_highlight_station->index) return TileHighlightType::White;
@@ -1940,6 +1980,7 @@ void ViewportDoDraw(const Viewport &vp, int left, int top, int right, int bottom
 
 	ViewportAddLandscape();
 	ViewportAddVehicles(&_vd.dpi);
+	ViewportAddSpaceEntities(_vd.dpi);
 
 	ViewportAddKdtreeSigns(&_vd.dpi);
 
@@ -2650,6 +2691,7 @@ bool HandleViewportClicked(const Viewport &vp, int x, int y)
 	}
 
 	if (CheckClickOnViewportSign(vp, x, y)) return true;
+	if (HandleSpaceEntityClick(vp, x, y)) return true;
 	bool result = CheckClickOnLandscape(vp, x, y);
 
 	if (v != nullptr) {

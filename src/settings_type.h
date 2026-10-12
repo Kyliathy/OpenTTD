@@ -444,6 +444,7 @@ struct NetworkSettings {
 /** Pending world-creation settings; profile policy is published only after content activation validates. */
 struct GameCreationSettings {
 	uint8_t gameplay_profile = 0; ///< New-world selector only; saved profile identity/version use MultiLayerProfileSelection.
+	uint8_t asteroid_density = 1; ///< Saved new-game Sparse/Normal/Dense selection; generated field remains authoritative.
 	uint32_t generation_seed; ///< noise seed for world generation
 	TimerGameCalendar::Year starting_year; ///< starting date
 	TimerGameCalendar::Year ending_year; ///< scoring end date

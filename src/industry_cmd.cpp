@@ -8,6 +8,7 @@
 /** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "misc/history_type.hpp"
 #include "misc/history_func.hpp"
 #include "bridge_map.h"
@@ -1601,6 +1602,11 @@ bool IsSlopeRefused(Slope current, Slope refused)
  */
 static CommandCost CheckIfIndustryTilesAreFree(TileIndex tile, const IndustryTileLayout &layout, IndustryType type)
 {
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) {
+		for (const auto &part : layout)
+			if (GetTranslatedIndustryTileID(part.gfx) != GFX_WATERTILE_SPECIALCHECK && TileAddWrap(tile, part.ti.x, part.ti.y) == water) return true;
+		return false;
+	})) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 	IndustryBehaviours ind_behav = GetIndustrySpec(type)->behaviour;
 
 	for (const IndustryTileLayoutTile &it : layout) {

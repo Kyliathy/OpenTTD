@@ -494,6 +494,30 @@ STR_MAP_LAYER_SURFACE                                           :Surface
 STR_MAP_LAYER_UNDERGROUND                                       :Underground
 STR_MAP_LAYER_DEEP_UNDERGROUND                                  :Deep Underground
 STR_MAP_LAYER_SPACE                                             :Outer Space
+STR_SPACE_SURVEY_CAPTION                                        :{WHITE}Space field and probes
+STR_SPACE_NATIVE_FIELD_COUNT                                    :{NUM} asteroids / {NUM} company mining probes
+STR_SPACE_MINING_BOUNDARY                                       :Extracted cargo stays in orbit; Surface descent pending.
+STR_SPACE_MINE_SELECTED                                         :Mine selected asteroid
+STR_SPACE_RECALL                                                :Recall selected probe
+STR_SPACE_MISSION_FAILED                                        :Cannot assign this mining mission
+STR_SPACE_IDLE                                                  :Idle
+STR_SPACE_MINING                                                :Mining
+STR_SPACE_HOLDING                                               :Holding cargo at orbital home
+STR_SPACE_NATIVE_PROBE_STATUS                                   :{VEHICLE}: {STRING} / {NUM}/{NUM} t {STRING}
+STR_SPACE_NATIVE_SELECTED                                       :Selected probe: body #{NUM}, work {NUM}/74 ticks
+STR_SPACE_FIELD_COUNT                                           :{NUM} asteroids / {NUM} predeployed survey probes
+STR_SPACE_SURVEY_BOUNDARY                                       :Survey preview: finite reserves remain untouched.
+STR_SPACE_METALLIC                                              :Metallic / Nickel Ore
+STR_SPACE_CARBONACEOUS                                          :Carbonaceous / Water Ice
+STR_SPACE_RICH                                                  :Rich / Rare Earth concentrate
+STR_SPACE_BODY_RESERVE                                          :Body #{NUM}: {STRING} - {NUM}/{NUM} t
+STR_SPACE_BODY_LOCATION                                         :Current plane position: {NUM}, {NUM}
+STR_SPACE_APPROACH                                              :Pursuing moving target
+STR_SPACE_ATTACHED                                              :Attached survey
+STR_SPACE_RETURN                                                :Returning to staging point
+STR_SPACE_WAITING                                               :Waiting to repeat
+STR_SPACE_SURVEY_STATUS                                         :Probe {NUM}: {STRING} / body #{NUM} / {NUM} surveys
+STR_SPACE_SURVEY_HINT                                           :Click a body or probe for its live status.
 STR_MAP_LAYER_CHOOSE_VIEW                                       :{BLACK}Choose which map layer this view shows
 
 # Town menu
@@ -3569,6 +3593,12 @@ STR_MAPGEN_WORLD_GENERATION_CAPTION                             :{WHITE}World Ge
 STR_MAPGEN_GAMEPLAY_PROFILE                                     :{BLACK}Gameplay profile:
 STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP                             :{BLACK}Choose Classic or the first-party Temperate Multilayer Industry economy
 STR_CONFIG_SETTING_GAMEPLAY_PROFILE                             :Gameplay profile: {STRING}
+STR_MAPGEN_ASTEROID_POPULATION                                 :{BLACK}Asteroid population:
+STR_MAPGEN_ASTEROID_POPULATION_TOOLTIP                         :{BLACK}Choose the exact population table column for a new Multilayer Industry world. Classic has no asteroids. Existing worlds retain their generated field.
+STR_CONFIG_SETTING_ASTEROID_POPULATION                         :Asteroid population: {STRING}
+STR_ASTEROID_POPULATION_SPARSE                                 :Sparse
+STR_ASTEROID_POPULATION_NORMAL                                 :Normal
+STR_ASTEROID_POPULATION_DENSE                                  :Dense
 STR_GAMEPLAY_PROFILE_CLASSIC                                    :Classic
 STR_GAMEPLAY_PROFILE_MULTILAYER_INDUSTRY                         :Multilayer Industry
 STR_MAPGEN_MAPSIZE                                              :{BLACK}Map size:
@@ -5899,6 +5929,7 @@ STR_SV_TRAIN_NAME                                               :Train #{COMMA}
 STR_SV_ROAD_VEHICLE_NAME                                        :Road Vehicle #{COMMA}
 STR_SV_SHIP_NAME                                                :Ship #{COMMA}
 STR_SV_AIRCRAFT_NAME                                            :Aircraft #{COMMA}
+STR_SV_SPACE_NAME                                               :Mining probe #{COMMA}
 
 ###length 27
 STR_SV_STNAME                                                   :{STRING1}
@@ -6453,3 +6484,28 @@ STR_PORTAL_HARDNESS_MIXED                                     :Mixed
 STR_PORTAL_HARDNESS_HARD                                      :Hard
 STR_PORTAL_HARDNESS_BASALT                                    :Basalt
 STR_PORTAL_HARDNESS_UNKNOWN                                   :Unknown
+
+# Native Surface Space launch facility; distinct from ordinary aircraft airports.
+STR_LAUNCH_CENTER_NAME                                          :Space Launch Center
+STR_LAUNCH_CENTER_BUILD_TOOLTIP                                 :Build a waterside Space Launch Center on Surface (available from 1990)
+STR_LAUNCH_CENTER_ROTATE                                        :Rotate
+STR_LAUNCH_CENTER_ROTATE_TOOLTIP                                :Rotate the Space Launch Center footprint
+STR_ERROR_BUILD_LAUNCH_CENTER                                   :{WHITE}Can't build Space Launch Center here...
+STR_ERROR_LAUNCH_CENTER_UNAVAILABLE                             :{WHITE}Space Launch Centers require Multilayer Industry and the year 1990 or later
+STR_ERROR_LAUNCH_CENTER_SURFACE                                 :{WHITE}Space Launch Centers must be built on the Surface layer
+STR_ERROR_LAUNCH_CENTER_WATER                                   :{WHITE}A Space Launch Center must retain an orthogonal edge beside flat navigable water
+STR_ERROR_LAUNCH_CENTER_LIMIT                                   :{WHITE}Too many Space Launch Centers
+STR_ERROR_LAUNCH_CENTER_EXISTS                                  :{WHITE}This station already has a Space Launch Center
+STR_ERROR_LAUNCH_CENTER_REMOVE_FIRST                            :{WHITE}Demolish the Space Launch Center first
+
+STR_LAUNCH_HUB_NONE                                             :{BLACK}Launch hub: None
+STR_LAUNCH_HUB_OWN                                              :{BLACK}Launch center inventory
+STR_LAUNCH_HUB_SELECTED                                         :{BLACK}Hub: {STATION}
+STR_LAUNCH_HUB_TOOLTIP                                          :Select the Space Launch Center supplying this Surface freight station; the whole station must be inside its collection area
+STR_LAUNCH_HUB_UNLINK                                           :No launch hub
+STR_LAUNCH_HUB_COLLECTION                                       :{BLACK}Collection area
+STR_LAUNCH_HUB_COLLECTION_TOOLTIP                               :Show this launch hub's Surface collection circle and linked stations
+STR_ERROR_SET_LAUNCH_HUB                                        :{WHITE}Can't change launch hub...
+STR_ERROR_LAUNCH_HUB_INELIGIBLE                                  :{WHITE}Select a current same-company launch center with this entire Surface train or lorry station inside its collection area
+STR_ERROR_LAUNCH_HUB_JOINED                                      :{WHITE}Joined freight facilities use their own launch center's shared station inventory
+STR_ERROR_LAUNCH_HUB_LIMIT                                       :{WHITE}This launch hub has no free freight membership slot

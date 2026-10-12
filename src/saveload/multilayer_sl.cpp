@@ -121,6 +121,9 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks) && (schema.feature_flags & MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS) != 0) SlErrorCorrupt("Unexpected local utility paths in old save version"); // Older electrical routes cannot impersonate installed Deep heat cells.
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatRoutes) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0) SlErrorCorrupt("Unexpected geothermal heat routes in old save version"); // Legacy absence creates neither physical ports nor a reconstructed grant path.
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
+		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidField) && (schema.feature_flags & MULTILAYER_FEATURE_ASTEROIDS) != 0) SlErrorCorrupt("Unexpected asteroid feature in old save version");
+		if (IsSavegameVersionBefore(SaveLoadVersion::LaunchCenters) && (schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0) SlErrorCorrupt("Unexpected launch-center feature in old save version");
+		if (IsSavegameVersionBefore(SaveLoadVersion::LaunchCollectionHubs) && (schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_HUBS) != 0) SlErrorCorrupt("Unexpected launch-hub feature in old save version");
 		return schema;
 	}
 
@@ -152,6 +155,7 @@ struct MLMDChunkHandler : ChunkHandler {
 		_load_check_data.gameplay_profile_id = to_underlying(schema.profile.id);
 		_load_check_data.gameplay_profile_version = schema.profile.version;
 		_load_check_data.multilayer_feature_flags = schema.feature_flags;
+		_load_check_data.orbital_seed = schema.orbital_seed;
 	}
 };
 

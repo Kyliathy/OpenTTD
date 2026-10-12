@@ -8,6 +8,7 @@
 /** @file terraform_cmd.cpp Commands related to terraforming. @see docs/zz-reach2/architecture/landscape/archi-landscape.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "command_func.h"
 #include "map_layer.h"
 #include "tilearea_type.h"
@@ -207,6 +208,8 @@ std::tuple<CommandCost, Money, TileIndex> CmdTerraformLand(DoCommandFlags flags,
 		if (cost.Failed()) return { cost, 0, err_tile };
 		total_cost.AddCost(cost.GetCost());
 	}
+
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return ts.dirty_tiles.contains(water); })) return {CommandCost(STR_ERROR_LAUNCH_CENTER_WATER), 0, tile};
 
 	/* Check if the terraforming is valid wrt. tunnels, bridges and objects on the surface
 	 * Pass == 0: Collect tileareas which are caused to be auto-cleared.

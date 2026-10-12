@@ -4,6 +4,111 @@ Owner: [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-an
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
+## Space economy revision - 2026-10-12
+
+**Current user decision; implementation pending.** This section and the revised
+[Space numerical budget](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
+supersede the earlier orbital construction/bootstrap rows below. Existing
+Surface/underground recipes and their completed evidence remain valid. The
+compiled version1 Space catalogue is the historical baseline; it must receive
+an explicit content/save compatibility revision before these rules become live.
+Rechecking a document does not finish that migration or any facility.
+
+Every newly constructed orbital structure, module, mirror and Space vehicle
+(including cross-layer rocket hulls) requires
+**Steel (`STEL`) and Goods (`GOOD`)**. They may be shipped from Earth or made in
+orbit. Initial station construction uses these two materials; later advanced
+equipment may require additional declared inputs, always retaining this common
+base. Natural asteroids are resources, not construction projects. Fuel and
+recurring service keep their separately declared consumables.
+
+An Earth-assembled probe or mirror carries a saved paid payload identity whose
+Steel/Goods were already consumed during assembly. Deployment cannot debit
+those materials again. Loose materials carried for a station blueprint remain
+actual cargo until consumed by its orbital construction job. Money pays for
+work/equipment; it never substitutes for missing delivered materials.
+
+### Probe roles and commissioning
+
+| Role | Initial commissioning | Orders/function | Later commissioning |
+| --- | --- | --- | --- |
+| Mining probe, existing model15 | Surface Space Launch Center, carried by an actual rocket | Visit body; mine a selected body/cargo; unload at an authorized station or return-drop center; service | Completed orbital Assembly with materials, berth, time and funds |
+| Survey probe, new model19 | Same Earth launch path | Visit body; complete a saved scan revealing reserves to its company; return/service | Same completed Assembly gate |
+| Construction probe, new model20 | Same Earth launch path | Carry Steel or Goods to a selected blueprint; construct/extend the selected station; unload/return/service | Same completed Assembly gate |
+
+Model IDs0..18 retain their meanings;19/20 are additions, never replacements for
+the later heavy construction robot16. All three initial probes are available
+with the1990 launch technology. Buying, cloning or replacing a Space vehicle
+must use the same material/commissioning gate. The first probe needs no station;
+the first station needs only Earth-launched construction probes and supplies.
+
+Typed vehicle orders identify a moving body or a generation-checked station,
+blueprint or launch center, never its current tile or an `IndustryID` cast.
+Visit, Survey, Mine, Deliver/Construct, Unload and Return/Service are distinct
+operations with role checks. Queues, current index, partial work and blocked
+reasons are synchronized/saved. Cancelling or editing an order preserves cargo
+and releases only that vehicle's reservations. It must not grant a survey or
+replay a completed delivery. Existing native Vehicle/Engine/cargo owners remain
+authoritative; adding roles creates no second fleet or inventory registry.
+
+### Survey knowledge
+
+Asteroid position, silhouette, size and broad class may be visible immediately.
+**Initial and remaining per-cargo quantities are hidden until a survey probe
+finishes scanning that body for its company.** Selection, tooltips, assignment
+lists, overlays and scripts use the same disclosure query. Display Unknown,
+not a guessed or zero reserve. An unfinished/cancelled scan reveals nothing.
+Completed knowledge is saved per body/company and then permits current reserve
+display; viewing a layer does not discover deposits. Mining is permitted before
+a survey, without revealing the body's quantities. Survey work extracts no ore
+and does not monopolize the exclusive mining attachment lease.
+
+Old preview survey controllers have no company owner and cannot grant knowledge.
+Migration defaults to unsurveyed; save/load and company deletion/ID reuse must
+not reveal another company's survey. Developer fixture ledgers may inspect
+reserves for conservation, but ordinary player UI may not expose them.
+
+### Build, process and reuse
+
+Use a **Fund Industry-style orbital construction window**: choose station/module,
+see footprint, money, Steel/Goods requirements and delivered/remaining stock,
+then place a blueprint. Placement reserves occupancy and a construction job; it
+provides no operational dock, factory, storage or assembly capacity. A first
+construction probe may deliver to this empty site through the saved job itself,
+so no pre-existing station is required. Multiple trips/probes can complete it.
+
+Completed orbital Steelworks convert metallic asteroid ore to Steel; completed
+Goodsworks convert Steel plus rare-earth concentrate to Goods. These are
+explicit game recipes with bounded stock, work, power and disposition ledgers,
+using the shared all-input planner/commit contract. Their own buildings must
+first be constructed from shipped Steel/Goods. Existing Water Ice/Propellant
+and mineral/Refined Metals choices remain later alternatives.
+
+Products may be reserved for nearby construction/vehicle assembly, carried to
+another orbital station, or sent through the authorized drop/descent/hub path
+to a useful Earth receiver. Steel and Goods therefore belong in rocket,
+construction-probe, orbital-hauler, return-pod and Surface collection admission.
+`GOOD` already exists; do not allocate a duplicate cargo. Its native class is
+Express, and its unit is a crate, currently8 sixteenths of a tonne. Capacity
+checks widen and sum `count * CargoSpec::weight` before comparison, without
+rounding every packet down; retain the authoritative unit/form for each label.
+
+Every reserved/held load has one owner. Local production, construction,
+reloading and dropping create no extra freight income. Industrial delivery is
+settled once through CargoPayment at a valid useful intake; later consumption
+is not another delivery. Company-supply purpose survives transfers and follows
+the declared recipe policy on conversion. Cancellation returns only unconsumed
+materials; consumed materials stay in the saved build/recipe ledger.
+
+**Required freeze/acceptance:** revise the profile definitions and compatibility
+signature, seed/price/cap table, all initial payload mass and bootstrap budgets,
+three role capabilities/orders, survey knowledge and processed-product
+provenance. Test Earth-only commissioning; two-stage first-station delivery;
+missing either material; output/storage congestion; imported and locally made
+inputs competing for one reservation; product drop versus orbital reuse;
+save/network continuation; and company/typed-ID reuse. These are pending
+implementation requirements, not new completed tasks.
+
 ## Group 7 - mines, processors and bounded receivers
 
 All cargo quantities use the existing packet unit for their label: tonnes for ores/metals/industrial packaged products; kilolitres for liquid CHEM/PROP and baseline OIL_; baseline GOOD keeps its existing crate unit. Stock caps below are per distinct label and never exceed the existing `uint16_t` industry stock bound. A mine debits finite deposit reserve only when a complete batch fits output stock. Discovery, construction, blocked output and paused work consume no reserve. Every mine requires excavated machinery/loading footprint and conventional access; none creates transport by sharing coordinates with Surface.

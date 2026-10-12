@@ -45,6 +45,7 @@ NewsReference Source::GetNewsReference() const
 	switch (this->type) {
 		case SourceType::Industry: return static_cast<IndustryID>(this->id);
 		case SourceType::Town: return static_cast<TownID>(this->id);
+		case SourceType::Asteroid: return std::monostate{}; // No industry/town news-link alias.
 		default: NOT_REACHED();
 	}
 }
@@ -58,6 +59,7 @@ StringID Source::GetFormat() const
 	switch (this->type) {
 		case SourceType::Industry: return STR_INDUSTRY_NAME;
 		case SourceType::Town: return STR_TOWN_NAME;
+		case SourceType::Asteroid: return STR_JUST_COMMA;
 		default: NOT_REACHED();
 	}
 }

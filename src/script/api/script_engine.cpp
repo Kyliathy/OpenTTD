@@ -27,7 +27,7 @@
 {
 	EnforceDeityOrCompanyModeValid(false);
 	const Engine *e = ::Engine::GetIfValid(engine_id);
-	if (e == nullptr || !e->IsEnabled()) return false;
+	if (e == nullptr || e->type == ::VehicleType::Space || !e->IsEnabled()) return false;
 
 	/* AIs have only access to engines they can purchase or still have in use.
 	 * Deity has access to all engined that will be or were available ever. */
@@ -39,7 +39,7 @@
 {
 	EnforceDeityOrCompanyModeValid(false);
 	const Engine *e = ::Engine::GetIfValid(engine_id);
-	return e != nullptr && ::IsEngineBuildable(engine_id, e->type, ScriptObject::GetCompany());
+	return e != nullptr && e->type != ::VehicleType::Space && ::IsEngineBuildable(engine_id, e->type, ScriptObject::GetCompany());
 }
 
 /* static */ std::optional<std::string> ScriptEngine::GetName(EngineID engine_id)

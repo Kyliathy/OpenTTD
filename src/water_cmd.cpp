@@ -8,6 +8,7 @@
 /** @file water_cmd.cpp Handling of water tiles. @see docs/zz-reach2/architecture/landscape/water-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "bridge.h"
 #include "landscape.h"
 #include "tilearea_spiral.h"
@@ -122,6 +123,7 @@ CommandCost CmdBuildShipDepot(DoCommandFlags flags, TileIndex tile, Axis axis)
 
 	if (!IsValidAxis(axis)) return CMD_ERROR;
 	TileIndex tile2 = tile + TileOffsByAxis(axis);
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return water == tile || water == tile2; })) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 
 	if (!HasTileWaterGround(tile) || !HasTileWaterGround(tile2)) {
 		return CommandCost(STR_ERROR_MUST_BE_BUILT_ON_WATER);
@@ -353,6 +355,7 @@ static CommandCost DoBuildLock(TileIndex tile, DiagDirection dir, DoCommandFlags
 
 	TileIndexDiff delta = TileOffsByDiagDir(dir);
 	CommandCost ret = EnsureNoVehicleOnGround(tile);
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return water == tile || water == tile - delta || water == tile + delta; })) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 	if (ret.Succeeded()) ret = EnsureNoVehicleOnGround(tile + delta);
 	if (ret.Succeeded()) ret = EnsureNoVehicleOnGround(tile - delta);
 	if (ret.Failed()) return ret;
@@ -545,6 +548,7 @@ CommandCost CmdBuildCanal(DoCommandFlags flags, TileIndex tile, TileIndex start_
 		/* Outside the editor, prevent building canals over your own or OWNER_NONE owned canals */
 		if (water && IsCanal(current_tile) && _game_mode != GameMode::Editor && (IsTileOwner(current_tile, _current_company) || IsTileOwner(current_tile, OWNER_NONE))) continue;
 
+		ScopedLaunchCenterWaterReplacement replacement(slope == SLOPE_FLAT ? current_tile : INVALID_TILE);
 		ret = Command<Commands::LandscapeClear>::Do(flags, current_tile);
 		if (ret.Failed()) return ret;
 

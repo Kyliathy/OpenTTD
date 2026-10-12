@@ -287,6 +287,16 @@ add_files(
     map.cpp
     map_func.h
     map_layer.cpp
+    space.cpp
+    space_vehicle.cpp
+    space.h
+    asteroid.cpp
+    launch_center.cpp
+    launch_hub.cpp
+    launch_center.h
+    asteroid.h
+    asteroid_gui.cpp
+    multilayer_asteroid_catalogue.cpp
     map_layer.h
     map_layer_gui.cpp
     map_layer_gui.h

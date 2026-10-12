@@ -10,6 +10,7 @@
 #include "../stdafx.h"
 
 #include "saveload.h"
+#include "saveload_error.hpp"
 #include "compat/engine_sl_compat.h"
 
 #include "saveload_internal.h"
@@ -200,6 +201,7 @@ struct EIDSChunkHandler : ChunkHandler {
 		while ((index = SlIterateArray()) != -1) {
 			EngineIDMapping eid;
 			SlObject(&eid, slt);
+			if (!IsCompanyVehicleType(eid.type) || (eid.type == VehicleType::Space && IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles))) SlErrorCorrupt("Invalid engine vehicle type");
 			_engine_mngr.SetID(eid.type, eid.internal_id, eid.grfid, eid.substitute_id, static_cast<EngineID>(index));
 		}
 	}

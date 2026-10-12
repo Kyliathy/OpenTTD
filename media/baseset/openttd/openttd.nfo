@@ -104,3 +104,4 @@
 #include "bridge_decks.nfo"
 #include "map_layers.nfo"
 #include "map_layers_m1.nfo"
+#include "space_preview.nfo"

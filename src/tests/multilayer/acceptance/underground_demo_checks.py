@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / "src/tests/multilayer"))
 sys.path.insert(0, str(ROOT / "mlm/tools/savegames"))
 from runner import current_run_context, run_native, start_native, console_executable, collect_native_screenshots
 from savegame_plane_digest import read_stream, Reader, CHUNK_RIFF, CHUNK_RECORDS
+from native_vehicle_projection import legacy_vehicle_projection
 
 DESTINATION = ROOT / "src/tests/fixtures/demos/underground"
 MANIFEST = DESTINATION / "demo-checkpoints.json"
@@ -63,12 +64,14 @@ def owners(path):
             raise ValueError("unsupported native save framing")
         if name in selected:
             result[name] = stream[start:reader.pos]
+            if name == b"VEHS":
+                result[name] = legacy_vehicle_projection(result[name][5:], version)
     assert b"GEOS" in result and b"INDY" in result, "demo lacks native geology/industry owners"
     return version, result
 
 
-def resave(context, source, name):
-    """Pause and resave through the actual optimized executable in an isolated data home."""
+def resave(context, source, name, configuration="RelWithDebInfo"):
+    """Pause and resave through the requested actual executable in an isolated data home."""
     output = context.saves / f"{name}.sav"
     assert not output.exists(), output
     original = identity(source)
@@ -76,7 +79,7 @@ def resave(context, source, name):
     startup = context.runtime_dir / "scripts/game_start.scr"
     startup.write_text(f'pause\nset savegame_format lzma\nsave "{output.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
     log = context.logs / f"{name}.log"
-    executable = console_executable(context, GAME)
+    executable = console_executable(context, ROOT / "build" / configuration / "openttd.exe")
     with log.open("wb") as sink:
         run_native(context, [str(executable), "-v", "null:ticks=2", "-s", "null", "-m", "null", "-x", "-X",
                              "-I", "original_dos", "-c", str(context.config_path), "-g", str(source)],
@@ -87,7 +90,7 @@ def resave(context, source, name):
     version, after = owners(output)
     changed = {key for key, value in before.items() if after.get(key) != value}
     migrated = []
-    if changed and before_version == 399 and version == 403:
+    if changed and before_version == 399 and version in (403, 404, 405, 406, 407, 408):
         # These older TBM snapshots contain no utility accounts. Version403
         # adds the paid-riser/share/parent descriptors and a zero share issuer;
         # all original epoch, IDs, quantities and phase flags must stay exact.
@@ -221,7 +224,7 @@ def capture(context, name):
                 process.terminate()
             process.wait(timeout=10)
     frames = collect_native_screenshots(context)
-    assert owners(source) == owners(output), "graphical loading changed a native owner"
+    assert owners(source)[1] == owners(output)[1], "graphical loading changed a native owner"
     assert identity(source) == scene["snapshot"]
     report = {"scene": name, "source": identity(source), "game": identity(GAME), "frames": [identity(p) for p in frames],
               "resave": identity(output), "native_owners_unchanged": True, "user_playtest": "pending"}
@@ -237,21 +240,21 @@ def capture(context, name):
     print(f"Ordinary graphical {name}: screenshot and unchanged native resave passed", flush=True)
 
 
-def verify(context):
+def verify(context, configuration="RelWithDebInfo"):
     """Reload every retained snapshot and verify natural reserves, jobs, vehicles, cargo and orders."""
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     results = []
     for row in manifest["checkpoints"]:
         source = ROOT / row["snapshot"]["path"]
         assert identity(source) == row["snapshot"]
-        _output, proof = resave(context, source, row["name"] + "-verified")
+        _output, proof = resave(context, source, row["name"] + "-verified", configuration)
         parent = ROOT / row["ordinary_load"]["source"]["path"]
         original, retained = owners(parent)[1], owners(source)[1]
         changed = sorted(key.decode() for key, value in original.items() if retained.get(key) != value)
         assert changed == row["ordinary_load"]["verified_empty_utility_schema_migration"]
         results.append({"scene": row["name"], **proof, "parent_owners_preserved": True})
         print(f"Verified {row['name']}: {len(proof['unchanged_owner_chunks'])} native owner chunks", flush=True)
-    report = {"game": identity(GAME), "manifest": identity(MANIFEST), "checkpoints": results}
+    report = {"configuration": configuration, "game": identity(ROOT / "build" / configuration / "openttd.exe"), "manifest": identity(MANIFEST), "checkpoints": results}
     target = context.reports / "retained-verification.json"
     target.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"Verification: {target.relative_to(ROOT)}", flush=True)
@@ -303,7 +306,7 @@ def main():
             parser.error("capture requires an explicit --scene")
         capture(context, args.scene)
     elif args.mode == "verify":
-        verify(context)
+        verify(context, args.configuration)
     else:
         if args.scene is None:
             parser.error("live requires an explicit --scene")

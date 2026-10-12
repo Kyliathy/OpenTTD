@@ -107,6 +107,7 @@ static constexpr VehicleTypeIndexArray<std::string_view> _vehicle_type_to_string
 	"roadveh",
 	"ship",
 	"aircraft",
+	"space",
 };
 
 /**
@@ -319,7 +320,7 @@ void SurveyCompanies(nlohmann::json &survey)
 			company["script"] = fmt::format("{}.{}", c->ai_info->GetName(), c->ai_info->GetVersion());
 		}
 
-		for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+		for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 			uint amount = c->group_all[type].num_vehicle;
 			company["vehicles"][_vehicle_type_to_string[type]] = amount;
 		}

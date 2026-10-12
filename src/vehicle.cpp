@@ -8,6 +8,7 @@
 /** @file vehicle.cpp Base implementations of all vehicles. @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
+#include "space_vehicle.h"
 #include "transport_tube.h"
 #include "error.h"
 #include "roadveh.h"
@@ -735,6 +736,7 @@ bool Vehicle::IsEngineCountable() const
 			return !this->IsArticulatedPart() && // tenders and other articulated parts
 					!Train::From(this)->IsRearDualheaded(); // rear parts of multiheaded engines
 		case VehicleType::Road: return RoadVehicle::From(this)->IsFrontEngine();
+		case VehicleType::Space:
 		case VehicleType::Ship: return true;
 		default: return false; // Only count company buildable vehicles
 	}
@@ -750,6 +752,7 @@ bool Vehicle::HasEngineType() const
 		case VehicleType::Aircraft: return Aircraft::From(this)->IsNormalAircraft();
 		case VehicleType::Train:
 		case VehicleType::Road:
+		case VehicleType::Space:
 		case VehicleType::Ship: return true;
 		default: return false;
 	}
@@ -982,7 +985,7 @@ static void RunEconomyVehicleDayProc()
 		if (v == nullptr) continue;
 
 		/* Call the 32-day callback if needed */
-		if ((v->day_counter & 0x1F) == 0 && v->HasEngineType()) {
+		if ((v->day_counter & 0x1F) == 0 && v->HasEngineType() && v->type != VehicleType::Space) {
 			uint16_t callback = GetVehicleCallback(CBID_VEHICLE_32DAY_CALLBACK, 0, 0, v->engine_type, v);
 			if (callback != CALLBACK_FAILED) {
 				if (HasBit(callback, 0)) {
@@ -1039,6 +1042,7 @@ void CallVehicleTicks()
 			case VehicleType::Train:
 			case VehicleType::Road:
 			case VehicleType::Aircraft:
+			case VehicleType::Space:
 			case VehicleType::Ship: {
 				Vehicle *front = v->First();
 
@@ -1049,6 +1053,8 @@ void CallVehicleTicks()
 						v->cargo_age_counter = v->vcache.cached_cargo_age_period;
 					}
 				}
+
+				if (v->type == VehicleType::Space) continue; // Cargo ages normally; no NewGRF orbital sound format exists.
 
 				/* Do not play any sound when crashed */
 				if (front->vehstatus.Test(VehState::Crashed)) continue;
@@ -1974,6 +1980,7 @@ UnitID GetFreeUnitNumber(VehicleType type)
 		case VehicleType::Road:     max_veh = _settings_game.vehicle.max_roadveh;  break;
 		case VehicleType::Ship:     max_veh = _settings_game.vehicle.max_ships;    break;
 		case VehicleType::Aircraft: max_veh = _settings_game.vehicle.max_aircraft; break;
+		case VehicleType::Space: max_veh = MAX_SPACE_VEHICLES; break;
 		default: NOT_REACHED();
 	}
 
@@ -2011,6 +2018,7 @@ bool CanBuildVehicleInfrastructure(VehicleType type, RoadTramType subtype)
 			break;
 		case VehicleType::Ship:     max = _settings_game.vehicle.max_ships; break;
 		case VehicleType::Aircraft: max = _settings_game.vehicle.max_aircraft; break;
+		case VehicleType::Space: return false; // No ordinary depot/transport infrastructure.
 		default: NOT_REACHED();
 	}
 
@@ -2648,6 +2656,7 @@ bool Vehicle::IsWaitingForUnbunching() const
  */
 CommandCost Vehicle::SendToDepot(DoCommandFlags flags, DepotCommandFlags command)
 {
+	if (this->type == VehicleType::Space) return CMD_ERROR;
 	CommandCost ret = CheckOwnership(this->owner);
 	if (ret.Failed()) return ret;
 

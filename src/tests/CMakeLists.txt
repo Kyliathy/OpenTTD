@@ -8,6 +8,9 @@ add_test_files(
     test_artifact_paths.h
     test_artifact_paths.cpp
     artifact_paths.cpp
+    space_preview.cpp
+    space_mining.cpp
+    launch_center.cpp
     alternating_iterator.cpp
     bitmath_func.cpp
     console.cpp

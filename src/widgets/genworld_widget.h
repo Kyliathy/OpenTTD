@@ -68,6 +68,7 @@ enum GenerateLandscapeWidgets : WidgetID {
 	WID_GL_CLIMATE_SEL_LABEL,           ///< NWID_SELECTION for snow or desert coverage label
 	WID_GL_CLIMATE_SEL_SELECTOR,        ///< NWID_SELECTION for snow or desert coverage selector
 	WID_GL_PROFILE_PULLDOWN,            ///< Appended explicit profile selector, preserving all original widget IDs.
+	WID_GL_ASTEROID_PULLDOWN,           ///< Saved Sparse/Normal/Dense asteroid population.
 };
 
 /** Widgets of the #CreateScenarioWindow class. */

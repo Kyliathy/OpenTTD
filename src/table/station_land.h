@@ -901,6 +901,7 @@ static constexpr EnumIndexArray<std::span<const DrawTileSpriteSpan>, StationType
 	_station_display_datas_buoy,
 	_station_display_datas_waypoint,
 	_station_display_datas_road_waypoint,
+	{}, // LaunchCenter uses a distinct native pad renderer.
 };
 
 static const BridgeableTileInfo _station_bridgeable_info_rail[] = {
@@ -960,4 +961,5 @@ static constexpr EnumIndexArray<std::span<const BridgeableTileInfo>, StationType
 	_station_bridgeable_info_buoy, // Buoy
 	_station_bridgeable_info_waypoint, // RailWaypoint
 	_station_bridgeable_info_road_waypoint, // RoadWaypoint
+	{}, // LaunchCenter: no bridge above the pad.
 };

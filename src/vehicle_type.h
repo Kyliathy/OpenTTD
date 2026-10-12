@@ -31,6 +31,7 @@ enum class VehicleType : uint8_t {
 
 	Effect = VehicleType::CompanyEnd, ///< Effect vehicle type (smoke, explosions, sparks, bubbles)
 	Disaster, ///< Disaster vehicle type.
+	Space, ///< Native orbital company vehicle; appended to preserve saved types 0..5.
 	End, ///< End marker.
 
 	Invalid = 0xFF, ///< Non-existing type of vehicle.
@@ -45,6 +46,30 @@ struct Ship;
 struct Aircraft;
 struct EffectVehicle;
 struct DisasterVehicle;
+struct SpaceVehicle;
+
+/** Company fleet order is independent of persisted VehicleType bytes. */
+inline constexpr std::array COMPANY_VEHICLE_TYPES = {VehicleType::Train, VehicleType::Road, VehicleType::Ship, VehicleType::Aircraft, VehicleType::Space};
+
+constexpr bool IsCompanyVehicleType(VehicleType type)
+{
+	return type <= VehicleType::Aircraft || type == VehicleType::Space;
+}
+
+constexpr size_t CompanyVehicleIndex(VehicleType type)
+{
+	assert(IsCompanyVehicleType(type));
+	return type == VehicleType::Space ? 4 : to_underlying(type);
+}
+
+/** Dense company storage excludes effects/disasters even though Space's saved byte is 6. */
+template <typename T>
+struct CompanyVehicleTypeArray : std::array<T, COMPANY_VEHICLE_TYPES.size()> {
+	constexpr T &operator[](VehicleType type) { return std::array<T, COMPANY_VEHICLE_TYPES.size()>::operator[](CompanyVehicleIndex(type)); }
+	constexpr const T &operator[](VehicleType type) const { return std::array<T, COMPANY_VEHICLE_TYPES.size()>::operator[](CompanyVehicleIndex(type)); }
+	constexpr T &at(VehicleType type) { return std::array<T, COMPANY_VEHICLE_TYPES.size()>::at(CompanyVehicleIndex(type)); }
+	constexpr const T &at(VehicleType type) const { return std::array<T, COMPANY_VEHICLE_TYPES.size()>::at(CompanyVehicleIndex(type)); }
+};
 
 /** Base vehicle class. */
 struct BaseVehicle {
@@ -100,7 +125,7 @@ using VehicleRandomTriggers = EnumBitSet<VehicleRandomTrigger, uint8_t>;
  * @tparam Tend the number of elements in the array.
  */
 template <typename T, VehicleType Tend = VehicleType::CompanyEnd>
-using VehicleTypeIndexArray = EnumIndexArray<T, VehicleType, Tend>;
+using VehicleTypeIndexArray = std::conditional_t<Tend == VehicleType::CompanyEnd, CompanyVehicleTypeArray<T>, EnumIndexArray<T, VehicleType, Tend>>;
 
 /** Ground vehicle flags. */
 enum class GroundVehicleFlag : uint8_t {

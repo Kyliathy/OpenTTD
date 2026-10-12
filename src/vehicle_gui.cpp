@@ -8,6 +8,7 @@
 /** @file vehicle_gui.cpp Vehicle controls and shared native freight refit restrictions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "asteroid.h"
 #include "underground_vehicle.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
@@ -2290,7 +2291,7 @@ public:
 };
 
 /** Window definitions for the vehicle list windows. */
-static VehicleTypeIndexArray<WindowDesc> _vehicle_list_desc = {{
+static EnumIndexArray<WindowDesc, VehicleType, VehicleType::CompanyEnd> _vehicle_list_desc = {{
 	WindowDesc{
 		WindowPosition::Automatic, "list_vehicles_train", 325, 246,
 		WindowClass::TrainList, WindowClass::None,
@@ -2319,6 +2320,7 @@ static VehicleTypeIndexArray<WindowDesc> _vehicle_list_desc = {{
 
 static void ShowVehicleListWindowLocal(CompanyID company, VehicleListType vlt, VehicleType vehicle_type, uint32_t unique_number)
 {
+	if (vehicle_type == VehicleType::Space) { ShowSpaceSurveyWindow(); return; }
 	if (!Company::IsValidID(company) && company != OWNER_NONE) return;
 
 	assert(IsCompanyBuildableVehicleType(vehicle_type));
@@ -2328,6 +2330,7 @@ static void ShowVehicleListWindowLocal(CompanyID company, VehicleListType vlt, V
 
 void ShowVehicleListWindow(CompanyID company, VehicleType vehicle_type)
 {
+	if (vehicle_type == VehicleType::Space) { ShowSpaceSurveyWindow(); return; }
 	/* If _settings_client.gui.advanced_vehicle_list > 1, display the Advanced list
 	 * if _settings_client.gui.advanced_vehicle_list == 1, display Advanced list only for local company
 	 * if _ctrl_pressed, do the opposite action (Advanced list x Normal list)
@@ -3554,6 +3557,7 @@ static WindowDesc _train_view_desc(
  */
 void ShowVehicleViewWindow(const Vehicle *v)
 {
+	if (v->type == VehicleType::Space) { ShowSpaceSurveyWindow(); return; }
 	AllocateWindowDescFront<VehicleViewWindow>((v->type == VehicleType::Train) ? _train_view_desc : _vehicle_view_desc, v->index);
 }
 

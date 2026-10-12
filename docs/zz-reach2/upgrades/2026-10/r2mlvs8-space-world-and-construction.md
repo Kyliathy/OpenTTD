@@ -44,11 +44,137 @@
 
 Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs1 and r2mlvs15 `Schema Foundation Handoff`.
 
+## Current dispatch - Native orbital mining, 2026-10-12
+
+The underground queue remains paused. GroupP1 delivered persistent geometry,
+field motion and the survey preview. The user's continuation request advances
+GroupP2: the canonical fifth company vehicle category and finite orbital mining.
+This bounded producer leaves launch-center construction, physical rockets,
+Surface descent and service/repeat work to their original entry gates. Prepared
+demo purchases retire survey records; they grant no free Surface facilities.
+
+### Area Mandatory Reading - Preview foundation
+
+_Applies to Group P1 only._ Read parent AD-9/AD-11 and I-3/I-5/I-7/I-9,
+`map_layer.h` ownership preamble, `multilayer_state.h` schema/validation,
+`vehicle_type.h` persisted enum and `vehicle_func.h` tick/render boundaries.
+Consume the existing selected-profile and save-foundation exports/tests.
+Shared Q16 geometry and reflection use Group10's tables unchanged. Read
+Plan10 GroupP1 before implementing the field consumer.
+
+### Group P1 - Persistent body motion and an explicitly staged survey preview
+
+{{HARD}}
+
+- [X] P1.1 Publish `space.h` with `OrbitalBodyID`, `SpaceMotion`, shared Q16 band/reflection helpers and a bounded derived spatial index. These are the preview's exact producer exports; full `SpaceVehicle`/structure/transition exports remain pending.
+- [X] P1.2 Tick the field once from synchronized simulation, independent of camera/layer selection; persist exact motion/remainders/IDs and rebuild only derived indexing after load. New saves require the versioned family; genuine older saves retain an empty Space layer.
+- [X] P1.3 Add saved `SpaceSurveyPreview` records for explicitly predeployed model15 demonstration craft. They pursue, attach, survey, detach and repeat without consuming reserves or creating cargo/payment. They are not company Vehicle/Engine entries, cannot be purchased or launched, and have no Surface descent. Keep old VehicleType bytes, arrays, commands and aircraft logic unchanged; full native fleet integration stays in Groups1-7.
+- [X] P1.4 Draw and inspect these entities on the actual Space viewport, provide a launchable ordinary saved demo and verify hidden-view motion, edge/corner reflection, deterministic pursuit/attachment and exact save/reload continuation. Identify preview art and economic boundaries in the player guide.
+
+**Delivered preview handoff,2026-10-12:** `space.h` owns typed body/survey IDs,
+Q16 motion and the16-tile derived buckets; clustered bucket removal is constant
+work per moved ID, with stable sorted query results. `asteroid.h` owns the one
+finite field and survey controllers. `ASTR` version404 stores the generated
+records, motion fractions, survey slots/phases and feature seed; `MLMD` requires
+the matching field bit/root. Preview loading validates copied candidate data
+without borrowing the running world. The native tick advances bodies before
+survey decisions; viewing/rendering cannot advance work or consume RNG.
+
+Focused producer evidence: `[space-preview]` plus existing state/content gates
+pass3,402 assertions/eight cases in RelWithDebInfo and Debug. Each featured
+checkpoint passes ordinary exact orbital resave and2,000 native continuation
+ticks in both configurations, including paused and hidden-view phases. Actual
+ordinary graphical captures and the inspector render successfully. The original
+eight underground checkpoints preserve27 native owner chunks each; the retained
+M0/M1 loader matches3,561 sprites/anchors/pixel hashes exactly (60,559 assertions).
+Only the new11-sprite preview block is appended after native offset3588.
+See `src/tests/fixtures/demos/space/demo-checkpoints.json`, the
+[walkthrough](d3sp-space-survey.md), and `logs/space-preview-verification.json`.
+This handoff authorizes GroupP1 consumers only; original full-fleet entry gates
+remain unsatisfied and their checkboxes remain pending.
+
+`SpaceSurveyPreview` is confined to explicitly prepared demo worlds. It is a
+survey controller, never a parallel vehicle/cargo/engine registry. Later native
+fleet commissioning must retire these demonstration records explicitly rather
+than grant free vehicles, stock or Surface facilities. Asteroid records remain
+the sole finite resource authority for the eventual mining controller.
+
+### Area Mandatory Reading - Native orbital mining increment
+
+_Applies to Group P2 only._ This staged producer revision follows the user's
+request to continue functionality after P1. Read the Global section, parent
+AD-9/AD-11, the delivered P1 exports, and
+[native compatibility matrix](space-vehicle-compatibility.md). Entry producers:
+state/content focused gates, canonical Vehicle/Engine/EIDS/CAPA ownership,
+`space.h` Q16 geometry and the one `AsteroidField`. Consume actual native owners;
+no second fleet, engine or cargo registry is allowed. This increment exports
+`SpaceVehicle`, `SpaceMission`, `CmdSetSpaceMission` and finite body leases.
+Explicit test/demo setup retires survey records and debits native purchases;
+it is not rocket commissioning. Cargo remains in the vehicle at orbital home.
+Missing launch-center/structure/descent producers stay outside P2; the original
+full-fleet/full-loop entry gates and checkboxes remain in force.
+
+Context has compacted 1 times while executing this group.
+
+### Group P2 - Native owned probes and finite orbital extraction
+
+{{HARD}}
+
+- [X] P2.1 Preserve historical vehicle bytes and fleet window identities; add explicit dense company indexing, canonical Space engine/class and versioned VEHS/ASTR/CAPA persistence. Reject unsupported ordinary purchase/order/clone/script/NewGRF paths.
+- [X] P2.2 Pursue moving bodies with a frozen adaptive timeout, lease one slot in native VehicleID order, mine 2 tonnes per 74 working ticks into a 20-tonne canonical packet hold, debit finite reserves and native company operating costs, and return with cargo intact.
+- [X] P2.3 Provide synchronized owner-validated assign/recall commands and a native Space inspector. Prepare purchased fleet snapshots; identify retained cargo and pending launch/descent/service work in the walkthrough.
+- [X] P2.4 Verify actual native contention, all resource classes, conservation/full-hold refusal/fleet bounds, cancellation/retargeting, costs/cargo age, paused/hidden ticks, old-save compatibility and exact reload continuation in both build configurations.
+
+**Delivered native mining handoff, 2026-10-12:** `SpaceVehicle` is saved native
+vehicle type6, with dense company slot4 and canonical Engine/EIDS, group/unit,
+operating-account and VehicleCargoList/CAPA owners. Historical bytes0..5 and
+old fleet-window numbers retain their meanings. `SpaceMission` and
+`CmdSetSpaceMission` provide owner-validated moving-target pursuit, bounded
+approach, exclusive native-ID leases, partial extraction and recall/retarget.
+The field ticks before native vehicles; each extraction credits packets before
+debiting finite reserves. Version405 saves body leases, native mission/hold
+state and Asteroid provenance. Load validation rejects orphan leases, duplicate
+packet ownership, legacy-byte aliases and fleets above the64-probe bound.
+
+Focused state/content/motion/index tests pass 3,818 assertions in nine cases in
+RelWithDebInfo and Debug. All three checkpoints pass ordinary exact orbital
+resave and two independent 2,200-tick native continuations per configuration;
+ASTR/VEHS/CAPA/PLYR outputs match exactly. Native setup tests in both builds
+exercise paid purchases, simultaneous arrival, loaded recall, incompatible
+retarget refusal, resumed mining, costs, ageing and reserve/hold conservation.
+Paused and hidden-view checks pass. All three corrupt-save cases reject in both
+builds; all eight underground demos preserve27 native owner chunks each.
+Ordinary graphical inspector captures pass for approach, partial work and full
+holds in both builds. Older404 survey and new-world population checks remain
+supported. See `src/tests/fixtures/demos/space/mining-checkpoints.json`,
+`logs/space-mining-verification.json` and the [walkthrough](d3sp-space-survey.md).
+
+This handoff exports native orbital mining only. The explicit demo purchase
+retires preview controllers and charges120,000 for three probes; it does not
+commission rockets. Full20-tonne holds wait at orbital staging. The next producer
+is Plan9's Surface launch center and20-tile circular drop zone, then saved
+cargo descent and Surface handling. No delivery income, automatic repeat,
+service producer, free Surface facility or final space-art completion is claimed.
+Original full-fleet/full-loop groups retain their own pending acceptance gates.
+
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Outcome and Boundaries
 
 Provide deterministic Space entities, vehicle control and construction semantics without treating vacuum as ordinary land or asteroids as moving map industries.
+
+**User revision,2026-10-12:** consume the shared
+[Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
+Mining, survey and construction probes share the native Space vehicle owner,
+with typed ordered moving-body/blueprint/station destinations. Initially all
+commission through an Earth launch center; later a completed orbital Assembly
+may construct them with Steel/Goods, capacity, time and funds. A Fund
+Industry-style Space build window places inert blueprints and shows missing
+Steel/Goods, delivered stock and assigned construction probes. Placing a
+blueprint activates no station function. Plan11 owns material consumption and
+processing; Plan10 owns survey disclosure and probe actions. Preserve the
+existing geometry/Vehicle/Engine/cargo authority and version new saved order,
+role, knowledge and construction fields. This revision is pending implementation.
 
 ## Public Handoff Contract
 
@@ -99,9 +225,9 @@ Treat this as the spike's working design, not an existing enum/API. The final ma
 ### Group 1 - Inventory saved type and company-mode assumptions
 
 {{MEDIUM}}
-- [ ] 1.1 Record current vehicle/engine enum values and every `CompanyEnd`, `VehicleTypeIndexArray` and four-mode array/switch used by company accounting, groups, unit numbers and build lists. Separate persisted bytes from runtime indexing.
-- [ ] 1.2 Audit order destinations, depot/service paths, network command fields, script mode enums, NewGRF feature maps and CargoDist mode buckets. Give each assumption an owner and a preserve/extend/reject policy.
-- [ ] 1.3 Publish a compatibility matrix with existing Train/Road/Ship/Aircraft/Effect/Disaster meanings and required old-save fixtures. Do not change the enum until the corresponding decoder/index strategy is explicit.
+- [X] 1.1 Record current vehicle/engine enum values and every `CompanyEnd`, `VehicleTypeIndexArray` and four-mode array/switch used by company accounting, groups, unit numbers and build lists. Separate persisted bytes from runtime indexing.
+- [X] 1.2 Audit order destinations, depot/service paths, network command fields, script mode enums, NewGRF feature maps and CargoDist mode buckets. Give each assumption an owner and a preserve/extend/reject policy.
+- [X] 1.3 Publish a compatibility matrix with existing Train/Road/Ship/Aircraft/Effect/Disaster meanings and required old-save fixtures. Do not change the enum until the corresponding decoder/index strategy is explicit.
 
 ### Group 2 - Choose explicit Space identity and dense company indexing
 
@@ -136,9 +262,9 @@ Treat this as the spike's working design, not an existing enum/API. The final ma
 ### Group 6 - Define typed mission targets and order ownership
 
 {{HARD}}
-- [ ] 6.1 Define a discriminated mission target for moving `OrbitalBodyID`, static `SpaceStructure` and future Surface recovery-center reference. Do not store these typed IDs in a station-only order field.
-- [ ] 6.2 Choose dedicated mission commands alongside ordinary vehicle management; specify shared-order/clone behavior and validate target kind/owner before assigning a mission.
-- [ ] 6.3 Define recoverable invalid/removed-target transitions and serialize target kind, ID, phase and timer. A stale pool slot must not silently target a new object reusing the index.
+- [ ] 6.1 Define discriminated targets for moving `OrbitalBodyID`, station, construction blueprint and Surface recovery-center references. Use generation-checked pool references; never truncate a body ID into a station-only order field.
+- [ ] 6.2 Add bounded typed order queues and dedicated commands beside ordinary vehicle management. Support Visit, Survey, Mine, Deliver/Construct, Unload and Return/Service with probe-role/owner checks; specify shared-order/clone behavior without bypassing commissioning.
+- [ ] 6.3 Define recoverable invalid/removed-target transitions and serialize queue/index, target kind/ID/generation, phase, partial work and timer. A reused pool slot cannot inherit an old order; editing/cancelling preserves cargo and grants no completed scan/build.
 
 ### Group 7 - Vehicle model and compatibility spike
 
@@ -242,7 +368,7 @@ For a 64 x 64 plane, the strip occupies rows 16..47, admissible body centers occ
 ### Group 13 - Reserve blueprint footprints without granting functionality
 
 {{HARD}}
-- [ ] 13.1 Validate a Space blueprint footprint against layer, ownership, static occupancy and approach exclusions; quote placement without allocating inventory or producing a working module.
+- [ ] 13.1 Add a Fund Industry-style Space station/module selector with footprint preview, cash and Steel/Goods required/delivered/missing. Validate layer, owner, static occupancy and approach exclusions; quote placement without creating inventory or a working module.
 - [ ] 13.2 Reserve footprint/anchor identity atomically with a typed blueprint record. Cancellation releases only its own reservation; an overlapping command refuses before either blueprint changes.
 - [ ] 13.3 Publish delivered-inventory and completion prerequisites to r2mlvs11. That owner performs assembly/function; a reservation alone never creates storage, power or a free station.
 

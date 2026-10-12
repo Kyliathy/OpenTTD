@@ -8,6 +8,9 @@
 /** @file misc_sl.cpp Saving and loading of things that didn't fit anywhere else. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md */
 
 #include "../stdafx.h"
+#include "../space_vehicle.h"
+#include "../asteroid.h"
+#include "../map_layer_gui.h"
 
 #include "saveload.h"
 #include "saveload_error.hpp"
@@ -88,6 +91,9 @@ void ResetViewportAfterLoadGame()
 	}
 
 	DoZoomInOutWindow(ZOOM_NONE, w); // update button status
+	// Explicitly prepared survey demos open on their advertised tour layer.
+	// Ordinary new worlds and all historical saves retain the Surface default.
+	if (!GetAsteroidField().surveys.empty() || GetSpaceVehicleCount() != 0) SetViewportLayer(w, MapLayer::Space);
 	MarkWholeScreenDirty();
 }
 

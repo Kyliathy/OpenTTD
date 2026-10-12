@@ -8,6 +8,8 @@
 /** @file console_cmds.cpp Console hooks and read-only native fleet reconstruction evidence. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "asteroid.h"
+#include "map_layer_gui.h"
 #include "underground_gui.h"
 #include "underground_vehicle.h"
 #include "tbm_exchange.h"
@@ -2995,8 +2997,24 @@ static bool ConDumpInfo(std::span<std::string_view> argv)
 }
 
 /** Console command registration. */
+static bool ConSpaceView(std::span<std::string_view> arguments)
+{
+	if (arguments.empty()) { IConsolePrint(CC_HELP, "space_view: show the current Space field and survey inspector (view only)"); return true; }
+	if (arguments.size() != 1 || GetAsteroidField().bodies.empty()) return false;
+	Window *window = GetMainWindow();
+	if (window == nullptr) return false;
+	SetViewportLayer(window, MapLayer::Space);
+	const auto point = GetAsteroidField().bodies.front().motion.position;
+	ScrollMainWindowToTile(TileXYL(point.x / SPACE_Q16, point.y / SPACE_Q16, MapLayer::Space), true);
+	ShowSpaceSurveyWindow();
+	IConsolePrint(CC_INFO, "SPACE_VIEW bodies={} survey_probes={} elapsed_ticks={}", GetAsteroidField().bodies.size(), GetAsteroidField().surveys.size(), GetAsteroidField().elapsed_ticks);
+	return true;
+}
+
+/** Console command registration. */
 void IConsoleStdLibRegister()
 {
+	IConsole::CmdRegister("space_view", ConSpaceView);
 	IConsole::CmdRegister("debug_level",             ConDebugLevel);
 	IConsole::CmdRegister("echo",                    ConEcho);
 	IConsole::CmdRegister("echoc",                   ConEchoC);

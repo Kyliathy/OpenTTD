@@ -101,6 +101,7 @@ inline WindowClass GetWindowClassForVehicleType(VehicleType vt)
 		case VehicleType::Road: return WindowClass::RoadVehicleList;
 		case VehicleType::Ship: return WindowClass::ShipList;
 		case VehicleType::Aircraft: return WindowClass::AircraftList;
+		case VehicleType::Space: return WindowClass::SpaceSurvey;
 	}
 }
 

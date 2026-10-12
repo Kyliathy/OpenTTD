@@ -8,6 +8,7 @@
 /** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
+#include "../space_vehicle.h"
 #include "../void_map.h"
 #include "../layer_portal_map.h"
 #include "../signs_base.h"
@@ -20,6 +21,8 @@
 #include "../clear_map.h"
 #include "../map_layer.h"
 #include "../multilayer_state.h"
+#include "../asteroid.h"
+#include "../launch_center.h"
 #include "../excavation_state.h"
 #include "../layer_portal_cmd.h"
 #include "../tbm.h"
@@ -586,6 +589,12 @@ bool AfterLoadGame()
 	extern uint8_t _map_file_layers;
 	for (uint layer_index = _map_file_layers; layer_index < Map::LayerCount(); ++layer_index) {
 		MultiLayerMap::InitialiseLayer(static_cast<MapLayer>(layer_index));
+	}
+	if (IsSavegameVersionBefore(SaveLoadVersion::LaunchCenters)) {
+		for (const auto cell : Map::Iterate())
+			if (IsTileType(cell, TileType::Station) && GetStationType(cell) == StationType::LaunchCenter) SlErrorCorrupt("Unexpected launch-center tile in old save");
+		for (const auto *station : Station::Iterate())
+			if (station->facilities.Test(StationFacility::LaunchCenter)) SlErrorCorrupt("Unexpected launch-center facility in old save");
 	}
 	//FD-9: the version-gated conversions below read files that hold one plane, so they walk the surface only.
 
@@ -3488,6 +3497,10 @@ bool AfterLoadGame()
 	if (!AcceptLoadedSpoilReceivers()) SlErrorCorrupt("Invalid spoil receiver state");
 	if (!AcceptLoadedLayerMines()) SlErrorCorrupt("Invalid finite mine state");
 	if (!AcceptLoadedLayerProcessors()) SlErrorCorrupt("Invalid native processor state");
+	if (!AcceptLoadedAsteroidField()) SlErrorCorrupt("Invalid asteroid field state");
+	if (!AcceptLoadedLaunchCenters()) SlErrorCorrupt("Invalid native launch-center state");
+	if (!AcceptLoadedLaunchHubs()) SlErrorCorrupt("Invalid native launch-hub membership");
+	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
 	if (!AcceptLoadedGeothermalRisers()) SlErrorCorrupt("Invalid native geothermal riser authority"); // Paid electrical links resolve original complete native machinery before the shared utility owner publishes their physical references.
 	// Utility grants bind actual companies and saved layers; accept only after
 	// physical owners and the profile have completed their load fixups.

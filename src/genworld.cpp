@@ -8,6 +8,7 @@
 /** @file genworld.cpp Functions to generate a map. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
 
 #include "stdafx.h"
+#include "asteroid.h"
 #include "multilayer_content.h"
 #include "excavation.h"
 #include "landscape.h"
@@ -167,6 +168,13 @@ static void _GenerateWorld()
 				HandleGeneratingWorldAbortion();
 				return;
 			}
+		}
+
+		/* These are probably pointless when inside the scenario editor. */
+		if (_game_mode != GameMode::Menu && !GenerateWorldAsteroids(_settings_game.game_creation.generation_seed)) {
+			Debug(Facility::Misc, Severity::Critical, "Space generation refused: unsupported field geometry");
+			HandleGeneratingWorldAbortion();
+			return;
 		}
 
 		/* These are probably pointless when inside the scenario editor. */

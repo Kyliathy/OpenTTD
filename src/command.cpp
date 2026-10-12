@@ -55,6 +55,8 @@
 #include "tree_cmd.h"
 #include "tunnelbridge_cmd.h"
 #include "vehicle_cmd.h"
+#include "space_vehicle_cmd.h"
+#include "launch_center_cmd.h"
 #include "viewport_cmd.h"
 #include "water_cmd.h"
 #include "waypoint_cmd.h"

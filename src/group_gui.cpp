@@ -8,6 +8,7 @@
 /** @file group_gui.cpp GUI for the group window. */
 
 #include "stdafx.h"
+#include "asteroid.h"
 #include "textbuf_gui.h"
 #include "command_func.h"
 #include "vehicle_gui.h"
@@ -1191,7 +1192,7 @@ public:
 };
 
 /** Window definitions for the vehicle group windows. */
-static VehicleTypeIndexArray<WindowDesc> _vehicle_group_desc = {{
+static EnumIndexArray<WindowDesc, VehicleType, VehicleType::CompanyEnd> _vehicle_group_desc = {{
 	WindowDesc{
 		WindowPosition::Automatic, "list_groups_train", 525, 246,
 		WindowClass::TrainList, WindowClass::None,
@@ -1228,6 +1229,7 @@ static VehicleTypeIndexArray<WindowDesc> _vehicle_group_desc = {{
 template <bool Tneed_existing_window>
 static void ShowCompanyGroupInternal(CompanyID company, VehicleType vehicle_type, GroupID group)
 {
+	if (vehicle_type == VehicleType::Space) { ShowSpaceSurveyWindow(); return; }
 	if (!Company::IsValidID(company)) return;
 
 	assert(to_underlying(vehicle_type) < std::size(_vehicle_group_desc));

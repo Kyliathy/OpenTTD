@@ -8,6 +8,7 @@
 /** @file vehicle_cmd.cpp Commands for vehicles. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
 
 #include "stdafx.h"
+#include "space_vehicle.h"
 #include "underground_vehicle.h"
 #include "transport_tube.h"
 #include "roadveh.h"
@@ -265,6 +266,15 @@ CommandCost CmdSellVehicle(DoCommandFlags flags, VehicleID v_id, bool sell_chain
 	Vehicle *front = v->First();
 
 	CommandCost ret = CheckOwnership(front->owner);
+	if (ret.Failed()) return ret;
+	if (front->type == VehicleType::Space) {
+		// Sale is permitted only stopped at orbital home with an empty hold.
+		const auto *space = SpaceVehicle::From(front);
+		if (!front->vehstatus.Test(VehState::Stopped) || space->position != space->home || front->cargo.TotalCount() != 0) return CMD_ERROR;
+		CommandCost result(ExpensesType::NewVehicles, -front->value);
+		if (flags.Test(DoCommandFlag::Execute)) delete front;
+		return result;
+	}
 	if (ret.Failed()) return ret;
 
 	if (front->vehstatus.Test(VehState::Crashed)) return CommandCost(STR_ERROR_VEHICLE_IS_DESTROYED);
@@ -544,7 +554,7 @@ static std::tuple<CommandCost, uint, uint16_t, CargoArray> RefitVehicle(Vehicle 
 std::tuple<CommandCost, uint, uint16_t, CargoArray> CmdRefitVehicle(DoCommandFlags flags, VehicleID veh_id, CargoType new_cargo_type, uint8_t new_subtype, bool auto_refit, bool only_this, uint8_t num_vehicles)
 {
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
-	if (v == nullptr || !IsCompanyBuildableVehicleType(v)) return { CMD_ERROR, 0, 0, {} };
+	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || v->type == VehicleType::Space) return { CMD_ERROR, 0, 0, {} };
 
 	Vehicle *front = v->First();
 
@@ -650,6 +660,7 @@ CommandCost CmdStartStopVehicle(DoCommandFlags flags, VehicleID veh_id, bool eva
 			if (v->vehstatus.Test(VehState::Stopped) && Train::From(v)->gcache.cached_power == 0) return CommandCost(STR_ERROR_TRAIN_START_NO_POWER);
 			break;
 
+		case VehicleType::Space:
 		case VehicleType::Ship:
 		case VehicleType::Road:
 			break;
@@ -665,7 +676,7 @@ CommandCost CmdStartStopVehicle(DoCommandFlags flags, VehicleID veh_id, bool eva
 		default: return CMD_ERROR;
 	}
 
-	if (evaluate_startstop_cb) {
+	if (evaluate_startstop_cb && v->type != VehicleType::Space) {
 		/* Check if this vehicle can be started/stopped. Failure means 'allow'. */
 		std::array<int32_t, 1> regs100;
 		uint16_t callback = GetVehicleCallback(CBID_VEHICLE_START_STOP_CHECK, 0, 0, v->engine_type, v, regs100);
@@ -893,7 +904,7 @@ std::tuple<CommandCost, VehicleID> CmdCloneVehicle(DoCommandFlags flags, TileInd
 
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
 	// Clone only an existing ordinary fleet head; arbitrary parts or noncompany vehicles cannot supply new ownership or order references.
-	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || !v->IsPrimaryVehicle()) return { CMD_ERROR, VehicleID::Invalid() };
+	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || v->type == VehicleType::Space || !v->IsPrimaryVehicle()) return { CMD_ERROR, VehicleID::Invalid() };
 	Vehicle *v_front = v;
 	// NoTest cloning must validate its genuine destination before inspecting layer capabilities or allocating any new train/truck part.
 	if (!IsValidTile(tile) || !IsDepotTile(tile) || !IsTileOwner(tile, _current_company) || GetDepotVehicleType(tile) != v->type) return {CMD_ERROR, VehicleID::Invalid()};
@@ -1135,6 +1146,7 @@ CommandCost CmdSendVehicleToDepot(DoCommandFlags flags, VehicleID veh_id, DepotC
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v)) return CMD_ERROR;
 	if (!v->IsPrimaryVehicle()) return CMD_ERROR;
 
+	if (v->type == VehicleType::Space) return CMD_ERROR;
 	return v->SendToDepot(flags, depot_cmd);
 }
 
@@ -1185,6 +1197,8 @@ CommandCost CmdRenameVehicle(DoCommandFlags flags, VehicleID veh_id, const std::
  */
 CommandCost CmdChangeServiceInt(DoCommandFlags flags, VehicleID veh_id, uint16_t serv_int, bool is_custom, bool is_percent)
 {
+	const auto *space_check = Vehicle::GetIfValid(veh_id);
+	if (space_check != nullptr && space_check->type == VehicleType::Space) return CMD_ERROR;
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || !v->IsPrimaryVehicle()) return CMD_ERROR;
 

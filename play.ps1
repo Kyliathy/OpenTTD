@@ -15,6 +15,11 @@ Examples:
 	.\play.ps1 1                            start menu entry 1 without asking
 	.\play.ps1 1 -Seed 1234                 a new game on a fixed map
 	.\play.ps1 demo                        finite Coal mine and cross-layer freight, ready to unpause
+	.\play.ps1 space                       company probes pursue and mine finite moving asteroids
+	.\play.ps1 space-mining                probes already extracting cargo
+	.\play.ps1 space-holds                 full probe holds retained in orbit
+	.\play.ps1 space-hub                   Surface launch center, freight links and collection area
+	.\play.ps1 space-attached              a probe already attached to a drifting body
 	.\play.ps1 underground-mines           the same demo by its permanent menu name
 	.\play.ps1 tbm-work                    current 50-cell project, ready to unpause
 	.\play.ps1 tbm-plan                    paused 44-cell project for trying the extension preview
@@ -52,6 +57,30 @@ $utf8 = New-Object System.Text.UTF8Encoding $false
 # Featured checkpoints have stable names and a guide, so recent autosaves cannot
 # push the intended demo out of the menu. Mine/TBM stages share one world; collectors use their own review world.
 $demoSaves = @(
+    @{ Name = 'space'; SaveName = 'space-mining-approach-1990-405';
+        Snapshot = 'src\tests\fixtures\demos\space\space-mining-approach-1990-405.sav';
+        Text = 'Space mining: three purchased company probes pursue finite moving asteroids; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-mining'; SaveName = 'space-mining-working-1990-405';
+        Snapshot = 'src\tests\fixtures\demos\space\space-mining-working-1990-405.sav';
+        Text = 'Space mining: extraction underway; watch reserves fall and real cargo holds fill';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-holds'; SaveName = 'space-mining-holds-1990-405';
+        Snapshot = 'src\tests\fixtures\demos\space\space-mining-holds-1990-405.sav';
+        Text = 'Space mining: three full20-tonne holds at orbital staging; Surface descent pending';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-hub'; SaveName = 'space-launch-hub-1990-408';
+        Snapshot = 'src\tests\fixtures\demos\space\space-launch-hub-1990-408.sav';
+        Text = 'Surface launch center: joined rail, linked train/lorry stations and collection overlay; no cargo transfer yet';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-survey'; SaveName = 'space-survey-approach-1990-404';
+        Snapshot = 'src\tests\fixtures\demos\space\space-survey-approach-1990-404.sav';
+        Text = 'Space preview: three probes pursue drifting asteroids; opens on Outer Space, paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-attached'; SaveName = 'space-survey-attached-1990-404';
+        Snapshot = 'src\tests\fixtures\demos\space\space-survey-attached-1990-404.sav';
+        Text = 'Space preview: attachment and survey already underway; finite reserves untouched';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
     @{ Name = 'underground-mines'; SaveName = 'mine-haulage-403';
         Snapshot = 'src\tests\fixtures\demos\underground\mine-haulage-403.sav';
         Text = 'Start here: finite Coal mine, mineral train and Surface delivery, paused';
@@ -479,7 +508,15 @@ $commandLine = (@($arguments) | ForEach-Object { ConvertTo-NativeArgument $_ }) 
 
 if ($choice.Guide -ne '') {
 	Write-Host "Demo guide: $($choice.Guide)" -ForegroundColor Cyan
-	Write-Host 'Starts paused. Follow the guide for this checkpoint and switch to its Underground or Deep layer. Save your experiments under a new name.'
+	if ($choice.Name -in 'space', 'space-mining', 'space-holds') {
+		Write-Host 'Opens paused on Outer Space. Click a body or native mining probe to inspect its mission and hold; unpause to continue. Full holds stay in orbit; Surface delivery is pending. Save experiments under a new name.'
+	} elseif ($choice.Name -in 'space-survey', 'space-attached') {
+		Write-Host 'Opens paused on Outer Space. Unpause to watch the older ownerless survey preview; click a body or probe for live status. These probes do not extract cargo. Save experiments under a new name.'
+	} elseif ($choice.Name -eq 'space-hub') {
+		Write-Host 'Opens paused on Outer Space. Select Surface and find the launch center at (16,4). Open nearby freight station windows to inspect Launch hub links and Collection area. Cargo handling is pending. Save experiments under a new name.'
+	} else {
+		Write-Host 'Starts paused. Follow the guide for this checkpoint and switch to its Underground or Deep layer. Save your experiments under a new name.'
+	}
 }
 
 #The Multilayer Industry profile refuses any NewGRF but its own package, and play.cfg keeps those picked in the game.

@@ -402,6 +402,10 @@ enum class Commands : uint8_t {
 	SendTBMToHangar, ///< choose a real owned hangar through an ordinary native depot order
 	BuildGeothermalRiser, ///< fund original-portal-bound native electrical machinery; r2mlvs18 Group5B, append preserves command identities
 
+	SetSpaceMission, ///< Assign or recall an owned native orbital mining probe; append preserves old command IDs.
+	BuildLaunchCenter, ///< Build a distinct native Surface Space launch facility.
+	RemoveLaunchCenter, ///< Remove an empty launch facility without recycling its generation.
+	SetLaunchHub, ///< Explicit exclusive Surface freight membership; never a catchment transfer.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

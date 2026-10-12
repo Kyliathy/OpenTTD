@@ -122,7 +122,7 @@ uint16_t GroupStatistics::GetNumEngines(EngineID engine) const
 {
 	/* Set up the engine count for all companies */
 	for (Company *c : Company::Iterate()) {
-		for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+		for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 			c->group_all[type].Clear();
 			c->group_default[type].Clear();
 		}
@@ -217,7 +217,7 @@ uint16_t GroupStatistics::GetNumEngines(EngineID engine) const
 {
 	/* Set up the engine count for all companies */
 	for (Company *c : Company::Iterate()) {
-		for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+		for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 			c->group_all[type].ClearProfits();
 			c->group_default[type].ClearProfits();
 		}
@@ -244,7 +244,7 @@ uint16_t GroupStatistics::GetNumEngines(EngineID engine) const
 {
 	/* Set up the engine count for all companies */
 	Company *c = Company::Get(company);
-	for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+	for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 		c->group_all[type].ClearAutoreplace();
 		c->group_default[type].ClearAutoreplace();
 	}
@@ -537,6 +537,7 @@ static void AddVehicleToGroup(Vehicle *v, GroupID new_g)
 		case VehicleType::Road:
 		case VehicleType::Ship:
 		case VehicleType::Aircraft:
+		case VehicleType::Space:
 			if (v->IsEngineCountable()) UpdateNumEngineGroup(v, v->group_id, new_g);
 			v->group_id = new_g;
 			for (Vehicle *u = v; u != nullptr; u = u->Next()) {

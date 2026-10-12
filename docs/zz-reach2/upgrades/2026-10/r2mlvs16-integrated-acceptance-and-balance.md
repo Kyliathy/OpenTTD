@@ -52,6 +52,19 @@ Demonstrate a playable connected economy with finished graphics, conserved mater
 
 ## Scenario register
 
+**Revised Space scenarios,2026-10-12:** use the current
+[Steel/Goods and probe-role contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+and numerical budget rather than the historical preassembled-Core ledger.
+Cover Earth-only initial mining/survey/construction launches; hidden quantities
+until a company completes a scan; Visit(A) then Mine(B); two-material first
+Core with no previous station; imported versus orbital-produced construction
+inputs; a built Steelworks/Goodsworks ore-to-material loop; exclusive reuse
+versus Earth drop; and later local probe assembly. Refuse missing inputs,
+blocked output, invalid roles and insufficient cargo mass/stock capacity before
+mutation. Include partial-job saves, two-company knowledge, company/target-ID
+reuse, native expenses, one payment/packet owner, hidden views and actual
+network replay. No scenario is passed by these planning changes.
+
 | ID | Scenario | Evidence required |
 | --- | --- | --- |
 | S1 | Sealed entrance and general area clearing | Ordinary traffic refused; portal-commissioned TBM clears corridors/irregular chambers with maximum 45-degree advancing turns, returns real spoil and recovers before a bay exists; cleared ground can later become tubes or plant foundations |

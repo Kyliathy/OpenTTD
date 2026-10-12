@@ -45,6 +45,8 @@ add_files(
     map_sl.cpp
     misc_sl.cpp
     multilayer_sl.cpp
+    asteroid_sl.cpp
+    launch_center_sl.cpp
     newgrf_sl.cpp
     newgrf_sl.h
     object_sl.cpp

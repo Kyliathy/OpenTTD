@@ -58,6 +58,16 @@ Before raster generation/editing, read the [canonical framed ImageGen prompt and
 
 ## Outcome and Boundaries
 
+**Space revision,2026-10-12:** the current
+[three-probe and Steel/Goods contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+requires distinct mining, survey and construction silhouettes, scan/work/load
+states, Steel/Goods cargo views, specialized Steelworks/Goodsworks and
+material-shortage/construction-progress blueprint states. New63B/63C tasks
+retain these additions; Processor75 must cover both specialized functions.
+Existing temporary asteroid/probe sprites are delivered preview art, not final
+acceptance. Underground source work remains paused; this note updates Space
+requirements without reopening that queue.
+
 Complete the remaining source families, deterministic conversion, native consumers and runtime review for the original complete graphics profile. The [shared asset-family requirements](r2mlvs13-graphics-and-asset-pipeline.md#asset-families) remain authoritative. Collector source/payload evidence is complete through Plan13 task79C.2; actual native loading and ordinary-game rendering remain here. User feedback and later-profile tasks retain their unchecked scope and historical dispositions.
 
 ## Public Handoff Contract
@@ -935,6 +945,31 @@ Read this plan's Global/Source generation Area, public `facility.utility-riser`,
 - [ ] 63.2 Produce the required directions/rotations for small mining probe from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
 - [ ] 63.3 Add free/attached/mining/loaded/service directional views for small mining probe, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+
+### Local Mandatory Reading - Survey and construction probe art
+
+_Applies to Groups63B/63C._ Read this plan's Global and the Space fleet authoring
+Area, the shared Space economy revision, actual role/geometry/state exports
+from Plans8-11, and the approved sprite manifest/template contract. Geometry
+and role states must be frozen before directions. New families use the same
+source/provenance, conversion, packed-load and native runtime review owners;
+recoloring the mining placeholder cannot finish either distinct model.
+
+### Group 63B - Author survey probe
+
+{{HARD}}
+
+- [ ] 63B.1 Freeze the native model19 brief and distinct scanner silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
+- [ ] 63B.2 Produce the required directions and free/approach/scanning/return/service states from that model; validate continuity and scan readability against actual saved role states.
+- [ ] 63B.3 Publish validated source/contact sheets and manifest entries to the existing conversion/packed/runtime pipeline. Final acceptance requires native ordinary-game captures; this task alone claims source delivery only.
+
+### Group 63C - Author construction probe
+
+{{HARD}}
+
+- [ ] 63C.1 Freeze the native model20 brief and distinct manipulator/material-carrier silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
+- [ ] 63C.2 Produce required directions and empty/Steel/Goods-loaded/constructing/return/service states, preserving native cargo units/weight and actual approach/work geometry.
+- [ ] 63C.3 Publish validated source/contact sheets and manifest entries through the existing pipeline; bind load/work states to native role/cargo queries and retain later packed/runtime acceptance.
 
 ### Group 64 - Author cargo return pod
 

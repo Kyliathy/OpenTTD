@@ -1831,6 +1831,7 @@ static void FormatString(StringBuilder &builder, std::string_view str_arg, Strin
 							case VehicleType::Road:     string_id = STR_SV_ROAD_VEHICLE_NAME; break;
 							case VehicleType::Ship:     string_id = STR_SV_SHIP_NAME; break;
 							case VehicleType::Aircraft: string_id = STR_SV_AIRCRAFT_NAME; break;
+							case VehicleType::Space: string_id = STR_SV_SPACE_NAME; break;
 						}
 
 						GetStringWithArgs(builder, string_id, tmp_params);

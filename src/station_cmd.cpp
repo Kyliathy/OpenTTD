@@ -8,6 +8,8 @@
 /** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
+#include "launch_center.h"
+#include "launch_center_cmd.h"
 #include "core/flatset_type.hpp"
 #include "aircraft.h"
 #include "bridge.h"
@@ -793,6 +795,8 @@ void Station::AfterStationTileSetChange(bool adding, StationType type)
 			break;
 		case StationType::Airport:
 			break;
+		case StationType::LaunchCenter:
+			break;
 		case StationType::Truck:
 		case StationType::Bus:
 			SetWindowWidgetDirty(WindowClass::StationView, this->index, WID_SV_ROADVEHS);
@@ -811,6 +815,7 @@ void Station::AfterStationTileSetChange(bool adding, StationType type)
 		this->RecomputeCatchment();
 	}
 
+	RevalidateLaunchHubMemberships();
 }
 
 CommandCost ClearTile_Station(TileIndex tile, DoCommandFlags flags);
@@ -908,6 +913,7 @@ static StringID GetBridgeTooLowMessageForStationType(StationType type)
 		STR_ERROR_BRIDGE_TOO_LOW_FOR_BUOY, // Buoy
 		STR_ERROR_BRIDGE_TOO_LOW_FOR_RAIL_WAYPOINT, // RailWaypoint
 		STR_ERROR_BRIDGE_TOO_LOW_FOR_ROAD_WAYPOINT, // RoadWaypoint
+		INVALID_STRING_ID, // LaunchCenter: no bridge above the pad.
 	};
 	return too_low_msgs[type];
 };
@@ -2862,6 +2868,100 @@ static CommandCost RemoveAirport(TileIndex tile, DoCommandFlags flags)
  * @param station_id Station ID of the airport.
  * @return the cost of this operation or an error
  */
+/** Build an empty native Surface launch facility; launch stock/jobs are separate producers. */
+CommandCost CmdBuildLaunchCenter(DoCommandFlags flags, TileIndex tile, uint8_t rotation, StationID to_join, bool adjacent)
+{
+	if (!Company::IsValidID(_current_company) || !IsLaunchCenterTechnologyAvailable()) return CommandCost(STR_ERROR_LAUNCH_CENTER_UNAVAILABLE);
+	const auto area = GetLaunchCenterFootprint(tile, rotation);
+	if (!area) return CommandCost(STR_ERROR_LAUNCH_CENTER_SURFACE);
+	if (!HasLaunchCenterWaterAccess(*area)) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
+	if (!CanAllocateLaunchCenter()) return CommandCost(STR_ERROR_LAUNCH_CENTER_LIMIT);
+	CommandCost ret = CheckIfAuthorityAllowsNewStation(tile, flags);
+	if (ret.Failed()) return ret;
+	ret = CheckStationSpread({}, *area);
+	if (ret.Failed()) return ret;
+
+	const bool reuse = to_join != NEW_STATION;
+	if (!reuse) to_join = StationID::Invalid();
+	const bool distant = to_join != StationID::Invalid();
+	if (distant && (!_settings_game.station.distant_join_stations || !Station::IsValidID(to_join))) return CMD_ERROR;
+	Station *station = nullptr;
+	ret = FindJoiningStation(StationID::Invalid(), to_join, adjacent, *area, &station);
+	if (ret.Failed()) return ret;
+	if (station == nullptr && distant) station = Station::GetIfValid(to_join);
+	DoCommandFlags test_flags = flags;
+	test_flags.Reset(DoCommandFlag::Execute);
+	test_flags.Set(DoCommandFlag::Auto);
+	test_flags.Set(DoCommandFlag::NoWater);
+	ret = BuildStationPart(&station, test_flags, reuse, *area, StationNaming::Rail);
+	if (ret.Failed()) return ret;
+	if (station != nullptr && station->launch_center != nullptr) return CommandCost(STR_ERROR_LAUNCH_CENTER_EXISTS);
+
+	// Preflight all footprint tiles, joining and allocation before the first clear.
+	CommandCost cost(ExpensesType::Construction, 500000);
+	const int height = GetTileZ(tile);
+	for (const auto cell : *area) {
+		if ((!IsTileType(cell, TileType::Clear) && !IsTileType(cell, TileType::Trees)) ||
+			!IsTileFlat(cell) || GetTileZ(cell) != height) return CommandCost(STR_ERROR_FLAT_LAND_REQUIRED);
+		if (IsBridgeAbove(cell)) return CommandCost(STR_ERROR_MUST_DEMOLISH_BRIDGE_FIRST);
+		ret = EnsureNoVehicleOnGround(cell);
+		if (ret.Failed()) return ret;
+		ret = Command<Commands::LandscapeClear>::Do(test_flags, cell);
+		if (ret.Failed()) return ret;
+		cost.AddCost(ret.GetCost());
+	}
+	if (flags.Test(DoCommandFlag::Execute)) {
+		ret = BuildStationPart(&station, flags, reuse, *area, StationNaming::Rail);
+		assert(ret.Succeeded() && station != nullptr);
+		station->AddFacility(StationFacility::LaunchCenter, tile);
+		DoCommandFlags clear_flags = test_flags;
+		clear_flags.Set(DoCommandFlag::Execute);
+		for (const auto cell : *area) {
+			const auto clear = Command<Commands::LandscapeClear>::Do(clear_flags, cell);
+			assert(clear.Succeeded());
+			MakeStation(cell, station->owner, station->index, StationType::LaunchCenter, rotation);
+			MarkTileDirtyByTile(cell);
+		}
+		InstallNewLaunchCenter(*station, tile, rotation);
+		station->spread.Add(*area);
+		Company::Get(station->owner)->infrastructure.station += area->w * area->h;
+		station->AfterStationTileSetChange(true, StationType::LaunchCenter);
+		InvalidateWindowData(WindowClass::StationView, station->index, -1);
+	}
+	return cost;
+}
+
+/** Remove the complete facility from any one of its tiles, preserving joined native freight. */
+CommandCost CmdRemoveLaunchCenter(DoCommandFlags flags, TileIndex tile)
+{
+	if (!IsValidTile(tile) || !IsTileType(tile, TileType::Station) || GetStationType(tile) != StationType::LaunchCenter) return CMD_ERROR;
+	auto *station = Station::GetByTile(tile);
+	if (station->launch_center == nullptr) return CMD_ERROR;
+	if (!flags.Test(DoCommandFlag::Bankrupt)) {
+		const auto owned = CheckOwnership(station->owner);
+		if (owned.Failed()) return owned;
+	}
+	const auto area = GetLaunchCenterFootprint(station->launch_center->tile, station->launch_center->rotation);
+	if (!area) return CMD_ERROR;
+	// Before launch/descent/handling is added, an empty facility has no feature cargo owner.
+	// Its future lifecycle gate must settle those typed jobs before this native removal.
+	for (const auto cell : *area) {
+		if (!IsTileType(cell, TileType::Station) || GetStationType(cell) != StationType::LaunchCenter || GetStationIndex(cell) != station->index) return CMD_ERROR;
+		const auto empty = EnsureNoVehicleOnGround(cell);
+		if (empty.Failed()) return empty;
+	}
+	if (flags.Test(DoCommandFlag::Execute)) {
+		for (const auto cell : *area) { DoClearSquare(cell); MarkTileDirtyByTile(cell); }
+		ForgetLaunchCenter(*station);
+		station->facilities.Reset(StationFacility::LaunchCenter);
+		Company::Get(station->owner)->infrastructure.station -= area->w * area->h;
+		MakeStationSpreadAreaSmaller(station);
+		station->AfterStationTileSetChange(false, StationType::LaunchCenter);
+		InvalidateWindowData(WindowClass::StationView, station->index, -1);
+	}
+	return CommandCost(ExpensesType::Construction, 10000);
+}
+
 CommandCost CmdOpenCloseAirport(DoCommandFlags flags, StationID station_id)
 {
 	if (!Station::IsValidID(station_id)) return CMD_ERROR;
@@ -2936,6 +3036,7 @@ CommandCost CmdBuildDock(DoCommandFlags flags, TileIndex tile, StationID station
 	DiagDirection direction = GetInclinedSlopeDirection(GetTileSlope(tile));
 	if (direction == DiagDirection::Invalid) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
 	direction = ReverseDiagDir(direction);
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return water == tile || water == tile + TileOffsByDiagDir(direction); })) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 	// Check both dock tiles and the water approach together before clearing the land end.
 	const auto approach_offset = TileIndexDiffCByDiagDir(direction);
 	if (CommandCost ground = CheckExcavationConstruction(std::array{tile, TileAddWrap(tile, approach_offset.x, approach_offset.y), TileAddWrap(tile, 2 * approach_offset.x, 2 * approach_offset.y)}); ground.Failed()) return ground;
@@ -3300,6 +3401,10 @@ static bool DrawCustomStationFoundations(const StationSpec *statspec, BaseStatio
 /** @copydoc DrawTileProc */
 static void DrawTile_Station(TileInfo *ti)
 {
+	if (GetStationType(ti->tile) == StationType::LaunchCenter) {
+		DrawGroundSprite(SPR_CONCRETE_GROUND, PAL_NONE); // Temporary native pad; final building family remains Plan14.
+		return;
+	}
 	const NewGRFSpriteLayout *layout = nullptr;
 	SpriteLayoutProcessor processor; // owns heap, borrowed by tmp_layout and t
 	DrawTileSpriteSpan tmp_layout;
@@ -3706,6 +3811,7 @@ static void GetTileDesc_Station(TileIndex tile, TileDesc &td)
 		case StationType::Buoy:     str = STR_LAI_STATION_DESCRIPTION_BUOY; break;
 		case StationType::RailWaypoint: str = STR_LAI_STATION_DESCRIPTION_WAYPOINT; break;
 		case StationType::RoadWaypoint: str = STR_LAI_STATION_DESCRIPTION_WAYPOINT; break;
+		case StationType::LaunchCenter: str = STR_LAUNCH_CENTER_NAME; break;
 	}
 	td.str = str;
 }
@@ -3762,6 +3868,7 @@ static TrackStatus GetTileTrackStatus_Station(TileIndex tile, TransportType mode
 /** @copydoc TileLoopProc */
 static void TileLoop_Station(TileIndex tile)
 {
+	if (GetStationType(tile) == StationType::LaunchCenter) return;
 	auto *st = BaseStation::GetByTile(tile);
 	switch (GetStationType(tile)) {
 		case StationType::Airport:
@@ -4986,6 +5093,10 @@ static CommandCost CanRemoveRoadWithStop(TileIndex tile, DoCommandFlags flags)
 /** @copydoc ClearTileProc */
 CommandCost ClearTile_Station(TileIndex tile, DoCommandFlags flags)
 {
+	if (GetStationType(tile) == StationType::LaunchCenter) {
+		if (flags.Test(DoCommandFlag::Auto)) return CommandCost(STR_ERROR_LAUNCH_CENTER_REMOVE_FIRST);
+		return CmdRemoveLaunchCenter(flags, tile);
+	}
 	if (flags.Test(DoCommandFlag::Auto)) {
 		switch (GetStationType(tile)) {
 			default: break;
@@ -5029,6 +5140,7 @@ CommandCost ClearTile_Station(TileIndex tile, DoCommandFlags flags)
 /** @copydoc TerraformTileProc */
 static CommandCost TerraformTile_Station(TileIndex tile, DoCommandFlags flags, int z_new, Slope tileh_new)
 {
+	if (GetStationType(tile) == StationType::LaunchCenter) return CommandCost(STR_ERROR_LAUNCH_CENTER_REMOVE_FIRST);
 	if (_settings_game.construction.build_on_slopes && AutoslopeEnabled()) {
 		/* TODO: If you implement newgrf callback 149 'land slope check', you have to decide what to do with it here.
 		 *       TTDP does not call it.

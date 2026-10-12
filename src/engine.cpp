@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "underground_vehicle.h"
+#include "space_vehicle.h"
 #include "core/container_func.hpp"
 #include "company_func.h"
 #include "command_func.h"
@@ -114,6 +115,7 @@ Engine::Engine(EngineID index, VehicleType type, uint16_t local_id) : EnginePool
 			case VehicleType::Road: this->vehicle_info.emplace<RoadVehicleInfo>(); break;
 			case VehicleType::Ship: this->vehicle_info.emplace<ShipVehicleInfo>(); break;
 			case VehicleType::Aircraft: this->vehicle_info.emplace<AircraftVehicleInfo>(); break;
+			case VehicleType::Space: this->vehicle_info.emplace<SpaceVehicleInfo>(); break;
 			default: break;
 		}
 		/* Set model life to maximum to make wagons available */
@@ -196,6 +198,7 @@ GrfID Engine::GetGRFID() const
  */
 bool Engine::CanCarryCargo() const
 {
+	if (this->type == VehicleType::Space) return IsValidCargoType(this->info.cargo_type);
 	/* For engines that can appear in a consist (i.e. rail vehicles and (articulated) road vehicles), a capacity
 	 * of zero is a special case, to define the vehicle to not carry anything. The default cargotype is still used
 	 * for livery selection etc.
@@ -231,6 +234,7 @@ uint Engine::DetermineCapacity(const Vehicle *v, uint16_t *mail_capacity) const
 {
 	assert(v == nullptr || this->index == v->engine_type);
 	if (mail_capacity != nullptr) *mail_capacity = 0;
+	if (this->type == VehicleType::Space) return this->VehInfo<SpaceVehicleInfo>().capacity;
 
 	if (!this->CanCarryCargo()) return 0;
 
@@ -309,6 +313,7 @@ uint Engine::DetermineCapacity(const Vehicle *v, uint16_t *mail_capacity) const
  */
 Money Engine::GetRunningCost() const
 {
+	if (this->type == VehicleType::Space) return 100 * CalendarTime::DAYS_IN_YEAR;
 	Price base_price;
 	uint cost_factor;
 	switch (this->type) {
@@ -346,6 +351,7 @@ Money Engine::GetRunningCost() const
  */
 Money Engine::GetCost() const
 {
+	if (this->type == VehicleType::Space) return this->VehInfo<SpaceVehicleInfo>().purchase_cost;
 	Price base_price;
 	uint cost_factor;
 	switch (this->type) {
@@ -386,6 +392,7 @@ Money Engine::GetCost() const
  */
 uint Engine::GetDisplayMaxSpeed() const
 {
+	if (this->type == VehicleType::Space) return 4;
 	switch (this->type) {
 		case VehicleType::Train:
 			return GetEngineProperty(this->index, PROP_TRAIN_SPEED, this->VehInfo<RailVehicleInfo>().max_speed);
@@ -539,7 +546,7 @@ bool Engine::IsVariantHidden(CompanyID c) const
 void EngineOverrideManager::ResetToDefaultMapping()
 {
 	EngineID id = EngineID::Begin();
-	for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+	for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 		auto &map = this->mappings[type];
 		map.clear();
 		for (uint internal_id = 0; internal_id < GetOriginalEngineCount(type); internal_id++, ++id) {
@@ -641,7 +648,7 @@ void SetupEngines()
 	CloseWindowByClass(WindowClass::EnginePreview);
 	_engine_pool.CleanPool();
 
-	for (VehicleType type : EnumRange(VehicleType::CompanyEnd)) {
+	for (VehicleType type : COMPANY_VEHICLE_TYPES) {
 		const auto &mapping = _engine_mngr.mappings[type];
 
 		/* Verify that the engine override manager has at least been set up with the default engines. */
@@ -779,7 +786,7 @@ void StartupOneEngine(Engine *e, const TimerGameCalendar::YearMonthDay &aging_ym
 	 * Note: TTDP uses fixed 1922 */
 	e->intro_date = ei->base_intro <= TimerGameCalendar::ConvertYMDToDate(_settings_game.game_creation.starting_year + 2, 0, 1) ? ei->base_intro : (TimerGameCalendar::Date)GB(r, 0, 9) + ei->base_intro;
 	// Native ground freight has published exact calendar dates; ordinary random introduction offsets cannot postpone the sealed 1980 transport handoff.
-	if (GetUndergroundEngineCapability(e->index) != nullptr) e->intro_date = ei->base_intro;
+	if (e->type == VehicleType::Space || GetUndergroundEngineCapability(e->index) != nullptr) e->intro_date = ei->base_intro;
 	if (e->intro_date <= TimerGameCalendar::date) {
 		TimerGameCalendar::YearMonthDay intro_ymd = TimerGameCalendar::ConvertDateToYMD(e->intro_date);
 		int aging_months = aging_ymd.year.base() * 12 + aging_ymd.month;
@@ -995,6 +1002,7 @@ static bool IsVehicleTypeDisabled(VehicleType type, bool ai)
 		case VehicleType::Road: return _settings_game.vehicle.max_roadveh == 0 || (ai && _settings_game.ai.ai_disable_veh_roadveh);
 		case VehicleType::Ship: return _settings_game.vehicle.max_ships == 0 || (ai && _settings_game.ai.ai_disable_veh_ship);
 		case VehicleType::Aircraft: return _settings_game.vehicle.max_aircraft == 0 || (ai && _settings_game.ai.ai_disable_veh_aircraft);
+		case VehicleType::Space: return ai; // Legacy scripts have no orbital mode contract.
 
 		default: NOT_REACHED();
 	}

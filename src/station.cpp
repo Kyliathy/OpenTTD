@@ -8,6 +8,7 @@
 /** @file station.cpp Station ownership, catchment and layer-local spread. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "core/flatset_type.hpp"
 #include "company_func.h"
 #include "roadveh.h"
@@ -84,6 +85,7 @@ Station::Station(StationID index, TileIndex tile) :
  */
 Station::~Station()
 {
+	ForgetLaunchCenter(*this);
 	if (CleaningPool()) {
 		for (GoodsEntry &ge : this->goods) {
 			if (!ge.HasData()) continue;
@@ -253,6 +255,10 @@ void Station::AddFacility(StationFacility new_facility_bit, TileIndex facil_xy)
  */
 void Station::MarkTilesDirty(bool cargo_change) const
 {
+	if (this->launch_center != nullptr) {
+		if (const auto area = GetLaunchCenterFootprint(this->launch_center->tile, this->launch_center->rotation))
+			for (const auto tile : *area) MarkTileDirtyByTile(tile);
+	}
 	if (this->train_station.IsEmpty()) return;
 
 	/* cargo_change is set if we're refreshing the tiles due to cargo moving
@@ -332,10 +338,12 @@ static uint GetTileCatchmentRadius(TileIndex tile, const Station *st)
 			case StationType::Buoy:
 			case StationType::RailWaypoint:
 			case StationType::RoadWaypoint: return CA_NONE;
+			case StationType::LaunchCenter: return CA_NONE;
 		}
 	} else {
 		switch (GetStationType(tile)) {
 			default:               return CA_UNMODIFIED;
+			case StationType::LaunchCenter: return CA_NONE;
 			case StationType::Buoy:
 			case StationType::RailWaypoint:
 			case StationType::RoadWaypoint: return CA_NONE;

@@ -36,6 +36,7 @@ enum class StationType : uint8_t {
 	Buoy, ///< Waypoint for ships.
 	RailWaypoint, ///< Waypoint for trains.
 	RoadWaypoint, ///< Waypoint for trucks and busses.
+	LaunchCenter, ///< Surface Space launch site; deliberately no airport FSM.
 	End, ///< End marker.
 };
 
@@ -53,6 +54,7 @@ enum class StationFacility : uint8_t {
 	BusStop   = 2, ///< Station with bus stops
 	Airport   = 3, ///< Station with an airport
 	Dock      = 4, ///< Station with a dock
+	LaunchCenter = 5, ///< Distinct Space launch facility; historical ghost/waypoint bits stay fixed.
 	Waypoint  = 7, ///< Station is a waypoint
 };
 

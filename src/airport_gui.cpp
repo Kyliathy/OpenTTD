@@ -8,6 +8,10 @@
 /** @file airport_gui.cpp The GUI for airports. */
 
 #include "stdafx.h"
+#include "launch_center.h"
+#include "launch_center_cmd.h"
+#include "viewport_type.h"
+#include "map_layer.h"
 #include "economy_func.h"
 #include "window_gui.h"
 #include "station_gui.h"
@@ -81,9 +85,25 @@ static void PlaceAirport(TileIndex tile)
 	ShowSelectStationIfNeeded(TileArea(tile, _thd.size.x / TILE_SIZE, _thd.size.y / TILE_SIZE), proc);
 }
 
+static void PlaceLaunchCenter(TileIndex tile, uint8_t rotation)
+{
+	const auto area = GetLaunchCenterFootprint(tile, rotation);
+	if (!area) {
+		Command<Commands::BuildLaunchCenter>::Post(STR_ERROR_BUILD_LAUNCH_CENTER, CcBuildAirport, tile, rotation, NEW_STATION, _ctrl_pressed);
+		return;
+	}
+	const bool adjacent = _ctrl_pressed;
+	auto proc = [=](bool test, StationID to_join) {
+		if (test) return Command<Commands::BuildLaunchCenter>::Do(CommandFlagsToDCFlags(GetCommandFlags<Commands::BuildLaunchCenter>()), tile, rotation, StationID::Invalid(), adjacent).Succeeded();
+		return Command<Commands::BuildLaunchCenter>::Post(STR_ERROR_BUILD_LAUNCH_CENTER, CcBuildAirport, tile, rotation, to_join, adjacent);
+	};
+	ShowSelectStationIfNeeded(*area, proc);
+}
+
 /** Airport build toolbar window handler. */
 struct BuildAirToolbarWindow : Window {
 	WidgetID last_user_action = INVALID_WIDGET; ///< Last started user action.
+	uint8_t launch_rotation = 0;
 
 	BuildAirToolbarWindow(WindowDesc &desc, WindowNumber window_number) : Window(desc)
 	{
@@ -123,6 +143,19 @@ struct BuildAirToolbarWindow : Window {
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		switch (widget) {
+			case WID_AT_LAUNCH_CENTER:
+				if (this->IsWidgetDisabled(widget)) break;
+				if (HandlePlacePushButton(this, widget, SPR_CURSOR_AIRPORT, HT_RECT)) {
+					this->last_user_action = widget;
+					SetTileSelectSize(this->launch_rotation % 2 == 0 ? 4 : 3, this->launch_rotation % 2 == 0 ? 3 : 4);
+				}
+				break;
+			case WID_AT_LAUNCH_ROTATE:
+				if (this->IsWidgetDisabled(widget)) break;
+				this->launch_rotation = (this->launch_rotation + 1) % 4;
+				if (this->IsWidgetLowered(WID_AT_LAUNCH_CENTER)) SetTileSelectSize(this->launch_rotation % 2 == 0 ? 4 : 3, this->launch_rotation % 2 == 0 ? 3 : 4);
+				this->SetDirty();
+				break;
 			case WID_AT_AIRPORT:
 				if (HandlePlacePushButton(this, WID_AT_AIRPORT, SPR_CURSOR_AIRPORT, HT_RECT)) {
 					ShowBuildAirportPicker(this);
@@ -143,6 +176,9 @@ struct BuildAirToolbarWindow : Window {
 	void OnPlaceObject([[maybe_unused]] Point pt, TileIndex tile) override
 	{
 		switch (this->last_user_action) {
+			case WID_AT_LAUNCH_CENTER:
+				PlaceLaunchCenter(tile, this->launch_rotation);
+				break;
 			case WID_AT_AIRPORT:
 				PlaceAirport(tile);
 				break;
@@ -182,6 +218,15 @@ struct BuildAirToolbarWindow : Window {
 		CloseWindowById(WindowClass::JoinStation, 0);
 	}
 
+	void OnPaint() override
+	{
+		const auto *main = GetMainWindow();
+		const bool available = IsLaunchCenterTechnologyAvailable() && main != nullptr && main->viewport != nullptr && main->viewport->layer == MapLayer::Surface;
+		this->SetWidgetDisabledState(WID_AT_LAUNCH_CENTER, !available);
+		this->SetWidgetDisabledState(WID_AT_LAUNCH_ROTATE, !available);
+		this->DrawWidgets();
+	}
+
 	/**
 	 * Handler for global hotkeys of the BuildAirToolbarWindow.
 	 * @param hotkey Hotkey
@@ -198,6 +243,8 @@ struct BuildAirToolbarWindow : Window {
 	static inline HotkeyList hotkeys{"airtoolbar", {
 		Hotkey('1', "airport", WID_AT_AIRPORT),
 		Hotkey('2', "demolish", WID_AT_DEMOLISH),
+		Hotkey('3', "space_launch_center", WID_AT_LAUNCH_CENTER),
+		Hotkey('4', "space_launch_rotate", WID_AT_LAUNCH_ROTATE),
 	}, AirportToolbarGlobalHotkeys};
 };
 
@@ -209,6 +256,8 @@ static constexpr std::initializer_list<NWidgetPart> _nested_air_toolbar_widgets 
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_AT_AIRPORT), SetFill(0, 1), SetToolbarMinimalSize(2), SetSpriteTip(SPR_IMG_AIRPORT, STR_TOOLBAR_AIRCRAFT_BUILD_AIRPORT_TOOLTIP),
+		NWidget(WWT_TEXTBTN, Colours::DarkGreen, WID_AT_LAUNCH_CENTER), SetFill(0, 1), SetStringTip(STR_LAUNCH_CENTER_NAME, STR_LAUNCH_CENTER_BUILD_TOOLTIP),
+		NWidget(WWT_TEXTBTN, Colours::DarkGreen, WID_AT_LAUNCH_ROTATE), SetFill(0, 1), SetStringTip(STR_LAUNCH_CENTER_ROTATE, STR_LAUNCH_CENTER_ROTATE_TOOLTIP),
 		NWidget(WWT_PANEL, Colours::DarkGreen), SetToolbarSpacerMinimalSize(), SetFill(1, 1), EndContainer(),
 		NWidget(WWT_IMGBTN, Colours::DarkGreen, WID_AT_DEMOLISH), SetFill(0, 1), SetToolbarMinimalSize(1), SetSpriteTip(SPR_IMG_DYNAMITE, STR_TOOLTIP_DEMOLISH_BUILDINGS_ETC),
 	EndContainer(),

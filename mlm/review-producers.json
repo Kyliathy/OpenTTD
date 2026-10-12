@@ -1340,6 +1340,360 @@
       "test_tags": [],
       "context_policy": "explicit invocation and process-local runtime; retained demo input hashes remain immutable",
       "invocation": "python -B src/tests/multilayer/acceptance/underground_demo_checks.py native; prepare requires exact --inputs report; verify/capture consume retained demo-checkpoints.json"
+    },
+    {
+      "producer": "src/tests/space_preview.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "preview"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-ui"
+        }
+      ],
+      "test_tags": [
+        "[space-preview]",
+        "[.space-demo]"
+      ],
+      "context_policy": "explicit caller feature/scenario and inherited invocation; pure tests write no reviews; native observer owns real saves and viewport rasters",
+      "invocation": "Run [.space-demo] through space_preview_checks.py prepare/verify; exact full-world state continuation, explicitly predeployed survey controllers only"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_preview_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "capture"
+        },
+        {
+          "feature": "space",
+          "scenario": "inspect"
+        },
+        {
+          "feature": "space",
+          "scenario": "resume-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "resume-attached"
+        },
+        {
+          "feature": "space",
+          "scenario": "verify-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "verify-attached"
+        },
+        {
+          "feature": "space",
+          "scenario": "capture-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "capture-attached"
+        },
+        {
+          "feature": "space",
+          "scenario": "inspect-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "inspect-attached"
+        },
+        {
+          "feature": "space",
+          "scenario": "new-multilayer-industry"
+        },
+        {
+          "feature": "space",
+          "scenario": "new-classic"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit invocation and process-local runtime; immutable retained input hashes; independent normal load, native continuation and real graphical capture",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_preview_checks.py prepare | verify | capture | inspect [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/space_mining.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "mining"
+        }
+      ],
+      "test_tags": [
+        "[space-native]",
+        "[.space-mining]"
+      ],
+      "context_policy": "native canonical fleet, packets, accounts and real save writer; inherited invocation",
+      "invocation": "Run [.space-mining] through space_mining_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_mining_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "mining-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-inspect"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-verify-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-verify-working"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-verify-holds"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-inspect-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-inspect-working"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-inspect-holds"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-resume-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-resume-working"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-resume-holds"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-replay-approach"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-replay-working"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-replay-holds"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-reject-old"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-reject-lease"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-reject-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "mining-exercise"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "isolated native process; retained immutable input hashes; actual canonical save replay",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_mining_checks.py prepare | verify | inspect | exercise [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_population_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "population-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-ui"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-multilayer-industry-sparse"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-multilayer-industry-normal"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-multilayer-industry-dense"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-classic-sparse"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-classic-normal"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-new-classic-dense"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-multilayer-industry-sparse"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-multilayer-industry-normal"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-multilayer-industry-dense"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-classic-sparse"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-classic-normal"
+        },
+        {
+          "feature": "space",
+          "scenario": "population-reload-classic-dense"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/asteroid_population_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_center_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-center-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-build"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reload"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-rotation"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-orphan"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-rotation"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-hub-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-hub-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-hub-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-member-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-hub-member-bound"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-duplicate"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-preview-hub-duplicate"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-center-reject-hub-orphan"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_center_checks.py [--configuration Debug]"
     }
   ],
   "proof_cache": "logs/proofs/mlm/native-art",

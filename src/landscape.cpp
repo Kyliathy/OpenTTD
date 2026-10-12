@@ -10,6 +10,7 @@
 /** @defgroup SnowLineGroup Snowline functions and data structures */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "geothermal.h"
 #include "bridge_map.h"
 #include "heightmap.h"
@@ -713,6 +714,7 @@ bool IsMapSurroundedByWater()
  */
 CommandCost CmdLandscapeClear(DoCommandFlags flags, TileIndex tile)
 {
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return water == tile; })) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 	// Ordinary demolition/overbuild cannot erase an active cold geothermal
 	// reservation. Explicit cancellation releases its floor without clearing
 	// rock or modifying the original natural source; later paid construction
@@ -788,6 +790,8 @@ std::tuple<CommandCost, Money> CmdClearArea(DoCommandFlags flags, TileIndex tile
 	//FD-10: an area or a drag stays in one layer.
 	if (CommandCost layer = CheckTilesShareLayer(tile, start_tile); layer.Failed()) return { layer, 0 };
 	if (start_tile >= Map::Size()) return { CMD_ERROR, 0 };
+	const auto cleared_area = CreateOrthoDiagonalArea(tile, start_tile, diagonal);
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return cleared_area.Contains(water); })) return {CommandCost(STR_ERROR_LAUNCH_CENTER_WATER), 0};
 
 	Money money = GetAvailableMoneyForCommand();
 	CommandCost cost(ExpensesType::Construction);

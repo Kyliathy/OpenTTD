@@ -14,6 +14,8 @@
 enum AirportToolbarWidgets : WidgetID {
 	WID_AT_AIRPORT,  ///< Build airport button.
 	WID_AT_DEMOLISH, ///< Demolish button.
+	WID_AT_LAUNCH_CENTER, ///< Distinct Space launch facility.
+	WID_AT_LAUNCH_ROTATE, ///< Rotate its land footprint.
 };
 
 /** Widgets of the #BuildAirportWindow class. */

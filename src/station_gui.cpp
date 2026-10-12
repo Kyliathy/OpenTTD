@@ -8,6 +8,8 @@
 /** @file station_gui.cpp The GUI for stations. */
 
 #include "stdafx.h"
+#include "launch_center.h"
+#include "launch_center_cmd.h"
 #include "debug.h"
 #include "gui.h"
 #include "querystring_gui.h"
@@ -320,7 +322,8 @@ protected:
 		this->stations_per_cargo_type_no_rating = 0;
 
 		for (const Station *st : Station::Iterate()) {
-			if (this->filter.facilities.Any(st->facilities)) { // only stations with selected facilities
+			if (this->filter.facilities.Any(st->facilities) ||
+				(this->filter.facilities.Test(StationFacility::Airport) && st->facilities.Test(StationFacility::LaunchCenter))) { // Space centers share the air-construction filter, not aircraft capability.
 				if (st->owner == owner || (st->owner == OWNER_NONE && HasStationInUse(st->index, true, owner))) {
 					this->string_filter.ResetState();
 					this->string_filter.AddLine(st->GetCachedName());
@@ -863,6 +866,12 @@ static constexpr std::initializer_list<NWidgetPart> _nested_station_view_widgets
 		NWidget(NWID_VSCROLLBAR, Colours::Grey, WID_SV_SCROLLBAR),
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::Grey, WID_SV_ACCEPT_RATING_LIST), SetMinimalSize(249, 23), SetResize(1, 0), EndContainer(),
+	NWidget(NWID_SELECTION, Colours::Invalid, WID_SV_LAUNCH_HUB_SEL),
+		NWidget(NWID_HORIZONTAL),
+			NWidget(WWT_DROPDOWN, Colours::Grey, WID_SV_LAUNCH_HUB), SetMinimalSize(168, 12), SetResize(1, 0), SetFill(1, 1), SetStringTip(STR_LAUNCH_HUB_NONE, STR_LAUNCH_HUB_TOOLTIP),
+			NWidget(WWT_TEXTBTN, Colours::Grey, WID_SV_LAUNCH_COLLECTION), SetMinimalSize(81, 12), SetFill(1, 1), SetStringTip(STR_LAUNCH_HUB_COLLECTION, STR_LAUNCH_HUB_COLLECTION_TOOLTIP),
+		EndContainer(),
+	EndContainer(),
 	NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
 		NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_SV_ACCEPTS_RATINGS), SetMinimalSize(46, 12), SetResize(1, 0), SetFill(1, 1),
 				SetStringTip(STR_STATION_VIEW_RATINGS_BUTTON, STR_STATION_VIEW_RATINGS_TOOLTIP),
@@ -1358,11 +1367,14 @@ struct StationViewWindow : public Window {
 	CargoDataEntry expanded_rows{}; ///< Parent entry of currently expanded rows.
 	CargoDataEntry cached_destinations{}; ///< Cache for the flows passing through this station.
 	CargoDataVector displayed_rows{}; ///< Parent entry of currently displayed rows (including collapsed ones).
+	std::vector<LaunchCenterRef> launch_hub_choices; ///< UI snapshot preserves the center generation until command execution.
 
 	StationViewWindow(WindowDesc &desc, WindowNumber window_number) : Window(desc)
 	{
 		this->CreateNestedTree();
 		this->GetWidget<NWidgetStacked>(WID_SV_CLOSE_AIRPORT_SEL)->SetDisplayedPlane(Station::Get(window_number)->facilities.Test(StationFacility::Airport) ? 0 : SZSP_NONE);
+		const auto *station = Station::Get(window_number);
+		this->GetWidget<NWidgetStacked>(WID_SV_LAUNCH_HUB_SEL)->SetDisplayedPlane(IsLaunchCenterTechnologyAvailable() && MultiLayerMap::IsTileInLayer(station->xy, MapLayer::Surface) ? 0 : SZSP_NONE);
 		this->vscroll = this->GetScrollbar(WID_SV_SCROLLBAR);
 		/* Nested widget tree creation is done in two steps to ensure that this->GetWidget<NWidgetCore>(WID_SV_ACCEPTS_RATINGS) exists in UpdateWidgetSize(). */
 		this->FinishInitNested(window_number);
@@ -1391,6 +1403,10 @@ struct StationViewWindow : public Window {
 		CloseWindowById(WindowClass::AircraftList, VehicleListIdentifier(VehicleListType::Station, VehicleType::Aircraft, this->owner, this->window_number).ToWindowNumber(), false);
 
 		SetViewportCatchmentStation(Station::Get(this->window_number), false);
+		const auto *station = Station::Get(this->window_number);
+		const auto membership = GetLaunchHubMembership(station->index);
+		const auto center = station->launch_center != nullptr ? GetLaunchCenterReference(*station) : membership ? membership->center : LaunchCenterRef{};
+		SetViewportLaunchCollection(center.station, center.generation, false);
 		this->Window::Close();
 	}
 
@@ -1474,6 +1490,11 @@ struct StationViewWindow : public Window {
 		extern const Station *_viewport_highlight_station;
 		this->SetWidgetDisabledState(WID_SV_CATCHMENT, st->facilities.None());
 		this->SetWidgetLoweredState(WID_SV_CATCHMENT, _viewport_highlight_station == st);
+		const auto membership = GetLaunchHubMembership(st->index);
+		const auto center = st->launch_center != nullptr ? GetLaunchCenterReference(*st) : membership ? membership->center : LaunchCenterRef{};
+		this->SetWidgetDisabledState(WID_SV_LAUNCH_HUB, st->owner != _local_company || st->launch_center != nullptr || GetEligibleLaunchHubs(*st).empty());
+		this->SetWidgetDisabledState(WID_SV_LAUNCH_COLLECTION, ResolveLaunchCenter(center) == nullptr);
+		this->SetWidgetLoweredState(WID_SV_LAUNCH_COLLECTION, IsViewportLaunchCollection(center.station, center.generation));
 
 		this->DrawWidgets();
 
@@ -1519,6 +1540,12 @@ struct StationViewWindow : public Window {
 		if (widget == WID_SV_CAPTION) {
 			const Station *st = Station::Get(this->window_number);
 			return GetString(STR_STATION_VIEW_CAPTION, st->index, st->facilities);
+		}
+		if (widget == WID_SV_LAUNCH_HUB) {
+			const auto *station = Station::Get(this->window_number);
+			if (station->launch_center != nullptr) return GetString(STR_LAUNCH_HUB_OWN);
+			const auto membership = GetLaunchHubMembership(station->index);
+			return membership ? GetString(STR_LAUNCH_HUB_SELECTED, membership->center.station) : GetString(STR_LAUNCH_HUB_NONE);
 		}
 
 		return this->Window::GetWidgetString(widget, stringid);
@@ -2036,6 +2063,33 @@ struct StationViewWindow : public Window {
 						this, CS_ALPHANUMERAL, {QueryStringFlag::EnableDefault, QueryStringFlag::LengthIsInChars, QueryStringFlag::EnableMove});
 				break;
 
+			case WID_SV_LAUNCH_HUB: {
+				if (this->IsWidgetDisabled(widget)) break;
+				const auto *member = Station::Get(this->window_number);
+				this->launch_hub_choices = GetEligibleLaunchHubs(*member);
+				DropDownList list;
+				list.push_back(MakeDropDownListStringItem(STR_LAUNCH_HUB_UNLINK, 0));
+				const auto current = GetLaunchHubMembership(member->index);
+				int selected = 0;
+				for (size_t i = 0; i < this->launch_hub_choices.size(); ++i) {
+					const auto ref = this->launch_hub_choices[i];
+					const auto *center = ResolveLaunchCenter(ref);
+					list.push_back(MakeDropDownListStringItem(GetString(STR_STATION_NAME, ref.station), static_cast<int>(i + 1),
+						center->launch_hub->members.size() >= MAX_LAUNCH_HUB_MEMBERS && (!current || current->center != ref)));
+					if (current && current->center == ref) selected = static_cast<int>(i + 1);
+				}
+				ShowDropDownList(this, std::move(list), selected, widget);
+				break;
+			}
+
+			case WID_SV_LAUNCH_COLLECTION: {
+				const auto *station = Station::Get(this->window_number);
+				const auto membership = GetLaunchHubMembership(station->index);
+				const auto center = station->launch_center != nullptr ? GetLaunchCenterReference(*station) : membership ? membership->center : LaunchCenterRef{};
+				SetViewportLaunchCollection(center.station, center.generation, !IsViewportLaunchCollection(center.station, center.generation));
+				break;
+			}
+
 			case WID_SV_CLOSE_AIRPORT:
 				Command<Commands::OpenCloseAirport>::Post(this->window_number);
 				break;
@@ -2163,6 +2217,12 @@ struct StationViewWindow : public Window {
 
 	void OnDropdownSelect(WidgetID widget, int index, int) override
 	{
+		if (widget == WID_SV_LAUNCH_HUB) {
+			if (index < 0 || static_cast<size_t>(index) > this->launch_hub_choices.size()) return;
+			const auto ref = index == 0 ? LaunchCenterRef{} : this->launch_hub_choices[index - 1];
+			Command<Commands::SetLaunchHub>::Post(STR_ERROR_SET_LAUNCH_HUB, static_cast<StationID>(this->window_number), ref.station, ref.generation);
+			return;
+		}
 		if (widget == WID_SV_SORT_BY) {
 			this->SelectSortBy(index);
 		} else {

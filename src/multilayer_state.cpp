@@ -7,6 +7,9 @@
 /** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md; r2mlvs12-solar-farms-mirrors-and-eti.md */
 
 #include "stdafx.h"
+#include "asteroid.h"
+#include "launch_center.h"
+#include "space_vehicle.h"
 #include "multilayer_state.h"
 #include "debug.h"
 #include "excavation.h"
@@ -41,7 +44,7 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS | MULTILAYER_FEATURE_ASTEROIDS | MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Retired riser machinery still owns paid native construction on excavated
 	// floor. Its original portal may legitimately be gone, and no energy ledger
 	// is required until the separate operating exporter actually exists.
@@ -112,6 +115,9 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 MultiLayerStateSchema CaptureMultiLayerStateSchema()
 {
 	MultiLayerStateSchema schema;
+	if (GetAsteroidField().generation_version != 0) schema.feature_flags |= MULTILAYER_FEATURE_ASTEROIDS;
+	if (GetNextLaunchCenterGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_CENTERS;
+	if (GetNextLaunchHubMemberGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_HUBS;
 	schema.profile = GetCurrentMultiLayerProfileSelection();
 	schema.geology_seed = _multilayer_geology_seed;
 	schema.orbital_seed = _multilayer_orbital_seed;
@@ -149,6 +155,8 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 /** Clear load transport and feature seed roots during ordinary world initialization. */
 void ResetMultiLayerStateSchema()
 {
+	ResetAsteroidField();
+	ResetLaunchCenters();
 	_pending_multilayer_schema.reset();
 	_multilayer_geology_seed = 0;
 	_multilayer_orbital_seed = 0;
@@ -170,6 +178,8 @@ void SetMultiLayerGeologySeed(uint64_t seed)
 {
 	_multilayer_geology_seed = seed;
 }
+
+void SetMultiLayerOrbitalSeed(uint64_t seed) { _multilayer_orbital_seed = seed; }
 
 /**
  * Stage one validated metadata row without accepting its policy or changing current seeds.
@@ -336,6 +346,14 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0) records.push_back({MultiLayerCanonicalKind::GeothermalHeatRouteRoot, 0, geothermal_route_fields});
 	const std::array geothermal_riser_fields = {MultiLayerCanonicalField{1, 8, ComputeGeothermalRiserDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_RISERS) != 0) records.push_back({MultiLayerCanonicalKind::GeothermalRiserRoot, 0, geothermal_riser_fields});
+	const std::array asteroid_fields = {MultiLayerCanonicalField{1, 8, ComputeAsteroidFieldDigest(GetAsteroidField())}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_ASTEROIDS) != 0) records.push_back({MultiLayerCanonicalKind::AsteroidFieldRoot, 0, asteroid_fields});
+	const std::array space_vehicle_fields = {MultiLayerCanonicalField{1, 8, ComputeSpaceVehicleDigest()}};
+	if (GetSpaceVehicleCount() != 0) records.push_back({MultiLayerCanonicalKind::SpaceVehicleRoot, 0, space_vehicle_fields});
+	const std::array launch_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchCenterDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchCenterRoot, 0, launch_fields});
+	const std::array hub_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchHubDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_HUBS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchHubRoot, 0, hub_fields});
 	const auto digest = ComputeMultiLayerStateDigest(schema, records);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);

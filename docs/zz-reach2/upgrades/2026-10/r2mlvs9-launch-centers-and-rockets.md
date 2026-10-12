@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/station_cmd.h](../../../../src/station_cmd.h) | 29-47 | Station construction declarations/traits own IDs, joining and facility mutation; specialized launch and underground handling reuse this public command boundary. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs8 and r2mlvs1 cargo definitions. Production supply chains come from r2mlvs6; development fixtures may supply inventory explicitly.
+Status: paused for demo at the user request,2026-10-12; native empty waterside facility, freight membership and collection UI are delivered. Handling, commissioning and launches remain pending. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs8 and r2mlvs1 cargo definitions. Production supply chains come from r2mlvs6; development fixtures may supply inventory explicitly.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -61,6 +61,19 @@ The two areas have separate semantics/settings and overlays even when both radii
 
 Ordinary catchment and station joining do not automatically move cargo between separate Station IDs. Implement a launch-center logistics hub with explicit membership and bounded timed Surface handling jobs. Returned cargo exists in exactly one place: center inventory, a reserved handling job, a member station, or a vehicle. Separate member stations retain their own IDs and normal station-spread rules; no global catchment-limit increase is needed to simulate this relationship. All returned materials have compatible train/lorry refits and can be routed through these members.
 
+**User revision,2026-10-12:** the
+[shared Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+requires Earth launch-center commissioning for mining, survey and construction
+probes initially. Carry a paid, material-built probe as a rocket payload and
+activate that same native unit once. Station-bound Steel/Goods remains actual
+freight, including cargo held by a launched construction probe; the first
+blueprint requires no existing station. Later orbital Assembly is a separate
+completed-facility gate, not an ordinary free-build path. Rocket, pod, Surface
+handling and hub filters must also carry processed Steel/Goods for Earth
+delivery. Goods uses Express-class crates and mass-based capacity. The revised
+pod/body/material numbers supersede the old Space rows; fuel/service scheduling
+and the two independent20-tile circles retain their own owners.
+
 ## Public Handoff Contract
 
 Proposed public owner: `src/launch_center.h`. Publish `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
@@ -75,9 +88,18 @@ Groups are chronological and contain consecutive tasks of one difficulty. Each d
 
 _Applies to Groups 1-7._
 
-**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/space.h`: `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`.
+**Entry gate (producer correction, 2026-10-12).** Surface placement consumes the
+selected-profile/content owner, native Station/command/map ownership and
+`src/space.h` plane-coordinate geometry. Water-edge and circle queries can be
+implemented and tested before mutating a facility. Construction, joining,
+removal and cargo handling require their actual native owners and focused tests.
+Native fleet references consume `SpaceVehicle`/`SpaceMission` from
+`src/space_vehicle.h`; rocket transition/deployment gates remain in the next
+area. An unbuilt SpaceStructure or rocket transition is not a prerequisite for
+checking Surface water or constructing an empty Surface facility. No preview
+record or declared interface proves commissioning, descent or handling.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
-If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-7. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+If a consumed required export is absent, stop the dependent implementation, mutation and runtime claims; independent placement geometry may proceed. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
 Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
 
 | File name | Line Ranges | Description |
@@ -108,13 +130,59 @@ flowchart LR
 
 Each edge is one packet-ownership transfer with capacity validation. Reservation records identify quantities; they must not contain a second copy of the packets.
 
+Context has compacted 2 times while executing this group.
+
 ### Group 1 - Place a waterside launch station through airport controls
 
 {{HARD}}
-- [ ] 1.1 Add the Surface Airport-menu entry and rotated land-footprint preview, then route it to a specialized launch-station command. Menu placement does not grant ordinary aircraft rocket capability or reuse the aircraft FSM.
-- [ ] 1.2 Preflight every footprint tile, owner/local authority, joining StationID and construction cost before any mutation; store an immutable launch anchor separate from the mutable station bounding box.
-- [ ] 1.3 Define a guarded water predicate over orthogonal outer footprint edges: require real navigable clear sea/river/lake/canal water, reject coast/decorative/diagonal-only adjacency and avoid invalid map-neighbor access.
-- [ ] 1.4 Create the center and its orbital navigation reference atomically. The reference contains no free orbital dock, inventory or Station Core.
+- [X] 1.1 Add the Surface Airport-menu entry and rotated land-footprint preview, then route it to a specialized launch-station command. Menu placement does not grant ordinary aircraft rocket capability or reuse the aircraft FSM.
+- [X] 1.2 Preflight every footprint tile, owner/local authority, joining StationID and construction cost before any mutation; store an immutable launch anchor separate from the mutable station bounding box.
+- [X] 1.3 Define a guarded water predicate over orthogonal outer footprint edges: require real navigable clear sea/river/lake/canal water, reject coast/decorative/diagonal-only adjacency and avoid invalid map-neighbor access.
+- [X] 1.4 Create the center and its orbital navigation reference atomically. The reference contains no free orbital dock, inventory or Station Core.
+
+**1.3 producer evidence, 2026-10-12:** `src/launch_center.h/.cpp` owns the
+rotated4x3 Surface footprint extent, guarded navigable-water predicate and
+orthogonal perimeter query. Four rotations and all four edges pass actual-map
+fixtures for flat sea, river and canal; sloped clear water, coast, diagonal/internal contact, other planes,
+invalid coordinates and off-map wrapped neighbours refuse. Excluding one water
+tile models the last-edge preflight and preserves an alternative valid edge.
+Independent Surface-collection and orbital-drop circle queries use widened Q16
+arithmetic and inclusive20-tile boundaries, including12/16 and14/14 diagonals,
+a one-Q16-unit outside point and extreme signed inputs. Command:
+`openttd_test.exe "[launch-center-geometry]"` (RelWithDebInfo;105 assertions).
+The flat-water correction and focused results are retained in
+`logs/launch-center-flat-water-release-build.log` and
+`logs/launch-center-flat-water-release-test.log`.
+This dated fixture publishes placement geometry. The subsequent native facility
+and water-hook evidence is recorded below; launch, descent and handling remain pending.
+The new footprint dimensions are an explicit initial facility default; rotation
+changes extent but does not change a future immutable build anchor.
+
+**Group1 native delivery,2026-10-12:** the airport toolbar exposes the specialized
+Surface launch center and four rotated4x3/3x4 placement selections. Native
+commands preflight the complete footprint, water, company/authority, joining,
+spread and allocation before mutation, charge500,000 plus clearing, and create
+one native Station facility with an immutable anchor and monotonic generation.
+Removal costs10,000 and preserves joined rail; rebuilding cannot resolve the
+retired reference. The center grants no airport FSM, free Space facility or cargo.
+The initial pad drawing is temporary. World capacity is64 centers.
+
+Save407 adds bounded staged `LCTR` transport without changing `STNN` fields.
+The native lifecycle fixture passes95 assertions in RelWithDebInfo; two independent
+reloads preserve `LCTR/STNN/ASTR/VEHS/CAPA/PLYR`, and ordinary `openttd` load/resave
+preserves the center and station exactly. Five corrupt actual loads and four
+read-only valid/corrupt/valid preview sequences reject while preserving authority.
+The toolbar capture uses actual native selection state. Source/binary hashes,
+logs, artifacts and exact scope are in `logs/launch-center-native-verification.json`
+and `mlm/reviews/space/launch-center-verify/20261012-142808-2eb96968ba/reports/launch-center-verification.json`.
+Focused geometry/identity/state/content/motion gates pass4,617 assertions/12 cases.
+Debug407 and broad old-save compatibility are queued for the next batch.
+
+**Verification batching,2026-10-12 (user instruction):** run tests and builds only
+after at least two completed feature groups since the preceding cycle. The native
+facility cycle above has finished. Implement the next feature batch before
+starting another cycle; compiler/test fixes belong to that same cycle. Keep
+unverified requirements unchecked.
 
 ### Group 2 - Preserve water access and independent service geometry
 
@@ -124,18 +192,53 @@ Each edge is one packet-ownership transfer with capacity validation. Reservation
 - [ ] 2.3 Define the independent Surface collection circle and Space release circle at the immutable anchor, clipped at map edges without wrapping. Keep precise rocket service/docking approaches separate.
 - [ ] 2.4 Add bounded pad queue, assembly/service slots, recovery storage and ordinary Surface freight supply access. Save queue/capacity authority; a station join cannot enlarge orbital range.
 
+**Implementation batch after the native facility cycle,2026-10-12:** Group3's
+exclusive train/lorry membership and Group4's full-footprint validation, joined
+storage, native selection UI and separate Surface overlay are implemented together.
+`Station::launch_hub` owns up to32 separate member relationships; typed monotonic
+link generations prevent reuse. Save408's bounded `LCHB` family stages these
+relationships without changing `LCTR`/`STNN`. Footprint edits, deletion and settled
+company ownership changes revalidate links without moving native cargo.
+The generic native `IsInUse` predicate now includes the launch facility.
+This is the next two-feature-group implementation batch; one combined build/test
+cycle follows. Checkboxes await its evidence. Packet reservation/allocation remains
+Group5.2 and the matching part of4.2. Once handling jobs exist, unlink/reselection
+must refuse outstanding jobs until settlement; this producer creates no jobs.
+
 ### Group 3 - Surface facility and placement
 
 {{MEDIUM}}
-- [ ] 3.1 Add same-company train/lorry collection membership within the proposed 20-tile Surface area, including joined facilities.
+- [X] 3.1 Add same-company train/lorry collection membership within the proposed 20-tile Surface area, including joined facilities.
 
 ### Group 4 - Validate hub membership independently of catchment
 
 {{HARD}}
-- [ ] 4.1 Keep separate member StationIDs and ordinary station-spread limits; require same company, Surface rail/lorry facilities and every station footprint tile within the collection circle.
+- [X] 4.1 Keep separate member StationIDs and ordinary station-spread limits; require same company, Surface rail/lorry facilities and every station footprint tile within the collection circle.
 - [ ] 4.2 Use explicit center selection for overlapping areas and exclusive per-packet allocation. Define whether a station may change hub while jobs exist; do not infer membership from overlapping normal catchment.
-- [ ] 4.3 Handle joined center/member facilities sharing one StationID as a no-self-transfer case: expose the same authoritative storage for normal pickup without a duplicate handling job or second cargo list.
-- [ ] 4.4 Publish a membership query used by commands and overlays, including joined center facilities and footprint changes. Test a station anchor inside with one remote tile outside.
+- [X] 4.3 Handle joined center/member facilities sharing one StationID as a no-self-transfer case: expose the same authoritative storage for normal pickup without a duplicate handling job or second cargo list.
+- [X] 4.4 Publish a membership query used by commands and overlays, including joined center facilities and footprint changes. Test a station anchor inside with one remote tile outside.
+
+**Native membership evidence,2026-10-12:** both configurations pass4,857 focused
+assertions/14 cases and147 actual loaded-world build/UI assertions. Native rail
+and lorry stations link through the synchronized command/actual station selector;
+expansion from an inside station tile to an outside tile retires the link.
+Overlapping-center choice, no automatic enrollment, whole-footprint checks,
+foreign/other-plane refusal, bounded32-member capacity, joined one-store behavior,
+unlink/reselection and native pool-ID reuse pass. No packet is copied/moved by a
+membership change. `LCHB` retains exact saved relationships through two independent
+reloads and ordinary resave;12 corrupt loads and9 read-only previews reject in each
+configuration. All three mining snapshots pass exact two-by2,200-tick continuation
+per configuration; all eight underground snapshots preserve27 owner chunks each.
+`logs/launch-hub-verification.json` binds scope, binaries, source, receipts and limits.
+
+Task4.2 remains unchecked for the per-packet allocation/active-job boundary supplied
+by Group5. The next implementation batch is handling and its lifecycle, after the
+user resumes development. First resolve the observed saved station-name ID
+regression: `STR_SV_SPACE_NAME` was inserted ahead of `STR_SV_STNAME` in the reserved
+0x6000 save-string range. Restore historical station IDs and check retained names;
+do not regenerate or overwrite original retained saves to hide that defect.
+The user requested a demo break after this verified batch. See the
+[bundled tour](d2um-underground-mines.md); do not continue feature work during it.
 
 ### Group 5 - Reserve and move bounded Surface handling cargo
 
@@ -195,9 +298,9 @@ return dx * dx + dy * dy <= r * r; // inclusive circular boundary
 ### Group 8 - Define rocket model and saved launch phases
 
 {{MEDIUM}}
-- [ ] 8.1 Register a reusable cargo rocket using the r2mlvs8 canonical Space engine/vehicle type. Specify purchase/service, profile propellant, payload capacity/mass, preparation and turnaround values.
-- [ ] 8.2 Define supported probe payload, components, Robotics Parts and mirror kits. Retain separate hull, carried probe and cargo identities; ordinary aircraft are not converted.
-- [ ] 8.3 Create/register the minimal small-probe hull/engine and passive carry/deploy identity here using r2mlvs8. It can idle in orbit without an asteroid target; r2mlvs10 adds mining orders/controller to this same shell and must not create a second deployment owner.
+- [ ] 8.1 Register the reusable cargo rocket through the native Space vehicle/engine owner. Earth hull assembly consumes its Steel/Goods once; bind purchase/service, propellant, separate dry-hull/payload/fuel mass, preparation and turnaround to the revised profile budget.
+- [ ] 8.2 Define mining/survey/construction probe payloads, Steel/Goods construction stock and later advanced supplies. Retain separate hull, carried probe and cargo identities; check canonical cargo weight/classes, not a tonne per Goods crate. Ordinary aircraft are not converted.
+- [ ] 8.3 Register the three minimal probe hull/engine roles and passive carry/deploy identity through the native Space owner. Initially all require material-paid Earth launch-center commissioning; an idle deployed shell needs no asteroid target. Plan10 adds role actions/orders to those same units, with later completed-Assembly commissioning owned by Plan11.
 - [ ] 8.4 Save GroundLoading, Preparing, Ascent, OrbitalDelivery, ReturnRecovery and Service phases with source center, explicit destination and simulation timer. Define resumable blocked reasons for each phase.
 
 ### Group 9 - Work the reusable-rocket and persistent-probe ledger
@@ -205,7 +308,7 @@ return dx * dx + dy * dy <= r * r; // inclusive circular boundary
 {{MEDIUM}}
 - [ ] 9.1 Calculate first purchase/launch and a second flight using the same rocket hull: fuel, preparation, service, pad occupancy and replacement cost are distinct charges from payload value.
 - [ ] 9.2 Specify probe deployment as releasing the carried robot into orbital operation once. Subsequent mined cargo descents pay pod/service costs without purchasing or launching that probe again.
-- [ ] 9.3 Publish a two-flight/two-probe-return numerical fixture from r2mlvs1 tuning values, including holds exhausted and unavailable service input. No profitable cargo duplication or free hull replacement is allowed.
+- [ ] 9.3 Publish revised first-mining/two-return and first-Core two-material launch fixtures from Plan1 tuning, including mass-limited Goods, exhausted holds and unavailable service. No free hull, preassembled Core bypass or duplicated cargo is allowed.
 
 ### Group 10 - Load and prepare a launch atomically
 

@@ -23,6 +23,12 @@ static const int TILE_HEIGHT_STEP = 50; ///< One Z unit tile height difference i
 /** Layer the current viewport draw is showing. Off-map fences read this. */
 extern MapLayer _viewport_draw_layer;
 
+/** Presentation-only Surface collection overlay, independent of catchment and orbital release. */
+enum class LaunchCollectionHighlight : uint8_t { None, Area, Member };
+void SetViewportLaunchCollection(StationID center, uint64_t generation, bool selected);
+bool IsViewportLaunchCollection(StationID center, uint64_t generation);
+LaunchCollectionHighlight GetViewportLaunchCollectionTile(TileIndex tile);
+
 void SetSelectionRed(bool);
 
 void InitializeWindowViewport(Window *w, int x, int y, int width, int height, std::variant<TileIndex, VehicleID> focus, ZoomLevel zoom);

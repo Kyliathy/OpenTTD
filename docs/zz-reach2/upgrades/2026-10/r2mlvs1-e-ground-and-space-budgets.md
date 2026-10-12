@@ -65,7 +65,106 @@ Load endpoints are at Manhattan bay distance `2,5,6,4,1`; conservative supported
 
 The loss is structural, not just this travel schedule: useful aggregate value is at most `0.75 * admitted Rock`, while Rock intake alone costs at least `3 * Rock` and Earth costs `2 * Earth`, before positive support/work/haulage. Spoil-only digging therefore cannot profit even with faster return travel. All ten ore routes use the conventional cargo carriers/dates from Group 12; hazardous Uranium never relies on a Bulk hopper or a 1985-only capsule. These hand budgets were independently recalculated; no new runtime implementation or regression test is claimed.
 
+## Space economy revision - 2026-10-12
+
+The user's [revised common contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+supersedes Group14's old Space body/module/pod material rows and preassembled
+nucleus. These are initial revised tuning defaults, pending compiled content
+freeze and real-route acceptance. Keep Group14's rocket fuel/phase/fee,
+20-tonne mining hold,2-tonne/74-tick extraction, service and descent schedules.
+The old26,420 operating ledger and11-milestone bootstrap total describe the
+previous recipes; do not cite them as proof of this revised economy.
+
+`STEL` is tonnes; `GOOD` is crates, not tonnes. With the current cargo weights,
+one Steel unit weighs1 tonne and one Goods crate0.5 tonne. The authoritative
+weight calculation uses `CargoSpec::weight` in sixteenths of a tonne, summed
+before division. Refits and mixed rocket manifests must obey both packet-count
+and mass bounds. Revised bounded Surface seed: GOOD from1950,120 money/crate,
+256 crates/company/economy day, with the existing non-paying supply purpose.
+Ordinary Earth-produced Goods remains the production alternative.
+
+| New Space asset | Materials consumed once | Embodied mass / work / capital |
+| --- | --- | --- |
+| Cargo rocket hull | STEL12 + GOOD16 | 20t dry hull, separate from30t payload / assembly schedule /400,000 |
+| Mining probe15 | STEL4 + GOOD8 | 8t hull / existing launch assembly schedule /100,000 |
+| Survey probe19 | STEL2 + GOOD4 | 4t hull / same assembly owner /60,000 |
+| Construction probe20 | STEL4 + GOOD8 | 8t hull / same assembly owner /100,000 |
+| Return pod shell | STEL1 + GOOD2 | 2t shell /74 ticks /2,000 |
+| Orbital mirror | STEL4 + GOOD4 | 6t /148 deployment ticks /40,000; Surface target unchanged |
+| First Core,1995 | STEL16 + GOOD24 | 28t delivered /740 probe construction +74 activation ticks /700,000 |
+| Dock extension | STEL8 + GOOD12 | 14t /444 ticks /160,000 |
+| Storage module | STEL8 + GOOD8 | 12t /296 ticks /120,000 |
+| Assembly/workshop | STEL8 + GOOD16 | 16t /592 ticks /180,000 |
+| Steelworks or Goodsworks module | STEL10 + GOOD16 | 18t /740 ticks /220,000 each |
+| Power module | STEL6 + GOOD20 | 16t /444 ticks /140,000; existing60kW local output |
+| Fuel store | STEL6 + GOOD12 | 12t /296 ticks /100,000; existing128kL capacity |
+| Later heavy robot16 | STEL6 + GOOD12 + RBPT4 + ELEC2 | 18t /592 ticks /200,000 |
+
+Unlisted later orbital assets, including haulers and advanced processors, must
+receive both base materials plus any declared advanced inputs before purchase
+is enabled. Existing old SCMP-only rows are not an alternate free route.
+
+The rocket's base materials are embodied at Earth assembly too. Its STEL12
+share comes from the existing combined center/rocket STEL24 row; add GOOD16
+to that row, retaining center-side RFMT16/SCMP8/ELEC8 and the separate PROP16
+fuel purchase. The remainder of the Steel belongs to the Surface center.
+Do not charge rocket hull mass against its freight allowance or charge its
+capital twice. Initial capital split:500,000 for the native Surface launch
+facility and400,000 for the reusable rocket; the combined total remains900,000.
+The native facility command charges its500,000 plus clearing costs. That empty
+facility supplies no free stock or commissioned rocket; material/launch gates
+remain pending their own producers and Group12B freeze.
+
+Construction probe hold:20t, one selected STEL or GOOD cargo at a time (20 Steel
+units or40 current Goods crates). The body is separate from this freight hold.
+Two Earth launches can supply the first Core: one construction probe with16t
+Steel, and a second with24 Goods crates(12t). Including a2t RFMT/ELEC service
+preload, their rocket manifests are26/30t and22/30t. Both vehicles persist for
+later work. Neither delivery requires an existing orbital dock or storage;
+the blueprint construction job receives the materials. Later a delivered
+resupply can let a single probe make multiple trips through the public transfer
+owner. A blueprint cannot process cargo or build probes before completion.
+
+The first mining payload becomes8t body + two2t shells +2t service =14/30t.
+Inputs are STEL6 + GOOD12 + RFMT1 + ELEC1, costing2,720 at the published seed
+prices; capital remains104,000 including two pod assemblies. Replacing the old
+1,200 pod-material term with680 gives a revised two-return operating debit of
+**25,900**, before travel/wait upkeep, body material and center/rocket capital.
+Probe service remains RFMT1 + ELEC1 after two returns, not free Steel/Goods.
+
+Survey scan:148 synchronized working ticks inside the0.25-tile approach
+tolerance, following the moving body without an exclusive mining lease;500
+money per working day and100 while travelling/waiting, with saved remainders.
+The company receives knowledge only on completion. Mining may precede survey.
+
+| Specialized processor /1995 | All inputs per batch | Output and disposition | Work / power / interval maximum |
+| --- | --- | --- | --- |
+| Orbital Steelworks | NORE4t | STEL2t;2t recorded process residue | 74 ticks /55,500J /4 batches |
+| Orbital Goodsworks | STEL2t + RARE1t | GOOD4 crates(2t);1t recorded process residue | 74 ticks /55,500J /4 batches |
+
+These are game conversion rules. Per-label input/output caps are1,024 native
+units; no free output, reserve replenishment or stock overflow. An ore-to-Goods
+worked path consumes NORE4 + RARE1, passes its2t Steel through exactly one
+inventory, produces4 crates and records3t total residue. Reserve debit occurs
+only at mining; processor input consumption must not debit the asteroid again.
+Each batch requires the shared utility grant, all inputs and complete output
+headroom before committing. Missing either Goodsworks input or one free crate
+short of its four-crate output retains every input. Products can go to an
+orbital build or Earth drop, with one exclusive quantity reservation.
+
+Freeze must add the stable recipe identities, expand all launch/seed/bootstrap
+budgets for the extra probe roles and real material routes, and verify the
+unchanged original ground capital separately. Preserve saved old builds and
+paid packets with an explicit version migration; no retroactive material bill,
+free survey, manufactured stock or completed blueprint is permitted.
+
 ## Group 14 - launch, returns and Surface-supplied orbital assembly
+
+**Historical version1 rows below:** the Space construction materials, pod mass,
+preassembled Core and aggregate cash totals are superseded by the revision
+above. Unchanged flight, service, handling and utility ownership rules still
+apply. Existing tests of these old definitions are retained compatibility
+evidence, not acceptance of the revised construction economy.
 
 | Vehicle/facility quantity | Initial value / bound |
 | --- | --- |

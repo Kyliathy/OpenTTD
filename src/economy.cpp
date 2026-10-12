@@ -13,6 +13,7 @@
  */
 
 #include "stdafx.h"
+#include "launch_center.h"
 #include "utility_power.h"
 #include "transport_tube.h"
 #include "geothermal_collector.h"
@@ -539,6 +540,9 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 			st->owner = new_owner == INVALID_OWNER ? OWNER_NONE : new_owner;
 		}
 	}
+
+	// Both native station and tile ownership have settled; retire only relationships that no longer qualify.
+	RevalidateLaunchHubMemberships();
 
 	/* do the same for waypoints (we need to do this here so deleted waypoints are converted too) */
 	for (Waypoint *wp : Waypoint::Iterate()) {

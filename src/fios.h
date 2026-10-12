@@ -54,6 +54,10 @@ struct NativeIndustryPreview {
  * Read-only save preview container; explicit metadata is transport, never live gameplay authority.
  */
 struct LoadCheckData {
+	bool asteroid_present = false, asteroid_active = false; ///< Independent bounded404 preview presence.
+	bool launch_centers_present = false, launch_centers_active = false; ///< Independent bounded407 preview presence.
+	bool launch_hubs_present = false, launch_hubs_active = false; ///< Independent bounded408 membership preview.
+	uint64_t asteroid_seed = 0, orbital_seed = 0; ///< Candidate field and metadata roots; never live-world values.
 	bool checkable = false; ///< True if the savegame could be checked by SL_LOAD_CHECK. (Old savegames are not checkable.)
 	StringID error{}; ///< Error message from loading. INVALID_STRING_ID if no error.
 	std::string error_msg{}; ///< Data to pass to string parameters when displaying #error.

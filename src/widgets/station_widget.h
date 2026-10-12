@@ -30,6 +30,9 @@ enum StationViewWidgets : WidgetID {
 	WID_SV_SHIPS,              ///< List of scheduled ships button.
 	WID_SV_PLANES,             ///< List of scheduled planes button.
 	WID_SV_CATCHMENT,          ///< Toggle catchment area highlight.
+	WID_SV_LAUNCH_HUB,         ///< Explicit Surface freight hub selector.
+	WID_SV_LAUNCH_COLLECTION,  ///< Separate collection-circle overlay.
+	WID_SV_LAUNCH_HUB_SEL,     ///< Hide hub controls outside supported Surface stations.
 };
 
 /** Widgets of the #CompanyStationsWindow class. */

@@ -6,6 +6,28 @@ This epic turns the four existing layers into a connected transport economy: exc
 
 This master owns scope, proposed architecture decisions, cross-plan invariants, dependencies and milestones. Implementation checkboxes live only in the owning child plans. Writing a plan does not complete its implementation tasks. New gameplay decisions below are planning defaults, not a claim of user approval or existing behavior. This epic does not inherit R2MLM's historical permission to skip operator acceptance.
 
+**Current dispatch, 2026-10-12:** the user paused underground work at `demo3`
+and requested full mature implementation of Plan10. Plans8/10 P1/P2 supply the
+existing persistent field and native mining fleet; they are foundations for the
+full launch/probe/drop/descent/service/Surface-delivery loop. Retained demo saves
+are regression inputs. Plan10's original Groups1-22 and completion conditions
+remain the target, including recovery, final art, network replay and performance.
+Prepared demo purchases are not the production commissioning path. The user's
+2026-10-12 [Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+adds Earth-launched survey/construction probes, survey-gated reserve disclosure,
+typed vehicle orders and Steel/Goods construction supplied from Earth or orbital
+processors. These requirements join the full implementation queue.
+Historical underground worlds retain their state and receive no asteroids on
+ordinary reload. See [the Space walkthrough](d3sp-space-survey.md).
+
+Run `play.ps1 space`, `play.ps1 space-mining` or `play.ps1 space-holds` for the
+native approach, partial extraction and full-hold checkpoints. The next producer
+is Plan9's Surface launch center and its linked orbital cargo-drop zone, followed
+by saved descent and Surface handling. Cargo currently stays in each probe at
+orbital staging. Physical rocket commissioning, paid service/repeat sorties,
+full orbital structures and final Plan13 art retain their delivery gates.
+Underground work remains paused.
+
 ## Development artifact layout
 
 Owner: this parent; implementation: [R2FC cleanup](r2fc-file-cleanup.md). Migration and focused native/cold verification are complete; the cleanup records producer readiness, input identities and commit scope. This contract supersedes the former docs `assets/`, `assets/reviews/`, `tools/` and assisting-script placement rules for all children. It does not change gameplay, save formats or ordinary OpenTTD/Classic user paths.
@@ -59,7 +81,9 @@ These tables summarize the planned additions by layer. Resources are listed wher
 | Underground and Deep Underground only | **Shield-85 Mineral Capsule** | Tube vehicle for Uranium and other designated sealed mineral loads; introduced 1985. |
 | Underground and Deep Underground only | **Forge-05 Heavy Capsule** | Tube vehicle for Steel, Refined Metals, Station Components and Robotics Parts; introduced 2005. |
 | Surface <-> Outer Space | **Cargo rocket** | Launches probes, components and mirror kits from a waterside Space Launch Center; delivers payloads and returns for recovery/service. |
-| Outer Space | **Small mining probe** | Rocket-deployed robot that attaches to moving asteroids, mines, and releases cargo within its center's 20-tile drop radius. |
+| Outer Space | **Small mining probe** | Earth-launched robot that attaches to moving asteroids, mines, and unloads at a constructed station or releases cargo within its center's 20-tile drop radius. |
+| Outer Space | **Survey probe** | Earth-launched scanner; completed scans reveal asteroid reserve amounts to its company. |
+| Outer Space | **Construction probe** | Earth-launched builder; delivers Steel/Goods to orbital blueprints and constructs stations/modules. |
 | Outer Space -> Surface | **Cargo return pod** | Saved descent/delivery unit carrying released cargo into launch-center storage; not an independently routed freight fleet. |
 | Outer Space | **Heavy mining robot** | Larger station-assembled miner with increased capacity and extraction capability. |
 | Outer Space | **Orbital hauler** | Moves materials and products between compatible orbital facilities and return services. |
@@ -104,7 +128,7 @@ Tube and geothermal details are expanded in [r2mlvs17](r2mlvs17-underground-tran
 
 The player starts with an ordinary Surface transport company. A rail tunnel creates a sealed underground entrance. A commissioned Tunnel Boring Machine enters it, cuts rock, and loads Earth and Rock into real wagons. A second locomotive collects those wagons, returns them to the project's originating Surface station, and supplies empties. The TBM turns in steps of at most 45 degrees and can clear connected areas for any underground use, including large chambers and transport tubes. Excavated corridors and chambers then support roads, railways, tube networks, stations, depots and mines. Deep Underground opens from 1980, with harder deposits, geothermal vents and progressively more advanced heat-powered industries.
 
-A waterside Space Launch Center, built from the airport controls, sends rockets carrying probes and construction cargo into Outer Space. Probes rendezvous with slowly moving asteroids, attach, mine, and return within 20 tiles of their launch center's orbital projection to send cargo down. A large Surface collection area lets connected train and lorry stations collect that returned cargo. Later, rockets deliver station components for assembly, larger robots and orbital processing. Launched solar mirrors target Surface solar farms and add 300% to their normal output.
+A waterside Space Launch Center, built from the airport controls, sends rockets carrying mining, survey and construction probes into Outer Space. Survey scans reveal resource quantities; mining probes rendezvous with moving bodies and return within20 tiles of their launch center's orbital projection to send cargo down. A large Surface collection area serves connected train and lorry stations. Construction probes deliver Steel/Goods to placed station blueprints. Completed stations can process asteroid ore into Steel/Goods for further orbital construction or Earth export, and later assemble probes locally. Launched solar mirrors target Surface solar farms and add300% to their normal output.
 
 ```mermaid
 flowchart LR
@@ -159,7 +183,7 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
-| [X] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Content profile, cargos, recipes, IDs, capabilities and balance contracts | none |
+| [~] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Version1 contracts delivered; revised Space Steel/Goods/probe-role freeze12B pending | none |
 | [X] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | All producer tasks complete, including loaded terrain/survey/job art16.1. Canonical geology/guards/paid cut/planning/save conditions pass; combined bootstrap/network acceptance remains with15/16 | 1 Content Freeze; 15 Schema Foundation; scoped portal bootstrap from3; selected art from13 |
 | [~] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Actual commissioning/entry/backing/lifecycle, Deep dates/scripts, genuine370/current385 occupied saves and selected final portal art delivered. Pending12.1 real tube/riser and18.2 full closure; explicit 3MP exceptions do not complete engineering acceptance | 2; actual TBM roles/recovery from4, source exchange from5; tube/riser17/18 and art13/14; staged by3MP |
 | [~] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Paid actual cutting/support/turns/backing, source/recurring bay, current385 bend/recovery/cancel files, complete corridor costs and selected art/sound delivered. Pending15.1/21.4 full final non-rail use and22.2 completion; real join/bootstrap/full-performance exceptions remain unverified | 2 solid starter; 3 portal handoff; 1 wagon contract; 5 exchange/receivers; 13 completed art; 14 remaining art; staged by3MP |
@@ -167,7 +191,7 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 | [~] | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) | Delivered finite mine/shared recipe/native selected Surface producers; later receiver/thermal/final-art/combined acceptance tasks remain pending | 2, 5; 12 Useful Power Handoff for power consumers |
 | [~] | [r2mlvs7-underground-construction-and-fleet.md](r2mlvs7-underground-construction-and-fleet.md) | Delivered survey/area/conventional construction, fleet/admission/station/service owners; tube/geothermal controls and later art/acceptance remain pending | 3, 5, 6 |
 | [ ] | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) | Space simulation, orbital vehicle model, occupancy and construction controls | 1 Content Freeze; 15 Schema Foundation Handoff |
-| [ ] | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) | Waterside airport-menu facility, launch queues, rockets and descent cargo | 8; cargo definitions from 1 |
+| [~] | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) | Waterside airport-menu facility, launch queues, rockets and descent cargo | 8; cargo definitions from 1 |
 | [ ] | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) | Moving deposits, rendezvous, attachment, extraction and return missions | 9 |
 | [ ] | [r2mlvs11-orbital-stations-and-manufacturing.md](r2mlvs11-orbital-stations-and-manufacturing.md) | Delivered module construction, assembly docks, larger robots and processing | 9, 10; recipes from 6 |
 | [~] | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | ETI compatibility decision, solar farms, useful power and orbital mirrors | ETI Feasibility Handoff uses 1 Draft Content; Useful Power Handoff after 1 Content Freeze; mirrors after 9 |
@@ -313,11 +337,37 @@ A mission is Launch/Deploy -> Rendezvous -> Attach -> Mine -> Detach -> Return i
 
 Start with three asteroid classes: metallic (Nickel), carbonaceous (Water Ice) and rich (Rare Earth concentrate). Reuse compatible terrestrial cargos where appropriate; class composition remains deterministic. Asteroids drift slowly enough to observe and intercept. Initial missions require no orbital station, avoiding a station/probe/bootstrap dependency cycle. Define an explicit safe interaction policy with stations; the initial design uses a separate asteroid travel band and approach/exclusion rules rather than impact damage.
 
+Mining, survey and construction are distinct probe roles with typed vehicle
+orders. Initially all are assembled/launched through an Earth Space Launch
+Center; later a completed orbital Assembly may build them from actual inputs.
+Asteroid quantities remain unknown to a company until its survey probe completes
+a scan. Persist that knowledge and partial scan work; preview controllers grant
+none. The rule gates quantity display, not permission to attempt mining.
+
 ### AD-12 - Orbital construction consumes delivered inventory (owner: 11)
 
-The first rocket carries a deployable Station Core to an available orbital anchor. Thereafter module blueprints reserve footprint and inventory; construction consumes delivered components through saved assembly progress. Dock, storage, power/service, assembly and processor modules are distinct functional components. Larger mining robots require a completed assembly dock, delivered Robotics Parts, components, capacity and funds. Their first production must be possible entirely from Surface supplies.
+Every orbital build requires Steel and Goods shipped from Earth or produced in
+space. A Fund Industry-style window places an inert blueprint with a visible
+money/material requirement. Earth-launched construction probes deliver actual
+materials and build the first Core without requiring an earlier station. Its
+saved construction job owns deliveries until completion; there is no free
+storage/dock or preassembled-Core bypass. Later modules use the same contract.
+An Earth-assembled vehicle/mirror carries its already consumed Steel/Goods as
+an embodied payload, without a second deployment debit.
 
-An orbital processor converts mined resources into Refined Metals, Electronics inputs or Propellant according to bounded recipes. Larger robots and processing are the later expansion milestone proposed from the user's "perhaps"; basic launch/probe/mirror gameplay does not depend on them. No crew life-support, weapons, combat or real launch physics are required.
+Dock, storage, power/service, assembly and processing remain distinct functions.
+Completed orbital Steelworks/Goodsworks turn mined resources into the common
+construction materials through bounded recipes. The player may reuse output
+for infrastructure/probes, haul it between stations or drop it for useful Earth
+delivery. Later Refined Metals/Propellant and advanced robot recipes retain
+their own extra inputs. A completed Assembly, berth, stock, work and funds are
+required for local vehicle production. The first station and factories have a
+wholly Surface-supplied path. The shared
+[Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+owns units, commissioning, survey disclosure and consumption boundaries. Basic
+mining/returns remain independently playable before stations; station production
+is now a firm planned expansion. No crew life-support, weapons, combat or real
+launch physics are required.
 
 ### AD-13 - Solar output is increased once, at its source (owner: 12)
 
@@ -426,7 +476,7 @@ Plan 1 is complete. Index marks for Plans 12/13/15 indicate only the prerequisit
 
 Plan 1's [Content Freeze record](r2mlvs1-g-content-freeze.md) owns the compiled numerical/ownership tables and evidence. Native MLVI is selected, with 30 active cargos, 64/283 industry/tile envelopes and 275 logical designs. ETI v14 is unsupported for this profile; its pinned source/terms failures and unexecuted runtime checks remain explicit. Its first-party fallback is the shipped cargo package and tested native utility/effect contract; operational Useful Power is still Plan 12 work after Content Freeze.
 
-Bootstrap adds bounded paid Surface procurement, including Electronics/Batteries from 1965 for the 1970 tube; purchased company supplies earn no freight income. Rock yields bounded local construction aggregate with a maximum replacement value and paid residue/disposal, instead of unrestricted profitable Goods. Two pod shells and a service preload are included in first-probe supplies. The station nucleus is a Surface-preassembled kit preceding heavy-robot assembly. These choices fit the budgets and close self-dependent build paths.
+Bootstrap adds bounded paid Surface procurement, including Electronics/Batteries from 1965 for the 1970 tube; purchased company supplies earn no freight income. Rock yields bounded local construction aggregate with a maximum replacement value and paid residue/disposal, instead of unrestricted profitable Goods. Two pod shells and a service preload are included in first-probe supplies. The first station is built by Earth-launched construction probes with shipped Steel/Goods, preceding heavy-robot assembly. Revised Space budgets remain pending their new content freeze. These choices fit the budgets and close self-dependent build paths.
 
 Schema Foundation allocates MLMD/save version 371 after verified 369/370 preservation. Exact content is checked before activation and cargo meanings afterwards; old chunk absence remains Classic, and saved editor policy is explicit. SolarMirrorID names a deployed solar-owned object and adds no routed engine design. Sprite M0 freezes 141 families/58,059 planned sprites, protects 0..73 and proposes core 74..167 without activation. Actual feature pools, source art, operating utility and whole-world network/performance acceptance remain unfinished.
 

@@ -2,6 +2,14 @@
 
 Owner: [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md), Groups 20-23. Architecture: [archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md), [archi-savegame.md](../../architecture/savegame/archi-savegame.md). Inputs: [ETI/native M0 decision](r2mlvs12-a-eti-feasibility.md), [sprite schema/geometry](graphics/r2mlvs13-a-sprite-contract.md), [Schema Foundation](r2mlvs15-a-schema-foundation.md). This record freezes definitions and ownership, with future gameplay/art/network work explicitly retained in feature plans.
 
+**Space revision pending,2026-10-12:** this is the historical version1 freeze.
+The user's [Steel/Goods and three-probe contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+supersedes its old orbital construction/bootstrap rows. Plan1 Group12B must
+version and compile the new definitions, admission and bootstrap budgets before
+those dependent features can claim readiness. Existing ground contracts and
+old-save evidence stay valid; no new survey, stock or construction is delivered
+by this note.
+
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
 ## Group 20 - transaction and saved-state ownership

@@ -71,6 +71,10 @@ bool FiosItemSorter(const FiosItem &a, const FiosItem &b)
  */
 void LoadCheckData::Clear()
 {
+	this->asteroid_present = this->asteroid_active = false;
+	this->asteroid_seed = this->orbital_seed = 0;
+	this->launch_centers_present = this->launch_centers_active = false;
+	this->launch_hubs_present = this->launch_hubs_active = false;
 	this->checkable = false;
 	this->error = INVALID_STRING_ID;
 	this->error_msg.clear();

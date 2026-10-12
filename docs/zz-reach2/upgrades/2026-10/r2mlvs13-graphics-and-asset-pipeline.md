@@ -76,9 +76,9 @@ Retain completed graphics contracts, authored sources, packed payloads and selec
 | Original tube fleet | Mole-70, Crate-75, Cistern-80, Shield-85 and Forge-05: 5 distinct silhouettes/models, each with 8 directions, purchase icon and cargo/load states; 5 refits or recolors are insufficient | 17 |
 | Geothermal sites and factories | Vent field/collector; Vent-Tap and Magma-Loop powerhouses; direct smelter, battery works and Mantle Forge; utility conduits/riser; construction/working/heat-starved states | 18 |
 | Space Launch Center | Pad, assembly/service building, cargo/recovery areas; footprint rotations; ready/preparing/launch/occupied states; foreground cuts | 9 |
-| Space fleet | Cargo rocket ascent/orbit/recovery; small probe free/attached/mining; return pod; heavy robot and orbital hauler; direction and purchase/state sprites | 9..11 |
+| Space fleet | Cargo rocket ascent/orbit/recovery; distinct mining, survey and construction probes with free/work/load/service states; return pod; later heavy robot and hauler; direction and purchase/state sprites | 9..11; remaining art in14 |
 | Asteroids | 3 readable classes, size variants, docking/mining overlays and depleted state; animation must preserve gameplay footprint | 10 |
-| Orbital modules | Core, dock, storage, utility, assembly and processor; blueprint/partial/complete states, connectors and docking occlusion | 11 |
+| Orbital modules | Core, dock, storage, utility, assembly, specialized Steelworks/Goodsworks and advanced processor; material-shortage/blueprint/partial/complete states, connectors and docking occlusion | 11; remaining art in14 |
 | Solar | Original solar farm and mirror kit icon; mirror packed/deploying/operating/idle; farm boost indicator | 12 |
 | Controls and cargos | Underground/Space Construction menus, general TBM area/45-degree turn previews, tube/geothermal tools, 1980/later technology locks, launch-center collection and separate 20-tile orbital-drop overlays, vehicle commands, cargo/resource icons and blocked-state markers | all |
 

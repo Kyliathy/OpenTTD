@@ -195,6 +195,9 @@ public:
 		return this->source;
 	}
 
+	/** Immutable production/pickup tile, including the actual extraction plane for orbital cargo. */
+	TileIndex GetSourceTile() const { return this->source_xy; }
+
 	/**
 	 * Gets the ID of the station where the cargo was loaded for the first time.
 	 * @return StationID.

@@ -524,10 +524,14 @@ struct IndustryCompare {
 
 typedef std::set<IndustryListEntry, IndustryCompare> IndustryList;
 struct RoadVehicle;
+struct LaunchCenterAnchor;
+struct LaunchCollectionHub;
 
 /** Station data structure */
 struct Station final : SpecializedStation<Station, false> {
 public:
+	std::unique_ptr<LaunchCenterAnchor> launch_center; ///< Saved by LCTR, with native Station identity/ownership.
+	std::unique_ptr<LaunchCollectionHub> launch_hub; ///< Saved by LCHB; native goods remains the only center cargo storage.
 	RoadStop *GetPrimaryRoadStop(RoadStopType type) const
 	{
 		return type == RoadStopType::Bus ? bus_stops : truck_stops;

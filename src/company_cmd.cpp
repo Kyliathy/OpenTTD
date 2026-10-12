@@ -1331,6 +1331,7 @@ int CompanyServiceInterval(const Company *c, VehicleType type)
 		case VehicleType::Train: return vds->servint_trains;
 		case VehicleType::Road: return vds->servint_roadveh;
 		case VehicleType::Aircraft: return vds->servint_aircraft;
+		case VehicleType::Space: return 0; // Orbital service is a separate mission, never an airport interval.
 		case VehicleType::Ship: return vds->servint_ships;
 	}
 }

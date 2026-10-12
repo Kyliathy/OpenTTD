@@ -1,0 +1,89 @@
+{
+  "save_version": 405,
+  "calendar_year": 1990,
+  "source": {
+    "path": "src/tests/fixtures/demos/space/space-survey-approach-1990-404.sav",
+    "sha256": "5a56a61b521d675937abfd4c073f4a55cf072435db62126c0a7368bdbff8cbda"
+  },
+  "native_probes": 3,
+  "purchase_charge": 120000,
+  "normal_starter_targets": true,
+  "previous_preparation": {
+    "save_version": 405,
+    "calendar_year": 1990,
+    "source": {
+      "path": "src/tests/fixtures/demos/space/space-survey-approach-1990-404.sav",
+      "sha256": "5a56a61b521d675937abfd4c073f4a55cf072435db62126c0a7368bdbff8cbda"
+    },
+    "native_probes": 3,
+    "purchase_charge": 120000,
+    "finite_extraction": true,
+    "surface_descent": false,
+    "cargo_owner": "native VehicleCargoList/CAPA",
+    "native_evidence": "mlm/reviews/space/mining-prepare/20261012-093740-96bac7747c",
+    "checkpoints": [
+      {
+        "name": "approach",
+        "snapshot": {
+          "path": "src/tests/fixtures/demos/space/space-mining-approach-405.sav",
+          "sha256": "bcc004173aa6a8589d510cc8d2ef61ed11006e66b5579fa54dde73eade4b17f2"
+        },
+        "paused": true,
+        "layer": "Outer Space"
+      },
+      {
+        "name": "working",
+        "snapshot": {
+          "path": "src/tests/fixtures/demos/space/space-mining-working-405.sav",
+          "sha256": "dc5f93d90a2f21d8f5dca2f76bef10fc6ab4e0578907cf5e8bbb44db761a0fe5"
+        },
+        "paused": true,
+        "layer": "Outer Space"
+      },
+      {
+        "name": "holds",
+        "snapshot": {
+          "path": "src/tests/fixtures/demos/space/space-mining-holds-405.sav",
+          "sha256": "69cd64ada1b0dd3f5ee84ffee5a7859148ae5459185860ffbbc1f353aed653ad"
+        },
+        "paused": true,
+        "layer": "Outer Space"
+      }
+    ],
+    "user_playtest": "pending"
+  },
+  "finite_extraction": true,
+  "surface_descent": false,
+  "cargo_owner": "native VehicleCargoList/CAPA",
+  "native_evidence": "mlm/reviews/space/mining-prepare/20261012-094804-b68e06108d",
+  "checkpoints": [
+    {
+      "name": "approach",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-mining-approach-1990-405.sav",
+        "sha256": "4f6d215248b9454627bc428df375521318f5034b3445ea14893427ff3548e406"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    },
+    {
+      "name": "working",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-mining-working-1990-405.sav",
+        "sha256": "2510190420c2eeee828c190204565cc1971f59c4c6e8fe83652a77c5a87943eb"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    },
+    {
+      "name": "holds",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-mining-holds-1990-405.sav",
+        "sha256": "d406c0afbb95c77bb07514054a43b7d13089ec4256a2897c37633f082f936ea5"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    }
+  ],
+  "user_playtest": "pending"
+}

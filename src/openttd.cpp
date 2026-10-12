@@ -8,6 +8,7 @@
 /** @file openttd.cpp Functions related to starting OpenTTD. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, bounded native failure reporting */
 
 #include "stdafx.h"
+#include "asteroid.h"
 
 #include "blitter/factory.hpp"
 #include "sound/sound_driver.hpp"
@@ -1237,7 +1238,9 @@ void StateGameLoop()
 	if (_game_mode == GameMode::Editor) {
 		BasePersistentStorageArray::SwitchMode(PSM_ENTER_GAMELOOP);
 		RunTileLoop();
+		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
 		CallVehicleTicks();
+		RefreshSpaceViewports();
 		CallLandscapeTick();
 		BasePersistentStorageArray::SwitchMode(PSM_LEAVE_GAMELOOP);
 		UpdateLandscapingLimits();
@@ -1265,7 +1268,9 @@ void StateGameLoop()
 		TimerManager<TimerGameEconomy>::Elapsed({});
 		TimerManager<TimerGameTick>::Elapsed(1);
 		RunTileLoop();
+		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
 		CallVehicleTicks();
+		RefreshSpaceViewports();
 		CallLandscapeTick();
 		BasePersistentStorageArray::SwitchMode(PSM_LEAVE_GAMELOOP);
 

@@ -28,7 +28,7 @@ ScriptVehicleList::ScriptVehicleList(HSQUIRRELVM vm)
 
 	ScriptList::FillList<Vehicle>(vm, this,
 		[is_deity, owner](const Vehicle *v) {
-			return (is_deity || v->owner == owner) && (v->IsPrimaryVehicle() || (v->type == VehicleType::Train && ::Train::From(v)->IsFreeWagon()));
+			return v->type != VehicleType::Space && (is_deity || v->owner == owner) && (v->IsPrimaryVehicle() || (v->type == VehicleType::Train && ::Train::From(v)->IsFreeWagon()));
 		}
 	);
 }

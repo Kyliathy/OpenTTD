@@ -747,6 +747,7 @@ enum class WindowClass : uint16_t {
 	UndergroundConstruction, ///< Explicit rock-layer tool context; window number is the requested layer.
 	TBMProjects, ///< Actual owned project browser; explicit work-layer context (r2tbmf-tbm-fixes.md Group2).
 
+	SpaceSurvey, ///< Read-only persistent Space field and staged survey inspector.
 	Invalid = 0xFFFF, ///< Invalid window.
 };
 

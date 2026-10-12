@@ -261,4 +261,11 @@ inline uint64_t PackEngineNameDParam(EngineID engine_id, EngineNameContext conte
 
 static const uint MAX_LENGTH_ENGINE_NAME_CHARS = 32; ///< The maximum length of an engine name in characters including '\0'
 
+/** Native model15 properties, deliberately separate from the four NewGRF vehicle formats. */
+struct SpaceVehicleInfo {
+	uint16_t model = 15;
+	uint16_t capacity = 20;
+	uint32_t purchase_cost = 40000;
+};
+
 #endif /* ENGINE_TYPE_H */

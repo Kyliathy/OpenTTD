@@ -1,0 +1,42 @@
+{
+  "save_version": 408,
+  "calendar_year": 1990,
+  "paused": true,
+  "layer": "Outer Space",
+  "tour_layer": "Surface",
+  "startup_note": "The loader selects Outer Space while the older survey preview is present. Select Surface to tour the launch center at (16,4).",
+  "snapshot": {
+    "path": "src/tests/fixtures/demos/space/space-launch-hub-1990-408.sav",
+    "sha256": "2f9c50badca4d4582850569231ec1db47bb677a73a1a6ad85f0ab2d0e22ab611"
+  },
+  "ordinary_source": {
+    "path": "mlm/reviews/space/launch-center-ordinary/20261012-152429-a84791506e/saves/ordinary-resave.sav",
+    "sha256": "2f9c50badca4d4582850569231ec1db47bb677a73a1a6ad85f0ab2d0e22ab611"
+  },
+  "native_acceptance": [
+    "mlm/reviews/space/launch-center-verify/20261012-152429-a84791506e/reports/launch-center-verification.json",
+    "mlm/reviews/space/launch-center-verify/20261012-154121-ec64b45827/reports/launch-center-verification.json"
+  ],
+  "center": {
+    "station_id": 4,
+    "generation": 2,
+    "anchor": [
+      16,
+      4
+    ],
+    "rotation": 1,
+    "separate_members": [
+      5,
+      6
+    ]
+  },
+  "prepared_conditions": [
+    "Explicit scratch terrain/river preparation on the review world",
+    "Native paid launch-center construction, removal/rebuild, joined rail and separate train/lorry construction",
+    "Membership assigned through synchronized command and actual station-window selector"
+  ],
+  "space_content": "Moving asteroid field and older ownerless survey-preview controllers; native mining is in the separate space/space-mining/space-holds checkpoints",
+  "cargo_descent": false,
+  "surface_handling_jobs": false,
+  "art": "Temporary launch pad and Space preview sprites"
+}

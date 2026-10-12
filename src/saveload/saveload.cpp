@@ -46,6 +46,8 @@
 #include "../fios.h"
 #include "../multilayer_content.h"
 #include "../multilayer_state.h"
+#include "../asteroid.h"
+#include "../launch_center.h"
 #include "../excavation_state.h"
 #include "../layer_portal_cmd.h"
 #include "../tbm.h"
@@ -257,6 +259,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _map_chunk_handlers;
 	extern const ChunkHandlerTable _misc_chunk_handlers;
 	extern const ChunkHandlerTable _multilayer_chunk_handlers;
+	extern const ChunkHandlerTable _asteroid_chunk_handlers;
+	extern const ChunkHandlerTable _launch_center_chunk_handlers;
 	extern const ChunkHandlerTable _geology_chunk_handlers;
 	extern const ChunkHandlerTable _excavation_chunk_handlers;
 	extern const ChunkHandlerTable _portal_work_chunk_handlers;
@@ -312,6 +316,8 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_map_chunk_handlers,
 		_misc_chunk_handlers,
 		_multilayer_chunk_handlers,
+		_asteroid_chunk_handlers,
+		_launch_center_chunk_handlers,
 		_geology_chunk_handlers,
 		_excavation_chunk_handlers,
 		_portal_work_chunk_handlers,
@@ -3345,6 +3351,8 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		/* The only part from AfterLoadGame() we need */
 		_load_check_data.grf_compatibility = IsGoodGRFConfigList(_load_check_data.grfconfig);
 		ValidateExcavationLoadPreview();
+		ValidateAsteroidLoadPreview();
+		ValidateLaunchCenterLoadPreview();
 		ValidateLayerPortalWorkLoadPreview();
 		ValidateTBMProjectLoadPreview();
 		ValidateSpoilReceiverLoadPreview();

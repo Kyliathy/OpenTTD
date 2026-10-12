@@ -1,0 +1,58 @@
+{
+  "owner": "docs/zz-reach2/upgrades/2026-10/d3sp-space-survey.md",
+  "date": "2026-10-12",
+  "source": {
+    "path": "src/tests/fixtures/demos/underground/mine-haulage-403.sav",
+    "sha256": "04b90a26658bc08dbd15ed43cefd0c5ad6de00d26f5a4fd7846e6467a35abcee"
+  },
+  "source_commit": "c99b6f0d55e7",
+  "save_version": 404,
+  "calendar_year": 1990,
+  "predeployed_survey_probes": 3,
+  "reserve_extraction": false,
+  "launch_center": false,
+  "surface_descent": false,
+  "preview_art": "code-authored native sprites; final Plan13 space families pending",
+  "native_evidence": "mlm/reviews/space/prepare/20261012-083530-8b9ee19943",
+  "checkpoints": [
+    {
+      "name": "approach",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-survey-approach-1990-404.sav",
+        "sha256": "5a56a61b521d675937abfd4c073f4a55cf072435db62126c0a7368bdbff8cbda"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    },
+    {
+      "name": "attached",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-survey-attached-1990-404.sav",
+        "sha256": "31db3e7138daa1bd8735d2a82aff3fec9128ed4518e9a8dc24d5a9f7fe9a8009"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    }
+  ],
+  "user_playtest": "pending",
+  "previous_checkpoints": [
+    {
+      "name": "approach",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-survey-approach-404.sav",
+        "sha256": "d00b97a380c692d475a1403d39075c441e908643f400558de04a1bdef078f3bf"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    },
+    {
+      "name": "attached",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-survey-attached-404.sav",
+        "sha256": "05bb41c989bbb792f1ef45f9709fa380043a827161fa1ec450514c779693f5ee"
+      },
+      "paused": true,
+      "layer": "Outer Space"
+    }
+  ]
+}

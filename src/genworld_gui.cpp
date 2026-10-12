@@ -91,6 +91,10 @@ static constexpr std::initializer_list<NWidgetPart> _nested_generate_landscape_w
 				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_GAMEPLAY_PROFILE, STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP),
 				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_PROFILE_PULLDOWN), SetToolTip(STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP), SetFill(1, 1),
 			EndContainer(),
+			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_ASTEROID_POPULATION, STR_MAPGEN_ASTEROID_POPULATION_TOOLTIP),
+				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_ASTEROID_PULLDOWN), SetToolTip(STR_MAPGEN_ASTEROID_POPULATION_TOOLTIP), SetFill(1, 1),
+			EndContainer(),
 
 			/* Generation options. */
 			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
@@ -231,6 +235,10 @@ static constexpr std::initializer_list<NWidgetPart> _nested_heightmap_load_widge
 			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
 				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_GAMEPLAY_PROFILE, STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP),
 				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_PROFILE_PULLDOWN), SetToolTip(STR_MAPGEN_GAMEPLAY_PROFILE_TOOLTIP), SetFill(1, 1),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL), SetPIP(0, WidgetDimensions::unscaled.hsep_wide, 0),
+				NWidget(WWT_TEXT, Colours::Invalid), SetStringTip(STR_MAPGEN_ASTEROID_POPULATION, STR_MAPGEN_ASTEROID_POPULATION_TOOLTIP),
+				NWidget(WWT_DROPDOWN, Colours::Orange, WID_GL_ASTEROID_PULLDOWN), SetToolTip(STR_MAPGEN_ASTEROID_POPULATION_TOOLTIP), SetFill(1, 1),
 			EndContainer(),
 
 			/* Generation options. */
@@ -402,6 +410,7 @@ static const StringID _rotation[]    = {STR_CONFIG_SETTING_HEIGHTMAP_ROTATION_CO
 static const StringID _num_towns[]   = {STR_NUM_VERY_LOW, STR_NUM_LOW, STR_NUM_NORMAL, STR_NUM_HIGH, STR_NUM_CUSTOM};
 static const StringID _num_inds[]    = {STR_FUNDING_ONLY, STR_MINIMAL, STR_NUM_VERY_LOW, STR_NUM_LOW, STR_NUM_NORMAL, STR_NUM_HIGH, STR_NUM_CUSTOM};
 static const StringID _gameplay_profile_names[] = {STR_GAMEPLAY_PROFILE_CLASSIC, STR_GAMEPLAY_PROFILE_MULTILAYER_INDUSTRY}; ///< Stable selector order, independent of runtime cargo slots.
+static const StringID _asteroid_population_names[] = {STR_ASTEROID_POPULATION_SPARSE, STR_ASTEROID_POPULATION_NORMAL, STR_ASTEROID_POPULATION_DENSE};
 static const StringID _variety[]     = {STR_VARIETY_NONE, STR_VARIETY_VERY_LOW, STR_VARIETY_LOW, STR_VARIETY_MEDIUM, STR_VARIETY_HIGH, STR_VARIETY_VERY_HIGH};
 static const StringID _average_height[] = {STR_CONFIG_SETTING_AVERAGE_HEIGHT_AUTO, STR_CONFIG_SETTING_AVERAGE_HEIGHT_LOWLANDS, STR_CONFIG_SETTING_AVERAGE_HEIGHT_NORMAL, STR_CONFIG_SETTING_AVERAGE_HEIGHT_PLATEAUS};
 
@@ -454,6 +463,7 @@ struct GenerateLandscapeWindow : public Window {
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
 		switch (widget) {
+			case WID_GL_ASTEROID_PULLDOWN: return GetString(_asteroid_population_names[_settings_newgame.game_creation.asteroid_density]);
 			case WID_GL_PROFILE_PULLDOWN: return GetString(_gameplay_profile_names[_settings_newgame.game_creation.gameplay_profile]);
 			case WID_GL_START_DATE_TEXT:      return GetString(STR_JUST_DATE_LONG, TimerGameCalendar::ConvertYMDToDate(_settings_newgame.game_creation.starting_year, 0, 1));
 			case WID_GL_MAPSIZE_X_PULLDOWN:   return GetString(STR_JUST_INT, 1LL << _settings_newgame.game_creation.map_x);
@@ -574,6 +584,7 @@ struct GenerateLandscapeWindow : public Window {
 			this->SetWidgetDisabledState(WID_GL_HEIGHTMAP_HEIGHT_DOWN, _settings_newgame.game_creation.heightmap_height <= MIN_HEIGHTMAP_HEIGHT);
 			this->SetWidgetDisabledState(WID_GL_HEIGHTMAP_HEIGHT_UP, _settings_newgame.game_creation.heightmap_height >= GetMapHeightLimit());
 		}
+		this->SetWidgetDisabledState(WID_GL_ASTEROID_PULLDOWN, _settings_newgame.game_creation.gameplay_profile == 0);
 		this->SetWidgetDisabledState(WID_GL_START_DATE_DOWN, _settings_newgame.game_creation.starting_year <= CalendarTime::MIN_YEAR);
 		this->SetWidgetDisabledState(WID_GL_START_DATE_UP,   _settings_newgame.game_creation.starting_year >= CalendarTime::MAX_YEAR);
 		this->SetWidgetDisabledState(WID_GL_SNOW_COVERAGE_DOWN, _settings_newgame.game_creation.snow_coverage <= 0 || _settings_newgame.game_creation.landscape != LandscapeType::Arctic);
@@ -662,6 +673,7 @@ struct GenerateLandscapeWindow : public Window {
 			case WID_GL_AVERAGE_HEIGHT_PULLDOWN: strs = _variety; break;
 			case WID_GL_VARIETY_PULLDOWN:    strs = _variety; break;
 			case WID_GL_HEIGHTMAP_ROTATION_PULLDOWN: strs = _rotation; break;
+			case WID_GL_ASTEROID_PULLDOWN: strs = _asteroid_population_names; break;
 			case WID_GL_PROFILE_PULLDOWN: strs = _gameplay_profile_names; break;
 			case WID_GL_BORDERS_PULLDOWN:    strs = _borders; break;
 			case WID_GL_WATER_NE:
@@ -719,6 +731,9 @@ struct GenerateLandscapeWindow : public Window {
 
 			case WID_GL_INDUSTRY_PULLDOWN: // Number of industries
 				ShowDropDownMenu(this, _num_inds, to_underlying(_settings_newgame.difficulty.industry_density), WID_GL_INDUSTRY_PULLDOWN, 0, 0);
+				break;
+			case WID_GL_ASTEROID_PULLDOWN:
+				ShowDropDownMenu(this, _asteroid_population_names, _settings_newgame.game_creation.asteroid_density, WID_GL_ASTEROID_PULLDOWN, 0, 0);
 				break;
 			case WID_GL_PROFILE_PULLDOWN:
 				ShowDropDownMenu(this, _gameplay_profile_names, _settings_newgame.game_creation.gameplay_profile, WID_GL_PROFILE_PULLDOWN, 0, 0);
@@ -920,6 +935,7 @@ struct GenerateLandscapeWindow : public Window {
 	void OnDropdownSelect(WidgetID widget, int index, int /* button */) override
 	{
 		switch (widget) {
+			case WID_GL_ASTEROID_PULLDOWN: _settings_newgame.game_creation.asteroid_density = index; break;
 			case WID_GL_PROFILE_PULLDOWN: _settings_newgame.game_creation.gameplay_profile = index; break;
 			case WID_GL_MAPSIZE_X_PULLDOWN:     _settings_newgame.game_creation.map_x = index; break;
 			case WID_GL_MAPSIZE_Y_PULLDOWN:     _settings_newgame.game_creation.map_y = index; break;

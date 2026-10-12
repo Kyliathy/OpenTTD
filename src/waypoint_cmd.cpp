@@ -8,6 +8,7 @@
 /** @file waypoint_cmd.cpp %Command Handling for waypoints. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "launch_center.h"
 
 #include "command_func.h"
 #include "map_layer.h"
@@ -511,6 +512,7 @@ CommandCost CmdBuildRoadWaypoint(DoCommandFlags flags, TileIndex start_tile, Axi
  */
 CommandCost CmdBuildBuoy(DoCommandFlags flags, TileIndex tile)
 {
+	if (!CanRemoveLaunchCenterWater([&](TileIndex water) { return water == tile; })) return CommandCost(STR_ERROR_LAUNCH_CENTER_WATER);
 	//A buoy is a dock for the layer rules.
 	if (CommandCost layer_cost = CheckLayerAllowsConstruction(tile, MapLayerConstruction::Dock); layer_cost.Failed()) return layer_cost;
 

@@ -10,6 +10,8 @@
 #include "../stdafx.h"
 
 #include "saveload.h"
+#include "saveload_error.hpp"
+#include "../space.h"
 #include "compat/cargopacket_sl_compat.h"
 
 #include "../vehicle_base.h"
@@ -164,6 +166,9 @@ struct CAPAChunkHandler : ChunkHandler {
 		while ((index = SlIterateArray()) != -1) {
 			CargoPacket *cp = CargoPacket::CreateAtIndex(CargoPacketID(index));
 			SlObject(cp, slt);
+			const auto source = cp->GetSource();
+			if (to_underlying(source.type) > to_underlying(SourceType::Asteroid) || (source.type == SourceType::Asteroid &&
+				(IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles) || source.id >= MAX_ORBITAL_BODIES))) SlErrorCorrupt("Invalid cargo source type/identity");
 		}
 	}
 };

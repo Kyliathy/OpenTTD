@@ -21,6 +21,7 @@ enum class SourceType : uint8_t {
 	Industry = 0, ///< Source/destination is an industry
 	Town = 1, ///< Source/destination is a town
 	Headquarters = 2, ///< Source/destination are company headquarters
+	Asteroid = 3, ///< Stable bounded orbital body ID; never an industry/town ID.
 };
 
 using SourceID = uint16_t; ///< Contains either industry ID, town ID or company ID (or Source::Invalid)

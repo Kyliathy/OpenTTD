@@ -48,20 +48,39 @@ Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structu
 
 ## Outcome and Boundaries
 
-Rockets deliver components that become functional station modules. Stations assemble larger mining robots and process asteroid cargo.
+Earth-launched construction probes deliver Steel and Goods to orbital
+blueprints. Completed stations process mined ore into Steel/Goods and may
+consume that output in further construction or vehicle assembly, haul it to
+another station or send it to Earth through the authorized drop service.
+
+**User revision,2026-10-12:** consume the canonical
+[Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+and [revised numerical defaults](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12).
+All orbital builds require Steel/Goods; initial station/module recipes use
+those two inputs. Later advanced equipment may add declared inputs. The former
+Surface-preassembled Core recipe is superseded: a construction probe builds
+the first Core from delivered packets at a placed blueprint. Earth-built
+probes remain launch-center payloads until deployed; local probe manufacture
+requires a completed orbital Assembly. These requirements are not yet delivered.
 
 ## Module contract
 
 | Module | Role | Bootstrap input |
 | --- | --- | --- |
-| Core | Anchor, initial assembly/service capacity and ownership | Rocket-delivered Station Components; deployable core recipe |
-| Dock | Rocket/hauler service and explicit cargo exchange | Components and Electronics |
-| Storage | Bounded cargo inventory | Components |
-| Utility | Station power/service capacity | Components, Batteries and service supplies |
-| Assembly | Builds heavy robots and orbital haulers | Components, Electronics; vehicle recipes consume Robotics Parts |
-| Processor | Bounded conversion of asteroid materials | Components/Robotics Parts; then mineral or Water Ice feedstock |
+| Core | Anchor, initial assembly/service capacity and ownership | Construction-probe-delivered Steel/Goods; no earlier station |
+| Dock | Rocket/hauler service and explicit cargo exchange | Steel/Goods |
+| Storage | Bounded cargo inventory | Steel/Goods |
+| Utility | Station power/service capacity | Steel/Goods to construct; separately declared operating supplies |
+| Assembly | Builds mining/survey/construction probes, later heavy robots and haulers | Steel/Goods to construct; each vehicle's paid recipe/capacity gate |
+| Steelworks | Bounded metallic-ore conversion to Steel | Steel/Goods to construct; NORE feedstock and utility grant |
+| Goodsworks | Bounded Steel/rare-earth conversion to Goods | Steel/Goods to construct; STEL and RARE feedstock and utility grant |
+| Advanced processor | Later Refined Metals/Water Ice alternatives | Both common construction materials plus any declared advanced inputs |
 
-Exact quantities, footprints and service consumption belong to r2mlvs1's numerical tables. Inputs to the first Core/Assembly/robot must all be producible on Surface.
+Exact quantities, footprints and service consumption belong to r2mlvs1's
+revised numerical tables. The first Core/Assembly/processor/probe path must
+accept entirely Earth-delivered inputs. No processor supplies the materials
+needed for its own first construction. GOOD keeps its crate unit and native
+weight; displays, holds and recipe caps must not silently treat crates as tonnes.
 
 ## Public Handoff Contract
 
@@ -108,20 +127,20 @@ flowchart LR
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Later groups use completed core/module and public inventory ownership from these construction groups. Verify the actual completion/cancellation fixture before using it as a manufacturing predecessor; blueprint presence is insufficient.
 
-### Group 1 - Deploy the first core from an actual rocket payload
+### Group 1 - Build the first Core from construction-probe deliveries
 
 {{HARD}}
-- [ ] 1.1 Consume r2mlvs8 blueprint anchor/occupancy and r2mlvs9 delivery transition rather than implementing another placement registry. Validate the empty anchor, owner and required Core recipe.
-- [ ] 1.2 Keep construction packets in the delivery/deployment job while no core exists; reserve anchor and assembly progress without inventing pre-existing station storage.
-- [ ] 1.3 Use the rocket deployment service to build the first Core without requiring its own Dock/Storage/Utility. Publish a numerical starter capacity sufficient for the next module recipe, supplied entirely from Surface inputs.
-- [ ] 1.4 Complete core deployment once, then activate only its declared initial inventory/service functions. Test cancelled delivery and save just before activation with the same packets accounted.
+- [ ] 1.1 Add the Fund Industry-style Space station/module selector and blueprint placement through r2mlvs8 occupancy commands. Show money, Steel/Goods required/delivered/missing and assigned probes; validate empty anchor/owner/recipe before reserving the site.
+- [ ] 1.2 Keep deliveries in one saved construction-job inventory while no Core exists. Accept Earth-launched construction probes with actual Steel/Goods; reserve progress without inventing completed storage/docking or teleporting material from Earth.
+- [ ] 1.3 Construct the first Core using probe work without its own Dock/Storage/Utility/heavy robot. Verify the28t two-material recipe through two capacity-checked Earth launches or subsequent actual resupply; publish starter capacity for the next module.
+- [ ] 1.4 Complete Core construction once, then activate only its declared initial inventory/service functions. Test missing either material, cancelled/partial delivery and saves before/after activation; returned unconsumed packets and recorded consumption must balance.
 
 ### Group 2 - Reserve module footprint and delivered inputs
 
 {{HARD}}
 - [ ] 2.1 Validate module type, adjacency/dependency, footprint, approach clearance and owner against the completed core. A blueprint grants no production/storage/service capacity.
 - [ ] 2.2 Select actual delivered packets for the module recipe and reserve them exclusively to a typed construction job; competing jobs cannot count the same quantity.
-- [ ] 2.3 Preflight output/module record capacity and assembly time, then commit footprint and input reservations together. Refuse insufficient components without partial inventory loss.
+- [ ] 2.3 Preflight output/module record capacity and assembly time, then commit footprint and Steel/Goods input reservations together. Refuse missing materials without partial inventory loss; accept imported and locally produced stock under the same recipe.
 
 ### Group 3 - Advance saved assembly milestones and cancellation
 
@@ -187,8 +206,8 @@ The helper names are proposed public exports, not evidence of delivery. **ASSUMP
 ### Group 7 - Prepare heavy-robot and hauler manufacturing orders
 
 {{HARD}}
-- [ ] 7.1 Add typed manufacture requests at completed Assembly modules; select heavy-robot or orbital-hauler profile recipe and required compatible berth.
-- [ ] 7.2 Validate actual Robotics Parts/components, funds, service grants and free berth before reserving input stock. The first robot uses entirely Surface-delivered inputs.
+- [ ] 7.1 Add typed manufacture requests at completed Assembly modules for mining/survey/construction probes and later heavy robots/haulers. Resolve the profile recipe, role and compatible berth; preserve Earth commissioning as the only pre-station path.
+- [ ] 7.2 Validate actual Steel/Goods, declared extra inputs, funds, service grants and free berth before reserving stock. All first vehicle recipes accept entirely Surface-delivered inputs; local production is an alternate source, not a prerequisite.
 - [ ] 7.3 Route ordinary purchase/clone/replacement requests for these models through the same physical-input facility gate. No generic vehicle command may bypass assembly or clone a paid recipe for free.
 
 ### Group 8 - Materialize one built vehicle without duplicate inputs
@@ -214,16 +233,16 @@ The helper names are proposed public exports, not evidence of delivery. **ASSUMP
 ### Group 11 - Verify recipe congestion and recovery before scaling
 
 {{HARD}}
-- [ ] 11.1 Test one Water Ice/Propellant and one mineral/Refined Metals batch with only earlier Surface/asteroid supplies; alternate recipes have a saved explicit choice.
+- [ ] 11.1 Test NORE-to-Steel and Steel/RARE-to-Goods batches in constructed specialized processors, with bounded output and residue ledgers. Also retain Water Ice/Propellant and mineral/Refined Metals alternatives with saved explicit choices.
 - [ ] 11.2 Test missing secondary input, full output, utility loss and failed packet allocation; no input disappears when output cannot be represented.
 - [ ] 11.3 Save midway through work and after output commit, then cancel/restart the order. Compare input/output/consumed quantities and prevent a repeated batch from the same reserved input.
 
 ### Group 12 - Connect processor outputs to explicit orbital freight
 
 {{MEDIUM}}
-- [ ] 12.1 Verify the Water Ice -> Propellant and mineral -> Refined Metals recipes already registered/resolved by the preceding batch groups, including transport refits for their existing cargo meanings. Define and validate any additional Electronics-input recipe before exposing it.
+- [ ] 12.1 Verify Steel/Goods and the later Propellant/Refined Metals recipe identities, output provenance and transport refits from the preceding batch groups. Extend rocket/hauler/pod/collection admission for STEL and Express-class GOOD; keep crates and tonnes distinct.
 - [ ] 12.2 Give haulers/robots explicit typed dock destinations and loading/unloading rules. Declare whether orbital CargoDist endpoints are supported; absent such support, use explicit orders rather than fabricate proximity-based graph links.
-- [ ] 12.3 Carry processed outputs to an actual next module consumer or r2mlvs9 authorized descent service. Heavy robots/haulers use the same inclusive 20-tile release rule while retaining distinct precise docking/service requirements.
+- [ ] 12.3 Carry processed Steel/Goods into an actual next blueprint/vehicle recipe or r2mlvs9 authorized descent service. Reserve each quantity for one chosen use; construction and export cannot both consume it. All craft retain the inclusive20-tile release rule and distinct precise docking/service requirements.
 - [ ] 12.4 Collect returned products through linked Surface train/lorry stations. Treat later Mantle Forge supplies as an additional recipe source, never a first-station prerequisite.
 
 ### Area Mandatory Reading - Presentation and acceptance
@@ -294,5 +313,11 @@ This is not an execution reading queue. Do not preload it after context compacti
 | [src/core/pool_type.hpp](../../../../src/core/pool_type.hpp) | 331-368 | Deeper planning pass, 2026-10-04: Allocation versus saved reconstruction shaped completed assembly waiting and one-time vehicle materialization. |
 
 ## Completion Conditions
+
+Completion includes the revised first-Core path through Earth-launched
+construction probes, both Steel/Goods specialized processors, reuse of their
+output in another build/locally assembled probe, and useful Earth export.
+Blueprints remain inert until both materials and construction work commit;
+consumption, cancellation, output and payment ledgers survive reload/network.
 
 Station construction and robot manufacturing consume delivered goods, and orbital processing produces transportable useful output. Every first component can be supplied from Earth. Free blueprint placement, instant vehicle purchase or save/load cannot substitute for the supply chain.

@@ -42,7 +42,13 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/cargotype.h](../../../../src/cargotype.h) | 211-223 | `SetupCargoForClimate`, `BuildCargoLabelMap`, `GetCargoTypeByLabel` separate stable labels from runtime slots; consumers must resolve the selected profile rather than hard-code cargo indices. |
 
-Status: completed; Groups 1-23 marked [X]. [Content Freeze](r2mlvs1-g-content-freeze.md) records the delivered exports, numerical/ownership decisions, focused validation and pending feature/art/network work. Initial M0 handoffs from Plans 12/13/15 are delivered; those feature plans remain unfinished. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
+Status: revision in progress. Original Groups1-23 remain completed with their
+dated version1 evidence; added Group12B must freeze the user's2026-10-12 Space
+economy revision before dependent commissioning/construction. The existing
+[Content Freeze](r2mlvs1-g-content-freeze.md) remains the delivered baseline,
+not proof of revised probe roles/materials. Initial M0 handoffs from Plans12/13/15
+are delivered; those feature plans remain unfinished. Parent:
+[R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -241,6 +247,26 @@ Evidence: [packet/inventory/payment ownership table and partial-intake example](
 
 Evidence: [all 19 capability/replacement rows](r2mlvs1-d-recipes-and-bootstrap.md#group-12---complete-logical-vehicle-capability-catalogue), [public read-only catalogue](../../../../src/multilayer_vehicle_catalogue.cpp). `[multilayer-vehicle-catalogue]` passed 181 assertions in one case for unique models, explicit commissioning/service, tube isolation, liquid forms, spoil obligations and conventional routes for all ten ores. Engine allocation, tanker refit mapping and command enforcement remain with feature owners.
 
+### Local Mandatory Reading - Revised Space content freeze
+
+_Applies to Group12B._ Read Global and Recipes, capability and economics Area,
+the [Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12),
+its [numerical defaults](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12),
+the existing catalogue/profile/recipe/bootstrap definitions and their focused
+tests, and the profile/version/save compatibility owner. Ground definitions
+and old accepted saves retain their existing meanings. This group freezes
+definitions; operational launch, scan, orders, station work and production
+remain with Plans8-11. No new runtime mutation is authorized by a draft table.
+
+### Group 12B - Freeze Steel/Goods orbital construction and three probe roles
+
+{{HARD}}
+
+- [ ] 12B.1 Version the selected content contract for survey19/construction20, both common construction materials on every orbital build and later completed-Assembly commissioning. Preserve0..18 and existing paid builds/vehicles; publish explicit old-save handling without granting surveys or free stock.
+- [ ] 12B.2 Compile revised body/pod/module and Steelworks/Goodsworks definitions, Goods procurement and label/class admission. Retain Goods crates and canonical mass; verify the14/30t first mining payload,26/30t and22/30t first-Core construction launches and both all-input output-congestion cases.
+- [ ] 12B.3 Reconcile the full Surface-seeded bootstrap graph, extra probes, money, work/power, stock caps, service and real launch routes. Publish worked import-to-Core and ore-to-Steel-to-Goods-to-build/drop ledgers; preserve the independent ground budgets.
+- [ ] 12B.4 Run focused profile/definition/bootstrap/recipe compatibility fixtures and update Content Freeze plus all direct consumers. Keep launch/order/survey/processing/art/network implementation tasks pending until their own behavior is demonstrated.
+
 ### Group 13 - Parameterize excavation and haulage budgets
 
 {{MEDIUM}}
@@ -390,6 +416,10 @@ This is not an execution reading queue. Do not preload it after context compacti
 | [src/economy.cpp](../../../../src/economy.cpp) | 1134-1167 | Deeper planning pass, 2026-10-04: Independent-input conversion required a shared all-input recipe contract and separate bootstrap validation. |
 
 ## Completion Conditions
+
+Original completion evidence below describes version1. Current completion also
+requires Group12B's revised Space freeze and compatibility/definition fixtures;
+the user revision cannot inherit completed acceptance from the old recipes.
 
 Every resource has a transport vehicle and useful receiver; every advanced facility can be bootstrapped from earlier supplies. Cargo and industry budgets fit actual limits. Content can be loaded deterministically, identified in saves and distributed with the chosen delivery route. ETI uncertainty has a working original-content fallback. Definitions are specific enough for feature work without inventing incompatible IDs or payment semantics.
 
