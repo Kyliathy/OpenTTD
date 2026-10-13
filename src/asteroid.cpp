@@ -12,6 +12,9 @@
 #include "map_func.h"
 #include "multilayer_state.h"
 #include "settings_type.h"
+#include "space_vehicle.h"
+#include "company_base.h"
+#include "multilayer_space_content.h"
 #include "safeguards.h"
 
 static AsteroidField _asteroid_field;
@@ -35,7 +38,68 @@ uint64_t ComputeAsteroidFieldDigest(const AsteroidField &field)
 		hash(survey.id.base()); hash(survey.model); point(survey.position); point(survey.home); hash(survey.target.base());
 		hash(to_underlying(survey.phase)); hash(survey.remaining_ticks); hash(survey.travel_remainder); hash(survey.completed_surveys);
 	}
+	// Preserve the exact legacy diagnostic stream while no company has completed a scan.
+	if (!field.knowledge.empty()) {
+		hash(0x53504B4E); hash(field.knowledge.size());
+		for (const auto &r : field.knowledge) { hash(r.body.base()); hash(r.surveyed_companies); }
+	}
 	return digest;
+}
+
+bool ValidateAsteroidKnowledgeRecords(std::span<const AsteroidKnowledgeRecord> records, uint32_t body_count)
+{
+	if (body_count > GetMultiLayerAsteroidPopulation(4096, 4096, 2) || records.size() > body_count) return false;
+	uint32_t previous = 0; bool first = true;
+	for (const auto &r : records) {
+		if (r.body.base() >= body_count || r.surveyed_companies == 0 || (r.surveyed_companies >> MAX_COMPANIES) != 0 || (!first && r.body.base() <= previous)) return false;
+		previous = r.body.base(); first = false;
+	}
+	return true;
+}
+bool ValidateAsteroidKnowledge()
+{
+	if (!ValidateAsteroidKnowledgeRecords(_asteroid_field.knowledge, static_cast<uint32_t>(_asteroid_field.bodies.size()))) return false;
+	for (const auto &r : _asteroid_field.knowledge) for (uint8_t company = 0; company < MAX_COMPANIES; ++company)
+		if ((r.surveyed_companies & (uint64_t{1} << company)) != 0 && !Company::IsValidID(CompanyID{company})) return false;
+	return true;
+}
+bool InstallLoadedAsteroidKnowledge(std::span<const AsteroidKnowledgeRecord> records)
+{
+	if (!ValidateAsteroidKnowledgeRecords(records, static_cast<uint32_t>(_asteroid_field.bodies.size()))) return false;
+	for (const auto &r : records) for (uint8_t company = 0; company < MAX_COMPANIES; ++company)
+		if ((r.surveyed_companies & (uint64_t{1} << company)) != 0 && !Company::IsValidID(CompanyID{company})) return false;
+	_asteroid_field.knowledge.assign(records.begin(), records.end()); return true;
+}
+std::optional<AsteroidQuantityDisclosure> GetAsteroidQuantityDisclosure(CompanyID company, OrbitalBodyID id)
+{
+	if (!Company::IsValidID(company) || id.base() >= _asteroid_field.bodies.size()) return std::nullopt;
+	const auto found = std::ranges::lower_bound(_asteroid_field.knowledge, id.base(), {}, [](const auto &r) { return r.body.base(); });
+	if (found == _asteroid_field.knowledge.end() || found->body != id || (found->surveyed_companies & (uint64_t{1} << company.base())) == 0) return std::nullopt;
+	const auto &body = _asteroid_field.bodies[id.base()]; return AsteroidQuantityDisclosure{body.remaining_reserve, body.initial_reserve};
+}
+bool CompleteAsteroidSurvey(const SpaceVehicle &v)
+{
+	const auto &q = v.space_orders;
+	if (GetSpaceVehicleModel(v) != 19 || v.construction.placement != SpacePlacement::Orbital || !Company::IsValidID(v.owner) ||
+		v.vehstatus.Test(VehState::Stopped) || !q.started || q.cursor >= q.entries.size() || q.work_ticks != GetMultiLayerSpaceBudget().scan_ticks) return false;
+	const auto &order = q.entries[q.cursor];
+	if (order.action != SpaceOrderAction::Survey || order.target.kind != SpaceOrderTargetKind::Body || order.target.generation != 0 || order.target.id >= _asteroid_field.bodies.size()) return false;
+	const auto &body = _asteroid_field.bodies[order.target.id];
+	const SpacePoint approach{body.motion.position.x + v.mission.attachment_offset.x, body.motion.position.y + v.mission.attachment_offset.y};
+	if (SpaceDistanceSquared(v.position, approach) > uint64_t{SPACE_Q16 / 4} * (SPACE_Q16 / 4)) return false;
+	auto found = std::ranges::lower_bound(_asteroid_field.knowledge, order.target.id, {}, [](const auto &r) { return r.body.base(); });
+	if (found == _asteroid_field.knowledge.end() || found->body != body.id) found = _asteroid_field.knowledge.insert(found, {body.id, 0});
+	found->surveyed_companies |= uint64_t{1} << v.owner.base(); return true;
+}
+void ChangeAsteroidKnowledgeOwnership(Owner old_owner, Owner new_owner)
+{
+	if (old_owner >= CompanyID::End() || old_owner == new_owner) return;
+	const uint64_t old_bit = uint64_t{1} << old_owner.base();
+	for (auto &r : _asteroid_field.knowledge) if ((r.surveyed_companies & old_bit) != 0) {
+		r.surveyed_companies &= ~old_bit;
+		if (new_owner < CompanyID::End()) r.surveyed_companies |= uint64_t{1} << new_owner.base();
+	}
+	std::erase_if(_asteroid_field.knowledge, [](const auto &r) { return r.surveyed_companies == 0; });
 }
 
 /** Feature-domain seed split; Surface simulation and interactive RNG never advance. */
@@ -143,7 +207,7 @@ bool ValidateAsteroidField(const AsteroidField &field)
 		const auto &survey = field.surveys[body.survey_slot.base()];
 		if (survey.target != body.id || survey.phase != SpaceSurveyPhase::Attached) return false;
 	}
-	return true;
+	return ValidateAsteroidKnowledgeRecords(field.knowledge, static_cast<uint32_t>(field.bodies.size()));
 }
 
 bool InstallAsteroidField(AsteroidField field)

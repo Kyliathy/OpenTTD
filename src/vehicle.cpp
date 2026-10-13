@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "space_vehicle.h"
+#include "space_transition.h"
 #include "transport_tube.h"
 #include "error.h"
 #include "roadveh.h"
@@ -580,6 +581,10 @@ CommandCost EnsureNoVehicleOnGround(TileIndex tile)
 	 */
 	for (const Vehicle *v : VehiclesOnTile(tile)) {
 		if (v->type == VehicleType::Disaster || (v->type == VehicleType::Aircraft && v->subtype == AIR_SHADOW)) continue;
+		// A detached paid hull stays dormant at its saved site. Rebuilding the facility
+		// can recover that identity explicitly; it does not operate on the cleared tile.
+		if (v->type == VehicleType::Space && IsSpaceCraftAwaitingSurfaceRecovery(*SpaceVehicle::From(v)) &&
+			v->vehstatus.Test(VehState::Hidden) && v->vehstatus.Test(VehState::Stopped)) continue;
 		if (v->z_pos > z) continue;
 
 		return CommandCost(STR_ERROR_TRAIN_IN_THE_WAY + to_underlying(v->type));

@@ -1324,9 +1324,10 @@ static constexpr std::initializer_list<NWidgetPart> _nested_industry_view_widget
 			NWidget(NWID_VIEWPORT, Colours::Invalid, WID_IV_VIEWPORT), SetMinimalSize(254, 86), SetFill(1, 0), SetResize(1, 1),
 		EndContainer(),
 	EndContainer(),
+	// Keep the information panel childless so UpdateWidgetSize can set its measured height.
 	NWidget(WWT_PANEL, Colours::Cream, WID_IV_INFO), SetMinimalSize(260, 0), SetMinimalTextLines(2, WidgetDimensions::unscaled.framerect.Vertical()), SetResize(1, 0),
-	NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_RECIPE), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_LAYER_RECIPE_CHANGE, STR_INDUSTRY_LAYER_RECIPE_CHANGE_TOOLTIP),
 	EndContainer(),
+	NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_RECIPE), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_LAYER_RECIPE_CHANGE, STR_INDUSTRY_LAYER_RECIPE_CHANGE_TOOLTIP),
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_DISPLAY), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_DISPLAY_CHAIN, STR_INDUSTRY_DISPLAY_CHAIN_TOOLTIP),
 		NWidget(WWT_PUSHTXTBTN, Colours::Cream, WID_IV_GRAPH), SetFill(1, 0), SetResize(1, 0), SetStringTip(STR_INDUSTRY_VIEW_CARGO_GRAPH, STR_INDUSTRY_VIEW_CARGO_GRAPH_TOOLTIP),

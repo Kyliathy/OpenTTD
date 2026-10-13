@@ -21,7 +21,7 @@ struct MultiLayerSurfaceSupply {
 
 /** Content-proof nodes only; these ordinals are not saved gameplay/pool identities. */
 enum class MultiLayerBootstrapStage : uint8_t {
-	SurfaceRoute, TBM, Mine, Tube, DeepTBM, Geothermal, Launch, Probe, Mirror, Station, HeavyRobot,
+	SurfaceRoute, TBM, Mine, Tube, DeepTBM, Geothermal, Launch, Probe, Mirror, Station, HeavyRobot, SurveyProbe, ConstructionProbes, Assembly,
 };
 
 /** One build milestone, seeded by paid Surface cargo and earlier real transport routes. */

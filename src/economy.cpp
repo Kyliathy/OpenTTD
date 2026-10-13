@@ -13,7 +13,9 @@
  */
 
 #include "stdafx.h"
+#include "asteroid.h"
 #include "launch_center.h"
+#include "space_pod.h"
 #include "utility_power.h"
 #include "transport_tube.h"
 #include "geothermal_collector.h"
@@ -502,6 +504,8 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	ChangeGeothermalCollectorOwnership(old_owner, new_owner); // Paid construction/control follows actual takeover, retaining native stock/work and original source association.
 	ChangeGeothermalRiserOwnership(old_owner, new_owner); // Native stock/work and the original physical portal incarnation survive takeover or abandonment.
 	ChangeGeothermalSiteCompanyOwnership(old_owner, new_owner); // Cancel unbuilt site reservations before the old company/tile identities can be reused.
+	ChangeSpacePodOwnership(old_owner, new_owner); // Retain actual paid shells, retiring old company custody before pool/tile reuse.
+	ChangeAsteroidKnowledgeOwnership(old_owner, new_owner); // Transfer takeover knowledge, clear removed company bits before CompanyID reuse.
 
 	/*  Change ownership of tiles */
 	{

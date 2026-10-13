@@ -7,7 +7,8 @@ This epic turns the four existing layers into a connected transport economy: exc
 This master owns scope, proposed architecture decisions, cross-plan invariants, dependencies and milestones. Implementation checkboxes live only in the owning child plans. Writing a plan does not complete its implementation tasks. New gameplay decisions below are planning defaults, not a claim of user approval or existing behavior. This epic does not inherit R2MLM's historical permission to skip operator acceptance.
 
 **Current dispatch, 2026-10-12:** the user paused underground work at `demo3`
-and requested full mature implementation of Plan10. Plans8/10 P1/P2 supply the
+and requested full mature implementation; the current objective finalizes
+Plans9 and10 together. Plans8/10 P1/P2 supply the
 existing persistent field and native mining fleet; they are foundations for the
 full launch/probe/drop/descent/service/Surface-delivery loop. Retained demo saves
 are regression inputs. Plan10's original Groups1-22 and completion conditions
@@ -21,9 +22,13 @@ Historical underground worlds retain their state and receive no asteroids on
 ordinary reload. See [the Space walkthrough](d3sp-space-survey.md).
 
 Run `play.ps1 space`, `play.ps1 space-mining` or `play.ps1 space-holds` for the
-native approach, partial extraction and full-hold checkpoints. The next producer
-is Plan9's Surface launch center and its linked orbital cargo-drop zone, followed
-by saved descent and Surface handling. Cargo currently stays in each probe at
+native approach, partial extraction and full-hold checkpoints. Plan9's native
+waterside center, explicit freight membership and saved timed Surface handling
+are delivered. Independent Space content revision2 and Plan8 Group6B's native
+typed queue foundation are now verified in both builds. Next are distinct
+pad/service/recovery state and physical commissioning, followed by reusable
+rocket deployment and saved orbital release/descent.
+Cargo in the retained mining demos still stays in each probe at
 orbital staging. Physical rocket commissioning, paid service/repeat sorties,
 full orbital structures and final Plan13 art retain their delivery gates.
 Underground work remains paused.
@@ -183,7 +188,7 @@ All boxes describe implementation: `[ ]` not started, `[~]` in progress, `[X]` c
 
 | Status | Plan | Delivers | Dependencies |
 | --- | --- | --- | --- |
-| [~] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Version1 contracts delivered; revised Space Steel/Goods/probe-role freeze12B pending | none |
+| [X] | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) | Ground/profile1 contracts and independent Space revision2 definitions/compatibility; runtime producers remain with their feature owners | none |
 | [X] | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) | All producer tasks complete, including loaded terrain/survey/job art16.1. Canonical geology/guards/paid cut/planning/save conditions pass; combined bootstrap/network acceptance remains with15/16 | 1 Content Freeze; 15 Schema Foundation; scoped portal bootstrap from3; selected art from13 |
 | [~] | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) | Actual commissioning/entry/backing/lifecycle, Deep dates/scripts, genuine370/current385 occupied saves and selected final portal art delivered. Pending12.1 real tube/riser and18.2 full closure; explicit 3MP exceptions do not complete engineering acceptance | 2; actual TBM roles/recovery from4, source exchange from5; tube/riser17/18 and art13/14; staged by3MP |
 | [~] | [r2mlvs4-tunnel-boring-machines.md](r2mlvs4-tunnel-boring-machines.md) | Paid actual cutting/support/turns/backing, source/recurring bay, current385 bend/recovery/cancel files, complete corridor costs and selected art/sound delivered. Pending15.1/21.4 full final non-rail use and22.2 completion; real join/bootstrap/full-performance exceptions remain unverified | 2 solid starter; 3 portal handoff; 1 wagon contract; 5 exchange/receivers; 13 completed art; 14 remaining art; staged by3MP |
@@ -474,9 +479,9 @@ Milestones are engineering deliveries, not calendar eras: M2's tube/geothermal a
 
 Plan 1 is complete. Index marks for Plans 12/13/15 indicate only the prerequisite native feasibility/draft solar, sprite contract and Schema Foundation handoffs delivered for M0; all remaining feature tasks stay unchecked. M0 Content Freeze does not imply M1 or runtime feature acceptance.
 
-Plan 1's [Content Freeze record](r2mlvs1-g-content-freeze.md) owns the compiled numerical/ownership tables and evidence. Native MLVI is selected, with 30 active cargos, 64/283 industry/tile envelopes and 275 logical designs. ETI v14 is unsupported for this profile; its pinned source/terms failures and unexecuted runtime checks remain explicit. Its first-party fallback is the shipped cargo package and tested native utility/effect contract; operational Useful Power is still Plan 12 work after Content Freeze.
+Plan 1's [Content Freeze record](r2mlvs1-g-content-freeze.md) owns the compiled numerical/ownership tables and evidence. Native MLVI is selected, with 30 active cargos, 64/283 industry/tile envelopes and 277 logical designs after the two appended probe roles. ETI v14 is unsupported for this profile; its pinned source/terms failures and unexecuted runtime checks remain explicit. Its first-party fallback is the shipped cargo package and tested native utility/effect contract; operational Useful Power is still Plan 12 work after Content Freeze.
 
-Bootstrap adds bounded paid Surface procurement, including Electronics/Batteries from 1965 for the 1970 tube; purchased company supplies earn no freight income. Rock yields bounded local construction aggregate with a maximum replacement value and paid residue/disposal, instead of unrestricted profitable Goods. Two pod shells and a service preload are included in first-probe supplies. The first station is built by Earth-launched construction probes with shipped Steel/Goods, preceding heavy-robot assembly. Revised Space budgets remain pending their new content freeze. These choices fit the budgets and close self-dependent build paths.
+Bootstrap adds bounded paid Surface procurement, including Electronics/Batteries from 1965 for the 1970 tube; purchased company supplies earn no freight income. Rock yields bounded local construction aggregate with a maximum replacement value and paid residue/disposal, instead of unrestricted profitable Goods. Two pod shells and a service preload are included in first-probe supplies. The first station is built by Earth-launched construction probes with shipped Steel/Goods, preceding heavy-robot assembly. Revised Space budgets are frozen in independent content revision2 (Plan1 Group12B); physical commissioning/construction remain pending. These choices fit the budgets and close self-dependent build paths.
 
 Schema Foundation allocates MLMD/save version 371 after verified 369/370 preservation. Exact content is checked before activation and cargo meanings afterwards; old chunk absence remains Classic, and saved editor policy is explicit. SolarMirrorID names a deployed solar-owned object and adds no routed engine design. Sprite M0 freezes 141 families/58,059 planned sprites, protects 0..73 and proposes core 74..167 without activation. Actual feature pools, source art, operating utility and whole-world network/performance acceptance remain unfinished.
 

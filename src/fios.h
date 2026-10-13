@@ -24,6 +24,11 @@
 #include "geothermal_riser_wire.h"
 #include "layer_portal_work_wire.h"
 #include "excavation.h"
+#include "launch_operations.h"
+#include "space_manifest.h"
+#include "space_pod.h"
+#include "space_transition.h"
+#include "asteroid.h"
 
 
 /** Special values for save-load window for the data parameter of #InvalidateWindowData. */
@@ -53,10 +58,44 @@ struct NativeIndustryPreview {
 /**
  * Read-only save preview container; explicit metadata is transport, never live gameplay authority.
  */
+struct NativeSpaceVehiclePreview {
+	VehicleID vehicle = VehicleID::Invalid();
+	VehicleType type = VehicleType::Invalid;
+	Owner owner = OWNER_NONE;
+	SpacePoint position{};
+};
+
 struct LoadCheckData {
+	uint64_t next_space_vehicle_generation = 1;
+	std::vector<NativeSpaceVehiclePreview> native_space_vehicle_rows;
+	bool space_transitions_present = false;
+	std::vector<SpaceTransitionRecord> space_transition_rows;
+	bool space_pods_present = false;
+	uint64_t next_space_pod_generation = 1;
+	std::vector<SpacePodRecord> space_pod_rows;
+	bool space_manifests_present = false;
+	std::vector<SpaceManifestRecord> space_manifest_rows;
+	bool space_production_present = false, launch_operations_present = false;
+	std::vector<SpaceProductionRecord> space_production_rows;
+	std::vector<LaunchOperationsRecord> launch_operations_rows;
+	std::vector<SpaceCraftRef> space_order_preview_refs;
+	std::vector<SpaceOrderRecord> space_order_preview_rows;
+	bool asteroid_knowledge_present = false;
+	uint32_t asteroid_body_count = 0;
+	std::vector<AsteroidKnowledgeRecord> asteroid_knowledge_rows;
+	std::vector<LaunchCenterRef> launch_center_preview_refs;
+	std::vector<LaunchCenterRecord> launch_center_preview_rows;
+	bool space_descents_present = false;
+	uint64_t next_space_descent_id = 1;
+	std::vector<SpaceDescentRecord> space_descent_rows;
+	bool space_content_present = false, space_orders_present = false;
+	bool space_orders_active = false;
+	uint16_t space_content_version = 0;
+	uint64_t space_content_signature = 0;
 	bool asteroid_present = false, asteroid_active = false; ///< Independent bounded404 preview presence.
 	bool launch_centers_present = false, launch_centers_active = false; ///< Independent bounded407 preview presence.
 	bool launch_hubs_present = false, launch_hubs_active = false; ///< Independent bounded408 membership preview.
+	bool surface_handling_present = false, surface_handling_active = false; ///< Independent bounded409 handling transport preview.
 	uint64_t asteroid_seed = 0, orbital_seed = 0; ///< Candidate field and metadata roots; never live-world values.
 	bool checkable = false; ///< True if the savegame could be checked by SL_LOAD_CHECK. (Old savegames are not checkable.)
 	StringID error{}; ///< Error message from loading. INVALID_STRING_ID if no error.

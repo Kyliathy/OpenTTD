@@ -8,6 +8,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md GroupP1
  */
 #include "../stdafx.h"
+#include <thread>
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid.h"
 #include "../core/random_func.hpp"
@@ -213,9 +214,16 @@ TEST_CASE("Space preview prepares or resumes ordinary playable checkpoints", "[.
 			auto expected = initial;
 			bool attached_saved = false;
 			SetViewportLayer(GetMainWindow(), MapLayer::Surface);
-			for (uint i = 0; i < 2000; ++i) {
+			const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
+			for (uint i = 0; i < 2000;) {
+				REQUIRE(std::chrono::steady_clock::now() < deadline);
 				if (i == 1000) SetViewportLayer(GetMainWindow(), MapLayer::Space);
-				AdvanceAsteroidField(expected); StateGameLoop();
+				const auto before = GetAsteroidField().elapsed_ticks; StateGameLoop();
+				if (GetAsteroidField().elapsed_ticks == before) {
+					CHECK(GetAsteroidField() == expected); // CargoDist can pause the real simulation between work ticks.
+					std::this_thread::sleep_for(std::chrono::milliseconds(1)); continue;
+				}
+				REQUIRE(GetAsteroidField().elapsed_ticks == before + 1); AdvanceAsteroidField(expected);
 				REQUIRE(GetAsteroidField() == expected);
 				if (!attached_saved && std::ranges::any_of(expected.surveys, [](const auto &p) { return p.phase == SpaceSurveyPhase::Attached; })) {
 					attached_saved = true;
@@ -225,6 +233,7 @@ TEST_CASE("Space preview prepares or resumes ordinary playable checkpoints", "[.
 						SetViewportLayer(GetMainWindow(), MapLayer::Surface);
 					}
 				}
+				++i;
 			}
 			REQUIRE(attached_saved);
 			for (const auto &survey : GetAsteroidField().surveys) CHECK(survey.completed_surveys >= 1);

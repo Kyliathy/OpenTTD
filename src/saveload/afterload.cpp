@@ -9,6 +9,9 @@
 
 #include "../stdafx.h"
 #include "../space_vehicle.h"
+#include "../space_manifest.h"
+#include "../space_pod.h"
+#include "../space_transition.h"
 #include "../void_map.h"
 #include "../layer_portal_map.h"
 #include "../signs_base.h"
@@ -3500,6 +3503,14 @@ bool AfterLoadGame()
 	if (!AcceptLoadedAsteroidField()) SlErrorCorrupt("Invalid asteroid field state");
 	if (!AcceptLoadedLaunchCenters()) SlErrorCorrupt("Invalid native launch-center state");
 	if (!AcceptLoadedLaunchHubs()) SlErrorCorrupt("Invalid native launch-hub membership");
+	if (!AcceptLoadedSurfaceHandling()) SlErrorCorrupt("Invalid native Surface handling state");
+	if (!AcceptLoadedSpaceOrders()) SlErrorCorrupt("Invalid native Space order ownership");
+	if (!AcceptLoadedAsteroidKnowledge()) SlErrorCorrupt("Invalid native asteroid survey knowledge");
+	if (!AcceptLoadedSpacePods()) SlErrorCorrupt("Invalid native passive Space pod ownership");
+	if (!AcceptLoadedSpaceManifests()) SlErrorCorrupt("Invalid native Space manifest ownership");
+	if (!AcceptLoadedSpaceTransitions()) SlErrorCorrupt("Invalid native Space transition ownership");
+	if (!AcceptLoadedSpaceProduction()) SlErrorCorrupt("Invalid native launch assembly ownership");
+	if (!AcceptLoadedSpaceDescents()) SlErrorCorrupt("Invalid native Space descent ownership");
 	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
 	if (!AcceptLoadedGeothermalRisers()) SlErrorCorrupt("Invalid native geothermal riser authority"); // Paid electrical links resolve original complete native machinery before the shared utility owner publishes their physical references.
 	// Utility grants bind actual companies and saved layers; accept only after

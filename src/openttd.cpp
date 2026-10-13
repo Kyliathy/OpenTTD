@@ -9,6 +9,11 @@
 
 #include "stdafx.h"
 #include "asteroid.h"
+#include "launch_center.h"
+#include "launch_operations.h"
+#include "space_manifest.h"
+#include "space_pod.h"
+#include "space_transition.h"
 
 #include "blitter/factory.hpp"
 #include "sound/sound_driver.hpp"
@@ -1241,6 +1246,12 @@ void StateGameLoop()
 		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
 		CallVehicleTicks();
 		RefreshSpaceViewports();
+		TickSurfaceHandling();
+		TickLaunchOperations();
+		TickSpaceManifests();
+		TickSpacePods();
+		TickSpaceTransitions();
+		TickSpaceDescents();
 		CallLandscapeTick();
 		BasePersistentStorageArray::SwitchMode(PSM_LEAVE_GAMELOOP);
 		UpdateLandscapingLimits();
@@ -1271,6 +1282,12 @@ void StateGameLoop()
 		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
 		CallVehicleTicks();
 		RefreshSpaceViewports();
+		TickSurfaceHandling();
+		TickLaunchOperations();
+		TickSpaceManifests();
+		TickSpacePods();
+		TickSpaceTransitions();
+		TickSpaceDescents();
 		CallLandscapeTick();
 		BasePersistentStorageArray::SwitchMode(PSM_LEAVE_GAMELOOP);
 

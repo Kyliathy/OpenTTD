@@ -9,7 +9,11 @@
 #include "stdafx.h"
 #include "asteroid.h"
 #include "launch_center.h"
+#include "multilayer_space_content.h"
 #include "space_vehicle.h"
+#include "space_manifest.h"
+#include "space_pod.h"
+#include "space_transition.h"
 #include "multilayer_state.h"
 #include "debug.h"
 #include "excavation.h"
@@ -44,13 +48,15 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS | MULTILAYER_FEATURE_ASTEROIDS | MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS | MULTILAYER_FEATURE_ASTEROIDS | MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS | MULTILAYER_FEATURE_SURFACE_HANDLING)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Retired riser machinery still owns paid native construction on excavated
 	// floor. Its original portal may legitimately be gone, and no energy ledger
 	// is required until the separate operating exporter actually exists.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_RISERS) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Physical Heat rights cannot omit their sole quantity owner or paid paths.
 	const uint32_t heat_route_owners = MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS;
+	const uint32_t handling_owners = MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS;
+	if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_HANDLING) != 0 && (schema.feature_flags & handling_owners) != handling_owners) return MultiLayerStateError::UnsupportedFeatures;
 	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0 && (schema.feature_flags & heat_route_owners) != heat_route_owners) return MultiLayerStateError::UnsupportedFeatures;
 	// Heat and electricity share native identities/accounting. A heat feature
 	// cannot claim balances or roles while omitting that sole utility authority.
@@ -118,6 +124,7 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (GetAsteroidField().generation_version != 0) schema.feature_flags |= MULTILAYER_FEATURE_ASTEROIDS;
 	if (GetNextLaunchCenterGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_CENTERS;
 	if (GetNextLaunchHubMemberGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_HUBS;
+	if (GetNextSurfaceHandlingID() != 1) schema.feature_flags |= MULTILAYER_FEATURE_SURFACE_HANDLING;
 	schema.profile = GetCurrentMultiLayerProfileSelection();
 	schema.geology_seed = _multilayer_geology_seed;
 	schema.orbital_seed = _multilayer_orbital_seed;
@@ -155,6 +162,13 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 /** Clear load transport and feature seed roots during ordinary world initialization. */
 void ResetMultiLayerStateSchema()
 {
+	ResetSpaceContentLoadStaging();
+	ResetSpaceProductionLoadStaging();
+	ResetSpaceManifestLoadStaging();
+	ResetSpacePods();
+	ResetSpaceDescents();
+	ResetSpaceTransitionLoadStaging();
+	ResetSpaceOrders();
 	ResetAsteroidField();
 	ResetLaunchCenters();
 	_pending_multilayer_schema.reset();
@@ -349,11 +363,15 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 	const std::array asteroid_fields = {MultiLayerCanonicalField{1, 8, ComputeAsteroidFieldDigest(GetAsteroidField())}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_ASTEROIDS) != 0) records.push_back({MultiLayerCanonicalKind::AsteroidFieldRoot, 0, asteroid_fields});
 	const std::array space_vehicle_fields = {MultiLayerCanonicalField{1, 8, ComputeSpaceVehicleDigest()}};
-	if (GetSpaceVehicleCount() != 0) records.push_back({MultiLayerCanonicalKind::SpaceVehicleRoot, 0, space_vehicle_fields});
+	if (GetSpaceVehicleCount() != 0 || GetNextSpaceVehicleGeneration() != 1) records.push_back({MultiLayerCanonicalKind::SpaceVehicleRoot, 0, space_vehicle_fields});
+	const std::array space_pod_fields = {MultiLayerCanonicalField{1, 8, ComputeSpacePodDigest()}};
+	if (SpacePod::GetNumItems() != 0 || GetNextSpacePodGeneration() != 1) records.push_back({MultiLayerCanonicalKind::SpacePodRoot, 0, space_pod_fields});
 	const std::array launch_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchCenterDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchCenterRoot, 0, launch_fields});
 	const std::array hub_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchHubDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_HUBS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchHubRoot, 0, hub_fields});
+	const std::array handling_fields = {MultiLayerCanonicalField{1, 8, ComputeSurfaceHandlingDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_HANDLING) != 0) records.push_back({MultiLayerCanonicalKind::SurfaceHandlingRoot, 0, handling_fields});
 	const auto digest = ComputeMultiLayerStateDigest(schema, records);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);

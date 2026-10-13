@@ -292,6 +292,20 @@ add_files(
     space.h
     asteroid.cpp
     launch_center.cpp
+    launch_operations.cpp
+    launch_assembly_gui.cpp
+    space_manifest.cpp
+    space_manifest.h
+    space_pod.cpp
+    space_pod.h
+    space_pod_type.h
+    space_transition.cpp
+    space_transition.h
+    space_descent.cpp
+    launch_operations.h
+    hub_cargo.cpp
+    hub_cargo.h
+    surface_handling.cpp
     launch_hub.cpp
     launch_center.h
     asteroid.h
@@ -395,6 +409,12 @@ add_files(
     multilayer_state.cpp
     multilayer_state.h
     multilayer_vehicle_catalogue.cpp
+    multilayer_space_content.cpp
+    multilayer_space_content.h
+    space_orders.cpp
+    space_production.cpp
+    space_production.h
+    space_orders.h
     multilayer_utility.cpp
     multilayer_utility.h
     utility_power.cpp

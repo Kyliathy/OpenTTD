@@ -20,6 +20,8 @@
 #include "newgrf_storage.h"
 #include "tilearea_bitmap.h"
 
+struct LaunchOperations;
+
 static const uint8_t INITIAL_STATION_RATING = 175;
 static const uint8_t MAX_STATION_RATING = 255;
 
@@ -532,6 +534,7 @@ struct Station final : SpecializedStation<Station, false> {
 public:
 	std::unique_ptr<LaunchCenterAnchor> launch_center; ///< Saved by LCTR, with native Station identity/ownership.
 	std::unique_ptr<LaunchCollectionHub> launch_hub; ///< Saved by LCHB; native goods remains the only center cargo storage.
+	std::unique_ptr<LaunchOperations> launch_operations; ///< LCOP owns bounded physical pad/workshop references.
 	RoadStop *GetPrimaryRoadStop(RoadStopType type) const
 	{
 		return type == RoadStopType::Bus ? bus_stops : truck_stops;

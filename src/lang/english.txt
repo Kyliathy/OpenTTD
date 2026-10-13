@@ -495,28 +495,56 @@ STR_MAP_LAYER_UNDERGROUND                                       :Underground
 STR_MAP_LAYER_DEEP_UNDERGROUND                                  :Deep Underground
 STR_MAP_LAYER_SPACE                                             :Outer Space
 STR_SPACE_SURVEY_CAPTION                                        :{WHITE}Space field and probes
-STR_SPACE_NATIVE_FIELD_COUNT                                    :{NUM} asteroids / {NUM} company mining probes
-STR_SPACE_MINING_BOUNDARY                                       :Extracted cargo stays in orbit; Surface descent pending.
+STR_SPACE_NATIVE_FIELD_COUNT                                    :{NUM} asteroids / {NUM} orbital craft
+STR_SPACE_MINING_BOUNDARY                                       :Survey reveals quantities. Mining can start before survey.
 STR_SPACE_MINE_SELECTED                                         :Mine selected asteroid
 STR_SPACE_RECALL                                                :Recall selected probe
 STR_SPACE_MISSION_FAILED                                        :Cannot assign this mining mission
 STR_SPACE_IDLE                                                  :Idle
 STR_SPACE_MINING                                                :Mining
-STR_SPACE_HOLDING                                               :Holding cargo at orbital home
-STR_SPACE_NATIVE_PROBE_STATUS                                   :{VEHICLE}: {STRING} / {NUM}/{NUM} t {STRING}
+STR_SPACE_HOLDING                                               :Idle in orbit
+STR_SPACE_NATIVE_PROBE_STATUS                                   :{VEHICLE}: {STRING} / {NUM}/{NUM} {STRING}
 STR_SPACE_NATIVE_SELECTED                                       :Selected probe: body #{NUM}, work {NUM}/74 ticks
 STR_SPACE_FIELD_COUNT                                           :{NUM} asteroids / {NUM} predeployed survey probes
-STR_SPACE_SURVEY_BOUNDARY                                       :Survey preview: finite reserves remain untouched.
+STR_SPACE_SURVEY_BOUNDARY                                       :Launch a survey probe to discover resource quantities.
 STR_SPACE_METALLIC                                              :Metallic / Nickel Ore
 STR_SPACE_CARBONACEOUS                                          :Carbonaceous / Water Ice
 STR_SPACE_RICH                                                  :Rich / Rare Earth concentrate
 STR_SPACE_BODY_RESERVE                                          :Body #{NUM}: {STRING} - {NUM}/{NUM} t
+STR_SPACE_BODY_UNKNOWN                                          :Body #{NUM}: {STRING} - Quantity unknown
+STR_SPACE_VISIT_SELECTED                                        :Add visit
+STR_SPACE_SURVEY_SELECTED                                       :Add survey
+STR_SPACE_ORDER_CLEAR                                           :Clear orders
+STR_SPACE_ORDER_ERASE                                           :Delete order
+STR_SPACE_ORDER_UP                                              :Move order up
+STR_SPACE_ORDER_DOWN                                            :Move order down
+STR_SPACE_ORDER_FAILED                                          :Cannot change these Space orders
+STR_SPACE_ORDER_EDIT_RESTARTS                                   :{BLACK}Editing orders restarts the mission and discards unfinished scan work.
+STR_SPACE_ORDER_VISIT                                           :Visit
+STR_SPACE_ORDER_SURVEY                                          :Survey
+STR_SPACE_ORDER_MINE                                            :Mine
+STR_SPACE_ORDER_CONSTRUCT                                       :Construct
+STR_SPACE_ORDER_UNLOAD                                          :Unload
+STR_SPACE_ORDER_SERVICE                                         :Return / service
+STR_SPACE_TARGET_BODY                                           :asteroid
+STR_SPACE_TARGET_STRUCTURE                                      :orbital facility
+STR_SPACE_TARGET_BLUEPRINT                                      :blueprint
+STR_SPACE_TARGET_CENTER                                         :launch center
+STR_SPACE_ORDER_ACTIVE                                          :Working / travelling
+STR_SPACE_ORDER_COMPLETED                                       :Completed
+STR_SPACE_ORDER_TARGET_LOST                                     :Target unavailable
+STR_SPACE_ORDER_FACILITY_MISSING                                 :Facility unavailable
+STR_SPACE_ORDER_HOLD_INCOMPATIBLE                                :Hold incompatible
+STR_SPACE_ORDER_TIMED_OUT                                       :Approach timed out
+STR_SPACE_ORDER_PROGRESS                                        :Order {NUM}/{NUM}: {STRING}
+STR_SPACE_SCAN_PROGRESS                                         :Scan: {NUM}/148 working ticks
+STR_SPACE_ORDER_ROW                                             :{NUM}: {STRING} {STRING} #{NUM}
 STR_SPACE_BODY_LOCATION                                         :Current plane position: {NUM}, {NUM}
 STR_SPACE_APPROACH                                              :Pursuing moving target
 STR_SPACE_ATTACHED                                              :Attached survey
 STR_SPACE_RETURN                                                :Returning to staging point
 STR_SPACE_WAITING                                               :Waiting to repeat
-STR_SPACE_SURVEY_STATUS                                         :Probe {NUM}: {STRING} / body #{NUM} / {NUM} surveys
+STR_SPACE_SURVEY_STATUS                                         :Unowned probe {NUM}: {STRING} / body #{NUM} / {NUM} surveys
 STR_SPACE_SURVEY_HINT                                           :Click a body or probe for its live status.
 STR_MAP_LAYER_CHOOSE_VIEW                                       :{BLACK}Choose which map layer this view shows
 
@@ -5929,7 +5957,6 @@ STR_SV_TRAIN_NAME                                               :Train #{COMMA}
 STR_SV_ROAD_VEHICLE_NAME                                        :Road Vehicle #{COMMA}
 STR_SV_SHIP_NAME                                                :Ship #{COMMA}
 STR_SV_AIRCRAFT_NAME                                            :Aircraft #{COMMA}
-STR_SV_SPACE_NAME                                               :Mining probe #{COMMA}
 
 ###length 27
 STR_SV_STNAME                                                   :{STRING1}
@@ -5960,8 +5987,33 @@ STR_SV_STNAME_LOWER                                             :Lower {STRING1}
 STR_SV_STNAME_HELIPORT                                          :{STRING1} Heliport
 STR_SV_STNAME_FOREST                                            :{STRING1} Forest
 STR_SV_STNAME_FALLBACK                                          :{STRING1} Station #{NUM}
+STR_SV_SPACE_NAME                                               :Mining probe #{COMMA}
 
 ############ end of savegame specific region!
+
+STR_ERROR_LAUNCH_HANDLING_ACTIVE                                 :Wait for launch-center cargo handling to finish
+STR_SPACE_ROCKET_NAME                                           :Rocket #{COMMA}
+STR_SPACE_SURVEY_PROBE_NAME                                     :Survey probe #{COMMA}
+STR_SPACE_CONSTRUCTION_PROBE_NAME                               :Construction probe #{COMMA}
+STR_SPACE_HEAVY_ROBOT_NAME                                      :Heavy robot #{COMMA}
+STR_SPACE_HAULER_NAME                                           :Orbital hauler #{COMMA}
+STR_SPACE_CRAFT_NAME                                            :Spacecraft #{COMMA}
+STR_SPACE_TARGET_CRAFT                                          :craft
+STR_SPACE_RETURNS_PENDING                                       :Waiting for pending cargo descents
+STR_SPACE_SERVICE_REQUIRED                                      :Service required: RFMT 1 + ELEC 1
+STR_SPACE_PODS_MISSING                                          :Waiting for paid replacement pods
+STR_SPACE_PROBE_SERVICE_STATE                                   :Return allowance {NUM}, pending {NUM}, pods {NUM}, service {NUM}/148
+STR_SPACE_PROBE_PARTS                                           :Service parts: RFMT {NUM}, ELEC {NUM}
+STR_SPACE_NATIVE_SURVEY_STATUS                                  :{VEHICLE}: {STRING}
+STR_LAUNCH_RESUPPLY_SELECT                                      :Set resupply receiver
+STR_LAUNCH_RESUPPLY_START                                       :Launch resupply
+STR_LAUNCH_RESUPPLY_HINT                                        :Select an orbital probe as receiver, then select the loaded rocket. Deliver all carried pods, service parts and compatible freight; the same probe stays in orbit.
+STR_LAUNCH_RESUPPLY_RECEIVER                                     :Resupply receiver: {VEHICLE}
+STR_LAUNCH_RESUPPLY_HOME_LOST                                    :Recovery center lost; choose recovery explicitly
+STR_LAUNCH_RESUPPLY_PAD_BUSY                                     :Waiting for the recovery pad
+STR_LAUNCH_RESUPPLY_BUSY                                         :Waiting for an idle receiver
+STR_LAUNCH_RESUPPLY_FULL                                         :Receiver cannot accept the whole payload
+STR_LAUNCH_RESUPPLY_APPROACH                                     :Approaching the resupply receiver
 
 ##id 0x8000
 ###length 116
@@ -6509,3 +6561,56 @@ STR_ERROR_SET_LAUNCH_HUB                                        :{WHITE}Can't ch
 STR_ERROR_LAUNCH_HUB_INELIGIBLE                                  :{WHITE}Select a current same-company launch center with this entire Surface train or lorry station inside its collection area
 STR_ERROR_LAUNCH_HUB_JOINED                                      :{WHITE}Joined freight facilities use their own launch center's shared station inventory
 STR_ERROR_LAUNCH_HUB_LIMIT                                       :{WHITE}This launch hub has no free freight membership slot
+
+STR_LAUNCH_ASSEMBLY_BUTTON                                      :{BLACK}Workshop
+STR_LAUNCH_ASSEMBLY_TOOLTIP                                     :Build spacecraft from delivered Steel and Goods, and manage paid assembly work
+STR_LAUNCH_ASSEMBLY_CAPTION                                     :{WHITE}Launch workshop
+STR_LAUNCH_ASSEMBLY_ROCKET                                      :Cargo rocket
+STR_LAUNCH_ASSEMBLY_MINER                                       :Mining probe
+STR_LAUNCH_ASSEMBLY_SURVEY                                      :Survey probe
+STR_LAUNCH_ASSEMBLY_BUILDER                                     :Construction probe
+STR_LAUNCH_ASSEMBLY_RECIPE                                      :{STRING}: {CURRENCY_LONG}, {NUM} Steel, {NUM} Goods
+STR_LAUNCH_ASSEMBLY_STATUS                                      :Select a craft and pod to load. Select the carrier rocket before packing a probe.
+STR_LAUNCH_ASSEMBLY_HULL                                        :{STRING} #{NUM}: {STRING}; {NUM} work ticks remaining
+STR_LAUNCH_ASSEMBLY_WORKING                                     :Assembling
+STR_LAUNCH_ASSEMBLY_PAUSED                                      :Paused
+STR_LAUNCH_ASSEMBLY_STORED                                      :Stored at launch center
+STR_LAUNCH_ASSEMBLY_UNHOMED                                     :Awaiting same-site recovery
+STR_LAUNCH_ASSEMBLY_PAUSE                                       :Pause / resume
+STR_LAUNCH_ASSEMBLY_RECOVER                                     :Recover here
+STR_LAUNCH_ASSEMBLY_FAILED                                      :{WHITE}Can't change launch assembly...
+STR_LAUNCH_LOGISTICS_POD                                        :Cargo pod
+STR_LAUNCH_LOGISTICS_BUILD_POD                                  :Build pod
+STR_LAUNCH_LOGISTICS_LOAD_POD                                   :Load pod
+STR_LAUNCH_LOGISTICS_UNLOAD_POD                                 :Unload pod
+STR_LAUNCH_LOGISTICS_SERVICE                                    :Service / pause
+STR_LAUNCH_LOGISTICS_FUEL                                       :Load 15 Propellant
+STR_LAUNCH_LOGISTICS_METAL                                      :Load 1 Refined Metal
+STR_LAUNCH_LOGISTICS_ELECTRONICS                                :Load 1 Electronics
+STR_LAUNCH_LOGISTICS_PACK_PROBE                                 :Pack probe
+STR_LAUNCH_LOGISTICS_UNPACK_PROBE                               :Unpack probe
+STR_LAUNCH_LOGISTICS_STEEL                                      :Load 1 Steel
+STR_LAUNCH_LOGISTICS_GOODS                                      :Load 1 Goods
+STR_LAUNCH_LOGISTICS_UNLOAD_FREIGHT                              :Unload freight
+STR_LAUNCH_LOGISTICS_CARRIED                                    :Packed in craft
+STR_LAUNCH_LOGISTICS_STOCK                                      :Craft #{NUM}: fuel {NUM}, metal {NUM}, electronics {NUM}, pods {NUM}, service {NUM} ticks
+STR_LAUNCH_LOGISTICS_CARRIER                                    :Selected carrier: rocket #{NUM}
+STR_LAUNCH_LOGISTICS_FREIGHT                                    :Freight: {CARGO_LONG}
+STR_LAUNCH_LOGISTICS_UNLOAD_FUEL                                :Unload Propellant
+STR_LAUNCH_LOGISTICS_UNLOAD_METAL                               :Unload Refined Metal
+STR_LAUNCH_LOGISTICS_UNLOAD_ELECTRONICS                         :Unload Electronics
+STR_LAUNCH_FLIGHT_START                                        :Launch to orbit here
+STR_LAUNCH_FLIGHT_CANCEL                                       :Cancel / return
+STR_LAUNCH_FLIGHT_RECOVER                                      :Recover rocket here
+STR_LAUNCH_FLIGHT_READY                                        :Ready
+STR_LAUNCH_FLIGHT_PREPARING                                    :Preparing
+STR_LAUNCH_FLIGHT_ASCENT                                       :Ascending
+STR_LAUNCH_FLIGHT_DELIVERY                                     :Deploying
+STR_LAUNCH_FLIGHT_RETURN                                       :Returning
+STR_LAUNCH_FLIGHT_TURNAROUND                                   :Turning around
+STR_LAUNCH_FLIGHT_WAITING                                      :Waiting for recovery
+STR_LAUNCH_FLIGHT_ORBITAL                                      :Operating in orbit
+STR_LAUNCH_DESCENT_RELEASE                                    :Release cargo pod
+STR_LAUNCH_DESCENT_RETARGET                                   :Recover pod here
+STR_LAUNCH_DESCENT_WORKING                                    :Descending
+STR_LAUNCH_DESCENT_WAITING                                    :Awaiting recovery

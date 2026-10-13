@@ -266,6 +266,81 @@ Treat this as the spike's working design, not an existing enum/API. The final ma
 - [ ] 6.2 Add bounded typed order queues and dedicated commands beside ordinary vehicle management. Support Visit, Survey, Mine, Deliver/Construct, Unload and Return/Service with probe-role/owner checks; specify shared-order/clone behavior without bypassing commissioning.
 - [ ] 6.3 Define recoverable invalid/removed-target transitions and serialize queue/index, target kind/ID/generation, phase, partial work and timer. A reused pool slot cannot inherit an old order; editing/cancelling preserves cargo and grants no completed scan/build.
 
+### Local Mandatory Reading - Native typed queue increment
+
+_Applies to Group6B._ Read Global and the Vehicle model and compatibility Area,
+`space_vehicle.h`, `space_orders.h`, their command traits and native tick, plus
+`space_order_sl.cpp`/`multilayer_sl.cpp` and current state/content producer tests.
+Consume existing native Vehicle/Engine/CAPA, body and launch-center owners.
+Absent structure/blueprint/scan/descent/service producers authorize no proxy
+pool or mutation. Original Group6 remains the complete action/UI contract;
+this staged increment publishes the bounded queue for those business owners.
+
+Context has compacted 1 times while executing this group.
+
+### Group 6B - Persist typed native queues and execute existing producers
+
+{{HARD}}
+
+- [X] 6B.1 Publish discriminated Body/Structure/Blueprint/LaunchCenter targets,
+  append-only actions, bounded native queues and monotonic Vehicle generations.
+  Commands check company, vehicle generation, roles, live target and queue bounds
+  before mutation; shared orders and ordinary clone/purchase remain refused.
+- [X] 6B.2 Execute Visit and Mine through existing native motion/extraction,
+  without taking a mining lease for Visit. Retain cargo on edits/removal;
+  unavailable actions retain an explicit saved block rather than grant survey,
+  construction, unloading or service. Keep empty legacy queues' behavior exact.
+- [X] 6B.3 Save `SPOR` separately from existing `VEHS`, including identity cursor,
+  queue/index/blocked/started/timer/work. Verify actual interrupted native
+  continuation, ordinary resave, independent previews, malformed records and
+  missing-target recovery in both builds, retaining original input identities.
+
+Candidate owner: `SpaceVehicle::space_orders` and `generation` hold the only live
+queue/identity; `space_orders.h` exports typed records, pure role/transport
+validation, capture/install and native execution. `CmdEditSpaceOrder` is a
+synchronized primitive-field command. Edits restart the queue, release only
+the edited vehicle's lease and retain packets/cost carry; cancellation grants
+no completed action. Empty queues delegate the exact previous mining FSM.
+
+`SPOR` save410 is a bounded separate family. Genuine older vehicles acquire
+generation=`VehicleID+1` and empty queues, preserving all old `VEHS` fields.
+Later allocations use the saved monotonic cursor. Unavailable station/blueprint
+producers are never resolved through a shadow pool; such commands refuse.
+Return/Service and Unload may target a valid owned center, but cannot service or
+release cargo until the actual business producers exist. Missing/generation-
+changed targets block with cargo intact. Native model19/20 commissioning,
+survey/construction work, real delivery/service and role-aware order UI remain
+unfinished in original Group6 and Plans9-11. The old single-mission inspector
+still uses its original assign/recall command; move it to the generation-checked
+order path before closing the complete command/UI contract.
+
+Both builds pass6,204 assertions/35 focused cases, plus actual prepared and two
+independent2,200-tick native continuations, an exact ordinary paused resave,
+15 full-load corrupt refusals,13 independent preview refusals and recoverable
+missing-body blocking. Wrong native engine categories refuse without committing
+queue state. Reports: `logs/space-content-orders-verification.json` and
+`mlm/reviews/space/orders-verify/20261012-191228-0eae44dca5/reports/space-orders-verification.json`
+(Release), `mlm/reviews/space/orders-verify/20261012-191228-81b990a242/reports/space-orders-verification.json`
+(Debug). Original Group6 remains pending for the complete action and UI support.
+
+**Coordinated414 extension,2026-10-13; verified in both configurations.**
+Plan9 Group11B and Plan10 Group12B append `Craft` after the existing four target
+kinds, using the same native VehicleID and nonzero incarnation. The native queue
+and rocket transition share one navigation resolver; missing/reused targets
+remain explicit stale references. Append waits for pending returns, service and
+pods without changing old enum meanings. `SPFL` reserves a separate resupply
+receipt in flag bit3; historical deployment bit2 keeps its meaning and row size.
+Earlier versions refuse these new target/block/receipt values. Independent414
+preview copies native `VEHS` owner/position fields and the `SPOR` incarnation
+cursor; it must not consult the running fleet. No second vehicle/stock registry
+or implicit old-save allowance is introduced. Existing413 producer evidence is
+in `logs/space-survey-verification.json`; new414 contracts, native resupply and
+repeat, independent corrupt previews and eight genuine413 migrations pass in
+both configurations. Current evidence is indexed by
+`logs/space-resupply-verification.json`. The complete action/UI and original
+structure/blueprint producer requirements remain pending; further work is
+paused after this batch at the user's request.
+
 ### Group 7 - Vehicle model and compatibility spike
 
 {{HARD}}

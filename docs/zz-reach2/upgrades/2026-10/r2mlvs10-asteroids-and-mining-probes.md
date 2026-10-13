@@ -18,6 +18,15 @@
 > - Do not read Consult on Demand or Planning Provenance merely because those
 >   sources are listed. Use a Consult on Demand source only when its trigger
 >   occurs.
+> - User execution correction,2026-10-12: batch related feature changes and
+>   fixture fixes before building. Builds take time and block the workspace.
+>   Do not rebuild after each small edit; use a consolidated build/validation
+>   pass when the next substantial batch is ready. Carry remaining fixture-only
+>   corrections into that batch instead of repeatedly rebuilding this one.
+> - User compiler limit,2026-10-13: keep tools launching MSVC `CL.exe` at two
+>   outer build workers, including on battery. Keep nested compiler parallelism
+>   bounded (`--parallel 2` and `CL_MPCount=2`); do not increase it to exploit
+>   all16 cores. An allowance of eight workers applies only to a different compiler.
 > - No created source file, test file or JSON file should start with same prefix as a planning MD file (such as r2). Only MD files can have that prefix. No MD file should be created anywhere in source directories unless specifically asked.
 > - After EVERY CONTEXT COMPACTION, you must add a note above the task group
 >   which is currently in execution. The note will say: "Context has compacted
@@ -42,15 +51,22 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/vehicle_func.h](../../../../src/vehicle_func.h) | 192-204 | `VehicleServiceInDepot`, `CallVehicleTicks`, `ResetVehicleHash`, `ViewportAddVehicles` are public tick/service/spatial-render boundaries for orbital vehicles. |
 
-Status: paused for demo at the user request,2026-10-12; full Groups1-22 remain required. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+Status: active toward full completion,2026-10-12; full Groups1-22 remain required. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
 
 ## Current dispatch - Full-plan completion, 2026-10-12
+
+**Resumed objective, 2026-10-12:** finalize both Plan9 and this plan. The recorded
+demo pause is superseded. The saved-name correction and Plan9 Groups5/6
+packet handling/lifecycle are delivered in both builds; the remaining launch,
+mining, survey, construction, service, graphics and acceptance scope stays active.
 
 The active objective is to finalize this entire plan. P1/P2 are delivered
 increments, not completion of the original Groups1-22. Group2.1's saved
 population control and Plan9's native empty Surface launch center are delivered.
-The next producers are explicit Surface freight membership/handling and paid
-rocket commissioning; generation/motion evidence and deployment/drop/descent
+Native Surface membership and timed handling are delivered. Next producers are
+paid rocket commissioning and remaining service/pad/recovery producers. Plan1
+Group12B's Space definitions and Plan8 Group6B's native typed queue foundation
+are verified in both builds; generation/motion evidence and deployment/drop/descent
 continue toward the full loop. The user's latest revision also requires
 Groups8B/8C: survey and construction roles, ordered missions and survey-gated
 resource disclosure, followed by Steel/Goods orbital construction and reuse.
@@ -58,13 +74,22 @@ Paid service/repeat, final art, recovery, network replay and useful Surface
 delivery remain required. Underground work stays paused. Every unfinished
 original task remains unchecked; the added requirements are pending too.
 
-**Demo break,2026-10-12:** the current Plan9 native facility/membership/UI batch is
-verified in both builds (`logs/launch-hub-verification.json`). Further implementation
-is paused at the user's request. The [bundled underground/Space walkthrough](d2um-underground-mines.md)
-provides mining, full-hold and new `space-hub` checkpoints. Native handling/descent,
-Earth commissioning, survey/construction roles, paid service/repeat and the rest
-of this plan remain pending. Resume with saved-name compatibility correction,
-then the actual packet handling/lifecycle producers. Retain the user instruction
+**Plan9 producer progress,2026-10-13; partial.** The connected launch logistics
+batch now has RelWithDebInfo native evidence for real supplies, paid passive
+pods, interrupted service and reusable rocket deployment/recovery, alongside
+passing assembly/order/handling/center regressions. Descent stopped at the
+foreign-center test-site setup before release. Its paid-canal fixture correction
+and an active-service capture await the next substantial feature batch; Debug
+remains deferred. `logs/launch-logistics-verification.json` binds the tested
+binaries/reports and identifies those uncompiled fixture changes. This does not
+complete the role actions, orbital resupply or either full plan.
+
+**Historical demo break,2026-10-12 (superseded):** the Plan9 native
+facility/membership/UI batch was verified in both builds
+(`logs/launch-hub-verification.json`) before the user paused implementation. The [bundled underground/Space walkthrough](d2um-underground-mines.md)
+provides mining, full-hold and `space-hub` checkpoints. Handling and its lifecycle
+are now delivered; descent, Earth commissioning, survey/construction roles, paid
+service/repeat and the remaining original requirements stay pending. Retain the user instruction
 to batch at least two feature groups between builds/tests.
 
 ### Area Mandatory Reading - Moving field preview
@@ -168,6 +193,16 @@ Original full-fleet/full-loop groups retain their own pending acceptance gates.
 
 ## Outcome and Boundaries
 
+**Delivered definition/queue handoff,2026-10-12:** Plan1 Group12B publishes
+`multilayer_space_content.h` revision2 recipes, mass, budgets and paid-facility
+admission; Plan8 Group6B publishes native `space_orders.h` queue/generation
+ownership. Save410 carries exact `SDEF` content identity and separate bounded
+`SPOR` transport, preserving ground/profile/package1 and paid old objects.
+Both builds and focused native save/replay/refusal gates pass; see
+`logs/space-content-orders-verification.json`. These handoffs grant no missing
+commissioning, survey, blueprint, processing, descent, service, UI/art or network
+producer. Consume their public definitions/commands; retain unfinished tasks.
+
 Slowly moving asteroids are finite deposits. Earth-launched mining, survey and
 construction probes are native vehicles with orders. Survey completion reveals
 resource quantities to the owning company; mining converts finite reserves into
@@ -189,7 +224,7 @@ these additions nor completed scans: preview controllers have no company owner.
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/asteroid.h`. Publish `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Public owners: `src/asteroid.h` supplies `AsteroidBody`, `AsteroidField` and `AdvanceAsteroidField`; `src/space_vehicle.h` supplies the native `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` mining controller. This corrects the earlier proposed duplicate mission/advance names to the actual P1/P2 owners. Existing motion/mining evidence does not publish missing survey, service, construction or descent behavior. Consumers retain those independent gates.
 
 The body contract must expose class, cargo composition, initial/remaining per-cargo reserve, and the shared authoritative position/velocity/phase state. Publish the generation-version and saved-tuning ownership needed to reproduce a new world and continue a loaded one; motion fields remain owned by the r2mlvs8 record rather than duplicated locally.
 
@@ -440,7 +475,7 @@ Choose the speed once at generation, independently of class and size. Group 8's 
 
 _Applies to Groups 8-13, including8B/8C._
 
-**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`.
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 8-13. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
 Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
@@ -450,7 +485,7 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 | [src/cargopacket.h](../../../../src/cargopacket.h) | 458-489 | `VehicleCargoList::Append`, `AgeCargo`, `Stage`, `Return`, `Unload`, `Shift` move accountable packets; exchange/descent/processing must not clone packet age or feeder shares. |
 | [src/cargopacket.h](../../../../src/cargopacket.h) | 596-603 | `StationCargoList::Reserve`, `Load`, `Truncate`, `Reroute` provide bounded station moves and destination reservations; hub inventory has one physical owner. |
 | [src/command.cpp](../../../../src/command.cpp) | 301-328 | `CommandHelperBase::InternalExecuteValidateTestAndPrepExec` defines refusal/estimate before execution; no validation phase may consume inventory, RNG or funds. |
-| `src/asteroid.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) Groups 1-7, ending with Group 7's public-contract task, publish `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/asteroid.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) Groups 1-7, ending with Group 7's public-contract task, publish `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
 | [src/source_type.h](../../../../src/source_type.h) | 19-56 | Canonical cargo source identities have no asteroid type; use the agreed provenance extension rather than aliasing an industry ID. |
 | [src/cargopacket.cpp](../../../../src/cargopacket.cpp) | 246-285 | Complete `VehicleCargoList::Append` does not enforce hold capacity and may merge/delete pointers; mining preflights capacity and initializes provenance first. |
 
@@ -524,13 +559,43 @@ commissioning handoff. Construction mutation/unload additionally requires
 Plan11's tested blueprint/inventory owners; missing producers permit contract
 and pure fixture work, not free deployment or a parallel cargo registry.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 8B - Implement survey probes and typed ordered missions
 
 {{HARD}}
 
+**Working-tree survey/order batch,2026-10-13; native verification passed in both configurations.** Native model19 now
+executes148 working ticks against the current moving-body approach without
+claiming the mining lease. `AsteroidField` owns sparse per-body company knowledge;
+`GetAsteroidQuantityDisclosure` is the sole player quantity query. Takeover
+transfers knowledge and company removal clears old bits before ID reuse. The
+inspector now shows Unknown until completion and exposes generation-checked
+append/delete/reorder/clear controls with scrollable fleet/order rows. Editing
+restarts the mission and discards partial scan work; unsurveyed mining stays legal.
+Proposed save413 adds mandatory `SPKN` receipts and permits bounded Survey-only
+work in `SPOR`, with independent copied company/body/order preview validation.
+The native fixture uses two actual paid launches, concurrent mining, cancelled
+and interrupted scans, company-specific screens and real company takeover/reuse.
+Generated fixture names/version expectations moved together to413; retained
+inputs and prior reports remain unchanged. This batch carries Plan9's paid-canal
+descent fixture correction and active-service capture. Both builds pass685
+contract assertions in15 cases plus the complete native survey and paid
+descent/service suites. Survey verification includes fourteen full and fourteen
+copied-preview corruptions and seventeen exact saved owner families. Actual
+inspector captures show owner quantities, foreign Unknown and the distinct
+Survey-probe default name; saved0x6000 string identities remain unchanged.
+The complete Debug regression pass is green: all eight native feature suites,
+both fresh profiles, eight retained underground saves and both legacy Space
+continuation suites. Current RelWithDebInfo also passes the affected native
+logistics, descent/service, survey and refreshed rocket suites. Exact build,
+source, binary and report identities are indexed by `logs/space-survey-verification.json`.
+Construction, orbital resupply, final art and full integrated/network acceptance
+remain open; passing these suites does not finalize either plan.
+
 - [ ] 8B.1 Add survey19 and construction20 without renumbering models0..18 or native vehicle kinds. Expose role/recipe-specific Earth launch-center commissioning; enable orbital manufacture only through a completed Assembly's same material gate. Version the content/save contract explicitly.
 - [ ] 8B.2 Add synchronized owner-validated typed order queues for Visit, Survey, Mine, Deliver/Construct, orbital Unload and Return/Service. Save order index, target generation, work and blocked reason; role-invalid actions refuse without cargo/reserve/money mutation. Ground StationID orders cannot truncate32-bit body IDs.
-- [ ] 8B.3 Implement148-working-tick moving-body scans and saved per-company knowledge. Hide initial/remaining quantities through one disclosure query in every player-facing body view until completion. Cancellation, hidden views and old preview surveys grant nothing; unsurveyed mining remains legal. Scans do not occupy the exclusive mining lease.
+- [X] 8B.3 Implement148-working-tick moving-body scans and saved per-company knowledge. Hide initial/remaining quantities through one disclosure query in every player-facing body view until completion. Cancellation, hidden views and old preview surveys grant nothing; unsurveyed mining remains legal. Scans do not occupy the exclusive mining lease.
 - [ ] 8B.4 Verify Visit(bodyA) then Mine(bodyB), role refusals, two companies with different knowledge, partial/cancelled/completed scans, company-ID reuse, old unsurveyed migration and exact save/network continuation. No UI/tooltips/scripts may expose undiscovered amounts.
 
 ### Group 8C - Deliver construction materials and reuse orbital products
@@ -573,6 +638,59 @@ and pure fixture work, not free deployment or a parallel cargo registry.
 - [ ] 12.2 Implement paid servicing, rearming/pod replacement and budget exhaustion from the profile. The probe stays in orbit and can repeat without another rocket launch or station.
 - [ ] 12.3 Enter the next rendezvous only after the cargo handoff/service conditions succeed. Save/reload at that boundary and verify no duplicated pending hold or free service.
 
+### Local Mandatory Reading - Paid repeat and orbital resupply batch
+
+_Applies to Group12B._ Read Global, the Probe mission controller Area, Plan9's
+Orbital resupply and repeat Local block, and the revised Space numerical budget.
+Use the actual saved `SpaceManifest` return/pending/service fields and native
+pod/descent owners. `IsSpaceServiceWorkTick` derives work/upkeep from current
+state; an unsaved previous-tick flag cannot govern continuation. Require Plan9
+Group11B's tested same-rocket transfer before claiming repeat acceptance. Preserve
+legacy paid identities and do not grant old saves free pods or service quotas.
+Implement the complete repeat/resupply behavior and fixtures before one build.
+
+Context has compacted 1 times while executing this group.
+
+### Group 12B - Pause exhausted mining and complete a paid third collection
+
+{{HARD}}
+**Verified414 batch,2026-10-13; both configurations passed.** Paid mining now derives a
+shared wait for reserved return allowances, service or actual pods. Direct
+assignment refuses unavailable work; queued Mine retains its cursor and cargo,
+releases its lease and waits in Holding. Current eligibility also governs upkeep.
+Manual onboard service may preserve that waiting order through148 paid work
+ticks, pause/reload and atomic RFMT1/ELEC1 consumption; completion permits a new
+approach without a new probe purchase. Old P2 mining behavior is grandfathered
+without a free return quota. Actual paid resupply may create its previously
+absent native compartment owner with zero allowance; earned service remains
+required. The inspector exposes parts, pods, pending returns and service work.
+Plan9's connected fixture/checker is registered for55 review contexts, including
+eight genuine413-to414 ordinary migrations. Both configurations compile, pass
+713 contract assertions in17 cases and complete the native three-return loop:
+60 actual mined tonnes, three expended paid pods, replacement pods/parts from
+the same rocket, one148-tick paid service and exact interrupted/paused replay.
+Service work costs1,000 and the74-tick pause costs100, with no reload charge
+difference. All17 checked owner families remain exact across continuations and
+the older-save migrations. RelWithDebInfo's connected checks and Debug's full
+15-check pass are indexed by `logs/space-resupply-verification.json`, including
+the shared helper filename correction resolved without a rebuild. Full Core,
+construction/processing, disposition, art and integrated/network requirements
+remain open. Further work stops after this batch at the user's request.
+
+- [X] 12B.1 Gate new/continued extraction on available paid return allowance and
+  pod/service state through the same eligibility rule in direct missions, typed
+  orders, upkeep and UI. Pending descents reserve their allowances; a waiting
+  probe owns its existing cargo but cannot extract a third batch for free.
+- [X] 12B.2 Keep exhausted orders recoverable with visible waits for pending
+  returns, parts, pods or service. Permit explicit onboard service of the waiting
+  mission and resume it only after its148 paid work ticks consume RFMT1/ELEC1
+  once. Preserve partial service, cancellation and legacy migration semantics.
+- [X] 12B.3 Run three real mined/descent batches with one paid probe and the same
+  reusable rocket supplying replacement pods/parts. Exercise missing parts and
+  pods, service interruption, lost receiver and failed transfer without reserve,
+  packet, stock or money duplication. Compare exact saved/replayed owners in both
+  configurations; no orbital station is required.
+
 ### Group 13 - Reconcile mission exits and recovery
 
 {{MEDIUM}}
@@ -584,7 +702,7 @@ and pure fixture work, not free deployment or a parallel cargo registry.
 
 _Applies to Groups 14-22._
 
-**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`.
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 14-22. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
 Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
@@ -594,12 +712,14 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 | [src/saveload/vehicle_sl.cpp](../../../../src/saveload/vehicle_sl.cpp) | 1119-1196 | `VEHSChunkHandler` and registration construct the vehicle class from saved type before member loading; protect old enum meanings and validate new references. |
 | [src/network/network_command.cpp](../../../../src/network/network_command.cpp) | 256-288 | `NetworkExecuteLocalCommandQueue` executes agreed frame order/company authority; all jobs use deterministic simulation time. |
 | [src/network/network_server.cpp](../../../../src/network/network_server.cpp) | 670-687 | `ServerNetworkGameSocketHandler::SendSync` compares RNG seeds, not a full gameplay checksum; validate orbital/geology/cargo ledgers in addition to a no-desync result. |
-| `src/asteroid.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) Groups 1-7, ending with Group 7's public-contract task, publish `AsteroidBody`, `MiningProbeMission`, `AdvanceAsteroidMotion`, `AdvanceProbeMining`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/asteroid.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs10-asteroids-and-mining-probes.md](r2mlvs10-asteroids-and-mining-probes.md) Groups 1-7, ending with Group 7's public-contract task, publish `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
 | [Sprite Contract and delivery owner](r2mlvs13-graphics-and-asset-pipeline.md#public-handoff-contract) | Live definitions; no fixed range | `Sprite Contract Handoff` defines manifest fields `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source`; the matching authoring/conversion/runtime groups deliver actual assets. Verify the requested family and packed loading fixture before graphics integration; template/manifest publication alone is not final art. |
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
 
 **Scoped graphics gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Final graphics tasks in this area require the corresponding r2mlvs13 manifest entries, delivered sprites and packed loading fixture. Verify them before binding/review; if absent, stop only those art tasks and their acceptance claims, continue independent code/state tests, and never count placeholders as finished assets.
+
+Context has compacted 2 times while executing this group.
 
 ### Group 14 - UI, art and acceptance
 

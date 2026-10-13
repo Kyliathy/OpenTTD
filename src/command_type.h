@@ -406,6 +406,24 @@ enum class Commands : uint8_t {
 	BuildLaunchCenter, ///< Build a distinct native Surface Space launch facility.
 	RemoveLaunchCenter, ///< Remove an empty launch facility without recycling its generation.
 	SetLaunchHub, ///< Explicit exclusive Surface freight membership; never a catchment transfer.
+	StartSurfaceHandling, ///< Explicit timed supply/return transfer using the selected native hub relationship.
+	EditSpaceOrder, ///< Generation-checked bounded typed orders; no ordinary destination truncation.
+	AssembleLaunchCraft, ///< Material-paid native rocket/probe hull construction at an actual center.
+	PauseLaunchAssembly, ///< Pause remaining paid work without a refund or replacement body.
+	RecoverLaunchCraft, ///< Explicit same-site recovery of a paid native hull after center loss.
+	MoveSpaceSupply, ///< Actual packet transfer to/from native fuel/service compartments.
+	ServiceLaunchProbe, ///< Paid-material probe service through the real Earth workshop.
+	CarryLaunchProbe, ///< Stow/unstow the same dormant paid native probe in a rocket.
+	AssembleLaunchPod, ///< Build a paid passive shell in the center workshop.
+	MoveLaunchPod, ///< Transfer one real shell between center and craft custody.
+	PauseLaunchPod, ///< Pause or resume retained pod construction work.
+	RecoverLaunchPod, ///< Reattach the same paid pod at its retained Surface site.
+	MoveLaunchFreight, ///< Move actual mass-limited construction freight between Surface center and native spacecraft hold.
+	BeginLaunchFlight, ///< Reserve a paid, fueled native rocket round trip and its explicit destination.
+	CancelLaunchFlight, ///< Cancel before burn or return the retained orbital payload without deploying it.
+	DivertLaunchRecovery, ///< Explicitly recover a waiting rocket at an authorized replacement facility.
+	ReleaseOrbitalCargo, ///< Move actual cargo into a paid pod with saved, capacity-reserved descent custody.
+	RetargetSpaceDescent, ///< Select an authorized recovery center for the same retained pod and packets.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

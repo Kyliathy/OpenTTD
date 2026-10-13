@@ -9,6 +9,8 @@
 
 #include "stdafx.h"
 #include "launch_center.h"
+#include "launch_operations.h"
+#include "space_pod.h"
 #include "launch_center_cmd.h"
 #include "core/flatset_type.hpp"
 #include "aircraft.h"
@@ -2943,8 +2945,8 @@ CommandCost CmdRemoveLaunchCenter(DoCommandFlags flags, TileIndex tile)
 	}
 	const auto area = GetLaunchCenterFootprint(station->launch_center->tile, station->launch_center->rotation);
 	if (!area) return CMD_ERROR;
-	// Before launch/descent/handling is added, an empty facility has no feature cargo owner.
-	// Its future lifecycle gate must settle those typed jobs before this native removal.
+	if (HasSurfaceHandlingForStation(station->index) && !flags.Test(DoCommandFlag::Bankrupt)) return CommandCost(STR_ERROR_LAUNCH_HANDLING_ACTIVE);
+	if (HasLaunchCraft(GetLaunchCenterReference(*station)) || HasLaunchPods(GetLaunchCenterReference(*station)) || HasSpaceDescentForCenter(GetLaunchCenterReference(*station))) return CMD_ERROR;
 	for (const auto cell : *area) {
 		if (!IsTileType(cell, TileType::Station) || GetStationType(cell) != StationType::LaunchCenter || GetStationIndex(cell) != station->index) return CMD_ERROR;
 		const auto empty = EnsureNoVehicleOnGround(cell);
@@ -2952,6 +2954,7 @@ CommandCost CmdRemoveLaunchCenter(DoCommandFlags flags, TileIndex tile)
 	}
 	if (flags.Test(DoCommandFlag::Execute)) {
 		for (const auto cell : *area) { DoClearSquare(cell); MarkTileDirtyByTile(cell); }
+		SettleSurfaceHandlingForStation(*station);
 		ForgetLaunchCenter(*station);
 		station->facilities.Reset(StationFacility::LaunchCenter);
 		Company::Get(station->owner)->infrastructure.station -= area->w * area->h;

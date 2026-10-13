@@ -10,6 +10,14 @@ add_test_files(
     artifact_paths.cpp
     space_preview.cpp
     space_mining.cpp
+    space_content.cpp
+    space_orders.cpp
+    space_survey.cpp
+    space_resupply.cpp
+    launch_production.cpp
+    space_logistics.cpp
+    launch_flight.cpp
+    space_descent.cpp
     launch_center.cpp
     alternating_iterator.cpp
     bitmath_func.cpp

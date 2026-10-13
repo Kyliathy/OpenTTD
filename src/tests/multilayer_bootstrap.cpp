@@ -17,7 +17,7 @@ TEST_CASE("All first-build milestones expand from paid Surface supplies and earl
 {
 	const auto milestones = GetMultiLayerBootstrapMilestones();
 	const auto supplies = GetMultiLayerSurfaceSupplies();
-	REQUIRE(milestones.size() == 11);
+	REQUIRE(milestones.size() == 14);
 	std::map<MultiLayerBootstrapStage, TimerGameCalendar::Year> reachable;
 	uint64_t cash = 5000000;
 	uint64_t paid_supplies = 0;
@@ -44,8 +44,8 @@ TEST_CASE("All first-build milestones expand from paid Surface supplies and earl
 		cash -= expense;
 		reachable.emplace(milestone.stage, milestone.introduction_year);
 	}
-	CHECK(paid_supplies == 76380);
-	CHECK(cash == 1219620);
+	CHECK(paid_supplies == 91030);
+	CHECK(cash == 764970);
 	CHECK(reachable.at(MultiLayerBootstrapStage::Tube) == TimerGameCalendar::Year{1970});
 	CHECK(reachable.at(MultiLayerBootstrapStage::Geothermal) == TimerGameCalendar::Year{1980});
 	CHECK(reachable.at(MultiLayerBootstrapStage::Probe) == TimerGameCalendar::Year{1990});
@@ -69,7 +69,7 @@ TEST_CASE("All first-build milestones expand from paid Surface supplies and earl
 TEST_CASE("Vehicle catalogue provides conventional resource paths without tube or liquid bypasses", "[multilayer-vehicle-catalogue]")
 {
 	const auto vehicles = GetMultiLayerVehicleCapabilities();
-	REQUIRE(vehicles.size() == 19);
+	REQUIRE(vehicles.size() == 21);
 	std::set<uint16_t> models;
 	// Capability invariants apply to every logical design before feature owners map it to an engine pool.
 	for (const auto &vehicle : vehicles) {

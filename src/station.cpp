@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "launch_center.h"
+#include "launch_operations.h"
 #include "core/flatset_type.hpp"
 #include "company_func.h"
 #include "roadveh.h"

@@ -1,14 +1,14 @@
 # R2MLVS1 execution record - ownership and Content Freeze
 
-Owner: [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md), Groups 20-23. Architecture: [archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md), [archi-savegame.md](../../architecture/savegame/archi-savegame.md). Inputs: [ETI/native M0 decision](r2mlvs12-a-eti-feasibility.md), [sprite schema/geometry](graphics/r2mlvs13-a-sprite-contract.md), [Schema Foundation](r2mlvs15-a-schema-foundation.md). This record freezes definitions and ownership, with future gameplay/art/network work explicitly retained in feature plans.
+Owner: [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md), Groups20-23 and12B. Architecture: [archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md), [archi-savegame.md](../../architecture/savegame/archi-savegame.md). Inputs: [ETI/native M0 decision](r2mlvs12-a-eti-feasibility.md), [sprite schema/geometry](graphics/r2mlvs13-a-sprite-contract.md), [Schema Foundation](r2mlvs15-a-schema-foundation.md). This record freezes definitions and ownership, with future gameplay/art/network work explicitly retained in feature plans.
 
-**Space revision pending,2026-10-12:** this is the historical version1 freeze.
-The user's [Steel/Goods and three-probe contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
-supersedes its old orbital construction/bootstrap rows. Plan1 Group12B must
-version and compile the new definitions, admission and bootstrap budgets before
-those dependent features can claim readiness. Existing ground contracts and
-old-save evidence stay valid; no new survey, stock or construction is delivered
-by this note.
+**Space revision2 delivered,2026-10-12:** Group12B supersedes the historical
+version1 orbital construction/bootstrap rows with the user's
+[Steel/Goods and three-probe contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
+Definitions, mass, admission, budgets and exact compatibility are frozen below.
+Existing ground/profile/package1 and paid old objects keep their identities.
+Operational commissioning, survey, construction, production and descent remain
+with their feature plans.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -54,6 +54,37 @@ Ground review preserves the corrected engine heading sequence and all newly swep
 
 First probe payload includes body, two expendable pods and service preload: 12/30 t. Surface chemical fuel precedes asteroid ice, two 20-t returns preserve one packet owner, and hub charges occur once per completed handling transfer. First mirror is 6/30 t plus a separate Surface solar target. A 28-t preassembled station nucleus precedes the first 12-t robot without self-dependency; delivered Surface parts and retained Q16 work carry are explicit. The 5,000,000 capital proof now buys every row and leaves 1,219,620. Runtime flight/descent/handling/construction, balance measurements, source art, multiplayer and performance remain the owning feature plans' checks.
 
+## Group12B - independent Space definition revision2
+
+The delivered Space definition owner is [multilayer_space_content.h](../../../../src/multilayer_space_content.h),
+with18 construction families,21 append-only vehicle capabilities,14 manufacturing
+choices,10 Surface supply SKUs and14 bootstrap milestones. The conservative
+vehicle envelope is256 originals plus21 logical models =277, below64,000;
+unchanged ground industry/tile envelopes remain64/283. Numerical and route
+ledgers are reconciled in the revised recipes/budgets above their historical
+version1 sections. Both configurations pass6,204 assertions/35 focused cases. Actual native
+save/replay, ordinary resave,15 corrupt full loads and13 independent previews
+also pass; see `logs/space-content-orders-verification.json`. Group12B closes
+the definition revision; unfinished operational acceptance remains below.
+
+Actual new selected/Classic worlds and their cold resaves verify `SDEF`/`SPOR`,
+with zero free native craft and an empty Classic field. All16 retained
+underground `STNN` resaves remain exact alongside their27 checked owner chunks;
+the three old mining checkpoints and interrupted Surface handling also retain
+their deterministic native continuations in both configurations.
+
+`SDEF` save410 carries the exact Space revision/signature; ground profile1,
+cargo package1, original vehicle/category IDs and paid old objects retain their
+identities. Older absence migrates only the definitions. Future/changed content
+refuses ordinary load and independent preview. `SPOR` carries typed native
+vehicle generations and queues separately from old `VEHS` fields. No metadata
+migration creates stock, vehicles, construction progress or survey knowledge.
+
+Definition-only facility admission does not replace actual paid Earth launch
+or completed-Assembly commissioning. Native survey/construction engines, scans,
+blueprints, powered processors, processed-product provenance and real descent
+remain the original Plans8-11 implementation/acceptance obligations.
+
 ## Group 23 - public exports and final verification
 
 The master records the resolved design choices in **Plan 1 M0 execution decisions**. These compiled exports form the Content Freeze handoff; feature owners consume them rather than copying tables, hard-coding runtime slots or allocating a second authority.
@@ -62,14 +93,14 @@ The master records the resolved design choices in **Plan 1 M0 execution decision
 | --- | --- |
 | [multilayer_content.h](../../../../src/multilayer_content.h) | Immutable `MultiLayerGameplayProfile`, `MultiLayerProfileSelection`, `LayerVehicleCapability`, cargo-form contracts, `UtilityPowerAccount`; profile/cargo/vehicle getters, typed-calendar `CheckDeepLayerAvailability`, candidate preparation, validated activation/restore and specific refusal diagnostics |
 | [multilayer_content_identity.h](../../../../src/multilayer_content_identity.h) | Exact package/version preflight and activated package/actual-slot label-uniqueness validation |
-| [multilayer_recipe.h](../../../../src/multilayer_recipe.h) | Bounded all-input pure planner; twelve manufacturing, ten mine/receiver and six geothermal recipe choices |
-| [multilayer_bootstrap.h](../../../../src/multilayer_bootstrap.h) | Nine paid Surface supply SKUs and eleven dated, cash/material-complete bootstrap milestones |
+| [multilayer_recipe.h](../../../../src/multilayer_recipe.h) | Bounded all-input pure planner; fourteen manufacturing, ten mine/receiver and six geothermal recipe choices |
+| [multilayer_bootstrap.h](../../../../src/multilayer_bootstrap.h) | Ten paid Surface supply SKUs and fourteen dated, cash/material-complete bootstrap milestones |
 | [multilayer_utility.h](../../../../src/multilayer_utility.h) | Checked generation integration, deterministic electricity/heat allocation proposals, native consumer effects and capped town bonus; no mutable runtime network |
 | [solar_power.h](../../../../src/solar_power.h) | Draft `SolarGenerationAccount`, `SolarMirrorID`, `MirrorAssignment` and `ComputeMirrorSolarOutput` signature; operational function intentionally remains Plan 12 work |
 | [multilayer_state.h](../../../../src/multilayer_state.h) | `MultiLayerStateSchema`, capture/staging/acceptance, `ValidateMultiLayerStateReferences`, canonical digest and desync logging; no fabricated feature records |
 | [sprite manifest](../../../../media/multilayer/contracts/multilayer_sprite_manifest.json) | Required `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source`, exact native geometry/state/preview coverage; final bitmap/packing sources remain planned |
 
-Final focused unit burst (normal Debug configuration, loader probe **OFF**) passed **876 assertions in 22 cases**. This covers only the newly delivered contracts; no full repository regression was run. Exact reproducible command from the repository root:
+Historical version1 focused unit burst (normal Debug configuration, loader probe **OFF**) passed **876 assertions in 22 cases**. This covers only the newly delivered contracts; no full repository regression was run. Exact reproducible command from the repository root:
 
 ```powershell
 $tags = '[multilayer-content-identity],[multilayer-profile-selection],[multilayer-content-contract],[multilayer-recipe],[multilayer-manufacturing],[multilayer-bootstrap],[multilayer-vehicle-catalogue],[multilayer-utility],[multilayer-power-effects],[multilayer-geothermal-bootstrap],[solar-power-contract],[multilayer-state-foundation],[multilayer-state-package-preview],[multilayer-state-digest]'

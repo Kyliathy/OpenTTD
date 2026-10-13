@@ -249,6 +249,9 @@ set_target_properties(openttd PROPERTIES OUTPUT_NAME "${BINARY_NAME}")
 # All other files are added via target_sources()
 
 if(MSVC)
+    # The complete network command serialization table exceeds COFF's section limit in Debug.
+    set_property(SOURCE src/network/network_command.cpp APPEND PROPERTY COMPILE_OPTIONS "$<$<CONFIG:Debug>:/bigobj>")
+
     # Add DPI manifest to project; other WIN32 targets get this via ottdres.rc
     target_sources(openttd PRIVATE "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
 

@@ -11,6 +11,7 @@
 #include "space.h"
 #include "vehicle_type.h"
 #include "multilayer_content.h"
+#include "company_type.h"
 #include <optional>
 
 struct DrawPixelInfo;
@@ -30,6 +31,16 @@ struct AsteroidBody {
 	bool operator==(const AsteroidBody &) const = default;
 };
 
+/** One sparse disclosure receipt per body; company removal clears its bit before ID reuse. */
+struct AsteroidKnowledgeRecord {
+	OrbitalBodyID body{0};
+	uint64_t surveyed_companies = 0;
+	bool operator==(const AsteroidKnowledgeRecord &) const = default;
+};
+struct AsteroidQuantityDisclosure { uint32_t remaining = 0, initial = 0; };
+struct SpaceVehicle;
+struct SpaceCraftRef;
+
 /** Persist generated records, never regenerate from current content defaults on reload. */
 struct AsteroidField {
 	uint16_t generation_version = 0;
@@ -39,6 +50,7 @@ struct AsteroidField {
 	SpaceTravelBand band;
 	std::vector<AsteroidBody> bodies;
 	std::vector<SpaceSurveyPreview> surveys;
+	std::vector<AsteroidKnowledgeRecord> knowledge; ///< Completed native scans only; ownerless preview surveys grant none.
 	bool operator==(const AsteroidField &) const = default;
 };
 
@@ -57,6 +69,7 @@ void TickAsteroidField();
 void ViewportAddSpaceEntities(const DrawPixelInfo &dpi);
 bool HandleSpaceEntityClick(const Viewport &viewport, int x, int y);
 void ShowSpaceSurveyWindow();
+void ShowSpaceSurveyWindow(SpaceCraftRef craft);
 void RefreshSpaceViewports();
 std::vector<OrbitalBodyID> QueryAsteroidBodies(SpacePoint min, SpacePoint max);
 
@@ -65,5 +78,14 @@ void StageLoadedAsteroidField(AsteroidField field);
 bool AcceptLoadedAsteroidField();
 void ValidateAsteroidLoadPreview();
 void ResetAsteroidLoadStaging();
+/** Sole player-facing quantity query. Invalid/spectator/unsurveyed companies see no amounts. */
+std::optional<AsteroidQuantityDisclosure> GetAsteroidQuantityDisclosure(CompanyID company, OrbitalBodyID body);
+bool CompleteAsteroidSurvey(const SpaceVehicle &vehicle);
+void ChangeAsteroidKnowledgeOwnership(Owner old_owner, Owner new_owner);
+bool ValidateAsteroidKnowledgeRecords(std::span<const AsteroidKnowledgeRecord> records, uint32_t body_count);
+bool ValidateAsteroidKnowledge();
+bool InstallLoadedAsteroidKnowledge(std::span<const AsteroidKnowledgeRecord> records);
+bool AcceptLoadedAsteroidKnowledge();
+void ValidateAsteroidKnowledgeLoadPreview();
 
 #endif /* ASTEROID_H */

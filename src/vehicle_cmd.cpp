@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "space_vehicle.h"
+#include "space_manifest.h"
 #include "underground_vehicle.h"
 #include "transport_tube.h"
 #include "roadveh.h"
@@ -270,6 +271,9 @@ CommandCost CmdSellVehicle(DoCommandFlags flags, VehicleID v_id, bool sell_chain
 	if (front->type == VehicleType::Space) {
 		// Sale is permitted only stopped at orbital home with an empty hold.
 		const auto *space = SpaceVehicle::From(front);
+		if (HasSpaceManifestAssets(*space)) return CMD_ERROR;
+		if (space->construction.placement != SpacePlacement::Orbital && space->construction.placement != SpacePlacement::SurfaceStored) return CMD_ERROR;
+		if (space->construction.placement == SpacePlacement::SurfaceStored && ResolveLaunchCenter(space->construction.home) == nullptr) return CMD_ERROR;
 		if (!front->vehstatus.Test(VehState::Stopped) || space->position != space->home || front->cargo.TotalCount() != 0) return CMD_ERROR;
 		CommandCost result(ExpensesType::NewVehicles, -front->value);
 		if (flags.Test(DoCommandFlag::Execute)) delete front;
@@ -661,6 +665,8 @@ CommandCost CmdStartStopVehicle(DoCommandFlags flags, VehicleID veh_id, bool eva
 			break;
 
 		case VehicleType::Space:
+			if (SpaceVehicle::From(v)->construction.placement != SpacePlacement::Orbital) return CMD_ERROR;
+			break;
 		case VehicleType::Ship:
 		case VehicleType::Road:
 			break;

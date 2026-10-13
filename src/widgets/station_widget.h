@@ -33,6 +33,7 @@ enum StationViewWidgets : WidgetID {
 	WID_SV_LAUNCH_HUB,         ///< Explicit Surface freight hub selector.
 	WID_SV_LAUNCH_COLLECTION,  ///< Separate collection-circle overlay.
 	WID_SV_LAUNCH_HUB_SEL,     ///< Hide hub controls outside supported Surface stations.
+	WID_SV_LAUNCH_ASSEMBLY,    ///< Open the owned native launch workshop.
 };
 
 /** Widgets of the #CompanyStationsWindow class. */

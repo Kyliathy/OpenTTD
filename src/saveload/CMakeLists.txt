@@ -4,6 +4,12 @@ add_subdirectory(compat)
 
 add_files(
     afterload.cpp
+    space_order_sl.cpp
+    space_production_sl.cpp
+    space_manifest_sl.cpp
+    space_pod_sl.cpp
+    space_transition_sl.cpp
+    space_descent_sl.cpp
     ai_sl.cpp
     airport_sl.cpp
     animated_tile_sl.cpp

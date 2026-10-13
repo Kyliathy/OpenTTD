@@ -91,6 +91,14 @@ The selected Temperate Multilayer Industry profile uses bundled NewGRF definitio
 
 Save version 371 records this profile/identity separately from ordinary `NGRF` mappings. Preview and preactivation checks do not publish live policy; actual loading checks exact package identity before sprites and cargo uniqueness afterward. Legacy files retain their existing content rules. The two-route ore/processor/vehicle spike is opt-in (`OPTION_MULTILAYER_LOADER_PROBE`, default OFF); its native registration is excluded from normal builds. [Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) distinguishes tested definitions/contracts from pending runtime/art acceptance.
 
+Space definition revision2 is independent of that unchanged cargo package1 and
+ground profile1. `multilayer_space_content.h` owns Steel/Goods construction,
+probe roles19/20, payload mass, processing and mission budgets; save410's `SDEF`
+pins its exact signature. Original logical IDs0..18 and paid old objects retain
+their meanings. Unknown Space content refuses loading/preview; an older absent
+family migrates definitions without granting craft, stock or survey knowledge.
+Operational commissioning and art remain feature-owned.
+
 ## Action dispatch
 
 `InvokeGrfActionHandler::funcs` (`src/newgrf.cpp` lines 1230–1233). Empty specializations are omitted from the "does work" column; the file still defines all six stages.

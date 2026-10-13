@@ -21,6 +21,7 @@ inline constexpr SpaceSurveyID INVALID_SPACE_SURVEY{UINT32_MAX};
 inline constexpr int32_t SPACE_Q16 = 65536;
 inline constexpr uint32_t MAX_ORBITAL_BODIES = 14336;
 inline constexpr uint32_t MAX_SPACE_SURVEY_PREVIEWS = 64;
+struct SpaceTransition; ///< Actual native rocket transition is defined in space_transition.h.
 
 /** Layer-local tile centers, never stacked world Y or camera coordinates. */
 struct SpacePoint {

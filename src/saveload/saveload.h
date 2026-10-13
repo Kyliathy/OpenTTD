@@ -469,6 +469,12 @@ enum class SaveLoadVersion : uint16_t {
 	AsteroidPopulation, ///< Saveload version: 406\n Saved synchronized new-game asteroid population column.
 	LaunchCenters, ///< Saveload version: 407\n Native Surface launch-center anchors, rotations and monotonic reference generation.
 	LaunchCollectionHubs, ///< Saveload version: 408\n Exclusive native Surface freight membership with monotonic link generations.
+	SurfaceLaunchHandling, ///< Saveload version: 409\n Bounded timed launch-hub packet owners, generations, age and fractional handling costs.
+	SpaceContentAndOrders, ///< Saveload version: 410\n Independent exact Space definition identity and bounded typed native order queues.
+	SpaceLaunchAssembly, ///< Saveload version: 411\n Native paid hull/work/Surface placement and bounded center pad/workshop references.
+	SpaceLaunchLogistics, ///< Saveload version: 412\n Actual spacecraft supplies/service, paid passive pods and native rocket transitions/pad custody.
+	SpaceSurveyKnowledge, ///< Saveload version: 413\n Company-specific completed survey knowledge and native partial scan work.
+	SpaceOrbitalResupply, ///< Saveload version: 414\n Generation-checked craft destinations, paid resupply receipts and recoverable mining service waits.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

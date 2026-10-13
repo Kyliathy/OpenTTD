@@ -18,7 +18,13 @@ struct LaunchHubTransport {
 	std::vector<LaunchHubRecord> records;
 };
 static std::optional<LaunchHubTransport> _staged_launch_hubs;
-void ResetLaunchCenterLoadStaging() { _staged_launch_centers.reset(); _staged_launch_hubs.reset(); }
+struct SurfaceHandlingTransport {
+	uint64_t next = 1;
+	std::vector<SurfaceHandlingRecord> records;
+	std::vector<SurfaceHandlingCostRecord> costs;
+};
+static std::optional<SurfaceHandlingTransport> _staged_surface_handling;
+void ResetLaunchCenterLoadStaging() { _staged_launch_centers.reset(); _staged_launch_hubs.reset(); _staged_surface_handling.reset(); }
 
 static void WriteUnsigned(uint64_t value, uint8_t width)
 {
@@ -58,6 +64,8 @@ void ValidateLaunchCenterLoadPreview()
 	if (_load_check_data.launch_centers_active != ((_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0)) SlErrorCorrupt("Launch-center preview feature mismatch");
 	if (!_load_check_data.launch_hubs_present && !IsSavegameVersionBefore(SaveLoadVersion::LaunchCollectionHubs)) SlErrorCorrupt("Missing launch-hub preview family");
 	if (_load_check_data.launch_hubs_active != ((_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_LAUNCH_HUBS) != 0)) SlErrorCorrupt("Launch-hub preview feature mismatch");
+	if (!_load_check_data.surface_handling_present && !IsSavegameVersionBefore(SaveLoadVersion::SurfaceLaunchHandling)) SlErrorCorrupt("Missing Surface handling preview family");
+	if (_load_check_data.surface_handling_active != ((_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_SURFACE_HANDLING) != 0)) SlErrorCorrupt("Surface handling preview feature mismatch");
 }
 
 struct LCTRChunkHandler : ChunkHandler {
@@ -108,6 +116,8 @@ struct LCTRChunkHandler : ChunkHandler {
 			(Active(data) && _load_check_data.map_layers < 3)) SlErrorCorrupt("Invalid launch-center preview geometry");
 		_load_check_data.launch_centers_present = true;
 		_load_check_data.launch_centers_active = Active(data);
+		for (const auto &r : data.records) _load_check_data.launch_center_preview_refs.push_back({r.station, r.anchor.generation});
+		_load_check_data.launch_center_preview_rows = data.records;
 	}
 };
 static const LCTRChunkHandler LCTR;
@@ -186,5 +196,98 @@ struct LCHBChunkHandler : ChunkHandler {
 	}
 };
 static const LCHBChunkHandler LCHB;
-static const ChunkHandlerRef launch_center_handlers[] = {LCTR, LCHB};
+
+bool AcceptLoadedSurfaceHandling()
+{
+	if (!_staged_surface_handling) return IsSavegameVersionBefore(SaveLoadVersion::SurfaceLaunchHandling) && InstallLoadedSurfaceHandling({}, {}, 1);
+	const auto &data = *_staged_surface_handling;
+	if (!InstallLoadedSurfaceHandling(data.records, data.costs, data.next)) return false;
+	_staged_surface_handling.reset();
+	return true;
+}
+
+struct LHNDChunkHandler : ChunkHandler {
+	LHNDChunkHandler() : ChunkHandler("LHND", ChunkType::Riff) {}
+	static bool Active(const SurfaceHandlingTransport &data) { return data.next != 1 || !data.records.empty() || !data.costs.empty(); }
+	void Save() const override
+	{
+		if (!ValidateSurfaceHandling()) SlErrorCorrupt("Invalid native Surface handling state");
+		const SurfaceHandlingTransport data{GetNextSurfaceHandlingID(), CaptureSurfaceHandling(), CaptureSurfaceHandlingCosts()};
+		size_t length = 11 + 11 * data.costs.size();
+		for (const auto &record : data.records) length += 35 + 6 * record.packets.size();
+		SlSetLength(length);
+		WriteUnsigned(data.next, 8); WriteUnsigned(data.records.size(), 2); WriteUnsigned(data.costs.size(), 1);
+		for (const auto &record : data.records) {
+			WriteUnsigned(record.id, 8);
+			WriteUnsigned(record.center.station.base(), 2); WriteUnsigned(record.center.generation, 8);
+			WriteUnsigned(record.member.station.base(), 2); WriteUnsigned(record.member.generation, 8);
+			WriteUnsigned(to_underlying(record.cargo), 1); WriteUnsigned(record.reverse, 1);
+			WriteUnsigned(record.remaining_ticks, 2); WriteUnsigned(record.age_ticks, 2); WriteUnsigned(record.packets.size(), 1);
+			for (const auto &[packet, hop] : record.packets) { WriteUnsigned(packet.base(), 4); WriteUnsigned(hop.base(), 2); }
+		}
+		for (const auto &cost : data.costs) { WriteUnsigned(cost.center.station.base(), 2); WriteUnsigned(cost.center.generation, 8); WriteUnsigned(cost.remainder, 1); }
+	}
+	SurfaceHandlingTransport Read() const
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::SurfaceLaunchHandling)) SlErrorCorrupt("Unexpected Surface handling in old save");
+		const auto length = SlGetFieldLength();
+		constexpr size_t maximum = 11 + 11 * MAX_LAUNCH_CENTERS + MAX_LAUNCH_CENTERS * MAX_SURFACE_HANDLING_JOBS * (35 + 6 * MAX_SURFACE_HANDLING_QUANTITY);
+		if (length < 11 || length > maximum) SlErrorCorrupt("Invalid Surface handling family length");
+		SurfaceHandlingTransport data;
+		data.next = ReadUnsigned(8);
+		const auto count = ReadUnsigned(2), costs = ReadUnsigned(1);
+		if (count > MAX_LAUNCH_CENTERS * MAX_SURFACE_HANDLING_JOBS || costs > MAX_LAUNCH_CENTERS) SlErrorCorrupt("Invalid Surface handling count");
+		size_t consumed = 11;
+		data.records.reserve(static_cast<size_t>(count));
+		for (size_t i = 0; i < count; ++i) {
+			if (consumed + 35 > length) SlErrorCorrupt("Truncated Surface handling job");
+			SurfaceHandlingRecord record;
+			record.id = ReadUnsigned(8);
+			record.center.station = StationID{static_cast<uint16_t>(ReadUnsigned(2))}; record.center.generation = ReadUnsigned(8);
+			record.member.station = StationID{static_cast<uint16_t>(ReadUnsigned(2))}; record.member.generation = ReadUnsigned(8);
+			record.cargo = CargoType{static_cast<uint8_t>(ReadUnsigned(1))};
+			const auto reverse = ReadUnsigned(1);
+			if (reverse > 1) SlErrorCorrupt("Invalid Surface handling direction");
+			record.reverse = reverse != 0;
+			record.remaining_ticks = static_cast<uint16_t>(ReadUnsigned(2)); record.age_ticks = static_cast<uint16_t>(ReadUnsigned(2));
+			const auto packets = ReadUnsigned(1);
+			consumed += 35 + 6 * packets;
+			if (packets == 0 || packets > MAX_SURFACE_HANDLING_QUANTITY || consumed > length) SlErrorCorrupt("Invalid Surface handling packet count");
+			for (size_t j = 0; j < packets; ++j) {
+				const auto packet = CargoPacketID{static_cast<uint32_t>(ReadUnsigned(4))};
+				const auto hop = StationID{static_cast<uint16_t>(ReadUnsigned(2))};
+				record.packets.emplace_back(packet, hop);
+			}
+			data.records.push_back(std::move(record));
+		}
+		if (consumed + 11 * costs != length) SlErrorCorrupt("Invalid Surface handling cost length");
+		for (size_t i = 0; i < costs; ++i) {
+			const auto station = StationID{static_cast<uint16_t>(ReadUnsigned(2))};
+			const auto generation = ReadUnsigned(8);
+			const auto remainder = static_cast<uint8_t>(ReadUnsigned(1));
+			data.costs.push_back({{station, generation}, remainder});
+		}
+		if (!ValidateSurfaceHandlingRecords(data.records, data.costs, data.next)) SlErrorCorrupt("Invalid Surface handling transport");
+		return data;
+	}
+	void Load() const override { _staged_surface_handling = this->Read(); }
+	void FixPointers() const override
+	{
+		if (!SlIsFixingPointers()) return;
+		const auto *metadata = GetPendingMultiLayerStateSchema();
+		const bool expected = metadata != nullptr && (metadata->feature_flags & MULTILAYER_FEATURE_SURFACE_HANDLING) != 0;
+		if (!_staged_surface_handling) {
+			if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceLaunchHandling) || expected) SlErrorCorrupt("Missing Surface handling family");
+		} else if (Active(*_staged_surface_handling) != expected) SlErrorCorrupt("Surface handling feature mismatch");
+	}
+	void LoadCheck([[maybe_unused]] size_t length) const override
+	{
+		const auto data = this->Read();
+		if (Active(data) && _load_check_data.map_layers < 3) SlErrorCorrupt("Surface handling preview needs Surface/Space geometry");
+		_load_check_data.surface_handling_present = true;
+		_load_check_data.surface_handling_active = Active(data);
+	}
+};
+static const LHNDChunkHandler LHND;
+static const ChunkHandlerRef launch_center_handlers[] = {LCTR, LCHB, LHND};
 extern const ChunkHandlerTable _launch_center_chunk_handlers(launch_center_handlers);

@@ -60,6 +60,7 @@ private:
 	template <class Tinst, class Tcont> friend class CargoList;
 	friend class VehicleCargoList;
 	friend class StationCargoList;
+	friend class HubCargoTransfer;
 	/** We want this to be saved, right? */
 	friend SaveLoadTable GetCargoPacketDesc();
 public:
@@ -386,6 +387,7 @@ public:
 	friend class CargoRemoval;
 	friend class CargoReturn;
 	friend class VehicleCargoReroute;
+	friend class HubCargoTransfer;
 
 	/**
 	 * Returns the first station of the first cargo packet in this list.
@@ -536,6 +538,7 @@ public:
 	friend class CargoReservation;
 	friend class CargoReturn;
 	friend class StationCargoReroute;
+	friend class HubCargoTransfer;
 
 	static void InvalidateAllFrom(Source src);
 

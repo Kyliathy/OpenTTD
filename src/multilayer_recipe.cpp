@@ -33,6 +33,9 @@ static constexpr MultiLayerRecipeCargo _ice_outputs[] = {{CargoLabel{"PROP"}, 1}
 static constexpr MultiLayerRecipeCargo _orbital_nickel_inputs[] = {{CargoLabel{"NORE"}, 4}};
 static constexpr MultiLayerRecipeCargo _mirror_inputs[] = {{CargoLabel{"SCMP"}, 2}, {CargoLabel{"ELEC"}, 1}};
 static constexpr MultiLayerRecipeCargo _mirror_outputs[] = {{CargoLabel{"SMIK"}, 1}};
+static constexpr MultiLayerRecipeCargo _orbital_steel_outputs[] = {{CargoLabel{"STEL"}, 2}};
+static constexpr MultiLayerRecipeCargo _orbital_goods_inputs[] = {{CargoLabel{"STEL"}, 2}, {CargoLabel{"RARE"}, 1}};
+static constexpr MultiLayerRecipeCargo _orbital_goods_outputs[] = {{CargoLabel{"GOOD"}, 4}};
 
 /* Alternative rows share facility stock/work. Selecting one stable recipe never runs every alternative at once. */
 static const MultiLayerManufacturingRecipe _manufacturing_recipes[] = {
@@ -48,6 +51,8 @@ static const MultiLayerManufacturingRecipe _manufacturing_recipes[] = {
 	{"Orbital processor", MapLayer::Space, TimerGameCalendar::Year{1995}, {MultiLayerRecipeID{"PICE"}, _ice_inputs, _ice_outputs, 74, 4}, 1024, 1024},
 	{"Orbital processor", MapLayer::Space, TimerGameCalendar::Year{1995}, {MultiLayerRecipeID{"OREF"}, _orbital_nickel_inputs, _metal_outputs, 74, 4}, 1024, 1024},
 	{"Mirror-kit works", MapLayer::Surface, TimerGameCalendar::Year{1980}, {MultiLayerRecipeID{"MKIT"}, _mirror_inputs, _mirror_outputs, 148, 2}, 1024, 512},
+	{"Orbital Steelworks", MapLayer::Space, TimerGameCalendar::Year{1995}, {MultiLayerRecipeID{"OSTL"}, _orbital_nickel_inputs, _orbital_steel_outputs, 74, 4, CT_INVALID, 0, 0, 55500}, 1024, 1024, 32},
+	{"Orbital Goodsworks", MapLayer::Space, TimerGameCalendar::Year{1995}, {MultiLayerRecipeID{"OGDS"}, _orbital_goods_inputs, _orbital_goods_outputs, 74, 4, CT_INVALID, 0, 0, 55500}, 1024, 1024, 16},
 };
 
 /**

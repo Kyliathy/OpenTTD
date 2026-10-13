@@ -158,6 +158,54 @@ unchanged original ground capital separately. Preserve saved old builds and
 paid packets with an explicit version migration; no retroactive material bill,
 free survey, manufactured stock or completed blueprint is permitted.
 
+### Group12B numerical reconciliation
+
+Compiled revision2 lives in `multilayer_space_content.h`. Hull preparation is
+148 ticks. The first mining manifest is14t, with2,720 material cost,104,000
+body/pod capital and the unchanged25,900 two-return operating debit above.
+Construction manifests remain26t and22t, including8t builder bodies and2t
+service preloads. The Core's28t of loose inputs is delivered once through the
+blueprint job; its capital700,000 and740 work plus74 activation ticks are
+separate from both reusable builders'200,000 and296 assembly ticks.
+
+For the two Core flights, preparation/flight/return/turnaround sum to
+`2 * (148 + 222 + 222 + 74) = 1,332` rocket ticks. A sequential import-to-Core
+budget adds296 builder-assembly and814 construction/activation ticks, giving
+2,442 ticks excluding freight travel/waiting and the rocket's initial hull
+assembly. The two rocket round trips use30kL,10,000 mission fee and3,000 active
+pad cost. Independently starting with16kL needs14 more; the cumulative graph
+has already spent15 on mining and therefore buys29 more for these flights.
+
+An ore-to-Goods batch path consumes NORE4t and RARE1t. `OSTL` uses74 work ticks
+and55,500J, passes exactly2t Steel to `OGDS`, which uses another74/55,500J,
+produces4 crates(2t) and records1t residue. Steelworks records the other2t
+residue. Total input5t equals product2t plus residue3t, with111,000J granted
+through the shared utility owner. Reuse reserves those four crates once for a
+construction recipe; a drop instead transfers their existing packets through
+descent/hub owners. Neither choice debits a reserve or pays a delivery again.
+The runtime reservation, production and provenance gates remain pending.
+
+A complete reuse/drop branch starts with NORE4t, RARE1t and separately imported
+STEL4t:9t total. The two batches above leave STEL4t + GOOD4 crates(2t), with3t
+recorded residue. Reserving those four crates for a mirror consumes both stocks
+once into6t of hardware,148 deployment ticks and40,000 capital;6+3=9t. Its
+Surface farm remains a separate build. Alternatively, retain the4t Steel in
+orbit and drop only the four Goods crates as a2t payload. A separately paid
+2t shell costs STEL1/GOOD2(340 material),2,000 assembly and74 ticks; its148-tick
+descent expends that shell only on valid receipt. Including the shell, initial
+11t equals4t orbital Steel +2t Surface Goods +3t residue +2t spent shell.
+Handling those four crates costs2, with no per-crate rounding. A single exclusive
+reservation prevents both consuming the same Goods in a mirror and dropping it;
+processing, reuse, launch and handling award no extra delivery income. These
+worked alternatives constrain the still-pending physical producers.
+
+Original ground capital remains1,680,000. The full revised14-row graph totals
+4,144,000 capital plus91,030 supplies, including105kL for seven flights and the
+separate Surface mirror target. The5,000,000 seed leaves764,970 before recurring
+operations, or719,470 after seven mission/pad windows. Shared service/stock/panel
+and750J-per-station-work-tick defaults are exported beside the recipes; no
+onboard construction probe needs a station's electricity to build the first Core.
+
 ## Group 14 - launch, returns and Surface-supplied orbital assembly
 
 **Historical version1 rows below:** the Space construction materials, pod mass,

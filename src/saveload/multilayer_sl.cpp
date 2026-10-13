@@ -10,6 +10,7 @@
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../multilayer_state.h"
+#include "../multilayer_space_content.h"
 #include "../fios.h"
 
 #include "../safeguards.h"
@@ -160,5 +161,59 @@ struct MLMDChunkHandler : ChunkHandler {
 };
 
 static const MLMDChunkHandler MLMD;
-static const ChunkHandlerRef multilayer_chunk_handlers[] = {MLMD};
+
+static std::optional<std::pair<uint16_t, uint64_t>> _space_content_candidate;
+void ResetSpaceContentLoadStaging() { _space_content_candidate.reset(); }
+
+void ValidateSpaceContentLoadPreview()
+{
+	if (!_load_check_data.space_content_present) {
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders)) SlErrorCorrupt("Missing Space content identity");
+		return; // Explicit legacy migration changes no paid object, packet, reserve or knowledge.
+	}
+	if (!IsSupportedMultiLayerSpaceContent(static_cast<MultiLayerGameplayProfileID>(_load_check_data.gameplay_profile_id), _load_check_data.space_content_version, _load_check_data.space_content_signature)) SlErrorCorrupt("Unsupported Space content identity");
+}
+
+/** Independent Space revision keeps original cargo/package/profile and old paid VEHS identities unchanged. */
+struct SDEFChunkHandler : ChunkHandler {
+	SDEFChunkHandler() : ChunkHandler("SDEF", ChunkType::Riff) {}
+	static void Write(uint64_t value, uint width) { for (int shift = (width - 1) * 8; shift >= 0; shift -= 8) SlWriteByte(static_cast<uint8_t>(value >> shift)); }
+	static uint64_t ReadInteger(uint width) { uint64_t value = 0; while (width-- != 0) value = (value << 8) | SlReadByte(); return value; }
+	void Save() const override
+	{
+		const bool selected = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
+		SlSetLength(10); Write(selected ? MULTILAYER_SPACE_CONTENT_VERSION : 0, 2); Write(selected ? GetMultiLayerSpaceContentSignature() : 0, 8);
+	}
+	std::pair<uint16_t, uint64_t> Read() const
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders) || SlGetFieldLength() != 10) SlErrorCorrupt("Invalid Space content family");
+		const auto version = static_cast<uint16_t>(ReadInteger(2)); const auto signature = ReadInteger(8);
+		return {version, signature};
+	}
+	void Load() const override
+	{
+		if (_space_content_candidate) SlErrorCorrupt("Repeated Space content identity");
+		_space_content_candidate = this->Read();
+	}
+	void FixPointers() const override
+	{
+		if (!SlIsFixingPointers()) return;
+		if (!_space_content_candidate) {
+			if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders)) SlErrorCorrupt("Missing Space content identity");
+			return;
+		}
+		const auto *schema = GetPendingMultiLayerStateSchema();
+		const auto profile = schema == nullptr ? MultiLayerGameplayProfileID::Classic : schema->profile.id;
+		if (!IsSupportedMultiLayerSpaceContent(profile, _space_content_candidate->first, _space_content_candidate->second)) SlErrorCorrupt("Unsupported Space content identity");
+	}
+	void LoadCheck([[maybe_unused]] size_t len) const override
+	{
+		if (_load_check_data.space_content_present) SlErrorCorrupt("Repeated Space content preview");
+		const auto [version, signature] = this->Read();
+		_load_check_data.space_content_present = true;
+		_load_check_data.space_content_version = version; _load_check_data.space_content_signature = signature;
+	}
+};
+static const SDEFChunkHandler SDEF;
+static const ChunkHandlerRef multilayer_chunk_handlers[] = {MLMD, SDEF};
 extern const ChunkHandlerTable _multilayer_chunk_handlers(multilayer_chunk_handlers);

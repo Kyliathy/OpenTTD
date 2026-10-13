@@ -71,10 +71,23 @@ bool FiosItemSorter(const FiosItem &a, const FiosItem &b)
  */
 void LoadCheckData::Clear()
 {
+	this->next_space_vehicle_generation = 1; this->native_space_vehicle_rows.clear();
+	this->space_production_present = this->launch_operations_present = false;
+	this->space_manifests_present = false; this->space_manifest_rows.clear();
+	this->space_pods_present = false; this->next_space_pod_generation = 1; this->space_pod_rows.clear();
+	this->space_transitions_present = false; this->space_transition_rows.clear();
+	this->space_production_rows.clear(); this->launch_operations_rows.clear();
+	this->space_order_preview_refs.clear(); this->launch_center_preview_refs.clear();
+	this->space_order_preview_rows.clear(); this->asteroid_knowledge_present = false; this->asteroid_body_count = 0; this->asteroid_knowledge_rows.clear();
+	this->launch_center_preview_rows.clear(); this->space_descents_present = false; this->next_space_descent_id = 1; this->space_descent_rows.clear();
+	this->space_content_present = this->space_orders_present = false;
+	this->space_orders_active = false;
+	this->space_content_version = 0; this->space_content_signature = 0;
 	this->asteroid_present = this->asteroid_active = false;
 	this->asteroid_seed = this->orbital_seed = 0;
 	this->launch_centers_present = this->launch_centers_active = false;
 	this->launch_hubs_present = this->launch_hubs_active = false;
+	this->surface_handling_present = this->surface_handling_active = false;
 	this->checkable = false;
 	this->error = INVALID_STRING_ID;
 	this->error_msg.clear();

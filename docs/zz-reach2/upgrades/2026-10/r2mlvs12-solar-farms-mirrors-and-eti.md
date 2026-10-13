@@ -54,7 +54,9 @@ and its revised6t payload recipe. Earth assembly consumes materials once;
 deployment retains that paid payload identity. Later orbital manufacture
 requires completed facilities and actual stock. The old SMIK/RFMT-only mirror
 build is superseded; existing solar output/assignment and Surface farm rules
-remain unchanged. New recipe/version acceptance is pending Plan1 Group12B.
+remain unchanged. Plan1 Group12B now freezes recipe/version definitions in
+`multilayer_space_content.h`; actual mirror assembly/deployment acceptance remains
+pending its producers.
 
 Surface solar farms receive useful additional power from launched orbital mirrors. Each supported farm has at most one +300% bonus, for 4x baseline output.
 

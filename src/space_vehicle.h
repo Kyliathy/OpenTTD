@@ -7,9 +7,13 @@
 #define SPACE_VEHICLE_H
 #include "vehicle_base.h"
 #include "space.h"
+#include "space_orders.h"
+#include "space_production.h"
 
 inline constexpr uint16_t SPACE_PROBE_MODEL = 15;
 inline constexpr uint32_t MAX_SPACE_VEHICLES = 64;
+struct SpaceManifest;
+struct SpaceTransition;
 
 enum class SpaceMissionPhase : uint8_t { Idle, Approach, Mining, Return, Holding };
 /** Body IDs are monotonic field identities; no station-order destination aliasing. */
@@ -28,7 +32,12 @@ struct SpaceVehicle final : SpecializedVehicle<SpaceVehicle, VehicleType::Space>
 	SpacePoint position, home;
 	SpaceMission mission;
 	uint32_t extracted_units = 0;
-	SpaceVehicle(VehicleID index) : SpecializedVehicleBase(index) {}
+	uint64_t generation = 0;
+	SpaceOrderQueue space_orders;
+	SpaceConstructionState construction;
+	std::unique_ptr<SpaceManifest> manifest; ///< Real fuel/service packet compartments and carried native body references.
+	std::unique_ptr<SpaceTransition> transition; ///< The same paid rocket owns its complete launch/recovery work and history.
+	SpaceVehicle(VehicleID index);
 	~SpaceVehicle() override;
 	bool IsPrimaryVehicle() const override { return true; }
 	bool Tick() override;
@@ -50,5 +59,6 @@ uint64_t ComputeSpaceVehicleDigest();
 /** Explicit demo setup only: retire survey records, debit purchases, allocate ordinary Vehicle identities. */
 bool PrepareNativeSpaceMiningDemo();
 void ReleaseSpaceMiningSlot(SpaceVehicle &vehicle);
+CommandCost AssignSpaceMiningMission(SpaceVehicle &vehicle, uint32_t body, bool execute);
 
 #endif /* SPACE_VEHICLE_H */

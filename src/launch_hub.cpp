@@ -116,7 +116,7 @@ static bool ValidatePhysicalLaunchHubs(std::span<const LaunchHubRecord> records)
 		const auto *center = ResolveLaunchCenter(record.center);
 		if (center == nullptr || center->launch_hub == nullptr) return false;
 		for (const auto ref : record.members) {
-			const auto *member = Station::GetIfValid(ref.station);
+			auto *member = Station::GetIfValid(ref.station);
 			if (member == nullptr || member->launch_center != nullptr || !IsLaunchHubEligible(*center, *member)) return false;
 		}
 	}
@@ -154,6 +154,7 @@ uint64_t ComputeLaunchHubDigest()
 
 void ResetLaunchHubs()
 {
+	ResetSurfaceHandling();
 	for (const auto ref : GetLaunchCenterReferences()) SetViewportLaunchCollection(ref.station, ref.generation, false);
 	for (auto *station : Station::Iterate()) station->launch_hub.reset();
 	_next_launch_hub_member_generation = 1;
@@ -162,6 +163,7 @@ void ResetLaunchHubs()
 /** Membership changes retain all native packets at their existing Station owner. */
 void ForgetLaunchHubStation(Station &station)
 {
+	SettleSurfaceHandlingForStation(station, Station::CleaningPool());
 	bool changed = station.launch_hub != nullptr;
 	for (const auto &record : GetLaunchCenterReferences()) {
 		auto *center = Station::Get(record.station);
@@ -187,8 +189,9 @@ void RevalidateLaunchHubMemberships()
 		auto *center = Station::Get(record.station);
 		if (center->launch_hub == nullptr) continue;
 		std::erase_if(center->launch_hub->members, [&](const auto ref) {
-			const auto *member = Station::GetIfValid(ref.station);
+			auto *member = Station::GetIfValid(ref.station);
 			if (member != nullptr && member->launch_center == nullptr && IsLaunchHubEligible(*center, *member)) return false;
+			if (member != nullptr) SettleSurfaceHandlingForStation(*member);
 			SetWindowDirty(WindowClass::StationView, ref.station); SetWindowDirty(WindowClass::StationView, center->index);
 			changed = true;
 			return true;
@@ -212,10 +215,11 @@ CommandCost CmdSetLaunchHub(DoCommandFlags flags, StationID member_id, StationID
 	}
 	const auto old = GetLaunchHubMembership(member_id);
 	if (old && old->center == LaunchCenterRef{center_id, generation}) return CommandCost();
+	// A deliberate unlink/reselection waits for its current physical handling to settle.
+	if (HasSurfaceHandlingForStation(member_id)) return CommandCost(STR_ERROR_LAUNCH_HANDLING_ACTIVE);
 	if (center != nullptr && (center->launch_hub->members.size() >= MAX_LAUNCH_HUB_MEMBERS || _next_launch_hub_member_generation == UINT64_MAX))
 		return CommandCost(STR_ERROR_LAUNCH_HUB_LIMIT);
 	if (flags.Test(DoCommandFlag::Execute)) {
-		// There are no handling jobs in this producer. The handling owner must settle/refuse outstanding work before this boundary is extended.
 		ForgetLaunchHubStation(*member);
 		if (center != nullptr) {
 			center->launch_hub->members.push_back({member_id, _next_launch_hub_member_generation++});

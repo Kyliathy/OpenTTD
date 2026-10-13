@@ -1694,6 +1694,1289 @@
         }
       ],
       "invocation": "python -B src/tests/multilayer/acceptance/launch_center_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/surface_handling_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "surface-handling-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-build"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-job-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-cargo"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-direction"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-packets"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-center-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-member-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-reject-orphan-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-job-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-cargo"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-direction"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-preview-packets"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/surface_handling_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_order_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orders-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-build"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-removed"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-content-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-content-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-content-signature"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-orders-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-cursor"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-target-kind"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-body-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-role"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-reject-vehicle"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-content-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-content-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-content-signature"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-orders-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-counter"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-cursor"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-target-kind"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-preview-body-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-profiles-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-profile-classic-reload"
+        },
+        {
+          "feature": "space",
+          "scenario": "orders-profile-multilayer-industry-reload"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/space_order_checks.py [--configuration Debug] [--profiles-only]"
+    },
+    {
+      "producer": "src/tests/space_orders.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orders"
+        }
+      ],
+      "test_tags": [
+        "[space-order-contract]",
+        "[.space-orders]"
+      ],
+      "context_policy": "native Vehicle queue/generation ownership and real save writer; inherited invocation",
+      "invocation": "Run [.space-orders] through space_order_checks.py"
+    },
+    {
+      "producer": "src/tests/launch_production.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "assembly"
+        }
+      ],
+      "test_tags": [
+        "[launch-assembly-contract]",
+        "[.launch-assembly]"
+      ],
+      "context_policy": "native Station packet consumption and Vehicle receipt/work/placement ownership; actual synchronized command payment and save writer",
+      "invocation": "Run [.launch-assembly] through launch_assembly_checks.py"
+    },
+    {
+      "producer": "src/tests/space_logistics.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "logistics"
+        }
+      ],
+      "test_tags": [
+        "[space-logistics-contract]",
+        "[.launch-logistics]"
+      ],
+      "context_policy": "native Vehicle packet compartments, paid passive pod pool and actual freight/service owners; inherited invocation",
+      "invocation": "Run [.launch-logistics] through launch_logistics_checks.py"
+    },
+    {
+      "producer": "src/tests/launch_flight.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "flight"
+        }
+      ],
+      "test_tags": [
+        "[space-logistics-contract]",
+        "[.launch-flight]"
+      ],
+      "context_policy": "native rocket Vehicle transition/pad owner and paid dormant probe activation; inherited invocation",
+      "invocation": "Run [.launch-flight] through launch_flight_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_logistics_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "logistics-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-next-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-next-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-duplicate"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-duplicate"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-capital"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-capital"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-carrier-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-carrier-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-unowned-custody"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-unowned-custody"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-pod-boolean"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-pod-boolean"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-manifest-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-manifest-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-manifest-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-manifest-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-manifest-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-manifest-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-manifest-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-manifest-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-reject-manifest-pod-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "logistics-preview-manifest-pod-count"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_logistics_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_flight_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "flight-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ground-production"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-prepare-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-resume-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-replay-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ordinary-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-prepare-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-resume-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-replay-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ordinary-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-prepare-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-resume-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-replay-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ordinary-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-prepare-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-resume-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-replay-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ordinary-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-prepare-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-resume-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-replay-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-ordinary-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-phase"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-phase"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-layer"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-layer"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-recovery-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-recovery-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-producer"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-producer"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-upkeep-remainder"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-upkeep-remainder"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-early-burn"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-early-burn"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-flags"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-flags"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-paid-missions"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-paid-missions"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-completion"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-completion"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-reject-pad-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-preview-pad-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-resume-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-replay-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-ordinary-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-resume-orbit"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-replay-orbit"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-ordinary-orbit"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-resume-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-replay-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "flight-loss-ordinary-turnaround"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_flight_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/space_descent.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "descent"
+        }
+      ],
+      "test_tags": [
+        "[space-logistics-contract]",
+        "[.space-descent]"
+      ],
+      "context_policy": "real native mining, paid passive pod packet custody, explicit target recovery and onboard service; inherited invocation",
+      "invocation": "Run [.space-descent] through space_descent_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_descent_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "descent-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-ground-production"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-resume-drop"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-replay-drop"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-ordinary-drop"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-resume-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-replay-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-ordinary-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-next-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-next-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-pod-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-pod-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-job-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-job-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-sender-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-sender-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-quantity"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-age"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-block"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-block"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-packet-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-packet-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-duplicate-supply-owner"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-duplicate-supply-owner"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-reject-outside-circle"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-preview-outside-circle"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/space_descent_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/space_survey.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "survey"
+        }
+      ],
+      "test_tags": [
+        "[space-survey-contract]",
+        "[.space-survey]"
+      ],
+      "context_policy": "native material-paid launches, moving scans, company-private disclosure and real Company pool reuse; inherited invocation",
+      "invocation": "Run [.space-survey] through space_survey_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_survey_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "survey-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-ground-production"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-known-reload"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-ordinary-partial"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-ordinary-complete"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-repeated-family"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-repeated-family"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-body"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-body"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-empty-mask"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-empty-mask"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-mask-range"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-mask-range"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-removed-company"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-removed-company"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-timer"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-cursor"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-cursor"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-body-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-body-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-reject-scan-missing-body"
+        },
+        {
+          "feature": "space",
+          "scenario": "survey-preview-scan-missing-body"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/space_survey_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/space_resupply.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "resupply"
+        }
+      ],
+      "test_tags": [
+        "[space-resupply-contract]",
+        "[.space-resupply]"
+      ],
+      "context_policy": "actual paid native three-collection loop, same rocket/probe, cargo-only parts/pod/freight custody; inherited invocation",
+      "invocation": "Run [.space-resupply] through space_resupply_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_resupply_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "resupply-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-ground-production"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-freight-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-freight-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-freight-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-resume-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-replay-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-ordinary-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-resume-delivered"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-replay-delivered"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-ordinary-delivered"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-resume-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-replay-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-ordinary-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-future-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-future-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-self-target"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-self-target"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-target-kind"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-target-kind"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-early-receipt"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-early-receipt"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-deployed-receipt"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-deployed-receipt"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-busy-in-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-busy-in-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-wait-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-wait-started"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-reject-wait-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-preview-wait-action"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-blocked-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-blocked-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-blocked-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-blocked-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-lost-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-lost-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-lost-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-lost-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-resume-paused"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-replay-paused"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-ordinary-paused"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-descent"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "resupply-migration-survey"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/space_resupply_checks.py [--configuration Debug]"
     }
   ],
   "proof_cache": "logs/proofs/mlm/native-art",

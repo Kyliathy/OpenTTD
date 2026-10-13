@@ -25,6 +25,7 @@
 #include "core/endian_func.hpp"
 #include "timer/timer_game_calendar.h"
 #include "vehicle_base.h"
+#include "space_vehicle.h"
 #include "engine_base.h"
 #include "language.h"
 #include "string_func.h"
@@ -1831,7 +1832,17 @@ static void FormatString(StringBuilder &builder, std::string_view str_arg, Strin
 							case VehicleType::Road:     string_id = STR_SV_ROAD_VEHICLE_NAME; break;
 							case VehicleType::Ship:     string_id = STR_SV_SHIP_NAME; break;
 							case VehicleType::Aircraft: string_id = STR_SV_AIRCRAFT_NAME; break;
-							case VehicleType::Space: string_id = STR_SV_SPACE_NAME; break;
+							case VehicleType::Space:
+								switch (GetSpaceVehicleModel(*SpaceVehicle::From(v))) {
+									case 14: string_id = STR_SPACE_ROCKET_NAME; break;
+									case 15: string_id = STR_SV_SPACE_NAME; break;
+									case 16: string_id = STR_SPACE_HEAVY_ROBOT_NAME; break;
+									case 17: string_id = STR_SPACE_HAULER_NAME; break;
+									case 19: string_id = STR_SPACE_SURVEY_PROBE_NAME; break;
+									case 20: string_id = STR_SPACE_CONSTRUCTION_PROBE_NAME; break;
+									default: string_id = STR_SPACE_CRAFT_NAME; break;
+								}
+								break;
 						}
 
 						GetStringWithArgs(builder, string_id, tmp_params);

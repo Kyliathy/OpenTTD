@@ -39,24 +39,31 @@ static const MultiLayerSurfaceSupply _surface_supplies[] = {
 	{CargoLabel{"RBPT"}, TimerGameCalendar::Year{1980}, 750, 32},
 	{CargoLabel{"PROP"}, TimerGameCalendar::Year{1980}, 250, 64},
 	{CargoLabel{"SMIK"}, TimerGameCalendar::Year{1980}, 1500, 16},
+	{CargoLabel{"GOOD"}, TimerGameCalendar::Year{1950}, 120, 256},
 };
 
 static constexpr MultiLayerBootstrapStage _surface_route[] = {MultiLayerBootstrapStage::SurfaceRoute};
 static constexpr MultiLayerBootstrapStage _tbm_route[] = {MultiLayerBootstrapStage::SurfaceRoute, MultiLayerBootstrapStage::TBM};
 static constexpr MultiLayerBootstrapStage _deep_route[] = {MultiLayerBootstrapStage::SurfaceRoute, MultiLayerBootstrapStage::DeepTBM};
 static constexpr MultiLayerBootstrapStage _launch_route[] = {MultiLayerBootstrapStage::SurfaceRoute, MultiLayerBootstrapStage::Launch};
-static constexpr MultiLayerBootstrapStage _station_route[] = {MultiLayerBootstrapStage::Launch, MultiLayerBootstrapStage::Station};
+static constexpr MultiLayerBootstrapStage _station_route[] = {MultiLayerBootstrapStage::Launch, MultiLayerBootstrapStage::Station, MultiLayerBootstrapStage::Assembly};
+static constexpr MultiLayerBootstrapStage _builders_route[] = {MultiLayerBootstrapStage::SurfaceRoute, MultiLayerBootstrapStage::Launch, MultiLayerBootstrapStage::ConstructionProbes};
+static constexpr MultiLayerBootstrapStage _core_route[] = {MultiLayerBootstrapStage::Station};
 
 static constexpr MultiLayerRecipeCargo _tbm_materials[] = {{CargoLabel{"STEL"}, 8}, {CargoLabel{"RFMT"}, 4}};
 static constexpr MultiLayerRecipeCargo _tube_materials[] = {{CargoLabel{"STEL"}, 12}, {CargoLabel{"RFMT"}, 8}, {CargoLabel{"ELEC"}, 4}, {CargoLabel{"BATY"}, 2}};
 static constexpr MultiLayerRecipeCargo _deep_materials[] = {{CargoLabel{"STEL"}, 12}, {CargoLabel{"RFMT"}, 8}, {CargoLabel{"ELEC"}, 4}};
 static constexpr MultiLayerRecipeCargo _geo_materials[] = {{CargoLabel{"STEL"}, 24}, {CargoLabel{"RFMT"}, 16}, {CargoLabel{"ELEC"}, 8}, {CargoLabel{"BATY"}, 4}};
-static constexpr MultiLayerRecipeCargo _launch_materials[] = {{CargoLabel{"STEL"}, 24}, {CargoLabel{"RFMT"}, 16}, {CargoLabel{"SCMP"}, 8}, {CargoLabel{"ELEC"}, 8}, {CargoLabel{"PROP"}, 16}};
-/* Probe body (8 t), two expendable pods (2 t) and one service preload (2 t) all travel from Surface. */
-static constexpr MultiLayerRecipeCargo _probe_materials[] = {{CargoLabel{"SCMP"}, 4}, {CargoLabel{"RFMT"}, 5}, {CargoLabel{"ELEC"}, 3}};
-static constexpr MultiLayerRecipeCargo _mirror_materials[] = {{CargoLabel{"SMIK"}, 4}, {CargoLabel{"RFMT"}, 2}, {CargoLabel{"STEL"}, 8}, {CargoLabel{"ELEC"}, 4}};
-static constexpr MultiLayerRecipeCargo _station_materials[] = {{CargoLabel{"SCMP"}, 16}, {CargoLabel{"RFMT"}, 8}, {CargoLabel{"ELEC"}, 4}};
-static constexpr MultiLayerRecipeCargo _robot_materials[] = {{CargoLabel{"SCMP"}, 6}, {CargoLabel{"RBPT"}, 4}, {CargoLabel{"ELEC"}, 2}};
+static constexpr MultiLayerRecipeCargo _launch_materials[] = {{CargoLabel{"STEL"}, 24}, {CargoLabel{"RFMT"}, 16}, {CargoLabel{"SCMP"}, 8}, {CargoLabel{"ELEC"}, 8}, {CargoLabel{"PROP"}, 16}, {CargoLabel{"GOOD"}, 16}};
+/* Paid embodied hull, two 2t shells and service preload: 14/30t in the first mining payload. */
+static constexpr MultiLayerRecipeCargo _probe_materials[] = {{CargoLabel{"STEL"}, 6}, {CargoLabel{"GOOD"}, 12}, {CargoLabel{"RFMT"}, 1}, {CargoLabel{"ELEC"}, 1}};
+static constexpr MultiLayerRecipeCargo _survey_materials[] = {{CargoLabel{"STEL"}, 2}, {CargoLabel{"GOOD"}, 4}, {CargoLabel{"RFMT"}, 1}, {CargoLabel{"ELEC"}, 1}, {CargoLabel{"PROP"}, 15}};
+/* Two reusable builders plus two service preloads; Core materials are purchased separately. After the mining flight, the two Core flights require 29 extra fuel above the remaining 1. */
+static constexpr MultiLayerRecipeCargo _builder_materials[] = {{CargoLabel{"STEL"}, 8}, {CargoLabel{"GOOD"}, 16}, {CargoLabel{"RFMT"}, 2}, {CargoLabel{"ELEC"}, 2}, {CargoLabel{"PROP"}, 29}};
+static constexpr MultiLayerRecipeCargo _mirror_materials[] = {{CargoLabel{"STEL"}, 12}, {CargoLabel{"GOOD"}, 4}, {CargoLabel{"ELEC"}, 4}, {CargoLabel{"PROP"}, 15}};
+static constexpr MultiLayerRecipeCargo _station_materials[] = {{CargoLabel{"STEL"}, 16}, {CargoLabel{"GOOD"}, 24}};
+static constexpr MultiLayerRecipeCargo _assembly_materials[] = {{CargoLabel{"STEL"}, 8}, {CargoLabel{"GOOD"}, 16}, {CargoLabel{"PROP"}, 15}};
+static constexpr MultiLayerRecipeCargo _robot_materials[] = {{CargoLabel{"STEL"}, 6}, {CargoLabel{"GOOD"}, 12}, {CargoLabel{"RBPT"}, 4}, {CargoLabel{"ELEC"}, 2}, {CargoLabel{"PROP"}, 15}};
 
 static const MultiLayerBootstrapMilestone _bootstrap_milestones[] = {
 	{MultiLayerBootstrapStage::SurfaceRoute, "Surface origin, portal and conventional route", TimerGameCalendar::Year{1950}, {}, {}, 220000},
@@ -67,8 +74,11 @@ static const MultiLayerBootstrapMilestone _bootstrap_milestones[] = {
 	{MultiLayerBootstrapStage::Geothermal, "Collector, powerhouse and commissioned riser", TimerGameCalendar::Year{1980}, _deep_route, _geo_materials, 480000},
 	{MultiLayerBootstrapStage::Launch, "Launch center, rocket and Surface fuel", TimerGameCalendar::Year{1990}, _surface_route, _launch_materials, 900000},
 	{MultiLayerBootstrapStage::Probe, "First probe deployment", TimerGameCalendar::Year{1990}, _launch_route, _probe_materials, 104000},
+	{MultiLayerBootstrapStage::SurveyProbe, "Paid Earth survey probe and launch", TimerGameCalendar::Year{1990}, _launch_route, _survey_materials, 60000},
 	{MultiLayerBootstrapStage::Mirror, "First mirror and Surface solar target", TimerGameCalendar::Year{1990}, _launch_route, _mirror_materials, 120000},
-	{MultiLayerBootstrapStage::Station, "Surface-supplied station nucleus", TimerGameCalendar::Year{1995}, _launch_route, _station_materials, 700000},
+	{MultiLayerBootstrapStage::ConstructionProbes, "Two Earth construction probes and Core flights", TimerGameCalendar::Year{1995}, _launch_route, _builder_materials, 200000},
+	{MultiLayerBootstrapStage::Station, "Probe-built Surface-supplied Core", TimerGameCalendar::Year{1995}, _builders_route, _station_materials, 700000},
+	{MultiLayerBootstrapStage::Assembly, "Delivered completed orbital Assembly", TimerGameCalendar::Year{1995}, _core_route, _assembly_materials, 180000},
 	{MultiLayerBootstrapStage::HeavyRobot, "First station-assembled heavy robot", TimerGameCalendar::Year{1995}, _station_route, _robot_materials, 200000},
 };
 

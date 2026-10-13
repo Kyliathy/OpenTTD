@@ -3,6 +3,7 @@
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../launch_center.h"
+#include "../hub_cargo.h"
 #include "../asteroid.h"
 #include "../launch_center_cmd.h"
 #include "../station_base.h"
@@ -15,6 +16,7 @@
 #include "../command_func.h"
 #include "../landscape_cmd.h"
 #include "../water_cmd.h"
+#include "../road.h"
 #include "../waypoint_cmd.h"
 #include "../terraform_cmd.h"
 #include "../clear_map.h"
@@ -107,11 +109,222 @@ struct LaunchHubRig {
 	}
 	LaunchHubRig()
 	{
+		ResetRoadTypes(); // The isolated native lorry fixture needs the actual road registry.
 		ResetLaunchCenters();
 		first = Center(20); second = Center(27); member = Freight(TileXYL(24, 22, MapLayer::Surface));
 	}
 	~LaunchHubRig() { stations.clear(); ResetLaunchCenters(); }
 };
+
+TEST_CASE("Saved station names retain historical string identities", "[launch-name-compatibility]")
+{
+	STATIC_REQUIRE(STR_SV_STNAME.base() == 0x6006);
+	STATIC_REQUIRE(STR_SV_STNAME_NORTH.base() == 0x6007);
+	STATIC_REQUIRE(STR_SV_STNAME_BUOY.base() == 0x6017);
+	STATIC_REQUIRE(STR_SV_STNAME_WAYPOINT.base() == 0x6018);
+	STATIC_REQUIRE(STR_SV_STNAME_FALLBACK.base() == 0x6027);
+	STATIC_REQUIRE(STR_SV_SPACE_NAME.base() == 0x6028);
+}
+
+TEST_CASE("Hub packet moves preserve accounting without loading a vehicle", "[surface-handling-packets]")
+{
+	MockEnvironment::Instance();
+	LaunchHubRig rig;
+	const auto type = GetCargoTypeByLabel(CargoLabel{"NORE"});
+	auto &source = rig.first->goods[type].GetOrCreateData().cargo;
+	StationCargoList job{};
+	REQUIRE(CargoPacket::CanAllocateItem());
+	auto *packet = CargoPacket::Create(uint16_t{23}, uint16_t{7}, rig.first->index, rig.first->xy, Money{230});
+	source.Append(packet, rig.member->index);
+	const auto seeds = _random;
+	CHECK_FALSE(HubCargoTransfer::CanMove(source, 24));
+	CHECK(source.AvailableCount() == 23);
+	REQUIRE(HubCargoTransfer::CanMove(source, 9));
+	CHECK(source.AvailableCount() == 23); CHECK(job.AvailableCount() == 0);
+	CHECK(_random.state[0] == seeds.state[0]); CHECK(_random.state[1] == seeds.state[1]);
+	REQUIRE(HubCargoTransfer::Move(source, job, 9));
+	CHECK(source.AvailableCount() == 14); CHECK(job.AvailableCount() == 9);
+	CHECK(source.ReservedCount() == 0); CHECK(job.ReservedCount() == 0);
+	const auto *held = job.Packets()->begin()->second.front();
+	CHECK(held->GetSourceTile() == rig.first->xy); CHECK(held->GetFirstStation() == rig.first->index);
+	CHECK(held->GetPeriodsInTransit() == 7); CHECK(held->GetFeederShare() == 90);
+	CHECK(job.Packets()->begin()->first == rig.member->index);
+	HubCargoTransfer::Age(job); CHECK(job.PeriodsInTransit() == 8); CHECK(source.PeriodsInTransit() == 7);
+	REQUIRE(HubCargoTransfer::Move(job, source, 9));
+	CHECK(job.AvailableCount() == 0); CHECK(source.AvailableCount() == 23);
+	Money share = 0; for (const auto &[hop, packets] : *source.Packets()) for (const auto *cp : packets) share += cp->GetFeederShare();
+	CHECK(share == 230);
+}
+
+TEST_CASE("Timed Surface jobs reserve one owner and settle station lifecycle", "[surface-handling-native]")
+{
+	MockEnvironment::Instance();
+	LaunchHubRig rig;
+	const auto ref = GetLaunchCenterReference(*rig.first);
+	REQUIRE(CmdSetLaunchHub(DoCommandFlag::Execute, rig.member->index, ref.station, ref.generation).Succeeded());
+	const auto membership = *GetLaunchHubMembership(rig.member->index);
+	const auto type = GetCargoTypeByLabel(CargoLabel{"NORE"});
+	CargoSpec::Get(type)->weight = 16;
+	auto &source = rig.first->goods[type].GetOrCreateData().cargo;
+	auto &target = rig.member->goods[type].GetOrCreateData().cargo;
+	REQUIRE(CargoPacket::CanAllocateItem());
+	source.Append(CargoPacket::Create(uint16_t{20}, uint16_t{4}, rig.first->index, rig.first->xy, Money{200}), StationID::Invalid());
+	const auto money = Company::Get(_current_company)->money;
+	const auto before = ComputeSurfaceHandlingDigest();
+	CHECK(CmdStartSurfaceHandling({}, rig.member->index, membership.member.generation + 1, ref.station, ref.generation, type, 20, false).Failed());
+	REQUIRE(CmdStartSurfaceHandling({}, rig.member->index, membership.member.generation, ref.station, ref.generation, type, 20, false).Succeeded());
+	CHECK(ComputeSurfaceHandlingDigest() == before); CHECK(source.AvailableCount() == 20);
+	REQUIRE(CmdStartSurfaceHandling(DoCommandFlag::Execute, rig.member->index, membership.member.generation, ref.station, ref.generation, type, 20, false).Succeeded());
+	CHECK(source.AvailableCount() == 0); CHECK(target.AvailableCount() == 0);
+	REQUIRE(rig.first->launch_hub->handling.size() == 1);
+	CHECK(rig.first->launch_hub->handling.front()->packets.AvailableCount() == 20);
+	CHECK(rig.first->launch_hub->handling.front()->remaining_ticks == 3);
+	CHECK_FALSE(CanStartSurfaceHandling(ref, membership.member, type, 1, false));
+	REQUIRE(ValidateSurfaceHandling());
+	SECTION("shared throughput and fees debit only actual transferred quantity") {
+		TickSurfaceHandling(); CHECK(target.AvailableCount() == 8);
+		CHECK(Company::Get(_current_company)->money == money - 8);
+		CHECK(rig.first->launch_hub->handling.front()->packets.AvailableCount() == 12);
+		TickSurfaceHandling(); CHECK(target.AvailableCount() == 16);
+		TickSurfaceHandling(); CHECK(target.AvailableCount() == 20);
+		CHECK(rig.first->launch_hub->handling.empty());
+		CHECK(Company::Get(_current_company)->money == money - 20);
+		Money share = 0; for (const auto &[hop, packets] : *target.Packets()) for (const auto *cp : packets) { share += cp->GetFeederShare(); CHECK(cp->GetPeriodsInTransit() == 4); CHECK(cp->GetSourceTile() == rig.first->xy); }
+		CHECK(share == 200);
+		CHECK_FALSE(StartSurfaceHandling(ref, membership.member, type, 20, true)); // Mined ore is not an inbound rocket supply.
+		CHECK(source.AvailableCount() == 0); CHECK(target.AvailableCount() == 20);
+		CHECK(Company::Get(_current_company)->money == money - 20);
+	}
+	SECTION("unlink and center demolition refuse outstanding physical jobs") {
+		const auto digest = ComputeSurfaceHandlingDigest();
+		CHECK(CmdSetLaunchHub({}, rig.member->index, StationID::Invalid(), 0).Failed());
+		CHECK(CmdSetLaunchHub(DoCommandFlag::Execute, rig.member->index, StationID::Invalid(), 0).Failed());
+		CHECK(CmdRemoveLaunchCenter({}, rig.first->xy).Failed());
+		CHECK(ComputeSurfaceHandlingDigest() == digest);
+	}
+	SECTION("bounded job allocation refuses without another packet or identity") {
+		REQUIRE(CargoPacket::CanAllocateItem());
+		source.Append(CargoPacket::Create(rig.first->index, uint16_t{32}, Source{Source::Invalid, SourceType::Industry}), StationID::Invalid());
+		for (size_t i = 1; i < MAX_SURFACE_HANDLING_JOBS; ++i) REQUIRE(StartSurfaceHandling(ref, membership.member, type, 1, false));
+		const auto next = GetNextSurfaceHandlingID(), digest = ComputeSurfaceHandlingDigest();
+		CHECK_FALSE(StartSurfaceHandling(ref, membership.member, type, 1, false));
+		CHECK(GetNextSurfaceHandlingID() == next); CHECK(ComputeSurfaceHandlingDigest() == digest);
+		CHECK(source.AvailableCount() == 1); CHECK(target.AvailableCount() == 0);
+		CHECK(Company::Get(_current_company)->money == money);
+	}
+	SECTION("transport validation rejects duplicate packet claims and stale job identities") {
+		const auto records = CaptureSurfaceHandling(); const auto costs = CaptureSurfaceHandlingCosts();
+		const auto next = GetNextSurfaceHandlingID();
+		REQUIRE(records.size() == 1); CHECK(ValidateSurfaceHandlingRecords(records, costs, next));
+		auto invalid = records;
+		invalid.front().packets.push_back(invalid.front().packets.front()); CHECK_FALSE(ValidateSurfaceHandlingRecords(invalid, costs, next));
+		invalid = records; invalid.front().id = next; CHECK_FALSE(ValidateSurfaceHandlingRecords(invalid, costs, next));
+		invalid = records; invalid.front().age_ticks = 185; CHECK_FALSE(ValidateSurfaceHandlingRecords(invalid, costs, next));
+		invalid = records; invalid.front().member.generation = 0; CHECK_FALSE(ValidateSurfaceHandlingRecords(invalid, costs, next));
+		CHECK_FALSE(InstallLoadedSurfaceHandling(records, costs, next)); // Live packets cannot acquire a second owner.
+	}
+	SECTION("full target blocks without loss and continues ageing") {
+		REQUIRE(CargoPacket::CanAllocateItem());
+		target.Append(CargoPacket::Create(rig.member->index, uint16_t{1024}, Source{Source::Invalid, SourceType::Industry}), StationID::Invalid());
+		for (uint tick = 0; tick < 185; ++tick) TickSurfaceHandling();
+		CHECK(target.AvailableCount() == 1024); CHECK(Company::Get(_current_company)->money == money);
+		CHECK(rig.first->launch_hub->handling.front()->packets.AvailableCount() == 20);
+		CHECK(rig.first->launch_hub->handling.front()->packets.PeriodsInTransit() == 5);
+		target.Truncate(); TickSurfaceHandling(); CHECK(target.AvailableCount() == 8);
+	}
+	SECTION("footprint expansion returns uncompleted cargo before retiring membership") {
+		TickSurfaceHandling(); CHECK(target.AvailableCount() == 8);
+		const auto outside = TileXYL(41, 20, MapLayer::Surface);
+		MakeRailStation(outside, rig.member->owner, rig.member->index, Axis::X, 0, RAILTYPE_RAIL); rig.member->spread.Add(outside);
+		RevalidateLaunchHubMemberships();
+		CHECK_FALSE(GetLaunchHubMembership(rig.member->index)); CHECK(rig.first->launch_hub->handling.empty());
+		CHECK(source.AvailableCount() == 12); CHECK(target.AvailableCount() == 8);
+		CHECK(Company::Get(_current_company)->money == money - 8);
+	}
+	SECTION("member deletion and reused pool ID cannot inherit a job") {
+		const auto id = rig.member->index;
+		const auto old_tile = rig.member->xy;
+		MakeClear(old_tile, ClearGround::Grass, 0); rig.stations.pop_back();
+		CHECK(rig.first->launch_hub->handling.empty()); CHECK(source.AvailableCount() == 20);
+		auto *replacement = rig.Freight(old_tile); CHECK(replacement->index == id);
+		CHECK_FALSE(GetLaunchHubMembership(id)); CHECK(replacement->goods[type].TotalCount() == 0);
+		REQUIRE(CmdSetLaunchHub(DoCommandFlag::Execute, id, ref.station, ref.generation).Succeeded());
+		const auto current = *GetLaunchHubMembership(id);
+		CHECK(current.member.generation != membership.member.generation);
+		for (auto flags : {DoCommandFlags{}, DoCommandFlags{DoCommandFlag::Execute}})
+			CHECK(CmdStartSurfaceHandling(flags, id, membership.member.generation, ref.station, ref.generation, type, 20, false).Failed());
+		CHECK(source.AvailableCount() == 20); CHECK(replacement->goods[type].TotalCount() == 0);
+		CHECK_FALSE(HasSurfaceHandlingForStation(id));
+	}
+	SECTION("company change settles packets before invalidating the old link") {
+		REQUIRE(Company::CanAllocateItem()); std::unique_ptr<Company> foreign{Company::Create()};
+		rig.member->owner = foreign->index;
+		RevalidateLaunchHubMemberships(); CHECK(rig.first->launch_hub->handling.empty());
+		CHECK(source.AvailableCount() == 20); CHECK_FALSE(GetLaunchHubMembership(rig.member->index));
+		rig.member->owner = _current_company;
+	}
+	CHECK(ValidateSurfaceHandling());
+}
+
+TEST_CASE("Handling reserves destination space and shares the center allowance", "[surface-handling-native]")
+{
+	MockEnvironment::Instance(); LaunchHubRig rig;
+	const auto ref = GetLaunchCenterReference(*rig.first);
+	auto *other = rig.Freight(TileXYL(25, 22, MapLayer::Surface), true);
+	for (auto *member : {rig.member, other}) REQUIRE(CmdSetLaunchHub(DoCommandFlag::Execute, member->index, ref.station, ref.generation).Succeeded());
+	const auto cargo = GetCargoTypeByLabel(CargoLabel{"GOOD"}); CargoSpec::Get(cargo)->weight = 8;
+	auto &source = rig.first->goods[cargo].GetOrCreateData().cargo;
+	REQUIRE(CargoPacket::CanAllocateItem());
+	source.Append(CargoPacket::Create(rig.first->index, uint16_t{30}, Source{Source::Invalid, SourceType::Industry}), StationID::Invalid());
+	auto &target = rig.member->goods[cargo].GetOrCreateData().cargo;
+	REQUIRE(CargoPacket::CanAllocateItem());
+	target.Append(CargoPacket::Create(rig.member->index, uint16_t{1014}, Source{Source::Invalid, SourceType::Industry}), StationID::Invalid());
+	const auto membership = *GetLaunchHubMembership(rig.member->index), other_membership = *GetLaunchHubMembership(other->index);
+	REQUIRE(StartSurfaceHandling(ref, membership.member, cargo, 10, false));
+	CHECK_FALSE(CanStartSurfaceHandling(ref, membership.member, cargo, 1, false));
+	REQUIRE(StartSurfaceHandling(ref, other_membership.member, cargo, 3, false));
+	const auto money = Company::Get(_current_company)->money;
+	TickSurfaceHandling(); CHECK(target.TotalCount() == 1022); CHECK(other->goods[cargo].TotalCount() == 0);
+	TickSurfaceHandling(); CHECK(target.TotalCount() == 1024); CHECK(other->goods[cargo].TotalCount() == 3);
+	CHECK(Company::Get(_current_company)->money == money - 6); CHECK(rig.first->launch_hub->handling_cost_remainder == 8);
+	CHECK(source.TotalCount() == 17); CHECK(ValidateSurfaceHandling());
+	REQUIRE(StartSurfaceHandling(ref, other_membership.member, cargo, 3, true));
+	TickSurfaceHandling(); CHECK(source.TotalCount() == 20); CHECK(other->goods[cargo].TotalCount() == 0);
+	CHECK(Company::Get(_current_company)->money == money - 8); CHECK(rig.first->launch_hub->handling_cost_remainder == 0);
+}
+
+TEST_CASE("Returned stock follows pickup demand and stable member ordering", "[surface-handling-native]")
+{
+	MockEnvironment::Instance(); LaunchHubRig rig;
+	const auto ref = GetLaunchCenterReference(*rig.first);
+	auto *other = rig.Freight(TileXYL(25, 22, MapLayer::Surface), true);
+	for (auto *member : {rig.member, other}) REQUIRE(CmdSetLaunchHub(DoCommandFlag::Execute, member->index, ref.station, ref.generation).Succeeded());
+	const auto cargo = GetCargoTypeByLabel(CargoLabel{"NORE"}); CargoSpec::Get(cargo)->weight = 16;
+	auto &stock = rig.first->goods[cargo].GetOrCreateData().cargo;
+	// Explicit unit-fixture returned stock tests allocation only, not an orbital
+	// release or a reserve debit. Production descent retains its separate gate.
+	auto supply = [&] {
+		REQUIRE(CargoPacket::CanAllocateItem());
+		stock.Append(CargoPacket::Create(StationID::Invalid(), uint16_t{20}, Source{0, SourceType::Asteroid}), StationID::Invalid());
+	};
+	supply();
+	const auto money = Company::Get(_current_company)->money;
+	TickSurfaceHandling(); CHECK(stock.TotalCount() == 20); CHECK(rig.first->launch_hub->handling.empty());
+	other->goods[cargo].last_speed = 1;
+	TickSurfaceHandling(); REQUIRE(rig.first->launch_hub->handling.size() == 1);
+	CHECK(rig.first->launch_hub->handling.front()->member.station == other->index);
+	CHECK(stock.TotalCount() == 0); CHECK(Company::Get(_current_company)->money == money);
+	supply(); rig.member->goods[cargo].last_speed = 1;
+	TickSurfaceHandling(); REQUIRE(rig.first->launch_hub->handling.size() == 2);
+	CHECK(other->goods[cargo].TotalCount() == 8);
+	CHECK(rig.first->launch_hub->handling.back()->member.station == rig.member->index); // Both demand it; native lower ID wins the next packet.
+	CHECK(stock.TotalCount() == 0); CHECK(rig.member->goods[cargo].TotalCount() == 0);
+	rig.member->goods[cargo].last_speed = 0; // Existing physical work still retains its packet owner.
+	for (uint tick = 0; tick < 4; ++tick) TickSurfaceHandling();
+	CHECK(rig.first->launch_hub->handling.empty()); CHECK(other->goods[cargo].TotalCount() == 20); CHECK(rig.member->goods[cargo].TotalCount() == 20);
+	CHECK(Company::Get(_current_company)->money == money - 40);
+	CHECK(ValidateSurfaceHandling());
+}
 
 TEST_CASE("Surface launch membership is explicit exclusive and generation safe", "[launch-hub-native]")
 {
@@ -462,8 +675,38 @@ TEST_CASE("Native launch facility builds joins protects water and retains saved 
 			REQUIRE(ValidateLaunchHubs());
 			const auto hubs = CaptureLaunchHubs(); REQUIRE(hubs.size() == 1); CHECK(hubs[0].members.size() == 2);
 			for (const auto member : hubs[0].members) CHECK(ResolveLaunchHubMember(hubs[0].center, member) != nullptr);
+			if (const char *action = std::getenv("OTTD_SURFACE_HANDLING_ACTION")) {
+				const auto center_ref = GetLaunchCenterReference(*station);
+				const auto member_ref = hubs[0].members.front();
+				auto *member = ResolveLaunchHubMember(center_ref, member_ref); REQUIRE(member != nullptr);
+				const auto cargo = GetCargoTypeByLabel(CargoLabel{"GOOD"});
+				REQUIRE(CargoSpec::Get(cargo)->weight == 8);
+				if (std::string_view(action) == "prepare") {
+					REQUIRE(station->goods[cargo].TotalCount() == 0); REQUIRE(member->goods[cargo].TotalCount() == 0);
+					REQUIRE(CargoPacket::CanAllocateItem());
+					station->goods[cargo].GetOrCreateData().cargo.Append(CargoPacket::Create(uint16_t{13}, uint16_t{4}, station->index, station->xy, Money{130}), StationID::Invalid());
+					REQUIRE(Command<Commands::StartSurfaceHandling>::Post(member_ref.station, member_ref.generation, center_ref.station, center_ref.generation, cargo, uint16_t{13}, false));
+					TickSurfaceHandling();
+					REQUIRE(station->launch_hub->handling.size() == 1);
+					station->launch_hub->handling.front()->age_ticks = 184;
+					CHECK(station->launch_hub->handling.front()->packets.AvailableCount() == 5);
+					CHECK(member->goods[cargo].TotalCount() == 8);
+				} else if (std::string_view(action) == "continue") {
+					REQUIRE(station->launch_hub->handling.size() == 1);
+					CHECK(station->launch_hub->handling.front()->age_ticks == 184);
+					const auto money = Company::Get(station->owner)->money;
+					TickSurfaceHandling();
+					CHECK(station->launch_hub->handling.empty()); CHECK(member->goods[cargo].TotalCount() == 13);
+					CHECK(Company::Get(station->owner)->money == money - 2); CHECK(station->launch_hub->handling_cost_remainder == 8);
+					Money shares = 0;
+					for (const auto &[hop, packets] : *member->goods[cargo].GetData().cargo.Packets()) for (const auto *packet : packets) shares += packet->GetFeederShare();
+					CHECK(shares == 130);
+				} else FAIL("Unknown native Surface handling action");
+				REQUIRE(ValidateSurfaceHandling());
+				fmt::print("SURFACE_HANDLING native=true action={} jobs={} digest={}\n", action, station->launch_hub->handling.size(), ComputeSurfaceHandlingDigest());
+			}
 			if (const char *corrupt = std::getenv("OTTD_LAUNCH_CENTER_CORRUPT")) {
-				const auto live = ComputeLaunchCenterDigest(), field = ComputeAsteroidFieldDigest(GetAsteroidField()), hub_digest = ComputeLaunchHubDigest();
+				const auto live = ComputeLaunchCenterDigest(), field = ComputeAsteroidFieldDigest(GetAsteroidField()), hub_digest = ComputeLaunchHubDigest(), handling_digest = ComputeSurfaceHandlingDigest();
 				const auto money = Company::Get(_local_company)->money;
 				REQUIRE(SaveOrLoad(source.string(), SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 				CHECK(_load_check_data.launch_centers_present); CHECK(_load_check_data.launch_centers_active);
@@ -473,6 +716,7 @@ TEST_CASE("Native launch facility builds joins protects water and retains saved 
 				CHECK(_load_check_data.launch_centers_present); CHECK(_load_check_data.launch_centers_active);
 				CHECK(_load_check_data.launch_hubs_present); CHECK(_load_check_data.launch_hubs_active);
 				CHECK(ComputeLaunchCenterDigest() == live); CHECK(ComputeAsteroidFieldDigest(GetAsteroidField()) == field); CHECK(ComputeLaunchHubDigest() == hub_digest);
+				CHECK(ComputeSurfaceHandlingDigest() == handling_digest);
 				CHECK(Company::Get(_local_company)->money == money); CHECK(ResolveLaunchCenter({records[0].station, records[0].anchor.generation}) == station);
 				fmt::print("LAUNCH_CENTER preview_reject=true authority_unchanged=true\n");
 			}
@@ -490,10 +734,14 @@ TEST_CASE("Native launch facility builds joins protects water and retains saved 
 			{
 				AutoRestoreBackup paused(_pause_mode, PauseModes{PauseMode::Normal});
 				AutoRestoreBackup compression(_savegame_format, std::string{"lzma"});
-				REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(paths.saves / "launch-center-408.sav"), false) == SaveLoadResult::Ok);
+				REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(paths.saves / "launch-center-413.sav"), false) == SaveLoadResult::Ok);
 			}
 			fmt::print("LAUNCH_CENTER native=true centers=1 generation={} digest={} reload={}\n", records[0].anchor.generation, ComputeLaunchCenterDigest(), !prepare);
 		} catch (...) { failure = std::current_exception(); }
+		// The null video driver's real screen has no pixel buffer. Raster captures
+		// use temporary screens; restore its blitter before the driver repaints.
+		BlitterFactory::SelectBlitter("null");
+		GfxClearSpriteCache();
 		observed = true; _exit_game = true;
 	};
 	AutoRestoreBackup observer(_launch_observer, &observe);

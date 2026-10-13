@@ -69,6 +69,7 @@ struct MultiLayerManufacturingRecipe {
 	MultiLayerRecipe recipe; ///< Immutable saved-choice batch.
 	uint16_t input_capacity; ///< Maximum incoming stock per label.
 	uint16_t output_capacity; ///< Maximum product stock per label.
+	uint16_t residue_mass_sixteenths = 0; ///< Per committed batch, physical mass recorded by the processor owner; never freight or reserve replenishment.
 };
 
 /**

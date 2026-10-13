@@ -184,6 +184,150 @@ Canonical diagnostics append `PortalWorkRoot` after existing kind IDs. Sealed/Co
 
 Preview records schema/profile fields only in `_load_check_data` and checks the resolved package identity without touching live policy, cargo slots, seed roots or staging. The live profile has one owner in `multilayer_content.cpp`; saved snapshots are transport. `multilayer_state.cpp` supplies read-only reference hooks and an explicit ordered integer digest for desync diagnostics. Feature owners must extend descriptors, references, deletion rules and digest records when their actual state exists. Current fixtures cover metadata/editor round trips, exact-content/corrupt-metadata refusal and supplied Surface/369/370 saves; feature-phase saves and multiplayer acceptance remain future work.
 
+## Independent Space content and typed orders (410)
+
+`multilayer_sl.cpp` adds mandatory `SDEF`: a10-byte RIFF payload containing a
+U16 Space content revision and U64 exact definition signature. Selected worlds
+use revision2 from `multilayer_space_content.h`; Classic uses zero/zero. Ground
+profile1, required cargo package1 and `MLMD` schema1 retain their identities.
+Older absence upgrades only definitions, preserving paid objects and packets;
+changed/unknown content and missing new-version families refuse load/preview.
+
+`space_order_sl.cpp` owns mandatory `SPOR`, with a9-byte next-generation/count
+header, at most64 native Vehicle rows,22 fixed bytes per row and14 bytes per
+typed order, capped at32 orders per craft. Rows store VehicleID/generation,
+queue/index, started/block reason and timer/work. Body targets retain32-bit IDs
+with generation0; pool targets carry nonzero generations. `SpaceVehicle` owns
+the sole live queue. Existing `VEHS` and `CAPA` retain mission/packet ownership;
+genuine older craft receive empty queues and generation=`VehicleID+1`, with no
+change to their paid body, legacy mission, work, inventory or operating carry.
+
+Independent preview checks presence, content identity and bounded transport
+without consulting live vehicles, centers or field state. Full acceptance also
+checks actual native Vehicle/Engine category, complete row coverage and roles.
+Missing targets block with cargo intact; unsupported scan/build/descent/service
+producers grant no progress. Vehicle/queue and retired identity cursors join the
+native diagnostic digest. Both configurations pass exact native continuation,
+ordinary resave, malformed full loads and valid/corrupt/valid previews; evidence
+is in `logs/space-content-orders-verification.json`. Whole-plan network/art and
+all unfinished business-action acceptance remain pending in Plans8-16.
+
+## Paid Surface hull assembly (411)
+
+`space_production_sl.cpp` adds mandatory `SVST` and `LCOP` RIFF families, including
+empty Classic worlds. `SVST` has a one-byte count and at most64 rows of48 bytes:
+VehicleID/generation, placement, current/original center references, Surface
+tile, remaining work, content revision, model, capital receipt and paused flag.
+The native `SpaceVehicle` owns this state; no second craft pool or inventory is
+created. Legacy absence retains existing paid craft with default orbital state
+and grants no assembly work, hulls, stock or operational reservations.
+
+`LCOP` has a one-byte count and at most64 center rows, each35 fixed bytes plus
+12 bytes per queued craft, capped at8. It stores generation-checked workshop,
+service and pad-queue references. Service must be empty until its real producer
+exists. Native station goods remain the sole supply/storage packet owner.
+Assembly consumes delivered Steel/Goods once and ordinary command accounting
+charges capital once. A missing center leaves the original paid hull and work
+paused at its saved Surface site; a reused StationID grants no ownership.
+
+Independent preview validates copied receipts and cross-family references
+against this file's `SPOR` and `LCTR` identities. Full acceptance also checks the
+actual native vehicle/engine, company, position, complete row coverage and zone
+assignment. Loading never repairs a corrupt position by moving the craft.
+Flight, deployment, pods, descent and paid service remain separate unfinished
+producer obligations. Plan9 Groups2B/8B own verification of this increment.
+
+## Connected launch logistics (412, working tree; partial verification)
+
+The consolidated batch adds mandatory bounded native-owner families,
+including empty families for Classic worlds. RelWithDebInfo compilation and
+the supply/pod/service and flight save/replay/refusal suites passed on2026-10-13;
+Debug and complete descent acceptance remain pending. Evidence and the two
+uncompiled fixture corrections are indexed by
+`logs/launch-logistics-verification.json`.
+`SPSU` holds actual Vehicle-owned fuel/service packet references,
+age/work fractions, preserved partial service, paid return allowances and linked
+passenger/pod custody. Its fixed row is64 bytes plus10 per pod reference and6 per
+packet/hop reference. Old absence creates no supplies, pods or service allowance;
+new paid assembly grants its initial allowance once at construction.
+
+`SPOD` owns passive hardware through a native pool rather than another routed
+vehicle. Its10-byte header carries the monotonic incarnation cursor and bounded
+count; each65-byte row preserves the paid material/capital receipt, owner,
+custodian, retained site/position and unfinished work. `SPFL` preserves the same
+native rocket's preparation, layer transition, single fuel-burn/deployment
+events, recovery and fractional pad costs: one count byte plus84 bytes per row.
+Preview checks copied cross-family links; full acceptance also checks native
+packet owners, vehicles, engines, companies, positions and reservations.
+
+Version412 `SVST` appends a deployment receipt to each row, giving49 bytes;
+`LCOP` appends pod-workshop and active-pad references, giving57 fixed bytes plus
+12 per queued craft. Earlier411 decoding retains48/35-byte rows and refuses new
+placements/reservations. `SPDJ` has a10-byte cursor/count header and57 fixed bytes
+plus6 per packet/hop reference per descent. The paid pod owns actual packets;
+the sender reserves one of its return allowances until completion. Copied
+preview links check pod/supply custody, target geometry and pending allowances;
+full acceptance also checks native packet owners and quantities. Descent's
+explicit travel-vector rebase preserves horizontal history without paying for
+the stacked map offset. The413 survey/order batch incorporated the deferred
+paid-canal fixture correction. Native descent/service now passes in both
+configurations, including seventeen exact owner families, fifteen malformed
+full loads and fourteen independent copied-preview rejections. Service work and
+upkeep derive from current state, avoiding an unsaved previous-tick flag at
+reload. Full-plan integrated/network acceptance remains separate.
+
+## Native survey knowledge (413, working tree; native reloads verified)
+
+`SPKN` persists sparse completed-scan receipts beside the existing `ASTR` body
+authority. Its two-byte count precedes12-byte rows: U32 body ID and U64 company
+mask. Rows are sorted, unique, nonempty and bounded by the copied field's actual
+body count; bits outside native company IDs or referring to absent companies
+refuse. Empty Classic/new worlds still write the family. Old absence grants no
+knowledge, including worlds with ownerless survey previews. Full restoration
+uses the loaded native Company pool; preview uses only copied `PLYR` companies
+and `ASTR` body count. Company takeover transfers bits; removal clears them
+before native ID reuse. Knowledge contributes to the asteroid diagnostic digest
+only when nonempty, preserving the legacy empty-knowledge stream.
+
+`SPOR` retains its wire layout but permits1..147 partial working ticks only on a
+started Survey order with a valid body and a remaining frozen approach budget,
+or a saved timeout. Earlier versions reject nonzero work. Completion grants
+knowledge and clears work atomically; cancellation/editing grants none. The
+inspector's company-aware disclosure query controls quantity rendering. The
+native fixture verifies concurrent mining, exact partial/complete reloads,
+company isolation/reuse and fourteen full/preview corruptions in both builds.
+The inspector uses role-specific native default names while preserving existing
+saved0x6000 string IDs. Current source, build, binary and report identities are
+indexed by `logs/space-survey-verification.json`. The complete Debug regression
+pass, fresh profiles and retained underground/Space continuations passed;
+current RelWithDebInfo passed the affected native suites and rocket refresh.
+Construction, resupply, final art and full integrated/network acceptance remain
+open.
+
+## Native orbital resupply (414)
+
+`SPFL` keeps its84-byte row and appends a separate resupply receipt in flag bit3;
+deployment bit2 retains its meaning. Craft targets append kind4 to the shared
+Body/Structure/Blueprint/LaunchCenter union and retain a32-bit native VehicleID
+plus nonzero64-bit incarnation. New receiver waits append after the old flight
+blocks; Mine budget waits append after the old order blocks. Earlier versions
+refuse all these new values. A missing/reused receiver remains a stale target;
+it cannot bind to a replacement. Full validation checks native owners, complete
+payload custody, fuel and the new receipt; copied preview obtains actual native
+owner/position fields from `VEHS` and the incarnation cursor from `SPOR` without
+allocating a vehicle or borrowing the running world. `SPSU` and production row
+layouts remain unchanged. Ordinary old-save loading supplies no parts, pods,
+allowances or replacement hulls. Both configurations compile and pass713
+contract assertions in17 cases, native same-probe paid repeat/resupply, Goods
+delivery, blocked/lost receiver continuation and ten full/preview corruptions.
+Eight genuine413 checkpoints migrate to414 with17 checked owner families
+unchanged. Current source, binaries, reports and compatibility outcomes are
+indexed by `logs/space-resupply-verification.json`. The launch-center fixture
+keeps its generated `launch-center-413.sav` filename while independent header
+checks require414; one shared helper path correction needed no rebuild.
+Construction, processing, final art and integrated/network acceptance remain
+pending. Further Plan9/10 work pauses after this verified batch at user request.
+
 ## Geology, sparse jobs and frozen passes (372-374)
 
 Save399 (`GeologyRegionalHardness`) extends only the GEOS header to wire2: the existing29 bytes are followed by a U16 hardness algorithm and U64 immutable hardness seed before the packed terrain. Wire1 remains required for preceding saves; those load algorithm0/seed0, preserving measured legacy layer defaults and saved deposit hardness through subsequent399 resaves. Current new worlds select algorithm1. Unknown algorithms, a nonzero seed under algorithm0, regional fields under inactive geology, wrong wire versions and short/excess payloads refuse in both preview and full load. The regional fields join the existing geology digest only when active, preserving legacy diagnostic streams. Actual390/399/resaved files and ten preview/full-load corruptions are verified in [R2TBMF Z](../../upgrades/2026-10/tbm-fixes/r2tbmf-z-geology-notes.md); cargo remains ordinary whole units.

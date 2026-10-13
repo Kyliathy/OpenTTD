@@ -16,8 +16,9 @@
 #include "../safeguards.h"
 
 static std::optional<AsteroidField> _staged_asteroids;
+static std::optional<std::vector<AsteroidKnowledgeRecord>> _staged_knowledge;
 
-void ResetAsteroidLoadStaging() { _staged_asteroids.reset(); }
+void ResetAsteroidLoadStaging() { _staged_asteroids.reset(); _staged_knowledge.reset(); }
 void StageLoadedAsteroidField(AsteroidField field) { _staged_asteroids = std::move(field); }
 
 static void WriteUnsigned(uint64_t value, uint8_t width)
@@ -120,8 +121,61 @@ struct ASTRChunkHandler : ChunkHandler {
 		const auto field = this->Read();
 		if (field.generation_version != 0 && (field.width != _load_check_data.map_size_x || field.height != _load_check_data.map_size_y || _load_check_data.map_layers < 3)) SlErrorCorrupt("Asteroid preview geometry mismatch");
 		_load_check_data.asteroid_present = true; _load_check_data.asteroid_active = field.generation_version != 0; _load_check_data.asteroid_seed = field.seed;
+		_load_check_data.asteroid_body_count = static_cast<uint32_t>(field.bodies.size());
+	}
+};
+bool AcceptLoadedAsteroidKnowledge()
+{
+	if (!_staged_knowledge) return IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge);
+	if (!InstallLoadedAsteroidKnowledge(*_staged_knowledge)) return false;
+	_staged_knowledge.reset(); return true;
+}
+void ValidateAsteroidKnowledgeLoadPreview()
+{
+	if (!_load_check_data.asteroid_knowledge_present) {
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge)) SlErrorCorrupt("Missing asteroid survey knowledge family");
+		return;
+	}
+	const auto &rows = _load_check_data.asteroid_knowledge_rows;
+	if (!ValidateAsteroidKnowledgeRecords(rows, _load_check_data.asteroid_body_count) || (!rows.empty() &&
+		(!_load_check_data.asteroid_active || _load_check_data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry)))) SlErrorCorrupt("Invalid asteroid survey knowledge preview");
+	for (const auto &r : rows) for (uint company = 0; company < MAX_COMPANIES; ++company)
+		if ((r.surveyed_companies & (uint64_t{1} << company)) != 0 && !_load_check_data.companies.contains(company)) SlErrorCorrupt("Missing company in asteroid survey knowledge preview");
+}
+struct SPKNChunkHandler : ChunkHandler {
+	SPKNChunkHandler() : ChunkHandler("SPKN", ChunkType::Riff) {}
+	void Save() const override
+	{
+		if (!ValidateAsteroidKnowledge()) SlErrorCorrupt("Invalid asteroid survey knowledge on save");
+		const auto &rows = GetAsteroidField().knowledge; SlSetLength(2 + 12 * rows.size()); WriteUnsigned(rows.size(), 2);
+		for (const auto &r : rows) { WriteUnsigned(r.body.base(), 4); WriteUnsigned(r.surveyed_companies, 8); }
+	}
+	std::vector<AsteroidKnowledgeRecord> Read() const
+	{
+		const auto length = SlGetFieldLength(); const uint32_t maximum = GetMultiLayerAsteroidPopulation(4096, 4096, 2);
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge) || length < 2 || length > 2 + 12 * maximum) SlErrorCorrupt("Invalid asteroid survey knowledge length");
+		const auto count = ReadUnsigned(2); if (length != 2 + 12 * count || count > maximum) SlErrorCorrupt("Invalid asteroid survey knowledge count");
+		std::vector<AsteroidKnowledgeRecord> rows;
+		for (uint i = 0; i < count; ++i) rows.push_back({OrbitalBodyID{static_cast<uint32_t>(ReadUnsigned(4))}, ReadUnsigned(8)});
+		if (!ValidateAsteroidKnowledgeRecords(rows, maximum)) SlErrorCorrupt("Invalid asteroid survey knowledge transport");
+		return rows;
+	}
+	void Load() const override { if (_staged_knowledge) SlErrorCorrupt("Repeated asteroid survey knowledge family"); _staged_knowledge = this->Read(); }
+	void FixPointers() const override
+	{
+		if (!SlIsFixingPointers()) return;
+		if (!_staged_knowledge) { if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge)) SlErrorCorrupt("Missing asteroid survey knowledge family"); return; }
+		const auto *schema = GetPendingMultiLayerStateSchema();
+		if (!_staged_knowledge->empty() && (schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry || !_staged_asteroids ||
+			!ValidateAsteroidKnowledgeRecords(*_staged_knowledge, static_cast<uint32_t>(_staged_asteroids->bodies.size())))) SlErrorCorrupt("Invalid asteroid survey knowledge authority");
+	}
+	void LoadCheck([[maybe_unused]] size_t length) const override
+	{
+		if (_load_check_data.asteroid_knowledge_present) SlErrorCorrupt("Repeated asteroid survey knowledge preview");
+		_load_check_data.asteroid_knowledge_rows = this->Read(); _load_check_data.asteroid_knowledge_present = true;
 	}
 };
 static const ASTRChunkHandler ASTR;
-static const ChunkHandlerRef asteroid_handlers[] = {ASTR};
+static const SPKNChunkHandler SPKN;
+static const ChunkHandlerRef asteroid_handlers[] = {ASTR, SPKN};
 extern const ChunkHandlerTable _asteroid_chunk_handlers(asteroid_handlers);

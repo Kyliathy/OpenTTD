@@ -111,7 +111,7 @@ TEST_CASE("Recipe validation rejects ambiguous roles and unsafe arithmetic", "[m
 TEST_CASE("Published manufacturing recipes need every input and fit bounded stock", "[multilayer-manufacturing]")
 {
 	const auto definitions = GetMultiLayerManufacturingRecipes();
-	REQUIRE(definitions.size() == 12);
+	REQUIRE(definitions.size() == 14);
 	std::set<MultiLayerRecipeID> identities;
 	// Exercise the shared planner for every published choice; no plant may quietly convert a subset of inputs.
 	for (const auto &definition : definitions) {
@@ -122,15 +122,15 @@ TEST_CASE("Published manufacturing recipes need every input and fit bounded stoc
 		std::vector<MultiLayerRecipeStock> outputs;
 		for (const auto &input : recipe.inputs) inputs.push_back({input.label, input.quantity * 2, definition.input_capacity});
 		for (const auto &output : recipe.outputs) outputs.push_back({output.label, 0, definition.output_capacity});
-		CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, 0, 0).batches == 2);
+		CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, recipe.power_j_per_batch * 2, 0).batches == 2);
 		// Removing each required label independently must pause the whole batch and retain the other stocks.
 		for (auto &stock : inputs) {
 			const auto retained = stock.amount;
 			stock.amount = 0;
-			CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, 0, 0).batches == 0);
+			CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, recipe.power_j_per_batch * 2, 0).batches == 0);
 			stock.amount = retained;
 		}
 		outputs[0].amount = outputs[0].capacity;
-		CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, 0, 0).limiting == MultiLayerRecipeLimit::Output);
+		CHECK(PlanMultiLayerRecipeBatches(recipe, inputs, outputs, recipe.work_economy_ticks * 2, 0, 0, recipe.power_j_per_batch * 2, 0).limiting == MultiLayerRecipeLimit::Output);
 	}
 }

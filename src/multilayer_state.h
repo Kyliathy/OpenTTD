@@ -86,6 +86,7 @@ void SetMultiLayerOrbitalSeed(uint64_t seed);
 inline constexpr uint32_t MULTILAYER_FEATURE_ASTEROIDS = 524288;
 inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_CENTERS = 1048576; ///< Native facility or retired-generation history, version407.
 inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_HUBS = 2097152; ///< Explicit freight links or retired-link history, version408.
+inline constexpr uint32_t MULTILAYER_FEATURE_SURFACE_HANDLING = 4194304; ///< Saved handling jobs and retired job identity, version409.
 
 /**
  * Stage one structurally validated save row until activated content can be checked.
@@ -126,6 +127,8 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	SpaceVehicleRoot, ///< Native fleet missions, cargo packets and owned operating accounts; appended identity.
 	LaunchCenterRoot, ///< Native station anchor/rotation/generation, excluding derived lookups.
 	LaunchHubRoot, ///< Native exclusive member relationships and monotonic link history.
+	SurfaceHandlingRoot, ///< Actual timed packet owners, age, remaining work and fractional fees.
+	SpacePodRoot, ///< Paid passive native shells, custody, construction and monotonic incarnation history.
 	End,
 };
 

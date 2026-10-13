@@ -71,8 +71,10 @@ remain immutable. `space_view` recenters the first body and opens the inspector.
 
 The full holds **remain in orbit**. Native Surface launch-center construction,
 explicit freight membership and its collection overlay are delivered in
-`play.ps1 space-hub`. Physical rocket commissioning, orbital cargo release,
-descent pods, timed Surface handling and paid service/repeat sorties remain pending. Returning to staging creates no
+`play.ps1 space-hub`. Saved timed Surface handling and its lifecycle are also
+verified with native supplied-inventory fixtures in both builds; see
+`logs/space-handling-verification.json`. Physical rocket commissioning, orbital
+cargo release, descent pods and paid service/repeat sorties remain pending. Returning to staging creates no
 Surface facility or delivery. The planned next transfer is probe hold -> saved
 descent job -> Surface launch-center storage -> onward transport. Cargo changes
 owner once at each handoff and earns income through the normal useful delivery.

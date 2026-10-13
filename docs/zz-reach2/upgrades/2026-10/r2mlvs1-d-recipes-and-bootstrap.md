@@ -109,6 +109,47 @@ inputs competing for one reservation; product drop versus orbital reuse;
 save/network continuation; and company/typed-ID reuse. These are pending
 implementation requirements, not new completed tasks.
 
+### Group12B compiled definition reconciliation
+
+`multilayer_space_content.h` publishes Space construction revision2 independently
+of the unchanged ground profile1 and required cargo package1. `SDEF` in save410
+pins the exact revision/signature. Older absence explicitly upgrades the
+definitions while retaining every paid object, packet, reserve, mission and
+work remainder. It creates no craft, stock, blueprint or survey knowledge.
+Unknown revisions/signatures refuse full load and independent preview.
+
+Logical models0..18 retain their meanings; survey19 and construction20 are
+appended. `CanCommissionSpaceVehicle` admits these three probe roles at Earth
+launch payload assembly or a completed orbital Assembly. Actual physical
+commissioning, receipts and native engine registration remain their feature
+owners' work; the definition query cannot allocate a vehicle. The old staged
+model15 demo retains its historical purchase convention.
+
+The public construction list includes every proposed build family, both common
+materials, capital, work, embodied mass, year and static footprint. Newly settled
+defaults are148 ticks for rocket/probe hull assembly; the later hauler uses the
+heavy model's STEL6/GOOD12/RBPT4/ELEC2,18t,592 ticks and200,000; advanced refinery
+and ice-processor buildings use STEL10/GOOD16,18t,740 ticks,220,000 and3x3.
+These definitions enable no unfinished runtime producer. Pods are model18
+construction payloads, never an independently purchased routed vehicle.
+
+Manufacturing adds stable choices `OSTL` and `OGDS`; their physical residue
+fields are32 and16 sixteenths of a tonne per committed batch. Processor code
+must record that disposition alongside its single input consumption. Goods
+procurement adds one existing-label SKU from1950 at120/crate and256/company/day.
+Rocket, construction-probe, hauler and return-pod admissions include Goods'
+Express class. Ground models0..13 and their admission rows remain unchanged.
+
+The revised graph has14 milestones. The Core depends on two Earth builders;
+heavy assembly depends on the completed Core and separately delivered Assembly.
+It preserves the original six ground rows and the mirror's separate80,000
+Surface farm with STEL8/ELEC4. Its total capital is4,144,000 and paid supplies
+91,030, leaving764,970 from5,000,000 before recurring operations. Seven flights
+consume105kL: initial16, then15 survey,15 mirror,29 builders,15 Assembly and15
+heavy-material delivery. Each pad window adds1,500 and each mission5,000,
+leaving719,470 before other work/travel/service/handling. These are definition
+ledgers; real routes and physical receipts remain acceptance gates.
+
 ## Group 7 - mines, processors and bounded receivers
 
 All cargo quantities use the existing packet unit for their label: tonnes for ores/metals/industrial packaged products; kilolitres for liquid CHEM/PROP and baseline OIL_; baseline GOOD keeps its existing crate unit. Stock caps below are per distinct label and never exceed the existing `uint16_t` industry stock bound. A mine debits finite deposit reserve only when a complete batch fits output stock. Discovery, construction, blocked output and paused work consume no reserve. Every mine requires excavated machinery/loading footprint and conventional access; none creates transport by sharing coordinates with Surface.

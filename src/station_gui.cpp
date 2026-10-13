@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "launch_center.h"
 #include "launch_center_cmd.h"
+#include "launch_operations.h"
 #include "debug.h"
 #include "gui.h"
 #include "querystring_gui.h"
@@ -870,6 +871,7 @@ static constexpr std::initializer_list<NWidgetPart> _nested_station_view_widgets
 		NWidget(NWID_HORIZONTAL),
 			NWidget(WWT_DROPDOWN, Colours::Grey, WID_SV_LAUNCH_HUB), SetMinimalSize(168, 12), SetResize(1, 0), SetFill(1, 1), SetStringTip(STR_LAUNCH_HUB_NONE, STR_LAUNCH_HUB_TOOLTIP),
 			NWidget(WWT_TEXTBTN, Colours::Grey, WID_SV_LAUNCH_COLLECTION), SetMinimalSize(81, 12), SetFill(1, 1), SetStringTip(STR_LAUNCH_HUB_COLLECTION, STR_LAUNCH_HUB_COLLECTION_TOOLTIP),
+			NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_SV_LAUNCH_ASSEMBLY), SetFill(1, 1), SetStringTip(STR_LAUNCH_ASSEMBLY_BUTTON, STR_LAUNCH_ASSEMBLY_TOOLTIP),
 		EndContainer(),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
@@ -1494,6 +1496,7 @@ struct StationViewWindow : public Window {
 		const auto center = st->launch_center != nullptr ? GetLaunchCenterReference(*st) : membership ? membership->center : LaunchCenterRef{};
 		this->SetWidgetDisabledState(WID_SV_LAUNCH_HUB, st->owner != _local_company || st->launch_center != nullptr || GetEligibleLaunchHubs(*st).empty());
 		this->SetWidgetDisabledState(WID_SV_LAUNCH_COLLECTION, ResolveLaunchCenter(center) == nullptr);
+		this->SetWidgetDisabledState(WID_SV_LAUNCH_ASSEMBLY, st->launch_center == nullptr || st->owner != _local_company);
 		this->SetWidgetLoweredState(WID_SV_LAUNCH_COLLECTION, IsViewportLaunchCollection(center.station, center.generation));
 
 		this->DrawWidgets();
@@ -2063,6 +2066,9 @@ struct StationViewWindow : public Window {
 						this, CS_ALPHANUMERAL, {QueryStringFlag::EnableDefault, QueryStringFlag::LengthIsInChars, QueryStringFlag::EnableMove});
 				break;
 
+			case WID_SV_LAUNCH_ASSEMBLY:
+				ShowLaunchAssemblyWindow(GetLaunchCenterReference(*Station::Get(this->window_number)));
+				break;
 			case WID_SV_LAUNCH_HUB: {
 				if (this->IsWidgetDisabled(widget)) break;
 				const auto *member = Station::Get(this->window_number);

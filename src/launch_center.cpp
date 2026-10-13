@@ -4,6 +4,7 @@
 /** @file launch_center.cpp Guarded native placement queries; no camera or wrapped neighbours. */
 #include "stdafx.h"
 #include "launch_center.h"
+#include "launch_operations.h"
 #include "map_layer.h"
 #include "water_map.h"
 #include "bridge_map.h"
@@ -109,12 +110,14 @@ void InstallNewLaunchCenter(Station &station, TileIndex anchor, uint8_t rotation
 	assert(station.launch_center == nullptr && CanAllocateLaunchCenter());
 	station.launch_center = std::make_unique<LaunchCenterAnchor>(anchor, _next_launch_center_generation++, rotation);
 	station.launch_hub = std::make_unique<LaunchCollectionHub>();
+	station.launch_operations = std::make_unique<LaunchOperations>();
 	_launch_centers.push_back(GetLaunchCenterReference(station));
 	std::ranges::sort(_launch_centers, {}, [](const auto &ref) { return ref.station.base(); });
 }
 
 void ForgetLaunchCenter(Station &station)
 {
+	ForgetLaunchOperations(station, Station::CleaningPool());
 	ForgetLaunchHubStation(station);
 	if (station.launch_center == nullptr) return;
 	const auto ref = GetLaunchCenterReference(station);
@@ -125,7 +128,7 @@ void ForgetLaunchCenter(Station &station)
 void ResetLaunchCenters()
 {
 	ResetLaunchHubs();
-	for (auto *station : Station::Iterate()) station->launch_center.reset();
+	for (auto *station : Station::Iterate()) { station->launch_center.reset(); station->launch_operations.reset(); }
 	_launch_centers.clear();
 	_next_launch_center_generation = 1;
 	_launch_center_replaced_water = INVALID_TILE;
@@ -206,6 +209,7 @@ bool InstallLoadedLaunchCenters(std::vector<LaunchCenterRecord> records, uint64_
 		auto *station = Station::Get(record.station);
 		station->launch_center = std::make_unique<LaunchCenterAnchor>(record.anchor);
 		station->launch_hub = std::make_unique<LaunchCollectionHub>();
+		station->launch_operations = std::make_unique<LaunchOperations>();
 		_launch_centers.push_back(GetLaunchCenterReference(*station));
 	}
 	std::ranges::sort(_launch_centers, {}, [](const auto &ref) { return ref.station.base(); });
@@ -218,6 +222,7 @@ uint64_t ComputeLaunchCenterDigest()
 	uint64_t digest = 14695981039346656037ULL;
 	auto hash = [&](uint64_t value) { for (uint shift = 0; shift < 64; shift += 8) { digest ^= (value >> shift) & 0xFF; digest *= 1099511628211ULL; } };
 	hash(_next_launch_center_generation);
+	hash(ComputeLaunchProductionDigest());
 	for (const auto &record : CaptureLaunchCenters()) {
 		hash(record.station.base()); hash(Station::Get(record.station)->owner.base());
 		hash(record.anchor.generation); hash(record.anchor.tile.base()); hash(record.anchor.rotation);

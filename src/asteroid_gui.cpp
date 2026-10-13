@@ -10,6 +10,8 @@
 #include "asteroid.h"
 #include "space_vehicle.h"
 #include "space_vehicle_cmd.h"
+#include "space_manifest.h"
+#include "core/backup_type.hpp"
 #include "command_func.h"
 #include "company_func.h"
 #include "cargotype.h"
@@ -21,6 +23,8 @@
 #include "window_func.h"
 #include "gfx_func.h"
 #include "strings_func.h"
+#include "launch_center_cmd.h"
+#include "core/backup_type.hpp"
 #include "zoom_func.h"
 #include "timer/timer.h"
 #include "timer/timer_window.h"
@@ -75,92 +79,176 @@ void RefreshSpaceViewports()
 }
 
 static std::optional<OrbitalBodyID> _inspected_asteroid;
-static VehicleID _inspected_probe = VehicleID::Invalid();
-
+static SpaceCraftRef _inspected_probe;
+static std::optional<OrbitalBodyID> InspectedProbeTarget(const SpaceVehicle &v)
+{
+	const auto &q = v.space_orders;
+	if (q.cursor < q.entries.size() && q.entries[q.cursor].target.kind == SpaceOrderTargetKind::Body) return OrbitalBodyID{q.entries[q.cursor].target.id};
+	if (v.mission.target != INVALID_ORBITAL_BODY) return v.mission.target;
+	return std::nullopt;
+}
+static constexpr StringID order_actions[] = {STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_SURVEY, STR_SPACE_ORDER_MINE, STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_ORDER_UNLOAD, STR_SPACE_ORDER_SERVICE};
+static constexpr StringID order_targets[] = {STR_SPACE_TARGET_BODY, STR_SPACE_TARGET_STRUCTURE, STR_SPACE_TARGET_BLUEPRINT, STR_SPACE_TARGET_CENTER, STR_SPACE_TARGET_CRAFT};
+static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING};
 static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),
 		NWidget(WWT_CAPTION, Colours::DarkBlue), SetStringTip(STR_SPACE_SURVEY_CAPTION),
 		NWidget(WWT_STICKYBOX, Colours::DarkBlue),
 	EndContainer(),
-	NWidget(WWT_PANEL, Colours::DarkBlue, 0), SetMinimalSize(460, 270), SetResize(1, 1), EndContainer(),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 1), SetStringTip(STR_SPACE_MINE_SELECTED), SetFill(1, 0),
+		NWidget(WWT_PANEL, Colours::DarkBlue, 0), SetMinimalSize(600, 350), SetResize(1, 1), SetScrollbar(9), EndContainer(),
+		NWidget(NWID_VSCROLLBAR, Colours::DarkBlue, 9),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 4), SetStringTip(STR_SPACE_VISIT_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 3), SetStringTip(STR_SPACE_SURVEY_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 1), SetStringTip(STR_SPACE_MINE_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 2), SetStringTip(STR_SPACE_RECALL), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 10), SetStringTip(STR_LAUNCH_LOGISTICS_SERVICE), SetFill(1, 0),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 5), SetStringTip(STR_SPACE_ORDER_CLEAR, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 6), SetStringTip(STR_SPACE_ORDER_ERASE, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 7), SetStringTip(STR_SPACE_ORDER_UP, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 8), SetStringTip(STR_SPACE_ORDER_DOWN, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
 	EndContainer(),
 };
 static WindowDesc _space_survey_desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::SpaceSurvey, WindowClass::None, {}, _space_survey_widgets);
-
 struct SpaceSurveyWindow : Window {
-	mutable std::vector<std::pair<VehicleID, Rect>> probe_rows; ///< Derived picking rectangles, never simulation state.
+	mutable std::vector<std::pair<SpaceCraftRef, Rect>> probe_rows;
+	mutable std::vector<std::pair<uint8_t, Rect>> order_rows;
+	uint8_t selected_order = UINT8_MAX;
+	Scrollbar *scrollbar = nullptr;
 	const IntervalTimer<TimerWindow> refresh = {std::chrono::milliseconds(250), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
-	SpaceSurveyWindow() : Window(_space_survey_desc) { this->InitNested(0); }
+	SpaceSurveyWindow() : Window(_space_survey_desc) { this->InitNested(0); this->scrollbar = this->GetScrollbar(9); }
 	void OnPaint() override
 	{
-		const auto *probe = SpaceVehicle::GetIfValid(_inspected_probe);
-		const bool owned = probe != nullptr && probe->owner == _local_company;
-		const auto &bodies = GetAsteroidField().bodies;
-		const auto *body = _inspected_asteroid && _inspected_asteroid->base() < bodies.size() ? &bodies[_inspected_asteroid->base()] : nullptr;
-		const bool can_mine = owned && body != nullptr && body->remaining_reserve != 0 && probe->cargo.TotalCount() < probe->cargo_cap &&
-			(probe->cargo.TotalCount() == 0 || probe->cargo_type == GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo));
-		this->SetWidgetDisabledState(1, !can_mine);
-		this->SetWidgetDisabledState(2, !owned);
+		AutoRestoreBackup actor(_current_company, _local_company);
+		const auto *probe = ResolveSpaceCraft(_inspected_probe);
+		const bool owned = probe != nullptr && probe->owner == _local_company && probe->construction.placement == SpacePlacement::Orbital;
+		const bool editing = owned && (!probe->manifest || probe->manifest->service_ticks == 0);
+		const bool append = editing && probe->space_orders.entries.size() < MAX_SPACE_ORDERS;
+		const auto *body = _inspected_asteroid ? GetMutableAsteroidBody(*_inspected_asteroid) : nullptr;
+		const auto model = probe == nullptr ? UINT16_MAX : GetSpaceVehicleModel(*probe);
+		// Unknown reserves do not leak through a disabled mining button. The command handles actual depletion.
+		this->SetWidgetDisabledState(1, !append || model != 15 || body == nullptr);
+		this->SetWidgetDisabledState(3, !append || model != 19 || body == nullptr);
+		this->SetWidgetDisabledState(4, !append || body == nullptr);
+		this->SetWidgetDisabledState(2, !editing || (probe->construction.home == LaunchCenterRef{} && model != 15));
+		this->SetWidgetDisabledState(5, !editing || probe->space_orders.entries.empty());
+		const bool selected = editing && this->selected_order < probe->space_orders.entries.size();
+		this->SetWidgetDisabledState(6, !selected);
+		this->SetWidgetDisabledState(7, !selected || this->selected_order == 0);
+		this->SetWidgetDisabledState(8, !selected || size_t{this->selected_order} + 1 >= probe->space_orders.entries.size());
+		this->SetWidgetDisabledState(10, !owned || CmdServiceLaunchProbe({}, probe->index, probe->generation,
+			probe->manifest && probe->manifest->service_ticks != 0 && !probe->manifest->service_paused).Failed());
 		this->DrawWidgets();
 	}
-	void OnClick([[maybe_unused]] Point point, WidgetID widget, [[maybe_unused]] int count) override
+	void OnClick(Point point, WidgetID widget, [[maybe_unused]] int count) override
 	{
-		if (widget == 0) for (const auto &[id, rect] : this->probe_rows) if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
-			_inspected_probe = id; this->SetDirty(); return;
+		if (widget == 0) {
+			for (const auto &[ref, rect] : this->probe_rows) if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
+				_inspected_probe = ref; this->selected_order = UINT8_MAX; this->SetDirty(); return;
+			}
+			for (const auto &[index, rect] : this->order_rows) if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
+				this->selected_order = index; this->SetDirty(); return;
+			}
 		}
-		const auto *probe = SpaceVehicle::GetIfValid(_inspected_probe);
-		if (probe == nullptr || probe->owner != _local_company) return;
-		if (widget == 1 && _inspected_asteroid) Command<Commands::SetSpaceMission>::Post(STR_SPACE_MISSION_FAILED, probe->index, _inspected_asteroid->base());
-		if (widget == 2) Command<Commands::SetSpaceMission>::Post(STR_SPACE_MISSION_FAILED, probe->index, UINT32_MAX);
+		const auto *probe = ResolveSpaceCraft(_inspected_probe);
+		if (probe == nullptr || probe->owner != _local_company || probe->construction.placement != SpacePlacement::Orbital) return;
+		const auto ref = _inspected_probe;
+		auto edit = [&](SpaceOrderEdit operation, uint8_t index, SpaceOrderAction action, SpaceOrderTarget target) {
+			Command<Commands::EditSpaceOrder>::Post(STR_SPACE_ORDER_FAILED, ref.vehicle, ref.generation, operation, index, action, target.kind, target.id, target.generation);
+		};
+		if (widget == 10) {
+			Command<Commands::ServiceLaunchProbe>::Post(STR_SPACE_ORDER_FAILED, ref.vehicle, ref.generation,
+				probe->manifest && probe->manifest->service_ticks != 0 && !probe->manifest->service_paused);
+		} else if ((widget == 1 || widget == 3 || widget == 4) && _inspected_asteroid && probe->space_orders.entries.size() < MAX_SPACE_ORDERS) {
+			edit(SpaceOrderEdit::Insert, static_cast<uint8_t>(probe->space_orders.entries.size()), widget == 1 ? SpaceOrderAction::Mine : widget == 3 ? SpaceOrderAction::Survey : SpaceOrderAction::Visit,
+				{SpaceOrderTargetKind::Body, _inspected_asteroid->base(), 0});
+		} else if (widget == 2) {
+			if (probe->construction.home != LaunchCenterRef{}) {
+				const auto home = probe->construction.home;
+				edit(SpaceOrderEdit::Clear, 0, SpaceOrderAction::Visit, {});
+				edit(SpaceOrderEdit::Insert, 0, SpaceOrderAction::Visit, {SpaceOrderTargetKind::LaunchCenter, home.station.base(), home.generation});
+			} else if (GetSpaceVehicleModel(*probe) == 15) Command<Commands::SetSpaceMission>::Post(STR_SPACE_MISSION_FAILED, ref.vehicle, UINT32_MAX);
+		} else if (widget == 5) {
+			edit(SpaceOrderEdit::Clear, 0, SpaceOrderAction::Visit, {}); this->selected_order = UINT8_MAX;
+		} else if (widget >= 6 && widget <= 8 && this->selected_order < probe->space_orders.entries.size()) {
+			edit(widget == 6 ? SpaceOrderEdit::Erase : widget == 7 ? SpaceOrderEdit::MoveUp : SpaceOrderEdit::MoveDown, this->selected_order, SpaceOrderAction::Visit, {});
+			this->selected_order = UINT8_MAX;
+		}
+		this->SetDirty();
 	}
-	void DrawWidget(const Rect &rect, [[maybe_unused]] WidgetID widget) const override
+	void DrawWidget(const Rect &rect, WidgetID widget) const override
 	{
 		if (widget != 0) return;
-		this->probe_rows.clear();
-		const auto &field = GetAsteroidField();
-		const int line = GetCharacterHeight(FontSize::Normal) + 3;
-		int y = rect.top + 8;
+		this->probe_rows.clear(); this->order_rows.clear();
+		const auto &field = GetAsteroidField(); const auto *selected = ResolveSpaceCraft(_inspected_probe);
+		const int line = GetCharacterHeight(FontSize::Normal) + 3; int y = rect.top + 8;
 		auto draw = [&](const std::string &text, TextColour colour = TextColour::White) { DrawString(rect.left + 8, rect.right - 8, y, text, colour); y += line; };
-		uint native_count = 0; for ([[maybe_unused]] const auto *probe : SpaceVehicle::Iterate()) ++native_count;
+		uint native_count = 0; for (const auto *probe : SpaceVehicle::Iterate()) if (probe->construction.placement == SpacePlacement::Orbital) ++native_count;
 		draw(GetString(native_count == 0 ? STR_SPACE_FIELD_COUNT : STR_SPACE_NATIVE_FIELD_COUNT, field.bodies.size(), native_count == 0 ? field.surveys.size() : native_count));
 		draw(GetString(native_count == 0 ? STR_SPACE_SURVEY_BOUNDARY : STR_SPACE_MINING_BOUNDARY));
-		y += 6;
 		static constexpr StringID classes[] = {STR_SPACE_METALLIC, STR_SPACE_CARBONACEOUS, STR_SPACE_RICH};
-		static constexpr StringID phases[] = {STR_SPACE_APPROACH, STR_SPACE_ATTACHED, STR_SPACE_RETURN, STR_SPACE_WAITING};
 		if (_inspected_asteroid && _inspected_asteroid->base() < field.bodies.size()) {
-			const auto &body = field.bodies[_inspected_asteroid->base()];
-			draw(GetString(STR_SPACE_BODY_RESERVE, body.id.base(), classes[to_underlying(body.resource_class)], body.remaining_reserve, body.initial_reserve));
+			const auto &body = field.bodies[_inspected_asteroid->base()]; const auto quantity = GetAsteroidQuantityDisclosure(_local_company, body.id);
+			if (quantity) draw(GetString(STR_SPACE_BODY_RESERVE, body.id.base(), classes[to_underlying(body.resource_class)], quantity->remaining, quantity->initial));
+			else draw(GetString(STR_SPACE_BODY_UNKNOWN, body.id.base(), classes[to_underlying(body.resource_class)]));
 			draw(GetString(STR_SPACE_BODY_LOCATION, body.motion.position.x / SPACE_Q16, body.motion.position.y / SPACE_Q16));
-			y += 6;
 		}
-		for (const auto &survey : field.surveys) {
-			if (y + line * 2 > rect.bottom) break;
-			draw(GetString(STR_SPACE_SURVEY_STATUS, survey.id.base() + 1, phases[to_underlying(survey.phase)], survey.target.base(), survey.completed_surveys));
-			y += 4;
+		if (selected != nullptr && !selected->space_orders.entries.empty()) {
+			const auto &q = selected->space_orders;
+			draw(GetString(STR_SPACE_ORDER_PROGRESS, std::min<size_t>(q.cursor + 1, q.entries.size()), q.entries.size(), order_blocks[to_underlying(q.blocked)]));
+			if (q.cursor < q.entries.size() && q.entries[q.cursor].action == SpaceOrderAction::Survey) draw(GetString(STR_SPACE_SCAN_PROGRESS, q.work_ticks));
 		}
+		if (selected != nullptr && selected->manifest) {
+			const auto &m = *selected->manifest;
+			draw(GetString(STR_SPACE_PROBE_SERVICE_STATE, m.returns_remaining, m.pending_returns, m.pods.size(), m.service_ticks));
+			draw(GetString(STR_SPACE_PROBE_PARTS, m.supplies[1].TotalCount(), m.supplies[2].TotalCount()));
+			if (GetSpaceVehicleModel(*selected) == 15 && selected->space_orders.entries.empty()) draw(GetString(order_blocks[to_underlying(GetSpaceMiningBlock(*selected))]));
+		}
+		draw(GetString(STR_SPACE_SURVEY_HINT)); y += 4;
+		const uint order_count = selected == nullptr ? 0 : static_cast<uint>(selected->space_orders.entries.size());
+		this->scrollbar->SetCount(order_count + native_count + static_cast<uint>(field.surveys.size()));
+		this->scrollbar->SetCapacity(std::max(1, (rect.bottom - y + 1) / line));
+		uint item = 0; const int first = this->scrollbar->GetPosition(), last = first + this->scrollbar->GetCapacity();
+		auto visible = [&] { const int ordinal = static_cast<int>(item++); return ordinal >= first && ordinal < last; };
+		if (selected != nullptr) for (uint8_t index = 0; index < selected->space_orders.entries.size(); ++index) {
+			if (!visible()) continue;
+			const auto &o = selected->space_orders.entries[index]; const int top = y;
+			draw(GetString(STR_SPACE_ORDER_ROW, index + 1, order_actions[to_underlying(o.action)], order_targets[to_underlying(o.target.kind)], o.target.id), index == this->selected_order ? TextColour::Yellow : TextColour::White);
+			this->order_rows.push_back({index, {rect.left, top, rect.right, y - 1}});
+		}
+		static constexpr StringID preview_phases[] = {STR_SPACE_APPROACH, STR_SPACE_ATTACHED, STR_SPACE_RETURN, STR_SPACE_WAITING};
+		for (const auto &preview : field.surveys) if (visible()) draw(GetString(STR_SPACE_SURVEY_STATUS, preview.id.base() + 1, preview_phases[to_underlying(preview.phase)], preview.target.base(), preview.completed_surveys));
 		static constexpr StringID mining_phases[] = {STR_SPACE_IDLE, STR_SPACE_APPROACH, STR_SPACE_MINING, STR_SPACE_RETURN, STR_SPACE_HOLDING};
 		for (const auto *probe : SpaceVehicle::Iterate()) {
-			if (y + line * 2 > rect.bottom) break;
-			const int row_top = y;
-			draw(GetString(STR_SPACE_NATIVE_PROBE_STATUS, probe->index, mining_phases[to_underlying(probe->mission.phase)], probe->cargo.TotalCount(), probe->cargo_cap, CargoSpec::Get(probe->cargo_type)->name), probe->index == _inspected_probe ? TextColour::Yellow : TextColour::White);
-			if (probe->index == _inspected_probe && probe->mission.target != INVALID_ORBITAL_BODY) draw(GetString(STR_SPACE_NATIVE_SELECTED, probe->mission.target.base(), probe->mission.work_ticks));
-			this->probe_rows.push_back({probe->index, {rect.left, row_top, rect.right, y - 1}});
-			y += 4;
+			if (probe->construction.placement != SpacePlacement::Orbital || !visible()) continue;
+			const int top = y;
+			if (GetSpaceVehicleModel(*probe) == 19) draw(GetString(STR_SPACE_NATIVE_SURVEY_STATUS, probe->index, mining_phases[to_underlying(probe->mission.phase)]), GetSpaceCraftReference(*probe) == _inspected_probe ? TextColour::Yellow : TextColour::White);
+			else draw(GetString(STR_SPACE_NATIVE_PROBE_STATUS, probe->index, mining_phases[to_underlying(probe->mission.phase)], probe->cargo.TotalCount(), probe->cargo_cap, CargoSpec::Get(probe->cargo_type)->name), GetSpaceCraftReference(*probe) == _inspected_probe ? TextColour::Yellow : TextColour::White);
+			this->probe_rows.push_back({GetSpaceCraftReference(*probe), {rect.left, top, rect.right, y - 1}});
 		}
-		draw(GetString(STR_SPACE_SURVEY_HINT));
 	}
 };
-
 void ShowSpaceSurveyWindow()
 {
-	if (SpaceVehicle::GetIfValid(_inspected_probe) == nullptr) for (const auto *probe : SpaceVehicle::Iterate()) { _inspected_probe = probe->index; break; }
+	const auto *selected = ResolveSpaceCraft(_inspected_probe);
+	if (selected == nullptr || selected->construction.placement != SpacePlacement::Orbital) {
+		_inspected_probe = {};
+		for (const auto *probe : SpaceVehicle::Iterate()) if (probe->owner == _local_company && probe->construction.placement == SpacePlacement::Orbital) { _inspected_probe = GetSpaceCraftReference(*probe); break; }
+	}
 	const auto &bodies = GetAsteroidField().bodies;
 	if (!bodies.empty() && (!_inspected_asteroid || _inspected_asteroid->base() >= bodies.size())) _inspected_asteroid = bodies.front().id;
 	if (BringWindowToFrontById(WindowClass::SpaceSurvey, 0) == nullptr) new SpaceSurveyWindow();
+}
+
+void ShowSpaceSurveyWindow(SpaceCraftRef craft)
+{
+	if (const auto *v = ResolveSpaceCraft(craft); v != nullptr && v->construction.placement == SpacePlacement::Orbital) _inspected_probe = craft;
+	ShowSpaceSurveyWindow();
 }
 
 bool HandleSpaceEntityClick(const Viewport &vp, int x, int y)
@@ -172,9 +260,9 @@ bool HandleSpaceEntityClick(const Viewport &vp, int x, int y)
 		const Point screen = RemapCoords(SpaceWorldPoint(point).x, SpaceWorldPoint(point).y, 0);
 		return std::abs(screen.x - x) < radius * static_cast<int>(ZOOM_BASE) && std::abs(screen.y - y) < radius * static_cast<int>(ZOOM_BASE);
 	};
-	for (const auto *probe : SpaceVehicle::Iterate()) if (hit(probe->position, 12)) {
-		_inspected_probe = probe->index;
-		if (probe->mission.target != INVALID_ORBITAL_BODY) _inspected_asteroid = probe->mission.target;
+	for (const auto *probe : SpaceVehicle::Iterate()) if (probe->construction.placement == SpacePlacement::Orbital && hit(probe->position, 12)) {
+		_inspected_probe = GetSpaceCraftReference(*probe);
+		if (const auto target = InspectedProbeTarget(*probe)) _inspected_asteroid = *target;
 		ShowSpaceSurveyWindow(); return true;
 	}
 	for (const auto &survey : GetAsteroidField().surveys) if (hit(survey.position, 12)) {

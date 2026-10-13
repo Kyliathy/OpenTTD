@@ -19,6 +19,7 @@
 #include "../roadveh.h"
 #include "../ship.h"
 #include "../space_vehicle.h"
+#include "../fios.h"
 #include "../aircraft.h"
 #include "../timetable.h"
 #include "../station_base.h"
@@ -1149,6 +1150,34 @@ static const SaveLoad _vehicle_desc[] = {
 	SaveLoad::Struct<SlVehicleSpace>("space", SaveLoadVersion::SpaceMiningVehicles),
 };
 
+class SlSpaceOwnerPreview : public DefaultSaveLoadHandler<SlSpaceOwnerPreview, NativeSpaceVehiclePreview> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, owner)),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	void LoadCheck(NativeSpaceVehiclePreview *row) const override
+	{
+		if (std::ranges::find(this->GetLoadDescription(), "owner", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space owner preview field");
+		SlObject(row, this->GetLoadDescription());
+	}
+};
+class SlSpaceVehiclePreview : public DefaultSaveLoadHandler<SlSpaceVehiclePreview, NativeSpaceVehiclePreview> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Struct<SlSpaceOwnerPreview>("common"),
+		SaveLoad::Variable<VarFileType::I32>("position.x", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.x)),
+		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.y)),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	void LoadCheck(NativeSpaceVehiclePreview *row) const override
+	{
+		if (row->type != VehicleType::Space) return;
+		for (const auto &field : description) if (std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
+		SlObject(row, this->GetLoadDescription());
+	}
+};
+
 struct VEHSChunkHandler : ChunkHandler {
 	VEHSChunkHandler() : ChunkHandler("VEHS", ChunkType::SparseTable) {}
 
@@ -1222,6 +1251,25 @@ struct VEHSChunkHandler : ChunkHandler {
 	{
 		for (Vehicle *v : Vehicle::Iterate()) {
 			SlObject(v, _vehicle_desc);
+		}
+	}
+	void LoadCheck(size_t length) const override
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply)) { ChunkHandler::LoadCheck(length); return; }
+		static const SaveLoad preview[] = {
+			SaveLoad::SaveByte("type", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, type)),
+			SaveLoad::Struct<SlSpaceVehiclePreview>("space"),
+		};
+		const auto desc = SlTableHeader(preview);
+		for (const auto &field : preview) if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native Space vehicle preview field");
+		auto &rows = _load_check_data.native_space_vehicle_rows;
+		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
+			NativeSpaceVehiclePreview row; row.vehicle = VehicleID{static_cast<uint32_t>(index)}; row.type = static_cast<VehicleType>(SlReadByte());
+			if (row.vehicle >= VehicleID::End() || row.type > VehicleType::Space) SlErrorCorrupt("Invalid native vehicle preview identity");
+			SlObject(&row, desc);
+			if (row.type != VehicleType::Space) continue;
+			if (rows.size() >= MAX_SPACE_VEHICLES || (!rows.empty() && row.vehicle <= rows.back().vehicle)) SlErrorCorrupt("Invalid native Space preview count");
+			rows.push_back(row);
 		}
 	}
 };

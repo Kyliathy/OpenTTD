@@ -9,12 +9,15 @@ from space_preview_checks import ROOT, chunks, identity, ordinary, read_stream, 
 from runner import current_run_context, run_native, save_native_capture
 
 
-def native(context, configuration, source=None, corrupt=None):
+def native(context, configuration, source=None, corrupt=None, handling=None):
     context.prepare_runtime()
     (context.runtime_dir / "scripts/game_start.scr").write_text("launch_center_test\n", encoding="utf-8")
     env = dict(os.environ)
     env.pop("OTTD_LAUNCH_CENTER_SOURCE", None)
     env.pop("OTTD_LAUNCH_CENTER_CORRUPT", None)
+    env.pop("OTTD_SURFACE_HANDLING_ACTION", None)
+    if handling is not None:
+        env["OTTD_SURFACE_HANDLING_ACTION"] = handling
     if source is not None:
         env["OTTD_LAUNCH_CENTER_SOURCE"] = str(source)
     if corrupt is not None:
@@ -33,7 +36,8 @@ def native(context, configuration, source=None, corrupt=None):
     for ppm in context.images.glob("*.ppm"):
         with Image.open(ppm) as raster:
             save_native_capture(context, raster, ppm, ppm.with_suffix(".png"))
-    return context.saves / "launch-center-408.sav"
+    # Match the native fixture's retained output name; callers validate the actual save header separately.
+    return context.saves / "launch-center-413.sav"
 
 
 def riff_location(stream, wanted):
@@ -63,7 +67,7 @@ def riff_location(stream, wanted):
 def damaged_copy(context, source, kind):
     context.prepare_runtime()
     version, stream = read_stream(source)
-    assert version == 408
+    assert version == 414
     start, body, length, end = riff_location(stream, b"LCTR")
     assert length == 25
     changed = bytearray(stream)
@@ -113,7 +117,7 @@ def reject(context, configuration, source, kind):
             env=dict(os.environ, OTTD_LAUNCH_CENTER_SOURCE=str(source)), timeout=45)
     text = log.read_text(encoding="utf-8", errors="replace")
     assert result.returncode != 0 and "All tests passed" not in text, log
-    assert any(reason in text.lower() for reason in ("launch-center", "launch centers", "launch-center record")), log
+    assert any(reason in text.lower() for reason in ("launch-center", "launch centers", "launch-center record", "surface handling")), log
     print(f"Native corrupt launch-center rejection: {kind}", flush=True)
 
 
@@ -126,7 +130,7 @@ def main():
     original = identity(source)
     built = native(context.for_feature("space", "launch-center-build"), args.configuration)
     version, data = chunks(built)
-    assert version == 408
+    assert version == 414
     next_generation, count = struct.unpack(">QH", data[b"LCTR"][3:13])
     assert (next_generation, count) == (3, 1)
     assert len(data[b"LCTR"][3:]) == 25
