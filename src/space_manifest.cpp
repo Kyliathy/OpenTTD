@@ -1,10 +1,15 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file space_manifest.cpp Actual native spacecraft fuel/service custody; Plan9 Groups2C/8C. */
+/** @file space_manifest.cpp Actual native spacecraft fuel/service custody.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups2C/8C.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1/1B; exclusive Core service and packet custody.
+ */
 #include "stdafx.h"
 #include "space_manifest.h"
+#include "orbital_service.h"
 #include "space_pod.h"
 #include "space_transition.h"
 #include "space_vehicle.h"
+#include "space_structure.h"
 #include "launch_operations.h"
 #include "launch_center_cmd.h"
 #include "multilayer_space_content.h"
@@ -202,8 +207,14 @@ CommandCost CmdCarryLaunchProbe(DoCommandFlags flags, VehicleID rocket_id, uint6
 	}
 	return CommandCost{};
 }
+/** Service through the existing Earth/onboard owner; a reserved Core job must be controlled at its own berth.
+ * @param flags Estimate or execute. @param vehicle Native probe ID. @param generation Exact hull incarnation.
+ * @param cancel True pauses the existing service. @return Complete service admission/control or unchanged refusal.
+ */
 CommandCost CmdServiceLaunchProbe(DoCommandFlags flags, VehicleID vehicle, uint64_t generation, bool cancel)
 {
+	// A Core reservation is the sole service owner until completed or explicitly cancelled there.
+	if (const auto *craft = ResolveSpaceCraft({vehicle, generation}); craft != nullptr && HasOrbitalServiceAssignment(*craft)) return CMD_ERROR;
 	auto *v = ResolveSpaceCraft({vehicle, generation}); if (v == nullptr || v->owner != _current_company || !v->manifest ||
 		(v->construction.placement != SpacePlacement::SurfaceStored && v->construction.placement != SpacePlacement::Orbital)) return CMD_ERROR;
 	const auto model = GetSpaceVehicleModel(*v); if (model != 15 && model != 19 && model != 20) return CMD_ERROR;
@@ -255,7 +266,8 @@ SpaceFlightBlock GetSpaceResupplyBlock(const SpaceVehicle &rocket, SpaceCraftRef
 		GetSpaceVehicleModel(rocket) != 14 || !rocket.manifest || rocket.manifest->passenger != SpaceCraftRef{}) return SpaceFlightBlock::TargetLost;
 	const auto model = GetSpaceVehicleModel(*v);
 	if (model != 15 && model != 19 && model != 20) return SpaceFlightBlock::TargetLost;
-	if (v->mission.phase != SpaceMissionPhase::Holding || (v->manifest && v->manifest->service_ticks != 0) ||
+	// Incoming paid supplies retain their carrier while a Core owns the receiver's precise service berth.
+	if (HasOrbitalServiceAssignment(*v) || v->mission.phase != SpaceMissionPhase::Holding || (v->manifest && v->manifest->service_ticks != 0) ||
 		(v->space_orders.cursor < v->space_orders.entries.size() && !IsSpaceMiningServiceWait(v->space_orders))) return SpaceFlightBlock::ReceiverBusy;
 	const auto &from = *rocket.manifest; const auto *to = v->manifest.get();
 	const size_t pod_cap = GetMultiLayerSpaceBudget().starting_pods;
@@ -360,9 +372,14 @@ bool ValidateSpaceManifestRecords(std::span<const SpaceManifestRecord> records)
 	}
 	return true;
 }
-/** Includes native ordinary containers, never cached counts or borrowed packet copies. */
+/** Audit native ordinary and orbital packet owners before accepting manifest custody.
+ * @param owned Previously encountered physical packet identities, extended by each actual container.
+ * @return Whether ordinary stations, vehicles, construction jobs and completed Core stock remain exclusive.
+ */
 static bool OtherPacketOwners(std::set<CargoPacketID> &owned)
 {
+	// Completed module stock and unfinished inputs are separate physical owners; neither may also appear in a spacecraft compartment.
+	if (!InsertOrbitalPacketOwners(owned)) return false;
 	auto add = [&](const auto &list) { for (const auto *cp : list) if (!owned.insert(cp->index).second) return false; return true; };
 	for (const auto *station : Station::Iterate()) {
 		for (CargoType cargo : EnumRange(NUM_CARGO)) if (station->goods[cargo].HasData()) {

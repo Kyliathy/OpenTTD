@@ -266,6 +266,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _space_production_chunk_handlers;
 	extern const ChunkHandlerTable _space_manifest_chunk_handlers;
 	extern const ChunkHandlerTable _space_pod_chunk_handlers;
+	extern const ChunkHandlerTable _space_structure_chunk_handlers;
 	extern const ChunkHandlerTable _space_transition_chunk_handlers;
 	extern const ChunkHandlerTable _space_descent_chunk_handlers;
 	extern const ChunkHandlerTable _launch_center_chunk_handlers;
@@ -329,6 +330,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_space_production_chunk_handlers,
 		_space_manifest_chunk_handlers,
 		_space_pod_chunk_handlers,
+		_space_structure_chunk_handlers,
 		_space_transition_chunk_handlers,
 		_space_descent_chunk_handlers,
 		_launch_center_chunk_handlers,
@@ -3373,6 +3375,7 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateSpaceProductionLoadPreview();
 		ValidateSpaceManifestLoadPreview();
 		ValidateSpacePodLoadPreview();
+		ValidateSpaceStructureLoadPreview();
 		ValidateSpaceTransitionLoadPreview();
 		ValidateSpaceDescentLoadPreview();
 		ValidateLayerPortalWorkLoadPreview();

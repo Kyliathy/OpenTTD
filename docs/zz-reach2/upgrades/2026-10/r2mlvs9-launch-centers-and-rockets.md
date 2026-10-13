@@ -47,11 +47,18 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 264-274 | `AD-10` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains 20-tile orbital release, separate Surface hub membership and one packet owner; a consumer must not redefine it locally. |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 327-338 | `AD-10` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains 20-tile orbital release, separate Surface hub membership and one packet owner; a consumer must not redefine it locally. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/station_cmd.h](../../../../src/station_cmd.h) | 29-47 | Station construction declarations/traits own IDs, joining and facility mutation; specialized launch and underground handling reuse this public command boundary. |
 
-Status: active toward full completion,2026-10-13; native waterside facility, Surface handling, paid hull/pod assembly, reusable launch and descent/service owners are implemented. Consolidated verification is recorded below. Orbital resupply, remaining mission/facility integration, final art and full acceptance remain active. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs8 and r2mlvs1 cargo definitions. Production supply chains come from r2mlvs6; development fixtures may supply inventory explicitly.
+Status: resumed at user request,2026-10-13; ordered reconciliation and focused acceptance are complete through Group10 and Group11's paid probe deployment tasks. Task11.3 retains the operational orbital-facility producer gate described below. Remaining integration, final art and full acceptance stay open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs8 and r2mlvs1 cargo definitions. Production supply chains come from r2mlvs6; development fixtures may supply inventory explicitly.
+
+The latest Plan8/10/11 batch consumes the existing paid launch producer for two
+real construction-probe deliveries. RelWithDebInfo paid resupply, survey and
+descent regressions pass with save415; this adds no newly completed Plan9 task.
+See `logs/space-construction-verification.json`. Debug validation is deferred
+to the next substantial batch. The full Plan9/10 goal remains unfinished and
+has resumed under the user's latest instruction to continue Plan9 in order.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -95,7 +102,7 @@ and the two independent20-tile circles retain their own owners.
 
 ## Public Handoff Contract
 
-Public owner: `src/launch_center.h`. `LaunchCenterAnchor`, `LaunchCollectionHub` and `SurfaceHandlingJob` are delivered native owners. `src/hub_cargo.h` supplies the packet-owner transfer adapter; `src/launch_center_cmd.h` owns synchronized generation-checked handling commands. `SpaceDescentJob`, `CanReleaseOrbitalCargo` and `CommitOrbitalCargoRelease` now have working-tree implementations; their behavioral handoff remains pending the connected batch's build/native gates. Consumers must verify that evidence before claiming orbital release readiness.
+Public owner: `src/launch_center.h`. `LaunchCenterAnchor`, `LaunchCollectionHub` and `SurfaceHandlingJob` are delivered native owners. `src/hub_cargo.h` supplies the packet-owner transfer adapter; `src/launch_center_cmd.h` owns synchronized generation-checked commands. `SpaceDescentJob`, `CanReleaseOrbitalCargo` and `CommitOrbitalCargoRelease` passed the connected413 native descent/service gates in both configurations, indexed by `logs/space-survey-verification.json`. Release requires explicit craft/center/paid-pod generations and quantity; the paid pod owns the saved descent packets and recovery reservation. Public declarations now document arguments, sole ownership, invalid references and refusal behavior. `src/tests/launch_contract.cpp` compile-checks the exact shared signatures and packet-owner types; its new build acceptance is recorded with the resumed batch below.
 
 ## Implementation Tasks
 
@@ -209,7 +216,7 @@ unverified requirements unchecked.
 - [X] 2.1 Track the center-to-qualifying-water relationship through explicit validation or a derived nearby-center index. Guard clear, terraform and water conversion/removal paths before they remove the last qualifying edge.
 - [X] 2.2 Allow changes that retain another valid edge; test simultaneous/area operations sequentially against updated state so two removals cannot each assume the other edge survives.
 - [X] 2.3 Define the independent Surface collection circle and Space release circle at the immutable anchor, clipped at map edges without wrapping. Keep precise rocket service/docking approaches separate.
-- [ ] 2.4 Add bounded pad queue, assembly/service slots, recovery storage and ordinary Surface freight supply access. Save queue/capacity authority; a station join cannot enlarge orbital range.
+- [X] 2.4 Add bounded pad queue, assembly/service slots, recovery storage and ordinary Surface freight supply access. Save queue/capacity authority; a station join cannot enlarge orbital range.
 
 **Producer reconciliation, 2026-10-12:** tasks2.1-2.3 were already implemented by
 the native facility batch and are now reconciled with their actual exports and
@@ -217,7 +224,17 @@ fixtures. The bounded center index preflights last-water removal through clear,
 area clear, terraform, dock/buoy, depot and water-conversion boundaries. Inclusive
 Q16 circles retain the immutable anchor and separate Surface/Space semantics;
 geometry fixtures and actual native water/placement cases pass in the current
-batch. Task2.4 remains pending; geometry grants no pad, service or recovery stock.
+batch. The resumed reconciliation below closes2.4 using its later native producers.
+
+**Task2.4 reconciliation,2026-10-13:** native `LaunchOperations` owns the bounded
+eight-craft pad queue and exclusive hull/pod/service workshop through `LCOP`;
+`SpaceDescentJob` reserves recovery slots and per-cargo headroom against actual
+Station goods. Ordinary joined freight and explicit reverse handling feed that
+same inventory. The separate immutable-anchor circles do not derive from joined
+station extent. Both-configuration assembly, logistics, flight and descent
+receipts in `logs/space-survey-verification.json` supersede the earlier missing
+producer state. This closes the facility/slot requirement, without closing final
+graphics, all mission integrations or whole-plan acceptance.
 
 **Implementation batch after the native facility cycle,2026-10-12:** Group3's
 exclusive train/lorry membership and Group4's full-footprint validation, joined
@@ -256,21 +273,30 @@ passes6,391 assertions/37 cases, native UI commissioning, exact interrupted
 continuation/paused resave, takeover/deletion/reuse and18 corrupt loads/16
 independent previews. The assembly report is
 `mlm/reviews/space/assembly-verify/20261012-205744-7cadea6cca/reports/launch-assembly-verification.json`.
-Both configurations compile; the Debug assembly fixture predates the final
-console-owner restoration correction. Its complete acceptance remains pending
-and joins the next substantial batch. Checkboxes remain open until both-config
-evidence closes them. See `logs/launch-assembly-verification.json` for exact
-source/binary/report identities and outstanding work.
+Both configurations compile. The initially deferred Debug fixture was subsequently
+verified in the survey/service batch; see the reconciliation below. The original
+`logs/launch-assembly-verification.json` retains its dated411 evidence.
+
+**Group2B acceptance reconciliation,2026-10-13:** the Debug413 native assembly
+report at `mlm/reviews/space/assembly-verify/20261013-015909-9c030d5a91/reports/launch-assembly-verification.json`
+closes the old Debug deferral alongside the RelWithDebInfo411 report above.
+It verifies four paid native models, exact interrupted continuation and ordinary
+resave over18 owner families,18 malformed loads and16 independent previews.
+Later both-configuration logistics/flight/descent receipts cover real service
+and recovery reservations. The slot implementation still matches the source
+identity recorded in `logs/space-survey-verification.json`; public header
+documentation is now expanded to state ownership and invalid-reference rules.
+These are dated focused producer checks, not a new broad regression claim.
 
 {{HARD}}
-- [ ] 2B.1 Define rotated disjoint pad, workshop, recovery and storage zones
+- [X] 2B.1 Define rotated disjoint pad, workshop, recovery and storage zones
   inside the immutable native footprint; keep precise service approach separate
   from both20-tile circles. Use the existing station goods for supplies/storage.
-- [ ] 2B.2 Add bounded native pad/workshop references and persist them, rejecting
+- [X] 2B.2 Add bounded native pad/workshop references and persist them, rejecting
   duplicate/reused/foreign identities. Missing service/descent producers may
   not acquire operational reservations. Refuse demolition with paid assets;
   supported deletion/ownership changes preserve remaining native craft/work.
-- [ ] 2B.3 Verify real center geometry, bounded queues, native deletion/reuse,
+- [X] 2B.3 Verify real center geometry, bounded queues, native deletion/reuse,
   ownership and old-save absence in both configurations alongside assembly.
 
 ### Group 3 - Surface facility and placement
@@ -376,9 +402,27 @@ feature groups; fixes within the same verification cycle do not start a new batc
 ### Group 7 - Publish launch, hub and release contracts
 
 {{HARD}}
-- [ ] 7.1 Publish `src/launch_center.h` exports `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease` with exact owned fields and invalid-reference rules.
-- [ ] 7.2 Declare release validation/commit inputs now; implement orbital release in the following area. Publish tested Surface handling separately from still-pending rocket/descent behavior.
-- [ ] 7.3 Register source/build entries, compile the public contract fixture and update all consumers if names change. r2mlvs10 may consume release only after its behavioral tests pass.
+- [X] 7.1 Publish `src/launch_center.h` exports `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease` with exact owned fields and invalid-reference rules.
+- [X] 7.2 Declare release validation/commit inputs now; implement orbital release in the following area. Publish tested Surface handling separately from still-pending rocket/descent behavior.
+- [X] 7.3 Register source/build entries, compile the public contract fixture and update all consumers if names change. r2mlvs10 may consume release only after its behavioral tests pass.
+
+**Resumed415 handoff,2026-10-13:** both RelWithDebInfo and Debug build the
+public signature/packet-owner fixture and pass446 assertions in12 focused
+`[launch-economics],[launch-assembly-contract],[space-logistics-contract]` cases.
+Both also pass current-schema native paid assembly: exact interrupted and
+ordinary continuation over18 owner families,18 malformed actual loads and16
+independent copied previews. The assembly harness is split into numbered
+`launch_assembly_checks-1.py/-2.py/-3.py` bursts because its earlier full Debug
+run took175 seconds. Bursts2/3 require the explicit successful lifecycle save
+and a valid native control continuation; they preserve that source and the
+retained408 input. Output basenames remain414 while actual save headers must
+be415. No recipe, packet/Engine identity, save version or runtime charge changes.
+The focused `launch_flight_checks-1.py` additionally verifies a paid delivery-phase
+interruption in both configurations, comparing18 owner families and the existing
+native deployment, fuel-once, reuse and lost-home recovery assertions. Other
+phase/corruption receipts remain dated evidence from the earlier connected batches.
+Commands, exact source/binary/report identities and remaining scope are indexed
+by `logs/launch-contract-ledger-verification.json`.
 
 ### Area Mandatory Reading - Launch and payload lifecycle
 
@@ -405,6 +449,7 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 const int64_t dx = int64_t(craft_plane_x) - int64_t(anchor_plane_x);
 const int64_t dy = int64_t(craft_plane_y) - int64_t(anchor_plane_y);
 const int64_t r = int64_t{20} * int64_t(fixed_units_per_tile);
+// Reject an out-of-range axis before squaring so release geometry cannot overflow or admit wrapped positions.
 if (dx < -r || dx > r || dy < -r || dy > r) return false;
 return dx * dx + dy * dy <= r * r; // inclusive circular boundary
 ```
@@ -414,10 +459,21 @@ return dx * dx + dy * dy <= r * r; // inclusive circular boundary
 ### Group 8 - Define rocket model and saved launch phases
 
 {{MEDIUM}}
-- [ ] 8.1 Register the reusable cargo rocket through the native Space vehicle/engine owner. Earth hull assembly consumes its Steel/Goods once; bind purchase/service, propellant, separate dry-hull/payload/fuel mass, preparation and turnaround to the revised profile budget.
-- [ ] 8.2 Define mining/survey/construction probe payloads, Steel/Goods construction stock and later advanced supplies. Retain separate hull, carried probe and cargo identities; check canonical cargo weight/classes, not a tonne per Goods crate. Ordinary aircraft are not converted.
-- [ ] 8.3 Register the three minimal probe hull/engine roles and passive carry/deploy identity through the native Space owner. Initially all require material-paid Earth launch-center commissioning; an idle deployed shell needs no asteroid target. Plan10 adds role actions/orders to those same units, with later completed-Assembly commissioning owned by Plan11.
-- [ ] 8.4 Save GroundLoading, Preparing, Ascent, OrbitalDelivery, ReturnRecovery and Service phases with source center, explicit destination and simulation timer. Define resumable blocked reasons for each phase.
+- [X] 8.1 Register the reusable cargo rocket through the native Space vehicle/engine owner. Earth hull assembly consumes its Steel/Goods once; bind purchase/service, propellant, separate dry-hull/payload/fuel mass, preparation and turnaround to the revised profile budget.
+- [X] 8.2 Define mining/survey/construction probe payloads, Steel/Goods construction stock and later advanced supplies. Retain separate hull, carried probe and cargo identities; check canonical cargo weight/classes, not a tonne per Goods crate. Ordinary aircraft are not converted.
+- [X] 8.3 Register the three minimal probe hull/engine roles and passive carry/deploy identity through the native Space owner. Initially all require material-paid Earth launch-center commissioning; an idle deployed shell needs no asteroid target. Plan10 adds role actions/orders to those same units, with later completed-Assembly commissioning owned by Plan11.
+- [X] 8.4 Save GroundLoading, Preparing, Ascent, OrbitalDelivery, ReturnRecovery and Service phases with source center, explicit destination and simulation timer. Define resumable blocked reasons for each phase.
+
+**Group8 reconciliation,2026-10-13:** revision2 definitions register native
+rocket14 and probes15/19/20 with separate paid production receipts and packet
+compartments. `SpaceTransition` saves GroundLoading, Preparing, Ascent,
+OrbitalDelivery, ReturnRecovery, Turnaround and Holding; probe service has its
+own saved `SpaceManifest` timer/location. These are the concrete owners of the
+original phase sketch. Both-configuration assembly/logistics/flight/descent
+receipts in `logs/space-survey-verification.json`, and paid resupply receipts in
+`logs/space-resupply-verification.json`, verify dormant carry, same-unit deployment,
+mass-limited Goods, interruptions and blocked recovery. Unfinished orbital
+facility commissioning remains with Plan11; these definitions grant none.
 
 Context has compacted 1 times while executing this group.
 
@@ -428,20 +484,21 @@ station view, exposes the four revision2 recipes/capital costs and manages
 paused work and explicit recovery of an existing paid hull at the same site.
 Commissioning consumes22 Steel/36 Goods and660,000 capital for the four-role
 fixture; recovery neither consumes a second hull recipe nor repays its capital.
-Full launch/deployment, pods, service, descent and Plan10 role actions remain
-queued in their original groups. Debug acceptance carries forward with the next
-substantial implementation batch under the user's build-cadence correction.
+The original411 checkpoint deferred launch/deployment, pods, service, descent
+and Debug acceptance. Group2B's reconciliation above records the later Debug
+assembly acceptance; the connected413/414 groups record the later flight and
+logistics deliveries. Their full-plan integration tasks retain separate gates.
 
 {{HARD}}
-- [ ] 8B.1 Build model14/15/19/20 through the existing Engine/Vehicle owners,
+- [X] 8B.1 Build model14/15/19/20 through the existing Engine/Vehicle owners,
   consuming delivered revision2 materials once and charging capital once.
   Preflight station/vehicle generations, date, all inputs, fleet/slot and pools
   before mutation. Ordinary vehicle purchase/clone remains refused.
-- [ ] 8B.2 Save one paid native hull/receipt, remaining assembly work and exact
+- [X] 8B.2 Save one paid native hull/receipt, remaining assembly work and exact
   Surface placement. Pause/resume work without repayment; dormant craft cannot
   execute orbital missions. Retain incomplete paid work after a lost center,
   with explicit same-site recovery rather than binding to a reused station ID.
-- [ ] 8B.3 Verify physical input consumption, no payment/RNG/estimate mutation,
+- [X] 8B.3 Verify physical input consumption, no payment/RNG/estimate mutation,
   three probe roles, capital/slot contention, interrupted exact continuation,
   malformed load/preview refusal and old saved identities in both builds.
   Flight/deployment, payload supplies/pods and paid service retain original gates.
@@ -581,25 +638,77 @@ Context has compacted 2 times while executing this group.
 
 ### Group 9 - Work the reusable-rocket and persistent-probe ledger
 
+**Resumed numerical fixtures,2026-10-13:**
+[worked reusable-rocket, persistent-probe and first-Core ledgers](r2mlvs9-a-launch-ledgers.md)
+consume the frozen revision2 recipes and Surface procurement prices. The new
+`[launch-economics]` fixtures calculate retained fuel and two flights with one
+paid hull, paid replacement shells, separate service upkeep and both26t/22t
+construction manifests. The historical25,900 subtotal excludes1,000 of actual
+148-tick onboard service upkeep; the complete service subtotal is26,900 before
+travel/wait upkeep. Plan1's budget now states that boundary explicitly. These
+first-Core fixtures price a completed project; current native construction
+evidence still proves only paid deliveries and interrupted first-frame work.
+Both-configuration compiled/paid-native acceptance is recorded in Group7's
+resumed415 handoff and `logs/launch-contract-ledger-verification.json`.
+
 {{MEDIUM}}
-- [ ] 9.1 Calculate first purchase/launch and a second flight using the same rocket hull: fuel, preparation, service, pad occupancy and replacement cost are distinct charges from payload value.
-- [ ] 9.2 Specify probe deployment as releasing the carried robot into orbital operation once. Subsequent mined cargo descents pay pod/service costs without purchasing or launching that probe again.
-- [ ] 9.3 Publish revised first-mining/two-return and first-Core two-material launch fixtures from Plan1 tuning, including mass-limited Goods, exhausted holds and unavailable service. No free hull, preassembled Core bypass or duplicated cargo is allowed.
+- [X] 9.1 Calculate first purchase/launch and a second flight using the same rocket hull: fuel, preparation, service, pad occupancy and replacement cost are distinct charges from payload value.
+- [X] 9.2 Specify probe deployment as releasing the carried robot into orbital operation once. Subsequent mined cargo descents pay pod/service costs without purchasing or launching that probe again.
+- [X] 9.3 Publish revised first-mining/two-return and first-Core two-material launch fixtures from Plan1 tuning, including mass-limited Goods, exhausted holds and unavailable service. No free hull, preassembled Core bypass or duplicated cargo is allowed.
 
 ### Group 10 - Load and prepare a launch atomically
 
 {{HARD}}
-- [ ] 10.1 Reserve the pad/approach, exact propellant and payload capacity through saved launch ownership. Validate current center/company and destination before loading/preparation consumes anything.
-- [ ] 10.2 Move actual cargo into the rocket hold once, with explicit packet split failure handling. Keep carried probe identity dormant: it must not tick independently while inside the payload.
-- [ ] 10.3 Advance preparation from simulation ticks and debit fuel/cost at the declared single event. Cancellation before/after that event follows an explicit retained/refunded-input rule, never an accidental second charge.
+- [X] 10.1 Reserve the pad/approach, exact propellant and payload capacity through saved launch ownership. Validate current center/company and destination before loading/preparation consumes anything.
+- [X] 10.2 Move actual cargo into the rocket hold once, with explicit packet split failure handling. Keep carried probe identity dormant: it must not tick independently while inside the payload.
+- [X] 10.3 Advance preparation from simulation ticks and debit fuel/cost at the declared single event. Cancellation before/after that event follows an explicit retained/refunded-input rule, never an accidental second charge.
+
+**Group10 reconciliation,2026-10-13:** `LCOP` owns the active pad and ordered
+queue; native `SPSU` compartments and Vehicle cargo own all loaded packets.
+`CmdBeginLaunchFlight` preflights both fuel burns, payload mass, exact center,
+queue head and destination, then charges one accepted mission fee. Dormant
+passengers do not execute orbital ticks; `SPFL` receipts/timers own preparation,
+burns and cancellation. Preparation cancellation retains unburned fuel and
+payload while keeping the accepted fee and elapsed pad upkeep paid. After
+outbound burn, cancellation uses the saved recovery leg. The both-configuration
+413/414 producer fixtures cover preparation cancellation and all phase
+interruptions; the resumed415 focused flight additionally verifies current
+paid loading, pad contention, deployment, same-hull reuse and interrupted
+continuation. It introduces no orbital module destination.
 
 ### Group 11 - Deliver payload and recover the same rocket
 
+**Operational-facility integration gate,2026-10-13:** Plan11's416/417 batches
+now deliver explicit paid-frame Core activation, bounded native stock and one
+precise paid probe-service berth in `src/space_structure.h`,
+`src/orbital_station.h` and `src/orbital_service.h`. Group1B/task1.4 pass in
+RelWithDebInfo and Debug: actual paid part resupply, atomic shared750J work,
+pause/cancellation/company lifecycle,26-family continuation and malformed
+full-load/preview refusals. See `logs/orbital-service-verification.json`;
+`logs/orbital-core-verification.json` retains the earlier416 checkpoint.
+FrameComplete alone still grants no facility. Later module construction,
+Dock/Storage activation, safe removal and rocket-to-module cargo delivery
+remain open. Keep task11.3 pending while Plan11 Groups2-6 finish those contracts
+and this plan integrates the real destination. Generation-qualified
+Craft resupply remains a distinct destination, and cannot substitute for direct
+module delivery. Existing paid probe deployment and same-rocket recovery
+evidence remain valid.
+
 {{HARD}}
-- [ ] 11.1 Drive ascent through r2mlvs8 `SpaceTransition`, then perform one synchronized payload delivery/deployment after destination capacity or deployable-unit capacity is reserved.
-- [ ] 11.2 Activate a carried probe exactly once with saved target/home reference; test save immediately before and after activation without two ticking copies.
+- [X] 11.1 Drive ascent through r2mlvs8 `SpaceTransition`, then perform one synchronized payload delivery/deployment after destination capacity or deployable-unit capacity is reserved.
+- [X] 11.2 Activate a carried probe exactly once with saved target/home reference; test save immediately before and after activation without two ticking copies.
 - [ ] 11.3 Return/recover the original rocket and service it before reuse. If an orbital module destination is not yet implemented by r2mlvs11, keep that delivery integration pending while probe deployment proceeds independently.
 - [ ] 11.4 Test pad contention, full hold/destination and lost target at each transition; preserve payload in its current authoritative owner until valid completion or explicit diversion.
+
+**Group11 scope,2026-10-13:** tasks11.1/11.2 close the carried-probe path:
+the already paid native unit owns its deployable capacity, becomes orbital once
+and retains its saved target/home identity. The delivery-phase415 fixture saves
+immediately before deployment, continues through deployment/recovery and
+compares18 owner families with uninterrupted completion in both configurations.
+The same rocket's recovery/turnaround is delivered. Task11.3 remains unchecked
+for the explicitly required future module integration;11.4 retains complete
+destination/failure acceptance, including those missing facilities. Do not
+advance their dependent mutation or runtime claims from a FrameComplete record.
 
 ### Local Mandatory Reading - Orbital resupply and repeat batch
 

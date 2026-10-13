@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3.",
   "schema_version": 2,
   "review_root": "mlm/reviews",
   "runtime_root": "mlm/runtime",
@@ -1979,7 +1979,7 @@
         "[.launch-assembly]"
       ],
       "context_policy": "native Station packet consumption and Vehicle receipt/work/placement ownership; actual synchronized command payment and save writer",
-      "invocation": "Run [.launch-assembly] through launch_assembly_checks.py"
+      "invocation": "Run bounded [.launch-assembly] bursts through launch_assembly_checks-1.py, -2.py and -3.py; pass the lifecycle checkpoint with --source to bursts2/3. The complete launch_assembly_checks.py entry remains available. Owner: r2mlvs9-launch-centers-and-rockets.md Groups2B/8B."
     },
     {
       "producer": "src/tests/space_logistics.cpp",
@@ -2009,7 +2009,7 @@
         "[.launch-flight]"
       ],
       "context_policy": "native rocket Vehicle transition/pad owner and paid dormant probe activation; inherited invocation",
-      "invocation": "Run [.launch-flight] through launch_flight_checks.py"
+      "invocation": "Run [.launch-flight] through launch_flight_checks.py; launch_flight_checks-1.py verifies one selected interruption phase as a bounded burst. Owner: r2mlvs9-launch-centers-and-rockets.md Groups9-11."
     },
     {
       "producer": "src/tests/multilayer/acceptance/launch_logistics_checks.py",
@@ -2977,6 +2977,901 @@
         }
       ],
       "invocation": "python -B src/tests/multilayer/acceptance/space_resupply_checks.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/space_construction.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "construction"
+        }
+      ],
+      "test_tags": [
+        "[space-construction-contract]",
+        "[.space-construction]"
+      ],
+      "context_policy": "Paid two-builder Earth delivery, retained cancellation and physical job replay; inherited invocation",
+      "invocation": "Run [.space-construction] through space_construction_checks.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_construction_checks.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "construction-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-ground-production"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-cancel-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-old-empty"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-resume-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-resume-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-replay-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-replay-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-ordinary-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-ordinary-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-capital"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-strip"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-consumption"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-quantity"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-future-target"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-capital"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-strip"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-consumption"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-quantity"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-future-target"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-missing"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-capital"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-strip"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-consumption"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-quantity"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-future-target"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-ownership"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-unowned-reload"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-cancel-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-cancel-work-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-corrupt-manifest-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-reject-manifest-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "construction-preview-manifest-packet"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/space_construction_checks.py [--configuration Debug] [--source <paid-bootstrap>]"
+    },
+    {
+      "producer": "src/tests/orbital_core.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "core"
+        }
+      ],
+      "test_tags": [
+        "[orbital-core-contract]",
+        "[.orbital-core]"
+      ],
+      "context_policy": "Paid native Core activation, precise physical stock exchange and inherited isolated invocation; Plan11 Group1",
+      "invocation": "Run [.orbital-core] through orbital_core_checks-1.py / -2.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_core_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "core-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-resume-activating"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-resume-stored"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-ordinary-activating"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-ordinary-stored"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_core_checks-1.py [--configuration Debug] --source <paid-construction-frame>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_core_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "core-refusals"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-presence"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-activation"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-pending-stock"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-packet-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-aging"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-damage-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-presence"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-activation"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-pending-stock"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-packet-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-aging"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-presence"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-activation"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-pending-stock"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-packet-count"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-aging"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-preview-old-version"
+        }
+      ],
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_core_checks-2.py [--configuration Debug] --source <core-stored-417.sav>"
+    },
+    {
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_service_checks-1.py / -2.py with immutable paid Core input",
+      "producer": "src/tests/orbital_service.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "service"
+        }
+      ],
+      "test_tags": [
+        "[orbital-service-contract]",
+        "[.orbital-service]"
+      ]
+    },
+    {
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_service_checks-1.py / -2.py with immutable paid Core input",
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "service-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-resume-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-resume-paused"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-resume-power"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-resume-last"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-ordinary-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-ordinary-paused"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-ordinary-power"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-ordinary-last"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-ownership"
+        }
+      ]
+    },
+    {
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_service_checks-1.py / -2.py with immutable paid Core input",
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "service-refusals"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-producer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-missing-metal"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-missing-electronics"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-future-craft"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-service-serial"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-damage-flag"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-producer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-missing-metal"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-missing-electronics"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-future-craft"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-service-serial"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-reject-flag"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-producer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-missing-metal"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-missing-electronics"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-duplicate-packet"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-packet-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-future-craft"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-service-serial"
+        },
+        {
+          "feature": "space",
+          "scenario": "service-preview-flag"
+        }
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "core-material-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-material-missing-goods"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-material-missing-steel"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-material-ordinary-missing-goods"
+        },
+        {
+          "feature": "space",
+          "scenario": "core-material-ordinary-missing-steel"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit immutable paid construction predecessors and isolated native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_service_checks-3.py [--configuration Debug] --work-source <paid-partial-work> --delivery-source <paid-first-delivery>"
+    },
+    {
+      "producer": "src/tests/orbital_module_reservation.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-reservation"
+        }
+      ],
+      "test_tags": [
+        "[.orbital-module-reservation]"
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [.orbital-module-reservation] through orbital_module_checks-1.py"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-reservation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-reservation-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-reservation-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-reservation-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-1.py [--configuration Debug] --source <paid-service-complete-417.sav>"
+    },
+    {
+      "producer": "src/tests/orbital_module_assembly.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-bootstrap"
+        }
+      ],
+      "test_tags": [
+        "[orbital-assembly-contract]",
+        "[.orbital-module-assembly]",
+        "[.orbital-bootstrap-receipt]"
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_module_checks-2.py through -5.py using immutable native predecessors"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly-prepare"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-2.py [--configuration Debug] with its explicit native source/preparation argument"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly-verify-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-resume-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-resume-partial"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-ordinary-work"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-ordinary-partial"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-3.py [--configuration Debug] with its explicit native source/preparation argument"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-3-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-resume-power"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-resume-last"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-ordinary-power"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-ordinary-last"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-3-1.py [--configuration Debug] --preparation <exact preparation report> --first-part <exact continuation-1 report>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-4.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly-refusals-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-fraction"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-remainder"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-future-interval"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-missing-interval"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-fraction"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-remainder"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-future-interval"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-missing-interval"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-fraction"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-remainder"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-future-interval"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-missing-interval"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-4.py [--configuration Debug] with its explicit native source/preparation argument"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-4-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-assembly-refusals-2"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-duplicate-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-consumer-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-missing-material"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-work-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-damage-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-duplicate-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-consumer-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-missing-material"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-work-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-duplicate-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-consumer-id"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-missing-material"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-work-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-assembly-preview-old-version"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-4-1.py [--configuration Debug] --source <genuine partial418 checkpoint>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-5.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-bootstrap-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-bootstrap-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-bootstrap-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-5.py [--configuration Debug] with its explicit native source/preparation argument"
     }
   ],
   "proof_cache": "logs/proofs/mlm/native-art",

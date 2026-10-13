@@ -119,6 +119,62 @@ $demoSaves = @(
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
 )
 
+# Recent paid Space checkpoints extend the numbered menu without renumbering the retained underground tour.
+$demoSaves += @(
+    @{ Name = 'space-workshop'; SaveName = 'space-workshop-415';
+        Snapshot = 'src\tests\fixtures\demos\space\space-workshop-415.sav';
+        Text = 'Paid hull assembly underway; inspect recipes and pause/resume the workshop; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-launch'; SaveName = 'space-launch-414';
+        Snapshot = 'src\tests\fixtures\demos\space\space-launch-414.sav';
+        Text = 'Reusable rocket preparing a paid launch; follow deployment, return and turnaround; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-descent'; SaveName = 'space-descent-414';
+        Snapshot = 'src\tests\fixtures\demos\space\space-descent-414.sav';
+        Text = 'Actual mined cargo descending in a paid pod to the Surface launch center; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-survey-live'; SaveName = 'space-survey-live-414';
+        Snapshot = 'src\tests\fixtures\demos\space\space-survey-live-414.sav';
+        Text = 'Owned survey probe at37/148 work; complete company-private resource knowledge; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-resupply'; SaveName = 'space-resupply-414';
+        Snapshot = 'src\tests\fixtures\demos\space\space-resupply-414.sav';
+        Text = 'Cargo-only rocket flight supplying the same orbital probe with paid parts and pods; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-core-build'; SaveName = 'space-core-build-415';
+        Snapshot = 'src\tests\fixtures\demos\space\space-core-build-415.sav';
+        Text = 'Two real builders and delivered Core materials; construction at37/740 work; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-core'; SaveName = 'space-core-417';
+        Snapshot = 'src\tests\fixtures\demos\space\space-core-417.sav';
+        Text = 'Operational paid Core, original panel and inventory; a completed service receipt; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-core-service'; SaveName = 'space-core-service-417';
+        Snapshot = 'src\tests\fixtures\demos\space\space-core-service-417.sav';
+        Text = 'Actual Core service in progress; pause, cancel or disable its real panel; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-module-reserved'; SaveName = 'space-module-reserved-418';
+        Snapshot = 'src\tests\fixtures\demos\space\space-module-reserved-418.sav';
+        Text = 'Storage holds exclusive Steel8/Goods8; competing blueprint remains empty; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-module-work'; SaveName = 'space-module-work-418';
+        Snapshot = 'src\tests\fixtures\demos\space\space-module-work-418.sav';
+        Text = 'Fractional Storage work and paused competing service; resume either physical job; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-module-power'; SaveName = 'space-module-power-418';
+        Snapshot = 'src\tests\fixtures\demos\space\space-module-power-418.sav';
+        Text = 'Same partial module with Core panel disabled; work waits without losing material; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-module-frame'; SaveName = 'space-module-frame-418';
+        Snapshot = 'src\tests\fixtures\demos\space\space-module-frame-418.sav';
+        Text = 'Steel/Goods consumed once; completed Storage frame remains inert pending activation; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+    @{ Name = 'space-module-cancelled'; SaveName = 'space-module-cancelled-418';
+        Snapshot = 'src\tests\fixtures\demos\space\space-module-cancelled-418.sav';
+        Text = 'Cancelled inputs returned physically; fresh replacement blueprint paid separately; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+)
+
 #The saves we have, with what each holds. They predate the gameplay profiles, so they load as Classic games.
 $knownSaves = @(
 	@{ Name = 'makinpr2-final-verification'; Text = 'your 256 x 256 game after the cross-layer train run (paused)' },

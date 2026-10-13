@@ -1,10 +1,15 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file space_descent.cpp One paid pod owns each saved cargo descent and recovery reservation. */
+/** @file space_descent.cpp One paid pod owns each saved cargo descent and recovery reservation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups12-14.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1/1B; exclusive Core stock and service berth.
+ */
 #include "stdafx.h"
 #include "launch_center.h"
 #include "launch_center_cmd.h"
 #include "space_pod.h"
 #include "space_vehicle.h"
+#include "space_structure.h"
+#include "orbital_service.h"
 #include "space_manifest.h"
 #include "space_transition.h"
 #include "multilayer_space_content.h"
@@ -38,9 +43,16 @@ uint GetIncomingSpaceDescent(LaunchCenterRef center, CargoType cargo)
 	return count;
 }
 bool HasSpaceDescentForCenter(LaunchCenterRef center) { return center.generation != 0 && RecoveryJobs(center) != 0; }
+/** Admit the complete existing descent owner only when no Core retains this hull's paid service berth.
+ * @param craft_ref Exact native sender incarnation. @param center_ref Explicit receiving center incarnation.
+ * @param pod_ref Actual paid recoverable shell. @param quantity Positive physical cargo units.
+ * @return Whether geometry, ownership, packet movement, receiver capacity and exclusive service state all permit release.
+ */
 bool CanReleaseOrbitalCargo(SpaceCraftRef craft_ref, LaunchCenterRef center_ref, SpacePodRef pod_ref, uint16_t quantity)
 {
 	const auto *v = ResolveSpaceCraft(craft_ref); const auto *center = ResolveLaunchCenter(center_ref); const auto *pod = ResolveSpacePod(pod_ref);
+	// The Core's single service berth cannot simultaneously authorize a cargo return that changes this manifest's allowance.
+	if (v != nullptr && HasOrbitalServiceAssignment(*v)) return false;
 	if (v == nullptr || center == nullptr || pod == nullptr || !Company::IsValidID(v->owner) || center->owner != v->owner || pod->state.owner != v->owner ||
 		v->construction.placement != SpacePlacement::Orbital || (GetSpaceVehicleModel(*v) != 15 && GetSpaceVehicleModel(*v) != 20) || !v->manifest ||
 		v->manifest->service_ticks != 0 || v->manifest->returns_remaining <= v->manifest->pending_returns || pod->descent ||
@@ -162,9 +174,15 @@ bool ValidateSpaceDescentLinks(std::span<const SpaceDescentRecord> records, std:
 	for (const auto &m : manifests) if (m.pending_returns != pending[{m.craft.vehicle, m.craft.generation}]) return false;
 	return true;
 }
+/** Revalidate descent custody against every actual physical cargo owner.
+ * @param records Copied descent transport pending acceptance or current validation.
+ * @return Whether packets, cargo counts and generation-qualified recovery obligations are consistent.
+ */
 static bool PhysicalDescents(std::span<const SpaceDescentRecord> records)
 {
 	std::set<CargoPacketID> owned;
+	// A descent can never own packets still held by either a construction job or a completed Core inventory.
+	if (!InsertOrbitalPacketOwners(owned)) return false;
 	auto add = [&](const auto &packets) { for (const auto *cp : packets) if (!owned.insert(cp->index).second) return false; return true; };
 	for (const auto *station : Station::Iterate()) {
 		for (const auto &goods : station->goods) if (goods.HasData()) for (const auto &[hop, packets] : *goods.GetData().cargo.Packets()) { (void)hop; if (!add(packets)) return false; }

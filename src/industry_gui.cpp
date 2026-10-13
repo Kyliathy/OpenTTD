@@ -22,6 +22,7 @@
 #include "layer_industry_processor.h"
 #include "layer_industry_baseline.h"
 #include "map_layer.h"
+#include "space_structure.h"
 #include "town.h"
 #include "cargo_type.h"
 #include "cheat_type.h"
@@ -789,6 +790,7 @@ public:
 void ShowBuildIndustryWindow()
 {
 	if (_game_mode != GameMode::Editor && !Company::IsValidID(_local_company)) return;
+	if (const auto *main = GetMainWindow(); main != nullptr && main->viewport != nullptr && main->viewport->layer == MapLayer::Space) { ShowSpaceConstructionWindow(); return; }
 	if (BringWindowToFrontById(WindowClass::BuildIndustry, 0)) return;
 	new BuildIndustryWindow();
 }

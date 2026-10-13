@@ -1,0 +1,325 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/d2um-underground-mines.md; paid Space checkpoints for r2mlvs9-launch-centers-and-rockets.md and r2mlvs11-orbital-stations-and-manufacturing.md. Native loading receipts preserve the original source identities.",
+  "date": "2026-10-13",
+  "prepared_conditions": "Acceptance worlds prepare Surface terrain, freight and service-part stock; native paid assembly, launches, mining, transfers, work and consumption are retained. This does not demonstrate a complete factory-to-launch supply chain.",
+  "checkpoints": [
+    {
+      "menu_number": 18,
+      "name": "space-workshop",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-workshop-415.sav",
+        "sha256": "c290621a9d697821aab1040232706436871c65c4a14ab11d9d502310b2fcdcd8"
+      },
+      "source": {
+        "path": "mlm/reviews/space/assembly-prepare/20261013-064418-10c9791ead/saves/assembly-partial-414.sav",
+        "sha256": "c290621a9d697821aab1040232706436871c65c4a14ab11d9d502310b2fcdcd8"
+      },
+      "description": "Paid hull assembly underway; inspect recipes and pause/resume the workshop",
+      "save_version": 415,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-18/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "76d83261906cc6add20c6048569e41458eb8ba89631d8bafd4be83fcc9188d3f"
+        }
+      }
+    },
+    {
+      "menu_number": 19,
+      "name": "space-launch",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-launch-414.sav",
+        "sha256": "02eb9fef7bb6f81f8fcf8d63d2991d1e12043855fa74d45b0149f3204a6bf6c5"
+      },
+      "source": {
+        "path": "mlm/reviews/space/flight-prepare-preparing/20261013-041252-7efcb7f257/saves/flight-partial-414.sav",
+        "sha256": "02eb9fef7bb6f81f8fcf8d63d2991d1e12043855fa74d45b0149f3204a6bf6c5"
+      },
+      "description": "Reusable rocket preparing a paid launch; follow deployment, return and turnaround",
+      "save_version": 414,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-19/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "0646403c5b7c9ce442a2c7b13c2da6d6c81a9a9a2197357901faffb74ad531c1"
+        }
+      }
+    },
+    {
+      "menu_number": 20,
+      "name": "space-descent",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-descent-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "source": {
+        "path": "mlm/reviews/space/descent-prepare/20261013-040503-58b0cb2a68/saves/descent-partial-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "description": "Actual mined cargo descending in a paid pod to the Surface launch center",
+      "save_version": 414,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-20/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "a1d0aac16c9b958a19d2c316b07f58fa80a7f12abbe061791ac85cc59352d99d"
+        }
+      }
+    },
+    {
+      "menu_number": 21,
+      "name": "space-survey-live",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-survey-live-414.sav",
+        "sha256": "320355339671a58dddedc23853bd56409779dacf000e217fa4f322df2b72517a"
+      },
+      "source": {
+        "path": "mlm/reviews/space/survey-prepare/20261013-040924-1a23e2f48a/saves/survey-partial-414.sav",
+        "sha256": "320355339671a58dddedc23853bd56409779dacf000e217fa4f322df2b72517a"
+      },
+      "description": "Owned survey probe at37/148 work; complete company-private resource knowledge",
+      "save_version": 414,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-21/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "b9258b22180e068ebb490bddee7808225acd0211e41e8668a90187e922167bea"
+        }
+      }
+    },
+    {
+      "menu_number": 22,
+      "name": "space-resupply",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-resupply-414.sav",
+        "sha256": "127ffe34d3d301a62a8dba6560cd05806fb12cffc01b37a78553335abbb82fcd"
+      },
+      "source": {
+        "path": "mlm/reviews/space/resupply-prepare/20261013-040503-9025f0985c/saves/resupply-ascent-414.sav",
+        "sha256": "127ffe34d3d301a62a8dba6560cd05806fb12cffc01b37a78553335abbb82fcd"
+      },
+      "description": "Cargo-only rocket flight supplying the same orbital probe with paid parts and pods",
+      "save_version": 414,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-22/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "bb96041d9c65c8299a309b191ef995668d2f0b6f60eb09d0c450f571f29a85a0"
+        }
+      }
+    },
+    {
+      "menu_number": 23,
+      "name": "space-core-build",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-core-build-415.sav",
+        "sha256": "45f71ef532c131b4485e8c015e1e7fad0519e78a534f8d52aced84b17ab165fb"
+      },
+      "source": {
+        "path": "mlm/reviews/space/construction-prepare/20261013-053250-b304881ae7/saves/construction-work-415.sav",
+        "sha256": "45f71ef532c131b4485e8c015e1e7fad0519e78a534f8d52aced84b17ab165fb"
+      },
+      "description": "Two real builders and delivered Core materials; construction at37/740 work",
+      "save_version": 415,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-2/20261013-162356-657d63bd96/reports/demo-guide-loads-2.json",
+          "sha256": "f35deeea865e5eff461f067aeab5bcb7eba8d3d48d346988d9073a3490cf443d"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-23/20261013-162356-657d63bd96/saves/ordinary-resave.sav",
+          "sha256": "c67ac92563ea26e0e5481db876d66e7b3ad6720481c6f8a58b50b2d4a0ba529e"
+        }
+      }
+    },
+    {
+      "menu_number": 24,
+      "name": "space-core",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-core-417.sav",
+        "sha256": "6e0cece29d4ea34044be9cf03f33d804d0b4ec3e10fd931763d33264e7c03d12"
+      },
+      "source": {
+        "path": "mlm/reviews/space/service-prepare/20261013-103218-403019c64b/saves/service-complete-417.sav",
+        "sha256": "6e0cece29d4ea34044be9cf03f33d804d0b4ec3e10fd931763d33264e7c03d12"
+      },
+      "description": "Operational paid Core, original panel and inventory; a completed service receipt",
+      "save_version": 417,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-24/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "42b07e7fcebc33a5f09a8c61c502c35fb0197ff33503fcc31f759d8ccfab3e76"
+        }
+      }
+    },
+    {
+      "menu_number": 25,
+      "name": "space-core-service",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-core-service-417.sav",
+        "sha256": "7e1af427b5570561173dcc25f2e19b981a73813fc5ecc107de6530f31cda5448"
+      },
+      "source": {
+        "path": "mlm/reviews/space/service-prepare/20261013-103218-403019c64b/saves/service-work-417.sav",
+        "sha256": "7e1af427b5570561173dcc25f2e19b981a73813fc5ecc107de6530f31cda5448"
+      },
+      "description": "Actual Core service in progress; pause, cancel or disable its real panel",
+      "save_version": 417,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-25/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "a79744c0d88dc38aebf0c4b51697e9655702d08d6195d1af0bb292f800b46d32"
+        }
+      }
+    },
+    {
+      "menu_number": 26,
+      "name": "space-module-reserved",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-module-reserved-418.sav",
+        "sha256": "879ca1ba9850bdda6d6b62c8e9b757f0aca5e643c15522ed05a80b4837cb4aa5"
+      },
+      "source": {
+        "path": "mlm/reviews/space/module-reservation-prepare/20261013-152737-2f7eb202ea/saves/module-reserved-418.sav",
+        "sha256": "879ca1ba9850bdda6d6b62c8e9b757f0aca5e643c15522ed05a80b4837cb4aa5"
+      },
+      "description": "Storage holds exclusive Steel8/Goods8; competing blueprint remains empty",
+      "save_version": 418,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-26/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "879ca1ba9850bdda6d6b62c8e9b757f0aca5e643c15522ed05a80b4837cb4aa5"
+        }
+      }
+    },
+    {
+      "menu_number": 27,
+      "name": "space-module-work",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-module-work-418.sav",
+        "sha256": "1400381a5a805fc488552d73c710c8c0d99067aa6d77d21e22576065ced9a7da"
+      },
+      "source": {
+        "path": "mlm/reviews/space/module-assembly-prepare/20261013-152631-7ee51b0de7/saves/module-assembly-partial-418.sav",
+        "sha256": "1400381a5a805fc488552d73c710c8c0d99067aa6d77d21e22576065ced9a7da"
+      },
+      "description": "Fractional Storage work and paused competing service; resume either physical job",
+      "save_version": 418,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-27/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "4d32156ea377ab016f0be60b6e95b2176fad7ae952d15ee13709a231ccd3e10b"
+        }
+      }
+    },
+    {
+      "menu_number": 28,
+      "name": "space-module-power",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-module-power-418.sav",
+        "sha256": "fdc60df03b0df3f6bcdeec80e3316073c4db4bf4ca7935f1348614e76450ba6c"
+      },
+      "source": {
+        "path": "mlm/reviews/space/module-assembly-prepare/20261013-152631-7ee51b0de7/saves/module-assembly-power-418.sav",
+        "sha256": "fdc60df03b0df3f6bcdeec80e3316073c4db4bf4ca7935f1348614e76450ba6c"
+      },
+      "description": "Same partial module with Core panel disabled; work waits without losing material",
+      "save_version": 418,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-28/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "18fe01607580ca630043595471af8dc2a77991f82ceb9aab41a494863e75ba4d"
+        }
+      }
+    },
+    {
+      "menu_number": 29,
+      "name": "space-module-frame",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-module-frame-418.sav",
+        "sha256": "0f10c5e085846c1ee2fca8c3d8945296e3b5366243ddaadff6d09e9250e00dca"
+      },
+      "source": {
+        "path": "mlm/reviews/space/module-assembly-prepare/20261013-152631-7ee51b0de7/saves/module-assembly-frame-418.sav",
+        "sha256": "0f10c5e085846c1ee2fca8c3d8945296e3b5366243ddaadff6d09e9250e00dca"
+      },
+      "description": "Steel/Goods consumed once; completed Storage frame remains inert pending activation",
+      "save_version": 418,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-29/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "0f10c5e085846c1ee2fca8c3d8945296e3b5366243ddaadff6d09e9250e00dca"
+        }
+      }
+    },
+    {
+      "menu_number": 30,
+      "name": "space-module-cancelled",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-module-cancelled-418.sav",
+        "sha256": "8af71a343be4a1dbb1b3c957c4f48a96ec96e38c13dd467062b52534b0f0f6fc"
+      },
+      "source": {
+        "path": "mlm/reviews/space/module-assembly-cancel/20261013-152648-53e87223ca/saves/module-assembly-cancelled-418.sav",
+        "sha256": "8af71a343be4a1dbb1b3c957c4f48a96ec96e38c13dd467062b52534b0f0f6fc"
+      },
+      "description": "Cancelled inputs returned physically; fresh replacement blueprint paid separately",
+      "save_version": 418,
+      "ordinary_load_418": {
+        "report": {
+          "path": "mlm/reviews/acceptance/demo-guide-saves-3/20261013-162516-e131f1b7f8/reports/demo-guide-loads-3.json",
+          "sha256": "e86e76e283fa7983d45a7d81adf98c44bb720eafe9991dbd2127e4f3fa8e4a77"
+        },
+        "resaved": {
+          "path": "mlm/reviews/acceptance/demo-guide-load-30/20261013-162516-e131f1b7f8/saves/ordinary-resave.sav",
+          "sha256": "8af71a343be4a1dbb1b3c957c4f48a96ec96e38c13dd467062b52534b0f0f6fc"
+        }
+      }
+    }
+  ],
+  "verification": {
+    "configuration": "RelWithDebInfo",
+    "source_inputs_unchanged": true,
+    "new_alias_and_numeric_choices_checked": 13,
+    "current_game_save_version": 418
+  }
+}

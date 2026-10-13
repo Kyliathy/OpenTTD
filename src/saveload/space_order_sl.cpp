@@ -86,6 +86,7 @@ struct SPORChunkHandler : ChunkHandler {
 			q.cursor = static_cast<uint8_t>(ReadInt(1)); const auto started = ReadInt(1);
 			if (started > 1) SlErrorCorrupt("Invalid Space order boolean");
 			q.started = started != 0; q.blocked = static_cast<SpaceOrderBlock>(ReadInt(1));
+			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs) && q.blocked >= SpaceOrderBlock::MaterialsMissing) SlErrorCorrupt("Unexpected construction wait in old Space orders");
 			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply) && q.blocked >= SpaceOrderBlock::ReturnsPending) SlErrorCorrupt("Unexpected mining budget wait in old Space orders");
 			q.timer_ticks = static_cast<uint32_t>(ReadInt(4)); q.work_ticks = static_cast<uint16_t>(ReadInt(2)); const auto orders = ReadInt(1);
 			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge) && q.work_ticks != 0) SlErrorCorrupt("Unexpected partial scan in old Space orders");

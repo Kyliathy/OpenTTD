@@ -424,6 +424,16 @@ enum class Commands : uint8_t {
 	DivertLaunchRecovery, ///< Explicitly recover a waiting rocket at an authorized replacement facility.
 	ReleaseOrbitalCargo, ///< Move actual cargo into a paid pod with saved, capacity-reserved descent custody.
 	RetargetSpaceDescent, ///< Select an authorized recovery center for the same retained pod and packets.
+	BuildSpaceBlueprint, ///< Paid empty native orbital Core site.
+	CancelSpaceBlueprint, ///< Retain unconsumed physical inputs for collection.
+	CollectSpaceConstructionInputs, ///< Recover cancelled job packets into a nearby builder hold.
+	ActivateOrbitalCore, ///< Begin saved activation of a paid native Core frame.
+	MoveOrbitalFreight, ///< Exchange actual packets at a precise operational Core approach.
+	CommissionOrbitalServices, ///< Explicitly commission a migrated Core's real panel without granting energy.
+	SetOrbitalPanelPaused, ///< Control actual Core panel availability.
+	ServiceOrbitalProbe, ///< Reserve/control the single paid Core service berth.
+	MoveOrbitalSupply, ///< Exchange actual RFMT/ELEC service packets at a Core.
+	ReserveOrbitalModuleInputs, ///< Reserve every missing recipe material from actual adjacent Core stock in one command.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

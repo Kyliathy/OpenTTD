@@ -749,6 +749,7 @@ enum class WindowClass : uint16_t {
 
 	SpaceSurvey, ///< Read-only persistent Space field and staged survey inspector.
 	LaunchAssembly, ///< Native Surface hull assembly and retained paid work.
+	SpaceConstruction, ///< Native orbital blueprints and delivered construction jobs.
 	Invalid = 0xFFFF, ///< Invalid window.
 };
 

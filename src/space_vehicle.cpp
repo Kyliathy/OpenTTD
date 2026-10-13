@@ -2,11 +2,16 @@
  * This file is part of OpenTTD, licensed under the GNU GPL version 2.
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
-/** @file space_vehicle.cpp Native orbital probe ownership, deterministic pursuit and conserved extraction. */
+/** @file space_vehicle.cpp Native orbital probe ownership, deterministic pursuit and conserved extraction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1; retained asteroid cargo in Core stock.
+ */
 #include "stdafx.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
 #include "space_pod.h"
+#include "space_structure.h"
+#include "orbital_service.h"
 #include "space_transition.h"
 #include "launch_operations.h"
 #include "multilayer_space_content.h"
@@ -124,8 +129,14 @@ static uint32_t ApproachDeadline(SpacePoint position, SpacePoint target)
 	return static_cast<uint32_t>(std::max<uint64_t>(1480, (lo * 74 + 3 * SPACE_Q16 - 1) / (3 * SPACE_Q16) + 148));
 }
 
+/** Assign the native mining/recall controller only when no paid Core berth retains this craft.
+ * @param craft Actual orbital hull. @param target Monotonic body ID, or invalid for recall.
+ * @param execute False estimates without changing work or target. @return Mission admission or unchanged refusal.
+ */
 CommandCost AssignSpaceMiningMission(SpaceVehicle &craft, uint32_t target, bool execute)
 {
+	// Explicit Core service holds this hull's physical berth; mining/recall cannot move it out during reserved work.
+	if (HasOrbitalServiceAssignment(craft)) return CMD_ERROR;
 	auto *vehicle = &craft;
 	if (vehicle->construction.placement != SpacePlacement::Orbital || (vehicle->manifest && vehicle->manifest->service_ticks != 0) || vehicle->engine_type != GetSpaceProbeEngine() || vehicle->vehstatus.Test(VehState::Crashed) || GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return CMD_ERROR;
 	const bool recall = target == INVALID_ORBITAL_BODY.base();
@@ -184,7 +195,8 @@ void SpaceVehicle::UpdateSpacePosition()
 	SyncSpacePods(*this);
 }
 
-Money SpaceVehicle::GetRunningCost() const { if (this->construction.placement != SpacePlacement::Orbital) return 0; return (IsSpaceMiningWorkTick(*this) || IsSpaceSurveyWorkTick(*this) || IsSpaceServiceWorkTick(*this) ? 500 : 100) * CalendarTime::DAYS_IN_YEAR * 256; }
+/** @return Published annual upkeep using the same actual service eligibility as native work and per-tick expense. */
+Money SpaceVehicle::GetRunningCost() const { if (this->construction.placement != SpacePlacement::Orbital) return 0; return (IsSpaceMiningWorkTick(*this) || IsSpaceSurveyWorkTick(*this) || IsSpaceServiceWorkTick(*this) || IsOrbitalServiceWorkTick(*this) || IsSpaceConstructionWorkTick(*this) ? 500 : 100) * CalendarTime::DAYS_IN_YEAR * 256; }
 void SpaceVehicle::OnNewCalendarDay() { AgeVehicle(this); }
 void SpaceVehicle::OnNewEconomyDay()
 {
@@ -192,6 +204,7 @@ void SpaceVehicle::OnNewEconomyDay()
 	if ((++this->day_counter & 7) == 0) DecreaseVehicleValue(this);
 }
 
+/** @return Whether this hull survives its native synchronized tick; held service craft accrue only actual eligible upkeep. */
 bool SpaceVehicle::Tick()
 {
 	if (this->construction.placement != SpacePlacement::Orbital) return true;
@@ -199,13 +212,14 @@ bool SpaceVehicle::Tick()
 	auto *body = GetMutableAsteroidBody(this->mission.target);
 	const bool stopped = this->vehstatus.Test(VehState::Stopped);
 	const bool mining = IsSpaceMiningWorkTick(*this);
-	const bool servicing = IsSpaceServiceWorkTick(*this);
-	const uint16_t accrual = this->mission.cost_remainder + (mining || servicing || IsSpaceSurveyWorkTick(*this) ? 500 : 100);
+	const bool servicing = IsSpaceServiceWorkTick(*this) || IsOrbitalServiceWorkTick(*this);
+	const uint16_t accrual = this->mission.cost_remainder + (mining || servicing || IsSpaceSurveyWorkTick(*this) || IsSpaceConstructionWorkTick(*this) ? 500 : 100);
 	const uint16_t cost = accrual / 74;
 	this->mission.cost_remainder = accrual % 74;
 	SubtractMoneyFromCompany(this->owner, CommandCost(ExpensesType::Other, cost));
 	this->profit_this_year -= Money{cost} * 256;
-	if (servicing || (this->manifest && this->manifest->service_ticks != 0)) { this->UpdateSpacePosition(); return true; }
+	// A waiting/paused Core job keeps its craft at the reserved berth while charging only the predicate's actual upkeep.
+	if (HasOrbitalServiceAssignment(*this) || servicing || (this->manifest && this->manifest->service_ticks != 0)) { this->UpdateSpacePosition(); return true; }
 	if (this->mission.phase == SpaceMissionPhase::Mining && body != nullptr && body->mining_slot == this->index) {
 		this->position = {body->motion.position.x + this->mission.attachment_offset.x, body->motion.position.y + this->mission.attachment_offset.y};
 	}
@@ -294,7 +308,9 @@ bool PrepareNativeSpaceMiningDemo()
 	return ValidateSpaceVehicles();
 }
 
-/** Every extracted packet has one actual native owner through descent and Surface hauling. */
+/** Audit asteroid provenance through actual vehicles, construction, Core stock, descent and Surface hauling.
+ * @return Whether each extracted packet retains its original body/cargo identity in exactly one physical container.
+ */
 static bool ValidateAsteroidPacketCustody()
 {
 	const auto &field = GetAsteroidField(); std::set<CargoPacketID> owned;
@@ -314,13 +330,19 @@ static bool ValidateAsteroidPacketCustody()
 	for (const auto *v : Vehicle::Iterate()) for (const auto *packet : *v->cargo.Packets()) if (!add(packet, v->cargo_type)) return false;
 	for (const auto *v : SpaceVehicle::Iterate()) if (v->manifest) for (uint i = 0; i < SPACE_SUPPLY_COUNT; ++i) if (!station_list(v->manifest->supplies[i], GetSpaceSupplyCargo(static_cast<SpaceSupply>(i)))) return false;
 	for (const auto *pod : SpacePod::Iterate()) if (pod->descent && !station_list(pod->descent->packets, pod->descent->cargo)) return false;
+	// Asteroid provenance remains accountable when freight is stored in an actual completed Core, separately from job material.
+	for (const auto *site : SpaceStructure::Iterate()) {
+		for (uint i = 0; i < 2; ++i) if (!station_list(site->job.inputs[i], GetCargoTypeByLabel(GetSpaceConstructionDefinition(site->state.kind)->inputs[i].label))) return false;
+		if (site->module) for (CargoType cargo : EnumRange(NUM_CARGO)) if (!station_list(site->module->stock[cargo], cargo)) return false;
+		if (site->module) for (uint i = 0; i < 2; ++i) if (!station_list(site->module->service.inputs[i], GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1)))) return false;
+	}
 	for (const auto *packet : CargoPacket::Iterate()) if (packet->GetSource().type == SourceType::Asteroid && !owned.contains(packet->index)) return false;
 	return true;
 }
 
 bool ValidateSpaceVehicles()
 {
-	if (!ValidateAsteroidKnowledge() || !ValidateNativeSpaceOrders() || !ValidateSpaceProduction() || !ValidateLaunchOperations() || !ValidateSpaceManifests() || !ValidateSpacePods() || !ValidateSpaceTransitions() || !ValidateSpaceDescents()) return false;
+	if (!ValidateAsteroidKnowledge() || !ValidateNativeSpaceOrders() || !ValidateSpaceProduction() || !ValidateLaunchOperations() || !ValidateSpaceManifests() || !ValidateSpacePods() || !ValidateSpaceTransitions() || !ValidateSpaceDescents() || !ValidateSpaceStructures()) return false;
 	uint32_t count = 0;
 	const auto &field = GetAsteroidField();
 	std::set<CargoPacketID> packet_owners;

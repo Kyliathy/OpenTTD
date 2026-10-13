@@ -98,6 +98,15 @@ Ordinary Earth-produced Goods remains the production alternative.
 | Steelworks or Goodsworks module | STEL10 + GOOD16 | 18t /740 ticks /220,000 each |
 | Power module | STEL6 + GOOD20 | 16t /444 ticks /140,000; existing60kW local output |
 | Fuel store | STEL6 + GOOD12 | 12t /296 ticks /100,000; existing128kL capacity |
+
+The first Core's starter cargo inventory uses the shared1,024-unit stock cap per
+resolved physical cargo label, with at most64 retained packet records per label.
+It begins empty after the74-tick explicit activation. Later Storage modules add
+their own bounded physical inventories; connection alone never duplicates or
+silently expands a Core's container. Construction-job inputs remain separate
+from operational stock. Precise cargo exchange creates no freight payment.
+Dock reservations, Assembly commissioning and actual shared-ledger power/service
+work remain independently gated by their declared facilities and operating inputs.
 | Later heavy robot16 | STEL6 + GOOD12 + RBPT4 + ELEC2 | 18t /592 ticks /200,000 |
 
 Unlisted later orbital assets, including haulers and advanced processors, must
@@ -129,7 +138,12 @@ The first mining payload becomes8t body + two2t shells +2t service =14/30t.
 Inputs are STEL6 + GOOD12 + RFMT1 + ELEC1, costing2,720 at the published seed
 prices; capital remains104,000 including two pod assemblies. Replacing the old
 1,200 pod-material term with680 gives a revised two-return operating debit of
-**25,900**, before travel/wait upkeep, body material and center/rocket capital.
+**25,900**, before service work, travel/wait upkeep, body material and center/rocket capital.
+Plan9 Group9's [worked ledger](r2mlvs9-a-launch-ledgers.md) separates the actual
+148 service ticks at500/day:1,000 more, giving26,900 through completed service
+before travel/wait upkeep and the excluded capital/materials. Native service
+charges retain per-tick remainders; the25,900 purchase/mining/handling subtotal
+must not be presented as including completed service work.
 Probe service remains RFMT1 + ELEC1 after two returns, not free Steel/Goods.
 
 Survey scan:148 synchronized working ticks inside the0.25-tile approach

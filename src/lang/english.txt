@@ -1,6 +1,7 @@
 ##name English (UK)
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md task16.1; native job progress/footprint presentation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1; native orbital module selector and Core activation.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -6014,6 +6015,70 @@ STR_LAUNCH_RESUPPLY_PAD_BUSY                                     :Waiting for th
 STR_LAUNCH_RESUPPLY_BUSY                                         :Waiting for an idle receiver
 STR_LAUNCH_RESUPPLY_FULL                                         :Receiver cannot accept the whole payload
 STR_LAUNCH_RESUPPLY_APPROACH                                     :Approaching the resupply receiver
+
+STR_SPACE_CONSTRUCTION_CAPTION                                  :{WHITE}Orbital construction
+STR_SPACE_CONSTRUCTION_PLACE                                    :Place blueprint
+STR_SPACE_CONSTRUCTION_COST                                     :{STRING}: {CURRENCY_LONG}; {COMMA} tonnes Steel + {COMMA} crates Goods; {COMMA} work ticks
+STR_SPACE_CONSTRUCTION_SITE                                     :{COMMA}. {STRING} at ({COMMA}, {COMMA}): {STRING}
+STR_SPACE_CONSTRUCTION_BLUEPRINT                                :Awaiting deliveries / construction
+STR_SPACE_CONSTRUCTION_FRAME                                    :Frame finished; awaiting activation
+STR_SPACE_CONSTRUCTION_CANCELLED                                :Cancelled; collect remaining inputs here
+STR_SPACE_CONSTRUCTION_STOCK                                    :Delivered: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
+STR_SPACE_CONSTRUCTION_CONSUMED                                 :Consumed: {COMMA} Steel tonnes, {COMMA} Goods crates
+STR_SPACE_CONSTRUCTION_HINT                                     :Place outside the asteroid strip. Select a site and an orbital builder, then queue construction. Cancellation retains cargo here; collect it with a nearby builder. Capital is not refunded.
+STR_SPACE_CONSTRUCTION_MISSING                                  :Waiting for construction materials
+STR_SPACE_CONSTRUCTION_BUSY                                     :Another builder has the work slot
+STR_SPACE_CONSTRUCTION_NEXT_PROBE                               :Next builder
+STR_SPACE_CONSTRUCTION_QUEUE                                    :Queue construction
+STR_SPACE_CONSTRUCTION_CANCEL                                   :Cancel blueprint
+STR_SPACE_CONSTRUCTION_COLLECT_STEEL                             :Collect Steel
+STR_SPACE_CONSTRUCTION_COLLECT_GOODS                             :Collect Goods
+STR_SPACE_CONSTRUCTION_PROBE                                    :Builder: {VEHICLE}; assigned here: {COMMA}
+STR_SPACE_CONSTRUCTION_NO_PROBE                                 :No owned orbital construction probe
+STR_SPACE_CONSTRUCTION_LOCATE                                   :Go to site
+STR_SPACE_CONSTRUCTION_CLEAR                                    :Clear builder orders
+STR_SPACE_CONSTRUCTION_SELECT                                   :Select station / module
+STR_SPACE_MODULE_CORE                                           :Station Core
+STR_SPACE_MODULE_DOCK                                           :Dock
+STR_SPACE_MODULE_STORAGE                                        :Storage
+STR_SPACE_MODULE_ASSEMBLY                                       :Assembly
+STR_SPACE_MODULE_STEELWORKS                                     :Steelworks
+STR_SPACE_MODULE_GOODSWORKS                                     :Goodsworks
+STR_SPACE_MODULE_POWER                                          :Power / utility
+STR_SPACE_MODULE_FUEL                                           :Fuel store
+STR_SPACE_MODULE_REFINERY                                       :Refinery
+STR_SPACE_MODULE_ICE                                            :Ice processor
+STR_SPACE_CONSTRUCTION_CASH                                     :Available funds: {CURRENCY_LONG}
+STR_SPACE_CONSTRUCTION_CORE_EDGE                                :Extensions require a shared edge with an owned operational Core.
+STR_SPACE_CONSTRUCTION_SELECTED                                 :Selected site: {STRING} #{COMMA}
+STR_SPACE_CONSTRUCTION_REMAINING                                :Still missing: {COMMA} tonnes Steel + {COMMA} crates Goods
+STR_SPACE_CONSTRUCTION_ACTIVATE                                 :Activate Core
+STR_SPACE_CONSTRUCTION_ACTIVATING                               :Core activation: {COMMA} ticks remaining
+STR_SPACE_CONSTRUCTION_READY                                    :Operational Core
+STR_SPACE_CONSTRUCTION_OPERATIONAL                              :Core inventory ready: up to {COMMA} units per cargo label. Exchange requires the precise approach.
+STR_SPACE_CONSTRUCTION_INVENTORY                                :Stored: {COMMA} tonnes Steel, {COMMA} crates Goods
+STR_SPACE_CONSTRUCTION_LOAD_STEEL                               :Load stored Steel
+STR_SPACE_CONSTRUCTION_LOAD_GOODS                               :Load stored Goods
+STR_SPACE_CONSTRUCTION_UNLOAD                                   :Unload to Core
+STR_SPACE_CONSTRUCTION_RESERVE                                  :Reserve Core materials
+STR_CORE_SERVICE_NEXT                                           :Next service probe
+STR_CORE_SERVICE_START                                          :Start service
+STR_CORE_SERVICE_PAUSE                                          :Pause service
+STR_CORE_SERVICE_RESUME                                         :Resume service
+STR_CORE_SERVICE_CANCEL                                         :Cancel service
+STR_CORE_PANEL_TOGGLE                                           :Toggle Core panel
+STR_CORE_SERVICE_COMMISSION                                     :Commission Core panel
+STR_CORE_SERVICE_UNLOAD_METAL                                   :Unload RFMT
+STR_CORE_SERVICE_UNLOAD_ELECTRONICS                             :Unload ELEC
+STR_CORE_SERVICE_LOAD_METAL                                     :Load RFMT
+STR_CORE_SERVICE_LOAD_ELECTRONICS                               :Load ELEC
+STR_CORE_SERVICE_STOCK                                          :Service stock: {COMMA} RFMT, {COMMA} ELEC (service needs 1 of each)
+STR_CORE_SERVICE_STATUS                                         :Service: {STRING}; {COMMA} work ticks remaining; {COMMA} completed
+STR_CORE_SERVICE_CRAFT                                          :Service probe: {COMMA}
+STR_CORE_SERVICE_IDLE                                           :berth available
+STR_CORE_SERVICE_PAUSED                                         :paused
+STR_CORE_SERVICE_WORKING                                        :working
+STR_CORE_SERVICE_WAITING                                        :waiting for power or eligible probe
 
 ##id 0x8000
 ###length 116

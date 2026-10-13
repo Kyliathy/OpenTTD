@@ -13,6 +13,7 @@
 #include "launch_operations.h"
 #include "space_manifest.h"
 #include "space_pod.h"
+#include "orbital_station.h"
 #include "space_transition.h"
 
 #include "blitter/factory.hpp"
@@ -1250,6 +1251,7 @@ void StateGameLoop()
 		TickLaunchOperations();
 		TickSpaceManifests();
 		TickSpacePods();
+		TickOrbitalConstructionInventory();
 		TickSpaceTransitions();
 		TickSpaceDescents();
 		CallLandscapeTick();
@@ -1286,6 +1288,7 @@ void StateGameLoop()
 		TickLaunchOperations();
 		TickSpaceManifests();
 		TickSpacePods();
+		TickOrbitalConstructionInventory();
 		TickSpaceTransitions();
 		TickSpaceDescents();
 		CallLandscapeTick();

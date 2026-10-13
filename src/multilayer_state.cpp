@@ -13,6 +13,7 @@
 #include "space_vehicle.h"
 #include "space_manifest.h"
 #include "space_pod.h"
+#include "space_structure.h"
 #include "space_transition.h"
 #include "multilayer_state.h"
 #include "debug.h"
@@ -166,6 +167,7 @@ void ResetMultiLayerStateSchema()
 	ResetSpaceProductionLoadStaging();
 	ResetSpaceManifestLoadStaging();
 	ResetSpacePods();
+	ResetSpaceStructures();
 	ResetSpaceDescents();
 	ResetSpaceTransitionLoadStaging();
 	ResetSpaceOrders();
@@ -366,6 +368,8 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 	if (GetSpaceVehicleCount() != 0 || GetNextSpaceVehicleGeneration() != 1) records.push_back({MultiLayerCanonicalKind::SpaceVehicleRoot, 0, space_vehicle_fields});
 	const std::array space_pod_fields = {MultiLayerCanonicalField{1, 8, ComputeSpacePodDigest()}};
 	if (SpacePod::GetNumItems() != 0 || GetNextSpacePodGeneration() != 1) records.push_back({MultiLayerCanonicalKind::SpacePodRoot, 0, space_pod_fields});
+	const std::array space_structure_fields = {MultiLayerCanonicalField{1, 8, ComputeSpaceStructureDigest()}};
+	if (SpaceStructure::GetNumItems() != 0 || GetNextSpaceStructureGeneration() != 1) records.push_back({MultiLayerCanonicalKind::SpaceStructureRoot, 0, space_structure_fields});
 	const std::array launch_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchCenterDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchCenterRoot, 0, launch_fields});
 	const std::array hub_fields = {MultiLayerCanonicalField{1, 8, ComputeLaunchHubDigest()}};

@@ -129,6 +129,7 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	LaunchHubRoot, ///< Native exclusive member relationships and monotonic link history.
 	SurfaceHandlingRoot, ///< Actual timed packet owners, age, remaining work and fractional fees.
 	SpacePodRoot, ///< Paid passive native shells, custody, construction and monotonic incarnation history.
+	SpaceStructureRoot, ///< Orbital site and its one delivered construction job inventory.
 	End,
 };
 

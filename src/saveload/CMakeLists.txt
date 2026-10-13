@@ -8,6 +8,7 @@ add_files(
     space_production_sl.cpp
     space_manifest_sl.cpp
     space_pod_sl.cpp
+    space_structure_sl.cpp
     space_transition_sl.cpp
     space_descent_sl.cpp
     ai_sl.cpp

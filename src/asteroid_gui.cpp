@@ -11,6 +11,7 @@
 #include "space_vehicle.h"
 #include "space_vehicle_cmd.h"
 #include "space_manifest.h"
+#include "space_structure.h"
 #include "core/backup_type.hpp"
 #include "command_func.h"
 #include "company_func.h"
@@ -58,6 +59,15 @@ void ViewportAddSpaceEntities(const DrawPixelInfo &dpi)
 {
 	if (_viewport_draw_layer != MapLayer::Space) return;
 	const auto &field = GetAsteroidField();
+	for (const auto *site : SpaceStructure::Iterate()) {
+		if (site->state.phase == SpaceStructurePhase::Cancelled && site->job.inputs[0].TotalCount() == 0 && site->job.inputs[1].TotalCount() == 0) continue;
+		const auto &d = *GetSpaceConstructionDefinition(site->state.kind);
+		// Native wire footprint is a blueprint overlay, not final module art.
+		for (uint y = 0; y <= d.height; ++y) for (uint x = 0; x < (y == d.height ? 1U : d.width); ++x) {
+			const Point p = SpaceWorldPoint({static_cast<int32_t>(site->state.x + x) * SPACE_Q16, static_cast<int32_t>(site->state.y + y) * SPACE_Q16});
+			AddSortableSpriteToDraw(SPR_SELECT_TILE, PAL_NONE, p.x - TILE_SIZE / 2, p.y - TILE_SIZE / 2, 0, {{0, 0, 0}, {16, 16, 1}, {0, 0, 0}});
+		}
+	}
 	for (const auto id : VisibleBodies(dpi)) {
 		const auto &body = field.bodies[id.base()];
 		const Point point = SpaceWorldPoint(body.motion.position);
@@ -89,7 +99,7 @@ static std::optional<OrbitalBodyID> InspectedProbeTarget(const SpaceVehicle &v)
 }
 static constexpr StringID order_actions[] = {STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_SURVEY, STR_SPACE_ORDER_MINE, STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_ORDER_UNLOAD, STR_SPACE_ORDER_SERVICE};
 static constexpr StringID order_targets[] = {STR_SPACE_TARGET_BODY, STR_SPACE_TARGET_STRUCTURE, STR_SPACE_TARGET_BLUEPRINT, STR_SPACE_TARGET_CENTER, STR_SPACE_TARGET_CRAFT};
-static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING};
+static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING, STR_SPACE_CONSTRUCTION_MISSING, STR_SPACE_CONSTRUCTION_BUSY};
 static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),

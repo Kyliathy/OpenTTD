@@ -27,6 +27,7 @@
 #include "launch_operations.h"
 #include "space_manifest.h"
 #include "space_pod.h"
+#include "space_structure.h"
 #include "space_transition.h"
 #include "asteroid.h"
 
@@ -66,6 +67,9 @@ struct NativeSpaceVehiclePreview {
 };
 
 struct LoadCheckData {
+	bool space_structures_present = false;
+	uint64_t next_space_structure_generation = 1;
+	std::vector<SpaceStructureRecord> space_structure_rows;
 	uint64_t next_space_vehicle_generation = 1;
 	std::vector<NativeSpaceVehiclePreview> native_space_vehicle_rows;
 	bool space_transitions_present = false;

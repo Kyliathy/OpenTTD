@@ -11,6 +11,8 @@
 #include "../space_vehicle.h"
 #include "../space_manifest.h"
 #include "../space_pod.h"
+#include "../space_structure.h"
+#include "../orbital_service.h"
 #include "../space_transition.h"
 #include "../void_map.h"
 #include "../layer_portal_map.h"
@@ -3511,11 +3513,14 @@ bool AfterLoadGame()
 	if (!AcceptLoadedSpaceTransitions()) SlErrorCorrupt("Invalid native Space transition ownership");
 	if (!AcceptLoadedSpaceProduction()) SlErrorCorrupt("Invalid native launch assembly ownership");
 	if (!AcceptLoadedSpaceDescents()) SlErrorCorrupt("Invalid native Space descent ownership");
-	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
+	if (!AcceptLoadedSpaceStructures()) SlErrorCorrupt("Invalid native orbital construction ownership");
 	if (!AcceptLoadedGeothermalRisers()) SlErrorCorrupt("Invalid native geothermal riser authority"); // Paid electrical links resolve original complete native machinery before the shared utility owner publishes their physical references.
 	// Utility grants bind actual companies and saved layers; accept only after
 	// physical owners and the profile have completed their load fixups.
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
+	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
+	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
+	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
 	// Paid physical inlets resolve after their actual portal, geology and ledger owners; load never fabricates a replacement contract.
 	if (!AcceptLoadedTubePowerConnections()) SlErrorCorrupt("Invalid tube power authority");
 	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority"); // Actual saved vehicles and paid sources resolve before native ticks.

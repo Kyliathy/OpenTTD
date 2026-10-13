@@ -1,6 +1,8 @@
 # Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 # Passive generator/site source boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Actual collector rendering: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C.
+# Orbital Core activation and sole packet stock: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1.
+# Contained Core service and shared electrical settlement: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Native Surface processor geometry/state: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 add_test_files(
@@ -14,6 +16,15 @@ add_test_files(
     space_orders.cpp
     space_survey.cpp
     space_resupply.cpp
+    space_construction.cpp
+    orbital_core.cpp
+    orbital_service.cpp
+    orbital_module_reservation.cpp
+    orbital_module_assembly.cpp
+    # Public launch owner/signature handoff: r2mlvs9-launch-centers-and-rockets.md Group7.
+    launch_contract.cpp
+    # Revised reusable-hull and first-Core numerical fixtures: Plan9 Group9.
+    launch_economics.cpp
     launch_production.cpp
     space_logistics.cpp
     launch_flight.cpp

@@ -299,6 +299,15 @@ add_files(
     space_pod.cpp
     space_pod.h
     space_pod_type.h
+    space_structure.cpp
+    space_structure_gui.cpp
+    space_structure.h
+    space_structure_type.h
+    space_structure_cmd.h
+    orbital_station.cpp
+    orbital_station.h
+    orbital_service.cpp
+    orbital_service.h
     space_transition.cpp
     space_transition.h
     space_descent.cpp

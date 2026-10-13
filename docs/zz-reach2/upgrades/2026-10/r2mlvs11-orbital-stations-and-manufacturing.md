@@ -38,11 +38,11 @@
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
-| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 282-286 | `AD-12` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains delivered module/robot construction and bounded orbital processing; a consumer must not redefine it locally. |
-| [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 352-376 | `AD-12` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains delivered module/robot construction and bounded orbital processing; a consumer must not redefine it locally. |
+| [src/map_layer.h](../../../../src/map_layer.h) | 81-89 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/cargopacket.cpp](../../../../src/cargopacket.cpp) | 96-121 | Complete `CargoPacket::Split` and `Merge` define quantity/feeder-share ownership and allocation failure. Every construction, production and transport group must conserve actual packet quantities; station vehicle-loading reservations are not a generic orbital inventory API. |
 
-Status: proposed. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9/10 and Surface recipes from r2mlvs6. This is milestone M4; the basic probe and mirror loops remain independently playable.
+Status: paused after Group3,2026-10-13, at the user's request; the operational Core and module-work prerequisites are delivered, while later activation/removal/handoff remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9/10 and Surface recipes from r2mlvs6. This is milestone M4; the basic probe and mirror loops remain independently playable.
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -94,7 +94,27 @@ weight; displays, holds and recipe caps must not silently treat crates as tonnes
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/orbital_station.h`. Publish `OrbitalModule`, `OrbitalConstructionJob`, `ReserveOrbitalConstructionInputs`, `CommitOrbitalConstructionStep`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+`src/orbital_station.h` publishes `OrbitalModule`, `OrbitalConstructionJob`,
+`ReserveOrbitalConstructionInputs` and `CommitOrbitalConstructionStep`, contained
+by the native `SpaceStructure` in `src/space_structure.h`. The416 batch delivers
+Core activation and operational packet storage. The417 Group1B batch adds
+`OrbitalServiceJob` and `src/orbital_service.h`: one generation-qualified Core
+berth, reserved RFMT/ELEC packets, common panel publication and atomic750J work
+settlement. Both configurations verify these initial Core functions; old416
+inventory-only Cores require explicit panel commissioning. Later Dock/Storage,
+module construction/removal and direct rocket destinations remain open.
+Keep one authority for
+these fields/commands; downstream plans consume the public owners rather than
+private pools or copied tables.
+
+**Construction batch,2026-10-13:** `space_structure.h` is the native Plan8
+identity/occupancy owner; `orbital_station.h` owns its contained construction
+job. The coordinated Plan8 Group13B / Plan10 Group8C batch implements those
+missing producers before claiming their handoff. Job inventories contain real
+packets; completion consumes the full canonical material batch atomically.
+A finished frame is explicitly awaiting activation, with no storage, dock,
+assembly or utility grant. Operational Core activation and those facilities
+remain required by Groups1-5 and are not completed by the owner foundation.
 
 ## Implementation Tasks
 
@@ -137,32 +157,196 @@ flowchart LR
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Later groups use completed core/module and public inventory ownership from these construction groups. Verify the actual completion/cancellation fixture before using it as a manufacturing predecessor; blueprint presence is insufficient.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 1 - Build the first Core from construction-probe deliveries
 
 {{HARD}}
-- [ ] 1.1 Add the Fund Industry-style Space station/module selector and blueprint placement through r2mlvs8 occupancy commands. Show money, Steel/Goods required/delivered/missing and assigned probes; validate empty anchor/owner/recipe before reserving the site.
-- [ ] 1.2 Keep deliveries in one saved construction-job inventory while no Core exists. Accept Earth-launched construction probes with actual Steel/Goods; reserve progress without inventing completed storage/docking or teleporting material from Earth.
-- [ ] 1.3 Construct the first Core using probe work without its own Dock/Storage/Utility/heavy robot. Verify the28t two-material recipe through two capacity-checked Earth launches or subsequent actual resupply; publish starter capacity for the next module.
-- [ ] 1.4 Complete Core construction once, then activate only its declared initial inventory/service functions. Test missing either material, cancelled/partial delivery and saves before/after activation; returned unconsumed packets and recorded consumption must balance.
+- [X] 1.1 Add the Fund Industry-style Space station/module selector and blueprint placement through r2mlvs8 occupancy commands. Show money, Steel/Goods required/delivered/missing and assigned probes; validate empty anchor/owner/recipe before reserving the site.
+- [X] 1.2 Keep deliveries in one saved construction-job inventory while no Core exists. Accept Earth-launched construction probes with actual Steel/Goods; reserve progress without inventing completed storage/docking or teleporting material from Earth.
+- [X] 1.3 Construct the first Core using probe work without its own Dock/Storage/Utility/heavy robot. Verify the28t two-material recipe through two capacity-checked Earth launches or subsequent actual resupply; publish starter capacity for the next module.
+
+**Resumed batch,2026-10-13; both configurations verified.** The native selector now
+uses the canonical static recipe catalogue, shows available funds and separate
+required/delivered/missing/consumed materials, and places typed module blueprints.
+Extensions require an owned operational Core edge. Explicit Core activation
+retains its74-tick countdown and a separate real packet inventory in save416's
+bounded `SPST` extension; genuine415 frames migrate inert. The shared1,024-unit
+stock cap and64 packet slots per label are preflighted before precise exchange.
+`orbital_core.cpp` and `orbital_core_checks-1.py` / `-2.py` cover activation,
+actual paid resupply, stock exchange, continuation and malformed transport.
+Each configuration passes77 contract assertions in four cases, exact18-family
+activation/populated-stock continuation and paused resaves, and eight independent
+full-load plus preview refusals. The real software-rendered selector capture
+and registered artifact export pass. See `logs/orbital-core-verification.json`;
+the genuine paid415 predecessor is unchanged. The focused native bursts take
+approximately11 and36 seconds in RelWithDebInfo; Debug is also focused and
+bounded. Precise berth/service
+work, shared utility publication and the Plan9 rocket-to-module delivery path
+remain required; an inventory-only Core does not complete task1.4 or Group4.
+
+**Saved owner verified,2026-10-13; paused.** Plan8 Group13B's save415 `SPST`
+family owns the real job packets, progress and consumed-material receipt.
+RelWithDebInfo verifies two paid launches,740 single-slot working ticks,
+interrupted replay, cancelled-job return/collection and company lifecycle.
+`logs/space-construction-verification.json` records the exact binaries, input,
+reports and native captures. Debug is deferred to the next substantial batch.
+The user requested stopping at that earlier checkpoint. Its415 finished frame
+remains inert until explicit activation. The later416 batch above completes
+module selection and starter inventory; the417 Group1B checkpoint below completes
+the initial Core service portion of task1.4.
+
+### Local Mandatory Reading - Core service and shared power
+
+_Applies to Group 1B; this splits the remaining service portion of original task1.4 after the verified selector/activation/inventory handoff._
+
+Read the actual exports and owners below before service mutation. The shared
+utility producer's `[utility-power-mutation]` fixture passes61 assertions in
+two cases in both configurations; source/epoch proposals must still be
+revalidated together with actual physical work. Declarations alone grant no power.
+
+| Source | Relevant section or exports | Why required |
+| --- | --- | --- |
+| `r2mlvs1-e-ground-and-space-budgets.md` | Revised Space defaults: Core panel30,000W, station work750J/tick, serviceRFMT1/ELEC1 and148 ticks | Owns quantities, units and costs; no feature-local retuning. |
+| `src/orbital_station.h`, `src/space_structure.h/.cpp` | `OrbitalModule`, `OrbitalConstructionJob`, generation-qualified site ownership and physical packet validation | Service is contained by the same native module; reserved service inputs are separate from stock and construction. |
+| `src/space_manifest.cpp` | `GetSpaceSupplyCapacity`, `CmdServiceLaunchProbe`, `IsSpaceServiceWorkTick`, `TickSpaceManifests` | Existing paid supplies, service count and bounded return allowance remain authoritative; no duplicate renewal or timer. |
+| `src/space_vehicle.cpp` | `SpaceVehicle::Tick`, `ValidateAsteroidPacketCustody` | One eligibility decision determines active upkeep and actual work; all extracted packets retain one physical owner. |
+| `src/utility_power.h` | `RegisterUtilityPowerProducer`, `RegisterUtilityPowerConsumer`, `PublishUtilityGeneration`, `GetUtilityAllocation`, `PrepareUtilityMutation`, `CommitUtilityMutation`, `UtilityMutationParticipant` | Native IDs, source lineage and atomic750J work settlement; no local energy account. |
+| `src/transport_tube_runtime.cpp`, `src/vehicle.cpp` | `PrepareTubePowerTick`, call before native vehicle iteration | Existing common per-tick source/request/allocation owner must include Core panels and jobs before vehicle work. |
+| `src/saveload/space_structure_sl.cpp`, `src/saveload/afterload.cpp` | Bounded417 `SPST` decoder retaining415/416 and native-owner acceptance before shared utility validation | Explicit schema/migration, copied preview, and final validation after both physical sites and utility IDs resolve. |
+| `src/space_manifest.cpp`, `src/space_descent.cpp`, `src/orbital_station.cpp` | `OtherPacketOwners`, `PhysicalDescents`, `InsertOrbitalPacketOwners` | Reserved service packets cannot simultaneously belong to a craft, descent, module stock or construction job. |
+
+**Execution notes.** The delivered common interval driver already allocates once
+per synchronized simulation tick; the older1-f Group16 table's74-tick cadence is
+not this controller's cadence. Join that driver instead of opening another
+interval. The30-kW generic AssemblyWork ceiling does not replace the revised
+Space750J exact work debit. A Core service job owns RFMT/ELEC packets until
+completion/cancellation, retains one generation-qualified craft/berth reference,
+and renews the existing craft allowance to its declared maximum, never adds to it.
+Old416 inventory-only Core records must not acquire power or service stock on load.
+The retained415/416 builders were launched without a spare RFMT/ELEC preload.
+Their paid Steel/Goods hull recipe is embodied hardware, separate from service
+stock. The native service fixture imports actual RFMT/ELEC on an additional paid
+flight of the same rocket; never turn a hull's assembly receipt into service parts.
+
+Context has compacted 1 times while executing this group.
+
+### Group 1B - Complete the first Core's paid service functions
+
+{{HARD}}
+- [X] 1B.1 Add one contained service/berth job per Core with real reserved RFMT/ELEC packets, saved progress and typed craft identity. Pause and cancellation retain or explicitly return only unconsumed material.
+- [X] 1B.2 Register the actual Core panel and service consumer with the shared utility owner, join common source/request gathering, and settle750J with each actual service tick. Zero grants preserve progress/materials; no second utility authority or free service.
+- [X] 1B.3 Add precise same-owner supply exchange and service start/pause/resume/cancel commands and native controls. One predicate controls active upkeep and work; completion consumes inputs once and renews the existing craft service allowance without stacking it.
+- [X] 1B.4 Add explicit bounded persistence/migration and copied/full-load packet/reference checks. Verify partial work, pauses, cancellation, missing either input, lost/foreign references and exact continuation in focused bursts.
+- [X] 1.4 Complete Core construction once, then activate only its declared initial inventory/service functions. Test missing either material, cancelled/partial delivery and saves before/after activation; returned unconsumed packets and recorded consumption must balance.
+
+**Verified417 Core service checkpoint,2026-10-13.** RelWithDebInfo and Debug
+build the game and focused test executable with two outer workers and
+`CL_MPCount=2`. Each passes5,463 assertions in14 focused cases. Native paid
+resupply supplies the real service parts;148 working ticks settle111,000J and
+consume RFMT1/ELEC1 once, renewing the existing allowance to two. Manual pause,
+zero generation, cancellation, foreign commands, takeover, company deletion
+and ID reuse preserve their declared material/energy owners. Four interrupted
+service phases and ordinary paused resaves match all26 owner families; completed
+Release/Debug service state also matches across those families. Ten service and
+eight Core malformed cases fail full load and independent copied preview.
+Both construction-material shortages and cancellation return actual unconsumed
+packets. Every focused burst stays below two minutes (Debug maximum about93s).
+`logs/orbital-service-verification.json` binds sources, binaries, immutable paid
+predecessors, reports and the native controls capture. Groups2-6 and direct
+rocket-to-module delivery remain required for Plan9 task11.3.
+
+### Local Mandatory Reading - Module construction after Core commissioning
+
+_Applies to Groups 2-6. The Delivered construction entry gate above remains applicable._
+
+Read `SpaceConstructionDefinition` in `src/multilayer_space_content.h`, actual
+site/approach overlap and ownership commands in `src/space_structure.cpp`, and
+`ReserveOrbitalConstructionInputs` / `CommitOrbitalConstructionStep` in
+`src/orbital_station.cpp`. Consume the verified native `OrbitalModule` inventory
+and Core service owner rather than creating another station, cargo pool or
+energy meter. Re-read only the relevant command estimate/execute boundary in
+`src/command.cpp` and packet split/merge/transfer semantics in `src/cargopacket.cpp`
+and `src/hub_cargo.h` when those paths are changed. Repeat current focused
+`[space-construction-contract]` / `[orbital-core-contract]` or their native
+boundary producer as required by the actual changed dependency.
 
 ### Group 2 - Reserve module footprint and delivered inputs
 
+Context has compacted 1 times while executing this group.
+
 {{HARD}}
-- [ ] 2.1 Validate module type, adjacency/dependency, footprint, approach clearance and owner against the completed core. A blueprint grants no production/storage/service capacity.
-- [ ] 2.2 Select actual delivered packets for the module recipe and reserve them exclusively to a typed construction job; competing jobs cannot count the same quantity.
-- [ ] 2.3 Preflight output/module record capacity and assembly time, then commit footprint and Steel/Goods input reservations together. Refuse missing materials without partial inventory loss; accept imported and locally produced stock under the same recipe.
+- [X] 2.1 Validate module type, adjacency/dependency, footprint, approach clearance and owner against the completed core. A blueprint grants no production/storage/service capacity.
+- [X] 2.2 Select actual delivered packets for the module recipe and reserve them exclusively to a typed construction job; competing jobs cannot count the same quantity.
+- [X] 2.3 Preflight the blueprint's reserved output identity/footprint and canonical assembly time, then atomically reserve every still-missing Steel/Goods input from adjacent Core stock. Refuse missing materials without partial inventory loss; accept imported and locally produced stock under the same recipe.
+
+**Existing-owner clarification.** Paid blueprint placement already reserves the
+native module identity and footprint while granting no function. Input
+reservation fills that same job atomically; it must not allocate another site
+or require a second capital payment. Physical builder deliveries remain valid
+and can supply part of the recipe before this all-missing-input reservation.
+
+**Verified, 2026-10-13.** Release and Debug each pass77 focused construction/Core
+assertions and the native paid-import reservation observer. A real additional
+rocket flight imports10 Steel; the existing paid Storage job reserves8 Steel
+and8 Goods exclusively, leaving2 Steel in the Core. Missing either input,
+competing jobs, foreign/stale references and repeated reservation preserve all
+owners. The split retains provenance, age and total feeder share; reservation
+earns no second capital charge or delivery payment. Ordinary paused resaves
+and74-tick continuations match all26 packet/job/company/vehicle/utility owner
+families. The frame remains inert with no assigned builder. Both native
+controls captures were inspected, including the corrected selected recipe.
+Evidence: `logs/orbital-module-reservation-verification.json`.
+
+**Provenance scope.** The reservation boundary admits actual canonical cargo
+containers without filtering Earth versus Space production origin. The native
+acceptance here uses genuine imported stock; end-to-end local manufacture
+remains in the later manufacturing groups and is not claimed by this result.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 3 - Advance saved assembly milestones and cancellation
 
 {{HARD}}
-- [ ] 3.1 Define monotonic assembly milestones with explicit input quantities consumed at each step, saved progress/remainder and one commit marker. Preview/reservation consumes nothing.
-- [ ] 3.2 At each milestone, revalidate remaining inputs and utility/service capacity, then consume the exact inputs and advance progress once. Save at either side of the milestone and compare next-step behavior.
-- [ ] 3.3 On cancellation, return only unconsumed reserved packets through the explicit inventory-transfer path. Already consumed materials remain recorded as consumption or a declared bounded salvage recipe; never regenerate the original cargo.
-- [ ] 3.4 Complete the module and release reservations only after functionality can activate atomically. No construction consumption or refund generates a second delivery payment.
+- [X] 3.1 Define monotonic assembly milestones with explicit input quantities consumed at each step, saved progress/remainder and one commit marker. Preview/reservation consumes nothing.
+- [X] 3.2 At each milestone, revalidate remaining inputs and utility/service capacity, then consume the exact inputs and advance progress once. Save at either side of the milestone and compare next-step behavior.
+- [X] 3.3 On cancellation, return only unconsumed reserved packets through the explicit inventory-transfer path. Already consumed materials remain recorded as consumption or a declared bounded salvage recipe; never regenerate the original cargo.
+
+**Assembly milestone contract.** Reservation and partial work retain both full
+recipe inputs. Only final frame completion consumes both lists together and
+records their exact canonical quantities. Save418 appends Q16 work, its exact
+division remainder, the native work tick and original utility interval; these
+describe physical progress, not another energy balance. Each operational Core
+has one bounded construction consumer competing with its separate service
+berth for the actual paid panel. Partial grants advance only their useful work,
+and the last request cannot exceed the remaining work. Paid portable builders
+still bootstrap a Core independently. Old415-417 records receive zero new work
+receipts and no implicit consumer, cargo, energy or functionality. Cancellation
+retains spent work and exposes only actual unconsumed packets for collection.
+
+**Verified, 2026-10-13.** Release and Debug build both native targets and each
+pass3,173 assertions in10 focused cases. Real810J panel competition supplies
+60J partial work, then exact30J final use; Storage consumes Steel8/Goods8 once
+and settles222,000J of assembly. Four interrupted continuations and ordinary
+resaves preserve all26 owner families; both configurations agree at every
+checkpoint and completed frame. Cancellation physically returns only the
+unconsumed packets, with no energy refund or freight payment. Ten malformed
+receipts/consumer/material/schema cases fail full load and copied preview.
+Genuine415 first-Core work still bootstraps independently and migrates exactly.
+The132-second Debug wrapper was split into `-3-1` and `-4-1` companion files;
+all replacement bursts finish within two minutes. Frozen evidence:
+`logs/orbital-assembly-verification.json`. Implementation stops after this
+group at the user's2026-10-13 request; Groups4 onward remain unchecked.
+
+**Activation ordering clarification.** Former task3.4 is now4.0 below because
+its functionality preflight requires Group4's actual module owner. Assembly
+finishes an accountable inert frame and keeps its exact native identity and
+footprint reserved; the following group owns once-only functional activation.
 
 ### Group 4 - Activate completed module functions
 
 {{MEDIUM}}
+- [ ] 4.0 Complete the module and release reservations only after functionality can activate atomically. No construction consumption or refund generates a second delivery payment.
 - [ ] 4.1 Activate Core/Dock services only after completion; expose bounded berth and handling capacity through the r2mlvs8 approach contract.
 - [ ] 4.2 Activate Storage with a declared capacity and Utility with explicit power/service inputs and grants. Connecting modules does not create unlimited shared inventory or free energy.
 - [ ] 4.3 Recompute adjacency/dependency queries from authoritative completed modules; unfinished modules remain inert. Test one module removal changes only its dependents.

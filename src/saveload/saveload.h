@@ -475,6 +475,10 @@ enum class SaveLoadVersion : uint16_t {
 	SpaceLaunchLogistics, ///< Saveload version: 412\n Actual spacecraft supplies/service, paid passive pods and native rocket transitions/pad custody.
 	SpaceSurveyKnowledge, ///< Saveload version: 413\n Company-specific completed survey knowledge and native partial scan work.
 	SpaceOrbitalResupply, ///< Saveload version: 414\n Generation-checked craft destinations, paid resupply receipts and recoverable mining service waits.
+	SpaceConstructionJobs, ///< Saveload version: 415\n Native orbital blueprint identity and physical construction packet custody.
+	OrbitalCoreFacilities, ///< Saveload version: 416\n Contained Core activation and sole operational packet inventory.
+	OrbitalCoreServices, ///< Saveload version: 417\n Contained paid service reservations, precise berth and original shared utility identities.
+	OrbitalAssemblyMilestones, ///< Saveload version: 418\n Exact fractional construction progress, native work receipts and bounded shared-panel assembly consumers.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

@@ -29,6 +29,7 @@
 #include "../geothermal_utility_cmd.h"
 #include "../space_vehicle_cmd.h"
 #include "../launch_center_cmd.h"
+#include "../space_structure_cmd.h"
 #include "../landscape_cmd.h"
 #include "../layer_portal_cmd.h"
 #include "../tbm_cmd.h"

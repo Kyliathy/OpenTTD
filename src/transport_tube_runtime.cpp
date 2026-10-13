@@ -9,6 +9,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md canonical mandatory service units
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2 actual bounded collector offers
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B common Core source/service requests
  */
 
 #include "stdafx.h"
@@ -22,6 +23,8 @@
 #include "company_func.h"
 #include "core/backup_type.hpp"
 #include "timer/timer_game_tick.h"
+#include "orbital_service.h"
+#include "orbital_station.h"
 #include <set>
 
 #include "safeguards.h"
@@ -171,14 +174,18 @@ void PrepareTubePowerTick()
 	// Native simulation owns both domains. Pausing or an editor view cannot
 	// earn heat; a completed collector also runs when no capsules exist.
 	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return;
-	if (std::ranges::none_of(_tube_power_vehicles, &TubePowerVehicle::active) && !HasGeothermalHeatSources()) return;
-	_tube_power_prepared_tick = TimerGameTick::counter;
+	PrepareOrbitalConstructionTick(); // Paid portable Core tooling also receives one native opportunity when no utility source exists yet.
+	// Completed Core panels also need this single synchronized publication/allocation phase when no capsule or collector exists.
+	if (std::ranges::none_of(_tube_power_vehicles, &TubePowerVehicle::active) && !HasGeothermalHeatSources() && !HasOrbitalUtilitySources()) return;
 	{
 		AutoRestoreBackup system(_current_company, OWNER_DEITY);
 		if (IsUtilityPowerAllocated() && BeginUtilityPowerInterval() != UtilityPowerError::None) return;
 	}
+	// A refused epoch rotation must not label an older grant as a newly prepared simulation opportunity for any consumer.
+	_tube_power_prepared_tick = TimerGameTick::counter;
 	const uint64_t interval = GetUtilityPowerInterval();
 	PublishGeothermalHeatSources(interval, 1);
+	PublishOrbitalUtilitySources(interval, 1);
 	// Publish each installed service once before any company's request is
 	// allocated. Availability/funds failures provide no source for this tick.
 	for (const auto &connection : CaptureTubePowerConnections()) {
@@ -205,6 +212,8 @@ void PrepareTubePowerTick()
 		binding.wait = TubePowerWait::None;
 		if (demand->energy_j != 0) requests.push_back({binding.consumer, demand->energy_j});
 	}
+	AppendOrbitalUtilityRequests(requests);
+	AppendOrbitalConstructionRequests(requests);
 	AutoRestoreBackup system(_current_company, OWNER_DEITY);
 	// Physical thermal requests arrive through the upcoming connected-network
 	// owner. Until then close an empty thermal pass, curtailing unused offers

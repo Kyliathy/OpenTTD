@@ -51,9 +51,20 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/vehicle_func.h](../../../../src/vehicle_func.h) | 192-204 | `VehicleServiceInDepot`, `CallVehicleTicks`, `ResetVehicleHash`, `ViewportAddVehicles` are public tick/service/spatial-render boundaries for orbital vehicles. |
 
-Status: active toward full completion,2026-10-12; full Groups1-22 remain required. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+Status: paused at user request after the verified first-frame construction batch,2026-10-13; remaining full-plan tasks still apply. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
 
 ## Current dispatch - Full-plan completion, 2026-10-12
+
+**Latest checkpoint,2026-10-13; paused.** The user requested stopping after the
+current task. Plan8 Group13B and Plan11's physical construction-job owner now
+support native Core blueprint placement, actual Earth-builder Steel/Goods
+delivery, saved work, cancellation/collection and a finished frame. Verification
+is in `logs/space-construction-verification.json`: RelWithDebInfo804 contract
+assertions/23 cases, native interrupted/lifecycle/conservation checks, twelve
+full/preview corruption cases and genuine414-to415 migration. Debug remains
+for the next substantial batch. First-Core activation, operational modules,
+processing/reuse, final art and full network acceptance remain open. Resume
+with the Core activation producer only after a new continuation request.
 
 **Resumed objective, 2026-10-12:** finalize both Plan9 and this plan. The recorded
 demo pause is superseded. The saved-name correction and Plan9 Groups5/6
@@ -556,8 +567,12 @@ parent AD-9/AD-11/AD-12, actual `SpaceVehicle`/`SpaceMission` ownership in
 `src/space_vehicle.h`, `AsteroidBody` in `src/asteroid.h`, and the current native
 command/save validation. Initial role deployment requires Plan9's tested
 commissioning handoff. Construction mutation/unload additionally requires
-Plan11's tested blueprint/inventory owners; missing producers permit contract
-and pure fixture work, not free deployment or a parallel cargo registry.
+Plan8's `space_structure.h` and Plan11's `orbital_station.h` blueprint/job
+owners. Their coordinated Group13B construction batch implements and validates
+the missing producer together with these order consumers; batch the build as
+requested by the user. Until that combined executable validation passes,
+retain all runtime handoff claims as pending. No free deployment or parallel
+cargo registry is authorized by declarations.
 
 Context has compacted 1 times while executing this group.
 
@@ -598,14 +613,23 @@ remain open; passing these suites does not finalize either plan.
 - [X] 8B.3 Implement148-working-tick moving-body scans and saved per-company knowledge. Hide initial/remaining quantities through one disclosure query in every player-facing body view until completion. Cancellation, hidden views and old preview surveys grant nothing; unsurveyed mining remains legal. Scans do not occupy the exclusive mining lease.
 - [ ] 8B.4 Verify Visit(bodyA) then Mine(bodyB), role refusals, two companies with different knowledge, partial/cancelled/completed scans, company-ID reuse, old unsurveyed migration and exact save/network continuation. No UI/tooltips/scripts may expose undiscovered amounts.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 8C - Deliver construction materials and reuse orbital products
 
 {{HARD}}
 
-- [ ] 8C.1 Implement the Earth-launched construction probe's20t mass-limited STEL/GOOD hold, paid material-built body and generation-checked blueprint orders. Count Goods crates with the canonical weight; preserve payload/cargo ownership through launch and role-specific refits.
-- [ ] 8C.2 Deliver actual packets to an empty Core blueprint through Plan11's saved construction job; advance bounded construction work and consume each required input once. Support missing-material waits, multiple trips/probes and cancellation without needing a pre-existing dock/storage/Assembly.
+- [X] 8C.1 Implement the Earth-launched construction probe's20t mass-limited STEL/GOOD hold, paid material-built body and generation-checked blueprint orders. Count Goods crates with the canonical weight; preserve payload/cargo ownership through launch and role-specific refits.
+- [X] 8C.2 Deliver actual packets to an empty Core blueprint through Plan11's saved construction job; advance bounded construction work and consume each required input once. Support missing-material waits, multiple trips/probes and cancellation without needing a pre-existing dock/storage/Assembly.
 - [ ] 8C.3 Allow explicit unloading of mined ore at completed orbital processors and loading of their Steel/Goods for construction or Plan9 authorized drop/descent. Distinguish construction reservation from transport ownership; competing builds/export cannot claim the same quantity.
 - [ ] 8C.4 Exercise Earth-only probe commissioning, two-material first-station delivery, constructed Steelworks/Goodsworks, imported versus locally produced construction stock, later local probe assembly and product Earth collection. Save interrupted orders/jobs and compare next-step conservation and command replay; no free station, input, launch or duplicate payment.
+
+**Delivered boundary:**8C.1/8C.2 finish the physical frame only. The native UI
+explicitly identifies it as awaiting activation; it grants no free storage,
+docking, assembly or electricity. Plan11's1.3/1.4 and the remaining8C tasks
+still gate a usable station and orbital manufacturing. Cancelled jobs retain
+their site until unconsumed packets are collected; consumed materials cannot
+be recovered through the cancellation command.
 
 ### Group 9 - Deploy and pursue a moving target
 

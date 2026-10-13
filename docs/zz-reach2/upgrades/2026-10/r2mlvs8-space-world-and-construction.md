@@ -178,7 +178,20 @@ role, knowledge and construction fields. This revision is pending implementation
 
 ## Public Handoff Contract
 
-Proposed public owner: `src/space.h`. Publish `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+Public owners: `src/space.h` supplies `OrbitalBodyID` and shared geometry;
+`src/space_vehicle.h` supplies `SpaceVehicle` and `SpaceMission`;
+`src/space_transition.h` supplies `SpaceTransition`; `src/space_structure.h`
+supplies `SpaceStructure`. Consume these native owners rather than copied
+registries. Their presence does not complete the remaining behavior/acceptance
+tasks or publish operational station facilities.
+
+**Owner locations reconciled for Group13B,2026-10-13:** shared body geometry
+remains in `space.h`; native craft/mission live in `space_vehicle.h`, transitions
+in `space_transition.h`, and static identity/occupancy in `space_structure.h`.
+The latter contains Plan11's `OrbitalConstructionJob` from `orbital_station.h`.
+Group13B is verified in RelWithDebInfo. Its static phases are Blueprint,
+FrameComplete (awaiting operational activation), and Cancelled. Consumers must
+not interpret any of these phases as an active Dock/Storage/Assembly/Utility.
 
 ## Implementation Tasks
 
@@ -446,6 +459,43 @@ For a 64 x 64 plane, the strip occupies rows 16..47, admissible body centers occ
 - [ ] 13.1 Add a Fund Industry-style Space station/module selector with footprint preview, cash and Steel/Goods required/delivered/missing. Validate layer, owner, static occupancy and approach exclusions; quote placement without creating inventory or a working module.
 - [ ] 13.2 Reserve footprint/anchor identity atomically with a typed blueprint record. Cancellation releases only its own reservation; an overlapping command refuses before either blueprint changes.
 - [ ] 13.3 Publish delivered-inventory and completion prerequisites to r2mlvs11. That owner performs assembly/function; a reservation alone never creates storage, power or a free station.
+
+### Local Mandatory Reading - Native blueprint and delivered construction batch
+
+_Applies to Group13B._ Read this Global block, Group10's geometry table,
+`space.h`, `space_orders.h`, `multilayer_space_content.h`, `hub_cargo.h`,
+`space_manifest.h` and the native Space save/preview owners. The structure
+export moves to `src/space_structure.h`; Plan11's `src/orbital_station.h`
+owns the job contained by that structure, with no second station or cargo
+registry. Plan10 Group8C consumes these exact public owners. Implement and
+validate this producer/consumer batch together, respecting the user's batched
+build instruction. Declarations alone grant no delivered-runtime claim.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13B - Persist blueprint occupancy and physical construction inputs
+
+{{HARD}}
+
+- [X] 13B.1 Add bounded native, generation-checked structure identities, pure static footprint/approach admission outside the asteroid strip, and paid empty Core blueprint placement.
+- [X] 13B.2 Connect Plan11's saved packet job and Plan10 Construct orders; preserve actual materials through partial delivery, cancellation, company changes and interrupted work. A finished frame grants no operational station functions until the activation producer is delivered.
+- [X] 13B.3 Version the owner with genuine older-empty migration, independent copied preview validation, canonical digest and native command/save/replay tests. Exercise overlapping sites and stale references without changing an existing owner.
+
+**Verified frame-owner checkpoint,2026-10-13; paused at user request.**
+Save415 adds bounded `SPST` identity/job transport. The actual native window,
+paid placement, typed orders, packet transfers,740 work ticks and one-time
+16-STEL/24-GOOD consumption pass in RelWithDebInfo. Two paid builders share
+one deterministic work slot. Both partial-delivery and partial-work cancellation
+retain packets for actual return/collection; takeover, company-ID reuse and
+company removal preserve the job's accountable inventory. Eighteen saved owner
+families match across interrupted continuation; twelve corruptions reject in
+both full load and independent preview. Genuine414 loading leaves the new
+owner empty and preserves all seventeen older owner families. The contract
+selection passes804 assertions/23 cases. Native paid resupply, survey and
+descent regressions pass too. Evidence: `logs/space-construction-verification.json`.
+Debug validation is deferred to the next substantial batch, respecting build
+costs and the requested stop. Operational Core activation, module facilities,
+final art and network acceptance remain pending; this is not full Plan8 completion.
 
 ### Group 14 - Implement saved cross-layer transition phases
 
