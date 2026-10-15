@@ -2,7 +2,7 @@
 
 A live game has four map planes in one `TileIndex` space. `Map` owns tile storage and geometry; `MultiLayerMap` owns layer meaning, initialization, construction rules and portal pairing. A viewport's `layer` selects which plane it draws. Commands and simulation ticks use world tiles, independently of that client selection.
 
-This page describes delivered layer, [geology/excavation](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md), physical portal/TBM/spoil and electrical-owner contracts through2026-10-08/save385. Selected M1 graphics retain the immutable66 original sprites inside the published2,404 bound and complete technical native review. [Final target audit](../../upgrades/2026-10/portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md) distinguishes delivered code/evidence from pending network/bootstrap/full-performance/late-consumer/personal-review acceptance. The [level0 overview](../@archi-ttd-level0.md) and [multilayer epic](../../upgrades/2026-10/r2mlm-multi-layered-map.md) retain the original architectural context.
+This page retains the delivered layer, [geology/excavation](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md), physical portal/TBM/spoil and electrical-owner contracts through2026-10-08/save385 and adds the native launch/recovery ownership handoff verified2026-10-14 through423 below. Selected M1 graphics retain the immutable66 original sprites inside the published2,404 bound and complete technical native review. [Final target audit](../../upgrades/2026-10/portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md) distinguishes delivered code/evidence from pending network/bootstrap/full-performance/late-consumer/personal-review acceptance. The [level0 overview](../@archi-ttd-level0.md) and [multilayer epic](../../upgrades/2026-10/r2mlm-multi-layered-map.md) retain the original architectural context.
 
 ## Layers and rules
 
@@ -13,7 +13,7 @@ This page describes delivered layer, [geology/excavation](../../upgrades/2026-10
 | 1 | Surface / 0 | Ordinary generated terrain and the historical construction set, subject to normal command checks. |
 | 2 | Underground / 1 | Flat bedrock at height 0: rail, roads, rail stations/waypoints, road stops/waypoints, train/road depots, signals, signs and permitted portals. |
 | 3 | Deep Underground / 3 | Classic retains roads, road stops/waypoints, road depots, signs and elevators. Multilayer Industry additionally permits rail/stations/depots/signals and Underground/Deep rail portals, subject to actual excavation and the 1980 calendar gate. |
-| 4 | Outer Space / 2 | Flat vacuum at height 0 with a sparse-star floor; signs only. |
+| 4 | Outer Space / 2 | Flat vacuum with a sparse-star floor; ordinary tile construction remains signs-only. Native paid spacecraft, asteroid and module owners use their separate typed/profile-authorized commands. |
 
 `MapLayerRules` contains the allowed-construction bitset, ground kind (`Natural`, `Bedrock`, `Vacuum`, `DeepBedrock`), initial height and climate, water-flow and ambient-sound flags. `CheckLayerAllowsConstruction` rejects prohibited work with `STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER`. The non-Surface layers have no towns, houses, industries, planted trees, water, terraforming, ordinary bridges/tunnels or trams. Portal permission is also checked against its kind and both layers; allowing `LayerPortal` construction alone does not allow every destination.
 
@@ -92,6 +92,41 @@ Signals belong on adjoining normal rail, not portal tiles. Portal rail reservati
 The front road vehicle stops hidden at the shaft edge for `LAYER_ELEVATOR_WAIT_TICKS`, 370 game ticks, roughly five game days or ten seconds at normal speed. This uses simulation time, not wall-clock time. `RoadVehicle::elevator_wait` is 0 when idle, above 1 while counting down, and 1 when ready to cross. Stopping the vehicle or an approach breakdown pauses the countdown; turning around during a ride is refused.
 
 A blocked destination retains the ready state, so the vehicle does not pay another wait when the exit clears. A committed crossing or permitted turn resets the wait to zero. The vehicle leaves the timed crossing from zero speed; articulated parts follow their front. Saving during the wait stores the counter for later continuation. YAPF includes the portal penalty for road tunnels and elevators and adds `LAYER_ELEVATOR_WAIT_COST`, ten tile costs, for the elevator.
+
+## Surface launch references and orbital recovery
+
+[Plan9](../../upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md) and its
+[current423 runtime handoff](../../upgrades/2026-10/r2mlsp-q-runtime-handoff.md)
+add explicit paid orbital transport without a Space portal or an ordinary
+cross-layer station join. A launch center is a native owned Surface station
+facility with protected orthogonal navigable-water access. Its original build
+anchor supplies GetLaunchCenterPlaneReference in Q16 plane coordinates. Camera
+selection, stacked Y and later joined station geometry cannot change gameplay.
+
+The orbital drop circle and Surface collection circle are independent20-tile
+regions. Current spacecraft release checks the explicitly selected owned
+center, exact generation, real purchased shell, physical inventory/quota and
+inclusive squared-distance circle BEFORE moving packets. A saved descent job
+retains the actual off-center release point/target and transfers its sole
+packets once. Full/lost targets retain recovery custody for explicit control.
+Valid diagonals, one-Q16-unit outside points, map-edge clipping and overlapping
+references are checked without wrapping or selecting another center implicitly.
+
+Surface collection links separate same-company rail/lorry Stations with their
+whole physical footprint inside the collection area. Native spread/catchment
+settings retain normal station geometry; identical XY on Underground supplies
+no membership. Timed neutral handling owns packets once, settles incomplete
+assignments when native footprint/removal changes invalidate a member, and
+refuses deliberate active unlink. Original source, recorded transit periods,
+routing, feeder share and horizontal travel remain preserved through real
+replay/circulation, with mass fees and no final delivery payment.
+
+Current423 VEHS/native Space/pod/flight/handling records retain exact owners and
+once-only receipts; SPFL's existing84-byte row carries its module-delivery flag
+in bit4. Derived spatial/viewport state cannot produce progress or cargo. The
+handoff names26 exact owner families, actual paid input identities and focused
+full/preview/ordinary/replay evidence. Unfinished final sprites and live network
+acceptance are explicit and do not close the parent/source checklist.
 
 ## Generated graphics and drawing
 

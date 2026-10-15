@@ -451,6 +451,18 @@ UtilityPowerError BeginUtilityPowerInterval(bool execute = true);
  */
 UtilityPowerError RemoveUtilityPowerProducer(UtilityProducerID producer, bool execute = true);
 
+/** Retire one native orbital facility's complete original electrical bindings atomically.
+ * The physical module owner must first settle its cargo/jobs/dependents. This
+ * shared owner releases only unused slices, retains all consumed lineage and
+ * retires IDs permanently; it publishes no replacement account or energy.
+ * @param producers Zero or one actual Space OrbitalPanel identity belonging to the caller/system.
+ * @param consumers Up to two actual Space AssemblyWork identities belonging to the same caller/system; duplicates refuse.
+ * @param execute False validates the whole set without changing any meter, eligibility, sequence or identity.
+ * @return Complete retirement or unchanged refusal; active transfer routes require their own physical lifecycle first.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups4C/5.
+ */
+UtilityPowerError RetireOrbitalUtilityAccounts(std::span<const UtilityProducerID> producers, std::span<const UtilityConsumerID> consumers, bool execute = true);
+
 /** @return Read-only whole-state copy for feature persistence and focused owner tests. */
 UtilityPowerState CaptureUtilityPowerState();
 

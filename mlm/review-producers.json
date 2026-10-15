@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3. Explicit native Storage/Power activation: r2mlvs11-orbital-stations-and-manufacturing.md Group4. Shared native approach reservation producer: r2mlvs8-space-world-and-construction.md Group11; r2mlvs11 Group4B prerequisite. Direct module flight/packet refusal/retired destination observers: r2mlvs9-launch-centers-and-rockets.md Groups11/11C. Native circular cargo return/descent acceptance: r2mlvs9-launch-centers-and-rockets.md Groups12-14.",
   "schema_version": 2,
   "review_root": "mlm/reviews",
   "runtime_root": "mlm/runtime",
@@ -3872,6 +3872,1965 @@
       ],
       "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
       "invocation": "python -B src/tests/multilayer/acceptance/orbital_module_checks-5.py [--configuration Debug] with its explicit native source/preparation argument"
+    },
+    {
+      "producer": "src/tests/orbital_module_activation.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-activation"
+        }
+      ],
+      "test_tags": [
+        "[orbital-activation-contract]",
+        "[.orbital-module-activation]"
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_activation_checks-1.py using the immutable paid418 frame"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-activation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_activation_checks-1.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-freight-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-freight-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-freight-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-freight-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_activation_checks-2.py [--configuration Debug] --activation <exact preceding activation report>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-activation-refusals-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-damage-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-preview-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-damage-panel-alias"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-reject-panel-alias"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-preview-panel-alias"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_activation_checks-3.py [--configuration Debug] --freight <exact preceding freight report>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-4.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-activation-refusals-2"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-damage-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-reject-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-preview-stock-cap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-damage-work-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-reject-work-consumer"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-activation-preview-work-consumer"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_activation_checks-4.py [--configuration Debug] --freight <exact preceding freight report>"
+    },
+    {
+      "producer": "src/tests/space_approach.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "approaches"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [.space-approaches] through space_approach_checks-1.py",
+      "test_tags": [
+        "[space-approach-contract]",
+        "[.space-approaches]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "approach-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_approach_checks-1.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "approach-refusals-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-damage-duplicate-slot"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-reject-duplicate-slot"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-preview-duplicate-slot"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-damage-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-reject-target-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-preview-target-generation"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_approach_checks-2.py [--configuration Debug] --approaches <exact preceding report>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "approach-refusals-2"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-damage-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-reject-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-preview-future-tick"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-damage-staging-bounds"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-reject-staging-bounds"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-preview-staging-bounds"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_approach_checks-3.py [--configuration Debug] --approaches <exact preceding report>"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-4.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "approach-body-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-body-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-body-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "approach-body-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_approach_checks-4.py [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/orbital_dock.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-dock"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run focused Dock contracts or [.orbital-dock] through orbital_dock_checks-1.py",
+      "test_tags": [
+        "[orbital-dock-contract]"
+      ]
+    },
+    {
+      "producer": "src/tests/orbital_utility_retirement.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-dock"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run focused Dock contracts or [.orbital-dock] through orbital_dock_checks-1.py",
+      "test_tags": [
+        "[orbital-dock-contract]"
+      ]
+    },
+    {
+      "producer": "src/tests/orbital_dock_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-dock"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run focused Dock contracts or [.orbital-dock] through orbital_dock_checks-1.py",
+      "test_tags": [
+        "[.orbital-dock]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_dock_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "dock-steel-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-steel-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-goods-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-goods-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-service-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-service-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-service-resume"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-service-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-cancel-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-cancel-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-cancel-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_dock_checks-1.py --phase <steel|goods|service|cancel> [--previous <exact preceding report>] [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_dock_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "dock-refusals-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-refusals-2"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-damage-source-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-reject-source-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-preview-source-generation"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-damage-duplicate-hull"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-reject-duplicate-hull"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-preview-duplicate-hull"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-damage-duplicate-part"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-reject-duplicate-part"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-preview-duplicate-part"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-damage-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-reject-old-version"
+        },
+        {
+          "feature": "space",
+          "scenario": "dock-preview-old-version"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_dock_checks-2.py --batch <1|2> --service <exact preceding report> [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/orbital_removal.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-removal"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [orbital-removal-contract] alongside the focused removal batch",
+      "test_tags": [
+        "[orbital-removal-contract]"
+      ]
+    },
+    {
+      "producer": "src/tests/orbital_removal_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-removal"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [.orbital-removal] through orbital_removal_checks-1.py",
+      "test_tags": [
+        "[.orbital-removal]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_removal_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-removal-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_removal_checks-1.py --dock <exact native service report or frozen421 proof> [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_removal_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-removal-refusals-1"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-refusals-2"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-damage-unissued"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-reject-unissued"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-preview-unissued"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-damage-live-overlap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-reject-live-overlap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-preview-live-overlap"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-damage-material-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-reject-material-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-preview-material-limit"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-damage-ownerless-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-reject-ownerless-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-removal-preview-ownerless-service"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_removal_checks-2.py --batch <1|2> --removal <exact preceding report> [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/orbital_evacuation.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-evacuation"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [orbital-evacuation-contract] alongside the focused removal batch",
+      "test_tags": [
+        "[orbital-evacuation-contract]"
+      ]
+    },
+    {
+      "producer": "src/tests/orbital_evacuation_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "orbital-evacuation"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [.orbital-evacuation] through orbital_evacuation_checks-1.py",
+      "test_tags": [
+        "[.orbital-evacuation]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_evacuation_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-service-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-service-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-service-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-construction-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-construction-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-evacuation-construction-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_evacuation_checks-1.py --phase <service|construction> [--dock <exact service report or frozen421 proof>] [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/orbital_module_lifecycle.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run [.orbital-module-lifecycle] through orbital_lifecycle_checks-1.py after removal/evacuation gates pass",
+      "test_tags": [
+        "[.orbital-module-lifecycle]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_lifecycle_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dependencies-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dependencies-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-ownership-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-ownership-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dependencies-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-ownership-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dock-remove-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dock-remove-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lifecycle-dock-remove-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_lifecycle_checks-1.py --phase <dependencies|ownership|dock-remove> --dock <exact421 proof> [--configuration Debug]"
+    },
+    {
+      "producer": "src/tests/orbital_freight_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-flight"
+        }
+      ],
+      "test_tags": [
+        "[.orbital-module-flight]"
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through orbital_freight_checks-1.py and its bounded continuations; owner r2mlvs9 Group11"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-flight-prepare-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-prepare"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-1.py [--configuration Debug]; owner r2mlvs9 Group11"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-flight-complete-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-complete"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-2.py --preparation <exact preceding preparation report> [--configuration Debug]; owner r2mlvs9 Group11"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-flight-replay-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-resume-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-paused-*"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-3.py --completion <exact preceding completion report> --phase <preburn|ascent|approach|unloaded|turnaround> [--configuration Debug]; owner r2mlvs9 Group11"
+    },
+    {
+      "producer": "src/tests/orbital_freight_failure.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-failure"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through bounded orbital_freight_checks-4/-5/-6.py; owner r2mlvs9 Group11C",
+      "test_tags": [
+        "[.orbital-module-failure]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-4.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-contention-*-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-contention-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-contention-ordinary-*"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-4.py --phase <prepare|continue> --predecessor <exact prior report> [--configuration Debug]; owner r2mlvs9 Group11C"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-5.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-lost-*-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lost-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lost-paused-*"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-5.py --phase <preparing|ascent|delivery|approach> [--configuration Debug]; owner r2mlvs9 Group11C"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-6.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-lost-recovery-*-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lost-recovery-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-lost-recovered-ordinary-*"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-6.py --loss <exact prior loss report> [--configuration Debug]; owner r2mlvs9 Group11C"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-7.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-flight-refusals-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-damage-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-reject-*"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-flight-preview-*"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-7.py --completion <exact positive completion report> --batch <1|2|3> [--configuration Debug]; owner r2mlvs9 Group11C"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-8.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "module-pad-contention-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-pad-contention"
+        },
+        {
+          "feature": "space",
+          "scenario": "module-pad-contention-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/orbital_freight_checks-8.py --preparation <exact positive preparation report> [--configuration Debug]; owner r2mlvs9 Group11C"
+    },
+    {
+      "producer": "src/tests/orbital_release_admission.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "release-admission"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through release_admission_checks-1.py; owner r2mlvs9 Group12",
+      "test_tags": [
+        "[.orbital-release-admission]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/release_admission_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "release-admission-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-admission-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-admission-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/release_admission_checks-1.py [--configuration Debug]; owner r2mlvs9 Group12"
+    },
+    {
+      "producer": "src/tests/descent_custody_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "descent-custody"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through descent_custody_checks-1.py; owner r2mlvs9 Group13",
+      "test_tags": [
+        "[.descent-custody]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/descent_custody_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-before-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-before-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-before-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-before-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-before-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-before-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-second"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-before-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-before-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-before-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-complete-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-complete-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-complete-service"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-retarget"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-retarget"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-retarget"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-verify-replacement"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-native-replacement"
+        },
+        {
+          "feature": "space",
+          "scenario": "descent-custody-ordinary-replacement"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/descent_custody_checks-1.py --phase <explicit phase> [--source <exact predecessor>] [--configuration Debug]; owner r2mlvs9 Group13"
+    },
+    {
+      "producer": "src/tests/cargo_return_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "cargo-return-policy"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through cargo_return_checks-1.py; owner r2mlvs9 Group14",
+      "test_tags": [
+        "[.cargo-return-policy]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/cargo_return_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "cargo-return-verify-recall"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-native-recall"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-ordinary-recall"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-verify-unload"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-native-unload"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-ordinary-unload"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-verify-visit"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-native-visit"
+        },
+        {
+          "feature": "space",
+          "scenario": "cargo-return-ordinary-visit"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/cargo_return_checks-1.py --phase <recall|unload|visit> --predecessor <exact admission/unload report> [--configuration Debug]; owner r2mlvs9 Group14"
+    },
+    {
+      "producer": "src/tests/space_company_custody_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "space-company-custody"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through space_company_checks-1.py; owner r2mlvs9 Group15",
+      "test_tags": [
+        "[.space-company-custody]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_company_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "space-company-verify-refusal"
+        },
+        {
+          "feature": "space",
+          "scenario": "space-company-native-refusal"
+        },
+        {
+          "feature": "space",
+          "scenario": "space-company-ordinary-refusal"
+        },
+        {
+          "feature": "space",
+          "scenario": "space-company-verify-transfer"
+        },
+        {
+          "feature": "space",
+          "scenario": "space-company-native-transfer"
+        },
+        {
+          "feature": "space",
+          "scenario": "space-company-ordinary-transfer"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_company_checks-1.py --phase <refusal|transfer> [--configuration Debug]; owner r2mlvs9 Group15"
+    },
+    {
+      "producer": "src/tests/launch_failure_phase_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-phase-failure"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through launch_failure_checks-1.py; owner r2mlvs9 Group15",
+      "test_tags": [
+        "[.launch-phase-failure]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_failure_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-failure-verify-fuel-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-failure-native-fuel-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-failure-ordinary-fuel-cancel"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-failure-verify-pad-order"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-failure-native-pad-order"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-failure-ordinary-pad-order"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_failure_checks-1.py --phase <fuel-cancel|pad-order> --predecessor <exact paid report> [--configuration Debug]; owner r2mlvs9 Group15"
+    },
+    {
+      "producer": "src/tests/launch_retirement_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-retirement"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through launch_retirement_checks-1.py; owner r2mlvs9 Group16",
+      "test_tags": [
+        "[.launch-retirement]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_retirement_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-joined-ordinary"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-placement"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-retirement-placement-ordinary"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through launch_retirement_checks-1.py; owner r2mlvs9 Group16"
+    },
+    {
+      "producer": "src/tests/paid_probe_phase_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through paid_probe_phase_checks-1.py; owner r2mlvs9 Group17",
+      "test_tags": [
+        "[.paid-probe-phase]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/paid_probe_phase_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-preparing"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-preparing-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-preparing-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-ascent"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-ascent-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-ascent-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-delivery"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-delivery-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-delivery-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-return-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-return-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-turnaround"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-turnaround-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-turnaround-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-verify-complete"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-native-complete"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-replay-complete"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-complete-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "paid-probe-phase-paused-complete-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through paid_probe_phase_checks-1.py; owner r2mlvs9 Group17"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/handling_phase_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "handling-phase-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-phase-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-phase-continue"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-phase-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-phase-paused-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "handling-phase-paused-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/handling_phase_checks-1.py [--configuration Debug]; owner r2mlvs9 Group17"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/phase_pair_index_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "phase-pair-index"
+        }
+      ],
+      "context_policy": "explicit declared immutable predecessor manifests",
+      "invocation": "python -B src/tests/multilayer/acceptance/phase_pair_index_checks-1.py --handling-release <exact report> --handling-debug <exact report>; owner r2mlvs9 Group17"
+    },
+    {
+      "producer": "src/tests/surface_space_loop_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "surface-space-loop"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through commodity_loop_checks-1.py; owner r2mlvs9 Group18",
+      "test_tags": [
+        "[.surface-space-loop]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/commodity_loop_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-verify-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-native-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-replay-prepare"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-prepare-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-prepare-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-verify-deploy"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-native-deploy"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-replay-deploy"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-deploy-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-deploy-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-verify-resupply"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-native-resupply"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-replay-resupply"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-resupply-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-resupply-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-verify-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-native-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-replay-return"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-return-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "commodity-loop-paused-return-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through commodity_loop_checks-1.py; owner r2mlvs9 Group18"
+    },
+    {
+      "producer": "src/tests/orbital_release_geometry.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "release-command-order"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through release_command_order_checks-1.py; owner r2mlvs9 Group18",
+      "test_tags": [
+        "[.release-command-order]",
+        "[orbital-release-geometry]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/release_command_order_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "release-order-verify-valid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-native-valid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-replay-valid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-paused-valid-first-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-paused-valid-first-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-verify-invalid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-native-invalid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-replay-invalid-first"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-paused-invalid-first-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "release-order-paused-invalid-first-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/release_command_order_checks-1.py --configuration RelWithDebInfo --ordering valid-first",
+      "test_tags": [
+        "[.release-command-order]"
+      ]
+    },
+    {
+      "producer": "src/tests/surface_collection_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "surface-collection"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through surface_collection_checks-1.py; owner r2mlvs9 Group19",
+      "test_tags": [
+        "[.surface-collection]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/surface_collection_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "collection-verify-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-release"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-release-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-release-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-verify-handling"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-handling"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-handling"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-handling-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-handling-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-verify-settle"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-settle"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-settle"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-settle-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-settle-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-verify-unlink"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-unlink"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-unlink"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-unlink-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-unlink-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-verify-expand"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-expand"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-expand"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-expand-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-expand-after"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-verify-delete"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-native-delete"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-replay-delete"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-delete-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "collection-paused-delete-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/surface_collection_checks-1.py --configuration RelWithDebInfo --stage release",
+      "test_tags": [
+        "[.surface-collection]"
+      ]
+    },
+    {
+      "producer": "src/tests/hub_circulation_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "hub-circulation"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "Run through hub_circulation_checks-1.py; owner r2mlvs9 Group20",
+      "test_tags": [
+        "[.hub-circulation]"
+      ]
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/hub_circulation_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "hub-circulation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "hub-circulation-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "hub-circulation-replay"
+        },
+        {
+          "feature": "space",
+          "scenario": "hub-circulation-paused-before"
+        },
+        {
+          "feature": "space",
+          "scenario": "hub-circulation-paused-after"
+        }
+      ],
+      "context_policy": "inherited invocation; explicit isolated feature/scenario and native runtime",
+      "invocation": "python -B src/tests/multilayer/acceptance/hub_circulation_checks-1.py --configuration RelWithDebInfo --predecessor <exact accepted Group19 settle report>",
+      "test_tags": [
+        "[.hub-circulation]"
+      ]
+    },
+    {
+      "producer": "src/tests/asteroid_catalogue.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-catalogue-verify"
+        }
+      ],
+      "test_tags": [
+        "[asteroid-catalogue]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and native process identity",
+      "invocation": "python -B src/tests/multilayer/acceptance/asteroid_catalogue_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs10 Group1"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_catalogue_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-catalogue-verify"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and native process identity",
+      "invocation": "python -B src/tests/multilayer/acceptance/asteroid_catalogue_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs10 Group1"
+    },
+    {
+      "producer": "src/tests/launch_site.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-site-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-focused"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-ordinary"
+        }
+      ],
+      "test_tags": [
+        "[launch-site]"
+      ],
+      "context_policy": "explicit feature/scenario; shared invocation and native process identities",
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_site_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs9 Group3 / r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_site_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "launch-site-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-focused"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "launch-site-ordinary"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit feature/scenario; shared invocation and native process identities",
+      "invocation": "python -B src/tests/multilayer/acceptance/launch_site_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs9 Group3 / r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/asteroid_generation.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-continuation-verify"
+        }
+      ],
+      "test_tags": [
+        "[asteroid-generation]"
+      ],
+      "context_policy": "explicit invocation and immutable source identity; real native saved owner or declared focused tag",
+      "invocation": "asteroid_generation_checks-1.py for new-world producer; asteroid_generation_checks-2.py with exact predecessor for motion/legacy/replay; r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/asteroid_generation_native.cpp",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-continuation-verify"
+        }
+      ],
+      "test_tags": [
+        "[.asteroid-generation-native]"
+      ],
+      "context_policy": "explicit invocation and immutable source identity; real native saved owner or declared focused tag",
+      "invocation": "asteroid_generation_checks-1.py for new-world producer; asteroid_generation_checks-2.py with exact predecessor for motion/legacy/replay; r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-continuation-verify"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit invocation and immutable source identity; real native saved owner or declared focused tag",
+      "invocation": "asteroid_generation_checks-1.py for new-world producer; asteroid_generation_checks-2.py with exact predecessor for motion/legacy/replay; r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-verify"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-native"
+        },
+        {
+          "feature": "space",
+          "scenario": "asteroid-generation-continuation-verify"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit invocation and immutable source identity; real native saved owner or declared focused tag",
+      "invocation": "asteroid_generation_checks-1.py for new-world producer; asteroid_generation_checks-2.py with exact predecessor for motion/legacy/replay; r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-3.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-input-reject"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "one named corruption; immutable genuine source and current native full/preview loader",
+      "invocation": "python -B asteroid_generation_checks-3.py --configuration RelWithDebInfo or Debug --source exact424save --kind onecase; r2mlvs10 Group2"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_motion_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-motion-verify"
+        }
+      ],
+      "test_tags": [
+        "[asteroid-motion]",
+        "[asteroid-generation]",
+        "[asteroid-catalogue]",
+        "[space-preview]"
+      ],
+      "context_policy": "explicit invocation and immutable source identity; isolated motion geometry and actual saved owners",
+      "invocation": "python -B asteroid_motion_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs10 Group3"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_motion_checks-2.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-motion-boundary"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "explicit invocation and immutable source identity; isolated motion geometry and actual saved owners",
+      "invocation": "python -B asteroid_motion_checks-2.py --configuration RelWithDebInfo or Debug --case one boundary case; r2mlvs10 Group3"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_depletion_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-depletion-verify"
+        }
+      ],
+      "test_tags": [
+        "[asteroid-depletion]"
+      ],
+      "context_policy": "explicit source and invocation; declared zero-reserve boundary and retained native owners",
+      "invocation": "python -B asteroid_depletion_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs10 Group5"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_band_checks-1.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "asteroid-band-verify"
+        }
+      ],
+      "test_tags": [
+        "[asteroid-band]",
+        "[space-construction-contract]",
+        "[space-approach-contract]",
+        "[asteroid-motion]"
+      ],
+      "context_policy": "explicit invocation; real shared static/body policy and immutable paid predecessor",
+      "invocation": "python -B asteroid_band_checks-1.py --configuration RelWithDebInfo or Debug; r2mlvs10 Group6"
     }
   ],
   "proof_cache": "logs/proofs/mlm/native-art",

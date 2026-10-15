@@ -6,6 +6,7 @@
 #include "orbital_station.h"
 #include "orbital_service.h"
 #include "space_structure.h"
+#include "space_approach.h"
 #include "space_structure_cmd.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
@@ -62,6 +63,19 @@ std::optional<OrbitalConstructionProgress> PlanOrbitalConstructionProgress(const
 	return next;
 }
 
+/** @copydoc AreOrbitalModuleFootprintsAdjacent */
+bool AreOrbitalModuleFootprintsAdjacent(const SpaceStructureState &a, const SpaceStructureState &b)
+{
+	const auto *ad = GetSpaceConstructionDefinition(a.kind), *bd = GetSpaceConstructionDefinition(b.kind);
+	// Only two actual static footprints can connect; coincident carried equipment and diagonal corners supply no station dependency.
+	if (ad == nullptr || bd == nullptr || ad->width == 0 || ad->height == 0 || bd->width == 0 || bd->height == 0) return false;
+	const bool horizontal = (uint{a.x} + ad->width == b.x || uint{b.x} + bd->width == a.x) &&
+		a.y < uint{b.y} + bd->height && b.y < uint{a.y} + ad->height;
+	const bool vertical = (uint{a.y} + ad->height == b.y || uint{b.y} + bd->height == a.y) &&
+		a.x < uint{b.x} + bd->width && b.x < uint{a.x} + ad->width;
+	return horizontal || vertical;
+}
+
 /** @copydoc GetOrbitalConstructionCore */
 SpaceStructure *GetOrbitalConstructionCore(const SpaceStructureState &state)
 {
@@ -73,12 +87,7 @@ SpaceStructure *GetOrbitalConstructionCore(const SpaceStructureState &state)
 		if (core->state.kind != SpaceBuildKind::Core) continue;
 		if (core->state.owner != state.owner) continue;
 		if (!IsOrbitalModuleOperational(*core)) continue;
-		const auto &footprint = *GetSpaceConstructionDefinition(core->state.kind);
-		const bool horizontal = (uint{state.x} + definition->width == core->state.x || uint{core->state.x} + footprint.width == state.x) &&
-			state.y < uint{core->state.y} + footprint.height && core->state.y < uint{state.y} + definition->height;
-		const bool vertical = (uint{state.y} + definition->height == core->state.y || uint{core->state.y} + footprint.height == state.y) &&
-			state.x < uint{core->state.x} + footprint.width && core->state.x < uint{state.x} + definition->width;
-		if (horizontal || vertical) return core; // Only a shared edge joins construction functions; diagonal proximity does not.
+		if (AreOrbitalModuleFootprintsAdjacent(state, core->state)) return core;
 	}
 	return nullptr;
 }
@@ -170,7 +179,7 @@ static bool ReadyProbe(const SpaceVehicle &v, const SpaceStructure &site)
 	return Company::IsValidID(v.owner) && v.owner == site.state.owner && GetSpaceVehicleModel(v) == 20 &&
 		v.construction.content_version == MULTILAYER_SPACE_CONTENT_VERSION && v.manifest != nullptr &&
 		v.construction.placement == SpacePlacement::Orbital && !v.vehstatus.Test(VehState::Stopped) && !v.vehstatus.Test(VehState::Crashed) &&
-		v.manifest->service_ticks == 0 && !HasOrbitalServiceAssignment(v) && v.position == GetSpaceStructureApproach(site.state);
+		v.manifest->service_ticks == 0 && !HasOrbitalServiceAssignment(v) && GetSpaceStructureBerth(v, site).has_value();
 }
 /** @param v Native builder. @return Its current, generation-qualified construction target, or nullptr. */
 static SpaceStructure *ConstructionTarget(const SpaceVehicle &v)
@@ -338,8 +347,46 @@ bool CommitOrbitalConstructionStep(SpaceVehicle &probe)
 /** @copydoc IsOrbitalModuleOperational */
 bool IsOrbitalModuleOperational(const SpaceStructure &site)
 {
-	return site.state.phase == SpaceStructurePhase::FrameComplete && site.state.kind == SpaceBuildKind::Core &&
-		site.module != nullptr && site.module->activation_ticks == 0 && Company::IsValidID(site.state.owner);
+	// Incomplete, unowned and unsupported frames cannot grant stock, generation or downstream construction functions.
+	if (site.state.phase != SpaceStructurePhase::FrameComplete || !IsSupportedOrbitalModuleKind(site.state.kind) ||
+		site.module == nullptr || site.module->activation_ticks != 0 || !Company::IsValidID(site.state.owner)) return false;
+	// A Core bootstraps independently; every extension must still share an edge with an actual owned operational Core.
+	return site.state.kind == SpaceBuildKind::Core || GetOrbitalConstructionCore(site.state) != nullptr;
+}
+
+/** @copydoc IsSupportedOrbitalModuleKind */
+bool IsSupportedOrbitalModuleKind(SpaceBuildKind kind)
+{
+	return kind == SpaceBuildKind::Core || kind == SpaceBuildKind::Storage || kind == SpaceBuildKind::Power || kind == SpaceBuildKind::Dock;
+}
+
+/** @copydoc GetOrbitalModuleServiceCapacity */
+uint8_t GetOrbitalModuleServiceCapacity(SpaceBuildKind kind)
+{
+	if (kind == SpaceBuildKind::Core) return 1;
+	if (kind == SpaceBuildKind::Dock) return 2;
+	return 0;
+}
+
+/** @copydoc GetOrbitalModuleStockLimit */
+uint16_t GetOrbitalModuleStockLimit(SpaceBuildKind kind)
+{
+	// Only an explicit storage role grants freight capacity; a power panel cannot double as free general storage.
+	return kind == SpaceBuildKind::Core || kind == SpaceBuildKind::Storage || kind == SpaceBuildKind::Dock ? GetMultiLayerSpaceBudget().stock_cap : 0;
+}
+
+/** @copydoc GetOrbitalModulePanelRate */
+uint32_t GetOrbitalModulePanelRate(const SpaceStructure &site)
+{
+	// Pending activation, disabled panels and lost dependencies publish zero without changing the shared energy ledger.
+	if (!IsOrbitalModuleOperational(site) || !site.module->power_enabled || site.module->producer == UtilityProducerID{UINT32_MAX}) return 0;
+	const auto *source = GetUtilityPowerProducer(site.module->producer);
+	// A retired or foreign original producer cannot be revived merely by retaining a paid module record.
+	if (source == nullptr || !source->active || source->owner != site.state.owner || source->meter.layer != MapLayer::Space) return 0;
+	const auto &budget = GetMultiLayerSpaceBudget();
+	if (site.state.kind == SpaceBuildKind::Core) return budget.core_panel_w;
+	if (site.state.kind == SpaceBuildKind::Power) return budget.module_panel_w;
+	return 0;
 }
 
 /** @copydoc GetOrbitalModuleCargoCapacity */
@@ -347,7 +394,7 @@ uint16_t GetOrbitalModuleCargoCapacity(const SpaceStructure &site, CargoType car
 {
 	// An inert/unowned Core and an unresolved cargo label supply no usable capacity.
 	if (!IsOrbitalModuleOperational(site) || !IsValidCargoType(cargo)) return 0;
-	return GetMultiLayerSpaceBudget().stock_cap;
+	return GetOrbitalModuleStockLimit(site.state.kind);
 }
 
 /** @copydoc InsertOrbitalPacketOwners */
@@ -366,7 +413,7 @@ bool InsertOrbitalPacketOwners(std::set<CargoPacketID> &owned)
 	for (const auto *site : SpaceStructure::Iterate()) {
 		for (const auto &slot : site->job.inputs) if (!insert(slot)) return false;
 		if (site->module) for (const auto &slot : site->module->stock) if (!insert(slot)) return false;
-		if (site->module) for (const auto &slot : site->module->service.inputs) if (!insert(slot)) return false;
+		if (site->module) for (const auto *job : site->module->GetServiceJobs()) for (const auto &slot : job->inputs) if (!insert(slot)) return false;
 	}
 	return true;
 }
@@ -386,12 +433,15 @@ void TickOrbitalConstructionInventory()
 		if (!site->module) continue;
 		auto &module = *site->module;
 		// Company loss preserves paid stock and pending activation; a reused company ID gains no operation.
-		if (Company::IsValidID(site->state.owner) && module.activation_ticks != 0) --module.activation_ticks;
+		if (Company::IsValidID(site->state.owner) && module.activation_ticks != 0) {
+			// Extension activation waits for its actual dependency; neither reload nor another company's adjacent Core supplies it.
+			if (site->state.kind == SpaceBuildKind::Core || GetOrbitalConstructionCore(site->state) != nullptr) --module.activation_ticks;
+		}
 		if (++module.age_ticks == Ticks::CARGO_AGING_TICKS) {
 			module.age_ticks = 0;
 			// Age every physical cargo label once; GUI polling and service queries never age or recreate stock.
 			for (auto &slot : module.stock) HubCargoTransfer::Age(slot);
-			for (auto &slot : module.service.inputs) HubCargoTransfer::Age(slot);
+			for (auto *job : module.GetServiceJobs()) for (auto &slot : job->inputs) HubCargoTransfer::Age(slot);
 		}
 	}
 	TickOrbitalServices();

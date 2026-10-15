@@ -66,7 +66,9 @@ TEST_CASE("Static module recipes retain native footprint and cannot masquerade a
 		row.work_ticks = definition.work_ticks; row.consumed = {static_cast<uint16_t>(definition.inputs[0].quantity), static_cast<uint16_t>(definition.inputs[1].quantity)};
 		CHECK(ValidateSpaceStructureRecords(std::array{row}, 2, 64, 64));
 		row.module.emplace();
-		CHECK(ValidateSpaceStructureRecords(std::array{row}, 2, 64, 64) == (definition.kind == SpaceBuildKind::Core));
+		// Newly activated Power modules require their actual panel reference; unsupported later functions remain inert frames.
+		if (definition.kind == SpaceBuildKind::Power) row.module->producer = UtilityProducerID{0};
+		CHECK(ValidateSpaceStructureRecords(std::array{row}, 2, 64, 64) == IsSupportedOrbitalModuleKind(definition.kind));
 	}
 	auto row = CoreFrame(); row.state.kind = SpaceBuildKind::Rocket; CHECK_FALSE(ValidateSpaceStructureRecords(std::array{row}, 2, 64, 64));
 }

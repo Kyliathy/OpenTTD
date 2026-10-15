@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "space_vehicle.h"
+#include "space_approach.h"
 #include "space_transition.h"
 #include "transport_tube.h"
 #include "error.h"
@@ -406,6 +407,8 @@ Vehicle::Vehicle(VehicleID index, VehicleType type) : VehiclePool::PoolItem<&_ve
 	this->cargo_age_counter  = 1;
 	this->last_station_visited = StationID::Invalid();
 	this->last_loading_station = StationID::Invalid();
+	// Every body, including a wagon that never owns orders, saves the common unbunching fields. Initialize its unused round-trip duration so purchase/save/replay cannot serialize allocator bytes or differ between builds (r2mlvs9 Group18).
+	this->round_trip_time = 0;
 }
 
 /** @{
@@ -1010,7 +1013,9 @@ static void RunEconomyVehicleDayProc()
 	}
 }
 
-/** Update actual vehicle owners once, preparing every company's capsule requests before any native front moves. */
+/** Update actual vehicle owners once, preparing every company's capsule and orbital approach requests before movement.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
+ */
 void CallVehicleTicks()
 {
 	_vehicles_to_autoreplace.clear();
@@ -1024,6 +1029,7 @@ void CallVehicleTicks()
 	// All capsule companies publish/request together after actual station load
 	// changes and before any front engine moves; allocation is independent of
 	// camera selection and the vehicle pool's native iteration order.
+	PrepareSpaceApproachTick();
 	PrepareTubePowerTick();
 	PerformanceAccumulator::Reset(PerformanceElement::GameLoopTrains);
 	PerformanceAccumulator::Reset(PerformanceElement::GameLoopRoadVehicles);

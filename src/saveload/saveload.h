@@ -479,6 +479,12 @@ enum class SaveLoadVersion : uint16_t {
 	OrbitalCoreFacilities, ///< Saveload version: 416\n Contained Core activation and sole operational packet inventory.
 	OrbitalCoreServices, ///< Saveload version: 417\n Contained paid service reservations, precise berth and original shared utility identities.
 	OrbitalAssemblyMilestones, ///< Saveload version: 418\n Exact fractional construction progress, native work receipts and bounded shared-panel assembly consumers.
+	OrbitalModuleActivation, ///< Saveload version: 419\n Explicit paid Storage/Power activation; unchanged SPST transport, bounded role-specific facilities and original panels.
+	SpaceApproachReservations, ///< Saveload version: 420\n Contained native hull requests, stable priority, bounded slot ownership and safe staging; Plan8 Group11.
+	OrbitalDockServices, ///< Saveload version: 421\n Explicit source-connected Dock activation, two contained service jobs and bounded shared work; Plan11 Group4C.
+	OrbitalModuleRetirement, ///< Saveload version: 422\n Bounded spent-module material/service receipts beside native structure issuance; Plan11 Group5.
+	SpaceOrbitalModuleFreight, ///< Saveload version: 423\n Generation-qualified direct module flights, once-only unloading receipt and shared in-transit admission; Plan9 Group11.
+	AsteroidStarterInputs, ///< Saveload version: 424\n Frozen initial launch-site preference and approach bound in the existing ASTR owner; Plan10 Group2.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

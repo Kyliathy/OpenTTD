@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_sl.cpp Code handling saving and loading of vehicles. */
+/** @file vehicle_sl.cpp Code handling saving and loading of vehicles.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group11 independent native freight preview.
+ */
 
 #include "../stdafx.h"
 
@@ -1150,18 +1152,23 @@ static const SaveLoad _vehicle_desc[] = {
 	SaveLoad::Struct<SlVehicleSpace>("space", SaveLoadVersion::SpaceMiningVehicles),
 };
 
+/** Decode same-file native authority and freight references for independent Space flight validation. */
 class SlSpaceOwnerPreview : public DefaultSaveLoadHandler<SlSpaceOwnerPreview, NativeSpaceVehiclePreview> {
 public:
 	static inline const SaveLoad description[] = {
 		SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, owner)),
+		SaveLoad::Vector<VarFileType::U32>("cargo.packets", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, cargo_packet_refs)),
 	};
 	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Detached same-file owner; raw cargo references cannot instantiate or borrow physical packets. */
 	void LoadCheck(NativeSpaceVehiclePreview *row) const override
 	{
-		if (std::ranges::find(this->GetLoadDescription(), "owner", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space owner preview field");
+		// Both authority and actual freight references are mandatory; omitted cargo cannot disguise a duplicated successful delivery receipt.
+		for (const auto &field : description) if (std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space owner/cargo preview field");
 		SlObject(row, this->GetLoadDescription());
 	}
 };
+/** Decode same-file Space hull geometry without constructing another fleet or consulting the active world. */
 class SlSpaceVehiclePreview : public DefaultSaveLoadHandler<SlSpaceVehiclePreview, NativeSpaceVehiclePreview> {
 public:
 	static inline const SaveLoad description[] = {
@@ -1170,6 +1177,7 @@ public:
 		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.y)),
 	};
 	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Detached native type/identity, filled only for the actual Space vehicle family. */
 	void LoadCheck(NativeSpaceVehiclePreview *row) const override
 	{
 		if (row->type != VehicleType::Space) return;

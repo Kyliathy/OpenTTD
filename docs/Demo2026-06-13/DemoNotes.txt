@@ -1,0 +1,34 @@
+1. 01MapIssues.png
+
+The map cannot be resized vertically less than in the screenshot.
+The map doesn't change layer when I switch layers via hotkey.
+I would like to have a hotkey for each map layer. From what I see, ALT + 1, 2, 3, 4 does nothing currently. Maybe that one?
+
+2. 02HeldNothing.png
+
+Why does it say "held nothing"? The TBM does have stuff.
+
+3. 03TrainStopped.png
+
+The haulage train has stuff in it but it doesn't get out of the depot unless I force it to override traffic lights.
+
+4. 04NewArea.png
+
+Come on, don't force me to return the train just to define a new area? What is this? Bureaucracy incorporated? What's the reason for this overcomplexity? I should be able to redefine the construction area whenever and it SJW (should just work :D ).
+
+Also, the train carriages are crushed into one another. Looks like a trainwreck in motion :D :D :D. Pun intended.
+
+5. 05CantDig.png
+
+The boring machine cannot plan... why? Error message doesn't convince me :D. Yes it can. Make an angled track and get to it :D.
+
+6. 06SomethingInTheWay.png
+
+There is nothing in the way. Well, I did have that hauler train forced out, but it wasn't going to the underground anyway. Anyway, I stopped it and still, the TBM just wouldn't leave. So I gave up at this point.
+
+Also, the hauler train and the TBM should not exchange cargo only in the portal. The portal is a tunnel. I expect the Hauler TO GO to the TBM and transfer load FROM the TBM and then go home with the load. It's insane to expect a TBM to go back to the Exchange area to unload :D. I can't believe that the plan became like that. Can't be from my prompt, and if it was, I was misunderstood or I deserve a little tiny spank on my left butt cheek for being naughty :D.
+
+13. Bonus questions:
+
+1. Why does Simulation Rate differ from Frame Rate?
+2. If I press F2, I get the Settings menu. If I press F2 again it shows again. Which I don't like. Pressing F2 another time should HIDE the thing (since ESC doesn't work). Same for all popups please. Or maybe there's a setting for that in the game already? One of the Advanced Settings?

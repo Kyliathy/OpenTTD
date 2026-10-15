@@ -2,6 +2,7 @@
 # Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
+# Shared native approach admission: docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -291,7 +292,16 @@ add_files(
     space_vehicle.cpp
     space.h
     asteroid.cpp
+    # Body/attachment publication before native work: r2mlvs10-asteroids-and-mining-probes.md Group3.
+    asteroid_motion.cpp
+    # Saved initial starter access: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    asteroid_generation.cpp
+    asteroid_generation.h
+    multilayer_asteroid_catalogue.h
     launch_center.cpp
+    # Shared native launch geometry: r2mlvs9 Group3 / r2mlvs10 Group2.
+    launch_site.cpp
+    launch_site.h
     launch_operations.cpp
     launch_assembly_gui.cpp
     space_manifest.cpp
@@ -308,6 +318,8 @@ add_files(
     orbital_station.h
     orbital_service.cpp
     orbital_service.h
+    orbital_freight.cpp
+    orbital_freight.h
     space_transition.cpp
     space_transition.h
     space_descent.cpp
@@ -421,6 +433,8 @@ add_files(
     multilayer_space_content.cpp
     multilayer_space_content.h
     space_orders.cpp
+    space_approach.cpp
+    space_approach.h
     space_production.cpp
     space_production.h
     space_orders.h

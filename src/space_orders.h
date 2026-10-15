@@ -1,7 +1,8 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_orders.h Native typed Space order ownership and physical work admission.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group14; paid cargo descent uses an explicit center's circular region.
  */
 #ifndef SPACE_ORDERS_H
 #define SPACE_ORDERS_H
@@ -17,7 +18,7 @@ enum class SpaceOrderAction : uint8_t { Visit, Survey, Mine, Construct, Unload, 
 /** Target domains remain distinct even when their numeric IDs coincide. */
 enum class SpaceOrderTargetKind : uint8_t { Body, Structure, Blueprint, LaunchCenter, Craft, End };
 /** Saved explicit operational waits; presentation never invents progress to clear one. */
-enum class SpaceOrderBlock : uint8_t { None, Completed, TargetRemoved, ProducerUnavailable, HoldIncompatible, Timeout, ReturnsPending, ServiceRequired, PodsMissing, MaterialsMissing, BuilderBusy, End };
+enum class SpaceOrderBlock : uint8_t { None, Completed, TargetRemoved, ProducerUnavailable, HoldIncompatible, Timeout, ReturnsPending, ServiceRequired, PodsMissing, MaterialsMissing, BuilderBusy, ApproachBusy, End };
 /** Synchronized bounded queue edits applied to an exact paid native craft incarnation. */
 enum class SpaceOrderEdit : uint8_t { Insert, Replace, Erase, Clear, MoveUp, MoveDown, End };
 /** Generation-qualified target; natural bodies use their monotonic body domain. */
@@ -35,6 +36,19 @@ struct SpaceOrder {
 	/** @param other Order to compare. @return Whether action and exact typed target agree. */
 	bool operator==(const SpaceOrder &other) const = default;
 };
+/** One saved request owned by the asking native hull; no second vehicle or berth registry.
+ * Structure and Blueprint navigation share the same physical Structure domain.
+ * A waiting request holds no slot. Admission retains its slot until explicit
+ * release, target loss or departure; rendering cannot resolve the queue.
+ */
+struct SpaceApproachRequest {
+	SpaceOrderTarget target; ///< Body or normalized generation-qualified Structure.
+	uint64_t request_tick = 0; ///< Synchronized arrival in the arbitration queue.
+	uint8_t slot = UINT8_MAX; ///< Waiting sentinel, otherwise the actual bounded target slot.
+	SpacePoint staging; ///< Saved safe waiting destination; movement remains ordinary native pursuit.
+	/** @param other Request to compare. @return Whether saved target, priority, slot and staging agree. */
+	bool operator==(const SpaceApproachRequest &other) const = default;
+};
 /** Owned directly by one native Vehicle. No shared-order or clone commissioning path. */
 struct SpaceOrderQueue {
 	std::vector<SpaceOrder> entries;
@@ -43,6 +57,7 @@ struct SpaceOrderQueue {
 	SpaceOrderBlock blocked = SpaceOrderBlock::None;
 	uint32_t timer_ticks = 0;
 	uint16_t work_ticks = 0; ///< Reserved for action-owned partial work; unavailable producers may not accrue it.
+	std::optional<SpaceApproachRequest> approach; ///< Sole saved approach request for this actual hull.
 	/** @param other Queue to compare. @return Whether every instruction, wait and action-owned timer agrees. */
 	bool operator==(const SpaceOrderQueue &other) const = default;
 };
@@ -76,7 +91,11 @@ void ResetSpaceOrderLoadStaging();
 bool AcceptLoadedSpaceOrders();
 /** Validate copied queues against this file's profile/native hull catalogue without changing the open world. */
 void ValidateSpaceOrderLoadPreview();
-/** @param vehicle Actual paid orbital hull. @return True when its queue handled this tick; false delegates Mine to the existing mining owner. */
+/** Execute existing feature owners, including paid-pod center Unload at the actual current in-circle point.
+ * An unavailable shell, quota or receiver keeps cargo aboard without granting service.
+ * @param vehicle Actual paid orbital hull with its sole native queue and packet containers.
+ * @return True when its queue handled this tick; false delegates Mine to the existing mining owner.
+ */
 bool TickSpaceOrders(SpaceVehicle &vehicle);
 /** @param vehicle Actual hull whose queue and existing mining lease must be explicitly released. */
 void CancelSpaceOrders(SpaceVehicle &vehicle);

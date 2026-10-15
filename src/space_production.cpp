@@ -67,13 +67,15 @@ static bool Physical(std::span<const SpaceProductionRecord> records, bool compar
 			v->cargo_cap != GetSpaceFreightCapacity(model, v->cargo_type) || v->cargo.TotalCount() > v->cargo_cap ||
 			(v->cargo.TotalCount() != 0 && model == 20 && CargoSpec::Get(v->cargo_type)->label != CargoLabel{"STEL"} && CargoSpec::Get(v->cargo_type)->label != CargoLabel{"GOOD"})) return false;
 		if (s.placement == SpacePlacement::Orbital) continue; // Native orbital mission/position validation runs over the installed state below.
-		const bool resupply = model == 14 && IsSpaceFlightActive(*v) && v->transition->destination.kind == SpaceOrderTargetKind::Craft;
-		const bool closing = resupply && v->transition->phase == SpaceFlightPhase::OrbitalDelivery;
+		// The original paid in-transit rocket retains actual freight for either explicit craft resupply or direct module delivery; neither creates an orbital replacement hull.
+		const bool freight_flight = model == 14 && IsSpaceFlightActive(*v) &&
+			(v->transition->destination.kind == SpaceOrderTargetKind::Craft || v->transition->destination.kind == SpaceOrderTargetKind::Structure);
+		const bool closing = freight_flight && v->transition->phase == SpaceFlightPhase::OrbitalDelivery;
 		if (!v->space_orders.entries.empty() || v->mission.phase != SpaceMissionPhase::Holding ||
 			v->mission.target != INVALID_ORBITAL_BODY || v->mission.work_ticks != 0 || v->mission.approach_ticks_left != 0 ||
 			v->mission.travel_remainder >= 74 || (v->mission.travel_remainder != 0 && !closing) || v->mission.cost_remainder != 0 || v->extracted_units != 0 ||
 			!v->vehstatus.Test(VehState::Stopped) || (s.placement != SpacePlacement::InTransit && !v->vehstatus.Test(VehState::Hidden)) ||
-			((model == 15 || model == 19 || s.placement == SpacePlacement::Assembling || (s.placement == SpacePlacement::InTransit && !resupply)) && v->cargo.TotalCount() != 0)) return false;
+			((model == 15 || model == 19 || s.placement == SpacePlacement::Assembling || (s.placement == SpacePlacement::InTransit && !freight_flight)) && v->cargo.TotalCount() != 0)) return false;
 		MapLayer layer = MapLayer::Surface; bool retained_z = s.placement == SpacePlacement::Unhomed;
 		if (s.placement == SpacePlacement::InTransit) {
 			if (!IsSpaceFlightActive(*v)) return false; layer = v->transition->layer;

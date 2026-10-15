@@ -26,7 +26,8 @@ struct SpaceTransition; ///< Actual native rocket transition is defined in space
 /** Layer-local tile centers, never stacked world Y or camera coordinates. */
 struct SpacePoint {
 	int32_t x = 0, y = 0;
-	bool operator==(const SpacePoint &) const = default;
+	/** @param other Plane point to compare. @return Whether both saved coordinates agree. */
+	bool operator==(const SpacePoint &other) const = default;
 };
 
 /** Authoritative per-axis magnitude/day and saved unsigned fractional travel. */
@@ -34,21 +35,29 @@ struct SpaceMotion {
 	SpacePoint position;
 	int32_t velocity_x = 0, velocity_y = 0;
 	uint8_t remainder_x = 0, remainder_y = 0;
-	bool operator==(const SpaceMotion &) const = default;
+	/** @param other Motion to compare. @return Whether position, velocity and fractional travel agree. */
+	bool operator==(const SpaceMotion &other) const = default;
 };
 
 /** Inclusive continuous reflection bounds joining admissible tile centers. */
 struct SpaceTravelBand {
 	SpacePoint min, max;
+	/** @param point Plane point to validate. @return Whether both axes lie inside the inclusive reflection bounds. */
 	bool Contains(SpacePoint point) const;
-	bool operator==(const SpaceTravelBand &) const = default;
+	/** @param other Band to compare. @return Whether the inclusive bounds agree. */
+	bool operator==(const SpaceTravelBand &other) const = default;
 };
 
+/** @param width Plane width in supported tiles. @param height Plane height in supported tiles. @return Shared middle-half envelope bounds, or an empty band for unsupported dimensions. */
 SpaceTravelBand GetSpaceTravelBand(uint32_t width, uint32_t height);
+/** @param motion Validated in-band motion with bounded per-day velocity and remainders. @param band Shared inclusive bounds wider than a single step. */
 void AdvanceSpaceMotion(SpaceMotion &motion, const SpaceTravelBand &band);
+/** @param a First bounded plane point. @param b Second bounded plane point. @return Exact squared Q16 distance without floating point. */
 uint64_t SpaceDistanceSquared(SpacePoint a, SpacePoint b);
+/** @param position Actual craft/preview point to advance. @param target Current authoritative destination. @param remainder Saved unsigned fraction of the four-tile/day speed. @return Whether this step reaches the destination. */
 bool MoveSpaceSurveyTowards(SpacePoint &position, SpacePoint target, uint8_t &remainder);
 
+/** Ownerless observation phases; these confer no native vehicle, resource or cargo rights. */
 enum class SpaceSurveyPhase : uint8_t { Approach, Attached, Return, Waiting };
 
 /** Explicit demo controller for model15; no Engine/Vehicle/cargo/Surface facility identity.
@@ -63,7 +72,8 @@ struct SpaceSurveyPreview {
 	uint16_t remaining_ticks = 0;
 	uint8_t travel_remainder = 0;
 	uint32_t completed_surveys = 0;
-	bool operator==(const SpaceSurveyPreview &) const = default;
+	/** @param other Preview to compare. @return Whether all saved observation fields agree. */
+	bool operator==(const SpaceSurveyPreview &other) const = default;
 };
 
 /** Derived local-query index. Save records and stable-ID iteration own simulation. */
@@ -73,8 +83,11 @@ class SpaceSpatialIndex {
 	std::vector<uint32_t> locations;
 	std::vector<uint32_t> slots;
 public:
+	/** @param width Plane width in tiles. @param height Plane height in tiles. @param count Number of monotonic body identities to index. */
 	void Reset(uint32_t width, uint32_t height, uint32_t count);
+	/** @param id Valid monotonic body identity. @param position Current bounded plane point published by body motion. */
 	void Update(OrbitalBodyID id, SpacePoint position);
+	/** @param min Minimum query coordinate. @param max Maximum query coordinate. @return Stable IDs in intersecting buckets; callers check their precise geometry. */
 	std::vector<OrbitalBodyID> Query(SpacePoint min, SpacePoint max) const;
 };
 

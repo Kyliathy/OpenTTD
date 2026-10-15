@@ -2,12 +2,16 @@
 /** @file space_orders.cpp Typed queue execution over the canonical Vehicle, mining and construction owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group6.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group14; explicit paid-pod return inside the owned center's circle.
  */
 #include "stdafx.h"
 #include "space_orders.h"
+#include "space_approach.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
+#include "space_pod.h"
 #include "space_structure.h"
+#include "orbital_service.h"
 #include "space_vehicle_cmd.h"
 #include "asteroid.h"
 #include "launch_center.h"
@@ -17,6 +21,7 @@
 #include "multilayer_space_content.h"
 #include "command_func.h"
 #include "map_func.h"
+#include "timer/timer_game_tick.h"
 #include <set>
 #include "safeguards.h"
 
@@ -94,9 +99,11 @@ bool ValidateSpaceOrderRecords(std::span<const SpaceOrderRecord> records, uint64
 		// Return/service waits belong only to an actual held Mine action, preserving paid return custody.
 		if (q.blocked >= SpaceOrderBlock::ReturnsPending && q.blocked <= SpaceOrderBlock::PodsMissing && !IsSpaceMiningServiceWait(q)) return false;
 		// Construction waits require the same live started action/deadline rather than hiding progress in another role.
-		if (q.blocked >= SpaceOrderBlock::MaterialsMissing && (!q.started || q.timer_ticks == 0 || q.cursor >= q.entries.size() || q.entries[q.cursor].action != SpaceOrderAction::Construct)) return false;
+		if (q.blocked >= SpaceOrderBlock::MaterialsMissing && q.blocked <= SpaceOrderBlock::BuilderBusy && (!q.started || q.timer_ticks == 0 || q.cursor >= q.entries.size() || q.entries[q.cursor].action != SpaceOrderAction::Construct)) return false;
+		// A queued approach wait cannot hide work or lose the hull's sole physical request.
+		if (q.blocked == SpaceOrderBlock::ApproachBusy && !q.approach) return false;
 	}
-	return true;
+	return ValidateSpaceApproachRecords(records);
 }
 
 /** @copydoc CaptureSpaceOrders */
@@ -142,14 +149,15 @@ bool ValidateNativeSpaceOrders()
 			if (v->mission.target != OrbitalBodyID{q.entries[q.cursor].target.id}) return false;
 		} else if (v->mission.phase != SpaceMissionPhase::Holding) return false;
 	}
-	return true;
+	return ValidateNativeSpaceApproaches();
 }
 
 /** @copydoc InstallLoadedSpaceOrders */
 bool InstallLoadedSpaceOrders(std::span<const SpaceOrderRecord> records, uint64_t next)
 {
 	// All native hulls must be accounted for before queue installation can mutate any vehicle.
-	if (!ValidateSpaceOrderRecords(records, next) || records.size() != GetSpaceVehicleCount()) return false;
+	if (!ValidateSpaceOrderRecords(records, next) || records.size() != GetSpaceVehicleCount() ||
+		!ValidateSpaceApproachRecords(records, TimerGameTick::counter, Map::SizeX(), Map::SizeY())) return false;
 	for (const auto &record : records) {
 		const auto *v = SpaceVehicle::GetIfValid(record.vehicle);
 		// Every copied queue must resolve to the exact native Space hull family before the all-row installation commit.
@@ -206,7 +214,8 @@ SpaceOrderBlock ResolveSpaceNavigationTarget(const SpaceVehicle &vehicle, const 
 		if (target.id >= SpaceStructureID::End().base()) return SpaceOrderBlock::TargetRemoved;
 		const auto *site = ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(target.id)}, target.generation});
 		// Cancellation removes construction admission while retaining the owned Structure approach for explicit material collection.
-		if (site == nullptr || site->state.owner != vehicle.owner || (target.kind == SpaceOrderTargetKind::Blueprint && site->state.phase == SpaceStructurePhase::Cancelled)) return SpaceOrderBlock::TargetRemoved;
+		if (site == nullptr || site->state.owner != vehicle.owner || (site->state.phase == SpaceStructurePhase::Cancelled &&
+			(target.kind == SpaceOrderTargetKind::Blueprint || (site->job.inputs[0].TotalCount() == 0 && site->job.inputs[1].TotalCount() == 0)))) return SpaceOrderBlock::TargetRemoved;
 		point = GetSpaceStructureApproach(site->state); return SpaceOrderBlock::None;
 	}
 	return SpaceOrderBlock::ProducerUnavailable;
@@ -222,7 +231,7 @@ CommandCost CmdEditSpaceOrder(DoCommandFlags flags, VehicleID id, uint64_t gener
 {
 	auto *v = SpaceVehicle::GetIfValid(id);
 	// Only the exact owned deployed unstolen hull may edit its queue; onboard service retains physical control of its craft.
-	if (v == nullptr || v->construction.placement != SpacePlacement::Orbital || (v->manifest && v->manifest->service_ticks != 0) || generation == 0 || v->generation != generation || v->owner != _current_company || v->vehstatus.Test(VehState::Crashed) ||
+	if (v == nullptr || v->construction.placement != SpacePlacement::Orbital || (v->manifest && v->manifest->service_ticks != 0) || HasOrbitalServiceAssignment(*v) || generation == 0 || v->generation != generation || v->owner != _current_company || v->vehstatus.Test(VehState::Crashed) ||
 		GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry || edit >= SpaceOrderEdit::End) return CMD_ERROR;
 	// Queue ownership requires an actual Space engine; an ordinary vehicle cannot inherit these orbital controls.
 	if (!Engine::IsValidID(v->engine_type) || v->GetEngine()->type != VehicleType::Space) return CMD_ERROR;
@@ -270,6 +279,8 @@ bool IsSpaceSurveyWorkTick(const SpaceVehicle &vehicle)
 	// Only an explicit natural-body Survey action may accrue action-owned scan work.
 	if (o.action != SpaceOrderAction::Survey || o.target.kind != SpaceOrderTargetKind::Body) return false;
 	const auto *body = GetMutableAsteroidBody(OrbitalBodyID{o.target.id}); if (body == nullptr) return false;
+	SpacePoint admitted;
+	if (GetSpaceApproachDestination(vehicle, admitted) != SpaceOrderBlock::None) return false;
 	const SpacePoint point{body->motion.position.x + vehicle.mission.attachment_offset.x, body->motion.position.y + vehicle.mission.attachment_offset.y};
 	return SpaceDistanceSquared(vehicle.position, point) <= uint64_t{SPACE_Q16 / 4} * (SPACE_Q16 / 4);
 }
@@ -313,7 +324,7 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 	SpacePoint destination;
 	queue.blocked = ResolveSpaceNavigationTarget(vehicle, order.target, destination);
 	if (queue.blocked != SpaceOrderBlock::None) {
-		ReleaseSpaceMiningSlot(vehicle); vehicle.mission.phase = SpaceMissionPhase::Holding; queue.started = false; queue.timer_ticks = 0; queue.work_ticks = 0; return true;
+		ReleaseSpaceMiningSlot(vehicle); ReleaseSpaceApproach(vehicle); vehicle.mission.phase = SpaceMissionPhase::Holding; queue.started = false; queue.timer_ticks = 0; queue.work_ticks = 0; return true;
 	}
 	/** Finish only the current action, releasing its actual lease and clearing its action-owned partial timers. */
 	auto complete = [&] {
@@ -334,8 +345,39 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 		}
 		return false; // Existing native lease/reserve/packet implementation is the only extraction owner.
 	}
+	// Cargo descent has a circular receiving region and its own paid owner; it must not inherit Visit's exact-anchor rendezvous or orbital-module unloading authority.
+	if (order.action == SpaceOrderAction::Unload && order.target.kind == SpaceOrderTargetKind::LaunchCenter) {
+		const LaunchCenterRef center{StationID{static_cast<uint16_t>(order.target.id)}, order.target.generation};
+		if (vehicle.cargo.TotalCount() == 0) { complete(); return true; }
+		queue.started = true; queue.timer_ticks = 0; queue.work_ticks = 0;
+		if (!IsInsideLaunchCenterDropZone(vehicle.position, destination)) {
+			vehicle.cur_speed = 4;
+			MoveSpaceSurveyTowards(vehicle.position, destination, vehicle.mission.travel_remainder);
+			vehicle.UpdateSpacePosition(); // Release provenance must use this tick's actual physical tile.
+		}
+		if (!IsInsideLaunchCenterDropZone(vehicle.position, destination)) return true;
+		// No shell, service quota or recovery headroom may be invented by an order; an unavailable producer retains the original hold for explicit recovery/edit.
+		if (!vehicle.manifest || vehicle.manifest->pods.empty()) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; return true; }
+		const auto pod = vehicle.manifest->pods.front(); const uint16_t quantity = static_cast<uint16_t>(std::min<uint>(40, vehicle.cargo.TotalCount()));
+		if (!CanReleaseOrbitalCargo(GetSpaceCraftReference(vehicle), center, pod, quantity)) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; return true; }
+		const bool released = CommitOrbitalCargoRelease(GetSpaceCraftReference(vehicle), center, pod, quantity); assert(released);
+		if (!released) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; return true; }
+		if (vehicle.cargo.TotalCount() == 0) complete();
+		return true;
+	}
 	// These physical approach actions share native pursuit and a frozen bounded deadline; each feature still owns its work.
 	if (order.action == SpaceOrderAction::Visit || order.action == SpaceOrderAction::ReturnService || order.action == SpaceOrderAction::Survey || order.action == SpaceOrderAction::Construct) {
+		// Static sites and bodies share one saved admission owner; craft/Surface navigation retains its separate producer contract.
+		if (order.target.kind == SpaceOrderTargetKind::Body || order.target.kind == SpaceOrderTargetKind::Structure || order.target.kind == SpaceOrderTargetKind::Blueprint) {
+			if (!RequestSpaceApproach(vehicle, order.target, true)) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; return true; }
+			const auto admission = GetSpaceApproachDestination(vehicle, destination);
+			if (admission != SpaceOrderBlock::None) {
+				// Waiting preserves the original action deadline without earning work; pursue staging normally rather than moving an occupant.
+				queue.blocked = admission; vehicle.cur_speed = 4;
+				MoveSpaceSurveyTowards(vehicle.position, destination, vehicle.mission.travel_remainder);
+				return true;
+			}
+		} else ReleaseSpaceApproach(vehicle);
 		if (!queue.started) {
 			// A frozen bounded deadline at the same conservative 3-tile/day pursuit envelope.
 			const uint64_t span = std::max<uint64_t>(std::abs(int64_t{vehicle.position.x} - destination.x), std::abs(int64_t{vehicle.position.y} - destination.y));
@@ -389,6 +431,12 @@ uint64_t ComputeSpaceOrdersDigest()
 	for (const auto &r : CaptureSpaceOrders()) {
 		hash(r.vehicle.base()); hash(r.generation); hash(r.queue.entries.size()); hash(r.queue.cursor); hash(r.queue.started);
 		hash(to_underlying(r.queue.blocked)); hash(r.queue.timer_ticks); hash(r.queue.work_ticks);
+		hash(r.queue.approach.has_value());
+		if (r.queue.approach) {
+			const auto &a = *r.queue.approach;
+			hash(to_underlying(a.target.kind)); hash(a.target.id); hash(a.target.generation); hash(a.request_tick); hash(a.slot);
+			hash(static_cast<uint32_t>(a.staging.x)); hash(static_cast<uint32_t>(a.staging.y));
+		}
 		// Include each ordered typed target and incarnation; coincident numeric IDs in different domains remain distinct.
 		for (const auto &o : r.queue.entries) { hash(to_underlying(o.action)); hash(to_underlying(o.target.kind)); hash(o.target.id); hash(o.target.generation); }
 	}

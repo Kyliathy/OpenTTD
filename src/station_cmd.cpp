@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "launch_center.h"
+#include "launch_site.h"
 #include "launch_operations.h"
 #include "space_pod.h"
 #include "launch_center_cmd.h"
@@ -2870,9 +2871,18 @@ static CommandCost RemoveAirport(TileIndex tile, DoCommandFlags flags)
  * @param station_id Station ID of the airport.
  * @return the cost of this operation or an error
  */
-/** Build an empty native Surface launch facility; launch stock/jobs are separate producers. */
+/**
+ * Build an empty native Surface launch facility after complete policy and geometry preflight.
+ * @param flags Native quote or synchronized execution flags.
+ * @param tile Immutable Surface build anchor.
+ * @param rotation Quarter-turn physical zone layout.
+ * @param to_join Requested real station identity, or NEW_STATION for a new owner.
+ * @param adjacent Whether nearby facilities must remain independently owned unless explicitly joined.
+ * @return Native refusal or complete construction/clearing cost; launch stock and jobs remain separate owners.
+ */
 CommandCost CmdBuildLaunchCenter(DoCommandFlags flags, TileIndex tile, uint8_t rotation, StationID to_join, bool adjacent)
 {
+	// Only a real company with unlocked launch technology may purchase a facility; geometry queries alone grant neither.
 	if (!Company::IsValidID(_current_company) || !IsLaunchCenterTechnologyAvailable()) return CommandCost(STR_ERROR_LAUNCH_CENTER_UNAVAILABLE);
 	const auto area = GetLaunchCenterFootprint(tile, rotation);
 	if (!area) return CommandCost(STR_ERROR_LAUNCH_CENTER_SURFACE);
@@ -2886,10 +2896,12 @@ CommandCost CmdBuildLaunchCenter(DoCommandFlags flags, TileIndex tile, uint8_t r
 	const bool reuse = to_join != NEW_STATION;
 	if (!reuse) to_join = StationID::Invalid();
 	const bool distant = to_join != StationID::Invalid();
+	// A requested distant station must exist and the saved policy must permit that ownership join.
 	if (distant && (!_settings_game.station.distant_join_stations || !Station::IsValidID(to_join))) return CMD_ERROR;
 	Station *station = nullptr;
 	ret = FindJoiningStation(StationID::Invalid(), to_join, adjacent, *area, &station);
 	if (ret.Failed()) return ret;
+	// Use the explicit distant owner only after nearby joining produced no station; never substitute an unrelated neighbor.
 	if (station == nullptr && distant) station = Station::GetIfValid(to_join);
 	DoCommandFlags test_flags = flags;
 	test_flags.Reset(DoCommandFlag::Execute);
@@ -2897,16 +2909,15 @@ CommandCost CmdBuildLaunchCenter(DoCommandFlags flags, TileIndex tile, uint8_t r
 	test_flags.Set(DoCommandFlag::NoWater);
 	ret = BuildStationPart(&station, test_flags, reuse, *area, StationNaming::Rail);
 	if (ret.Failed()) return ret;
+	// One native station cannot own two launch anchors, even when ordinary facilities are joined to it.
 	if (station != nullptr && station->launch_center != nullptr) return CommandCost(STR_ERROR_LAUNCH_CENTER_EXISTS);
 
 	// Preflight all footprint tiles, joining and allocation before the first clear.
 	CommandCost cost(ExpensesType::Construction, 500000);
 	const int height = GetTileZ(tile);
 	for (const auto cell : *area) {
-		if ((!IsTileType(cell, TileType::Clear) && !IsTileType(cell, TileType::Trees)) ||
-			!IsTileFlat(cell) || GetTileZ(cell) != height) return CommandCost(STR_ERROR_FLAT_LAND_REQUIRED);
-		if (IsBridgeAbove(cell)) return CommandCost(STR_ERROR_MUST_DEMOLISH_BRIDGE_FIRST);
-		ret = EnsureNoVehicleOnGround(cell);
+		// Generation and paid placement share geometry; company policy and ordinary clearing costs stay in this command.
+		ret = GetLaunchCenterTerrainTileBlock(cell, height);
 		if (ret.Failed()) return ret;
 		ret = Command<Commands::LandscapeClear>::Do(test_flags, cell);
 		if (ret.Failed()) return ret;
@@ -2933,9 +2944,15 @@ CommandCost CmdBuildLaunchCenter(DoCommandFlags flags, TileIndex tile, uint8_t r
 	return cost;
 }
 
-/** Remove the complete facility from any one of its tiles, preserving joined native freight. */
+/** Remove the complete facility while preserving every existing physical cargo owner.
+ * @param flags Query or synchronized execution, including the normal bankruptcy ownership policy.
+ * @param tile Any actual tile of the native launch footprint.
+ * @return Removal cost or refusal while cargo/work would lose its only physical loading/recovery owner.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group16.
+ */
 CommandCost CmdRemoveLaunchCenter(DoCommandFlags flags, TileIndex tile)
 {
+	// Only a live native launch footprint may retire its recovery owner; ordinary station tiles and non-map references cannot enter this transaction.
 	if (!IsValidTile(tile) || !IsTileType(tile, TileType::Station) || GetStationType(tile) != StationType::LaunchCenter) return CMD_ERROR;
 	auto *station = Station::GetByTile(tile);
 	if (station->launch_center == nullptr) return CMD_ERROR;
@@ -2945,8 +2962,18 @@ CommandCost CmdRemoveLaunchCenter(DoCommandFlags flags, TileIndex tile)
 	}
 	const auto area = GetLaunchCenterFootprint(station->launch_center->tile, station->launch_center->rotation);
 	if (!area) return CMD_ERROR;
+	// Manual removal must let timed Surface handling finish; the existing bankruptcy path settles those packets synchronously after all other custody checks.
 	if (HasSurfaceHandlingForStation(station->index) && !flags.Test(DoCommandFlag::Bankrupt)) return CommandCost(STR_ERROR_LAUNCH_HANDLING_ACTIVE);
+	// Paid craft, pods and active descents still require this exact recovery generation, so none may lose its target during demolition.
 	if (HasLaunchCraft(GetLaunchCenterReference(*station)) || HasLaunchPods(GetLaunchCenterReference(*station)) || HasSpaceDescentForCenter(GetLaunchCenterReference(*station))) return CMD_ERROR;
+	// Joined ordinary freight retains this actual station and its loading point; a stand-alone center's returned/supply packets cannot be stranded by clearing the only facility.
+	const bool freight_remains = station->facilities.Test(StationFacility::Train) || station->facilities.Test(StationFacility::TruckStop) ||
+		station->facilities.Test(StationFacility::Dock) || station->facilities.Test(StationFacility::Airport);
+	if (!freight_remains) {
+		// Inspect every existing cargo owner before mutation so any held label keeps its age, route and physical inventory until actual evacuation.
+		for (const auto &goods : station->goods) if (goods.TotalCount() != 0) return CMD_ERROR;
+	}
+	// Revalidate every footprint cell and physical vehicle before clearing the first tile; a partial demolition cannot retire the shared station owner.
 	for (const auto cell : *area) {
 		if (!IsTileType(cell, TileType::Station) || GetStationType(cell) != StationType::LaunchCenter || GetStationIndex(cell) != station->index) return CMD_ERROR;
 		const auto empty = EnsureNoVehicleOnGround(cell);

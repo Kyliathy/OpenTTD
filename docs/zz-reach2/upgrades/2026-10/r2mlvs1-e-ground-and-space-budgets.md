@@ -98,6 +98,7 @@ Ordinary Earth-produced Goods remains the production alternative.
 | Steelworks or Goodsworks module | STEL10 + GOOD16 | 18t /740 ticks /220,000 each |
 | Power module | STEL6 + GOOD20 | 16t /444 ticks /140,000; existing60kW local output |
 | Fuel store | STEL6 + GOOD12 | 12t /296 ticks /100,000; existing128kL capacity |
+| Later heavy robot16 | STEL6 + GOOD12 + RBPT4 + ELEC2 | 18t /592 ticks /200,000 |
 
 The first Core's starter cargo inventory uses the shared1,024-unit stock cap per
 resolved physical cargo label, with at most64 retained packet records per label.
@@ -107,7 +108,33 @@ silently expands a Core's container. Construction-job inputs remain separate
 from operational stock. Precise cargo exchange creates no freight payment.
 Dock reservations, Assembly commissioning and actual shared-ledger power/service
 work remain independently gated by their declared facilities and operating inputs.
-| Later heavy robot16 | STEL6 + GOOD12 + RBPT4 + ELEC2 | 18t /592 ticks /200,000 |
+
+**Module activation contract,2026-10-13:** fully consumed Storage and Power
+frames use the same explicit74-tick commissioning countdown as the Core,
+without another material or capital debit. Storage starts empty with its own
+1,024-unit/64-packet bound per physical cargo label; it does not expand the
+Core's containers. Power starts without freight stock or service/assembly
+slots and registers its own original60kW Space-local panel in the common
+utility ledger. Pending activation, a disabled/retired panel or loss of the
+owned adjacent operational Core supplies zero output. Shared allocation is
+still required before any work can consume that output. Dock functionality
+and later manufacturing/processing retain their separate producer gates.
+
+**Dock service implementation contract,2026-10-14:** the paid STEL8/GOOD12
+Dock frame uses the same explicit74-tick activation and supplies two precise
+berths inside its reserved south approach cell. These are two contained
+service jobs, each using RFMT1/ELEC1 and148 actual750J working ticks. One
+explicitly connected shared consumer is capped at1,500J per tick; a30kW Core
+panel alone cannot run both jobs at full rate. Stable berth order and actual
+remaining allocation determine work/upkeep together. Connection requires an
+original adjacent owned Core/Power panel and generates no energy or free panel.
+Dock freight stock has the same1,024-unit/64-packet per-label physical bound;
+RFMT/ELEC supply exchange retains the existing64/32 service-buffer admission.
+Power/dependency outages preserve paid physical berths and unconsumed parts,
+while operational handling/work remains blocked. Group4C's RelWithDebInfo
+contracts and native delivery/service/replay/cancellation/refusal gates verify
+this producer in `logs/orbital-dock-verification.json`. Debug remains queued;
+manufacturing and rocket-to-module delivery retain their own producer gates.
 
 Unlisted later orbital assets, including haulers and advanced processors, must
 receive both base materials plus any declared advanced inputs before purchase

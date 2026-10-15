@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file company_cmd.cpp Handling of companies. */
+/** @file company_cmd.cpp Handling of companies.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group15; liquidation must not discard unsettled Space custody/work.
+ */
 
 #include "stdafx.h"
 #include "company_base.h"
@@ -31,6 +33,14 @@
 #include "settings_func.h"
 #include "vehicle_base.h"
 #include "vehicle_func.h"
+#include "space_vehicle.h"
+#include "space_manifest.h"
+#include "space_pod.h"
+#include "space_transition.h"
+#include "space_structure.h"
+#include "orbital_station.h"
+#include "station_base.h"
+#include "launch_center.h"
 #include "smallmap_gui.h"
 #include "game/game.hpp"
 #include "goal_base.h"
@@ -899,6 +909,71 @@ void CompanyAdminRemove(CompanyID company_id, CompanyRemoveReason reason)
 	if (_network_server) NetworkAdminCompanyRemove(company_id, static_cast<AdminCompanyRemoveReason>(reason));
 }
 
+/** Check actual physical Space cargo and unfinished work before company liquidation.
+ * Normal takeover keeps these native owners and their paid history; deletion
+ * has no receiving owner and must wait for actual settlement or ownership transfer.
+ * @param company Existing company whose items would otherwise be destroyed.
+ * @return Whether deletion would discard or orphan unsettled Space custody/work.
+ */
+static bool HasUnsettledSpaceCompanyCustody(CompanyID company)
+{
+	// Surface trains/lorries may already hold finite orbital returns; their ordinary vehicle class does not authorize erasing the original asteroid debit.
+	for (const auto *vehicle : Vehicle::Iterate()) {
+		if (vehicle->owner != company) continue;
+		for (const auto *packet : *vehicle->cargo.Packets()) if (packet->GetSource().type == SourceType::Asteroid) return true;
+	}
+	// Every owned Space hull retains actual freight, active flight/assembly and carried/service obligations until a real receiving owner exists.
+	for (const auto *craft : SpaceVehicle::Iterate()) {
+		if (craft->owner != company) continue;
+		// Loaded cargo, a running flight or unfinished material-paid hull cannot be destroyed as an empty ordinary transport asset.
+		if (craft->cargo.TotalCount() != 0 || IsSpaceFlightActive(*craft) || craft->construction.placement == SpacePlacement::Assembling) return true;
+		if (!craft->manifest) continue;
+		const auto &manifest = *craft->manifest;
+		// Carried paid payload and funded return/service work must keep their original native hull/pod bindings rather than becoming a phantom deployment.
+		if (manifest.passenger != SpaceCraftRef{} || manifest.carrier != SpaceCraftRef{} || manifest.pending_returns != 0 || manifest.service_ticks != 0) return true;
+		// Each real supply compartment owns purchased packets; a company removal cannot substitute abandonment for accounted consumption or transfer.
+		for (const auto &stock : manifest.supplies) if (stock.TotalCount() != 0) return true;
+	}
+	// Paid descent packets and unfinished shell production remain their own owners even when the original craft is elsewhere.
+	for (const auto *pod : SpacePod::Iterate()) {
+		if (pod->state.owner != company) continue;
+		// A retained cargo descent or funded assembly timer needs settlement before its company can disappear.
+		if ((pod->descent && pod->descent->packets.TotalCount() != 0) || pod->state.remaining_ticks != 0) return true;
+	}
+	// Native orbital construction, module stock and both service berths use the same physical packet authority; liquidation cannot bypass their evacuation guards.
+	for (const auto *site : SpaceStructure::Iterate()) {
+		if (site->state.owner != company) continue;
+		// Only unfinished paid work blocks on its labour receipt; completed/cancelled structural history is not an active job.
+		if (site->job.work_ticks != 0 && site->state.phase != SpaceStructurePhase::FrameComplete && site->state.phase != SpaceStructurePhase::Cancelled) return true;
+		// Reserved construction packets must be consumed by work or evacuated to an actual inventory first.
+		for (const auto &stock : site->job.inputs) if (stock.TotalCount() != 0) return true;
+		if (!site->module) continue;
+		// Every operational stock label and retained paid service owner must be empty/settled before company deletion can retire this module.
+		for (const auto &stock : site->module->stock) if (stock.TotalCount() != 0) return true;
+		for (const auto *job : site->module->GetServiceJobs()) {
+			if (job->craft != SpaceCraftRef{}) return true;
+			// Service inputs stay separate from general module stock and cannot be hidden by an empty visible inventory.
+			for (const auto &stock : job->inputs) if (stock.TotalCount() != 0) return true;
+		}
+	}
+	// Surface launch supplies, handling and finite asteroid returns continue the same custody chain until ordinary final acceptance or a real takeover.
+	for (const auto *station : Station::Iterate()) {
+		if (station->owner != company) continue;
+		// Read only existing data; checking deletion must not create inventory caches or reassign CargoDist routes.
+		for (const auto &goods : station->goods) {
+			if (!goods.HasData()) continue;
+			// An actual launch inventory is part of the Space producer/recovery chain even when its supplies originated on the Surface.
+			if (station->launch_center && goods.TotalCount() != 0) return true;
+			// A collected finite asteroid packet must still reach actual acceptance/transfer; clearing a separate member station cannot erase that debit history.
+			for (const auto &[hop, packets] : *goods.GetData().cargo.Packets()) { (void)hop; for (const auto *packet : packets) if (packet->GetSource().type == SourceType::Asteroid) return true; }
+		}
+		if (!station->launch_hub) continue;
+		// Timed handling has sole packet custody between its two station inventories; an empty endpoint does not prove settled cargo.
+		for (const auto &job : station->launch_hub->handling) if (job->packets.TotalCount() != 0) return true;
+	}
+	return false;
+}
+
 /**
  * Control the companies: add, delete, etc.
  * @param flags operation to perform
@@ -995,6 +1070,8 @@ CommandCost CmdCompanyCtrl(DoCommandFlags flags, CompanyCtrlAction cca, CompanyI
 
 			Company *c = Company::GetIfValid(company_id);
 			if (c == nullptr) return CMD_ERROR;
+			// Generic liquidation deletes loaded Space hulls before its ownership hooks. Refuse while native cargo/work has no settled receiving owner; normal takeover remains the preserving path.
+			if (HasUnsettledSpaceCompanyCustody(company_id)) return CMD_ERROR;
 
 			if (!flags.Test(DoCommandFlag::Execute)) return CommandCost();
 

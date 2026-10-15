@@ -15,7 +15,11 @@
 #include "../safeguards.h"
 
 /** Detached records; decoding/preview never publishes native inventory or activation. */
-struct StructureTransport { uint64_t next = 1; std::vector<SpaceStructureRecord> rows; };
+struct StructureTransport {
+	uint64_t next = 1;
+	SpaceStructureRetirementHistory history;
+	std::vector<SpaceStructureRecord> rows;
+};
 static std::optional<StructureTransport> candidate;
 /** @copydoc ResetSpaceStructureLoadStaging */
 void ResetSpaceStructureLoadStaging() { candidate.reset(); }
@@ -23,7 +27,7 @@ void ResetSpaceStructureLoadStaging() { candidate.reset(); }
 bool AcceptLoadedSpaceStructures()
 {
 	if (!candidate) return IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs);
-	if (!InstallLoadedSpaceStructures(candidate->rows, candidate->next)) return false;
+	if (!InstallLoadedSpaceStructures(candidate->rows, candidate->next, candidate->history)) return false;
 	candidate.reset(); return true;
 }
 /** @copydoc ValidateSpaceStructureLoadPreview */
@@ -36,10 +40,11 @@ void ValidateSpaceStructureLoadPreview()
 	}
 	const auto &rows = data.space_structure_rows;
 	// Nonempty native orbital state requires the same file's selected Space profile, rather than the current camera/world.
-	if ((!rows.empty() || data.next_space_structure_generation != 1) && (data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry) || data.map_layers < 3)) SlErrorCorrupt("Orbital construction requires selected Space profile");
+	if ((!rows.empty() || data.next_space_structure_generation != 1 || data.space_structure_retirement_history != SpaceStructureRetirementHistory{}) &&
+		(data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry) || data.map_layers < 3)) SlErrorCorrupt("Orbital construction requires selected Space profile");
 	// Assembly receipts compare against this file's copied clock, never the currently open world's opportunity.
 	if (!rows.empty() && !data.native_tick_present) SlErrorCorrupt("Missing orbital assembly clock preview");
-	if (!ValidateSpaceStructureRecords(rows, data.next_space_structure_generation, data.map_size_x, data.map_size_y, data.native_tick_counter)) SlErrorCorrupt("Invalid orbital construction preview");
+	if (!ValidateSpaceStructureRecords(rows, data.next_space_structure_generation, data.map_size_x, data.map_size_y, data.native_tick_counter, data.space_structure_retirement_history)) SlErrorCorrupt("Invalid orbital construction preview");
 	if (!ValidateOrbitalServiceUtilityRecords(rows, data.utility_power_state)) SlErrorCorrupt("Invalid orbital service utility preview");
 	std::set<CargoPacketID> packets;
 	// Cross-family copied owners must remain exclusive even when no live native pool has been installed.
@@ -51,23 +56,39 @@ void ValidateSpaceStructureLoadPreview()
 		for (const auto &slot : r.inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital construction packet preview"); }
 		if (r.module) for (const auto &slot : r.module->stock) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated operational Core packet preview"); }
 		if (r.module) {
-			const auto &job = r.module->service;
-			// Service reservations join cross-family exclusivity before a detached preview can grant valid load status.
-			for (const auto &slot : job.inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital service packet preview"); }
-			if (job.remaining_ticks != 0) {
-				if (job.craft.generation >= data.next_space_vehicle_generation) SlErrorCorrupt("Unissued orbital service craft preview");
-				/** @param m Copied native manifest. @return Whether it owns the exact job's hull incarnation. */
-				const auto manifest = std::find_if(data.space_manifest_rows.begin(), data.space_manifest_rows.end(), [&](const auto &m) { return m.craft == job.craft; });
-				/** @param v Copied native hull. @return Whether its pool ID matches the exact incarnation admitted by the order catalogue below. */
-				const auto craft = std::find_if(data.native_space_vehicle_rows.begin(), data.native_space_vehicle_rows.end(), [&](const auto &v) { return v.vehicle == job.craft.vehicle; });
-				const bool live = std::find(data.space_order_preview_refs.begin(), data.space_order_preview_refs.end(), job.craft) != data.space_order_preview_refs.end();
-				/** @param p Copied paid construction receipt. @return Whether it belongs to this exact berth incarnation. */
-				const auto production = std::find_if(data.space_production_rows.begin(), data.space_production_rows.end(), [&](const auto &p) { return p.craft == job.craft; });
-				// Removed craft may retain a waiting reservation; a surviving craft must own the same service serial and company.
-				if (live && (craft == data.native_space_vehicle_rows.end() || craft->owner != r.state.owner || manifest == data.space_manifest_rows.end() || manifest->service_ticks != 0 || manifest->services_completed != job.services_at_start)) SlErrorCorrupt("Foreign or changed orbital service craft preview");
-				// A live occupant must be the same paid deployed probe accepted by the physical service command, never a rocket or preview-only hull.
-				if (live && (production == data.space_production_rows.end() || production->state.content_version != MULTILAYER_SPACE_CONTENT_VERSION ||
-					production->state.placement != SpacePlacement::Orbital || (production->state.model != 15 && production->state.model != 19 && production->state.model != 20))) SlErrorCorrupt("Invalid orbital service probe role preview");
+			const auto jobs = r.module->GetServiceJobs();
+			// Both contained berths participate in same-file physical ownership; no second-job reference may hide from preview auditing.
+			for (size_t berth = 0; berth < jobs.size(); ++berth) {
+				const auto &job = *jobs[berth];
+				// Service reservations join cross-family exclusivity before a detached preview can grant valid load status.
+				for (const auto &slot : job.inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital service packet preview"); }
+				if (job.remaining_ticks != 0) {
+					if (job.craft.generation >= data.next_space_vehicle_generation) SlErrorCorrupt("Unissued orbital service craft preview");
+					/** @param m Copied native manifest. @return Whether it owns the exact job's hull incarnation. */
+					const auto manifest = std::find_if(data.space_manifest_rows.begin(), data.space_manifest_rows.end(), [&](const auto &m) { return m.craft == job.craft; });
+					/** @param v Copied native hull. @return Whether its pool ID matches the exact incarnation admitted by the order catalogue below. */
+					const auto craft = std::find_if(data.native_space_vehicle_rows.begin(), data.native_space_vehicle_rows.end(), [&](const auto &v) { return v.vehicle == job.craft.vehicle; });
+					const bool live = std::find(data.space_order_preview_refs.begin(), data.space_order_preview_refs.end(), job.craft) != data.space_order_preview_refs.end();
+					/** @param p Copied paid construction receipt. @return Whether it belongs to this exact berth incarnation. */
+					const auto production = std::find_if(data.space_production_rows.begin(), data.space_production_rows.end(), [&](const auto &p) { return p.craft == job.craft; });
+					// Removed craft may retain a waiting reservation; a surviving craft must own the same service serial and company.
+					if (live && (craft == data.native_space_vehicle_rows.end() || craft->owner != r.state.owner || manifest == data.space_manifest_rows.end() || manifest->service_ticks != 0 || manifest->services_completed != job.services_at_start)) SlErrorCorrupt("Foreign or changed orbital service craft preview");
+					// A live occupant must be the same paid deployed probe accepted by the physical service command, never a rocket or preview-only hull.
+					if (live && (production == data.space_production_rows.end() || production->state.content_version != MULTILAYER_SPACE_CONTENT_VERSION ||
+						production->state.placement != SpacePlacement::Orbital || (production->state.model != 15 && production->state.model != 19 && production->state.model != 20))) SlErrorCorrupt("Invalid orbital service probe role preview");
+					if (live) {
+						auto point = GetSpaceStructureApproach(r.state);
+						if (r.state.kind == SpaceBuildKind::Dock) {
+							point.x += static_cast<int32_t>(berth) * (SPACE_Q16 / 2);
+							/** @param row Same-file native queue. @return Whether it belongs to this exact retained service craft. */
+							const auto queue = std::ranges::find_if(data.space_order_preview_rows, [&](const auto &row) { return row.vehicle == job.craft.vehicle && row.generation == job.craft.generation; });
+							// A new Dock job must retain its own exact admitted physical slot, including while power is paused; legacy Core jobs need no new implicit reservation.
+							if (queue == data.space_order_preview_rows.end() || !queue->queue.approach || queue->queue.approach->target != SpaceOrderTarget{SpaceOrderTargetKind::Structure, r.ref.structure.base(), r.ref.generation} ||
+								queue->queue.approach->slot != berth) SlErrorCorrupt("Invalid orbital Dock berth preview");
+						}
+						if (craft->position != point) SlErrorCorrupt("Invalid orbital service craft position preview");
+					}
+				}
 			}
 		}
 	}
@@ -87,23 +108,37 @@ void ValidateSpaceStructureLoadPreview()
 static void Write(uint64_t value, uint width) { for (int shift = (width - 1) * 8; shift >= 0; shift -= 8) SlWriteByte(static_cast<uint8_t>(value >> shift)); }
 /** @param width Big-endian byte width already admitted by the caller. @return Decoded integer. */
 static uint64_t Read(uint width) { uint64_t value = 0; while (width-- != 0) value = (value << 8) | SlReadByte(); return value; }
-/** Native SPST family:415 job prefix,416 stock,417 service and418 exact assembly work/consumer receipts. */
+/** Native SPST family:415 jobs,416 stock,417 service,418 exact work,419 extension activation and421 connected Dock jobs. */
 struct SPSTChunkHandler : ChunkHandler {
 	/** Register the single bounded native structure family. */
 	SPSTChunkHandler() : ChunkHandler("SPST", ChunkType::Riff) {}
+	/** @param job Contained service record whose state and real packet references are written in the canonical existing field order. */
+	static void WriteService(const OrbitalServiceRecord &job)
+	{
+		Write(job.craft.vehicle.base(), 4); Write(job.craft.generation, 8); Write(job.remaining_ticks, 2); Write(job.paused, 1);
+		Write(job.last_work_interval, 8); Write(job.services_at_start, 8);
+		// Each reserved label retains exact packet IDs and routing, rather than replacing parts with aggregate quantities.
+		for (uint i = 0; i < 2; ++i) {
+			Write(job.quantities[i], 2); Write(job.inputs[i].size(), 2);
+			for (const auto &[packet, hop] : job.inputs[i]) { Write(packet.base(), 4); Write(hop.base(), 2); }
+		}
+	}
 	/** Serialize validated native owners, preserving exact packet identity and activation countdown. */
 	void Save() const override
 	{
 		if (!ValidateSpaceStructures()) SlErrorCorrupt("Invalid orbital construction on save");
-		const auto rows = CaptureSpaceStructures(); size_t length = 10 + 62 * rows.size();
+		const auto rows = CaptureSpaceStructures(); size_t length = 42 + 62 * rows.size();
 		// Exact transport length includes every retained packet reference, never cargo quantity as a packet surrogate.
 		for (const auto &r : rows) for (const auto &slot : r.inputs) length += 6 * slot.size();
 		for (const auto &r : rows) if (r.module) {
-			length += 5 + 56 + 4;
+			length += 5 + 56 + 4 + 10 + 39;
 			for (const auto &slot : r.module->stock) if (!slot.empty()) length += 5 + 6 * slot.size();
-			for (const auto &slot : r.module->service.inputs) length += 6 * slot.size();
+			for (const auto *job : r.module->GetServiceJobs()) for (const auto &slot : job->inputs) length += 6 * slot.size();
 		}
 		SlSetLength(length); Write(GetNextSpaceStructureGeneration(), 8); Write(rows.size(), 2);
+		// Append422's bounded aggregates to the family header; no deleted native object or packet pool is reconstructed from spent receipts.
+		const auto &history = GetSpaceStructureRetirementHistory();
+		Write(history.structures_removed, 8); Write(history.consumed[0], 8); Write(history.consumed[1], 8); Write(history.services_completed, 8);
 		// Write the unchanged construction prefix before the append-only contained facility payload.
 		for (const auto &r : rows) {
 			Write(r.ref.structure.base(), 2); Write(r.ref.generation, 8); const auto &s = r.state;
@@ -121,13 +156,11 @@ struct SPSTChunkHandler : ChunkHandler {
 				}
 				// Append417 fields after the unchanged416 sparse stock payload; old saves receive no implicit commissioned IDs.
 				Write(m.producer.base(), 4); Write(m.consumer.base(), 4); Write(m.power_enabled, 1); Write(m.services_completed, 8);
-				const auto &job = m.service;
-				Write(job.craft.vehicle.base(), 4); Write(job.craft.generation, 8); Write(job.remaining_ticks, 2); Write(job.paused, 1); Write(job.last_work_interval, 8); Write(job.services_at_start, 8);
-				for (uint i = 0; i < 2; ++i) {
-					Write(job.quantities[i], 2); Write(job.inputs[i].size(), 2);
-					for (const auto &[packet, hop] : job.inputs[i]) { Write(packet.base(), 4); Write(hop.base(), 2); }
-				}
+				WriteService(m.service);
 				Write(m.assembly_consumer.base(), 4); // Append418 after the unchanged417 contained-service payload.
+				// Append421 preserves the complete older module prefix; old modules acquire neither a source connection nor a second job.
+				Write(m.utility_source.structure.base(), 2); Write(m.utility_source.generation, 8);
+				WriteService(m.dock_service);
 			}
 			// Every native row carries the exact fractional milestone and tick receipt, including portable Core and cancelled jobs.
 			Write(r.work_fraction, 2); Write(r.work_remainder, 2); Write(r.last_work_tick, 8); Write(r.last_work_interval, 8);
@@ -140,13 +173,33 @@ struct SPSTChunkHandler : ChunkHandler {
 		const bool facilities = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalCoreFacilities);
 		const bool services = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalCoreServices);
 		const bool milestones = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalAssemblyMilestones);
-		const size_t row_limit = 47 + 56 + 12 + 24 + 6 * 128 + NUM_CARGO * (5 + 6 * 64);
+		const bool docks = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalDockServices);
+		const bool retired = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalModuleRetirement);
+		const size_t header_length = retired ? 42 : 10;
+		const size_t row_limit = 47 + 56 + 12 + 24 + 6 * 128 + NUM_CARGO * (5 + 6 * 64) + (docks ? 49 + 12 : 0);
 		// Bound the whole family before allocating records; older saves cannot smuggle newer facility payloads.
-		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs) || length < 10 || length > 10 + SpaceStructureID::End().base() * row_limit) SlErrorCorrupt("Invalid orbital construction length");
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs) || length < header_length || length > header_length + SpaceStructureID::End().base() * row_limit) SlErrorCorrupt("Invalid orbital construction length");
 		size_t consumed = 0;
 		/** @param width Requested integer width. @return Value only after admitting its bytes within this family. */
 		auto read = [&](uint width) { if (width > length - consumed) SlErrorCorrupt("Truncated orbital construction data"); consumed += width; return Read(width); };
+		/** @param job Receives one bounded detached service job; no packet, craft or utility owner is resolved while decoding. */
+		auto read_service = [&](OrbitalServiceRecord &job) {
+			job.craft = {VehicleID{static_cast<uint32_t>(read(4))}, read(8)}; job.remaining_ticks = static_cast<uint16_t>(read(2));
+			const auto paused = read(1); job.last_work_interval = read(8); job.services_at_start = read(8);
+			if (paused > 1) SlErrorCorrupt("Invalid orbital service flags");
+			job.paused = paused != 0;
+			// One actual part per label bounds the saved packet count independently of byte framing and claimed quantities.
+			for (uint i = 0; i < 2; ++i) {
+				job.quantities[i] = static_cast<uint16_t>(read(2)); const auto packets = read(2);
+				if (packets > 1) SlErrorCorrupt("Invalid orbital service packet count");
+				for (uint k = 0; k < packets; ++k) job.inputs[i].push_back({CargoPacketID{static_cast<uint32_t>(read(4))}, StationID{static_cast<uint16_t>(read(2))}});
+			}
+		};
 		StructureTransport t; t.next = read(8); const auto count = read(2);
+		if (retired) {
+			// Old saves receive zero aggregates; current history is bounded together with the same file's issuance and live owners below.
+			t.history.structures_removed = read(8); t.history.consumed[0] = read(8); t.history.consumed[1] = read(8); t.history.services_completed = read(8);
+		}
 		// Every native row has a mandatory construction prefix and, from416, one facility-presence byte.
 		if (count > SpaceStructureID::End().base() || consumed + count * ((facilities ? 42 : 41) + (milestones ? 20 : 0)) > length) SlErrorCorrupt("Invalid orbital construction count");
 		// Decode bounded native rows without allocating pools or resolving any live packet owner.
@@ -165,6 +218,9 @@ struct SPSTChunkHandler : ChunkHandler {
 				const auto present = read(1);
 				if (present > 1) SlErrorCorrupt("Invalid orbital Core presence");
 				if (present != 0) {
+					// Older binaries only supported contained Core facilities; an older save cannot smuggle newly usable extension functions.
+					if (IsSavegameVersionBefore(SaveLoadVersion::OrbitalModuleActivation) && s.kind != SpaceBuildKind::Core) SlErrorCorrupt("Invalid orbital extension activation version");
+					if (!docks && s.kind == SpaceBuildKind::Dock) SlErrorCorrupt("Invalid orbital Dock activation version");
 					r.module.emplace(); auto &m = *r.module;
 					m.activation_ticks = static_cast<uint16_t>(read(2)); m.age_ticks = static_cast<uint16_t>(read(2)); const auto slots = read(1);
 					if (slots > NUM_CARGO) SlErrorCorrupt("Invalid orbital Core cargo count");
@@ -178,20 +234,16 @@ struct SPSTChunkHandler : ChunkHandler {
 					}
 					if (services) {
 						m.producer = UtilityProducerID{static_cast<uint32_t>(read(4))}; m.consumer = UtilityConsumerID{static_cast<uint32_t>(read(4))};
-						const auto enabled = read(1); m.services_completed = read(8); auto &job = m.service;
-						job.craft = {VehicleID{static_cast<uint32_t>(read(4))}, read(8)}; job.remaining_ticks = static_cast<uint16_t>(read(2));
-						const auto paused = read(1); job.last_work_interval = read(8); job.services_at_start = read(8);
+						const auto enabled = read(1); m.services_completed = read(8);
 						// Presence flags are strict booleans, rather than accepting malformed values through a cast.
-						if (enabled > 1 || paused > 1) SlErrorCorrupt("Invalid orbital service flags");
-						m.power_enabled = enabled != 0; job.paused = paused != 0;
-						// Each active service label is exactly one part, so more than one packet cannot be a legitimate owner.
-						for (uint i = 0; i < 2; ++i) {
-							job.quantities[i] = static_cast<uint16_t>(read(2)); const auto packets = read(2);
-							if (packets > 1) SlErrorCorrupt("Invalid orbital service packet count");
-							for (uint k = 0; k < packets; ++k) job.inputs[i].push_back({CargoPacketID{static_cast<uint32_t>(read(4))}, StationID{static_cast<uint16_t>(read(2))}});
-						}
+						if (enabled > 1) SlErrorCorrupt("Invalid orbital service flags");
+						m.power_enabled = enabled != 0; read_service(m.service);
 					}
 					if (milestones) m.assembly_consumer = UtilityConsumerID{static_cast<uint32_t>(read(4))};
+					if (docks) {
+						m.utility_source = {SpaceStructureID{static_cast<uint16_t>(read(2))}, read(8)};
+						read_service(m.dock_service);
+					}
 				}
 			} else if (s.kind != SpaceBuildKind::Core) {
 				SlErrorCorrupt("Old orbital construction cannot contain later module kinds");
@@ -214,14 +266,16 @@ struct SPSTChunkHandler : ChunkHandler {
 		if (!candidate) { if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs)) SlErrorCorrupt("Missing orbital construction family"); return; }
 		const auto *schema = GetPendingMultiLayerStateSchema();
 		// Nonempty orbital owners require the pending save's selected gameplay profile.
-		if ((!candidate->rows.empty() || candidate->next != 1) && (schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry)) SlErrorCorrupt("Orbital construction requires selected profile");
-		if (!ValidateSpaceStructureRecords(candidate->rows, candidate->next, Map::SizeX(), Map::SizeY(), TimerGameTick::counter)) SlErrorCorrupt("Invalid orbital construction receipt");
+		if ((!candidate->rows.empty() || candidate->next != 1 || candidate->history != SpaceStructureRetirementHistory{}) &&
+			(schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry)) SlErrorCorrupt("Orbital construction requires selected profile");
+		if (!ValidateSpaceStructureRecords(candidate->rows, candidate->next, Map::SizeX(), Map::SizeY(), TimerGameTick::counter, candidate->history)) SlErrorCorrupt("Invalid orbital construction receipt");
 	}
 	/** @param length Framework-admitted family length; the bounded decoder checks its exact contents again. */
 	void LoadCheck([[maybe_unused]] size_t length) const override
 	{
 		if (_load_check_data.space_structures_present) SlErrorCorrupt("Repeated orbital construction preview");
-		auto t = this->ReadRecords(); _load_check_data.space_structure_rows = std::move(t.rows); _load_check_data.next_space_structure_generation = t.next; _load_check_data.space_structures_present = true;
+		auto t = this->ReadRecords(); _load_check_data.space_structure_rows = std::move(t.rows); _load_check_data.next_space_structure_generation = t.next;
+		_load_check_data.space_structure_retirement_history = t.history; _load_check_data.space_structures_present = true;
 	}
 };
 static const SPSTChunkHandler SPST;

@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 81-89 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/cargopacket.cpp](../../../../src/cargopacket.cpp) | 96-121 | Complete `CargoPacket::Split` and `Merge` define quantity/feeder-share ownership and allocation failure. Every construction, production and transport group must conserve actual packet quantities; station vehicle-loading reservations are not a generic orbital inventory API. |
 
-Status: paused after Group3,2026-10-13, at the user's request; the operational Core and module-work prerequisites are delivered, while later activation/removal/handoff remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9/10 and Surface recipes from r2mlvs6. This is milestone M4; the basic probe and mirror loops remain independently playable.
+Status: construction prerequisite Groups1-6 delivered,2026-10-14. Group6 publishes the exact native construction/module contract after focused RelWithDebInfo/Debug and22 Debug native phases. Evidence: `logs/orbital-handoff-debug-verification.json`; earlier immutable Release evidence: `logs/orbital-removal-verification.json`, `logs/orbital-evacuation-verification.json`, `logs/orbital-lifecycle-verification.json`, `logs/orbital-dock-verification.json`. Deferred Debug for4/4B/4C/5/5B/5C is now accepted. Return to [Space master](r2mlsp-space-master-plan.md) / Plan9 Group11 tasks11.3-11.4. Later orbital Assembly/manufacturing/processing, presentation and completion conditions remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -94,18 +94,47 @@ weight; displays, holds and recipe caps must not silently treat crates as tonnes
 
 ## Public Handoff Contract
 
-`src/orbital_station.h` publishes `OrbitalModule`, `OrbitalConstructionJob`,
-`ReserveOrbitalConstructionInputs` and `CommitOrbitalConstructionStep`, contained
-by the native `SpaceStructure` in `src/space_structure.h`. The416 batch delivers
-Core activation and operational packet storage. The417 Group1B batch adds
-`OrbitalServiceJob` and `src/orbital_service.h`: one generation-qualified Core
-berth, reserved RFMT/ELEC packets, common panel publication and atomic750J work
-settlement. Both configurations verify these initial Core functions; old416
-inventory-only Cores require explicit panel commissioning. Later Dock/Storage,
-module construction/removal and direct rocket destinations remain open.
-Keep one authority for
-these fields/commands; downstream plans consume the public owners rather than
-private pools or copied tables.
+[src/orbital_station.h](../../../../src/orbital_station.h) publishes
+`OrbitalModule`, `OrbitalConstructionJob`, `ReserveOrbitalConstructionInputs`
+and `CommitOrbitalConstructionStep`, contained by the native `SpaceStructure`
+in [src/space_structure.h](../../../../src/space_structure.h). Groups1/1B/2/3
+have RelWithDebInfo/Debug producer evidence. Groups4/4B/4C/5/5B/5C now also
+have both configurations' focused and native boundaries. The final exact type/
+signature fixture passes with3,605 assertions in26 focused cases per configuration;
+22 bounded Debug native phases cover activation, shared approaches, delivered
+Dock services, removal, evacuation, company lifecycle and independent refusals.
+`logs/orbital-handoff-debug-verification.json` freezes this422 handoff and the
+repaired current Release freight fixture. Earlier dated Release proofs remain
+immutable. Plan9 task11.3 now verifies423 direct rocket-to-module delivery and
+original-hull recovery/failure acceptance in RelWithDebInfo/Debug
+(`logs/module-flight-verification.json`). Orbital
+Assembly/manufacturing/processing remain later producers.
+
+| Native authority | Published contract |
+| --- | --- |
+| `SpaceStructure` / `SpaceStructureRef` | One paid static footprint, phase and monotonic generation. IDs may be reused only with a new generation; absent, stale or zero-generation references resolve to no owner. `FrameComplete` alone grants no facilities. |
+| `OrbitalConstructionJob` | Two exclusive actual STEL/GOOD packet containers, consumed receipts, bounded whole/fractional work and saved native tick/allocation receipts. Final completion consumes one whole canonical recipe once; cancellation preserves only unconsumed material and refunds no work. |
+| `ReserveOrbitalConstructionInputs(SpaceStructure &, SpaceVehicle &, bool)` | Actual precise admitted builder and matching typed Construct order. Estimate moves nothing; execution reserves only physically delivered still-missing material. `CmdReserveOrbitalModuleInputs` separately fills all missing labels atomically from actual adjacent Core stock. |
+| `CommitOrbitalConstructionStep(SpaceVehicle &)` | Normal prepared native opportunity only. Portable paid tooling bootstraps Core; extensions consume the original Core's shared allocation. Queries, pauses and repeated callbacks earn no work. |
+| `OrbitalModule` | Sole contained stock:1,024 units/64 packet references per label. Explicit paid-frame activation begins empty. Core/Storage/Power/Dock are supported; later recipe frames remain inert. Connection never expands another module's container. |
+| `OrbitalServiceJob` / `GetServiceJobs()` | Core capacity1, activated Dock capacity2. Each contained job owns one RFMT/ELEC pair, exact craft generation/service serial and once-only750J work receipt. Onboard/contained jobs cannot overlap. Cancellation preserves actual parts and spent energy; it grants no return allowance. |
+| `OrbitalFacilityState` | Original typed producer/service/construction consumer IDs; `UINT32_MAX` means absent. Core30kW and Power60kW use the shared Space electricity ledger. Dock has no panel: explicit `utility_source` binds one adjacent owned original Core/Power and one1,500J consumer. Old inventory-only Cores commission explicitly. |
+| `space_approach.h` / contained `SpaceOrderQueue` | Shared generation-qualified admission, stable saved priority, precise physical slot and safe waiting point. This is the berth authority; service and freight consume it rather than create another registry. Dependency loss blocks handling; zero panel generation blocks service work. Both retain paid Dock geometry. |
+| Removal/evacuation (422; RelWithDebInfo verified) | Exact owned empty removal preflights every physical/dependency/utility owner. `SpaceStructureRetirementHistory` remains beside native generation issuance, preserving spent material/service totals without retired-object inventory. Whole packet evacuation cancels jobs into one safe adjacent native inventory; hull holds/poses remain actual until explicit departure. |
+
+Schema422 preserves the421 module row and appends no new inventory owner.
+Its SPST header stores next generation(8bytes), live count(2), removed count(8),
+spent STEL(8), spent GOOD(8) and completed services(8). Older schemas start
+with zero retired aggregates. Native capture/install/digest and independent
+preview use the same bounded history; rejected snapshots cannot borrow live
+modules or reactivate retired utility identities.
+
+Downstream consumers use these actual owners and command estimate/execute
+boundaries. They cannot replace them with copied pools, private utility/cargo
+tables, blueprint capacity, implicit activation or another capital/material
+debit. The existing `orbital_removal.cpp` fixture binds exact exported types,
+packet containers, contained ownership and function signatures at compile time;
+the native producer fixtures verify their physical behavior.
 
 **Construction batch,2026-10-13:** `space_structure.h` is the native Plan8
 identity/occupancy owner; `orbital_station.h` owns its contained construction
@@ -127,6 +156,13 @@ Groups are chronological and contain consecutive tasks of one difficulty. Each d
 _Applies to Groups 1-6._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/multilayer_industry.h`: `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`; `src/space.h`: `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`; `src/launch_center.h`: `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease`; `src/asteroid.h`: `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`.
+**Delivered owner locations:** `space.h` supplies geometry and world types.
+Native fleet/mission owners are in `space_vehicle.h`, static sites and contained
+module identity in `space_structure.h`, and flights in `space_transition.h`.
+The historical `space.h` navigation row below does not relocate those owners.
+Use these actual headers with `orbital_station.h` and their compiled producer
+fixtures; no consumer should add replacement declarations or a second pool.
+
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
 If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-6. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
 Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
@@ -343,25 +379,189 @@ its functionality preflight requires Group4's actual module owner. Assembly
 finishes an accountable inert frame and keeps its exact native identity and
 footprint reserved; the following group owns once-only functional activation.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 4 - Activate completed module functions
 
-{{MEDIUM}}
-- [ ] 4.0 Complete the module and release reservations only after functionality can activate atomically. No construction consumption or refund generates a second delivery payment.
-- [ ] 4.1 Activate Core/Dock services only after completion; expose bounded berth and handling capacity through the r2mlvs8 approach contract.
-- [ ] 4.2 Activate Storage with a declared capacity and Utility with explicit power/service inputs and grants. Connecting modules does not create unlimited shared inventory or free energy.
-- [ ] 4.3 Recompute adjacency/dependency queries from authoritative completed modules; unfinished modules remain inert. Test one module removal changes only its dependents.
+**Execution split,2026-10-13:** this group supplies atomic Core/Storage/Power
+activation, bounded physical stock and the actual shared-ledger panel. Group4B
+retains the shared approach prerequisite; Group4C retains Dock activation/berths
+and dependency acceptance. Plan8 Group11's generic approach producer must pass
+its public boundary before the Dock consumer is claimed.
+The current user instruction resumes execution after the earlier Group3 pause.
 
-### Group 5 - Refuse or evacuate unsafe module removal
+{{MEDIUM}}
+- [X] 4.0 Activate fully consumed Core/Storage/Power frames once through a synchronized, generation-checked command and saved countdown. Prepare native functionality and any shared producer before committing activation; preserve the native footprint/identity. No construction consumption, activation or refund generates a second delivery payment. Dock activation remains in Group4B.
+- [X] 4.2 Activate Storage with a declared capacity and Utility with explicit power/service inputs and grants. Connecting modules does not create unlimited shared inventory or free energy.
+
+**RelWithDebInfo verified,2026-10-13; paused at the user's request.** Save419
+retains the418 byte layout and admits explicit74-tick Storage/Power activation;
+old-version non-Core activation is refused. Storage has its own bounded1,024-unit
+stock and no panel/work consumers. Power has no freight stock and publishes its
+original60kW panel through the shared utility owner; the Core retains30kW.
+The focused producer/consumer contracts pass285 assertions in11 cases. Native
+activation and actual typed Core-to-Storage transport of one existing Steel
+packet preserve26 owner families through interrupted replay and ordinary resave,
+without another material debit or freight payment. Four malformed schema,
+panel, stock-cap and work-consumer cases fail both full load and independent
+preview, with live authority unchanged. All four native bursts finish under10s.
+`logs/orbital-activation-verification.json` freezes sources, binaries, the
+unchanged paid418 input, exact reports and logs. Debug remains explicitly
+deferred to the next substantial Dock/approach/removal/handoff batch, following
+the user's instruction to bundle costly builds. Group4B and later groups remain
+unchecked; this checkpoint does not claim their functionality.
+
+### Local Mandatory Reading - Shared approach prerequisite
+
+_Applies to Group4B. Read the Global and Delivered construction Area gates,
+the module-construction Local reading above, Plan8 Global/Orbital world and
+construction Area reading, and its Group11 shared approach contract. Inspect
+the actual `space_approach.h/.cpp`, contained native `SpaceOrderQueue`, SPOR
+decoder/full-load/copied-preview boundaries and ordinary native movement.
+Existing asteroid mining leases remain the physical attachment authority.
+Reconcile and verify this producer before implementing its Dock consumer._
+
+### Group 4B - Deliver shared approach reservations
+
+**Execution split,2026-10-13:** the missing shared approach producer includes
+saved priority, exclusive slots, local staging, actual movement and independent
+loader/preview acceptance. Give it its own prerequisite group; original4.1/4.3
+continue unchanged in Group4C. This preserves the original order while keeping
+each active group and its reading focused.
 
 {{HARD}}
-- [ ] 5.1 Classify dependent berths, vehicles, assembly jobs and stored packets before removing a module. Refuse final Core/Dock/Storage removal if an accountable item has nowhere valid to go.
-- [ ] 5.2 Implement a deterministic explicit evacuation/cancellation path where possible, using the public cargo/job APIs and preserving unconsumed components.
-- [ ] 5.3 Test full replacement storage, occupied last dock, active assembly and company transfer. Reused module IDs cannot inherit old berth/recipe assignments.
+- [X] 4B.1 Complete Plan8 Group11's actual shared approach producer, publish its native request/admission/release boundary and verify simultaneous contention, removed targets and queued reload before the Dock consumer.
+
+**RelWithDebInfo verified,2026-10-14.** Plan8 Group11 publishes the contained
+native queue request and `space_approach.h` admission/release/precise-berth
+queries in save420. Focused contracts pass3,369 assertions in16 cases. Real
+paid craft demonstrate static/body contention, actual departure, target
+cancellation and moving-body tracking without acquiring mining/survey rights.
+Both queued continuations and ordinary resaves preserve26 owner families;
+four malformed cases fail both full load and copied preview with live owners,
+cash and RNG unchanged. Frozen evidence: `logs/space-approach-verification.json`.
+Debug remains queued with the next substantial batch. This completes the
+shared prerequisite only; original4.1/4.3 remain unchecked in Group4C.
+
+### Local Mandatory Reading - Dock functions and completed-module dependencies
+
+_Applies to Group4C. Read the Global and Delivered construction Area gates,
+the module-construction Local reading above, the verified Group4B/Plan8 Group11
+approach handoff and Group4 activation/save validation. Inspect the actual
+`OrbitalModule`, `SpaceStructureRef`, contained service jobs, precise admitted
+berth queries and shared utility registration/settlement. Dock capacity must
+consume explicit physically connected original sources and actual service
+packets; no second inventory, berth registry or energy balance may bypass them._
+
+### Group 4C - Activate Dock services and verify module dependencies
+
+Context has compacted 1 times while executing this group.
+
+{{MEDIUM}}
+- [X] 4.1 Activate Core/Dock services only after completion; expose bounded berth and handling capacity through the r2mlvs8 approach contract. Complete the missing shared approach producer and its focused fixtures before claiming this consumer.
+- [X] 4.3 Recompute adjacency/dependency queries from authoritative completed modules; unfinished modules remain inert. Verify activation/source outages against actual owners. Actual removal's dependent-only acceptance continues as task5.4 after the safe-removal producer.
+
+**RelWithDebInfo verified,2026-10-14.** Focused Dock/activation/approach/
+construction/Core contracts pass294 assertions in12 cases. Genuine418 paid
+builders and the same recovered rocket import STEL8/GOOD12 plus two actual
+RFMT/ELEC service pairs. Native shared work completes the444-tick Dock frame,
+then explicit74-tick activation supplies two precise berths without a panel.
+The one1,500J consumer binds the original adjacent Core; two real jobs compete
+for its810J generation and settle750J once per admitted working tick, with
+matching upkeep. Job pause and zero generation retain parts. Interrupted
+service, completion and cancellation ordinary resaves preserve26 owner
+families. Cancellation returns both unconsumed pairs and retires an idle
+connection without refunding settled power. Four malformed source/hull/part/
+schema cases fail full load and independent preview with active owners
+unchanged; the older-schema case reaches the explicit Dock-version refusal.
+The native inspector was inspected and shared module labels corrected through
+a language-only build. Frozen evidence: `logs/orbital-dock-verification.json`.
+Debug remains queued with Groups4/4B for the next substantial batch. This
+handoff supplies Dock functions and outage queries; Group5 owns actual removal.
+
+### Local Mandatory Reading - Safe module removal and evacuation
+
+_Applies to Group5. Read the Global and Delivered construction Area gates,
+the module-construction Local block, Group4C's contained service/connection
+handoff and actual `SpaceStructure` generations, packet owners and job receipts.
+Inspect `utility_power.cpp` source/share retirement and operation-sequence
+preflight before retiring physical bindings. Whole refusal preserves every
+packet, ledger, field and reference; only unconsumed material can be evacuated.
+Preserve spent construction/material history while permitting generation-safe
+native ID reuse. Read native queue/approach cancellation and company lifecycle
+only where removal changes those owners. No copied ledger or private cargo
+registry may replace the shared native authority._
+
+### Group 5 - Classify and safely remove empty modules
+
+**Execution split,2026-10-14:** retain original task order while separating
+whole empty removal/retired receipts, packet evacuation, and lifecycle
+acceptance. These changes share the next build batch; each group is checked
+only after its own focused evidence passes.
+
+{{HARD}}
+- [X] 5.1 Classify dependent berths, vehicles, assembly jobs and stored packets before removing a module. Refuse final Core/Dock/Storage removal if an accountable item has nowhere valid to go.
+- [X] 5.1B Remove only fully preflighted empty native owners, preserving aggregate spent-material/service receipts and exact utility history. Save issuance/retired history together through explicit schema422; old saves gain zero retired history.
+- [X] 5.1C Verify estimate/refusal purity, empty removal, receipt conservation and generation-safe identity reuse at the native owner boundary.
+
+**RelWithDebInfo verified,2026-10-14.** Focused dependency/removal contracts pass3,559 assertions in24 cases. The genuine paid Storage frame is removed through the actual command, preserving STEL8/GOOD8 in native retirement history. Its reused numeric ID receives a new generation and another capital payment; the old saved queue remains TargetRemoved. Stocked Core/occupied Dock and stale/foreign requests refuse unchanged. Ordinary resave preserves26 owner families. Four malformed issuance/material/service history cases fail both full load and independent preview, leaving active owners/cash/RNG unchanged. Exact construction signatures/contained types compile in the same fixture. Frozen evidence: `logs/orbital-removal-verification.json`. Debug remains queued; evacuation/lifecycle still require their own gates.
+
+### Local Mandatory Reading - Explicit module evacuation
+
+_Applies to Group5B. Read Global/Delivered construction and module-construction
+Local reading, Group5's exact removal classifier/history handoff, actual
+`HubCargoTransfer` station-to-station preflight/move, native module stock limits
+and contained construction/service jobs. Preflight every destination label,
+packet bound and held craft before moving anything. Return only unconsumed
+parts/materials and leave spent source history and unrelated owners unchanged.
+Packet evacuation cancels contained jobs and preserves actual hull holds,
+poses and surviving berth admission. Craft departure remains an explicit
+native order/movement step; occupied modules remain protected from removal._
+
+### Group 5B - Evacuate unconsumed module inventory explicitly
+
+Context has compacted 1 times while executing this group.
+
+{{HARD}}
+- [X] 5.2 Implement a deterministic explicit evacuation/cancellation path where possible, using the public cargo/job APIs and preserving unconsumed components.
+
+**RelWithDebInfo verified,2026-10-14.** Focused evacuation contracts pass46 assertions in2 cases, including full replacement inventory and unsafe last-Core destination refusal. Native paid Dock-job and unfinished-assembly evacuation preserve actual packet quantity/provenance/feeder share, spent work/energy, hull holds/poses and manifest allowances. Both ordinary resaves preserve26 owner families; occupied completed Dock still refuses removal. Both native inspector captures were reviewed. Frozen evidence: `logs/orbital-evacuation-verification.json`. Debug remains queued.
+
+### Local Mandatory Reading - Module removal lifecycle acceptance
+
+_Applies to Group5C. Read Global/Delivered construction, the verified Group5
+removal and Group5B evacuation handoffs, actual company ownership hooks and
+native generation-qualified queue/approach/service owners. Exercise actual
+removal and takeover commands; copied fixture deletion is not gameplay proof.
+Inspect copied/full-load validators only for changed cross-family owners.
+Reuse the frozen paid Dock421 predecessor and exact identity-bound reports._
+
+### Group 5C - Verify removal dependencies and company lifecycle
+
+{{HARD}}
+- [X] 5.3 Test full replacement storage, occupied last dock, active assembly and company transfer. Reused module IDs cannot inherit old berth/recipe assignments.
+- [X] 5.4 Test actual safe module removal changes only its dependents, using authoritative completed-module queries. This is the removal-acceptance portion of original4.3; it follows the producer that makes removal possible.
+
+**RelWithDebInfo verified,2026-10-14.** Actual takeover/loss/company-ID reuse, occupied last-Dock refusal followed by native hull departure/empty removal, and dependency-local Core removal pass924 assertions in3 native cases. Completed Dock removal retains spent STEL8/GOOD12 and two completed services while its original Core panel survives. Actual Core stock leaves in paid native hull compartments; removing that empty Core disables only its empty Storage/Dock, preserving independent paid inert blueprint, queues, cargo, manifest, cash and spent source history. All three ordinary resaves preserve26 owner families. Group5/5B supply full destination/active assembly and generation-reuse boundaries. The original replacement-flight test design was narrowed because the immutable input has only8 fuel; no fuel/material was fabricated. Frozen evidence: `logs/orbital-lifecycle-verification.json`. Debug remains queued.
+
+### Local Mandatory Reading - Delivered construction publication
+
+_Applies to Group6. Read Global/Delivered construction and module-construction
+Local reading, the Public Handoff Contract above, and the verified5/5B/5C
+producer evidence when available. Inspect exact public owner/signature/schema
+fields in `orbital_station.h`, `space_structure.h`, `space_structure_cmd.h`,
+`orbital_service.h` and `space_approach.h`; use their actual compiled fixture.
+Publish only delivered behavior and scoped configuration evidence. Keep direct
+rocket-to-module integration and later manufacturing gates explicit. Update
+direct consumer references if an actual owner/signature differs from the
+contract, rather than aliasing a second registry or a private mutation path._
 
 ### Group 6 - Delivered construction
 
 {{HARD}}
-- [ ] 6.1 Publish `src/orbital_station.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+- [X] 6.1 Publish `src/orbital_station.h` with the exact exports/schema fields in `Public Handoff Contract`; document authoritative fields, invalid-ID semantics and command/estimate boundaries. Register any created C++ source in the existing build list. If the chosen implementation uses a different public location, update this contract and every direct consumer before declaring the producer ready.
+
+**Delivered,2026-10-14.** The native public owner/signature/schema table above matches `orbital_station.h`, `space_structure.h`, commands, service jobs and shared approaches. Exact type/function bindings compile in both configurations. Focused handoff contracts pass3,605 assertions/26 cases per configuration; all22 bounded Debug native phases and repaired Release freight replay/resave pass. Sixteen malformed schema/ownership/history cases refuse in both independent load paths. Actual Debug Dock/evacuation captures were inspected. This closes deferred Debug for4/4B/4C/5/5B/5C; earlier dated pending statements are superseded by this checkpoint. Frozen evidence: `logs/orbital-handoff-debug-verification.json`. Return to Plan9 task11.3. Later recipes and final source-plan acceptance remain open.
 
 ### Area Mandatory Reading - Orbital manufacture and processing
 

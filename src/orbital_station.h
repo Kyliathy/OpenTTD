@@ -9,6 +9,8 @@
 #include "space_production.h"
 #include "multilayer_utility.h"
 #include "utility_power.h"
+#include "multilayer_space_content.h"
+#include "space_structure_type.h"
 #include <array>
 #include <set>
 
@@ -56,15 +58,16 @@ struct OrbitalServiceRecord : OrbitalServiceState {
 	std::array<uint16_t, 2> quantities{};
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, 2> inputs;
 };
-/** Actual Core utility identities and completion receipt; energy remains solely in the shared ledger. */
+/** Actual module utility identities and completion receipt; energy remains solely in the shared ledger. */
 struct OrbitalFacilityState {
 	UtilityProducerID producer{UINT32_MAX}; ///< Original paid panel; older inventory-only cores require explicit commissioning.
-	UtilityConsumerID consumer{UINT32_MAX}; ///< Original single service consumer, registered on first use.
+	UtilityConsumerID consumer{UINT32_MAX}; ///< Original bounded service consumer: one Core job or two explicitly connected Dock jobs.
 	UtilityConsumerID assembly_consumer{UINT32_MAX}; ///< One bounded construction slot; shares the actual panel with the separate service berth.
 	bool power_enabled = true; ///< Physical panel availability; disabling it publishes zero generation.
 	uint64_t services_completed = 0; ///< Once-only local service completion receipt.
+	SpaceStructureRef utility_source; ///< Explicit Dock connection to an original adjacent owned panel; absent for other module roles.
 };
-/** Completed Core facilities, contained by their generation-qualified native structure.
+/** Completed module facilities, contained by their generation-qualified native structure.
  * Activation has no free cargo, vehicle or power grant. Inventory remains inert
  * until the saved countdown finishes; operational stock never reuses job inputs.
  */
@@ -72,7 +75,12 @@ struct OrbitalModule : OrbitalFacilityState {
 	std::array<StationCargoList, NUM_CARGO> stock{}; ///< Sole physical owner of completed-module cargo.
 	uint16_t activation_ticks = 0; ///< Remaining synchronized activation work, zero means ready.
 	uint16_t age_ticks = 0; ///< Native cargo-aging remainder, independent of UI refresh.
-	OrbitalServiceJob service; ///< Single native berth and its reserved physical inputs.
+	OrbitalServiceJob service; ///< First Core/Dock berth and its reserved physical inputs.
+	OrbitalServiceJob dock_service; ///< Second contained Dock berth; other module roles retain its canonical empty state.
+	/** @return Every contained physical service owner for packet/lifecycle audits; capacity remains role-specific. */
+	std::array<OrbitalServiceJob *, 2> GetServiceJobs() { return {&this->service, &this->dock_service}; }
+	/** @return Read-only contained service owners; querying this array grants no operational berth. */
+	std::array<const OrbitalServiceJob *, 2> GetServiceJobs() const { return {&this->service, &this->dock_service}; }
 };
 /** Copied transport for a contained module; packet IDs refer to existing packets, never copies. */
 struct OrbitalModuleRecord : OrbitalFacilityState {
@@ -80,6 +88,11 @@ struct OrbitalModuleRecord : OrbitalFacilityState {
 	std::array<uint16_t, NUM_CARGO> quantities{};
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, NUM_CARGO> stock;
 	OrbitalServiceRecord service;
+	OrbitalServiceRecord dock_service;
+	/** @return Both detached service records, including the canonical empty second record for old/non-Dock modules. */
+	std::array<OrbitalServiceRecord *, 2> GetServiceJobs() { return {&this->service, &this->dock_service}; }
+	/** @return Read-only detached service owners for same-file preview and physical exclusivity checks. */
+	std::array<const OrbitalServiceRecord *, 2> GetServiceJobs() const { return {&this->service, &this->dock_service}; }
 };
 /** Physical delivery, bounded by the remaining recipe.
  * @param site Authoritative blueprint receiving materials.
@@ -123,8 +136,25 @@ bool HasOrbitalConstructionInputs(const SpaceStructure &site);
 SpaceStructure *GetOrbitalConstructionCore(const SpaceStructureState &state);
 /** Age retained job/module packets and advance paid Core activation once per synchronized tick. */
 void TickOrbitalConstructionInventory();
-/** @param site Native structure. @return Whether its paid, completed Core activation has finished. */
+/** @param kind Canonical static recipe. @return Whether this producer delivers its activation functions. */
+bool IsSupportedOrbitalModuleKind(SpaceBuildKind kind);
+/** Pure physical edge relation shared by construction dependencies and explicit local utility connections.
+ * @param a First paid static footprint. @param b Second paid static footprint.
+ * @return Whether their canonical footprints share a nonempty orthogonal edge, without counting approach cells.
+ */
+bool AreOrbitalModuleFootprintsAdjacent(const SpaceStructureState &a, const SpaceStructureState &b);
+/** @param kind Canonical module recipe. @return Bounded operational service job count; an inert frame grants none by itself. */
+uint8_t GetOrbitalModuleServiceCapacity(SpaceBuildKind kind);
+/** Definition-only physical stock bound; connected modules never enlarge another module's container.
+ * @param kind Canonical static recipe. @return Per-label stock limit, or zero for a module without freight storage.
+ */
+uint16_t GetOrbitalModuleStockLimit(SpaceBuildKind kind);
+/** @param site Native structure. @return Whether its paid activation and actual owned Core dependency are ready. */
 bool IsOrbitalModuleOperational(const SpaceStructure &site);
+/** Actual same-layer panel output; this query neither publishes generation nor credits energy.
+ * @param site Native completed module. @return Available watts from its declared original panel, or zero when blocked.
+ */
+uint32_t GetOrbitalModulePanelRate(const SpaceStructure &site);
 /** @param site Native structure. @param cargo Resolved physical cargo type. @return Operational capacity, or zero for an inert/invalid owner. */
 uint16_t GetOrbitalModuleCargoCapacity(const SpaceStructure &site, CargoType cargo);
 /** Add every actual construction and completed-module packet to an exclusivity audit.

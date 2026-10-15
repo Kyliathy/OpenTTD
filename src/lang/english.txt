@@ -6012,9 +6012,13 @@ STR_LAUNCH_RESUPPLY_HINT                                        :Select an orbit
 STR_LAUNCH_RESUPPLY_RECEIVER                                     :Resupply receiver: {VEHICLE}
 STR_LAUNCH_RESUPPLY_HOME_LOST                                    :Recovery center lost; choose recovery explicitly
 STR_LAUNCH_RESUPPLY_PAD_BUSY                                     :Waiting for the recovery pad
-STR_LAUNCH_RESUPPLY_BUSY                                         :Waiting for an idle receiver
-STR_LAUNCH_RESUPPLY_FULL                                         :Receiver cannot accept the whole payload
-STR_LAUNCH_RESUPPLY_APPROACH                                     :Approaching the resupply receiver
+STR_LAUNCH_RESUPPLY_BUSY                                         :Waiting for the destination to become available
+STR_LAUNCH_RESUPPLY_FULL                                         :Destination cannot accept the whole payload
+STR_LAUNCH_RESUPPLY_APPROACH                                     :Approaching the destination
+STR_LAUNCH_MODULE_SELECT                                        :Next orbital destination
+STR_LAUNCH_MODULE_START                                         :Launch to module
+STR_LAUNCH_MODULE_HINT                                          :Choose an operational owned Core, Storage or Dock, then select the loaded rocket. Deliver freight and service parts together; retain propellant for the same rocket's return.
+STR_LAUNCH_MODULE_DESTINATION                                   :Orbital destination: {STRING} at ({NUM}, {NUM})
 
 STR_SPACE_CONSTRUCTION_CAPTION                                  :{WHITE}Orbital construction
 STR_SPACE_CONSTRUCTION_PLACE                                    :Place blueprint
@@ -6052,14 +6056,14 @@ STR_SPACE_CONSTRUCTION_CASH                                     :Available funds
 STR_SPACE_CONSTRUCTION_CORE_EDGE                                :Extensions require a shared edge with an owned operational Core.
 STR_SPACE_CONSTRUCTION_SELECTED                                 :Selected site: {STRING} #{COMMA}
 STR_SPACE_CONSTRUCTION_REMAINING                                :Still missing: {COMMA} tonnes Steel + {COMMA} crates Goods
-STR_SPACE_CONSTRUCTION_ACTIVATE                                 :Activate Core
+STR_SPACE_CONSTRUCTION_ACTIVATE                                 :Activate module
 STR_SPACE_CONSTRUCTION_ACTIVATING                               :Core activation: {COMMA} ticks remaining
-STR_SPACE_CONSTRUCTION_READY                                    :Operational Core
-STR_SPACE_CONSTRUCTION_OPERATIONAL                              :Core inventory ready: up to {COMMA} units per cargo label. Exchange requires the precise approach.
+STR_SPACE_CONSTRUCTION_READY                                    :Operational module
+STR_SPACE_CONSTRUCTION_OPERATIONAL                              :Module inventory ready: up to {COMMA} units per cargo label. Exchange requires the precise approach.
 STR_SPACE_CONSTRUCTION_INVENTORY                                :Stored: {COMMA} tonnes Steel, {COMMA} crates Goods
 STR_SPACE_CONSTRUCTION_LOAD_STEEL                               :Load stored Steel
 STR_SPACE_CONSTRUCTION_LOAD_GOODS                               :Load stored Goods
-STR_SPACE_CONSTRUCTION_UNLOAD                                   :Unload to Core
+STR_SPACE_CONSTRUCTION_UNLOAD                                   :Unload to module
 STR_SPACE_CONSTRUCTION_RESERVE                                  :Reserve Core materials
 STR_CORE_SERVICE_NEXT                                           :Next service probe
 STR_CORE_SERVICE_START                                          :Start service
@@ -6679,3 +6683,27 @@ STR_LAUNCH_DESCENT_RELEASE                                    :Release cargo pod
 STR_LAUNCH_DESCENT_RETARGET                                   :Recover pod here
 STR_LAUNCH_DESCENT_WORKING                                    :Descending
 STR_LAUNCH_DESCENT_WAITING                                    :Awaiting recovery
+STR_SPACE_CONSTRUCTION_PANEL_OUTPUT                          :Available local panel output: {COMMA} kW
+STR_SPACE_DOCK_CONNECT                                       :Connect power
+STR_SPACE_DOCK_NEXT_BERTH                                    :Next berth
+STR_SPACE_DOCK_NEXT_SOURCE                                   :Next power source
+STR_SPACE_DOCK_BERTH                                         :Dock berth {NUM} of {NUM}
+STR_SPACE_DOCK_SOURCE                                        :Power source: module {NUM}
+STR_SPACE_DOCK_PROPOSE_SOURCE                                :Selected power source: module {NUM}
+STR_SPACE_DOCK_SOURCE_MISSING                                :No power connection
+STR_SPACE_DOCK_DISCONNECT                                    :Disconnect power
+STR_SPACE_MODULE_REMOVE                                      :Remove empty module
+STR_SPACE_MODULE_REMOVE_READY                                :Removal ready: spent materials, service and power remain spent.
+STR_SPACE_MODULE_REMOVE_OWNER                                :Removal blocked: this module belongs to another owner.
+STR_SPACE_MODULE_REMOVE_STOCK                                :Removal blocked: evacuate the stored cargo first.
+STR_SPACE_MODULE_REMOVE_SERVICE                              :Removal blocked: cancel the retained service jobs first.
+STR_SPACE_MODULE_REMOVE_CONSTRUCTION                         :Removal blocked: cancel and evacuate the construction job first.
+STR_SPACE_MODULE_REMOVE_VEHICLE                              :Removal blocked: a craft still occupies the footprint or approach.
+STR_SPACE_MODULE_REMOVE_DEPENDENT                            :Removal blocked: occupied or stocked modules need this Core.
+STR_SPACE_MODULE_REMOVE_CONNECTION                           :Removal blocked: disconnect Docks from this power source first.
+STR_SPACE_MODULE_REMOVE_UTILITY                              :Removal blocked: the power connection cannot be retired yet.
+STR_SPACE_MODULE_REMOVE_HISTORY                              :Removal blocked: the completed-work history is full.
+STR_SPACE_MODULE_EVACUATE                                     :Evacuate cargo and cancel jobs
+STR_SPACE_MODULE_EVACUATE_NEXT                                :Next cargo destination
+STR_SPACE_MODULE_EVACUATE_DESTINATION                         :Cargo destination: module {COMMA}. Craft must depart before removal.
+STR_SPACE_MODULE_EVACUATE_MISSING                             :No adjacent safe inventory can hold the whole evacuation.

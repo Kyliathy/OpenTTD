@@ -1,9 +1,10 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file space_structure_gui.cpp Native module selection, paid placement and Core activation controls.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-2.
+/** @file space_structure_gui.cpp Native module selection, paid activation and precise Core/Dock service controls.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-4C.
  */
 #include "stdafx.h"
 #include "space_structure.h"
+#include "space_approach.h"
 #include "space_structure_cmd.h"
 #include "space_vehicle.h"
 #include "space_vehicle_cmd.h"
@@ -74,6 +75,17 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 26), SetStringTip(STR_CORE_SERVICE_LOAD_ELECTRONICS), SetFill(1, 0),
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 27), SetStringTip(STR_SPACE_CONSTRUCTION_RESERVE), SetFill(1, 0),
 	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 28), SetStringTip(STR_SPACE_DOCK_CONNECT), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 29), SetStringTip(STR_SPACE_DOCK_NEXT_BERTH), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 30), SetStringTip(STR_SPACE_DOCK_NEXT_SOURCE), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 31), SetStringTip(STR_SPACE_DOCK_DISCONNECT), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 32), SetStringTip(STR_SPACE_MODULE_REMOVE), SetFill(1, 0),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 33), SetStringTip(STR_SPACE_MODULE_EVACUATE), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 34), SetStringTip(STR_SPACE_MODULE_EVACUATE_NEXT), SetFill(1, 0),
+	EndContainer(),
 };
 static WindowDesc desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::SpaceConstruction, WindowClass::None, {}, widgets);
 /** Resolve translated presentation without duplicating recipe quantities or construction authority.
@@ -95,12 +107,25 @@ static StringID ModuleName(SpaceBuildKind kind)
 		default: return STR_SPACE_CONSTRUCTION_SELECT;
 	}
 }
+/** @param block Exact pure native removal admission. @return Player-facing action needed before this module can be removed. */
+static StringID OrbitalRemovalReason(OrbitalRemovalBlock block)
+{
+	static constexpr StringID reasons[] = {STR_SPACE_MODULE_REMOVE_READY, STR_SPACE_MODULE_REMOVE_OWNER, STR_SPACE_MODULE_REMOVE_STOCK,
+		STR_SPACE_MODULE_REMOVE_SERVICE, STR_SPACE_MODULE_REMOVE_CONSTRUCTION, STR_SPACE_MODULE_REMOVE_VEHICLE, STR_SPACE_MODULE_REMOVE_DEPENDENT,
+		STR_SPACE_MODULE_REMOVE_CONNECTION, STR_SPACE_MODULE_REMOVE_UTILITY, STR_SPACE_MODULE_REMOVE_HISTORY};
+	static_assert(std::size(reasons) == to_underlying(OrbitalRemovalBlock::End));
+	assert(block < OrbitalRemovalBlock::End);
+	return reasons[to_underlying(block)];
+}
 /** Fund Industry-style native selector; all mutations pass through synchronized commands. */
 struct SpaceConstructionWindow : Window {
 	SpaceBuildKind kind = SpaceBuildKind::Core;
 	SpaceStructureRef selected;
 	SpaceCraftRef builder;
 	SpaceCraftRef service_craft;
+	uint8_t service_berth = 0; ///< Presentation-only selected contained job; native commands still identify its exact saved craft.
+	SpaceStructureRef utility_source_selection; ///< Presentation-only source proposal; only the synchronized connection command publishes it.
+	SpaceStructureRef evacuation_destination; ///< Presentation-only packet destination; quotes/selection cannot move cargo or cancel a job.
 	mutable std::vector<std::pair<SpaceStructureRef, Rect>> rows;
 	Scrollbar *scroll = nullptr;
 	/** Refresh presentation only. @param elapsed Window intervals; never simulation work or cargo age. */
@@ -118,6 +143,39 @@ struct SpaceConstructionWindow : Window {
 		}
 		const auto it = std::find(craft.begin(), craft.end(), this->service_craft);
 		this->service_craft = craft.empty() ? SpaceCraftRef{} : (it == craft.end() || std::next(it) == craft.end() ? craft.front() : *std::next(it));
+		const auto *site = ResolveSpaceStructure(this->selected); const auto *probe = ResolveSpaceCraft(this->service_craft);
+		// Selecting an actual admitted probe follows its physical Dock berth without changing the job or its reservation.
+		if (site != nullptr && probe != nullptr && site->state.kind == SpaceBuildKind::Dock) {
+			if (const auto berth = GetSpaceStructureBerth(*probe, *site)) this->service_berth = *berth;
+		}
+	}
+	/** Cycle actual adjacent original owned panel proposals; this selector registers no connection or energy. */
+	void NextUtilitySource()
+	{
+		const auto *site = ResolveSpaceStructure(this->selected);
+		if (site == nullptr) { this->utility_source_selection = {}; return; }
+		std::vector<SpaceStructureRef> sources;
+		AutoRestoreBackup actor(_current_company, _local_company);
+		// Native pure admission supplies the complete ownership/activation/physical-edge test for every candidate panel.
+		for (const auto *source : SpaceStructure::Iterate()) {
+			if (CmdConnectOrbitalServices({}, site->index, site->generation, source->index, source->generation).Succeeded()) sources.push_back(GetSpaceStructureReference(*source));
+		}
+		const auto it = std::find(sources.begin(), sources.end(), this->utility_source_selection);
+		this->utility_source_selection = sources.empty() ? SpaceStructureRef{} : (it == sources.end() || std::next(it) == sources.end() ? sources.front() : *std::next(it));
+	}
+	/** Cycle only actual adjacent destinations that admit the complete physical packet/job evacuation. */
+	void NextEvacuationDestination()
+	{
+		const auto *site = ResolveSpaceStructure(this->selected);
+		if (site == nullptr) { this->evacuation_destination = {}; return; }
+		std::vector<SpaceStructureRef> destinations;
+		AutoRestoreBackup actor(_current_company, _local_company);
+		// Whole pure command admission excludes full/unowned/inert destinations and stock that would lose its last Core after removal.
+		for (const auto *destination : SpaceStructure::Iterate()) {
+			if (CmdEvacuateOrbitalModule({}, site->index, site->generation, destination->index, destination->generation).Succeeded()) destinations.push_back(GetSpaceStructureReference(*destination));
+		}
+		const auto it = std::find(destinations.begin(), destinations.end(), this->evacuation_destination);
+		this->evacuation_destination = destinations.empty() ? SpaceStructureRef{} : (it == destinations.end() || std::next(it) == destinations.end() ? destinations.front() : *std::next(it));
 	}
 	/** Cycle actual owned orbital builders in native pool order; payload passengers are not eligible. */
 	void NextBuilder()
@@ -150,26 +208,48 @@ struct SpaceConstructionWindow : Window {
 		this->SetWidgetDisabledState(8, site == nullptr);
 		// Collection is restricted to actual unconsumed cancelled stock; activation never grants a refund path.
 		for (uint i = 0; i < 2; ++i) this->SetWidgetDisabledState(5 + i, !owned || v == nullptr || site->state.phase != SpaceStructurePhase::Cancelled || site->job.inputs[i].TotalCount() == 0);
-		this->SetWidgetDisabledState(12, !owned || site->state.kind != SpaceBuildKind::Core || site->state.phase != SpaceStructurePhase::FrameComplete || site->module != nullptr);
-		const bool exchange = owned && v != nullptr && IsOrbitalModuleOperational(*site) && v->position == GetSpaceStructureApproach(site->state);
+		bool can_activate = false;
+		if (owned) {
+			AutoRestoreBackup actor(_current_company, _local_company);
+			can_activate = CmdActivateOrbitalModule({}, site->index, site->generation).Succeeded();
+		}
+		this->SetWidgetDisabledState(12, !can_activate);
+		const bool exchange = owned && v != nullptr && IsOrbitalModuleOperational(*site) &&
+			(site->state.kind == SpaceBuildKind::Dock ? GetSpaceStructureBerth(*v, *site).has_value() : v->position == GetSpaceStructureApproach(site->state));
 		// Module exchange is a precise approach action, independent of the launch center's twenty-tile drop circle.
 		for (uint widget = 13; widget <= 15; ++widget) this->SetWidgetDisabledState(widget, !exchange);
 		const auto *probe = ResolveSpaceCraft(this->service_craft);
 		// Removed/foreign service selections are refreshed without changing the contained job's retained craft reference.
-		if (probe == nullptr || probe->owner != _local_company) { this->service_craft = {}; this->NextServiceCraft(); probe = ResolveSpaceCraft(this->service_craft); }
+		if (probe == nullptr || probe->owner != _local_company) {
+			const auto selected_berth = this->service_berth;
+			// Refreshing a lost hull must retain the chosen accountable job, so its held parts remain reachable through Cancel.
+			const bool held = site != nullptr && site->module != nullptr && selected_berth < site->module->GetServiceJobs().size() &&
+				site->module->GetServiceJobs()[selected_berth]->remaining_ticks != 0;
+			this->service_craft = {}; this->NextServiceCraft(); probe = ResolveSpaceCraft(this->service_craft);
+			if (held) this->service_berth = selected_berth;
+		}
 		const bool operational = owned && IsOrbitalModuleOperational(*site);
-		const bool busy = operational && site->module->service.remaining_ticks != 0;
+		if (site != nullptr && this->service_berth >= GetOrbitalModuleServiceCapacity(site->state.kind)) this->service_berth = 0;
+		// Paid retained jobs remain cancellable during a dependency/power outage; selecting a berth grants no service work.
+		const bool retained = owned && site->module != nullptr && site->module->activation_ticks == 0;
+		const bool busy = retained && site->module->GetServiceJobs()[this->service_berth]->remaining_ticks != 0;
 		bool can_start = false;
 		// The Start button uses the same pure whole admission as execution, including both real parts and the precise paid hull.
 		if (operational && probe != nullptr) {
 			AutoRestoreBackup actor(_current_company, _local_company);
-			can_start = CmdServiceOrbitalProbe({}, site->index, site->generation, probe->index, probe->generation, OrbitalServiceControl::Start).Succeeded();
+			const bool selected_berth = site->state.kind != SpaceBuildKind::Dock || GetSpaceStructureBerth(*probe, *site) == std::optional<uint8_t>{this->service_berth};
+			can_start = selected_berth && CmdServiceOrbitalProbe({}, site->index, site->generation, probe->index, probe->generation, OrbitalServiceControl::Start).Succeeded();
 		}
 		this->SetWidgetDisabledState(17, !can_start);
 		// Pause/resume/cancel act on the actual occupant even when a different probe is selected or the original hull was lost.
 		for (uint widget = 18; widget <= 20; ++widget) this->SetWidgetDisabledState(widget, !busy);
 		this->SetWidgetDisabledState(21, !operational || site->module->producer == UtilityProducerID{UINT32_MAX});
-		this->SetWidgetDisabledState(22, !operational || site->module->producer != UtilityProducerID{UINT32_MAX});
+		bool can_commission = false;
+		if (operational) {
+			AutoRestoreBackup actor(_current_company, _local_company);
+			can_commission = CmdCommissionOrbitalServices({}, site->index, site->generation).Succeeded();
+		}
+		this->SetWidgetDisabledState(22, !can_commission);
 		// Every part-exchange button also preflights its actual source and destination; empty/full/stopped/remote owners stay visibly disabled.
 		for (uint widget = 23; widget <= 26; ++widget) {
 			bool allowed = false;
@@ -189,6 +269,37 @@ struct SpaceConstructionWindow : Window {
 			}
 		}
 		this->SetWidgetDisabledState(27, !can_reserve);
+		bool can_connect = false;
+		// Source selection remains a proposal until the native command atomically publishes the original connection/consumer.
+		if (operational && site->state.kind == SpaceBuildKind::Dock && site->module->utility_source == SpaceStructureRef{}) {
+			AutoRestoreBackup actor(_current_company, _local_company);
+			can_connect = CmdConnectOrbitalServices({}, site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation).Succeeded();
+			if (!can_connect) {
+				this->NextUtilitySource();
+				can_connect = CmdConnectOrbitalServices({}, site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation).Succeeded();
+			}
+		}
+		this->SetWidgetDisabledState(28, !can_connect);
+		this->SetWidgetDisabledState(29, !retained || site->state.kind != SpaceBuildKind::Dock);
+		this->SetWidgetDisabledState(30, !can_connect);
+		bool can_disconnect = false;
+		if (retained) {
+			AutoRestoreBackup actor(_current_company, _local_company);
+			can_disconnect = CmdDisconnectOrbitalServices({}, site->index, site->generation).Succeeded();
+		}
+		this->SetWidgetDisabledState(31, !can_disconnect);
+		// Demolition uses the same whole pure admission as execution; stock, held jobs and actual occupancy cannot disappear through a UI shortcut.
+		this->SetWidgetDisabledState(32, !owned || ClassifyOrbitalModuleRemoval(*site, _local_company) != OrbitalRemovalBlock::None);
+		bool can_evacuate = false;
+		if (owned) {
+			AutoRestoreBackup actor(_current_company, _local_company);
+			can_evacuate = CmdEvacuateOrbitalModule({}, site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation).Succeeded();
+			if (!can_evacuate) {
+				this->NextEvacuationDestination();
+				can_evacuate = CmdEvacuateOrbitalModule({}, site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation).Succeeded();
+			}
+		}
+		this->SetWidgetDisabledState(33, !can_evacuate); this->SetWidgetDisabledState(34, !can_evacuate);
 		this->DrawWidgets();
 	}
 	/** @param rect Widget bounds. @param widget Native widget identity. */
@@ -219,19 +330,37 @@ struct SpaceConstructionWindow : Window {
 				recipe.inputs[0].quantity - site->job.inputs[0].TotalCount() - site->job.consumed[0],
 				recipe.inputs[1].quantity - site->job.inputs[1].TotalCount() - site->job.consumed[1]));
 			draw(GetString(STR_SPACE_CONSTRUCTION_CONSUMED, site->job.consumed[0], site->job.consumed[1]));
+			const auto removal = ClassifyOrbitalModuleRemoval(*site, _local_company);
+			draw(GetString(OrbitalRemovalReason(removal)));
+			if (this->evacuation_destination != SpaceStructureRef{}) draw(GetString(STR_SPACE_MODULE_EVACUATE_DESTINATION, this->evacuation_destination.structure.base() + 1));
+			// Missing cargo capacity matters only for actual held inventory/jobs; an empty occupied berth instead needs real craft departure.
+			else if (removal == OrbitalRemovalBlock::Inventory || removal == OrbitalRemovalBlock::Service || removal == OrbitalRemovalBlock::Construction) draw(GetString(STR_SPACE_MODULE_EVACUATE_MISSING));
 			if (site->module) {
 				if (site->module->activation_ticks != 0) draw(GetString(STR_SPACE_CONSTRUCTION_ACTIVATING, site->module->activation_ticks));
-				else draw(GetString(STR_SPACE_CONSTRUCTION_OPERATIONAL, GetMultiLayerSpaceBudget().stock_cap));
+				else if (!IsOrbitalModuleOperational(*site)) draw(GetString(STR_SPACE_CONSTRUCTION_CORE_EDGE));
+				else if (site->state.kind == SpaceBuildKind::Power) draw(GetString(STR_SPACE_CONSTRUCTION_PANEL_OUTPUT, GetOrbitalModulePanelRate(*site) / 1000));
+				else draw(GetString(STR_SPACE_CONSTRUCTION_OPERATIONAL, GetOrbitalModuleCargoCapacity(*site, GetCargoTypeByLabel(CargoLabel{"STEL"}))));
 				draw(GetString(STR_SPACE_CONSTRUCTION_INVENTORY, site->module->stock[GetCargoTypeByLabel(CargoLabel{"STEL"})].TotalCount(), site->module->stock[GetCargoTypeByLabel(CargoLabel{"GOOD"})].TotalCount()));
-				const auto &module = *site->module; const auto &job = module.service;
-				draw(GetString(STR_CORE_SERVICE_STOCK, module.stock[GetSpaceSupplyCargo(SpaceSupply::RefinedMetal)].TotalCount(), module.stock[GetSpaceSupplyCargo(SpaceSupply::Electronics)].TotalCount()));
-				const auto *probe = ResolveSpaceCraft(job.remaining_ticks == 0 ? this->service_craft : job.craft);
-				StringID status = STR_CORE_SERVICE_IDLE;
-				// A settled current-epoch receipt remains visible as working after its grant has been consumed; UI never renews that grant.
-				const bool worked = job.last_work_interval != 0 && job.last_work_interval == GetUtilityPowerInterval() && module.power_enabled;
-				if (job.remaining_ticks != 0) status = job.paused ? STR_CORE_SERVICE_PAUSED : (worked || (probe != nullptr && IsOrbitalServiceWorkTick(*probe)) ? STR_CORE_SERVICE_WORKING : STR_CORE_SERVICE_WAITING);
-				draw(GetString(STR_CORE_SERVICE_STATUS, status, job.remaining_ticks, module.services_completed));
-				if (probe != nullptr) draw(GetString(STR_CORE_SERVICE_CRAFT, probe->index));
+				const auto &module = *site->module;
+				if (GetOrbitalModuleServiceCapacity(site->state.kind) != 0) {
+					const auto &job = *module.GetServiceJobs()[this->service_berth];
+					if (site->state.kind == SpaceBuildKind::Dock) {
+						draw(GetString(STR_SPACE_DOCK_BERTH, this->service_berth + 1, GetOrbitalModuleServiceCapacity(site->state.kind)));
+						if (module.utility_source != SpaceStructureRef{}) draw(GetString(STR_SPACE_DOCK_SOURCE, module.utility_source.structure.base() + 1));
+						else if (this->utility_source_selection != SpaceStructureRef{}) draw(GetString(STR_SPACE_DOCK_PROPOSE_SOURCE, this->utility_source_selection.structure.base() + 1));
+						else draw(GetString(STR_SPACE_DOCK_SOURCE_MISSING));
+						const auto *source = GetOrbitalServicePowerSite(*site);
+						draw(GetString(STR_SPACE_CONSTRUCTION_PANEL_OUTPUT, source == nullptr ? 0 : GetOrbitalModulePanelRate(*source) / 1000));
+					}
+					draw(GetString(STR_CORE_SERVICE_STOCK, module.stock[GetSpaceSupplyCargo(SpaceSupply::RefinedMetal)].TotalCount(), module.stock[GetSpaceSupplyCargo(SpaceSupply::Electronics)].TotalCount()));
+					const auto *probe = ResolveSpaceCraft(job.remaining_ticks == 0 ? this->service_craft : job.craft);
+					StringID status = STR_CORE_SERVICE_IDLE;
+					// A settled current-epoch receipt remains visible after its grant is spent; polling never renews work or another berth's receipt.
+					const bool worked = job.last_work_interval != 0 && job.last_work_interval == GetUtilityPowerInterval();
+					if (job.remaining_ticks != 0) status = job.paused ? STR_CORE_SERVICE_PAUSED : (worked || (probe != nullptr && IsOrbitalServiceWorkTick(*probe)) ? STR_CORE_SERVICE_WORKING : STR_CORE_SERVICE_WAITING);
+					draw(GetString(STR_CORE_SERVICE_STATUS, status, job.remaining_ticks, module.services_completed));
+					if (probe != nullptr) draw(GetString(STR_CORE_SERVICE_CRAFT, probe->index));
+				}
 			}
 		}
 		y = DrawStringMultiLine(rect.left + 8, rect.right - 8, y, y + line * 4, GetString(STR_SPACE_CONSTRUCTION_HINT), TextColour::Black) + line;
@@ -277,7 +406,7 @@ struct SpaceConstructionWindow : Window {
 			ShowDropDownList(this, std::move(list), to_underlying(this->kind), 11);
 		}
 		// Starting activation is an explicit synchronized action on the selected paid frame.
-		if (widget == 12 && site != nullptr) Command<Commands::ActivateOrbitalCore>::Post(site->index, site->generation);
+		if (widget == 12 && site != nullptr) Command<Commands::ActivateOrbitalModule>::Post(site->index, site->generation);
 		// These controls move actual common construction cargo at a precise approach; no proximity transfer or payment occurs.
 		if (widget >= 13 && widget <= 15 && site != nullptr && site->module != nullptr && v != nullptr) {
 			const bool load = widget != 15;
@@ -292,11 +421,23 @@ struct SpaceConstructionWindow : Window {
 		if (widget == 16) this->NextServiceCraft();
 		// Service controls address the saved occupant for existing jobs, preserving cancellation after hull loss.
 		if (widget >= 17 && widget <= 20 && site != nullptr && site->module != nullptr) {
-			const auto ref = widget == 17 ? this->service_craft : site->module->service.craft;
+			const auto ref = widget == 17 ? this->service_craft : site->module->GetServiceJobs()[this->service_berth]->craft;
 			Command<Commands::ServiceOrbitalProbe>::Post(site->index, site->generation, ref.vehicle, ref.generation, static_cast<OrbitalServiceControl>(widget - 17));
 		}
 		if (widget == 21 && site != nullptr && site->module != nullptr) Command<Commands::SetOrbitalPanelPaused>::Post(site->index, site->generation, site->module->power_enabled);
 		if (widget == 22 && site != nullptr) Command<Commands::CommissionOrbitalServices>::Post(site->index, site->generation);
+		if (widget == 28 && site != nullptr) Command<Commands::ConnectOrbitalServices>::Post(site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation);
+		if (widget == 29 && site != nullptr && site->module != nullptr && site->state.kind == SpaceBuildKind::Dock) {
+			this->service_berth = static_cast<uint8_t>((this->service_berth + 1) % GetOrbitalModuleServiceCapacity(site->state.kind));
+			const auto ref = site->module->GetServiceJobs()[this->service_berth]->craft;
+			// Lost occupants remain cancellable through the selected saved berth; do not replace that selection with a different live hull.
+			if (ResolveSpaceCraft(ref) != nullptr) this->service_craft = ref;
+		}
+		if (widget == 30) this->NextUtilitySource();
+		if (widget == 31 && site != nullptr) Command<Commands::DisconnectOrbitalServices>::Post(site->index, site->generation);
+		if (widget == 32 && site != nullptr) Command<Commands::RemoveOrbitalModule>::Post(site->index, site->generation);
+		if (widget == 33 && site != nullptr) Command<Commands::EvacuateOrbitalModule>::Post(site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation);
+		if (widget == 34) this->NextEvacuationDestination();
 		// Only the synchronized command can turn delivered stock into this exact job's exclusive reservation.
 		if (widget == 27 && site != nullptr) {
 			if (const auto *core = GetOrbitalConstructionCore(site->state)) Command<Commands::ReserveOrbitalModuleInputs>::Post(site->index, site->generation, core->index, core->generation);

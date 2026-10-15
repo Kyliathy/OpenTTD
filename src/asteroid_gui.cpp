@@ -5,6 +5,7 @@
  */
 /** @file asteroid_gui.cpp Read-only Space viewport rendering/picking and live survey inspector.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11; native approach waits.
  */
 #include "stdafx.h"
 #include "asteroid.h"
@@ -99,7 +100,8 @@ static std::optional<OrbitalBodyID> InspectedProbeTarget(const SpaceVehicle &v)
 }
 static constexpr StringID order_actions[] = {STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_SURVEY, STR_SPACE_ORDER_MINE, STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_ORDER_UNLOAD, STR_SPACE_ORDER_SERVICE};
 static constexpr StringID order_targets[] = {STR_SPACE_TARGET_BODY, STR_SPACE_TARGET_STRUCTURE, STR_SPACE_TARGET_BLUEPRINT, STR_SPACE_TARGET_CENTER, STR_SPACE_TARGET_CRAFT};
-static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING, STR_SPACE_CONSTRUCTION_MISSING, STR_SPACE_CONSTRUCTION_BUSY};
+static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING, STR_SPACE_CONSTRUCTION_MISSING, STR_SPACE_CONSTRUCTION_BUSY, STR_GRAPH_INDUSTRY_RANGE_WAITING};
+static_assert(std::size(order_blocks) == to_underlying(SpaceOrderBlock::End));
 static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),

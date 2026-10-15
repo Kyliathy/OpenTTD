@@ -10,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility units and single authority
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B shared typed heat accounting
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5 paid electrical link admission and lifecycle
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups4C/5 original orbital binding retirement
  */
 
 #include "stdafx.h"
@@ -826,6 +827,67 @@ UtilityPowerError RemoveUtilityPowerProducer(UtilityProducerID id, bool execute)
 		source->active = false;
 		++_utility_power.operation_sequence;
 	}
+	return UtilityPowerError::None;
+}
+
+/** @copydoc RetireOrbitalUtilityAccounts */
+UtilityPowerError RetireOrbitalUtilityAccounts(std::span<const UtilityProducerID> producer_ids, std::span<const UtilityConsumerID> consumer_ids, bool execute)
+{
+	if (_utility_mutation_committing) return UtilityPowerError::Refused;
+	// Current native modules own at most one panel and separate service/construction consumers; bound the whole lifecycle before resolving references.
+	if (producer_ids.size() > 1 || consumer_ids.size() > 2) return UtilityPowerError::Limit;
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return UtilityPowerError::UnsupportedProfile;
+	std::array<UtilityPowerProducer *, 1> producers{};
+	std::array<UtilityPowerConsumer *, 2> consumers{};
+	bool changed = false;
+	// Retain pointers only after full typed-owner admission; no caller span can be invalidated when eligibility vectors are later cleared.
+	for (size_t i = 0; i < producer_ids.size(); ++i) {
+		auto *p = FindUtilityProducer(producer_ids[i]);
+		if (p == nullptr || p->kind != UtilityGenerationKind::OrbitalPanel || p->meter.layer != MapLayer::Space || p->meter.domain != UtilityEnergyDomain::Electricity) return UtilityPowerError::InvalidReference;
+		if (_current_company != OWNER_DEITY && _current_company != p->owner) return UtilityPowerError::InvalidOwner;
+		producers[i] = p; changed |= p->active;
+	}
+	// Each original consumer is retired once, preserving its settled shares even if a previous company lifecycle already made it inactive.
+	for (size_t i = 0; i < consumer_ids.size(); ++i) {
+		auto *c = FindUtilityConsumer(consumer_ids[i]);
+		if (c == nullptr || c->effect != UtilityConsumerEffect::AssemblyWork || c->meter.layer != MapLayer::Space || c->meter.domain != UtilityEnergyDomain::Electricity ||
+			(i != 0 && consumer_ids[i] == consumer_ids[0])) return UtilityPowerError::InvalidReference;
+		if (_current_company != OWNER_DEITY && _current_company != c->owner) return UtilityPowerError::InvalidOwner;
+		consumers[i] = c; changed |= c->active;
+	}
+	// A physical transfer route has another owner; module retirement cannot silently decommission that external benefit or rewrite its lineage.
+	for (const auto &link : _utility_power.links) {
+		if (!link.active) continue;
+		if (std::ranges::find(consumer_ids, link.source) != consumer_ids.end() || std::ranges::find(consumer_ids, link.destination) != consumer_ids.end()) return UtilityPowerError::Refused;
+	}
+	// One whole operation advances the shared sequence once, so an overflow cannot leave the first of several bindings partially retired.
+	if (changed && _utility_power.operation_sequence >= UINT64_MAX - 1) return UtilityPowerError::Limit;
+	if (!execute || !changed) return UtilityPowerError::None;
+	// Expire each retiring consumer's unspent allocation once. Original consumed/transferred lineage and other consumers remain untouched.
+	for (auto *c : consumers) {
+		if (c == nullptr || !c->active) continue;
+		for (auto &share : c->shares) {
+			const auto unused = FreeUtilityShare(share);
+			share.released_j += unused;
+			auto *source = FindUtilityProducer(share.producer); assert(source != nullptr);
+			source->reserved_j -= unused;
+		}
+		c->linked_producers.clear(); c->active = false;
+	}
+	// Source retirement applies the existing exact unused-share rule across its whole eligible network, retaining all paid history and original IDs.
+	for (auto *p : producers) {
+		if (p == nullptr || !p->active) continue;
+		for (auto &c : _utility_power.consumers) {
+			std::erase(c.linked_producers, p->meter.producer_id);
+			for (auto &share : c.shares) {
+				if (share.producer != p->meter.producer_id) continue;
+				const auto unused = FreeUtilityShare(share);
+				share.released_j += unused; p->reserved_j -= unused;
+			}
+		}
+		p->active = false;
+	}
+	++_utility_power.operation_sequence;
 	return UtilityPowerError::None;
 }
 

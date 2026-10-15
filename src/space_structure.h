@@ -48,6 +48,29 @@ struct SpaceStructureRecord : OrbitalConstructionState {
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, 2> inputs;
 	std::optional<OrbitalModuleRecord> module;
 };
+/** Bounded spent receipts retained by the same native structure authority after an empty pool owner is demolished.
+ * These aggregates own no packets, energy, berth or replacement object identity.
+ */
+struct SpaceStructureRetirementHistory {
+	uint64_t structures_removed = 0; ///< Number of native incarnations explicitly removed, including empty blueprints.
+	std::array<uint64_t, 2> consumed{}; ///< Spent canonical STEL/GOOD receipts; demolition never refunds either material.
+	uint64_t services_completed = 0; ///< Completed native services formerly recorded by removed modules.
+	/** @param other Historical receipts to compare. @return Whether every aggregate native receipt agrees. */
+	bool operator==(const SpaceStructureRetirementHistory &other) const = default;
+};
+/** @return Read-only spent receipts from the native structure authority, with no retired-object registry. */
+const SpaceStructureRetirementHistory &GetSpaceStructureRetirementHistory();
+/** Pure lifecycle admission result; refusal never removes a physical owner, packet, grant or historical receipt. */
+enum class OrbitalRemovalBlock : uint8_t {
+	None, InvalidOwner, Inventory, Service, Construction, Vehicle, Dependent, Connection, Utility, History, End,
+};
+/** Classify actual whole removal admission without moving any accountable item.
+ * @param site Exact existing native site whose generation remains authoritative.
+ * @param owner Company asking to remove it; foreign and retired company incarnations refuse.
+ * @return First deterministic refusal, or None only when every physical/dependency/utility owner admits empty removal.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group5.
+ */
+OrbitalRemovalBlock ClassifyOrbitalModuleRemoval(const SpaceStructure &site, CompanyID owner);
 /** @param site Actual native site. @return Its generation-qualified identity. */
 SpaceStructureRef GetSpaceStructureReference(const SpaceStructure &site);
 /** @param ref Saved identity including incarnation. @return Matching actual site, or nullptr. */
@@ -74,16 +97,18 @@ std::vector<SpaceStructureRecord> CaptureSpaceStructures();
 /** Validate copied identities, geometry and material receipts without consulting live pools.
  * @param records Copied records. @param next Saved next incarnation. @param width Plane width. @param height Plane height.
  * @param native_tick Same-file/native simulation clock, or UINT64_MAX for a clock-independent structural fixture.
+ * @param history Same-file native retired receipts; default empty only for older saves/isolated pre-removal fixtures.
  * @return Whether all records and exclusive packet references are structurally consistent.
  */
-bool ValidateSpaceStructureRecords(std::span<const SpaceStructureRecord> records, uint64_t next, uint32_t width, uint32_t height, uint64_t native_tick = UINT64_MAX);
+bool ValidateSpaceStructureRecords(std::span<const SpaceStructureRecord> records, uint64_t next, uint32_t width, uint32_t height, uint64_t native_tick = UINT64_MAX, SpaceStructureRetirementHistory history = {});
 /** @return Whether actual sites, packet owners and material quantities are consistent. */
 bool ValidateSpaceStructures();
 /** Reconstruct native owners only after their referenced packet owners have loaded.
  * @param records Validated copied transport. @param next Saved next incarnation.
+ * @param history Same-file spent receipts; old saves and isolated older fixtures receive zeros.
  * @return Whether installation preserved every physical packet reference.
  */
-bool InstallLoadedSpaceStructures(std::span<const SpaceStructureRecord> records, uint64_t next);
+bool InstallLoadedSpaceStructures(std::span<const SpaceStructureRecord> records, uint64_t next, SpaceStructureRetirementHistory history = {});
 /** @return Deterministic digest of actual site, job, activation and packet history. */
 uint64_t ComputeSpaceStructureDigest();
 /** Discard pending detached save transport. */

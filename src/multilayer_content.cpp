@@ -23,10 +23,24 @@ static RequiredMultiLayerContent MakeMultiLayerRequirements()
 	return required;
 }
 
+/** @return Sole shared Industry Q16, tick and travel-strip defaults, unchanged from the delivered Space producer. */
+const MultiLayerSpaceTuning &GetMultiLayerSpaceTuning()
+{
+	static const MultiLayerSpaceTuning tuning;
+	return tuning;
+}
+
 static const RequiredMultiLayerContent _multilayer_required_content = MakeMultiLayerRequirements(); ///< Manifest bound to the generated definition bytes.
 static MultiLayerProfileSelection _multilayer_selection; ///< World-owned policy; persistence is supplied by the schema handoff.
 static const MultiLayerGameplayProfile _classic_profile{MultiLayerGameplayProfileID::Classic, 0, nullptr}; ///< Unmodified Classic/legacy contract.
-static const MultiLayerGameplayProfile _industry_profile{MultiLayerGameplayProfileID::MultilayerIndustry, _multilayer_profile_version, &_multilayer_required_content}; ///< First-party contract.
+static const MultiLayerGameplayProfile _industry_profile{
+	.id = MultiLayerGameplayProfileID::MultilayerIndustry,
+	.version = _multilayer_profile_version,
+	.required_content = &_multilayer_required_content,
+	.asteroid_resources = GetMultiLayerAsteroidDefinitions(),
+	.asteroid_sizes = GetMultiLayerAsteroidSizeDefinitions(),
+	.space_tuning = &GetMultiLayerSpaceTuning(),
+}; ///< First-party contract, including immutable finite asteroid content; Classic exposes no field definitions.
 
 /**
  * Restore saved exceptions only after the selected definitions are checked again.

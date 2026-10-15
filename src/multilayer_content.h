@@ -16,12 +16,52 @@
 #include "timer/timer_game_calendar.h"
 #include <array>
 
-/** Immutable single-cargo finite resource definitions; class order is saved. */
+struct Randomizer;
+
+/** Immutable single-cargo finite resources, in saved Metallic/Carbonaceous/Rich order. */
 struct MultiLayerAsteroidDefinition {
-	CargoLabel cargo;
-	uint32_t small_min, small_max;
+	CargoLabel cargo; ///< Selected-profile meaning; one tonne of reserve produces one cargo unit.
+	uint32_t small_min, small_max; ///< Inclusive whole-tonne bounds before the independent size multiplier.
 };
+
+/** Immutable sizes in saved Small/Medium/Large order; artwork never determines resource content. */
+struct MultiLayerAsteroidSizeDefinition {
+	uint8_t chance_percent; ///< Independent generation weight; the three weights sum to 100.
+	uint32_t diameter_q16; ///< Visual body diameter in Q16 tiles, separate from its travel-band centre.
+	uint8_t mining_slots; ///< One native extraction lease per body in the initial catalogue.
+	uint8_t reserve_multiplier; ///< Applied after sampling the inclusive Small reserve range.
+};
+
+/** @return Immutable finite resource records used by the Industry profile. */
 const std::array<MultiLayerAsteroidDefinition, 3> &GetMultiLayerAsteroidDefinitions();
+
+/** @return Immutable size records used by the Industry profile. */
+const std::array<MultiLayerAsteroidSizeDefinition, 3> &GetMultiLayerAsteroidSizeDefinitions();
+
+/**
+ * Resolve one percentile against the catalogue's cumulative size weights.
+ * @param percentile Independent uniform generation draw in [0, 100).
+ * @return Saved size index; callers must provide a valid percentile.
+ */
+uint8_t SelectMultiLayerAsteroidSize(uint32_t percentile);
+
+/**
+ * Sample finite whole-tonne content without consuming simulation or presentation RNG.
+ * @param resource Immutable selected-profile class record with inclusive Small bounds.
+ * @param size Immutable independent size record whose multiplier follows sampling.
+ * @param random Feature-local content generator; advances exactly once.
+ * @return Initial reserve in whole tonnes, also used as the initial remaining reserve.
+ */
+uint32_t SampleMultiLayerAsteroidReserve(const MultiLayerAsteroidDefinition &resource,
+	const MultiLayerAsteroidSizeDefinition &size, Randomizer &random);
+
+/**
+ * Look up an exact population rather than deriving a density or silently reducing it.
+ * @param width Surface-plane width in tiles, a supported power of two.
+ * @param height Surface-plane height in tiles, a supported power of two.
+ * @param density Saved Sparse/Normal/Dense column (0/1/2).
+ * @return Exact body count, or zero for unsupported geometry or density.
+ */
 uint32_t GetMultiLayerAsteroidPopulation(uint32_t width, uint32_t height, uint8_t density);
 
 /** Stable layer capability mask, using saved layer IDs rather than UI display order. */
@@ -159,6 +199,21 @@ enum class MultiLayerTownPowerAuthority : uint8_t {
 	Invalid = 0xFF, ///< Unknown authority refuses effects.
 };
 
+/** Shared immutable Q16 coordinate, economy-step and body-centre envelope contract.
+ * Asteroid headings/speeds remain in their catalogue; static structures and
+ * moving bodies consume this single geometry authority.
+ */
+struct MultiLayerSpaceTuning {
+	uint32_t coordinate_units_per_tile = 65536; ///< Saved Q16 precision, never a camera scale.
+	uint16_t ticks_per_economy_day = 74; ///< One synchronized movement step per simulation tick.
+	uint8_t body_center_margin_tiles = 2; ///< Translation envelope reserved on each travel-strip edge.
+	uint8_t travel_start_quarters = 1; ///< Inclusive middle-half strip starts at floor(height/4).
+	uint8_t travel_end_quarters = 3; ///< Exclusive strip ends at floor(3*height/4).
+};
+
+/** @return Shared Industry geometry defaults; definition changes require profile compatibility handling. */
+const MultiLayerSpaceTuning &GetMultiLayerSpaceTuning();
+
 /** Immutable definition contract; later capability queries extend this same public owner. */
 struct MultiLayerGameplayProfile {
 	MultiLayerGameplayProfileID id; ///< Stable profile identity.
@@ -169,6 +224,9 @@ struct MultiLayerGameplayProfile {
 	MultiLayerTownPowerAuthority town_power_authority = MultiLayerTownPowerAuthority::Native; ///< One authority; no approved ETI adapter in version 1.
 	uint16_t orbital_release_radius = 20; ///< Required circular Space release radius in tiles, with its own mission eligibility.
 	uint16_t surface_collection_radius = 20; ///< Independent circular Surface station membership radius, never inferred from orbital eligibility.
+	std::span<const MultiLayerAsteroidDefinition> asteroid_resources; ///< Industry's immutable resource definitions; Classic has none.
+	std::span<const MultiLayerAsteroidSizeDefinition> asteroid_sizes; ///< Industry's independent size probabilities and reserve multipliers.
+	const MultiLayerSpaceTuning *space_tuning = nullptr; ///< Industry's shared geometry/step authority; Classic has no orbital tuning.
 };
 
 /** Specific reasons why a new world cannot select a gameplay profile. */

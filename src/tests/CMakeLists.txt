@@ -11,16 +11,51 @@ add_test_files(
     test_artifact_paths.cpp
     artifact_paths.cpp
     space_preview.cpp
+    # Immutable class/size definitions and inclusive sampling: r2mlvs10-asteroids-and-mining-probes.md Group1.
+    asteroid_catalogue.cpp
+    # Bounded real-site starter selection and frozen inputs: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    asteroid_generation.cpp
+    asteroid_generation_native.cpp
+    # Integer trajectory, envelope and numerical budget fixtures: r2mlvs10-asteroids-and-mining-probes.md Group3.
+    asteroid_motion.cpp
+    asteroid_motion_native.cpp
+    # Persistent depletion/invalid-target boundaries: r2mlvs10-asteroids-and-mining-probes.md Group5.
+    asteroid_depletion.cpp
+    asteroid_depletion_native.cpp
+    # Shared body-strip/static-footprint separation: r2mlvs10-asteroids-and-mining-probes.md Group6.
+    asteroid_band.cpp
     space_mining.cpp
     space_content.cpp
     space_orders.cpp
+    # Shared deterministic approach and queued-save contracts: r2mlvs8 Group11 / r2mlvs11 Group4B.
+    space_approach.cpp
     space_survey.cpp
     space_resupply.cpp
+    # Direct native module flight and exact same-rocket recovery: r2mlvs9 Group11.
+    orbital_freight.cpp
+    orbital_freight_native.cpp
+    # Whole-label/fragment and physical custody refusal: r2mlvs9 Group11C.
+    orbital_freight_bounds.cpp
+    orbital_freight_failure.cpp
     space_construction.cpp
     orbital_core.cpp
     orbital_service.cpp
     orbital_module_reservation.cpp
     orbital_module_assembly.cpp
+    # Bounded activation, native paid Storage freight and original Power panels: Plan11 Group4.
+    orbital_module_activation.cpp
+    # Explicit source-connected two-berth Dock owner: r2mlvs11 Group4C.
+    orbital_dock.cpp
+    orbital_dock_native.cpp
+    orbital_utility_retirement.cpp
+    # Safe empty removal and retained spent receipts: r2mlvs11 Group5.
+    orbital_removal.cpp
+    orbital_removal_native.cpp
+    # All-label packet evacuation and cancellation: r2mlvs11 Group5B.
+    orbital_evacuation.cpp
+    orbital_evacuation_native.cpp
+    # Real takeover/reuse and paid replacement-Core dependency removal: r2mlvs11 Group5C.
+    orbital_module_lifecycle.cpp
     # Public launch owner/signature handoff: r2mlvs9-launch-centers-and-rockets.md Group7.
     launch_contract.cpp
     # Revised reusable-hull and first-Core numerical fixtures: Plan9 Group9.
@@ -29,7 +64,26 @@ add_test_files(
     space_logistics.cpp
     launch_flight.cpp
     space_descent.cpp
+    # Actual current-position release/foreign overlap and native reservation quotes: r2mlvs9 Group12.
+    orbital_release_admission.cpp
+    descent_custody.cpp
+    descent_custody_native.cpp
+    cargo_return_native.cpp
+    space_company_custody_native.cpp
+    launch_failure_phase_native.cpp
+    launch_retirement_native.cpp
+    paid_probe_phase_native.cpp
+    surface_space_loop_native.cpp
+    # Exact circles/clipped targets and actual moving release commands: r2mlvs9-launch-centers-and-rockets.md Group18.
+    orbital_release_geometry.cpp
+    # Actual multi-cargo recovery and separate boundary collection: r2mlvs9-launch-centers-and-rockets.md Group19.
+    surface_collection_native.cpp
+    surface_collection_boundaries.cpp
+    # Native packet/provenance/fee conservation through repeated hub circulation: r2mlvs9-launch-centers-and-rockets.md Group20.
+    hub_circulation_native.cpp
     launch_center.cpp
+    # Actual command's company-independent terrain predicate: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    launch_site.cpp
     alternating_iterator.cpp
     bitmath_func.cpp
     console.cpp

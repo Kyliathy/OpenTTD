@@ -4,7 +4,7 @@ Native underground construction and conventional freight are specified by [R2MLV
 
 TBM ownership,2026-10-09: the native Train, Order/OrderList and Depot pool own machinery, ordinary travel and selected hangar identity. The geological job retains its immutable commissioning anchor, accepted geometry and work; the exchange owner retains actual wagon custody and the original haulage origin. Player return/service or Follow order suspends new cutting after the atomic operation. Resume work rejoins the retained face through the real working bay. Missing work targets wait rather than falling into ordinary no-order movement. Final release requires the whole stored cutter and settled, vacated logistics; it retains the machine and permits paid support conversion/public traffic. Shared orders do not duplicate assignments. [R2TBMF W](../../upgrades/2026-10/tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure) and [ZB](../../upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md) retain physical service/reuse, remote storage and A-to-B traffic evidence.
 
-Company vehicles are pool items of type `Vehicle` (`src/vehicle_base.h`). Trains, road vehicles, ships, and aircraft each override `Tick`. Effect vehicles and disaster vehicles share the same pool and the same walk; their handlers live in `src/effectvehicle.cpp` and `src/disaster_vehicle.cpp` and are outside the movement described here.
+Company vehicles are pool items of type `Vehicle` (`src/vehicle_base.h`). Trains, road vehicles, ships, aircraft and native Space vehicles each override `Tick`. Effect vehicles and disaster vehicles share the same pool and the same walk; their handlers live in `src/effectvehicle.cpp` and `src/disaster_vehicle.cpp` and are outside the movement described here.
 
 `StateGameLoop` calls `CallVehicleTicks` once per simulation frame. The frame order is in [the game loop](../game-loop/archi-game-loop.md). Player actions that buy, sell, start, stop, refit, or send a vehicle to a depot are commands in `src/vehicle_cmd.cpp`. Order-list edits are commands in `src/order_cmd.cpp`. The command pipeline is in [commands](../commands/archi-commands.md).
 
@@ -22,7 +22,7 @@ Path choice for trains, road vehicles, and ships is YAPF. This page names the ca
 | Piece | File | What it is |
 | --- | --- | --- |
 | `Vehicle` | `src/vehicle_base.h` | Pool item, chain, position, cargo, orders, breakdown counters, `Tick` |
-| `VehicleType` | `src/vehicle_type.h` | `Train`, `Road`, `Ship`, `Aircraft`, then `Effect` and `Disaster` |
+| `VehicleType` | `src/vehicle_type.h` | `Train`, `Road`, `Ship`, `Aircraft`, `Effect`, `Disaster`, then append-only `Space` |
 | `BaseConsist` | `src/base_consist.h` | `cur_real_order_index`, `cur_implicit_order_index`, `VehicleFlag` |
 | `Order` / `OrderType` | `src/order_type.h`, `src/order_base.h` | Order kinds and load, unload, depot, and conditional flags |
 | `SpecializedVehicle` | `src/vehicle_base.h` | Typed `First` / `Next` for one `VehicleType` |
@@ -47,6 +47,47 @@ These are ordinary `Train` and `RoadVehicle` pool items with existing costs, gro
 `GetTBMCutterSteeringTarget` derives the cutter's live work-face or exchange-bay destination from its existing project/job. YAPF recognizes that plain paid support as an uncached target, and the train releases reservations when its cached goal changes; ordinary saved orders remain with their existing owner. `CheckTBMSupportRailTurns` refuses a commissioned support path that the actual rail turn rule forbids. Shared `GetDefaultTBMConsist(MapLayer)` supplies two Earth/four Rock hoppers for Deep's first complete Hard cut, retaining two/two on Underground; actual capacity, length and purchase checks remain authoritative.
 
 The focused native save fixture writes actual purchased and physically loaded vehicles with station/service orders and an active hauler association. The real game-loader round trip preserves EIDS, VEHS, ORDL and project/exchange descriptors exactly and resolves all seven conventional mappings. `dump_info underground_fleet` reads those loaded owners for evidence; it creates no replacement registry. See R2MLVS7 Group 10B for commands and retained input/output saves.
+
+## Native launch and orbital cargo ownership
+
+[Plan9](../../upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md) and the
+[current423 runtime handoff](../../upgrades/2026-10/r2mlsp-q-runtime-handoff.md)
+own the delivered launch/recovery contract. SpaceVehicle uses the ordinary
+Vehicle pool for paid rocket/miner/survey/builder roles14/15/19/20, with exact
+saved incarnations. SpaceManifest owns actual supplies, freight and reciprocal
+carried-body/pod bindings; SpaceTransition retains the same rocket's paid
+preparation/ascent/delivery/return/turnaround and once-only receipts. Ordinary
+station/depot/train commands supply the actual Surface delivery leg; mineral-
+only trucks do not acquire Goods capability to satisfy a test scenario.
+
+A purchased SpacePod becomes the sole SpaceDescentJob packet owner at actual
+current-position release. It targets an explicitly selected owned launch
+center's inclusive20-tile Q16 circle and preserves packets when capacity or
+identity is lost. Native loaded recall stops inside that circle, Visit retains
+precise arrival, and Unload invokes the real release boundary. Space orders
+cannot replace it with a proxy warehouse or payment. Direct full-load module
+freight uses the actual operational Core/Storage/Dock's shared admitted berth
+and sole inventory; current builder Craft resupply admits actual STEL/GOOD.
+
+SurfaceHandlingJob owns a native StationCargoList between the real center and
+an exclusive generation-qualified Surface member. Shared8-unit throughput,
+capacity reservations and mass fees preserve source/routing/feeder/recorded-age
+history through packet splits/merges. Pickup history is the per-cargo filter;
+automatic allocation currently requires Asteroid-origin stock, and compatible
+reverse supplies/processed Goods use explicit jobs. Active deliberate unlink
+refuses; native station range/removal changes settle remaining assignments.
+Handling expenses use canonical yearly Other; no final income arises merely
+from changing layers or neutral routing. GetDistance requires in-vehicle
+custody; the stored travel vector is verified through canonical CAPA transport.
+
+Manual/bankruptcy company deletion refuses unsettled Space custody before
+ordinary vehicle destruction; real ownership transfer retains original packet
+and target generations. Last-facility launch retirement retains/refuses stored
+cargo according to surviving ordinary freight facilities. Every new Vehicle
+body initializes its saved round-trip duration, including wagons without
+orders.26 owner families match current ordinary/replayed saves in both builds.
+Final authored/packed artwork and live network acceptance remain separate
+unfinished gates in the handoff, as do later manufacturing/hauler producers.
 
 ## Pool and chain
 
@@ -196,7 +237,7 @@ Leaving the depot is mode-specific. The shared piece is `VehicleServiceInDepot` 
 
 `CheckVehicleBreakdown` (`src/vehicle.cpp`) runs from each mode's `OnNewEconomyDay`, on the primary vehicle. It returns in the menu, and when breakdowns are `None` and servicing-without-breakdowns is disabled. Reduced breakdowns skip reliability loss while `current_order` is `OT_LOADING`. Reliability then falls by `reliability_spd_dec`, clamped to the engine's current reliability.
 
-No breakdown is rolled when breakdowns are `None`, when `breakdown_ctr` is already non-zero, when `cur_speed < 5`, or when the vehicle is manually stopped. Otherwise `Random` increases `breakdown_chance` (an extra 25 on a 1-in-25 roll). The chance table `_breakdown_chance` is indexed by reliability shifted down 10 bits. Ships add `0x6666` to reliability before that index. Reduced breakdowns add the same offset. A hit sets `breakdown_ctr` from bits 16–21 of the random word plus `0x3F`, `breakdown_delay` from bits 24–30 plus `0x80`, and clears `breakdown_chance`.
+No breakdown is rolled when breakdowns are `None`, when `breakdown_ctr` is already non-zero, when `cur_speed < 5`, or when the vehicle is manually stopped. Otherwise `Random` increases `breakdown_chance` (an extra 25 on a 1-in-25 roll). The chance table `_breakdown_chance` is indexed by reliability shifted down 10 bits. Ships add `0x6666` to reliability before that index. Reduced breakdowns add the same offset. A hit sets `breakdown_ctr` from bits 16â€“21 of the random word plus `0x3F`, `breakdown_delay` from bits 24â€“30 plus `0x80`, and clears `breakdown_chance`.
 
 `HandleBreakdown` interprets `breakdown_ctr`:
 

@@ -72,6 +72,7 @@ bool FiosItemSorter(const FiosItem &a, const FiosItem &b)
 void LoadCheckData::Clear()
 {
 	this->space_structures_present = false; this->next_space_structure_generation = 1; this->space_structure_rows.clear();
+	this->space_structure_retirement_history = {}; // Every preview starts with its own absent/older-file receipts, never the previous file's demolition history.
 	this->next_space_vehicle_generation = 1; this->native_space_vehicle_rows.clear();
 	this->space_production_present = this->launch_operations_present = false;
 	this->space_manifests_present = false; this->space_manifest_rows.clear();

@@ -18,6 +18,19 @@
 CommandCost CmdBuildSpaceBlueprint(DoCommandFlags flags, TileIndex tile, SpaceBuildKind kind = SpaceBuildKind::Core);
 /** @param flags Estimate or execute. @param site Native site ID. @param generation Exact site incarnation. @return Refusal or retained-input cancellation. */
 CommandCost CmdCancelSpaceBlueprint(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
+/** Remove a fully preflighted empty paid site without refunding spent materials, capital or energy.
+ * @param flags Estimate or execute; estimates change no native receipt, packet, account or reference.
+ * @param site Exact native pool ID. @param generation Exact issued incarnation; old queues cannot target a replacement through ID reuse.
+ * @return Whole empty removal or unchanged refusal; accountable jobs, stock, occupancy and dependencies require explicit evacuation first.
+ */
+CommandCost CmdRemoveOrbitalModule(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
+/** Cancel retained jobs and evacuate every unconsumed module packet to one explicit safe adjacent native inventory.
+ * @param flags Estimate or execute; whole estimates move no packet, clear no job and release no physical craft.
+ * @param site Source native ID. @param generation Exact source incarnation.
+ * @param destination Owned operational Core/Storage/Dock ID. @param destination_generation Exact destination incarnation.
+ * @return Whole packet evacuation/cancellation or unchanged refusal; spent history/energy and hull holds/poses remain authoritative.
+ */
+CommandCost CmdEvacuateOrbitalModule(DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation);
 /** Collect actual unconsumed material from a cancelled job.
  * @param flags Estimate or execute. @param site Native site ID. @param generation Exact site incarnation.
  * @param probe Native builder ID. @param probe_generation Exact builder incarnation.
@@ -30,7 +43,14 @@ CommandCost CmdCollectSpaceConstructionInputs(DoCommandFlags flags, SpaceStructu
  * @return Refusal or the start of the saved canonical activation countdown; creates no stock.
  */
 CommandCost CmdActivateOrbitalCore(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
-/** Exchange real freight at an operational Core's precise approach.
+/** Activate a fully consumed Core/Storage/Power/Dock frame without another material debit, cargo grant or freight payment.
+ * @param flags Estimate or execute; estimates reserve no identity, panel or stock.
+ * @param site Existing native paid frame ID.
+ * @param generation Exact frame incarnation; stale or foreign requests refuse unchanged.
+ * @return Refusal or the once-only start of saved activation; extensions require an operational adjacent owned Core.
+ */
+CommandCost CmdActivateOrbitalModule(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
+/** Exchange real freight at an operational Core/Storage approach or an admitted Dock berth.
  * @param flags Estimate or execute. @param site Native module ID. @param generation Exact module incarnation.
  * @param craft Native orbital craft ID. @param craft_generation Exact craft incarnation.
  * @param cargo Actual physical cargo. @param quantity Positive bounded amount. @param load True loads the craft, false unloads it.
@@ -42,18 +62,30 @@ CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID site, u
  * @return Once-only registration or unchanged refusal.
  */
 CommandCost CmdCommissionOrbitalServices(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
-/** @param flags Estimate or execute. @param site Native Core ID. @param generation Exact incarnation.
+/** Explicitly connect one activated Dock's bounded service consumer to an original adjacent paid panel.
+ * @param flags Estimate or execute; estimates register no consumer or connection.
+ * @param site Owned activated Dock identity. @param generation Exact Dock incarnation.
+ * @param source Owned operational adjacent Core/Power identity. @param source_generation Exact source incarnation.
+ * @return Whole zero-energy connection registration or unchanged refusal; generation and allocation remain separate.
+ */
+CommandCost CmdConnectOrbitalServices(DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation);
+/** Disconnect an idle paid Dock without discarding parts, consumed history or another module's grants.
+ * @param flags Estimate or execute. @param site Owned activated Dock ID. @param generation Exact Dock incarnation.
+ * @return Whole original consumer retirement/connection release or unchanged refusal; held jobs must be explicitly cancelled first.
+ */
+CommandCost CmdDisconnectOrbitalServices(DoCommandFlags flags, SpaceStructureID site, uint64_t generation);
+/** @param flags Estimate or execute. @param site Native Core/Power panel owner. @param generation Exact incarnation.
  * @param paused True disables physical panel generation. @return Availability change or unchanged refusal.
  */
 CommandCost CmdSetOrbitalPanelPaused(DoCommandFlags flags, SpaceStructureID site, uint64_t generation, bool paused);
-/** Start/control the single precise Core service berth.
- * @param flags Estimate or execute. @param site Native Core ID. @param generation Exact Core incarnation.
+/** Start or control one exact contained Core job or either admitted Dock service job.
+ * @param flags Estimate or execute. @param site Native Core/Dock ID. @param generation Exact module incarnation.
  * @param craft Native hull ID. @param craft_generation Exact hull incarnation. @param control Explicit job operation.
  * @return Whole reservation/control/return operation or unchanged refusal.
  */
 CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, OrbitalServiceControl control);
-/** Move actual service supplies between an idle precise craft and the Core's stock.
- * @param flags Estimate or execute. @param site Native Core ID. @param generation Exact Core incarnation.
+/** Move actual service supplies between an idle precise craft and its Core/Dock's separate stock.
+ * @param flags Estimate or execute. @param site Native Core/Dock ID. @param generation Exact module incarnation.
  * @param craft Native hull ID. @param craft_generation Exact hull incarnation. @param supply RFMT1 or ELEC2 compartment.
  * @param quantity Positive whole units. @param load True loads the craft; false unloads it.
  * @return Packet-preserving exchange without delivery income, or unchanged refusal.
@@ -67,10 +99,15 @@ CommandCost CmdMoveOrbitalSupply(DoCommandFlags flags, SpaceStructureID site, ui
 CommandCost CmdReserveOrbitalModuleInputs(DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID core, uint64_t core_generation);
 DEF_CMD_TRAIT(Commands::BuildSpaceBlueprint, CmdBuildSpaceBlueprint, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::CancelSpaceBlueprint, CmdCancelSpaceBlueprint, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::RemoveOrbitalModule, CmdRemoveOrbitalModule, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::EvacuateOrbitalModule, CmdEvacuateOrbitalModule, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::CollectSpaceConstructionInputs, CmdCollectSpaceConstructionInputs, {}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::ActivateOrbitalCore, CmdActivateOrbitalCore, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::ActivateOrbitalModule, CmdActivateOrbitalModule, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::MoveOrbitalFreight, CmdMoveOrbitalFreight, {}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::CommissionOrbitalServices, CmdCommissionOrbitalServices, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::ConnectOrbitalServices, CmdConnectOrbitalServices, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::DisconnectOrbitalServices, CmdDisconnectOrbitalServices, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::SetOrbitalPanelPaused, CmdSetOrbitalPanelPaused, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::ServiceOrbitalProbe, CmdServiceOrbitalProbe, {}, CommandType::VehicleManagement)
 DEF_CMD_TRAIT(Commands::MoveOrbitalSupply, CmdMoveOrbitalSupply, {}, CommandType::VehicleManagement)

@@ -434,6 +434,11 @@ enum class Commands : uint8_t {
 	ServiceOrbitalProbe, ///< Reserve/control the single paid Core service berth.
 	MoveOrbitalSupply, ///< Exchange actual RFMT/ELEC service packets at a Core.
 	ReserveOrbitalModuleInputs, ///< Reserve every missing recipe material from actual adjacent Core stock in one command.
+	ActivateOrbitalModule, ///< Plan11 Groups4/4C: activate the same paid native Core/Storage/Power/Dock frame once.
+	ConnectOrbitalServices, ///< Plan11 Group4C: connect a paid Dock's bounded jobs to an actual adjacent original panel.
+	DisconnectOrbitalServices, ///< Plan11 Groups4C/5: retire an idle Dock connection without refunding settled work or reusing its consumer identity.
+	RemoveOrbitalModule, ///< Plan11 Group5: remove only a fully preflighted empty native site, preserving spent material/service and utility history.
+	EvacuateOrbitalModule, ///< Plan11 Group5B: cancel jobs and move actual unconsumed packets to one adjacent safe native inventory; hulls retain their physical positions.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

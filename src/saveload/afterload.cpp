@@ -9,6 +9,7 @@
 
 #include "../stdafx.h"
 #include "../space_vehicle.h"
+#include "../space_approach.h"
 #include "../space_manifest.h"
 #include "../space_pod.h"
 #include "../space_structure.h"
@@ -3520,6 +3521,8 @@ bool AfterLoadGame()
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
 	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
 	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
+	// Saved approach claims resolve only after native hulls, owned sites and body leases have all installed their original identities.
+	if (!ValidateNativeSpaceApproaches()) SlErrorCorrupt("Invalid native Space approach ownership");
 	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
 	// Paid physical inlets resolve after their actual portal, geology and ledger owners; load never fabricates a replacement contract.
 	if (!AcceptLoadedTubePowerConnections()) SlErrorCorrupt("Invalid tube power authority");

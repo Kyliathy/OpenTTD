@@ -193,6 +193,19 @@ Group13B is verified in RelWithDebInfo. Its static phases are Blueprint,
 FrameComplete (awaiting operational activation), and Cancelled. Consumers must
 not interpret any of these phases as an active Dock/Storage/Assembly/Utility.
 
+**Shared approach handoff,2026-10-14:** `space_approach.h` publishes
+`PlanSpaceApproaches`, `RequestSpaceApproach`, `ReleaseSpaceApproach`,
+`PrepareSpaceApproachTick`, `GetSpaceApproachDestination` and
+`GetSpaceStructureBerth`. The actual hull's `SpaceOrderQueue` contains its one
+saved `SpaceApproachRequest`; version420 SPOR appends priority, normalized
+target, bounded admitted slot or waiting sentinel, and safe staging. Body
+mining/survey leases remain separate physical authorities and are never
+manufactured by navigation. RelWithDebInfo's focused and actual-world gates
+pass; Debug is deferred to the next substantial consumer batch. See
+`logs/space-approach-verification.json`. This supplies reservation admission,
+not operational Dock/service/processing functions; those remain Plan11 Group4C
+and their owning later groups.
+
 ## Implementation Tasks
 
 Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
@@ -422,7 +435,7 @@ Configure these through the planned immutable `MultiLayerSpaceTuning` record in 
 
 #### Shared Space geometry and motion defaults
 
-These are initial profile defaults for this group and shared with [r2mlvs10's asteroid tuning](r2mlvs10-asteroids-and-mining-probes.md#movement-trajectory-defaults). They establish one coordinate/band/edge authority; neither these records nor Space motion are implemented by this documentation change. Configure them through a planned immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the selected `MultiLayerGameplayProfile`.
+These profile defaults are shared with [r2mlvs10's asteroid tuning](r2mlvs10-asteroids-and-mining-probes.md#movement-trajectory-defaults). P1 delivered the shared integer band/reflection producer. Plan10 Group3 now publishes its unchanged precision,74-tick step, middle-half strip and two-tile margin through the immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the Industry `MultiLayerGameplayProfile`; Classic has no orbital tuning. `src/space.cpp` owns translation/reflection, while asteroid heading/speed records stay in their own catalogue. Both configurations pass `logs/asteroid-motion-verification.json`; [motion notes](r2mlsp-u-motion-notes.md) bind worked boundary records and exact continuations. This producer evidence does not close Group10's broader construction/envelope/approach requirements below.
 
 | Parameter | Default | Semantics |
 | --- | --- | --- |
@@ -441,12 +454,39 @@ For a 64 x 64 plane, the strip occupies rows 16..47, admissible body centers occ
 - [ ] 10.3 Define which moving craft may enter a body approach/attachment region and which reservations exclude static construction. Distinguish a body position from a structure footprint so they cannot reserve one tile via incompatible authorities.
 - [ ] 10.4 Test band-edge drift, a blueprint touching the exclusion boundary and a blocked approach; failures retain object position/inventory rather than destroying either participant.
 
+### Local Mandatory Reading - Shared native approach reservations
+
+_Applies to Group11. The Global and Orbital world and construction Area gates
+remain applicable. Read the actual `space_approach.h/.cpp` request/arbitration
+boundary, `SpaceOrderQueue` ownership and SPOR versioned transport,
+`SpaceVehicle::Tick` and typed navigation, `SpaceStructure` footprint/approach
+geometry, and existing asteroid mining/survey slot ownership. Full-load and
+copied-preview checks must resolve only their own native hulls, target
+incarnations, geometry and clocks. No request grants a facility function,
+mining reserve, cargo, power or a free craft. Consumer Dock functionality
+remains Plan11 Group4C after this producer passes._
+
 ### Group 11 - Allocate dock and approach slots deterministically
 
 {{HARD}}
-- [ ] 11.1 Represent docking/approach reservations by facility/body ID, slot ID, craft ID and request tick. Resolve simultaneous requests using stable ID order and one owner per slot.
-- [ ] 11.2 Implement waiting, admission, release and cancellation over local occupancy queries. A craft with no available slot waits at a valid staging position; it cannot push another entity aside.
-- [ ] 11.3 Test two craft requesting one slot, removal of the target and reload while queued. Publish the approach contract for r2mlvs9/10/11 without requiring their final vehicles yet.
+- [X] 11.1 Represent docking/approach reservations by facility/body ID, slot ID, craft ID and request tick. Resolve simultaneous requests using stable ID order and one owner per slot.
+- [X] 11.2 Implement waiting, admission, release and cancellation over local occupancy queries. A craft with no available slot waits at a valid staging position; it cannot push another entity aside.
+- [X] 11.3 Test two craft requesting one slot, removal of the target and reload while queued. Publish the approach contract for r2mlvs9/10/11 without requiring their final vehicles yet.
+
+**RelWithDebInfo verified,2026-10-14.** The focused admission/order/consumed
+producer contracts pass3,369 assertions in16 cases. Two actual paid builders
+request one Core approach together; native ID breaks the simultaneous tie,
+the second waits, and only the first craft's real departure frees physical
+occupancy. Cancelling an actually paid empty blueprint clears only its target
+claims. Separate real body visits retain one admitted slot, follow current
+body motion and preserve its reserve and mining/survey leases. Both queued
+interruptions and ordinary game resaves match all26 native owner families.
+Four malformed duplicate-slot, target-generation, future-clock and staging
+cases fail both native full load and independent copied preview; active
+owners, cash and RNG remain unchanged. The paid418 predecessor is immutable.
+`logs/space-approach-verification.json` freezes exact sources, binaries, reports
+and logs. Debug is explicitly queued with the next substantial Dock/removal
+batch; no full regression was run and no later facility function is claimed.
 
 ### Group 12 - Orbital world and construction
 

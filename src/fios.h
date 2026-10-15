@@ -64,11 +64,13 @@ struct NativeSpaceVehiclePreview {
 	VehicleType type = VehicleType::Invalid;
 	Owner owner = OWNER_NONE;
 	SpacePoint position{};
+	std::vector<uint32_t> cargo_packet_refs; ///< Same-file serialized native freight references; preview owns no packets and never consults live cargo.
 };
 
 struct LoadCheckData {
 	bool space_structures_present = false;
 	uint64_t next_space_structure_generation = 1;
+	SpaceStructureRetirementHistory space_structure_retirement_history; ///< Same-file spent receipts; preview never borrows active-world demolition history.
 	std::vector<SpaceStructureRecord> space_structure_rows;
 	uint64_t next_space_vehicle_generation = 1;
 	std::vector<NativeSpaceVehiclePreview> native_space_vehicle_rows;
