@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.3. Exact executed own rich mineral surface original; native selection pending.",
+  "key": "rich-asteroid-mining-b-s-sw-w-nw-v1",
+  "asset_id": "asteroid.rare-earth",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-s-sw-w-nw-v1.png",
+      "sha256": "cc796e664d2d4d54e79efa5cf40e687a7ca30012032da7b2dce6cfc6f4fc7c15",
+      "role": "Exact own selected rich boulder/yaw/light and violet mineral pocket edit target; all outside native surface pixels protected"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nAsset asteroid.rare-earth rich natural boulder, local surface state. Image1 is the EXACT SELECTED own rusty-umber asteroid, four genuine views S/SW/W/NW in top-left/top-right/bottom-left/bottom-right order. Preserve exact yaw/body scale/position/whole silhouette, tall blunt rear ridge, lower chipped FRONT face, triangular opposite pit, brown/ochre faceted stone, camera and upper-left SCREEN light.\nChange ONLY existing embedded blue-violet mineral pocket inside the zigzag fissure: MINING PHASE B: retain the original blue-violet mineral. Add ONE compact high contrast warm GOLD/AMBER contact glint cluster at its physical OPPOSITE REAR endpoint. Actual yellow/light gold center with orange surround, cluster approximately40-48sourcepx across ON existing purple mineral; small enough to leave most pocket purple. FRONT endpoint completely plain purple. This is a different original flicker position from phaseA. EXACT PLACEMENT by panel: S top-left: UPPER LEFT end of purple pocket. SW top-right: UPPER end. W bottom-left: UPPER RIGHT end. NW bottom-right: UPPER RIGHT end.\nSame classic1990s Tycoon crisp pixel clusters. Mineral purple is blue-violet #7044A8/#8C64C4/#A888E0, never separator magenta. Native probe rendered separately: NO tool, probe, machinery, cargo, extra rock, metal spike, extra mineral seam, plume, halo or external spark. All non-pocket native stone pixels will be protected exactly. No unrelated rock redraw.\nSAFE BORDERED1536x1024 real-transparent2x2 sheet. Four opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Preserve original small bodies centered with>=48px REAL transparent clearance to every frame. Complete independent cutouts, no clipping or gutter pixels. Real transparent background, margins and gutters: NO haze, ground, shadow, gradient, checkerboard, text, labels, digits or diagrams.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-42403326-e1eb-48bd-a2c5-0e0bd37a5694.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-mining-b-s-sw-w-nw-v1.png",
+  "sha256": "2ea2c107d43de526c41d038782898014a2ca77ae7d537487bb6c041b6e110abb"
+}

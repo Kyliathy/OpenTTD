@@ -7,6 +7,7 @@
 
 /** @file company_cmd.cpp Handling of companies.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group15; liquidation must not discard unsettled Space custody/work.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; enabled/unfinished processing remains accountable even with empty input stock.
  */
 
 #include "stdafx.h"
@@ -38,6 +39,7 @@
 #include "space_pod.h"
 #include "space_transition.h"
 #include "space_structure.h"
+#include "orbital_recipe.h"
 #include "orbital_station.h"
 #include "station_base.h"
 #include "launch_center.h"
@@ -948,6 +950,11 @@ static bool HasUnsettledSpaceCompanyCustody(CompanyID company)
 		// Reserved construction packets must be consumed by work or evacuated to an actual inventory first.
 		for (const auto &stock : site->job.inputs) if (stock.TotalCount() != 0) return true;
 		if (!site->module) continue;
+		if (site->module->processing) {
+			const auto &processing = *site->module->processing;
+			// Liquidation must not dispose of enabled or unfinished processing merely because its physical input compartment was temporarily emptied by a hauler.
+			if (processing.enabled || processing.unpowered_work_ticks != 0 || (processing.electrical && processing.electrical->Capture().paid_j != 0)) return true;
+		}
 		// Every operational stock label and retained paid service owner must be empty/settled before company deletion can retire this module.
 		for (const auto &stock : site->module->stock) if (stock.TotalCount() != 0) return true;
 		for (const auto *job : site->module->GetServiceJobs()) {

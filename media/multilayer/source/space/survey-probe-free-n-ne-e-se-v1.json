@@ -1,0 +1,19 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BC and r2mlvs14-remaining-assets-and-runtime-integration.md Group63B; exact executed original survey-model prompt, pending measured native silhouette review.",
+  "key": "survey-probe-free-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-19",
+  "state": "free",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: stylized-concept.\nBrand-new first-party OpenTTD vehicle.model-19 SURVEY PROBE, four genuine directional FREE/idle views of ONE physical model. No input images.\nOne compact CREAM-GRAY SHORT HEXAGONAL instrument bus, distinctly squat and rounded, NOT a long mining wedge. ONE shallow circular dark-teal scanner DISH at A/front on one short central pivot tilted30degrees upward along the long axis. The dish is a broad open concave circular sensor cup with a cyan rim, not a drill, antenna mast or telescope barrel. Exactly TWO short rectangular DARK-NAVY solar paddles on opposite sides at B/rear. ONE short central rear maneuvering nozzle. ONE small rectangular amber upper service-access panel. Preserve these exact counts and proportions in every direction. Compact readable silhouette, scanner dish immediately identifies surveying.\nNo mining drill, hooks, claws, robotic arms, cargo basket, cab, person, wheels, legs, extra antenna, rocket hull, asteroids, visible scan beams or exhaust flame.\nFOUR actual fixed elevated ORTHOGRAPHIC classic transport-Tycoon ENGINE VIEWPORT headings, fixed upper-left SCREEN illumination:\nTOP LEFT N: front dish points exactly UP, narrow end-on view of the same model; appropriate rim/back of the dish visible.\nTOP RIGHT NE: front dish points UPPER RIGHT; genuine elevated physical view.\nBOTTOM LEFT E: front dish points exactly RIGHT; long axis exactly horizontal, elevated side view.\nBOTTOM RIGHT SE: front dish points LOWER RIGHT; genuine elevated view.\nKeep rear nozzle and paddles at the actual opposite B/rear end. Show true physical changes of perspective of ONE identical spacecraft; never rotate/mirror a flat picture or light.\nStyle: restrained classic1990s Tycoon industrial pixel-art clusters, matte cream-gray top facets and charcoal underside, teal scanner cup/cyan rim, dark-navy solar rectangles with two broad blue divisions, amber service hatch. Tiny native about28x24px craft inside64x48, chunky readable hardware, modest black outline. No shiny3D, smooth painting, photorealism, intricate greebles or gradients.\nSAFE BORDERED transparent1536x1024,6px opaque PURE MAGENTA #FF00FF frames N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000).\nEvery complete craft must fit at least48px within its own frame, max400px width280px height, uniformly reduce if needed. Real transparent alpha throughout background, margins and gutters. Keep visible magenta separator frames only. No checkerboard, haze, floor, shadow, glow, text, numbers, labels or extra props. Four complete fully separated views of ONE new squat scanner probe.",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "path": "media/multilayer/source/space/raw/survey-probe-free-n-ne-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-d713c918-18d6-4d01-8247-7532936c2b70.png",
+  "status": "pending_measured_base_silhouette_review"
+}

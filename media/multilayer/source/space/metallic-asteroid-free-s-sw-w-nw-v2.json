@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.1. Exact executed first metallic natural-body source; source/native selection remains pending.",
+  "key": "metallic-asteroid-free-s-sw-w-nw-v2",
+  "asset_id": "asteroid.nickel",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+      "sha256": "66fcf30e0cd93e6cb9277623fac9ef4f5b8c9496dffc50f4b0b73b42c39d45b9",
+      "role": "Exact selected natural metallic body, first genuineN/NE/E/SE; preserve physical silhouette/landmarks and screen light"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-s-sw-w-nw-v1.png",
+      "sha256": "fcba4d1808a0a4bfab3c403d90140844f3a8a47f5fcf1c3b86b52be583e1f98b",
+      "role": "Opposite beak pose reference only; seam/depression screen positions are wrong and must change"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the selected natural blue-gray metallic asteroid in originalN/NE/E/SE views. Image2 provides the requested oppositeS/SW/W/NW beak orientations BUT its ore seam and dark crater stayed on the wrong screen shoulders. CORRECT THE LANDMARK CONTINUITY while keeping the same natural body, two-lobe silhouette, dimensions, camera and fixed upper-left screen lighting. No new parts.\nOutput opposite four views2x2: TOP LEFT S smaller beak DOWN, TOP RIGHT SW smaller beak lowerLEFT, BOTTOM LEFT W smaller beak LEFT, BOTTOM RIGHT NW smaller beak upperLEFT. One broad irregular blunt rear mass joined by shallow saddle to one smaller pointed beak, no separate rear appendage. Same selected lopsided rock volume; genuine physical yaw, no flat rotation/mirror.\nMANDATORY LANDMARKS ON THESE OPPOSITE VIEWS: the SINGLE broken PALE SILVER seam runs down the LEFT visible upper shoulder, toward the lower-left outer flank of the main rock. The SINGLE shallow DARK DEPRESSION sits on the RIGHT upper shoulder. Do NOT keep the silver seam on screen-right or the dark depression on screen-left as in Image2. These body-fixed landmarks move to opposite shoulders because the body turned180degrees. S: bright seamLEFT flank, dark depressionRIGHT flank, beakDOWN. SW/W/NW: keep seam on visibleLEFT upper surface and depression onRIGHT upper surface as their physical positions turn. Preserve one seam/one depression, sparse silver clusters, angular blue-gray facets, charcoal crevices and restrained classic1990s Tycoon pixel clusters, no smooth photographic detail.\nEach rock about350-400px wide and250-310px tall. SAFE BORDERED1536x1024 true-transparent2x2 sheet. Four opaque PURE MAGENTA #FF00FF6px frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Complete small cutouts centered with >=64px real transparent clearance to every frame. Transparent emptybackground/margins/gutters, no haze, floor, shadow, backdrop, checkerboard, text, labels, digits, diagrams, effects, extra rocks or hardware.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-944bb16d-04f9-4e0b-b909-119b9f2b3961.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-free-s-sw-w-nw-v2.png",
+  "sha256": "4a1d59059a63a46b4b867ae1228f36c85d09e21f2037d3cc91902910420e3e04"
+}

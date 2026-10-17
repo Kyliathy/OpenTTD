@@ -4,13 +4,18 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_sl.cpp One-row metadata load/preview/fixup scaffold; feature records remain owner-specific. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
+/** @file multilayer_sl.cpp One-row metadata load/preview/fixup scaffold; feature records remain owner-specific.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; configured same-file cargo dimensions, independent of content3 recipes.
+ */
 
 #include "../stdafx.h"
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../multilayer_state.h"
 #include "../multilayer_space_content.h"
+#include "space_cargo_preview.h"
+#include "../cargotype.h"
 #include "../fios.h"
 
 #include "../safeguards.h"
@@ -163,8 +168,36 @@ struct MLMDChunkHandler : ChunkHandler {
 static const MLMDChunkHandler MLMD;
 
 static std::optional<std::pair<uint16_t, uint64_t>> _space_content_candidate;
-void ResetSpaceContentLoadStaging() { _space_content_candidate.reset(); }
+/** Detached configured dimensions await normal required-content reconstruction, never becoming a cargo-definition owner. */
+static std::optional<std::vector<NativeCargoDimensionPreview>> _space_cargo_dimension_candidate;
+/** @copydoc ResetSpaceContentLoadStaging */
+void ResetSpaceContentLoadStaging() { _space_content_candidate.reset(); _space_cargo_dimension_candidate.reset(); }
 
+/** Capture actual configured definitions only for the selected Space profile.
+ * @return Canonical cargo-ordinal metadata; Classic keeps an empty family and its ordinary content behavior.
+ */
+static std::vector<NativeCargoDimensionPreview> CaptureSpaceCargoDimensions()
+{
+	std::vector<NativeCargoDimensionPreview> rows;
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return rows;
+	// Save actual required-content definitions, including nonstandard weights; a local recipe table cannot substitute for the physical cargo configuration.
+	for (CargoType cargo{0}; cargo < NUM_CARGO; ++cargo) {
+		const auto *spec = CargoSpec::Get(cargo);
+		if (spec->IsValid()) rows.push_back({cargo, spec->label, spec->weight});
+	}
+	return rows;
+}
+
+/** @copydoc AcceptLoadedSpaceCargoDimensions */
+bool AcceptLoadedSpaceCargoDimensions()
+{
+	if (!_space_cargo_dimension_candidate) return IsSavegameVersionBefore(SaveLoadVersion::SpaceCargoDimensions);
+	const bool matches = *_space_cargo_dimension_candidate == CaptureSpaceCargoDimensions();
+	_space_cargo_dimension_candidate.reset();
+	return matches;
+}
+
+/** @copydoc ValidateSpaceContentLoadPreview */
 void ValidateSpaceContentLoadPreview()
 {
 	if (!_load_check_data.space_content_present) {
@@ -176,25 +209,36 @@ void ValidateSpaceContentLoadPreview()
 
 /** Independent Space revision keeps original cargo/package/profile and old paid VEHS identities unchanged. */
 struct SDEFChunkHandler : ChunkHandler {
+	/** Register the unchanged ten-byte Space content family; native assets retain their own paid receipt versions. */
 	SDEFChunkHandler() : ChunkHandler("SDEF", ChunkType::Riff) {}
+	/** @param value Canonical unsigned scalar. @param width Exact fixed byte width in the original network-order transport. */
 	static void Write(uint64_t value, uint width) { for (int shift = (width - 1) * 8; shift >= 0; shift -= 8) SlWriteByte(static_cast<uint8_t>(value >> shift)); }
+	/** @param width Exact already bounded scalar width. @return Original network-order unsigned value. */
 	static uint64_t ReadInteger(uint width) { uint64_t value = 0; while (width-- != 0) value = (value << 8) | SlReadByte(); return value; }
+	/** Publish the current content fingerprint; old paid2 receipts remain conserved in their actual native asset families. */
 	void Save() const override
 	{
 		const bool selected = GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry;
 		SlSetLength(10); Write(selected ? MULTILAYER_SPACE_CONTENT_VERSION : 0, 2); Write(selected ? GetMultiLayerSpaceContentSignature() : 0, 8);
 	}
+	/** @return Same-file bounded revision/fingerprint, with explicit old/new source-version admission and no live profile mutation. */
 	std::pair<uint16_t, uint64_t> Read() const
 	{
+		// No old pre-content save may acquire a forged Space definition family; complete original framing is required before reading any identity.
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders) || SlGetFieldLength() != 10) SlErrorCorrupt("Invalid Space content family");
 		const auto version = static_cast<uint16_t>(ReadInteger(2)); const auto signature = ReadInteger(8);
+		const auto expected = IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning) ? MULTILAYER_SPACE_LEGACY_CONTENT_VERSION : MULTILAYER_SPACE_CONTENT_VERSION;
+		// Classic's zero identity remains independent. Real pre431 inputs must use their exact2 content; current files publish3 and cannot disguise new roles under a legacy identity.
+		if (version != 0 && version != expected) SlErrorCorrupt("Space content revision does not match save version");
 		return {version, signature};
 	}
+	/** Stage one actual file identity; duplicate families never replace previously decoded authority. */
 	void Load() const override
 	{
 		if (_space_content_candidate) SlErrorCorrupt("Repeated Space content identity");
 		_space_content_candidate = this->Read();
 	}
+	/** Validate original profile/content after complete metadata staging without re-registering engines or changing paid receipts. */
 	void FixPointers() const override
 	{
 		if (!SlIsFixingPointers()) return;
@@ -206,6 +250,7 @@ struct SDEFChunkHandler : ChunkHandler {
 		const auto profile = schema == nullptr ? MultiLayerGameplayProfileID::Classic : schema->profile.id;
 		if (!IsSupportedMultiLayerSpaceContent(profile, _space_content_candidate->first, _space_content_candidate->second)) SlErrorCorrupt("Unsupported Space content identity");
 	}
+	/** @param len Framework-provided family length; Read independently enforces the exact ten-byte bounded format. */
 	void LoadCheck([[maybe_unused]] size_t len) const override
 	{
 		if (_load_check_data.space_content_present) SlErrorCorrupt("Repeated Space content preview");
@@ -215,5 +260,55 @@ struct SDEFChunkHandler : ChunkHandler {
 	}
 };
 static const SDEFChunkHandler SDEF;
-static const ChunkHandlerRef multilayer_chunk_handlers[] = {MLMD, SDEF};
+
+/** Versioned configured cargo dimensions support independent preview without opening required-content stores or changing content3 recipes. */
+struct CDIMChunkHandler : ChunkHandler {
+	/** Register metadata only; actual CargoSpec and cargo owners remain native. */
+	CDIMChunkHandler() : ChunkHandler("CDIM", ChunkType::Riff) {}
+	/** Serialize the actual selected profile's canonical configured ordinals, labels and masses. */
+	void Save() const override
+	{
+		const auto rows = CaptureSpaceCargoDimensions(); SlSetLength(1 + rows.size() * 6); SDEFChunkHandler::Write(rows.size(), 1);
+		// Every valid configured entry has exactly one six-byte row; this does not serialize cargo quantities or grant an inventory.
+		for (const auto &row : rows) {
+			SDEFChunkHandler::Write(row.cargo, 1);
+			for (const auto byte : row.label) SlWriteByte(byte);
+			SlWriteByte(row.weight);
+		}
+	}
+	/** @return Bounded source-version-qualified configured metadata; old sources cannot impersonate the new independent producer. */
+	std::vector<NativeCargoDimensionPreview> Read() const
+	{
+		const auto length = SlGetFieldLength();
+		// Admit the complete family before reading ordinals: malformed metadata cannot allocate an unbounded catalogue or disguise a different source era.
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceCargoDimensions) || length < 1 || length > 1 + NUM_CARGO * 6) SlErrorCorrupt("Invalid configured cargo dimension family");
+		const auto count = SDEFChunkHandler::ReadInteger(1);
+		if (length != 1 + count * 6) SlErrorCorrupt("Invalid configured cargo dimension framing");
+		std::vector<NativeCargoDimensionPreview> rows; CargoType previous = INVALID_CARGO;
+		// One unique ascending ordinal resolves every copied physical reference; definitions are validated rather than installed into the running world.
+		for (uint i = 0; i < count; ++i) {
+			NativeCargoDimensionPreview row; row.cargo = static_cast<CargoType>(SlReadByte());
+			for (auto &byte : row.label) byte = SlReadByte();
+			row.weight = SlReadByte();
+			// Missing labels and repeated/out-of-range ordinals cannot independently identify configured cargo.
+			if (row.cargo >= NUM_CARGO || row.label.Empty() || (previous != INVALID_CARGO && row.cargo <= previous)) SlErrorCorrupt("Invalid configured cargo dimension row");
+			previous = row.cargo; rows.push_back(row);
+		}
+		return rows;
+	}
+	/** Stage exact metadata; normal profile/NewGRF reconstruction must subsequently match it. */
+	void Load() const override
+	{
+		if (_space_cargo_dimension_candidate) SlErrorCorrupt("Repeated configured cargo dimensions");
+		_space_cargo_dimension_candidate = this->Read();
+	}
+	/** @param length Framework extent; Read admits the complete bounded source-qualified family. */
+	void LoadCheck([[maybe_unused]] size_t length) const override
+	{
+		if (_load_check_data.native_cargo_dimensions_present) SlErrorCorrupt("Repeated configured cargo dimension preview");
+		_load_check_data.native_cargo_dimension_rows = this->Read(); _load_check_data.native_cargo_dimensions_present = true;
+	}
+};
+static const CDIMChunkHandler CDIM;
+static const ChunkHandlerRef multilayer_chunk_handlers[] = {MLMD, SDEF, CDIM};
 extern const ChunkHandlerTable _multilayer_chunk_handlers(multilayer_chunk_handlers);

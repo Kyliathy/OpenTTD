@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; actual pure plume extraction edit, not alpha/source selection approval",
+  "key": "small-miner-plume-a-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: four original small-miner travel PLUME components only, PHASE A.\nEdit target is the attached clean-alpha four-nozzle sheet.\nREMOVE every nozzle, mounting collar, gold stripe, gray/black hardware pixel and any hardware shadow.\nKEEP ONLY each existing crisp tapered BLUE/CYAN/white thrust plume, preserving its exact directional axis, long phase-A silhouette, physical size and source position. The four flames must be independent completely isolated cutouts; no remaining engine ring, cylinder, collar, gray stub or gold pixels.\nDo not redesign the plume, add another plume, or stretch/rotate/mirror it. Keep broad crisp original Tycoon pixel clusters, cyan/white core and blue edge; remove any background glow haze outside the actual flame.\nThe native game retains the original nozzle/hull separately; this component MUST contain absolutely no hardware.\n\nSame four original engine-heading arrangement:\ntop-left N flame points DOWN;\ntop-right NE flame points LOWER LEFT;\nbottom-left E flame points exactly LEFT, HORIZONTAL;\nbottom-right SE flame points UPPER LEFT.\nPreserve the existing true physical source orientation and source layout.\n\nCRITICAL preserve ACTUAL CLEAN TRANSPARENT ALPHA. Outside the hard-edged blue flame pixels and the exterior magenta source frames, all pixels are genuine alpha0 transparent.\nDo NOT add checkerboard, white/gray fill, gradient backdrop, black/pink rectangle, fog, halo or drop shadow. Transparent pixels may retain flat magenta hidden RGB.\nKeep1536x1024, existing exterior magenta frames and safe transparent gutters. Each tiny flame is far inside its own independent panel.\nNo text, numbers, labels, arrows, stars, floor, spacecraft, nozzle, ring, collar, metal, gold, black hardware or extra props.\nFOUR unchanged genuine authored phase-A blue travel flames ONLY.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+      "sha256": "3a86d570fba2feaf96ed396d8b63e42b946cc0a2418e11d18c5efb5664173cae",
+      "role": "Actual clean-alpha original authored directional phase-A plumes/nozzle context; remove hardware only"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-plume-a-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-f354cd1d-574b-4af4-8853-9ba87abc103d.png",
+  "status": "pending_actual_alpha_layout_review"
+}

@@ -2,6 +2,8 @@
 
 Owner: [cleanup plan](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md). Shared decision: [Development artifact layout](../../docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout).
 
+Follow-up: [R2FC-2](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup-2.md) records disk cleanup and plans moving required log-resident inputs/evidence into curated fixtures and explicit review runs. That migration is pending; current consumers still require some files under `logs/`.
+
 ## Routing contract
 
 The layout migration and focused native/cold verification are complete. Reusable tests live under `src/tests/`; this directory contains generated evidence. The [producer catalogue](../review-producers.json) records native writers and wrapper entry points. Each caller selects feature/scenario explicitly; mixed tests share an invocation ID while using separate feature directories.
@@ -9,6 +11,16 @@ The layout migration and focused native/cold verification are complete. Reusable
 Use `<feature>/<scenario>/<run-id>/images/`, `saves/`, `reports/` and `scratch/`. Reports record producer, native writer, feature, scenario, run ID, build configuration, input identities and artifact paths/hashes. Logs use repository `logs/<feature>/<scenario>/<run-id>/`. Runtime homes use `mlm/runtime/<profile>/<run-id>/<process>/`, separately for host/client.
 
 Inputs are immutable fixtures or explicitly selected prior checkpoints. Do not overwrite them, infer the latest historical run, or create a docs data home. Reproducible proof images/reports/logs belong under ignored `logs/proofs/mlm/native-art/`, with explicit source identities and regeneration commands. A validator dependency alone does not justify committing generated output. Immutable compatibility/demo inputs stay in purpose-named fixture directories. Historical `import-20261009` artifacts preserve original bytes/provenance and do not count as new passes. Fixture pruning remains gated by master task 12.6.
+
+The repository's clean.ps1 removes reproducible acceptance/data-home and
+acceptance/demo-guide-load-N outputs, plus raw PPM captures with retained PNG
+counterparts. The original playable demos stay in src/tests/fixtures/demos/.
+It also discards old native runtime homes and their binaries: historical proof
+records describe completed executions, rather than requiring executable copies
+to remain installed forever. Reverify by regenerating the relevant output.
+Other review runs remain because some contain the only explicit saved inputs
+for unfinished Space work or native art validators; do not erase this entire
+tree without first retaining those inputs in their proper fixture/asset owner.
 
 ## Producer catalogue
 

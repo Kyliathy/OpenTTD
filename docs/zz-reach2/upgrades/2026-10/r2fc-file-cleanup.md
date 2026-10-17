@@ -51,6 +51,8 @@ The architecture spine below establishes one asset authority, content-bound veri
 
 Status: **execution complete, 2026-10-09**. Groups 1-11 are complete. Final scope and file reduction: [commit-selection handoff](r2fc-j-commit-handoff.md). Git operations remain read-only. Evidence and continuation notes: [execution record](r2fc-a-execution-notes.md).
 
+**Follow-up, 2026-10-15:** [R2FC-2](r2fc-file-cleanup-2.md) records the later disk cleanup, minimal local baseline retention, hard-link accounting and remaining test dependencies under `logs/`. It plans moving required test data/evidence out of logs; that migration is not implemented yet. The completed status above describes this original layout migration, not proof that logs can now be emptied.
+
 Execution-standard revision: 2026-10-09. Tests must group screenshots by feature and document their producers. The original audit snapshot below is retained; it is not a new status measurement.
 
 ## Requirements and scope

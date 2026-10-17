@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB; r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3. Exact actual full-hold panel edit, pending measured original/component review.",
+  "key": "small-miner-full-s-sw-w-nw-v2",
+  "asset_id": "vehicle.model-15",
+  "state": "full",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: first-party OpenTTD small mining probe model15, FULL HOLD status cue, eight-view family first four views.\nImage1 is the approved original four-view spacecraft edit target. Preserve exact view positions, craft size, camera, silhouette, drill, TWO hooks, olive-gray wedge bus, TWO navy rear paddles and rear nozzle.\nChange ONLY the one small yellow upper access panel: replace its plain yellow face with a clear amber-orange inset carrying THREE broad dark horizontal ribs/bars, a compact locked full-hold indicator. Same physical panel outline and position; do not enlarge it, attach cargo, alter tools or recolor the hull. Native cargo owns fullness; artwork supplies no quantities.\nFour genuine headings as reference: S top-left front DOWN, SW top-right front LOWER LEFT, W bottom-left front LEFT horizontal, NW bottom-right front UPPER LEFT. Fixed upper-left screen light; no mirrored/rotated pictures.\nRetain crisp classic transport-Tycoon pixel-art clusters, matte palette and exact approved model. No other equipment, text, labels, numbers, dust, glow, shadows or background.\nSAFE BORDERED transparent1536x1024 sheet: 6px opaque PURE MAGENTA #FF00FF frames S(24,24)-(744,488), SW(792,24)-(1512,488), W(24,536)-(744,1000), NW(792,536)-(1512,1000).\nComplete spacecraft at least32px clear inside each frame, actual transparent alpha in background/gutters, keep visible separator frames. Do not paint transparency checkerboards or haze. Change only the small existing top panel to the amber ribbed FULL HOLD cue; all other original hardware remains the same.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-s-sw-w-nw-v1.png",
+      "sha256": "e36f16c23f109a1a7a0171cae1966bdac8681afd442dbc1bb856248cb5fdd044",
+      "role": "Approved opposite-heading same-model base and exact layout edit target"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-full-s-sw-w-nw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-44090fd9-db3a-4194-a67f-1db93ce14846.png",
+  "status": "pending_measured_status_component_review"
+}

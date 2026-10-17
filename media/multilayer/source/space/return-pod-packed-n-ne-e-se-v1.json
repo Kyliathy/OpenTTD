@@ -1,0 +1,21 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.1. Exact executed brand-new passive-shell original; source/native selection pending.",
+  "key": "return-pod-packed-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-18",
+  "state": "packed",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: stylized-concept.\nAsset: original first-party OpenTTD PASSIVE CARGO RETURN POD, logical model18, PACKED sealed state. A tiny separate expendable payload shell; no pilot or independent vehicle propulsion.\nDesign ONE consistent physical model: small squat OFF-WHITE OCTAGONAL reentry canister with a beveled rounded top, ONE thick BURNT-ORANGE equatorial belt, a CHARCOAL TILED bottom heat shield. ONE flush dark rectangular cargo hatch lies on the FORWARD top slope. Exactly TWO SMALL folded charcoal recovery tabs lie flush on the REAR shoulders, one on each rear side. Keep a low blunt capsule, about1.4 times wider than tall, no long nose or cylindrical rocket body. Hatch and two folded rear tabs define its physical front/rear orientation.\nNo cockpit, windows, dish, solar paddles, manipulators, drill, wheels, engine nozzle, flames, legs, parachute, people, loose cargo or printed markings. Distinct white/orange expendable canister, not a recolored probe.\nFour GENUINE PHYSICAL yaw views with one fixed2:1 isometric viewport camera and upper-left SCREEN lighting:\nN top-left: forward hatch points UP, rear pair of folded tabs at DOWN side.\nNE top-right: forward hatch UPPER RIGHT, rear tabs LOWER LEFT.\nE bottom-left: forward hatch exactly RIGHT, rear tabs LEFT; true side-facing heading, not a diagonal vehicle.\nSE bottom-right: forward hatch LOWER RIGHT, rear tabs UPPER LEFT.\nDo not rotate/mirror a flat image. Redraw genuine visible surfaces of this SAME octagonal shell and retain the same exact equipment counts, belt and heat shield in each view.\nRestrained1990s transport-Tycoon pixel-art clusters, matte off-white facets, dark-gray heat tiles and solid orange belt; readable native object about22x16px. Crisp economical shapes, no glossy photoreal3D or gradients.\nSAFE BORDERED1536x1024 transparent2x2 sheet,6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Center one COMPLETE shell in each cell. Each whole shell maximum450px wide and280px tall; at least64px genuinely transparent clearance from every subject pixel to each magenta separator. Uniformly reduce whole shells if needed to protect clearance. Real transparent alpha background/margins/gutters; magenta frames remain opaque and separate.\nNo painted checkerboard, haze, glow, floor, shadow, text, numbers, labels, scene or extra props. This original supplies art only: native SpacePod/SpaceDescentJob owns paid shell generation, packets, custody and descent countdown; no quantity, work or gameplay owner is introduced.",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-3d90cd72-77d0-403a-be81-7a59621d3c35.png",
+  "path": "media/multilayer/source/space/raw/return-pod-packed-n-ne-e-se-v1.png",
+  "sha256": "1bec6cf9a6e68e7f7da8202fbb434b69e8809171ad53782012469b6ae41148b6"
+}

@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; original active mechanical phase-B source edit; only measured authored front mechanism components may replace selected hull parts",
+  "key": "small-miner-mining-b-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original native small mining probe model15 ACTIVE MINING mechanical PHASE B, four engine headings.\nImage1 is the exact same-model phase-A source reference. Keep the whole olive-gray bus, yellow top panel, two navy rear solar paddles, rear nozzle, camera, registration and four-view layout unchanged. ONLY animate the front drill and two original gripping hooks.\nMake an OBVIOUS second mechanical pose readable after reduction to roughly36x24 native pixels:\nRetract the SAME drill along its own axis by about40 source pixels (a small feed stroke, not removal), turn its spiral flutes by approximately one quarter revolution so broad silver/dark cutting facets visibly change, and rotate both of the SAME hook jaws inward by roughly20degrees at their existing gold hinges. Their tips move about30 source pixels closer to the drill's axis and remain separate; neither hook crosses or touches through the drill. Preserve one drill and exactly two hooks in all views. Same chuck/hinges. This is a modest working stroke with believable rigid joints, not telescoping the hull or changing tool count.\nDo not animate or reshape the bus, panels, supports, top panel or rear nozzle. No sparks, dust, blast, glow, ore, rocks, extra limbs, extra nozzle, labels or background. The native game owns the asteroid; this original contains only the same spacecraft.\n\nSame TRUE physical engine-viewport headings in2x2:\nTOP LEFT N, drill straight UP; TOP RIGHT NE, drill UPPER RIGHT;\nBOTTOM LEFT E, drill straight RIGHT, exact horizontal side view;\nBOTTOM RIGHT SE, drill LOWER RIGHT.\nFixed elevated orthographic classic Tycoon camera and fixed upper-left SCREEN light. Do not rotate/mirror flat pictures. Retain crisp restrained pixel-art clusters and broad facets, not photorealism/soft painting.\n\nSAFE BORDERED transparent1536x1024:\napproximately6px opaque pure MAGENTA #FF00FF separator rectangles:\nN(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000).\nAll spacecraft parts stay at least48px inside each panel, max450px width270px height, reduce uniformly if necessary.\nGenuine transparent alpha background/margins/gutters. Magenta only in separator frames outside each isolated model.\nNo text, numbers, letters, arrows, stars, floor, shadow, scenery or props.\nFour complete separated views of the IDENTICAL small miner, front mechanism PHASE B visibly distinct from phase A.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-mining-a-n-ne-e-se-v1.png",
+      "sha256": "ca174c0125a8d4a4d279b63c41dfcd4401b321d3d3e8994ccb123d338a2a1950",
+      "role": "Same-model active front mechanism phase-A candidate; change only the original drill/feed/hook pose"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-mining-b-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-10a76049-58df-4328-9a8a-f30d391c81fa.png",
+  "status": "pending_measured_layout_and_native_component_phase_review"
+}

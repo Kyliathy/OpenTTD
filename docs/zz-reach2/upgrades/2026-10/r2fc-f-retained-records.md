@@ -4,6 +4,13 @@ Owner: [cleanup plan](r2fc-file-cleanup.md). Architecture: [savegames](../../arc
 
 These quoted records preserve the original digests and outcomes. Paths inside the quotes name historical producers, including a separate baseline checkout; they are not current launch commands or dependencies. Historical completion permissions do not authorize Git writes in this cleanup.
 
+The original version368 baseline saves, configuration and build/test proof logs
+are retained in the local, Git-ignored [OpenTTD-baseline](../../../../OpenTTD-baseline/)
+directory inside the main repository. Its [retention manifest](../../../../OpenTTD-baseline/retained-files.json)
+records original paths, source commit, sizes and SHA256 hashes. The external
+baseline export can be deleted after these copies are verified; the historical
+paths quoted below remain unchanged as provenance.
+
 ## Baseline plane digests
 
 Original SHA256: `7ff1a267e2dd5f8a6c80011c52f5dd29cd2708ab5255397a99029e84fca1cdb6`. Preserved verbatim as text:

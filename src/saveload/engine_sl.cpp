@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file engine_sl.cpp Code handling saving and loading of engines. */
+/** @file engine_sl.cpp Native Engine history reconstruction and bounded legacy Space startup repair.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; paid roles saved before native runtime startup existed retain their actual indices while their never-initialized catalogue history is completed once.
+ */
 
 #include "../stdafx.h"
 
@@ -15,6 +17,9 @@
 
 #include "saveload_internal.h"
 #include "../engine_base.h"
+#include "../engine_func.h"
+#include "../space_production.h"
+#include "../core/backup_type.hpp"
 #include "../string_func.h"
 
 #include "../safeguards.h"
@@ -62,19 +67,24 @@ Engine *GetTempDataEngine(EngineID index, VehicleType type, uint16_t local_id)
 	}
 }
 
+/** Original native per-Engine availability/reliability history, staged independently of physical hull production and content reconstruction. */
 struct ENGNChunkHandler : ChunkHandler {
+	/** Register the existing native Engine-history table without adding another availability or vehicle owner. */
 	ENGNChunkHandler() : ChunkHandler("ENGN", ChunkType::Table) {}
 
+	/** Serialize each existing native Engine's history at its actual retained index. */
 	void Save() const override
 	{
 		SlTableHeader(_engine_desc);
 
+		// Retain the complete actual catalogue history, including explicit company denial/hiding; a later paid replacement may not infer availability from hull ownership alone.
 		for (Engine *e : Engine::Iterate()) {
 			SlSetArrayIndex(e->index);
 			SlObject(e, _engine_desc);
 		}
 	}
 
+	/** Stage original native history before content definitions exist; final publication remains CopyTempEngineData's sole responsibility. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_engine_desc, _engine_sl_compat);
@@ -98,11 +108,25 @@ struct ENGNChunkHandler : ChunkHandler {
 	}
 };
 
-/**
- * Copy data from temporary engine array into the real engine pool.
+/** Finish only a legacy canonical Space definition that never received native startup, preserving every initialized/denied/preview history and its saved user-hidden flags.
+ * @param engine Actual existing native definition after all of its own saved fields have been copied; this allocates no mapping, hull or material owner.
  */
+static void RestoreUnstartedSpaceEngine(Engine &engine)
+{
+	// Only pre429 canonical mappings with the entire untouched constructor/startup pattern qualify. Native availability denial retains initialized flags/reliability phases, so it cannot be overwritten by a migration or a replacement consumer.
+	if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceReplacementSettlement) || engine.type != VehicleType::Space ||
+		GetSpaceEngine(engine.VehInfo<SpaceVehicleInfo>().model) != engine.index || engine.flags.Any() || engine.company_avail.Any() || engine.age != 0 ||
+		engine.reliability_start != 0 || engine.reliability_max != 0 || engine.reliability_final != 0 || engine.reliability_spd_dec != 0 ||
+		engine.duration_phase_1 != 0 || engine.duration_phase_2 != 0 || engine.duration_phase_3 != 0 ||
+		engine.preview_asked.Any() || engine.preview_company != CompanyID::Invalid() || engine.preview_wait != 0) return;
+	AutoRestoreBackup hidden(engine.company_hidden); // User catalogue hiding is saved preference, independent of this missing native startup; restore it exactly after the original startup owner runs.
+	StartupNewEngine(&engine);
+}
+
+/** Copy all saved native history before repairing only proven never-initialized legacy Space definitions; no physical producer, company money or hull identity changes. */
 void CopyTempEngineData()
 {
+	// Reconstruct each original native Engine at its retained index. Complete initialized saved history takes precedence over runtime definition defaults and is never reset by later replacement admission.
 	for (Engine *e : Engine::Iterate()) {
 		if (e->index >= _temp_engine.size()) break;
 
@@ -124,20 +148,25 @@ void CopyTempEngineData()
 		e->company_avail       = se->company_avail;
 		e->company_hidden      = se->company_hidden;
 		e->name                = se->name;
+		RestoreUnstartedSpaceEngine(*e);
 	}
 
 	ResetTempEngineData();
 }
 
+/** Clear detached native Engine-history staging after publication or world teardown; this resets no live catalogue definition. */
 void ResetTempEngineData()
 {
 	_temp_engine.clear();
 	_temp_engine.shrink_to_fit();
 }
 
+/** Read-only historical custom-name transport; original names join the existing staged Engine history rather than creating new definitions. */
 struct ENGSChunkHandler : ChunkHandler {
+	/** Register the original legacy name family for compatibility only. */
 	ENGSChunkHandler() : ChunkHandler("ENGS", ChunkType::ReadOnly) {}
 
+	/** Restore original legacy custom names into their matching detached Engine indices. */
 	void Load() const override
 	{
 		/* Load old separate String ID list into a temporary array. This
@@ -162,9 +191,12 @@ static const SaveLoad _engine_id_mapping_desc[] = {
 	SaveLoad::Variable<VarFileType::U8>("substitute_id", SLE_OBJECT_ADDRESS(EngineIDMapping, substitute_id)),
 };
 
+/** Native package/local-role-to-Engine mapping transport; actual retained indices remain authoritative across load and paid replacement. */
 struct EIDSChunkHandler : ChunkHandler {
+	/** Register the sole original native Engine mapping table. */
 	EIDSChunkHandler() : ChunkHandler("EIDS", ChunkType::Table) {}
 
+	/** Serialize complete native role mappings in actual Engine-index order without allocating replacement definitions. */
 	void Save() const override
 	{
 		SlTableHeader(_engine_id_mapping_desc);
@@ -191,6 +223,7 @@ struct EIDSChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Restore only admitted saved native vehicle-family mappings, leaving physical commissioning to its separate paid producer. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_engine_id_mapping_desc, _engine_id_mapping_sl_compat);
@@ -201,6 +234,7 @@ struct EIDSChunkHandler : ChunkHandler {
 		while ((index = SlIterateArray()) != -1) {
 			EngineIDMapping eid;
 			SlObject(&eid, slt);
+			// A mapping cannot manufacture another vehicle family or introduce Space identities into a format predating their actual native owner.
 			if (!IsCompanyVehicleType(eid.type) || (eid.type == VehicleType::Space && IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles))) SlErrorCorrupt("Invalid engine vehicle type");
 			_engine_mngr.SetID(eid.type, eid.internal_id, eid.grfid, eid.substitute_id, static_cast<EngineID>(index));
 		}

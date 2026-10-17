@@ -2,6 +2,8 @@
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md task16.1; native job progress/footprint presentation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1; native orbital module selector and Core activation.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; actual per-model and immutable saved service bills.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; native composition/trajectory and retained descent presentation.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -541,6 +543,9 @@ STR_SPACE_ORDER_PROGRESS                                        :Order {NUM}/{NU
 STR_SPACE_SCAN_PROGRESS                                         :Scan: {NUM}/148 working ticks
 STR_SPACE_ORDER_ROW                                             :{NUM}: {STRING} {STRING} #{NUM}
 STR_SPACE_BODY_LOCATION                                         :Current plane position: {NUM}, {NUM}
+STR_SPACE_BODY_COMPOSITION                                      :Primary resource: {STRING}
+STR_SPACE_BODY_TRAJECTORY                                       :Trajectory: X {RAW_STRING}{DECIMAL}, Y {RAW_STRING}{DECIMAL}; speed {DECIMAL} plane tiles/day
+STR_SPACE_PROBE_DESCENT                                         :Pod #{COMMA}: {STRING}; {COMMA} {STRING}; {COMMA} descent ticks left
 STR_SPACE_APPROACH                                              :Pursuing moving target
 STR_SPACE_ATTACHED                                              :Attached survey
 STR_SPACE_RETURN                                                :Returning to staging point
@@ -5725,6 +5730,7 @@ STR_ERROR_RAIL_VEHICLE_NOT_AVAILABLE                            :vehicle is not 
 STR_ERROR_ROAD_VEHICLE_NOT_AVAILABLE                            :vehicle is not available
 STR_ERROR_SHIP_NOT_AVAILABLE                                    :ship is not available
 STR_ERROR_AIRCRAFT_NOT_AVAILABLE                                :aircraft is not available
+STR_ERROR_SPACE_VEHICLE_NOT_AVAILABLE                           :space vehicle is not available
 
 ###length VEHICLE_TYPES
 STR_ERROR_CAN_T_REFIT_TRAIN                                     :Can't refit train...
@@ -6003,8 +6009,16 @@ STR_SPACE_TARGET_CRAFT                                          :craft
 STR_SPACE_RETURNS_PENDING                                       :Waiting for pending cargo descents
 STR_SPACE_SERVICE_REQUIRED                                      :Service required: RFMT 1 + ELEC 1
 STR_SPACE_PODS_MISSING                                          :Waiting for paid replacement pods
-STR_SPACE_PROBE_SERVICE_STATE                                   :Return allowance {NUM}, pending {NUM}, pods {NUM}, service {NUM}/148
+STR_SPACE_PROBE_SERVICE_STATE                                   :Return allowance {NUM}, pending {NUM}, pods {NUM}
 STR_SPACE_PROBE_PARTS                                           :Service parts: RFMT {NUM}, ELEC {NUM}
+STR_SPACE_MINER_BUDGET                                          :Mining: {NUM} t hold, {NUM} units per {NUM} work ticks
+STR_SPACE_MINER_WORK                                            :Extraction work {NUM}/{NUM}; lifetime extracted {COMMA} units
+STR_SPACE_SERVICE_BILL                                          :{STRING}: {NUM} RFMT + {NUM} ELEC, {NUM} work ticks, {NUM} returns
+STR_SPACE_SERVICE_ONBOARD                                       :Onboard service: {NUM}/{NUM} work ticks remaining; {STRING}
+STR_SPACE_SERVICE_CONTAINED                                     :Module {NUM}, berth {NUM}: {NUM}/{NUM} work ticks remaining
+STR_SPACE_SERVICE_LEGACY_ROLE                                   :Original legacy probe
+STR_SPACE_SERVICE_RESERVED                                      :Reserved parts: {NUM} RFMT, {NUM} ELEC
+STR_SPACE_SERVICE_SENDER_LOST                                   :Original service probe {COMMA} unavailable; reserved parts retained
 STR_SPACE_NATIVE_SURVEY_STATUS                                  :{VEHICLE}: {STRING}
 STR_LAUNCH_RESUPPLY_SELECT                                      :Set resupply receiver
 STR_LAUNCH_RESUPPLY_START                                       :Launch resupply
@@ -6076,7 +6090,7 @@ STR_CORE_SERVICE_UNLOAD_METAL                                   :Unload RFMT
 STR_CORE_SERVICE_UNLOAD_ELECTRONICS                             :Unload ELEC
 STR_CORE_SERVICE_LOAD_METAL                                     :Load RFMT
 STR_CORE_SERVICE_LOAD_ELECTRONICS                               :Load ELEC
-STR_CORE_SERVICE_STOCK                                          :Service stock: {COMMA} RFMT, {COMMA} ELEC (service needs 1 of each)
+STR_CORE_SERVICE_STOCK                                          :Loose service stock: {COMMA} RFMT, {COMMA} ELEC
 STR_CORE_SERVICE_STATUS                                         :Service: {STRING}; {COMMA} work ticks remaining; {COMMA} completed
 STR_CORE_SERVICE_CRAFT                                          :Service probe: {COMMA}
 STR_CORE_SERVICE_IDLE                                           :berth available
@@ -6700,10 +6714,40 @@ STR_SPACE_MODULE_REMOVE_SERVICE                              :Removal blocked: c
 STR_SPACE_MODULE_REMOVE_CONSTRUCTION                         :Removal blocked: cancel and evacuate the construction job first.
 STR_SPACE_MODULE_REMOVE_VEHICLE                              :Removal blocked: a craft still occupies the footprint or approach.
 STR_SPACE_MODULE_REMOVE_DEPENDENT                            :Removal blocked: occupied or stocked modules need this Core.
-STR_SPACE_MODULE_REMOVE_CONNECTION                           :Removal blocked: disconnect Docks from this power source first.
+STR_SPACE_MODULE_REMOVE_CONNECTION                           :Removal blocked: disconnect work modules from this power source first.
 STR_SPACE_MODULE_REMOVE_UTILITY                              :Removal blocked: the power connection cannot be retired yet.
 STR_SPACE_MODULE_REMOVE_HISTORY                              :Removal blocked: the completed-work history is full.
 STR_SPACE_MODULE_EVACUATE                                     :Evacuate cargo and cancel jobs
 STR_SPACE_MODULE_EVACUATE_NEXT                                :Next cargo destination
 STR_SPACE_MODULE_EVACUATE_DESTINATION                         :Cargo destination: module {COMMA}. Craft must depart before removal.
 STR_SPACE_MODULE_EVACUATE_MISSING                             :No adjacent safe inventory can hold the whole evacuation.
+
+# Paid Assembly facility controls: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group6B.
+STR_SPACE_ASSEMBLY_READY                                      :Assembly ready
+
+# Paid manufacturing reservations: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group7. Append to preserve earlier saved string identities.
+STR_SPACE_MANUFACTURE_NEXT_MODEL                              :Next vehicle recipe
+STR_SPACE_MANUFACTURE_NEXT_SOURCE                             :Next input inventory
+STR_SPACE_MANUFACTURE_QUEUE                                   :Queue manufacture
+STR_SPACE_MANUFACTURE_CANCEL                                  :Cancel / clear manufacture job
+STR_SPACE_REPLACEMENT_CANCEL                                  :Keep both hulls
+STR_SPACE_REPLACEMENT_CANCEL_HINT                             :Cancel the old-hull replacement request. Finish this paid assembly as an ordinary purchase; keep the original hull and its assets. Spent materials, work and capital are not refunded.
+STR_SPACE_MANUFACTURE_MINING                                  :Mining probe
+STR_SPACE_MANUFACTURE_SURVEY                                  :Survey probe
+STR_SPACE_MANUFACTURE_BUILDER                                 :Construction probe
+STR_SPACE_MANUFACTURE_HEAVY                                   :Heavy robot
+STR_SPACE_MANUFACTURE_HAULER                                  :Orbital hauler
+STR_SPACE_MANUFACTURE_RECIPE                                  :{STRING}: {CURRENCY_LONG}
+STR_SPACE_MANUFACTURE_SOURCE                                  :Input inventory: module {COMMA}
+STR_SPACE_MANUFACTURE_SOURCE_MISSING                          :Choose an adjacent owned Core or Storage for inputs.
+STR_SPACE_MANUFACTURE_WAITING                                 :Waiting for power, inputs or a free berth.
+STR_SPACE_MANUFACTURE_RESERVED                                :Inputs reserved; waiting for assembly work.
+STR_SPACE_MANUFACTURE_INPUT                                   :{STRING}: {COMMA}/{COMMA}
+
+# Paid work and prepared canonical materialization: r2mlvs11-orbital-stations-and-manufacturing.md Group8; append to preserve earlier native string identities.
+STR_SPACE_MANUFACTURE_PROGRESS                                :Assembly work: {COMMA}/{COMMA} ticks
+STR_SPACE_MANUFACTURE_CAPACITY_WAIT                           :Work paid; waiting for vehicle, engine, unit or berth capacity.
+STR_SPACE_MANUFACTURE_COMPLETE                                :Vehicle {COMMA} complete; clear this job before the next request.
+
+# Distinct Assembly-only miner21: r2mlvs11-orbital-stations-and-manufacturing.md Group9B; append to preserve all existing saved/native string identities.
+STR_SPACE_MANUFACTURE_HEAVY_MINING                             :Heavy mining robot

@@ -1,0 +1,21 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.1. Exact first own Rich Rare-Earth natural-body original; native selection pending.",
+  "key": "rich-asteroid-free-n-ne-e-se-v1",
+  "asset_id": "asteroid.rare-earth",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "status": "pending_original_review",
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original natural RICH RARE-EARTH ASTEROID for classic1990s Tycoon pixel-art game. A COMPACT STEEP rusty umber/reddish-brown angular boulder, irregular truncated-pyramidal volume with tall BLUNT CENTRAL REAR RIDGE and a LOWER SQUARED CHIPPED FRONT FACE. One BROAD embedded VIOLET/LILAC granular mineral pocket fills a broken zigzag fissure on the upper RIGHT face. One shallow DARK TRIANGULAR pit on the opposite upper LEFT shoulder. Warm matte brown/ochre stone facets, dark chocolate crevices and restrained deep-violet/lilac mineral clusters. No shiny silver nodules or white ice. Solid natural connected rock; mineral is embedded in the fissure, not a growth of external crystal spikes.\nFour genuine physical yaw views of the SAME rigid boulder, fixed2:1 isometric camera and fixed upper-left SCREEN light. TOP LEFT N: lower squared/chipped FRONT face points UP/away; TOP RIGHT NE: front upperRIGHT; BOTTOM LEFT E: front RIGHT; BOTTOM RIGHT SE: front lowerRIGHT/toward viewer. Taller blunt central rear ridge opposite the front. Body-fixed violet fissure and triangular pit turn naturally with yaw. No flat rotation/mirror or rotating screen lighting. Clearly compact steep boulder, no tapered beak/longnose or low flattened slab. No extra lobes, rocks, metal hull, probe, machinery, hardware, ice, rings, glow, satellites or floor.\nRestrained crisp classic1990s Tycoon pixel clusters with limited warm brown/ochre/charcoal and violet/lilac palette, broad readable facets, no photographic noise or smooth3Drender. Mineral pocket should remain a readable violet accent at tiny native scale. Each complete boulder roughly350-410px wide and260-300px tall, maximum430wide/320tall, centered with very generous empty alpha margins.\nSAFE BORDERED1536x1024 real-transparent2x2 source sheet. Four straight opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Each complete cutout WELL inside its own cell with >=64px REAL TRANSPARENT empty clearance to EVERY frame. No frame/gutter touching, overlap or clipping. Magenta is separator only, never mineral/rock artwork. Real transparent background/margins/gutters, no paintedcheckerboard, haze, gradient, shadow, ground, backdrop, text, labels, numbers or diagrams. Free normal body only: no mining glint, exhausted patch, damage or resource quantity indicators. Exact one physical model and source separation take priority over filling cells.\nMINERAL COLOR CONTROL: embedded mineral is muted BLUE-VIOLET/LAVENDER, around#8874A8 and#B4A0CC with dark#504060 crevices. Never neon pink/pure magenta. Keep green content visible in lavender shading; pure magenta is reserved exclusively for the external source frames.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-4e6b6392-f2a9-4d52-9570-692d5d44679c.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v1.png",
+  "sha256": "2c2cccf1290d9fa8c84532165e8f118c3888fffd51daddeef4b2852da92a9150"
+}

@@ -86,8 +86,49 @@ and target generations. Last-facility launch retirement retains/refuses stored
 cargo according to surviving ordinary freight facilities. Every new Vehicle
 body initializes its saved round-trip duration, including wagons without
 orders.26 owner families match current ordinary/replayed saves in both builds.
-Final authored/packed artwork and live network acceptance remain separate
-unfinished gates in the handoff, as do later manufacturing/hauler producers.
+That423 handoff is a dated producer boundary. The later438 runtime below
+records delivered mining, manufacturing/hauler consumers and joined mining
+socket replay; final authored/packed artwork and Plan11's broader acceptance
+remain open under their own source tasks.
+
+## Native moving-target mining and runtime evidence
+
+[Plan10](../../upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md)
+and its [current438 handoff](../../upgrades/2026-10/r2mlsp-z-z-p-probe-runtime-handoff.md)
+retain one actual Vehicle-pool hull and incarnation through Approach, Mining,
+Return and Holding. Stable asteroid IDs resolve directly to the original
+finite body; matching native leases alone permit attached motion/work.
+Body motion/index publication and all attached transforms precede native
+craft decisions. `CommitSpaceMiningExtraction` emits a whole admitted native
+CargoPacket batch and debits only its finite body; refusal keeps the last
+partial interval and all material. Model15 earns two units per74 working
+opportunities into its20-unit hold. Rendering earns no opportunities.
+
+`CmdSetSpaceMissionChecked` binds assignment/Recall to the player's selected
+generation at agreed execution; old generation-free arguments/IDs remain
+offline-compatible and refuse multiplayer. Recall retains the last body as
+nonactionable departure/history, releases its lease/uncommitted work and
+preserves emitted cargo. The shared clear homeward exit precedes actual
+owned20-tile circle entry. Original shells, manifest allowance, descent,
+paid148-tick service and linked Surface freight/payment remain their native
+owners. Actual three-resource missions, repeated batches and train/lorry
+refinery delivery are accepted without another cargo registry or grant.
+
+Company scan receipts alone authorize inspector quantities. Actual typed
+survey/construction/ReturnService state uses original work/inventory owners.
+Plan10's joined TCP client issues assignment and shell release, with six
+matching frame/tick/elapsed checkpoints and55 physical families between peers;
+visible/hidden/local/queued missions also agree. This verifies mining replay,
+while Plan11's remaining broader network/end-to-end gates stay explicit.
+
+Group21 measures exact10/160/10,240/14,336 populations, clustered drift and
+narrow maps. Each body takes one motion and one native index update per
+opportunity; target lookup is direct. Existing shared arbitration is bounded
+by64 hulls and probe/slot pairs. Local bucket queries copy and sort their real
+candidates, including the entire14,336-body cluster. Opt-in thread-local
+work counters have no persistent or command authority; their timings do not
+claim whole-game FPS or paid performance-world commissioning. Final Space
+family sources, packed loading and ordinary-game art review remain pending.
 
 ## Pool and chain
 

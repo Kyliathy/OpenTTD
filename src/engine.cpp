@@ -5,9 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file engine.cpp Base for engine handling and canonical native freight dates. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
+/** @file engine.cpp Base for engine handling and canonical native freight dates.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; new paid runtime definitions use the same native availability/ageing authority.
+ */
 
 #include "stdafx.h"
+#include "space_mining_tuning.h"
 #include "underground_vehicle.h"
 #include "space_vehicle.h"
 #include "core/container_func.hpp"
@@ -313,7 +317,11 @@ uint Engine::DetermineCapacity(const Vehicle *v, uint16_t *mail_capacity) const
  */
 Money Engine::GetRunningCost() const
 {
-	if (this->type == VehicleType::Space) return 100 * CalendarTime::DAYS_IN_YEAR;
+	if (this->type == VehicleType::Space) {
+		// Purchase information uses the same declared idle rate as the actual hull; heavy mining cannot advertise small-probe upkeep while charging its own larger native account.
+		const auto *miner = GetSpaceMiningTuning(this->VehInfo<SpaceVehicleInfo>().model);
+		return (miner != nullptr ? miner->idle_per_day : 100) * CalendarTime::DAYS_IN_YEAR;
+	}
 	Price base_price;
 	uint cost_factor;
 	switch (this->type) {
@@ -841,20 +849,35 @@ void StartupOneEngine(Engine *e, const TimerGameCalendar::YearMonthDay &aging_ym
 	}
 }
 
-/**
- * Start/initialise all our engines. Must be called whenever there are changes
- * to the NewGRF config.
- */
+/** @return Current native ageing date capped by the content-owned cutoff, shared by full catalogue startup and an actual newly commissioned definition. */
+static TimerGameCalendar::YearMonthDay GetEngineAgingYearMonthDay()
+{
+	const auto date = std::min(TimerGameCalendar::date, TimerGameCalendar::ConvertYMDToDate(_year_engine_aging_stops, 0, 1));
+	return TimerGameCalendar::ConvertDateToYMD(date);
+}
+
+/** @copydoc StartupNewEngine */
+void StartupNewEngine(Engine *engine)
+{
+	assert(engine != nullptr);
+	// A genuinely uninitialized definition can extend the derived catalogue cutoff. Only its native creation/load owner may invoke startup; initialized saved availability/reliability retain their existing history.
+	SetYearEngineAgingStops();
+	StartupOneEngine(engine, GetEngineAgingYearMonthDay(), 0);
+	CalcEngineReliability(engine, false);
+}
+
+/** Start/initialise all existing Engines after NewGRF content changes, retaining the original shared startup seed policy. */
 void StartupEngines()
 {
 	/* Aging of vehicles stops, so account for that when starting late */
-	const TimerGameCalendar::Date aging_date = std::min(TimerGameCalendar::date, TimerGameCalendar::ConvertYMDToDate(_year_engine_aging_stops, 0, 1));
-	TimerGameCalendar::YearMonthDay aging_ymd = TimerGameCalendar::ConvertDateToYMD(aging_date);
+	const auto aging_ymd = GetEngineAgingYearMonthDay();
 	uint32_t seed = Random();
 
+	// Publish the complete catalogue's native availability under its original shared seed before any variant reads another definition's reliability fields.
 	for (Engine *e : Engine::Iterate()) {
 		StartupOneEngine(e, aging_ymd, seed);
 	}
+	// Reliability is a separate pass because a variant may refer to a later Engine; every parent must already have its original startup state.
 	for (Engine *e : Engine::Iterate()) {
 		CalcEngineReliability(e, false);
 	}

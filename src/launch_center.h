@@ -4,6 +4,7 @@
 /**
  * @file launch_center.h Native launch-center placement, Surface handling and orbital descent contracts.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups1-7/7B/12-14.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; immutable descent sender/mass provenance survives the original hull.
  * Station owns the immutable anchor, hub links and Surface jobs; SpacePod owns
  * descent packets. Saved records contain packet references, never another packet
  * list. Empty or stale generation-qualified references confer no authority.
@@ -45,6 +46,7 @@ struct LaunchCenterRef {
 
 /** Saved resumable descent failures; blocked cargo remains owned by its paid pod. */
 enum class SpaceDescentBlock : uint8_t { None, TargetLost, StorageFull, CompanyRemoved, End };
+inline constexpr uint16_t SPACE_DESCENT_LEGACY_SENDER_MODEL = UINT16_MAX; ///< Retained pre434 unknown role; it carries only the original conservative20t rights.
 /** Owned by the one paid passive pod until its cargo reaches actual Surface inventory. */
 struct SpaceDescentJob {
 	/** Construct an empty owner; commit installs its identity, reservations and actual packets together. */
@@ -58,6 +60,9 @@ struct SpaceDescentJob {
 	SpacePoint release_point{};
 	VehicleID sender = VehicleID::Invalid();
 	uint64_t sender_generation = 0;
+	uint16_t sender_model = SPACE_DESCENT_LEGACY_SENDER_MODEL; ///< Immutable actual release role, retained after sender loss; old receipts stay explicitly unknown.
+	uint8_t unit_weight = 0; ///< Actual CargoSpec weight at release; zero only for unchanged legacy-unknown provenance.
+	uint16_t freight_mass = 0; ///< Complete released mass in sixteenths; quantity/weight arithmetic remains independently checkable after sender loss.
 	CargoType cargo = INVALID_CARGO;
 	uint16_t quantity = 0, remaining_ticks = 0, age_ticks = 0;
 	SpaceDescentBlock blocked = SpaceDescentBlock::None;
@@ -71,11 +76,27 @@ struct SpaceDescentRecord {
 	SpacePoint release_point{};
 	VehicleID sender = VehicleID::Invalid();
 	uint64_t sender_generation = 0;
+	uint16_t sender_model = SPACE_DESCENT_LEGACY_SENDER_MODEL; ///< Copied immutable release role; numeric vehicle reuse grants no new authority.
+	uint8_t unit_weight = 0; ///< Copied actual release dimension, never borrowed from the open world's CargoSpecs.
+	uint16_t freight_mass = 0; ///< Copied total release mass; this is provenance, not a second packet/cargo owner.
 	CargoType cargo = INVALID_CARGO;
 	uint16_t quantity = 0, remaining_ticks = 0, age_ticks = 0;
 	SpaceDescentBlock blocked = SpaceDescentBlock::None;
 	std::vector<std::pair<CargoPacketID, StationID>> packets;
 };
+/** Query the immutable mass allowance retained by a descent after its sender disappears.
+ * @param model Actual saved release role, or explicit old unknown provenance.
+ * @return Sixteenth-tonne bound for15/20/21 or conservative legacy history; zero denies every unrelated role.
+ */
+uint16_t GetSpaceDescentMassLimit(uint16_t model);
+/** Validate a detached immutable descent receipt without consulting native pools or active-world cargo definitions.
+ * @param model Actual release role, or explicit retained legacy-unknown marker.
+ * @param quantity Whole positive released units, bounded by the original40-unit wire/work contract.
+ * @param unit_weight Original physical unit dimension; zero only for the old unknown receipt.
+ * @param freight_mass Original complete mass; known receipts must equal quantity times unit weight and fit the exact role.
+ * @return Whether role, dimensions and historical mass are coherent; actual native/copy owners separately validate packet custody.
+ */
+bool IsSpaceDescentReceiptValid(uint16_t model, uint16_t quantity, uint8_t unit_weight, uint16_t freight_mass);
 /**
  * Preflight paid-shell release without moving cargo, charging income or reserving twice.
  * Checks exact identities, company, compatible deployed hull, current Q16 position,

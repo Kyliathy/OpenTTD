@@ -5,10 +5,16 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file autoreplace_cmd.cpp Deals with autoreplace execution but not the setup. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
+/** @file autoreplace_cmd.cpp Native replacement policy and execution.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; actual Space role rules feed the paid producer and prepared settlement.
+ */
 
 #include "stdafx.h"
 #include "underground_vehicle.h"
+#include "space_replacement.h"
+#include "space_purchase.h"
+#include "space_vehicle.h"
 #include "company_func.h"
 #include "train.h"
 #include "tbm.h"
@@ -73,6 +79,11 @@ bool CheckAutoreplaceValidity(EngineID from, EngineID to, CompanyID company)
 
 	/* check that the new vehicle type is available to the company and its type is the same as the original one */
 	if (!IsEngineBuildable(to, type, company)) return false;
+	if (type == VehicleType::Space) {
+		// Space rules select actual canonical producer roles; each real old hold, service owner and instruction is checked again by prepared physical handover before payment/retirement.
+		return IsSpacePurchaseEngine(from) && IsSpacePurchaseEngine(to) && AreSpaceReplacementModelsCompatible(
+			e_from->VehInfo<SpaceVehicleInfo>().model, e_to->VehInfo<SpaceVehicleInfo>().model);
+	}
 
 	switch (type) {
 		case VehicleType::Train: {
@@ -311,6 +322,7 @@ static CommandCost GetNewEngineType(const Vehicle *v, const Company *c, bool alw
 	if (e == EngineID::Invalid() || IsEngineBuildable(e, v->type, _current_company)) return CommandCost();
 
 	/* The engine we need is not available. Report error to user */
+	if (v->type == VehicleType::Space) return CommandCost(STR_ERROR_SPACE_VEHICLE_NOT_AVAILABLE); // Space is outside the four ordinary vehicle error offsets; report its actual native role.
 	return CommandCost(STR_ERROR_RAIL_VEHICLE_NOT_AVAILABLE + to_underlying(v->type));
 }
 
@@ -753,6 +765,17 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 {
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v)) return CMD_ERROR;
+	if (v->type == VehicleType::Space) {
+		const auto ownership = CheckOwnership(v->owner);
+		if (ownership.Failed()) return ownership;
+		if (v->vehstatus.Test(VehState::Crashed)) return CMD_ERROR;
+		EngineID engine;
+		const auto policy = GetNewEngineType(v, Company::Get(v->owner), false, engine);
+		if (policy.Failed()) return policy;
+		if (engine == EngineID::Invalid()) return CommandCost(STR_ERROR_AUTOREPLACE_NOTHING_TO_DO);
+		// The actual company/group age policy chooses one canonical target; the physical producer quotes full new materials/capital while the original identity survives. Never enter ordinary temporary estimate construction.
+		return ReplaceSpaceVehicle(flags, *SpaceVehicle::From(v), engine);
+	}
 	// Replacement estimates can construct temporary trains: protect the whole fixed machinery prefix before any replacement lookup or allocation.
 	for (const Vehicle *part = v->First(); part != nullptr; part = part->Next()) {
 		if (IsTBMCutterEngine(part->engine_type)) return CMD_ERROR;

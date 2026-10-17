@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; genuine remaining phase-B mechanism views with exact two-reference ancestry; component/layout/native phase approval remains pending",
+  "key": "small-miner-mining-b-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original small mining probe model15 ACTIVE MINING mechanical PHASE B, remaining S/SW/W/NW views.\nImage1 is the SAME model's opposite-heading PHASE A and is the physical angles/layout edit target.\nImage2 is the SAME model's first-four-heading PHASE B, provided ONLY as the exact mechanical-stroke guide. Preserve image1's S/SW/W/NW directions; do not substitute image2's headings.\n\nChange ONLY the single front drill and the SAME two hook arms into PHASE B:\nRetract the drill along its own axis by about40 source pixels, showing a clearly shorter normal feed stroke. Rotate its broad helical silver/dark flutes about a quarter revolution. Rotate both existing hook jaws inward about20degrees at their original gold hinges, moving their tips about30 source pixels closer to the drill axis. Keep two separate hooks, no crossing through the drill. Match the modest shorter-drill/tighter-jaws phase shown by image2, while preserving true opposite physical camera views.\nDo not change the olive-gray bus, yellow top access panel, TWO navy REAR solar paddles or their joints, or the ONE rear nozzle. No extra equipment, contact asteroid, ore, sparks, dust, glow or flames.\n\nFOUR true physical engine-viewport headings in2x2:\ntop-left S front/drill exactly DOWN;\ntop-right SW front/drill LOWER LEFT;\nbottom-left W front/drill exactly LEFT, exact horizontal side view;\nbottom-right NW front/drill UPPER LEFT.\nFixed elevated orthographic Tycoon camera and fixed UPPER-LEFT SCREEN light. Genuine orientations, never mirror/rotate flat art. Same crisp classic Tycoon pixel clusters, broad matte olive-gray facets, small yellow accents/navy solar cells, tiny36x24 native clarity. No photorealism, shiny3D or painted blur.\n\nSAFE BORDERED transparent1536x1024 with6px opaque pure MAGENTA #FF00FF separators:\nS(24,24)-(744,488), SW(792,24)-(1512,488),\nW(24,536)-(744,1000), NW(792,536)-(1512,1000).\nEach WHOLE craft fits at least48px inside its frame; max450px width270px height, reduce uniformly to fit. No subject pixel reaches frames/gutters/other panels.\nReal transparent alpha background/margins/gutters; magenta only in exterior separator frames.\nNo text, labels, letters, numbers, arrows, stars, floor, scenery, cast shadow or extra props.\nFOUR complete separated opposite physical views of the SAME craft, PHASE B mechanism visibly distinct from phase A.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-mining-a-s-sw-w-nw-v1.png",
+      "sha256": "09a781eadfad1c6c84124544971c3c2f7402ae359f3d0d9c9cabb10a24d1b969",
+      "role": "Same-model opposite-heading phase-A physical model/layout edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-mining-b-n-ne-e-se-v1.png",
+      "sha256": "64baee58666e2ad639185892087b798fd941653808e8f65262fc3b39fbb008fe",
+      "role": "Same-model first-four-heading phase-B feed stroke/tighter-jaw mechanism guide"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-mining-b-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-85125f38-0a10-4d79-a251-5394927da887.png",
+  "status": "pending_measured_layout_and_native_mechanism_phase_review"
+}

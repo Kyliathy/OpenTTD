@@ -1,0 +1,28 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.3. Exact executed original two-tab source phase; native part/model review pending.",
+  "key": "return-pod-tabs-a-n-s-e-w-v1",
+  "asset_id": "vehicle.model-18",
+  "component_kind": "recovery_tabs",
+  "state": "descending",
+  "phase": 0,
+  "directions": [
+    "N",
+    "S",
+    "E",
+    "W"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: selected passive RETURN POD model18, actual two-recovery-tab DESCENT mechanical phaseA: hinge BOTH original small dark-gray rear tabs outward about25degrees, forming TWO short blunt charcoal flaps extending35-45source pixels beyond their original fixed hinges. Preserve exactly two original hinge roots.\nImage1 is the exact selected direct four-view edit target.\nChange ONLY the two existing charcoal recovery tabs beyond their original fixed hinges. No new tabs, fins, landing legs, thrusters, nozzles, glow, heat plume, body panel, cable, hatch or cargo. These are the same two original small rear shoulder flaps, now modestly unfolded; do not turn them into wings, arms, wheels or vehicle supports.\nPreserve EXACT same squat off-white octagonal shell, rounded beveled facets, orange equatorial belt, dark tiled bottom heat shield and one flush forward upper hatch with correct occlusion. Preserve source body position/size, body proportions, fixed2:1 isometric camera and upper-left SCREEN light. N has no forward hatch visible on its near white face; S has the near forward hatch visible and far rear tabs. Respect actual diagonal hatch visibility from selected originals.\nFour genuine physical headings in the following2x2 cells: N top-left, two original tab hinges on DOWN/near rear shoulders; S top-right, two original tab hinges on UP/far rear shoulders; E bottom-left, two original tab hinges on LEFT rear shoulders; W bottom-right, two original tab hinges on RIGHT rear shoulders. Keep actual mounting locations from their source views; tips swing outward while hinges stay fixed. No flat rotation/mirror or relabeled opposite view.\nRestrained classic1990s transport-Tycoon pixel clusters, matte cream/orange/charcoal. Tiny original22x16px native shell; moving tabs add only a few native pixels.\nSAFE BORDERED1536x1024 transparent sheet,6px PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). One COMPLETE separated shell including opened tabs per cell. Original body about370-400px wide/270px high; WHOLE opened subject maximum540px wide/340px high. At least48px completely transparent clearance between every subject pixel and each frame. No clipping, overlap, checkerboard, painted alpha preview, haze, glow, floor/shadow, labels, text or extra props.\nArt only: original SpaceDescentJob remaining_ticks/blocked and SpacePod custody own runtime pose eligibility. This source grants no work, physics, extra recovered shell or native packet quantity.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-packed-direct-n-s-e-w-v1.png",
+      "sha256": "577a330ce10c54ef669a364adc65508e59d6ed84dfda74586400bbc7769d6f16",
+      "role": "Exact selected direct N/S/E/W packed shell edit target, including corrected N/S hatch occlusion and two rear folded tabs"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-2e959c9d-60d0-4997-9d6e-35ef64ec28fa.png",
+  "path": "media/multilayer/source/space/raw/return-pod-tabs-a-n-s-e-w-v1.png",
+  "sha256": "8974e6e89d07a7c7e010afc799050a24d7ae60790bdb5163270a90c84334c410"
+}

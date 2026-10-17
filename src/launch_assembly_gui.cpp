@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file launch_assembly_gui.cpp Native material-paid Surface workshop and explicit orbital freight controls.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups8B/11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; explicit paid Earth replacement cancellation.
  */
 #include "stdafx.h"
 #include "launch_operations.h"
@@ -10,6 +11,7 @@
 #include "space_pod.h"
 #include "space_transition.h"
 #include "space_structure.h"
+#include "space_structure_cmd.h"
 #include "multilayer_space_content.h"
 #include "station_base.h"
 #include "company_func.h"
@@ -47,6 +49,7 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 	NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 5), SetStringTip(STR_LAUNCH_ASSEMBLY_PAUSE), SetFill(1, 0),
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 6), SetStringTip(STR_LAUNCH_ASSEMBLY_RECOVER), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 32), SetStringTip(STR_SPACE_REPLACEMENT_CANCEL, STR_SPACE_REPLACEMENT_CANCEL_HINT), SetFill(1, 0),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL, NWidContainerFlag::EqualSize),
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 7), SetStringTip(STR_LAUNCH_LOGISTICS_BUILD_POD), SetFill(1, 0),
@@ -122,6 +125,8 @@ struct LaunchAssemblyWindow : Window {
 		const auto *s = ResolveLaunchCenter(this->center); if (s == nullptr) { this->Close(); return; }
 		const auto *v = ResolveSpaceCraft(this->selected);
 		const auto *pod = ResolveSpacePod(this->selected_pod);
+		// Cancellation is available only for the exact selected unfinished paid Earth replacement body; painting cannot detach or refund a historical source.
+		this->SetWidgetDisabledState(32, v == nullptr || CmdCancelEarthSpaceReplacement({}, selected.vehicle, selected.generation).Failed());
 		// Quote each canonical recipe independently: another company or a failed native material/slot quote must never enable paid commissioning.
 		for (uint i = 0; i < std::size(models); ++i) this->SetWidgetDisabledState(i + 1, s->owner != _local_company || CmdAssembleLaunchCraft({}, center.station, center.generation, models[i]).Failed());
 		this->SetWidgetDisabledState(5, pod != nullptr ? CmdPauseLaunchPod({}, selected_pod.pod, selected_pod.generation, !pod->state.paused).Failed() :
@@ -287,6 +292,7 @@ struct LaunchAssemblyWindow : Window {
 			this->SetDirty();
 		}
 		if (widget == 31) Command<Commands::BeginLaunchFlight>::Post(STR_LAUNCH_ASSEMBLY_FAILED, selected.vehicle, selected.generation, SpaceOrderTargetKind::Structure, module_destination.structure.base(), module_destination.generation);
+		if (widget == 32) Command<Commands::CancelEarthSpaceReplacement>::Post(STR_LAUNCH_ASSEMBLY_FAILED, selected.vehicle, selected.generation);
 	}
 };
 /** @param center Exact existing paid workshop whose native window should be shown. */

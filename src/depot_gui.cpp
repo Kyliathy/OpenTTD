@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file depot_gui.cpp The GUI for depots. */
+/** @file depot_gui.cpp The GUI for depots.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BB; paid native clone callbacks show actual jobs or hulls.
+ */
 
 #include "stdafx.h"
 #include "train.h"
@@ -33,6 +35,8 @@
 #include "depot_cmd.h"
 #include "train_cmd.h"
 #include "vehicle_cmd.h"
+#include "space_clone.h"
+#include "space_structure.h"
 #include "core/geometry_func.hpp"
 
 #include "widgets/depot_widget.h"
@@ -121,14 +125,21 @@ static WindowDesc _aircraft_depot_desc(
 
 extern void DepotSortList(VehicleList *list);
 
-/**
- * This is the Callback method after the cloning attempt of a vehicle
- * @param result the result of the cloning command
- * @param veh_id cloned vehicle ID
- */
-void CcCloneVehicle(Commands, const CommandCost &result, VehicleID veh_id)
+/** @copydoc CcCloneVehicle */
+void CcCloneVehicle([[maybe_unused]] Commands command, const CommandCost &result, VehicleID veh_id,
+	TileIndex tile, VehicleID source, [[maybe_unused]] bool share_orders)
 {
 	if (result.Failed()) return;
+	if (veh_id == VehicleID::Invalid()) {
+		const auto *factory = GetSpacePurchaseAssembly(tile);
+		// A synchronous queued clone callback shows only the actual original local factory/job. The source can later disappear without making Invalid a vehicle or replacing its captured incarnation.
+		if (factory == nullptr || factory->state.owner != _local_company || !factory->module || !factory->module->manufacture) return;
+		const auto &job = *factory->module->manufacture;
+		// This callback runs before another command can replace the fresh request; its captured source identifies the admitted clone without consulting mutable source orders/assets.
+		if (job.phase != OrbitalManufacturePhase::Queued || !job.clone || job.clone->source.vehicle != source) return;
+		ShowSpaceConstructionWindow(GetSpaceStructureReference(*factory));
+		return;
+	}
 
 	const Vehicle *v = Vehicle::Get(veh_id);
 

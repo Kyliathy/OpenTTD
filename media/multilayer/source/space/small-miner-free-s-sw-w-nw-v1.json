@@ -1,0 +1,24 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63; exact executed edit prompt and immutable directional source ancestry; acceptance remains measured source/model review",
+  "key": "small-miner-free-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "free",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: remaining FOUR genuine physical engine-viewport headings of the approved original small mining probe, vehicle.model-15 FREE-FLIGHT base.\nImage1 is the approved N/NE/E/SE model and framed-layout edit target. Preserve that exact ONE physical spacecraft and its material/pixel-art style. Redraw it in the remaining opposite physical views; do not mirror or rotate flat source pixels.\n\nExact identity: ONE olive-gray compact wedge bus, ONE front axial cylindrical silver mining drill, TWO small articulated hook arms flanking the drill, TWO rectangular dark-navy solar paddles on opposite sides of the REAR bus, ONE short central rear maneuvering nozzle, ONE small yellow upper access panel. Same drill length, hull dimensions, hooks, panel count/size/struts and nozzle in every view. Keep the hooks compact, close to the drill, in the same free-flight pose. No antenna, extra panel, dish, thruster, hatch, windows, cargo, person or background. Show physically occluded components only as the camera permits. No equipment duplication.\n\nRequested output FOUR remaining true engine-viewport headings, same fixed elevated orthographic Tycoon camera and fixed UPPER-LEFT SCREEN LIGHT:\nTOP LEFT S: drill/front A end points exactly DOWN; vertical centerline, genuine opposite end-on view, rear nozzle at upper/back end.\nTOP RIGHT SW: drill/front A end points LOWER LEFT; long axis upper-right to lower-left.\nBOTTOM LEFT W: drill/front A end points exactly LEFT; genuine elevated exact SIDE view with HORIZONTAL long axis, rear nozzle at right/back end.\nBOTTOM RIGHT NW: drill/front A end points UPPER LEFT; long axis lower-right to upper-left.\nThese are physical views of the same3D model, not reflected copies. Its two rear paddles stay rear, yellow top panel stays on top. Preserve broad light top facets and charcoal lower faces under fixed upper-left illumination.\n\nCrisp restrained classic 1990s transport-Tycoon pixel-art clusters, olive-gray hull, small yellow accents, navy solar cells with two or three broad blue divisions. Match approved subject proportions/pixel treatment; readable near36x24 native pixels. No photorealism, smooth-render gloss, fine greebles, blur, glow or new component styling.\n\nCreate SAFE BORDERED transparent1536x1024 2x2 source sheet, four complete isolated cutouts:\nPURE OPAQUE MAGENTA #FF00FF separator rectangles approximately6px thick:\nS(24,24)-(744,488), SW(792,24)-(1512,488),\nW(24,536)-(744,1000), NW(792,536)-(1512,1000).\nKeep each whole subject at least48px inside its frame; maximum roughly450px width270px height, reduce uniformly to fit.\nNo hook, drill, paddle, nozzle, edge or shadow may touch a frame or enter a gutter/neighboring cell.\nGenuine transparent alpha background, margins and gutters; retain only visible magenta separator frames.\nNo text, labels, numbers, arrows, direction symbols, floor, stars, scenery, shadows or props.\nFour complete separated new directional views of the IDENTICAL approved small miner.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+      "role": "Approved physical mining model and exact four-panel layout edit target; turn into four genuine remaining engine-viewport headings"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-free-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-de6922a4-147c-441a-b35a-06b5643015c6.png",
+  "status": "pending_measured_layout_and_native_review"
+}

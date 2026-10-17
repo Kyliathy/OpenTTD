@@ -1,0 +1,21 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.1. Exact executed first metallic natural-body source; source/native selection remains pending.",
+  "key": "metallic-asteroid-free-n-ne-e-se-v1",
+  "asset_id": "asteroid.nickel",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "status": "pending_original_review",
+  "prompt": "Use case: stylized-concept.\nAsset: one natural metallic NICKEL ASTEROID for classic1990s Tycoon pixel-art game. Four genuine yaw views of the SAME rigid natural rock, fixed2:1 isometric camera, fixed upper-left SCREEN light. Matte blue-gray blocky facets, charcoal crevices, a few pale silver mineral clusters, crisp restrained low-resolution pixel-art clusters, readable broad silhouette. Not a photorealistic render.\nEXACT BODY: a broad blunt irregular rear lobe, a smaller tapered forward beak, shallow saddle joining them. One broken SILVER mineral seam on the upper RIGHT shoulder of the main rear lobe, and one shallow dark depression on the opposite upper LEFT shoulder. Same silhouette volume, beak, saddle and seam/depression landmarks in every actual physical yaw. No spacecraft, machinery, probe, base, satellites, separate stones, crystals, ice, rings, plume, glow, orbit, floor or cast shadow. Natural dense solid ore-bearing rock.\nFour independent views2x2: TOP LEFT N=small beak pointsUP/away; TOP RIGHT NE=beak upperRIGHT; BOTTOM LEFT E=beak RIGHT; BOTTOM RIGHT SE=beak lowerRIGHT/toward viewer. Turn the actual3D body relative to the fixed camera; never rotate a flat drawing or change screen lighting. Maintain consistent actual body size, each whole rock roughly400-440px wide and240-275px tall. Subtle facet clusters should remain legible when uniformly reduced to about80x55native pixels.\nSAFE BORDERED source sheet1536x1024. Four straight opaque PURE MAGENTA #FF00FF rectangular frames approx6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep each complete rock centered in its cell with at least64px of REAL TRANSPARENT empty clearance from all frame edges. Magenta is only source separator, never model art. Fully transparent background, margins, gutters; no painted checkerboard, haze, gradient, contact shadow, text, labels or diagrams. Nothing clipped or overlapping cells. Safe separation takes priority over large subjects.\nThis is the FREE normal body only. Do not add mining attachment, damage, extracted resources, quantity indicators or state animation.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-4a122169-a234-43b3-adc5-3cfc3ea6b1ae.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v1.png",
+  "sha256": "41391eb75de3a8814ef9e26780c8d4fe9853ad42d442d11c60c751fac0acc71a"
+}

@@ -8,6 +8,8 @@
 /** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "../stdafx.h"
+#include "space_cargo_preview.h"
+#include "../orbital_recipe.h"
 #include "../space_vehicle.h"
 #include "../space_approach.h"
 #include "../space_manifest.h"
@@ -3513,12 +3515,16 @@ bool AfterLoadGame()
 	if (!AcceptLoadedSpaceManifests()) SlErrorCorrupt("Invalid native Space manifest ownership");
 	if (!AcceptLoadedSpaceTransitions()) SlErrorCorrupt("Invalid native Space transition ownership");
 	if (!AcceptLoadedSpaceProduction()) SlErrorCorrupt("Invalid native launch assembly ownership");
+	// Configured metadata must match actual reconstructed required content before accepting physical descent mass; old sources retain their original native-only checks.
+	if (!AcceptLoadedSpaceCargoDimensions()) SlErrorCorrupt("Changed configured Space cargo dimensions");
 	if (!AcceptLoadedSpaceDescents()) SlErrorCorrupt("Invalid native Space descent ownership");
 	if (!AcceptLoadedSpaceStructures()) SlErrorCorrupt("Invalid native orbital construction ownership");
 	if (!AcceptLoadedGeothermalRisers()) SlErrorCorrupt("Invalid native geothermal riser authority"); // Paid electrical links resolve original complete native machinery before the shared utility owner publishes their physical references.
 	// Utility grants bind actual companies and saved layers; accept only after
 	// physical owners and the profile have completed their load fixups.
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
+	// Restore the sole private processing owners only after their exact native module and original utility identities have both admitted this same file.
+	if (!AcceptLoadedOrbitalRecipes()) SlErrorCorrupt("Invalid native orbital processing authority");
 	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
 	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
 	// Saved approach claims resolve only after native hulls, owned sites and body leases have all installed their original identities.

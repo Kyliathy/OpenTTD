@@ -1,0 +1,87 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BG. Append final Space art after all protected M0/M1 and11 preview sprites; no legacy range or definition namespace changes. Source identities are dated completed family handoffs.",
+  "schema_version": 1,
+  "native_route": "native_baseset_space",
+  "native_start": 3599,
+  "protected_native_end_exclusive": 3599,
+  "native_end_exclusive": 5167,
+  "asset_ids": [
+    "vehicle.model-15",
+    "vehicle.model-19",
+    "vehicle.model-20",
+    "vehicle.model-18",
+    "asteroid.nickel",
+    "asteroid.ice",
+    "asteroid.rare-earth"
+  ],
+  "toolchain": {
+    "python": "3.10.0",
+    "pillow": "12.3.0",
+    "grfcodec": "6.2.0",
+    "nforenum": "6.2.0"
+  },
+  "protected_outputs": [
+    {
+      "path": "media/baseset/openttd/map_layers.png",
+      "sha256": "d3a93082ea33dda5759319a3833f86deca1fcf9119fcf2e6543d424f1420a4f1"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers.nfo",
+      "sha256": "d63a614b9c95412d218be6da253efe7dfbd35940f1e197d8ed069eb3bd38f5db"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.png",
+      "sha256": "5bb1311f5c4940eb4718aebcc496122bf3251aba38d46b1f4796a2a60a00c974"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.nfo",
+      "sha256": "47022818191e223e042c7893ca90cf17894dbb84b04ed2261c5d01194e554057"
+    },
+    {
+      "path": "media/baseset/openttd/space_preview.png",
+      "sha256": "913b6ab7e2b24f693b7974c6de10b9b1b390052d2fd6efc7a00358d64cc177af"
+    },
+    {
+      "path": "media/baseset/openttd/space_preview.nfo",
+      "sha256": "2f4b5c9b0ffe3f5954bd730e49c6e2060d556b6e008e27a382ac6fa5b0b3a472"
+    },
+    {
+      "path": "src/table/multilayer_sprite_assets.h",
+      "sha256": "fa96e23b1facf8221817bf1ee7f2ae58fa51ec2664ef13fba225132a68613a71"
+    }
+  ],
+  "source_reviews": {
+    "vehicle.model-15": {
+      "path": "logs/proofs/mlm/native-art/space/small-miner-complete-v1/space-source-manifest.json",
+      "sha256": "a47a8e73e08a5bf40d17f3498d9f785b2bdc07569690672b6ded189b0e17c3e6"
+    },
+    "vehicle.model-19": {
+      "path": "logs/proofs/mlm/native-art/space/survey-complete-v1/space-source-manifest.json",
+      "sha256": "30b7e11419b6132d495d3901303f661e73af63bf553d85ad65fa3011869a8924"
+    },
+    "vehicle.model-20": {
+      "path": "logs/proofs/mlm/native-art/space/construction-complete-v1/space-source-manifest.json",
+      "sha256": "a150041d7278cb3172f7abd36b8fbce799e3c25d670bbe5aa8c6ea06b2d7c961"
+    },
+    "vehicle.model-18": {
+      "path": "logs/proofs/mlm/native-art/space/return-pod-complete-v1/space-source-manifest.json",
+      "sha256": "8a5d9d08406eba12120fb6cd49316019bebe5af31ba8ba4376f5eee80287f755"
+    },
+    "asteroid.nickel": {
+      "path": "logs/proofs/mlm/native-art/space/metallic-complete-v3/space-source-manifest.json",
+      "sha256": "b0516cfb6ce2511d69fc685d38eb941a56682da2eb21bbf1db7f8f63c864c900"
+    },
+    "asteroid.ice": {
+      "path": "logs/proofs/mlm/native-art/space/carbonaceous-complete-v2/space-source-manifest.json",
+      "sha256": "e3aff866e2326671c5ede1dad12f8d26231b5c8f9c4e2e0c9d613edc2381129f"
+    },
+    "asteroid.rare-earth": {
+      "path": "logs/proofs/mlm/native-art/space/rich-complete-v4/space-source-manifest.json",
+      "sha256": "bae0f5675d1d7358e4c31cf8070e20bdde11be1af126b422af85bf77dba6152d"
+    }
+  },
+  "png": "media/baseset/openttd/space_final.png",
+  "nfo": "media/baseset/openttd/space_final.nfo",
+  "header": "src/table/space_sprite_assets.h",
+  "report": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+}

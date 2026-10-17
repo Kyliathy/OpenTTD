@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.1. Exact executed first metallic natural-body source; source/native selection remains pending.",
+  "key": "metallic-asteroid-mining-a-n-ne-e-se-v1",
+  "asset_id": "asteroid.nickel",
+  "state": "mining",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+      "sha256": "66fcf30e0cd93e6cb9277623fac9ef4f5b8c9496dffc50f4b0b73b42c39d45b9",
+      "role": "Selected metallic body N/NE/E/SE; edit only exact silver ore seam surface, all other body pixels are protected original"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 contains the EXACT selected metallic natural asteroid free views, N top-left, NE top-right, E bottom-left, SE bottom-right. Preserve the exact positions, crop registration, dimensions, body outlines, yaw, blue-gray facets, dark depression, saddle, forward beak, screen upper-left light and existing source-frame layout.\nCreate mining SURFACE EFFECT PHASE A by changing ONLY the ONE pale silver ore seam on the upper shoulder of each rock. Keep the silver seam, but add a small localized cluster of warm AMBER/YELLOW chipped mineral glints at the UPPER END of the seam. Exactly one short bright golden surface glint cluster and a couple tiny darker amber chips, all ON TOP OF the existing seam/surrounding immediate stone. This should read as a mining contact flicker when reduced to native scale. Do not place glints outside the body silhouette, no detached dust halo, plume, glow or light rays. No mining tool or vehicle; actual probe is rendered separately. Every other surface/body part is the unchanged original; do not globally recolor or redraw the rock. Phase A glint belongs at the upper end of the seam, phase B will later be a distinct lower-end flicker.\nKeep all four exact genuine physical views and the selected body size. Classic1990s Tycoon pixel clusters, blue-gray/charcoal/pale silver with localized amber effect only. No new crater, rock, ice, hardware, equipment, text or symbols.\nSAFE BORDERED1536x1024 true-transparent2x2 sheet,6px PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Same well-separated small original cutouts centered in cells with >=64px genuinely transparent clearance to every frame. No haze, shadows, floor, backdrop, gradient, painted checkerboard, overlap or clipping. Only authored original seam effect supplies the later physical-part conversion; original body stays protected.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-7b85cb88-b814-4915-8ac5-757ec2d11356.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-mining-a-n-ne-e-se-v1.png",
+  "sha256": "6866d62e006d6de8b34d7ebe50918574d16439039b582f24254238faf66bc930"
+}

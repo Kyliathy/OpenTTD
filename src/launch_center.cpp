@@ -6,6 +6,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group2
  */
 #include "stdafx.h"
+#include "space_order_actions.h"
 #include "launch_center.h"
 #include "launch_site.h"
 #include "launch_operations.h"
@@ -155,6 +156,7 @@ void ForgetLaunchCenter(Station &station)
 	ForgetLaunchHubStation(station);
 	if (station.launch_center == nullptr) return;
 	const auto ref = GetLaunchCenterReference(station);
+	if (!Station::CleaningPool()) ForgetSpaceServiceOrderCenter(ref); // Actual retirement marks only existing onboard work; bulk teardown must not inspect already cleaned vehicle owners.
 	std::erase(_launch_centers, ref);
 	station.launch_center.reset();
 }

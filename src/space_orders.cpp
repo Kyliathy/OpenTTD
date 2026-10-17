@@ -2,12 +2,18 @@
 /** @file space_orders.cpp Typed queue execution over the canonical Vehicle, mining and construction owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group6.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; genuine Visit arrivals feed the native automatic replacement queue.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8B; reached freight/service instructions delegate to their actual physical producers.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group14; explicit paid-pod return inside the owned center's circle.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C; appended heavy mining retains the original queue/mission owner.
  */
 #include "stdafx.h"
 #include "space_orders.h"
+#include "space_order_actions.h"
+#include "space_replacement.h"
 #include "space_approach.h"
 #include "space_vehicle.h"
+#include "space_mining_tuning.h"
 #include "space_manifest.h"
 #include "space_pod.h"
 #include "space_structure.h"
@@ -67,10 +73,10 @@ bool IsSpaceOrderAllowed(uint16_t model, const SpaceOrder &order)
 {
 	if (!ValidOrder(order)) return false;
 	// Only commissioned Space roles enter this controller; ordinary vehicles cannot acquire orbital actions.
-	if (model != 15 && model != 16 && model != 17 && model != 19 && model != 20) return false;
+	if (model != 15 && model != 16 && model != 17 && model != 19 && model != 20 && model != SPACE_HEAVY_MINER_MODEL) return false;
 	switch (order.action) {
 		case SpaceOrderAction::Survey: return model == 19;
-		case SpaceOrderAction::Mine: return model == 15;
+		case SpaceOrderAction::Mine: return GetSpaceMiningTuning(model) != nullptr;
 		case SpaceOrderAction::Construct: return model == 16 || model == 20;
 		case SpaceOrderAction::Unload: return model != 19;
 		case SpaceOrderAction::Visit:
@@ -96,8 +102,8 @@ bool ValidateSpaceOrderRecords(std::span<const SpaceOrderRecord> records, uint64
 			(q.entries.empty() && (q.cursor != 0 || q.started || q.blocked != SpaceOrderBlock::None))) return false;
 		// Every queued craft target must be an already issued incarnation; future targets cannot inherit later hulls.
 		for (const auto &order : q.entries) if (!ValidOrder(order) || (order.target.kind == SpaceOrderTargetKind::Craft && order.target.generation >= next)) return false;
-		// Return/service waits belong only to an actual held Mine action, preserving paid return custody.
-		if (q.blocked >= SpaceOrderBlock::ReturnsPending && q.blocked <= SpaceOrderBlock::PodsMissing && !IsSpaceMiningServiceWait(q)) return false;
+		// Paid return/service waits belong to a held Mine or the reached explicit Return/Service action; unrelated actions cannot inherit another owner's allowance or service state.
+		if (q.blocked >= SpaceOrderBlock::ReturnsPending && q.blocked <= SpaceOrderBlock::PodsMissing && !IsSpaceMiningServiceWait(q) && !IsSpaceReturnServiceWait(q)) return false;
 		// Construction waits require the same live started action/deadline rather than hiding progress in another role.
 		if (q.blocked >= SpaceOrderBlock::MaterialsMissing && q.blocked <= SpaceOrderBlock::BuilderBusy && (!q.started || q.timer_ticks == 0 || q.cursor >= q.entries.size() || q.entries[q.cursor].action != SpaceOrderAction::Construct)) return false;
 		// A queued approach wait cannot hide work or lose the hull's sole physical request.
@@ -251,7 +257,8 @@ CommandCost CmdEditSpaceOrder(DoCommandFlags flags, VehicleID id, uint64_t gener
 	else if (edit == SpaceOrderEdit::MoveUp && (index == 0 || index >= size)) return CMD_ERROR;
 	// Moving downward preserves existing queue bounds and cannot append an unintended instruction.
 	else if (edit == SpaceOrderEdit::MoveDown && size_t{index} + 1 >= size) return CMD_ERROR;
-	if (flags.Test(DoCommandFlag::Execute)) {
+	// Mixed Execute/QueryCost is still an estimate; inspecting a valid instruction must not restart work, release a berth or alter pending replacement running intent.
+	if (flags.Test(DoCommandFlag::Execute) && !flags.Test(DoCommandFlag::QueryCost)) {
 		auto queue = v->space_orders.entries;
 		switch (edit) {
 			case SpaceOrderEdit::Insert: queue.insert(queue.begin() + index, order); break;
@@ -263,7 +270,9 @@ CommandCost CmdEditSpaceOrder(DoCommandFlags flags, VehicleID id, uint64_t gener
 			default: return CMD_ERROR;
 		}
 		CancelSpaceOrders(*v); v->space_orders.entries = std::move(queue);
-		v->vehstatus.Reset(VehState::Stopped); v->MarkDirty();
+		v->vehstatus.Reset(VehState::Stopped);
+		SetPendingSpaceReplacementResume(GetSpaceCraftReference(*v), true); // Editing native instructions explicitly starts this original hull; its actual pending producer must preserve that later running choice at handover.
+		v->MarkDirty();
 	}
 	return CommandCost{};
 }
@@ -282,7 +291,8 @@ bool IsSpaceSurveyWorkTick(const SpaceVehicle &vehicle)
 	SpacePoint admitted;
 	if (GetSpaceApproachDestination(vehicle, admitted) != SpaceOrderBlock::None) return false;
 	const SpacePoint point{body->motion.position.x + vehicle.mission.attachment_offset.x, body->motion.position.y + vehicle.mission.attachment_offset.y};
-	return SpaceDistanceSquared(vehicle.position, point) <= uint64_t{SPACE_Q16 / 4} * (SPACE_Q16 / 4);
+	const uint64_t tolerance = GetMultiLayerMiningProbeTuning().approach_tolerance_q16;
+	return SpaceDistanceSquared(vehicle.position, point) <= tolerance * tolerance;
 }
 
 /** @copydoc IsSpaceMiningServiceWait */
@@ -290,6 +300,30 @@ bool IsSpaceMiningServiceWait(const SpaceOrderQueue &q)
 {
 	return !q.started && q.cursor < q.entries.size() && q.entries[q.cursor].action == SpaceOrderAction::Mine &&
 		(q.blocked == SpaceOrderBlock::ReturnsPending || q.blocked == SpaceOrderBlock::ServiceRequired || q.blocked == SpaceOrderBlock::PodsMissing);
+}
+
+/** Prove a podless heavy miner has an explicit physical orbital return route.
+ * @param craft Actual paid hull whose current Mine may acquire the finite-resource lease.
+ * @return Whether its first subsequent handling action is an owned operational module Unload for the target's mineral.
+ */
+static bool HasHeavyMiningModuleReturn(const SpaceVehicle &craft)
+{
+	const auto &queue = craft.space_orders;
+	// Only the appended station-built miner may replace a shell requirement with its own explicit module route; old15 and legacy unordered missions retain their delivered pod rule.
+	if (GetSpaceVehicleModel(craft) != SPACE_HEAVY_MINER_MODEL || queue.cursor >= queue.entries.size() || queue.entries[queue.cursor].action != SpaceOrderAction::Mine) return false;
+	const auto *body = GetMutableAsteroidBody(OrbitalBodyID{queue.entries[queue.cursor].target.id});
+	if (body == nullptr) return false;
+	const auto cargo = GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo);
+	// Visits may navigate between the mine and receiver. Another work/handling action cannot hide an Earth return, unavailable processor or intervening mining trip behind a later valid module.
+	for (size_t index = queue.cursor + 1; index < queue.entries.size(); ++index) {
+		const auto &order = queue.entries[index];
+		if (order.action == SpaceOrderAction::Visit) continue;
+		// The first actual unload must identify a real module incarnation; coordinates and Surface launch regions grant no orbital receiving function.
+		if (order.action != SpaceOrderAction::Unload || order.target.kind != SpaceOrderTargetKind::Structure) return false;
+		const auto *site = ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(order.target.id)}, order.target.generation});
+		return site != nullptr && site->state.owner == craft.owner && GetOrbitalModuleCargoCapacity(*site, cargo) != 0;
+	}
+	return false;
 }
 
 /** @copydoc GetSpaceMiningBlock */
@@ -301,7 +335,8 @@ SpaceOrderBlock GetSpaceMiningBlock(const SpaceVehicle &v)
 	// Paid mining requires an actual idle serviced manifest and remaining allowance; no query creates replacement supplies.
 	if (!v.manifest || v.manifest->service_ticks != 0 || v.manifest->returns_remaining == 0) return SpaceOrderBlock::ServiceRequired;
 	if (v.manifest->returns_remaining <= v.manifest->pending_returns) return SpaceOrderBlock::ReturnsPending;
-	if (v.manifest->pods.empty()) return SpaceOrderBlock::PodsMissing;
+	// A separately paid shell remains mandatory for Earth recovery. Only21's explicit operational module route can use its actual orbital freight owner instead.
+	if (v.manifest->pods.empty() && !HasHeavyMiningModuleReturn(v)) return SpaceOrderBlock::PodsMissing;
 	return SpaceOrderBlock::None;
 }
 
@@ -366,7 +401,7 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 		return true;
 	}
 	// These physical approach actions share native pursuit and a frozen bounded deadline; each feature still owns its work.
-	if (order.action == SpaceOrderAction::Visit || order.action == SpaceOrderAction::ReturnService || order.action == SpaceOrderAction::Survey || order.action == SpaceOrderAction::Construct) {
+	if (order.action == SpaceOrderAction::Visit || order.action == SpaceOrderAction::ReturnService || order.action == SpaceOrderAction::Survey || order.action == SpaceOrderAction::Construct || order.action == SpaceOrderAction::Unload) {
 		// Static sites and bodies share one saved admission owner; craft/Surface navigation retains its separate producer contract.
 		if (order.target.kind == SpaceOrderTargetKind::Body || order.target.kind == SpaceOrderTargetKind::Structure || order.target.kind == SpaceOrderTargetKind::Blueprint) {
 			if (!RequestSpaceApproach(vehicle, order.target, true)) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; return true; }
@@ -385,6 +420,13 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 			queue.started = true;
 		}
 		if (queue.timer_ticks == 0) { queue.blocked = SpaceOrderBlock::Timeout; return true; }
+		// Reaching a physical handler ends travel's deadline. Missing receiving capacity, materials or power then waits at that actual berth without spending partial freight or recreating a service timer in this queue.
+		if (vehicle.position == destination && (order.action == SpaceOrderAction::Unload || order.action == SpaceOrderAction::ReturnService)) {
+			queue.timer_ticks = 1; vehicle.cur_speed = 0;
+			const bool finished = order.action == SpaceOrderAction::Unload ? ExecuteSpaceOrderUnload(vehicle) : ExecuteSpaceOrderService(vehicle);
+			if (finished) complete();
+			return true;
+		}
 		// Construction starts only at the exact paid site approach, using its exclusive material and current utility work admission.
 		if (order.action == SpaceOrderAction::Construct && vehicle.position == destination) {
 			auto &site = *ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(order.target.id)}, order.target.generation});
@@ -411,8 +453,12 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 		--queue.timer_ticks; vehicle.cur_speed = 4;
 		if (MoveSpaceSurveyTowards(vehicle.position, destination, vehicle.mission.travel_remainder)) {
 			if (order.action == SpaceOrderAction::Construct) queue.timer_ticks = std::max<uint32_t>(queue.timer_ticks, 1);
-			if (order.action == SpaceOrderAction::Visit) complete();
-			else if (order.action == SpaceOrderAction::ReturnService) { queue.blocked = SpaceOrderBlock::ProducerUnavailable; queue.started = false; queue.timer_ticks = 0; } // Precise arrival cannot grant free service.
+			if (order.action == SpaceOrderAction::Visit) {
+				complete();
+				QueueSpaceReplacementOnArrival(vehicle); // Only this genuine reached Visit event may offer automatic paid replacement; the existing native queue accounts its full capital later this tick.
+			}
+			// Actual freight/service admission occurs on the next reached tick; keep a bounded live deadline so arrival on its last travel opportunity cannot turn into a false timeout.
+			else if (order.action == SpaceOrderAction::ReturnService || order.action == SpaceOrderAction::Unload) queue.timer_ticks = std::max<uint32_t>(queue.timer_ticks, 1);
 		}
 		return true;
 	}

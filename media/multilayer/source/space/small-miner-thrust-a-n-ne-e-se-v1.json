@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; genuine isolated rear-nozzle/travel-plume phase-A source; actual alpha/layout/native part review required before selection",
+  "key": "small-miner-thrust-a-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: the EXACT rear maneuvering nozzle of original OpenTTD small mining probe model15, isolated physical component with a SHORT BLUE travel plume, PHASE A.\nImage1 is the approved N/NE/E/SE craft model, STYLE AND REAR-NOZZLE GEOMETRY reference only. Extract/redraw ONLY its ONE short charcoal-gray cylindrical rear nozzle with its single narrow gold ring and original mounting collar. Omit the whole hull, drill, hooks and solar paddles. Do not invent a different engine.\nEach panel contains ONE isolated nozzle attached to no other object. At the original open rear outlet add ONE short tapered pale-cyan/blue thrust plume, about HALF of the nozzle barrel length, with a small bright core and crisp blue outer pixels. No large flare, glow halo, smoke, embers or extra jets. The plume must point directly away from the mounting collar, along the nozzle axis.\nSame identical little nozzle/gold band/collar dimensions in every physical view; preserve classic crisp transport-Tycoon pixel clusters, broad charcoal/gray facets and gold stripe, upper-left SCREEN illumination. Native nozzle will be about5x4 pixels; the short plume about2pixels. Keep the part simple and readable.\n\nFour true engine-viewpoint component orientations in2x2, following the parent craft's heading:\nTOP LEFT N: mounting end points UP toward the absent bus; open outlet and BLUE plume point straight DOWN.\nTOP RIGHT NE: mounting end UPPER RIGHT; open outlet and plume LOWER LEFT.\nBOTTOM LEFT E: mounting end exactly RIGHT; outlet and plume exactly LEFT, HORIZONTAL axis and elevated side view.\nBOTTOM RIGHT SE: mounting end LOWER RIGHT; outlet and plume UPPER LEFT.\nGenuine physical views under a fixed elevated orthographic camera. Never mirror/rotate flat pictures or screen light. Do not draw arrows, heading letters or an entire spacecraft.\n\nSAFE BORDERED transparent1536x1024, four separated component cutouts:\napproximately6px opaque pure MAGENTA #FF00FF frames:\nN(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000).\nCenter each small component within its own panel with at least64px genuine transparent clearance. Aim for a200px barrel diameter and total roughly300px maximum part+plume length; no component pixel may approach frames or gutters.\nReal transparent alpha throughout background/margins/gutters; keep magenta separators only.\nNo text, numbers, labels, arrows, stars, floor, shadow, backdrop, extra nozzle, ship hull or other props.\nFOUR isolated genuine rear-nozzle views with the SAME SHORT phase-A blue travel plume.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+      "sha256": "82628dde71d12edf5033642dba350cab78fb6c42a0402d1e2161b2a2dabe19ab",
+      "role": "Original rear-nozzle geometry, original craft style, and direction convention reference"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-dbd70aaa-3231-449b-8cc6-4f1e932e342f.png",
+  "status": "pending_alpha_layout_and_native_component_review"
+}

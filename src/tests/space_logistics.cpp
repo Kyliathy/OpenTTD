@@ -1,5 +1,9 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file space_logistics.cpp Native supply custody/service contracts; Plan9 connected logistics batch. */
+/** @file space_logistics.cpp Native supply custody/service contracts.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group2C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CB; factory roles retain separate bounded service stores and explicit pod history.
+ * The historical native prepare branch declares starting-content inventory; it provides no procurement acceptance. Current heavy supply consumes its immutable paid predecessor separately.
+ */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../space_manifest.h"
@@ -33,26 +37,30 @@
 #include <thread>
 #include "../safeguards.h"
 
+/** Every delivered native role keeps a bounded separate service compartment; capacities grant no parts, freight or mining authority. */
 TEST_CASE("Space supply compartments retain separate canonical capacities", "[space-logistics-contract]")
 {
 	CHECK(GetSpaceSupplyCapacity(14, SpaceSupply::Propellant) == 40);
 	CHECK(GetSpaceSupplyCapacity(14, SpaceSupply::RefinedMetal) == 64);
 	CHECK(GetSpaceSupplyCapacity(14, SpaceSupply::Electronics) == 32);
-	for (uint16_t model : {15, 19, 20}) {
+	// Paid factory roles already share these original service buffers; constructor16's buffer never grants a freight hold or Mine action.
+	for (uint16_t model : {15, 16, 17, 19, 20, 21}) {
 		CHECK(GetSpaceSupplyCapacity(model, SpaceSupply::Propellant) == 0);
 		CHECK(GetSpaceSupplyCapacity(model, SpaceSupply::RefinedMetal) == 8);
 		CHECK(GetSpaceSupplyCapacity(model, SpaceSupply::Electronics) == 4);
 	}
 	CHECK(GetSpaceSupplyCapacity(14, SpaceSupply::End) == 0);
 	CHECK(GetSpaceSupplyCapacity(18, SpaceSupply::Propellant) == 0);
-	CHECK(GetSpaceSupplyCapacity(16, SpaceSupply::RefinedMetal) == 0);
+	CHECK(GetSpaceSupplyCapacity(22, SpaceSupply::RefinedMetal) == 0);
 }
+/** Detached manifests reject duplicate custody, future/overflowing work and unearned physical return state before installation. */
 TEST_CASE("Space manifest transport refuses duplicate custody and unearned work", "[space-logistics-contract]")
 {
 	SpaceManifestRecord r; r.craft = {VehicleID{2}, 5};
 	r.supplies[0].push_back({CargoPacketID{3}, StationID::Invalid()});
 	CHECK(ValidateSpaceManifestRecords(std::array{r}));
 	CHECK_FALSE(ValidateSpaceManifestRecords(std::array{r, r}));
+	// Independently break each custody, work or allowance invariant so one rejected malformed field cannot mask another future/unearned owner.
 	for (uint test = 0; test < 13; ++test) {
 		auto bad = r;
 		switch (test) {
@@ -82,6 +90,7 @@ TEST_CASE("Space manifest transport refuses duplicate custody and unearned work"
 	preview.Clear(); CHECK_FALSE(preview.space_manifests_present); CHECK(preview.space_manifest_rows.empty());
 }
 
+/** Native partial/whole packet movements conserve actual units, age, routing and feeder ownership without a second cargo ledger. */
 TEST_CASE("Native Keep freight moves preserve age feeder share and routing through partial transfers", "[space-logistics-contract]")
 {
 	MockEnvironment::Instance(); ExcavationFixture world;
@@ -103,6 +112,7 @@ TEST_CASE("Native Keep freight moves preserve age feeder share and routing throu
 	CHECK(_random.state[0] == seeds.state[0]); CHECK(_random.state[1] == seeds.state[1]);
 }
 
+/** Each paid shell occupies one real workshop/carrier slot; copied Surface custody must identify an actual carrier location. */
 TEST_CASE("Passive pod receipts and custody refuse duplicate packing and workshop owners", "[space-logistics-contract]")
 {
 	const LaunchCenterRef center{StationID{1}, 4};
@@ -115,6 +125,7 @@ TEST_CASE("Passive pod receipts and custody refuse duplicate packing and worksho
 	CHECK_FALSE(ValidateSpacePodRecords(std::array{r, r}, 10, 64, 64));
 	CHECK_FALSE(ValidateSpacePodRecords(std::array{r}, 9, 64, 64));
 	CHECK_FALSE(ValidateSpacePodRecords(std::array{r}, 0, 64, 64));
+	// Each copied receipt independently loses one required paid identity, work bound or physical custody field; every violation must refuse before installation.
 	for (uint i = 0; i < 11; ++i) {
 		auto bad = r;
 		switch (i) {
@@ -137,6 +148,7 @@ TEST_CASE("Passive pod receipts and custody refuse duplicate packing and worksho
 	wrong = op; wrong.slots.service = {VehicleID{2}, 8}; CHECK_FALSE(ValidateLaunchOperationRecords(std::array{wrong}));
 	wrong = op; wrong.slots.pod_workshop = {}; CHECK_FALSE(ValidateSpacePodLinks(std::array{r}, {}, std::array{wrong}, {}));
 	SpaceProductionRecord craft; craft.craft = {VehicleID{2}, 8}; craft.state.model = 15;
+	craft.state.surface_tile = s.surface_tile; // Declared actual Surface carrier location; this isolated graph is not an orbital factory receipt or a gameplay production claim.
 	SpaceManifestRecord manifest; manifest.craft = craft.craft; manifest.pods.push_back(r.ref);
 	r.state.custody = SpacePodCustody::Craft; r.state.craft = craft.craft; r.state.home = {}; r.state.remaining_ticks = 0; op.slots.pod_workshop = {};
 	CHECK(ValidateSpacePodRecords(std::array{r}, 10, 64, 64));
@@ -151,10 +163,12 @@ TEST_CASE("Passive pod receipts and custody refuse duplicate packing and worksho
 }
 
 static std::function<void()> *logistics_observer = nullptr;
+/** @param args Parameter-free historical loaded-world console callback. @return Whether its explicitly installed native observer ran. */
 static bool ObserveLogistics(std::span<std::string_view> args)
 {
 	REQUIRE(args.size() == 1); REQUIRE(logistics_observer != nullptr); (*logistics_observer)(); return true;
 }
+/** Historical declared-starting-content branch and actual paid shell/part work use native containers; later heavy acceptance loads a separate immutable producer. */
 TEST_CASE("Native paid pods supplies and freight retain single custody across interrupted service", "[.launch-logistics]")
 {
 	const char *action_env = std::getenv("OTTD_LAUNCH_LOGISTICS_ACTION"); REQUIRE(action_env != nullptr); const std::string_view action{action_env};
@@ -162,37 +176,45 @@ TEST_CASE("Native paid pods supplies and freight retain single custody across in
 	const auto source = action == "prepare" ? FindTestRepositoryRoot() / "src/tests/fixtures/demos/space/space-launch-hub-1990-408.sav" : std::filesystem::path{input == nullptr ? "" : input};
 	const auto paths = GetTestCaseArtifactPaths("space", "logistics"); const auto config = GetTestRuntimeConfig();
 	bool observed = false; std::exception_ptr failure;
+	/** Observe the actual loaded historical world and preserve assertion failures through ordinary application shutdown. */
 	std::function<void()> observe = [&] {
 		try {
 			AutoRestoreBackup actor(_current_company, _local_company);
 			REQUIRE(ValidateSpaceVehicles()); REQUIRE(GetLaunchCenterReferences().size() == 1);
 			auto center_ref = GetLaunchCenterReferences().front(); auto *center = ResolveLaunchCenter(center_ref); REQUIRE(center != nullptr);
 			auto *company = Company::Get(_current_company);
+			/** @param ticks Actual synchronized opportunities; rendering/yields cannot earn paid work or movement. */
 			auto advance = [&](uint ticks) {
 				AutoRestoreBackup pause(_pause_mode, PauseModes{}); const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
+				// Only the real field clock counts an opportunity; the bounded wait permits native workers to finish without fabricating elapsed work.
 				for (uint i = 0; i < ticks;) {
 					REQUIRE(std::chrono::steady_clock::now() < deadline); const auto before = GetAsteroidField().elapsed_ticks;
 					StateGameLoop(); if (GetAsteroidField().elapsed_ticks == before) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); continue; }
 					REQUIRE(GetAsteroidField().elapsed_ticks == before + 1); ++i;
 				}
 			};
+			/** @param name Explicit unique native checkpoint basename; serialize only fully validated original physical owners. */
 			auto save = [&](std::string_view name) {
 				REQUIRE(ValidateSpaceVehicles()); AutoRestoreBackup pause(_pause_mode, PauseModes{PauseMode::Normal}); AutoRestoreBackup compression(_savegame_format, std::string{"lzma"});
 				REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(paths.saves / std::string{name}), false) == SaveLoadResult::Ok);
 			};
+			/** @param model Actual logical native role. @return Its original loaded hull, never an allocated stand-in. */
 			auto find = [&](uint16_t model) -> SpaceVehicle * { for (auto *v : SpaceVehicle::Iterate()) if (GetSpaceVehicleModel(*v) == model) return v; return nullptr; };
 			if (action == "prepare") {
 				REQUIRE(GetSpaceVehicleCount() == 0); REQUIRE(SpacePod::GetNumItems() == 0);
+				// Historical fixture preparation explicitly declares its starting Surface stock. This branch supplies no procurement acceptance and is never used by current heavy resupply verification.
 				for (const auto &[label, count] : std::array<std::pair<CargoLabel, uint16_t>, 5>{{{CargoLabel{"STEL"}, 100}, {CargoLabel{"GOOD"}, 200}, {CargoLabel{"RFMT"}, 16}, {CargoLabel{"ELEC"}, 16}, {CargoLabel{"PROP"}, 128}}}) {
 					const auto cargo = GetCargoTypeByLabel(label); REQUIRE(IsValidCargoType(cargo)); REQUIRE(center->goods[cargo].TotalCount() == 0);
 					REQUIRE(CargoPacket::CanAllocateItem()); auto *cp = CargoPacket::Create(count, uint16_t{9}, center->index, center->launch_center->tile, Money{count * 10});
 					center->goods[cargo].GetOrCreateData().cargo.Append(cp, StationID::Invalid());
 				}
+				// Consume each original whole recipe through the single real Surface workshop; competing passive work must remain unavailable until its paid hull completes.
 				for (uint16_t model : {14, 15, 19, 20}) {
 					REQUIRE(Command<Commands::AssembleLaunchCraft>::Post(center_ref.station, center_ref.generation, model));
 					CHECK(CmdAssembleLaunchPod({}, center_ref.station, center_ref.generation).Failed()); advance(148);
 				}
 				auto *rocket = find(14); auto *miner = find(15); auto *survey = find(19); auto *builder = find(20); REQUIRE((rocket && miner && survey && builder));
+				// Build the facility's bounded real shell inventory, checking pure quotes and once-only capital/material settlement for every original asset.
 				for (uint i = 0; i < 8; ++i) {
 					const auto money = company->money; const auto digest = ComputeSpacePodDigest(); const auto seeds = _random; const auto generation = GetNextSpacePodGeneration();
 					const auto quote = CmdAssembleLaunchPod({}, center_ref.station, center_ref.generation); REQUIRE(quote.Succeeded()); CHECK(quote.GetCost() == 2000);
@@ -208,10 +230,12 @@ TEST_CASE("Native paid pods supplies and freight retain single custody across in
 				}
 				CHECK(CountLaunchPods(center_ref) == 8); CHECK(CmdAssembleLaunchPod({}, center_ref.station, center_ref.generation).Failed());
 				uint packed = 0;
+				// Two actual shells leave Surface storage for the original miner; repeated packing of the same paid identity cannot create a second carried shell.
 				for (auto *pod : SpacePod::Iterate()) if (packed < 2) {
 					REQUIRE(Command<Commands::MoveLaunchPod>::Post(center_ref.station, center_ref.generation, miner->index, miner->generation, pod->index, pod->generation, false));
 					CHECK(CmdMoveLaunchPod({}, center_ref.station, center_ref.generation, miner->index, miner->generation, pod->index, pod->generation, false).Failed()); ++packed;
 				}
+				// Packing freed exactly two Surface slots; each replacement stored shell requires another complete paid recipe and actual workshop interval.
 				for (uint i = 0; i < 2; ++i) { REQUIRE(Command<Commands::AssembleLaunchPod>::Post(center_ref.station, center_ref.generation)); advance(74); }
 				CHECK(SpacePod::GetNumItems() == 10); CHECK(CountLaunchPods(center_ref) == 8);
 				CHECK(CmdMoveLaunchPod({}, center_ref.station, center_ref.generation, miner->index, miner->generation, miner->manifest->pods.front().pod, miner->manifest->pods.front().generation, true).Failed());
@@ -227,6 +251,7 @@ TEST_CASE("Native paid pods supplies and freight retain single custody across in
 				REQUIRE(Command<Commands::MoveLaunchFreight>::Post(center_ref.station, center_ref.generation, builder->index, builder->generation, goods, uint16_t{40}, false));
 				CHECK(builder->cargo.TotalCount() == 40); CHECK(builder->cargo_cap == 40); CHECK(GetSpacePayloadMass(*builder) == 20 * 16);
 				CHECK(CmdMoveLaunchFreight({}, center_ref.station, center_ref.generation, builder->index, builder->generation, goods, 1, false).Failed());
+				// Each original Earth-built role can change sole carrier custody and return intact, retaining its actual body, cargo and paid identity.
 				for (auto *probe : {miner, survey, builder}) {
 					const auto money = company->money; const auto ref = GetSpaceCraftReference(*probe);
 					REQUIRE(Command<Commands::CarryLaunchProbe>::Post(rocket->index, rocket->generation, probe->index, probe->generation, false));
@@ -253,7 +278,9 @@ TEST_CASE("Native paid pods supplies and freight retain single custody across in
 				const auto old_home = center_ref; const auto anchor = center->launch_center->tile; const auto rotation = center->launch_center->rotation;
 				ForgetLaunchCenter(*center); CHECK(miner->manifest->service_ticks == 111); CHECK(miner->manifest->service_paused); CHECK(CountLaunchPods(old_home) == 0);
 				InstallNewLaunchCenter(*center, anchor, rotation); center_ref = GetLaunchCenterReference(*center); CHECK(center_ref != old_home);
+				// Explicitly recover each actual unhomed hull into the new real center incarnation; retiring a numeric center never transfers custody implicitly.
 				for (auto *v : SpaceVehicle::Iterate()) REQUIRE(Command<Commands::RecoverLaunchCraft>::Post(center_ref.station, center_ref.generation, v->index, v->generation));
+				// Retained original unhomed shells refuse the retired incarnation and recover only through their actual current Surface footprint.
 				for (auto *pod : SpacePod::Iterate()) if (pod->state.custody == SpacePodCustody::Unhomed) {
 					CHECK(CmdRecoverLaunchPod({}, old_home.station, old_home.generation, pod->index, pod->generation).Failed());
 					REQUIRE(Command<Commands::RecoverLaunchPod>::Post(center_ref.station, center_ref.generation, pod->index, pod->generation));

@@ -3,6 +3,8 @@
 
 @file multilayer_sprite_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BB, scoped Space contract validation.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups14BF/14BFB/14BFC, explicit native asteroid size/source policy.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups60B-60C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
@@ -293,16 +295,45 @@ def build_manifest():
             "assets": rows}
 
 
-def validate_manifest(document):
+def validate_asteroid_contract(row):
+    """Preserve all three original native sizes and truthful logical source frames before natural-body authoring.
+
+    @param row Existing exact asteroid family row from the public Sprite Contract.
+    @return None; raise ValueError on a missing size, clipped canvas, shifted anchor or fabricated frame/quantity policy.
+    """
+    expected = dict(native_size=[96, 80], anchor=[-48, -48], bounds=[0, 0, 96, 80], tile_variants=3,
+                    variant_semantics="native_saved_asteroid_size_small_medium_large",
+                    size_variants=["small", "medium", "large"], visual_diameters_q16=[32768, 65536, 131072],
+                    states=["free", "attached", "mining", "depleted"], frames=4, company_colors="none")
+    # The native saved size enum and visual diameters are immutable producer facts. A generic vehicle canvas, company mask or omitted size would hide source obligations or clip the2tile body before packing.
+    if any(row.get(key) != value for key, value in expected.items()):
+        raise ValueError("native asteroid size/canvas contract changed")
+    aliases = row.get("source_frame_contract", {})
+    required = dict(free=[0, 0, 0, 0], attached=[0, 0, 0, 0], mining=[0, 1, 0, 1], depleted=[0, 0, 0, 0])
+    # AsteroidBody has no saved angular spin. Four public frames retain explicit static aliases or repeated two actual mining effects, never a new physical clock or duplicate native probe.
+    if any(aliases.get(key) != value for key, value in required.items()):
+        raise ValueError("asteroid logical frame/source alias contract changed")
+
+
+def validate_manifest(document, selected_assets=None):
     """Reject incomplete identities, counts, placement and falsely delivered source/packing evidence.
 
     @param document Decoded M0 manifest from the producer artifact.
+    @param selected_assets Optional exact family IDs whose geometry/source contracts are under development; global identity/range protections still apply.
     @return Total exact sprite requirement count; raise ValueError on an invalid contract.
     """
     identities = set()
+    all_ids = [row["asset_id"] for row in document["assets"]]
+    selected = set(selected_assets or ())
+    # Scoped family validation must retain complete public identity/range protections; an absent selected family or duplicate cannot disappear through filtering.
+    if len(all_ids) != len(set(all_ids)) or not selected.issubset(all_ids):
+        raise ValueError("duplicate or missing selected asset_id")
     count = 0
     # Validate each independent family before consumers assign runtime sprite references or author sheets.
     for row in document["assets"]:
+        # Feature-owned Space work must not requalify unrelated dated Underground geometry descriptors after later native source changes.
+        if selected and row["asset_id"] not in selected:
+            continue
         mandatory = {"asset_id", "consumer", "directions", "frames", "states", "native_size", "footprint", "anchor", "source", "packed", "tile_variants", "preview"}
         if not mandatory.issubset(row):
             raise ValueError("missing mandatory field")
@@ -317,6 +348,8 @@ def validate_manifest(document):
         if row["kind"] == "vehicle" and row["directions"] != DIRECTIONS:
             # Moving designs require every engine view, not rotated substitutes for absent silhouettes.
             raise ValueError("incomplete vehicle directions")
+        if row["asset_id"] in ("asteroid.nickel", "asteroid.ice", "asteroid.rare-earth"):
+            validate_asteroid_contract(row)
         if row["asset_id"] == "vehicle.model-05":
             # The complete native refit catalogue, packet-backed state priority
             # and approved hold geometry prevent ore-only art from hiding real
@@ -492,7 +525,7 @@ def validate_manifest(document):
     required = {f"mine.{label}" for label in ("COAL", "IORE", "CORE", "BAUX", "SALT", "LITH", "NORE", "COBT", "RARE", "URAN")}
     required.update(f"vehicle.model-{model:02}" for model in range(19))
     required.update(("overlay.orbital-drop", "overlay.surface-collection", "solar.mirror", "facility.vent-powerhouse", "facility.mantle-forge"))
-    if not required.issubset(identities):
+    if not required.issubset(all_ids):
         raise ValueError("missing required functional family")
     reference = ROOT / document["legacy"]["reference_sheet"]
     if hashlib.sha256(reference.read_bytes()).hexdigest() != document["legacy"]["sha256"]:
@@ -589,13 +622,35 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--generate", action="store_true")
+    parser.add_argument("--assets", nargs="+", help="Validate only these exact family contracts; preserve global identity/range checks")
     args = parser.parse_args()
+    # Source authoring may inspect a scoped existing contract, while regenerating the complete public manifest remains an explicit whole-producer operation.
+    if args.generate and args.assets:
+        parser.error("--assets validates existing families and cannot accompany --generate")
     if args.generate:
         document = build_manifest()
         MANIFEST.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
         write_templates()
     document = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    count = validate_manifest(document)
+    count = validate_manifest(document, args.assets)
+    if args.assets:
+        # Real refusal inputs protect missing views, absent sources and duplicate global identities without invoking unrelated providers' stale native geometry hashes.
+        for mutation in ("directions", "source", "duplicate"):
+            broken = json.loads(json.dumps(document))
+            row = next(row for row in broken["assets"] if row["asset_id"] == args.assets[0])
+            if mutation == "directions":
+                row["directions"].pop()
+            elif mutation == "source":
+                row["source"] = {"status": "delivered", "path": "missing_final_source.png"}
+            else:
+                broken["assets"].append(broken["assets"][0])
+            try:
+                validate_manifest(broken, args.assets)
+            except ValueError:
+                continue
+            raise AssertionError("invalid scoped manifest accepted")
+        print(f"Scoped sprite contract: {len(set(args.assets))} families, {count} required sprites; native source/runtime delivery remains separate")
+        return
     # Mutated independent inputs ensure the validator refuses missing views, duplicates and fictitious final-source claims.
     for mutation in ("duplicate", "directions", "source", "tube_axis", "tube_front", "tube_corner", "tube_curve_front", "tube_junction_layout", "tube_junction_rotation", "tube_end_facing", "tube_end_front", "tube_crossing_rotation", "tube_crossing_front", "tube_conduit_branch", "tube_conduit_ground", "vent_shortage", "vent_hidden", "utility_domains", "utility_contact", "riser_shortage", "riser_cells", "wagon_refits", "wagon_state_owner", "wagon_aperture"):
         broken = json.loads(json.dumps(document))

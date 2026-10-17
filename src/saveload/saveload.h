@@ -485,6 +485,20 @@ enum class SaveLoadVersion : uint16_t {
 	OrbitalModuleRetirement, ///< Saveload version: 422\n Bounded spent-module material/service receipts beside native structure issuance; Plan11 Group5.
 	SpaceOrbitalModuleFreight, ///< Saveload version: 423\n Generation-qualified direct module flights, once-only unloading receipt and shared in-transit admission; Plan9 Group11.
 	AsteroidStarterInputs, ///< Saveload version: 424\n Frozen initial launch-site preference and approach bound in the existing ASTR owner; Plan10 Group2.
+	OrbitalAssemblyFacilities, ///< Saveload version: 425\n Paid Assembly activation and original-source work connections in unchanged SPST transport; Plan11 Group6B.
+	OrbitalManufacturingReservations, ///< Saveload version: 426\n Contained paid queued/reserved four-input manufacturing jobs and monotonic order issuance; Plan11 Group7.
+	OrbitalManufacturingMaterialization, ///< Saveload version: 427\n Paid common-grant work, exact completion material receipt and original factory/job provenance; Plan11 Group8.
+	OrbitalManufacturingClones, ///< Saveload version: 428\n Bounded immutable clone source/name/instructions inside the original SPST paid job; Plan11 Group8BB.
+	SpaceReplacementSettlement, ///< Saveload version: 429\n Bounded original hull and once-only retirement receipts in the actual SPST job or SVST Earth assembly body; Plan11 Group8BC.
+	SpaceOrderedActions, ///< Saveload version: 430\n Existing SPOR queues can retain reached freight/service waits and their actual SPSU onboard service work; r2mlvs10-asteroids-and-mining-probes.md Group8B. No extra inventory or timer transport.
+	SpaceHeavyMinerCommissioning, ///< Saveload version: 431\n Content3 appends paid Assembly-only miner21 while preserving original content2 construction receipts and exact legacy fingerprints; r2mlvs11-orbital-stations-and-manufacturing.md Group9B.
+	SpaceHeavyMinerMissions, ///< Saveload version: 432\n Existing native mission/order owners admit per-model heavy extraction;431 retains commissioning-only admission. See r2mlvs11-orbital-stations-and-manufacturing.md Group9C.
+	SpaceHeavyMinerSupplies, ///< Saveload version: 433\n Original rocket/pod/manifest owners admit heavy resupply and retain the shell's actual Surface history at paid orbital factory hulls. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CB.
+	SpaceHeavyMinerDescents, ///< Saveload version: 434\n Immutable sender/physical-mass receipts retain heavy descent admission after sender loss. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB.
+	SpaceHeavyMinerOnboardServices, ///< Saveload version: 435\n Original native manifests admit heavy onboard service with actual two-part bills and296 earned opportunities; contained Core/Dock service remains separately gated. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CC.
+	SpaceHeavyMinerContainedServices, ///< Saveload version: 436\n Original contained Core/Dock jobs append immutable service role, retaining genuine old unknown one-part receipts and real heavy two-part/296-opportunity work. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC.
+	SpaceCargoDimensions, ///< Saveload version: 437\n Same-file configured cargo dimensions join copied descent mass admission; genuine older receipts keep their original native checks. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CD.
+	OrbitalRecipeProcessing, ///< Saveload version: 438\n Native module recipe/work/material/residue metadata and bounded retired history join original SPST stocks and utility authority. See r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

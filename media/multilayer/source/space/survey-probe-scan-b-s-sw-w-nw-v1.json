@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BC and r2mlvs14-remaining-assets-and-runtime-integration.md Group63B.2; exact executed scanner phase/directional edit, pending native component review.",
+  "key": "survey-probe-scan-b-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-19",
+  "state": "scanning",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: approved first-party OpenTTD SURVEY PROBE model19, actual SCANNING mechanical phase B.\nImage1 is the approved S/SW/W/NW original. Preserve exact same whole spacecraft layout, positions, scale, camera, squat cream hexagonal bus, TWO navy lateral solar paddles, rear nozzle, small amber access hatch, all colors and upper-left screen light.\nChange ONLY the same single teal scanner dish and its existing short pivot: yaw the dish about10degrees toward the spacecraft's RIGHT at its current front mount, one small physically plausible scanning sweep. Preserve dish diameter, circular concave cup, cyan rim, silver central sensor feed and one short pivot. No extra dish, moving arm, antenna, beam, glow, spark, projected cone, rays, body target or particle. This is an actual mechanical orientation difference, not a light or color flash. Native saved scan work owns the action; source art creates no knowledge or quantity.\nKeep every bus/paddle/nozzle/hatch pixel unchanged as closely as possible; a later converter will use only declared original front scanner pixels and retain the selected original bus.\nFOUR genuine engine-viewport headings exactly as reference: S top-left front DOWN, SW top-right front LOWER LEFT, W bottom-left front LEFT horizontal, NW bottom-right front UPPER LEFT. Dish yaw is relative to each actual craft heading; do not mirror or rotate flat pictures. Fixed elevated orthographic camera, fixed upper-left screen light.\nCrisp classic1990s Tycoon pixel-art clusters, restrained matte cream bus/dark-teal cup/cyan rim/navy paddles/amber hatch, tiny28x24px native craft, no smooth3D or photorealism.\nSAFE BORDERED1536x1024 transparent sheet,6px opaque PURE MAGENTA frames S(24,24)-(744,488),SW(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000).\nFour complete separated spacecraft at least32px clear within frames. Real transparent alpha background/margins/gutters; keep visible magenta frames. No printed checkerboard, haze, gradients, floor, shadows, text, labels or extra props. Same approved spacecraft; only actual dish/pivot scanning phase B changes.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/survey-probe-free-s-sw-w-nw-v1.png",
+      "sha256": "8698ed9acc2fe7787ec463b58cb9b1666bdb7aa591161ecb22f8ab0d2f8f3579",
+      "role": "Approved exact opposite survey model and directional layout edit target"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/survey-probe-scan-b-s-sw-w-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-0e668155-0fc1-406a-8bb4-6925aa8ade42.png",
+  "status": "pending_scanner_component_review",
+  "phase": 1
+}

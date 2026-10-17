@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BD and r2mlvs14-remaining-assets-and-runtime-integration.md Group63C.2; exact executed original symbolic cargo-load edit, pending measured native cradle/foreground protection review.",
+  "key": "construction-probe-goods-s-sw-e-se-v1",
+  "asset_id": "vehicle.model-20",
+  "state": "goods",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: approved first-party OpenTTD LIGHT CONSTRUCTION PROBE model20, GOODS-LOADED source pose.\nImage1 is the exact selected EMPTY carrier and actual four-view layout. Preserve the same whole chassis positions/scale, camera, TWO folded silver front manipulators, two navy rear paddles, central rear nozzle, amber rear-deck service hatch, ochre truss frame and upper-left SCREEN light.\nChange ONLY the central empty cargo cradle: put ONE LOW TAN slatted shipping crate with two narrow dark steel straps, centered in the cargo cradle. Clear brown wood/slat faces, no markings, signs or printed labels. The load must fit comfortably INSIDE the existing shallow bed, below its high perimeter rim and folded-arm clearance. No overhang, detached cargo, covered arms, changed frame, extra platform or enlarged vehicle. Retain visible dark bed/perimeter edges around the low load. The original manipulator arms stay in their exact folded free pose.\nThis is a symbolic load-TYPE cue for actual positive native cargo, not a unit-count depiction. No numbers, mass labels or quantity gauge. Native CargoList/weights and paid construction own all actual Steel/Goods units; this source creates no cargo, recipe stock or work.\nFour genuine physical viewpoints EXACTLY as Image1: S top-left arm bases DOWN/nozzle UP, SW top-right arm bases LOWER LEFT/nozzle UPPER RIGHT, E bottom-left arm bases RIGHT/nozzle LEFT, SE bottom-right arm bases LOWER RIGHT/nozzle UPPER LEFT. Do not redraw a different heading, rotate/mirror a flat image, move hardware or change the empty-carrier model. Keep the same material bundle/crate in each real perspective.\nCrisp restrained classic1990s transport-Tycoon pixel-art clusters, matte ochre frame, charcoal underside, dull silver arms, navy rear solar paddles. Tiny32x24px native craft, no smooth3D, shiny rendering or excessive detail.\nSAFE BORDERED1536x1024 transparent sheet with6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Four COMPLETE separated views at least32px clear inside frames. Real transparent alpha background/margins/gutters; preserve visible magenta frames. No haze, painted checkerboard, gradient, floor/shadow, beams, flames, text, labels or props. Same original construction carrier; only the actual low goods load inside its cradle changes.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-e-se-v1.png",
+      "sha256": "34f568450934d572808dcb05360cf29486c8cff2336b4d90c8b2fff1073aa158",
+      "role": "Approved exact empty construction model and actual S/SW/E/SE source layout; replace only its central cargo-bed load"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/construction-probe-goods-s-sw-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-9ab4e497-f7c8-420d-8717-6f2ef6805209.png",
+  "status": "pending_native_load_component_review"
+}

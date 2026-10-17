@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFB / r2mlvs14-remaining-assets-and-runtime-integration.md68.3. Exact executed own Water-Ice local surface original; native registration/selection pending.",
+  "key": "carbonaceous-asteroid-mining-b-s-sw-w-nw-v1",
+  "asset_id": "asteroid.ice",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-free-s-sw-w-nw-v1.png",
+      "sha256": "b233ae938d4b5303a62fca32484fc1c2a02442ceb012b4b8c9e3084a52d7f216",
+      "role": "Exact own selected carbonaceous Water-Ice slab/yaw/light and icy fissure edit target; all outside native surface pixels protected"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the EXACT SELECTED low flattened carbonaceous WATER-ICE slab, four genuine views TOP LEFT S, TOP RIGHT SW, BOTTOM LEFT W, BOTTOM RIGHT NW. Preserve exact original body position, scale, silhouette, blunt notched front, broad rear, dark porous/chipped facets, main oval pit, camera, upper-left SCREEN lighting and magenta-frame layout. Do not change yaw/model or redraw unrelated stone.\nChange ONLY the ONE broad embedded icy lens INSIDE its existing long upper-face fissure: MINING CONTACT PHASE B: keep the broad white/cyan ice lens intact and place ONE concentrated warm AMBER/YELLOW drilling-contact glint cluster at its physical OPPOSITE ROUNDED-REAR END, with two tiny darker orange chips immediately beside it on the ice. The cluster spans about50-60px of the original ice surface so it survives small native reduction. Keep the NOTCHED FRONT end plain ice, distinct from phaseA. All light remains ON existing ice lens, not outside body. Local work-light flicker, never gold cargo/nodules, plume or hardware. CRITICAL EXACT EFFECT POSITIONS: TOP LEFT S=UPPER LEFT ice endpoint; TOP RIGHT SW=UPPER RIGHT endpoint; BOTTOM LEFT W=RIGHT endpoint; BOTTOM RIGHT NW=LOWER RIGHT endpoint.\nNo new body, tool, probe, machinery, metal parts, extra pits, external crystals, separate rocks, detached effect/dust, halo, glow rays, heat plume or extra seam. Actual native probe is rendered separately. Only declared original local surface pixels supply later assembly; all other original slab pixels remain protected. Same classic1990s Tycoon pixel clusters and matte charcoal/navy stone.\nSAFE BORDERED1536x1024 real-transparent2x2 source sheet. Four opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep same consistent small original bodies centered with>=48px REAL transparent clearance to every frame. Nothing clipped/overlapping or touching gutters. Actual transparent background/margins/gutters, no haze, backdrop, shadow, floor, gradient, painted checkerboard, text, labels, digits or diagrams.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-dfeaab90-7cfa-4b2c-a83c-ada76a100c97.png",
+  "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-mining-b-s-sw-w-nw-v1.png",
+  "sha256": "7e73247724d8ab43470de3d36ba36b1795844e84ef8e364c2510ce2236a7c166"
+}

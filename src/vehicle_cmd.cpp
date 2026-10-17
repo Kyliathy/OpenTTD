@@ -5,11 +5,17 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_cmd.cpp Commands for vehicles. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md */
+/** @file vehicle_cmd.cpp Commands for vehicles.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups8B/8BB; ordinary purchases/clones use actual paid facilities.
+ */
 
 #include "stdafx.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
+#include "space_purchase.h"
+#include "space_clone.h"
+#include "space_replacement.h"
 #include "underground_vehicle.h"
 #include "transport_tube.h"
 #include "roadveh.h"
@@ -110,16 +116,27 @@ VehicleTypeIndexArray<const StringID> _send_to_depot_msg_table = {
 /**
  * Build a vehicle.
  * @param flags for command
- * @param tile tile of depot where the vehicle is built
- * @param eid vehicle type being built.
- * @param use_free_vehicles use free vehicles when building the vehicle.
- * @param cargo refit cargo type.
+ * @param tile Actual owned ordinary depot, Surface workshop or orbital Assembly world tile, independent of camera selection.
+ * @param eid Existing native EngineID being purchased.
+ * @param use_free_vehicles Ordinary reuse preference; a Space request still needs its complete paid physical recipe.
+ * @param cargo Ordinary refit cargo, or default/INVALID_CARGO for supported Space purchases.
  * @param client_id User
- * @return the cost of this operation + the new vehicle ID + the refitted capacity + the refitted mail capacity (aircraft) or an error
+ * @return Cost, actual new VehicleID, cargo/mail capacities and cargo array, or an error. A successful queued orbital purchase has no VehicleID yet;
+ *         its physical factory owns the paid request and callbacks use their original world tile/Engine to show that actual job.
  */
 std::tuple<CommandCost, VehicleID, uint, uint16_t, CargoArray> CmdBuildVehicle(DoCommandFlags flags, TileIndex tile, EngineID eid, bool use_free_vehicles, CargoType cargo, ClientID client_id)
 {
 	if (IsTBMCutterEngine(eid)) return { CMD_ERROR, VehicleID::Invalid(), 0, 0, {} }; // Portal-only machinery refuses before refit estimates, clone/autoreplace or script purchase can allocate any part.
+	const auto *requested = Engine::GetIfValid(eid);
+	// Space purchases use real launch/factory owners rather than ordinary depot tiles; the original producer pays/reserves once and creates no temporary refit hull.
+	if (requested != nullptr && requested->type == VehicleType::Space) {
+		auto purchase = PurchaseSpaceVehicleAtFacility(flags, tile, eid, cargo);
+		if (purchase.cost.Failed()) return {std::move(purchase.cost), VehicleID::Invalid(), 0, 0, {}};
+		const auto default_cargo = requested->GetDefaultCargoType();
+		const auto capacity = GetSpaceFreightCapacity(requested->VehInfo<SpaceVehicleInfo>().model, default_cargo);
+		CargoArray capacities{}; capacities[default_cargo] = capacity;
+		return {std::move(purchase.cost), purchase.vehicle, capacity, 0, capacities};
+	}
 	/* Ordinary purchase requires a genuine facility owned by the command actor; foreign infrastructure cannot supply assembly permission. */
 	if (!IsValidTile(tile) || !IsDepotTile(tile) || !IsTileOwner(tile, _current_company)) return { CMD_ERROR, VehicleID::Invalid(), 0, 0, {} };
 
@@ -252,12 +269,12 @@ std::tuple<CommandCost, VehicleID, uint, uint16_t, CargoArray> CmdBuildVehicle(D
 
 /**
  * Sell a vehicle.
- * @param flags for command.
- * @param v_id vehicle ID being sold.
- * @param sell_chain sell the vehicle and all vehicles following it in the chain.
- * @param backup_order make a backup of the vehicle's order (if an engine).
- * @param client_id User.
- * @return the cost of this operation or an error.
+ * @param flags Native estimate/execution; Space retirement away from home additionally requires the private exact prepared replacement scope.
+ * @param v_id Actual existing vehicle being retired; replacement has already validated its full original incarnation.
+ * @param sell_chain Whether ordinary linked vehicles following it are sold together.
+ * @param backup_order Whether ordinary engine orders are backed up before sale.
+ * @param client_id Native requesting client for ordinary order backups.
+ * @return Actual negative native value, or an unchanged refusal. The command caller remains the sole finance owner.
  */
 CommandCost CmdSellVehicle(DoCommandFlags flags, VehicleID v_id, bool sell_chain, bool backup_order, ClientID client_id)
 {
@@ -269,12 +286,14 @@ CommandCost CmdSellVehicle(DoCommandFlags flags, VehicleID v_id, bool sell_chain
 	CommandCost ret = CheckOwnership(front->owner);
 	if (ret.Failed()) return ret;
 	if (front->type == VehicleType::Space) {
-		// Sale is permitted only stopped at orbital home with an empty hold.
+		// Ordinary Space sale retains its actual home and empty stopped-hull policy. A prepared replacement may retire only its exact now-emptied source at the verified local handover berth.
 		const auto *space = SpaceVehicle::From(front);
 		if (HasSpaceManifestAssets(*space)) return CMD_ERROR;
 		if (space->construction.placement != SpacePlacement::Orbital && space->construction.placement != SpacePlacement::SurfaceStored) return CMD_ERROR;
 		if (space->construction.placement == SpacePlacement::SurfaceStored && ResolveLaunchCenter(space->construction.home) == nullptr) return CMD_ERROR;
-		if (!front->vehstatus.Test(VehState::Stopped) || space->position != space->home || front->cargo.TotalCount() != 0) return CMD_ERROR;
+		const bool replacement = flags.Test(DoCommandFlag::AutoReplace) && IsSpaceReplacementRetirement(*space);
+		// A caller's AutoReplace flag alone grants no remote sale: the private synchronous scope follows complete asset transfer, while every other source must still stand at its original home.
+		if (!front->vehstatus.Test(VehState::Stopped) || front->cargo.TotalCount() != 0 || (space->position != space->home && !replacement)) return CMD_ERROR;
 		CommandCost result(ExpensesType::NewVehicles, -front->value);
 		if (flags.Test(DoCommandFlag::Execute)) delete front;
 		return result;
@@ -717,6 +736,7 @@ CommandCost CmdStartStopVehicle(DoCommandFlags flags, VehicleID veh_id, bool eva
 		if (v->IsStoppedInDepot() && !flags.Test(DoCommandFlag::AutoReplace)) DeleteVehicleNews(veh_id, AdviceType::VehicleWaiting);
 
 		v->vehstatus.Flip(VehState::Stopped);
+		if (v->type == VehicleType::Space) SetPendingSpaceReplacementResume(GetSpaceCraftReference(*SpaceVehicle::From(v)), !v->vehstatus.Test(VehState::Stopped)); // Later explicit source commands retain their actual requested state while the one paid orbital producer waits.
 		if (v->type != VehicleType::Train) v->cur_speed = 0; // trains can stop 'slowly'
 
 		/* Unbunching data is no longer valid. */
@@ -845,70 +865,81 @@ bool IsUniqueVehicleName(const std::string &name)
 }
 
 /**
- * Clone the custom name of a vehicle, adding or incrementing a number.
- * @param src Source vehicle, with a custom name.
- * @param dst Destination vehicle.
+ * @copydoc MakeClonedVehicleName
  */
-static void CloneVehicleName(const Vehicle *src, Vehicle *dst)
+std::string MakeClonedVehicleName(std::string_view source_name)
 {
+	// Bounded legal custom text must fit the ordinary rename policy; no naming failure may abort an already paid native clone settlement.
+	if (source_name.empty() || source_name.size() > (MAX_LENGTH_VEHICLE_NAME_CHARS - 1) * 4 || source_name.find('\0') != std::string_view::npos) return {};
+	const std::string original(source_name);
+	if (!StrValid(std::span{original.c_str(), original.size() + 1}) || Utf8StringLength(original) >= MAX_LENGTH_VEHICLE_NAME_CHARS) return {};
 	std::string buf;
 
 	/* Find the position of the first digit in the last group of digits. */
 	size_t number_position;
-	for (number_position = src->name.length(); number_position > 0; number_position--) {
+	// Preserve the ordinary last-decimal-suffix convention, including its padding; UTF-8 continuation bytes cannot be mistaken for ASCII digits.
+	for (number_position = original.length(); number_position > 0; number_position--) {
 		/* The design of UTF-8 lets this work simply without having to check
 		 * for UTF-8 sequences. */
-		if (src->name[number_position - 1] < '0' || src->name[number_position - 1] > '9') break;
+		if (original[number_position - 1] < '0' || original[number_position - 1] > '9') break; // Only the final contiguous digit group participates in naming.
 	}
 
 	/* Format buffer and determine starting number. */
-	long num;
+	uint64_t num;
 	uint8_t padding = 0;
-	if (number_position == src->name.length()) {
+	if (number_position == original.length()) {
 		/* No digit at the end, so start at number 2. */
-		buf = src->name;
+		buf = original;
 		buf += " ";
 		number_position = buf.length();
 		num = 2;
 	} else {
 		/* Found digits, parse them and start at the next number. */
-		buf = src->name.substr(0, number_position);
+		buf = original.substr(0, number_position);
 
-		auto num_str = std::string_view(src->name).substr(number_position);
+		auto num_str = std::string_view(original).substr(number_position);
 		padding = (uint8_t)num_str.length();
 
-		[[maybe_unused]] auto err = std::from_chars(num_str.data(), num_str.data() + num_str.size(), num, 10).ec;
-		assert(err == std::errc());
+		const auto err = std::from_chars(num_str.data(), num_str.data() + num_str.size(), num, 10).ec;
+		// A long legal custom name can exceed numeric storage; preserve default naming rather than overflow or fail an actual clone after payment.
+		if (err != std::errc() || num == UINT64_MAX) return {};
 		num++;
 	}
 
-	/* Check if this name is already taken. */
-	for (int max_iterations = 1000; max_iterations > 0; max_iterations--, num++) {
+	// Consult the existing unique-name authority with bounded attempts; this query reserves nothing and cannot create a proxy vehicle.
+	for (int max_iterations = 1000; max_iterations > 0; max_iterations--) {
 		std::string new_name = fmt::format("{}{:0{}}", buf, num, padding);
+		if (Utf8StringLength(new_name) >= MAX_LENGTH_VEHICLE_NAME_CHARS) return {};
 
 		/* Check the name is unique. */
 		if (IsUniqueVehicleName(new_name)) {
-			dst->name = std::move(new_name);
-			break;
+			return new_name;
 		}
+		if (num == UINT64_MAX) return {};
+		++num;
 	}
 
-	/* All done. If we didn't find a name, it'll just use its default. */
+	return {}; // Exhausted custom names preserve the ordinary default-name fallback.
 }
 
 /**
  * Clone a vehicle. If it is a train, it will clone all the cars too
- * @param flags type of operation
- * @param tile tile of the depot where the cloned vehicle is build
- * @param veh_id the original vehicle's index
- * @param share_orders shared orders, else copied orders
- * @return the cost of this operation + the new vehicle ID or an error
+ * @param flags Native estimate/NoTest execution; Space query-cost inspection remains pure.
+ * @param tile Actual ordinary depot, Surface workshop or orbital Assembly world tile.
+ * @param veh_id Original real owned hull, whose assets and action progress remain unchanged by Space cloning.
+ * @param share_orders Ordinary shared-list preference; Space requires independent copied instructions.
+ * @return Actual cost plus the new hull ID, or Invalid for an admitted real orbital clone job that has no product yet.
  */
 std::tuple<CommandCost, VehicleID> CmdCloneVehicle(DoCommandFlags flags, TileIndex tile, VehicleID veh_id, bool share_orders)
 {
 	CommandCost total_cost(ExpensesType::NewVehicles);
 
 	Vehicle *v = Vehicle::GetIfValid(veh_id);
+	// Space clones request a new physical paid product; the ordinary temporary-build/refit loop below cannot supply an asynchronous manufacture result.
+	if (v != nullptr && v->type == VehicleType::Space) {
+		auto result = CloneSpaceVehicleAtFacility(flags, tile, *SpaceVehicle::From(v), share_orders);
+		return {std::move(result.cost), result.vehicle};
+	}
 	// Clone only an existing ordinary fleet head; arbitrary parts or noncompany vehicles cannot supply new ownership or order references.
 	if (v == nullptr || !IsCompanyBuildableVehicleType(v) || v->type == VehicleType::Space || !v->IsPrimaryVehicle()) return { CMD_ERROR, VehicleID::Invalid() };
 	Vehicle *v_front = v;
@@ -1085,7 +1116,7 @@ std::tuple<CommandCost, VehicleID> CmdCloneVehicle(DoCommandFlags flags, TileInd
 		}
 
 		/* Now clone the vehicle's name, if it has one. */
-		if (!v_front->name.empty()) CloneVehicleName(v_front, w_front);
+		if (!v_front->name.empty()) w_front->name = MakeClonedVehicleName(v_front->name);
 
 		/* Since we can't estimate the cost of cloning a vehicle accurately we must
 		 * check whether the company has enough money manually. */

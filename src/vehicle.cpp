@@ -946,11 +946,8 @@ Vehicle::~Vehicle()
 	}
 }
 
-/**
- * Adds a vehicle to the list of vehicles that visited a depot this tick
- * @param *v vehicle to add
- */
-static void VehicleEnteredDepotThisTick(Vehicle *v)
+/** @copydoc VehicleEnteredDepotThisTick */
+void VehicleEnteredDepotThisTick(Vehicle *v)
 {
 	/* Vehicle should stop in the depot if it was in 'stopping' state */
 	_vehicles_to_autoreplace[v->index] = !v->vehstatus.Test(VehState::Stopped);

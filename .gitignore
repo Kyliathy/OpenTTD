@@ -2,6 +2,8 @@
 /.vs
 /logs
 /build*
+# Local historical baseline inputs and evidence.
+/OpenTTD-baseline/
 CMakeSettings.json
 docs/aidocs/*
 docs/gamedocs/*

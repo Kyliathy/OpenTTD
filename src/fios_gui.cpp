@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file fios_gui.cpp GUIs for loading/saving games, scenarios, heightmaps, ... @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
+/** @file fios_gui.cpp GUIs for loading/saving games, scenarios, heightmaps, ...
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; discard detached packet metadata between checked files.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; clear independent processing presence/history before every copied reader.
+ */
 
 #include "stdafx.h"
 #include "saveload/saveload_func.h"
@@ -71,9 +75,16 @@ bool FiosItemSorter(const FiosItem &a, const FiosItem &b)
  */
 void LoadCheckData::Clear()
 {
+	// Each preview must supply its own complete processing family and retired history; a valid previous file cannot lend paid work or presence to a missing/malformed next file.
+	this->orbital_recipes_present = false; this->orbital_recipe_rows.clear(); this->orbital_retired_recipe_batches.clear(); this->orbital_retired_discarded_paid_j = 0;
+	this->native_cargo_dimensions_present = false; this->native_cargo_dimension_rows.clear();
 	this->space_structures_present = false; this->next_space_structure_generation = 1; this->space_structure_rows.clear();
 	this->space_structure_retirement_history = {}; // Every preview starts with its own absent/older-file receipts, never the previous file's demolition history.
 	this->next_space_vehicle_generation = 1; this->native_space_vehicle_rows.clear();
+	this->native_station_owner_rows.clear(); // Each copied service target must prove its own file's station authority; a previous preview cannot lend an owner to an absent or foreign center.
+	// Ordinary freight and hub handling must come entirely from this next file; stale copied references could otherwise conceal shared ownership or fabricate a missing packet.
+	this->native_vehicle_cargo_present = this->native_station_cargo_present = false;
+	this->native_ordinary_vehicle_cargo_refs.clear(); this->native_station_cargo_refs.clear(); this->surface_handling_rows.clear();
 	this->space_production_present = this->launch_operations_present = false;
 	this->space_manifests_present = false; this->space_manifest_rows.clear();
 	this->space_pods_present = false; this->next_space_pod_generation = 1; this->space_pod_rows.clear();
@@ -82,6 +93,8 @@ void LoadCheckData::Clear()
 	this->space_order_preview_refs.clear(); this->launch_center_preview_refs.clear();
 	this->space_order_preview_rows.clear(); this->asteroid_knowledge_present = false; this->asteroid_body_count = 0; this->asteroid_knowledge_rows.clear();
 	this->launch_center_preview_rows.clear(); this->space_descents_present = false; this->next_space_descent_id = 1; this->space_descent_rows.clear();
+	// Packet counts belong only to the currently checked file; a later preview must never inherit an earlier file's physical ownership evidence.
+	this->native_cargo_packets_present = false; this->native_cargo_packet_rows.clear();
 	this->space_content_present = this->space_orders_present = false;
 	this->space_orders_active = false;
 	this->space_content_version = 0; this->space_content_signature = 0;

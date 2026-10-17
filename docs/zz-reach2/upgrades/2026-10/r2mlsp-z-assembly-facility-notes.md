@@ -1,0 +1,25 @@
+# R2MLSP-Z - Paid Assembly activation handoff
+
+Owner: [Space master](r2mlsp-space-master-plan.md), [Plan11](r2mlvs11-orbital-stations-and-manufacturing.md) Group6B. Accepted2026-10-15 in RelWithDebInfo and Debug. The source tasks6B.1-6B.3 and master6B are checked. Group6B compacted once. Group7 is next; its working notes are [manufacturing notes](r2mlsp-z-a-manufacturing-notes.md).
+
+## Accepted contract
+
+The original immutable paid418 frame supplies the actual Core, reusable rocket and two deployed builders. Real rocket freight delivers STEL8/GOOD16 to the adjacent180,000 Assembly; native construction consumes the complete batch after592 work ticks. Explicit activation requires the original owned adjacent operational Core and74 opportunities, including a37-tick interruption. No packet, hull, position or consumed receipt is fabricated.
+
+Assembly joins Core/Dock/Storage/Power activation but receives no own panel, general freight stock or probe-service berth. `CmdConnectOrbitalServices`/disconnect explicitly bind an adjacent original owned Core/Power through `OrbitalFacilityState::utility_source` and its750J `consumer`. `assembly_consumer` remains Core construction only. Pausing generation retains IDs and produces no work grant. Existing removal, takeover and company loss retain accountable owners; reused company IDs gain no operation. Schema425 `OrbitalAssemblyFacilities` retains SPST framing; earlier schemas allow inert Assembly frames and reject activated rows. Content revision2 is unchanged. Public field comments were clarified after successful builds; only comments changed, so no broad rebuild was required.
+
+## Frozen evidence
+
+`logs/assembly-facility-verification.json`, SHA256 `87994a5020094d09eb0cb5e7b763487edd54cd22cd009c17206e53f8cad20a8d`, freezes46 acceptance reports,108 nested JSON reports and192 identities. Each configuration passes3,341 focused assertions/15 cases,7,006 physical assertions,100 interrupted-activation assertions, nine ordinary checkpoints across26 owners and seven full/copied-preview rejection pairs. All260 cross-configuration owner comparisons pass.62 native processes comprise48 successes and14 intentional full-load refusals. Ordinary console copies have an old runner label of unknown; their complete bytes were independently verified against the exact configured product with only PE output routing changed. Do not alter the user's runner cleanup work to relabel historical evidence.
+
+Release invocation: `20261015-141242-b68ef79b9a`; Debug: `20261015-142619-a890515c0e`. Reports live under `mlm/reviews/space/assembly-facility-{verify-PHASE,reload-PHASE-BOUNDARY,reject-KIND}/INVOCATION/reports/`. Native controls in Release connect were inspected: full consumed8/16 receipt,592 work, Assembly ready, original module1 power source and30kW output. The retained PNG has pixels identical to its native PPM. Inputs and earlier proofs remain immutable.
+
+The original disconnect fixture expected Connection before the real Core's retained stock. Production correctly returns Inventory and rejects unsafe last-Core evacuation into its dependent Storage. The accepted correction verifies those refusals unchanged, disconnects the Assembly, orders the actual builder to depart and removes the now empty paid facility. Isolated empty-Core contracts cover the Connection guard. Do not weaken the evacuation rule or manufacture another Core/stock/position to change this test.
+
+## Build and test bounds
+
+Release builds `logs/assembly-facility-release-build.log` and `-build-2.log`, Debug `logs/assembly-facility-debug-build.log` all completed0. Sessions75097/19872/46084 are terminal; Release sequence72064 and Debug88019 are terminal0. No build or native test remains live. Do not restart them. The three `assembly_facility_checks-1.py`, `-2.py`, `-3.py` wrappers each bound their native child to110 seconds. With `PYTHONPATH=src/tests/multilayer/support;src/tests/multilayer/acceptance`, each accepts an explicit configuration and exact predecessor/proof. No full regression was run.
+
+The cross-plan entry producers passed12,901 focused assertions/28 cases in each424 configuration before dependent mutation, invocation `20261015-132817-baf7698fc7`, including native Storage activation from the original418 paid frame. Their shared utility source is unchanged. Current425 physical Assembly construction also consumes the actual native common allocations. Industry recipe implementation is deferred to Group10, not a missing Assembly activation prerequisite.
+
+CMake absolute path: `C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe`. Use two outer workers and `/p:CL_MPCount=2`; explicitly `exit $LASTEXITCODE` after PowerShell CMake commands. Batch source/fixture changes before builds. Poll confirmed live sessions with50-second waits and communicate within60 seconds. No write Git commands or subagents. Preserve unrelated cleanup changes. Future auxiliary names extend `r2mlsp-z-a-` alphabetically.

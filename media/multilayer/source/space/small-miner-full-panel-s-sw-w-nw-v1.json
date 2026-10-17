@@ -1,0 +1,20 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; exact actual authored access-panel prompt and reference roles; selection requires measured native component review.",
+  "key": "small-miner-full-panel-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "full",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: stylized-concept.\nNew original bitmap source: four genuine physical views of ONE tiny AMBER ORANGE ribbed machinery access-panel cassette, an authored component for the existing first-party OpenTTD olive-gray small mining robot. No input images.\nThe part is a flat rectangular dark olive-gray metal bezel with an inset amber-orange face and THREE broad dark ribs crossing its SHORT dimension. Length twice width, shallow thickness, chunky classic 1990s transport-Tycoon pixel-art clusters, dark underside, upper-left SCREEN illumination. No spacecraft/hull or other equipment. It will replace only the original tiny top access panel as a FULL HOLD cue; native cargo owns the actual hold.\nFour real elevated orthographic views in2x2:\ntop-left S long panel axis screen vertical, front end DOWN;\ntop-right SW long panel axis upper-right to lower-left, front end LOWER LEFT;\nbottom-left W long panel axis screen horizontal, front end LEFT;\nbottom-right NW long panel axis lower-right to upper-left, front end UPPER LEFT.\nMaintain exactly the SAME flat cassette,3 ribs, proportions, colors and screen light in all4 actual orientations; don't mirror/rotate flat images. Small native target3x5px part; broad readable clusters only.\nSAFE BORDERED1536x1024 transparent sheet with6px PURE MAGENTA #FF00FF separator frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000).\nEach cassette centered in its own frame, length220px width110px max, at least80px TRANSPARENT clearance from every frame. Background/margins/gutters are real transparent alpha. No gradients, pink fill, haze, checkerboard, floor, shadow, glow, text, labels, symbols or other props. Four separated tiny physical panel parts only, with visible magenta frames.",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "path": "media/multilayer/source/space/raw/small-miner-full-panel-s-sw-w-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-2539f81c-e2e8-4a0a-8a68-ac9a94657c1e.png",
+  "status": "pending_measured_status_component_review"
+}

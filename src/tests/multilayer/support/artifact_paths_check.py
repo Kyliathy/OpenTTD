@@ -14,7 +14,7 @@ import unittest
 from unittest.mock import patch
 
 from artifact_paths import contained, create_run_context, repository_root, resolve_input_path
-from runner import collect_native_screenshots
+from runner import collect_native_screenshots, console_executable
 
 
 class ArtifactPathTests(unittest.TestCase):
@@ -133,6 +133,37 @@ class ArtifactPathTests(unittest.TestCase):
         self.assertEqual((client.runtime_dir / "scripts/game_start.scr").read_bytes(), b"original startup")
         self.assertEqual((build / "scripts/game_start.scr").read_bytes(), b"original startup")
         self.assertEqual((build / "native-art.cfg").read_bytes(), b"original configuration")
+
+    @unittest.skipUnless(os.name == "nt", "Windows console projection")
+    def test_console_regeneration_preserves_hard_linked_historical_bytes(self):
+        """Regenerate one run without changing another run linked by cleanup.
+
+        @return None; old executable bytes/hash survive and the new run owns a new file.
+        """
+        source = self.root / "build/RelWithDebInfo/openttd.exe"
+        source.parent.mkdir(parents=True)
+        (self.root / "build/native-art.cfg").write_bytes(b"test configuration")
+        encoded = bytearray(512)
+        encoded[60:64] = (128).to_bytes(4, "little")
+        encoded[128:132] = b"PE\0\0"
+        encoded[220:222] = (2).to_bytes(2, "little")
+        source.write_bytes(encoded)
+        first = create_run_context("geology", "console", root=self.root)
+        second = first.for_process("historical")
+        second.prepare_runtime()
+        target = console_executable(first, source)
+        historical = second.runtime_dir / target.name
+        os.link(target, historical)
+        original = historical.read_bytes()
+        self.assertTrue(os.path.samefile(target, historical))
+
+        encoded[-1] = 1
+        source.write_bytes(encoded)
+        console_executable(first, source)
+        self.assertEqual(historical.read_bytes(), original)
+        self.assertNotEqual(target.read_bytes(), original)
+        self.assertFalse(os.path.samefile(target, historical))
+        self.assertEqual(list(first.runtime_dir.glob("*.tmp")), [])
 
     def test_reports_bind_feature_artifacts_and_reject_other_runs(self):
         """Permit explicit mixed-feature evidence while refusing unrelated runs.

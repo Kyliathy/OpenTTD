@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BC and r2mlvs14-remaining-assets-and-runtime-integration.md Group63B.2; exact executed survey service/interlock hatch source edit, pending native registration and protected-body review.",
+  "key": "survey-probe-service-a-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-19",
+  "state": "service",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: approved first-party OpenTTD SURVEY PROBE model19, SERVICE inspection phase A.\nImage1 is the exact approved S/SW/W/NW free original. Preserve identical positions, size, camera, dish and pivot, squat cream hexagonal bus, TWO navy solar paddles, rear nozzle, upper-left screen lighting and all original colors.\nChange ONLY the existing small amber service-access hatch: Open its small amber face to a BLACK inspection socket with ONE short BRIGHT CYAN connector at the LEFT end of the socket as viewed in each panel, the other end dark. Retain a thin amber bezel. This is actual inspection phase A.\nKeep exactly the hatch's original size, location, orientation and outline. No enlargement, extra equipment, scan beam, glow, exhaust, cargo, sparks, text or symbols. The dish stays in its original free pose; service is not a scan. Native funded work/blocking owners alone select the cue; source art grants no work, knowledge, quantities or supplies.\nFOUR genuine engine viewport headings, same as reference: S top-left front DOWN, SW top-right front LOWER LEFT, W bottom-left front LEFT horizontal, NW bottom-right front UPPER LEFT. Fixed elevated orthographic camera, crisp classic1990s Tycoon pixel-art clusters; never rotate/mirror a flat picture or change model identity.\nSAFE BORDERED1536x1024 transparent sheet,6px opaque PURE MAGENTA frames S(24,24)-(744,488),SW(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000).\nFour complete separated spacecraft at least32px clear of frames. Real transparent alpha background/margins/gutters, keep visible magenta frames only. No painted checkerboard, haze, gradients, floor, shadows, text, labels or props. All original craft hardware remains fixed; only the declared small service hatch changes.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/survey-probe-free-s-sw-w-nw-v1.png",
+      "sha256": "8698ed9acc2fe7787ec463b58cb9b1666bdb7aa591161ecb22f8ab0d2f8f3579",
+      "role": "Approved exact survey model and same-heading layout; only existing upper hatch may change"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/survey-probe-service-a-s-sw-w-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-0089e752-4b80-4d68-9175-8fabb8304c04.png",
+  "status": "pending_native_status_component_review",
+  "phase": 0
+}

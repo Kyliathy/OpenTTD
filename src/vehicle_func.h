@@ -5,7 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_func.h Functions related to vehicles. */
+/** @file vehicle_func.h Functions related to vehicles.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BB; prepare clone names before physical manufacture.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; actual physical arrivals share the native replacement queue/stop owner.
+ */
 
 #ifndef VEHICLE_FUNC_H
 #define VEHICLE_FUNC_H
@@ -197,6 +200,12 @@ uint8_t CalcPercentVehicleFilled(const Vehicle *v, StringID *colour);
 void VehicleLengthChanged(const Vehicle *u);
 
 void ResetVehicleHash();
+
+/** Prepare the usual unique numbered clone name without allocating a vehicle or reserving a name.
+ * @param source_name Captured original custom name; empty or unusable/overlong names retain the new product's default name.
+ * @return Next available bounded UTF-8 custom name, or empty after invalid/overflow/exhausted naming admission.
+ */
+std::string MakeClonedVehicleName(std::string_view source_name);
 void ResetVehicleColourMap();
 
 uint8_t GetBestFittingSubType(Vehicle *v_from, Vehicle *v_for, CargoType dest_cargo_type);
@@ -330,6 +339,10 @@ bool VehiclesHaveSameEngineList(const Vehicle *v1, const Vehicle *v2);
 bool VehiclesHaveSameOrderList(const Vehicle *v1, const Vehicle *v2);
 
 bool IsUniqueVehicleName(const std::string &name);
+/** Queue one actual depot/eligible physical Space arrival for the existing native automatic replacement pass; preserve its requested running state and stop it until that pass.
+ * @param v Actual surviving owned vehicle whose genuine arrival was already admitted; this grants no free service, randomization, materials or replacement identity.
+ */
+void VehicleEnteredDepotThisTick(Vehicle *v);
 Direction VehicleEnterTileCoordinates(GetNewVehiclePosResult &gp, DiagDirection enterdir, Track track);
 
 #endif /* VEHICLE_FUNC_H */

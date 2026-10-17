@@ -1,12 +1,14 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_transition_sl.cpp Saved native rocket round trips and independent preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups10B/11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CB; source-era heavy resupply admission precedes physical handover.
  */
 #include "../stdafx.h"
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../space_transition.h"
 #include "../space_vehicle.h"
+#include "../space_mining_tuning.h"
 #include "../launch_operations.h"
 #include "../space_structure.h"
 #include "../multilayer_state.h"
@@ -20,6 +22,13 @@ void ResetSpaceTransitionLoadStaging() { candidate.reset(); }
 bool AcceptLoadedSpaceTransitions()
 {
 	if (!candidate) return IsSavegameVersionBefore(SaveLoadVersion::SpaceLaunchLogistics);
+	// Older commissioning/mining-only sources could not launch toward a heavy receiver, even while its own still-empty manifest reveals no future supply yet.
+	for (const auto &row : *candidate) {
+		const auto &target = row.state.destination;
+		if (target.kind != SpaceOrderTargetKind::Craft) continue;
+		const auto *receiver = ResolveSpaceCraft({VehicleID{target.id}, target.generation});
+		if (receiver != nullptr && GetSpaceVehicleModel(*receiver) == SPACE_HEAVY_MINER_MODEL && IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerSupplies)) return false;
+	}
 	if (!InstallLoadedSpaceTransitions(*candidate)) return false;
 	candidate.reset(); return true;
 }
@@ -66,6 +75,10 @@ void ValidateSpaceTransitionLoadPreview()
 		} else {
 			if (f.destination.generation >= _load_check_data.next_space_vehicle_generation) SlErrorCorrupt("Invalid future Space resupply target preview");
 			const SpaceCraftRef target{VehicleID{f.destination.id}, f.destination.generation};
+			/** @param row Same-file paid hull receipt. @return Whether this is the exact original resupply receiver incarnation. */
+			const auto receipt = std::ranges::find_if(_load_check_data.space_production_rows, [&](const auto &row) { return row.craft == target; });
+			// Enforce the source producer before consulting delivered stock; a pre433 flight to an otherwise empty paid21 cannot borrow later heavy resupply admission.
+			if (receipt != _load_check_data.space_production_rows.end() && receipt->state.model == SPACE_HEAVY_MINER_MODEL && IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerSupplies)) SlErrorCorrupt("Future heavy resupply flight in older source preview");
 			const auto identity = std::find(_load_check_data.space_order_preview_refs.begin(), _load_check_data.space_order_preview_refs.end(), target);
 			// Retained lost history grants no operation; a surviving active resupply receiver must still belong to the exact sender fleet.
 			if (identity != _load_check_data.space_order_preview_refs.end() && f.blocked != SpaceFlightBlock::TargetLost && unresolved) {

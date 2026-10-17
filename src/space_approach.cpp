@@ -1,11 +1,15 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_approach.cpp Stable shared approach admission over actual native hulls and targets.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group4B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group11; shared homeward mining departure.
  */
 #include "stdafx.h"
+#include "space_work_cost.h"
 #include "space_approach.h"
+#include "space_departure.h"
 #include "space_vehicle.h"
 #include "space_transition.h"
 #include "space_structure.h"
@@ -19,6 +23,8 @@
 #include <set>
 #include <tuple>
 #include "safeguards.h"
+
+static constexpr int32_t BODY_APPROACH_CLEARANCE = 2 * SPACE_Q16; ///< Original shared body/attachment waiting envelope, also governing mining departure.
 
 /** @param target Typed requested destination. @return Its shared physical approach domain. */
 static SpaceOrderTarget NormalizeApproachTarget(SpaceOrderTarget target)
@@ -71,6 +77,7 @@ std::optional<std::vector<SpaceApproachRecord>> PlanSpaceApproaches(std::span<co
 	// Bound both copied request and derived-slot work by the published native fleet capacity.
 	if (requests.size() > MAX_SPACE_VEHICLES || slots.size() > 2 * MAX_SPACE_VEHICLES) return std::nullopt;
 	std::vector<SpaceApproachRecord> result(requests.begin(), requests.end());
+	RecordSpaceWork(SpaceWorkKind::PlannerRequests, requests.size()); RecordSpaceWork(SpaceWorkKind::PlannerSlots, slots.size());
 	std::set<VehicleID> crafts;
 	std::set<std::tuple<SpaceOrderTargetKind, uint32_t, uint64_t, uint8_t>> definitions, retained;
 	// Reject ambiguous physical slot definitions before considering any caller's priority or occupancy.
@@ -84,13 +91,16 @@ std::optional<std::vector<SpaceApproachRecord>> PlanSpaceApproaches(std::span<co
 		if (r.request.slot == UINT8_MAX) continue;
 		const auto key = std::tuple{r.request.target.kind, r.request.target.id, r.request.target.generation, r.request.slot};
 		if (!retained.insert(key).second) return std::nullopt;
-		const auto found = std::ranges::find_if(slots, [&](const auto &s) { return s.target == r.request.target && s.slot == r.request.slot; });
+		/** @param s Original physical slot. @return Whether its full domain/slot identity matches this existing request. */
+		const auto found = std::ranges::find_if(slots, [&](const auto &s) { RecordSpaceWork(SpaceWorkKind::PlannerSlotTests); return s.target == r.request.target && s.slot == r.request.slot; });
 		// Missing slots and physical foreign occupants block admission without moving either hull or replacing an actual body lease.
 		if (found == slots.end() || found->blocked || (found->occupant != VehicleID::Invalid() && found->occupant != r.craft)) r.request.slot = UINT8_MAX;
 	}
 	std::vector<size_t> order(result.size());
 	for (size_t i = 0; i < order.size(); ++i) order[i] = i;
+	/** @param a First original request index. @param b Second original request index. @return Whether stable native tick/ID priority admits the first earlier. */
 	std::ranges::sort(order, [&](size_t a, size_t b) {
+		RecordSpaceWork(SpaceWorkKind::PlannerOrderTests);
 		return std::tuple{result[a].request.request_tick, result[a].craft.base()} < std::tuple{result[b].request.request_tick, result[b].craft.base()};
 	});
 	// Older requests win first, with native hull ID resolving simultaneous arrivals independently of input iteration order.
@@ -100,8 +110,10 @@ std::optional<std::vector<SpaceApproachRecord>> PlanSpaceApproaches(std::span<co
 		// Choose the lowest free physical slot, so derived slot enumeration cannot change deterministic admission.
 		const SpaceApproachSlot *best = nullptr;
 		for (const auto &s : slots) {
+			RecordSpaceWork(SpaceWorkKind::PlannerSlotTests);
 			if (s.target != r.request.target || s.blocked || (s.occupant != VehicleID::Invalid() && s.occupant != r.craft)) continue;
-			const bool used = std::ranges::any_of(result, [&](const auto &other) { return other.request.target == s.target && other.request.slot == s.slot; });
+			/** @param other Previously admitted original request. @return Whether that exact shared slot already has an owner. */
+			const bool used = std::ranges::any_of(result, [&](const auto &other) { RecordSpaceWork(SpaceWorkKind::PlannerOwnerTests); return other.request.target == s.target && other.request.slot == s.slot; });
 			if (!used && (best == nullptr || s.slot < best->slot)) best = &s;
 		}
 		if (best != nullptr) r.request.slot = best->slot;
@@ -162,27 +174,44 @@ static bool IsSafeStaging(SpacePoint point, const SpaceVehicle &craft)
 		for (uint8_t slot = 0; slot < GetSpaceStructureApproachCapacity(*site); ++slot) if (point == *GetSpaceStructureApproachSlot(*site, slot)) return false;
 	}
 	// The derived body index limits exclusion checks to the local envelope, including a moving body's attached-craft margin.
-	for (auto id : QueryAsteroidBodies({point.x - 2 * SPACE_Q16, point.y - 2 * SPACE_Q16}, {point.x + 2 * SPACE_Q16, point.y + 2 * SPACE_Q16})) {
+	for (auto id : QueryAsteroidBodies({point.x - BODY_APPROACH_CLEARANCE, point.y - BODY_APPROACH_CLEARANCE}, {point.x + BODY_APPROACH_CLEARANCE, point.y + BODY_APPROACH_CLEARANCE})) {
+		RecordSpaceWork(SpaceWorkKind::StagingBodyTests);
 		const auto *body = GetMutableAsteroidBody(id);
-		if (body != nullptr && SpaceDistanceSquared(point, body->motion.position) < uint64_t{2 * SPACE_Q16} * (2 * SPACE_Q16)) return false;
+		if (body != nullptr && SpaceDistanceSquared(point, body->motion.position) < uint64_t{BODY_APPROACH_CLEARANCE} * BODY_APPROACH_CLEARANCE) return false;
 	}
 	return true;
 }
 
-/** Find a real waiting destination without changing position or saved priority.
- * @param craft Actual asking hull. @return Safe current position or a bounded local alternative, if one exists.
+/** Find a real waiting/departure destination without changing position or saved priority.
+ * @param craft Actual asking hull.
+ * @param onward Optional actual onward route; only departing miners prefer its nearest clear candidate.
+ * @return Safe current position or a bounded local alternative, if one exists.
  */
-static std::optional<SpacePoint> FindSafeStaging(const SpaceVehicle &craft)
+static std::optional<SpacePoint> FindSafeStaging(const SpaceVehicle &craft, std::optional<SpacePoint> onward = std::nullopt)
 {
 	if (IsSafeStaging(craft.position, craft)) return craft.position;
+	std::optional<SpacePoint> best;
 	// The fixed local ring order bounds work and makes simultaneous staging choices independent of rendering or RNG.
 	for (int radius = 1; radius <= 8; ++radius) {
 		for (const auto [dx, dy] : std::array<std::pair<int, int>, 8>{{{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}}) {
 			const SpacePoint point{craft.position.x + dx * radius * SPACE_Q16, craft.position.y + dy * radius * SPACE_Q16};
-			if (IsSafeStaging(point, craft)) return point;
+			if (!IsSafeStaging(point, craft)) continue;
+			if (!onward) return point;
+			// Original waiting requests retain their canonical first candidate. A mining departure instead prefers the homeward clear point so the next direct return step does not reverse into the body envelope.
+			if (!best || SpaceDistanceSquared(point, *onward) < SpaceDistanceSquared(*best, *onward)) best = point;
 		}
 	}
-	return std::nullopt;
+	return best;
+}
+
+/** @copydoc GetSpaceMiningDepartureDestination */
+std::optional<SpacePoint> GetSpaceMiningDepartureDestination(const SpaceVehicle &craft, SpacePoint onward)
+{
+	if (craft.mission.phase != SpaceMissionPhase::Return) return std::nullopt;
+	const auto *body = GetMutableAsteroidBody(craft.mission.target);
+	// Departure is local to the original mining envelope. Once clear, ordinary travel retains its existing semantics; a removed body creates no artificial obstacle, waypoint or lease.
+	if (body == nullptr || SpaceDistanceSquared(craft.position, body->motion.position) >= uint64_t{BODY_APPROACH_CLEARANCE} * BODY_APPROACH_CLEARANCE) return craft.position;
+	return FindSafeStaging(craft, onward);
 }
 
 /** @copydoc RequestSpaceApproach */
@@ -215,10 +244,13 @@ static std::vector<SpaceApproachSlot> GetTargetSlots(const SpaceVehicle &craft, 
 	} else {
 		const auto &site = *ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(target.id)}, target.generation});
 		for (uint8_t i = 0; i < GetSpaceStructureApproachCapacity(site); ++i) slots.push_back({target, i, *GetSpaceStructureApproachSlot(site, i)});
+		// A native manufacturing job reserves its planned output berth through this same authority; incoming craft wait without fake VehicleIDs or a parallel occupancy table.
+		if (site.module && site.module->manufacture && site.module->manufacture->phase != OrbitalManufacturePhase::Complete) for (auto &slot : slots) slot.blocked = true;
 	}
 	// Physical occupants and legacy body leases constrain reservations; admission never rewrites either physical authority.
 	for (auto &slot : slots) {
 		for (const auto *other : SpaceVehicle::Iterate()) {
+			RecordSpaceWork(SpaceWorkKind::ApproachOccupantChecks);
 			// An actual Space rocket occupies geometry through its original hull; a carried passenger is custody inside that hull and consumes no second berth.
 			if (GetSpaceVehicleLayer(*other) != MapLayer::Space || other->construction.placement == SpacePlacement::Carried || other->position != slot.point) continue;
 			if (slot.occupant != VehicleID::Invalid() && slot.occupant != other->index) slot.blocked = true;
@@ -235,6 +267,7 @@ void PrepareSpaceApproachTick()
 	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return;
 	// Gather existing explicit orders before any hull earns upkeep/work or moves; simultaneous arrivals share this native tick's priority.
 	for (auto *craft : SpaceVehicle::Iterate()) {
+		RecordSpaceWork(SpaceWorkKind::ApproachCraftVisits);
 		const auto &q = craft->space_orders;
 		if (craft->transition) {
 			const auto &flight = *craft->transition;
@@ -260,6 +293,7 @@ void PrepareSpaceApproachTick()
 	std::vector<SpaceApproachSlot> slots;
 	// Gather every company before arbitration, preserving old priority and releasing only requests whose actual target disappeared.
 	for (auto *craft : SpaceVehicle::Iterate()) {
+		RecordSpaceWork(SpaceWorkKind::ApproachCraftVisits);
 		if (!craft->space_orders.approach) continue;
 		const auto target = craft->space_orders.approach->target;
 		if (!CanOwnSpaceApproach(*craft, target) || craft->vehstatus.Test(VehState::Crashed) || !HasApproachTarget(*craft, target)) {
@@ -268,7 +302,8 @@ void PrepareSpaceApproachTick()
 			continue;
 		}
 		requests.push_back({craft->index, craft->generation, *craft->space_orders.approach});
-		if (std::ranges::none_of(slots, [&](const auto &s) { return s.target == target; })) {
+		/** @param s Already gathered original slot. @return Whether this physical domain already contributes its native slots. */
+		if (std::ranges::none_of(slots, [&](const auto &s) { RecordSpaceWork(SpaceWorkKind::ApproachTargetChecks); return s.target == target; })) {
 			auto target_slots = GetTargetSlots(*craft, target);
 			slots.insert(slots.end(), target_slots.begin(), target_slots.end());
 		}
@@ -299,6 +334,7 @@ SpaceOrderBlock GetSpaceApproachDestination(const SpaceVehicle &craft, SpacePoin
 		return SpaceOrderBlock::ApproachBusy;
 	}
 	const auto slots = GetTargetSlots(craft, request.target);
+	/** @param s Actual target slot. @return Whether its stable ordinal belongs to this original request. */
 	const auto found = std::ranges::find_if(slots, [&](const auto &s) { return s.slot == request.slot; });
 	// A lost/blocked slot remains a wait; a query cannot push an occupant away or grant a replacement slot outside arbitration.
 	if (found == slots.end() || found->blocked || (found->occupant != VehicleID::Invalid() && found->occupant != craft.index)) {
@@ -333,6 +369,8 @@ bool ValidateNativeSpaceApproaches()
 		if (r.target.kind == SpaceOrderTargetKind::Structure && r.slot != UINT8_MAX) {
 			const auto *site = ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(r.target.id)}, r.target.generation});
 			if (!GetSpaceStructureApproachSlot(*site, r.slot)) return false;
+			// A pending paid batch owns the output slot. After completion, actual native hull admission/occupancy resumes, including a later visitor after the product departs.
+			if (site->module && site->module->manufacture && site->module->manufacture->phase != OrbitalManufacturePhase::Complete) return false;
 		}
 	}
 	return true;
@@ -357,4 +395,34 @@ bool IsSpaceApproachSiteAvailable(const SpaceStructureState &state)
 		if (contains(craft->position) || (craft->space_orders.approach && contains(craft->space_orders.approach->staging))) return false;
 	}
 	return true;
+}
+
+/** @copydoc IsSpaceStructureManufactureBerthFree */
+bool IsSpaceStructureManufactureBerthFree(const SpaceStructure &site)
+{
+	// Only a real Assembly's one physical output slot can admit manufacture; actual footprint, approach and staging occupants remain authoritative.
+	if (site.state.kind != SpaceBuildKind::Assembly || GetSpaceStructureApproachCapacity(site) != 1 || !IsSpaceApproachSiteAvailable(site.state)) return false;
+	const SpaceOrderTarget target{SpaceOrderTargetKind::Structure, site.index.base(), site.generation};
+	// An already admitted incoming hull has priority even before reaching the precise point; a new order cannot steal its saved native slot.
+	for (const auto *craft : SpaceVehicle::Iterate()) {
+		if (!craft->space_orders.approach) continue;
+		const auto &request = *craft->space_orders.approach;
+		if (request.target == target && request.slot != UINT8_MAX) return false;
+	}
+	return true;
+}
+
+/** @copydoc BindSpaceManufactureBerth */
+bool BindSpaceManufactureBerth(SpaceVehicle &craft, const SpaceStructure &site)
+{
+	// Only the exact freshly completed paid product can inherit this preflighted output berth; a caller cannot use this boundary to admit an unrelated incoming hull.
+	if (!site.module || !site.module->manufacture || site.module->manufacture->phase != OrbitalManufacturePhase::Complete ||
+		site.module->manufacture->product != GetSpaceCraftReference(craft) || craft.owner != site.state.owner || craft.space_orders.approach ||
+		craft.construction.assembly != GetSpaceStructureReference(site) || craft.construction.assembly_serial != site.module->manufacture->serial ||
+		craft.position != GetSpaceStructureApproach(site.state) || craft.construction.placement != SpacePlacement::Orbital) return false;
+	const SpaceOrderTarget target{SpaceOrderTargetKind::Structure, site.index.base(), site.generation};
+	const auto slots = GetTargetSlots(craft, target);
+	// The one derived physical slot must still belong only to this actual hull; no proxy VehicleID or alternate occupancy registry participates.
+	if (slots.size() != 1 || slots[0].blocked || (slots[0].occupant != VehicleID::Invalid() && slots[0].occupant != craft.index)) return false;
+	craft.space_orders.approach = SpaceApproachRequest{target, TimerGameTick::counter, 0, craft.position}; return true;
 }

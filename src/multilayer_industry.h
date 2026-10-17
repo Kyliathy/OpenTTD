@@ -246,6 +246,26 @@ uint32_t CommitLayerMineDispatch(Industry &industry, const LayerMineDispatchTick
 /** @param industry Existing bound mine whose tile loop requests supply. @return Whole committed station units, or zero with stock retained. */
 uint32_t DispatchLayerMineCargo(Industry &industry);
 
+/** Shared noncopyable owner of recipe-bound physical work already paid through the actual electrical ledger. */
+class LayerRecipeElectricalWork;
+
+/** Saved physical progress paid through the shared utility participant, never an electrical balance.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10
+ * A native owner may serialize this receipt, but copied scalar work cannot create or replenish its private runtime owner.
+ */
+struct LayerRecipeElectricalWorkRecord {
+	MultiLayerRecipeID recipe{}; ///< Exact selected immutable alternative; another recipe cannot spend this progress.
+	uint32_t consumer = UINT32_MAX; ///< Existing ledger-issued native consumer ID; this receipt issues no identity.
+	uint32_t work_per_batch = 0; ///< Original recipe duration, retained to reject silent work-rate reinterpretation.
+	uint64_t power_per_batch = 0; ///< Original complete electrical bill, distinct from a usable grant.
+	uint64_t paid_j = 0; ///< Already consumed joules embodied in this one pending batch's physical work.
+	uint64_t sequence = 1; ///< Receipt change stamp; stale copies cannot earn or settle the same progress twice.
+	uint64_t last_interval = 0; ///< Actual ledger opportunity most recently used; zero is the explicit fresh state.
+	uint64_t interval_paid_j = 0; ///< Actual work already paid in that opportunity, bounding split grants to one work tick.
+	/** @param other Original work receipt to compare. @return Whether all provenance, progress and opportunity fields agree. */
+	bool operator==(const LayerRecipeElectricalWorkRecord &other) const = default;
+};
+
 /** Read-only copy of an existing facility's actual stock/work; it is not a physical cargo or utility inventory. */
 struct LayerRecipeInventorySnapshot {
 	MultiLayerRecipeID recipe{}; ///< Saved owner-selected alternative; unknown/invalid choice cannot run a batch.
@@ -259,6 +279,13 @@ struct LayerRecipeInventorySnapshot {
 	uint64_t power_j = 0; ///< Proposed authoritative electric grant quantity; this view cannot allocate or consume a grid grant.
 };
 
+/** Compare every physical inventory/work/grant field without treating either snapshot as custody.
+ * @param left Original prepared owner snapshot.
+ * @param right Current actual owner snapshot.
+ * @return Whether all choice, revision, stock, work and grant values agree.
+ */
+bool EqualLayerRecipeInventory(const LayerRecipeInventorySnapshot &left, const LayerRecipeInventorySnapshot &right);
+
 /**
  * Read-only inventory boundary implemented by the actual Industry or later SpaceStructure owner.
  * A proposal borrows this object's identity within one simulation action. It is not saved,
@@ -270,6 +297,8 @@ public:
 	virtual ~LayerRecipeInventoryView() = default;
 	/** @return A pure snapshot of the owner's actual inventory/recipe/work/grant view; no stock, RNG or counters change. */
 	virtual LayerRecipeInventorySnapshot Capture() const = 0;
+	/** @return This actual owner's optional shared paid-work receipt; ordinary whole-grant and unpowered callers expose none. */
+	virtual const LayerRecipeElectricalWork *ElectricalWork() const { return nullptr; }
 };
 
 /** One checked input debit or output credit, in the selected content label's actual packet unit. */
@@ -291,6 +320,8 @@ struct LayerRecipeBatchProposal {
 	uint64_t work_ticks = 0; ///< Whole work debit for the complete batch count.
 	uint64_t heat_j = 0; ///< Proposed grant use; actual token scheduling/allocation remains with its utility owner.
 	uint64_t power_j = 0; ///< Separate electrical grant use, never cargo payment or mine reserve.
+	std::optional<LayerRecipeElectricalWorkRecord> electrical_work; ///< Exact optional already-paid physical receipt, bound to the same real inventory owner.
+	uint64_t paid_power_j = 0; ///< Previously consumed work settled with this batch, never another current utility debit.
 };
 
 /** Ledger-owned reservation identity; defined by utility_power.h, never derived from an industry ID. */
@@ -309,6 +340,8 @@ public:
 	 * @return Whether this owner has an actual grant; default refuses scalar-only power and allocates no utility identity.
 	 */
 	virtual bool GetElectricalGrant([[maybe_unused]] UtilityGrantID &grant) const { return false; }
+	/** @return The same optional mutable receipt exposed by Inventory(); default callers cannot claim prepaid progress. */
+	virtual LayerRecipeElectricalWork *ElectricalWork() { return nullptr; }
 	/**
 	 * Revalidate the complete actual owner and its optional authoritative grant participant.
 	 * @param proposal Exact bounded all-input/output/work proposal.

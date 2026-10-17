@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BD and r2mlvs14-remaining-assets-and-runtime-integration.md Group63C.2; exact executed missing-direction carrier edit prompt, pending actual heading/layout/native review.",
+  "key": "construction-probe-empty-n-ne-w-nw-v1",
+  "asset_id": "vehicle.model-20",
+  "state": "empty",
+  "directions": [
+    "N",
+    "NE",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: approved first-party OpenTTD LIGHT CONSTRUCTION PROBE model20, remaining genuine EMPTY views N/NE/W/NW.\nImage1 is the approved SAME physical carrier. Its actual views are S top-left (arm bases DOWN, nozzle UP), SW top-right (arm bases LOWER LEFT, nozzle UPPER RIGHT), E bottom-left, SE bottom-right. Those views are already retained; DO NOT repeat them. Draw the genuine opposite camera views specified below. Do not rotate or mirror a flat image.\nPreserve the exact short broad OCHRE-YELLOW rectangular TRUSS chassis, shallow dark-gray EMPTY central cargo cradle, exactly TWO short articulated SILVER manipulator arms at the two A/front corners, small paired-jaw grippers folded close, TWO small NAVY solar paddles at B/rear, ONE short rear central nozzle, ONE amber upper rear service hatch. Same physical proportions, equipment, materials and chunky Tycoon pixel style. No cargo, drill, dish, wheels, cab, person, extra arms, tall crane or rocket hull.\nCRITICAL FRONT/REAR geometry for FOUR output views:\nTOP LEFT N: FRONT ARM BASES at the TOP, REAR NOZZLE at the BOTTOM. Long chassis axis vertical. We see the opposite physical end from the source top-left; manipulator mounting corners must be uppermost and rear solar paddles near the lower rear. Arms folded close to upper corners.\nTOP RIGHT NE: FRONT ARM BASES at the UPPER RIGHT, REAR NOZZLE at the LOWER LEFT. The opposite physical end from source top-right. Long chassis axis lower-left to upper-right.\nBOTTOM LEFT W: FRONT ARM BASES at the LEFT, REAR NOZZLE at the RIGHT. Exact horizontal axis, genuine opposite side of the source E view.\nBOTTOM RIGHT NW: FRONT ARM BASES at the UPPER LEFT, REAR NOZZLE at the LOWER RIGHT. Genuine opposite side of source SE.\nUse arm mounting positions and the opposite central nozzle to enforce orientation, not the direction in which a folded gripper happens to point. Same elevated ORTHOGRAPHIC camera and fixed upper-left SCREEN light, never rotate the lighting. Ordinary physical occlusion is allowed for far equipment.\nClassic restrained1990s transport-Tycoon pixel-art clusters, matte ochre metal, charcoal floor/underside, dull silver arms, navy solar rectangles with broad blue divisions, amber hatch. Tiny native32x24px craft, no shiny3D or smooth painting.\nSAFE BORDERED transparent1536x1024,6px opaque PURE MAGENTA frames N(24,24)-(744,488),NE(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000).\nFour COMPLETE separated cutouts at least32px from frames, max440px width280px height; uniformly reduce as necessary. Real transparent alpha background/margins/gutters, visible magenta frames only. No printed checkerboard, haze, gradients, floor/shadow, text, labels, arrows, cargo or props. Same selected carrier, true N/NE/W/NW views with EMPTY cradle.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-e-se-v1.png",
+      "sha256": "34f568450934d572808dcb05360cf29486c8cff2336b4d90c8b2fff1073aa158",
+      "role": "Selected exact carrier model; actual source headings S/SW/E/SE are geometry/style reference for genuine missing N/NE/W/NW views"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-w-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-63e002b4-8895-405a-a986-fbd366ef631f.png",
+  "status": "pending_genuine_direction_and_native_review"
+}

@@ -3,6 +3,10 @@
 # Actual collector rendering: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C.
 # Orbital Core activation and sole packet stock: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1.
 # Contained Core service and shared electrical settlement: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B.
+# Native processor work, independent copied records and ordinary files: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
+# Paid processor construction/resource routes: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group11.
+# Explicit paid-hauler packet/refit boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12.
+# Actual processor product returns and linked Surface collection: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Native Surface processor geometry/state: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 add_test_files(
@@ -11,8 +15,18 @@ add_test_files(
     test_artifact_paths.cpp
     artifact_paths.cpp
     space_preview.cpp
+    # Final read-only native Space art: r2mlvs10-asteroids-and-mining-probes.md Group14BG.
+    space_sprite.cpp
+    # Exact native population/body/probe cost boundaries: r2mlvs10-asteroids-and-mining-probes.md Group21.
+    asteroid_work_costs-1.cpp
+    asteroid_work_costs-2.cpp
+    asteroid_work_fixture.h
+    probe_mining_fixture.h
     # Immutable class/size definitions and inclusive sampling: r2mlvs10-asteroids-and-mining-probes.md Group1.
     asteroid_catalogue.cpp
+    # Pure company disclosure and signed motion presentation: r2mlvs10-asteroids-and-mining-probes.md Group14.
+    asteroid_inspection.cpp
+    asteroid_inspection_native.cpp
     # Bounded real-site starter selection and frozen inputs: r2mlvs10-asteroids-and-mining-probes.md Group2.
     asteroid_generation.cpp
     asteroid_generation_native.cpp
@@ -25,8 +39,47 @@ add_test_files(
     # Shared body-strip/static-footprint separation: r2mlvs10-asteroids-and-mining-probes.md Group6.
     asteroid_band.cpp
     space_mining.cpp
+    # Model15 catalogue binding and real paid-hull mining: r2mlvs10-asteroids-and-mining-probes.md Group8.
+    probe_shell.cpp
+    probe_shell_native.cpp
     space_content.cpp
     space_orders.cpp
+    # Actual typed freight/service completion: r2mlvs10-asteroids-and-mining-probes.md Group8B.
+    probe_order_actions.cpp
+    probe_order_actions_native.cpp
+    # Current paid scan/company/migration and original network-queue dispatch: r2mlvs10-asteroids-and-mining-probes.md task8B.4.
+    probe_mission_native.cpp
+    # Per-miner legacy/operating contract: r2mlvs11-orbital-stations-and-manufacturing.md Group9.
+    heavy_mining_tuning.cpp
+    # Exact legacy2/current3 and original paid heavy factory: r2mlvs11-orbital-stations-and-manufacturing.md Group9B.
+    heavy_commissioning.cpp
+    heavy_commissioning_native.cpp
+    # Actual per-model native extraction and sustainable explicit orbital return: r2mlvs11 Group9C.
+    heavy_mining_runtime.cpp
+    heavy_mining_runtime_native.cpp
+    # Original paid rocket/shell custody at a genuine orbital factory hull: r2mlvs11 Group9CB.
+    heavy_supply_custody.cpp
+    heavy_supply_custody_native.cpp
+    legacy_descent_native.cpp
+    heavy_descent.cpp
+    heavy_descent_native.cpp
+    heavy_onboard_service.cpp
+    heavy_onboard_service_native.cpp
+    # Genuine pre-heavy one-part Core service transport: r2mlvs11 Group9CCB.
+    legacy_contained_service_native.cpp
+    # Immutable original contained service bills and shared Core/Dock work: r2mlvs11 Group9CCC.
+    heavy_contained_service.cpp
+    heavy_contained_service_native.cpp
+    # Actual paid Dock construction and original heavy/legacy service: r2mlvs11-orbital-stations-and-manufacturing.md Group 9CCCC.
+    heavy_dock_service_native.cpp
+    heavy_dock_work_native.cpp
+    # Ordinary native/Space copied packet exclusivity: r2mlvs11-orbital-stations-and-manufacturing.md Group 9CD.
+    heavy_joined_validation.cpp
+    heavy_joined_native.cpp
+    # Actual original15/21 lease, finite work and native upkeep: r2mlvs11-orbital-stations-and-manufacturing.md Group9D.
+    heavy_role_native.cpp
+    heavy_cycle_native.cpp
+    heavy_network_native.cpp
     # Shared deterministic approach and queued-save contracts: r2mlvs8 Group11 / r2mlvs11 Group4B.
     space_approach.cpp
     space_survey.cpp
@@ -44,6 +97,57 @@ add_test_files(
     orbital_module_assembly.cpp
     # Bounded activation, native paid Storage freight and original Power panels: Plan11 Group4.
     orbital_module_activation.cpp
+    orbital_recipe_inventory.cpp
+    orbital_recipe_files.cpp
+    orbital_processor_native.cpp
+    processor_freight.cpp
+    processor_freight_fixture.h
+    processor_freight_native.cpp
+    processor_returns_native.cpp
+    # Original paid product command dispatch: r2mlvs10-asteroids-and-mining-probes.md task8C.4.
+    probe_product_replay_native.cpp
+    probe_replay_native.cpp
+    # Moving-target pursuit and station-free paid deployment: r2mlvs10-asteroids-and-mining-probes.md Group9.
+    probe_pursuit.cpp
+    probe_pursuit_native.cpp
+    # Finite extraction, original provenance and allocation refusal: r2mlvs10-asteroids-and-mining-probes.md Group10.
+    probe_extraction.cpp
+    probe_extraction_native.cpp
+    # Native retained-cargo departure/circle entry: r2mlvs10-asteroids-and-mining-probes.md Group11.
+    probe_return_native.cpp
+    # Actual descent, paid resupply and repeat: r2mlvs10-asteroids-and-mining-probes.md Group12.
+    probe_repeat_native.cpp
+    # Recall/recovery shared command and saved owners: r2mlvs10-asteroids-and-mining-probes.md Group13.
+    probe_exit_native.cpp
+    # Same-tick interception and saved edge decisions: r2mlvs10-asteroids-and-mining-probes.md Group15.
+    probe_interception_native.cpp
+    # Actual exit/retained recovery boundaries: r2mlvs10-asteroids-and-mining-probes.md Group16.
+    probe_boundary_native.cpp
+    # Conserved original paid phase saves/next decisions: r2mlvs10-asteroids-and-mining-probes.md Group17.
+    probe_conservation_native.cpp
+    # Three actual paid resource missions and declared drop boundary: r2mlvs10-asteroids-and-mining-probes.md Group18.
+    probe_class_mission_native.cpp
+    # Actual linked Surface carrier delivery: r2mlvs10-asteroids-and-mining-probes.md Group19.
+    surface_return_delivery_native.cpp
+    # Paid Assembly activation/source binding before manufacturing: r2mlvs11 Group6B.
+    assembly_facility.cpp
+    assembly_native_fixture.h
+    assembly_facility_native.cpp
+    manufacturing_reservation.cpp
+    manufacturing_reservation_native.cpp
+    # Actual shared-grant progress, final material consumption and native orbital factory provenance: r2mlvs11 Group8.
+    manufacturing_materialization.cpp
+    manufacturing_materialization_native.cpp
+    # Ordinary purchase commands consume the paid native producer: r2mlvs11-orbital-stations-and-manufacturing.md Group8B.
+    manufacturing_purchase.cpp
+    # Independent paid native clone intent: r2mlvs11-orbital-stations-and-manufacturing.md Group8BB.
+    manufacturing_clone.cpp
+    manufacturing_clone_native.cpp
+    # Actual native paid replacement settlement: r2mlvs11-orbital-stations-and-manufacturing.md Group8BC.
+    manufacturing_replacement.cpp
+    manufacturing_replacement-1.cpp
+    manufacturing_replacement_native.cpp
+    manufacturing_purchase_native.cpp
     # Explicit source-connected two-berth Dock owner: r2mlvs11 Group4C.
     orbital_dock.cpp
     orbital_dock_native.cpp
@@ -224,6 +328,7 @@ add_test_files(
     layer_mine_dispatch.cpp
     layer_mine_dispatch_pool.cpp
     layer_recipe_batch.cpp
+    layer_recipe_work.cpp
     mine_fixture.h
     mine_production_fixture.h
     multilayer_bootstrap.cpp

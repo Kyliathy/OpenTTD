@@ -100,6 +100,59 @@ Ordinary Earth-produced Goods remains the production alternative.
 | Fuel store | STEL6 + GOOD12 | 12t /296 ticks /100,000; existing128kL capacity |
 | Later heavy robot16 | STEL6 + GOOD12 + RBPT4 + ELEC2 | 18t /592 ticks /200,000 |
 
+### Heavy mining contract - 2026-10-16
+
+The user confirmed Plan11 Group9's role split: append heavy miner21 and retain
+the saved cargo-less construction robot16. This matches the implementation
+already in progress. The quantities below remain explicit initial tuning
+defaults, pending measured balance results.
+
+| Heavy miner21 quantity | Default and owner |
+| --- | --- |
+| Introduction / commissioning | 1995, completed orbital Assembly only; actual inputs, berth, funds and native work required. |
+| Hull recipe / embodied mass | STEL6 + GOOD12 + RBPT4 + ELEC2;18t,592 work ticks,200,000 capital. |
+| Freight hold / refits | 40t of one NORE, RARE or WICE physical cargo, with native CargoSpec weight and whole-packet admission. |
+| Travel / approach | Same4-tile/day,0.25-tile tolerance and frozen conservative deadline contract as15; follow current body coordinates. |
+| Extraction | At most4 whole units per74 earned synchronized work ticks;740 working ticks fill40t. |
+| Active / idle upkeep | 1,000 /200 money per economy day, using the native74-tick accrual remainder. |
+| Return allowance / pod capacity | Two actual completed return batches per paid commissioning/service; each successful positive orbital unload spends one, while Surface descent reserves one until recovery. At most two separately paid shells; a tuning query grants none. |
+| Due service | RFMT2 + ELEC2 consumed once after296 real service work ticks. Core/Dock work uses the existing750J per full tick and original shared allocation. |
+| Release / freight | Existing40t maximum pod command, inclusive20-tile authorized Surface release and precise whole module exchange. An unavailable receiver retains the hold. |
+
+A podless21 may begin typed Mine only when its first subsequent handling action
+is an explicit Unload at a real owned operational module with mineral capacity;
+intervening Visits are allowed. An inert processor or a later module hidden behind
+an Earth unload cannot supply that permission. Mining promises no destination
+headroom: actual full/lost receivers retain the cargo until a real whole transfer
+succeeds. Every positive orbital batch, including a manual partial unload, spends
+one allowance; quotes, zero quantities and refusals spend none. Model15 retains
+its delivered pod and orbital-unload behavior. This admission/settlement pair is
+part of9C's sustainable orbital mining path; paid Surface descent remains9CB.
+
+Two full extraction windows plus due service require `2*740+296=1776` active
+ticks and24,000 active upkeep, excluding actual travel/waits, parts, pod shells,
+launches, recovery fees, capital and final-delivery income. No ledger grants
+native inventory or readiness. Only real paid commissioning and completed real
+service may establish allowance; later shell/part resupply keeps its original
+physical producer. Model15's20t/2-unit/148-service-tick contract is unchanged.
+
+`space_mining_tuning.h` publishes the immutable old15/new21 operating contract.
+Group9 alone grants no commissioning, changed SDEF signature or runtime Mine
+admission. Plan11 Group9B must append catalogue/construction identity and
+explicit content3/save431 compatibility;9C supplies native work/returns/service,
+and9D verifies it. Keep old content2 recipes/paid receipts conserved. Legacy
+signatures must be computed against the original definition/model set;
+new21 may never enter a pre431/content2 world by forged old-version admission.
+Old0..20 paid receipts retain their original content2 fields and full recipes
+after upgrade; new content3 saves may contain those conserved older receipts.
+Model21 requires content3 provenance. Shared receipt validation must recognize
+those exact supported model/version combinations instead of rewriting old
+embodied inputs or treating every receipt as newly commissioned. New current
+files publish content3/SDEF; accepting a genuine pre431/content2 input is an
+explicit loader compatibility path, not permission to forge a new model into it.
+
+### Revised module and service budgets
+
 The first Core's starter cargo inventory uses the shared1,024-unit stock cap per
 resolved physical cargo label, with at most64 retained packet records per label.
 It begins empty after the74-tick explicit activation. Later Storage modules add

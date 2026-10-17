@@ -1,0 +1,29 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BD / r2mlvs14-remaining-assets-and-runtime-integration.md63C.2. Exact executed original physical hatch-part edit; source/native approval pending.",
+  "key": "construction-probe-blocked-s-sw-e-se-v1",
+  "asset_id": "vehicle.model-20",
+  "component_kind": "status_panel",
+  "panel_state": "blocked",
+  "state": "blocked",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: first-party OpenTTD construction carrier model20, isolated original rear-deck HATCH PARTS.\nImage1 is the selected construction-carrier source, reference for its actual single AMBER rectangular hatch and each true camera view. Extract ONLY that SMALL existing amber rear-deck hatch and its thin dark rim from each view; keep its physical proportions, material, perspective and upper-left SCREEN light. Apply this actual panel state: BLOCKED: closed amber service hatch with a short dark RED mechanical interlock bar across the MIDDLE of its face. Keep a thin visible original amber bezel.\nShow FOUR ISOLATED HATCH PARTS ONLY in matching view cells: S top-left; SW top-right; E bottom-left; SE bottom-right. Those are the actual physical hatch perspectives observed in Image1, never flat rotations/mirrors. Do not include any chassis deck, nozzle, arm, solar panel, bed, extension, cable, body shading, vehicle or other hardware. The unchanged complete chassis is assembled later from its immutable original. Each part must be a clean transparent cutout with crisp restrained1990s Tycoon pixel-art clusters and simple amber bezel/dark face/cyan connector or red latch; no smooth3D gloss.\nEnlarge each hatch PART uniformly for a clear authoring source: roughly320px width,140px height, centered in its own cell. Exactly one hatch per cell, entire part at least80px clear of every frame. This source will be uniformly reduced to the existing tiny native hatch, about3x2pixels. Keep the left/right socket occupancy bold and simple so the two real positions survive reduction. Do not draw symbols, labels, letters, quantities, arrows or invented equipment.\nSAFE BORDERED1536x1024 transparent2x2 sheet with6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Real transparent alpha background, margins and gutters. No checkerboard, haze, glow, floor, shadow, whole vehicle, numbers, text or scenery.\nActual native paid-service148-work allowance and real blocking conditions alone select these source parts. This image creates no service work, payment, cargo or runtime state.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-e-se-v1.png",
+      "sha256": "34f568450934d572808dcb05360cf29486c8cff2336b4d90c8b2fff1073aa158",
+      "role": "Selected own construction carrier; reference/edit target for only the existing amber hatch in its genuine views"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-34e07949-e934-496c-a711-5823f57ac44b.png",
+  "path": "media/multilayer/source/space/raw/construction-probe-blocked-s-sw-e-se-v1.png",
+  "sha256": "787c00e999bdc8c5c1ecfc850be18e9f92f634a3d38420aed9d4fb92d10ba625"
+}

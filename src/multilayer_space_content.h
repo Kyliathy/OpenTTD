@@ -5,13 +5,15 @@
 #include "multilayer_recipe.h"
 #include <optional>
 
-inline constexpr uint16_t MULTILAYER_SPACE_CONTENT_VERSION = 2;
+inline constexpr uint16_t MULTILAYER_SPACE_LEGACY_CONTENT_VERSION = 2; ///< Exact original0..20 recipes and paid receipt provenance remain supported.
+inline constexpr uint16_t MULTILAYER_SPACE_CONTENT_VERSION = 3; ///< Appends heavy miner21; actual saved admission is versioned by Plan11 Group9B.
 /** Append-only construction identities; natural asteroids are not construction recipes. */
 enum class SpaceBuildKind : uint8_t {
 	Rocket, MiningProbe, SurveyProbe, ConstructionProbe, Pod, Mirror, Core, Dock, Storage,
-	Assembly, Steelworks, Goodsworks, Power, FuelStore, HeavyRobot, Hauler, Refinery, IceProcessor, End,
+	Assembly, Steelworks, Goodsworks, Power, FuelStore, HeavyRobot, Hauler, Refinery, IceProcessor, HeavyMiner, End,
 };
 
+/** Immutable full recipe and physical construction contract; native jobs/hulls retain consumed inputs and capital provenance. */
 struct SpaceConstructionDefinition {
 	SpaceBuildKind kind;
 	uint16_t model; ///< Logical model including nonrouted pod18; UINT16_MAX for static structures/mirrors.
@@ -42,18 +44,45 @@ struct MultiLayerSpaceBudget {
 	uint16_t work_j_per_tick = 750;
 };
 
+/** @return Every immutable construction definition in stable append-only identity order; this creates no paid asset. */
 std::span<const SpaceConstructionDefinition> GetSpaceConstructionDefinitions();
+/** @param kind Canonical construction identity. @return Immutable full recipe, or nullptr for an unsupported kind. */
 const SpaceConstructionDefinition *GetSpaceConstructionDefinition(SpaceBuildKind kind);
+/** @return Delivered common Space budget; per-miner operating differences are published by space_mining_tuning.h. */
 const MultiLayerSpaceBudget &GetMultiLayerSpaceBudget();
+/** @return Current canonical Space content fingerprint, including every appended role and its immutable operating tuning. */
 uint64_t GetMultiLayerSpaceContentSignature();
+/** Compute a supported content revision using precisely its original definition/model set.
+ * @param version Legacy2 or current3; unsupported revisions do not acquire compatibility through current definitions.
+ * @return Exact revision fingerprint, or zero for an unsupported version.
+ */
+uint64_t GetMultiLayerSpaceContentSignatureForVersion(uint16_t version);
+/** @param version Original paid construction provenance. @return Whether a legacy2 or current3 recipe revision is recognized; callers still validate the full actual recipe/owner. */
+bool IsSupportedSpaceConstructionVersion(uint16_t version);
+/** Preserve older paid receipts without granting a new role to an older construction revision.
+ * @param version Original paid receipt revision. @param model Actual canonical hull/payload identity.
+ * @return Whether that exact supported model/revision exists; heavy21 requires3. This creates no commissioning right.
+ */
+bool IsSupportedSpaceVehicleContentVersion(uint16_t version, uint16_t model);
+/** @param profile Actual selected/same-file gameplay profile. @param version Its saved Space revision. @param signature Exact saved immutable fingerprint.
+ * @return Whether profile and revision/fingerprint agree; save readers additionally gate old/new source versions.
+ */
 bool IsSupportedMultiLayerSpaceContent(MultiLayerGameplayProfileID profile, uint16_t version, uint64_t signature);
+/** Clear only pending content metadata before an independent load/check; paid native assets are untouched. */
 void ResetSpaceContentLoadStaging();
+/** Validate same-file copied content metadata without publishing it to the open world. */
 void ValidateSpaceContentLoadPreview();
-/** Wide mass sum in sixteenths; missing meanings or arithmetic overflow refuse. No rounding per crate/packet. */
+/** Sum wide native physical mass without per-crate/packet rounding.
+ * @param cargo Actual label/whole-unit recipe or payload view. @return Mass in sixteenths, or no value after missing meanings/overflow.
+ */
 std::optional<uint64_t> GetMultiLayerPayloadMass(std::span<const MultiLayerRecipeCargo> cargo);
-/** Canonical commissioning recipe for an existing immutable vehicle model, or nullptr if unsupported. */
+/** @param model Canonical logical hull/payload identity. @return Full immutable commissioning recipe, or nullptr if unsupported; this allocates no Engine/Vehicle. */
 const SpaceConstructionDefinition *GetSpaceVehicleConstruction(uint16_t model);
+/** @return Existing model15/19/20 service recipe; per-miner operating definitions supply the explicit heavy quantities. */
 std::span<const MultiLayerRecipeCargo> GetSpaceProbeServiceInputs();
-/** Definition-only facility admission; feature owners must additionally prove actual paid, completed physical facilities. */
+/** Query definition-only commissioning rights; native producers additionally prove actual materials, berth, paid work and funds.
+ * @param model Canonical logical vehicle role. @param facility Explicit physical facility class. @param completed Whether that actual facility has completed activation.
+ * @return Whether the role permits that completed facility; this query creates no assets or readiness.
+ */
 bool CanCommissionSpaceVehicle(uint16_t model, MultiLayerCommissioningFacility facility, bool completed);
 #endif

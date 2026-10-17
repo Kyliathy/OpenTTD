@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.2. Exact executed same-shell opposite-view edit; actual source/native selection pending.",
+  "key": "return-pod-packed-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-18",
+  "state": "packed",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: selected first-party OpenTTD PASSIVE RETURN POD model18, same PACKED shell, remaining physical yaw views.\nImage1 is the EXACT SELECTED white/orange canister edit target and scale/style/framing reference. Preserve this same squat off-white octagonal body, beveled rounded top, ONE continuous burnt-orange belt, charcoal tiled bottom heat shield, ONE flush dark rectangular upper cargo hatch, exactly TWO SMALL folded charcoal recovery tabs at rear shoulders. No added equipment, duplicate tabs, nozzle, cockpit, arms, dish, solar paddles, landing legs, parachute, exhaust or cargo.\nGenerate four new GENUINE PHYSICAL opposite viewpoints of this SAME model, SAME small source size/proportions and upper-left SCREEN light, without rotating/mirroring a flat picture:\nS top-left: front/upper hatch faces DOWN, rear pair of folded tabs on UP/far shoulders; respect real occlusion of far rear fittings.\nSW top-right: front/upper hatch LOWER LEFT, rear two folded tabs UPPER RIGHT.\nW bottom-left: front/upper hatch exactly LEFT, rear two folded tabs RIGHT; true horizontal side-facing physical heading.\nNW bottom-right: front/upper hatch UPPER LEFT, rear two folded tabs LOWER RIGHT.\nHatch and rear tabs rotate physically with the same shell; no painted directional labels, no light direction rotation. Render correct newly visible facets and fittings while maintaining exactly one hatch and two folded tabs. The original short octagonal canister is not a rocket or another spacecraft.\nRestrained classic1990s transport-Tycoon pixel clusters, matte cream facets/orange belt/dark bottom heat tiles. Tiny22x16px native payload, crisp silhouettes, no glossy3D or smooth gradients.\nSAFE BORDERED1536x1024 transparent2x2 sheet with6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Whole shell MAX450px width/280px height, centered in each cell, at least64px genuinely transparent clearance to every frame. Match the existing shell size from Image1. Keep each complete subject inside its own frame; no clipping, overlap, halo, floor/shadow, checkerboard, fog, background paint, labels or text.\nArt only: actual paid SpacePod and sole SpaceDescentJob packet owner retain native custody/countdown. This source adds no recovered shell, cargo, work or propulsion authority.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-packed-n-ne-e-se-v1.png",
+      "sha256": "1bec6cf9a6e68e7f7da8202fbb434b69e8809171ad53782012469b6ae41148b6",
+      "role": "Selected original pod shell, edit target for genuine opposite yaw views; same model/scale/light/materials"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-cf5f7aa3-47da-4964-a804-1a7f421de8d4.png",
+  "path": "media/multilayer/source/space/raw/return-pod-packed-s-sw-w-nw-v1.png",
+  "sha256": "18d52aacf1ca1f5e0a021b18f5d661e6f8c95dc07d6f33a502dfe62b75942888"
+}

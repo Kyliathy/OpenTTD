@@ -125,8 +125,36 @@ Current423 VEHS/native Space/pod/flight/handling records retain exact owners and
 once-only receipts; SPFL's existing84-byte row carries its module-delivery flag
 in bit4. Derived spatial/viewport state cannot produce progress or cargo. The
 handoff names26 exact owner families, actual paid input identities and focused
-full/preview/ordinary/replay evidence. Unfinished final sprites and live network
-acceptance are explicit and do not close the parent/source checklist.
+full/preview/ordinary/replay evidence. This remains a dated423 boundary; the
+later438 mining handoff below records its own joined network evidence without
+closing unrelated parent/source tasks.
+
+## Generated Space bodies and current mining simulation
+
+[Plan10](../../upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md)
+and its [current438 runtime handoff](../../upgrades/2026-10/r2mlsp-z-z-p-probe-runtime-handoff.md)
+keep exact generated bodies, finite reserves, frozen initial access history
+and Q16 motion under `AsteroidField`. ASTR and native vehicle/order/packet
+records own continuation; SPKN owns company scan receipts. Reloading cannot
+reroll or replenish from current density, definitions or camera selection.
+Depleted body IDs remain visible, moving and indexed. Bodies use plane
+coordinates; `MultiLayerMap` owns native layer meaning and tile conversion.
+
+Actual body/index steps and attached transforms precede all native probe
+decisions. Visible Space and hidden Surface views produce identical paid
+mining/return/descent/Surface results. Actual joined loopback peers retain six
+matching frame/tick/elapsed checkpoints and55 owner families through recovery;
+company access setup grants no physical or financial resource. Plan11's
+broader module/manufacturing acceptance remains independently pending.
+
+Exact population performance fixtures cover10,160,10,240 and14,336 bodies,
+clustered drift and64x1024/1024x64 maps. Each body steps and updates its derived
+index once; bucket departure uses constant-work swap/pop. Local queries cost
+their visited buckets and actual sorted candidate output, including all
+14,336 clustered records. Native hull fixtures allocate matching Map geometry,
+but initialize only the measured Space layer and claim no whole-save,
+maximum-map Surface-generation or whole-game FPS acceptance. Final authored
+Space sprites, packed loading and ordinary-game art review remain open.
 
 ## Generated graphics and drawing
 

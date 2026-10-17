@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_transition.cpp Real native rocket round trips, single burns and explicit payload completion.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups10B/11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8; a deployed shell without a target starts Idle.
  */
 #include "stdafx.h"
 #include "space_transition.h"
@@ -131,7 +132,7 @@ CommandCost CmdBeginLaunchFlight(DoCommandFlags flags, VehicleID vehicle, uint64
 		auto *probe = ResolveSpaceCraft(v->manifest->passenger);
 		// Deployment keeps a separate paid passenger incarnation and its carrier binding; direct freight cannot reinterpret loose rocket stock as another hull.
 		if (v->cargo.TotalCount() != 0 || probe == nullptr || probe->owner != v->owner || !probe->manifest || probe->manifest->carrier != ref || probe->construction.placement != SpacePlacement::Carried ||
-			probe->construction.content_version != MULTILAYER_SPACE_CONTENT_VERSION) return CMD_ERROR;
+			!IsSupportedSpaceVehicleContentVersion(probe->construction.content_version, GetSpaceVehicleModel(*probe))) return CMD_ERROR;
 	}
 	if (flags.Test(DoCommandFlag::Execute)) {
 		if (!GetAsteroidField().surveys.empty()) { const bool retired = RetireSpaceSurveyPreview(); assert(retired); (void)retired; }
@@ -288,6 +289,8 @@ void TickSpaceTransitions()
 			if (probe == nullptr || !probe->manifest || probe->manifest->carrier != GetSpaceCraftReference(*v)) { f.blocked = SpaceFlightBlock::TargetLost; continue; }
 			v->position = point; probe->position = point; probe->home = v->home;
 			probe->construction.placement = SpacePlacement::Orbital; probe->construction.paused = false; probe->construction.deployed = true; probe->manifest->carrier = {}; v->manifest->passenger = {};
+			// A carried shell has no mining assignment merely because its carrier visited a body; the owner must explicitly choose its mission.
+			if (probe->mission.target == INVALID_ORBITAL_BODY) probe->mission.phase = SpaceMissionPhase::Idle;
 			probe->vehstatus.Reset({VehState::Hidden, VehState::Stopped}); probe->UpdateSpacePosition(); SyncSpacePods(*probe); probe->MarkDirty();
 			f.deployed = true; StartReturn(*v);
 		} else if (f.phase == SpaceFlightPhase::ReturnRecovery) {
@@ -383,7 +386,7 @@ bool ValidateSpaceTransitionLinks(std::span<const SpaceTransitionRecord> flight,
 	// Every saved flight must reattach to its original paid rocket and actual physical pad; matching numeric IDs alone cannot supply production or recovery authority.
 	for (const auto &r : flight) {
 		const SpaceConstructionState *s = nullptr; for (const auto &c : craft) if (c.craft == r.craft) s = &c.state;
-		if (s == nullptr || s->model != 14 || s->content_version != MULTILAYER_SPACE_CONTENT_VERSION) return false;
+		if (s == nullptr || s->model != 14 || !IsSupportedSpaceVehicleContentVersion(s->content_version, s->model)) return false;
 		if (r.state.phase != SpaceFlightPhase::GroundLoading) {
 			if (s->placement != SpacePlacement::InTransit) return false;
 			if (s->home != LaunchCenterRef{}) {

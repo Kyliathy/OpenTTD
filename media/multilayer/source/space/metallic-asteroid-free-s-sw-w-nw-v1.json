@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.1. Exact executed first metallic natural-body source; source/native selection remains pending.",
+  "key": "metallic-asteroid-free-s-sw-w-nw-v1",
+  "asset_id": "asteroid.nickel",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+      "sha256": "66fcf30e0cd93e6cb9277623fac9ef4f5b8c9496dffc50f4b0b73b42c39d45b9",
+      "role": "Exact selected natural metallic body, first genuineN/NE/E/SE; preserve physical silhouette/landmarks and screen light"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED metallic natural NICKEL ASTEROID, with genuineN/NE/E/SE beak views. Produce the four OPPOSITE genuine physical yaw views of exactly this same natural irregular blue-gray rock. Preserve one broad blunt main rear lobe, one smaller tapered forward beak, one saddle, one broken silver ore seam on the body's right upper shoulder and one shallow dark depression on the opposite left shoulder. Landmarks must turn with the actual body, never remain painted in the same screen position; fixed upper-left SCREEN lighting does not turn. Keep the original compact rock volume and proportions. No new crater, stone, crystal, ice, machinery, antenna, probe, hardware, glow, effects or extra beak.\nFour actual3D directions, fixed2:1 isometric camera: TOP LEFT S=small beak STRAIGHT DOWN toward viewer, rear lobe above it; TOP RIGHT SW=small beak lowerLEFT; BOTTOM LEFT W=small beak LEFT; BOTTOM RIGHT NW=small beak upperLEFT. These are the opposite sides of the same body, not copied/rotated/mirrored first-sheet pixels. The silver seam and depression wrap naturally around corresponding shoulders with visibility/occlusion appropriate to yaw. Classic1990s Tycoon pixel-art clusters, same cool blue-gray/charcoal/pale silver colors, no smoother photographic texture. Each complete rock around350-400px wide and250-300px tall, never taller than330px; generous blank alpha margins.\nSAFE BORDERED1536x1024 true-transparent2x2 source sheet. Four opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Center each complete cutout with at least64px genuinely transparent empty clearance to EVERY frame. No touching gutters/cell edges, no overlap/clipping, no background, haze, shadow, floor, gradients or painted checkerboard. No text, labels, numbers, diagrams. Free body only. Preserve selected model and genuine view continuity.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-50d871f3-177d-4b76-8e1a-1e50d8ffab7b.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-free-s-sw-w-nw-v1.png",
+  "sha256": "fcba4d1808a0a4bfab3c403d90140844f3a8a47f5fcf1c3b86b52be583e1f98b"
+}

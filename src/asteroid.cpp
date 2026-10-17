@@ -4,9 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 /** @file asteroid.cpp Persistent finite resources, independent field generation and synchronized survey motion.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md GroupP1
  */
 #include "stdafx.h"
+#include "space_work_cost.h"
 #include "asteroid.h"
 #include "core/random_func.hpp"
 #include "map_func.h"
@@ -230,27 +232,28 @@ std::optional<AsteroidField> GenerateAsteroidField(uint32_t width, uint32_t heig
 	std::vector<SpacePoint> grid;
 	// Four-tile grid cells enforce initial spacing; capacity refusal preserves the exact selected population.
 	for (int32_t y = field.band.min.y; y <= field.band.max.y; y += placement_definition.grid_spacing_tiles * SPACE_Q16)
-		for (int32_t x = field.band.min.x; x <= field.band.max.x; x += placement_definition.grid_spacing_tiles * SPACE_Q16) grid.push_back({x, y});
+		for (int32_t x = field.band.min.x; x <= field.band.max.x; x += placement_definition.grid_spacing_tiles * SPACE_Q16) { grid.push_back({x, y}); RecordSpaceWork(SpaceWorkKind::GenerationCells); }
 	if (grid.size() < count) return std::nullopt;
 	// Preserve the established leading-swap order while selecting nearest centres to the saved, explicit world preference.
 	const auto center = field.starter_input.preference;
 	for (uint32_t i = 0; i < 3; ++i) {
 		auto best = grid.begin() + i;
-		for (auto it = best; it != grid.end(); ++it) if (SpaceDistanceSquared(*it, center) < SpaceDistanceSquared(*best, center)) best = it;
+		for (auto it = best; it != grid.end(); ++it) { RecordSpaceWork(SpaceWorkKind::GenerationStarterCandidates); if (SpaceDistanceSquared(*it, center) < SpaceDistanceSquared(*best, center)) best = it; }
 		std::iter_swap(grid.begin() + i, best);
 	}
 	// Shuffle only nonstarter cells without replacement, retaining distinct positions and the central preference.
-	for (uint32_t i = 3; i < count; ++i) std::swap(grid[i], grid[i + placement.Next(static_cast<uint32_t>(grid.size()) - i)]);
+	for (uint32_t i = 3; i < count; ++i) { std::swap(grid[i], grid[i + placement.Next(static_cast<uint32_t>(grid.size()) - i)]); RecordSpaceWork(SpaceWorkKind::GenerationShuffleSwaps); }
 	const auto classes = InitialAsteroidClassCounts(count);
 	std::vector<AsteroidClass> labels{AsteroidClass::Metallic, AsteroidClass::Carbonaceous, AsteroidClass::Rich};
 	// Reserve one starter of each class, then shuffle the exact remaining class allocation independently of placement.
 	for (uint32_t c = 0; c < 3; ++c) for (uint32_t i = 1; i < classes[c]; ++i) labels.push_back(static_cast<AsteroidClass>(c));
-	for (uint32_t i = 3; i < count; ++i) std::swap(labels[i], labels[i + content.Next(count - i)]);
+	for (uint32_t i = 3; i < count; ++i) { std::swap(labels[i], labels[i + content.Next(count - i)]); RecordSpaceWork(SpaceWorkKind::GenerationShuffleSwaps); }
 	const auto headings = GetMultiLayerAsteroidHeadingDefinitions(MultiLayerGameplayProfileID::MultilayerIndustry);
 	const auto speeds = GetMultiLayerAsteroidSpeedDefinitions(MultiLayerGameplayProfileID::MultilayerIndustry);
 	const auto &profile = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry);
 	// Publish each body's composition once in stable ID order; later loading and artwork reuse saved records.
 	for (uint32_t i = 0; i < count; ++i) {
+		RecordSpaceWork(SpaceWorkKind::GenerationBodies);
 		const auto &definition = profile.asteroid_resources[to_underlying(labels[i])];
 		const auto size = static_cast<AsteroidSize>(SelectMultiLayerAsteroidSize(content.Next(100)));
 		const uint32_t reserve = SampleMultiLayerAsteroidReserve(definition, profile.asteroid_sizes[to_underlying(size)], content);
@@ -321,6 +324,7 @@ bool ValidateAsteroidField(const AsteroidField &field)
 	std::array<uint32_t, 3> class_counts{};
 	// Validate in stable body-ID order before any body reference is used for gameplay or rendering.
 	for (uint32_t i = 0; i < field.bodies.size(); ++i) {
+		RecordSpaceWork(SpaceWorkKind::ValidationBodies);
 		const auto &body = field.bodies[i];
 		// Invalid identities/content, out-of-band motion or reserve growth would break finite extraction and pursuit.
 		if (body.id.base() != i || to_underlying(body.resource_class) > 2 || to_underlying(body.size) > 2 || !field.band.Contains(body.motion.position) ||
@@ -340,6 +344,7 @@ bool ValidateAsteroidField(const AsteroidField &field)
 			const int32_t speed = definition.distance_q16_per_day;
 			// All reflected signs are represented by the same eight-heading catalogue, avoiding a second diagonal authority.
 			for (const auto &heading : GetMultiLayerAsteroidHeadingDefinitions(MultiLayerGameplayProfileID::MultilayerIndustry)) {
+				RecordSpaceWork(SpaceWorkKind::ValidationVelocityTests);
 				const int32_t x = static_cast<int64_t>(speed) * heading.x_q16 / SPACE_Q16;
 				const int32_t y = static_cast<int64_t>(speed) * heading.y_q16 / SPACE_Q16;
 				valid_velocity |= body.motion.velocity_x == x && body.motion.velocity_y == y;
@@ -428,6 +433,7 @@ bool PrepareSpaceSurveyPreview()
  */
 AsteroidBody *GetMutableAsteroidBody(OrbitalBodyID id)
 {
+	RecordSpaceWork(SpaceWorkKind::BodyLookups);
 	return id.base() < _asteroid_field.bodies.size() ? &_asteroid_field.bodies[id.base()] : nullptr;
 }
 
@@ -448,7 +454,7 @@ void AdvanceAsteroidField(AsteroidField &field)
 	if (field.generation_version == 0) return;
 	++field.elapsed_ticks;
 	// Body records are validated in monotonic ID order; publish all transforms before any attached preview decides work.
-	for (auto &body : field.bodies) AdvanceSpaceMotion(body.motion, field.band);
+	for (auto &body : field.bodies) { AdvanceSpaceMotion(body.motion, field.band); RecordSpaceWork(SpaceWorkKind::BodySteps); }
 	// Publish all existing observation attachments first; an earlier preview decision must not see a later attachment's old position.
 	for (auto &survey : field.surveys) {
 		if (survey.phase != SpaceSurveyPhase::Attached) continue;

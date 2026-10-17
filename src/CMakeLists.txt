@@ -1,8 +1,10 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Final Space presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
 # Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 # Shared native approach admission: docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
+# Native bounded orbital recipe runtime/history: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
 if(OPTION_MULTILAYER_LOADER_PROBE)
     # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
@@ -290,7 +292,15 @@ add_files(
     map_layer.cpp
     space.cpp
     space_vehicle.cpp
+    space_sprite.cpp
+    # Atomic original finite extraction: r2mlvs10-asteroids-and-mining-probes.md Group10.
+    space_mining_inventory.cpp
+    space_mining_inventory.h
+    # Shared physical mining departure: r2mlvs10-asteroids-and-mining-probes.md Group11.
+    space_departure.h
     space.h
+    # Disposable native work counters: r2mlvs10-asteroids-and-mining-probes.md Group21.
+    space_work_cost.h
     asteroid.cpp
     # Body/attachment publication before native work: r2mlvs10-asteroids-and-mining-probes.md Group3.
     asteroid_motion.cpp
@@ -318,6 +328,22 @@ add_files(
     orbital_station.h
     orbital_service.cpp
     orbital_service.h
+    # Queued paid Assembly requests: r2mlvs11-orbital-stations-and-manufacturing.md Group7.
+    orbital_manufacturing.cpp
+    orbital_recipe.h
+    orbital_recipe.cpp
+    orbital_recipe_runtime.cpp
+    orbital_recipe_record.cpp
+    orbital_manufacturing.h
+    # Ordinary paid facility purchase consumers: r2mlvs11-orbital-stations-and-manufacturing.md Group8B.
+    space_purchase.cpp
+    space_purchase.h
+    # Copied paid clone intent: r2mlvs11-orbital-stations-and-manufacturing.md Group8BB.
+    space_clone.cpp
+    space_clone.h
+    # Prepared paid native replacement: r2mlvs11-orbital-stations-and-manufacturing.md Group8BC.
+    space_replacement.cpp
+    space_replacement.h
     orbital_freight.cpp
     orbital_freight.h
     space_transition.cpp
@@ -331,6 +357,9 @@ add_files(
     launch_center.h
     asteroid.h
     asteroid_gui.cpp
+    # Company-gated native inspector/motion disclosure: r2mlvs10-asteroids-and-mining-probes.md Group14.
+    asteroid_inspection.cpp
+    asteroid_inspection.h
     multilayer_asteroid_catalogue.cpp
     map_layer.h
     map_layer_gui.cpp
@@ -433,6 +462,11 @@ add_files(
     multilayer_space_content.cpp
     multilayer_space_content.h
     space_orders.cpp
+    space_order_actions.cpp
+    space_order_actions.h
+    # Immutable distinct miner roles: r2mlvs11-orbital-stations-and-manufacturing.md Group9.
+    space_mining_tuning.cpp
+    space_mining_tuning.h
     space_approach.cpp
     space_approach.h
     space_production.cpp
@@ -450,6 +484,8 @@ add_files(
     layer_industry_policy.cpp
     layer_industry_mine.cpp
     layer_industry_recipe.cpp
+    layer_recipe_work.h
+    layer_recipe_work.cpp
     layer_industry_definitions.cpp
     layer_industry_processor.h
     layer_industry_processor.cpp

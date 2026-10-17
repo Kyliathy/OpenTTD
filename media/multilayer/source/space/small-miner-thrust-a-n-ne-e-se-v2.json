@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; exact background-extraction edit request, not a source acceptance claim",
+  "key": "small-miner-thrust-a-n-ne-e-se-v2",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: background-extraction.\nEdit target: the attached four-view original rear-thruster component sheet.\nCorrect ONLY its background/transparency. Preserve the EXACT four physical gray/gold nozzle components, their short crisp blue plume shapes, fixed upper-left lighting, original N/NE/E/SE positions and true camera views.\nThe present file has a faint pink/gray CHECKERBOARD and milky gray gradient printed in the supposed transparent area. Remove ALL checkerboard squares, gray/pink fill, fog, background gradients, glow haze and drop shadows around the components. Outside the actual hard-edged nozzle and its small crisp blue flame, the interior of each panel MUST be genuine alpha0 TRANSPARENT pixels, not a painted transparency pattern. Do not draw a checkerboard.\nKeep only the four exterior PURE MAGENTA #FF00FF frame rectangles visible/opaque; clean transparent gutters and at least64px genuinely empty transparent clearance around every part. Source canvas remains1536x1024.\nDo not invent, repaint, rotate, rescale, replace or duplicate the nozzle hardware or blue flame; do not add any background scene or prop. No text, numbers, labels, arrows, symbols, floor or stars.\nFour unchanged isolated rear-nozzle+short-plume cutouts on real clean transparent alpha, inside their separate magenta separator frames.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v1.png",
+      "sha256": "d26b2d8d495e58196561b4b91bb8478b7b78bbd51a2598a9d19fc3b961bad8f4",
+      "role": "Same four genuine rear nozzles/plumes; remove only printed background/checkerboard and haze"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v2.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-967b275c-fb6a-41a8-9e82-a85c3132ddbd.png",
+  "status": "pending_actual_alpha_and_layout_review"
+}

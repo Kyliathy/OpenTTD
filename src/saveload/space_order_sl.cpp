@@ -1,11 +1,13 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_order_sl.cpp Bounded generation/order/approach transport beside native VEHS.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C heavy native role/version admission.
  */
 #include "../stdafx.h"
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../space_vehicle.h"
+#include "../space_mining_tuning.h"
 #include "../space_approach.h"
 #include "../space_structure.h"
 #include "../space_transition.h"
@@ -35,6 +37,14 @@ bool AcceptLoadedSpaceOrders()
 		return InstallLoadedSpaceOrders(legacy.records, legacy.next);
 	}
 	if (!InstallLoadedSpaceOrders(_candidate->records, _candidate->next)) return false;
+	const bool heavy_runtime = !IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerMissions);
+	// Native reconstruction and copied preview enforce the same source boundary: a431 paid hull cannot arrive with future mining progress or future Mine instructions.
+	for (const auto *craft : SpaceVehicle::Iterate()) {
+		const auto model = GetSpaceVehicleModel(*craft);
+		if (!IsSpaceMiningStateSupported(model, craft->mission.phase, craft->mission.work_ticks, craft->extracted_units, heavy_runtime)) return false;
+		// Retained queue history is gameplay capability too;431 admitted no typed21 actions, so even an unstarted Visit must refuse in that commissioning-only source.
+		if (model == SPACE_HEAVY_MINER_MODEL && !heavy_runtime && !craft->space_orders.entries.empty()) return false;
+	}
 	_candidate.reset(); return true;
 }
 /** @copydoc ValidateSpaceOrderLoadPreview */
@@ -74,6 +84,21 @@ void ValidateSpaceOrderLoadPreview()
 		const auto found = std::find_if(_load_check_data.space_production_rows.begin(), _load_check_data.space_production_rows.end(), [&](const auto &p) { return p.craft == SpaceCraftRef{r.vehicle, r.generation}; });
 		if (found == _load_check_data.space_production_rows.end() && !IsSavegameVersionBefore(SaveLoadVersion::SpaceLaunchAssembly)) SlErrorCorrupt("Missing Space order production identity preview");
 		const uint16_t model = found == _load_check_data.space_production_rows.end() || found->state.content_version == 0 ? 15 : found->state.model;
+		const bool heavy_runtime = !IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerMissions);
+		// Same-file VEHS fields and same-file paid role jointly admit heavy work; preview never borrows an active hull or assumes an idle phase.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply)) {
+			/** @param row Copied same-file hull. @return Whether its exact native ID belongs to this queue. */
+			const auto native = std::ranges::find_if(_load_check_data.native_space_vehicle_rows, [&](const auto &row) { return row.vehicle == r.vehicle; });
+			if (native == _load_check_data.native_space_vehicle_rows.end()) SlErrorCorrupt("Missing mining hull preview");
+			const auto phase = static_cast<SpaceMissionPhase>(native->mining_phase);
+			if (!IsSpaceMiningStateSupported(model, phase, native->mining_work_ticks, native->extracted_units, heavy_runtime)) SlErrorCorrupt("Invalid native mining role or source version preview");
+			// Active pursuit/extraction must name a body actually present in this candidate file, not a matching body in the open world.
+			if ((phase == SpaceMissionPhase::Approach || phase == SpaceMissionPhase::Mining) && native->mining_target >= _load_check_data.asteroid_body_count) SlErrorCorrupt("Missing native mining body preview");
+			// A started Mine owns this exact native target; copied queue progress cannot point extraction at a different natural resource.
+			if (r.queue.started && r.queue.cursor < r.queue.entries.size() && r.queue.entries[r.queue.cursor].action == SpaceOrderAction::Mine && native->mining_target != r.queue.entries[r.queue.cursor].target.id) SlErrorCorrupt("Changed native mining target preview");
+		}
+		// Source431 introduced commissioning only; any typed21 history, including Visit without extraction, would smuggle later runtime admission into that older file.
+		if (model == SPACE_HEAVY_MINER_MODEL && !heavy_runtime && !r.queue.entries.empty()) SlErrorCorrupt("Future heavy orders in commissioning-only save");
 		for (const auto &o : r.queue.entries) if (!IsSpaceOrderAllowed(model, o)) SlErrorCorrupt("Invalid Space order role preview");
 		if (r.queue.work_ticks != 0 && r.queue.entries[r.queue.cursor].target.id >= _load_check_data.asteroid_body_count) SlErrorCorrupt("Missing partial survey target preview");
 		if (found != _load_check_data.space_production_rows.end() && found->state.placement != SpacePlacement::Orbital) {

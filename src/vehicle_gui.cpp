@@ -5,10 +5,16 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle_gui.cpp Vehicle controls and shared native freight refit restrictions. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
+/** @file vehicle_gui.cpp Vehicle controls and shared native freight refit restrictions.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8B; queued purchase callback presentation.
+ */
 
 #include "stdafx.h"
 #include "asteroid.h"
+#include "space_purchase.h"
+#include "space_structure.h"
+#include "engine_base.h"
 #include "underground_vehicle.h"
 #include "tbm.h"
 #include "tbm_exchange.h"
@@ -3622,14 +3628,23 @@ void StopGlobalFollowVehicle(const Vehicle *v)
 }
 
 
-/**
- * This is the Callback method after the construction attempt of a primary vehicle
- * @param result indicates completion (or not) of the operation
- * @param new_veh_id ID of the new vehicle.
- */
-void CcBuildPrimaryVehicle(Commands, const CommandCost &result, VehicleID new_veh_id, uint, uint16_t, CargoArray)
+/** @copydoc CcBuildPrimaryVehicle */
+void CcBuildPrimaryVehicle([[maybe_unused]] Commands command, const CommandCost &result, VehicleID new_veh_id,
+	[[maybe_unused]] uint capacity, [[maybe_unused]] uint16_t mail_capacity, [[maybe_unused]] CargoArray capacities,
+	TileIndex tile, EngineID engine, [[maybe_unused]] bool use_free_vehicles, [[maybe_unused]] CargoType cargo, [[maybe_unused]] ClientID client_id)
 {
 	if (result.Failed()) return;
+	if (new_veh_id == VehicleID::Invalid()) {
+		if (!IsSpacePurchaseEngine(engine)) return;
+		const auto *factory = GetSpacePurchaseAssembly(tile);
+		// A queued success owns an actual fresh native job, not a vehicle. Only its original local physical facility/model may open a job view; rendering creates no substitute hull.
+		if (factory == nullptr || factory->state.owner != _local_company || !factory->module || !factory->module->manufacture) return;
+		const auto &job = *factory->module->manufacture;
+		// The callback runs synchronously after this command, before another job can replace its just-admitted queued receipt.
+		if (job.phase != OrbitalManufacturePhase::Queued || job.model != Engine::Get(engine)->VehInfo<SpaceVehicleInfo>().model) return;
+		ShowSpaceConstructionWindow(GetSpaceStructureReference(*factory));
+		return;
+	}
 
 	const Vehicle *v = Vehicle::Get(new_veh_id);
 	ShowVehicleViewWindow(v);

@@ -5,7 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file fios.h Declarations for savegames operations. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
+/** @file fios.h Declarations for savegames operations.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; detached same-file descent packet counts.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group 9CD; copied ordinary stock joins the original Space packet owners.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; independent copied processor metadata cannot inherit another file's paid work or presence.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; copied hauler refits join this file's physical cargo dimensions and quantities.
+ */
 
 #ifndef FIOS_H
 #define FIOS_H
@@ -28,6 +34,7 @@
 #include "space_manifest.h"
 #include "space_pod.h"
 #include "space_structure.h"
+#include "orbital_recipe.h"
 #include "space_transition.h"
 #include "asteroid.h"
 
@@ -65,15 +72,50 @@ struct NativeSpaceVehiclePreview {
 	Owner owner = OWNER_NONE;
 	SpacePoint position{};
 	std::vector<uint32_t> cargo_packet_refs; ///< Same-file serialized native freight references; preview owns no packets and never consults live cargo.
+	uint32_t mining_target = UINT32_MAX; ///< Same-file native body reference; never resolved against the open world's field.
+	uint32_t extracted_units = 0; ///< Actual hull's lifetime finite extraction receipt.
+	uint16_t mining_work_ticks = 0; ///< Native partial extraction, separate from service and typed survey work.
+	uint8_t mining_phase = 0; ///< Serialized SpaceMissionPhase; role/version validation precedes its use.
+	bool cargo_complete = false; ///< Decoder-only proof that this row's actual common cargo fields were read; an omitted variant cannot impersonate an empty carrier.
+	CargoType freight_cargo = INVALID_CARGO; ///< Original common cargo_type; interpreted only through this file's CDIM meanings.
+	uint16_t freight_capacity = 0; ///< Original common cargo_cap; a reported refit cannot override the physical role/mass bound.
 };
 
+/** Detached same-file physical packet identity/quantity for independent descent checks; this snapshot allocates no native packet or inventory. */
+struct NativeCargoPacketPreview {
+	CargoPacketID packet = CargoPacketID::Invalid(); ///< Actual serialized native CAPA pool index, not a count-only replacement packet.
+	uint16_t quantity = 0; ///< Original positive whole units; native containers retain the sole gameplay ownership.
+};
+
+/** Same-file configured cargo dimensions; detached metadata cannot allocate cargo or replace a loaded CargoSpec. */
+struct NativeCargoDimensionPreview {
+	CargoType cargo = INVALID_CARGO; ///< Original configured cargo ordinal used by the saved physical owners.
+	CargoLabel label; ///< Actual configured label, retaining arbitrary required-content mappings.
+	uint8_t weight = 0; ///< Original CargoSpec unit mass in sixteenths of a tonne, including legitimate weightless non-freight cargo.
+	/** @param other Independently captured configured row. @return Exact ordinal, label and unit-mass equality without runtime registration. */
+	bool operator==(const NativeCargoDimensionPreview &other) const = default;
+};
+
+/** Copied native Station authority for independent launch-target validation; this record allocates no station or cargo inventory. */
+struct NativeStationOwnerPreview {
+	StationID station = StationID::Invalid(); ///< Actual same-file native Station index; waypoints are excluded.
+	Owner owner = OWNER_NONE; ///< Saved native authority, never borrowed from a station in the open world.
+};
+
+/** Detached whole-file preview transport; copied identities and authority cannot mutate or supply owners from the current playable world. */
 struct LoadCheckData {
+	bool native_cargo_dimensions_present = false; ///< This file supplied its own versioned configured-dimensions family.
+	std::vector<NativeCargoDimensionPreview> native_cargo_dimension_rows; ///< Copied definition metadata, never borrowed from active-world CargoSpec.
 	bool space_structures_present = false;
 	uint64_t next_space_structure_generation = 1;
 	SpaceStructureRetirementHistory space_structure_retirement_history; ///< Same-file spent receipts; preview never borrows active-world demolition history.
 	std::vector<SpaceStructureRecord> space_structure_rows;
 	uint64_t next_space_vehicle_generation = 1;
 	std::vector<NativeSpaceVehiclePreview> native_space_vehicle_rows;
+	std::vector<NativeStationOwnerPreview> native_station_owner_rows; ///< Same-file STNN normal-station authority for explicit reached service targets; r2mlvs10-asteroids-and-mining-probes.md Group8B.
+	bool native_vehicle_cargo_present = false, native_station_cargo_present = false; ///< Complete same-file native family reads, including legitimate empty tables; never inherited from a previous preview.
+	std::vector<uint32_t> native_ordinary_vehicle_cargo_refs; ///< Original ordinary carrier references encoded as native ID+1; copied metadata creates no hull, cargo or reservation.
+	std::vector<uint32_t> native_station_cargo_refs; ///< Original normal-station stock references encoded as native ID+1, across all cargo and next-hop buckets.
 	bool space_transitions_present = false;
 	std::vector<SpaceTransitionRecord> space_transition_rows;
 	bool space_pods_present = false;
@@ -94,6 +136,8 @@ struct LoadCheckData {
 	bool space_descents_present = false;
 	uint64_t next_space_descent_id = 1;
 	std::vector<SpaceDescentRecord> space_descent_rows;
+	bool native_cargo_packets_present = false; ///<434 copied CAPA metadata is independent of all packets in the open world.
+	std::vector<NativeCargoPacketPreview> native_cargo_packet_rows; ///< Bounded original index order; binary lookup checks actual references without allocating cargo.
 	bool space_content_present = false, space_orders_present = false;
 	bool space_orders_active = false;
 	uint16_t space_content_version = 0;
@@ -102,6 +146,7 @@ struct LoadCheckData {
 	bool launch_centers_present = false, launch_centers_active = false; ///< Independent bounded407 preview presence.
 	bool launch_hubs_present = false, launch_hubs_active = false; ///< Independent bounded408 membership preview.
 	bool surface_handling_present = false, surface_handling_active = false; ///< Independent bounded409 handling transport preview.
+	std::vector<SurfaceHandlingRecord> surface_handling_rows; ///< Original unpublished handling packet owners; the native launch hub remains the sole gameplay inventory.
 	uint64_t asteroid_seed = 0, orbital_seed = 0; ///< Candidate field and metadata roots; never live-world values.
 	bool checkable = false; ///< True if the savegame could be checked by SL_LOAD_CHECK. (Old savegames are not checkable.)
 	StringID error{}; ///< Error message from loading. INVALID_STRING_ID if no error.
@@ -189,6 +234,10 @@ struct LoadCheckData {
 	GRFListCompatibility grf_compatibility = GRFListCompatibility::NotFound; ///< Summary state of NewGrfs, whether missing files or only compatible found.
 
 	Gamelog gamelog{}; ///< Gamelog actions
+	bool orbital_recipes_present = false; ///< This exact file supplied its required versioned processing metadata, independent of the active world.
+	std::vector<OrbitalRecipeRecord> orbital_recipe_rows; ///< Copied bounded metadata/private receipt fields; never a native paid-work owner.
+	std::map<MultiLayerRecipeID, uint64_t> orbital_retired_recipe_batches; ///< Independent SPRC aggregate; keeping it separate prevents chunk-order-dependent SPST overwrites.
+	uint64_t orbital_retired_discarded_paid_j = 0; ///< Same-file spent cancelled work, never electricity available to a preview.
 
 	/** Initialize independent preview fields without changing current world policy. */
 	LoadCheckData() {}

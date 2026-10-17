@@ -245,7 +245,7 @@ Paused, unfinished, stopped and calendar-locked mines preserve all balances.
 
 The shared batch executor recomputes every input/output/work delta and compares
 the entire actual owner view before invoking its non-failing commit participant.
-It refuses scalar-only heat/power commits: `src/utility_power.h` remains absent.
+It refuses scalar-only heat/power commits. The current electrical participant and staged-work extension are recorded under Group13; all electrical authority stays with the shared ledger.
 This scoped gate does not block ordinary material recipes. The native tile loop
 currently completes machinery and returns before legacy station dispatch, so
 Group 8 must install exact finite dispatch; it must not re-enable the lossy
@@ -461,6 +461,8 @@ resolve that stranded-output policy rather than silently deleting it.
 
 ## Group 13: delivered batch API and blocked utility participant
 
+**Current electrical boundary, 2026-10-16.** The absent-utility statements below describe the original delivery baseline. The shared electrical owner and whole-grant recipe participant are now delivered. [Plan11 Group10](r2mlvs11-orbital-stations-and-manufacturing.md#group-10---bind-orbital-inventory-to-the-shared-recipe-executor) additionally publishes [recipe-bound staged work](../../../../src/layer_recipe_work.h): actual atomic electrical mutations earn private pending progress, then the same original all-input/output executor settles it once without charging electricity twice. Existing whole-grant and unpowered participants retain their paths. Both configurations pass 2,447 focused assertions/23 cases (`logs/orbital-recipe-work-verification.json`); the index binds actual sources, executables and terminal logs. This shared producer supplies no orbital packet owner or processing save state; Plan11 Groups10B/10C own those consumers. Direct thermal commits remain outside this staged electrical API.
+
 All six frozen geothermal choices now have pure quantity/refusal checks for
 supplied heat/power, a missing transported role and full output. Positive scalar
 energy plans do not authorize a commit: the actual utility owner remains absent.
@@ -483,7 +485,9 @@ LayerRecipeBatchReceipt CommitLayerRecipeBatch(const MultiLayerRecipe &recipe,
 | --- | --- |
 | `snapshot.recipe/layer/revision/active` | Actual facility choice, layer, saved stamp and construction/calendar/pause permission; the owner supplies them. |
 | `snapshot.inputs/outputs/work_ticks` | Pure view of the sole physical input/output/work owner, with whole-unit capacities; the copy grants no custody. |
-| `snapshot.heat_j/power_j` | Read-only proposed quantities. No typed native grant is integrated and positive-energy commits are refused. |
+| `snapshot.heat_j/power_j` | Read-only proposed quantities; current electrical commits require the same participant's actual native grant. Positive scalar quantities alone grant no permission. |
+| `inventory.ElectricalWork` / `participant.ElectricalWork` | Optional pointers to the same noncopyable shared paid-work receipt. Ordinary callers expose none; a copied scalar work count cannot substitute. |
+| `LayerRecipeElectricalWorkRecord` | Immutable selected recipe/rate/consumer, bounded already-consumed pending work, sequence and per-opportunity use. This record is physical progress, never a usable or refundable energy account; native consumers must validate their actual incarnation joins. |
 | `proposal.owner/definition/before` | Borrowed real view and immutable content record plus expected snapshot, valid only within the same simulation action; never saved. |
 | `proposal.plan/inputs/outputs/work_ticks` | Recomputed all-role batch count and exact deltas. Missing input/output/work returns zero without consumption. |
 | `participant.Inventory/Validate/Commit` | Same actual view, pure complete revalidation and one non-allocating/non-failing commit; refusal preserves all quantities, success advances saved revision. |

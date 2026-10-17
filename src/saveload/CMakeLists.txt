@@ -1,16 +1,23 @@
 # Metadata/geology/job transport: docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md and r2mlvs2-geology-and-excavation.md.
 # Native electrical transport: docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 7B.
+# Native/copy orbital recipe transport: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 add_subdirectory(compat)
 
 add_files(
     afterload.cpp
     space_order_sl.cpp
     space_production_sl.cpp
+    # Paid replacement receipt codec: r2mlvs11-orbital-stations-and-manufacturing.md Group8BC.
+    space_replacement_sl.h
     space_manifest_sl.cpp
     space_pod_sl.cpp
     space_structure_sl.cpp
+    orbital_recipe_sl.cpp
     space_transition_sl.cpp
     space_descent_sl.cpp
+    # Independent ordinary/Space physical packet ownership: r2mlvs11-orbital-stations-and-manufacturing.md Group 9CD.
+    space_cargo_preview.cpp
+    space_cargo_preview.h
     ai_sl.cpp
     airport_sl.cpp
     animated_tile_sl.cpp

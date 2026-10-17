@@ -50,6 +50,7 @@
 #include "../launch_center.h"
 #include "../multilayer_space_content.h"
 #include "../space_orders.h"
+#include "space_cargo_preview.h"
 #include "../excavation_state.h"
 #include "../layer_portal_cmd.h"
 #include "../tbm.h"
@@ -267,6 +268,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _space_manifest_chunk_handlers;
 	extern const ChunkHandlerTable _space_pod_chunk_handlers;
 	extern const ChunkHandlerTable _space_structure_chunk_handlers;
+	extern const ChunkHandlerTable _orbital_recipe_chunk_handlers;
 	extern const ChunkHandlerTable _space_transition_chunk_handlers;
 	extern const ChunkHandlerTable _space_descent_chunk_handlers;
 	extern const ChunkHandlerTable _launch_center_chunk_handlers;
@@ -331,6 +333,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_space_manifest_chunk_handlers,
 		_space_pod_chunk_handlers,
 		_space_structure_chunk_handlers,
+		_orbital_recipe_chunk_handlers,
 		_space_transition_chunk_handlers,
 		_space_descent_chunk_handlers,
 		_launch_center_chunk_handlers,
@@ -3376,8 +3379,18 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateSpaceManifestLoadPreview();
 		ValidateSpacePodLoadPreview();
 		ValidateSpaceStructureLoadPreview();
+		ValidateOrbitalRecipeLoadPreview(); // Same-file native structures, utility and clock supply processing ownership; the active world grants no work to preview.
 		ValidateSpaceTransitionLoadPreview();
 		ValidateSpaceDescentLoadPreview();
+		// Current files publish actual configured mass separately from job receipts; genuine older saves retain explicitly limited copied admission and their full native dimension checks.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceCargoDimensions)) {
+			if (!ValidateSpaceCargoPreviewDimensions(_load_check_data)) SlErrorCorrupt("Changed or missing configured cargo dimension preview");
+		}
+		// Modern Space worlds must join all actual same-file cargo containers after their family readers finish; ordinary stock or hub handling cannot finance another physical copy in orbit.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning) &&
+			(!_load_check_data.native_space_vehicle_rows.empty() || !_load_check_data.space_structure_rows.empty() || !_load_check_data.space_descent_rows.empty())) {
+			if (!ValidateSpaceCargoPreviewOwners(_load_check_data)) SlErrorCorrupt("Shared or missing native/Space cargo ownership preview");
+		}
 		ValidateLayerPortalWorkLoadPreview();
 		ValidateTBMProjectLoadPreview();
 		ValidateSpoilReceiverLoadPreview();

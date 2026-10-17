@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.1. Exact first own Rich Rare-Earth natural-body original; native selection pending.",
+  "key": "rich-asteroid-free-n-ne-e-se-v2",
+  "asset_id": "asteroid.rare-earth",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v1.png",
+      "sha256": "2c2cccf1290d9fa8c84532165e8f118c3888fffd51daddeef4b2852da92a9150",
+      "role": "Exact rusty/lavender rich boulder model reference only; all old poses incorrectly show front and do not establish requested directions"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the exact natural RICH RARE-EARTH BOULDER MODEL REFERENCE: steep compact rusty brown angular rock, tall blunt rear ridge, lower squared chipped FRONT face, one embedded muted lavender/violet fissure, one opposite triangular dark pit. Preserve this exact single connected physical boulder and its materials. The first sheet incorrectly showed almost the SAME FRONT VIEW in every cell. Now correct PHYSICAL CAMERA YAW and make subjects SMALLER, maximum390px wide/280px tall, very generous transparent margins. No changing the model, adding rocks, or flat rotation/mirroring.\nCRITICAL FOUR DISTINCT GEOMETRIES, fixed2:1 isometric camera, upper-left SCREEN lighting:\nTOP LEFT N: view the BACK of the boulder. The TALL REAR RIDGE is on the NEAR/LOWER side facing viewer. The LOWER CHIPPED FRONT FACE is on the FAR/UPPER side, mostly OCCLUDED behind the ridge. Show the VIOLET fissure on the LEFT visible shoulder and TRIANGULAR dark pit on the RIGHT upper shoulder. This must look like the opposite side of the reference, not the old front view.\nTOP RIGHT NE: true rear-left oblique. Tall rear ridge is NEAR LOWER-LEFT, lower chipped front is FAR UPPER-RIGHT. Violet mineral fissure LEFT visible shoulder, triangular pit on opposite upperRIGHT shoulder. Turn the actual rock45degrees from N.\nBOTTOM LEFT E: genuine LEFT SIDE view. Tall rear ridge is LEFT; low chipped front face is RIGHT. The violet fissure wraps across the visible upper flank, with the triangular pit on the opposite shoulder. The tall/low ridge profile clearly slopes downward LEFT toRIGHT.\nBOTTOM RIGHT SE: genuine FRONT-LEFT oblique. Tall rear ridge is FAR UPPER-LEFT; low chipped front face NEAR LOWER-RIGHT. Violet fissure RIGHT visible slope; triangular pit LEFT opposite upper shoulder. Clear45degree physical yaw from E.\nBody-fixed landmarks turn WITH the boulder; screen light NEVER turns. No all-front repeated poses. Muted lavender around#8874A8/#B4A0CC with#504060 dark facets, never neonpink/puremagenta. Rust/ochre broad rock facets, restrained classic1990s Tycoon pixel clusters, no noisy photographic texture. No metal nodules, ice, crystals sticking out, machinery, tools, probe, extra lobes, glow, effects or newholes.\nSAFE BORDERED1536x1024 actual-transparent2x2 sheet with6px opaque PURE MAGENTA #FF00FF rectangles at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Center each complete SMALL rock with>=80px real transparent clearance to EVERY frame. No frame/gutter touches, overlap or clipping. Real alpha background/margins/gutters, no haze, checkerboardpaint, shadow, floor, backdrop, text, labels, digits or diagrams. Exact geometry, genuine distinct views and safe separation take priority over filling cells. Free normal mineral-bearing body only.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-8cb88c35-6716-4b43-a729-ae207471ca1b.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v2.png",
+  "sha256": "ca66e152367f1783d8aececc8d0311162a72240238dfba5bb482f63a0f60cac0"
+}

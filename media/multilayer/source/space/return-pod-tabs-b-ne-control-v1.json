@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.3. Exact executed NE-only phaseB edit from clean A original; other three cells are unchanged phaseA controls, not phaseB coverage.",
+  "key": "return-pod-tabs-b-ne-control-v1",
+  "asset_id": "vehicle.model-18",
+  "component_kind": "recovery_tabs",
+  "state": "descending",
+  "phase": 1,
+  "directions": [
+    "NE",
+    "SE",
+    "SW",
+    "NW"
+  ],
+  "authored_phase_directions": [
+    "NE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the clean transparent-alpha original four-view PASSIVE POD recovery-tab phaseA source. Preserve its CLEAN actual transparent background and existing opaque PURE MAGENTA rectangular frames exactly. Never paint a checkerboard, purple haze, fog, gradient or any alpha background within panel interiors.\nONLY in the TOP-LEFT NE view: extend its TWO EXISTING opened charcoal tabs on the LEFT/LOWER-LEFT rear side slightly further outward, and hinge their flat plate faces to a broader more-open angle. Add about30source pixels to their visible projection beyond phaseA while keeping both original hinge positions fixed. Same two blunt charcoal plates, not new equipment. EXACTLY TWO tabs total in this NE panel, both on its left side. Do NOT add a third folded tab on the right or near/front rim.\nPreserve every body/cap/orange belt/heat-shield/hatch detail and equipment count. Do NOT edit the other three panel views. They are phaseA control views and will not be counted as phaseB sources. Only NE is a newly authored mechanical phaseB in this correction.\nKeep entire1536x1024 source canvas, small subject sizes, all straight magenta frames and real empty transparent alpha margins. Complete subject including two newly opened NE tabs stays at least48px clear of its frame. Preserve fixed2:1 isometric camera, upper-left SCREEN light, matte classic1990s Tycoon pixel clusters and exact original white/orange octagonal shell. No new hatches, legs, fins, nozzle, plume, text, labels, loose props, glow, shadow or background fill.\nCRITICAL: keep background alpha truly zero in all empty margins, gutters and around all four subjects, exactly as clean Image1. Magenta frames are the only visible separator; do not reconstruct or paint any background. The only creative pixel edit is the actual two tab angles/extension in NE. Art creates no native job/cargo/recovered shell/work or physics authority.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-tabs-a-ne-se-sw-nw-v1.png",
+      "sha256": "4a15ed6f8dc1812f293f1b0fe569e15757b61bd0e6185c6f02d5a9daec4d5fb0",
+      "role": "Clean alpha/frames and actual two rear NE tabs; edit target for only NE phaseB. Other three cells are phaseA controls"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-4b3ce547-ba6f-4666-89e8-c29e834f743f.png",
+  "path": "media/multilayer/source/space/raw/return-pod-tabs-b-ne-control-v1.png",
+  "sha256": "e82d57a8fe0e48a0c68648b4fa6d520da500137996be5cf23ca3977e1f7fe62c"
+}

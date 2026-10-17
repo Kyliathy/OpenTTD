@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFB / r2mlvs14-remaining-assets-and-runtime-integration.md68.1. Exact first own carbonaceous Water-Ice natural-body source; original native selection pending.",
+  "key": "carbonaceous-asteroid-free-s-sw-w-nw-v1",
+  "asset_id": "asteroid.ice",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-free-n-ne-e-se-v1.png",
+      "sha256": "3a7a32c20b3b6fad31a354ad928db40fe1c23b5336c79f0a1e5474b3c7a1b530",
+      "role": "Exact selected low carbonaceous Water-Ice slab, firstN/NE/E/SE physical views and fixed upper-left light"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED natural CARBONACEOUS WATER-ICE ASTEROID: a low flattened charcoal porous slab, broad rounded rear, ONE short BLUNT NOTCHED front, ONE wide embedded pale-cyan/milky white ICE LENS filling a long broken fissure across the upper face, one large shallow oval pit on the opposite rear shoulder. Tiny pores are surface texture. Retain this exact physical connected rock slab, not a new body. Same relative volume, original dark stone/chipped edges, ice-patch extent and matte cold materials. No bulb-and-beak outline, pointed long nose, silver nodules, crystal spikes, metal, hardware, machinery or separate stones.\nProduce four OPPOSITE genuine physical yaw views, fixed2:1 isometric camera and upper-left SCREEN light: TOP LEFT S=blunt NOTCHED FRONT points DOWN/toward viewer, rounded rear up; TOP RIGHT SW=notched front lowerLEFT; BOTTOM LEFT W=notched front LEFT; BOTTOM RIGHT NW=notched front upperLEFT. The ice lens is BODY-FIXED and must turn with the slab: in these opposite views the long PALE ICE FISSURE occupies the LEFT visible upper surface of the slab; the single LARGE shallow OVAL PIT occupies the opposite RIGHT rear shoulder. Do not leave ice patch on screen-right and pit on screen-left as in original first-sheet views. Preserve one wide ice lens/one main oval pit through physical yaw/occlusion, not flat mirror/rotation or a changed lighting direction. Same restrained classic1990s Tycoon pixel clusters, charcoal/navy stone with pale cyan/white frost. Do not make photographic detail smoother.\nFour independent complete cutouts centered2x2, each about450-500px wide and280-320px tall, maximum520wide/340tall. Same consistent physical scale across all poses. SAFE BORDERED1536x1024 source sheet with6px opaque PURE MAGENTA #FF00FF rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep every complete small subject >=64px REAL TRANSPARENT empty clearance to every frame. No cell/gutter touching, overlap or clipping. Actual transparency background/margins/gutters, no haze, gradients, floor, shadow, painted checkerboard, text, labels, digits or diagrams. Free normal body only, no damage, glints, mining effect or cargo quantities. Source separation and exact physical model continuity take priority over large cutouts.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-615b49fd-479c-480e-aeae-6da31fefad79.png",
+  "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-free-s-sw-w-nw-v1.png",
+  "sha256": "b233ae938d4b5303a62fca32484fc1c2a02442ceb012b4b8c9e3084a52d7f216"
+}

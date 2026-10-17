@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; original active mechanical phase-A source edit; only measured front mechanism pixels may later replace approved body parts",
+  "key": "small-miner-mining-a-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "mining",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original small mining probe model15, ACTIVE ATTACHED MINING equipment pose, mechanical phase A.\nImage1 is the approved original N/NE/E/SE free-flight model. Preserve its exact physical hull, scale, component inventory, model proportions, material colors, upper-left light, camera and four directional views.\nChange ONLY the front mining mechanism: the SAME single spiral drill projects slightly farther forward in its ready cutting position, its silver flutes show a clear phase-A rotational position; the SAME TWO little hook arms bend inward into a firm shallow gripping C shape beside the drill. The hook tips are slightly closer to the drill tip. Both hooks remain clearly separate and must not cross the drill. This is one physically plausible operating pose, not damage.\nKeep the olive-gray wedge bus, yellow top access panel, exactly TWO dark-navy REAR solar paddles, their joints and one rear nozzle UNCHANGED. Do not add struts, claws, extra arms, panels, drills, sparks, dust, glow, flames, ore, rocks, cables, labels or background. The native game owns the asteroid and resource; this sheet contains spacecraft only. A later separate phase B will turn the SAME drill and move only these same hooks a little.\n\nFOUR actual engine viewport headings in2x2, identical to reference camera:\ntop-left N front/drill straight UP;\ntop-right NE front/drill UPPER RIGHT;\nbottom-left E front/drill straight RIGHT, horizontal side view;\nbottom-right SE front/drill LOWER RIGHT.\nPreserve genuine physical orientation and fixed upper-left SCREEN lighting; never mirror/rotate flat pictures.\nCrisp classic transport-Tycoon pixel-art clusters, tiny native36x24 craft readability, olive-gray matte bus, dark-blue rear panels and yellow access panel. Same approved sprite style, not shiny3D or smooth painting.\n\nSAFE BORDERED transparent1536x1024:\n6px opaque pure MAGENTA #FF00FF frames N(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000).\nEach complete craft must fit at least48px inside its own frame; max450px width270px height, reduce uniformly if needed.\nEvery hook/drill tip/paddle/nozzle stays far from separators and neighboring panels. Genuine transparent alpha background/margins/gutters, retain magenta separator frames only. No text, letters, numbers, arrows, starfield, floor, shadow, pedestal, decorations or extra props.\nFOUR complete separated views of the SAME native small miner, changing only the front drill and two hook arms into active MINING PHASE A.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+      "sha256": "82628dde71d12edf5033642dba350cab78fb6c42a0402d1e2161b2a2dabe19ab",
+      "role": "Approved physical same-model base and exact N/NE/E/SE layout edit target"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-mining-a-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-8c3b3450-3e2c-4560-b8d2-da734411e724.png",
+  "status": "pending_measured_layout_and_mechanism_component_review"
+}

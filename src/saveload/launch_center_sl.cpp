@@ -286,6 +286,8 @@ struct LHNDChunkHandler : ChunkHandler {
 		if (Active(data) && _load_check_data.map_layers < 3) SlErrorCorrupt("Surface handling preview needs Surface/Space geometry");
 		_load_check_data.surface_handling_present = true;
 		_load_check_data.surface_handling_active = Active(data);
+		// Retain only this file's original unpublished packet references for the global copied ownership join; no launch-hub job or cargo is installed by preview.
+		_load_check_data.surface_handling_rows = data.records;
 	}
 };
 static const LHNDChunkHandler LHND;

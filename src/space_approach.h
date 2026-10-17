@@ -64,4 +64,15 @@ std::optional<uint8_t> GetSpaceStructureBerth(const SpaceVehicle &craft, const S
 bool ValidateNativeSpaceApproaches();
 /** @param state Candidate static footprint. @return Whether actual hull/staging occupancy leaves its cells and approaches free. */
 bool IsSpaceApproachSiteAvailable(const SpaceStructureState &state);
+/** Check the actual Assembly slot before a paid request or whole input reservation.
+ * @param site Exact native Assembly; its own saved manufacturing request is not a fictitious Vehicle occupant.
+ * @return Whether physical footprint/approach and every previously admitted hull leave its one manufacturing berth free.
+ */
+bool IsSpaceStructureManufactureBerthFree(const SpaceStructure &site);
+/** Bind only the freshly completed job's actual hull to its already preflighted native physical output berth.
+ * @param craft Original newly issued native hull, physically at its factory output point.
+ * @param site Actual completed Assembly whose exact paid job owns this product.
+ * @return Whether the existing approach authority committed its one original berth; creates no proxy hull or cargo.
+ */
+bool BindSpaceManufactureBerth(SpaceVehicle &craft, const SpaceStructure &site);
 #endif

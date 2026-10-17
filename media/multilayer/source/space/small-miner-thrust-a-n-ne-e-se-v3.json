@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; exact original model-derived nozzle extraction/travel edit request; alpha/layout/source selection separate",
+  "key": "small-miner-thrust-a-n-ne-e-se-v3",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nEdit the attached APPROVED small-mining-probe sheet into a REAR-NOZZLE COMPONENT sheet.\nCRITICAL: preserve the input's CLEAN TRANSPARENT ALPHA BACKGROUND and its exterior flat pure-MAGENTA rectangular separators. Do NOT put checkerboard squares, white/gray fill, fog, glow or a painted transparency preview inside the panels. The empty panel interiors must remain actually empty transparent alpha as in the input; their hidden RGB may be flat magenta. NO CHECKERBOARD OR GRAY/WHITE BACKGROUND ANYWHERE.\n\nIn each of the four existing engine-direction panels, keep ONLY the ONE original short dark-gray cylindrical REAR maneuvering nozzle, its narrow gold band and original gray mounting collar.\nRemove the central bus, yellow panel, drill, both hooks and both solar paddles entirely, leaving genuine transparent alpha where they were.\nPreserve the exact original nozzle geometry, physical direction and fixed upper-left light. Do not redesign or enlarge it. Add ONE VERY SHORT crisp blue/cyan jet to the open rear outlet, about20-30 source pixels long. Bright cyan core, narrow blue edge, no glow halo. This is travel phase A. Keep the part safely inside the same panel. Do not add any other hardware or effects.\n\nSame genuine N/NE/E/SE engine component views:\nTOP LEFT N: original nozzle mounting end up, outlet/short blue jet straight DOWN.\nTOP RIGHT NE: mounting end up-right, outlet/short jet down-left.\nBOTTOM LEFT E: mounting end right, outlet/short jet exactly LEFT, horizontal axis.\nBOTTOM RIGHT SE: mounting end down-right, outlet/short jet up-left.\nRetain original pixel-art clusters, charcoal/gray cylinder and one gold stripe. ONE nozzle/short jet per panel, genuine physical redraw only when needed, never a flat flip/rotation.\n\nRetain source canvas1536x1024 and four opaque pure-magenta #FF00FF frames at approximately\n(24,24)-(744,488);(792,24)-(1512,488);(24,536)-(744,1000);(792,536)-(1512,1000).\nEach complete part/jet has clear transparent space to every separator; if necessary shift the complete part slightly inward without changing its physical size or orientation.\nNo text, labels, numbers, letters, arrows, stars, checkerboard, white/gray fill, cast shadow, haze or extra props.\nFour SMALL genuine original REAR NOZZLES, each with one tiny blue jet, on the same clean actual-transparent background as the approved input.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+      "sha256": "82628dde71d12edf5033642dba350cab78fb6c42a0402d1e2161b2a2dabe19ab",
+      "role": "Approved physical rear nozzles, exact genuine source directions and clean alpha/magenta layout edit target"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-67471b14-d0d9-4524-b485-7ceb3eed8b4f.png",
+  "status": "pending_actual_alpha_and_layout_review"
+}

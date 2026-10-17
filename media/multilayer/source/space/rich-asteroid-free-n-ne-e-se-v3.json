@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.1. Exact first own Rich Rare-Earth natural-body original; native selection pending.",
+  "key": "rich-asteroid-free-n-ne-e-se-v3",
+  "asset_id": "asteroid.rare-earth",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v2.png",
+      "sha256": "ca66e152367f1783d8aececc8d0311162a72240238dfba5bb482f63a0f60cac0",
+      "role": "Correct genuineN/NE/E/SE model/camera/positions; only mineral color needs stronger DOS-readable violet"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 has the CORRECT selected RICH ASTEROID GEOMETRY and four genuine views: N top-left (rear ridge near, violetLEFT/pitRIGHT), NE top-right (rear-left oblique, violetLEFT/pitRIGHT), E bottom-left (tallridgeLEFT/lowerfrontRIGHT), SE bottom-right (ridgefarupperLEFT/frontlowerRIGHT, violetRIGHT/pitLEFT). Preserve EXACT physical model, yaw, composition, body position, original size, silhouette, rustybrown/ochre rock facets, ONE triangular pit, fixed2:1 camera and fixed upper-left SCREENlight.\nCHANGE ONLY THE EMBEDDED MINERAL POCKET COLOR: the old pale desaturated lavender becomes gray when reduced to the game's DOS palette. Make this same mineral pocket a clearly SATURATED BLUE-VIOLET, around#7044A8 (dark-mid),#8C64C4 (mid) and#A888E0 (lighter). Keep blue channel roughly60-100higher than green in the main mineral facets. Strong readable VIOLET/PURPLE at small scale, NOT gray, silver, white, pink or neonmagenta. Avoid white/yellow mineral highlights; pale highlights are still BLUE-VIOLET. Preserve the exact pocket footprint and embedded granular/faceted texture, no new external crystals, larger vein, protrusions, glow or extra material.\nDo not recolor the warm rusty host rock. Do not move fissure/pit or change any front/rear view geometry. No metal, ice, machinery, tool, probe, hardware, extra rock/lobe, effect, mining spark or exhausted patch. Same classic1990s Tycoon pixel clusters, less noisy detail rather than smoothphotographictexture.\nKeep SAFE BORDERED1536x1024 true-transparent2x2 source sheet with6px PURE MAGENTA #FF00FF frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Complete cutouts centeredwith>=64px REAL TRANSPARENT clearance to every frame, no overlap/clipping/frameguttertouch. Actual transparent background/margins/gutters, no haze/shadow/floor/backdrop/checkerboardpaint/text/labels/digits. Separator magenta stays external and unchanged. Only strengthen true mineral BLUE-VIOLET while keeping selected body and four genuine camera views.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-ae394fd6-4faf-4909-a815-76bf2768df09.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+  "sha256": "1a4c73152a9e88846633c33db1daae24ed521b1c55436e94d46615a8d9fd3ef2"
+}

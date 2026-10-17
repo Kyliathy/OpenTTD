@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; genuine remaining shorter travel-pulse source with exact two-input ancestry; native approval remains pending",
+  "key": "small-miner-thrust-b-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original small mining probe's isolated rear-nozzle travel components, remaining physical headings, PHASE B.\nImage1 is the S/SW/W/NW phase-A nozzle sheet: exact physical views/layout/hardware edit target.\nImage2 is the SAME original component's N/NE/E/SE phase-B sheet: guide ONLY for the shorter actual blue/cyan jet pulse.\nKeep image1's four opposite headings and preserve its exact charcoal-gray nozzle barrel, gray mounting collar, ONE narrow gold band, component scale, positions and upper-left SCREEN light.\nChange ONLY each blue plume: shorten to about HALF of image1's present length, matching the compact phase-B pulse in image2. Crisp cyan core and narrow blue pixel edge, same axis/outlet. No added jet, halo, haze, smoke, sparks, flare or moving nozzle hardware.\n\nPhysical component orientations stay:\nTOP LEFT S: mounting end DOWN, nozzle outlet/jet exactly UP;\nTOP RIGHT SW: mounting end LOWER LEFT, outlet/jet UPPER RIGHT;\nBOTTOM LEFT W: mounting end LEFT, outlet/jet exactly RIGHT on a HORIZONTAL axis;\nBOTTOM RIGHT NW: mounting end UPPER LEFT, outlet/jet LOWER RIGHT.\nTrue opposite physical camera views, fixed elevated orthographic Tycoon camera, never flat mirror/rotation. Preserve crisp restrained classic pixel-art model and materials.\n\nPreserve the input's ACTUAL CLEAN TRANSPARENT ALPHA interiors and magenta source separator layout; empty pixels must remain alpha0.\nNO checkerboard, white/gray/pink fill, fog, gradient background, glow haze or painted transparency preview. Hidden RGB outside alpha may be flat magenta; do not paint visible colored backgrounds.\nKeep1536x1024 and four fully separated small component cutouts with ample transparent clearance to their exterior source frames/gutters.\nNo text, letters, numbers, arrows, labels, stars, floor, cast shadow, spacecraft hull or extra props.\nFour SAME genuine S/SW/W/NW original nozzles with only their blue jet shortened into actual PHASE B.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+      "sha256": "37bf5aee105a37461c278a561811eec9eecfcaca11007897c101751f229aff03",
+      "role": "Exact opposite-heading phase-A nozzle geometry/clean-alpha/layout edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+      "sha256": "4ba9a79d6f9eb60cb333476b2b30a824768b123a6fd37320c2c4126ca0f779cf",
+      "role": "Same-model first-four-heading shorter phase-B plume guide only"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-a349bf79-83ec-4a7d-8137-d62b31ff52af.png",
+  "status": "pending_measured_alpha_layout_and_native_travel_phase_review"
+}

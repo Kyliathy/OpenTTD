@@ -1,14 +1,20 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_service.cpp Contained Core/Dock berths, actual service packets and atomic shared-power settlement.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/3/4C.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/3/4C/6B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; original contained timers consume complete per-role bills through the same750J owner.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; the same native connection commands delegate to the distinct processing owner.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; original countdown queried for presentation only.
  */
 #include "stdafx.h"
 #include "orbital_service.h"
+#include "orbital_manufacturing.h"
+#include "orbital_recipe.h"
 #include "space_structure.h"
 #include "space_approach.h"
 #include "space_structure_cmd.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
+#include "space_mining_tuning.h"
 #include "hub_cargo.h"
 #include "company_base.h"
 #include "company_func.h"
@@ -28,14 +34,29 @@ struct OrbitalServiceAssignment {
 	uint8_t berth;
 };
 
+/** @copydoc GetOrbitalServiceJobTuning */
+std::optional<SpaceServiceTuning> GetOrbitalServiceJobTuning(const OrbitalServiceState &job)
+{
+	// Genuine older receipts never contained a model. Preserve their original bounded bill after load/loss rather than reconstructing a current role from another hull or assuming heavy rights.
+	if (job.model == UINT16_MAX) return SpaceServiceTuning{GetMultiLayerSpaceBudget().service_ticks, {1, 1}, GetMultiLayerSpaceBudget().returns_per_service};
+	return GetSpaceServiceTuning(job.model);
+}
+
+/** @param kind Actual paid module role. @return Bounded electrical work slots; an Assembly work slot grants no probe service berth. */
+static uint8_t OrbitalElectricalWorkCapacity(SpaceBuildKind kind)
+{
+	return kind == SpaceBuildKind::Assembly ? 1 : GetOrbitalModuleServiceCapacity(kind);
+}
+
 /** @copydoc GetOrbitalServicePowerSite */
 const SpaceStructure *GetOrbitalServicePowerSite(const SpaceStructure &site)
 {
 	if (!IsOrbitalModuleOperational(site)) return nullptr;
 	if (site.state.kind == SpaceBuildKind::Core) return &site;
-	if (site.state.kind != SpaceBuildKind::Dock) return nullptr;
+	// Dock service and Assembly manufacture share explicit source geometry; other modules cannot borrow an arbitrary nearby panel.
+	if (site.state.kind != SpaceBuildKind::Dock && site.state.kind != SpaceBuildKind::Assembly) return nullptr;
 	auto *source = ResolveSpaceStructure(site.module->utility_source);
-	// Only the exact original adjacent same-company panel supplies the Dock; a reused ID or a nearby unrelated producer cannot supply free work.
+	// Only the exact original adjacent same-company panel supplies work; a reused ID or unrelated nearby producer cannot supply free work.
 	if (source == nullptr || source->state.owner != site.state.owner || !IsOrbitalModuleOperational(*source) ||
 		(source->state.kind != SpaceBuildKind::Core && source->state.kind != SpaceBuildKind::Power) ||
 		!AreOrbitalModuleFootprintsAdjacent(site.state, source->state)) return nullptr;
@@ -60,13 +81,14 @@ static std::optional<OrbitalServiceAssignment> ServiceSite(const SpaceVehicle &c
 static bool ReadyCraft(const SpaceStructure &site, const SpaceVehicle &craft)
 {
 	const auto model = GetSpaceVehicleModel(craft);
-	// The original Core berth preserves historical paid service; new Dock jobs require the exact shared admitted physical slot.
-	const bool at_berth = site.state.kind == SpaceBuildKind::Core ? craft.position == GetSpaceStructureApproach(site.state) : GetSpaceStructureBerth(craft, site).has_value();
+	// The original Core berth preserves historical paid service. Heavy Core and every Dock job require the exact shared admitted physical slot, so a coincident position cannot create new service rights.
+	const bool at_berth = site.state.kind == SpaceBuildKind::Core && model != SPACE_HEAVY_MINER_MODEL ? craft.position == GetSpaceStructureApproach(site.state) : GetSpaceStructureBerth(craft, site).has_value();
 	return GetOrbitalModuleServiceCapacity(site.state.kind) != 0 && IsOrbitalModuleOperational(site) && craft.owner == site.state.owner &&
-		(model == 15 || model == 19 || model == 20) && craft.construction.placement == SpacePlacement::Orbital &&
-		craft.construction.content_version == MULTILAYER_SPACE_CONTENT_VERSION &&
+		GetSpaceServiceTuning(model).has_value() && craft.construction.placement == SpacePlacement::Orbital &&
+		IsSupportedSpaceVehicleContentVersion(craft.construction.content_version, model) &&
 		at_berth && craft.manifest != nullptr &&
 		craft.manifest->service_ticks == 0 && craft.manifest->pending_returns == 0 &&
+		(model != SPACE_HEAVY_MINER_MODEL || craft.mission.phase == SpaceMissionPhase::Holding) &&
 		!craft.vehstatus.Test(VehState::Stopped) && !craft.vehstatus.Test(VehState::Crashed);
 }
 
@@ -79,6 +101,10 @@ static bool ReadyJob(const SpaceStructure &site, const OrbitalServiceJob &job)
 	// Lost, foreign, paused or changed hulls retain their parts and berth, without spending power or renewing allowances.
 	if (job.remaining_ticks == 0 || job.paused || craft == nullptr || !ReadyCraft(site, *craft) ||
 		craft->manifest->services_completed != job.services_at_start || job.services_at_start == UINT64_MAX || m.services_completed == UINT64_MAX) return false;
+	const auto model = GetSpaceVehicleModel(*craft); const auto tuning = GetOrbitalServiceJobTuning(job);
+	// An immutable bill follows only its original role. Unknown old receipts remain legacy-only; heavy work requires its own known role and exhausted allowance throughout execution.
+	if (!tuning || job.remaining_ticks > tuning->ticks || (job.model == UINT16_MAX ? model == SPACE_HEAVY_MINER_MODEL : model != job.model) ||
+		(model == SPACE_HEAVY_MINER_MODEL && craft->manifest->returns_remaining != 0)) return false;
 	const auto *source = GetOrbitalServicePowerSite(site);
 	if (source == nullptr) return false;
 	if (site.state.kind == SpaceBuildKind::Dock) {
@@ -86,7 +112,7 @@ static bool ReadyJob(const SpaceStructure &site, const OrbitalServiceJob &job)
 		// A hull admitted to one Dock berth cannot spend parts reserved by the other physical job.
 		if (!berth || jobs[*berth] != &job) return false;
 	}
-	return job.inputs[0].AvailableCount() == 1 && job.inputs[1].AvailableCount() == 1;
+	return job.inputs[0].AvailableCount() == tuning->inputs[0] && job.inputs[1].AvailableCount() == tuning->inputs[1];
 }
 
 /** @param stock Actual Core cargo slot. @return Number of retained physical packet references, not aggregate quantity. */
@@ -100,6 +126,13 @@ static size_t PacketCount(const StationCargoList &stock)
 
 /** @copydoc HasOrbitalServiceAssignment */
 bool HasOrbitalServiceAssignment(const SpaceVehicle &craft) { return ServiceSite(craft).has_value(); }
+
+/** @copydoc GetOrbitalServiceJobState */
+const OrbitalServiceState *GetOrbitalServiceJobState(const SpaceVehicle &craft)
+{
+	const auto assignment = ServiceSite(craft);
+	return assignment ? assignment->job : nullptr;
+}
 
 /** @copydoc HasOrbitalUtilitySources */
 bool HasOrbitalUtilitySources()
@@ -187,10 +220,11 @@ public:
 		auto &m = *this->site.module; auto &job = this->job;
 		job.last_work_interval = proposal.grant.interval;
 		if (--job.remaining_ticks != 0) return true;
-		// The final whole work tick consumes both exclusive parts once, then replaces rather than adds the bounded allowance.
-		for (auto &slot : job.inputs) { const bool consumed = HubCargoTransfer::Consume(slot, 1); assert(consumed); (void)consumed; }
+		const auto tuning = GetOrbitalServiceJobTuning(job); assert(tuning);
+		// The final whole work tick consumes both complete immutable input bills once, then replaces rather than adds the bounded allowance. Earlier opportunities retain every actual part.
+		for (uint i = 0; i < 2; ++i) { const bool consumed = HubCargoTransfer::Consume(job.inputs[i], tuning->inputs[i]); assert(consumed); (void)consumed; }
 		auto &manifest = *ResolveSpaceCraft(job.craft)->manifest;
-		++manifest.services_completed; manifest.returns_remaining = GetMultiLayerSpaceBudget().returns_per_service;
+		++manifest.services_completed; manifest.returns_remaining = tuning->returns;
 		++m.services_completed; static_cast<OrbitalServiceState &>(job) = {};
 		return true;
 	}
@@ -231,9 +265,14 @@ CommandCost CmdCommissionOrbitalServices(DoCommandFlags flags, SpaceStructureID 
 CommandCost CmdConnectOrbitalServices(DoCommandFlags flags, SpaceStructureID id, uint64_t generation, SpaceStructureID source_id, uint64_t source_generation)
 {
 	auto *site = ResolveSpaceStructure({id, generation}); const auto *source = ResolveSpaceStructure({source_id, source_generation});
-	// A connection follows paid Dock activation and an actual owned physical edge; it cannot manufacture a panel or inherit a reused source identity.
+	// The same typed original source command reaches a processor's distinct metadata/consumer owner; it never grants that module a Dock berth or Assembly manufacturing account.
+	if (site != nullptr && IsOrbitalRecipeKind(site->state.kind)) {
+		if (source == nullptr) return CMD_ERROR;
+		return ConnectOrbitalRecipePower(flags, *site, *source);
+	}
+	// A connection follows paid Dock/Assembly activation and an actual owned physical edge; it cannot manufacture a panel or inherit a reused source identity.
 	if (site == nullptr || source == nullptr || !Company::IsValidID(_current_company) || site->state.owner != _current_company || source->state.owner != _current_company ||
-		site->state.kind != SpaceBuildKind::Dock || !IsOrbitalModuleOperational(*site) || !IsOrbitalModuleOperational(*source) ||
+		(site->state.kind != SpaceBuildKind::Dock && site->state.kind != SpaceBuildKind::Assembly) || !IsOrbitalModuleOperational(*site) || !IsOrbitalModuleOperational(*source) ||
 		(source->state.kind != SpaceBuildKind::Core && source->state.kind != SpaceBuildKind::Power) || !AreOrbitalModuleFootprintsAdjacent(site->state, source->state)) return CMD_ERROR;
 	auto &module = *site->module; const auto *producer = GetUtilityPowerProducer(source->module->producer);
 	// Register the one original bounded work consumer once; source toggles and subsequent service jobs do not reissue IDs or grant energy.
@@ -241,7 +280,7 @@ CommandCost CmdConnectOrbitalServices(DoCommandFlags flags, SpaceStructureID id,
 		producer->owner != _current_company || producer->meter.layer != MapLayer::Space || producer->kind != UtilityGenerationKind::OrbitalPanel) return CMD_ERROR;
 	const std::array sources{source->module->producer}; const bool execute = flags.Test(DoCommandFlag::Execute);
 	const auto consumer = RegisterUtilityPowerConsumer(_current_company, MapLayer::Space, UtilityConsumerEffect::AssemblyWork,
-		uint64_t{GetOrbitalModuleServiceCapacity(site->state.kind)} * GetMultiLayerSpaceBudget().work_j_per_tick, sources, execute);
+		uint64_t{OrbitalElectricalWorkCapacity(site->state.kind)} * GetMultiLayerSpaceBudget().work_j_per_tick, sources, execute);
 	if (!consumer) return CMD_ERROR;
 	if (execute) { module.consumer = *consumer; module.utility_source = GetSpaceStructureReference(*source); MarkWholeScreenDirty(); }
 	return CommandCost{};
@@ -251,10 +290,15 @@ CommandCost CmdConnectOrbitalServices(DoCommandFlags flags, SpaceStructureID id,
 CommandCost CmdDisconnectOrbitalServices(DoCommandFlags flags, SpaceStructureID id, uint64_t generation)
 {
 	auto *site = ResolveSpaceStructure({id, generation});
-	// The paid physical Dock retains its completed history/berths through outages; disconnection never requires its original source to still operate.
-	if (site == nullptr || !Company::IsValidID(_current_company) || site->state.owner != _current_company || site->state.kind != SpaceBuildKind::Dock ||
+	// Original processing cleanup preserves its private paid-work/history boundary even when source/Core availability has been lost.
+	if (site != nullptr && IsOrbitalRecipeKind(site->state.kind)) return DisconnectOrbitalRecipePower(flags, *site);
+	// Paid work facilities retain history through outages; disconnection never requires their original source to still operate.
+	if (site == nullptr || !Company::IsValidID(_current_company) || site->state.owner != _current_company ||
+		(site->state.kind != SpaceBuildKind::Dock && site->state.kind != SpaceBuildKind::Assembly) ||
 		!site->module || site->module->activation_ticks != 0 || site->module->utility_source == SpaceStructureRef{} || site->module->consumer == UtilityConsumerID{UINT32_MAX}) return CMD_ERROR;
 	auto &module = *site->module;
+	// A queued or reserved vehicle order owns this exact work connection until explicit cancellation; disconnect cannot strand its paid reservation.
+	if (module.manufacture) return CMD_ERROR;
 	// Every held job is an accountable physical owner; the player must return/cancel its actual parts before retiring its shared work connection.
 	for (const auto *job : module.GetServiceJobs()) if (job->remaining_ticks != 0 || job->inputs[0].TotalCount() != 0 || job->inputs[1].TotalCount() != 0) return CMD_ERROR;
 	const std::array consumers{module.consumer}; const bool execute = flags.Test(DoCommandFlag::Execute);
@@ -276,6 +320,7 @@ CommandCost CmdSetOrbitalPanelPaused(DoCommandFlags flags, SpaceStructureID id, 
 /** @copydoc CmdServiceOrbitalProbe */
 CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, uint64_t generation, VehicleID vehicle, uint64_t craft_generation, OrbitalServiceControl control)
 {
+	if (flags.Test(DoCommandFlag::QueryCost)) flags.Reset(DoCommandFlag::Execute);
 	auto *site = ResolveSpaceStructure({id, generation}); const SpaceCraftRef ref{vehicle, craft_generation};
 	// Retained paid berths allow explicit cancellation during a dependency outage, so lost power/Core never strands actual unconsumed parts.
 	if (site == nullptr || !Company::IsValidID(_current_company) || site->state.owner != _current_company || site->module == nullptr ||
@@ -288,6 +333,7 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 		// Control cannot retarget another job or renew a finished service through a stale command.
 		if (selected == nullptr) return CMD_ERROR;
 		auto &job = *selected;
+		const auto tuning = GetOrbitalServiceJobTuning(job); if (!tuning) return CMD_ERROR;
 		if (control == OrbitalServiceControl::Cancel) {
 			// Preflight both destination slots before returning anything; spent electricity is never refunded.
 			for (uint i = 0; i < 2; ++i) {
@@ -295,11 +341,11 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 				if (!IsValidCargoType(cargo)) return CMD_ERROR;
 				const auto &stock = m.stock[cargo];
 				// Physical count and packet-record limits both constrain cancellation, preserving every part on refusal.
-				if (stock.TotalCount() + 1 > GetOrbitalModuleStockLimit(site->state.kind) || PacketCount(stock) + PacketCount(job.inputs[i]) > 64 || !HubCargoTransfer::CanMove(job.inputs[i], 1)) return CMD_ERROR;
+				if (stock.TotalCount() + tuning->inputs[i] > GetOrbitalModuleStockLimit(site->state.kind) || PacketCount(stock) + PacketCount(job.inputs[i]) > 64 || !HubCargoTransfer::CanMove(job.inputs[i], tuning->inputs[i])) return CMD_ERROR;
 			}
 			if (execute) {
-				// Both whole single-unit inputs are already admitted; these moves require no split allocation.
-				for (uint i = 0; i < 2; ++i) { const bool moved = HubCargoTransfer::Move(job.inputs[i], m.stock[GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1))], 1); assert(moved); (void)moved; }
+				// Both complete immutable bills are already admitted; cancellation returns only those actual reserved packets and refunds no earned electrical work.
+				for (uint i = 0; i < 2; ++i) { const bool moved = HubCargoTransfer::Move(job.inputs[i], m.stock[GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1))], tuning->inputs[i]); assert(moved); (void)moved; }
 				static_cast<OrbitalServiceState &>(job) = {};
 			}
 		} else if (execute) {
@@ -309,6 +355,9 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 	}
 	auto *craft = ResolveSpaceCraft(ref);
 	if (craft == nullptr) return CMD_ERROR;
+	const auto model = GetSpaceVehicleModel(*craft); const auto tuning = GetSpaceServiceTuning(model); if (!tuning) return CMD_ERROR;
+	// The new heavy producer renews only exhausted allowance. Historical15/19/20 jobs retain their original admission rather than being reinterpreted under a later mining policy.
+	if (model == SPACE_HEAVY_MINER_MODEL && (!craft->manifest || craft->manifest->returns_remaining != 0)) return CMD_ERROR;
 	const auto berth = site->state.kind == SpaceBuildKind::Core ? std::optional<uint8_t>{0} : GetSpaceStructureBerth(*craft, *site);
 	if (!berth) return CMD_ERROR;
 	auto &job = *jobs[*berth]; const auto *source_site = GetOrbitalServicePowerSite(*site);
@@ -321,7 +370,7 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 	for (uint i = 0; i < 2; ++i) {
 		const auto cargo = GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1));
 		if (!IsValidCargoType(cargo)) return CMD_ERROR;
-		if (!HubCargoTransfer::CanMove(m.stock[cargo], 1)) return CMD_ERROR;
+		if (!HubCargoTransfer::CanMove(m.stock[cargo], tuning->inputs[i])) return CMD_ERROR;
 	}
 	if (!CargoPacket::CanAllocateItem(2)) return CMD_ERROR;
 	const std::array sources{source_site->module->producer};
@@ -333,8 +382,8 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 	}
 	if (execute) {
 		// No intervening mutation can consume the preflighted packet capacity; both parts become exclusive to this job.
-		for (uint i = 0; i < 2; ++i) { const bool moved = HubCargoTransfer::Move(m.stock[GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1))], job.inputs[i], 1); assert(moved); (void)moved; }
-		job.craft = ref; job.remaining_ticks = GetMultiLayerSpaceBudget().service_ticks; job.services_at_start = craft->manifest->services_completed;
+		for (uint i = 0; i < 2; ++i) { const bool moved = HubCargoTransfer::Move(m.stock[GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1))], job.inputs[i], tuning->inputs[i]); assert(moved); (void)moved; }
+		job.craft = ref; job.model = model; job.remaining_ticks = tuning->ticks; job.services_at_start = craft->manifest->services_completed;
 		MarkWholeScreenDirty();
 	}
 	return CommandCost{};
@@ -343,6 +392,7 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 /** @copydoc CmdMoveOrbitalSupply */
 CommandCost CmdMoveOrbitalSupply(DoCommandFlags flags, SpaceStructureID id, uint64_t generation, VehicleID vehicle, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool load)
 {
+	if (flags.Test(DoCommandFlag::QueryCost)) flags.Reset(DoCommandFlag::Execute);
 	auto *site = ResolveSpaceStructure({id, generation}); auto *craft = ResolveSpaceCraft({vehicle, craft_generation});
 	// Only real service compartments at an idle owned precise berth may exchange RFMT/ELEC; fuel remains a separate function.
 	if (site == nullptr || craft == nullptr || site->state.owner != _current_company || !ReadyCraft(*site, *craft) ||
@@ -368,16 +418,19 @@ CommandCost CmdMoveOrbitalSupply(DoCommandFlags flags, SpaceStructureID id, uint
 /** @copydoc ValidateOrbitalServiceUtilityRecords */
 bool ValidateOrbitalServiceUtilityRecords(std::span<const SpaceStructureRecord> rows, const UtilityPowerState &power)
 {
+	if (!ValidateOrbitalManufacturingRecords(rows, power.interval)) return false;
 	std::set<UtilityProducerID> producers; std::set<UtilityConsumerID> consumers;
 	// Both preview and actual-load validation use the same copied typed bindings, never feature-local energy accounts.
 	for (const auto &site : rows) {
 		if (site.last_work_interval > power.interval) return false;
 		if (!site.module) continue;
 		const auto &m = *site.module; UtilityProducerID service_producer = m.producer;
-		// Dock work binds an external original panel; no copied own-panel identity or consumer without its physical connection is admissible.
-		if (site.state.kind == SpaceBuildKind::Dock && (m.producer != UtilityProducerID{UINT32_MAX} ||
+		const bool external_work = site.state.kind == SpaceBuildKind::Dock || site.state.kind == SpaceBuildKind::Assembly;
+		// Both paid external work roles retain an original panel connection; neither copied own-panel identity nor unconnected consumer is admissible.
+		if (external_work && (m.producer != UtilityProducerID{UINT32_MAX} ||
 			((m.consumer == UtilityConsumerID{UINT32_MAX}) != (m.utility_source == SpaceStructureRef{})))) return false;
-		if (site.state.kind == SpaceBuildKind::Dock && m.utility_source != SpaceStructureRef{}) {
+		// A retained connection resolves within the same snapshot, preventing an active-world panel or a reused native ID from legitimizing it.
+		if (external_work && m.utility_source != SpaceStructureRef{}) {
 			/** @param candidate Same-file native site. @return Whether it retains the exact original physical source incarnation. */
 			const auto source = std::ranges::find_if(rows, [&](const auto &candidate) { return candidate.ref == m.utility_source; });
 			// Copied preview binds only its own original paid adjacent panel; no active-world source or copied numeric producer ID may substitute.
@@ -399,9 +452,9 @@ bool ValidateOrbitalServiceUtilityRecords(std::span<const SpaceStructureRecord> 
 			/** @param c Copied consumer. @return Whether this is the original issued bounded work identity. */
 			const auto c = std::find_if(power.consumers.begin(), power.consumers.end(), [&](const auto &c) { return c.meter.consumer_id == id; });
 			// Each live work slot is dedicated to its panel; company removal clears retired eligibility while retaining original paid history.
-			const bool dock_service = site.state.kind == SpaceBuildKind::Dock && id == m.consumer;
-			const uint64_t capacity = uint64_t{GetMultiLayerSpaceBudget().work_j_per_tick} * (dock_service ? GetOrbitalModuleServiceCapacity(site.state.kind) : 1);
-			const auto expected_source = dock_service ? service_producer : m.producer;
+			const bool external_consumer = external_work && id == m.consumer;
+			const uint64_t capacity = uint64_t{GetMultiLayerSpaceBudget().work_j_per_tick} * (external_consumer ? OrbitalElectricalWorkCapacity(site.state.kind) : 1);
+			const auto expected_source = external_consumer ? service_producer : m.producer;
 			if (c == power.consumers.end() || !consumers.insert(id).second || c->effect != UtilityConsumerEffect::AssemblyWork || c->meter.layer != MapLayer::Space ||
 				c->meter.domain != UtilityEnergyDomain::Electricity || c->capacity_j != capacity ||
 				(c->active ? c->linked_producers != std::vector{expected_source} : !c->linked_producers.empty()) ||
@@ -431,8 +484,12 @@ bool ValidateOrbitalServices()
 			if (craft != nullptr && (craft->owner != site->state.owner || !craft->manifest || craft->manifest->service_ticks != 0 || craft->manifest->services_completed != job.services_at_start)) return false;
 			if (craft != nullptr) {
 				const auto model = GetSpaceVehicleModel(*craft);
-				if ((model != 15 && model != 19 && model != 20) || craft->construction.placement != SpacePlacement::Orbital || craft->construction.content_version != MULTILAYER_SPACE_CONTENT_VERSION) return false;
-				if (site->state.kind == SpaceBuildKind::Dock) {
+				// Current known bills must match this exact paid role; genuine unknown legacy receipts cannot be converted into heavy rights by a surviving or reused hull.
+				if (!GetSpaceServiceTuning(model) || (job.model == UINT16_MAX ? model == SPACE_HEAVY_MINER_MODEL : model != job.model) || craft->construction.placement != SpacePlacement::Orbital || !IsSupportedSpaceVehicleContentVersion(craft->construction.content_version, model)) return false;
+				// The factory-only heavy's retained contained job requires exhausted allowance, no outstanding descent and actual holding pose throughout saved work; legacy probe policy remains unchanged.
+				if (model == SPACE_HEAVY_MINER_MODEL && (craft->manifest->returns_remaining != 0 || craft->manifest->pending_returns != 0 || craft->mission.phase != SpaceMissionPhase::Holding)) return false;
+				// Shared admission is mandatory for both new heavy Core work and all Dock work; historical Core jobs retain their original precise-coordinate contract.
+				if (site->state.kind == SpaceBuildKind::Dock || model == SPACE_HEAVY_MINER_MODEL) {
 					const auto admitted = GetSpaceStructureBerth(*craft, *site);
 					if (!admitted || *admitted != berth) return false;
 				} else if (craft->position != GetSpaceStructureApproach(site->state)) return false;

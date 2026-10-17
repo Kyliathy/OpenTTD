@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs10 Group14BFC / r2mlvs14 Group69.3. Correct actual native glint weaknesses; exact edited original retained, no native recoloring.",
+  "key": "rich-asteroid-mining-b-n-ne-e-se-v2",
+  "asset_id": "asteroid.rare-earth",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-mining-b-n-ne-e-se-v1.png",
+      "sha256": "fa8679118aa368e5b1bf7d0cf87a8274778ab035bd34daa6d2c8274b0e0ec129",
+      "role": "Own phase edit target; only named failed glint positions corrected"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+      "sha256": "1a4c73152a9e88846633c33db1daae24ed521b1c55436e94d46615a8d9fd3ef2",
+      "role": "Exact own free original purple footprint; all host rock protected"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit. Image1 is current own rich asteroid mining phase; Image2 is exact selected FREE body with original PURPLE mineral footprint. Preserve four exact body views/positions/scales/silhouettes/brown stone/pit/camera/light/frame layout. Modify ONLY the named mining contact glint positions INSIDE ORIGINAL PURPLE surface; never place glint on host brown rock. Two named corrections ONLY: TOP LEFT N current gold sits on BROWN left bank and fails even Large. MOVE cluster approximately30px RIGHT and28px UP to center(313,240), replacing original PURPLE LOWER-MIDDLE mineral, not brown at(280,270). Make warm gold center35-40px wide, upper endpoint remains purple. TOP RIGHT NE current gold on BROWN lower-left lip disappears. Move center about25px RIGHT and15px UP, to approximately(1067,207), INSIDE original PURPLE LOWER-LEFT HALF. Make solid gold core approximately35px wide following purple seam; upper-right half remains purple. These two yellow clusters must replace purple, not sit beside it. E bottom-left and SE bottom-right already correct; keep their UPPER LEFT gold endpoints unchanged. Keep all other views' correct effect positions unchanged. Original blue-violet mineral surrounds the localized actual GOLD/YELLOW center and orange rim. Native Small reduction is1/4 of Large; glint must average to visible WARM gold rather than vanish into purple. No glow rays/tool/probe/hardware/cargo/plume/halo/external pixels. Actual native probe draws separately. Same crisp classic Tycoon style. Preserve1536x1024 SAFE bordered2x2 layout,6pxpuremagenta frames(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). All complete bodies>=32px realtransparent clearance, no frame/gutter overlap. Real transparent background/margins/gutters, no haze/shadow/backdrop/floor/checkerboard/text/labels.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-604e7447-28b3-4209-ad96-034475061488.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-mining-b-n-ne-e-se-v2.png",
+  "sha256": "8754e1621dbe7dca3443aefa9d27debbb0443a56f3174a98b93d7d57a5a85ffb"
+}

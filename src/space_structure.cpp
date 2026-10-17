@@ -1,15 +1,23 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_structure.cpp Native paid sites, Core activation and exclusive orbital cargo owners.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-8BC.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B; native processor buffers resolve actual configured cargo labels.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; processing work/connection/history follows exact native activation, freight and removal owners.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; haulers use explicit precise module exchanges without orbital CargoDist endpoints.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group6 shared body-strip exclusion.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C; an actual heavy orbital return spends its original manifest allowance.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; immutable contained-job bills bound real reserved packets and survive sender loss.
  */
 #include "stdafx.h"
 #include "space_structure.h"
+#include "orbital_manufacturing.h"
+#include "orbital_recipe.h"
 #include "multilayer_content.h"
 #include "space_transition.h"
 #include "space_approach.h"
 #include "space_structure_cmd.h"
 #include "space_vehicle.h"
+#include "space_mining_tuning.h"
 #include "space_manifest.h"
 #include "orbital_service.h"
 #include "space_pod.h"
@@ -34,6 +42,13 @@ static uint64_t next_generation = 1;
 static SpaceStructureRetirementHistory retirement_history;
 /** @copydoc GetSpaceStructureRetirementHistory */
 const SpaceStructureRetirementHistory &GetSpaceStructureRetirementHistory() { return retirement_history; }
+/** @copydoc InstallLoadedSpaceStructureProcessingHistory */
+bool InstallLoadedSpaceStructureProcessingHistory(const SpaceStructureRetirementHistory &history)
+{
+	auto expected = retirement_history; expected.processing_batches = history.processing_batches; expected.processing_discarded_paid_j = history.processing_discarded_paid_j;
+	if (expected != history) return false;
+	retirement_history = history; return true;
+}
 /** @copydoc GetSpaceStructureReference */
 SpaceStructureRef GetSpaceStructureReference(const SpaceStructure &site) { return {site.index, site.generation}; }
 /** @copydoc ResolveSpaceStructure */
@@ -45,7 +60,7 @@ SpaceStructure *ResolveSpaceStructure(SpaceStructureRef ref)
 /** @copydoc GetNextSpaceStructureGeneration */
 uint64_t GetNextSpaceStructureGeneration() { return next_generation; }
 /** @copydoc ResetSpaceStructures */
-void ResetSpaceStructures() { next_generation = 1; retirement_history = {}; ResetSpaceStructureLoadStaging(); ResetOrbitalConstructionTick(); }
+void ResetSpaceStructures() { next_generation = 1; retirement_history = {}; ResetSpaceStructureLoadStaging(); ResetOrbitalRecipeLoadStaging(); ResetOrbitalConstructionTick(); }
 
 /** Preflight all native spent-receipt additions before any physical or shared utility owner changes.
  * @param site Exact native owner being removed once.
@@ -63,6 +78,20 @@ static std::optional<SpaceStructureRetirementHistory> PlanSpaceStructureRetireme
 	const uint64_t services = site.module ? site.module->services_completed : 0;
 	if (services > UINT64_MAX - next.services_completed) return std::nullopt;
 	next.services_completed += services;
+	// Processing spent receipts follow their original physical module into the existing bounded retirement authority, with complete overflow admission before deletion.
+	if (site.module && site.module->processing) {
+		if (!ValidateOrbitalRecipes()) return std::nullopt;
+		const auto &processing = *site.module->processing;
+		// Retain each complete original recipe count under the same structure authority; removing its physical owner never erases consumed materials, residue or actual spent electricity.
+		for (const auto &[id, batches] : processing.batches) {
+			if (batches == 0) continue;
+			auto &total = next.processing_batches[id]; if (batches > UINT64_MAX - total) return std::nullopt;
+			total += batches;
+		}
+		if (processing.discarded_paid_j > UINT64_MAX - next.processing_discarded_paid_j) return std::nullopt;
+		next.processing_discarded_paid_j += processing.discarded_paid_j;
+		if (!GetOrbitalRecipeRetirementEnergy(next)) return std::nullopt;
+	}
 	return next;
 }
 /** @copydoc SpaceStructure::~SpaceStructure */
@@ -83,6 +112,11 @@ SpaceStructure::~SpaceStructure()
 				if (SpaceStructure::CleaningPool()) slot.OnCleanPool();
 				else assert(slot.TotalCount() == 0);
 			}
+		}
+		// A manufacturing batch has the same teardown rule: only world cleanup may discard its native packet references; ordinary removal requires explicit return.
+		if (this->module->manufacture) for (auto &slot : this->module->manufacture->inputs) {
+			if (SpaceStructure::CleaningPool()) slot.OnCleanPool();
+			else assert(slot.TotalCount() == 0);
 		}
 	}
 }
@@ -153,6 +187,12 @@ static bool HasOrbitalRemovalAccountableItem(const SpaceStructure &site)
 	if (site.job.inputs[0].TotalCount() != 0 || site.job.inputs[1].TotalCount() != 0 ||
 		(site.state.phase == SpaceStructurePhase::Blueprint && (site.job.work_ticks != 0 || site.job.work_fraction != 0))) return true;
 	if (site.module) {
+		if (site.module->manufacture) return true; // Even a packet-free queued order retains paid capital and its original construction dependency.
+		if (site.module->processing) {
+			const auto &processing = *site.module->processing;
+			// Enabled/unfinished processing retains the same completed-Core dependency even after a hauler emptied its input compartment.
+			if (processing.enabled || processing.unpowered_work_ticks != 0 || (processing.electrical && processing.electrical->Capture().paid_j != 0)) return true;
+		}
 		// Every contained service job and stock label remains accountable independently of present power availability.
 		for (const auto *job : site.module->GetServiceJobs()) {
 			if (job->remaining_ticks != 0 || job->inputs[0].TotalCount() != 0 || job->inputs[1].TotalCount() != 0) return true;
@@ -182,11 +222,15 @@ static bool HasAlternativeOrbitalCore(const SpaceStructureState &state, const Sp
 static UtilityPowerError RetireOrbitalModuleUtility(const SpaceStructure &site, bool execute)
 {
 	std::array<UtilityProducerID, 1> producers{}; size_t producer_count = 0;
-	std::array<UtilityConsumerID, 2> consumers{}; size_t consumer_count = 0;
+	std::array<UtilityConsumerID, 3> consumers{}; size_t consumer_count = 0;
 	if (site.module) {
 		if (site.module->producer != UtilityProducerID{UINT32_MAX}) producers[producer_count++] = site.module->producer;
 		// Native service and construction remain separate physical accounts; omit absent identities rather than issue replacements.
 		for (const auto id : {site.module->consumer, site.module->assembly_consumer}) if (id != UtilityConsumerID{UINT32_MAX}) consumers[consumer_count++] = id;
+		if (site.module->processing) {
+			const auto id = site.module->processing->consumer;
+			if (id != UtilityConsumerID{UINT32_MAX}) consumers[consumer_count++] = id;
+		}
 	}
 	return RetireOrbitalUtilityAccounts(std::span{producers}.first(producer_count), std::span{consumers}.first(consumer_count), execute);
 }
@@ -197,6 +241,12 @@ OrbitalRemovalBlock ClassifyOrbitalModuleRemoval(const SpaceStructure &site, Com
 	// An old numeric company identity cannot dispose of unowned retained material or another company's paid module.
 	if (!Company::IsValidID(owner) || site.state.owner != owner) return OrbitalRemovalBlock::InvalidOwner;
 	if (site.module) {
+		if (site.module->manufacture) return OrbitalRemovalBlock::Construction; // Cancel the exact paid request before deleting its facility or reserved batch.
+		if (site.module->processing) {
+			const auto &processing = *site.module->processing;
+			// Explicit cancellation must account for unfinished physical work before demolition; empty stock alone cannot waive an enabled or paid processing order.
+			if (processing.enabled || processing.unpowered_work_ticks != 0 || (processing.electrical && processing.electrical->Capture().paid_j != 0)) return OrbitalRemovalBlock::Construction;
+		}
 		// Explicit service cancellation must return its actual parts before demolition; a stopped or lost occupant does not waive this owner.
 		for (const auto *job : site.module->GetServiceJobs()) {
 			if (job->remaining_ticks != 0 || job->inputs[0].TotalCount() != 0 || job->inputs[1].TotalCount() != 0) return OrbitalRemovalBlock::Service;
@@ -212,6 +262,10 @@ OrbitalRemovalBlock ClassifyOrbitalModuleRemoval(const SpaceStructure &site, Com
 	for (const auto *dependent : SpaceStructure::Iterate()) {
 		if (dependent == &site) continue;
 		if (dependent->module != nullptr && dependent->module->utility_source == reference) return OrbitalRemovalBlock::Connection;
+		// A processing source is the same original physical incarnation; remove/disconnect its actual consumer before deleting that panel.
+		if (dependent->module && dependent->module->processing && dependent->module->processing->source == reference) return OrbitalRemovalBlock::Connection;
+		// Original stock-source identity is part of the paid order even after full reservation; source removal must follow explicit cancellation.
+		if (dependent->module && dependent->module->manufacture && dependent->module->manufacture->source == reference) return OrbitalRemovalBlock::Construction;
 		// Only removing a real completed Core can invalidate an existing dependent; unfinished/cancelled frames supplied no eligibility.
 		if (site.state.kind != SpaceBuildKind::Core || !IsOrbitalModuleOperational(site) || dependent->state.owner != owner ||
 			dependent->state.kind == SpaceBuildKind::Core || !AreOrbitalModuleFootprintsAdjacent(site.state, dependent->state)) continue;
@@ -295,6 +349,7 @@ struct OrbitalEvacuationPlan {
 	std::array<size_t, NUM_CARGO> packets{};
 	std::array<SpaceCraftRef, 2> services{};
 	size_t service_count = 0;
+	bool manufacture = false; ///< Cancel the exact contained request under the same whole-destination admission.
 };
 
 /** @param stock Actual sole native container. @return All saved reference fragments, across every routing bucket. */
@@ -346,8 +401,19 @@ static std::optional<OrbitalEvacuationPlan> PlanOrbitalEvacuation(const SpaceStr
 		if (!IsValidCargoType(cargo) || !AppendOrbitalEvacuationCargo(plan, cargo, source.job.inputs[i])) return std::nullopt;
 	}
 	if (source.module) {
+		if (source.module->processing) {
+			// Evacuation explicitly cancels unfinished processing under the same no-refund/history admission before any original stock can move.
+			if (CmdControlOrbitalRecipe({}, source.index, source.generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Cancel)).Failed()) return std::nullopt;
+		}
 		// Source stock moves first during execution, making room for public service cancellation to return its actual whole parts safely.
 		for (CargoType cargo : EnumRange(NUM_CARGO)) if (!AppendOrbitalEvacuationCargo(plan, cargo, source.module->stock[cargo])) return std::nullopt;
+		if (source.module->manufacture) {
+			// Manufacturing evacuation uses its actual public cancellation path and includes all four declared labels in this same whole-destination preflight.
+			if (CmdCancelOrbitalManufacture({}, source.index, source.generation, destination.index, destination.generation).Failed()) return std::nullopt;
+			plan.manufacture = true;
+			const auto &job = *source.module->manufacture; const auto &recipe = *GetSpaceVehicleConstruction(job.model);
+			for (size_t input = 0; input < recipe.inputs.size(); ++input) if (!AppendOrbitalEvacuationCargo(plan, GetCargoTypeByLabel(recipe.inputs[input].label), job.inputs[input])) return std::nullopt;
+		}
 		const auto jobs = source.module->GetServiceJobs();
 		// Every held craft remains physically accounted by the same native berth. Cancelling its job moves no hull, personal hold or manifest allowance.
 		for (size_t berth = 0; berth < jobs.size(); ++berth) {
@@ -367,7 +433,12 @@ static std::optional<OrbitalEvacuationPlan> PlanOrbitalEvacuation(const SpaceStr
 			}
 		}
 	}
-	bool useful = false;
+	bool useful = plan.manufacture; // A paid packet-free queued order is still an actual cancellable owner.
+	if (source.module && source.module->processing) {
+		const auto &processing = *source.module->processing;
+		// Even packet-free pending work is a useful explicit cancellation; its actual spent energy stays in the source module's historical ledger.
+		useful |= processing.enabled || processing.unpowered_work_ticks != 0 || (processing.electrical && processing.electrical->Capture().paid_j != 0);
+	}
 	// Whole destination preflight includes construction material, existing stock and all cancelled-job parts together, never one label at a time.
 	for (CargoType cargo : EnumRange(NUM_CARGO)) {
 		if (plan.quantities[cargo] == 0) continue;
@@ -398,8 +469,13 @@ CommandCost CmdEvacuateOrbitalModule(DoCommandFlags flags, SpaceStructureID id, 
 	if (source == nullptr || destination == nullptr) return CMD_ERROR;
 	const auto plan = PlanOrbitalEvacuation(*source, *destination);
 	if (!plan) return CMD_ERROR;
-	if (!flags.Test(DoCommandFlag::Execute)) return CommandCost{};
+	// Mixed query/execute is still whole-operation estimation; no cancellation, packet movement or paid-history change may escape the preflight.
+	if (!flags.Test(DoCommandFlag::Execute) || flags.Test(DoCommandFlag::QueryCost)) return CommandCost{};
 	if (source->module) {
+		if (source->module->processing) {
+			const auto cancelled = CmdControlOrbitalRecipe({DoCommandFlag::Execute}, source->index, source->generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Cancel));
+			assert(cancelled.Succeeded()); (void)cancelled;
+		}
 		// Empty original general stock first; held service parts still belong to their exact jobs until their public cancellation below.
 		for (CargoType cargo : EnumRange(NUM_CARGO)) MoveOrbitalEvacuationCargo(source->module->stock[cargo], destination->module->stock[cargo]);
 	}
@@ -409,6 +485,11 @@ CommandCost CmdEvacuateOrbitalModule(DoCommandFlags flags, SpaceStructureID id, 
 	const auto &definition = *GetSpaceConstructionDefinition(source->state.kind);
 	// Move only unconsumed construction inputs; saved partial progress and every already spent source joule remain spent.
 	for (uint i = 0; i < source->job.inputs.size(); ++i) MoveOrbitalEvacuationCargo(source->job.inputs[i], destination->module->stock[GetCargoTypeByLabel(definition.inputs[i].label)]);
+	if (plan->manufacture) {
+		// The preflight included this complete original batch; cancellation moves it directly to the explicit destination without granting Assembly general storage.
+		const auto cancelled = CmdCancelOrbitalManufacture({DoCommandFlag::Execute}, source->index, source->generation, destination->index, destination->generation);
+		assert(cancelled.Succeeded()); (void)cancelled;
+	}
 	// Each admitted native job returns its actual parts into now-empty source stock, preserving manifest serial/allowance and physical craft control.
 	for (size_t i = 0; i < plan->service_count; ++i) {
 		const auto ref = plan->services[i];
@@ -476,7 +557,7 @@ CommandCost CmdActivateOrbitalModule(DoCommandFlags flags, SpaceStructureID id, 
 	const auto &definition = *GetSpaceConstructionDefinition(site->state.kind);
 	// Recheck the complete physical receipt before publishing any functionality; activation never consumes construction inputs a second time.
 	if (site->job.work_ticks != definition.work_ticks || site->job.work_fraction != 0 || site->job.work_remainder != 0 ||
-		site->state.capital_paid != definition.capital || site->state.content_version != MULTILAYER_SPACE_CONTENT_VERSION) return CMD_ERROR;
+		site->state.capital_paid != definition.capital || !IsSupportedSpaceConstructionVersion(site->state.content_version)) return CMD_ERROR;
 	// Every recipe label must have exactly its completed consumption and no remaining reserved packet owner.
 	for (uint i = 0; i < site->job.inputs.size(); ++i) {
 		if (site->job.inputs[i].TotalCount() != 0 || site->job.consumed[i] != definition.inputs[i].quantity) return CMD_ERROR;
@@ -486,7 +567,13 @@ CommandCost CmdActivateOrbitalModule(DoCommandFlags flags, SpaceStructureID id, 
 	const bool execute = flags.Test(DoCommandFlag::Execute);
 	std::unique_ptr<OrbitalModule> prepared;
 	// Allocate the complete native functionality before commissioning a shared source, keeping allocation failure free of partial panel registration.
-	if (execute) prepared = std::make_unique<OrbitalModule>();
+	if (execute) {
+		prepared = std::make_unique<OrbitalModule>();
+		if (IsOrbitalRecipeKind(site->state.kind)) {
+			prepared->processing = CreateEmptyOrbitalRecipeState(*site);
+			if (!prepared->processing) return CMD_ERROR;
+		}
+	}
 	UtilityProducerID producer{UINT32_MAX};
 	// Only the paid Core/Power recipes contain a panel; Dock activation supplies berths and buffers without creating an energy source.
 	if (site->state.kind == SpaceBuildKind::Core || site->state.kind == SpaceBuildKind::Power) {
@@ -514,32 +601,44 @@ CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID id, uin
 		(site->state.kind != SpaceBuildKind::Dock && craft->position != GetSpaceStructureApproach(site->state)) || craft->vehstatus.Test(VehState::Crashed) ||
 		(craft->manifest && craft->manifest->service_ticks != 0) || quantity == 0 || !IsValidCargoType(cargo) ||
 		(craft->cargo.TotalCount() != 0 && craft->cargo_type != cargo)) return CMD_ERROR;
-	// An occupied service berth cannot simultaneously move freight or lend its craft to another physical operation.
-	const auto berth = site->state.kind == SpaceBuildKind::Dock ? GetSpaceStructureBerth(*craft, *site) : std::optional<uint8_t>{0};
+	const auto model = GetSpaceVehicleModel(*craft);
+	// Heavy mineral returns and general haulers require their actual shared berth even at a Core/processor. Existing constructor handling retains its geometry contract; a nearby craft cannot borrow another hull's admitted slot.
+	const auto berth = site->state.kind == SpaceBuildKind::Dock || model == SPACE_HEAVY_MINER_MODEL || model == 17 ? GetSpaceStructureBerth(*craft, *site) : std::optional<uint8_t>{0};
 	// A Dock's two precise admitted slots handle independently; a service job reserves only its own craft and physical berth.
 	if (!berth || site->module->GetServiceJobs()[*berth]->remaining_ticks != 0 || HasOrbitalServiceAssignment(*craft)) return CMD_ERROR;
 	auto &stock = site->module->stock[cargo];
-	const auto model = GetSpaceVehicleModel(*craft);
+	const auto stock_capacity = GetOrbitalModuleCargoCapacity(*site, cargo);
+	// A valid berth grants handling geometry, not another module function. Assembly has no general stock, and specialized processors exchange only their declared input/product labels.
+	if (stock_capacity == 0) return CMD_ERROR;
 	const auto capacity = GetSpaceFreightCapacity(model, cargo);
+	// Each positive heavy orbital unload is one completed return batch. Pending descents already reserve their own quota; direct handling cannot spend it again or renew an exhausted allowance.
+	if (model == SPACE_HEAVY_MINER_MODEL && (!craft->manifest || craft->manifest->returns_remaining <= craft->manifest->pending_returns || craft->mission.phase != SpaceMissionPhase::Holding || capacity == 0)) return CMD_ERROR;
 	if (load) {
 		const auto label = CargoSpec::Get(cargo)->label;
-		// Builders load the same two common materials as at Earth commissioning. Mining probes unload their extraction;
-		// loading construction stock into a miner would create a fleet state its native provenance/role validator refuses.
-		if (model != 20 || (label != CargoLabel{"STEL"} && label != CargoLabel{"GOOD"})) return CMD_ERROR;
+		// Constructors retain their two material labels; canonical general-freight haulers may load their own positive mass/refit allowance. Mining probes remain extraction-only, and a hauler still approaching or servicing cannot start a competing load.
+		const bool constructor = model == 20 && (label == CargoLabel{"STEL"} || label == CargoLabel{"GOOD"});
+		const bool hauler = model == 17 && capacity != 0 && craft->mission.phase == SpaceMissionPhase::Holding;
+		if (!constructor && !hauler) return CMD_ERROR;
 		// Probe freight uses its own mass-bounded hold, separate from paid service/pod compartments.
 		if (craft->cargo.TotalCount() + quantity > capacity || !HubCargoTransfer::CanMove(stock, quantity)) return CMD_ERROR;
 	} else {
 		// Whole destination admission preserves the freight hold when module stock is full or packets cannot move.
-		if (stock.TotalCount() + quantity > GetOrbitalModuleCargoCapacity(*site, cargo) || !HubCargoTransfer::CanMove(craft->cargo, quantity)) return CMD_ERROR;
+		if (stock.TotalCount() + quantity > stock_capacity || !HubCargoTransfer::CanMove(craft->cargo, quantity)) return CMD_ERROR;
 		size_t packets = craft->cargo.Packets()->size();
 		// Conservatively preflight transport record capacity before a move; packet merging may use fewer slots, never more.
 		for (const auto &[hop, list] : *stock.Packets()) { (void)hop; packets += list.size(); }
 		if (packets > 64) return CMD_ERROR;
 	}
-	if (flags.Test(DoCommandFlag::Execute)) {
+	// A native processing quote must retain a representable revision after any freight movement into or out of its actual packet owner.
+	if (site->module->processing && site->module->processing->revision >= UINT64_MAX - 1) return CMD_ERROR;
+	// A mixed Execute/QueryCost call remains an estimate; only the real physical transaction may move packets and spend a heavy return allowance.
+	if (flags.Test(DoCommandFlag::Execute) && !flags.Test(DoCommandFlag::QueryCost)) {
 		const bool moved = load ? HubCargoTransfer::Move(stock, craft->cargo, quantity, craft->tile) : HubCargoTransfer::Move(craft->cargo, stock, quantity, craft->tile);
 		assert(moved);
 		if (!moved) return CMD_ERROR;
+		if (site->module->processing) ++site->module->processing->revision;
+		// Quota changes only after its actual positive packet move succeeds; quotes, full receivers, stale targets and failed allocation retain the original allowance and freight.
+		if (model == SPACE_HEAVY_MINER_MODEL) --craft->manifest->returns_remaining;
 		craft->cargo_type = cargo; craft->cargo_cap = capacity; craft->MarkDirty(); MarkWholeScreenDirty();
 	}
 	return CommandCost{};
@@ -549,7 +648,12 @@ CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID id, uin
 void ChangeSpaceStructureOwnership(Owner old_owner, Owner new_owner)
 {
 	// Takeovers transfer the actual site; company deletion retains inventory under OWNER_NONE before ID reuse.
-	for (auto *site : SpaceStructure::Iterate()) if (site->state.owner == old_owner) site->state.owner = Company::IsValidID(new_owner) ? new_owner : OWNER_NONE;
+	for (auto *site : SpaceStructure::Iterate()) {
+		if (site->state.owner != old_owner) continue;
+		site->state.owner = Company::IsValidID(new_owner) ? new_owner : OWNER_NONE;
+		// Ownership changes invalidate earlier processing quotes; an exhausted revision already refuses production and must never wrap into a fresh owner stamp.
+		if (site->module && site->module->processing && site->module->processing->revision < UINT64_MAX - 1) ++site->module->processing->revision;
+	}
 }
 /** @copydoc CaptureSpaceStructures */
 std::vector<SpaceStructureRecord> CaptureSpaceStructures()
@@ -567,6 +671,16 @@ std::vector<SpaceStructureRecord> CaptureSpaceStructures()
 		if (site->module) {
 			r.module.emplace(); r.module->activation_ticks = site->module->activation_ticks; r.module->age_ticks = site->module->age_ticks;
 			static_cast<OrbitalFacilityState &>(*r.module) = *site->module;
+			r.module->manufacture_serial = site->module->manufacture_serial;
+			if (site->module->manufacture) {
+				const auto &job = *site->module->manufacture; auto &copy = r.module->manufacture.emplace();
+				static_cast<OrbitalManufactureState &>(copy) = job;
+				// Capture every heavy/common label's exact packet IDs and routing, never aggregate replacement stock.
+				for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) {
+					copy.quantities[input] = static_cast<uint16_t>(job.inputs[input].TotalCount());
+					for (const auto &[hop, packets] : *job.inputs[input].Packets()) for (const auto *packet : packets) copy.inputs[input].push_back({packet->index, hop});
+				}
+			}
 			// Both contained service jobs retain their own actual packet owners; the second is canonically empty outside a Dock.
 			const auto native_jobs = site->module->GetServiceJobs(); const auto copied_jobs = r.module->GetServiceJobs();
 			for (size_t berth = 0; berth < native_jobs.size(); ++berth) {
@@ -589,6 +703,7 @@ std::vector<SpaceStructureRecord> CaptureSpaceStructures()
 /** @copydoc ValidateSpaceStructureRecords */
 bool ValidateSpaceStructureRecords(std::span<const SpaceStructureRecord> rows, uint64_t next, uint32_t width, uint32_t height, uint64_t native_tick, SpaceStructureRetirementHistory history)
 {
+	if (!ValidateOrbitalManufacturingRecords(rows)) return false;
 	// Bounded issuance and record count prevent identity reuse and unbounded copied transport.
 	if (next == 0 || rows.size() > SpaceStructureID::End().base()) return false;
 	// Live and retired incarnations cannot exceed native issuance; subtract only after admitting the retired count to avoid overflow.
@@ -618,7 +733,7 @@ bool ValidateSpaceStructureRecords(std::span<const SpaceStructureRecord> rows, u
 		// Identities, paid recipe, full geometry and bounded work must agree; a frame cannot bypass material consumption.
 		if (r.ref.structure >= SpaceStructureID::End() || r.ref.generation == 0 || r.ref.generation >= next || !ids.insert(r.ref.structure).second || !generations.insert(r.ref.generation).second ||
 			(s.owner != OWNER_NONE && s.owner.base() >= MAX_COMPANIES) || s.phase >= SpaceStructurePhase::End ||
-			!IsSpaceStructureSiteValid(s, width, height) || s.content_version != MULTILAYER_SPACE_CONTENT_VERSION || s.capital_paid != d->capital ||
+			!IsSpaceStructureSiteValid(s, width, height) || !IsSupportedSpaceConstructionVersion(s.content_version) || s.capital_paid != d->capital ||
 			r.work_ticks > d->work_ticks || r.age_ticks >= Ticks::CARGO_AGING_TICKS) return false;
 		const bool complete = s.phase == SpaceStructurePhase::FrameComplete;
 		if (complete != (r.work_ticks == d->work_ticks)) return false;
@@ -649,37 +764,47 @@ bool ValidateSpaceStructureRecords(std::span<const SpaceStructureRecord> rows, u
 			// A Power module's paid original panel is mandatory; legacy inventory-only commissioning is confined to historical Cores.
 			if (s.kind == SpaceBuildKind::Power && (m.producer == UtilityProducerID{UINT32_MAX} || m.consumer != UtilityConsumerID{UINT32_MAX} ||
 				m.assembly_consumer != UtilityConsumerID{UINT32_MAX} || m.services_completed != 0)) return false;
-			const bool dock = s.kind == SpaceBuildKind::Dock;
-			if (dock) {
-				// A Dock owns no panel or construction slot; its one bounded work consumer requires an explicit original native source connection.
+			const bool external_work = s.kind == SpaceBuildKind::Dock || s.kind == SpaceBuildKind::Assembly;
+			if (external_work) {
+				// Dock service and Assembly work own no panel or Core construction slot; their bounded consumer needs an explicit original native source.
 				if (m.producer != UtilityProducerID{UINT32_MAX} || m.assembly_consumer != UtilityConsumerID{UINT32_MAX} || !m.power_enabled ||
 					((m.consumer == UtilityConsumerID{UINT32_MAX}) != (m.utility_source == SpaceStructureRef{}))) return false;
+				// A manufacturing facility cannot acquire completed service receipts merely by sharing Dock's electrical connection transport.
+				if (s.kind == SpaceBuildKind::Assembly && m.services_completed != 0) return false;
 				if (m.utility_source != SpaceStructureRef{}) {
 					// Connections use issued foreign-proof incarnations and cannot appear during unfinished activation or point back to their own Dock.
 					if (m.utility_source.structure >= SpaceStructureID::End() || m.utility_source.generation == 0 || m.utility_source.generation >= next ||
 						m.utility_source == r.ref || m.activation_ticks != 0) return false;
 				}
 			} else {
-				// Other roles retain their own original panels and may not acquire a hidden Dock connection from transport or company-ID reuse.
+				// Other roles retain their own original panels and may not acquire a hidden external connection from transport or company-ID reuse.
 				if (m.utility_source != SpaceStructureRef{}) return false;
 				if (m.producer == UtilityProducerID{UINT32_MAX} && (m.consumer != UtilityConsumerID{UINT32_MAX} || m.assembly_consumer != UtilityConsumerID{UINT32_MAX} || m.services_completed != 0 || !m.power_enabled)) return false;
 			}
 			const auto jobs = m.GetServiceJobs();
+			if (m.manufacture) {
+				// Reserved vehicle inputs join the same global packet set as construction, service and stock; no copied job may promise another owner's packet.
+				for (const auto &slot : m.manufacture->inputs) for (const auto &[packet, hop] : slot) {
+					if (packet >= CargoPacketID::End() || !packets.insert(packet).second || (hop != StationID::Invalid() && hop >= StationID::End())) return false;
+				}
+			}
 			// Validate every contained physical owner, including the mandatory empty second record for historical/non-Dock modules.
 			for (size_t berth = 0; berth < jobs.size(); ++berth) {
 				const auto &job = *jobs[berth]; const bool active = job.remaining_ticks != 0;
+				const auto tuning = GetOrbitalServiceJobTuning(job);
 				if (active) {
 					// Exact manifest serials and one global craft owner prevent another berth or reused hull claiming the same reserved parts.
-					if (berth >= GetOrbitalModuleServiceCapacity(s.kind) || m.activation_ticks != 0 || m.consumer == UtilityConsumerID{UINT32_MAX} || job.remaining_ticks > GetMultiLayerSpaceBudget().service_ticks ||
+					if (!tuning || berth >= GetOrbitalModuleServiceCapacity(s.kind) || m.activation_ticks != 0 || m.consumer == UtilityConsumerID{UINT32_MAX} || job.remaining_ticks > tuning->ticks ||
 						job.craft.vehicle == VehicleID::Invalid() || job.craft.generation == 0 || job.services_at_start == UINT64_MAX || m.services_completed == UINT64_MAX ||
 						!service_craft.insert({job.craft.vehicle, job.craft.generation}).second) return false;
 				} else {
 					// Completed/cancelled/inapplicable berths retain no replayable job receipt, hidden occupant or unconsumed material promise.
-					if (job.craft != SpaceCraftRef{} || job.paused || job.last_work_interval != 0 || job.services_at_start != 0) return false;
+					if (job.craft != SpaceCraftRef{} || job.paused || job.last_work_interval != 0 || job.services_at_start != 0 || job.model != UINT16_MAX) return false;
 				}
-				// Each actual job retains exactly one physical part per label until final completion; no other slot may reference those packets.
+				// Each actual job retains its complete immutable bill until final completion. One two-unit native packet or two one-unit packets may finance heavy work; reference counts alone cannot impersonate quantities.
 				for (uint i = 0; i < 2; ++i) {
-					if (job.quantities[i] != (active ? 1 : 0) || job.inputs[i].size() != job.quantities[i]) return false;
+					const auto quantity = active ? tuning->inputs[i] : 0;
+					if (job.quantities[i] != quantity || (quantity == 0 ? !job.inputs[i].empty() : job.inputs[i].empty() || job.inputs[i].size() > quantity)) return false;
 					for (const auto &[packet, hop] : job.inputs[i]) if (packet >= CargoPacketID::End() || !packets.insert(packet).second || (hop != StationID::Invalid() && hop >= StationID::End())) return false;
 				}
 			}
@@ -725,6 +850,15 @@ static bool PhysicalInputs(std::span<const SpaceStructureRecord> rows)
 			if (count != r.quantities[i]) return false;
 		}
 		if (r.module) {
+			if (r.module->manufacture) {
+				const auto &job = *r.module->manufacture;
+				// Every declared recipe quantity must bind original actual packet objects before the native contained job can install.
+				for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) {
+					uint64_t count = 0;
+					for (const auto &[id, hop] : job.inputs[input]) { (void)hop; const auto *packet = CargoPacket::GetIfValid(id); if (packet == nullptr || !owned.insert(id).second) return false; count += packet->Count(); }
+					if (count != job.quantities[input]) return false;
+				}
+			}
 			// Bind the reserved RFMT/ELEC quantities to actual packet objects before any native job can be reconstructed.
 			for (const auto *job : r.module->GetServiceJobs()) {
 				for (uint i = 0; i < 2; ++i) {
@@ -743,6 +877,8 @@ static bool PhysicalInputs(std::span<const SpaceStructureRecord> rows)
 				}
 				if (count != r.module->quantities[cargo]) return false;
 				if (count != 0 && !IsValidCargoType(cargo)) return false;
+				// A processor retains only its published family buffers; native configured meanings, not arbitrary cargo ordinals, determine which physical stock is admissible.
+				if (count != 0 && IsOrbitalRecipeKind(r.state.kind) && count > GetOrbitalRecipeCargoCapacity(r.state.kind, CargoSpec::Get(cargo)->label)) return false;
 			}
 		}
 	}
@@ -754,7 +890,7 @@ bool ValidateSpaceStructures()
 	const auto rows = CaptureSpaceStructures();
 	// A demolished world's receipts still belong to the selected Space profile after its last live module has gone.
 	return ((rows.empty() && next_generation == 1 && retirement_history == SpaceStructureRetirementHistory{}) || GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry) &&
-		ValidateSpaceStructureRecords(rows, next_generation, Map::SizeX(), Map::SizeY(), TimerGameTick::counter, retirement_history) && PhysicalInputs(rows) && ValidateOrbitalServices();
+		ValidateSpaceStructureRecords(rows, next_generation, Map::SizeX(), Map::SizeY(), TimerGameTick::counter, retirement_history) && PhysicalInputs(rows) && ValidateOrbitalServices() && ValidateOrbitalRecipes();
 }
 /** @copydoc InstallLoadedSpaceStructures */
 bool InstallLoadedSpaceStructures(std::span<const SpaceStructureRecord> rows, uint64_t next, SpaceStructureRetirementHistory history)
@@ -769,6 +905,14 @@ bool InstallLoadedSpaceStructures(std::span<const SpaceStructureRecord> rows, ui
 		if (r.module) {
 			site->module = std::make_unique<OrbitalModule>(); site->module->activation_ticks = r.module->activation_ticks; site->module->age_ticks = r.module->age_ticks;
 			static_cast<OrbitalFacilityState &>(*site->module) = *r.module;
+			site->module->manufacture_serial = r.module->manufacture_serial;
+			if (r.module->manufacture) {
+				const auto &copy = *r.module->manufacture;
+				site->module->manufacture = std::make_unique<OrbitalManufactureJob>(); auto &job = site->module->manufacture;
+				static_cast<OrbitalManufactureState &>(*job) = copy;
+				// Reconstruct sole custody from actual loaded packet identities; save loading never moves source stock or requests an allocation.
+				for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) for (const auto &[id, hop] : copy.inputs[input]) job->inputs[input].Append(CargoPacket::Get(id), hop);
+			}
 			// Rebuild each contained berth from its own packet references; old/non-Dock second jobs remain empty rather than receiving parts.
 			const auto native_jobs = site->module->GetServiceJobs(); const auto copied_jobs = r.module->GetServiceJobs();
 			for (size_t berth = 0; berth < native_jobs.size(); ++berth) {
@@ -788,6 +932,8 @@ bool InstallLoadedSpaceStructures(std::span<const SpaceStructureRecord> rows, ui
 		if (r.module && it->module->stock != r.module->stock) return false;
 		if (r.module) {
 			const auto actual = it->module->GetServiceJobs(), expected = r.module->GetServiceJobs();
+			// Rebuilding the new contained manufacturing owner must preserve the exact per-label ordering as well as the whole quantity.
+			if (r.module->manufacture && (!it->module->manufacture || it->module->manufacture->inputs != r.module->manufacture->inputs)) return false;
 			// Whole installation compares both actual service owners, preventing a second berth's packet order from disappearing on reload.
 			for (size_t berth = 0; berth < actual.size(); ++berth) if (actual[berth]->inputs != expected[berth]->inputs) return false;
 		}
@@ -801,6 +947,7 @@ uint64_t ComputeSpaceStructureDigest()
 	/** @param value Canonical integer whose big-endian bytes enter the native digest. */
 	auto add = [&](uint64_t value) { for (int shift = 56; shift >= 0; shift -= 8) { digest ^= static_cast<uint8_t>(value >> shift); digest *= 1099511628211ULL; } };
 	add(next_generation);
+	add(ComputeOrbitalRecipeDigest()); // Private progress, recipe/material/residue and retired processing history remain part of the same native authority digest.
 	// Historical spent receipts remain part of the same native digest after pool identities become reusable.
 	add(retirement_history.structures_removed); add(retirement_history.consumed[0]); add(retirement_history.consumed[1]); add(retirement_history.services_completed);
 	// Hash authoritative state and packet provenance so interrupted execution cannot hide a duplicated delivery or renewed age.
@@ -815,11 +962,42 @@ uint64_t ComputeSpaceStructureDigest()
 		add(r.module.has_value());
 		if (r.module) {
 			add(r.module->activation_ticks); add(r.module->age_ticks);
+			add(r.module->manufacture_serial); add(r.module->manufacture.has_value());
+			if (r.module->manufacture) {
+				const auto &job = *r.module->manufacture;
+				add(to_underlying(job.phase)); add(job.model); add(job.serial); add(job.source.structure.base()); add(job.source.generation);
+				add(job.capital_paid); add(job.berth); add(job.reservation_interval);
+				// Saved paid work, exact completion material receipt and original product identity must survive every digest/reload boundary.
+				add(job.work_ticks); add(job.last_work_interval); add(job.work_energy_j); add(job.product.vehicle.base()); add(job.product.generation);
+				for (const auto quantity : job.consumed) add(quantity);
+				add(job.clone.has_value());
+				if (job.clone) {
+					const auto &clone = *job.clone;
+					add(clone.source.vehicle.base()); add(clone.source.generation); add(clone.name.size());
+					// Every captured name byte and typed instruction remains immutable request intent; source changes cannot silently rewrite a pending paid clone during save/retry.
+					for (const auto byte : clone.name) add(static_cast<uint8_t>(byte));
+					add(clone.orders.size());
+					for (const auto &order : clone.orders) { add(to_underlying(order.action)); add(to_underlying(order.target.kind)); add(order.target.id); add(order.target.generation); }
+				}
+				add(job.replacement.has_value());
+				if (job.replacement) {
+					const auto &intent = *job.replacement;
+					add(intent.source.vehicle.base()); add(intent.source.generation); add(intent.source_model); add(intent.resume); add(intent.settled); add(intent.sale_credit);
+				}
+				// Every common/heavy input retains its full packet provenance in the same native structure digest through reservation and cancellation.
+				for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) {
+					add(job.quantities[input]); add(job.inputs[input].size());
+					for (const auto &[id, hop] : job.inputs[input]) {
+						const auto *packet = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(packet->Count()); add(packet->GetPeriodsInTransit());
+						add(static_cast<int64_t>(packet->GetFeederShare())); add(packet->GetSourceTile().base()); add(packet->GetFirstStation().base()); add(to_underlying(packet->GetSource().type)); add(packet->GetSource().id);
+					}
+				}
+			}
 			add(r.module->producer.base()); add(r.module->consumer.base()); add(r.module->assembly_consumer.base()); add(r.module->power_enabled); add(r.module->services_completed);
 			add(r.module->utility_source.structure.base()); add(r.module->utility_source.generation);
 			// Each berth's work receipt and packet provenance joins the digest independently of shared freight inventory.
 			for (const auto *job : r.module->GetServiceJobs()) {
-				add(job->craft.vehicle.base()); add(job->craft.generation); add(job->remaining_ticks); add(job->paused); add(job->last_work_interval); add(job->services_at_start);
+				add(job->craft.vehicle.base()); add(job->craft.generation); add(job->remaining_ticks); add(job->paused); add(job->last_work_interval); add(job->services_at_start); add(job->model);
 				for (uint i = 0; i < 2; ++i) {
 					add(job->quantities[i]); add(job->inputs[i].size());
 					for (const auto &[id, hop] : job->inputs[i]) {

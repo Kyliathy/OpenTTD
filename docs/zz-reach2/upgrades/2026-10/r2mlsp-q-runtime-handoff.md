@@ -7,6 +7,8 @@ Owner: [space master](r2mlsp-space-master-plan.md),
 Updated:2026-10-14. This records delivered runtime behavior through schema423;
 it does not close unfinished graphics, network or later producer work.
 
+Current continuation,2026-10-17: [schema438 asteroid/probe runtime handoff](r2mlsp-z-z-p-probe-runtime-handoff.md) records later paid mining/manufacturing/hauler consumers, useful Surface delivery, real joined mining socket replay and exact population work. This423 launch handoff retains its original acceptance boundary; final art and Plan11's broader network/end-to-end requirements remain separate pending tasks.
+
 ## Public owners and command boundaries
 
 | Owner/export | Delivered behavior | Source |

@@ -948,18 +948,31 @@ Read this plan's Global/Source generation Area, public `facility.utility-riser`,
 - [ ] 62.3 Add loading/preparing/ascent/orbit/recovery/service views for cargo rocket, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 
+### Local Mandatory Reading - Native small mining probe original
+
+_Applies to Group63 only, dispatched by Plan10 final-art child14BB._ Read Global/Source generation Area, Plan10 final14B and14BB Local, public `vehicle.model-15` row, actual model15 native mission/work/hold/service and engine-viewport direction contract, `source/space/space-generation-record.json`, scoped manifest/source fixtures and canonical framed ImageGen prompt/installed skill. Original64x48/(-32,-32) registration, true eight headings, two phase/state coverage and native-only quantity/work owners govern. Preserve existing sources/ranges and leave packing/runtime to14BG/14BH. This consumes only Space art and does not resume the paused Underground queue.
+
+Context has compacted 1 times while executing this group.
+
 ### Group 63 - Author small mining probe
 
 {{HARD}}
-- [ ] 63.1 For small mining probe, derive a single-model brief from its approved manifest/template: compact hook/mining robot silhouette. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 63.2 Produce the required directions/rotations for small mining probe from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 63.3 Add free/attached/mining/loaded/service directional views for small mining probe, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 63.1 For small mining probe, derive a single-model brief from its approved manifest/template: compact hook/mining robot silhouette. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 63.2 Produce the required directions/rotations for small mining probe from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 63.3 Add free/attached/mining/loaded/service directional views for small mining probe, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+**Source accepted via Space master14BB,2026-10-17.** `logs/space-miner-source-verification.json` binds18 original/prompt/input ancestries, eight genuine headings,128 logical poses/72 actual component poses and32 explicit static aliases, reviewed native/4x frame contacts and43 focused source/refusal tests. Actual front-tool, travel, full/blocked panel and two service phases preserve protected original hardware/opacity. Five alpha-defective attempts and one whole-nozzle assembly remain excluded. The existing public model15 descriptor carries complete authored source coverage with no invented company mask. Packing/runtime remain false until Space14BG/14BH. Continue dispatched63B; the unrelated Underground queue stays paused.
+
+63.1 source brief/base selected,2026-10-17 under Plan10 14BB: `media/multilayer/source/space/space-generation-record.json` freezes native model15, one central bus/drill, two hook arms, two rear solar paddles and one nozzle. The first original supplies genuine N/NE/E/SE free views with exact immutable tool/prompt receipt and measured framed rectangles; no visible model pixel lies outside its own window and no opaque magenta enters extraction. Fixed source scale9/128 and per-view native32,32 reference preserve64x48/(-32,-32) geometry. `logs/proofs/mlm/native-art/space/small-miner-free-v1/source-review.json` retains reviewed native/4x contacts; all four base registrations are frozen. Scoped public validation passes five existing Space families/576 logical poses and meaningful refusal inputs; the broad check's unrelated stale mine source hashes remain outside this scope. Focused original/crop/ancestry/registration refusal checks pass nine cases. Remaining four headings and actual state phases are pending; source coverage, packed loading and runtime acceptance remain false.
+
+63.2 complete,2026-10-17: a second immutable same-model edit supplies genuine S/SW/W/NW with upper-left screen light and the same exact component inventory. `logs/proofs/mlm/native-art/space/small-miner-eight-free-v1/source-review.json` SHA256 `064d460af6b28b7332454df1551ec6567661c201cb8df09e7e857a0602992ea3` retains the combined eight-view native/4x contact and source ancestry. All eight headings were visually compared and registrations frozen; nine focused cases pass in `logs/space-miner-source-checks3.log`. Initial unapproved south registration correctly refused clipping; final opposite review3 calibrates the source reference before selection without editing original pixels. Actual attached/mining/load/service phase source remains63.3; no final manifest source, packed loading or runtime art claim yet.
 
 
 ### Local Mandatory Reading - Survey and construction probe art
 
-_Applies to Groups63B/63C._ Read this plan's Global and the Space fleet authoring
-Area, the shared Space economy revision, actual role/geometry/state exports
+_Applies to Groups63B/63C._ Read this plan's Global and Source generation Area,
+[shared Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+only for the executing role and its company/work/cargo boundary, actual live role/geometry/state exports
 from Plans8-11, and the approved sprite manifest/template contract. Geometry
 and role states must be frozen before directions. New families use the same
 source/provenance, conversion, packed-load and native runtime review owners;
@@ -969,24 +982,48 @@ recoloring the mining placeholder cannot finish either distinct model.
 
 {{HARD}}
 
-- [ ] 63B.1 Freeze the native model19 brief and distinct scanner silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
-- [ ] 63B.2 Produce the required directions and free/approach/scanning/return/service states from that model; validate continuity and scan readability against actual saved role states.
-- [ ] 63B.3 Publish validated source/contact sheets and manifest entries to the existing conversion/packed/runtime pipeline. Final acceptance requires native ordinary-game captures; this task alone claims source delivery only.
+- [X] 63B.1 Freeze the native model19 brief and distinct scanner silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
+
+**Base silhouette selected,2026-10-17.** Actual model19 native role/survey contracts pass41 assertions/three focused cases in each438 build (`logs/space-survey-art-native-relwithdebinfo1.log`, Debug twin). The new public96-pose family and source brief retain64x48/(-32,-32), eight genuine directions and free/approach/scanning/return/service/blocked ownership. A distinct cream hexagonal bus with one teal dish, two lateral paddles, rear nozzle and amber service panel replaces no mining hardware. The first four native/4x original views are reviewed/frozen in `logs/proofs/mlm/native-art/space/survey-free-first-v1/source-review.json`; exact executed prompt/raw source/input roles remain retained. Opposite directions and actual scan/state sources remain pending63B.2/.3; packing/runtime false.
+- [X] 63B.2 Produce the required directions and free/approach/scanning/return/service states from that model; validate continuity and scan readability against actual saved role states.
+- [X] 63B.3 Publish validated source/contact sheets and manifest entries to the existing conversion/packed/runtime pipeline. Final acceptance requires native ordinary-game captures; this task alone claims source delivery only.
+
+**Source accepted via Space14BC,2026-10-17.** `logs/space-survey-source-verification.json` retains12 new original/prompt/input ancestries, four registered actual gas-source instances, eight genuine views and96 logical poses/64 components/16 explicit static aliases. Reviewed native/4x state contacts and zero outside-view model pixels cover the distinct scanner, actual dish/service phases, blocked hatch and attached gas pulses. All non-hatch original pixels and every original opaque craft pixel under gas remain exact; both pulses meet the native rear edge. Two unaccepted assemblies retain explicit exclusions.34 focused source/compatibility cases and current native role/survey boundaries pass. The public model19 source descriptor is complete, with packing/runtime still false. Native company knowledge/work/leases/custody remain original owners. Continue dispatched63C.
+
+### Local Mandatory Reading - Native construction carrier source
+
+_Applies to Group63C only, dispatched by Space14BD._ Read Global/Source generation Area, Plan10 14BD Local, the [current construction handover](r2mlsp-z-z-r-construction-art-notes.md), public model20 row and its original selected source geometry. Read only native20 CargoList/STEL/GOOD mass/admission, typed Construct/site work and original paid service boundaries needed by the current source state. Actual source directions, load/foreground masks, two real work/service phases and immutable prompt/receipt/input identities govern. Preserve accepted15/19 originals and signatures; source coverage does not activate packed/runtime art. Avoid preloading pod/asteroid or unrelated Underground tasks.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 63C - Author construction probe
 
 {{HARD}}
 
-- [ ] 63C.1 Freeze the native model20 brief and distinct manipulator/material-carrier silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
-- [ ] 63C.2 Produce required directions and empty/Steel/Goods-loaded/constructing/return/service states, preserving native cargo units/weight and actual approach/work geometry.
-- [ ] 63C.3 Publish validated source/contact sheets and manifest entries through the existing pipeline; bind load/work states to native role/cargo queries and retain later packed/runtime acceptance.
+- [X] 63C.1 Freeze the native model20 brief and distinct manipulator/material-carrier silhouette; author/select an original at native scale with source/prompt/provenance and consistent anchors.
+
+**Base silhouette selected,2026-10-17.** Native construction/content/order boundaries pass255 assertions/five focused cases in each438 build (`logs/space-builder-art-native-relwithdebinfo1.log`, Debug twin). Public model20 is appended with128 planned logical poses and native64x48/(-32,-32); actual Steel/Goods counts/weight, site work and paid service remain native. The first original's ochre truss carrier, two short manipulators, empty cradle, rear paddles/nozzle and access hatch are selected at native/4x scale in `logs/proofs/mlm/native-art/space/construction-empty-first-v1/source-review.json`. The generator rendered observed S/SW/E/SE rather than the first two requested headings; actual source directions are recorded honestly while the immutable executed prompt/receipt is preserved. Remaining genuine N/NE/W/NW, load/work/service source and final coverage stay pending63C.2/.3.
+- [X] 63C.2 Produce required directions and empty/Steel/Goods-loaded/constructing/return/service states, preserving native cargo units/weight and actual approach/work geometry.
+- [X] 63C.3 Publish validated source/contact sheets and manifest entries through the existing pipeline; bind load/work states to native role/cargo queries and retain later packed/runtime acceptance.
+
+**Source accepted via Space14BD,2026-10-17.** `logs/space-builder-source-verification.json` binds16 immutable own originals/four real gas instances, eight genuine headings,128 logical poses/80 actual components/32 static aliases and reviewed native contacts. Actual Steel/Goods cradle loads, two reaching/fastening arm phases, two own service-connector phases, static blocked latch and original rear gas preserve all protected carrier pixels. Native source colors remain readable; whole originals retain zero outside-view model pixels.44 focused unit/compatibility cases, seven-family/800-pose contract/three refusals and255 native entry assertions/five cases per438 build pass. Public source coverage is complete; packed/runtime false. CargoList, native weights, Construct/material/work/approach and paid service remain original authorities. Continue dispatched64.
+
+### Local Mandatory Reading - Native passive return-pod source
+
+_Applies to Group64 only, dispatched by Space14BE._ Read Global/Source generation Area, Plan10 14BE Local, public model18 geometry/state row, actual `SpacePodState`/`SpaceDescentJob` and `CommitOrbitalCargoRelease`/`TickSpaceDescents`, and [current pod source notes](r2mlsp-z-z-s-return-pod-art-notes.md). Native shell generations, exclusive custody/packets, saved148-opportunity descent and atomic expenditure govern. This is a passive pool object, not a SpaceVehicle. Existing logical key`recovered` denotes the final recovery-ready pose while the same native descent job still exists; successful commit deletes that shell, so no persistent recovered asset or extra cargo/art clock is introduced. Preserve approved15/19/20 sources. Read canonical framed prompt/installed imagegen skill before raster work; genuinely author each requested view and freeze the selected base before variants. Final packing/render placement remains14BG/14BH.
 
 ### Group 64 - Author cargo return pod
 
 {{HARD}}
-- [ ] 64.1 For cargo return pod, derive a single-model brief from its approved manifest/template: separate saved descent unit. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 64.2 Produce the required directions/rotations for cargo return pod from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 64.3 Add release/descent/recovery frames for cargo return pod, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 64.1 For cargo return pod, derive a single-model brief from its approved manifest/template: separate saved descent unit. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+
+**Base shell selected,2026-10-17.** Both438 native logistics/custody boundaries pass299 assertions/ten cases (`logs/space-pod-art-native-relwithdebinfo1.log`, Debug twin). Own original `return-pod-packed-n-ne-e-se-v1` SHA`1bec6cf9a6e68e7f7da8202fbb434b69e8809171ad53782012469b6ae41148b6` selects the off-white/orange octagonal shell, charcoal heat shield, one upper hatch and two folded rear tabs at native/4x scale. `logs/proofs/mlm/native-art/space/return-pod-packed-first-v1/source-review.json` SHA`0066f790328f1a312ef8e22ff6ca7e89a7a575c19db93b6d13f46174af1ca426` freezes genuine N/NE/E/SE, uniform3/50 and original32,32 body reference. Whole source has85-100px clearance/zero outside model pixels. Actual separate shell/job custody and successful atomic expenditure remain unchanged; historical `recovered` source key denotes final recovery-ready live-job pose. Remaining directions/state coverage stay64.2/.3; packed/runtime false.
+- [X] 64.2 Produce the required directions/rotations for cargo return pod from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+
+**Eight packed views complete,2026-10-17.** `return-pod-eight-packed-v1/source-review.json` SHA`87686b945ac6e959c5b3e89513e600e06d3ee2d21915fcf8c2552950e3c73b1c` is visually reviewed at native/4x scale. Three actual originals supply honest eight-view coverage; direct N/S are corrected to occlude/show the far/near forward hatch consistently with the opposite rear tabs. Superseded first-N/second-S views remain retained and explicitly refused by conversion, while each source's valid other headings stay selected. All8 body registrations remain uniform3/50 and fixed32,32. Nine focused original/ancestry/crop/anchor/refusal cases pass (`logs/space-pod-source-checks1.log`). Full source/state/packing/runtime coverage stays pending64.3/14BG/14BH.
+- [X] 64.3 Add release/descent/recovery frames for cargo return pod, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+
+**Source accepted via Space14BE,2026-10-17.** `logs/space-pod-source-verification.json` binds eight immutable own original/prompt/input ancestries,64 logical poses/24 actual base/tab components/24 static aliases and reviewed native contacts. Both actual plate phases touch each own original hinge while protecting48,270 other pixels, all fixed joints and original opacity; phase differences10-24pixels/heading. Explicit aliases preserve release/blocked folded shell and final live-job recovery-ready open pose. Successful native recovery still expends the original shell, with no post-completion asset or packet duplication. Known wrong direct/extra-equipment/control views and one bad-alpha original remain refused.42 focused unit/compatibility cases, seven-family/800-pose contract and299 native logistics/custody assertions/ten cases per438 build pass. Packing/passive runtime placement remain14BG/14BH. Continue Space-dispatched67-69; unrelated65/66 remain their own pending source tasks.
 
 
 ### Group 65 - Author heavy mining robot
@@ -1005,29 +1042,51 @@ recoloring the mining placeholder cannot finish either distinct model.
 - [ ] 66.3 Add direction/load/docking/service and purchase views for orbital hauler, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 
+### Local Mandatory Reading - Metallic asteroid source
+
+_Applies to Group67 only, dispatched by Space14BF._ Read Global/Source generation Area, Plan10 14BF Local, [current metallic source notes](r2mlsp-z-z-t-metallic-asteroid-art-notes.md), public asteroid.nickel variant/canvas/anchor row, `AsteroidBody`/`AsteroidSize`, immutable visual diameter catalogue, `ViewportAddSpaceEntities`/`RemapCoords`, actual native lease/work and `GetAsteroidQuantityDisclosure`. Native bodies retain fixed identity/trajectory and nonrotating attachment offsets; renderer variation cannot create physics, spin clocks or quantities. Three explicit saved-size variants use the same genuine original body and uniform reduction. No company mask. Preserve accepted craft/pod sources and complete only metallic source here; packing/native review remain14BG/14BH.
+
+Context has compacted 1 times while executing this group.
+
 ### Group 67 - Author metallic asteroid
 
 {{HARD}}
-- [ ] 67.1 For metallic asteroid, derive a single-model brief from its approved manifest/template: readable Nickel composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 67.2 Produce the required directions/rotations for metallic asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 67.3 Add required size/attachment/mining/depleted variants for metallic asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 67.1 For metallic asteroid, derive a single-model brief from its approved manifest/template: readable Nickel composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 67.2 Produce the required directions/rotations for metallic asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 67.3 Add required size/attachment/mining/depleted variants for metallic asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+
+**Metallic source acceptance,2026-10-17.** `logs/space-metallic-source-verification.json` (SHA256 `1e5b11b873b7d7b0b882787d005071048c1c224ff4704fc317bdd53062b3622f`) binds45 focused source/compatibility cases, both438 native field entry boundaries, eight own originals and384 logical poses/96 per-size components/288 explicit aliases. All15 native/4x contacts and complete-original layout pass; outside ore pixels and silhouette remain exact. Source only: native packing/field selection14BG and ordinary-game review14BH stay open. [Bounded handover](r2mlsp-z-z-t-metallic-asteroid-art-notes.md).
+
+### Local Mandatory Reading - Carbonaceous asteroid source
+
+_Applies to Group68 only, dispatched by Space14BFB._ Read Global/Source generation Area, corresponding Plan10 Local, completed67 public shared size/source/conversion contract, actual carbonaceous class definition and public asteroid.ice row. Author own original Water-Ice/carbonaceous silhouette and state parts; reuse validated geometry/helpers, never recolor or relabel the metallic body. Native finite reserve/lease/company disclosure remain original owners.
 
 ### Group 68 - Author carbonaceous asteroid
 
 {{HARD}}
-- [ ] 68.1 For carbonaceous asteroid, derive a single-model brief from its approved manifest/template: readable Water Ice composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 68.2 Produce the required directions/rotations for carbonaceous asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 68.3 Add required size/attachment/mining/depleted variants for carbonaceous asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 68.1 For carbonaceous asteroid, derive a single-model brief from its approved manifest/template: readable Water Ice composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 68.2 Produce the required directions/rotations for carbonaceous asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 68.3 Add required size/attachment/mining/depleted variants for carbonaceous asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+
+**Water-Ice source acceptance,2026-10-17.** `logs/space-carbonaceous-source-verification.json` (SHA256 `d319e64f0d58a60f21a7ef89a40b7a96d8b6392c13425b766994c259d30beee4`) binds33 focused source/compatibility cases, retained unchanged438 native entry boundaries, eight own originals and384 logical poses/96 per-size components/288 aliases. All15 native/4x contacts and whole-original layout pass;530,469 outside-fissure pixels and original slab opacity remain exact. WorkedW preserves the original complete sampling grid to avoid a Small crop-rounding alias. Packing/field selection14BG and game14BH remain open. [Bounded handover](r2mlsp-z-z-u-carbonaceous-asteroid-art-notes.md).
+
+### Local Mandatory Reading - Rich asteroid source
+
+_Applies to Group69 only, dispatched by Space14BFC._ Read Global/Source generation Area, corresponding Plan10 Local, completed shared size/source/conversion contract, actual rich class definition and public asteroid.rare-earth row. Author its own Rare-Earth body/state parts; preserve natural identity, native finite resources, lease and company disclosure. Do not reload complete preceding-family diaries.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 69 - Author rich asteroid
 
 {{HARD}}
-- [ ] 69.1 For rich asteroid, derive a single-model brief from its approved manifest/template: readable Rare Earth composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
-- [ ] 69.2 Produce the required directions/rotations for rich asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
-- [ ] 69.3 Add required size/attachment/mining/depleted variants for rich asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
+- [X] 69.1 For rich asteroid, derive a single-model brief from its approved manifest/template: readable Rare Earth composition with stable body footprint. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
+- [X] 69.2 Produce the required directions/rotations for rich asteroid from that selected form, using labelled engine-view templates and fixed anchors/contact points. Compare neighboring views for continuity; do not synthesize views by rotating a flat image.
+- [X] 69.3 Add required size/attachment/mining/depleted variants for rich asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
+
+**Rich source accepted,2026-10-17.** `logs/space-rich-source-verification.json` binds31 focused source/compatibility cases,9 actual own selected originals,384 logical poses/96 components/288 aliases and15 reviewed native/4x contacts. Every saved size retains distinct actual glints on original violet and fully worked depletion;544,389 outside-fissure pixels/opacity are protected. Complete-original audit passes with minimum28px clearance and no alpha repair. Packing/native selection remain Space14BG.
 
 ### Group 70 - Author Core module
 

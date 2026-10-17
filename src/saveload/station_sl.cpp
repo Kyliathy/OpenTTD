@@ -5,14 +5,18 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_sl.cpp Code handling saving and loading of stations. */
+/** @file station_sl.cpp Native station reconstruction and detached saved authority for launch targets.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8B; independent service preview reads native STNN authority without constructing a station or borrowing live ownership.
+ */
 
 #include "../stdafx.h"
 
 #include "saveload.h"
+#include "saveload_error.hpp"
 #include "compat/station_sl_compat.h"
 
 #include "../station_base.h"
+#include "../fios.h"
 #include "../station_func.h"
 #include "../waypoint_base.h"
 #include "../roadstop_base.h"
@@ -723,9 +727,93 @@ static const SaveLoad _station_desc[] = {
 	SaveLoad::StructList<SlRoadStopTileData>("roadstoptiledata", SaveLoadVersion::RoadStopTileData),
 };
 
+/** Minimal transient table decoder; native Station retains the actual owner and inventory, while preview copies only authority. */
+struct StationAuthorityPreview {
+	StationFacilities facilities; ///< Original saved normal/waypoint discriminator; a waypoint can never supply a LaunchCenter owner.
+	Owner owner = OWNER_NONE; ///< Same-file native owner read only from the existing base.owner field.
+	std::vector<uint32_t> cargo_packet_refs; ///< Unpublished native ID+1 references across this actual station's goods/next-hop buckets.
+};
+
+/** One detached original next-hop bucket; decoding references creates no CargoPacket or station stock. */
+struct StationCargoBucketPreview {
+	std::vector<uint32_t> references; ///< Exact saved native references; physical ownership stays with the original Station.
+};
+
+/** Copy each original station cargo bucket without constructing its runtime container or resolving native pointers. */
+class SlStationCargoPreview : public DefaultSaveLoadHandler<SlStationCargoPreview, StationAuthorityPreview> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Vector<VarFileType::U32>("second", SLE_OBJECT_ADDRESS(StationCargoBucketPreview, references)),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Original station's unpublished reference accumulator; bucket count and actual packet bounds apply before extension. */
+	void LoadCheck(StationAuthorityPreview *row) const override
+	{
+		if (std::ranges::find(this->GetLoadDescription(), "second", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station cargo preview references");
+		const auto count = SlGetStructListLength(uint32_t{StationID::Invalid().base()} + 1);
+		// All original next-hop buckets contribute to the same station owner; an alternate route cannot conceal a packet shared with orbital work.
+		for (size_t index = 0; index < count; ++index) {
+			StationCargoBucketPreview bucket; SlObject(&bucket, this->GetLoadDescription());
+			if (bucket.references.size() > CargoPacketID::End().base() - row->cargo_packet_refs.size()) SlErrorCorrupt("Excessive native station cargo preview references");
+			row->cargo_packet_refs.insert(row->cargo_packet_refs.end(), bucket.references.begin(), bucket.references.end());
+		}
+	}
+};
+
+/** Walk the original goods array while copying only actual cargo-reference buckets; no GoodsEntry or flow inventory is created. */
+class SlStationGoodsCargoPreview : public DefaultSaveLoadHandler<SlStationGoodsCargoPreview, StationAuthorityPreview> {
+public:
+	static inline const SaveLoad description[] = {SaveLoad::StructList<SlStationCargoPreview>("cargo")};
+	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Detached original normal-station owner; every declared native cargo slot is inspected once. */
+	void LoadCheck(StationAuthorityPreview *row) const override
+	{
+		if (std::ranges::find(this->GetLoadDescription(), "cargo", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station goods cargo preview");
+		const auto count = SlGetStructListLength(NUM_CARGO);
+		// Empty goods slots still belong to this file's schema; only actual retained packet references enter the global copied ownership join.
+		for (size_t cargo = 0; cargo < count; ++cargo) SlObject(row, this->GetLoadDescription());
+	}
+};
+
+/** Read the existing normal-station base owner without allocating native station/cargo objects. */
+class SlStationAuthorityBasePreview : public DefaultSaveLoadHandler<SlStationAuthorityBasePreview, StationAuthorityPreview> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(StationAuthorityPreview, owner)),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Detached discriminator/authority row; the existing table must contain its actual native owner field. */
+	void LoadCheck(StationAuthorityPreview *row) const override
+	{
+		if (std::ranges::find(this->GetLoadDescription(), "owner", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station owner preview field");
+		SlObject(row, this->GetLoadDescription());
+	}
+};
+
+/** Select only normal-station authority from the original nested table; unrelated station fields remain ordinary skipped transport. */
+class SlStationAuthorityPreview : public DefaultSaveLoadHandler<SlStationAuthorityPreview, StationAuthorityPreview> {
+public:
+	static inline const SaveLoad description[] = {
+		SaveLoad::Struct<SlStationAuthorityBasePreview>("base"),
+		SaveLoad::StructList<SlStationGoodsCargoPreview>("goods"),
+	};
+	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Same-file saved discriminator; a waypoint's separate schema grants no normal-station or launch-target authority. */
+	void LoadCheck(StationAuthorityPreview *row) const override
+	{
+		if (row->facilities.Test(StationFacility::Waypoint)) return;
+		if (std::ranges::find(this->GetLoadDescription(), "base", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station base preview field");
+		if (std::ranges::find(this->GetLoadDescription(), "goods", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station goods preview field");
+		SlObject(row, this->GetLoadDescription());
+	}
+};
+
+/** Existing native Station/Waypoint table and a detached430 normal-station authority view; preview creates no native owner. */
 struct STNNChunkHandler : ChunkHandler {
+	/** Register the original native station table without changing its transport or physical inventory owner. */
 	STNNChunkHandler() : ChunkHandler("STNN", ChunkType::Table) {}
 
+	/** Save each existing native Station/Waypoint at its retained index with its complete original fields. */
 	void Save() const override
 	{
 		SlTableHeader(_station_desc);
@@ -738,6 +826,7 @@ struct STNNChunkHandler : ChunkHandler {
 	}
 
 
+	/** Reconstruct the original native Station or Waypoint at each saved index; preview follows a separate non-owning decoder. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_station_desc, _station_sl_compat);
@@ -753,6 +842,7 @@ struct STNNChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Restore ordinary native station references once, retaining the original old-format STNS migration boundary. */
 	void FixPointers() const override
 	{
 		/* From SaveLoadVersion::UnifyWaypointAndStation we store stations in STNN; before that in STNS. So do not
@@ -763,6 +853,35 @@ struct STNNChunkHandler : ChunkHandler {
 		for (BaseStation *bst : BaseStation::Iterate()) {
 			SlObject(bst, _station_desc);
 		}
+	}
+	/** Copy only saved normal-station authority for same-file launch/service ownership checks.
+	 * @param length Framework-provided extent for the historical default skip path; modern tables carry their own bounded records.
+	 */
+	void LoadCheck(size_t length) const override
+	{
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrderedActions)) { ChunkHandler::LoadCheck(length); return; }
+		static const SaveLoad preview[] = {
+			SaveLoad::SaveByte("facilities", SLE_OBJECT_ADDRESS(StationAuthorityPreview, facilities)),
+			SaveLoad::Struct<SlStationAuthorityPreview>("normal"),
+		};
+		const auto description = SlTableHeader(preview);
+		// Both the native discriminator and normal-station schema must be present; omitted authority cannot turn an otherwise real launch anchor into a usable service target.
+		for (const auto &field : preview) if (std::ranges::find(description, field.name, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing native station authority preview field");
+		auto &rows = _load_check_data.native_station_owner_rows;
+		// Native row framing bounds each skipped station's other fields. Retain only original normal-station indices in strict order, excluding waypoint aliases and duplicate identities.
+		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
+			if (index >= StationID::Invalid().base()) SlErrorCorrupt("Invalid native station authority preview index");
+			StationAuthorityPreview row; row.facilities = static_cast<StationFacilities>(SlReadByte()); SlObject(&row, description);
+			if (row.facilities.Test(StationFacility::Waypoint)) continue;
+			const StationID id{static_cast<uint16_t>(index)};
+			if (!rows.empty() && id <= rows.back().station) SlErrorCorrupt("Repeated native station authority preview identity");
+			rows.push_back({id, row.owner});
+			auto &cargo = _load_check_data.native_station_cargo_refs;
+			// The whole copied station family may reference at most the actual packet pool bound; metadata never creates stock for missing native owners.
+			if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - cargo.size()) SlErrorCorrupt("Excessive native station-family cargo preview references");
+			cargo.insert(cargo.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+		}
+		_load_check_data.native_station_cargo_present = true;
 	}
 };
 

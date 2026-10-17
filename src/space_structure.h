@@ -2,6 +2,7 @@
 /** @file space_structure.h Native Space occupancy, construction and contained Core facilities.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group13B.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; removed processors retain bounded spent history in this same native authority.
  */
 #ifndef SPACE_STRUCTURE_H
 #define SPACE_STRUCTURE_H
@@ -10,7 +11,10 @@
 #include "orbital_station.h"
 #include "multilayer_space_content.h"
 #include "company_type.h"
+#include "multilayer_recipe.h"
+#include <map>
 
+/** Existing native site lifetime owner, forward declared for its original pool and generation-qualified references. */
 struct SpaceStructure;
 using SpaceStructurePool = Pool<SpaceStructure, SpaceStructureID, 16>;
 extern SpaceStructurePool _space_structure_pool;
@@ -55,11 +59,18 @@ struct SpaceStructureRetirementHistory {
 	uint64_t structures_removed = 0; ///< Number of native incarnations explicitly removed, including empty blueprints.
 	std::array<uint64_t, 2> consumed{}; ///< Spent canonical STEL/GOOD receipts; demolition never refunds either material.
 	uint64_t services_completed = 0; ///< Completed native services formerly recorded by removed modules.
+	std::map<MultiLayerRecipeID, uint64_t> processing_batches; ///< Bounded canonical recipe history from removed processors; physical products are never reconstructed from these spent receipts.
+	uint64_t processing_discarded_paid_j = 0; ///< Already spent unfinished electrical work explicitly abandoned before processor removal.
 	/** @param other Historical receipts to compare. @return Whether every aggregate native receipt agrees. */
 	bool operator==(const SpaceStructureRetirementHistory &other) const = default;
 };
 /** @return Read-only spent receipts from the native structure authority, with no retired-object registry. */
 const SpaceStructureRetirementHistory &GetSpaceStructureRetirementHistory();
+/** Install only already admitted same-file processing aggregates into the original structure authority.
+ * @param history Complete original SPST history prefix plus independently validated SPRC processing fields.
+ * @return Whether the unchanged original structure/material/service prefix still agrees; creates no retired native object or packet.
+ */
+bool InstallLoadedSpaceStructureProcessingHistory(const SpaceStructureRetirementHistory &history);
 /** Pure lifecycle admission result; refusal never removes a physical owner, packet, grant or historical receipt. */
 enum class OrbitalRemovalBlock : uint8_t {
 	None, InvalidOwner, Inventory, Service, Construction, Vehicle, Dependent, Connection, Utility, History, End,

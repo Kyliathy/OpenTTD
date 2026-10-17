@@ -126,6 +126,18 @@ enum class MultiLayerServiceFacility : uint8_t {
 	OrbitalService, ///< Compatible station service inventory in Space.
 };
 
+/** Unchanged model15 pursuit defaults; altering these values requires a Space content compatibility revision.
+ * Extraction, hold mass, upkeep and service remain in the shared MultiLayerSpaceBudget.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8
+ */
+struct MultiLayerMiningProbeTuning {
+	uint8_t travel_tiles_per_day = 4; ///< Actual native/preview movement rate on the shared economy schedule.
+	uint16_t approach_tolerance_q16 = 16384; ///< Maximum authorized arrival/working distance: one quarter tile.
+	uint16_t minimum_approach_ticks = 1480; ///< Twenty-day floor, frozen when an attempt begins.
+	uint8_t closing_tiles_per_day = 3; ///< Conservative closing rate, below probe speed and above maximum body drift.
+	uint16_t approach_margin_ticks = 148; ///< Two additional economy days for the initial distance allowance.
+};
+
 /** Read-only logical model capability; engine-pool allocation remains with the feature owner. */
 struct LayerVehicleCapability {
 	uint16_t model_id = UINT16_MAX; ///< Stable profile-owned model identity, never a runtime EngineID.
@@ -139,13 +151,17 @@ struct LayerVehicleCapability {
 	TimerGameCalendar::Year introduction_year{0}; ///< Calendar availability; never an economy year or display-frame count.
 	bool conventional_portals = false; ///< Tube/orbital designs cannot use ground inter-layer portals.
 	bool mandatory_spoil_wagon_leg = false; ///< Loaded spoil cannot bypass actual wagon exchange/Surface haulage.
+	const MultiLayerMiningProbeTuning *mining_tuning = nullptr; ///< Explicit15/21 physical pursuit definition; unrelated roles gain no mining capability.
 };
 
 /**
  * Read the complete first-party logical vehicle catalogue.
- * @return Nineteen immutable designs; feature owners map their model identity to real engine/vehicle records.
+ * @return Append-only immutable designs; feature owners map their model identity to real engine/vehicle records.
  */
 std::span<const LayerVehicleCapability> GetMultiLayerVehicleCapabilities();
+
+/** @return Model15's immutable pursuit tuning from the same catalogue used by paid hull commissioning. */
+const MultiLayerMiningProbeTuning &GetMultiLayerMiningProbeTuning();
 
 /** Producer identity allocated by the shared utility owner; no feature-local utility registry. */
 using UtilityProducerID = StrongType::Typedef<uint32_t, struct UtilityProducerIDTag, StrongType::Compare>;

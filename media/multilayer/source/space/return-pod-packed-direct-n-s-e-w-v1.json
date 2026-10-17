@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.2. Exact executed direct N/S visibility correction; other three accepted original views stay unchanged. Selection pending actual source/native review.",
+  "key": "return-pod-packed-direct-n-s-e-w-v1",
+  "asset_id": "vehicle.model-18",
+  "state": "packed",
+  "phase": 0,
+  "directions": [
+    "N",
+    "S",
+    "E",
+    "W"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: exact selected passive RETURN POD model18, correct direct front/back hatch visibility.\nImages1/2 are the SAME selected packed white/orange octagonal shell in existing source directions. Preserve this exact body silhouette/size, off-white facets, one orange belt, charcoal tiled bottom shield and exactly TWO folded rear tabs. Fixed upper-left SCREEN light and fixed2:1 isometric camera.\nCRITICAL DIRECT VIEW FIX:\nTOP LEFT N: the pod's FRONT points UP/AWAY from camera, REAR points DOWN/toward camera. Keep TWO small folded charcoal tabs on the near LOWER rear shoulders. The single forward cargo hatch is on the FAR slope facing UP and is OCCLUDED by the top; DO NOT draw ANY dark hatch/window/panel on the visible near white face. The visible white cap is uninterrupted, like the direct no-hatch shell in Image2 top-left, but with the rear tabs on the lower side.\nTOP RIGHT S: FRONT points DOWN/TOWARD camera, REAR points UP/away. Keep TWO small folded tabs on the FAR UPPER shoulders, partially occluded naturally. Show the ONE dark flush rectangular cargo hatch centered on the visible near/front WHITE slope, immediately above the orange belt. Use the near white-face hatch visible in Image1 top-left, while rear tabs are on the opposite upper side.\nThese TWO correct views must show one consistent rigid shell: forward hatch and rear tab pair are physically OPPOSITE features. Never place a visible near hatch and near rear tabs on the same face.\nBOTTOM LEFT E and BOTTOM RIGHT W: retain the same genuine side views, front hatch right/left and two rear tabs left/right respectively, same body inventory. No flat rotation/mirror; physical new viewpoints only.\nEach whole shell about370-400px wide and270px tall, same small native22x16 canister. No new nozzles, windows, legs, panels, arms, antenna, glow, heat effect, parachute, text, labels or props. Restrained classic1990s Tycoon pixel-art clusters, matte cream/orange/dark gray.\nSAFE BORDERED1536x1024 transparent2x2 sheet,6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Complete separated views each at least64px truly transparent clearance to all frames. Actual transparent alpha background/margins/gutters. No checkerboard paint, haze, floor/shadow or source overlap.\nOnly correct direct-view physical visibility. Keep original passive shell identity; art grants no cargo, recovered asset, work, physics or native state.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-packed-n-ne-e-se-v1.png",
+      "sha256": "1bec6cf9a6e68e7f7da8202fbb434b69e8809171ad53782012469b6ae41148b6",
+      "role": "Selected shell and near white-face cargo hatch style; original N hatch placement fails direct front/back continuity"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-packed-s-sw-w-nw-v1.png",
+      "sha256": "18d52aacf1ca1f5e0a021b18f5d661e6f8c95dc07d6f33a502dfe62b75942888",
+      "role": "Same selected shell/opposite rear-tab poses; original S incorrectly hides forward hatch"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-efb16545-16aa-4f78-9ce8-a08e0c21df0f.png",
+  "path": "media/multilayer/source/space/raw/return-pod-packed-direct-n-s-e-w-v1.png",
+  "sha256": "577a330ce10c54ef669a364adc65508e59d6ed84dfda74586400bbc7769d6f16"
+}

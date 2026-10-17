@@ -1,0 +1,28 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BE / r2mlvs14-remaining-assets-and-runtime-integration.md64.3. Exact executed source count correction; remove unwanted third folded NE tab, preserve two real opened tab parts. Selection pending.",
+  "key": "return-pod-tabs-b-ne-se-sw-nw-v2",
+  "asset_id": "vehicle.model-18",
+  "component_kind": "recovery_tabs",
+  "state": "descending",
+  "phase": 1,
+  "directions": [
+    "NE",
+    "SE",
+    "SW",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nImage1 is an existing four-view original PASSIVE RETURN POD tab phaseB source. Keep the same original canvas, magenta frame positions, actual transparent alpha, whole subject size, lighting, white/orange shell and all four view positions.\nMake ONE targeted physical equipment-count correction in ONLY THE TOP-LEFT NE PANEL:\nThere must be EXACTLY TWO opened charcoal rear recovery tabs, both on the LOWER-LEFT/LEFT rear side of this shell. Preserve those two long opened gray tabs: one at approximately(130,290)-(212,355), the other(237,343)-(315,420), including their two original left-side hinges.\nREMOVE the UNWANTED THIRD small FOLDED charcoal tab on the near-RIGHT orange/dark rim at approximately(424,322)-(457,360). Reconstruct the original continuous orange belt/dark heat-shield surface behind that single extra tab using the SAME shell materials. Do not add any other fittings or alter the two valid left-hand opened tabs. Their count must be exactly TWO, never three.\nDo not change the top-left cargo hatch, body, contour or valid tab phase/hinges. Do not alter any pixel/model hardware in the other three views (SE top-right, SW bottom-left, NW bottom-right). Preserve real transparent background/margins and full separated subject clearance. No labels, text, glow, shadows, floor, checkerboard, extra tabs, legs, nozzles or props.\nThis is only a correction to the generated physical source count. No native shell/job/cargo/work state is changed.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/return-pod-tabs-b-ne-se-sw-nw-v1.png",
+      "sha256": "6e746299859042a6b7a35c64876136c9af2c09eb116b200ad30b7cfb840378e5",
+      "role": "Exact phaseB diagonal source edit target; top-left NE extra third tab must be removed, all valid opened parts preserved"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-9cb1bdf3-63f0-4aef-881c-d5a38a3da8ee.png",
+  "path": "media/multilayer/source/space/raw/return-pod-tabs-b-ne-se-sw-nw-v2.png",
+  "sha256": "7e400e0182a4f15414808d959913b8d670fbdeb5aeec8a4c509fdf06982585bf"
+}

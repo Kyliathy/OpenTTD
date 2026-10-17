@@ -8,6 +8,7 @@
 // See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
 //
 // @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
+// @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; final Space append.
 // Sources for OpenTTD's required base graphics.
 // Checks whether the correct version of OpenTTD is used before
 // allowing it to be used.
@@ -105,3 +106,4 @@
 #include "map_layers.nfo"
 #include "map_layers_m1.nfo"
 #include "space_preview.nfo"
+#include "space_final.nfo"

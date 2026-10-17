@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; remaining genuine mechanical phase-A directional source; native component/layout review remains required",
+  "key": "small-miner-mining-a-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "mining",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original small mining probe model15 ACTIVE MINING mechanical PHASE A, remaining four real engine headings.\nImage1 is the approved FREE base for S/SW/W/NW, and is the physical model/angles/layout edit target.\nImage2 is the SAME model's N/NE/E/SE MINING PHASE A, supplied ONLY to show the requested active front mechanism. Do not copy its view arrangement into the output.\nPreserve image1's bus shape, proportions, top yellow panel, exactly TWO rectangular navy REAR solar paddles, one rear nozzle, source layout, fixed elevated orthographic camera and fixed UPPER-LEFT SCREEN light.\n\nChange ONLY the SAME single front spiral mining drill and SAME two hook jaws to match phase A in image2: drill projects forward into a normal cutting/feed pose, broad silver/dark helical flutes visible; the two original small hook arms brace beside it in separated inward C shapes. Same gold hinges, one drill/two hooks; no new component. No added contact surface, sparks, ore, rock, dust, glow, flames, labels or background.\nKeep tool scale and attachment to the original front collar consistent with the approved physical model. Do not resize or turn the central bus or rear fittings.\n\nOutput FOUR complete TRUE physical viewport headings in2x2:\nTOP LEFT S: drill/front points exactly DOWN;\nTOP RIGHT SW: drill/front points LOWER LEFT;\nBOTTOM LEFT W: drill/front points exactly LEFT, exact horizontal side view;\nBOTTOM RIGHT NW: drill/front points UPPER LEFT.\nReal physical redraws, never rotate/mirror flat pixels. Match original crisp classic Tycoon pixel-art clusters, broad olive-gray top facets, charcoal undersides, small yellow access panel and navy solar cells. Tiny36x24 native readability, no smooth glossy rendering or fine greebles.\n\nSAFE BORDERED transparent1536x1024, four roughly6px opaque pure MAGENTA #FF00FF rectangular separators:\nS(24,24)-(744,488), SW(792,24)-(1512,488),\nW(24,536)-(744,1000), NW(792,536)-(1512,1000).\nEvery complete craft at least48px inside its frame, max450px width270px height, uniformly reduce to fit. No hook, drill tip, paddle, nozzle or shadow touches frames/gutters/another panel.\nReal transparent alpha background, margins and gutters; retain visible separator frames only.\nNo text, labels, numbers, arrows, stars, floor, shadow, scenery or extra props.\nFour separated active PHASE-A views of the IDENTICAL small mining robot.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-s-sw-w-nw-v1.png",
+      "sha256": "e36f16c23f109a1a7a0171cae1966bdac8681afd442dbc1bb856248cb5fdd044",
+      "role": "Approved same-model opposite-heading physical model/layout edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-mining-a-n-ne-e-se-v1.png",
+      "sha256": "ca174c0125a8d4a4d279b63c41dfcd4401b321d3d3e8994ccb123d338a2a1950",
+      "role": "Same-model first-four-headings phase-A mechanism-pose guide only"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-mining-a-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-a6065bff-365d-4262-a3b6-822cad51a2e6.png",
+  "status": "pending_measured_layout_and_native_mechanism_review"
+}

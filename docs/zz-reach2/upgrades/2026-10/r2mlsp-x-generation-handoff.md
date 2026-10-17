@@ -2,6 +2,8 @@
 
 Owner: [Space master plan](r2mlsp-space-master-plan.md), [Plan10](r2mlvs10-asteroids-and-mining-probes.md) Group7. Date:2026-10-15. Groups1-7 and their master items are complete. Next is Group8's existing probe-model binding; [band policy notes](r2mlsp-w-band-policy-notes.md) preserve the preceding static/moving separation gate.
 
+Current continuation,2026-10-17: [schema438 runtime handoff](r2mlsp-z-z-p-probe-runtime-handoff.md) records completed independent8-22 mission, conservation, useful Surface delivery, actual joined socket replay and exact population work. This424 generation handoff remains a dated producer boundary; its historical resume directions and executable identities do not reopen completed work. Final Space art14B remains pending.
+
 ## Published current contract
 
 Plan10's `Public Handoff Contract` now names actual public owners, fields and estimate boundaries. `asteroid.h` owns the sole field, finite body records, feature-local generation, stable ID lookup and ordered movement. Shared `SpaceMotion` owns Q16 positions, signed per-day velocities and unsigned fractional remainders; bodies have no duplicate mission-phase field. One resource class maps to one canonical cargo, so initial/remaining whole-tonne reserves are single-cargo quantities. Zero remains a live, moving, indexed body. No in-play removal/replacement path exists.

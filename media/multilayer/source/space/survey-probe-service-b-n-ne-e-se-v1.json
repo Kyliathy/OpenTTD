@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BC and r2mlvs14-remaining-assets-and-runtime-integration.md Group63B.2; exact executed survey service/interlock hatch source edit, pending native registration and protected-body review.",
+  "key": "survey-probe-service-b-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-19",
+  "state": "service",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: approved first-party OpenTTD SURVEY PROBE model19, SERVICE inspection phase B.\nImage1 is the exact approved N/NE/E/SE service phase-A original. Preserve identical positions, size, camera, dish and pivot, squat cream hexagonal bus, TWO navy solar paddles, rear nozzle, upper-left screen lighting and all original colors.\nChange ONLY the existing small amber service-access hatch: Keep the SAME actual open black inspection socket and thin amber bezel in Image1. MOVE its one BRIGHT CYAN connector from the LEFT end to the RIGHT end of that socket as viewed in each panel, leaving the former end black. Change only that physical connector position. This is actual inspection phase B.\nKeep exactly the hatch's original size, location, orientation and outline. No enlargement, extra equipment, scan beam, glow, exhaust, cargo, sparks, text or symbols. The dish stays in its original free pose; service is not a scan. Native funded work/blocking owners alone select the cue; source art grants no work, knowledge, quantities or supplies.\nFOUR genuine engine viewport headings, same as reference: N top-left front UP, NE top-right front UPPER RIGHT, E bottom-left front RIGHT horizontal, SE bottom-right front LOWER RIGHT. Fixed elevated orthographic camera, crisp classic1990s Tycoon pixel-art clusters; never rotate/mirror a flat picture or change model identity.\nSAFE BORDERED1536x1024 transparent sheet,6px opaque PURE MAGENTA frames N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000).\nFour complete separated spacecraft at least32px clear of frames. Real transparent alpha background/margins/gutters, keep visible magenta frames only. No painted checkerboard, haze, gradients, floor, shadows, text, labels or props. All original craft hardware remains fixed; only the declared small service hatch changes.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/survey-probe-service-a-n-ne-e-se-v1.png",
+      "sha256": "fdcc52ee910e8320297a940bae6d94bcdfeb6335b9949f08080b21fef303ca4d",
+      "role": "Actual service phase-A same-heading edit target; move only its existing cyan connector to the opposite end"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/survey-probe-service-b-n-ne-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-149379bf-b0f7-4877-81ec-084f8a9e4ab9.png",
+  "status": "pending_native_status_component_review",
+  "phase": 1
+}

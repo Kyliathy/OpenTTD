@@ -6408,19 +6408,134 @@
       "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+        "sha256": "82628dde71d12edf5033642dba350cab78fb6c42a0402d1e2161b2a2dabe19ab",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 3599,
+        "sprite_count": 128,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/small-miner-blocked-panel-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-blocked-panel-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-free-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-full-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-full-panel-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-mining-a-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-mining-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-mining-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-mining-b-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-service-a-panel-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-service-a-panel-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-service-b-panel-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-service-b-panel-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/small-miner-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "a47a8e73e08a5bf40d17f3498d9f785b2bdc07569690672b6ded189b0e17c3e6",
+        "native_atlas": "logs/proofs/mlm/native-art/space/small-miner-complete-v1/vehicle-model-15-authored.png",
+        "native_sha256": "c16b6c81c5eef327245f918df0226745ae6dd62fd0a51072bc86f23b41f09a55",
+        "staged_pose_count": 128,
+        "required_pose_count": 128,
+        "missing_pose_count": 0,
+        "runtime_activated": false,
+        "coverage_complete": true,
+        "actual_component_pose_count": 72,
+        "explicit_static_alias_count": 32,
+        "state_policy_sha256": "eca30d8fe552bb493bb43de79a03c718d3f7be423b67e17cce6d40e38e26b6ce"
+      },
+      "frame_policy": {
+        "free": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Idle/Holding original craft; stopped free pose, no invented animation"
+        },
+        "rendezvous": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual native moving Approach; original position/shared simulation time selects plume only"
+        },
+        "attached": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Actual reciprocal mining lease with stopped/paused work; braced hook pose"
+        },
+        "mining": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual active native leased work; saved work remainder selects actual tool phase"
+        },
+        "full": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Actual CargoList count reaches native capacity; no displayed or granted reserve"
+        },
+        "return": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual native moving Return; presentation supplies no movement or elapsed work"
+        },
+        "service": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual funded onboard/orbital service progress; no service work or parts inferred from appearance"
+        },
+        "blocked": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Actual native admission/service/order block only; no unsurveyed remaining-reserve disclosure"
+        }
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_review",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        }
       }
     },
     {
@@ -6756,19 +6871,100 @@
       "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/return-pod-packed-direct-n-s-e-w-v1.png",
+        "sha256": "577a330ce10c54ef669a364adc65508e59d6ed84dfda74586400bbc7769d6f16",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 3951,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "state_semantics": {
+        "packed": "Actual paid shell in original storage/carrier custody",
+        "descending": "Original native live unblocked descent job; source phases derive only from original countdown",
+        "recovered": "Legacy source key for final recovery-ready original live-job pose; successful atomic commit expends that exact shell and leaves no persistent recovered pod",
+        "blocked": "Original live job blocked by TargetLost, StorageFull or CompanyRemoved; packets and shell identity remain original"
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/return-pod-packed-direct-n-s-e-w-v1.png",
+          "media/multilayer/source/space/raw/return-pod-packed-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/return-pod-packed-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/return-pod-tabs-a-n-s-e-w-v1.png",
+          "media/multilayer/source/space/raw/return-pod-tabs-a-ne-se-sw-nw-v1.png",
+          "media/multilayer/source/space/raw/return-pod-tabs-b-n-s-e-w-v1.png",
+          "media/multilayer/source/space/raw/return-pod-tabs-b-ne-control-v1.png",
+          "media/multilayer/source/space/raw/return-pod-tabs-b-ne-se-sw-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/return-pod-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "8a5d9d08406eba12120fb6cd49316019bebe5af31ba8ba4376f5eee80287f755",
+        "native_atlas": "logs/proofs/mlm/native-art/space/return-pod-complete-v1/vehicle-model-18-authored.png",
+        "native_sha256": "d3609067d1acd3e529916f386e108d9c6c6aa33dbfff567aaf9ad6916e0c92b0",
+        "staged_pose_count": 64,
+        "required_pose_count": 64,
+        "missing_pose_count": 0,
+        "runtime_activated": false,
+        "coverage_complete": true,
+        "actual_component_pose_count": 24,
+        "explicit_static_alias_count": 24,
+        "new_original_source_count": 8,
+        "registered_source_instance_count": 0,
+        "state_policy_sha256": "e439dd7a7eccc573e9d3e5ec7b29b1b77785c39ac76b0b2c64e3317fac80f173"
+      },
+      "frame_policy": {
+        "packed": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original paid shell/storage/carrier custody and release pose before sole SpaceDescentJob commit; no carried packet or paid shell is created by source"
+        },
+        "descending": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Original live SpaceDescentJob with blocked None; sample only its saved148-opportunity remaining_ticks for the two actual tab poses. No art clock, progress or packet owner"
+        },
+        "recovered": {
+          "animated": false,
+          "phase_alias": [
+            1,
+            1
+          ],
+          "owner": "Historical source key means final recovery-ready LIVE ORIGINAL JOB with blocked None and remaining_ticks<=1. Hold actual open-tab phase1; successful atomic Surface transfer deletes that exact spent shell, leaving no persistent recovered pod"
+        },
+        "blocked": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original live job TargetLost/StorageFull/CompanyRemoved or original paused/unhomed shell custody. Explicit folded original pose alias; actual native inspector discloses reason, no invented red latch or automatic recovery"
+        }
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_passive_pool_render_review",
+        "consumer": {
+          "source": "src/space_pod.h",
+          "symbol": "SpacePod/SpaceDescentJob; actual passive read-only render consumer remains14BG"
+        }
       }
     },
     {
@@ -11741,8 +11937,8 @@
         "depleted"
       ],
       "native_size": [
-        64,
-        48
+        96,
+        80
       ],
       "footprint": [
         0,
@@ -11750,35 +11946,116 @@
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
-        -32,
-        -32
+        -48,
+        -48
       ],
       "bounds": [
         0,
         0,
-        64,
-        48
+        96,
+        80
       ],
       "parts": [
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 3,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+        "sha256": "66fcf30e0cd93e6cb9277623fac9ef4f5b8c9496dffc50f4b0b73b42c39d45b9",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 4015,
+        "sprite_count": 384,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "variant_semantics": "native_saved_asteroid_size_small_medium_large",
+      "size_variants": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "visual_diameters_q16": [
+        32768,
+        65536,
+        131072
+      ],
+      "native_owner": "AsteroidBody/AsteroidSize, separate from Vehicle; final read-only field rendering remains14BG",
+      "source_frame_contract": {
+        "logical_frames": 4,
+        "free": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "attached": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "mining": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "depleted": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "notes": "Eight genuine fixed physical views; no saved angular motion or sprite-driven spin. Actual mining requires two own authored effect phases. Attached retains original natural body; native leased probe is rendered separately once. Depleted is company-disclosure gated and retains original body identity/silhouette."
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/metallic-asteroid-depleted-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-depleted-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-free-s-sw-w-nw-v2.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-mining-a-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-mining-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-mining-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/metallic-asteroid-mining-b-s-sw-w-nw-v2.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/metallic-complete-v3/space-source-manifest.json",
+        "atlas_manifest_sha256": "b0516cfb6ce2511d69fc685d38eb941a56682da2eb21bbf1db7f8f63c864c900",
+        "native_atlas": "logs/proofs/mlm/native-art/space/metallic-complete-v3/native.png",
+        "native_sha256": "16ef70158cc07796e5c58f75f0ab468c1af6095d413fd192b66a2ddfdc8bf873",
+        "staged_pose_count": 384,
+        "required_pose_count": 384,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "actual_component_pose_count": 96,
+        "explicit_source_alias_count": 288,
+        "new_original_source_count": 8,
+        "registered_source_instance_count": 0,
+        "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_field_render_review",
+        "consumer": {
+          "source": "src/asteroid.h",
+          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
+        }
       }
     },
     {
@@ -11803,8 +12080,8 @@
         "depleted"
       ],
       "native_size": [
-        64,
-        48
+        96,
+        80
       ],
       "footprint": [
         0,
@@ -11812,35 +12089,116 @@
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
-        -32,
-        -32
+        -48,
+        -48
       ],
       "bounds": [
         0,
         0,
-        64,
-        48
+        96,
+        80
       ],
       "parts": [
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 3,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-free-n-ne-e-se-v1.png",
+        "sha256": "3a7a32c20b3b6fad31a354ad928db40fe1c23b5336c79f0a1e5474b3c7a1b530",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 4399,
+        "sprite_count": 384,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "variant_semantics": "native_saved_asteroid_size_small_medium_large",
+      "size_variants": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "visual_diameters_q16": [
+        32768,
+        65536,
+        131072
+      ],
+      "native_owner": "AsteroidBody/AsteroidSize, separate from Vehicle; final read-only field rendering remains14BG",
+      "source_frame_contract": {
+        "logical_frames": 4,
+        "free": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "attached": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "mining": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "depleted": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "notes": "Eight genuine fixed physical views; no saved angular motion or sprite-driven spin. Actual mining requires two own authored effect phases. Attached retains original natural body; native leased probe is rendered separately once. Depleted is company-disclosure gated and retains original body identity/silhouette."
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-depleted-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-depleted-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-free-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-free-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-mining-a-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-mining-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-mining-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/carbonaceous-asteroid-mining-b-s-sw-w-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/carbonaceous-complete-v2/space-source-manifest.json",
+        "atlas_manifest_sha256": "e3aff866e2326671c5ede1dad12f8d26231b5c8f9c4e2e0c9d613edc2381129f",
+        "native_atlas": "logs/proofs/mlm/native-art/space/carbonaceous-complete-v2/native.png",
+        "native_sha256": "255fdd5c7eb80440586f4e5f3b98db5c668144585b7ba6e873161775d35807ca",
+        "staged_pose_count": 384,
+        "required_pose_count": 384,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "actual_component_pose_count": 96,
+        "explicit_source_alias_count": 288,
+        "new_original_source_count": 8,
+        "registered_source_instance_count": 0,
+        "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_field_render_review",
+        "consumer": {
+          "source": "src/asteroid.h",
+          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
+        }
       }
     },
     {
@@ -11865,8 +12223,8 @@
         "depleted"
       ],
       "native_size": [
-        64,
-        48
+        96,
+        80
       ],
       "footprint": [
         0,
@@ -11874,35 +12232,117 @@
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
-        -32,
-        -32
+        -48,
+        -48
       ],
       "bounds": [
         0,
         0,
-        64,
-        48
+        96,
+        80
       ],
       "parts": [
         "body"
       ],
       "geometry": "per_view",
-      "tile_variants": 1,
+      "tile_variants": 3,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+        "sha256": "1a4c73152a9e88846633c33db1daae24ed521b1c55436e94d46615a8d9fd3ef2",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 4783,
+        "sprite_count": 384,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "variant_semantics": "native_saved_asteroid_size_small_medium_large",
+      "size_variants": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "visual_diameters_q16": [
+        32768,
+        65536,
+        131072
+      ],
+      "native_owner": "AsteroidBody/AsteroidSize, separate from Vehicle; final read-only field rendering remains14BG",
+      "source_frame_contract": {
+        "logical_frames": 4,
+        "free": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "attached": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "mining": [
+          0,
+          1,
+          0,
+          1
+        ],
+        "depleted": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "notes": "Eight genuine fixed physical views; no saved angular motion or sprite-driven spin. Actual mining requires two own authored effect phases. Attached retains original natural body; native leased probe is rendered separately once. Depleted is company-disclosure gated and retains original body identity/silhouette."
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/rich-asteroid-depleted-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/rich-asteroid-depleted-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/rich-asteroid-free-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/rich-asteroid-mining-a-n-ne-e-se-v2.png",
+          "media/multilayer/source/space/raw/rich-asteroid-mining-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/rich-asteroid-mining-b-n-ne-e-se-v2.png",
+          "media/multilayer/source/space/raw/rich-asteroid-mining-b-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/rich-asteroid-mining-b-s-sw-w-nw-v3.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/rich-complete-v4/space-source-manifest.json",
+        "atlas_manifest_sha256": "bae0f5675d1d7358e4c31cf8070e20bdde11be1af126b422af85bf77dba6152d",
+        "native_atlas": "logs/proofs/mlm/native-art/space/rich-complete-v4/native.png",
+        "native_sha256": "c9a920960a50e29e33c032291c22cefd858c31f1db4fc49c932455211320b42a",
+        "staged_pose_count": 384,
+        "required_pose_count": 384,
+        "missing_pose_count": 0,
+        "coverage_complete": true,
+        "runtime_activated": false,
+        "actual_component_pose_count": 96,
+        "explicit_source_alias_count": 288,
+        "new_original_source_count": 9,
+        "registered_source_instance_count": 0,
+        "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_field_render_review",
+        "consumer": {
+          "source": "src/asteroid.h",
+          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
+        }
       }
     },
     {
@@ -14381,6 +14821,354 @@
         },
         "binding_manifest": "logs/proofs/mlm/native-art/runtime-manifest.json",
         "user_review": "deferred_until_integration"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-19",
+      "consumer": 10,
+      "kind": "vehicle",
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "frames": 2,
+      "states": [
+        "free",
+        "approach",
+        "scanning",
+        "return",
+        "service",
+        "blocked"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "parts": [
+        "body"
+      ],
+      "geometry": "per_view",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "purchase_family",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/survey-probe-free-n-ne-e-se-v1.png",
+        "sha256": "a390cfef827882df13bfe12f49840547af319384813f6c48ae7ef7deecfe3541",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 3727,
+        "sprite_count": 96,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/survey-probe-blocked-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-blocked-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-free-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-free-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-scan-a-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-scan-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-scan-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-scan-b-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-service-a-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-service-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-service-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/survey-probe-service-b-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/survey-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "30b7e11419b6132d495d3901303f661e73af63bf553d85ad65fa3011869a8924",
+        "native_atlas": "logs/proofs/mlm/native-art/space/survey-complete-v1/vehicle-model-19-authored.png",
+        "native_sha256": "18c48b1ae3fc62cb2c0118f11ee724e91a47036f692438d6444332c8ca58ae5e",
+        "staged_pose_count": 96,
+        "required_pose_count": 96,
+        "missing_pose_count": 0,
+        "runtime_activated": false,
+        "coverage_complete": true,
+        "actual_component_pose_count": 64,
+        "explicit_static_alias_count": 16,
+        "new_original_source_count": 12,
+        "registered_source_instance_count": 4,
+        "state_policy_sha256": "732836348292d760cbbd01acfbd44138e6b3e34184022fddeccd62eb265f4f94"
+      },
+      "frame_policy": {
+        "free": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original native Idle/Holding or stopped scanner; no work or discovery from appearance"
+        },
+        "approach": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual native typed Visit/Survey navigation with original moving body target and cur_speed; gas supplies no movement or work"
+        },
+        "scanning": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "IsSpaceSurveyWorkTick and action-owned saved work_ticks against scan_ticks148; no quantity disclosure before CompleteAsteroidSurvey"
+        },
+        "return": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Actual native generation-checked Return/Service travel; same actual gas as approach, no extra movement authority"
+        },
+        "service": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Original funded onboard/orbital service progress only; authored hatch supplies no parts/work/allowance"
+        },
+        "blocked": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original native admission/order/service block; no guessed reserve or automatic survey knowledge"
+        }
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_review",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        }
+      }
+    },
+    {
+      "asset_id": "vehicle.model-20",
+      "consumer": 10,
+      "kind": "vehicle",
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "frames": 2,
+      "states": [
+        "empty",
+        "approach",
+        "steel",
+        "goods",
+        "constructing",
+        "return",
+        "service",
+        "blocked"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "parts": [
+        "body"
+      ],
+      "geometry": "per_view",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "purchase_family",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-w-nw-v1.png",
+        "sha256": "831a70bb7e5b1342fb00954263553d6616bbc879e0afbaf166b8344f6178763c",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null,
+        "route": "native_baseset_space",
+        "native_offset": 3823,
+        "sprite_count": 128,
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_coverage_verified_packing_runtime_pending",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "originals": [
+          "media/multilayer/source/space/raw/construction-probe-blocked-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-blocked-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-empty-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-empty-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-goods-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-goods-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-service-a-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-service-a-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-service-b-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-service-b-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-steel-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-steel-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-work-a-n-ne-w-nw-v2.png",
+          "media/multilayer/source/space/raw/construction-probe-work-a-s-sw-e-se-v2.png",
+          "media/multilayer/source/space/raw/construction-probe-work-b-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-probe-work-b-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/construction-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "a150041d7278cb3172f7abd36b8fbce799e3c25d670bbe5aa8c6ea06b2d7c961",
+        "native_atlas": "logs/proofs/mlm/native-art/space/construction-complete-v1/vehicle-model-20-authored.png",
+        "native_sha256": "8033d34f49667f1ffd786a8bf1e091ad774b16a0631f8ef131487a0cafb563d0",
+        "staged_pose_count": 128,
+        "required_pose_count": 128,
+        "missing_pose_count": 0,
+        "runtime_activated": false,
+        "coverage_complete": true,
+        "actual_component_pose_count": 80,
+        "explicit_static_alias_count": 32,
+        "new_original_source_count": 16,
+        "registered_source_instance_count": 4,
+        "state_policy_sha256": "3f408e8edfee7185595e9b003ac347285cd9e63d39d6dcdd22fdc6eec94deca3"
+      },
+      "frame_policy": {
+        "empty": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original native model20 cargo count0 with Idle/Holding/stopped state; no fabricated packets or site stock"
+        },
+        "approach": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Original typed Construct/Visit navigation, cur_speed and generation-checked site/approach owner; gas grants no motion"
+        },
+        "steel": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Actual native CargoList positive STEL count, original20t weight/capacity and conserved source packets; symbolic load type only"
+        },
+        "goods": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Actual native CargoList positive GOOD count, original20t weight/capacity and conserved source packets; symbolic load type only"
+        },
+        "constructing": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "IsSpaceConstructionWorkTick, ReadyProbe, actual site admission/input reservation and once-per-opportunity original paid work; no work from eligibility alone"
+        },
+        "return": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Original native generation-checked Return/Service navigation and cur_speed; same actual gas phases as approach"
+        },
+        "service": {
+          "animated": true,
+          "phase_alias": [
+            0,
+            1
+          ],
+          "owner": "Original funded148-work service, RFMT1/ELEC1 consumption and allowance owner; hatch grants no parts/work/service"
+        },
+        "blocked": {
+          "animated": false,
+          "phase_alias": [
+            0,
+            0
+          ],
+          "owner": "Original native Construct input/target/admission/order/service block; static latch gives no inventory, permission or work"
+        }
+      },
+      "runtime": {
+        "status": "pending_packed_delivery_and_native_review",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        }
       }
     }
   ],

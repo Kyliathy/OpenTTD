@@ -7,6 +7,9 @@
 
 /** @file vehicle_sl.cpp Code handling saving and loading of vehicles.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group11 independent native freight preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C same-file mining role/work preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; refuse missing Space companies before generic unit-number reconstruction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; copied hauler refits retain original common cargo/capacity fields.
  */
 
 #include "../stdafx.h"
@@ -1157,6 +1160,8 @@ class SlSpaceOwnerPreview : public DefaultSaveLoadHandler<SlSpaceOwnerPreview, N
 public:
 	static inline const SaveLoad description[] = {
 		SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, owner)),
+		SaveLoad::Variable<VarFileType::U8>("cargo_type", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, freight_cargo)),
+		SaveLoad::Variable<VarFileType::U16>("cargo_cap", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, freight_capacity)),
 		SaveLoad::Vector<VarFileType::U32>("cargo.packets", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, cargo_packet_refs)),
 	};
 	static inline const SaveLoadCompatTable compat_description = {};
@@ -1166,6 +1171,7 @@ public:
 		// Both authority and actual freight references are mandatory; omitted cargo cannot disguise a duplicated successful delivery receipt.
 		for (const auto &field : description) if (std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space owner/cargo preview field");
 		SlObject(row, this->GetLoadDescription());
+		row->cargo_complete = true;
 	}
 };
 /** Decode same-file Space hull geometry without constructing another fleet or consulting the active world. */
@@ -1175,20 +1181,45 @@ public:
 		SaveLoad::Struct<SlSpaceOwnerPreview>("common"),
 		SaveLoad::Variable<VarFileType::I32>("position.x", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.x)),
 		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.y)),
+		SaveLoad::Variable<VarFileType::U32>("mission.target", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, mining_target)),
+		SaveLoad::Variable<VarFileType::U8>("mission.phase", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, mining_phase)),
+		SaveLoad::Variable<VarFileType::U16>("mission.work_ticks", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, mining_work_ticks)),
+		SaveLoad::Variable<VarFileType::U32>("extracted_units", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, extracted_units)),
 	};
 	static inline const SaveLoadCompatTable compat_description = {};
 	/** @param row Detached native type/identity, filled only for the actual Space vehicle family. */
 	void LoadCheck(NativeSpaceVehiclePreview *row) const override
 	{
 		if (row->type != VehicleType::Space) return;
+		// Every mining field already exists in the native source schema; preview must inspect its actual bytes rather than accepting a default idle state for a forged heavy mission.
 		for (const auto &field : description) if (std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
 		SlObject(row, this->GetLoadDescription());
 	}
 };
 
+/** Read only an ordinary native carrier's existing common owner/cargo fields; no normal vehicle or Space proxy is allocated.
+ * @tparam Type Actual serialized company-vehicle variant that owns this nested common description.
+ */
+template <VehicleType Type>
+class SlOrdinaryCargoPreview : public DefaultSaveLoadHandler<SlOrdinaryCargoPreview<Type>, NativeSpaceVehiclePreview> {
+public:
+	static inline const SaveLoad description[] = {SaveLoad::Struct<SlSpaceOwnerPreview>("common")};
+	static inline const SaveLoadCompatTable compat_description = {};
+	/** @param row Detached native row; only its matching original variant may contribute cargo references. */
+	void LoadCheck(NativeSpaceVehiclePreview *row) const override
+	{
+		if (row->type != Type) return;
+		if (std::ranges::find(this->GetLoadDescription(), "common", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing ordinary native cargo preview fields");
+		SlObject(row, this->GetLoadDescription());
+	}
+};
+
+/** Original native vehicle transport; independent copied Space rows grant no physical hull, company, packet or progress. */
 struct VEHSChunkHandler : ChunkHandler {
+	/** Register the original sparse native vehicle family without allocating a runtime hull. */
 	VEHSChunkHandler() : ChunkHandler("VEHS", ChunkType::SparseTable) {}
 
+	/** Serialize every original native vehicle and its contained physical/runtime state. */
 	void Save() const override
 	{
 		SlTableHeader(_vehicle_desc);
@@ -1200,6 +1231,7 @@ struct VEHSChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Reconstruct original native identities under source-era type/count bounds before ordinary pointer fixing. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_vehicle_desc, _vehicle_sl_compat);
@@ -1209,6 +1241,7 @@ struct VEHSChunkHandler : ChunkHandler {
 		_cargo_count = 0;
 		uint32_t space_count = 0;
 
+		// Source framing alone issues these exact reconstruction slots; old cargo/order conversion remains distinct from new paid commissioning.
 		while ((index = SlIterateArray()) != -1) {
 			Vehicle *v;
 			VehicleType vtype = (VehicleType)SlReadByte();
@@ -1230,6 +1263,7 @@ struct VEHSChunkHandler : ChunkHandler {
 
 			SlObject(v, slt);
 
+			// Only a legacy company vehicle's actually saved positive cargo creates the old-format packet; effects and exhausted pools cannot receive replacement stock.
 			if (_cargo_count != 0 && IsCompanyBuildableVehicleType(v) && CargoPacket::CanAllocateItem()) {
 				/* Don't construct the packet with station here, because that'll fail with old savegames */
 				CargoPacket *cp = CargoPacket::Create(_cargo_count, _cargo_periods, _cargo_source, _cargo_source_xy, _cargo_feeder_share);
@@ -1255,30 +1289,49 @@ struct VEHSChunkHandler : ChunkHandler {
 		}
 	}
 
+	/** Bind original references after all native company rows exist; reject corrupt Space owners before generic vehicle initialization dereferences their company. */
 	void FixPointers() const override
 	{
+		// Each original vehicle keeps its native references. During real fixing, a Space hull must name an actual loaded company before free-unit reconstruction; nulling during failed-load cleanup must remain non-throwing.
 		for (Vehicle *v : Vehicle::Iterate()) {
+			if (SlIsFixingPointers() && v->type == VehicleType::Space && !Company::IsValidID(v->owner)) SlErrorCorrupt("Missing native Space vehicle company");
 			SlObject(v, _vehicle_desc);
 		}
 	}
+	/** @param length Framework extent; older sources retain the ordinary skipped preview, while current Space rows copy only this file's bounded actual fields. */
 	void LoadCheck(size_t length) const override
 	{
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply)) { ChunkHandler::LoadCheck(length); return; }
 		static const SaveLoad preview[] = {
 			SaveLoad::SaveByte("type", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, type)),
+			SaveLoad::Struct<SlOrdinaryCargoPreview<VehicleType::Train>>("train"),
+			SaveLoad::Struct<SlOrdinaryCargoPreview<VehicleType::Road>>("roadveh"),
+			SaveLoad::Struct<SlOrdinaryCargoPreview<VehicleType::Ship>>("ship"),
+			SaveLoad::Struct<SlOrdinaryCargoPreview<VehicleType::Aircraft>>("aircraft"),
 			SaveLoad::Struct<SlSpaceVehiclePreview>("space"),
 		};
 		const auto desc = SlTableHeader(preview);
+		// Required original field definitions cannot be omitted to substitute a default idle or empty hull in independent preview.
 		for (const auto &field : preview) if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native Space vehicle preview field");
 		auto &rows = _load_check_data.native_space_vehicle_rows;
+		// Retain only bounded original Space IDs in native order; type/count/identity checks prevent copied rows from allocating or impersonating a paid incarnation.
 		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
 			NativeSpaceVehiclePreview row; row.vehicle = VehicleID{static_cast<uint32_t>(index)}; row.type = static_cast<VehicleType>(SlReadByte());
 			if (row.vehicle >= VehicleID::End() || row.type > VehicleType::Space) SlErrorCorrupt("Invalid native vehicle preview identity");
 			SlObject(&row, desc);
+			// Every company carrier must expose its actual common cargo once; an omitted native variant cannot hide shared packets behind an invented empty list.
+			if ((row.type <= VehicleType::Aircraft || row.type == VehicleType::Space) && !row.cargo_complete) SlErrorCorrupt("Missing native carrier cargo preview");
+			if (row.type <= VehicleType::Aircraft) {
+				auto &ordinary = _load_check_data.native_ordinary_vehicle_cargo_refs;
+				// A valid world has at most one actual container per native packet; cap copied references before extending the unpublished metadata.
+				if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - ordinary.size()) SlErrorCorrupt("Excessive ordinary cargo preview references");
+				ordinary.insert(ordinary.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+			}
 			if (row.type != VehicleType::Space) continue;
 			if (rows.size() >= MAX_SPACE_VEHICLES || (!rows.empty() && row.vehicle <= rows.back().vehicle)) SlErrorCorrupt("Invalid native Space preview count");
 			rows.push_back(row);
 		}
+		_load_check_data.native_vehicle_cargo_present = true;
 	}
 };
 

@@ -42,6 +42,18 @@ with the1990 launch technology. Buying, cloning or replacing a Space vehicle
 must use the same material/commissioning gate. The first probe needs no station;
 the first station needs only Earth-launched construction probes and supplies.
 
+**Heavy mining contract,2026-10-16; user-confirmed role decision.** Plan11
+Group9 separates its historical heavy-mining request from the established
+cargo-less construction robot16. Append mining model21, with Assembly-only1995
+commissioning through an independently paid STEL6/GOOD12/RBPT4/ELEC2 recipe,
+18t embodied hull,592 work ticks and200,000 capital. Its40t mineral hold,
+4t/74-tick extraction and doubled operating/service quantities are recorded in
+the [heavy mining numerical contract](r2mlvs1-e-ground-and-space-budgets.md#heavy-mining-contract---2026-10-16).
+Existing0..20 roles keep their meanings;21 cannot scan or construct. This is the
+user-confirmed role split: keep16 for construction and add a separate miner.
+The confirmation matches the implementation already in progress. Runtime admission
+must wait for Plan11's versioned paid producer and native mission groups.
+
 Typed vehicle orders identify a moving body or a generation-checked station,
 blueprint or launch center, never its current tile or an `IndustryID` cast.
 Visit, Survey, Mine, Deliver/Construct, Unload and Return/Service are distinct

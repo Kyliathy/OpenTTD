@@ -1,0 +1,21 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFB / r2mlvs14-remaining-assets-and-runtime-integration.md68.1. Exact first own carbonaceous Water-Ice natural-body source; original native selection pending.",
+  "key": "carbonaceous-asteroid-free-n-ne-e-se-v1",
+  "asset_id": "asteroid.ice",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "status": "pending_original_review",
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original natural CARBONACEOUS WATER-ICE ASTEROID for classic1990s Tycoon pixel-art game. A low FLATTENED charcoal-black porous rock slab with broad rounded rear and a SHORT BLUNT NOTCHED FRONT, irregular rounded triangular/trapezoidal overall shape. One WIDE embedded MILKY WHITE/PALE CYAN WATER-ICE LENS fills a deep diagonal broken fissure across the upper surface, visibly embedded inside dark stone, matte frosted planar ice facets. One shallow oval dark pit on the opposite upper rear shoulder. Sooty dark navy/charcoal porous facets, chipped edges and a broad cold white/cyan ice patch. The ice lens should provide a strong readable light patch when the rock is tiny. Natural low slab body, no bulb-and-beak shape, no long nose, no satellite or machinery. No metallic silver nodules, polished metal seam, external crystal spikes, rings, extra stones, probe, hardware, glow or floor.\nFour genuine physical yaw views of the SAME rock, fixed2:1 isometric camera, fixed upper-left SCREEN light. TOP LEFT N: blunt notched short FRONT points UP/away; TOP RIGHT NE: notched front upperRIGHT; BOTTOM LEFT E: front RIGHT; BOTTOM RIGHT SE: front lowerRIGHT/toward viewer. Broad rounded rear is opposite the notched front. Body-fixed diagonal ice lens/pit turn naturally with yaw; do not keep them painted in one screen position. No flat rotation/mirroring. Restrained crisp classic Tycoon pixel clusters with simple limited dark charcoal/blue-gray/white/pale cyan palette, not photographic noise or a smooth render.\nEach complete rock about350-400px wide and230-290px tall, maximum420wide/310tall. Keep the body low and flattened and centered with generous empty transparent margins. The whole shape is a single natural connected slab, no separate ice crystals or added lobes.\nSAFE BORDERED source sheet1536x1024,2x2 grid. Four straight opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep every complete cutout well inside its own cell with at least64px of REAL transparent empty clearance from every frame. Magenta only separators, never model art. Real transparent background/margins/gutters, no painted checkerboard, haze, gradients, shadow, ground, text, labels, numbers or diagrams. No overlap or clipping. Source separation and the one consistent physical model take priority over filling cells. Free normal ice body only, no extraction/damage/mining animation.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-4f4c3329-99a6-4d2f-9f8b-598bac3ce673.png",
+  "path": "media/multilayer/source/space/raw/carbonaceous-asteroid-free-n-ne-e-se-v1.png",
+  "sha256": "3a7a32c20b3b6fad31a354ad928db40fe1c23b5336c79f0a1e5474b3c7a1b530"
+}

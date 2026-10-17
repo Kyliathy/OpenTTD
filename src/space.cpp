@@ -4,9 +4,12 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 /** @file space.cpp Shared integer Space geometry; no camera or simulation RNG.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8; model15 owns the existing four-tile/day movement definition.
  */
 #include "stdafx.h"
+#include "space_work_cost.h"
 #include "space.h"
 #include "multilayer_content.h"
 #include <algorithm>
@@ -89,7 +92,7 @@ static uint64_t IntegerSquareRoot(uint64_t value)
 bool MoveSpaceSurveyTowards(SpacePoint &position, SpacePoint target, uint8_t &remainder)
 {
 	const uint16_t day = GetMultiLayerSpaceTuning().ticks_per_economy_day;
-	const uint32_t numerator = 4 * SPACE_Q16 + remainder;
+	const uint32_t numerator = GetMultiLayerMiningProbeTuning().travel_tiles_per_day * SPACE_Q16 + remainder;
 	const uint32_t step = numerator / day;
 	remainder = numerator % day;
 	const uint64_t distance = IntegerSquareRoot(SpaceDistanceSquared(position, target));
@@ -111,10 +114,12 @@ void SpaceSpatialIndex::Reset(uint32_t width, uint32_t height, uint32_t count)
 /** @param id Existing monotonic body identity. @param p Current authoritative plane point; this lookup update creates no body. */
 void SpaceSpatialIndex::Update(OrbitalBodyID id, SpacePoint p)
 {
+	RecordSpaceWork(SpaceWorkKind::IndexUpdates);
 	const uint32_t bucket = (p.y / SPACE_Q16 / 16) * this->columns + p.x / SPACE_Q16 / 16;
 	auto &old = this->locations.at(id.base());
 	if (old == bucket) return;
 	if (old != UINT32_MAX) {
+		RecordSpaceWork(SpaceWorkKind::IndexUnlinks);
 		auto &previous = this->buckets[old];
 		const auto moved = previous.back();
 		previous[this->slots[id.base()]] = moved;
@@ -123,11 +128,13 @@ void SpaceSpatialIndex::Update(OrbitalBodyID id, SpacePoint p)
 	}
 	this->slots[id.base()] = static_cast<uint32_t>(this->buckets.at(bucket).size());
 	this->buckets[bucket].push_back(id); old = bucket;
+	RecordSpaceWork(SpaceWorkKind::IndexLinks);
 }
 
 /** @param min Minimum plane query point. @param max Maximum plane query point. @return Stable IDs from intersecting buckets, without precise-distance or ownership admission. */
 std::vector<OrbitalBodyID> SpaceSpatialIndex::Query(SpacePoint min, SpacePoint max) const
 {
+	RecordSpaceWork(SpaceWorkKind::QueryCalls);
 	std::vector<OrbitalBodyID> result;
 	// An empty index or impossible query cannot authorize lookup outside the generated field.
 	if (this->columns == 0 || max.x < 0 || max.y < 0 || min.x > max.x || min.y > max.y) return result;
@@ -138,8 +145,10 @@ std::vector<OrbitalBodyID> SpaceSpatialIndex::Query(SpacePoint min, SpacePoint m
 	// Visit only intersecting fixed-size buckets; stable sorting afterward prevents container moves affecting target order.
 	for (int y = y0; y <= y1; ++y) for (int x = x0; x <= x1; ++x) {
 		const auto &bucket = this->buckets[y * this->columns + x];
+		RecordSpaceWork(SpaceWorkKind::QueryBuckets); RecordSpaceWork(SpaceWorkKind::QueryCandidates, bucket.size());
 		result.insert(result.end(), bucket.begin(), bucket.end());
 	}
-	std::ranges::sort(result);
+	/** @param a First actual candidate. @param b Second actual candidate. @return Native stable-ID order, independent of bucket removal history. */
+	std::ranges::sort(result, [](OrbitalBodyID a, OrbitalBodyID b) { RecordSpaceWork(SpaceWorkKind::QueryOrderTests); return a < b; });
 	return result;
 }

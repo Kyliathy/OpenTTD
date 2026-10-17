@@ -9,7 +9,8 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md canonical mandatory service units
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2 actual bounded collector offers
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B common Core source/service requests
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/7 common native source/service/manufacturing requests
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C materially useful processor demand shares this original single allocation.
  */
 
 #include "stdafx.h"
@@ -24,7 +25,9 @@
 #include "core/backup_type.hpp"
 #include "timer/timer_game_tick.h"
 #include "orbital_service.h"
+#include "orbital_recipe.h"
 #include "orbital_station.h"
+#include "orbital_manufacturing.h"
 #include <set>
 
 #include "safeguards.h"
@@ -214,6 +217,8 @@ void PrepareTubePowerTick()
 	}
 	AppendOrbitalUtilityRequests(requests);
 	AppendOrbitalConstructionRequests(requests);
+	AppendOrbitalManufacturingRequests(requests); // A real queued Assembly competes in the same one allocation; no private grant or idle demand.
+	AppendOrbitalRecipeRequests(requests); // Material-feasible processors compete in this same single pass; paid/full/idle buffers demand no fictitious grant.
 	AutoRestoreBackup system(_current_company, OWNER_DEITY);
 	// Physical thermal requests arrive through the upcoming connected-network
 	// owner. Until then close an empty thermal pass, curtailing unused offers

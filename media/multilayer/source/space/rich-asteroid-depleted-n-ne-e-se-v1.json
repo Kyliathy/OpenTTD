@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.3. Exact executed own rich mineral surface original; native selection pending.",
+  "key": "rich-asteroid-depleted-n-ne-e-se-v1",
+  "asset_id": "asteroid.rare-earth",
+  "state": "depleted",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+      "sha256": "1a4c73152a9e88846633c33db1daae24ed521b1c55436e94d46615a8d9fd3ef2",
+      "role": "Exact own selected rich boulder/yaw/light and violet mineral pocket edit target; all outside native surface pixels protected"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nAsset asteroid.rare-earth rich natural boulder, local surface state. Image1 is the EXACT SELECTED own rusty-umber asteroid, four genuine views N/NE/E/SE in top-left/top-right/bottom-left/bottom-right order. Preserve exact yaw/body scale/position/whole silhouette, tall blunt rear ridge, lower chipped FRONT face, triangular opposite pit, brown/ochre faceted stone, camera and upper-left SCREEN light.\nChange ONLY existing embedded blue-violet mineral pocket inside the zigzag fissure: EXHAUSTED POCKET: replace ALL blue-violet/lilac mineral INSIDE its one existing zigzag fissure with dull DARK BROWN/CHARCOAL worked stone and small extraction grooves. Entire formerly purple mineral footprint becomes dark worked stone: absolutely NO purple/blue/lilac mineral remains. Keep exact fissure outline, depth and rim; no new hole, enlarged crater or global rock recolor.\nSame classic1990s Tycoon crisp pixel clusters. Mineral purple is blue-violet #7044A8/#8C64C4/#A888E0, never separator magenta. Native probe rendered separately: NO tool, probe, machinery, cargo, extra rock, metal spike, extra mineral seam, plume, halo or external spark. All non-pocket native stone pixels will be protected exactly. No unrelated rock redraw.\nSAFE BORDERED1536x1024 real-transparent2x2 sheet. Four opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Preserve original small bodies centered with>=48px REAL transparent clearance to every frame. Complete independent cutouts, no clipping or gutter pixels. Real transparent background, margins and gutters: NO haze, ground, shadow, gradient, checkerboard, text, labels, digits or diagrams.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-36f70308-1c50-4929-bf2c-7fea65f00672.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-depleted-n-ne-e-se-v1.png",
+  "sha256": "10b1c2f5da001a9d5552e3b64fd692c6f5f5fe7cd7b8a7481b2c7a683450d835"
+}

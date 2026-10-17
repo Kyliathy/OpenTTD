@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; actual shorter alternate travel pulse on four genuine original nozzles; native source/part approval remains separate",
+  "key": "small-miner-thrust-b-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 1,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nEdit the attached four original small-mining-probe rear-nozzle components into travel-plume PHASE B.\nKeep the EXACT four charcoal-gray cylindrical nozzles, original gray mounting collar, narrow gold band, positions, sizes, original N/NE/E/SE physical views and fixed upper-left light UNCHANGED.\nChange ONLY each existing cyan/blue jet: make it approximately HALF as long as the present jet, a compact bright-cyan core with two or three crisp dark-blue edge clusters. Preserve the same nozzle outlet and jet axis; no extra jet, smoke, sparks, blur or halo. This is a clearly SHORTER alternate thrust pulse, so the native animation has an actual authored change.\nDo not enlarge the nozzle hardware or move its mounting contact.\n\nN top-left jet points DOWN, NE top-right jet LOWER LEFT,\nE bottom-left jet exactly LEFT on a horizontal axis,\nSE bottom-right jet UPPER LEFT.\nSame genuine camera orientations, never mirror/rotate flat art.\n\nCRITICAL keep the input's actual clean transparent-alpha interiors and its exterior magenta separator frames. Empty interiors/background/gutters remain genuinely alpha0 transparent. Do NOT add checkerboard, white/gray fill, fog, gradients, glow haze or drop shadows. Hidden RGB for empty transparent pixels may be flat magenta; no painted transparency preview.\nRetain1536x1024 and the existing separated2x2 layout, with every part safely clear of its own magenta frame. No text, numbers, labels, arrows, letters, stars, scenery or props.\nFour identical original nozzles, ONLY the blue thrust plume shortened into actual PHASE B.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+      "sha256": "3a86d570fba2feaf96ed396d8b63e42b946cc0a2418e11d18c5efb5664173cae",
+      "role": "Actual clean-alpha phase-A original isolated nozzles/layout; preserve hardware and shorten only the plume"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-a1e5ab4f-cdb7-4d7a-a5bd-b1072a3346ad.png",
+  "status": "pending_measured_layout_and_native_travel_phase_review"
+}

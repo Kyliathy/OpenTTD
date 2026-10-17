@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.3. Exact executed own original ore-surface part; original body/alpha remain protected. Selection pending measured native review.",
+  "key": "metallic-asteroid-mining-b-s-sw-w-nw-v2",
+  "asset_id": "asteroid.nickel",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-s-sw-w-nw-v2.png",
+      "sha256": "4a1d59059a63a46b4b867ae1228f36c85d09e21f2037d3cc91902910420e3e04",
+      "role": "Exact selected body/camera/yaw reference and surface-part edit target; whole original body remains protected outside ore part"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the exact SELECTED metallic natural asteroid original. Four genuine views TOP LEFT S, TOP RIGHT SW, BOTTOM LEFT W, BOTTOM RIGHT NW. Preserve exact body positions, original dimensions, silhouette, yaw, camera and upper-left SCREEN lighting. Preserve the natural blue-gray main lobe, one smaller beak, saddle and one dark depression. Silver seam is LEFT visible shoulder, dark depressionRIGHT.\nChange ONLY the ONE silver ore seam: MINING SURFACE EFFECT PHASE B: retain the silver ore seam and add exactly one small concentrated warm AMBER/YELLOW chip-glint cluster at the LOWER END of the seam. Keep upper end plain silver. This is a distinct later localized contact flicker, not the same upper-end phase A cluster. Actual bright cluster and two tiny amber chips ON THE SEAM surface; no effect outside silhouette.\nNo machinery, tool, vehicle, new rocks, separate stones, crystals, ice, hardware, glow, rays, dust halo, plume or second seam. Actual native probe is drawn separately. Only the declared surface part will be selected over the protected original body later; do not globally recolor/redesign. Restrained classic1990s Tycoon pixel-art clusters, same blue-gray/charcoal/pale silver with localized amber only for mining.\nSAFE BORDERED1536x1024 actual-transparent2x2 sheet. Six-pixel opaque PURE MAGENTA #FF00FF frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Same small centered cutouts with >=64px REAL TRANSPARENT empty clearance to every frame; no overlap/clipping. Real alpha background/margins/gutters, no haze, shadow, floor, backdrop, gradient or painted checkerboard. No text, labels, digits, diagrams or props.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-4fd9e4b9-373a-4126-97e6-d3635ad91b4c.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-mining-b-s-sw-w-nw-v2.png",
+  "sha256": "4b5aa948cb7a8c7844d23a544246e8be43a1a3a2b742b5c02567eb3b4d713862"
+}

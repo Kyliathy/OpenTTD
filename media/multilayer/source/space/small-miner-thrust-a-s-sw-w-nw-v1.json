@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; genuine opposite-heading isolated travel nozzle originals; actual alpha/layout/native part review required",
+  "key": "small-miner-thrust-a-s-sw-w-nw-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "travel",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: original small miner's rear-nozzle travel components, PHASE A, remaining S/SW/W/NW headings.\nImage1 is the approved SAME craft in S/SW/W/NW, physical rear-nozzle geometry/direction and clean source-layout edit target.\nImage2 is its N/NE/E/SE isolated phase-A nozzle components, a guide for nozzle materials and the one short cyan/blue plume ONLY.\nKeep image1's four OPPOSITE physical headings. Remove the hull/drill/hooks/solar panels entirely and retain only ONE original short charcoal-gray cylindrical rear maneuvering nozzle with its one narrow gold band and gray mounting collar in each panel. Match image2's physical nozzle model and tiny crisp blue phase-A jet. No other spacecraft parts.\nOne tapered cyan-core/blue-edge jet emerges along the rear nozzle axis, roughly nozzle-barrel length or less; no glow halo, haze, smoke, sparks or extra jet.\n\nActual engine-direction component orientations in2x2:\nTOP LEFT S: mounting end points DOWN toward the absent bus, open outlet and jet straight UP.\nTOP RIGHT SW: mounting end LOWER LEFT, open outlet/jet UPPER RIGHT.\nBOTTOM LEFT W: mounting end exactly LEFT, open outlet/jet exactly RIGHT, HORIZONTAL elevated side view.\nBOTTOM RIGHT NW: mounting end UPPER LEFT, open outlet/jet LOWER RIGHT.\nSame fixed elevated orthographic classic Tycoon camera and fixed upper-left SCREEN light; genuine physical views, never flat flips/rotations.\nCrisp original Tycoon pixel clusters, broad charcoal/gray cylinder facets, one gold ring, restrained blue/cyan plume. No nozzle redesign or extra hardware.\n\nPreserve actual CLEAN TRANSPARENT ALPHA like approved image1 and the four opaque pure-MAGENTA #FF00FF separator rectangles. NO checkerboard squares, white/gray fills, fog, gradients, shadows or painted transparency previews in the interiors. Empty pixels are alpha0; their hidden RGB may be flat magenta.\nSAFE2x2 transparent1536x1024:\nS frame(24,24)-(744,488);SW(792,24)-(1512,488);W(24,536)-(744,1000);NW(792,536)-(1512,1000).\nPlace each small isolated part safely in the center of its panel, preserving physical scale/orientation, with at least64px clear real transparency to every separator. No subject pixel reaches frames/gutters/another panel.\nNo text, numbers, letters, labels, arrows, stars, backdrop, floor, shadows, scenery or extra props.\nFour SAME original rear nozzle/phase-A plume components, true S/SW/W/NW only.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-s-sw-w-nw-v1.png",
+      "sha256": "e36f16c23f109a1a7a0171cae1966bdac8681afd442dbc1bb856248cb5fdd044",
+      "role": "Approved same-model opposite physical rear-nozzle views and clean layout edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+      "sha256": "3a86d570fba2feaf96ed396d8b63e42b946cc0a2418e11d18c5efb5664173cae",
+      "role": "Same physical isolated nozzles and actual long phase-A blue travel pulse"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-3e30b057-94ac-4746-ae91-459e79180e94.png",
+  "status": "pending_measured_alpha_layout_and_native_travel_review"
+}

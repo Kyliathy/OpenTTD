@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BFC / r2mlvs14-remaining-assets-and-runtime-integration.md69.1. Exact first own Rich Rare-Earth natural-body original; native selection pending.",
+  "key": "rich-asteroid-free-s-sw-w-nw-v1",
+  "asset_id": "asteroid.rare-earth",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/rich-asteroid-free-n-ne-e-se-v3.png",
+      "sha256": "1a4c73152a9e88846633c33db1daae24ed521b1c55436e94d46615a8d9fd3ef2",
+      "role": "Exact selected rich rusty/lavender boulder with genuineN/NE/E/SE views, saturated DOS-readable purple pocket and fixed upper-left screenlight"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the EXACT SELECTED rich RARE-EARTH BOULDER: compact steep rusty ochre/brown angular rock, one tall blunt CENTRAL REAR RIDGE, a lower squared CHIPPED FRONT face, ONE embedded saturated BLUE-VIOLET mineral pocket in a zigzag fissure and ONE shallow DARK TRIANGULAR PIT on the opposite shoulder. Retain same solid natural body, all facets, physical volume, materials and pocket/pit count. No additional rocks/lobes or external crystals.\nGenerate the OPPOSITE four true physical camera yaws of this SAME boulder, fixed2:1 isometric camera and fixed upper-left SCREENlight:\nTOP LEFT S: FRONT TOWARD VIEWER, tall rear ridge FAR/UPPER side, lower squared chipped front NEAR/LOWER. VIOLET pocket RIGHT visible shoulder, TRIANGULAR pit LEFT opposite upper shoulder.\nTOP RIGHT SW: FRONT-OTHER-SIDE oblique, lower front NEAR LOWER-LEFT, tall rear ridge FAR UPPER-RIGHT. Violet pocket visible on RIGHT shoulder, triangular pit on LEFT opposite shoulder.\nBOTTOM LEFT W: genuine OPPOSITE SIDE view: lower chipped front LEFT, tall rear ridge RIGHT. Violet pocket wraps onto RIGHT visible upper flank; triangular pit is on the opposite LEFT upper shoulder. The tall/low profile clearly rises LEFT toRIGHT, opposite of original E.\nBOTTOM RIGHT NW: genuine REAR-OTHER-SIDE oblique: lower chipped front FAR UPPER-LEFT, tall rear ridge NEAR LOWER-RIGHT. Violet pocket LEFT visible shoulder, triangular pit RIGHT opposite shoulder, with appropriate partial occlusion by near ridge.\nReal3D body-fixed landmarks turn with physical yaw; never repeat all-front views or mirror/rotate a flat drawing. Screenlighting never turns. Same compact steep silhouette, no pointed beak or flattened slab.\nPreserve strong BLUE-VIOLET mineral around#7044A8/#8C64C4/#A888E0, with blue60-100abovegreen. Purple nevergray/silver/white/neonpink/puremagenta. No white/yellow mineral highlights, glow, ice, metal, machinery, probe, tool, hardware, extrahole or stateeffect. Classic1990s Tycoon pixel clusters, broad warm rock facets, not smoothphotographictexture.\nSAFE BORDERED1536x1024 actual-transparent2x2 sheet. Each entire SMALL boulder about350-400px wide/280-320px tall, maximum420wide/340tall, centered with>=64px REAL transparent clearance to every frame.6px opaque PURE MAGENTA #FF00FF rectangles at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). No frame/guttertouch, overlap/clipping, haze, shadow, floor, backdrop, gradient, checkerboardpaint, text, labels, digits or diagrams. Free normal mineral-bearing rock only. Exact body continuity/genuine physical view/safe separation take priority over filling cells.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-a66f36c1-7713-4796-bae2-fa6aae2a43b7.png",
+  "path": "media/multilayer/source/space/raw/rich-asteroid-free-s-sw-w-nw-v1.png",
+  "sha256": "cc796e664d2d4d54e79efa5cf40e687a7ca30012032da7b2dce6cfc6f4fc7c15"
+}

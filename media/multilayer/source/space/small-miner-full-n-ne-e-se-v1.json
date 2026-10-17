@@ -1,0 +1,26 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BB and r2mlvs14-remaining-assets-and-runtime-integration.md Group63.3; exact actual authored access-panel prompt and reference roles; selection requires measured native component review.",
+  "key": "small-miner-full-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-15",
+  "state": "full",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: first-party OpenTTD small mining probe model15, FULL HOLD status cue, eight-view family first four views.\nImage1 is the approved original four-view spacecraft edit target. Preserve exact view positions, craft size, camera, silhouette, drill, TWO hooks, olive-gray wedge bus, TWO navy rear paddles and rear nozzle.\nChange ONLY the one small yellow upper access panel: replace its plain yellow face with a clear amber-orange inset carrying THREE broad dark horizontal ribs/bars, a compact locked full-hold indicator. Same physical panel outline and position; do not enlarge it, attach cargo, alter tools or recolor the hull. Native cargo owns fullness; artwork supplies no quantities.\nFour genuine headings as reference: N top-left front UP, NE top-right front UPPER RIGHT, E bottom-left front RIGHT horizontal, SE bottom-right front LOWER RIGHT. Fixed upper-left screen light; no mirrored/rotated pictures.\nRetain crisp classic transport-Tycoon pixel-art clusters, matte palette and exact approved model. No other equipment, text, labels, numbers, dust, glow, shadows or background.\nSAFE BORDERED transparent1536x1024 sheet: 6px opaque PURE MAGENTA #FF00FF frames N(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000).\nComplete spacecraft at least32px clear inside each frame, actual transparent alpha in background/gutters, keep visible separator frames. Do not paint transparency checkerboards or haze. Change only the small existing top panel to the amber ribbed FULL HOLD cue; all other original hardware remains the same.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/small-miner-free-n-ne-e-se-v1.png",
+      "sha256": "82628dde71d12edf5033642dba350cab78fb6c42a0402d1e2161b2a2dabe19ab",
+      "role": "Approved same-model base and exact directional layout edit target"
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/small-miner-full-n-ne-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-628a969b-a872-4da3-b0d2-4fdf37c01449.png",
+  "status": "pending_measured_status_component_review"
+}

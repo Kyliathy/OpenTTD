@@ -1,0 +1,28 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BD / r2mlvs14-remaining-assets-and-runtime-integration.md63C.2. Exact executed source edit; selection awaits source/model/native review.",
+  "key": "construction-probe-work-a-n-ne-w-nw-v2",
+  "asset_id": "vehicle.model-20",
+  "component_kind": "front_builder",
+  "state": "constructing",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "W",
+    "NW"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit.\nAsset: first-party OpenTTD LIGHT CONSTRUCTION PROBE model20. Actual mechanical CONSTRUCTING phase A: extend BOTH short silver arms forward from their existing fixed bases. Elbows slightly open; two paired-jaw grippers OPEN in a reaching assembly pose.\nImage1 is the selected EMPTY construction carrier and exact original camera/layout. Change ONLY its TWO silver front manipulators beyond their fixed ochre mounting bases. Both original silver arms must clearly change their elbow/wrist/gripper geometry. Keep exactly two arms with paired-jaw grippers, no tools or props. These are two real mechanical source phases; no flashing light as a substitute. Do not add drill, crane, beam, sparks, panel, workers, cargo or target building.\nPreserve exact broad low ochre rectangular truss chassis, empty charcoal cargo cradle, two navy rear paddles, one rear silver nozzle, one amber rear-deck hatch. Preserve fixed 2:1 isometric viewport camera and upper-left SCREEN light. Only moving arm segments beyond the fixed original bases change; chassis, paddles, nozzle, hatch and bed remain exact.\nFour genuine headings in the SAME cells as Image1: N top-left, arms/front point UP; NE top-right, arms/front point UPPER RIGHT; W bottom-left, arms/front point LEFT; NW bottom-right, arms/front point UPPER LEFT. Rear nozzle faces opposite the arms. Never relabel or rotate/mirror a flat view.\nRestrained classic1990s transport-Tycoon pixel-art clusters, matte ochre frame/charcoal bed/dull silver arms/navy paddles. Tiny32x24px native craft, crisp readable physical silhouettes, no glossy3D.\nSAFE BORDERED1536x1024 transparent2x2 sheet,6px opaque PURE MAGENTA frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). COMPLETE whole craft including extended arms at least32px clear inside frames. MANDATORY: uniformly REDUCE EACH WHOLE CRAFT to THREE QUARTERS of Image1 source size, including every chassis part and extended arm. Center it in its cell. Whole craft including arms MAXIMUM480px WIDE and MAXIMUM320px HIGH. Keep at least64px completely transparent between every subject pixel and each frame. The whole model must become SMALLER than Image1: do not retain its source scale. Preserve its physical proportions exactly. Separation is mandatory. Real transparent alpha everywhere except craft and magenta separator. No painted checkerboard, haze, floor, shadows, text, labels, scenery or props.\nOriginal native Construct opportunity/site/material/paid work owns actual animation eligibility and progress; this image creates no work, inventory or assembly authority.",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-w-nw-v1.png",
+      "sha256": "831a70bb7e5b1342fb00954263553d6616bbc879e0afbaf166b8344f6178763c",
+      "role": "Selected original empty model20; edit target for only two front manipulator moving segments"
+    }
+  ],
+  "status": "pending_source_review",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-6ecf0b98-e4db-4386-9aaa-7337f534d1dc.png",
+  "path": "media/multilayer/source/space/raw/construction-probe-work-a-n-ne-w-nw-v2.png",
+  "sha256": "3252991f7633ea553306d73e6e6721aa7f642691a2f281bd24828f006d61cc92"
+}

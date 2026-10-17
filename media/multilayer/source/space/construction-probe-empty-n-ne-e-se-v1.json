@@ -1,0 +1,19 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md Group14BD and r2mlvs14-remaining-assets-and-runtime-integration.md Group63C.1; exact executed new light construction carrier prompt, pending measured native silhouette review.",
+  "key": "construction-probe-empty-n-ne-e-se-v1",
+  "asset_id": "vehicle.model-20",
+  "state": "empty",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "prompt": "Use case: stylized-concept.\nNew original first-party OpenTTD vehicle.model-20 LIGHT CONSTRUCTION PROBE, EMPTY cargo cradle, four genuine directions of ONE physical model. No input images.\nONE SHORT BROAD RECTANGULAR OCHRE-YELLOW TRUSS CARRIER chassis with a shallow dark-gray central cargo cradle, visibly EMPTY. Exactly TWO short articulated SILVER manipulator arms at the two A/FRONT corners, each ending in a SMALL paired-jaw gripper. Both arms fold close to the front corners in the idle transport pose. Exactly TWO small rectangular DARK-NAVY solar paddles on opposite B/REAR sides. ONE short central rear maneuvering nozzle. ONE small rectangular AMBER service hatch on the upper rear deck.\nKeep these exact component counts and positions in every true physical view. Short wide industrial carrier silhouette, light portable robot with two little manipulators, chunky readable joints and empty low load bed. Distinct from an olive drill-miner and a round cream dish-scanner. Do not turn it into the larger heavy construction robot.\nNo mining drill, scanner dish, cargo of any kind, tall crane, cockpit, person, wheels, legs, landing gear, rocket hull, extra arms, antenna, cables, exhaust or extra machinery.\nFOUR genuine fixed elevated ORTHOGRAPHIC classic transport-Tycoon ENGINE VIEWPORT headings with fixed upper-left SCREEN light:\nTOP LEFT N: A/front two folded manipulator arms point exactly UP.\nTOP RIGHT NE: A/front two arms point UPPER RIGHT.\nBOTTOM LEFT E: A/front two arms point exactly RIGHT, long axis exactly horizontal.\nBOTTOM RIGHT SE: A/front two arms point LOWER RIGHT.\nRear paddles/nozzle remain at the opposite B end. Genuine physical redrawing of the same model; never rotate/mirror flat pictures or the lighting. Far equipment may be physically occluded in a true side view, never duplicate it to force visibility.\nStyle: restrained classic1990s Tycoon pixel-art clusters, matte ochre-yellow metal frame, dark charcoal underside/empty load-bed floor, dull silver arms, navy solar rectangles with two broad blue divisions and amber hatch. Tiny native32x24px craft inside64x48, clear construction/cargo silhouette, modest dark outline. No photorealism, shiny3D, smooth painting, dense greebles or text.\nSAFE BORDERED transparent1536x1024,6px opaque PURE MAGENTA #FF00FF frames N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000).\nFour complete cutouts at least48px inside frames, max440px width280px height; uniformly reduce as needed. Real transparent alpha background/margins/gutters. Keep visible magenta separator frames. No checkerboard, haze, gradients, floor/shadow, labels, numbers, stars or props. Four fully separated views of ONE empty light material-carrier robot with TWO folded front manipulators.",
+  "transparent_background": true,
+  "reference_inputs": [],
+  "path": "media/multilayer/source/space/raw/construction-probe-empty-n-ne-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-7cad76d8-55bc-40d8-aa52-f2640bf8681d.png",
+  "status": "pending_native_base_silhouette_review"
+}

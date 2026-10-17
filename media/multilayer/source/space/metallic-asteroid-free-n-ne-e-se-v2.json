@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs10-asteroids-and-mining-probes.md14BF / r2mlvs14-remaining-assets-and-runtime-integration.md67.1. Exact executed first metallic natural-body source; source/native selection remains pending.",
+  "key": "metallic-asteroid-free-n-ne-e-se-v2",
+  "asset_id": "asteroid.nickel",
+  "state": "free",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v1.png",
+      "sha256": "41391eb75de3a8814ef9e26780c8d4fe9853ad42d442d11c60c751fac0acc71a",
+      "role": "Exact natural metallic model reference only; source sheet too large and first angle actualNW"
+    }
+  ],
+  "status": "pending_original_review",
+  "prompt": "Use case: precise-object-edit.\nImage1 is the exact metallic natural asteroid MODEL REFERENCE. Retain its ONE larger blunt blue-gray rear mass, ONE smaller pointed forward beak joined by a saddle, ONE broken silver upper-shoulder ore seam and ONE shallow dark opposite-shoulder depression. No new stones, crystals, machinery, hardware or extra lobes. Correct the camera views and make every rock MUCH SMALLER, approximately350px wide and230px tall, NEVER exceeding400px width or270px height. Center each complete rock with very generous blank transparency.\nProduce four TRUE physical yaw views with a fixed2:1 isometric camera and upper-left SCREEN lighting. TOP LEFT N: smaller pointed beak extends STRAIGHT UP toward the far edge, away from viewer, partially behind the broad main mass; do NOT point upper-left. TOP RIGHT NE: beak upper-right. BOTTOM LEFT E: beak right. BOTTOM RIGHT SE: beak lower-right. These are views of one rigid3D rock; landmarks travel with body yaw, light stays upper-left. Do not rotate/mirror a flat image. Clearly angular classic1990s Tycoon pixel-art clusters, limited blue-gray/charcoal/pale silver palette, less noisy detail, no smooth photographic texture.\nSAFE BORDERED1536x1024 transparent2x2 sheet. Four opaque PURE MAGENTA #FF00FF6px rectangular frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Each whole small rock must stay centered WELL INSIDE its cell with at least80px of genuinely transparent clearance to EVERY frame edge. Nothing approaches a frame, gutter or cell boundary. True transparent background/margins/gutters, no backdrop, haze, glow, shadows, floor or painted checkerboard. No text, labels, numbers or diagrams. Free normal body only, no effects/damage/states. Source separation and genuine yaw take priority over filling cells.",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-f9384425-a33f-452d-8f20-408bbf8b7501.png",
+  "path": "media/multilayer/source/space/raw/metallic-asteroid-free-n-ne-e-se-v2.png",
+  "sha256": "66fcf30e0cd93e6cb9277623fac9ef4f5b8c9496dffc50f4b0b73b42c39d45b9"
+}

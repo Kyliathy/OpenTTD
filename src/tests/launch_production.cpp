@@ -1,5 +1,8 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file launch_production.cpp Actual packets, rotated zones, receipts and native paid assembly/save; Plan9 Groups2B/8B. */
+/** @file launch_production.cpp Actual packets, rotated zones, receipts and native paid assembly/save.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups2B/8B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md task8C.4; future-version refusal follows current content.
+ */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../launch_operations.h"
@@ -42,10 +45,12 @@
 #include <thread>
 #include "../safeguards.h"
 
+/** Every rotation must retain disjoint native work areas and conserved consumed-packet accounting. */
 TEST_CASE("Launch zones partition each rotated native footprint and consumption retains packet accounting", "[launch-assembly-contract]")
 {
 	MockEnvironment::Instance(); ExcavationFixture world;
 	const auto anchor = TileXYL(20, 20, MapLayer::Surface);
+	// Every supported orientation must expose the same twelve exclusive native facility tiles and actual service approach.
 	for (uint8_t rotation = 0; rotation < 4; ++rotation) {
 		std::set<TileIndex> all;
 		REQUIRE(Station::CanAllocateItem());
@@ -53,6 +58,7 @@ TEST_CASE("Launch zones partition each rotated native footprint and consumption 
 		station->owner = _current_company;
 		station->launch_center = std::make_unique<LaunchCenterAnchor>(anchor, 1, rotation);
 		const auto footprint = GetLaunchCenterFootprint(anchor, rotation);
+		// Native pad, workshop, recovery and storage partition the footprint; overlapping work areas would authorize conflicting facility use.
 		for (const auto zone : {LaunchFacilityZone::Pad, LaunchFacilityZone::Workshop, LaunchFacilityZone::Recovery, LaunchFacilityZone::Storage}) {
 			const auto area = GetLaunchFacilityZone(anchor, rotation, zone); REQUIRE(area);
 			for (auto tile : *area) { CHECK(footprint->Contains(tile)); CHECK(all.insert(tile).second); }
@@ -78,6 +84,7 @@ TEST_CASE("Launch zones partition each rotated native footprint and consumption 
 	REQUIRE(HubCargoTransfer::Consume(stock, 14)); CHECK(stock.AvailableCount() == 0); CHECK(stock.Packets()->empty());
 	CHECK(_random.state[0] == seeds.state[0]); CHECK(_random.state[1] == seeds.state[1]);
 }
+/** Paid receipts retain supported content and exclusive workshop/pad identities across independent copied validation. */
 TEST_CASE("Paid production receipt and cross-family slots reject unearned or reused identities", "[launch-assembly-contract]")
 {
 	const LaunchCenterRef center{StationID{1}, 9}; const SpaceCraftRef craft{VehicleID{3}, 7};
@@ -86,13 +93,15 @@ TEST_CASE("Paid production receipt and cross-family slots reject unearned or reu
 	CHECK(ValidateSpaceProductionRecords(std::array{r}, 64, 64));
 	CHECK(ValidateLaunchProductionLinks(std::array{r}, std::array{op}, std::array{craft}, std::array{center}));
 	CHECK_FALSE(ValidateSpaceProductionRecords(std::array{r, r}, 64, 64));
+	// Every original Earth role retains its own canonical paid bill after later content revisions arrive.
 	for (uint16_t model : {14, 15, 19, 20}) { auto valid = r; valid.state.model = model; valid.state.capital_paid = GetSpaceVehicleConstruction(model)->capital; CHECK(ValidateSpaceProductionRecords(std::array{valid}, 64, 64)); }
+	// Each independent malformed receipt must fail without borrowing another hull's generation, paid bill, work, role or facility history.
 	for (uint i = 0; i < 9; ++i) {
 		auto bad = r;
 		switch (i) {
 			case 0: bad.craft.generation = 0; break;
 			case 1: bad.state.capital_paid = 0; break;
-			case 2: bad.state.content_version = 3; break;
+			case 2: bad.state.content_version = MULTILAYER_SPACE_CONTENT_VERSION + 1; break;
 			case 3: bad.state.model = 18; break;
 			case 4: bad.state.remaining_ticks = 149; break;
 			case 5: bad.state.remaining_ticks = 0; break;
@@ -112,6 +121,7 @@ TEST_CASE("Paid production receipt and cross-family slots reject unearned or reu
 	CHECK_FALSE(ValidateLaunchProductionLinks(std::array{r}, std::array{stale}, std::array{craft}, std::array{center}));
 	{
 		std::vector<SpaceProductionRecord> fleet; std::vector<SpaceCraftRef> identities; LaunchOperationsRecord filled{center, {}};
+		// Fill the real bounded pad queue with unique already-paid identities; the ninth cannot acquire invented facility capacity.
 		for (uint32_t i = 0; i < 8; ++i) {
 			auto queued = r; queued.craft = {VehicleID{i}, uint64_t{i} + 1}; queued.state.placement = SpacePlacement::SurfaceStored; queued.state.remaining_ticks = 0;
 			fleet.push_back(queued); identities.push_back(queued.craft); filled.slots.pad_queue.push_back(queued.craft);
@@ -127,7 +137,9 @@ TEST_CASE("Paid production receipt and cross-family slots reject unearned or reu
 }
 
 static std::function<void()> *observer = nullptr;
+/** @param args Parameter-free ordinary game console arguments. @return Whether this invocation's loaded-world observer ran. */
 static bool ObserveAssembly(std::span<std::string_view> args) { REQUIRE(args.size() == 1); REQUIRE(observer != nullptr); (*observer)(); return true; }
+/** Explicit historical starting-stock fixture verifies paid assembly, interruption and native company/station lifecycle without claiming procurement. */
 TEST_CASE("Native workshop charges once and resumes the same paid dormant hull", "[.launch-assembly]")
 {
 	const char *action_env = std::getenv("OTTD_LAUNCH_ASSEMBLY_ACTION"); REQUIRE(action_env != nullptr); const std::string_view action{action_env};
@@ -135,6 +147,7 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 	const auto source = action == "prepare" ? FindTestRepositoryRoot() / "src/tests/fixtures/demos/space/space-launch-hub-1990-408.sav" : std::filesystem::path{input == nullptr ? "" : input};
 	const auto paths = GetTestCaseArtifactPaths("space", "assembly"); const auto config = GetTestRuntimeConfig();
 	bool observed = false; std::exception_ptr failure;
+	/** Retain native assertion failures across orderly shutdown of this exact loaded fixture world. */
 	std::function<void()> observe = [&] {
 		try {
 			AutoRestoreBackup actor(_current_company, _local_company);
@@ -142,14 +155,17 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 			auto center_ref = GetLaunchCenterReferences().front(); auto *center = ResolveLaunchCenter(center_ref); REQUIRE(center != nullptr);
 			auto *company = Company::Get(_current_company);
 			const auto steel = GetCargoTypeByLabel(CargoLabel{"STEL"}), goods = GetCargoTypeByLabel(CargoLabel{"GOOD"});
+			/** @param ticks Actual synchronized opportunities required; presentation/yields cannot earn assembly work. */
 			auto advance = [&](uint ticks) {
 				AutoRestoreBackup pause(_pause_mode, PauseModes{}); const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
+				// Only the authoritative simulation schedule advances paid work; yielding while paused preserves the same receipt.
 				for (uint i = 0; i < ticks;) {
 					REQUIRE(std::chrono::steady_clock::now() < deadline); const auto before = GetAsteroidField().elapsed_ticks; const auto work = ComputeLaunchProductionDigest();
 					StateGameLoop(); if (GetAsteroidField().elapsed_ticks == before) { CHECK(ComputeLaunchProductionDigest() == work); std::this_thread::sleep_for(std::chrono::milliseconds(1)); continue; }
 					REQUIRE(GetAsteroidField().elapsed_ticks == before + 1); ++i;
 				}
 			};
+			/** @param name Explicit invocation-owned ordinary checkpoint basename, preserving the actual paid owner. */
 			auto save = [&](std::string_view name) {
 				AutoRestoreBackup pause(_pause_mode, PauseModes{PauseMode::Normal}); AutoRestoreBackup compression(_savegame_format, std::string{"lzma"});
 				REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(paths.saves / std::string{name}), false) == SaveLoadResult::Ok);
@@ -164,6 +180,7 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 				REQUIRE(CargoPacket::CanAllocateItem());
 				center->goods[goods].GetOrCreateData().cargo.Append(CargoPacket::Create(center->index, uint16_t{100}, Source{Source::Invalid, SourceType::Industry}), StationID::Invalid());
 				CHECK(CmdAssembleLaunchCraft({}, center_ref.station, center_ref.generation + 1, 14).Failed());
+				// Ground, orbital-only and passive roles cannot borrow the Earth launch workshop's commissioning rights.
 				for (uint16_t bad : {0, 16, 17, 18, 21}) CHECK(CmdAssembleLaunchCraft({}, center_ref.station, center_ref.generation, bad).Failed());
 				{
 					AutoRestoreBackup year(TimerGameCalendar::year, TimerGameCalendar::Year{1989}); CHECK(CmdAssembleLaunchCraft({}, center_ref.station, center_ref.generation, 14).Failed());
@@ -181,6 +198,7 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 				station_window->OnClick({}, WID_SV_LAUNCH_ASSEMBLY, 1);
 				auto *workshop_window = FindWindowById(WindowClass::LaunchAssembly, center->index.base()); REQUIRE(workshop_window != nullptr);
 				Money capital = 0;
+				// Each Earth role pays its actual full bill once, keeps a dormant native hull through pause, and enters storage only after its own work completes.
 				for (uint16_t model : {14, 15, 19, 20}) {
 					const auto &d = *GetSpaceVehicleConstruction(model); const auto before = company->money; const auto digest = ComputeLaunchProductionDigest();
 					const auto quote = CmdAssembleLaunchCraft({}, center_ref.station, center_ref.generation, model);
@@ -211,6 +229,7 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 				CHECK(CmdRecoverLaunchCraft({}, paid.home.station, paid.home.generation, v->index, v->generation).Failed());
 				const auto before = company->money; REQUIRE(Command<Commands::RecoverLaunchCraft>::Post(center_ref.station, center_ref.generation, v->index, v->generation));
 				CHECK(company->money == before); CHECK(v->construction.origin == paid.origin); CHECK(v->construction.capital_paid == paid.capital_paid); CHECK(v->construction.remaining_ticks == 111);
+				// Recover each actual stranded paid hull through explicit native reassignment; station reincarnation alone grants no home or work.
 				for (auto *stranded : SpaceVehicle::Iterate()) if (stranded->construction.placement == SpacePlacement::Unhomed) {
 					REQUIRE(Command<Commands::RecoverLaunchCraft>::Post(center_ref.station, center_ref.generation, stranded->index, stranded->generation));
 				}
@@ -225,6 +244,7 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 			}
 			REQUIRE(center->launch_operations->workshop != SpaceCraftRef{}); advance(2200); REQUIRE(ValidateSpaceVehicles());
 			CHECK(center->launch_operations->workshop == SpaceCraftRef{}); CHECK(GetSpaceVehicleCount() == 4); CHECK(center->launch_operations->pad_queue.size() == 1);
+			// All four paid hulls must finish dormant and empty; native construction cannot create freight or an active mission.
 			for (const auto *v : SpaceVehicle::Iterate()) { CHECK(v->construction.placement == SpacePlacement::SurfaceStored); CHECK(v->construction.remaining_ticks == 0); CHECK(v->cargo.TotalCount() == 0); }
 			save("assembly-complete-414.sav");
 			// Exercise real takeover and destruction after retaining the clean continuation artifact.
@@ -232,15 +252,19 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 			REQUIRE(Company::CanAllocateItem()); auto *receiver = Company::Create();
 			ChangeOwnershipOfCompanyItems(old_owner, receiver->index);
 			CHECK(center->owner == receiver->index); REQUIRE(ValidateSpaceVehicles());
+			// Takeover moves ownership only; each original paid construction receipt remains byte-equivalent.
 			for (const auto &r : paid_fleet) { const auto *v = ResolveSpaceCraft(r.craft); REQUIRE(v != nullptr); CHECK(v->owner == receiver->index); CHECK(v->construction == r.state); }
 			const auto deleted_ref = GetLaunchCenterReference(*center); const auto anchor = center->launch_center->tile; const auto rotation = center->launch_center->rotation;
 			delete center; CHECK(ResolveLaunchCenter(deleted_ref) == nullptr);
+			// Removing the actual home strands every dependent hull while preserving original paid provenance and unfinished work.
 			for (const auto &r : paid_fleet) { const auto *v = ResolveSpaceCraft(r.craft); REQUIRE(v != nullptr); CHECK(v->construction.placement == SpacePlacement::Unhomed); CHECK(v->construction.paused); CHECK(v->construction.origin == r.state.origin); CHECK(v->construction.remaining_ticks == r.state.remaining_ticks); }
 			// Native pool reuse may occupy the identical StationID; it never inherits paid craft.
 			center = Station::CreateAtIndex(deleted_ref.station, anchor); center->owner = receiver->index; center->facilities.Set(StationFacility::LaunchCenter);
+			// Explicit identity-reuse fixture rebuilds the same original footprint; no old hull or paid receipt is attached by allocating matching tiles.
 			for (auto tile : *GetLaunchCenterFootprint(anchor, rotation)) { MakeStation(tile, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(tile); }
 			InstallNewLaunchCenter(*center, anchor, rotation);
 			CHECK(GetLaunchCenterReference(*center) != deleted_ref); CHECK_FALSE(HasLaunchCraft(GetLaunchCenterReference(*center)));
+			// Every old-generation request must refuse despite native StationID reuse, retaining each hull's unhomed ownership.
 			for (const auto &r : paid_fleet) { CHECK(ResolveSpaceCraft(r.craft)->construction.home == LaunchCenterRef{}); CHECK(CmdRecoverLaunchCraft({}, deleted_ref.station, deleted_ref.generation, r.craft.vehicle, r.craft.generation).Failed()); }
 			{ AutoRestoreBackup local_actor(_current_company, _local_company); SetLocalCompany(old_owner); } // Restore both local/current identities before native input resumes.
 			fmt::print("LAUNCH_ASSEMBLY native=true paid_once=true dormant=true takeover=true deletion_reuse=true digest={}\n", ComputeLaunchProductionDigest());

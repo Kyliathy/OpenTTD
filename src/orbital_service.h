@@ -1,17 +1,26 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_service.h Contained paid Core/Dock service and shared electrical work.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/4C.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/4C/6B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; shared per-role contained bills and genuine unknown-role legacy work.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only actual service progress presentation.
  */
 #ifndef ORBITAL_SERVICE_H
 #define ORBITAL_SERVICE_H
 #include "utility_power.h"
 #include "space_production.h"
+#include "space_manifest.h"
 
 struct SpaceVehicle;
 struct SpaceStructure;
 struct SpaceStructureRecord;
-/** Resolve the actual paid electrical source behind a Core or an explicitly connected Dock.
- * @param site Actual native service module. @return Its original owned physically adjacent source site, or nullptr when disconnected/lost.
+struct OrbitalServiceState;
+/** Resolve the bill already owned by an immutable contained job, including conservative genuine legacy work.
+ * @param job Original contained receipt; UINT16_MAX retains the pre436 one-part/148-opportunity budget without assigning a model.
+ * @return Original immutable bill, or absence for an unsupported claimed role. This query creates no work, parts, utility grant or berth rights.
+ */
+std::optional<SpaceServiceTuning> GetOrbitalServiceJobTuning(const OrbitalServiceState &job);
+/** Resolve the actual paid electrical source behind a Core or an explicitly connected Dock/Assembly.
+ * @param site Actual native work module. @return Its original owned physically adjacent source site, or nullptr when disconnected/lost.
  */
 const SpaceStructure *GetOrbitalServicePowerSite(const SpaceStructure &site);
 /** Player operations on one exact contained berth; cancellation returns only its actual unconsumed parts. */
@@ -24,6 +33,11 @@ void PublishOrbitalUtilitySources(uint64_t interval, uint32_t ticks);
 void AppendOrbitalUtilityRequests(std::vector<UtilityPowerRequest> &requests);
 /** @param craft Actual native hull. @return Whether a contained Core/Dock job retains this exact hull, including paused work. */
 bool HasOrbitalServiceAssignment(const SpaceVehicle &craft);
+/** Read the original contained service countdown without copying its packet owner or acquiring a berth.
+ * @param craft Exact native hull incarnation whose original contained assignment is queried.
+ * @return Const original job metadata, or nullptr when this hull has no contained service job.
+ */
+const OrbitalServiceState *GetOrbitalServiceJobState(const SpaceVehicle &craft);
 /** @param craft Actual native hull. @return Whether this epoch authorizes both active upkeep and one750J service step. */
 bool IsOrbitalServiceWorkTick(const SpaceVehicle &craft);
 /** Settle one exact electrical debit together with each eligible native service step. */

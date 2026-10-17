@@ -31,6 +31,8 @@ static constexpr CargoLabel _payload_cargo[] = {CargoLabel{"SCMP"}, CargoLabel{"
 static constexpr CargoLabel _asteroid_cargo[] = {CargoLabel{"NORE"}, CargoLabel{"RARE"}, CargoLabel{"WICE"}};
 static constexpr CargoLabel _orbital_cargo[] = {CargoLabel{"SCMP"}, CargoLabel{"RBPT"}, CargoLabel{"ELEC"}, CargoLabel{"BATY"}, CargoLabel{"SMIK"}, CargoLabel{"RFMT"}, CargoLabel{"STEL"}, CargoLabel{"NORE"}, CargoLabel{"RARE"}, CargoLabel{"WICE"}, CargoLabel{"PROP"}, CargoLabel{"GOOD"}};
 
+static constexpr MultiLayerMiningProbeTuning _mining_probe_tuning; ///< Existing revision2 physical constants, now bound to their logical model.
+
 /* Logical IDs are append-only; revised Space definitions are independently versioned, and are never inserted into original engine tables. */
 static const LayerVehicleCapability _vehicle_catalogue[] = {
 	{0, "Standard TBM", _standard_tbm_layers, MultiLayerVehicleTransport::Rail, {}, {}, MultiLayerCommissioningFacility::RailPortalBay, MultiLayerServiceFacility::RailService, TimerGameCalendar::Year{1950}, true, true},
@@ -48,12 +50,13 @@ static const LayerVehicleCapability _vehicle_catalogue[] = {
 	{12, "Shield-85 Mineral Capsule", _tube_layers, MultiLayerVehicleTransport::Tube, {CargoClass::PieceGoods, CargoClass::Covered, CargoClass::Hazardous}, _sealed_cargo, MultiLayerCommissioningFacility::TubeDepot, MultiLayerServiceFacility::TubeService, TimerGameCalendar::Year{1985}, false, false},
 	{13, "Forge-05 Heavy Capsule", _tube_layers, MultiLayerVehicleTransport::Tube, {CargoClass::PieceGoods, CargoClass::Oversized}, _heavy_cargo, MultiLayerCommissioningFacility::TubeDepot, MultiLayerServiceFacility::TubeService, TimerGameCalendar::Year{2005}, false, false},
 	{14, "Surface launch rocket", _launch_layers, MultiLayerVehicleTransport::Rocket, {CargoClass::Express, CargoClass::PieceGoods, CargoClass::Covered, CargoClass::Oversized}, _payload_cargo, MultiLayerCommissioningFacility::LaunchCenter, MultiLayerServiceFacility::LaunchRecovery, TimerGameCalendar::Year{1990}, false, false},
-	{15, "Mining probe", _space_layer, MultiLayerVehicleTransport::Orbital, {CargoClass::Bulk, CargoClass::Covered, CargoClass::Refrigerated}, _asteroid_cargo, MultiLayerCommissioningFacility::RocketPayload, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1990}, false, false},
+	{15, "Mining probe", _space_layer, MultiLayerVehicleTransport::Orbital, {CargoClass::Bulk, CargoClass::Covered, CargoClass::Refrigerated}, _asteroid_cargo, MultiLayerCommissioningFacility::RocketPayload, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1990}, false, false, &_mining_probe_tuning},
 	{16, "Heavy construction robot", _space_layer, MultiLayerVehicleTransport::Orbital, {}, {}, MultiLayerCommissioningFacility::OrbitalAssembly, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1995}, false, false},
 	{17, "Orbital cargo hauler", _space_layer, MultiLayerVehicleTransport::Orbital, {CargoClass::Bulk, CargoClass::Express, CargoClass::PieceGoods, CargoClass::Covered, CargoClass::Liquid, CargoClass::Refrigerated, CargoClass::Oversized}, _orbital_cargo, MultiLayerCommissioningFacility::OrbitalAssembly, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1995}, false, false},
 	{18, "Return pod", _launch_layers, MultiLayerVehicleTransport::Descent, {CargoClass::Bulk, CargoClass::Covered, CargoClass::Refrigerated, CargoClass::PieceGoods, CargoClass::Express, CargoClass::Liquid}, _return_cargo, MultiLayerCommissioningFacility::RocketPayload, MultiLayerServiceFacility::LaunchRecovery, TimerGameCalendar::Year{1990}, false, false},
 	{19, "Survey probe", _space_layer, MultiLayerVehicleTransport::Orbital, {}, {}, MultiLayerCommissioningFacility::RocketPayload, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1990}, false, false},
 	{20, "Construction probe", _space_layer, MultiLayerVehicleTransport::Orbital, {CargoClass::PieceGoods, CargoClass::Express}, _construction_cargo, MultiLayerCommissioningFacility::RocketPayload, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1990}, false, false},
+	{21, "Heavy mining robot", _space_layer, MultiLayerVehicleTransport::Orbital, {CargoClass::Bulk, CargoClass::Covered, CargoClass::Refrigerated}, _asteroid_cargo, MultiLayerCommissioningFacility::OrbitalAssembly, MultiLayerServiceFacility::OrbitalService, TimerGameCalendar::Year{1995}, false, false, &_mining_probe_tuning},
 };
 
 /**
@@ -63,4 +66,11 @@ static const LayerVehicleCapability _vehicle_catalogue[] = {
 std::span<const LayerVehicleCapability> GetMultiLayerVehicleCapabilities()
 {
 	return _vehicle_catalogue;
+}
+
+/** @return The existing miner model's physical tuning; no second engine, fleet or launch definition is created. */
+const MultiLayerMiningProbeTuning &GetMultiLayerMiningProbeTuning()
+{
+	assert(_vehicle_catalogue[15].model_id == 15);
+	return *_vehicle_catalogue[15].mining_tuning;
 }

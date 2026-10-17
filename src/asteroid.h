@@ -107,6 +107,12 @@ bool HandleSpaceEntityClick(const Viewport &viewport, int x, int y);
 void ShowSpaceSurveyWindow();
 /** @param craft Actual generation-qualified native hull to inspect. */
 void ShowSpaceSurveyWindow(SpaceCraftRef craft);
+/** Retarget an already selected native hull after actual paid replacement; opening/selection of unrelated inspectors remains with their current UI owner.
+ * @param source Exact retired original incarnation, including its generation.
+ * @param product Actual newly paid deployed incarnation to inspect.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC
+ */
+void RetargetSpaceVehicleInspector(SpaceCraftRef source, SpaceCraftRef product);
 /** Invalidate Space viewports after changed derived render state without advancing simulation. */
 void RefreshSpaceViewports();
 /** @param min Inclusive projected minimum. @param max Inclusive projected maximum. @return Stable body IDs from disposable lookup buckets. */

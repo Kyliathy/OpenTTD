@@ -439,6 +439,11 @@ enum class Commands : uint8_t {
 	DisconnectOrbitalServices, ///< Plan11 Groups4C/5: retire an idle Dock connection without refunding settled work or reusing its consumer identity.
 	RemoveOrbitalModule, ///< Plan11 Group5: remove only a fully preflighted empty native site, preserving spent material/service and utility history.
 	EvacuateOrbitalModule, ///< Plan11 Group5B: cancel jobs and move actual unconsumed packets to one adjacent safe native inventory; hulls retain their physical positions.
+	QueueOrbitalManufacture, ///< Plan11 Group7: pay for one native Assembly request; a later actual utility grant admits its complete physical batch.
+	CancelOrbitalManufacture, ///< Plan11 Group7: return every unconsumed reserved label to one explicit native inventory without a capital refund or hull.
+	CancelEarthSpaceReplacement, ///< Plan11 Group8BC: detach the old-hull intent from an existing paid Earth assembly body, preserving both hulls and spent materials/work/capital.
+	ControlOrbitalRecipe, ///< Plan11 Group10C: explicitly select/start, pause, resume or cancel the actual module's bounded processing work.
+	SetSpaceMissionChecked, ///< Plan10 Group20: assign/recall only the original hull generation; legacy command IDs/layout remain unchanged.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

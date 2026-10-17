@@ -51,7 +51,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/vehicle_func.h](../../../../src/vehicle_func.h) | 192-204 | `VehicleServiceInDepot`, `CallVehicleTicks`, `ResetVehicleHash`, `ViewportAddVehicles` are public tick/service/spatial-render boundaries for orbital vehicles. |
 
-Status: resumed at user request,2026-10-14; Groups1-7 are complete after Plan9's independent runtime handoff; runtime groups passed both configurations and documentation groups reconcile their delivered definitions. Next is Group8 task8.1. Remaining full-plan tasks still apply. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+Status: resumed at user request; Groups1-18, including8B/8C/12B and their Plan11 runtime prerequisites, are complete in both438 configurations,2026-10-17. Continue sequentially at19 linked Surface collection/useful delivery; original14 final art remains pending14B after22. Later presentation/art, save/network and full-plan gates remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
 
 ## Current dispatch - Full-plan completion, 2026-10-12
 
@@ -249,6 +249,11 @@ Public owners: [src/asteroid.h](../../../../src/asteroid.h) supplies `AsteroidBo
 | [Asteroid catalogue](../../../../src/multilayer_asteroid_catalogue.h), selected profile resource/size spans and `space_tuning` | Immutable population/share/placement/heading/speed definitions and shared geometry/clock. Classic has no orbital definitions. Version changed simulation definitions through the profile/content contract; algorithm changes also version the generator. Saved records remain authoritative. |
 | `AsteroidField::knowledge` / `GetAsteroidQuantityDisclosure` | Sparse native scan receipts persist separately in SPKN. Ownerless previews grant no quantity disclosure or resource ownership. Later survey/controller tasks retain their independent acceptance gates. |
 | `AssignSpaceMiningMission(SpaceVehicle &, uint32_t body, bool execute)` | Native hull/role/owner/resource/lease admission. `execute=false` estimates without changing target, work, packets or money; commands validate the actual asking owner. The explicit invalid-body mining-command sentinel means recall, while a typed invalid natural navigation target reports `TargetRemoved`. |
+| [CmdSetSpaceMissionChecked](../../../../src/space_vehicle_cmd.h) `(flags, VehicleID, uint64_t generation, uint32_t body)` | Appended synchronized assignment/Recall command checks the original hull incarnation again at agreed execution. The GUI uses it. Historical generation-free arguments/IDs remain offline-compatible and refuse multiplayer; no save-schema change. |
+| [GetSpaceMiningTuning](../../../../src/space_mining_tuning.h), [CommitSpaceMiningExtraction](../../../../src/space_mining_inventory.h) | Immutable15/21 operating quantities and the atomic original native body/hold/CargoPacket participant. Complete ready work, exact lease, resource, whole capacity and actual packet allocation precede finite debit/output; refusal grants no capacity or material. |
+| [GetSpaceMiningDepartureDestination](../../../../src/space_departure.h) | Pure clear homeward exit through original shared staging/occupancy. Recall keeps the last body as nonactionable departure/history, preserving emitted packets while releasing the lease and uncommitted work. |
+| [GetAsteroidInspectionDisclosure, GetSpaceTrajectoryDisclosure](../../../../src/asteroid_inspection.h) | Read-only company survey-gated quantities, public composition and signed integer motion. Native construction/service/descent owners supply actual inspector progress; opening/rendering cannot step gameplay. |
+| [SpaceWorkSample, ScopedSpaceWork](../../../../src/space_work_cost.h) | Opt-in thread-local diagnostic operations only. No saved/network/command/stock authority; native timings are diagnostic. Group21 accepts exact population, linear body/index work, bounded probe arbitration and output-sensitive local queries. |
 
 Actual C++ sources are registered in the existing root/test CMake lists. Direct
 consumers include the native mission/order/approach owners, ASTR/SPKN codec,
@@ -723,7 +728,7 @@ work, cost and service. r2mlvs9 owns paid replacement and descent. No orbital
 station is required for the basic loop. The old SCMP-only pod recipe must be
 replaced in the catalogue, not exposed as a second construction route.
 
-**Configuration:** extend logical model 15 (Mining probe) through [src/multilayer_vehicle_catalogue.cpp](../../../../src/multilayer_vehicle_catalogue.cpp) / [src/multilayer_content.h](../../../../src/multilayer_content.h). The r2mlvs9 hull and this controller consume the same model's tuning. These are typed content definitions, following the existing vehicle catalogue style; implementation still needs to add the physical tuning fields.
+**Configuration:** logical model15 (Mining probe) owns `MultiLayerMiningProbeTuning` through [src/multilayer_vehicle_catalogue.cpp](../../../../src/multilayer_vehicle_catalogue.cpp) / [src/multilayer_content.h](../../../../src/multilayer_content.h). `GetMultiLayerMiningProbeTuning` publishes that model's speed, tolerance and frozen deadline defaults. The r2mlvs9 hull and this controller consume the same native engine/model; hold mass, extraction, upkeep and service remain in `MultiLayerSpaceBudget`. These expose the existing revision2 values without a content or save-schema change.
 
 **Timeout rule:** measure upward-rounded Q16 distance `D_fp` to the current approach point when rendezvous begins, then save `max(1480, ceil(D_fp * 74 / (3 * 65536)) + 148)` ticks as that attempt's deadline. This allows at least 20 days, or travel at a conservative 3-tile/day closing speed plus two days. Target-position updates cannot keep extending the deadline. Group 15 must verify the controller meets this allowance on unblocked paths. A 32-tile approach needs 632 ticks under ideal straight pursuit or 790 ticks under the conservative bound, within the 1,480-tick minimum.
 
@@ -731,8 +736,10 @@ Charge travel/wait upkeep in addition to the revised25,900-money two-return
 collection ledger: add `100 * assigned_idle_ticks / 74`, retaining the accrual
 remainder. A saved descent job owns and charges its cargo once.
 
-- [ ] 8.1 Consume the minimal probe hull/carry/deployment identity already delivered by r2mlvs9; add mining capability to that same engine/unit rather than create another probe registry or launch mechanism.
-- [ ] 8.2 Bind the Mining-probe defaults to the existing model's tuning and add home-center/body-target commands, hold/refit choice, speed, extraction rate, upkeep, timeout and service budget. Use Group 3's body-speed bounds and the canonical r2mlvs1 cost/service budget. Validate missing target as an idle/unassigned state before a mission begins.
+- [X] 8.1 Consume the minimal probe hull/carry/deployment identity already delivered by r2mlvs9; add mining capability to that same engine/unit rather than create another probe registry or launch mechanism.
+- [X] 8.2 Bind the Mining-probe defaults to the existing model's tuning and add home-center/body-target commands, hold/refit choice, speed, extraction rate, upkeep, timeout and service budget. Use Group 3's body-speed bounds and the canonical r2mlvs1 cost/service budget. Validate missing target as an idle/unassigned state before a mission begins.
+
+**Delivered shell binding,2026-10-15:** both configurations execute the actual paid commissioning/carry/deployment producer, then mine with that same model15 EngineID/VehicleID/generation. Generation-checked paid commissioning/recovery supplies its home; `CmdSetSpaceMission` selects the body and compatible empty-hold cargo, refusing an incompatible loaded refit. A newly deployed shell with no target stays Idle. The saved allowance now uses upward-rounded distance to the current attachment point, including its offset; attachment uses the declared0.25-tile tolerance. Native work charges the common budget with saved remainders and extracts20t in740 working ticks without spending a pod before descent. Focused checks pass13,518 assertions/nine cases per configuration; actual collection and its2t/37-work-tick reload pass8,941 and7,317 assertions. Ordinary partial/complete resaves and interrupted continuation preserve26 owner families;156 comparisons also match across configurations. `logs/probe-shell-verification.json` binds14 accepted processes and63 audited referenced identities. [Shell notes](r2mlsp-y-probe-shell-notes.md) preserve the public exports and next producer gate. Content2/schema424 remain unchanged. Later roles/manufacturing and full mission acceptance stay open.
 
 ### Local Mandatory Reading - Additional probe roles and orders
 
@@ -749,7 +756,7 @@ requested by the user. Until that combined executable validation passes,
 retain all runtime handoff claims as pending. No free deployment or parallel
 cargo registry is authorized by declarations.
 
-Context has compacted 1 times while executing this group.
+Context has compacted 2 times while executing this group.
 
 ### Group 8B - Implement survey probes and typed ordered missions
 
@@ -783,10 +790,16 @@ source, binary and report identities are indexed by `logs/space-survey-verificat
 Construction, orbital resupply, final art and full integrated/network acceptance
 remain open; passing these suites does not finalize either plan.
 
-- [ ] 8B.1 Add survey19 and construction20 without renumbering models0..18 or native vehicle kinds. Expose role/recipe-specific Earth launch-center commissioning; enable orbital manufacture only through a completed Assembly's same material gate. Version the content/save contract explicitly.
-- [ ] 8B.2 Add synchronized owner-validated typed order queues for Visit, Survey, Mine, Deliver/Construct, orbital Unload and Return/Service. Save order index, target generation, work and blocked reason; role-invalid actions refuse without cargo/reserve/money mutation. Ground StationID orders cannot truncate32-bit body IDs.
+- [X] 8B.1 Add survey19 and construction20 without renumbering models0..18 or native vehicle kinds. Expose role/recipe-specific Earth launch-center commissioning; enable orbital manufacture only through a completed Assembly's same material gate. Version the content/save contract explicitly.
+- [X] 8B.2 Add synchronized owner-validated typed order queues for Visit, Survey, Mine, Deliver/Construct, orbital Unload and Return/Service. Save order index, target generation, work and blocked reason; role-invalid actions refuse without cargo/reserve/money mutation. Ground StationID orders cannot truncate32-bit body IDs.
 - [X] 8B.3 Implement148-working-tick moving-body scans and saved per-company knowledge. Hide initial/remaining quantities through one disclosure query in every player-facing body view until completion. Cancellation, hidden views and old preview surveys grant nothing; unsurveyed mining remains legal. Scans do not occupy the exclusive mining lease.
-- [ ] 8B.4 Verify Visit(bodyA) then Mine(bodyB), role refusals, two companies with different knowledge, partial/cancelled/completed scans, company-ID reuse, old unsurveyed migration and exact save/network continuation. No UI/tooltips/scripts may expose undiscovered amounts.
+- [X] 8B.4 Verify Visit(bodyA) then Mine(bodyB), role refusals, two companies with different knowledge, partial/cancelled/completed scans, company-ID reuse, old unsurveyed migration and exact save/network continuation. No UI/tooltips/scripts may expose undiscovered amounts.
+
+**Commissioning consumer verified,2026-10-16.** `logs/probe-role-commissioning-verification.json` binds both current429 configurations' focused content, Earth production-receipt and ordinary physical purchase contracts, plus eight exact paid19/20 queued/reserved/before/complete milestones each from the immutable Plan11 replacement handoff. Its83 current producer source identities still match before reuse. Logical19/20 retain the original native Space type and append to0..18; content2/SDEF, actual Earth workshop/body and operational Assembly/full-input/shared-work owners are delivered. No new commissioning implementation or save revision is needed. Continue sequentially at8B.2: typed queues exist, but orbital Unload and Return/Service still stop at producer placeholders despite delivered freight/service commands. Actual action completion and8B.4 acceptance remain open; this commissioning proof does not close Group8B.
+
+**Typed actions verified,2026-10-16.** New `space_order_actions.h/.cpp` delegates reached whole-hold Unload and due Return/Service to the delivered native freight/Core-Dock/onboard owners. Pending descents, full stock and absent parts/power retain the actual instruction and assets. Save430 explicitly admits the existing queue alongside its actual onboard service work without adding bytes or another timer. Independent preview reads normal Station authority from the same-file native STNN table and exact launch-anchor incarnation/position, without live ownership. `logs/probe-order-actions-verification.json` binds both430 builds,19 sources and324 directly audited identities:587 focused assertions/four cases and12,688 native assertions/15 stages each;8,123/8,122 resumed assertions,13 ordinary checkpoints and ten full/copied refusal pairs each. Thirty owners match across1,080 cross-configuration comparisons. Original paid parts/pods arrive through actual rocket resupply; two real returns exhaust allowance before148 service ticks consume parts once. Pause/reload and removal of a separately paid empty service center preserve work and lost-target intent; the original receiving center's asset demolition guard remains intact. No physical input, pose, money or allowance is granted. Continue at8B.4; this proof does not claim its remaining survey/migration/network acceptance. [Current notes](r2mlsp-z-f-probe-order-notes.md) retain exact boundaries.
+
+**Mission acceptance verified,2026-10-16.** `logs/probe-mission-verification.json` binds both430 builds,16 sources and269 directly audited identities:11,726 native assertions/13 stages and792 resumed assertions/six continuations each. Thirteen ordinary checkpoints preserve30 native owners, including real Visit(body1) then Mine(body0), unsurveyed extraction, role/owner/stale-generation refusals,37/148-tick scans, cancellation, actual knowledge takeover and company-ID reuse. Genuine408 input withoutSPKN remains unknown after148 old-preview ticks. Actual SendNet/distribution/next-frame/PostFromNet dispatch matches local commands, refuses early execution and does not repeat on duplicate dispatch. Thirty owners match across960 cross-configuration and360 local/network comparisons per build. Fourteen actual inspector captures per build retain native/pixel provenance; the completed owner sees quantities while the other company sees Unknown. The sole orbital GUI quantity path uses the company disclosure query, and172 script units expose no raw reserve fields. Full multiplayer socket integration remains in its later owning gate. Group8B is complete; continue at8C's remaining processor/freight producer gate. [Mission handoff](r2mlsp-z-g-probe-mission-notes.md) preserves exact originals and evidence.
 
 Context has compacted 1 times while executing this group.
 
@@ -796,8 +809,8 @@ Context has compacted 1 times while executing this group.
 
 - [X] 8C.1 Implement the Earth-launched construction probe's20t mass-limited STEL/GOOD hold, paid material-built body and generation-checked blueprint orders. Count Goods crates with the canonical weight; preserve payload/cargo ownership through launch and role-specific refits.
 - [X] 8C.2 Deliver actual packets to an empty Core blueprint through Plan11's saved construction job; advance bounded construction work and consume each required input once. Support missing-material waits, multiple trips/probes and cancellation without needing a pre-existing dock/storage/Assembly.
-- [ ] 8C.3 Allow explicit unloading of mined ore at completed orbital processors and loading of their Steel/Goods for construction or Plan9 authorized drop/descent. Distinguish construction reservation from transport ownership; competing builds/export cannot claim the same quantity.
-- [ ] 8C.4 Exercise Earth-only probe commissioning, two-material first-station delivery, constructed Steelworks/Goodsworks, imported versus locally produced construction stock, later local probe assembly and product Earth collection. Save interrupted orders/jobs and compare next-step conservation and command replay; no free station, input, launch or duplicate payment.
+- [X] 8C.3 Allow explicit unloading of mined ore at completed orbital processors and loading of their Steel/Goods for construction or Plan9 authorized drop/descent. Distinguish construction reservation from transport ownership; competing builds/export cannot claim the same quantity.
+- [X] 8C.4 Exercise Earth-only probe commissioning, two-material first-station delivery, constructed Steelworks/Goodsworks, imported versus locally produced construction stock, later local probe assembly and product Earth collection. Save interrupted orders/jobs and compare next-step conservation and command replay; no free station, input, launch or duplicate payment.
 
 **Delivered boundary:**8C.1/8C.2 finish the physical frame only. The native UI
 explicitly identifies it as awaiting activation; it grants no free storage,
@@ -806,36 +819,80 @@ still gate a usable station and orbital manufacturing. Cancelled jobs retain
 their site until unconsumed packets are collected; consumed materials cannot
 be recovered through the cancellation command.
 
+**Processor transport consumer verified,2026-10-17.** `logs/probe-product-contract-verification.json` SHA256 `c637da7e4728965c5240af99bf2e026dec789c87616dddddb2f85a76be54d2e2` reconciles the exact accepted Plan11 11/12/12B indexes and original438 saves in both configurations. Actual finite mined inputs enter constructed specialized processors through precise native berths. Original20Steel separately finances18 construction and two Goods inputs; fresh later10Steel supplies two exports and eight retained units. Four actual Goods and those twoSteel use original paid-shell descent and linked Surface rail/lorry collection. Historical Surface36Steel/64Goods remain separate. Paid haulers retain canonical mass, quantity and original provenance through typed explicit exchanges, with three independent full/copied refusal pairs. The consumer independently decodes original packet/material/custody owners without requalifying old binaries or adding stock/work.8C.3 is complete;8C.4 still requires coordinated acceptance and product command replay. Starting-content procurement remains unverified.
+
+**Coordinated scenario and command-replay acceptance,2026-10-17.** `logs/probe-product-replay-verification.json` SHA256 `f1acde0c26243341ae493df720ddb3419d05e84e7f5f6998d96c68ef96901c72` binds both current438 configurations, eight dated producer indexes and exact original report/save memberships. Both pass2949 focused assertions/23cases and1862 native assertions/eight command scenarios. Original Earth commissioning, no-station first-Core construction/activation, imported versus processed construction inputs, local Assembly and interrupted local model15 production remain their accepted dated scenarios. Independent427 receipt decoding identifies actual local miner20/gen6 from factory3/gen4 serial1, capital100000; an Earth-carried model15 cannot substitute that producer. The original inherited starting-stock procurement limit remains explicit.
+
+Current native tests load exact12B paid checkpoints and dispatch processing Resume, full original product freight, typed LaunchCenter Unload and four actual Surface reservations through local Post and original SendNet/distribute/next-frame/PostFromNet. Early execution and repeating a drained queue preserve work, money and all original physical owners. Four pairs compare120physical/eightmetadata families per build, plus90physical/sixmetadata comparisons against original saved next actions. Both builds agree across240physical/16metadata comparisons. No new stock, station, hull, source account, pose or work is installed; no new delivery income appears. The focused burst exposed a stale Earth test treating now-supported content3 as future; its refusal now uses the declared current version plus one, with documented fixture ownership. Final Releasebuild2/Debugbuild2, Release native-a2/native-b2/focused3, Debug native-a2/native-b2/focused1 and audit1 pass. Earlier executables/failed stale-version burst are excluded. Full socket multiplayer remains its later owning gate. Group8C is complete; continue9.
+
+### Local Mandatory Reading - Moving-target pursuit acceptance
+
+_Applies to Group9 only._ Read Global and Probe mission controller Area. Inspect canonical `GetSpaceMiningApproachTicks`, `AssignSpaceMiningMission`, `GetSpaceMiningBlock` and actual `SpaceVehicle::Tick`/typed-order dispatch in current sources; there is no separate `AdvanceSpaceMiningMissions` export. Read the exact current generation/motion/shell/paid mission producer indexes as dated boundaries and their directly relevant focused tests. Verify deployed original home/body admission, current moving approaches, deterministic speed/timeout bounds and lost/busy/low-budget exits with retained packet ownership. No fixture pose or stock may stand in for a native paid route; reuse actual saved mission phases when available. Do not reopen historical executable/source graphs or preload later art/UI gates.
+
 ### Group 9 - Deploy and pursue a moving target
 
 {{HARD}}
-- [ ] 9.1 Activate the carried small probe only through the r2mlvs9 deployment handoff and validate its home center/body target. Start Rendezvous from the saved deployment position; no orbital station is required.
-- [ ] 9.2 Use bounded deterministic pursuit of the target current approach position, updating by target ID each simulation step. Consume Group 3's body-speed bounds and Group 8's probe speed/timeout, with fixed-point step rounding; validate them against the actual approach geometry and service budget. An optimal orbit solver is unnecessary.
-- [ ] 9.3 Revalidate target/slot availability during pursuit; on disappearance, timeout or exhausted service budget choose the explicit blocked/retarget/return state without losing cargo.
-- [ ] 9.4 Test a body crossing its initial tile and edge while approached; the probe follows current coordinates rather than an old tile order.
+- [X] 9.1 Activate the carried small probe only through the r2mlvs9 deployment handoff and validate its home center/body target. Start Rendezvous from the saved deployment position; no orbital station is required.
+- [X] 9.2 Use bounded deterministic pursuit of the target current approach position, updating by target ID each simulation step. Consume Group 3's body-speed bounds and Group 8's probe speed/timeout, with fixed-point step rounding; validate them against the actual approach geometry and service budget. An optimal orbit solver is unnecessary.
+- [X] 9.3 Revalidate target/slot availability during pursuit; on disappearance, timeout or exhausted service budget choose the explicit blocked/retarget/return state without losing cargo.
+- [X] 9.4 Test a body crossing its initial tile and edge while approached; the probe follows current coordinates rather than an old tile order.
+
+**Moving-target pursuit verified,2026-10-17.** `logs/probe-pursuit-verification.json` SHA256 `58389fe799980625900bbe16ff068a718b7efbceb7000ed45bcd5555c1007b33` binds both current438 builds to the exact original paid Earth deployment. Original miner16/gen2 retains its100000 paid content2 receipt, actual home4/gen3, two paid pods and return allowance2; zero orbital structures exist. The original saved pose begins a real body0 mission with a frozen1480-opportunity ceiling-root allowance. Actual native simulation intercepts after92 opportunities while the body crosses a tile boundary. Independent SVST/VEHS/ASTR decoding joins the same hull, home, current body/offset and exclusive lease; all1760 resource units remain and no extraction work or cargo is granted.
+
+Both builds pass13048 focused assertions/ten cases and856 native/save assertions across five processes. Native assignment/interception, unchanged own-assignment and actual own-resave interception preserve30 physical families plus CDIM/SPRC:60physical/fourmetadata local comparisons per build and120physical/eightmetadata between builds. Separate geometry components follow both reflected travel edges across initial tiles using the original fixed-point movement functions. Explicit isolated legacy loss/depletion/deadline inputs and an exhausted paid-manifest input retain the exact two-unit packet; these declared unit starting conditions are not native paid procurement evidence. Shared approach components separately preserve stable request priority/exclusive ownership. Final Releasebuild3/Debugbuild1 and audit1 pass; Release native2/own1/resume1/focused2 and Debug all1 are accepted. Initial missing-include/content-descriptor diagnostics are excluded. No production/schema changes; inherited starting-content procurement remains unverified. Continue10.
+
+### Local Mandatory Reading - Finite extraction and packet provenance
+
+_Applies to Group10 only._ Read Global and Probe mission controller Area. Inspect actual `SpaceVehicle::Tick` Approach/Mining transitions, original shared `RequestSpaceApproach`/`PrepareSpaceApproachTick` priority, `UpdateAttachedSpaceCraftTransforms`, finite `AsteroidBody` reserve, `CargoPacket::Append` ownership and source initialization. Consume exact accepted9 assigned/intercepted original paid saves and their immutable index; retain old motion/shell/heavy finite-mining proofs as dated boundaries where relevant. Verify exclusive leases, body-relative attached transforms, complete hold/reserve/work/allocation preflight and once-only native debit/provenance through focused actual participants. Separate declared failure fixtures from paid native extraction; preserve interrupted extraction next actions without installing new cargo, pose, reserve or work. Do not preload later return/service or artwork gates.
 
 ### Group 10 - Lease an attachment slot and mine finite reserve
 
 {{HARD}}
-- [ ] 10.1 Acquire a body attachment lease through r2mlvs8 stable request/ID ordering. Attach only within approach tolerance with valid relative position and free slot; two competing probes cannot both own it.
-- [ ] 10.2 Save body ID, slot and attachment offset; derive latched position from the body after each motion update rather than independently integrating probe velocity.
-- [ ] 10.3 At each mining step, preflight the minimum of work allowance, remaining body reserve and compatible hold room plus packet capacity. Commit reserve debit, hold credit and service/work cost once.
-- [ ] 10.4 Initialize new cargo through the canonical provenance contract: record extraction-plane coordinates and age at production, never cast `OrbitalBodyID` to `IndustryID`. Account for reserved hold capacity and `Append` merging/deleting packet pointers; moving the body later cannot rewrite existing cargo origin.
-- [ ] 10.5 Handle full hold, depleted body, low service and cancellation by requesting detachment after the last committed extraction. A failed packet allocation must not debit reserve.
+- [X] 10.1 Acquire a body attachment lease through r2mlvs8 stable request/ID ordering. Attach only within approach tolerance with valid relative position and free slot; two competing probes cannot both own it.
+- [X] 10.2 Save body ID, slot and attachment offset; derive latched position from the body after each motion update rather than independently integrating probe velocity.
+- [X] 10.3 At each mining step, preflight the minimum of work allowance, remaining body reserve and compatible hold room plus packet capacity. Commit reserve debit, hold credit and service/work cost once.
+- [X] 10.4 Initialize new cargo through the canonical provenance contract: record extraction-plane coordinates and age at production, never cast `OrbitalBodyID` to `IndustryID`. Account for reserved hold capacity and `Append` merging/deleting packet pointers; moving the body later cannot rewrite existing cargo origin.
+- [X] 10.5 Handle full hold, depleted body, low service and cancellation by requesting detachment after the last committed extraction. A failed packet allocation must not debit reserve.
+
+**Finite extraction and native packet participant verified,2026-10-17.** `space_mining_inventory.h/.cpp` publishes `CommitSpaceMiningExtraction` over the original native hull, finite body and CargoPacket owners. Ready interval, same exclusive lease/target, resource meaning and whole hold room precede the minimum model/reserve/capacity batch. Actual native packet capacity remains mandatory; an additional admission veto can refuse but cannot manufacture headroom. Original `SpaceVehicle::Tick` retains upkeep/work accrual and the last partial interval on refusal. Successful commit initializes Asteroid/body/Space production provenance before Append may merge/delete the new packet, then debits reserve, credits extraction, resets work and releases full/depleted leases once. No new registry, stock, account or wire/schema field appears.
+
+`logs/probe-extraction-verification.json` SHA256 `6785d60976c3572b3606b54b91bb66c14b523e4bb3586c121e5d39c645f233af` binds77 current sources,83 direct identities and the exact paid9 interception producer. Both438 builds pass9744 focused assertions/11cases and8998 native/save assertions across11 processes: five original stages, three unchanged own-resaves, two actual own-resave next actions and one focused burst. Original miner16/gen2 earns stopped37, active37, first74, second partial111 and complete740-work boundaries. The full actual20NORE hold leaves1740 of1760 body units, no lease and Return state; original two shells and allowance2 remain. Each actual opportunity verifies500active/100idle per74-day remainder accounting. Stopped attachment follows current body motion without earning work.
+
+Independent SVST/VEHS/ASTR/CDIM/CAPA decoding verifies exact quantities, work, current body-relative poses, original paid content2 receipt and positive asteroid0 packet references with unchanged production coordinates, nondecreasing age, invalid pickup and zero feeder credit. Thirty physical families plus CDIM/SPRC match150physical/tenmetadata own/resume comparisons per build and300physical/20metadata between builds. Isolated actual legacy hulls separately contend for one real shared lease, recall/reacquire, preserve stopped transforms and exercise one-unit reserve/hold tails. The deterministic allocation case is an additional component admission refusal, not native physical heap exhaustion or paid procurement. Adjacent current heavy/pursuit/shared-approach callers pass. Final Releasebuild2/Debugbuild1, all selectors1 and audit1 pass; initial test include/overload compile diagnostics are excluded. Inherited starting-content procurement remains unverified. Continue11.
+
+### Local Mandatory Reading - Retained cargo detachment and return geometry
+
+_Applies to Group11 only._ Read Global and Probe mission controller Area. Inspect `ReleaseSpaceMiningSlot`, native Return movement, shared approach occupancy/staging and original inclusive circular `IsInsideLaunchCenterDropZone`/release authority; retain precise service berths as separate producers. Consume the exact accepted10 loaded paid save and its original body/hold/provenance receipt. Inspect existing geometry, recall and lost/full/foreign-center tests before changing gameplay. Verify safe shared-policy departure, deterministic circle entry, current-position admission and unchanged retained cargo while invalid/full/foreign targets wait or require explicit retargeting. Separate controlled boundary fixtures from actual paid travel; save and resume original release-region entry without changing pose, reserve, allowance or stock. Later descent/service owns actual cargo handoff and payment.
 
 ### Group 11 - Detach and return to an authorized release region
 
 {{HARD}}
-- [ ] 11.1 Release the attachment lease and choose a safe approach-exit position via the shared occupancy policy; preserve held cargo and saved work history.
-- [ ] 11.2 Route toward a deterministic reachable point inside the home center circular region rather than the exact anchor. Recompute when the craft is still outside, and check current position at command execution.
-- [ ] 11.3 Wait or request explicit retargeting if the home center is invalid/full; overlap with another circle does not authorize foreign delivery. Keep exact service-docking orders separate from cargo-only returns.
+- [X] 11.1 Release the attachment lease and choose a safe approach-exit position via the shared occupancy policy; preserve held cargo and saved work history.
+- [X] 11.2 Route toward a deterministic reachable point inside the home center circular region rather than the exact anchor. Recompute when the craft is still outside, and check current position at command execution.
+- [X] 11.3 Wait or request explicit retargeting if the home center is invalid/full; overlap with another circle does not authorize foreign delivery. Keep exact service-docking orders separate from cargo-only returns.
+
+**Retained-cargo departure and return verified,2026-10-17.** `space_departure.h` publishes the native `GetSpaceMiningDepartureDestination` query over the original shared staging/occupancy owner. Inside the original body's two-tile approach envelope, existing clear candidates are preferred toward the actual onward home; absent admission retains the full hold and Return state. Actual movement clears the envelope before ordinary circle entry. Existing waiting-request ring order is unchanged. A homeward preference prevents departure from oscillating back into the body envelope. No saved waypoint, phase, timer, lease, cargo owner or schema field is added;438 remains valid.
+
+`logs/probe-return-verification.json` SHA256 `b1c57dee86998772c8dad1b13a091f432656ee6ee39840ef6d6a25e4e2e47953` binds86 sources,57 direct identities and the exact10 paid full-hold producer. Both438 builds pass11073 focused assertions/19cases and4532 native/save/component assertions across eight processes. Three actual paid travel stages preserve all20NORE,1740 reserve, original packet IDs/quantities/production coordinates, nondecreasing age and unchanged allowance/pods. Exit advances by an actual bounded movement step; outbound clears the original body; Holding stops inside home4/gen3's inclusive20-tile circle at a nonanchor point distinct from precise service. Valid/stale-generation release quotes preserve funds, cargo and pending jobs; no descent is committed here. Two unchanged own-resaves and one actual own-resave arrival match90physical/sixmetadata comparisons per build and180physical/12metadata between builds.
+
+Separate unsaved component runs use a valid temporary foreign identity without funds/assets and explicit capacity fixture stock to qualify foreign/full refusal on the actual release predicate. They retain the same original20-unit hold and zero pending descents and emit no candidate save; supplied fixture stock is not a native paid procurement claim. Independent SVST/VEHS/ASTR/CDIM/CAPA/LCTR decoding verifies actual retained packets and circle geometry. Shared arbitration, exact circle/edge/overlap, original logistics and direct extraction/heavy callers pass. Final Releasebuild3/Debugbuild1, Release native1/own1/resume1/focused2/boundaries1 and Debug all1, plus audit1 pass. Initial missing Station include and helper-entry path diagnostics are excluded. Inherited starting-content procurement remains unverified. Continue12 actual descent/repeat/service.
+
+### Local Mandatory Reading - Actual descent, paid service and next rendezvous
+
+_Applies to Group12 only._ Read Global and Probe mission controller Area, the completed Plan9 orbital resupply/repeat public handoff and the relevant revised Space service/launch numerical rows. Inspect original `CanReleaseOrbitalCargo`/`CommitOrbitalCargoRelease`, SPOD/SPDJ custody/recovery, actual `SpaceManifest` pending/remaining/service fields, `CmdServiceLaunchProbe` and derived `IsSpaceServiceWorkTick`, typed Return/Service navigation, original paid shell packing and same-rocket Craft resupply. Consume the exact accepted11 region paid save; keep its full/foreign component fixture outside all successors. Require actual source packets, expired quotas, paid parts/work/fees and transported original shells; no allowance, material, pose, source account or service time is installed. Save actual pending descent and service next actions and compare once-only recovery/rearming/retry before next Mine. Retain completed12B's paid third-collection proof as a dated producer boundary without requalifying old binaries.
 
 ### Group 12 - Hand off descent and repeat after paid service
 
 {{HARD}}
-- [ ] 12.1 Call r2mlvs9 release preflight/commit, retaining the probe hold until descent ownership actually commits. Record the returned descent/job identity so a retried mission tick cannot release twice.
-- [ ] 12.2 Implement paid servicing, rearming/pod replacement and budget exhaustion from the profile. The probe stays in orbit and can repeat without another rocket launch or station.
-- [ ] 12.3 Enter the next rendezvous only after the cargo handoff/service conditions succeed. Save/reload at that boundary and verify no duplicated pending hold or free service.
+- [X] 12.1 Call r2mlvs9 release preflight/commit, retaining the probe hold until descent ownership actually commits. Record the returned descent/job identity so a retried mission tick cannot release twice.
+- [X] 12.2 Implement paid servicing, rearming/pod replacement and budget exhaustion from the profile. The probe stays in orbit and can repeat without another rocket launch or station.
+- [X] 12.3 Enter the next rendezvous only after the cargo handoff/service conditions succeed. Save/reload at that boundary and verify no duplicated pending hold or free service.
+
+**Actual descent and paid repeat verified,2026-10-17.** Existing original producers supply this group without new runtime state or schema. Native monotonic SPDJ identity, exact paid shell custody, reserved pending allowance and the emptied sender hold prevent a second release. Typed Unload uses the same preflight/commit and advances its saved cursor only after transfer; ReturnService retains pending claims and does not top up a partly used allowance. Actual onboard completion alone consumes RFMT1/ELEC1 and replaces quota after148 paid work opportunities. Original two-return batches repeat without another probe, station or per-batch rocket launch.
+
+`logs/probe-repeat-verification.json` SHA256 `4538c0a58ef7d1440788df02b1ff6355bdf8d02defbab0e67d4e4f3e7b6dc952` binds the exact11 paid region producer and current original descent/recovery/resupply/service/rendezvous owners. Both438 builds pass886 focused assertions/14cases and8587 native/save assertions across15 processes. Eight native stages retain actual40 mined NORE/reserve1720, commit two20-unit descents, expend original paid shells0/gen1 and1/gen2 once and exhaust quota2->1->0. The native pad queue selects original paid rocket19/gen5, preserving rocket15/gen1; actual unload retains carried constructor18/gen4 in Surface storage. Two original paid stored shells2/gen3 and3/gen4, RFMT1/ELEC1 and real fuel move through original packing/flight/recovery commands. Native fuel burn15 and Surface fuel debit15 are checked. Resupply leaves quota0. Initial service history1 becomes2 only after actual148 work costs1000, consumes both real parts once and restores quota2; only then the same probe starts its next rendezvous.
+
+Three unchanged own-resaves and three actual own-resave next actions compare180physical/12metadata per build, and14 checkpoints compare420physical/28metadata between builds. Independent SVST/VEHS/ASTR/CDIM/CAPA/SPSU/SPOD/SPDJ decoding verifies job identities/countdowns, actual positive conserved asteroid packets, exact paid shell generations/capital, parts and allowance history. Final Releasebuild3/Debugbuild2, Release native-a2/native-b3/own1/resume1/focused1, Debug native-a2/native-b1/own1/resume1/focused1 and audit1 pass. Initial fixture assumptions about pad queue, retained passenger and service history are excluded/corrected; no producer bypass or supplied stock enters successors. Dated12B retains the completed paid third collection and interrupted-service proof. Inherited starting-content procurement remains unverified. Continue13.
 
 ### Local Mandatory Reading - Paid repeat and orbital resupply batch
 
@@ -890,16 +947,26 @@ remain open. Further work stops after this batch at the user's request.
   packet, stock or money duplication. Compare exact saved/replayed owners in both
   configurations; no orbital station is required.
 
+### Local Mandatory Reading - Mission exit and recovery reconciliation
+
+_Applies to Group13 only._ Read Global and the Probe mission controller Area. Inspect the actual `SpaceMissionPhase` fields, assignment/recall/refit guards, native phase switch and shared mining eligibility, plus typed navigation/ReturnService ownership, GUI command controls and same-file mission validation. Use accepted9/10/11/12 and dated12B only as exact producer boundaries. Build a phase/trigger transition table from current source; cover timeouts, absent target/home, full hold, finite depletion, paid service exhaustion and cancellation without inventing target removal or automatic retargeting. Current focused boundary tests must exercise recoverable ownership/refit refusals and retain cargo. Reuse accepted12 for the paid station-free repeat; precise requested docking remains its separate shared berth/service producer. No replay of old complete producer suites or historical executable/source requalification is required.
+
 ### Group 13 - Reconcile mission exits and recovery
 
 {{MEDIUM}}
-- [ ] 13.1 Build a transition table covering timeout, removed target/home, full hold, reserve exhaustion, low service and cancellation for every phase; connect each to the previously implemented recoverable exit.
-- [ ] 13.2 Verify the same home/target/hold/refit rules in UI, commands and saved mission validation. Keep failed handoffs in their current phase with cargo intact.
-- [ ] 13.3 Check the basic repeat loop uses the published paid service path without requiring a later station; precise docking/service remains a separate mission when requested.
+- [X] 13.1 Build a transition table covering timeout, removed target/home, full hold, reserve exhaustion, low service and cancellation for every phase; connect each to the previously implemented recoverable exit.
+- [X] 13.2 Verify the same home/target/hold/refit rules in UI, commands and saved mission validation. Keep failed handoffs in their current phase with cargo intact.
+- [X] 13.3 Check the basic repeat loop uses the published paid service path without requiring a later station; precise docking/service remains a separate mission when requested.
+
+**Mission exit/recovery reconciliation verified,2026-10-17.** [The phase/trigger transition table](r2mlsp-z-z-g-probe-exit-notes.md#phase-and-trigger-table) covers all five native phases, deployment, typed waits, descent and service owners. Actual Recall now retains the last natural body as nonactionable departure/history so the existing shared safe-exit query still applies after an attached cancellation. Return and released lease end extraction; original cancellation still discards the uncommitted attachment interval, preserving emitted packets/extracted history. The inspector now quotes/posts the same native Recall for mining roles instead of installing exact home Visit; other roles retain explicit home navigation. No new flag, phase, stock owner or schema appears.
+
+`logs/probe-exit-verification.json` SHA256 `3c5c5ea4473693346b895aebe5c62dfc5a65b127728bdf0f23d00ab1c254010c` binds98 current sources,57 direct identities and three exact dated paid producers. Both438 builds pass10995 focused assertions/15cases and1444 native/save assertions across seven processes. Original full-hold11 region, actual2-unit/37-partial-work10 attachment and12 active74-work service exercise incompatible target/refit/mixed-query refusals, safe cargo-preserving cancellation and conflicting-service refusal. Actual partial Recall releases its lease, clears only unfinished work, leaves reserve/extracted packets unchanged and physically reaches the original inclusive circle. Running/stopped isolated legacy components additionally exercise the same shared departure; these create no paid procurement claim.
+
+Three unchanged own-resaves and unchanged service-source comparisons match150physical/tenmetadata per build; six checkpoints match180physical/12metadata between builds. Independent current packet, body, circle, manifest, paid shell and descent decoding agrees. Accepted12 supplies the actual paid station-free repeat without requalifying historical binaries; precise requested service remains its separate shared berth owner. Final Releasebuild2/Debugbuild1, both native1/own1/focused1 and audit1 pass. Initial missing service declaration compile diagnostic is excluded. Inherited starting-content procurement remains unverified; visual capture/final art retain14's gate. Continue14.
 
 ### Area Mandatory Reading - UI, art and acceptance
 
-_Applies to Groups 14-22._
+_Applies to Groups 14-22, including14B._
 
 **Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/asteroid.h`: `AsteroidBody`, `AdvanceAsteroidField`, plus `SpaceVehicle`, `SpaceMission`, `AssignSpaceMiningMission` and `SpaceVehicle::Tick` in `src/space_vehicle.h`.
 Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
@@ -920,57 +987,281 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 
 Context has compacted 2 times while executing this group.
 
+### Local Mandatory Reading - Native inspector disclosures
+
+_Applies to Group14 only._ Read Global and UI/art/acceptance Area. Inspect `GetAsteroidQuantityDisclosure`, actual company scan knowledge, selected native role/order/work/service/packet owners and `SpaceSurveyWindow` drawing/picking/command handlers. Public packed Sprite Contract rows for the three asteroid classes and Space craft currently retain planned/null sources; Plan14 Groups63/63B/63C/64/67-69 own their source art. Under the Area's scoped graphics gate, complete independent native inspector fields/captures here and retain final source/packed/runtime art binding in Group14B after22. No existing temporary sprites count as final. Derive displayed composition, signed trajectory/speed and state progress from original native fields without revealing unsurveyed quantities, modifying RNG, or creating another inventory/work clock. Reuse existing capture/runtime tooling with exact paid/surveyed/unknown saves, and test read-only company isolation before current UI captures.
+
 ### Group 14 - UI, art and acceptance
 
 {{MEDIUM}}
-- [ ] 14.1 Add asteroid selection with survey-gated initial/remaining per-cargo quantities, class/composition, trajectory direction and speed, role-aware order editing and mission status. Show Unknown before a company scan completes, plus scan progress, construction deliveries, attachment/mining and return-pod states using r2mlvs13 art.
+**Scoped split,2026-10-17.** The Area explicitly permits independent code/state work while final graphics producers are absent. Original14.1's final r2mlvs13-art obligation remains unchecked as14B below; that group follows independent14-22 work and cannot use temporary preview sprites as completion evidence.
+
+- [X] 14.1 Add asteroid selection with survey-gated initial/remaining per-cargo quantities, class/composition, trajectory direction and speed, role-aware order editing and mission status. Show Unknown before a company scan completes, plus scan progress, construction deliveries, attachment/mining and return-pod states. Verify current native inspector captures; final r2mlvs13-art binding/review remains14B.
+
+**Functional inspector verified,2026-10-17; final art remains14B.** New `asteroid_inspection.h/.cpp` publishes pure company-authorized composition/quantity and signed native motion presentation. It delegates quantity authorization to the original survey owner; unknown observers receive no copied raw reserves. A fixed32-candidate-bit integer display magnitude and explicit direction signs preserve reflected/sub-resolution motion without advancing simulation. The native inspector now shows actual primary resource, signed trajectory/speed, exact original Construct target deliveries/consumption/work and selected-sender-generation descent payload/countdown/status. Non-mining typed work/waits no longer appear Idle; eligibility alone no longer appears Working. Existing role-aware commands, scan, mining, parts and paid service remain their original owners.
+
+`logs/asteroid-inspection-verification.json` SHA256 `dd738d03ac7c633c3749fa6307b25ec3e06ac6dcb19a428f7eaf10e20f7c2294` binds current code and exact paid/scan producers. Both438 builds pass641 focused assertions/eight cases and435 native assertions across12 processes and11 captures each. Eight native views cover unknown full hold, actual partial mining, pending descent, active service, partial scan, completed survey, another company's Unknown view and actual37/740-work construction. Original430 scan and the one original Release415 construction input cold-load into current438 before/after snapshots; no historical Debug construction producer is claimed. All originals and their dated native writer/procurement limits remain intact.
+
+Actual native widget captures are encoded to PNG with identical PPM pixels and retained writer provenance. Opening/viewing preserves every resource owner, money, RNG, work, clock and sparse company knowledge. Three ordinary reload captures remain identical;420physical/28metadata comparisons pass per build, and22 checkpoints plus11 images match660physical/44metadata and11pixel comparisons between builds. Actual known/foreign/pending/construction images were visually reviewed; no missing fields or clipping. Final Releasebuild3/Debugbuild1, Release native-a2/native-b2/own1/focused2, Debug native-a1/native-b1/own1/focused1 and audit1 pass. Initial string-parameter compile diagnostic and pre-refinement status captures are excluded. The public Space family manifest still has absent/planned sources and no required packed fixtures; temporary preview sprites are not final art. Continue15, retaining14B unchecked.
+
+### Local Mandatory Reading - Interception, tie order and saved edge continuation
+
+_Applies to Group15 only._ Read Global and UI/art/acceptance Area. Inspect the existing Group3 maximum-drift/basic-probe/starter-budget tests and frozen starter-distance contract, actual `GetSpaceMiningApproachTicks`/`SpaceVehicle::Tick`, shared body approach request priority/admission and exclusive mining lease. Inspect current motion/reflection and direct competing-probe fixtures before adding coverage. Require multiple actual native probe initial offsets, same-tick commands in both orders with the documented deterministic tie, and approaching/latched edge save/reload next-step comparisons. Declared isolated geometry/legacy hull fixtures are not paid procurement; retain exact accepted9/10 paid pursuit/extraction indexes as dated producer boundaries without replaying old complete suites or historical binary/source graphs. Use public field installation/validation and original saved ASTR/VEHS/SPOR fields; no copied movement, local lease registry or artificial progress can substitute the native transition under test. Keep final art14B's gate separate.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 15 - Test interception and exclusive attachment
 
 {{HARD}}
-- [ ] 15.1 Run deterministic moving-target pursuit from multiple initial offsets and across the body edge policy, including Group 3's maximum-drift/basic-probe interception fixture and guaranteed starter-distance bound. Assert starter interception within its budget, and finite completion or the declared timeout for other cases, with bounded per-tick work.
-- [ ] 15.2 Issue two attachment requests for one slot in the same simulation tick and in reversed command order; verify the documented tie rule, one lease and recoverable waiting for the loser.
-- [ ] 15.3 Save/reload while approaching and latched near an edge; compare body position, attachment offset and next-step decision.
+- [X] 15.1 Run deterministic moving-target pursuit from multiple initial offsets and across the body edge policy, including Group 3's maximum-drift/basic-probe interception fixture and guaranteed starter-distance bound. Assert starter interception within its budget, and finite completion or the declared timeout for other cases, with bounded per-tick work.
+- [X] 15.2 Issue two attachment requests for one slot in the same simulation tick and in reversed command order; verify the documented tie rule, one lease and recoverable waiting for the loser.
+- [X] 15.3 Save/reload while approaching and latched near an edge; compare body position, attachment offset and next-step decision.
+
+**Native interception verified,2026-10-17.** `logs/probe-interception-verification.json` SHA256 `e6c11d97bb05fa201509aeac83a1072824e98092f8e7c5be5e8958b3a8513687` binds85 sources,68 direct identities and exact dated9/10 paid producers. Both438 builds pass20,290 focused assertions/11cases and258 native/save assertions across nine processes. Actual isolated native hulls intercept from five offsets at maximum canonical drift; the32-tile basic case meets the632-opportunity bound. All three genuine generated starters retain their historical input and intercept within the frozen assignment. Two same-tick command orders select lower native hull ID despite its greater initial distance; one shared lease exists and the waiting loser recovers after recall.
+
+Original paid approach16/gen2 and partial attachment16/gen2 supply unchanged cargo, service and finite reserve owners for explicitly declared edge geometry. Staging changes only existing pose/canonical motion, earns no travel or work, and preserves elapsed time. One real native opportunity reflects X by222Q16 units, reverses velocity and retains remainder29; latched work37 becomes38 without extracting another unit. Two ordinary stage resaves and two resumed next steps match120physical/eightmetadata families per build; eight checkpoints match240physical/16metadata across builds, including SPOR admission, VEHS decisions, attachment offsets and packets. No production/schema change or paid geometry claim. Releasebuild1/Debugbuild1, all four selectors1 and audit1 pass. Continue16; final art14B remains open.
+
+### Local Mandatory Reading - Exit boundaries and lost identities
+
+_Applies to Group16 only._ Read Global and UI/art/acceptance Area. Inspect actual native phase exits, finite extraction commit, paid service eligibility, typed cancellation and original pod/descent custody. Reuse accepted9/10/11/12/13/15 indexes as dated boundaries; inspect focused tests before adding only missing coverage. Verify partial/full/one-unit/service exits separately and cancellation during approach/mining/detachment/pending descent. For home retirement/reassignment, use original generation-checked launch-center/retarget commands and existing guards; never invent automatic alternatives or reused-ID ownership. Inspect the supported body command surface before testing depletion/removal: natural finite depletion must use actual extraction, and unsupported removal is a refusal/characterization rather than a new destructive gameplay feature. Clearly label isolated component inputs; do not present copied service state, geometry or reserve as paid progress. Preserve original packet IDs/provenance, lease and recovery owners across all cases. Group20 retains the deferred legacy Recall wire-generation audit.
 
 ### Group 16 - Test mining exits and lost mission references
 
 {{HARD}}
-- [ ] 16.1 Test partial/full holds, last-unit reserve and service exhaustion separately; compare exact extracted quantities and retained cargo for each exit.
-- [ ] 16.2 Cancel at approach, mining, detachment and pending descent; validate lease release and packet ownership without repeat extraction.
-- [ ] 16.3 Remove/reassign home and deplete/remove the body through supported commands; check the mission never follows a reused ID and selects only explicit valid recovery alternatives.
+- [X] 16.1 Test partial/full holds, last-unit reserve and service exhaustion separately; compare exact extracted quantities and retained cargo for each exit.
+- [X] 16.2 Cancel at approach, mining, detachment and pending descent; validate lease release and packet ownership without repeat extraction.
+- [X] 16.3 Remove/reassign home and deplete/remove the body through supported commands; check the mission never follows a reused ID and selects only explicit valid recovery alternatives.
+
+**Native exit boundaries verified,2026-10-17.** `logs/probe-boundary-verification.json` SHA256 `9ef31a97fb07e69f30439bd91baacb6b158c2ac89f2b533b291375fe2fb6bfe2` binds exact9/10/12 paid inputs and original paid alternate-recovery reports. Both438 builds pass3513 focused assertions/ten cases and1002 native/save assertions across13 processes. Existing original partial/full production remains accepted. A declared one-unit reserve component now earns73+1 native work opportunities and emits exactly one packet; another75 steps retain the exhausted body ID/record, original initial reserve and emitted packet. It claims no paid depletion or installed ready work. Actual spent two-return allowance refuses quote/execute/mixed-query pursuit without mutation.
+
+Actual paid Recall at approach,2-unit/37-work mining,full20-unit detachment and pending20-unit descent releases any mining lease and runs75 actual opportunities without new extraction. Only unfinished work resets; held quantities, extracted history, original packet IDs/coordinates, paid shells, quota and service history survive. The already released descent remains its own sender-generation/pod/job/packet owner and advances111->36. Occupied paid home demolition refuses both quote and execution; wrong recovery/shell generations cannot redirect its original job. Existing focused retired-center tests exercise same numeric StationID/new generation and explicit authorized retarget; exact accepted paid retarget reports retain the purchased alternative rather than inventing another recovery owner.
+
+**Supported lifecycle boundary:** there is no gameplay body-delete command and no arbitrary probe-home setter. Exhausted bodies remain moving records with unreused IDs; invalid/out-of-range assignments refuse. Home demolition with paid craft/pods/recovery is guarded; actual explicit descent recovery uses `CmdRetargetSpaceDescent`, not an automatic reassignment. Testing those supported refusals/retained identities satisfies16.3 without introducing destructive gameplay. Six ordinary resaves and two unchanged refusal-source pairs match240physical/16metadata per build; twelve checkpoints match360physical/24metadata between builds. Releasebuild2/Debugbuild1, all selectors1 and audit1 pass; initial missing command include diagnostic is excluded. No production/schema change. Continue17; legacy Recall wire-generation audit remains20 and final art remains14B.
+
+### Local Mandatory Reading - Conserved resources and exact phase continuation
+
+_Applies to Group17 only._ Read Global and UI/art/acceptance Area. Inspect original ASTR finite per-body/class fields, same-file CDIM meanings, actual VEHS/CAPA packets and original SPDJ/SPOD/SPSU ownership. Reuse accepted9/10/11/12/15/16 direct indexes and exact paid saves without reopening old source/executable graphs. Reconcile every asteroid resource separately, including unchanged classes; positive emitted packets must belong to exactly one original physical holding. Preserve paid return-cycle evidence and distinguish RFMT/ELEC service consumption from raw ore or processed products. Round-trip actual approach, first attachment, partial mining, detached full hold and pending descent, then earn one actual native opportunity from the original and its own resave and compare every original physical owner, saved remainder and next decision. No installed phase, ready work, pose, reserve, cargo, replacement shell or elapsed tick may substitute these paid sources. Keep isolated16 final-tail fixture outside paid conservation and keep final art14B separate.
 
 ### Group 17 - Verify mission conservation through saved phases
 
 {{HARD}}
-- [ ] 17.1 Track each resource separately: initial reserve equals remaining reserve plus probe/descent/Surface inventory plus recorded final consumption/disposal. Do not equate product units from later processing with unconverted ore.
-- [ ] 17.2 Round-trip Rendezvous, Attach, Mine, Detach and DescentHandoff with their phase/lease/service remainder; compare the next exact simulation step.
-- [ ] 17.3 Repeat multiple return cycles and reconcile split/merged packet quantities, age/provenance and one container owner at a time; no new reserve appears after docking or reload.
+- [X] 17.1 Track each resource separately: initial reserve equals remaining reserve plus probe/descent/Surface inventory plus recorded final consumption/disposal. Do not equate product units from later processing with unconverted ore.
+- [X] 17.2 Round-trip Rendezvous, Attach, Mine, Detach and DescentHandoff with their phase/lease/service remainder; compare the next exact simulation step.
+- [X] 17.3 Repeat multiple return cycles and reconcile split/merged packet quantities, age/provenance and one container owner at a time; no new reserve appears after docking or reload.
+
+**Conserved native phases verified,2026-10-17.** `logs/probe-conservation-verification.json` SHA256 `901ca9ba65d9fb45a21d7ac890fd7edb7c3c09ebd09171f5461753f5abd2bc2a` binds90 sources,131 direct identities and exact9/10/12 paid inputs. Both438 builds pass330 native assertions across ten processes. Five actual saved phases cover Rendezvous/Approach, first Attach,37-work Mine, full-hold Detach/Return and111-tick DescentHandoff. Each process writes an unchanged own save, earns exactly one original synchronized opportunity, then writes next; a second process consumes that own save and repeats. Saved admission/lease, attachment offset, travel/cost/work remainders, packet age/provenance and descent110 decision match450physical/30metadata comparisons per build and600physical/40metadata comparisons across twenty checkpoints between builds.
+
+The independent wire audit joins every ASTR body debit to original CAPA packets, actual VEHS Space/Surface holds, STNN goods/next-hop buckets and SPDJ descent references. It resolves cargo meanings through same-file CDIM, checks every asteroid-source packet has exactly one physical owner, and reconciles Nickel Ore, Water Ice and Rare Earth separately, including untouched classes. These raw-ore worlds have no raw-ore consumption/disposal; RFMT/ELEC service inputs and processed products cannot substitute ore. All28 exact accepted12 paid return checkpoints also reconcile: first20 units descend and recover; both20 returns leave40 real Surface ore units, original body0 reserve1720 and aggregate Nickel reserve5061 of5101. Original shell replacement, completed paid service1->2, parts consumption and quota2 before next rendezvous remain their dated native producer. No copied ready work, pose, reserve, clock or inventory is installed. No production/schema change. Final Releasebuild2/Debugbuild1, both native1/resume1 and audit1 pass; initial missing company include diagnostic is excluded. Continue18; final art remains14B.
+
+### Local Mandatory Reading - Three-resource missions and inclusive drop boundary
+
+_Applies to Group18 only._ Read Global and UI/art/acceptance Area. Inspect actual class cargo definitions/dimensions, original mission assignment/refit/pursuit/extraction/return, inclusive `IsInsideLaunchCenterDropZone` and generation-checked release/recovery commands. Reuse exact accepted9 original empty paid hull and17 per-resource/unique-owner decoder. Run a complete actual mission for each original resource class with no installed work, cargo, reserve or paid travel. Record real off-anchor circle entry and original shell/job/packet recovery. Inspect accepted11 boundary tests before adding only missing exact20-tile release coverage. If exact boundary geometry needs an explicit isolated control, label it separately from earned full-mission travel, preserve the actual original paid hold/shell and use original release commands; never count artificial pose as earned route evidence. Keep final graphics14B's scoped gate separate and retain all original paid inputs.
 
 ### Group 18 - UI, art and acceptance
 
 {{MEDIUM}}
-- [ ] 18.1 Run one full mission for each asteroid class, including drops away from the center and at the 20-tile boundary.
+- [X] 18.1 Run one full mission for each asteroid class, including drops away from the center and at the 20-tile boundary.
+
+**Three resource missions verified,2026-10-17.** `logs/probe-class-verification.json` SHA256 `058483cef0fa7fcaa6e51186ea1a3c8f70ced6854a5aef419345af88a94b960e` binds exact original9 empty paid miner16/gen2, its original100000 content2 receipt/home4/gen3 and two actual shells. Release/Debug438 pass13,001/12,999 native assertions across twelve processes. Independent fresh original worlds for Nickel Ore, Water Ice and Rare Earth each earn pursuit/attachment,740 extraction work for a20-unit hold, safe off-anchor circle entry, actual generation-checked shell release and148 native descent opportunities. Surface receives20 units, the exact shell is expended once, quota2->1 and paid service history remains1. No pose, stock, reserve, work, clock or replacement allowance is installed on these full-mission paths.
+
+Three separate boundary forks consume those actual earned holds. Explicitly declared geometry places only the original hull one Q16 unit outside20 tiles (quote and execution refuse), then exactly20 tiles (actual release/recovery succeeds). These forks claim no earned travel; paid resources/history remain their original owners. Same-file SVST/VEHS/CDIM/ASTR/SPSU/SPDJ/LCTR decoding checks all three resource meanings, original sender/model/mass, exclusive packet holdings, real off-anchor release points, exact boundary, finite debit and recovery custody. Three ordinary recovered resaves match90physical/sixmetadata per build;24 checkpoints match720physical/48metadata between builds. No production/schema change. Final Releasebuild3/Debugbuild1 and all twelve selectors1/audit1 pass. Initial safeguarded-parser/Catch assertion compile diagnostics and the preflight's mistaken111 literal are excluded:111 was an earlier partially elapsed checkpoint; fresh descents correctly start148. The native fixture always used actual saved countdown; its comment was corrected without runtime change. Continue19; final art remains14B.
+
+### Local Mandatory Reading - Linked terrestrial collection and useful receivers
+
+_Applies to Group19 only._ Read Global and UI/art/acceptance Area. Inspect original native launch-hub membership, Surface loading and actual train/lorry cargo transfer, plus supported receiver/recipe consumption and payment. Reuse accepted Plan9 Surface collection/commodity-loop producer indexes and exact original paid returned packets as dated boundaries; inspect their native scenario membership before adding missing work. Run the relevant current focused producer boundary tests before consumer claims. Verify both linked terrestrial vehicle families collect actual returned cargo and deliver to useful receivers with source/age/packet conservation and existing payment rules. Keep imported starting-stock/procurement limits explicit and never grant replacement cargo, invent a second stock/recipe account, count processed product units as raw ore, or requalify old executable/source graphs. Group18's actual three-resource returns can supply new consumers only where additional evidence is required.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 19 - UI, art and acceptance
 
 {{SIMPLE}}
-- [ ] 19.1 Collect returned cargo through both linked Surface train and lorry stations and deliver it to useful receivers.
+- [X] 19.1 Collect returned cargo through both linked Surface train and lorry stations and deliver it to useful receivers.
+
+**Native Surface delivery verified,2026-10-17.** `logs/probe-surface-verification.json` SHA256 `9d69de693f8ede26289b207cae2dec431159019de1cafff85a9e9d9f5f0ce57b` binds the original18 paid Nickel return and two independent ordinary carrier continuations. Each438 configuration passes251 focused assertions/three cases and14,667 native assertions/nine processes. Normal launch-hub commands link actual rail5/lorry6 stations; actual timed handling splits the original20 units10+10. Normal paid construction, native refinery construction time, vehicle purchases/orders and physical trips deliver10 units to the native NFMT input. The other linked station retains10. Actual payment completes before the final save; no pending carrier payment remains.
+
+Independent same-file CDIM/CAPA/VEHS/STNN/INDY/LPCR/LPCC decoding reconciles original body0 reserve1760 =1740 remaining +10 raw packets +10 native unconverted input. NFMT awaits Coal; no Coal is borrowed, consumption/product remains0, and processed units never replace raw ore in this equation. Original paid miner/home/shell/quota/service history and all other resource classes are retained. Thirty-five owner families include native Industry, processor history and CAPY payment custody: unchanged own pairs match70 owner/four metadata comparisons per build; eight checkpoints match280 owner/16 metadata between builds. Final Releasebuild8/Debugbuild2, native selectors3/2, focused3 and audit1 pass. Provisional route/edge/payment snapshots are excluded. No production/schema change; inherited starting-stock procurement remains outside the original producer boundary. Continue20; final art remains14B.
+
+### Local Mandatory Reading - Visibility and synchronized mission replay
+
+_Applies to Group20 only._ Read Global and UI/art/acceptance Area. Inspect current mission command wire types, generation references, all mission frontend posts, native command serialization/server-frame dispatch and existing heavy/product network fixtures before choosing missing coverage. Preserve legacy argument layouts and native authority; a delayed command must not act on a reused vehicle incarnation. Compare actual visible/hidden simulation, original paid mining/return/recovery owners and financial/native Industry/payment custody, beyond RNG-only synchronization. Distinguish native queued dispatch from real socket multiplayer; retain unsupported gates explicitly. Reuse original paid checkpoint/index identities as dated boundaries, never install mining work, cargo, money or elapsed time as mission evidence. A cloned loopback socket host may configure company access through the native company command before its first join; record that endpoint setup and prove no money, cargo, work, hull or clock grant. Require actual joined company membership before client commands. Batch related protocol/frontend/test changes before the two-worker builds. Do not preload performance21 or final-art14B sources.
 
 ### Group 20 - UI, art and acceptance
 
 {{HARD}}
-- [ ] 20.1 Compare visible/hidden layer results and multiplayer replay.
+- [X] 20.1 Compare visible/hidden layer results and multiplayer replay.
+
+**View and native multiplayer replay verified,2026-10-17.** `logs/probe-replay-verification.json` SHA256 `30478028651def2e426437fa1440df66a348dc146cd07b0be3c66a221d6a2f2c` binds116 current source files and228 direct evidence identities. Each438 build passes1178 focused assertions/three cases and nine actual processes; Release/Debug native assertions are34,465/34,495. Four complete original paid20-unit missions cover local/queued commands with Space visible or hidden beneath Surface. Two original earned two-unit partial loads exercise queued Recall, native return, shell release and recovery under both views. Actual native game opportunities earn all pursuit, extraction, movement and148-tick descent; no cargo, reserve, hull, work, money or interval is installed.
+
+Two independent actual loopback peers also complete the original paid small-miner mission. The real client submits assignment and shell release over its socket, after native company membership is established; both peers retain six identical frame/tick/elapsed boundaries and physical saves through recovery. The cloned host's closed original allow-list requires explicitly recorded native company access setup before joining; this grants no physical/financial resource and the listener binds only loopback. Fifty-five native owner families include original orbital/Surface custody, Industry/history/payment, finite geology/mine records, packed map storage, economy and clock/RNG state. Fifty checkpoints per build reconcile independently. Thirty-eight local/view/own/peer comparisons match2090 owner/76metadata per build;38 deterministic local checkpoints match2090 owner/76metadata between builds. Separate socket sessions may schedule commands on different frames, so exact byte equality is required between peers within each session. Reviewed original visible/hidden native captures retain pixel-identical conversion provenance; final art remains14B.
+
+Production adds `CmdSetSpaceMissionChecked(flags,VehicleID,uint64_t generation,uint32_t body)` as an appended synchronized command. GUI Recall quotes/posts the original incarnation; actual native ID reuse, foreign actors, pure estimates and stale queued Recall refuse unchanged. The original mission argument layout and command IDs remain intact for offline callers/replays; generation-free legacy multiplayer admission now refuses. Final normal game and test binaries pass Releasebuild3/Debugbuild2, all final selectors3/2, both real peer sessions and audit1. Initial closed-company/spectator and superseded-binary attempts remain provisional. No save-schema change. Continue21.
+
+### Local Mandatory Reading - Exact population work and search costs
+
+_Applies to Group21 only._ Read Global and UI/art/acceptance Area, the exact Population defaults table and its10/160/10,240/14,336 examples. Inspect current public generation, canonical motion, body lookup/spatial index and pursuit/arbitration owners, existing operation instrumentation and focused maximum/clustered/narrow fixtures before adding missing work. Measure actual native owners at those exact counts, including clustered drift and narrow maps; do not substitute proxy lists or a second target/accounting authority. Reuse delivered generation/index focused boundaries and add only missing generation, target-search, per-body/per-probe cost records. Exact work counts and bounded queries govern acceptance; elapsed CPU timings are diagnostic rather than fragile wall-time thresholds. Keep declared isolated performance worlds separate from paid mission procurement. Avoid all-pairs per-tick scans, run only focused current-group bursts, and split any scope exceeding two minutes. Do not preload22 or final-art14B.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 21 - UI, art and acceptance
 
 {{MEDIUM}}
-- [ ] 21.1 Measure generation, target search and per-body/per-probe costs at Group 2's 10/160-body small/normal examples, 10,240-body largest Normal map and 14,336-body Dense maximum, including clustered drift and narrow-map cases. Record those exact counts and work bounds; avoid all-pairs scanning every tick.
+- [X] 21.1 Measure generation, target search and per-body/per-probe costs at Group 2's 10/160-body small/normal examples, 10,240-body largest Normal map and 14,336-body Dense maximum, including clustered drift and narrow-map cases. Record those exact counts and work bounds; avoid all-pairs scanning every tick.
+
+**Exact native work verified,2026-10-17.** `logs/asteroid-work-verification.json` SHA256 `bc223f9c6a7251cf2981275cc5722bdc64406e1483d25a800b1aee39dd1944c0` binds39 current source files,150 direct evidence identities and30 actual processes. Each438 build passes7,068 measured assertions/14 cases and38,589 focused assertions/13 producer cases. All14 native semantic results, exact operations, finite resource facts and final field digests agree between builds. Final normal game/test binaries pass Releasebuild2/Debugbuild1. The first Release test-only money comparison diagnostic is excluded. Focused commands and original invocation selectors are retained by `asteroid_work_checks-1.py/-2.py` and [performance notes](r2mlsp-z-z-o-probe-performance-notes.md).
+
+| Actual geometry / population | Bodies N | Generated grid cells G | Leading candidate visits 3G-3 | Release generation ms, diagnostic |
+| --- | --- | --- | --- | --- |
+| 64x64 Normal | 10 | 105 | 312 | 0.052 |
+| 256x256 Normal | 160 | 1,953 | 5,856 | 0.094 |
+| 4096x4096 Normal | 10,240 | 522,753 | 1,568,256 | 14.900 |
+| 4096x4096 Dense | 14,336 | 522,753 | 1,568,256 | 22.940 |
+| 4096x4096 Dense, declared clustered drift | 14,336 | 522,753 | 1,568,256 | 16.905 |
+| 64x1024 Normal | 160 | 1,905 | 5,712 | 0.095 |
+| 1024x64 Normal | 160 | 1,785 | 5,352 | 0.102 |
+
+Generation also performs exactly2(N-3) shuffle swaps, N record constructions and24N canonical velocity checks: one-off O(G+N), excluding native Map allocation and Surface launch-site search. Every measured motion opportunity performs exactly N body steps and N native index updates. Clustered departure performs exactly N swap/pop unlinks and links, independent of bucket occupancy; no body-pair pass or unconditional body-by-probe target scan is introduced. Native target lookup remains direct by stable ID. Local +/-2-tile queries visit at most four buckets; copied/sorted candidates C cost O(K+C log C), and the cluster actually returns all14,336. This is an output-sensitive bound, not constant query work.
+
+Actual approaching/mining legacy15 fleets use6 native hulls on the smallest map and64 elsewhere, with one attached hull in the overlapping-body cluster and64 distant approaching hulls there. Shared arbitration retains its existing bounded probe-pair/slot work, O(P squared + P log P), P<=64; it does not scan the complete asteroid population per request. Cold assignment/staging queries are measured separately and can encounter the whole cluster. Warm native craft ticks make at most32 direct target lookups per hull/opportunity and copy no body-query candidates in these scenarios. Thirty-two approaching opportunities charge43 per hull; separate fresh native assignments earn attachment, then74 actual mining opportunities charge500 and emit exactly two accountable units per hull from the original finite reserve. Native component timings are diagnostic, including observation overhead; no paid procurement, whole-game FPS or maximum-map Surface-startup performance is claimed. Existing paid histories remain dated immutable boundaries. Continue22; final art14B remains unchecked.
+
+### Local Mandatory Reading - Public runtime and evidence handoff
+
+_Applies to Group22 only._ Read Global and UI/art/acceptance Area, this plan's Completion Conditions and the accepted public-contract/evidence summaries for7/8B/8C/9-21. Verify live exported signatures and the current39-source performance index, with earlier accepted indexes treated as dated boundaries rather than historical executable graphs. Read only relevant Space paragraphs in vehicle/map-layer architecture and current master queue. Record actual native ownership, focused commands/results, original supplied-save retention and exact remaining art/packed-loading gates; distinguish delivered20 socket replay from broader Plan11 acceptance. Update affected handoffs without marking this source plan or parent complete while14B is unchecked. No new runtime regression is needed for accurate documentation alone.
 
 ### Group 22 - UI, art and acceptance
 
 {{SIMPLE}}
-- [ ] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
-- [ ] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+- [X] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
+- [X] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+
+**Runtime handoff recorded,2026-10-17.** [Current438 handoff](r2mlsp-z-z-p-probe-runtime-handoff.md) records live generation/body/mission/checked-command/extraction/departure/disclosure/measurement exports, original paid owners, exact focused commands and accepted7/8B/8C/9-21 indexes. `logs/probe-runtime-handoff-verification.json` retains direct dated producer identities, both unchanged original paid deployments, current performance/source evidence and documentation-link checks. Vehicle and map-layer architecture now distinguish delivered finite mining, actual paid recovery/Surface delivery, company disclosure, real joined socket replay and exact population work from the dated423 launch and424 generation boundaries. Original supplied/derived saves and their native provenance remain unchanged; no historical binary graph or full regression is rerun for documentation. The master reconciles completed groups only. This source plan and parent remain open while14B requires actual authored/packed family delivery and ordinary-game review; Plan11's broader acceptance remains its own queue.
+
+### Local Mandatory Reading - Final Space family art acceptance
+
+_Applies to Group14B only._ Read Global and UI/art/acceptance Area, the public Sprite Contract Handoff and matching Plan14 Space source/conversion/packed/runtime tasks. Require actual asteroid/mining/survey/construction/return-pod family sources, complete directions/states/frames, their original provenance and packed loading fixtures before binding/review. Keep gameplay quantities, movement, work and custody under original native owners. Temporary code-authored preview sprites and a planned manifest row cannot satisfy this group. Preserve all existing supplied saves and repository-local review captures; final native ordinary-game images must show the requested original14.1 states.
+
+### Group 14B - Bind and review final inspector and mission art
+
+{{HARD}}
+- [ ] 14B.1 Complete original14.1's final r2mlvs13-art integration using delivered asteroid, mining/survey/construction probe and return-pod family sprites through their packed loading owners, with the existing native state/quantity queries.
+- [ ] 14B.2 Review actual ordinary-game selection/scan/construction/attachment/mining/return-pod captures with those final sprites; retain source/packed/runtime evidence and keep this group pending until all required families pass.
+
+**Execution split,2026-10-17.** Final producers are still absent. Execute the bounded children below sequentially, preserving original14B.1/.2 as aggregate obligations. Each child consumes the existing public manifest and its corresponding Plan14 source tasks; no unrelated Underground queue is reopened. Source delivery cannot close packing/runtime acceptance.
+
+### Local Mandatory Reading - Small mining probe original and Space source gate
+
+_Applies to Group14BB only._ Read Global, UI/art/acceptance Area and final14B Local, Plan14 Global/Source generation Area and closest Remaining plant and orbital originals Local for63, Plan13 Public Handoff Contract and canonical framed prompt, installed imagegen skill, current `vehicle.model-15` manifest row and actual native model15 mission/work/hold/service/direction exports. Reuse the scoped existing-manifest validator; its unrelated broad mine-hash failure is retained without refreshing that producer. Freeze a single hook/mining silhouette, eight real engine-viewport directions, states, two phases,64x48 canvas/(-32,-32) anchor and original provenance before variants. Author and inspect actual bitmap originals through built-in imagegen; no procedural replacement or rotated flat views. All quantities/work remain native owners. Do not preload survey/builder/pod/asteroid source details while authoring this model.
+
+Context has compacted 1 times while executing this group.
+
+### Group 14BB - Deliver the small mining probe source
+
+{{HARD}}
+- [X] 14BB.1 Freeze the native model15 brief, manifest state/direction/anchor policy and scoped source/refusal fixture.
+- [X] 14BB.2 Author and review the compact hook/mining model and eight genuine directional views with immutable prompt/reference/source provenance, satisfying Plan14 63.1/63.2.
+- [X] 14BB.3 Author required attached/mining/load/service differences, publish native-scale contacts/source coverage and satisfy Plan14 63.3; retain packing/runtime false.
+
+**Small-miner source complete,2026-10-17.** `logs/space-miner-source-verification.json` binds18 immutable built-in originals,128 logical native poses,72 actual directional component poses and32 explicit static aliases. Eight genuine views retain protected original hardware; actual front-tool, two travel pulses, full/blocked access panels and two service phases occupy declared parts. Both native/4x frame contacts are reviewed. Status preserves97,532 outside-panel pixels and all original opacity; travel preserves every original opaque craft pixel.43 focused unit tests, the five-family/576-pose public contract and three refusal cases pass. Five actual alpha failures and the gap-producing whole-nozzle pilot remain excluded with exact receipts. Public model15 source coverage is true; company colors are none, packed/runtime false. Original quantities, cargo, work, leases and service remain native. Continue14BC/Plan14 63B; original14B aggregates remain open.
+
+### Local Mandatory Reading - Distinct survey probe source
+
+_Applies to Group14BC only._ Read Global/UI Area, Plan14 Global/Source generation Area and63B/63C Local, native19 scan/knowledge/service owners and the existing source/manifest/conversion contract delivered14BB. Freeze and author a distinct scanner model and genuine directions; scan effects must follow real native work and confer no quantities. Preserve all approved mining originals.
+
+### Group 14BC - Deliver the survey probe source
+
+{{HARD}}
+- [X] 14BC.1 Complete Plan14 63B.1-63B.3 with native model19 manifest, genuine scanner originals/directions/states and reviewed source contacts/provenance; packing/runtime remain pending.
+
+**Survey source complete,2026-10-17.** `logs/space-survey-source-verification.json` binds12 new survey originals and four explicitly registered existing gas-source instances,96 logical poses/64 actual components/16 static aliases, reviewed native/4x contacts and complete-view separation. Actual dish sweeps, model-specific service connector phases and blocked hatch preserve the distinct original bus/paddles/nozzle. Service protects73,620 non-hatch pixels; gas protects every opaque original pixel and touches the original rear edge in both phases. Whole-frame panel shading and first detached-pulse assemblies remain excluded explicitly.34 focused unit/compatibility tests, six-family/672-pose contract with three refusal cases, and41 native role/survey assertions/three cases in each438 build pass. Original native scan work/company disclosure and all saved owners remain unchanged. Public source coverage is complete; packed/runtime false. Continue14BD/Plan14 63C.
+
+### Local Mandatory Reading - Distinct construction probe source
+
+_Applies to Group14BD only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Native construction carrier Local, native20 cargo/Construct/job/approach/service owners and delivered source/conversion contracts. Steel/Goods loads and active construction derive only from original native cargo/work. Preserve approved mining/survey originals.
+
+Current bounded handover: [construction source notes](r2mlsp-z-z-r-construction-art-notes.md); after compaction consume its active source section rather than the full earlier Space-art history.
+
+Context has compacted 1 times while executing this group.
+
+### Group 14BD - Deliver the construction probe source
+
+{{HARD}}
+- [X] 14BD.1 Complete Plan14 63C.1-63C.3 with a distinct manipulator/material carrier, genuine directions, actual empty/Steel/Goods/constructing/service states and reviewed provenance/contacts; packing/runtime remain pending.
+
+**Construction source complete,2026-10-17.** `logs/space-builder-source-verification.json` SHA256`e8d444442a77b971282314f3c989b77c120a8ce40b5b65181ca3720540b24fd8` binds16 own actual originals, four explicitly registered original gas sources,128 logical poses/80 actual component poses/32 static aliases and reviewed native/4x contacts. All eight genuine headings retain exact original hardware outside actual load/arm/hatch parts; two actual manipulator phases differ27-96pixels, service3-5 and gas3-6. All24 hatch cues retain real red/cyan source pixels. Loads protect48,230 outside-volume pixels, work44,722 outside-swept pixels, status73,608 non-hatch pixels and gas every original opaque pixel. Whole-source layout has zero nonseparator model pixels outside selected windows; the Goods frame-crop misclassification is corrected without alpha repair. Two unsafe extended-arm source attempts and two weak hatch assemblies remain excluded explicitly.44 focused unit/compatibility cases, seven-family/800-pose contract with three refusal cases and both438 native entry boundaries255assertions/five cases pass. Original cargo/mass, Construct/site inputs/work, paid service and movement remain sole native owners. Packing/runtime false. Continue14BE/Plan14 64; original14B aggregates remain open.
+
+### Local Mandatory Reading - Actual return-pod source
+
+_Applies to Group14BE only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Native passive return-pod Local for64, native18 SpacePod/SpaceDescentJob custody/progress and existing manifest/source/conversion owners. Preserve actual shell/job identity and author genuine packed/release/descent/recovery views; no art timer or packet owner.
+
+### Group 14BE - Deliver the return-pod source
+
+{{HARD}}
+- [X] 14BE.1 Complete Plan14 64.1-64.3 with native18 silhouette/directions/states, reviewed originals/contacts and immutable provenance; packing/runtime remain pending.
+
+**Passive-pod source complete,2026-10-17.** `logs/space-pod-source-verification.json` SHA256`17c1bb74dc56f414b26066189d5a77c4ee6d83ee6d76e58f14a26a5fbdc4a49e` binds eight own actual originals,64 logical poses/24 actual components/24 explicit static aliases and reviewed native/4x contacts. Eight genuine shell views include corrected direct N/S hatch occlusion. Two original tab plates register independently at each own original hinge; all32 phase contacts touch,48,270 outside-volume pixels and every fixed joint stay exact, and all original opacity is conserved. Actual phases differ10-24pixels per heading. Packed/release and blocked explicitly share folded original; legacy `recovered` holds actual open-tab phase1 only for a final recovery-ready live job. Successful native atomic transfer still expends/deletes that exact shell; no persistent recovered asset, extra packets or art clock. One hazy original and known equipment/control views remain excluded.42 focused unit/compatibility cases, seven-family/800-pose contract/three refusals and299 native logistics/custody assertions/ten cases in each438 build pass. Public source complete; packing/runtime false. Passive-pool rendering/placement remains14BG, ordinary-game art14BH. Continue14BF/Plan14 67-69.
+
+### Local Mandatory Reading - Metallic asteroid source
+
+_Applies to Group14BF only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Metallic asteroid Local for67, current [metallic source notes](r2mlsp-z-z-t-metallic-asteroid-art-notes.md), actual native class/size/motion/lease and company-disclosure owners, and only the metallic public source row. The shared saved size order is Small/Medium/Large with visual diameters0.5/1/2tiles. Freeze declared variant/canvas/anchor and actual static/animated aliases before genuine views. Native motion reflection does not rotate attachment offsets or grant a saved visual spin. Depleted appearance requires the original company's quantity disclosure; unknown observers retain normal body appearance. Preserve natural body identity and exact outside-part source pixels. No resource reroll, extra lease/hardware, body replacement or art clock.
+
+Context has compacted 1 times while executing this group.
+
+### Group 14BF - Deliver the metallic asteroid source
+
+{{HARD}}
+**Scoped split,2026-10-17.** The original three-family group is split before authoring so each physical model has bounded mandatory reading and acceptance. Original14BF.2/.3 obligations continue unchanged as14BFB/14BFC below; complete all three sequentially before14BG.
+- [X] 14BF.1 Complete Plan14 67.1-67.3 for metallic/Nickel with reviewed original views/sizes/states and provenance.
+
+**Completed metallic source,2026-10-17.** Plan14 67.1-67.3 and `logs/space-metallic-source-verification.json` bind45 focused cases, both native entry boundaries,8 originals and384 reviewed logical poses at all3sizes. Native source canvas96x80 and original static/two-phase aliases retain finite body/disclosure ownership; packed/runtime gates stay open. Continue14BFB.
+
+### Local Mandatory Reading - Carbonaceous asteroid source
+
+_Applies to Group14BFB only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Carbonaceous Local for68, completed metallic public size/conversion contract and the executing carbonaceous public row/native class definition. Reuse only validated helpers/size geometry; author a distinct carbonaceous/Water-Ice body and own state parts. Preserve original finite body/lease/company knowledge owners; do not reload the full metallic authoring diary.
+
+### Group 14BFB - Deliver the carbonaceous asteroid source
+
+{{HARD}}
+- [X] 14BFB.1 Complete the original14BF.2 obligation, Plan14 68.1-68.3, for carbonaceous/Water Ice with distinct reviewed original views/sizes/states and provenance.
+
+**Completed Water-Ice source,2026-10-17.** Plan14 68.1-68.3 and `logs/space-carbonaceous-source-verification.json` bind33 focused cases,8 own originals and384 reviewed logical poses across all3sizes. Exact outside-fissure pixels/opacity and native finite company-disclosure owners are preserved; packed/runtime stay open. Continue14BFC.
+
+### Local Mandatory Reading - Rich asteroid source
+
+_Applies to Group14BFC only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Rich Local for69, completed shared size/conversion contract and the executing rich public row/native class definition. Author a distinct Rare-Earth body and own state parts; preserve native finite reserve/lease/disclosure boundaries. Read only relevant completed helper contracts, not preceding whole-family diaries.
+
+Context has compacted 1 times while executing this group.
+
+### Group 14BFC - Deliver the rich asteroid source
+
+{{HARD}}
+- [X] 14BFC.1 Complete the original14BF.3 obligation, Plan14 69.1-69.3, for rich/Rare Earth with distinct reviewed original views/sizes/states and provenance; retain packing/runtime false until14BG.
+
+**Rich source accepted,2026-10-17.** Plan14 69.1-69.3 and `logs/space-rich-source-verification.json` bind31 focused cases,9 own selected originals and384 reviewed logical poses across all3sizes. Actual violet-specific depletion and distinct gold contact phases pass; original outside-fissure stone/opacity and company-gated native resource ownership remain unchanged. Packed/runtime stay open. Continue14BG.
+
+### Local Mandatory Reading - Final Space packing and native selection
+
+_Applies to Group14BG only._ Read Global/UI Area, completed14BB-14BFC source receipts, Plan14 Remaining conversion and packing Local, existing quantize/GRF/fallback/runtime range owners and actual Space draw/selection boundaries. Append stable native ranges without moving old sprites, compile actual state/role/size selectors and preserve original gameplay fields/RNG/quantities. Require decoded packed loading and checked-in generator-free payload proof before closing original14B.1.
+
+Context has compacted 1 times while executing this group.
+
+### Group 14BG - Pack and bind final Space sprites
+
+{{HARD}}
+- [X] 14BG.1 Convert and validate all required source packing inputs through existing palette/anchor/provenance owners, append protected native ranges and prepare exact actual-loader expectations.
+- [ ] 14BG.2 Bind actual native read-only state/role/size selectors; consolidate both configuration builds, two reproducible actual GRF builds, generator-free packaging and decoded loading proofs with focused selection/owner-isolation checks; then complete original14B.1.
+
+**Shared-build alignment,2026-10-17.** Original14BG.1 actual decoded/fallback proof obligation moves intact to14BG.2 beside the required compiled selectors, avoiding a full native rebuild solely for the loader followed by another rebuild for selectors.14BG.1 now certifies packing INPUTS only:8 focused cases/7.2s,1568 exact crop/anchor round trips, native3599..5166, protected seven old source/header hashes unchanged. Exact fixture expects1568 final +11 unchanged previews. No actual GRF generation, decoding, fallback or runtime acceptance claimed yet. Master14BG/original14B remain unchecked.
+
+**Checkpoint disposition,2026-10-17.** Read-only native selectors, eight focused C++ cases and the separate bounded actual-build/load runner are implemented. The first consolidated RelWithDebInfo build generated the appended GRF, then exposed a missing direct `direction_type.h` include in `space_sprite.h`. The include is corrected. The user explicitly instructed stopping compilation and deferring the rebuild; the active build tree was stopped and no replacement build or native tests were run.14BG.2, original14B.1 and master14BG remain unchecked: both configuration builds, selector checks, two byte-identical actual GRF builds, generator-free packaging and both actual decoded prefix/final loading proofs remain required. See [bounded packing handover](r2mlsp-z-z-w-space-packing-notes.md). This checkpoint creates no native or runtime acceptance claim.
+
+### Local Mandatory Reading - Ordinary-game final Space art review
+
+_Applies to Group14BH only._ Read Global/UI Area, original14B requirements and delivered14BG packed/selector evidence, actual paid/scan/construction/descent source checkpoints and existing native capture provenance. Review required states in ordinary native game with no fixture work/cargo/pose grants. Preserve supplied originals and distinguish source/packed/runtime acceptance; source-plan/master closure requires all Completion Conditions.
+
+### Group 14BH - Review final native Space art
+
+{{HARD}}
+- [ ] 14BH.1 Capture and review actual selection/scan/construction/attachment/mining/return-pod states using final packed sprites in both configurations, retaining original native/pixel/owner evidence.
+- [ ] 14BH.2 Complete original14B.2 and reconcile Plan10/master/parent only after all required art/runtime and Completion Conditions pass; then resume the master's next source group.
 
 ## Consult on Demand
 

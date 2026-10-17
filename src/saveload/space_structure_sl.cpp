@@ -1,12 +1,19 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_structure_sl.cpp Bounded construction and operational Core transport.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-8BC.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B; processor buffers require same-file configured cargo dimensions.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; versioned immutable contained service roles and same-file native part quantities.
  */
 #include "../stdafx.h"
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../space_structure.h"
+#include "../space_vehicle.h"
+#include "../space_mining_tuning.h"
 #include "../orbital_service.h"
+#include "../orbital_manufacturing.h"
+#include "../orbital_recipe.h"
+#include "space_replacement_sl.h"
 #include "../multilayer_state.h"
 #include "../fios.h"
 #include "../map_func.h"
@@ -46,6 +53,7 @@ void ValidateSpaceStructureLoadPreview()
 	if (!rows.empty() && !data.native_tick_present) SlErrorCorrupt("Missing orbital assembly clock preview");
 	if (!ValidateSpaceStructureRecords(rows, data.next_space_structure_generation, data.map_size_x, data.map_size_y, data.native_tick_counter, data.space_structure_retirement_history)) SlErrorCorrupt("Invalid orbital construction preview");
 	if (!ValidateOrbitalServiceUtilityRecords(rows, data.utility_power_state)) SlErrorCorrupt("Invalid orbital service utility preview");
+	if (!ValidateOrbitalManufacturingProductionLinks(rows, data.space_production_rows, data.next_space_structure_generation, data.next_space_vehicle_generation)) SlErrorCorrupt("Invalid orbital manufacture product preview");
 	std::set<CargoPacketID> packets;
 	// Cross-family copied owners must remain exclusive even when no live native pool has been installed.
 	for (const auto &m : data.space_manifest_rows) for (const auto &slot : m.supplies) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital cargo preview owner"); }
@@ -56,12 +64,37 @@ void ValidateSpaceStructureLoadPreview()
 		for (const auto &slot : r.inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital construction packet preview"); }
 		if (r.module) for (const auto &slot : r.module->stock) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated operational Core packet preview"); }
 		if (r.module) {
+			if (r.module->manufacture) {
+				// A manufactured batch remains an exclusive copied owner, including heavy components that do not belong to service/blueprint slots.
+				for (const auto &slot : r.module->manufacture->inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital manufacture packet preview"); }
+				// A pending job owns its planned berth. Completed products and later actual visitors use ordinary same-file native admission instead.
+				for (const auto &order : data.space_order_preview_rows) if (order.queue.approach) {
+					const auto &request = *order.queue.approach;
+					if (request.target == SpaceOrderTarget{SpaceOrderTargetKind::Structure, r.ref.structure.base(), r.ref.generation} && request.slot != UINT8_MAX &&
+						r.module->manufacture->phase != OrbitalManufacturePhase::Complete) SlErrorCorrupt("Occupied orbital manufacture berth preview");
+				}
+			}
 			const auto jobs = r.module->GetServiceJobs();
 			// Both contained berths participate in same-file physical ownership; no second-job reference may hide from preview auditing.
 			for (size_t berth = 0; berth < jobs.size(); ++berth) {
 				const auto &job = *jobs[berth];
 				// Service reservations join cross-family exclusivity before a detached preview can grant valid load status.
 				for (const auto &slot : job.inputs) for (const auto &[id, hop] : slot) { (void)hop; if (!packets.insert(id).second) SlErrorCorrupt("Repeated orbital service packet preview"); }
+				// Sources with detached native CAPA metadata must fund every claimed reserved unit from those exact same-file packet IDs; an open world's stock or a cached quantity cannot fill a missing part.
+				if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerDescents)) {
+					if (!data.native_cargo_packets_present) SlErrorCorrupt("Missing contained service packet quantities preview");
+					const auto &native_packets = data.native_cargo_packet_rows;
+					for (uint i = 0; i < 2; ++i) {
+						uint64_t quantity = 0;
+						for (const auto &[id, hop] : job.inputs[i]) {
+							(void)hop; const auto packet = std::ranges::lower_bound(native_packets, id, {}, &NativeCargoPacketPreview::packet);
+							// Only this original same-file native packet may finance its sole contained owner; a missing or different pool ID grants no work.
+							if (packet == native_packets.end() || packet->packet != id) SlErrorCorrupt("Missing contained service packet preview");
+							quantity += packet->quantity;
+						}
+						if (quantity != job.quantities[i]) SlErrorCorrupt("Invalid contained service packet quantity preview");
+					}
+				}
 				if (job.remaining_ticks != 0) {
 					if (job.craft.generation >= data.next_space_vehicle_generation) SlErrorCorrupt("Unissued orbital service craft preview");
 					/** @param m Copied native manifest. @return Whether it owns the exact job's hull incarnation. */
@@ -74,15 +107,20 @@ void ValidateSpaceStructureLoadPreview()
 					// Removed craft may retain a waiting reservation; a surviving craft must own the same service serial and company.
 					if (live && (craft == data.native_space_vehicle_rows.end() || craft->owner != r.state.owner || manifest == data.space_manifest_rows.end() || manifest->service_ticks != 0 || manifest->services_completed != job.services_at_start)) SlErrorCorrupt("Foreign or changed orbital service craft preview");
 					// A live occupant must be the same paid deployed probe accepted by the physical service command, never a rocket or preview-only hull.
-					if (live && (production == data.space_production_rows.end() || production->state.content_version != MULTILAYER_SPACE_CONTENT_VERSION ||
-						production->state.placement != SpacePlacement::Orbital || (production->state.model != 15 && production->state.model != 19 && production->state.model != 20))) SlErrorCorrupt("Invalid orbital service probe role preview");
+					if (live && (production == data.space_production_rows.end() || !IsSupportedSpaceVehicleContentVersion(production->state.content_version, production->state.model) ||
+						production->state.placement != SpacePlacement::Orbital || !GetSpaceServiceTuning(production->state.model) ||
+						(job.model == UINT16_MAX ? production->state.model == SPACE_HEAVY_MINER_MODEL : production->state.model != job.model))) SlErrorCorrupt("Invalid orbital service probe role preview");
 					if (live) {
+						const auto model = production->state.model;
+						// The heavy's current contained producer requires exhausted allowance, no pending descent and actual holding pose. Genuine older role-unknown jobs cannot borrow this capability.
+						if (model == SPACE_HEAVY_MINER_MODEL && (IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerContainedServices) || manifest->returns_remaining != 0 || manifest->pending_returns != 0 || craft->mining_phase != to_underlying(SpaceMissionPhase::Holding))) SlErrorCorrupt("Invalid heavy contained service state preview");
 						auto point = GetSpaceStructureApproach(r.state);
-						if (r.state.kind == SpaceBuildKind::Dock) {
+						// Both heavy Core jobs and every Dock job retain their original precise shared berth; historical Core jobs preserve their older coordinate-only admission.
+						if (r.state.kind == SpaceBuildKind::Dock || model == SPACE_HEAVY_MINER_MODEL) {
 							point.x += static_cast<int32_t>(berth) * (SPACE_Q16 / 2);
 							/** @param row Same-file native queue. @return Whether it belongs to this exact retained service craft. */
 							const auto queue = std::ranges::find_if(data.space_order_preview_rows, [&](const auto &row) { return row.vehicle == job.craft.vehicle && row.generation == job.craft.generation; });
-							// A new Dock job must retain its own exact admitted physical slot, including while power is paused; legacy Core jobs need no new implicit reservation.
+							// A current heavy Core or Dock job must retain its own exact admitted physical slot, including while power is paused; legacy Core jobs need no new implicit reservation.
 							if (queue == data.space_order_preview_rows.end() || !queue->queue.approach || queue->queue.approach->target != SpaceOrderTarget{SpaceOrderTargetKind::Structure, r.ref.structure.base(), r.ref.generation} ||
 								queue->queue.approach->slot != berth) SlErrorCorrupt("Invalid orbital Dock berth preview");
 						}
@@ -122,16 +160,28 @@ struct SPSTChunkHandler : ChunkHandler {
 			Write(job.quantities[i], 2); Write(job.inputs[i].size(), 2);
 			for (const auto &[packet, hop] : job.inputs[i]) { Write(packet.base(), 4); Write(hop.base(), 2); }
 		}
+		Write(job.model, 2); // Append436 after the complete older job, preserving original fields and unknown legacy role without inference.
 	}
 	/** Serialize validated native owners, preserving exact packet identity and activation countdown. */
 	void Save() const override
 	{
 		if (!ValidateSpaceStructures()) SlErrorCorrupt("Invalid orbital construction on save");
-		const auto rows = CaptureSpaceStructures(); size_t length = 42 + 62 * rows.size();
+		const auto rows = CaptureSpaceStructures();
+		// Validate copied clone/source/product epochs and bounded text before deriving lengths or writing presence bytes; serialization cannot publish malformed retained intent.
+		if (!ValidateOrbitalManufacturingProductionLinks(rows, CaptureSpaceProduction(), GetNextSpaceStructureGeneration(), GetNextSpaceVehicleGeneration())) SlErrorCorrupt("Invalid orbital manufacture intent on save");
+		size_t length = 42 + 62 * rows.size();
 		// Exact transport length includes every retained packet reference, never cargo quantity as a packet surrogate.
 		for (const auto &r : rows) for (const auto &slot : r.inputs) length += 6 * slot.size();
 		for (const auto &r : rows) if (r.module) {
-			length += 5 + 56 + 4 + 10 + 39;
+			length += 5 + 56 + 4 + 10 + 39 + 9 + 4; // Two contained jobs each append their original immutable role in436.
+			if (r.module->manufacture) {
+				length += 90; // Original50-byte reservation plus427 paid work, completion identity and four-label consumed receipt.
+				for (const auto &slot : r.module->manufacture->inputs) length += 6 * slot.size();
+				const auto &clone = r.module->manufacture->clone;
+				length += 1; // Append428 records absence explicitly; ordinary purchases retain no inferred clone intent.
+				if (clone) length += 14 + clone->name.size() + 14 * clone->orders.size();
+				length += SpaceReplacementTransportLength(r.module->manufacture->replacement);
+			}
 			for (const auto &slot : r.module->stock) if (!slot.empty()) length += 5 + 6 * slot.size();
 			for (const auto *job : r.module->GetServiceJobs()) for (const auto &slot : job->inputs) length += 6 * slot.size();
 		}
@@ -161,6 +211,33 @@ struct SPSTChunkHandler : ChunkHandler {
 				// Append421 preserves the complete older module prefix; old modules acquire neither a source connection nor a second job.
 				Write(m.utility_source.structure.base(), 2); Write(m.utility_source.generation, 8);
 				WriteService(m.dock_service);
+				// Append426 after the complete older facility payload; old saves acquire neither a request nor a new order serial.
+				Write(m.manufacture_serial, 8); Write(m.manufacture.has_value(), 1);
+				if (m.manufacture) {
+					const auto &job = *m.manufacture;
+					Write(to_underlying(job.phase), 1); Write(job.model, 2); Write(job.serial, 8);
+					Write(job.source.structure.base(), 2); Write(job.source.generation, 8); Write(job.capital_paid, 4); Write(job.berth, 1); Write(job.reservation_interval, 8);
+					// Every declared heavy/common input retains its own exact packet references; reserved quantities never become manufactured cargo on load.
+					for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) {
+						Write(job.quantities[input], 2); Write(job.inputs[input].size(), 2);
+						for (const auto &[packet, hop] : job.inputs[input]) { Write(packet.base(), 4); Write(hop.base(), 2); }
+					}
+					// Append427 only after the complete426 packet owner; old reservations acquire zero work, consumption or product.
+					Write(job.work_ticks, 4); Write(job.last_work_interval, 8); Write(job.work_energy_j, 8);
+					Write(job.product.vehicle.base(), 4); Write(job.product.generation, 8);
+					for (const auto quantity : job.consumed) Write(quantity, 2);
+					Write(job.clone.has_value(), 1);
+					if (job.clone) {
+						const auto &clone = *job.clone;
+						Write(clone.source.vehicle.base(), 4); Write(clone.source.generation, 8);
+						Write(clone.name.size(), 1);
+						// Serialize bounded captured text/instructions only: no source cargo, mutable action progress or shared queue identity can enter this owner.
+						for (const auto byte : clone.name) Write(static_cast<uint8_t>(byte), 1);
+						Write(clone.orders.size(), 1);
+						for (const auto &order : clone.orders) { Write(to_underlying(order.action), 1); Write(to_underlying(order.target.kind), 1); Write(order.target.id, 4); Write(order.target.generation, 8); }
+					}
+					WriteSpaceReplacementTransport(job.replacement, Write);
+				}
 			}
 			// Every native row carries the exact fractional milestone and tick receipt, including portable Core and cancelled jobs.
 			Write(r.work_fraction, 2); Write(r.work_remainder, 2); Write(r.last_work_tick, 8); Write(r.last_work_interval, 8);
@@ -175,8 +252,13 @@ struct SPSTChunkHandler : ChunkHandler {
 		const bool milestones = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalAssemblyMilestones);
 		const bool docks = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalDockServices);
 		const bool retired = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalModuleRetirement);
+		const bool manufacturing = !IsSavegameVersionBefore(SaveLoadVersion::OrbitalManufacturingReservations);
+		const bool heavy_service = !IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerContainedServices);
 		const size_t header_length = retired ? 42 : 10;
-		const size_t row_limit = 47 + 56 + 12 + 24 + 6 * 128 + NUM_CARGO * (5 + 6 * 64) + (docks ? 49 + 12 : 0);
+		const size_t row_limit = 47 + 56 + 12 + 24 + 6 * 128 + NUM_CARGO * (5 + 6 * 64) + (docks ? 49 + 12 : 0) + (heavy_service ? 4 + 24 : 0) +
+			(manufacturing ? 9 + 50 + (IsSavegameVersionBefore(SaveLoadVersion::OrbitalManufacturingMaterialization) ? 0 : 40) +
+				(IsSavegameVersionBefore(SaveLoadVersion::OrbitalManufacturingClones) ? 0 : 15 + MAX_SPACE_CLONE_NAME_BYTES + 14 * MAX_SPACE_ORDERS) +
+				(IsSavegameVersionBefore(SaveLoadVersion::SpaceReplacementSettlement) ? 0 : 21) + 6 * 64 * MAX_ORBITAL_MANUFACTURE_INPUTS : 0);
 		// Bound the whole family before allocating records; older saves cannot smuggle newer facility payloads.
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceConstructionJobs) || length < header_length || length > header_length + SpaceStructureID::End().base() * row_limit) SlErrorCorrupt("Invalid orbital construction length");
 		size_t consumed = 0;
@@ -188,12 +270,14 @@ struct SPSTChunkHandler : ChunkHandler {
 			const auto paused = read(1); job.last_work_interval = read(8); job.services_at_start = read(8);
 			if (paused > 1) SlErrorCorrupt("Invalid orbital service flags");
 			job.paused = paused != 0;
-			// One actual part per label bounds the saved packet count independently of byte framing and claimed quantities.
+			// Source-era bounds admit at most two real references per heavy input, while genuine older service keeps its original one-reference cap. Actual role/bill and native quantities validate after the complete row.
 			for (uint i = 0; i < 2; ++i) {
 				job.quantities[i] = static_cast<uint16_t>(read(2)); const auto packets = read(2);
-				if (packets > 1) SlErrorCorrupt("Invalid orbital service packet count");
+				if (packets > (heavy_service ? 2 : 1)) SlErrorCorrupt("Invalid orbital service packet count");
 				for (uint k = 0; k < packets; ++k) job.inputs[i].push_back({CargoPacketID{static_cast<uint32_t>(read(4))}, StationID{static_cast<uint16_t>(read(2))}});
 			}
+			// Genuine old jobs retain unknown instead of borrowing a surviving hull's current model; that conservative role and the complete original paid fields survive the first ordinary upgrade resave.
+			if (heavy_service) job.model = static_cast<uint16_t>(read(2));
 		};
 		StructureTransport t; t.next = read(8); const auto count = read(2);
 		if (retired) {
@@ -207,6 +291,8 @@ struct SPSTChunkHandler : ChunkHandler {
 			SpaceStructureRecord r; r.ref = {SpaceStructureID{static_cast<uint16_t>(read(2))}, read(8)}; auto &s = r.state;
 			s.owner = Owner{static_cast<uint8_t>(read(1))}; s.kind = static_cast<SpaceBuildKind>(read(1)); s.phase = static_cast<SpaceStructurePhase>(read(1));
 			s.x = static_cast<uint16_t>(read(2)); s.y = static_cast<uint16_t>(read(2)); s.content_version = static_cast<uint16_t>(read(2)); s.capital_paid = static_cast<uint32_t>(read(4));
+			// New content cannot be smuggled into an older SDEF2 file by editing only its global identity; genuine older construction receipts remain exact2.
+			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning) && s.content_version > MULTILAYER_SPACE_LEGACY_CONTENT_VERSION) SlErrorCorrupt("Future orbital construction provenance in old save");
 			r.work_ticks = static_cast<uint32_t>(read(4)); r.age_ticks = static_cast<uint16_t>(read(2));
 			// Preserve each recipe slot's consumed receipt, current count and exact physical packet references.
 			for (uint i = 0; i < 2; ++i) {
@@ -221,6 +307,8 @@ struct SPSTChunkHandler : ChunkHandler {
 					// Older binaries only supported contained Core facilities; an older save cannot smuggle newly usable extension functions.
 					if (IsSavegameVersionBefore(SaveLoadVersion::OrbitalModuleActivation) && s.kind != SpaceBuildKind::Core) SlErrorCorrupt("Invalid orbital extension activation version");
 					if (!docks && s.kind == SpaceBuildKind::Dock) SlErrorCorrupt("Invalid orbital Dock activation version");
+					// Passive processor buffers need this file's configured cargo meanings; earlier saves cannot supply the independently bounded role metadata.
+					if (IsOrbitalRecipeKind(s.kind) && IsSavegameVersionBefore(SaveLoadVersion::SpaceCargoDimensions)) SlErrorCorrupt("Unsupported orbital processor buffer version");
 					r.module.emplace(); auto &m = *r.module;
 					m.activation_ticks = static_cast<uint16_t>(read(2)); m.age_ticks = static_cast<uint16_t>(read(2)); const auto slots = read(1);
 					if (slots > NUM_CARGO) SlErrorCorrupt("Invalid orbital Core cargo count");
@@ -243,6 +331,47 @@ struct SPSTChunkHandler : ChunkHandler {
 					if (docks) {
 						m.utility_source = {SpaceStructureID{static_cast<uint16_t>(read(2))}, read(8)};
 						read_service(m.dock_service);
+					}
+					// Earlier runtimes could retain an inert Assembly frame but could never activate it or issue its work connection.
+					if (s.kind == SpaceBuildKind::Assembly && IsSavegameVersionBefore(SaveLoadVersion::OrbitalAssemblyFacilities)) SlErrorCorrupt("Invalid orbital Assembly facility version");
+					if (manufacturing) {
+						m.manufacture_serial = read(8); const auto present_job = read(1);
+						if (present_job > 1) SlErrorCorrupt("Invalid orbital manufacture presence");
+						if (present_job != 0) {
+							auto &job = m.manufacture.emplace(); job.phase = static_cast<OrbitalManufacturePhase>(read(1)); job.model = static_cast<uint16_t>(read(2)); job.serial = read(8);
+							// Before431 no paid heavy-miner request existed, even while still queued without a hull receipt. Both native load and copied preview reject that future producer identity before publishing work or inputs.
+							if (IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning) && job.model >= 21) SlErrorCorrupt("Future orbital manufacture model in old save");
+							job.source = {SpaceStructureID{static_cast<uint16_t>(read(2))}, read(8)}; job.capital_paid = static_cast<uint32_t>(read(4));
+							job.berth = static_cast<uint8_t>(read(1)); job.reservation_interval = read(8);
+							// Bound all four packet lists before allocating copied vectors; model/quantity/source semantics validate together after complete decoding.
+							for (size_t input = 0; input < MAX_ORBITAL_MANUFACTURE_INPUTS; ++input) {
+								job.quantities[input] = static_cast<uint16_t>(read(2)); const auto packets = read(2);
+								if (packets > 64 || packets * 6 > length - consumed) SlErrorCorrupt("Invalid orbital manufacture packet count");
+								for (uint packet = 0; packet < packets; ++packet) job.inputs[input].push_back({CargoPacketID{static_cast<uint32_t>(read(4))}, StationID{static_cast<uint16_t>(read(2))}});
+							}
+							if (!IsSavegameVersionBefore(SaveLoadVersion::OrbitalManufacturingMaterialization)) {
+								job.work_ticks = static_cast<uint32_t>(read(4)); job.last_work_interval = read(8); job.work_energy_j = read(8);
+								job.product = {VehicleID{static_cast<uint32_t>(read(4))}, read(8)};
+								for (auto &quantity : job.consumed) quantity = static_cast<uint16_t>(read(2));
+							}
+							if (!IsSavegameVersionBefore(SaveLoadVersion::OrbitalManufacturingClones)) {
+								const auto present = read(1);
+								if (present > 1) SlErrorCorrupt("Invalid orbital clone presence");
+								if (present != 0) {
+									auto &clone = job.clone.emplace();
+									clone.source = {VehicleID{static_cast<uint32_t>(read(4))}, read(8)};
+									const auto name_length = read(1);
+									if (name_length > MAX_SPACE_CLONE_NAME_BYTES) SlErrorCorrupt("Invalid orbital clone name length");
+									clone.name.reserve(name_length);
+									// Admit byte/count bounds before allocating copied containers; full/preview semantics then validate UTF-8, roles and same-file issuance together.
+									for (uint byte = 0; byte < name_length; ++byte) clone.name.push_back(static_cast<char>(read(1)));
+									const auto orders = read(1);
+									if (orders > MAX_SPACE_ORDERS) SlErrorCorrupt("Invalid orbital clone order count");
+									for (uint order = 0; order < orders; ++order) clone.orders.push_back({static_cast<SpaceOrderAction>(read(1)), {static_cast<SpaceOrderTargetKind>(read(1)), static_cast<uint32_t>(read(4)), read(8)}});
+								}
+							}
+							if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceReplacementSettlement)) job.replacement = ReadSpaceReplacementTransport(read);
+						}
 					}
 				}
 			} else if (s.kind != SpaceBuildKind::Core) {

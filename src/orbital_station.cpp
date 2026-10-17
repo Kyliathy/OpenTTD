@@ -1,10 +1,14 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_station.cpp Delivered construction, Core activation and native inventory aging.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; original unique builder progress queried for presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6/10B; processor activation grants only canonical bounded recipe buffers.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; normal synchronized inventory callbacks also settle bounded processing work.
  */
 #include "stdafx.h"
 #include "orbital_station.h"
 #include "orbital_service.h"
+#include "orbital_manufacturing.h"
+#include "orbital_recipe.h"
 #include "space_structure.h"
 #include "space_approach.h"
 #include "space_structure_cmd.h"
@@ -21,6 +25,11 @@
 #include "transport_tube.h"
 #include "timer/timer_game_tick.h"
 #include "safeguards.h"
+
+/** @copydoc OrbitalModule::OrbitalModule */
+OrbitalModule::OrbitalModule() = default;
+/** @copydoc OrbitalModule::~OrbitalModule */
+OrbitalModule::~OrbitalModule() = default;
 
 static uint64_t construction_prepared_tick = UINT64_MAX; ///< Transient native-loop admission; never persisted as progress or energy.
 
@@ -177,7 +186,7 @@ bool HasOrbitalConstructionInputs(const SpaceStructure &site)
 static bool ReadyProbe(const SpaceVehicle &v, const SpaceStructure &site)
 {
 	return Company::IsValidID(v.owner) && v.owner == site.state.owner && GetSpaceVehicleModel(v) == 20 &&
-		v.construction.content_version == MULTILAYER_SPACE_CONTENT_VERSION && v.manifest != nullptr &&
+		IsSupportedSpaceVehicleContentVersion(v.construction.content_version, 20) && v.manifest != nullptr &&
 		v.construction.placement == SpacePlacement::Orbital && !v.vehstatus.Test(VehState::Stopped) && !v.vehstatus.Test(VehState::Crashed) &&
 		v.manifest->service_ticks == 0 && !HasOrbitalServiceAssignment(v) && GetSpaceStructureBerth(v, site).has_value();
 }
@@ -297,6 +306,28 @@ static void ApplyConstructionProgress(SpaceStructure &site, const OrbitalConstru
 	site.job.last_work_tick = TimerGameTick::counter; site.job.last_work_interval = interval;
 }
 
+/** @copydoc GetSpaceConstructionVisualWork */
+std::optional<uint32_t> GetSpaceConstructionVisualWork(const SpaceVehicle &probe)
+{
+	const auto *site = ConstructionTarget(probe);
+	// Presentation must retain native physical/role/material admission. A coincident craft, missing input or stopped builder cannot borrow another job's progress.
+	if (site == nullptr || !ReadyProbe(probe, *site) || !HasOrbitalConstructionInputs(*site)) return std::nullopt;
+	const bool committed = site->job.last_work_tick != 0 && site->job.last_work_tick == TimerGameTick::counter;
+	// A grant consumed earlier in this exact native opportunity is a real work receipt, not permission to consume it twice. Before commitment the original eligibility query remains authoritative.
+	if (!committed && !IsSpaceConstructionWorkTick(probe)) return std::nullopt;
+	if (site->state.kind == SpaceBuildKind::Core) {
+		// The same lowest-ID portable worker as native execution owns the visible step; another ready builder may not display borrowed committed work.
+		for (const auto *other : SpaceVehicle::Iterate()) {
+			if (other->index < probe.index && ConstructionTarget(*other) == site && ReadyProbe(*other, *site)) return std::nullopt;
+		}
+	} else {
+		const auto *core = GetOrbitalConstructionCore(site->state);
+		// Extension construction retains the one actual Core work slot and its selected physical builder even after the ledger grant has been spent.
+		if (core == nullptr || CoreConstructionProbe(*core) != &probe) return std::nullopt;
+	}
+	return site->job.work_ticks;
+}
+
 /** Complete physical assembly participant; the shared owner commits its exact source debit with the same saved work milestone. */
 class OrbitalConstructionStep final : public UtilityMutationParticipant {
 	SpaceStructure &site;
@@ -357,7 +388,8 @@ bool IsOrbitalModuleOperational(const SpaceStructure &site)
 /** @copydoc IsSupportedOrbitalModuleKind */
 bool IsSupportedOrbitalModuleKind(SpaceBuildKind kind)
 {
-	return kind == SpaceBuildKind::Core || kind == SpaceBuildKind::Storage || kind == SpaceBuildKind::Power || kind == SpaceBuildKind::Dock;
+	return kind == SpaceBuildKind::Core || kind == SpaceBuildKind::Storage || kind == SpaceBuildKind::Power ||
+		kind == SpaceBuildKind::Dock || kind == SpaceBuildKind::Assembly || IsOrbitalRecipeKind(kind);
 }
 
 /** @copydoc GetOrbitalModuleServiceCapacity */
@@ -371,7 +403,8 @@ uint8_t GetOrbitalModuleServiceCapacity(SpaceBuildKind kind)
 /** @copydoc GetOrbitalModuleStockLimit */
 uint16_t GetOrbitalModuleStockLimit(SpaceBuildKind kind)
 {
-	// Only an explicit storage role grants freight capacity; a power panel cannot double as free general storage.
+	// Processing owns only its bounded recipe buffers. The existing generic storage roles retain their original whole-label bound; a panel grants no freight room.
+	if (IsOrbitalRecipeKind(kind)) return GetMultiLayerSpaceBudget().stock_cap;
 	return kind == SpaceBuildKind::Core || kind == SpaceBuildKind::Storage || kind == SpaceBuildKind::Dock ? GetMultiLayerSpaceBudget().stock_cap : 0;
 }
 
@@ -394,6 +427,7 @@ uint16_t GetOrbitalModuleCargoCapacity(const SpaceStructure &site, CargoType car
 {
 	// An inert/unowned Core and an unresolved cargo label supply no usable capacity.
 	if (!IsOrbitalModuleOperational(site) || !IsValidCargoType(cargo)) return 0;
+	if (IsOrbitalRecipeKind(site.state.kind)) return GetOrbitalRecipeCargoCapacity(site.state.kind, CargoSpec::Get(cargo)->label);
 	return GetOrbitalModuleStockLimit(site.state.kind);
 }
 
@@ -414,6 +448,8 @@ bool InsertOrbitalPacketOwners(std::set<CargoPacketID> &owned)
 		for (const auto &slot : site->job.inputs) if (!insert(slot)) return false;
 		if (site->module) for (const auto &slot : site->module->stock) if (!insert(slot)) return false;
 		if (site->module) for (const auto *job : site->module->GetServiceJobs()) for (const auto &slot : job->inputs) if (!insert(slot)) return false;
+		// The contained manufacturing batch is another exclusive physical owner, including heavy component labels that service/construction do not hold.
+		if (site->module && site->module->manufacture) for (const auto &slot : site->module->manufacture->inputs) if (!insert(slot)) return false;
 	}
 	return true;
 }
@@ -442,7 +478,12 @@ void TickOrbitalConstructionInventory()
 			// Age every physical cargo label once; GUI polling and service queries never age or recreate stock.
 			for (auto &slot : module.stock) HubCargoTransfer::Age(slot);
 			for (auto *job : module.GetServiceJobs()) for (auto &slot : job->inputs) HubCargoTransfer::Age(slot);
+			// Reserved manufacturing packets retain ordinary age/provenance in their sole container during pauses and power outages.
+			if (module.manufacture) for (auto &slot : module.manufacture->inputs) HubCargoTransfer::Age(slot);
 		}
 	}
 	TickOrbitalServices();
+	TickOrbitalManufacturingReservations();
+	TickOrbitalManufacturingWork();
+	TickOrbitalRecipes();
 }

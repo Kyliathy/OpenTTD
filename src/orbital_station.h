@@ -1,22 +1,30 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_station.h Native construction and completed Core inventory.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only original builder work presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-8BB.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; immutable contained service roles preserve actual bills after sender loss.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; a native module contains its sole private processing metadata/work owner.
  */
 #ifndef ORBITAL_STATION_H
 #define ORBITAL_STATION_H
 #include "cargopacket.h"
 #include "cargotype.h"
 #include "space_production.h"
+#include "space_clone.h"
 #include "multilayer_utility.h"
 #include "utility_power.h"
 #include "multilayer_space_content.h"
 #include "space_structure_type.h"
 #include <array>
 #include <set>
+#include <memory>
+#include <optional>
 
 struct SpaceStructure;
 struct SpaceStructureState;
 struct SpaceVehicle;
+/** Sole private recipe-progress metadata; native module stock remains the only physical processing cargo owner. */
+struct OrbitalRecipeState;
 /** Saved physical assembly progress, expressed in whole and fractional canonical work ticks.
  * The remainder preserves exact conversion from whole joules to Q16 work;
  * it owns no energy balance or grant. The shared utility ledger owns energy.
@@ -48,6 +56,7 @@ struct OrbitalServiceState {
 	bool paused = false; ///< Explicit player pause retains every reserved part.
 	uint64_t last_work_interval = 0; ///< Prevents a second work debit in the same shared allocation epoch.
 	uint64_t services_at_start = 0; ///< Exact native manifest serial renewed by this job once.
+	uint16_t model = UINT16_MAX; ///< Original immutable service role; unknown preserves genuine pre436 one-part/148tick jobs without guessing a surviving or lost sender's role.
 };
 /** One contained berth/job owns actual RFMT/ELEC until completion or explicit cancellation. */
 struct OrbitalServiceJob : OrbitalServiceState {
@@ -58,25 +67,61 @@ struct OrbitalServiceRecord : OrbitalServiceState {
 	std::array<uint16_t, 2> quantities{};
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, 2> inputs;
 };
+inline constexpr size_t MAX_ORBITAL_MANUFACTURE_INPUTS = 4; ///< Heavy recipes retain their declared components beside Steel/Goods.
+/** A paid request waits for a genuine shared grant before acquiring any physical input; reservation itself performs no work. */
+enum class OrbitalManufacturePhase : uint8_t { Queued, Reserved, Working, AwaitingMaterialization, Complete, End };
+/** Saved request identity and admission receipt, contained by one native Assembly incarnation. */
+struct OrbitalManufactureState {
+	OrbitalManufacturePhase phase = OrbitalManufacturePhase::Queued;
+	uint16_t model = UINT16_MAX; ///< Immutable profile model, never an Engine or fabricated hull identity.
+	uint64_t serial = 0; ///< Monotonic order within the containing native facility.
+	SpaceStructureRef source; ///< Exact adjacent stock owner; source deletion requires explicit job cancellation.
+	uint32_t capital_paid = 0; ///< Capital charged by the original synchronized request, without a second reservation debit.
+	uint8_t berth = 0; ///< Planned physical Assembly slot, owned through shared approach arbitration.
+	uint64_t reservation_interval = 0; ///< Actual allocation epoch admitting the complete material reservation; zero while queued.
+	uint32_t work_ticks = 0; ///< Paid whole opportunities, retained while final pool/engine/unit/berth admission waits.
+	uint64_t last_work_interval = 0; ///< Original common epoch of the last paid opportunity; loading/repeated callbacks cannot repeat it.
+	uint64_t work_energy_j = 0; ///< Exact common-ledger energy consumed by this job, never a second electrical account.
+	SpaceCraftRef product; ///< Once-only completed native hull incarnation; absent until the prepared completion commit.
+	std::array<uint16_t, MAX_ORBITAL_MANUFACTURE_INPUTS> consumed{}; ///< Full recipe receipt at completion; every input remains physically reserved until then.
+	std::optional<SpaceCloneIntent> clone; ///< Independent captured configuration for one newly paid clone, never ownership of its historical source's assets.
+	std::optional<SpaceReplacementIntent> replacement; ///< Original hull/retirement receipt for this paid replacement; mutually exclusive with clone intent and never a second asset owner.
+};
+/** One actual queued/reserved manufacturing job owns up to four exclusive physical recipe inputs. */
+struct OrbitalManufactureJob : OrbitalManufactureState {
+	std::array<StationCargoList, MAX_ORBITAL_MANUFACTURE_INPUTS> inputs{};
+};
+/** Detached manufacturing transport references existing packets; decoding cannot commission a request or reserve stock. */
+struct OrbitalManufactureRecord : OrbitalManufactureState {
+	std::array<uint16_t, MAX_ORBITAL_MANUFACTURE_INPUTS> quantities{};
+	std::array<std::vector<std::pair<CargoPacketID, StationID>>, MAX_ORBITAL_MANUFACTURE_INPUTS> inputs;
+};
 /** Actual module utility identities and completion receipt; energy remains solely in the shared ledger. */
 struct OrbitalFacilityState {
 	UtilityProducerID producer{UINT32_MAX}; ///< Original paid panel; older inventory-only cores require explicit commissioning.
-	UtilityConsumerID consumer{UINT32_MAX}; ///< Original bounded service consumer: one Core job or two explicitly connected Dock jobs.
-	UtilityConsumerID assembly_consumer{UINT32_MAX}; ///< One bounded construction slot; shares the actual panel with the separate service berth.
+	UtilityConsumerID consumer{UINT32_MAX}; ///< Original bounded work consumer: one Core service job, two Dock service jobs or one explicitly connected750J Assembly slot.
+	UtilityConsumerID assembly_consumer{UINT32_MAX}; ///< Core-only bounded construction slot, sharing its original panel with the separate service berth; never the Assembly manufacturing connection.
 	bool power_enabled = true; ///< Physical panel availability; disabling it publishes zero generation.
 	uint64_t services_completed = 0; ///< Once-only local service completion receipt.
-	SpaceStructureRef utility_source; ///< Explicit Dock connection to an original adjacent owned panel; absent for other module roles.
+	SpaceStructureRef utility_source; ///< Explicit Dock/Assembly connection to an original adjacent owned Core/Power panel; absent for other module roles.
 };
 /** Completed module facilities, contained by their generation-qualified native structure.
  * Activation has no free cargo, vehicle or power grant. Inventory remains inert
  * until the saved countdown finishes; operational stock never reuses job inputs.
  */
 struct OrbitalModule : OrbitalFacilityState {
+	/** Construct empty native containers; incomplete recipe metadata is owned through its out-of-line lifetime boundary. */
+	OrbitalModule();
+	/** Destroy private recipe metadata with its actual native module; accountable packets still follow SpaceStructure lifecycle admission. */
+	~OrbitalModule();
 	std::array<StationCargoList, NUM_CARGO> stock{}; ///< Sole physical owner of completed-module cargo.
 	uint16_t activation_ticks = 0; ///< Remaining synchronized activation work, zero means ready.
 	uint16_t age_ticks = 0; ///< Native cargo-aging remainder, independent of UI refresh.
 	OrbitalServiceJob service; ///< First Core/Dock berth and its reserved physical inputs.
 	OrbitalServiceJob dock_service; ///< Second contained Dock berth; other module roles retain its canonical empty state.
+	uint64_t manufacture_serial = 0; ///< Last issued order, retained after explicit cancellation to prevent order-ID reuse.
+	std::unique_ptr<OrbitalManufactureJob> manufacture; ///< Sole optional manufacturing packet owner; never a temporary Vehicle.
+	std::unique_ptr<OrbitalRecipeState> processing; ///< Sole generation-qualified recipe/work/history owner; processor packets remain in stock above.
 	/** @return Every contained physical service owner for packet/lifecycle audits; capacity remains role-specific. */
 	std::array<OrbitalServiceJob *, 2> GetServiceJobs() { return {&this->service, &this->dock_service}; }
 	/** @return Read-only contained service owners; querying this array grants no operational berth. */
@@ -89,6 +134,8 @@ struct OrbitalModuleRecord : OrbitalFacilityState {
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, NUM_CARGO> stock;
 	OrbitalServiceRecord service;
 	OrbitalServiceRecord dock_service;
+	uint64_t manufacture_serial = 0; ///< Same-file native order issuance; loading never increments it.
+	std::optional<OrbitalManufactureRecord> manufacture;
 	/** @return Both detached service records, including the canonical empty second record for old/non-Dock modules. */
 	std::array<OrbitalServiceRecord *, 2> GetServiceJobs() { return {&this->service, &this->dock_service}; }
 	/** @return Read-only detached service owners for same-file preview and physical exclusivity checks. */
@@ -127,6 +174,11 @@ void ResetOrbitalConstructionTick();
 void AppendOrbitalConstructionRequests(std::vector<UtilityPowerRequest> &requests);
 /** @param probe Actual builder. @return Whether this tick authorizes construction work/upkeep. */
 bool IsSpaceConstructionWorkTick(const SpaceVehicle &probe);
+/** Read actual eligible or just-committed builder work for presentation without spending its grant again.
+ * @param probe Original native builder; the owner's precise site and unique Core/tooling admission still apply.
+ * @return Original whole work progress for that builder, or absence while stopped, waiting or not the selected worker.
+ */
+std::optional<uint32_t> GetSpaceConstructionVisualWork(const SpaceVehicle &probe);
 /** @param site Native blueprint. @return Whether every canonical recipe input is physically present. */
 bool HasOrbitalConstructionInputs(const SpaceStructure &site);
 /** Resolve the deterministic physical Core supplying an adjacent module's construction dependency.
