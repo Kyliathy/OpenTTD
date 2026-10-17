@@ -10,9 +10,9 @@
  * leg of unloading (Group 8.1), the logistics waits that pause new cutting (Group 9.3), the staged acceptance of a
  * loaded store (Group 10) and the lifecycle rules for sale, refit, autoreplace, deletion, bays and companies (Group 11).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
  */
 
 #include "stdafx.h"

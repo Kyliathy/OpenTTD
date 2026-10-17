@@ -9,7 +9,7 @@
  * The material participant is an interface fixture: it proves the geology transaction boundary, not the later
  * actual-wagon commissioning (Plan 4 Groups 6-8 and R2MLVS3MP Group 7).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 14B
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  */
 
 #include "../stdafx.h"

@@ -9,7 +9,7 @@
  * admission never exceeds the free stock or the interval allowance and charges exactly the admitted tonnes once; each
  * interval disposes, crushes or (when chosen) disposes surplus Rock; and a station's room is its catchment's receivers.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Frozen recipe and Bounded intake
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Frozen recipe and Bounded intake
  */
 
 #include "../stdafx.h"

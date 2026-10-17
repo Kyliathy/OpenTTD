@@ -592,7 +592,7 @@ _Applies to Group 3._
 - [x] 3.5 `src/industry_cmd.cpp` and `src/object_cmd.cpp`: convert placement loops, `Map::MaxY()` bounds and budgets to surface plane semantics (C2, C3, C4).
 - [x] 3.6 `src/water_cmd.cpp` (`ConvertGroundTilesIntoWaterTiles` and the flood checks): surface-only (C2).
 - [x] 3.7 `src/disaster_vehicle.cpp`: target tiles, start positions and `Map::MaxY()` bounds use the surface plane (C2, C3).
-- [x] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4. All ten Surface prefixes match for all four final worlds; R2RVM2 task 18.1 and [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests).
+- [x] 3.8 Build, regenerate the four baseline saves, and diff digests against `baseline-digests.txt`; any difference blocks Group 4. All ten Surface prefixes match for all four final worlds; R2RVM2 task 18.1 and [tools/final-layer-save-digests.txt](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#final-layer-save-digests).
 
 ### Area Mandatory Reading - Savegame conversions
 
@@ -668,7 +668,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [src/viewport.cpp](../../../../src/viewport.cpp) | 1195-1320 | `GetViewportY` and `ViewportAddLandscape`: the main C7 site, recorded only; its migration is r2mlm5 Group 2. |
 | [src/saveload/map_sl.cpp](../../../../src/saveload/map_sl.cpp) | 22-95 | `_map_desc`, `MAPSChunkHandler`, `MAPTChunkHandler`: the C8 pattern repeated by every plane chunk; recorded only, migrated by r2mlm4 Group 5. |
-| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). The neutrality reference for task 8.6. |
+| [docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). The neutrality reference for task 8.6. |
 
 ### Group 8 - Deferred records and verification
 
@@ -682,7 +682,7 @@ Closure, 2026-10-04: task 8.7's year-long player-route operator run is skipped u
 
   Verified 2026-10-04 against the integrated tree: both targets/configurations build with exit 0 and zero compiler warnings; both unit runs pass 110/110. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. Surface digest and runtime checks remain open; this does not recreate the earlier one-layer staging build.
 - [x] 8.5 Add to `src/tests/map_layer.cpp` tests for the migrated helpers on a three-layer map: spiral search, `OrthogonalTileArea::Expand`, `GetTileSlopeZ` neighbours and `ProjectToSurface` all stay in the expected layer.
-- [x] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6). All four final worlds match every Surface chunk, R2RVM2 task 18.1; full digest lines are in [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests).
+- [x] 8.6 Regenerate the four baseline saves and compare digests with `baseline-digests.txt`; they must match (I-6). All four final worlds match every Surface chunk, R2RVM2 task 18.1; full digest lines are in [tools/final-layer-save-digests.txt](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#final-layer-save-digests).
 - [s] 8.7 Play a new game for one in-game year at fast forward in a Debug build with towns, industries and a few player routes; confirm no assert fires.
 
 ## Consult on Demand

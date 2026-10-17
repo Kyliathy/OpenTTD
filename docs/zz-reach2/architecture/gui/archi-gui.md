@@ -216,7 +216,7 @@ sequenceDiagram
 
 ## Invariants
 
-TBM player-flow acceptance (2026-10-09) is recorded in [R2TBMF ZB](../../upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md). Native mouse dispatch opens the compact palette and actual project list, previews/extends the same machine, selects a compatible native hangar and releases settled work. Renderers and previews read geometry/material owners; synchronized commands alone publish work, paid portal handover and vehicle travel intent. The linked399 files continue through fifty cuts, local exit construction and public traffic with the cutter retained in B's magazine.
+TBM player-flow acceptance (2026-10-09) is recorded in [R2TBMF ZB](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md). Native mouse dispatch opens the compact palette and actual project list, previews/extends the same machine, selects a compatible native hangar and releases settled work. Renderers and previews read geometry/material owners; synchronized commands alone publish work, paid portal handover and vehicle travel intent. The linked399 files continue through fifty cuts, local exit construction and public traffic with the cutter retained in B's magazine.
 
 - A `Window` is a retained object. It is constructed into `_z_windows`, painted from the state it already holds, and destroyed only by `DeleteClosedWindows` after `Close`.
 - `OnPaint` and `DrawWidget` only draw. The comments on both hooks forbid state changes inside the repaint.

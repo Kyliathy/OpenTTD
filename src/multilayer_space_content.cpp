@@ -1,5 +1,5 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file multilayer_space_content.cpp Steel/Goods Space content and stable compatibility signature. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md. */
+/** @file multilayer_space_content.cpp Steel/Goods Space content and stable compatibility signature. @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md. */
 #include "stdafx.h"
 #include "multilayer_space_content.h"
 #include "cargotype.h"

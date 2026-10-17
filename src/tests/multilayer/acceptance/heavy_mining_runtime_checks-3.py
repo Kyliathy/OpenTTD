@@ -16,7 +16,7 @@ SOURCES = (
     "src/space_mining_tuning.h", "src/space_mining_tuning.cpp", "src/space_vehicle.h", "src/space_vehicle.cpp", "src/space_orders.cpp",
     "src/space_structure.cpp", "src/fios.h", "src/saveload/space_order_sl.cpp", "src/saveload/vehicle_sl.cpp", "src/saveload/saveload.h",
     "src/tests/heavy_mining_runtime.cpp", "src/tests/heavy_mining_runtime_native.cpp", "src/tests/probe_shell.cpp", "src/tests/CMakeLists.txt",
-    "docs/zz-reach2/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md",
+    "docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md",
 ) + tuple(f"src/tests/multilayer/acceptance/heavy_mining_runtime_checks-{number}.py" for number in range(1, 4))
 
 

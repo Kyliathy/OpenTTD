@@ -2,7 +2,7 @@
 
 @file create_facility_art_guides.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups23/26/54B
-@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-a-sprite-contract.md
+@see docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-a-sprite-contract.md
 These diagrams describe native placement; they never supply game artwork.
 """
 

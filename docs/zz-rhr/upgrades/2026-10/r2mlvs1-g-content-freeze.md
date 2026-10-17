@@ -1,0 +1,117 @@
+# R2MLVS1 execution record - ownership and Content Freeze
+
+Owner: [r2mlvs1-gameplay-contracts-and-content.md](../../../zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md), Groups20-23 and12B. Architecture: [archi-map-layers.md](../../../zz-reach2/architecture/map-layers/archi-map-layers.md), [archi-savegame.md](../../../zz-reach2/architecture/savegame/archi-savegame.md). Inputs: [ETI/native M0 decision](r2mlvs12-a-eti-feasibility.md), [sprite schema/geometry](graphics/r2mlvs13-a-sprite-contract.md), [Schema Foundation](r2mlvs15-a-schema-foundation.md). This record freezes definitions and ownership, with future gameplay/art/network work explicitly retained in feature plans.
+
+**Space revision2 delivered,2026-10-12:** Group12B supersedes the historical
+version1 orbital construction/bootstrap rows with the user's
+[Steel/Goods and three-probe contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
+Definitions, mass, admission, budgets and exact compatibility are frozen below.
+Existing ground/profile/package1 and paid old objects keep their identities.
+Operational commissioning, survey, construction, production and descent remain
+with their feature plans.
+
+**Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](../../../zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](../../../zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
+
+## Group 20 - transaction and saved-state ownership
+
+The three M0 producer handoffs were verified in the actual workspace: solar types/signature compile, native refusal/authority fixtures pass, manifest/source-template validation passes, and schema metadata/reference/digest plus actual Surface/369/370/new-profile load fixtures pass. Draft solar signatures authorize no operational mirror mutation. M0 saves contain metadata only and reject unsupported feature bits; later owners supply their own typed IDs/descriptors/reference/removal hooks before writing feature records. Names marked **planned** below are contractual producer obligations, not substitute local pools.
+
+| Family / sole owner | Typed references and authority | Atomic/save boundary | Invalid references / rebuilt cache |
+| --- | --- | --- | --- |
+| Deposit / 2 | Planned DepositID; CompanyID claim; explicit layer/world tile; CargoLabel; remaining reserve u64 tonnes; discovery/claim flags | Debited once with completed extraction, never discovery/paused production | Missing bound deposit refuses extraction; survey/index rebuilt |
+| ExcavationJob / 2 | Planned JobID/DepositID; world outline/cells; state/progress ticks/support quantity | Whole newly solid swept-cell transition + support/spoil/cost commit | Invalid footprint/job suspends; active queue/render cache rebuilt |
+| TBMProject / 4 | Planned ProjectID; actual VehicleID, wagon VehicleIDs, StationID origin; face/world tile/heading; work/cost numerators and pass cursor | Complete advancing segment, max 45-degree change, every affected cell/output/cost together | Lost cutter/origin/route suspends new work, retains wagons; summaries/path cache rebuilt |
+| ExchangeAssignment / 5 | Planned AssignmentID; actual stopped consist/hauler/wagon VehicleIDs; origin StationID; exchange phase/timer | Detach/couple actual wagons atomically; packet IDs and ages preserved | Restore or safely suspend consist ownership before work; train/queue cache rebuilt |
+| OrbitalBody / 8,10 by distinct fields | Planned BodyID; 8 owns fixed position/drift, 10 owns label/reserve/attachment | Movement/extraction is saved integer state; no tile Industry surrogate | Invalid attachment detaches without losing hold; spatial/draw index rebuilt |
+| SpaceMission / 8,9,10 by phase ownership | Planned MissionID; actual vehicle/payload refs; source/destination/target; fixed release point; phase/remaining ticks; 9 owns launch/descent, 10 rendezvous/mining | Transition moves one payload owner, conserves reserved fuel/cargo; save every phase | Lost target resolves to valid owner or visible wait; interpolation/target-search rebuilt |
+| ConstructionInventory / 6 shared contract, 11 facility instance | Planned InventoryID; actual CargoPacketID where packets still exist; label/count/cap u32<=65535; reservations/selected recipe/disposition | Intake finalizes admitted slice once; complete build/recipe consumes once; no duplicate packet/stock count | Release uncommitted reservations; never recreate consumed material; intake/UI cache rebuilt |
+| MirrorAssignment / 12 | Actual public SolarMirrorID, IndustryID, UtilityProducerID; coverage/service and bonus numerator remainder | One active target/source publication per interval; assignment change clears obsolete carry | Missing farm clears assignment; mirror lookup/beam rebuilt |
+| LaunchCollectionHub / 9 | Planned HubID; actual StationID/CompanyID; fixed independent anchors/radii; membership/revision; actual stock and recovery reservations | Admit descent only with storage; one packet custody and reserved return space | Close/change center only after safe recovery owner; membership/overlay rebuilt |
+| SurfaceHandlingJob / 9 | Planned HandlingJobID; actual CargoPacketID slice, source/destination StationID and owning hub; reservation/count/phase/timer | Unstarted reservation references source; pickup moves actual slice to job; delivery charges once | Lost member releases unpicked slice/returns picked cargo; scheduler/demand cache rebuilt |
+| TubeNetwork / 16 | Planned NetworkID; commissioned explicit world guideway edges, terminals/depots; actual capsule VehicleID, UtilityConsumerID; lease/work/cost remainders | Network edit revalidates route/reservation; movement consumes its one electrical grant | Lost route/source pauses; connectivity and route reservations rebuild from saved authority |
+| GeothermalVent / 17 | Planned VentID; actual CompanyID, explicit Deep location; rate/capacity/claim; UtilityProducerID/ConsumerIDs; heat shares/conversion carry | One renewable interval budget shared by direct recipes/generators before conversion | Invalid consumer/link suspends or releases unused share; heat graph/overlay rebuilt |
+| UtilityLink / 12 runtime accounting, 17 physical riser/edge | Actual public UtilityLinkID and ProducerIDs; commissioned endpoints/capacity owned by builder; ledger owns interval flow/debit/credit | Source own generation debited, destination credited once; imports cannot re-export this interval | Lost endpoint refuses/release uncommitted flow; network lookup rebuilt |
+
+Physical connectivity/commissioned edges and active material/energy reservations are saved authority. Network connectivity/pathfinding/index/display summaries are caches. A feature can propose/validate a shared grant, but only the utility owner commits generation/allocation/mutation sequences. A facility can reserve shared inventory, but only the inventory transaction debits that material. No field in the table has two independent counters/owners: split ownership is by explicit field or phase, not two copies of one reserve/packet/grant.
+
+Schema Foundation supplies profile/schema/identity, actual typed old-ID preservation and read-only reference/digest extension points. Each feature adds its exact record cap, invalid sentinel, enum and deletion hook before mutation; missing future types are not a claim that runtime records exist. Save boundaries apply to complete transactions, with staged load separate from accepted policy and cache rebuilding after valid authority. The consolidated dependency table is this matrix plus the master's staged handoffs; it never authorizes a consumer to invent private IDs, bypass missing producer behavior or mark undeveloped features passed.
+
+## Group 21 - selected profile and persistence
+
+Native MLVI is the selected first-party route. ETI commit/version/hash evidence and incompatible/unverified conditions are in its M0 record; no compatible ETI adapter or distribution license is approved. Native 30 active cargos/31 reserved envelope, at most 64 industry types/283 logical industry tiles and 275 total logical designs remain the complete budget. One URAN meaning, no freight POWR, no-GS native authority, existing climate/numeric meanings and the bounded Surface seed are preserved.
+
+The selected native/fallback contract burst passed **450 assertions in six cases** (all manufacturing choices, paid bootstrap, utility conservation and exclusive native effects). Real saved-profile fixtures passed native save/reload/reload, then an explicit saved editor flag and its second round trip. Older Surface/369/370 files without metadata loaded as Classic despite a pending Multilayer selector. Required content is checked before sprite activation/network compatibility, with cargo uniqueness checked again after actual loading. Future schema, unknown policy bits, missing new-version metadata, missing package and changed/compatible package each refuse before startup/save. The five refusals produced no accepted-world save; original content/config/script/source-save bytes were restored. Evidence: saved-profile results (`r2mlvs1-h-saved-profile-results.txt`; historical file unavailable), schema/legacy results (`r2mlvs14-b-metadata-results.txt`; historical file unavailable).
+
+The metadata wire is one row with 50 scalar/array payload bytes plus its MD5 array length; schema/profile/package versions are distinct. Saved editor is explicit, ordinary generation keeps it false, and no absence-of-profile migration enables Native. No ETI runtime pass, mutable utility grant or future object record is claimed. This closes the M0 definition/metadata fallback; Plan 12's runtime Useful Power Handoff remains required before power-dependent feature integration.
+
+## Group 22 - reconciled art and numerical contracts
+
+Sprite M0 is reconciled to **141 families / 58,059 exact required sprites**. All 19 added cargos now have explicit icon rows from the same cargo JSON; COAL/IORE retain baseline icons. Every logical vehicle has a separate purchase/manufacture preview, buildings have an explicit native build pose, and functional states/directions/front/back parts are enumerated. Final sources/packed hashes remain null/planned, and the current native block remains 66. Proposed core append 74..167 protects 0..65 and optional 66..73; activation requires the later packing/loader work. Geometry templates were viewed at native scale; this is layout evidence, not final raster art or runtime occlusion acceptance.
+
+Ground review preserves the corrected engine heading sequence and all newly swept solid cells: 30 corridor cells and 35 chamber cells, with whole advancing-segment wagon fit, actual loaded return and empty delivery. Minimum spoil-only losses after maximal aggregate credit are 23,850/27,795. Rock crushing's explicit eight-batch daily limit matches its shared 64-t intake; Earth remains four/32 t. Aggregate is bounded internal construction material, never profitable unrestricted Goods. Conventional carrier/date coverage was compiled for all ten ores, including sealed Uranium in 1980 before Shield-85. Actual swept-consist collisions/track geometry are still Plan 4 acceptance.
+
+1970 tube budget uses paid external power and 1965 Surface Electronics/Batteries; it does not wait for Deep. 1980 collector/plant/riser inputs/capital match the executable paid-seed graph exactly. Later 2010/2030/2045 recipes use the same all-input/heat/output contract; their shared heat and electric-use/curtailment examples conserve one budget. Runtime networks/leases/factories remain Plans 12/17/18 acceptance.
+
+First probe payload includes body, two expendable pods and service preload: 12/30 t. Surface chemical fuel precedes asteroid ice, two 20-t returns preserve one packet owner, and hub charges occur once per completed handling transfer. First mirror is 6/30 t plus a separate Surface solar target. A 28-t preassembled station nucleus precedes the first 12-t robot without self-dependency; delivered Surface parts and retained Q16 work carry are explicit. The 5,000,000 capital proof now buys every row and leaves 1,219,620. Runtime flight/descent/handling/construction, balance measurements, source art, multiplayer and performance remain the owning feature plans' checks.
+
+## Group12B - independent Space definition revision2
+
+The delivered Space definition owner is [multilayer_space_content.h](../../../../src/multilayer_space_content.h),
+with18 construction families,21 append-only vehicle capabilities,14 manufacturing
+choices,10 Surface supply SKUs and14 bootstrap milestones. The conservative
+vehicle envelope is256 originals plus21 logical models =277, below64,000;
+unchanged ground industry/tile envelopes remain64/283. Numerical and route
+ledgers are reconciled in the revised recipes/budgets above their historical
+version1 sections. Both configurations pass6,204 assertions/35 focused cases. Actual native
+save/replay, ordinary resave,15 corrupt full loads and13 independent previews
+also pass; see `logs/space-content-orders-verification.json`. Group12B closes
+the definition revision; unfinished operational acceptance remains below.
+
+Actual new selected/Classic worlds and their cold resaves verify `SDEF`/`SPOR`,
+with zero free native craft and an empty Classic field. All16 retained
+underground `STNN` resaves remain exact alongside their27 checked owner chunks;
+the three old mining checkpoints and interrupted Surface handling also retain
+their deterministic native continuations in both configurations.
+
+`SDEF` save410 carries the exact Space revision/signature; ground profile1,
+cargo package1, original vehicle/category IDs and paid old objects retain their
+identities. Older absence migrates only the definitions. Future/changed content
+refuses ordinary load and independent preview. `SPOR` carries typed native
+vehicle generations and queues separately from old `VEHS` fields. No metadata
+migration creates stock, vehicles, construction progress or survey knowledge.
+
+Definition-only facility admission does not replace actual paid Earth launch
+or completed-Assembly commissioning. Native survey/construction engines, scans,
+blueprints, powered processors, processed-product provenance and real descent
+remain the original Plans8-11 implementation/acceptance obligations.
+
+## Group 23 - public exports and final verification
+
+The master records the resolved design choices in **Plan 1 M0 execution decisions**. These compiled exports form the Content Freeze handoff; feature owners consume them rather than copying tables, hard-coding runtime slots or allocating a second authority.
+
+| Public file | Delivered boundary |
+| --- | --- |
+| [multilayer_content.h](../../../../src/multilayer_content.h) | Immutable `MultiLayerGameplayProfile`, `MultiLayerProfileSelection`, `LayerVehicleCapability`, cargo-form contracts, `UtilityPowerAccount`; profile/cargo/vehicle getters, typed-calendar `CheckDeepLayerAvailability`, candidate preparation, validated activation/restore and specific refusal diagnostics |
+| [multilayer_content_identity.h](../../../../src/multilayer_content_identity.h) | Exact package/version preflight and activated package/actual-slot label-uniqueness validation |
+| [multilayer_recipe.h](../../../../src/multilayer_recipe.h) | Bounded all-input pure planner; fourteen manufacturing, ten mine/receiver and six geothermal recipe choices |
+| [multilayer_bootstrap.h](../../../../src/multilayer_bootstrap.h) | Ten paid Surface supply SKUs and fourteen dated, cash/material-complete bootstrap milestones |
+| [multilayer_utility.h](../../../../src/multilayer_utility.h) | Checked generation integration, deterministic electricity/heat allocation proposals, native consumer effects and capped town bonus; no mutable runtime network |
+| [solar_power.h](../../../../src/solar_power.h) | Draft `SolarGenerationAccount`, `SolarMirrorID`, `MirrorAssignment` and `ComputeMirrorSolarOutput` signature; operational function intentionally remains Plan 12 work |
+| [multilayer_state.h](../../../../src/multilayer_state.h) | `MultiLayerStateSchema`, capture/staging/acceptance, `ValidateMultiLayerStateReferences`, canonical digest and desync logging; no fabricated feature records |
+| [sprite manifest](../../../../media/multilayer/contracts/multilayer_sprite_manifest.json) | Required `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source`, exact native geometry/state/preview coverage; final bitmap/packing sources remain planned |
+
+Historical version1 focused unit burst (normal Debug configuration, loader probe **OFF**) passed **876 assertions in 22 cases**. This covers only the newly delivered contracts; no full repository regression was run. Exact reproducible command from the repository root:
+
+```powershell
+$tags = '[multilayer-content-identity],[multilayer-profile-selection],[multilayer-content-contract],[multilayer-recipe],[multilayer-manufacturing],[multilayer-bootstrap],[multilayer-vehicle-catalogue],[multilayer-utility],[multilayer-power-effects],[multilayer-geothermal-bootstrap],[solar-power-contract],[multilayer-state-foundation],[multilayer-state-package-preview],[multilayer-state-digest]'
+& .\build\Debug\openttd_test.exe $tags
+python src/tests/multilayer_sprite_contract.py
+python src/tests/multilayer_state_fixture.py --smoke
+python src/tests/multilayer_profile_save_fixture.py --packages-only
+```
+
+The sprite validator passed **141 families / 58,059 planned sprites**, including malformed direction/duplicate/final-source refusals and code-native template checks. Dedicated smoke checks load an existing explicit native save and an unchanged supplied Classic save with a pending Multilayer selector. The package-only rerun checks exact missing/changed-content refusal and verifies retained editor/schema/policy evidence before reporting combined success. Earlier comprehensive focused commands were `python src/tests/multilayer_state_fixture.py` (six cases), `python src/tests/multilayer_profile_save_fixture.py` (seven boundaries) and `python src/tests/multilayer_loader_fixture.py --run` / `--profiles` (opt-in spike/profile evidence). Those earlier groups are not rerun as a full regression.
+
+Normal Windows Debug game/test builds pass with `VCPKG_MANIFEST_INSTALL=OFF` and `OPTION_MULTILAYER_LOADER_PROBE=OFF`. Native/FHS install declarations and Emscripten preload now include the generated first-party package; install and browser-target execution were not performed in this workspace. Supplied legacy saves are retained unchanged. Owned save variants live in `src/tests/fixtures/content/` and `src/tests/fixtures/state/` beside their tests; logs and result files remain beside this plan; final evidence is unit results (`r2mlvs1-i-final-validation.txt`; historical file unavailable), normal metadata smoke (`r2mlvs1-i-final-metadata-results.txt`; historical file unavailable) and saved-policy/refusal results (`r2mlvs1-h-saved-profile-results.txt`; historical file unavailable).
+
+Architecture updates describe actual profile/cargo/metadata behavior in [NewGRF](../../../zz-reach2/architecture/newgrf/archi-newgrf.md), [savegame](../../../zz-reach2/architecture/savegame/archi-savegame.md) and [map layers](../../../zz-reach2/architecture/map-layers/archi-map-layers.md). Plans 12/13/15 have only their initial M0 handoffs delivered. Remaining obligations include actual mine/processor production, paid procurement commands, vehicle engine registration, Deep command enforcement, excavation/wagon exchange, flight/descent/hub handling, orbital assembly, operating solar/grid/tube/geothermal behavior, generated final art and in-game packing/occlusion review, feature-phase saves, multiplayer, measured balance and performance. Plan 1 freezes their definitions and authority; their execution tasks stay unchecked in their owners.

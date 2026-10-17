@@ -7,7 +7,7 @@
 /**
  * @file geothermal_riser.cpp Pure complete-floor and commissioned two-endpoint electrical riser admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19
  */
 
 #include "stdafx.h"

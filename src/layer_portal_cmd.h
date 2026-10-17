@@ -145,7 +145,7 @@ LayerPortalCommissionResult ValidateLayerPortalCommissioning(const LayerPortalCo
 /**
  * Portal-issued bootstrap proof for a solid commissioning start (Plan 3 Group 8B).
  * It describes geometry and references only: no excavation credit, vehicle admission, purchase or payment.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  */
 struct LayerPortalBootstrapProof {
 	LayerPortalWorkError error = LayerPortalWorkError::InvalidPair; ///< None only for a complete issued proof.

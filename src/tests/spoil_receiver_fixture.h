@@ -9,7 +9,7 @@
  * their real owner, and receiver industries placed tile by tile in the pool within the origin station's catchment,
  * as a funded receiver would stand there. The industry construction command needs a town, which these fixtures lack.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
  */
 
 #ifndef TESTS_SPOIL_RECEIVER_FIXTURE_H

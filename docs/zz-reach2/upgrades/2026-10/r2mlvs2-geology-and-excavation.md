@@ -42,7 +42,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/map_layer.h](../../../../src/map_layer.h) | 281-315 | `IsPortalPairAllowed`, `GetPortalTargetLayer`, `CheckLayerAllowsConstruction`, `CheckTilesShareLayer` define live connection/construction authority; new profile checks must preserve legacy behavior. |
 
-Status, 2026-10-08: all tasks and this plan's producer Completion Conditions are satisfied. Geology/job/cut/planning/guard/save validation and16.1's actual loaded terrain/survey/job presentation are delivered; retained closure evidence appears below and in [execution notes](r2mlvs2-b-execution-notes.md). Combined normal-newgame/network/performance acceptance remains with Plans15/16 and is not inferred from producer completion. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
+Status, 2026-10-08: all tasks and this plan's producer Completion Conditions are satisfied. Geology/job/cut/planning/guard/save validation and16.1's actual loaded terrain/survey/job presentation are delivered; retained closure evidence appears below and in [execution notes](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md). Combined normal-newgame/network/performance acceptance remains with Plans15/16 and is not inferred from producer completion. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
 **Artifact-layout migration (2026-10-09):** this plan consumes the parent [Development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout), implemented by [R2FC](r2fc-file-cleanup.md). It supersedes earlier docs asset/review/helper placement and fixed runtime-config destinations below. New native homes use `mlm/runtime/`, generated feature reviews use `mlm/reviews/`, logs remain under `logs/`, and reusable code/curated inputs keep their code/test owners. Paths and focused native/cold verification are complete; R2FC records the results and retained-input identities. Repository-relative executable commands run from the checkout root through their context-aware wrappers. Historical pass records remain dated evidence and are not new acceptance claims. No gameplay task is completed by this migration and the separate post-demo fixture-pruning gate remains.
 
@@ -52,19 +52,19 @@ Replace visual bedrock with persistent solid/excavated terrain and finite resour
 
 ## Public Handoff Contract
 
-R2TBMF10 regional-rock amendment,2026-10-09: new worlds retain frozen ore/vent generation and add an independent version1/seed rock field. `GetExcavationCellHardness` first respects saved deposit hardness, otherwise queries nine deterministic24-tile regional centres. Expected Underground Soft/Mixed/Hard/Basalt proportions are60/25/14/1; Deep5/15/60/20. Cutting, quotes, survey and material art use that one query. Save399 GEOS wire2 persists the regional algorithm/seed; earlier worlds load version0/seed0 and retain their measured layer/deposit difficulty through resaves. Actual generation, native390/399 reloads, malformed preview/full-load refusals and physical regional cutting/retreat are recorded in [Z](tbm-fixes/r2tbmf-z-geology-notes.md). Whole cargo remains3/6,2/12,1/20,1/24 Earth/Rock per material; no new cargo fractions exist.
+R2TBMF10 regional-rock amendment,2026-10-09: new worlds retain frozen ore/vent generation and add an independent version1/seed rock field. `GetExcavationCellHardness` first respects saved deposit hardness, otherwise queries nine deterministic24-tile regional centres. Expected Underground Soft/Mixed/Hard/Basalt proportions are60/25/14/1; Deep5/15/60/20. Cutting, quotes, survey and material art use that one query. Save399 GEOS wire2 persists the regional algorithm/seed; earlier worlds load version0/seed0 and retain their measured layer/deposit difficulty through resaves. Actual generation, native390/399 reloads, malformed preview/full-load refusals and physical regional cutting/retreat are recorded in [Z](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-z-geology-notes.md). Whole cargo remains3/6,2/12,1/20,1/24 Earth/Rock per material; no new cargo fractions exist.
 
-R2TBMF9 terminal-portal consumer,2026-10-09: the existing portal command may replace the completed route's vacant terminal support after the whole cutter stages clear locally. `CheckExcavationConstruction` still requires the full cutter pocket already open and unclaimed; the handover does not change geological terrain, accepted geometry, receipts, cursor or the immutable commissioning anchor. The support/portal owners quote and publish the replacement together. Actual50-cell reciprocal journeys, whole-machine parking, public traffic and native files are verified in [Y](tbm-fixes/r2tbmf-y-exit-notes.md#group9-closure); neither an unfinished route nor a missing footprint gets free clearance.
+R2TBMF9 terminal-portal consumer,2026-10-09: the existing portal command may replace the completed route's vacant terminal support after the whole cutter stages clear locally. `CheckExcavationConstruction` still requires the full cutter pocket already open and unclaimed; the handover does not change geological terrain, accepted geometry, receipts, cursor or the immutable commissioning anchor. The support/portal owners quote and publish the replacement together. Actual50-cell reciprocal journeys, whole-machine parking, public traffic and native files are verified in [Y](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-y-exit-notes.md#group9-closure); neither an unfinished route nor a missing footprint gets free clearance.
 
-R2TBMF8 reused-pocket amendment,2026-10-09: an existing portal with an excavated centre but unopened cells in its initial3x3 cutter pocket still requires its real portal issuer and the existing paid first cut. `ResolveExcavationStarter`, canonical quotes/cuts and bidirectional loaded job/pair validation preserve that requirement. Already open cells produce no spoil; remaining cells are charged exactly once. Ordinary open-floor starts gain no bootstrap authority. Actual remote reuse, quoted receipts and full-file/preview continuation are verified in [W](tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure), superseding the narrower centre-cell-only wording below.
+R2TBMF8 reused-pocket amendment,2026-10-09: an existing portal with an excavated centre but unopened cells in its initial3x3 cutter pocket still requires its real portal issuer and the existing paid first cut. `ResolveExcavationStarter`, canonical quotes/cuts and bidirectional loaded job/pair validation preserve that requirement. Already open cells produce no spoil; remaining cells are charged exactly once. Ordinary open-floor starts gain no bootstrap authority. Actual remote reuse, quoted receipts and full-file/preview continuation are verified in [W](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure), superseding the narrower centre-cell-only wording below.
 
 Delivered public type owner: [src/excavation.h](../../../../src/excavation.h). Exports include `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. Storage/geology/vent, complete-footprint guards, job reserve/control/persistence, coordinated cuts, outline normalization and deterministic advancing geometry have tested behavior. `PrepareExcavationPass`, `ValidateExcavationPassTerms`, `GetExcavationRetreatPath` and `CheckExcavationSupportReplacement` freeze/check supported backing and independent whole-cut spoil limits.
 
 Save versions 372/373/374 own geology/jobs/frozen passes, with metadata feature bits 1/2/4/8 for geology/vents/job history/pass input. Exact IDs, finite reserves, canonical geometry, progress and static capacity/return input are authoritative; spatial/claim caches rebuild. Predecessor absence remains explicit legacy policy, and historical jobs without frozen input cannot commit cuts. [Architecture](../../architecture/map-layers/archi-map-layers.md#geology-and-excavation-r2mlvs2) and [save transport](../../architecture/savegame/archi-savegame.md#geology-sparse-jobs-and-frozen-passes-372-374) document delivered behavior.
 
-Solid-starter extension (R2MLVS3MP Group 2, implemented 2026-10-05, focused tests pending the milestone build): `GetExcavationCutterEnvelope`, `ExcavationStarterResult`, `ResolveExcavationStarter` and `CheckExcavationStarterGeometry`. While the destination housing's packed cell is not Excavated, the canonical planner, pass, reservation and cut accept a portal-issued first segment that leaves straight through the door and sweeps the whole 3x3 pocket. They charge every swept cell, housing included, and leave portal metadata untouched. Rules: [r2mlvs3mp-f](portal-tbm/r2mlvs3mp-f-solid-starter-contract.md).
+Solid-starter extension (R2MLVS3MP Group 2, implemented 2026-10-05, focused tests pending the milestone build): `GetExcavationCutterEnvelope`, `ExcavationStarterResult`, `ResolveExcavationStarter` and `CheckExcavationStarterGeometry`. While the destination housing's packed cell is not Excavated, the canonical planner, pass, reservation and cut accept a portal-issued first segment that leaves straight through the door and sweeps the whole 3x3 pocket. They charge every swept cell, housing included, and leave portal metadata untouched. Rules: [r2mlvs3mp-f](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md).
 
-Actual TBM/wagon/controller, physical support, portal issuance, exchange and mine production use their delivered feature owners. Material/cash/actor participants cannot substitute statistics for inventory. Multi-process network and combined normal-newgame acceptance remain Plans15/16. Task16.1 is complete through the selected Plan13 source/packed/native gallery and actual public job/survey presentation. Focused producer/save/refusal evidence remains in [execution notes](r2mlvs2-b-execution-notes.md); downstream consumers use public contracts rather than copied private pools/tables.
+Actual TBM/wagon/controller, physical support, portal issuance, exchange and mine production use their delivered feature owners. Material/cash/actor participants cannot substitute statistics for inventory. Multi-process network and combined normal-newgame acceptance remain Plans15/16. Task16.1 is complete through the selected Plan13 source/packed/native gallery and actual public job/survey presentation. Focused producer/save/refusal evidence remains in [execution notes](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md); downstream consumers use public contracts rather than copied private pools/tables.
 
 ## Implementation Tasks
 
@@ -112,7 +112,7 @@ The Schema Foundation is assumed delivered by the entry gate; concrete geology/j
 - [X] 1.2 Prototype indexing through `MultiLayerMap` layer/local-coordinate helpers; encode Solid, Excavating and Excavated with a rejected/reserved fourth bit pattern. Check Surface, Space and void tiles cannot address rock-plane storage.
 - [X] 1.3 Measure packed state, sparse records and lookup index separately on representative maximum maps. Two bits over two 4096x4096 planes cost 8 MiB; a byte costs 32 MiB before records. Record allocation/reset costs and select the measured layout.
 
-Evidence: [storage decision](r2mlvs2-b-execution-notes.md#group-1---measured-storage-decision), 30 assertions/two cases (`r2mlvs2-a-storage-results.txt`; historical file unavailable). Lookup payload baseline is separate from future bucket/node overhead; lifecycle/persistence follow Groups 3/4.
+Evidence: [storage decision](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-1---measured-storage-decision), 30 assertions/two cases (`r2mlvs2-a-storage-results.txt`; historical file unavailable). Lookup payload baseline is separate from future bucket/node overhead; lifecycle/persistence follow Groups 3/4.
 
 ### Group 2 - Represent deposits and deterministic claims
 
@@ -122,7 +122,7 @@ Evidence: [storage decision](r2mlvs2-b-execution-notes.md#group-1---measured-sto
 - [X] 2.3 Define claim ownership and overlap rules for mines and excavation jobs. Specify how a cut through ore debits recoverable reserve or leaves retained seam according to the content contract; never leave ore claimable twice.
 - [X] 2.4 Add a small deposit fixture covering intersecting shapes, invalid IDs, depleted reserve and deletion/reclaim. Check serialized authority versus rebuilt lookup index explicitly.
 
-Evidence: [finite seam/claim rules](r2mlvs2-b-execution-notes.md#group-2---finite-seam-and-claim-authority), 206 assertions/three cases (`r2mlvs2-c-deposit-results.txt`; historical file unavailable). Canonical authority replay proves rebuilt lookup independence; actual file round trips follow Group 4.
+Evidence: [finite seam/claim rules](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-2---finite-seam-and-claim-authority), 206 assertions/three cases (`r2mlvs2-c-deposit-results.txt`; historical file unavailable). Canonical authority replay proves rebuilt lookup independence; actual file round trips follow Group 4.
 
 ### Group 3 - Generate guaranteed deposits without Surface RNG changes
 
@@ -132,7 +132,7 @@ Evidence: [finite seam/claim rules](r2mlvs2-b-execution-notes.md#group-2---finit
 - [X] 3.3 Add optional deposits only after guaranteed placements, with bounded retries and deterministic fallback locations. Validate rectangular maps and both void-fence policies.
 - [X] 3.4 Compare `_random` state and feature-disabled Surface digest before/after geology generation; separately record the enabled-profile fixture where new Surface industries are intentional.
 
-Evidence: [guaranteed generation and seed ownership](r2mlvs2-b-execution-notes.md#group-3---deterministic-guaranteed-generation). 602 focused assertions and three actual dedicated candidates passed; all ten saved Surface fields and RNG streams were preserved. Root metadata is saved now; full geological version/state descriptors follow Group 4.
+Evidence: [guaranteed generation and seed ownership](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-3---deterministic-guaranteed-generation). 602 focused assertions and three actual dedicated candidates passed; all ten saved Surface fields and RNG streams were preserved. Root metadata is saved now; full geological version/state descriptors follow Group 4.
 
 ### Group 4 - Persist geology authority before consumers
 
@@ -141,14 +141,14 @@ Evidence: [guaranteed generation and seed ownership](r2mlvs2-b-execution-notes.m
 - [X] 4.2 Define absent-chunk legacy defaults without making existing infrastructure solid. Add round trips for partially depleted deposits, invalid references and truncated/out-of-bounds state.
 - [X] 4.3 Publish the descriptor-extension obligation for `ExcavationJob` fields finalized in Groups 7/10; require their implementation and active-progress round trip in 10.3 before TBM consumers start. Do not treat this storage foundation as finished job persistence.
 
-Evidence: [bounded persistence and job extension handoff](r2mlvs2-b-execution-notes.md#group-4---bounded-feature-persistence). 40 focused assertions, six actual accepted loads and five corruption/reference refusals passed. Job descriptors and active-progress acceptance remain in 10.3.
+Evidence: [bounded persistence and job extension handoff](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-4---bounded-feature-persistence). 40 focused assertions, six actual accepted loads and five corruption/reference refusals passed. Job descriptors and active-progress acceptance remain in 10.3.
 
 ### Group 5 - Storage and deterministic geology
 
 {{MEDIUM}}
 - [X] 5.1 Specify survey visibility and pricing. The initial survey overlay may expose deposit locations for planning; revealed information does not excavate tiles or spawn productive mines. Save any information that affects company gameplay.
 
-Evidence: [public planning survey and zero price](r2mlvs2-b-execution-notes.md#group-5---survey-information-and-price). Information creates no terrain, reserve, industry or heat mutation; exact optional information-mask persistence was verified in Group 4. Overlay runtime remains Group 16.
+Evidence: [public planning survey and zero price](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-5---survey-information-and-price). Information creates no terrain, reserve, industry or heat mutation; exact optional information-mask persistence was verified in Group 4. Overlay runtime remains Group 16.
 
 ### Group 6 - Add vent geology independently of mineral reserves
 
@@ -158,7 +158,7 @@ Evidence: [public planning survey and zero price](r2mlvs2-b-execution-notes.md#g
 - [X] 6.3 Define overlap of vent influence and mineral deposits without deleting either identity. Clearing vent tiles preserves the vent; survey visibility reveals it but neither allocates heat nor spawns a plant.
 - [X] 6.4 Save and round-trip vent identity/capacity; add a tiny-map failure fixture and a repeated-generation comparison. Publish this geological contract to r2mlvs18 before its heat consumers exist.
 
-Evidence: [independent natural thermal source](r2mlvs2-b-execution-notes.md#group-6---independent-natural-thermal-geology). 73 focused assertions and five actual save/migration/refusal boundaries passed; no power/plant allocation is claimed.
+Evidence: [independent natural thermal source](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-6---independent-natural-thermal-geology). 73 focused assertions and five actual save/migration/refusal boundaries passed; no power/plant allocation is claimed.
 
 ### Group 7 - Publish geology and cut interfaces
 
@@ -167,7 +167,7 @@ Evidence: [independent natural thermal source](r2mlvs2-b-execution-notes.md#grou
 - [X] 7.2 Specify the cut request/result and job fields now; implement their behavior in the next area. Keep wagon mutation with r2mlvs4/5 through an explicit validated material/capacity contract, not a private vehicle lookup in geology.
 - [X] 7.3 Register new source files in CMake and compile a public-header fixture. Identify which exports have behavior tests already and which still require the following groups before downstream mutation is allowed; update every consumer if the public location changes.
 
-Evidence: [public declarations and behavioral readiness](r2mlvs2-b-execution-notes.md#group-7---public-type-and-transaction-handoff), 20 assertions/type-signature fixture (`r2mlvs2-j-contract-results.txt`; historical file unavailable). Operational footprint/job/cut tests remain the next areas.
+Evidence: [public declarations and behavioral readiness](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-7---public-type-and-transaction-handoff), 20 assertions/type-signature fixture (`r2mlvs2-j-contract-results.txt`; historical file unavailable). Operational footprint/job/cut tests remain the next areas.
 
 ### Area Mandatory Reading - Construction guards and excavation job ownership
 
@@ -196,7 +196,7 @@ Context has compacted 1 times while executing this group.
 - [X] 8.3 Wire rail/road track, signals, depots and station constructors to the predicate before their first tile mutation. Add one mixed solid/cleared footprint refusal per family.
 - [X] 8.4 Wire existing industries, objects and portal approaches; publish the same guard for later tube/geothermal/utility constructors rather than requiring those future implementations here.
 
-Evidence: [complete construction authority](r2mlvs2-b-execution-notes.md#group-8---complete-construction-authority), 71 assertions/three cases (`r2mlvs2-k-guard-results.txt`; historical file unavailable). Commissioning pocket issuance remains with the actual portal/TBM producers; its occupancy contract never changes ordinary buildability.
+Evidence: [complete construction authority](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-8---complete-construction-authority), 71 assertions/three cases (`r2mlvs2-k-guard-results.txt`; historical file unavailable). Commissioning pocket issuance remains with the actual portal/TBM producers; its occupancy contract never changes ordinary buildability.
 
 ### Group 9 - Close clearing and area-tool bypasses
 
@@ -205,7 +205,7 @@ Evidence: [complete construction authority](r2mlvs2-b-execution-notes.md#group-8
 - [X] 9.2 Audit area construction, conversion and terraforming entry points, including commands marked `NoTest`. Preflight each atomic footprint; preserve documented partial-area command behavior while forbidding any solid tile mutation.
 - [X] 9.3 Exercise command/API paths independently of toolbar visibility, including script calls and extra-view coordinates. Keep editor terrain painting behind the saved explicit override and test normal gameplay cannot inherit it.
 
-Evidence: [clearing and editor boundaries](r2mlvs2-b-execution-notes.md#group-9---clearing-and-editor-boundaries), 57 assertions/three cases (`r2mlvs2-l-clearing-results.txt`; historical file unavailable). Area commands retain their prior per-tile success semantics.
+Evidence: [clearing and editor boundaries](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-9---clearing-and-editor-boundaries), 57 assertions/three cases (`r2mlvs2-l-clearing-results.txt`; historical file unavailable). Area commands retain their prior per-tile success semantics.
 
 ### Group 10 - Implement excavation job reservations
 
@@ -213,7 +213,7 @@ Evidence: [clearing and editor boundaries](r2mlvs2-b-execution-notes.md#group-9-
 - [X] 10.1 Define reserve, advance, pause and cancel states with one owner per active cut. Validate a connected route and claim the work footprint deterministically; conflicting jobs refuse before modifying either claim.
 - [X] 10.2 Cancel only unfinished reservations; keep completed cavities, paid work and generated materials. Make invalid owner/removed support produce a recoverable pause reason.
 
-Evidence: [sparse job owner and control](r2mlvs2-b-execution-notes.md#group-10---sparse-job-owner-and-control), 80 assertions/three cases (`r2mlvs2-m-job-results.txt`; historical file unavailable). Saved active progress is still gated by Group 10B.
+Evidence: [sparse job owner and control](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-10---sparse-job-owner-and-control), 80 assertions/three cases (`r2mlvs2-m-job-results.txt`; historical file unavailable). Saved active progress is still gated by Group 10B.
 
 ### Area Mandatory Reading - Excavation job save ownership
 
@@ -233,7 +233,7 @@ The reservation owner in Group 10 must pass its focused competing-job, pause/can
 {{HARD}}
 - [X] 10.3 Add descriptors for job route, cursor, partial work and claims, then rebuild lookup caches on load. Test two competing jobs and reload during partial progress before publishing behavioral readiness.
 
-Evidence: [bounded saved job authority](r2mlvs2-b-execution-notes.md#group-10b---bounded-saved-job-authority), 27 snapshot assertions (`r2mlvs2-n-job-state-results.txt`; historical file unavailable), eight real save/migration/refusal boundaries (`r2mlvs2-o-job-save-results.txt`; historical file unavailable). Actual file round trips cover explicit paused removed-owner progress; owned Working progress is covered by the snapshot fixture.
+Evidence: [bounded saved job authority](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-10b---bounded-saved-job-authority), 27 snapshot assertions (`r2mlvs2-n-job-state-results.txt`; historical file unavailable), eight real save/migration/refusal boundaries (`r2mlvs2-o-job-save-results.txt`; historical file unavailable). Actual file round trips cover explicit paused removed-owner progress; owned Working progress is covered by the snapshot fixture.
 
 ### Area Mandatory Reading - Atomic cuts and bounded area route planning
 
@@ -274,7 +274,7 @@ flowchart LR
 - [X] 11.3 Define resource-bearing cuts in the result ledger so later mines see the reduced reserve. Include no-progress/paused outcomes that leave all quantities unchanged.
 - [X] 11.4 Test estimate versus execute, last-unit reserve, full wagon sink and insufficient cash with state digests before/after; failed preparation must leave no temporary rail or partial cargo.
 
-Evidence: [complete coordinated transaction](r2mlvs2-b-execution-notes.md#group-11---complete-coordinated-transaction), 219 focused assertions/three cases (`r2mlvs2-p-cut-results.txt`; historical file unavailable), real full-authority digest stability/sensitivity (`r2mlvs2-q-digest-results.txt`; historical file unavailable).
+Evidence: [complete coordinated transaction](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-11---complete-coordinated-transaction), 219 focused assertions/three cases (`r2mlvs2-p-cut-results.txt`; historical file unavailable), real full-authority digest stability/sensitivity (`r2mlvs2-q-digest-results.txt`; historical file unavailable).
 
 ### Group 12 - Normalize arbitrary clearing outlines
 
@@ -283,7 +283,7 @@ Evidence: [complete coordinated transaction](r2mlvs2-b-execution-notes.md#group-
 - [X] 12.2 Separate requested final floor area from temporary approach/turn/support space. Preview any extra required space and its cost; require it in the accepted job so the planner never silently excavates outside authorization.
 - [X] 12.3 Keep final land use out of geometry acceptance: road, rail, tube, mine and empty chamber use the same reachable-clearing domain.
 
-Evidence: [canonical floor and explicit extra space](r2mlvs2-b-execution-notes.md#group-12---canonical-floor-and-explicit-extra-space), 38 assertions/two cases (`r2mlvs2-r-outline-results.txt`; historical file unavailable).
+Evidence: [canonical floor and explicit extra space](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-12---canonical-floor-and-explicit-extra-space), 38 assertions/two cases (`r2mlvs2-r-outline-results.txt`; historical file unavailable).
 
 ### Group 13 - Plan legal advancing passes with bounded search
 
@@ -293,7 +293,7 @@ Evidence: [canonical floor and explicit extra space](r2mlvs2-b-execution-notes.m
 - [X] 13.3 Build area coverage by selecting remaining targets in stable order and joining legal passes. Cap work per planning command and total search; return a visible partial/proposed route or refusal requiring a revised outline rather than an unbounded solver.
 - [X] 13.4 Supply geometric tests for straight, two-bend 90-degree, irregular chamber, too-tight corner and impossible turn space. r2mlvs4 owns movement execution against this route contract.
 
-Evidence: [bounded full-consist advancing search](r2mlvs2-b-execution-notes.md#group-13---bounded-full-consist-advancing-search), 156 assertions/three cases (`r2mlvs2-s-route-results.txt`; historical file unavailable).
+Evidence: [bounded full-consist advancing search](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-13---bounded-full-consist-advancing-search), 156 assertions/three cases (`r2mlvs2-s-route-results.txt`; historical file unavailable).
 
 Context has compacted 1 times while executing this group.
 
@@ -321,7 +321,7 @@ Read master AD-3/AD-5, [R2MLVS3MP Group 2](r2mlvs3mp-master-plan.md#group-2---re
 - [X] 14B.5 Run focused producer success/refusal/rollback tests for solid startup, full one-cargo capacity, unavailable support/funds, issuer loss and replay. Distinguish interface-participant boundary tests from the later actual-wagon commissioning proof; no fake cargo/vehicle owner may substitute for that integration.
 - [X] 14B.6 Publish the tested handoff to Plan 4 Groups 2B/4/6-8 and Plan 3 Group 8; update all direct signatures/reading gates. Retain the original MissingSupport characterization as historical evidence and replace its expected outcome only when the corresponding behavior is delivered.
 
-**R2MLVS3MP status, 2026-10-05.** 14B.1 is frozen in [r2mlvs3mp-f](portal-tbm/r2mlvs3mp-f-solid-starter-contract.md). 14B.2-14B.6 are implemented and passed the R2MLVS3MP milestone burst (`r2mlvs3mp-g-burst4-all-results.txt`; historical file unavailable) on 2026-10-05, so they are ticked. Code: `src/excavation.h`, `src/excavation_starter.cpp` (new), and starter mode in `excavation_route.cpp`, `excavation_pass.cpp`, `excavation.cpp` (`ReserveExcavationJob`) and `excavation_cut.cpp`. 14B.4: starter mode is derived from packed geology plus the pair record, so no saved field, descriptor, pass fingerprint or digest changes. The new reference check is the load-time binding in `ValidateLayerPortalWorkRecords`: an unopened cursor-0 job needs its own Commissioning record. Open-starter and legacy behaviour is unchanged. Tests: `src/tests/excavation_starter.cpp` (`[excavation-starter]`, interface participants only) and the renamed `[tbm-sealed-start-gate]`. The historical MissingSupport refusal stays recorded in Plan 4 evidence `r2mlvs4-k`. The test now expects IllegalTurn for a sideways start and InsufficientCapacity for one Earth plus one Rock hopper. Capacity consequence: the 12-cell first cut at the fixture site needs 72 t Earth and 144 t Rock, more than the single-hopper assumption of a cleared 3x3 commissioning area.
+**R2MLVS3MP status, 2026-10-05.** 14B.1 is frozen in [r2mlvs3mp-f](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md). 14B.2-14B.6 are implemented and passed the R2MLVS3MP milestone burst (`r2mlvs3mp-g-burst4-all-results.txt`; historical file unavailable) on 2026-10-05, so they are ticked. Code: `src/excavation.h`, `src/excavation_starter.cpp` (new), and starter mode in `excavation_route.cpp`, `excavation_pass.cpp`, `excavation.cpp` (`ReserveExcavationJob`) and `excavation_cut.cpp`. 14B.4: starter mode is derived from packed geology plus the pair record, so no saved field, descriptor, pass fingerprint or digest changes. The new reference check is the load-time binding in `ValidateLayerPortalWorkRecords`: an unopened cursor-0 job needs its own Commissioning record. Open-starter and legacy behaviour is unchanged. Tests: `src/tests/excavation_starter.cpp` (`[excavation-starter]`, interface participants only) and the renamed `[tbm-sealed-start-gate]`. The historical MissingSupport refusal stays recorded in Plan 4 evidence `r2mlvs4-k`. The test now expects IllegalTurn for a sideways start and InsufficientCapacity for one Earth plus one Rock hopper. Capacity consequence: the 12-cell first cut at the fixture site needs 72 t Earth and 144 t Rock, more than the single-hopper assumption of a cleared 3x3 commissioning area.
 
 ### Area Mandatory Reading - Existing cavity and reserve invariants
 
@@ -387,9 +387,9 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [X] 19.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [X] 19.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 
-Evidence: final focused checks (`r2mlvs2-z-final-results.txt`; historical file unavailable), current Surface preservation (`r2mlvs2-z-surface-results.txt`; historical file unavailable), large-map measurements (`r2mlvs2-z-runtime-results.txt`; historical file unavailable), actual frozen-pass saves/refusals (`r2mlvs2-u-pass-save-results.txt`; historical file unavailable), art gate (`r2mlvs2-w-art-gate.txt`; historical file unavailable), and [public handoff/remaining producer boundaries](r2mlvs2-b-execution-notes.md#group-19---delivered-handoffs-and-final-focused-verification). The final build passed; 5,835 Plan 2 assertions and 44 metadata assertions passed, followed by 750 affected assertions after the final ownership review. Every case completed below two minutes. **At that original closure only task 16.1 remained unchecked. The later R2MLVS3MP scheduling amendment also adds pending Group 14B for solid-starter behavior; both that extension and actual Plan 13 art must pass before current plan closure.**
+Evidence: final focused checks (`r2mlvs2-z-final-results.txt`; historical file unavailable), current Surface preservation (`r2mlvs2-z-surface-results.txt`; historical file unavailable), large-map measurements (`r2mlvs2-z-runtime-results.txt`; historical file unavailable), actual frozen-pass saves/refusals (`r2mlvs2-u-pass-save-results.txt`; historical file unavailable), art gate (`r2mlvs2-w-art-gate.txt`; historical file unavailable), and [public handoff/remaining producer boundaries](../../../zz-rhr/upgrades/2026-10/r2mlvs2-b-execution-notes.md#group-19---delivered-handoffs-and-final-focused-verification). The final build passed; 5,835 Plan 2 assertions and 44 metadata assertions passed, followed by 750 affected assertions after the final ownership review. Every case completed below two minutes. **At that original closure only task 16.1 remained unchecked. The later R2MLVS3MP scheduling amendment also adds pending Group 14B for solid-starter behavior; both that extension and actual Plan 13 art must pass before current plan closure.**
 
-The reconciled [leftovers tracker](r2mlvs99-leftovers.md) records16.1's closure and the actual remaining Plan3 tasks. Full selected art/hash proof is in [the final audit](portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md); personal feedback and later-profile art remain separate.
+The reconciled [leftovers tracker](r2mlvs99-leftovers.md) records16.1's closure and the actual remaining Plan3 tasks. Full selected art/hash proof is in [the final audit](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-b-final-closure-audit.md); personal feedback and later-profile art remain separate.
 
 ## Consult on Demand
 

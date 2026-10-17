@@ -45,7 +45,7 @@
 Status: definitions complete. Original Groups1-23 retain their dated version1
 evidence; Group12B freezes the user's2026-10-12 Space economy as independent
 revision2. Ground profile/package1 and paid old objects preserve their meanings.
-The [Content Freeze](r2mlvs1-g-content-freeze.md) records both revisions; actual
+The [Content Freeze](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md) records both revisions; actual
 launch, survey, construction, processing and delivery stay with their feature
 owners. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md).
 
@@ -99,7 +99,7 @@ missing required meaning / unsupported set -> explicit refusal before world acti
 - [X] 1.1 Inventory live cargo labels/slots, industry types/tiles, accepted/produced cargo-array limits and engine IDs for the proposed Temperate profile.
 - [X] 1.2 Preserve existing numeric meanings.
 
-Evidence: [execution record, Group 1](r2mlvs1-a-content-contract.md#group-1---live-identity-and-format-inventory). Original definitions and numeric identities are unchanged. Temperate has 11 active cargos in its 12-slot original envelope; current industry arrays are 16/16.
+Evidence: [execution record, Group 1](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-1---live-identity-and-format-inventory). Original definitions and numeric identities are unchanged. Temperate has 11 active cargos in its 12-slot original envelope; current industry arrays are 16/16.
 
 ### Group 2 - Content budget and profile
 
@@ -111,7 +111,7 @@ Evidence: [execution record, Group 1](r2mlvs1-a-content-contract.md#group-1---li
 - [X] 2.5 Budget the entire catalogue. Starting allowance: at most 12 baseline cargos + 8 additional mine resources (Coal/Iron Ore reused) + 11 additional cargos from the master + 1 Power representation = 32 active cargos before any further additions.
 - [X] 2.6 Verify actual labels and climate counts; this arithmetic is a design budget, not a slot allocation.
 
-Evidence: [draft cargo meanings and budgets](r2mlvs1-a-content-contract.md#group-2---draft-cargo-meanings). Native utility uses no freight slot: 30 active cargos within a 31-slot original-preserving envelope. Industrial `BATY` preserves Toyland `BATT`; `URAN` is one first-party meaning, with ETI mapping still gated by feasibility evidence.
+Evidence: [draft cargo meanings and budgets](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-2---draft-cargo-meanings). Native utility uses no freight slot: 30 active cargos within a 31-slot original-preserving envelope. Industrial `BATY` preserves Toyland `BATT`; `URAN` is one first-party meaning, with ETI mapping still gated by feasibility evidence.
 
 ### Group 3 - Compare content delivery with one representative definition
 
@@ -120,7 +120,7 @@ Evidence: [draft cargo meanings and budgets](r2mlvs1-a-content-contract.md#group
 - [X] 3.2 For each candidate, save/reload the fixture and run the dedicated binary with repository-local content. Compare cargo labels, engine/industry identities and sprite availability. Select the smallest supported delivery path and record why the other candidate is unnecessary.
 - [X] 3.3 Specify a required-content identity/version check before activating a Multilayer save or new world. Exercise missing package, compatible-but-different package and duplicate required label; none may silently change a saved cargo meaning.
 
-Evidence: [Group 3 delivery decision](r2mlvs1-a-content-contract.md#group-3---delivery-spike-and-exact-identity-boundary), dedicated results (`r2mlvs1-b-loader-results.txt`; historical file unavailable). Both candidates passed new-world/save/reload definition checks. Bundled first-party NewGRF definitions are selected. `[multilayer-content-identity]` passed 17 assertions in two cases. This group publishes the read-only refusal contract; production profile activation is Group 4 and saved profile persistence remains Group 21. Experimental native registration is excluded from default builds.
+Evidence: [Group 3 delivery decision](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-3---delivery-spike-and-exact-identity-boundary), dedicated results (`r2mlvs1-b-loader-results.txt`; historical file unavailable). Both candidates passed new-world/save/reload definition checks. Bundled first-party NewGRF definitions are selected. `[multilayer-content-identity]` passed 17 assertions in two cases. This group publishes the read-only refusal contract; production profile activation is Group 4 and saved profile persistence remains Group 21. Experimental native registration is excluded from default builds.
 
 ### Group 4 - Persist profile choice and reject unsupported combinations
 
@@ -129,7 +129,7 @@ Evidence: [Group 3 delivery decision](r2mlvs1-a-content-contract.md#group-3---de
 - [X] 4.2 Specify legacy absence-of-profile migration as Classic/legacy behavior. Separate a saved explicit editor override from normal technology availability; hand the field list and migration fixture to r2mlvs15 without inventing its chunk format here.
 - [X] 4.3 Verify new-game and dedicated activation produce the same label-to-slot map; keep a Classic fixture whose cargo meanings are unchanged. Defer the new saved-profile identity round trip to the final area after Schema Foundation; the earlier candidate spike uses existing content serialization only.
 
-Evidence: [Group 4 profile and schema handoff](r2mlvs1-a-content-contract.md#group-4---profile-activation-and-persistence-handoff), actual profile results (`r2mlvs1-c-profile-results.txt`; historical file unavailable). Two profile-selection cases passed 44 assertions; the existing widget-tree check passed 330 assertions; six dedicated activation/refusal cases passed. New-game controls and the dedicated path share `GenerateWorld` preparation/activation. No saved profile round trip or downstream feature behavior is claimed by this group.
+Evidence: [Group 4 profile and schema handoff](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-4---profile-activation-and-persistence-handoff), actual profile results (`r2mlvs1-c-profile-results.txt`; historical file unavailable). Two profile-selection cases passed 44 assertions; the existing widget-tree check passed 330 assertions; six dedicated activation/refusal cases passed. New-game controls and the dedicated path share `GenerateWorld` preparation/activation. No saved profile round trip or downstream feature behavior is claimed by this group.
 
 ### Group 5 - Content budget and profile
 
@@ -139,7 +139,7 @@ Evidence: [Group 4 profile and schema handoff](r2mlvs1-a-content-contract.md#gro
 - [X] 5.3 Budget tube models, terminals and geothermal buildings as well as cargo slots. Heat/electric flows reuse metered utility state, not extra freight cargos; geothermal recipes reuse the existing planned materials.
 - [X] 5.4 Define liquid Chemicals/Propellant consistently across vehicle refits.
 
-Evidence: [calendar and representation policy](r2mlvs1-a-content-contract.md#group-5---calendar-and-representation-policy). Defaults are now explicit contracts, with per-command enforcement remaining in its feature owners. Five capsule dates, six geothermal definitions and liquid cargo forms fit the existing budgets. This definition-only group needs no additional runtime regression; the executable date boundary is Group 6.
+Evidence: [calendar and representation policy](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-5---calendar-and-representation-policy). Defaults are now explicit contracts, with per-command enforcement remaining in its feature owners. Five capsule dates, six geothermal definitions and liquid cargo forms fit the existing budgets. This definition-only group needs no additional runtime regression; the executable date boundary is Group 6.
 
 ### Group 6 - Publish content types and deterministic capability queries
 
@@ -199,7 +199,7 @@ Use the graph to test prerequisites, including dates and transport. Later astero
 {{MEDIUM}}
 - [X] 7.1 Specify inputs, outputs, reserve consumption, storage and processing time for each mine/processor. Include usable Surface sinks for all ten resources, Earth disposal, Rock crushing and surplus disposal.
 
-Evidence: [bounded mines, processors and receivers](r2mlvs1-d-recipes-and-bootstrap.md#group-7---mines-processors-and-bounded-receivers). All ten resources have dated Surface receivers; stock/intake/time/reserve quantities are explicit. Crusher aggregate is an internal construction stock with bounded replacement value, not unrestricted paid Goods. Group 8 validates the all-input record before feature implementation.
+Evidence: [bounded mines, processors and receivers](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-7---mines-processors-and-bounded-receivers). All ten resources have dated Surface receivers; stock/intake/time/reserve quantities are explicit. Crusher aggregate is an internal construction stock with bounded replacement value, not unrestricted paid Goods. Group 8 validates the all-input record before feature implementation.
 
 Context has compacted 1 times while executing this group.
 
@@ -210,7 +210,7 @@ Context has compacted 1 times while executing this group.
 - [X] 8.2 Work one partial-input and one full-output example by hand: no batch consumes stock until every required input and every output slot can fit. Define alternate recipes as a saved choice, not simultaneous production from the same inputs.
 - [X] 8.3 Publish a recipe record/validation fixture for r2mlvs6/11/18. Require unique cargo roles, positive quantities, defined physical forms, slot-budget compliance and one owner of input consumption.
 
-Evidence: [batch/commit boundary and worked examples](r2mlvs1-d-recipes-and-bootstrap.md#group-8---one-atomic-all-input-batch-owner), [public recipe contract](../../../../src/multilayer_recipe.h). `[multilayer-recipe]` passed 39 assertions in three cases. This pure planner owns no runtime facility or stock mutation; downstream owners must implement the documented atomic commit and save the alternative choice.
+Evidence: [batch/commit boundary and worked examples](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-8---one-atomic-all-input-batch-owner), [public recipe contract](../../../../src/multilayer_recipe.h). `[multilayer-recipe]` passed 39 assertions in three cases. This pure planner owns no runtime facility or stock mutation; downstream owners must implement the documented atomic commit and save the alternative choice.
 
 ### Group 9 - Fill Surface manufacturing recipes
 
@@ -221,7 +221,7 @@ Evidence: [batch/commit boundary and worked examples](r2mlvs1-d-recipes-and-boot
 - [X] 9.4 Fill Propellant from Chemicals or Water Ice using explicit alternative recipes; fill Solar Mirror Kits from components/electronics. Record the pre-asteroid Chemicals route so the first rocket can launch.
 - [X] 9.5 For every recipe record, check input/output slot counts and bounded inventory; split plant definitions only when the chosen content path requires it.
 
-Evidence: [manufacturing choices and expanded robot ledger](r2mlvs1-d-recipes-and-bootstrap.md#group-9---manufacturing-choices-and-first-robot-inputs). `[multilayer-manufacturing]` passed 73 assertions in one case covering all 12 immutable choices, required inputs and output caps. Largest recipe is 3 inputs/1 output; no capacity-driven split plant or extra cargo is required.
+Evidence: [manufacturing choices and expanded robot ledger](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-9---manufacturing-choices-and-first-robot-inputs). `[multilayer-manufacturing]` passed 73 assertions in one case covering all 12 immutable choices, required inputs and output caps. Largest recipe is 3 inputs/1 output; no capacity-driven split plant or extra cargo is required.
 
 ### Group 10 - Prove content bootstrap reachability
 
@@ -230,27 +230,27 @@ Evidence: [manufacturing choices and expanded robot ledger](r2mlvs1-d-recipes-an
 - [X] 10.2 Topologically expand the table at the first TBM, first mine, 1970 tube, 1980 geothermal, first probe/mirror and first heavy-robot milestones. A cycle is acceptable only with a documented earlier external supply; reject self-dependent recipes.
 - [X] 10.3 Record one input ledger and earliest feasible date per bootstrap path; check all ten mined resources have an active receiver at their introduction. Hand unresolved recipe changes back to the central catalogue before freeze.
 
-Evidence: [bootstrap graph, external seed and capital ledger](r2mlvs1-d-recipes-and-bootstrap.md#group-10---bootstrap-graph-and-bounded-external-seed). `[multilayer-bootstrap]` passed 258 assertions in one case, expanding 11 milestones and all ten mine/receiver dates. A bounded paid 1965 supply closes the early-tube dependency; bought company supplies earn no freight income. Runtime procurement/routes and long-term balance remain feature work.
+Evidence: [bootstrap graph, external seed and capital ledger](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-10---bootstrap-graph-and-bounded-external-seed). `[multilayer-bootstrap]` passed 258 assertions in one case, expanding 11 milestones and all ten mine/receiver dates. A bounded paid 1965 supply closes the early-tube dependency; bought company supplies earn no freight income. Runtime procurement/routes and long-term balance remain feature work.
 
 ### Group 11 - Recipes, capability and economics
 
 {{MEDIUM}}
 - [X] 11.1 Specify how construction/service inputs enter facility inventory, when packets are consumed, and when a carrier earns delivery income. A delivery, a transfer and construction consumption cannot each pay for the same final transport leg.
 
-Evidence: [packet/inventory/payment ownership table and partial-intake example](r2mlvs1-d-recipes-and-bootstrap.md#group-11---packet-inventory-and-income-boundary). Live CargoPayment transfer/final-delivery methods were inspected. This documentation group changes no payment behavior; feature integration remains outstanding.
+Evidence: [packet/inventory/payment ownership table and partial-intake example](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-11---packet-inventory-and-income-boundary). Live CargoPayment transfer/final-delivery methods were inspected. This documentation group changes no payment behavior; feature integration remains outstanding.
 
 ### Group 12 - Recipes, capability and economics
 
 {{SIMPLE}}
 - [X] 12.1 Publish capability tables for standard/deep TBMs, hoppers, haulers, trucks, all five tube capsules, rockets, probes and robots: layers, transport/rail compatibility, cargo classes, commissioning facility, service facility, dates and replacement rules. Tube capability excludes ordinary rail/portals and cannot bypass spoil-wagon hauling.
 
-Evidence: [all 19 capability/replacement rows](r2mlvs1-d-recipes-and-bootstrap.md#group-12---complete-logical-vehicle-capability-catalogue), [public read-only catalogue](../../../../src/multilayer_vehicle_catalogue.cpp). `[multilayer-vehicle-catalogue]` passed 181 assertions in one case for unique models, explicit commissioning/service, tube isolation, liquid forms, spoil obligations and conventional routes for all ten ores. Engine allocation, tanker refit mapping and command enforcement remain with feature owners.
+Evidence: [all 19 capability/replacement rows](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#group-12---complete-logical-vehicle-capability-catalogue), [public read-only catalogue](../../../../src/multilayer_vehicle_catalogue.cpp). `[multilayer-vehicle-catalogue]` passed 181 assertions in one case for unique models, explicit commissioning/service, tube isolation, liquid forms, spoil obligations and conventional routes for all ten ores. Engine allocation, tanker refit mapping and command enforcement remain with feature owners.
 
 ### Local Mandatory Reading - Revised Space content freeze
 
 _Applies to Group12B._ Read Global and Recipes, capability and economics Area,
-the [Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12),
-its [numerical defaults](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12),
+the [Space economy revision](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12),
+its [numerical defaults](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12),
 the existing catalogue/profile/recipe/bootstrap definitions and their focused
 tests, and the profile/version/save compatibility owner. Ground definitions
 and old accepted saves retain their existing meanings. This group freezes
@@ -286,7 +286,7 @@ network acceptance remain unchecked in Plans8-16.
 - [X] 13.2 Fill standard/deep TBM, hopper and hauler capacities plus disposal prices and intake limits. Calculate one straight corridor and one turning chamber, including loaded return and empty delivery time.
 - [X] 13.3 Publish a worked ledger proving spoil-only digging loses money after work, support, transport and disposal; state the starting cash and bounded receiver capacity used.
 
-Evidence: [hardness/capacity tables, swept-cell count and both loss ledgers](r2mlvs1-e-ground-and-space-budgets.md#group-13---excavation-units-bounded-spoil-and-legal-heading-budgets). Independent arithmetic verified 24,120/28,110 cash debits and 23,850/27,795 loss after maximal aggregate value. Twelve advancing chamber headings change at most 45 degrees. Runtime swept-consist geometry and balance remain unverified feature work.
+Evidence: [hardness/capacity tables, swept-cell count and both loss ledgers](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#group-13---excavation-units-bounded-spoil-and-legal-heading-budgets). Independent arithmetic verified 24,120/28,110 cash debits and 23,850/27,795 loss after maximal aggregate value. Twelve advancing chamber headings change at most 45 degrees. Runtime swept-consist geometry and balance remain unverified feature work.
 
 ### Group 14 - Parameterize launch and construction budgets
 
@@ -295,7 +295,7 @@ Evidence: [hardness/capacity tables, swept-cell count and both loss ledgers](r2m
 - [X] 14.2 Fill each station module construction quantity/time and each service inventory capacity. Define depletion as a visible pause that retains materials, including zero fuel and full output storage.
 - [X] 14.3 Publish the first station/heavy-robot budget with Surface-only parts and a saved remainder policy for fractional work; these are initial tuning numbers for r2mlvs16, not measured final balance.
 
-Evidence: [launch/return/module ledger and Q16 remainder policy](r2mlvs1-e-ground-and-space-budgets.md#group-14---launch-returns-and-surface-supplied-orbital-assembly). Arithmetic verified the 12/30-t probe/pods/service payload, 26,420 initial operating debit and exact 300+450-J fractional-work carry. Reconciled bootstrap fixture passed 258 assertions; pod/service supplies are now explicit. Nucleus deployment precedes heavy-robot assembly without a self-dependency. Runtime/art/network acceptance remains outstanding.
+Evidence: [launch/return/module ledger and Q16 remainder policy](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#group-14---launch-returns-and-surface-supplied-orbital-assembly). Arithmetic verified the 12/30-t probe/pods/service payload, 26,420 initial operating debit and exact 300+450-J fractional-work carry. Reconciled bootstrap fixture passed 258 assertions; pod/service supplies are now explicit. Nucleus deployment precedes heavy-robot assembly without a self-dependency. Runtime/art/network acceptance remains outstanding.
 
 ### Group 15 - Define the utility ledger and allocation boundary
 
@@ -305,7 +305,7 @@ Evidence: [launch/return/module ledger and Q16 remainder policy](r2mlvs1-e-groun
 - [X] 15.3 Separate vent heat allocation from electricity: generators receive a share of heat before converting it; direct-heat recipes consume a different share. Mark eligible solar generation before its single mirror modifier.
 - [X] 15.4 Provide worked fixtures for oversubscribed generation, zero supply, two consumers and one inter-layer export. Require conservation and identical results under different render/view settings.
 
-Evidence: [shared energy/commit contract and worked ledgers](r2mlvs1-f-utility-and-transfer-contracts.md#group-15---one-conserved-utility-ledger), [pure public utility API](../../../../src/multilayer_utility.h). `[multilayer-utility]` passed 97 assertions in three cases. Checked integration/carry, sorted shortage grants, explicit export debit/credit, zero supply, wrong layers, duplicate identities and separate heat conversion conserve energy. Runtime network eligibility, interval commit and operational mirror behavior remain feature obligations.
+Evidence: [shared energy/commit contract and worked ledgers](../../../zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md#group-15---one-conserved-utility-ledger), [pure public utility API](../../../../src/multilayer_utility.h). `[multilayer-utility]` passed 97 assertions in three cases. Checked integration/carry, sorted shortage grants, explicit export debit/credit, zero supply, wrong layers, duplicate identities and separate heat conversion conserve energy. Runtime network eligibility, interval commit and operational mirror behavior remain feature obligations.
 
 ### Group 16 - Assign native and ETI power effects to one authority
 
@@ -314,14 +314,14 @@ Evidence: [shared energy/commit contract and worked ledgers](r2mlvs1-f-utility-a
 - [X] 16.2 Specify an exclusive authority selector for native town effects versus an ETI Game Script adapter. Never allow both to set the same growth rate or reward the same electricity; include the no-GS native path.
 - [X] 16.3 Publish a contract fixture showing solar and geothermal entering one grid, geothermal excluded from mirror multiplication, and virtual energy excluded from unrestricted freight income.
 
-Evidence: [native effect caps, interval and exclusive authority](r2mlvs1-f-utility-and-transfer-contracts.md#group-16---useful-native-effects-and-exclusive-town-authority). `[multilayer-power-effects]` passed 22 assertions in one case, including one mixed solar/geothermal allocation, source eligibility, capped/zero bonuses and GS refusal. No operational solar modifier, town/GS hook or freight Power cargo is introduced.
+Evidence: [native effect caps, interval and exclusive authority](../../../zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md#group-16---useful-native-effects-and-exclusive-town-authority). `[multilayer-power-effects]` passed 22 assertions in one case, including one mixed solar/geothermal allocation, source eligibility, capped/zero bonuses and GS refusal. No operational solar modifier, town/GS hook or freight Power cargo is introduced.
 
 ### Group 17 - Recipes, capability and economics
 
 {{MEDIUM}}
 - [X] 17.1 Define the two independent launch-center areas: required 20-tile circular orbital release radius and proposed 20-tile Surface collection radius.
 
-Evidence: [independent radius/layer/anchor contract](r2mlvs1-f-utility-and-transfer-contracts.md#group-17---two-independent-circular-areas). The immutable profile publishes separate radius fields. Boundary/fixed-point comparison and checked arithmetic are specified; global station spread and catchment remain unchanged. Plan 9 owns operational eligibility/overlays.
+Evidence: [independent radius/layer/anchor contract](../../../zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md#group-17---two-independent-circular-areas). The immutable profile publishes separate radius fields. Boundary/fixed-point comparison and checked arithmetic are specified; global station spread and catchment remain unchanged. Plan 9 owns operational eligibility/overlays.
 
 ### Group 18 - Specify Surface collection membership and reservation
 
@@ -330,7 +330,7 @@ Evidence: [independent radius/layer/anchor contract](r2mlvs1-f-utility-and-trans
 - [X] 18.2 Define one packet location at a time: center storage, reserved handling job, member station or vehicle. Select members by cargo filters/demand and stable ID order; specify per-tick capacity and handling charges.
 - [X] 18.3 Specify cancellation on station extension/deletion or company changes: release unstarted reservations or settle in-progress jobs to a valid owner. Give one conservation example; r2mlvs9 owns implementation and payment integration.
 
-Evidence: [whole-footprint membership, reservation bounds and 40-unit cancellation ledger](r2mlvs1-f-utility-and-transfer-contracts.md#group-18---collection-membership-and-one-packet-location). Circular boundary/count arithmetic was recalculated. This contract-only group adds no private pool or packet mutation; Plan 9 still owes operational conservation, deletion and payment tests.
+Evidence: [whole-footprint membership, reservation bounds and 40-unit cancellation ledger](../../../zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md#group-18---collection-membership-and-one-packet-location). Circular boundary/count arithmetic was recalculated. This contract-only group adds no private pool or packet mutation; Plan 9 still owes operational conservation, deletion and payment tests.
 
 ### Group 19 - Define direct-heat recipes and early utility bootstrap
 
@@ -340,7 +340,7 @@ Evidence: [whole-footprint membership, reservation bounds and 40-unit cancellati
 - [X] 19.3 Define paid external electricity for the first 1970 tube route independently of Deep access; retain a usable conventional Uranium carrier between 1980 and Shield-85 in 1985.
 - [X] 19.4 Extend the bootstrap fixture with these dates and verify shared heat demand never exceeds the vent budget; later geothermal products cannot be required to build their own first source.
 
-Evidence: [dated heat recipes, construction inputs, paid-power tariff and shared heat ledger](r2mlvs1-f-utility-and-transfer-contracts.md#group-19---direct-heat-and-early-power-bootstrap). `[multilayer-geothermal-bootstrap]` passed 56 assertions in one case. No bootstrap input depends on a later heat factory; 1,998,000 thermal J funds distinct recipe/generator shares. Plan 18 still owns operating factories, links/leases and their runtime acceptance.
+Evidence: [dated heat recipes, construction inputs, paid-power tariff and shared heat ledger](../../../zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md#group-19---direct-heat-and-early-power-bootstrap). `[multilayer-geothermal-bootstrap]` passed 56 assertions in one case. No bootstrap input depends on a later heat factory; 1,998,000 thermal J funds distinct recipe/generator shares. Plan 18 still owns operating factories, links/leases and their runtime acceptance.
 
 ### Area Mandatory Reading - Shared interfaces and feasibility records
 
@@ -373,7 +373,7 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 - [X] 20.3 Extend the matrix for TubeNetwork and GeothermalVent/UtilityLink. Classify utility reservations and network connectivity as saved authority or rebuildable cache explicitly.
 - [X] 20.4 Review each row against r2mlvs15 Schema Foundation Handoff. Freeze transaction/save boundaries one family at a time; publish the consolidated dependency table only when no field has two owners.
 
-Evidence: [field/phase ownership and saved/cache boundaries](r2mlvs1-g-content-freeze.md#group-20---transaction-and-saved-state-ownership). Solar/sprite/schema M0 handoffs exist and their focused contract/metadata fixtures pass. Future feature IDs/pools remain producer obligations; no dependent runtime mutation is claimed.
+Evidence: [field/phase ownership and saved/cache boundaries](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md#group-20---transaction-and-saved-state-ownership). Solar/sprite/schema M0 handoffs exist and their focused contract/metadata fixtures pass. Future feature IDs/pools remain producer obligations; no dependent runtime mutation is claimed.
 
 ### Group 21 - Resolve ETI evidence before content freeze
 
@@ -383,7 +383,7 @@ Evidence: [field/phase ownership and saved/cache boundaries](r2mlvs1-g-content-f
 - [X] 21.3 Run the selected profile and native fallback contract fixtures for labels, bootstrap recipes and single power authority. Publish the decision and its evidence; absent feasibility evidence stops content freeze, not independent table drafting.
 - [X] 21.4 With Schema Foundation available, implement and round-trip saved profile ID/version and legacy absence-of-profile migration. Validate required-content identity and label meanings before allowing dependent gameplay to resume; record this persistence evidence in Content Freeze.
 
-Evidence: [native decision, save/editor/legacy and refusal boundaries](r2mlvs1-g-content-freeze.md#group-21---selected-profile-and-persistence). Six metadata/legacy cases and seven saved-policy/refusal cases passed; original files restored. Native/fallback contract burst passed 450 assertions. ETI runtime/redistribution remain unsupported/unverified; operating power/art/features are later handoffs.
+Evidence: [native decision, save/editor/legacy and refusal boundaries](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md#group-21---selected-profile-and-persistence). Six metadata/legacy cases and seven saved-policy/refusal cases passed; original files restored. Native/fallback contract burst passed 450 assertions. ETI runtime/redistribution remain unsupported/unverified; operating power/art/features are later handoffs.
 
 ### Group 22 - Reconcile art and worked budgets for Content Freeze
 
@@ -393,7 +393,7 @@ Evidence: [native decision, save/editor/legacy and refusal boundaries](r2mlvs1-g
 - [X] 22.3 Review first-tube, 1980 vent/riser and later-smelter budgets with calendar and power bootstrap checks.
 - [X] 22.4 Review first-probe/drop/collection, first-mirror and first-station/heavy-robot budgets with Surface-supplied fuel and parts. Record unimplemented runtime/art/network checks in their owners rather than treating these paper budgets as acceptance.
 
-Evidence: [reconciled geometry/coverage, ground/utility/Space budgets and remaining acceptance](r2mlvs1-g-content-freeze.md#group-22---reconciled-art-and-numerical-contracts). Manifest validation passed at 141 families/58,059 planned sprites; all actual art/feature/network checks remain in their owners.
+Evidence: [reconciled geometry/coverage, ground/utility/Space budgets and remaining acceptance](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md#group-22---reconciled-art-and-numerical-contracts). Manifest validation passed at 141 families/58,059 planned sprites; all actual art/feature/network checks remain in their owners.
 
 Context has compacted 1 times while executing this group.
 
@@ -404,7 +404,7 @@ Context has compacted 1 times while executing this group.
 - [X] 23.2 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [X] 23.3 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 
-Evidence: [public exports and final verification](r2mlvs1-g-content-freeze.md#group-23---public-exports-and-final-verification). Normal Debug builds passed with the loader probe disabled; 876 assertions/22 focused cases, manifest validation, two selected save loads and two exact-package refusals passed. Architecture and parent index now distinguish completed Plan 1 from partial producer M0 handoffs.
+Evidence: [public exports and final verification](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md#group-23---public-exports-and-final-verification). Normal Debug builds passed with the loader probe disabled; 876 assertions/22 focused cases, manifest validation, two selected save loads and two exact-package refusals passed. Architecture and parent index now distinguish completed Plan 1 from partial producer M0 handoffs.
 
 ## Consult on Demand
 

@@ -8,7 +8,7 @@
  * @file tbm_acquisition.cpp Pure whole-consist preparation, unpublished acquisition with rollback, and the role contract.
  * Production commissioning stays guarded: nothing here charges money, reserves a job or publishes a project.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md (Plan 4 consumer obligations)
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md (Plan 4 consumer obligations)
  */
 
 #include "stdafx.h"

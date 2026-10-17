@@ -8,7 +8,7 @@
  * @file geothermal_utility.h Paid native rock-layer utility installation and deterministic physical paths, using shared link identities.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3B-5
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group7 public facade
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md paid utility-cell extension
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md paid utility-cell extension
  */
 
 #ifndef GEOTHERMAL_UTILITY_H

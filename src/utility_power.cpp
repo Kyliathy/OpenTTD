@@ -7,7 +7,7 @@
 /**
  * @file utility_power.cpp Shared native owner of bounded Heat/Electricity publication and separate deterministic interval reservations.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group7
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility units and single authority
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md utility units and single authority
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B shared typed heat accounting
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5 paid electrical link admission and lifecycle
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups4C/5 original orbital binding retirement

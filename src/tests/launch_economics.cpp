@@ -2,7 +2,7 @@
 /**
  * @file launch_economics.cpp Revised launch, persistent-probe and first-Core numerical ledgers.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group9.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-a-launch-ledgers.md
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs9-a-launch-ledgers.md
  * These content-budget checks complement actual paid native flight/descent fixtures;
  * they neither commission a hull nor prove a completed orbital facility.
  */

@@ -11,7 +11,7 @@
  * breakpoint before the last waits NoEmpties here; short initial empties, competing haulers and blocked lines have their
  * own cases in tbm_exchange_origin.cpp, tbm_wagon_sets.cpp and spoil_receiver_stall.cpp.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 12
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  */
 
 #include "../stdafx.h"

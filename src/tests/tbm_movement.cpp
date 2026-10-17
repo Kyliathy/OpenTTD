@@ -13,7 +13,7 @@
  * real trains, from the rig's project or one commissioned through the player's command ([tbm-loop]). Only the trains'
  * own ticks move them, through the game's vehicle step in the loop and whole-life tests; the TBM controller and the
  * hauler cycle run inside them. A Commissioning pair shows its track to the project's own trains only.
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-m-movement-design.md, decisions 1-7
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-m-movement-design.md, decisions 1-7
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 19
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8 and 11 (paid support and bend reload)

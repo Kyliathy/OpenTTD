@@ -9,8 +9,8 @@
  * industries installed after GRF loading, whose bounded intake, interval processing, fees and saved side state are
  * owned here. Delivery reaches them through the ordinary station catchment and economy path.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md, Group 7 (frozen recipes)
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md, Group 7 (frozen recipes)
  */
 
 #ifndef SPOIL_RECEIVER_H

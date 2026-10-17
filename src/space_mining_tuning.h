@@ -1,7 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_mining_tuning.h Immutable per-miner operating contracts, separate from physical hull/packet/work ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md Heavy mining contract
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md Heavy mining contract
  */
 #ifndef SPACE_MINING_TUNING_H
 #define SPACE_MINING_TUNING_H

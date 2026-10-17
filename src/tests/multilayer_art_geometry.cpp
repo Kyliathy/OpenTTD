@@ -7,7 +7,7 @@
 /**
  * @file multilayer_art_geometry.cpp Measure actual native consumer geometry before selecting M1 raster source footprints.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md, Group 9
- * @see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (source/consumer reconciliation)
+ * @see docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (source/consumer reconciliation)
  */
 
 #include "../stdafx.h"

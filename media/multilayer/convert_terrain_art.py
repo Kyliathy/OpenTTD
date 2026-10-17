@@ -2,7 +2,7 @@
 
 @file convert_terrain_art.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 10-11 and 79
-@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md
+@see docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md
 Only deterministic crop, native resampling and DOS-palette conversion happen
 here. Built-in image generation owns raster authoring; runtime activation is
 reserved for the later owning integration groups.

@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_cut.cpp Pure complete-cut accounting and owner/geometry/capacity preflight. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Groups 11 and 14B (solid start); r2mlvs4-tunnel-boring-machines.md, Group 6 (per-tick work estimate); r2mlvs1-e-ground-and-space-budgets.md, Group 13; docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file excavation_cut.cpp Pure complete-cut accounting and owner/geometry/capacity preflight. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Groups 11 and 14B (solid start); r2mlvs4-tunnel-boring-machines.md, Group 6 (per-tick work estimate); docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md, Group 13; docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "excavation.h"

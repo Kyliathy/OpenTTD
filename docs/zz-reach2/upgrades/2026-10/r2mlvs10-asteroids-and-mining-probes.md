@@ -147,7 +147,7 @@ native company fleet integration retain their separate delivery gates.
 _Applies to Group P2 only._ This staged producer revision follows the user's
 request to continue functionality after P1. Read the Global section, parent
 AD-9/AD-11, the delivered P1 exports, and
-[native compatibility matrix](space-vehicle-compatibility.md). Entry producers:
+[native compatibility matrix](../../../zz-rhr/upgrades/2026-10/space-vehicle-compatibility.md). Entry producers:
 state/content focused gates, canonical Vehicle/Engine/EIDS/CAPA ownership,
 `space.h` Q16 geometry and the one `AsteroidField`. Consume actual native owners;
 no second fleet, engine or cargo registry is allowed. This increment exports
@@ -222,8 +222,8 @@ orbital station. Steel/Goods may arrive from Earth or be produced by constructed
 orbital processors, then be reused for infrastructure/probes or dropped to Earth.
 
 **User revision,2026-10-12:** the canonical
-[Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
-and [revised numerical defaults](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
+[Space economy contract](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+and [revised numerical defaults](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
 supersede the old material/bootstrap rows. Plan9 owns initial Earth commissioning;
 Plan8 owns native typed order/vehicle/blueprint identity; this plan owns probe
 actions and survey disclosure; Plan11 owns delivered construction, orbital
@@ -301,8 +301,8 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 | [src/core/random_func.hpp](../../../../src/core/random_func.hpp) | 24-43 | `Randomizer` and simulation versus interactive state constrain feature-seed generation: preserve Surface simulation RNG and exclude presentation randomness. |
 | [src/tests/map_layer.cpp](../../../../src/tests/map_layer.cpp) | 162-183 | Complete `Plane distances ignore the layer` test fixes projected geometry but grants no cross-layer transfer authority. |
 | [src/timer/timer_game_calendar.h](../../../../src/timer/timer_game_calendar.h) | 15-39 | `TimerGameCalendar` technology-clock contract and date conversions govern 1980/model/factory introductions; economic/realtime scheduling cannot unlock a technology. |
-| [r2mlvs1-a-content-contract.md](r2mlvs1-a-content-contract.md#group-2---draft-cargo-meanings) | `Group 2 - draft cargo meanings` | Canonical `NORE`, `WICE` and `RARE` meanings, units and carrier forms constrain composition and finite reserve; do not allocate alternate asteroid cargo meanings. |
-| [r2mlvs1-e-ground-and-space-budgets.md](r2mlvs1-e-ground-and-space-budgets.md#group-14---launch-returns-and-surface-supplied-orbital-assembly) | `Group 14 - launch, returns and Surface-supplied orbital assembly` | The 20-tonne hold, 2-tonne/74-work-tick extraction bound, two-return/service budget and paid pod supplies constrain starter reserves and movement/interception tuning. |
+| [r2mlvs1-a-content-contract.md](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md#group-2---draft-cargo-meanings) | `Group 2 - draft cargo meanings` | Canonical `NORE`, `WICE` and `RARE` meanings, units and carrier forms constrain composition and finite reserve; do not allocate alternate asteroid cargo meanings. |
+| [r2mlvs1-e-ground-and-space-budgets.md](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#group-14---launch-returns-and-surface-supplied-orbital-assembly) | `Group 14 - launch, returns and Surface-supplied orbital assembly` | The 20-tonne hold, 2-tonne/74-work-tick extraction bound, two-return/service budget and paid pod supplies constrain starter reserves and movement/interception tuning. |
 | `src/multilayer_content.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs1-gameplay-contracts-and-content.md](r2mlvs1-gameplay-contracts-and-content.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
 | [src/space.h](../../../../src/space.h) (published geometry; native mission in `space_vehicle.h`) | Live definitions; no fixed range | [r2mlvs8-space-world-and-construction.md](r2mlvs8-space-world-and-construction.md) Groups 1-7, ending with Group 7's public-contract task, publish `SpaceVehicle`, `OrbitalBodyID`, `SpaceMission`, `SpaceStructure`, `SpaceTransition`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
 | `src/launch_center.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs9-launch-centers-and-rockets.md](r2mlvs9-launch-centers-and-rockets.md) Groups 1-7, ending with Group 7's public-contract task, publish `LaunchCenterAnchor`, `LaunchCollectionHub`, `SurfaceHandlingJob`, `SpaceDescentJob`, `CanReleaseOrbitalCargo`, `CommitOrbitalCargoRelease`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
@@ -400,7 +400,7 @@ means, the two-return reserve floor and740 work ticks per20t full hold at2t/74ti
 `logs/asteroid-catalogue-verification.json` binds the two accepted native
 executable/report/log chains:4,274 assertions/ten focused cases each. Command:
 `python -B src/tests/multilayer/acceptance/asteroid_catalogue_checks-1.py --configuration RelWithDebInfo`
-(also Debug). [Execution notes](r2mlsp-r-asteroid-catalogue-notes.md) preserve
+(also Debug). [Execution notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-r-asteroid-catalogue-notes.md) preserve
 the producer evidence and next placement task. This supplies no new paid
 mission, saved-phase replay, graphics or network acceptance.
 
@@ -496,7 +496,7 @@ preserves generated body identities and initial reserves. Isolated native
 terrain proves no-site, distant-site and preferred32-tile selection through
 this same geometry producer. Genuine generated worlds in the accepted seed
 fixture have explicit `NoSite` inputs; they supply no claim of immediately
-available launch terrain. [Starter access notes](r2mlsp-s-starter-access-notes.md)
+available launch terrain. [Starter access notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-s-starter-access-notes.md)
 preserve the producer handoff.
 
 - [X] 2.3 Generate the complete body list, class/content and initial positions from the saved Space feature seed, generation version and selected tuning without Surface RNG draws. Save the generated records and generation inputs; load, view changes and target selection never reroll them. Group 3 extends this generator with seeded initial motion before producer readiness.
@@ -513,7 +513,7 @@ input cases each refuse full load and read-only preview without mutating the
 live field. The nearest-grid estimator matches an independent full-grid oracle
 and examines at most25 points per candidate; real site search is bounded by
 two geometry queries per Surface anchor. No full regression was run.
-[Generation input notes](r2mlsp-t-generation-inputs-notes.md) retain exact run
+[Generation input notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-t-generation-inputs-notes.md) retain exact run
 identities, schema and the no-site limitation. Group3's complete motion and
 attachment requirements remain open.
 
@@ -558,7 +558,7 @@ heading/speed records retain the original random draws, content and positions;
 `MultiLayerSpaceTuning` exposes the unchanged shared geometry/step defaults.
 Generation version1 and schema424 remain unchanged. All attached preview and
 actual matching mining-lease transforms publish before their work decisions.
-[Motion notes](r2mlsp-u-motion-notes.md) retain the worked edge/corner records,
+[Motion notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-u-motion-notes.md) retain the worked edge/corner records,
 632-tick32-tile pursuit, distant generated starter geometry, travel-cost ledger
 and explicit isolated-fixture scope. Rendering projects published Q16 positions
 at native sprite-pixel precision; it does not advance gameplay. Later paid
@@ -583,7 +583,7 @@ catalogue fixtures, so all147 population cells,14,336 maximum bodies, inclusive
 resource bounds and unchanged seed ledger remain verified in both configurations.
 Normal256x256 is160 bodies (96/48/16), with actual95050/99715/4018 tonnes and
 198783 total for feature seed `0x20261012`; expected total is211680 tonnes and
-the absolute bound is78400..627200. [Motion notes](r2mlsp-u-motion-notes.md)
+the absolute bound is78400..627200. [Motion notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-u-motion-notes.md)
 publish the shared64x64 centre rectangle, saved edge/corner fractions and
 632-tick fastest-body32-tile interception. The basic probe's declared4-tile/day
 speed is16 times the fastest body's nominal speed; its0.25-tile tolerance and
@@ -617,7 +617,7 @@ then proves the actual existing lease exits to Return on one working tick,
 retaining cargo and refusing another Mine assignment. Independent resume and
 ordinary resave retain all26 owners exactly. This fixture does not claim
 production of its historical missing reserve or a newly launched mission.
-[Depletion notes](r2mlsp-v-depletion-notes.md) publish invalid-ID/recall distinctions
+[Depletion notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-v-depletion-notes.md) publish invalid-ID/recall distinctions
 and `TargetRemoved` / `Target unavailable` notification semantics. Later controller
 groups retain their actual final-debit, retarget, cancellation and full mission
 conservation obligations.
@@ -635,7 +635,7 @@ all49 supported map shapes, static recipe footprints/south approaches and every
 heading/speed/corner envelope pass. Actual native quotes accept a free north
 site and refuse the moving strip/crossing approach without changing structures,
 orders, bodies, money or RNG. Ordinary resave and corresponding configurations
-retain all26 owners exactly. [Band policy notes](r2mlsp-w-band-policy-notes.md)
+retain all26 owners exactly. [Band policy notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-w-band-policy-notes.md)
 preserve the current gate and19 identities audited at acceptance. This narrow
 consumer proof does not close Plan8's broader first-station/launch-access groups
 or later paid mining-controller acceptance.
@@ -657,7 +657,7 @@ Both configurations pass37,122 assertions/12 focused cases and actual new-world
 population/reload plus new/legacy37-work-tick continuation. All26 owner families
 match independent replay, ordinary reload and260 comparisons across configurations.
 Saved records retain their original content/motion instead of current defaults.
-[Generation handoff](r2mlsp-x-generation-handoff.md) preserves the exact gate,
+[Generation handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-x-generation-handoff.md) preserves the exact gate,
 version policy and transition to the next mandatory-reading Area. This publishes
 generation/body readiness, not completion of the later mission/manufacturing,
 presentation or network consumers.
@@ -721,7 +721,7 @@ Implement one transition family per group. Failure paths retain the last authori
 | Cargo descent time | 2 economy days. |
 | Separate elapsed-travel-time endurance cutoff | None; pods, service state and the saved approach deadline constrain missions. |
 
-The [revised Space budget](r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
+The [revised Space budget](../../../zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md#space-economy-revision---2026-10-12)
 is authoritative for body/pod materials and masses; a pod now uses STEL1 +
 GOOD2 and weighs2t. The unchanged launch/probe schedules govern shared hold,
 work, cost and service. r2mlvs9 owns paid replacement and descent. No orbital
@@ -739,7 +739,7 @@ remainder. A saved descent job owns and charges its cargo once.
 - [X] 8.1 Consume the minimal probe hull/carry/deployment identity already delivered by r2mlvs9; add mining capability to that same engine/unit rather than create another probe registry or launch mechanism.
 - [X] 8.2 Bind the Mining-probe defaults to the existing model's tuning and add home-center/body-target commands, hold/refit choice, speed, extraction rate, upkeep, timeout and service budget. Use Group 3's body-speed bounds and the canonical r2mlvs1 cost/service budget. Validate missing target as an idle/unassigned state before a mission begins.
 
-**Delivered shell binding,2026-10-15:** both configurations execute the actual paid commissioning/carry/deployment producer, then mine with that same model15 EngineID/VehicleID/generation. Generation-checked paid commissioning/recovery supplies its home; `CmdSetSpaceMission` selects the body and compatible empty-hold cargo, refusing an incompatible loaded refit. A newly deployed shell with no target stays Idle. The saved allowance now uses upward-rounded distance to the current attachment point, including its offset; attachment uses the declared0.25-tile tolerance. Native work charges the common budget with saved remainders and extracts20t in740 working ticks without spending a pod before descent. Focused checks pass13,518 assertions/nine cases per configuration; actual collection and its2t/37-work-tick reload pass8,941 and7,317 assertions. Ordinary partial/complete resaves and interrupted continuation preserve26 owner families;156 comparisons also match across configurations. `logs/probe-shell-verification.json` binds14 accepted processes and63 audited referenced identities. [Shell notes](r2mlsp-y-probe-shell-notes.md) preserve the public exports and next producer gate. Content2/schema424 remain unchanged. Later roles/manufacturing and full mission acceptance stay open.
+**Delivered shell binding,2026-10-15:** both configurations execute the actual paid commissioning/carry/deployment producer, then mine with that same model15 EngineID/VehicleID/generation. Generation-checked paid commissioning/recovery supplies its home; `CmdSetSpaceMission` selects the body and compatible empty-hold cargo, refusing an incompatible loaded refit. A newly deployed shell with no target stays Idle. The saved allowance now uses upward-rounded distance to the current attachment point, including its offset; attachment uses the declared0.25-tile tolerance. Native work charges the common budget with saved remainders and extracts20t in740 working ticks without spending a pod before descent. Focused checks pass13,518 assertions/nine cases per configuration; actual collection and its2t/37-work-tick reload pass8,941 and7,317 assertions. Ordinary partial/complete resaves and interrupted continuation preserve26 owner families;156 comparisons also match across configurations. `logs/probe-shell-verification.json` binds14 accepted processes and63 audited referenced identities. [Shell notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-y-probe-shell-notes.md) preserve the public exports and next producer gate. Content2/schema424 remain unchanged. Later roles/manufacturing and full mission acceptance stay open.
 
 ### Local Mandatory Reading - Additional probe roles and orders
 
@@ -797,9 +797,9 @@ remain open; passing these suites does not finalize either plan.
 
 **Commissioning consumer verified,2026-10-16.** `logs/probe-role-commissioning-verification.json` binds both current429 configurations' focused content, Earth production-receipt and ordinary physical purchase contracts, plus eight exact paid19/20 queued/reserved/before/complete milestones each from the immutable Plan11 replacement handoff. Its83 current producer source identities still match before reuse. Logical19/20 retain the original native Space type and append to0..18; content2/SDEF, actual Earth workshop/body and operational Assembly/full-input/shared-work owners are delivered. No new commissioning implementation or save revision is needed. Continue sequentially at8B.2: typed queues exist, but orbital Unload and Return/Service still stop at producer placeholders despite delivered freight/service commands. Actual action completion and8B.4 acceptance remain open; this commissioning proof does not close Group8B.
 
-**Typed actions verified,2026-10-16.** New `space_order_actions.h/.cpp` delegates reached whole-hold Unload and due Return/Service to the delivered native freight/Core-Dock/onboard owners. Pending descents, full stock and absent parts/power retain the actual instruction and assets. Save430 explicitly admits the existing queue alongside its actual onboard service work without adding bytes or another timer. Independent preview reads normal Station authority from the same-file native STNN table and exact launch-anchor incarnation/position, without live ownership. `logs/probe-order-actions-verification.json` binds both430 builds,19 sources and324 directly audited identities:587 focused assertions/four cases and12,688 native assertions/15 stages each;8,123/8,122 resumed assertions,13 ordinary checkpoints and ten full/copied refusal pairs each. Thirty owners match across1,080 cross-configuration comparisons. Original paid parts/pods arrive through actual rocket resupply; two real returns exhaust allowance before148 service ticks consume parts once. Pause/reload and removal of a separately paid empty service center preserve work and lost-target intent; the original receiving center's asset demolition guard remains intact. No physical input, pose, money or allowance is granted. Continue at8B.4; this proof does not claim its remaining survey/migration/network acceptance. [Current notes](r2mlsp-z-f-probe-order-notes.md) retain exact boundaries.
+**Typed actions verified,2026-10-16.** New `space_order_actions.h/.cpp` delegates reached whole-hold Unload and due Return/Service to the delivered native freight/Core-Dock/onboard owners. Pending descents, full stock and absent parts/power retain the actual instruction and assets. Save430 explicitly admits the existing queue alongside its actual onboard service work without adding bytes or another timer. Independent preview reads normal Station authority from the same-file native STNN table and exact launch-anchor incarnation/position, without live ownership. `logs/probe-order-actions-verification.json` binds both430 builds,19 sources and324 directly audited identities:587 focused assertions/four cases and12,688 native assertions/15 stages each;8,123/8,122 resumed assertions,13 ordinary checkpoints and ten full/copied refusal pairs each. Thirty owners match across1,080 cross-configuration comparisons. Original paid parts/pods arrive through actual rocket resupply; two real returns exhaust allowance before148 service ticks consume parts once. Pause/reload and removal of a separately paid empty service center preserve work and lost-target intent; the original receiving center's asset demolition guard remains intact. No physical input, pose, money or allowance is granted. Continue at8B.4; this proof does not claim its remaining survey/migration/network acceptance. [Current notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-f-probe-order-notes.md) retain exact boundaries.
 
-**Mission acceptance verified,2026-10-16.** `logs/probe-mission-verification.json` binds both430 builds,16 sources and269 directly audited identities:11,726 native assertions/13 stages and792 resumed assertions/six continuations each. Thirteen ordinary checkpoints preserve30 native owners, including real Visit(body1) then Mine(body0), unsurveyed extraction, role/owner/stale-generation refusals,37/148-tick scans, cancellation, actual knowledge takeover and company-ID reuse. Genuine408 input withoutSPKN remains unknown after148 old-preview ticks. Actual SendNet/distribution/next-frame/PostFromNet dispatch matches local commands, refuses early execution and does not repeat on duplicate dispatch. Thirty owners match across960 cross-configuration and360 local/network comparisons per build. Fourteen actual inspector captures per build retain native/pixel provenance; the completed owner sees quantities while the other company sees Unknown. The sole orbital GUI quantity path uses the company disclosure query, and172 script units expose no raw reserve fields. Full multiplayer socket integration remains in its later owning gate. Group8B is complete; continue at8C's remaining processor/freight producer gate. [Mission handoff](r2mlsp-z-g-probe-mission-notes.md) preserves exact originals and evidence.
+**Mission acceptance verified,2026-10-16.** `logs/probe-mission-verification.json` binds both430 builds,16 sources and269 directly audited identities:11,726 native assertions/13 stages and792 resumed assertions/six continuations each. Thirteen ordinary checkpoints preserve30 native owners, including real Visit(body1) then Mine(body0), unsurveyed extraction, role/owner/stale-generation refusals,37/148-tick scans, cancellation, actual knowledge takeover and company-ID reuse. Genuine408 input withoutSPKN remains unknown after148 old-preview ticks. Actual SendNet/distribution/next-frame/PostFromNet dispatch matches local commands, refuses early execution and does not repeat on duplicate dispatch. Thirty owners match across960 cross-configuration and360 local/network comparisons per build. Fourteen actual inspector captures per build retain native/pixel provenance; the completed owner sees quantities while the other company sees Unknown. The sole orbital GUI quantity path uses the company disclosure query, and172 script units expose no raw reserve fields. Full multiplayer socket integration remains in its later owning gate. Group8B is complete; continue at8C's remaining processor/freight producer gate. [Mission handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-g-probe-mission-notes.md) preserves exact originals and evidence.
 
 Context has compacted 1 times while executing this group.
 
@@ -958,7 +958,7 @@ _Applies to Group13 only._ Read Global and the Probe mission controller Area. In
 - [X] 13.2 Verify the same home/target/hold/refit rules in UI, commands and saved mission validation. Keep failed handoffs in their current phase with cargo intact.
 - [X] 13.3 Check the basic repeat loop uses the published paid service path without requiring a later station; precise docking/service remains a separate mission when requested.
 
-**Mission exit/recovery reconciliation verified,2026-10-17.** [The phase/trigger transition table](r2mlsp-z-z-g-probe-exit-notes.md#phase-and-trigger-table) covers all five native phases, deployment, typed waits, descent and service owners. Actual Recall now retains the last natural body as nonactionable departure/history so the existing shared safe-exit query still applies after an attached cancellation. Return and released lease end extraction; original cancellation still discards the uncommitted attachment interval, preserving emitted packets/extracted history. The inspector now quotes/posts the same native Recall for mining roles instead of installing exact home Visit; other roles retain explicit home navigation. No new flag, phase, stock owner or schema appears.
+**Mission exit/recovery reconciliation verified,2026-10-17.** [The phase/trigger transition table](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-g-probe-exit-notes.md#phase-and-trigger-table) covers all five native phases, deployment, typed waits, descent and service owners. Actual Recall now retains the last natural body as nonactionable departure/history so the existing shared safe-exit query still applies after an attached cancellation. Return and released lease end extraction; original cancellation still discards the uncommitted attachment interval, preserving emitted packets/extracted history. The inspector now quotes/posts the same native Recall for mining roles instead of installing exact home Visit; other roles retain explicit home navigation. No new flag, phase, stock owner or schema appears.
 
 `logs/probe-exit-verification.json` SHA256 `3c5c5ea4473693346b895aebe5c62dfc5a65b127728bdf0f23d00ab1c254010c` binds98 current sources,57 direct identities and three exact dated paid producers. Both438 builds pass10995 focused assertions/15cases and1444 native/save assertions across seven processes. Original full-hold11 region, actual2-unit/37-partial-work10 attachment and12 active74-work service exercise incompatible target/refit/mixed-query refusals, safe cargo-preserving cancellation and conflicting-service refusal. Actual partial Recall releases its lease, clears only unfinished work, leaves reserve/extracted packets unchanged and physically reaches the original inclusive circle. Running/stopped isolated legacy components additionally exercise the same shared departure; these create no paid procurement claim.
 
@@ -1107,7 +1107,7 @@ Context has compacted 1 times while executing this group.
 {{MEDIUM}}
 - [X] 21.1 Measure generation, target search and per-body/per-probe costs at Group 2's 10/160-body small/normal examples, 10,240-body largest Normal map and 14,336-body Dense maximum, including clustered drift and narrow-map cases. Record those exact counts and work bounds; avoid all-pairs scanning every tick.
 
-**Exact native work verified,2026-10-17.** `logs/asteroid-work-verification.json` SHA256 `bc223f9c6a7251cf2981275cc5722bdc64406e1483d25a800b1aee39dd1944c0` binds39 current source files,150 direct evidence identities and30 actual processes. Each438 build passes7,068 measured assertions/14 cases and38,589 focused assertions/13 producer cases. All14 native semantic results, exact operations, finite resource facts and final field digests agree between builds. Final normal game/test binaries pass Releasebuild2/Debugbuild1. The first Release test-only money comparison diagnostic is excluded. Focused commands and original invocation selectors are retained by `asteroid_work_checks-1.py/-2.py` and [performance notes](r2mlsp-z-z-o-probe-performance-notes.md).
+**Exact native work verified,2026-10-17.** `logs/asteroid-work-verification.json` SHA256 `bc223f9c6a7251cf2981275cc5722bdc64406e1483d25a800b1aee39dd1944c0` binds39 current source files,150 direct evidence identities and30 actual processes. Each438 build passes7,068 measured assertions/14 cases and38,589 focused assertions/13 producer cases. All14 native semantic results, exact operations, finite resource facts and final field digests agree between builds. Final normal game/test binaries pass Releasebuild2/Debugbuild1. The first Release test-only money comparison diagnostic is excluded. Focused commands and original invocation selectors are retained by `asteroid_work_checks-1.py/-2.py` and [performance notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-o-probe-performance-notes.md).
 
 | Actual geometry / population | Bodies N | Generated grid cells G | Leading candidate visits 3G-3 | Release generation ms, diagnostic |
 | --- | --- | --- | --- | --- |
@@ -1133,7 +1133,7 @@ _Applies to Group22 only._ Read Global and UI/art/acceptance Area, this plan's C
 - [X] 22.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [X] 22.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 
-**Runtime handoff recorded,2026-10-17.** [Current438 handoff](r2mlsp-z-z-p-probe-runtime-handoff.md) records live generation/body/mission/checked-command/extraction/departure/disclosure/measurement exports, original paid owners, exact focused commands and accepted7/8B/8C/9-21 indexes. `logs/probe-runtime-handoff-verification.json` retains direct dated producer identities, both unchanged original paid deployments, current performance/source evidence and documentation-link checks. Vehicle and map-layer architecture now distinguish delivered finite mining, actual paid recovery/Surface delivery, company disclosure, real joined socket replay and exact population work from the dated423 launch and424 generation boundaries. Original supplied/derived saves and their native provenance remain unchanged; no historical binary graph or full regression is rerun for documentation. The master reconciles completed groups only. This source plan and parent remain open while14B requires actual authored/packed family delivery and ordinary-game review; Plan11's broader acceptance remains its own queue.
+**Runtime handoff recorded,2026-10-17.** [Current438 handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-p-probe-runtime-handoff.md) records live generation/body/mission/checked-command/extraction/departure/disclosure/measurement exports, original paid owners, exact focused commands and accepted7/8B/8C/9-21 indexes. `logs/probe-runtime-handoff-verification.json` retains direct dated producer identities, both unchanged original paid deployments, current performance/source evidence and documentation-link checks. Vehicle and map-layer architecture now distinguish delivered finite mining, actual paid recovery/Surface delivery, company disclosure, real joined socket replay and exact population work from the dated423 launch and424 generation boundaries. Original supplied/derived saves and their native provenance remain unchanged; no historical binary graph or full regression is rerun for documentation. The master reconciles completed groups only. This source plan and parent remain open while14B requires actual authored/packed family delivery and ordinary-game review; Plan11's broader acceptance remains its own queue.
 
 ### Local Mandatory Reading - Final Space family art acceptance
 
@@ -1177,7 +1177,7 @@ _Applies to Group14BC only._ Read Global/UI Area, Plan14 Global/Source generatio
 
 _Applies to Group14BD only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Native construction carrier Local, native20 cargo/Construct/job/approach/service owners and delivered source/conversion contracts. Steel/Goods loads and active construction derive only from original native cargo/work. Preserve approved mining/survey originals.
 
-Current bounded handover: [construction source notes](r2mlsp-z-z-r-construction-art-notes.md); after compaction consume its active source section rather than the full earlier Space-art history.
+Current bounded handover: [construction source notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-r-construction-art-notes.md); after compaction consume its active source section rather than the full earlier Space-art history.
 
 Context has compacted 1 times while executing this group.
 
@@ -1201,7 +1201,7 @@ _Applies to Group14BE only._ Read Global/UI Area, Plan14 Global/Source generatio
 
 ### Local Mandatory Reading - Metallic asteroid source
 
-_Applies to Group14BF only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Metallic asteroid Local for67, current [metallic source notes](r2mlsp-z-z-t-metallic-asteroid-art-notes.md), actual native class/size/motion/lease and company-disclosure owners, and only the metallic public source row. The shared saved size order is Small/Medium/Large with visual diameters0.5/1/2tiles. Freeze declared variant/canvas/anchor and actual static/animated aliases before genuine views. Native motion reflection does not rotate attachment offsets or grant a saved visual spin. Depleted appearance requires the original company's quantity disclosure; unknown observers retain normal body appearance. Preserve natural body identity and exact outside-part source pixels. No resource reroll, extra lease/hardware, body replacement or art clock.
+_Applies to Group14BF only._ Read Global/UI Area, Plan14 Global/Source generation Area and closest Metallic asteroid Local for67, current [metallic source notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-t-metallic-asteroid-art-notes.md), actual native class/size/motion/lease and company-disclosure owners, and only the metallic public source row. The shared saved size order is Small/Medium/Large with visual diameters0.5/1/2tiles. Freeze declared variant/canvas/anchor and actual static/animated aliases before genuine views. Native motion reflection does not rotate attachment offsets or grant a saved visual spin. Depleted appearance requires the original company's quantity disclosure; unknown observers retain normal body appearance. Preserve natural body identity and exact outside-part source pixels. No resource reroll, extra lease/hardware, body replacement or art clock.
 
 Context has compacted 1 times while executing this group.
 
@@ -1251,7 +1251,7 @@ Context has compacted 1 times while executing this group.
 
 **Shared-build alignment,2026-10-17.** Original14BG.1 actual decoded/fallback proof obligation moves intact to14BG.2 beside the required compiled selectors, avoiding a full native rebuild solely for the loader followed by another rebuild for selectors.14BG.1 now certifies packing INPUTS only:8 focused cases/7.2s,1568 exact crop/anchor round trips, native3599..5166, protected seven old source/header hashes unchanged. Exact fixture expects1568 final +11 unchanged previews. No actual GRF generation, decoding, fallback or runtime acceptance claimed yet. Master14BG/original14B remain unchecked.
 
-**Checkpoint disposition,2026-10-17.** Read-only native selectors, eight focused C++ cases and the separate bounded actual-build/load runner are implemented. The first consolidated RelWithDebInfo build generated the appended GRF, then exposed a missing direct `direction_type.h` include in `space_sprite.h`. The include is corrected. The user explicitly instructed stopping compilation and deferring the rebuild; the active build tree was stopped and no replacement build or native tests were run.14BG.2, original14B.1 and master14BG remain unchecked: both configuration builds, selector checks, two byte-identical actual GRF builds, generator-free packaging and both actual decoded prefix/final loading proofs remain required. See [bounded packing handover](r2mlsp-z-z-w-space-packing-notes.md). This checkpoint creates no native or runtime acceptance claim.
+**Checkpoint disposition,2026-10-17.** Read-only native selectors, eight focused C++ cases and the separate bounded actual-build/load runner are implemented. The first consolidated RelWithDebInfo build generated the appended GRF, then exposed a missing direct `direction_type.h` include in `space_sprite.h`. The include is corrected. The user explicitly instructed stopping compilation and deferring the rebuild; the active build tree was stopped and no replacement build or native tests were run.14BG.2, original14B.1 and master14BG remain unchecked: both configuration builds, selector checks, two byte-identical actual GRF builds, generator-free packaging and both actual decoded prefix/final loading proofs remain required. See [bounded packing handover](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-w-space-packing-notes.md). This checkpoint creates no native or runtime acceptance claim.
 
 ### Local Mandatory Reading - Ordinary-game final Space art review
 

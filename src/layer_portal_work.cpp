@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_portal_work.cpp One canonical saved work owner per reciprocal portal pair. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 2, 5 (task 5.3B: TBM role admission), 8 (commissioning binding), 8B (solid-start load binding) and 11.3/11.4 (withdrawal, merger and company removal of assigned pairs); docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md; docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file layer_portal_work.cpp One canonical saved work owner per reciprocal portal pair. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Groups 2, 5 (task 5.3B: TBM role admission), 8 (commissioning binding), 8B (solid-start load binding) and 11.3/11.4 (withdrawal, merger and company removal of assigned pairs); docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md; docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #include "stdafx.h"
 #include "layer_portal_cmd.h"

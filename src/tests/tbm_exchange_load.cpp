@@ -10,7 +10,7 @@
  * assignment names one live non-cutter hauler and at most one carried set. Any refusal publishes nothing. Wagon packets
  * never pass through the store, and a save before or after the exchange step resumes the same cycle.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 10
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
  */
 
 #include "../stdafx.h"

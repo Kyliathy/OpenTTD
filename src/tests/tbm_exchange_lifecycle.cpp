@@ -10,7 +10,7 @@
  * deleted trains leave the exchange store, a depot bay goes only with a fallback, and a merger or company removal keeps
  * every store loadable. After each event the exchange store reloads unchanged.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 11
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  */
 
 #include "../stdafx.h"

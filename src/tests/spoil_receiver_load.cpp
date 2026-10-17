@@ -8,7 +8,7 @@
  * @file spoil_receiver_load.cpp Staged loading of receiver state (Plan 5 Group 8 persistence): loaded rows stay
  * unpublished until they match the rebuilt receiver industries one for one, with in-range fields and stock; any
  * refusal publishes nothing. A closed receiver takes its row with it. The metadata feature flag follows the live receivers.
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Persistence
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Persistence
  */
 
 #include "../stdafx.h"

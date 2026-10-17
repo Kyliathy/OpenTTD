@@ -54,7 +54,7 @@ struct MultiLayerTubePowerContract {
 	uint16_t introduction_year = 1970; ///< Calendar gate independent of Deep access and economy speed.
 };
 
-/** @return Canonical paid service contract frozen by r2mlvs1-f-utility-and-transfer-contracts.md Group19. */
+/** @return Canonical paid service contract frozen by docs/zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19. */
 const MultiLayerTubePowerContract &GetMultiLayerTubePowerContract();
 
 /** Canonical propulsion envelope per capsule; native20-kW mandatory depot service remains the shared TubeWork contract. */

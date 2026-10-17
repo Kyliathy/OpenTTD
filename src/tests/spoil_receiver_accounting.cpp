@@ -9,7 +9,7 @@
  * origin and transferring there pay and charge nothing; an ordinary carrier outside every set takes the spoil on;
  * and the company's own receivers charge their fee once, only for the tonnes they finally admit.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 9
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md, Earth/Rock disposal settlement row
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md, Earth/Rock disposal settlement row
  */
 
 #include "../stdafx.h"

@@ -7,7 +7,7 @@
 /**
  * @file utility_power_effects.cpp Actual ledger-backed bounded work and real Town/custom-GS authority fixtures.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 9
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-g-content-freeze.md native response caps
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md native response caps
  */
 
 #include "../stdafx.h"

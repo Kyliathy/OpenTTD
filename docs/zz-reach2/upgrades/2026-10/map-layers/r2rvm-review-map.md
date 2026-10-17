@@ -106,7 +106,7 @@ Master-plan Group 1 stands at:
 
 - tasks 1.1 and 1.2 done: `build/` is configured with the standalone vcpkg (master-plan task 1.2, last note);
 - no build, no baseline saves;
-- `mlm/tools/savegames/savegame_plane_digest.py` and `docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` do not exist.
+- `mlm/tools/savegames/savegame_plane_digest.py` and `docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` do not exist.
 
 Master-plan task 1.6 cannot be run as written:
 
@@ -1130,7 +1130,7 @@ These are exactly the edits the probe build needed. Each one is behaviour-neutra
 _Applies to Group 5._
 
 **Entry gate:**
-- **Required:** `docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` exists and holds the eight saves of tasks 2.1 and 2.4.
+- **Required:** `docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` exists and holds the eight saves of tasks 2.1 and 2.4.
 - **How to verify:** `grep -c '^file ' "$TOOLS/baseline-digests.txt"` prints 8.
 - **If absent:** stop tasks 5.4 and 5.5. Tasks 5.1 to 5.3 and 5.6 may continue.
 - **Forbidden fallback:** never produce or replace the baseline with the epic build.
@@ -1400,6 +1400,6 @@ This table records what shaped this plan:
 
 - Every task of Groups 1 to 7 is checked.
 - The epic tree builds in Debug and RelWithDebInfo. The unit tests pass, including the new test case of task 6.7. The regression tests match the results of task 1.7. Every warning above the task 1.4 baseline is recorded and justified.
-- `docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` holds the 80 digest lines of task 2.5, and the pre-fix I-6 and I-7 results of tasks 5.4 and 5.5 are recorded.
+- `docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests` holds the 80 digest lines of task 2.5, and the pre-fix I-6 and I-7 results of tasks 5.4 and 5.5 are recorded.
 - Master-plan tasks 1.3 to 1.8 are checked with the notes of tasks 2.6, 4.5 and 5.1.
 - [r2rvm2-review-map-2.md](r2rvm2-review-map-2.md) can start with Group 8.

@@ -148,7 +148,7 @@ _Applies to Groups 6-7._
 | [src/tests/tilearea.cpp](../../../../src/tests/tilearea.cpp) | 1-60 | Catch2 test shape that allocates a map directly with `Map::Allocate` and checks `TileX` / `TileY`; the new test file follows it. |
 | [src/tests/CMakeLists.txt](../../../../src/tests/CMakeLists.txt) | 1-23 | `add_test_files`: where `map_layer.cpp` is registered. |
 | [src/map_layer.h](../../../../src/map_layer.h) | Live definitions; no fixed range | Produced by Group 4. Every `MultiLayerMap` member named in `## Outcome and Boundaries` must exist before Group 6 starts; if one is missing, finish Group 4 first. |
-| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for the neutrality check in task 7.3. |
+| [docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for the neutrality check in task 7.3. |
 
 ### Group 6 - Unit tests
 
@@ -168,7 +168,7 @@ _Applies to Groups 6-7._
 
   Verified 2026-10-04: `openttd` and `openttd_test` build in Debug and RelWithDebInfo, exit 0, zero distinct compiler warnings. Both configurations pass 110/110 unit cases, including layered addressing and `tilearea`: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. This validates the current integrated tree; the earlier one-layer staging scenario is superseded and is not claimed as a fresh runtime pass.
 - [x] 7.2 Start, save and reload a new game in a Debug build; confirm no assert fires (the new `TileAdd` layer assert included). R2MLM1 Group 7B records actual new-game saves/reloads from all three non-surface layers, normal exit and unchanged complete map chunks.
-- [x] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan. Final Surface prefixes match all ten baseline chunks for both seeds and both sizes; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1. The final games contain four planes; no claim is made that their entire payload equals a one-plane file.
+- [x] 7.3 Regenerate the four baseline saves of master plan `## Baseline Data` with this build and compare digests with `baseline-digests.txt`; they must be identical (AD-11). Any difference stops this plan. Final Surface prefixes match all ten baseline chunks for both seeds and both sizes; [tools/final-layer-save-digests.txt](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1. The final games contain four planes; no claim is made that their entire payload equals a one-plane file.
 
 ## Consult on Demand
 

@@ -1,0 +1,13 @@
+{
+    // Ledger archive: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup-2.md.
+    // Keep historical records in Git while excluding them from workspace browsing, search and file watching.
+    "files.exclude": {
+        "**/zz-rhr": true
+    },
+    "search.exclude": {
+        "**/zz-rhr/**": true
+    },
+    "files.watcherExclude": {
+        "**/zz-rhr/**": true
+    }
+}

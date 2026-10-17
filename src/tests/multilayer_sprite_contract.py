@@ -11,7 +11,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
-@see docs/zz-reach2/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
+@see docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
 """
 
 import argparse
@@ -286,7 +286,7 @@ def build_manifest():
                         [f"{material}_{column}" for material in ("soft", "mixed", "hard", "basalt") for column in columns])
         family["packed"]["namespace"] = "native_geology_append"
         rows.append(family)
-    return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and r2mlvs1-e-ground-and-space-budgets.md",
+    return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md",
             "schema_version": 1, "handoff": "M0_contract_only", "direction_convention": "engine_viewport",
             "legacy": {"live_count": 66, "preserved_offsets": [0, 65], "unactivated_reserved_offsets": [66, 73],
                        "reference_sheet": "media/baseset/openttd/map_layers.png", "sha256": hashlib.sha256(sheet.read_bytes()).hexdigest()},

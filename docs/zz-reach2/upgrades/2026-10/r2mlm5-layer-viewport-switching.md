@@ -246,7 +246,7 @@ _Applies to Group 8._
 | --- | --- | --- |
 | [r2mlm4-layer-world-lifecycle-and-savegame.md](r2mlm4-layer-world-lifecycle-and-savegame.md) | 147-147 | Task 4.8 of r2mlm4 and the gating matrix recorded beneath it during execution (the list grows below this line): the commands, kinds and allowed layers verified in task 8.4. Read only that task's list. |
 | [src/toolbar_gui.cpp](../../../../src/toolbar_gui.cpp) | 2006-2186 | `MainToolbarWindow`: the icon and tooltip refresh added by r2mlm1 Group 5, now reflecting real switching. |
-| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`); rendering changes must not alter saved surface data. |
+| [docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`); rendering changes must not alter saved surface data. |
 
 ### Group 8 - Button finish and verification
 
@@ -260,7 +260,7 @@ Closure, 2026-10-04: operator tasks 8.3..8.5 are skipped under the goal's allowa
 - [s] 8.3 Cycle the layer in a new game: each layer draws only itself, the plane position is kept, and the icon and tooltip follow.
 - [s] 8.4 In the Underground view, build road, rail, a bus stop, a rail station and a depot; confirm they appear only underground. Try every forbidden command from the r2mlm4 task 4.8 matrix in Underground and Space and confirm the layer error.
 - [s] 8.5 Open a news item or the station list for an underground station and confirm the main view jumps to the Underground layer.
-- [x] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match. Every Surface chunk matches for both seeds/sizes; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1.
+- [x] 8.6 Compare the surface digests of the four baseline saves with `baseline-digests.txt`; they must still match. Every Surface chunk matches for both seeds/sizes; [tools/final-layer-save-digests.txt](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#final-layer-save-digests), R2RVM2 task 18.1.
 
 ## Consult on Demand
 

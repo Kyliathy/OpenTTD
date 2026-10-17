@@ -7,7 +7,7 @@
 /**
  * @file utility_power_fixture.h Actual company expense participant shared by utility owner and native file tests.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 8
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-v-utility-settlement-contract.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-v-utility-settlement-contract.md
  */
 
 #ifndef TESTS_UTILITY_POWER_FIXTURE_H

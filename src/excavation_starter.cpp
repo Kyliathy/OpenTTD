@@ -9,7 +9,7 @@
  * issuer resolution through the portal owner and the first-segment rule. The pocket stays restricted
  * occupancy; only the first paid cut opens it.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 14B
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8; reused magazines charge every remaining starter-pocket cell.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */

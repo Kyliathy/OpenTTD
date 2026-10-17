@@ -2,6 +2,8 @@
 
 Recorded: 2026-10-15. Predecessor: [R2FC file cleanup](r2fc-file-cleanup.md). Shared layout owner: [R2MLVS development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout).
 
+**Separate authorized archive cleanup,2026-10-17.** The user requested and authorized a separate Git commit moving the October execution ledgers, handovers, audits and generation records to `docs/zz-rhr/upgrades/2026-10/`, preserving their relative subfolders.168 auxiliary Markdown files moved;45 main plans, review plans and player guides remain at the original location. Inbound links, archived outbound links and repository-qualified source/tool references follow the new paths. Repository VS Code settings hide the archive from Explorer, search and file watching; Git continues to include it. This relocation supersedes the earlier same-directory companion placement rule. It does not execute the pending artifact/log migrations below or resume deferred native compilation.
+
 **Status:** the disk audit, cleanup script, baseline retention and post-cleanup checks below are completed work. The migration tasks in Groups 2-9 are **planned, not implemented**. In particular, `logs/` is still required by some checks and must not yet be emptied wholesale. This documentation request does not apply another cleanup, move test inputs or authorize Git writes.
 
 ## Scope and execution rules
@@ -53,7 +55,7 @@ At the user's request, the necessary project material was copied into the user-c
 
 All copied hashes were checked, as were all 80 historical map-plane digest records. Four stock regression saves and their config were already identical to repository regression inputs. Exported source, compiled binaries, package installations and caches were unnecessary to retain. The archive is protected by the root-anchored `/OpenTTD-baseline/` ignore rule and is deliberately independent of `clean.ps1`.
 
-The retained location is documented in [R2FC-F](r2fc-f-retained-records.md) and [R2MLM](r2mlm-multi-layered-map.md). At the post-cleanup check the external sibling directory was absent; the agent did not delete it. Preserve the local archive. Because it is ignored, it is local retained data rather than something automatically supplied by a fresh checkout.
+The retained location is documented in [R2FC-F](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md) and [R2MLM](r2mlm-multi-layered-map.md). At the post-cleanup check the external sibling directory was absent; the agent did not delete it. Preserve the local archive. Because it is ignored, it is local retained data rather than something automatically supplied by a fresh checkout.
 
 ### Expanded cleanup and reasons the large directories were disposable
 
@@ -196,7 +198,7 @@ Read: [evidence.py](../../../../media/multilayer/evidence.py), [source regenerat
 
 ### Group 6 - Move progress, continuation and acceptance evidence
 
-Read: [state fixture prior_artifact](../../../../src/tests/multilayer_state_fixture.py), [profile fixture](../../../../src/tests/multilayer_profile_save_fixture.py), [geology fixture](../../../../src/tests/geology_save_fixture.py), [phase-pair index](../../../../src/tests/multilayer/acceptance/phase_pair_index_checks-1.py), TBM `native_feedback.py`/`native_motion.py`, and [Space runtime handoff](r2mlsp-q-runtime-handoff.md).
+Read: [state fixture prior_artifact](../../../../src/tests/multilayer_state_fixture.py), [profile fixture](../../../../src/tests/multilayer_profile_save_fixture.py), [geology fixture](../../../../src/tests/geology_save_fixture.py), [phase-pair index](../../../../src/tests/multilayer/acceptance/phase_pair_index_checks-1.py), TBM `native_feedback.py`/`native_motion.py`, and [Space runtime handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-q-runtime-handoff.md).
 
 - [ ] 6.1 Move Space paid-probe/descent/module/collection progress indexes and verification receipts into purpose-named run reports. Repoint their producers, phase-pair comparisons, chemical-state inputs and active continuation commands together.
 - [ ] 6.2 Replace required previous `.logs` reads in state/profile/geology and TBM feedback/motion/pacing with explicit prior-run reports/evidence. Preserve `--prior-run`, configuration identity, exact saved input and accepted-stage semantics; no latest-run search or fallback into old logs.

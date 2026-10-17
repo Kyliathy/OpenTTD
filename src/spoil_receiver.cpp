@@ -9,7 +9,7 @@
  * tile definitions are installed natively under the first-party package's GRF ID, as the TBM engines are; their
  * bounded intake, fees, interval processing and saved side state live here, beside the industry's own stock.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
  */
 
 #include "stdafx.h"

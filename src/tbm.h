@@ -8,7 +8,7 @@
  * @file tbm.h Train-owned cutter definitions, project authority, unpublished whole-consist acquisition, face work, the
  * actual-train cut participant, temporary support track, recurring cost and the work corridor.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 1-15; master AD-5
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md (Plan 4 consumer obligations)
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md (Plan 4 consumer obligations)
  */
 
 #ifndef TBM_H

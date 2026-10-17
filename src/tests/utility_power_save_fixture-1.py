@@ -2,7 +2,7 @@
 
 @file utility_power_save_fixture-1.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group 8
-@see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-v-utility-settlement-contract.md
+@see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-v-utility-settlement-contract.md
 """
 
 import hashlib

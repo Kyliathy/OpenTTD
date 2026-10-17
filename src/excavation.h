@@ -659,7 +659,7 @@ std::vector<TileIndex> GetExcavationCutterEnvelope(TileIndex centre);
  * Solid commissioning start, resolved through the issuing portal owner. Geometry and permission only:
  * it never grants excavation credit, cleared floor or vehicle admission. It applies while the anchor
  * housing's own rock cell is still unopened (Solid before reservation, Excavating until cut 0 commits).
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-f-solid-starter-contract.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-f-solid-starter-contract.md
  */
 struct ExcavationStarterResult {
 	ExcavationError error = ExcavationError::None; ///< None when no solid start applies, or when its issuer is current.

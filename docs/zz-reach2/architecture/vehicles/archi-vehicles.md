@@ -2,7 +2,7 @@
 
 Native underground construction and conventional freight are specified by [R2MLVS7](../../upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md); this page records their delivered vehicle ownership and save boundaries.
 
-TBM ownership,2026-10-09: the native Train, Order/OrderList and Depot pool own machinery, ordinary travel and selected hangar identity. The geological job retains its immutable commissioning anchor, accepted geometry and work; the exchange owner retains actual wagon custody and the original haulage origin. Player return/service or Follow order suspends new cutting after the atomic operation. Resume work rejoins the retained face through the real working bay. Missing work targets wait rather than falling into ordinary no-order movement. Final release requires the whole stored cutter and settled, vacated logistics; it retains the machine and permits paid support conversion/public traffic. Shared orders do not duplicate assignments. [R2TBMF W](../../upgrades/2026-10/tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure) and [ZB](../../upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md) retain physical service/reuse, remote storage and A-to-B traffic evidence.
+TBM ownership,2026-10-09: the native Train, Order/OrderList and Depot pool own machinery, ordinary travel and selected hangar identity. The geological job retains its immutable commissioning anchor, accepted geometry and work; the exchange owner retains actual wagon custody and the original haulage origin. Player return/service or Follow order suspends new cutting after the atomic operation. Resume work rejoins the retained face through the real working bay. Missing work targets wait rather than falling into ordinary no-order movement. Final release requires the whole stored cutter and settled, vacated logistics; it retains the machine and permits paid support conversion/public traffic. Shared orders do not duplicate assignments. [R2TBMF W](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-w-order-control-notes.md#group8-closure) and [ZB](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-zb-final-notes.md) retain physical service/reuse, remote storage and A-to-B traffic evidence.
 
 Company vehicles are pool items of type `Vehicle` (`src/vehicle_base.h`). Trains, road vehicles, ships, aircraft and native Space vehicles each override `Tick`. Effect vehicles and disaster vehicles share the same pool and the same walk; their handlers live in `src/effectvehicle.cpp` and `src/disaster_vehicle.cpp` and are outside the movement described here.
 
@@ -51,7 +51,7 @@ The focused native save fixture writes actual purchased and physically loaded ve
 ## Native launch and orbital cargo ownership
 
 [Plan9](../../upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md) and the
-[current423 runtime handoff](../../upgrades/2026-10/r2mlsp-q-runtime-handoff.md)
+[current423 runtime handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-q-runtime-handoff.md)
 own the delivered launch/recovery contract. SpaceVehicle uses the ordinary
 Vehicle pool for paid rocket/miner/survey/builder roles14/15/19/20, with exact
 saved incarnations. SpaceManifest owns actual supplies, freight and reciprocal
@@ -94,7 +94,7 @@ remain open under their own source tasks.
 ## Native moving-target mining and runtime evidence
 
 [Plan10](../../upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md)
-and its [current438 handoff](../../upgrades/2026-10/r2mlsp-z-z-p-probe-runtime-handoff.md)
+and its [current438 handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-p-probe-runtime-handoff.md)
 retain one actual Vehicle-pool hull and incarnation through Approach, Mining,
 Return and Holding. Stable asteroid IDs resolve directly to the original
 finite body; matching native leases alone permit attached motion/work.

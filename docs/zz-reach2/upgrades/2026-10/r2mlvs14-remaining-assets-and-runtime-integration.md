@@ -69,7 +69,7 @@ commissioning, survey, blueprint, processing, descent, service, UI/art or networ
 producer. Consume their public definitions/commands; retain unfinished tasks.
 
 **Space revision,2026-10-12:** the current
-[three-probe and Steel/Goods contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+[three-probe and Steel/Goods contract](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
 requires distinct mining, survey and construction silhouettes, scan/work/load
 states, Steel/Goods cargo views, specialized Steelworks/Goodsworks and
 material-shortage/construction-progress blueprint states. New63B/63C tasks
@@ -150,7 +150,7 @@ Read this plan's Global and Source generation Area, the executing family's manif
 
 ### Group 19 - Author underground freight locomotive
 
-Resumed2026-10-11 under master10.4C after related controls78C. [The selected conventional handoff](portal-tbm/r2mlvs3mp-y-ground-producer-handoff.md#conventional-fleet-continuation) identifies native model4 as the already delivered hauler/ordinary freight locomotive. Reconcile and verify its existing body/purchase sources and native geometry before marking19 complete; do not generate a duplicate locomotive or reinterpret mineral wagon model5 as traction. The historical finalization skip is superseded for this selected scope.
+Resumed2026-10-11 under master10.4C after related controls78C. [The selected conventional handoff](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-y-ground-producer-handoff.md#conventional-fleet-continuation) identifies native model4 as the already delivered hauler/ordinary freight locomotive. Reconcile and verify its existing body/purchase sources and native geometry before marking19 complete; do not generate a duplicate locomotive or reinterpret mineral wagon model5 as traction. The historical finalization skip is superseded for this selected scope.
 
 {{HARD}}
 - [X] 19.1 For underground freight locomotive, derive a single-model brief from its approved manifest/template: conventional mineral-freight traction silhouette. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -528,7 +528,7 @@ Selected dispatch resumed,2026-10-12, under master10.4C after complete Iron28 so
 
 ### Group 30 - Author Bauxite mine
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 30.1 For Bauxite mine, derive a single-model brief from its approved manifest/template: Underground machinery/loading silhouette with Bauxite identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -576,7 +576,7 @@ Group32 source closure,2026-10-12: all three tasks areX. Seven genuinely authore
 
 ### Group 33 - Author Nickel mine
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 33.1 For Nickel mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Nickel identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -622,7 +622,7 @@ Group35 source closure,2026-10-12: all three tasks areX. Seven genuine Rare Eart
 
 ### Group 36 - Author Uranium mine
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 36.1 For Uranium mine, derive a single-model brief from its approved manifest/template: Deep machinery/loading silhouette with Uranium identity. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -740,7 +740,7 @@ Group40C closure,2026-10-12: all three staged tasks and original40.3 areX. The i
 
 ### Group 41 - Author Surface battery works
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 41.1 For Surface battery works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -750,7 +750,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 42 - Author electronics works
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 42.1 For electronics works, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -760,7 +760,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 43 - Author component manufacture
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 43.1 For component manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -770,7 +770,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 44 - Author robotics manufacture
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 44.1 For robotics manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -780,7 +780,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 45 - Author mirror-kit manufacture
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 45.1 For mirror-kit manufacture, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -790,7 +790,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 46 - Author nuclear plant
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 46.1 For nuclear plant, derive a single-model brief from its approved manifest/template: profile-selected Surface receiver footprint and recipe cues. Produce and select the base silhouette at native scale; record source/prompt/provenance and resolve geometry before making variants.
@@ -971,7 +971,7 @@ Context has compacted 1 times while executing this group.
 ### Local Mandatory Reading - Survey and construction probe art
 
 _Applies to Groups63B/63C._ Read this plan's Global and Source generation Area,
-[shared Space economy revision](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+[shared Space economy revision](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
 only for the executing role and its company/work/cargo boundary, actual live role/geometry/state exports
 from Plans8-11, and the approved sprite manifest/template contract. Geometry
 and role states must be frozen before directions. New families use the same
@@ -992,7 +992,7 @@ recoloring the mining placeholder cannot finish either distinct model.
 
 ### Local Mandatory Reading - Native construction carrier source
 
-_Applies to Group63C only, dispatched by Space14BD._ Read Global/Source generation Area, Plan10 14BD Local, the [current construction handover](r2mlsp-z-z-r-construction-art-notes.md), public model20 row and its original selected source geometry. Read only native20 CargoList/STEL/GOOD mass/admission, typed Construct/site work and original paid service boundaries needed by the current source state. Actual source directions, load/foreground masks, two real work/service phases and immutable prompt/receipt/input identities govern. Preserve accepted15/19 originals and signatures; source coverage does not activate packed/runtime art. Avoid preloading pod/asteroid or unrelated Underground tasks.
+_Applies to Group63C only, dispatched by Space14BD._ Read Global/Source generation Area, Plan10 14BD Local, the [current construction handover](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-r-construction-art-notes.md), public model20 row and its original selected source geometry. Read only native20 CargoList/STEL/GOOD mass/admission, typed Construct/site work and original paid service boundaries needed by the current source state. Actual source directions, load/foreground masks, two real work/service phases and immutable prompt/receipt/input identities govern. Preserve accepted15/19 originals and signatures; source coverage does not activate packed/runtime art. Avoid preloading pod/asteroid or unrelated Underground tasks.
 
 Context has compacted 1 times while executing this group.
 
@@ -1010,7 +1010,7 @@ Context has compacted 1 times while executing this group.
 
 ### Local Mandatory Reading - Native passive return-pod source
 
-_Applies to Group64 only, dispatched by Space14BE._ Read Global/Source generation Area, Plan10 14BE Local, public model18 geometry/state row, actual `SpacePodState`/`SpaceDescentJob` and `CommitOrbitalCargoRelease`/`TickSpaceDescents`, and [current pod source notes](r2mlsp-z-z-s-return-pod-art-notes.md). Native shell generations, exclusive custody/packets, saved148-opportunity descent and atomic expenditure govern. This is a passive pool object, not a SpaceVehicle. Existing logical key`recovered` denotes the final recovery-ready pose while the same native descent job still exists; successful commit deletes that shell, so no persistent recovered asset or extra cargo/art clock is introduced. Preserve approved15/19/20 sources. Read canonical framed prompt/installed imagegen skill before raster work; genuinely author each requested view and freeze the selected base before variants. Final packing/render placement remains14BG/14BH.
+_Applies to Group64 only, dispatched by Space14BE._ Read Global/Source generation Area, Plan10 14BE Local, public model18 geometry/state row, actual `SpacePodState`/`SpaceDescentJob` and `CommitOrbitalCargoRelease`/`TickSpaceDescents`, and [current pod source notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-s-return-pod-art-notes.md). Native shell generations, exclusive custody/packets, saved148-opportunity descent and atomic expenditure govern. This is a passive pool object, not a SpaceVehicle. Existing logical key`recovered` denotes the final recovery-ready pose while the same native descent job still exists; successful commit deletes that shell, so no persistent recovered asset or extra cargo/art clock is introduced. Preserve approved15/19/20 sources. Read canonical framed prompt/installed imagegen skill before raster work; genuinely author each requested view and freeze the selected base before variants. Final packing/render placement remains14BG/14BH.
 
 ### Group 64 - Author cargo return pod
 
@@ -1044,7 +1044,7 @@ _Applies to Group64 only, dispatched by Space14BE._ Read Global/Source generatio
 
 ### Local Mandatory Reading - Metallic asteroid source
 
-_Applies to Group67 only, dispatched by Space14BF._ Read Global/Source generation Area, Plan10 14BF Local, [current metallic source notes](r2mlsp-z-z-t-metallic-asteroid-art-notes.md), public asteroid.nickel variant/canvas/anchor row, `AsteroidBody`/`AsteroidSize`, immutable visual diameter catalogue, `ViewportAddSpaceEntities`/`RemapCoords`, actual native lease/work and `GetAsteroidQuantityDisclosure`. Native bodies retain fixed identity/trajectory and nonrotating attachment offsets; renderer variation cannot create physics, spin clocks or quantities. Three explicit saved-size variants use the same genuine original body and uniform reduction. No company mask. Preserve accepted craft/pod sources and complete only metallic source here; packing/native review remain14BG/14BH.
+_Applies to Group67 only, dispatched by Space14BF._ Read Global/Source generation Area, Plan10 14BF Local, [current metallic source notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-t-metallic-asteroid-art-notes.md), public asteroid.nickel variant/canvas/anchor row, `AsteroidBody`/`AsteroidSize`, immutable visual diameter catalogue, `ViewportAddSpaceEntities`/`RemapCoords`, actual native lease/work and `GetAsteroidQuantityDisclosure`. Native bodies retain fixed identity/trajectory and nonrotating attachment offsets; renderer variation cannot create physics, spin clocks or quantities. Three explicit saved-size variants use the same genuine original body and uniform reduction. No company mask. Preserve accepted craft/pod sources and complete only metallic source here; packing/native review remain14BG/14BH.
 
 Context has compacted 1 times while executing this group.
 
@@ -1056,7 +1056,7 @@ Context has compacted 1 times while executing this group.
 - [X] 67.3 Add required size/attachment/mining/depleted variants for metallic asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 
-**Metallic source acceptance,2026-10-17.** `logs/space-metallic-source-verification.json` (SHA256 `1e5b11b873b7d7b0b882787d005071048c1c224ff4704fc317bdd53062b3622f`) binds45 focused source/compatibility cases, both438 native field entry boundaries, eight own originals and384 logical poses/96 per-size components/288 explicit aliases. All15 native/4x contacts and complete-original layout pass; outside ore pixels and silhouette remain exact. Source only: native packing/field selection14BG and ordinary-game review14BH stay open. [Bounded handover](r2mlsp-z-z-t-metallic-asteroid-art-notes.md).
+**Metallic source acceptance,2026-10-17.** `logs/space-metallic-source-verification.json` (SHA256 `1e5b11b873b7d7b0b882787d005071048c1c224ff4704fc317bdd53062b3622f`) binds45 focused source/compatibility cases, both438 native field entry boundaries, eight own originals and384 logical poses/96 per-size components/288 explicit aliases. All15 native/4x contacts and complete-original layout pass; outside ore pixels and silhouette remain exact. Source only: native packing/field selection14BG and ordinary-game review14BH stay open. [Bounded handover](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-t-metallic-asteroid-art-notes.md).
 
 ### Local Mandatory Reading - Carbonaceous asteroid source
 
@@ -1070,7 +1070,7 @@ _Applies to Group68 only, dispatched by Space14BFB._ Read Global/Source generati
 - [X] 68.3 Add required size/attachment/mining/depleted variants for carbonaceous asteroid, changing only declared moving/load/status parts. Build a model-specific contact sheet and check missing views, anchor drift, silhouette readability and intended foreground cuts before handing these originals to conversion.
 
 
-**Water-Ice source acceptance,2026-10-17.** `logs/space-carbonaceous-source-verification.json` (SHA256 `d319e64f0d58a60f21a7ef89a40b7a96d8b6392c13425b766994c259d30beee4`) binds33 focused source/compatibility cases, retained unchanged438 native entry boundaries, eight own originals and384 logical poses/96 per-size components/288 aliases. All15 native/4x contacts and whole-original layout pass;530,469 outside-fissure pixels and original slab opacity remain exact. WorkedW preserves the original complete sampling grid to avoid a Small crop-rounding alias. Packing/field selection14BG and game14BH remain open. [Bounded handover](r2mlsp-z-z-u-carbonaceous-asteroid-art-notes.md).
+**Water-Ice source acceptance,2026-10-17.** `logs/space-carbonaceous-source-verification.json` (SHA256 `d319e64f0d58a60f21a7ef89a40b7a96d8b6392c13425b766994c259d30beee4`) binds33 focused source/compatibility cases, retained unchanged438 native entry boundaries, eight own originals and384 logical poses/96 per-size components/288 aliases. All15 native/4x contacts and whole-original layout pass;530,469 outside-fissure pixels and original slab opacity remain exact. WorkedW preserves the original complete sampling grid to avoid a Small crop-rounding alias. Packing/field selection14BG and game14BH remain open. [Bounded handover](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-u-carbonaceous-asteroid-art-notes.md).
 
 ### Local Mandatory Reading - Rich asteroid source
 
@@ -1154,7 +1154,7 @@ Context has compacted 1 times while executing this group.
 
 ### Group 78 - Author construction and cargo controls
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 Resumed2026-10-11 for the related master10.4C source subset in78C below. Completed ground78B remains in Plan13. Original78.1-78.3 retain their whole-profile/orbital scope and stay pending until all portions pass.
 
@@ -1215,7 +1215,7 @@ Read this plan's Global/Source generation Area and the executing selected famili
 
 ### Group 79 - Convert and pack from stable originals
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 79.1 Extend deterministic quantization/cropping to consume manifest records, preserve index-0 transparency and handle reserved company/animation colors explicitly. Preserve world anchor when transparent margins are cropped.
@@ -1226,7 +1226,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 80 - Validate asset structure and palette deterministically
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{HARD}}
 - [ ] 80.1 Validate required record fields, unique IDs, expected direction/frame/state Cartesian coverage and exact native dimensions/anchors before packing. Report the failing asset ID and source.
@@ -1237,7 +1237,7 @@ Goal-authorized skip (2026-10-08, master finalization): dispatched expansion wor
 
 ### Group 81 - Source generation and reproducible conversion
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{MEDIUM}}
 - [ ] 81.1 Keep simulation state independent of animation timing.
@@ -1301,7 +1301,7 @@ Read this plan's Global/Runtime integration Area, the executing family's complet
 
 ### Group 84 - Runtime integration and review
 
-Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
 
 {{MEDIUM}}
 - [ ] 84.1 Integrate all ten mines and the underground conventional fleet after their r2mlvs6/7 code is delivered.

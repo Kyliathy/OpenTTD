@@ -2,7 +2,7 @@
 
 @file utility_power_save_fixture-7.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md Group15B
-@see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md company rows
+@see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-utility-lifecycle-policy.md company rows
 """
 
 import hashlib

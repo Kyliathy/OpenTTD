@@ -9,7 +9,7 @@
  * structurally checked here and staged; they are validated against the rebuilt industries, which own the spoil stock
  * itself, only at the end of AfterLoadGame.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md, Persistence
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Persistence
  */
 
 #include "../stdafx.h"

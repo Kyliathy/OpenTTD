@@ -316,7 +316,7 @@ def bind_manifest(document, report):
                             "runtime_activated": False, "coverage_complete": complete_icon}
         # Keep the original planned offsets and null packed-payload hashes.
     manifest["authoring_pass"] = {"date": report["date"], "scope": "Plans 1-5 partial source authoring",
-                                  "record": "docs/zz-reach2/upgrades/2026-10/graphics/multilayer-m1-art-pass.md",
+                                  "record": "docs/zz-rhr/upgrades/2026-10/graphics/multilayer-m1-art-pass.md",
                                   "runtime_activated": False}
     path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 

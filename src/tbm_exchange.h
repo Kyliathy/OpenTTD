@@ -12,9 +12,9 @@
  * and kept consistent through sale, refit, autoreplace, deletion, bay removal and company changes (Group 11).
  * Real wagon units move between trains with their own cargo; no packet is copied or transferred.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11 (Public Handoff Contract)
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-j-lifecycle-design.md (Group 11 lifecycle)
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-i-receiver-design.md (origin leg, Plan 5 Groups 8-9)
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md (Group 11 lifecycle)
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md (origin leg, Plan 5 Groups 8-9)
  */
 
 #ifndef TBM_EXCHANGE_H

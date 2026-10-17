@@ -10,7 +10,7 @@
  * of AfterLoadGame. Wagon packets stay in the vehicles' own cargo lists; a set saves wagon identities only. The
  * exchange is one simulation action, so a save always sees the store before or after it, never a half swap.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 10
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-h-exchange-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
  */
 
 #include "../stdafx.h"

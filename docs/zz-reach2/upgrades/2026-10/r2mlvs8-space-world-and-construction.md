@@ -104,7 +104,7 @@ the sole finite resource authority for the eventual mining controller.
 _Applies to Group P2 only._ This staged producer revision follows the user's
 request to continue functionality after P1. Read the Global section, parent
 AD-9/AD-11, the delivered P1 exports, and
-[native compatibility matrix](space-vehicle-compatibility.md). Entry producers:
+[native compatibility matrix](../../../zz-rhr/upgrades/2026-10/space-vehicle-compatibility.md). Entry producers:
 state/content focused gates, canonical Vehicle/Engine/EIDS/CAPA ownership,
 `space.h` Q16 geometry and the one `AsteroidField`. Consume actual native owners;
 no second fleet, engine or cargo registry is allowed. This increment exports
@@ -164,7 +164,7 @@ Original full-fleet/full-loop groups retain their own pending acceptance gates.
 Provide deterministic Space entities, vehicle control and construction semantics without treating vacuum as ordinary land or asteroids as moving map industries.
 
 **User revision,2026-10-12:** consume the shared
-[Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
+[Space economy contract](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12).
 Mining, survey and construction probes share the native Space vehicle owner,
 with typed ordered moving-body/blueprint/station destinations. Initially all
 commission through an Earth launch center; later a completed orbital Assembly
@@ -435,7 +435,7 @@ Configure these through the planned immutable `MultiLayerSpaceTuning` record in 
 
 #### Shared Space geometry and motion defaults
 
-These profile defaults are shared with [r2mlvs10's asteroid tuning](r2mlvs10-asteroids-and-mining-probes.md#movement-trajectory-defaults). P1 delivered the shared integer band/reflection producer. Plan10 Group3 now publishes its unchanged precision,74-tick step, middle-half strip and two-tile margin through the immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the Industry `MultiLayerGameplayProfile`; Classic has no orbital tuning. `src/space.cpp` owns translation/reflection, while asteroid heading/speed records stay in their own catalogue. Both configurations pass `logs/asteroid-motion-verification.json`; [motion notes](r2mlsp-u-motion-notes.md) bind worked boundary records and exact continuations. This producer evidence does not close Group10's broader construction/envelope/approach requirements below.
+These profile defaults are shared with [r2mlvs10's asteroid tuning](r2mlvs10-asteroids-and-mining-probes.md#movement-trajectory-defaults). P1 delivered the shared integer band/reflection producer. Plan10 Group3 now publishes its unchanged precision,74-tick step, middle-half strip and two-tile margin through the immutable `MultiLayerSpaceTuning` record in [src/multilayer_content.h](../../../../src/multilayer_content.h) / [src/multilayer_content.cpp](../../../../src/multilayer_content.cpp), exposed by the Industry `MultiLayerGameplayProfile`; Classic has no orbital tuning. `src/space.cpp` owns translation/reflection, while asteroid heading/speed records stay in their own catalogue. Both configurations pass `logs/asteroid-motion-verification.json`; [motion notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-u-motion-notes.md) bind worked boundary records and exact continuations. This producer evidence does not close Group10's broader construction/envelope/approach requirements below.
 
 | Parameter | Default | Semantics |
 | --- | --- | --- |

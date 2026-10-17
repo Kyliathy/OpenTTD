@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and r2mlvs1-e-ground-and-space-budgets.md",
+  "_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md",
   "schema_version": 1,
   "handoff": "M0_contract_only",
   "direction_convention": "engine_viewport",
@@ -15175,11 +15175,11 @@
   "authoring_pass": {
     "date": "2026-10-06",
     "scope": "Plans 1-5 partial source authoring",
-    "record": "docs/zz-reach2/upgrades/2026-10/graphics/multilayer-m1-art-pass.md",
+    "record": "docs/zz-rhr/upgrades/2026-10/graphics/multilayer-m1-art-pass.md",
     "runtime_activated": false
   },
   "m1_geometry_review": {
-    "owner": "r2mlvs13-b-m1-authoring.md",
+    "owner": "docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md",
     "evidence": "r2mlvs13-e-native-art-layout-checks.log",
     "cutter_parts": "actual body plus permanent articulated support",
     "depot": "one actual owned tile; full straight approach remains ordinary track",

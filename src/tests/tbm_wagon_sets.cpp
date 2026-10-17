@@ -10,7 +10,7 @@
  * aboard to be recovered, and several haulers take one bay in accepted request order. Queue reload waits for the
  * assignment saves of Group 10.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 7
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md, Wagon sets and queue
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md, Wagon sets and queue
  */
 
 #include "../stdafx.h"

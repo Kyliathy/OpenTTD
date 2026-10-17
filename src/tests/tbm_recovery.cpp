@@ -10,7 +10,7 @@
  * breakdown and service are saved pauses; a finished project retires only once nothing depends on it; and a lost
  * origin or bay is a visible block that explicit reassignment clears.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 17
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  */
 
 #include "../stdafx.h"

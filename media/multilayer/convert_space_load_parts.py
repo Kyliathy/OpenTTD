@@ -3,7 +3,7 @@
 @file convert_space_load_parts.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BD
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group63C.2
-@see docs/zz-reach2/upgrades/2026-10/r2mlsp-z-z-r-construction-art-notes.md
+@see docs/zz-rhr/upgrades/2026-10/r2mlsp-z-z-r-construction-art-notes.md
 Native CargoList/type/weight owns the actual load. Source assembly changes only a reviewed cargo-volume mask and grants no packets, recipe input, work or runtime sprite.
 """
 import argparse

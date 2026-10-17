@@ -59,7 +59,7 @@ def load_and_save(source, destination, suffix):
     assert not destination.exists(), f"destination already exists: {destination}"
     startup = RUNTIME / "scripts/game_start.scr"
     startup.write_text(
-        "# @see r2mlvs3mp-z-l-demo-checkpoint.md ordinary paused TBM checkpoint.\n"
+        "# @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-z-l-demo-checkpoint.md ordinary paused TBM checkpoint.\n"
         "pause\nset savegame_format lzma\n"
         f'save "{destination.with_suffix("").as_posix()}"\nquit\n', encoding="utf-8")
     runner = ROOT / "mlm/tools/run/run_game_logged.sh"

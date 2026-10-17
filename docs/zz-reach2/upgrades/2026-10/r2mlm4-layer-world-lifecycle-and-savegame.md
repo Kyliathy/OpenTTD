@@ -205,7 +205,7 @@ _Applies to Groups 6-7._
 | [src/misc.cpp](../../../../src/misc.cpp) | 92-171 | `InitializeGame`: the allocation call for new games, editor worlds and the pre-load reset; switching it to `MAX_MAP_LAYERS` is what makes layers live. |
 | [src/saveload/oldloader_sl.cpp](../../../../src/saveload/oldloader_sl.cpp) | 1527-1531 | TTO allocation inside `LoadOldMapPart1`, changed in task 5.7. |
 | [docs/zz-reach2/architecture/desync/archi-desync.md](../../architecture/desync/archi-desync.md) | 166-172 | `### Cache checks at desync level 2`: `CheckCaches` runs every tick at `-d desync=2`; used as the determinism smoke test in task 6.5. |
-| [docs/zz-reach2/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6 in Group 7. |
+| [docs/zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#baseline-plane-digests) | Live definitions; no fixed range | Produced by r2rvm task 2.5 (master plan `## Baseline Data`). Reference for I-6 in Group 7. |
 
 ### Group 6 - Three live layers
 
@@ -227,7 +227,7 @@ Closure, 2026-10-04: operator rows 7.3..7.5 are skipped under the goal's allowan
 - [x] 7.1 Build both configurations without new warnings; run `ctest` including the new rule and initialiser tests.
 
   Verified 2026-10-04: both targets build in Debug and RelWithDebInfo, exit 0, zero compiler warnings; both runs pass 110/110 unit cases, including layer rules/initialisers. Evidence: `build/build-portal-rail-conversion-{Debug,RelWithDebInfo}.log`, `build/ctest-portal-rail-conversion-{Debug,RelWithDebInfo}.log`. The current tree has four layers after r2mlm12; the old three-layer runtime checks need their corresponding four-layer acceptance runs and remain open.
-- [x] 7.2 Regenerate the four baseline saves and compare the surface-plane digests (`--tiles` = one plane) with `baseline-digests.txt` (I-6). All ten Surface prefixes match for all four final worlds; [tools/final-layer-save-digests.txt](r2fc-f-retained-records.md#final-layer-save-digests).
+- [x] 7.2 Regenerate the four baseline saves and compare the surface-plane digests (`--tiles` = one plane) with `baseline-digests.txt` (I-6). All ten Surface prefixes match for all four final worlds; [tools/final-layer-save-digests.txt](../../../zz-rhr/upgrades/2026-10/r2fc-f-retained-records.md#final-layer-save-digests).
 - [s] 7.3 Load each pre-epic baseline save, confirm three layers exist after load, play one in-game month, save, reload, and confirm all plane digests are stable (I-7).
 - [s] 7.4 Load a TTO save copied from `!kit/TT/` and confirm it gains Underground and Space and plays for one month.
 - [s] 7.5 Open the load dialog on a new save and confirm the preview still shows the map size correctly.

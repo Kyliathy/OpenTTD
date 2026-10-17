@@ -88,7 +88,7 @@ The two areas have separate semantics/settings and overlays even when both radii
 Ordinary catchment and station joining do not automatically move cargo between separate Station IDs. Implement a launch-center logistics hub with explicit membership and bounded timed Surface handling jobs. Returned cargo exists in exactly one place: center inventory, a reserved handling job, a member station, or a vehicle. Separate member stations retain their own IDs and normal station-spread rules; no global catchment-limit increase is needed to simulate this relationship. All returned materials have compatible train/lorry refits and can be routed through these members.
 
 **User revision,2026-10-12:** the
-[shared Space economy contract](r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
+[shared Space economy contract](../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md#space-economy-revision---2026-10-12)
 requires Earth launch-center commissioning for mining, survey and construction
 probes initially. Carry a paid, material-built probe as a rocket payload and
 activate that same native unit once. Station-bound Steel/Goods remains actual
@@ -639,7 +639,7 @@ Context has compacted 2 times while executing this group.
 ### Group 9 - Work the reusable-rocket and persistent-probe ledger
 
 **Resumed numerical fixtures,2026-10-13:**
-[worked reusable-rocket, persistent-probe and first-Core ledgers](r2mlvs9-a-launch-ledgers.md)
+[worked reusable-rocket, persistent-probe and first-Core ledgers](../../../zz-rhr/upgrades/2026-10/r2mlvs9-a-launch-ledgers.md)
 consume the frozen revision2 recipes and Surface procurement prices. The new
 `[launch-economics]` fixtures calculate retained fuel and two flights with one
 paid hull, paid replacement shells, separate service upkeep and both26t/22t
@@ -1067,7 +1067,7 @@ Native retirement/placement pass201 assertions/2 cases each; three ordinary
 paused resaves each preserve26 owner families. Actual two-paid-rocket pad
 ordering is reused from immutable Group15 evidence. Proof:
 `logs/launch-retirement-verification.json`,14 reports/25 artifacts/12 accepted
-processes; [retirement/art notes](r2mlsp-k-retirement-and-art-notes.md).
+processes; [retirement/art notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-k-retirement-and-art-notes.md).
 Task16.2 stays open: logical manifest/template and preview captures do not
 supply the missing authored/packed launch-center and fleet families.
 
@@ -1110,7 +1110,7 @@ The seeded13-unit handling characterization also replays the remaining5 units
 with the same2 expense and feeder share130; it makes no paid cargo-production
 claim. The hash-bound phase index compares23 pairs per configuration across
 all26 canonical owners. Proof: `logs/phase-ledger-verification.json` and
-[phase/ledger notes](r2mlsp-l-phase-ledger-notes.md). Ordinary industry/house
+[phase/ledger notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-l-phase-ledger-notes.md). Ordinary industry/house
 acceptance/payment retains the canonical economy event and is not invoked by
 launch, descent or handling. Final graphics/network and end-to-end delivery
 still have their later acceptance gates.
@@ -1141,12 +1141,12 @@ Context has compacted 1 times while executing this group.
 
 {{MEDIUM}}
 - [X] 18.1 Run an actual Surface freight delivery -> rocket payload -> Space inventory -> descent -> Surface collection loop with repository-local test content/configs.
-  Evidence: current423 RelWithDebInfo/Debug each pass11,152 native assertions/8 cases for four actual stages plus saved-input replays. The paid Surface train delivers20 Goods to the center; original paid builder/rocket deployment and Craft resupply carry those20 into Space; an original purchased shell completes descent and separate lorry collection. Final Goods deliveries remain0. All26 before/after owners match ordinary/replayed saves and both configurations. `logs/commodity-loop-verification.json` freezes44 reports/66 artifacts/32 accepted processes. The normal Vehicle constructor now initializes saved round-trip duration for every body, including wagons without orders; no fixture masks uninitialized state. [Commodity notes](r2mlsp-m-commodity-loop-notes.md) preserve exact inputs, stages and excluded attempts.
+  Evidence: current423 RelWithDebInfo/Debug each pass11,152 native assertions/8 cases for four actual stages plus saved-input replays. The paid Surface train delivers20 Goods to the center; original paid builder/rocket deployment and Craft resupply carry those20 into Space; an original purchased shell completes descent and separate lorry collection. Final Goods deliveries remain0. All26 before/after owners match ordinary/replayed saves and both configurations. `logs/commodity-loop-verification.json` freezes44 reports/66 artifacts/32 accepted processes. The normal Vehicle constructor now initializes saved round-trip duration for every body, including wagons without orders; no fixture masks uninitialized state. [Commodity notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-m-commodity-loop-notes.md) preserve exact inputs, stages and excluded attempts.
 - [X] 18.2 Test release at the anchor, exactly 20 tiles away and just outside the fixed-point circle.
 - [X] 18.3 Test valid/invalid diagonals, map-edge clipping without wrapping and overlapping target centers.
 - [X] 18.4 Test a moving spacecraft and reordered release commands to ensure current position/target checks precede cargo mutation.
 
-Group18 acceptance: both current423 configurations pass201 focused geometry assertions/3 cases and4,716 native command-order assertions/4 cases. Actual outward navigation invalidates the original inside release quote; native recall brings the same paid mined load back inside. Foreign/valid command sequences and duplicate release preserve ownership and explicit current target authority. All26 before/after owners match ordinary/replayed saves, both command orderings and configurations. `logs/release-geometry-verification.json` freezes20 reports/35 artifacts/16 accepted processes; [release geometry notes](r2mlsp-n-release-geometry-notes.md) retain the input and boundaries. These are local deterministic command tests; final network acceptance remains open.
+Group18 acceptance: both current423 configurations pass201 focused geometry assertions/3 cases and4,716 native command-order assertions/4 cases. Actual outward navigation invalidates the original inside release quote; native recall brings the same paid mined load back inside. Foreign/valid command sequences and duplicate release preserve ownership and explicit current target authority. All26 before/after owners match ordinary/replayed saves, both command orderings and configurations. `logs/release-geometry-verification.json` freezes20 reports/35 artifacts/16 accepted processes; [release geometry notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-n-release-geometry-notes.md) retain the input and boundaries. These are local deterministic command tests; final network acceptance remains open.
 
 ### Local Mandatory Reading - Surface collection and retained assignments
 
@@ -1177,7 +1177,7 @@ No private pose/timer/cargo or fabricated vehicle-arrival substitute._
 - [X] 19.6 Verify collection membership works independently of ordinary global station-spread/catchment settings.
 - [X] 19.7 Save/reload during off-center descent and Surface handling.
 
-Group19 acceptance: both current423 configurations pass612 focused assertions/6 cases and5,962 native assertions/12 cases (six stages plus saved-input replays). Original paid hulls/pods recover20 actual mined NORE and40 declared builder GOOD; real near-boundary rail/lorry stations each collect10 ore/20 Goods. Active unlink refuses; selected out-of-range expansion and empty assigned bay removal settle uncompleted assignments into the retained center. Isolated full storage, per-cargo demand changes, foreign/unlinked/Underground and spread1/catchment tests remain distinct from paid-world evidence. Off-center descent and partial handling pairs compare26 owners in ordinary/replayed saves and both configurations. `logs/surface-collection-verification.json` freezes62 reports/99 artifacts/48 accepted processes. [Collection notes](r2mlsp-o-collection-notes.md) retain exact inputs, failed/superseded attempts and actual native command boundaries.
+Group19 acceptance: both current423 configurations pass612 focused assertions/6 cases and5,962 native assertions/12 cases (six stages plus saved-input replays). Original paid hulls/pods recover20 actual mined NORE and40 declared builder GOOD; real near-boundary rail/lorry stations each collect10 ore/20 Goods. Active unlink refuses; selected out-of-range expansion and empty assigned bay removal settle uncompleted assignments into the retained center. Isolated full storage, per-cargo demand changes, foreign/unlinked/Underground and spread1/catchment tests remain distinct from paid-world evidence. Off-center descent and partial handling pairs compare26 owners in ordinary/replayed saves and both configurations. `logs/surface-collection-verification.json` freezes62 reports/99 artifacts/48 accepted processes. [Collection notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-o-collection-notes.md) retain exact inputs, failed/superseded attempts and actual native command boundaries.
 
 ### Local Mandatory Reading - Hub circulation and canonical cargo history
 
@@ -1198,7 +1198,7 @@ characterize a refusal but cannot replace real native circulation evidence._
 {{MEDIUM}}
 - [X] 20.1 Verify total packets/age/provenance and no income generated by repeatedly relinking or routing cargo around the hub.
 
-Group20 acceptance: each current423 configuration passes5,910 native assertions/2 cases (actual circulation and saved-input replay).32 completed reverse/outbound Goods cycles/64 legs alternate both real boundary members and completed relink generations. A per-tick all-station/job census rejects duplicate physical ownership and preserves weighted quantities/recorded age/source/routing/feeder history through valid packet splits/merges. Canonical dense CAPA before/after transport also preserves saved travel vectors. Actual cash/yearly Other handling expenses debit; income and delivered cargo do not increase. All26 before/after owners match ordinary/replayed saves and configurations. `logs/hub-circulation-verification.json` freezes12 reports/18 artifacts/8 accepted processes. [Circulation notes](r2mlsp-p-circulation-notes.md) retain exact19 settled predecessors and observer corrections; no private age/vehicle/job/cash normalization was used.
+Group20 acceptance: each current423 configuration passes5,910 native assertions/2 cases (actual circulation and saved-input replay).32 completed reverse/outbound Goods cycles/64 legs alternate both real boundary members and completed relink generations. A per-tick all-station/job census rejects duplicate physical ownership and preserves weighted quantities/recorded age/source/routing/feeder history through valid packet splits/merges. Canonical dense CAPA before/after transport also preserves saved travel vectors. Actual cash/yearly Other handling expenses debit; income and delivered cargo do not increase. All26 before/after owners match ordinary/replayed saves and configurations. `logs/hub-circulation-verification.json` freezes12 reports/18 artifacts/8 accepted processes. [Circulation notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-p-circulation-notes.md) retain exact19 settled predecessors and observer corrections; no private age/vehicle/job/cash normalization was used.
 
 ### Local Mandatory Reading - Public runtime handoff and conditional closure
 
@@ -1221,7 +1221,7 @@ sequence into final art/manufacturing/network acceptance._
 - [X] 21.1 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
 - [X] 21.2 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
 
-Group21 handoff: [current runtime/export/evidence record](r2mlsp-q-runtime-handoff.md) describes delivered423 owners, actual command/receipt boundaries, all26 exact families, current focused commands/results and remaining runtime/art/network/producer gates. Vehicle and map-layer architecture pages now record the delivered Space/Surface ownership. A read-only audit checked1,056 referenced report/artifact/predecessor identities across11 retained proof indexes. Parent/source/full-master closure is deliberately not reconciled while16.2's actual manifest family remains planned and other source gates remain unfinished; the conditional parent update is not a missing runtime implementation.16.2 stays unchecked. The next independent queue is Plan10 Group1 task1.4 under its own mandatory readings. No build or test remains running; no actual21 compaction occurred.
+Group21 handoff: [current runtime/export/evidence record](../../../zz-rhr/upgrades/2026-10/r2mlsp-q-runtime-handoff.md) describes delivered423 owners, actual command/receipt boundaries, all26 exact families, current focused commands/results and remaining runtime/art/network/producer gates. Vehicle and map-layer architecture pages now record the delivered Space/Surface ownership. A read-only audit checked1,056 referenced report/artifact/predecessor identities across11 retained proof indexes. Parent/source/full-master closure is deliberately not reconciled while16.2's actual manifest family remains planned and other source gates remain unfinished; the conditional parent update is not a missing runtime implementation.16.2 stays unchecked. The next independent queue is Plan10 Group1 task1.4 under its own mandatory readings. No build or test remains running; no actual21 compaction occurred.
 
 
 ## Consult on Demand

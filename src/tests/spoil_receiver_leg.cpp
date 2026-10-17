@@ -9,7 +9,7 @@
  * unloading only from the hauler carrying its loaded set, at the project's origin or after visiting it; never from
  * the cutter; and a replaced origin must again be a company Surface railway station, keeping earlier visits.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 8
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Surface origin leg
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Surface origin leg
  */
 
 #include "../stdafx.h"

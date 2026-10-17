@@ -10,7 +10,7 @@
  * track or in a depot as its hauler cycle (Plan 5 Group 6) expects. Neither train can yet drive itself (master Group 7).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-11 (staged store copies: Group 10)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md, task 10.3 (packet custody audit)
- * @see docs/zz-reach2/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
+ * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
  */
 
 #ifndef TESTS_TBM_EXCHANGE_FIXTURE_H

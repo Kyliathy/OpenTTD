@@ -4,7 +4,7 @@ NewGRF is the GRF container OpenTTD uses to replace and extend vehicles, industr
 
 There is no `Action` enum. Each action is a `uint8_t` and a `GrfActionHandler<TAction>` specialization. The legal values are the template arguments in `InvokeGrfActionHandler::funcs` (`src/newgrf.cpp` lines 1230–1233): `0x00` through `0x14`, in that order. Callback identifiers are the `CallbackID` enum in `src/newgrf_callbacks.h`.
 
-Companion notes: [features.md](features.md), [sprite-groups.md](sprite-groups.md), [callbacks.md](callbacks.md). [R2MLVS1](../../upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md) owns the first-party profile contract and its [activation evidence](../../upgrades/2026-10/r2mlvs1-a-content-contract.md).
+Companion notes: [features.md](features.md), [sprite-groups.md](sprite-groups.md), [callbacks.md](callbacks.md). [R2MLVS1](../../upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md) owns the first-party profile contract and its [activation evidence](../../../zz-rhr/upgrades/2026-10/r2mlvs1-a-content-contract.md).
 
 ## What a loaded GRF becomes
 
@@ -89,7 +89,7 @@ The selected Temperate Multilayer Industry profile uses bundled NewGRF definitio
 
 `PrepareMultiLayerProfileContent` resolves the candidate package and refuses unsupported climates or external industry sets before world activation. `ActivateMultiLayerProfile` validates its activated definitions. `CheckMultiLayerContentPackageIdentity` requires the exact GRFID, MD5 and package version, rejecting compatible substitutions; `CheckMultiLayerContentIdentity` also counts required labels across actual `CargoSpec` slots because `BuildCargoLabelMap` silently keeps the first duplicate. Consumers resolve stable labels rather than using the package's current slots. Temperate has eleven active baseline cargos plus nineteen additions: thirty active cargos in a thirty-one-slot envelope preserving original slots 0..11, within `NUM_CARGO = 64`.
 
-Save version 371 records this profile/identity separately from ordinary `NGRF` mappings. Preview and preactivation checks do not publish live policy; actual loading checks exact package identity before sprites and cargo uniqueness afterward. Legacy files retain their existing content rules. The two-route ore/processor/vehicle spike is opt-in (`OPTION_MULTILAYER_LOADER_PROBE`, default OFF); its native registration is excluded from normal builds. [Content Freeze](../../upgrades/2026-10/r2mlvs1-g-content-freeze.md) distinguishes tested definitions/contracts from pending runtime/art acceptance.
+Save version 371 records this profile/identity separately from ordinary `NGRF` mappings. Preview and preactivation checks do not publish live policy; actual loading checks exact package identity before sprites and cargo uniqueness afterward. Legacy files retain their existing content rules. The two-route ore/processor/vehicle spike is opt-in (`OPTION_MULTILAYER_LOADER_PROBE`, default OFF); its native registration is excluded from normal builds. [Content Freeze](../../../zz-rhr/upgrades/2026-10/r2mlvs1-g-content-freeze.md) distinguishes tested definitions/contracts from pending runtime/art acceptance.
 
 Space definition revision2 is independent of that unchanged cargo package1 and
 ground profile1. `multilayer_space_content.h` owns Steel/Goods construction,

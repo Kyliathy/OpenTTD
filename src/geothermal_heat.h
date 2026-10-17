@@ -7,7 +7,7 @@
 /**
  * @file geothermal_heat.h Physical thermal request proposals backed by shared native utility identities.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups2-4
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group15 stable ConsumerID priority
+ * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group15 stable ConsumerID priority
  */
 
 #ifndef GEOTHERMAL_HEAT_H
