@@ -1,0 +1,96 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13HB / r2mlvs14-remaining-assets-and-runtime-integration.md73B.3. Genuine planning wire original, no built tank hardware or fuel.",
+  "asset_id": "module.fuel-store",
+  "candidate": "orbital-fuel-store-blueprint-v1",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png",
+      "sha256": "a57d1e4d2a65c7b1859899cce7b1c64c96a9cbcd7e652bf680638ec83965813e",
+      "role": "FuelStore edit target: exact hardware and camera"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-blueprint-v5.png",
+      "sha256": "d2510a608693946b3705cece9e5299be0e0bdb73d76f8f38b3577e743094bc1e",
+      "role": "floor grid and bold wire line reference only; no Power hardware or capability"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE fixed orbital Fuel Store BLUEPRINT source for OpenTTD, isolated transparent image.\nImage1 is the genuine approved FuelStore body, the EDIT TARGET for equipment counts, vessel shapes, placement, fixed shallow camera and footprint. Image2 is an approved simple BLUEPRINT FLOOR GRID AND BOLD LINE WEIGHT reference ONLY: do not copy its solar-panel shapes or any Power hardware. Keep the same outer deck as Image1. Convert Image1 into a sparse pure cyan unbuilt planning wire outline on a truly transparent background: TWO low horizontal rounded cylindrical tank contours in their actual rear positions, ONE small central manifold cube contour. The tanks must read as elongated rounded closed cylinders, never rectangles or solar panels. No filled deck, metal surfaces, panels, cargo, liquid, status lamps, shadows or coupling.\nFloor grid is EXACTLY four diamond world tiles, as Image2: one outer diamond plus two diagonals connecting MIDPOINTS of opposite outer edges, crossing at the floor centre. No line from rear outer corner to front outer corner, no line from left outer corner to right outer corner, no triangular fan, no extra axes. Keep every actual floor edge continuous, including the centre junction; hardware contours may sit above but must not erase those floor-grid lines.\nUse clean opaque CYAN strokes around14-18source pixels wide on a1402x1122 canvas, with transparent interiors. Stroke width must remain strongly visible after about9x uniform reduction, as Image2. Very simple few contours, no fine blueprint mesh or technical doodles. ONE whole model, four floor corners visible and100px transparent clearance at image edges. Shallow near2:1floor and upper-left view preserved. No labels, symbols, text, arrows, border, background, thick foundation or extra hardware. Keep two rounded vessel outlines and one small cube; every interior beyond those few wire lines is transparent.",
+  "original": "media/multilayer/source/space/raw/orbital-fuel-store-blueprint-v1.png",
+  "original_sha256": "22238bdeb31a5dda0902f7f150fe687cde6719272c38980a5a0dbb9a62ea50e0",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      119,
+      349,
+      1286,
+      952
+    ],
+    "uniform_scale": [
+      109,
+      1000
+    ],
+    "source_reference": [
+      701,
+      376
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        367
+      ],
+      [
+        1275,
+        648
+      ],
+      [
+        701,
+        946
+      ],
+      [
+        125,
+        648
+      ]
+    ]
+  }
+}

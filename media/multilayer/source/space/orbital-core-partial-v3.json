@@ -1,0 +1,101 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Genuine partial physical source with unchanged native floor/cell gate.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-partial-v3",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "native_geometry_verified_pending_state_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-core-construction-camera-v1.png",
+      "sha256": "bc06f7220a239e86387974e53696b742e73bb63f632fdc607896edb518d16739",
+      "role": "camera-only stronger shallow generator reference; not a native geometry exception"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-partial-v2.png",
+      "sha256": "d06447f953acc607cd654ef86637f941aa736eaa00d6910dbcc08f619d8663a7",
+      "role": "unfinished hardware/style only; rejected camera does not supply source coverage"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nCreate a FRESH single original orbital construction platform, copying the SHALLOW FLOOR DIAMOND CAMERA OF IMAGE1 exactly. Image1 is a pure geometry guide, no model artwork. Image2 is HARDWARE/COLOURS REFERENCE ONLY; do NOT copy its excessively steep camera or tall diamond.\nThe floor must follow image1's strongly flattened diamond, about1000px wide and380px high, on a1280x1024 transparent canvas. Place one very thin3x3 tiled deck exactly on that diamond, with upper vertex around(640,390), right(1140,580), front(640,770), left(140,580). Use a genuinely lowered camera, no perspective convergence.\nOn this floor render the same unfinished Core hardware as image2: one OPEN low octagonal hub rim in the centre with eight short uprights, exposed interior floor, NO roof or finished window belt; exactly TWO long flat cream/navy solar-bank frames at back-left and back-right, partially filled with navy panels and visible unfinished cross-ribs; one shallow open cream locker at front-left, NO lid. Preserve their relative positions. Sparse low construction stage, no additional machinery, crates, people, robots, cranes, coupling or spacecraft. Cream panels, dark graphite interiors, navy solar cells, upper-left light, crisp restrained game art. Everything fits inside the guide diamond, with100px transparent outer clearance, no external shadow. Real transparent background, no scene, words, labels, guide lines, axes, magenta separators or other views. A single isolated complete original. Prioritise the shallow guide camera over any camera cues in image2.",
+  "original": "media/multilayer/source/space/raw/orbital-core-partial-v3.png",
+  "native_registration": {
+    "canvas": [
+      256,
+      192
+    ],
+    "native_reference": [
+      128,
+      64
+    ],
+    "native_floor_corners": [
+      [
+        128,
+        64
+      ],
+      [
+        224,
+        112
+      ],
+      [
+        128,
+        160
+      ],
+      [
+        32,
+        112
+      ]
+    ],
+    "native_approach": [
+      224,
+      128
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      75,
+      366,
+      1329,
+      969
+    ],
+    "uniform_scale": [
+      767,
+      5000
+    ],
+    "source_reference": [
+      698,
+      354
+    ],
+    "source_floor_corners": [
+      [
+        702,
+        370
+      ],
+      [
+        1324,
+        652
+      ],
+      [
+        698,
+        964
+      ],
+      [
+        80,
+        652
+      ]
+    ]
+  },
+  "original_sha256": "b1a75d09f5e2aacdcc49805c08d2296f36aecc45c892437c23fdb165329abd46",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

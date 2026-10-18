@@ -524,6 +524,13 @@ protected:
 	typedef CargoList<StationCargoList, StationCargoPacketMap> Parent;
 
 	uint reserved_count; ///< Amount of cargo being reserved for loading.
+	/** Remove original station cargo through the same fair-removal owner, optionally protecting bought material.
+	 * @param max_move Maximum eligible whole units to discard.
+	 * @param cargo_per_source Optional original-source accounting for the ordinary discard path.
+	 * @param protect_company_supplies Keep non-paying bought stock out of both discard selection and its lottery weight.
+	 * @return Exactly removed eligible native units; no second cargo list or stock account is introduced.
+	 */
+	uint TruncateImpl(uint max_move, StationCargoAmountMap *cargo_per_source, bool protect_company_supplies);
 
 public:
 	/** The super class ought to know what it's doing. */
@@ -609,6 +616,12 @@ public:
 	uint Reserve(uint max_move, VehicleCargoList *dest, std::span<const StationID> next, TileIndex current_tile);
 	uint Load(uint max_move, VehicleCargoList *dest, std::span<const StationID> next, TileIndex current_tile);
 	uint Truncate(uint max_move = UINT_MAX, StationCargoAmountMap *cargo_per_source = nullptr);
+	/** Discard abandoned transport offers while preserving actual bought company material in the same native station container.
+	 * @param max_move Maximum ordinary offered units to discard; owned CompanySupply does not count toward the requested removal.
+	 * @return Exactly removed ordinary units; explicit destruction still uses ordinary Truncate/destructor semantics.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Groups13CCC/13CCD; rating hook activation remains13CCD.
+	 */
+	uint TruncateAbandonedOffers(uint max_move);
 	uint Reroute(uint max_move, StationCargoList *dest, StationID avoid, StationID avoid2, const GoodsEntry *ge);
 
 	/**

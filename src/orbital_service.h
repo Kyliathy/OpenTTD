@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_service.h Contained paid Core/Dock service and shared electrical work.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/4C/6B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; read-only physical service disclosure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; shared per-role contained bills and genuine unknown-role legacy work.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only actual service progress presentation.
  */
@@ -23,6 +24,12 @@ std::optional<SpaceServiceTuning> GetOrbitalServiceJobTuning(const OrbitalServic
  * @param site Actual native work module. @return Its original owned physically adjacent source site, or nullptr when disconnected/lost.
  */
 const SpaceStructure *GetOrbitalServicePowerSite(const SpaceStructure &site);
+/** Read physical service availability through the original contained-job owner.
+ * @param site Actual Core or Dock; no job, berth or energy is granted by this query.
+ * @return Whether activation, connection or all outstanding unpaused jobs are unavailable.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K
+ */
+bool IsOrbitalServiceFacilityBlocked(const SpaceStructure &site);
 /** Player operations on one exact contained berth; cancellation returns only its actual unconsumed parts. */
 enum class OrbitalServiceControl : uint8_t { Start, Pause, Resume, Cancel, End };
 /** @return Whether an owned Core/Power has an actual active panel for common interval publication. */

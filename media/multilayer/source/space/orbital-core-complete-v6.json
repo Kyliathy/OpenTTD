@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Retained unapproved fresh Core hardware base.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v6",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "unaccepted_native_floor_and_coupling",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-core-floor-template-v1.png",
+      "sha256": "9b910adc3798350d9524d31529cf06c4d25432397ce27b2265a2798594bf93ca",
+      "role": "primary geometry only"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nThe only input is a GEOMETRY TEMPLATE for an original OpenTTD orbital Core station. Generate NEW artwork; there is no previous rendered model to preserve.\nKeep the input image's EXACT1024x1024 canvas and EXACT floor diamond: top(512,256), right(896,448), bottom(512,640), left(128,448). Keep its full2:1 outline, scale and position. This is a thin square3x3 deck in the engine's dimetric projection. Do not enlarge, rotate or steepen it. Every floor edge has slope1/2.\nReplace the plain grey guide floor with an original textured ivory/gunmetal orbital deck. Add one LOW OCTAGONAL CENTRAL COMMAND HUB, ivory roof, muted teal band and dark control glass; its height at most80source pixels. Add exactly TWO LOW FLAT NAVY SOLAR PANELS on the two rear side areas as a paired assembly. Add one SHALLOW IVORY SUPPLY LOCKER in the foreground-left area. Simple recessed structural conduits connect these. Flat low hardware, crisp classic transport-game sprite style, upper-left lighting.\nAt the GREEN DOT(832,480), put the ONE small docking coupling. Its BACK FLOOR CONTACT must exactly replace that dot. The coupling has two short pale cheeks and one dark open aperture, facing outward down-right. It is close to the rightmost floor vertex, NOT midway along the edge. Keep it shallow and small and flush with the floor; nothing extends far outside the outline.\nAll four floor corners stay plain and thin: no projecting corner caps, circular corner ornaments, deep rim or legs. The green dot and guide lines disappear into original station textures. No text, symbols, numbers, extra docks, ships, robots, cargo, people, crane, antenna, exhaust, scenery or cast ground shadow.\nTrue transparent background. One complete fixed2:1 view. Maintain the large empty margins in the template. The exact square-floor outline and one berth contact are the most important requirements.",
+  "review": "Fresh hardware is distinct and low, but output floor remains deeper than actual2:1 projection and its one coupling is too close to the extreme right vertex. No geometry/pixel repair. Next base request omits the coupling so its own genuine source component can later be registered at the exact native contact, using the established original-part assembly policy.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v6.png",
+  "original_sha256": "eb2963c85c5ca5b3fb396a6c2085c414bc502cad53243dc1873e2df883bb551f",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

@@ -78,6 +78,12 @@ enum class LayerPortalKind : uint8_t {
 	RoadElevator, ///< Timed road passage from an upper Layer to Deep Underground.
 };
 
+/** Explicit same-file tile position whose layer meaning is assigned only by the canonical controller. */
+struct StoredLayerTilePosition {
+	uint16_t x = 0, y = 0; ///< Original local plane coordinates, independent of active map/camera.
+	MapLayer layer = MapLayer::Invalid; ///< Canonical gameplay meaning of the admitted original storage plane.
+};
+
 /**
  * Layer meaning for the stacked map.
  *
@@ -87,6 +93,15 @@ enum class LayerPortalKind : uint8_t {
  * to a tile by hand.
  */
 struct MultiLayerMap {
+	/** Interpret one explicit original packed index through native map geometry and canonical layer semantics.
+	 * @param tile Original serialized index.
+	 * @param width Candidate file's native plane width.
+	 * @param height Candidate file's native plane height.
+	 * @param layers Candidate file's original stored layer count.
+	 * @return Same-file local coordinates/layer, or no value for invalid source geometry/index; never reads live map/camera state.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC.
+	 */
+	static std::optional<StoredLayerTilePosition> DecodeStoredTile(TileIndex tile, uint32_t width, uint32_t height, uint8_t layers);
 	/**
 	 * Walk every tile of one layer.
 	 * Same shape as Map::Iterator, bounded to a single plane.

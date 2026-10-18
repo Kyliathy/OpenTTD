@@ -1,0 +1,102 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.1; exact built-in corrective source request; no selected/native acceptance yet.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-free-n-ne-e-se-v2",
+  "tool": "built-in image_gen",
+  "state": "free",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "original model edit target, retained rejected only for native source clearance",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v1.png",
+      "sha256": "09e41a99ea79480d3adb80853a865549ecc24b453ead487f2b6a71d679ee69f9"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: canonical OpenTTD vehicle.model-21 heavy mining robot, EMPTY FREE/IDLE.\nInput image1 is the original four-view model edit target, not a new design request. Change ONLY source-sheet spacing/clearance: make each of the four complete machines uniformly20percent smaller within its own panel. Keep one consistent physical scale across all four genuine views and keep their N/NE/E/SE orientations. Centre each smaller subject comfortably within its corresponding safe inner rectangle. Preserve the exact same model, silhouette proportions, equipment inventory, dark steel/ochre/blue palette, upper-left light, camera and idle state. Exactly one central industrial cutter/drill, two folded clamp/gripper arms, one integrated EMPTY rear hopper, two rear thruster bells, one top electronics housing. Do not add/remove/mirror equipment or add work effects, exhaust, cargo, shadows or props.\nRetain a1536x1024 transparent four-cell2x2 source sheet. Use opaque pure magenta #FF00FF frames about6px thick outside the models at N(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000). Genuine transparent background, gutters and margins. All complete model pixels, including cutter tips and engine nozzles, must remain inside the safe inner rectangles N(56,56)-(712,456), NE(824,56)-(1480,456), E(56,568)-(712,968), SE(824,568)-(1480,968), with at least32px clear transparent space between every complete subject and its actual frame. The N cutter tip was too close to the top border in the target: correct that by reducing the whole subject uniformly, never clipping, erasing or separately shortening its drill. Target maximum whole subject width500px and height330px. Preserve clean native-sprite readability for64x48 output. No text, labels, watermark or decorative backdrop. No edits beyond the requested uniform smaller source subjects, their safe placement and transparent framed layout.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-f1bb5028-b078-42c7-8a10-7b1d58128df9.png",
+  "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          222,
+          47,
+          483,
+          405
+        ],
+        "minimum_transparent_clearance": 43,
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          138,
+          84,
+          523,
+          390
+        ],
+        "minimum_transparent_clearance": 58,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          106,
+          116,
+          621,
+          337
+        ],
+        "minimum_transparent_clearance": 83,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          139,
+          57,
+          570,
+          360
+        ],
+        "minimum_transparent_clearance": 57,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0
+  },
+  "selection_decision_owner": "media/multilayer/source/space/space-generation-record.json"
+}

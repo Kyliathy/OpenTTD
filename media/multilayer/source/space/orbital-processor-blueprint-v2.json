@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.3. Genuine blueprint thin-floor correction; source approval separate.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_edit",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset module.processor BLUEPRINT. Image1 is the cyan blueprint edit target; Image2 is a geometry-only shallow diamond guide. Keep exactly its one drum, one exchanger, one joining pipe and one console as cyan wireframe planning outlines. Correct ONLY the floor projection and outline thickness. Floor must be FLAT and shallow like Image2, about1200pixels wide by560pixels high in a1536x1024image; vertices rear(768,260), right(1368,540), front(768,820), left(168,540). Remove all raised corner caps and border blocks: use a single thin cyan hairline diamond rim and nine thin3x3panel outlines, no extruded vertical edge or thick fascia. Make the floor six percent shallower than Image1 while retaining the machine's original proportions and low supports. Every floor corner remains fully exposed. No halo or glow outside any outline. Sparse translucent blue faces inside equipment are acceptable; background and margins genuinely transparent. Keep at least80transparent pixels around the complete isolated cutout. Exactly one view, no text/labels/numbers, no additional equipment, no clamps, no cargo/products, no vehicle, no background or guide markers. Preserve this same processor model; native footprint readability and safe isolation take priority over size.",
+  "input_images": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-processor-blueprint-v1.png",
+      "role": "blueprint_edit_target",
+      "sha256": "23ca72dca26938c005bd033058226deeefa191589e52285008188b89e86e1aa1"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+      "role": "geometry_only_reference",
+      "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b"
+    }
+  ],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-3945cdf5-0798-451c-81c0-9bf62449a705.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-blueprint-v2.png",
+    "sha256": "30ae908b6c67396d80f47c350860fd6182db0ba51fe9178ed75ebd5fdc8d3dd2"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    86,
+    233,
+    1453,
+    907
+  ],
+  "selection": "selected_stage_pending_full_review"
+}

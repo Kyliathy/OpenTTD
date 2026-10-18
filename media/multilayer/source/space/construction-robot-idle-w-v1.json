@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Exact built-in single-view fallback request; immutable output and actual source measurements. Selection/native conversion remain separate.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-w-v1",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "W"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Exact untouched original E-side model reference, ordinary rectangle only",
+      "path": "media/multilayer/guides/space/construction-robot-e-original-reference.png",
+      "sha256": "5fab1d8c60e7a26f0d66ef30fa4c525cf9a8f7d9e0b81343c15de957d3d03edc"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD retained cargo-less heavy construction robot model16. ONE GENUINE W directional view, IDLE.\nInput image1 is the exact untouched E-side rectangle of the APPROVED physical robot: front passive coupling and folded wrists are on the RIGHT, the single rear engine nozzle is on the LEFT, and the small dark-navy roof display sits toward the FRONT/RIGHT portion of the roof. Use this one actual model as geometric authority.\nRe-render the SAME entire physical robot from the OPPOSITE side, W: front coupling and both folded wrists point LEFT; the ONE rear nozzle points RIGHT. Move the entire physical anatomy coherently with the actual camera orbit. Crucially, the dark roof display belongs near the FRONT of the roof: in W it must therefore sit toward the LEFT, not remain on the right next to the rear nozzle. Broad beveled front nose plates, passive short front coupling, roof display and folded arm wrists all turn together. Do not merely swap front/rear ports on the unchanged E picture. Do not mirror or rotate flat artwork: show the opposite real3D faces with upper-left SCREEN light unchanged.\nPreserve exact hardware/inventory: one closed pentagonal pale-ivory ceramic hull over dark gunmetal, burnt-orange joint accents, exactly TWO articulated side arms folded at rest, one two-jaw wrist per arm (2wrists total, naturally occluded if necessary), ONE compact central cylindrical rear nozzle at the RIGHT, ONE small passive front coupling at LEFT (not an engine or drill), ONE original dark-navy flat unlit roof display toward LEFT/front, and the original closed lower chassis swivel boss. No second nozzle, extra wrists/arms, cargo bed/hopper/cradle/materials, cutter, welding work, beam, exhaust, service lights, solar wings, antennas, crew or weapons. The near/far arms may naturally overlap; do not duplicate them to show hidden hardware.\nKeep original proportions, low elevated orthographic2:1 camera, calm idle fold, ivory/steel/orange materials and fixed upper-left lighting. Crisp original volumetric isometric sprite render for native64x48 indexed palette, fixed anchor(-32,-32). No ground plane or cast shadow.\nONE complete isolated W robot only, centered on a1024x1024 TRUE-TRANSPARENT source canvas, whole-model width about560px and height about300px. One thin opaque pure-magenta #FF00FF rectangular source separator around(24,24)-(1000,1000), about6px thick. The entire subject must remain safely inside(80,80)-(944,944), at least40px clean transparent clearance to its frame. All empty background/margins are truly alpha=0, no translucent purple haze, checkerboard, white/gray fill or glow. No text, labels, arrows, numbers, watermark, extra views or other objects. Only one true W view of the exact approved robot, with front hardware and roof display LEFT, rear nozzle RIGHT.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-w-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-b1105ef2-ac79-4c20-8915-8c5378056ff5.png",
+  "sha256": "c5c8537fcc35c8275be2f586b63728e60062316ff563dd3d361aa19f2a9eee69",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "W": {
+        "crop_box": [
+          130,
+          300,
+          1170,
+          950
+        ],
+        "subject_bbox_in_crop": [
+          34,
+          66,
+          1005,
+          580
+        ],
+        "minimum_transparent_clearance": 34,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "background": "Actual alpha retained unchanged. Ragged exterior frame/speckles lie outside the ordinary selected rectangle; no alpha repair or frame removal.",
+    "camera": "Front passive coupling/folded wrist and original front roof display LEFT; single original rear nozzle RIGHT. Opposite physical side with fixed upper-left screen light."
+  }
+}

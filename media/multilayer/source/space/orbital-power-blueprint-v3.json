@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Rejected wrong-grid planning original retained; native world-cell semantics remain unchanged.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-blueprint-v3",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_wrong_floor_grid",
+  "rejection": "The simple equipment outlines are present, but the internal floor lines connect opposite corners as horizontal/vertical axes and create four triangles rather than four native floor diamonds.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-power-blueprint-camera-v1.png",
+      "sha256": "46acf1fc1cdda06188588c632bed45a3e5d8f10959fb4b1dbf1e002f2a324720",
+      "role": "plain floor silhouette guide only"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nCreate ONE fresh SIMPLE WIREFRAME BLUEPRINT game sprite on genuine transparent background. Flat clean vector-like cyan line drawing, not a filtered 3D render, no textures.\nImage1 is ONLY the exact floor silhouette guide. Trace its shallow diamond1000px wide/490px tall, corners(640,315),(1140,560),(640,805),(140,560) on1280x1024 transparent canvas.\nDraw ONLY these shapes in continuous fully opaque bright cyan strokes about20px thick:\n1. The outer floor diamond.\n2. Two diagonal interior floor lines joining opposite edge midpoints, crossing in an X to make exactly four floor diamonds. No rear-to-front vertical axis.\n3. TWO simple four-line rectangular panel-surface outlines lying low in the rear half, one left and one right, representing the two PV banks of an orbital power module. Use the same shallow isometric axes; no internal cell grid, leg detail or filled panel.\n4. ONE small simple low wire cube just in front of the panels at the floor centre, representing its control box.\nAll strokes SOLID, smooth and unbroken at full opacity. Every shape interior completely transparent, no cyan patches, speckles, mesh, shaded surfaces, dark fill, glow, dither, scratches or tiny fasteners. Keep every corner and both panels inside generous transparent margins. No other equipment, coupling, cargo, labels, text, symbols, axes, shadows or background. ONE full isolated fixed view. A minimal readable planning schematic, not detailed machinery.",
+  "original": "media/multilayer/source/space/raw/orbital-power-blueprint-v3.png",
+  "original_sha256": "446ddcec389f5b0588a3c07c84a9c8aadacdeef81282d995d2b729464f1548be",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

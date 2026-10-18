@@ -1,0 +1,358 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3d. Exact opposite12-component request; NW model camera is unaccepted and cannot supply a native pose. Genuine S/SW/W source selection remains subject to measured registration/native review.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-status-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "indicator-component-matrix",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "column": 0
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "column": 1
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "column": 2
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_partial_camera_rejection",
+  "unaccepted_directions": {
+    "NW": "Housing long axis is incorrectly SW-NE; actual native NW reference requires NW-SE. Never relabel or flat-rotate this component."
+  },
+  "reference_inputs": [
+    {
+      "role": "Approved opposite original housing identity and genuine camera reference",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+      "sha256": "e0435128e8e556079212c18b4b9b7ff895387c1cb3b116b03aef6d3788890460"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-21 heavy-miner ORIGINAL DARK-BLUE ELECTRONICS HOUSING, status-part source sheet.\nInput image1 is the approved heavy-miner S/SW/W/NW model reference. Extract ONLY its one original small flat dark-blue top electronics housing as an isolated component; do not include or change the cutter, arms, hopper, thrusters, yellow body mounts or chassis. Keep the housing's exact shape, original proportions, materials, beveled edges, small existing recessed display/connector face, genuine view orientation and fixed upper-left light. No new antennas, doors, hardware, text or symbols. This is the SAME housing in three actual status illumination variants per direction, never three different designs.\nCreate EXACTLY TWELVE small isolated component cutouts in a1536x1024 sheet, grouped inside FOUR outer pure-magenta #FF00FF rectangular6px frames: S top-left(24,24)-(744,488); SW top-right(792,24)-(1512,488); W bottom-left(24,536)-(744,1000); NW bottom-right(792,536)-(1512,1000). These are the same genuine physical camera orientations as the reference. Each outer direction panel contains THREE SEPARATE components side-by-side at the SAME scale, not a merged triplet or connected objects:\nLEFT: BLOCKED, one short crisp warm amber interlock bar lit on the existing top display surface.\nMIDDLE: SERVICE phase A, one short crisp bright cyan diagnostic bar lit toward one end of the existing top display surface; the opposite end is dark.\nRIGHT: SERVICE phase B, the SAME unchanged housing with that cyan diagnostic bar lit at the OPPOSITE END of the existing top display surface; phase-A position now dark. Actual visibly different source pixels, no moving or newly opened hardware.\nKeep illumination bars broad/clean enough to read after conversion to a6-8px native component: roughly35-45 source pixels long and15-20px thick on the real display face, with crisp edges and NO glow/halo. Preserve the surrounding original blue housing surface.\nExact desired cutout centers: S(148,256),(380,256),(612,256); SW(916,256),(1148,256),(1380,256); W(148,768),(380,768),(612,768); NW(916,768),(1148,768),(1380,768). MAXIMUM each complete component width140px and height140px. Keep each entire component safely within its OWN transparent200x352 rectangle: N[48,80,248,432],[280,80,480,432],[512,80,712,432]; NE[816,80,1016,432],[1048,80,1248,432],[1280,80,1480,432]; E same x ranges with y592..944; SE same upper-right x ranges with y592..944. At least24px truly transparent clearance on all sides of EVERY component. No cutout may overlap another or touch an outer frame.\nBackground, panel interiors, margins and gutters must be actual clean transparent alpha=0, with ONLY the four opaque pure-magenta outer separator frames outside all twelve safe cutouts. No translucent purple haze, checkerboard, gray/white fill, cast shadows, labels, numbers, arrows, watermark, backdrop or other props. Exactly four genuine original housing orientations, each with blocked/service-A/service-B component originals left-to-right.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-status-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-c2b0650a-dead-4f21-8c9d-6af658eb2fa2.png",
+  "sha256": "ecc781dea0a56fe5ddd7ff4d13812a9c7fdf3b91007f63424f0b36d54c2fdb57",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_color_policy": {
+      "red_min": 180,
+      "green_max": 60,
+      "blue_min": 180,
+      "chroma_min": 128
+    },
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          46,
+          150,
+          662,
+          313
+        ],
+        "minimum_transparent_clearance": 42,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              78,
+              182,
+              242,
+              345
+            ],
+            "source_part_box": [
+              75,
+              179,
+              245,
+              348
+            ],
+            "source_center": [
+              160,
+              264
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              303,
+              182,
+              468,
+              344
+            ],
+            "source_part_box": [
+              300,
+              179,
+              471,
+              347
+            ],
+            "source_center": [
+              386,
+              263
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              529,
+              182,
+              694,
+              344
+            ],
+            "source_part_box": [
+              526,
+              179,
+              697,
+              347
+            ],
+            "source_center": [
+              612,
+              263
+            ]
+          }
+        ]
+      },
+      "SW": {
+        "crop_box": [
+          792,
+          100,
+          1515,
+          400
+        ],
+        "subject_bbox_in_crop": [
+          19,
+          74,
+          706,
+          258
+        ],
+        "minimum_transparent_clearance": 17,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              811,
+              175,
+              1019,
+              358
+            ],
+            "source_part_box": [
+              808,
+              172,
+              1022,
+              361
+            ],
+            "source_center": [
+              915,
+              266
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1047,
+              174,
+              1255,
+              358
+            ],
+            "source_part_box": [
+              1044,
+              171,
+              1258,
+              361
+            ],
+            "source_center": [
+              1151,
+              266
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1289,
+              174,
+              1498,
+              358
+            ],
+            "source_part_box": [
+              1286,
+              171,
+              1501,
+              361
+            ],
+            "source_center": [
+              1394,
+              266
+            ]
+          }
+        ]
+      },
+      "W": {
+        "crop_box": [
+          17,
+          680,
+          755,
+          840
+        ],
+        "subject_bbox_in_crop": [
+          16,
+          31,
+          722,
+          129
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              33,
+              713,
+              247,
+              808
+            ],
+            "source_part_box": [
+              30,
+              710,
+              250,
+              811
+            ],
+            "source_center": [
+              140,
+              760
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              275,
+              712,
+              493,
+              808
+            ],
+            "source_part_box": [
+              272,
+              709,
+              496,
+              811
+            ],
+            "source_center": [
+              384,
+              760
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              522,
+              711,
+              739,
+              809
+            ],
+            "source_part_box": [
+              519,
+              708,
+              742,
+              812
+            ],
+            "source_center": [
+              630,
+              760
+            ]
+          }
+        ]
+      },
+      "NW": {
+        "crop_box": [
+          792,
+          640,
+          1515,
+          880
+        ],
+        "subject_bbox_in_crop": [
+          27,
+          28,
+          707,
+          206
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              819,
+              670,
+              1037,
+              846
+            ],
+            "source_part_box": [
+              816,
+              667,
+              1040,
+              849
+            ],
+            "source_center": [
+              928,
+              758
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1054,
+              669,
+              1271,
+              846
+            ],
+            "source_part_box": [
+              1051,
+              666,
+              1274,
+              849
+            ],
+            "source_center": [
+              1162,
+              758
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1288,
+              668,
+              1499,
+              846
+            ],
+            "source_part_box": [
+              1285,
+              665,
+              1502,
+              849
+            ],
+            "source_center": [
+              1394,
+              757
+            ]
+          }
+        ]
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "component_count": 12,
+    "measured_window_note": "Actual frame-free non-overlapping parent rectangles preserve S42/SW17/W16/NW16px clearance and zero clipped/frame pixels. Outside visible frame colors measure red>=186,green<=33,blue>=208,chroma>=170; the conservative per-output policy includes all actual saturated frames and excludes the dark blue model edges. No image pixels are changed. NW camera remains independently unaccepted."
+  }
+}

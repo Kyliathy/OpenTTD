@@ -1,0 +1,83 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.2. Exact missing-camera edit. Only genuine S/NW pass layout/model review; SW lacks required clearance and W changes the display inventory. Preserve rejected parts, never repair alpha or reuse them as selected source.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-empty-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "empty",
+  "directions": [
+    "S",
+    "NW"
+  ],
+  "requested_directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "unaccepted_directions": {
+    "SW": "Correct physical camera but complete body ends497; measured frame-free window ends500 and gives only3px bottom clearance. Expanding through513includes real separator pixels. Cannot satisfy16px required clearance.",
+    "W": "Front command head adds a second navy display/glazing face and complete body crowds/overlaps canonical source borders. One original display only; rejected before native registration."
+  },
+  "transparent_background": true,
+  "status": "generated_partial_layout_model_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Selected genuine N/NE/E/SE original physical hauler model, exact edit/reference target",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+      "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-17 orbital cargo hauler, EMPTY, four MISSING GENUINE camera views.\nInput1 is the SELECTED exact physical model, actual N/NE/E/SE. Preserve its same complete rectangular ivory/gunmetal/muted-teal cargo barge: one bare recessed rectangular dark-steel EMPTY cargo deck, exactly TWO fixed low longitudinal side rails with the same end sills/posts, ONE short FRONT solid command head with its small flat dark-navy upper display, exactly ONE compact central cylindrical REAR nozzle unlit. No cargo/crates/tanks/materials, extra command heads/engines, arms/grippers/cutter/drill/scanner, booms/solarwings/antenna/cockpit/crew/weapons/legs. Keep its original long low deck, narrow width, all proportions, white corner caps and real structural positions. Empty bare deck only, no service/light/exhaust/work/motionblur. Display stays attached to the same front command head, never another position beside the rear engine.\nThe reference top-leftN and top-rightNE are rear views with front head UP/far and one open nozzle DOWN/near; its bottom-leftE has front head RIGHT/nozzleLEFT; bottom-rightSEfrontheadLOWER-RIGHT/nozzleUPPER-LEFT. Do NOT repeat these cameras. Render the FOUR OTHER physical camera orbits, one coherent3D rig, fixed LOW elevated orthographic2:1 camera26.565degrees and upper-left SCREEN light. Redraw actual visible faces, no flat mirror/rotation and no just swapping ports on an unchanged deck/head.\nTOP LEFT S: FRONT command head/navy display at near LOWER CENTER facing DOWN/toward viewer; long empty deck behind it to the far UPPER edge; ONE rear nozzle at far UPPER center, naturally partly occluded by its original rear sill if necessary. No big engine nozzle at the front/near lower end.\nTOP RIGHT SW: front command head/display near LOWER-LEFT, empty deck extends UPPER-RIGHT, ONE rear nozzle far UPPER-RIGHT. Genuine front-three-quarter counterpart of NE, no new hardware.\nBOTTOM LEFT W: opposite physical side of E: FRONT command head/display LEFT, long empty deck behind it toward RIGHT, ONE rear nozzle RIGHT. Entire head/display/deck/rails rotate coherently; fixed upper-left light unchanged.\nBOTTOM RIGHT NW: FRONT head/display far UPPER-LEFT, ONE rear nozzle near LOWER-RIGHT, genuine rear-three-quarter counterpart of SE. Same bare deck, TWO rails only.\nSame physical source scale across all4cameras and matching reference proportions. Source designed for unchanged64x48native/anchor(-32,-32). Preserve all original physical parts; naturally hidden hardware stays hidden, never duplicate it to show an occluded nozzle or rail.\n1536x1024 TRUE-TRANSPARENT2x2 source, four straight opaque pure-magenta #FF00FF6px frames at S(24,24)-(744,488),SW(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000). Each COMPLETE barge maximum620px wide/360px tall, comfortably within S[64,64,704,448],SW[832,64,1472,448],W[64,576,704,960],NW[832,576,1472,960], with32px+ clean TRUE TRANSPARENT clearance to every frame. Whole-model uniform reduction permitted for margins, no shortening individual rails/head/engine. Do not clip or overlap anything. Empty margins/gutters/interiors actual alpha=0, no purple haze/checkerboard/gray-white fill/background/groundplane/castshadow/glow. Pure magenta only frames. No text/labels/numbers/arrows/watermark/extra props. Four genuine missing S/SW/W/NW original EMPTY cargo-barge views, same exact physical model.",
+  "path": "media/multilayer/source/space/raw/orbital-hauler-empty-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-777733ba-d45c-4f4f-9f20-f8141af14d99.png",
+  "sha256": "90f4b061b515942ab50a38ed985a2bb04771144a0df90ac40d073a28fc1a0bce",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          24,
+          736,
+          502
+        ],
+        "subject_bbox_in_crop": [
+          204,
+          20,
+          507,
+          461
+        ],
+        "minimum_transparent_clearance": 17,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          519,
+          1504,
+          1000
+        ],
+        "subject_bbox_in_crop": [
+          17,
+          16,
+          627,
+          447
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "measured_layout_note": "Selected two complete source views use actual measured rectangles with16px+ clearance. Other views explicitly unaccepted; no whole-sheet model/coverage claim or pixel/alpha repair.",
+    "camera": "S front command head/display DOWN/near, single nozzle UP/far. NW head/display UPPER-LEFT/far, one open rear nozzle LOWER-RIGHT/near; same original empty deck and2rails."
+  }
+}

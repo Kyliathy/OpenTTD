@@ -1,0 +1,58 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13HB / r2mlvs14-remaining-assets-and-runtime-integration.md73B.1. Explicit unchanged Dock metal reuse as passive construction hardware; no native fuel, stock, service or utility functionality.",
+  "tool": "original_component_reuse_registration",
+  "asset_id": "module.fuel-store",
+  "candidate": "orbital-fuel-store-construction-coupling-v1",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "original": "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+  "original_sha256": "ecda810a68e43cd1e065b6d5deeb5bdffd88135236e3e9e6b5697700615d2c46",
+  "image_size": [
+    1659,
+    948
+  ],
+  "original_generation_receipt": {
+    "path": "media/multilayer/source/space/orbital-dock-clamp-v1.json",
+    "sha256": "e33a14e04fbeb8ab1f0eb6cc5f1f52e433e453f914d7ed01e09f3b7af273a49e"
+  },
+  "reused_original_key": "orbital-dock-clamp-v1",
+  "native_registration": {
+    "crop_box": [
+      0,
+      0,
+      1659,
+      948
+    ],
+    "measured_subject_bbox_in_crop": [
+      453,
+      192,
+      1255,
+      754
+    ],
+    "uniform_scale": [
+      1,
+      112
+    ],
+    "source_reference": [
+      1344,
+      784
+    ],
+    "native_relative_bounds": [
+      -8,
+      -6,
+      0,
+      0
+    ],
+    "mount_reference_semantics": "Virtual lower-right floor-edge reference immediately beyond the whole hardware; every physical original pixel stays inboard. Receiver and near cheek are elevated hardware, not new world positions."
+  },
+  "native_contact": [
+    144,
+    88
+  ],
+  "native_service_slots": 0,
+  "native_stock_cap_per_label": 0,
+  "original_role": "One passive physical construction/visit coupling only; no Dock service, freight stock or utility authority",
+  "status": "selected_construction_coupling_pending_base_review"
+}

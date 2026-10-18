@@ -8,12 +8,14 @@
 /** @file cargopacket_sl.cpp Code handling saving and loading of cargo packets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; detached same-file descent quantity admission.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CB; identical native/copied non-paying purpose admission.
  */
 
 #include "../stdafx.h"
 
 #include "saveload.h"
 #include "saveload_error.hpp"
+#include "cargo_source_sl.h"
 #include "../space.h"
 #include "../fios.h"
 #include "compat/cargopacket_sl_compat.h"
@@ -22,6 +24,8 @@
 #include "../station_base.h"
 
 #include "../safeguards.h"
+
+extern SaveLoadVersion _sl_version; ///< Candidate file's genuine era, owned by the native save/load framework.
 
 /**
  * Savegame conversion for cargopackets.
@@ -148,7 +152,19 @@ SaveLoadTable GetCargoPacketDesc()
 	return _cargopacket_desc;
 }
 
-/** Original native packet transport with a separate bounded read-only quantity view; preview never creates or publishes an inventory owner. */
+/** Require the candidate table's actual quantity, purpose and credit fields in both loading modes.
+ * @param desc Decoded candidate-file table; this grants no live packet or copied default the authority to replace an omitted field.
+ */
+static void CheckCargoPacketSourceFields(const std::vector<SaveLoad> &desc)
+{
+	if (IsSavegameVersionBefore(SaveLoadVersion::TableChunks)) return;
+	// Table-era packets already serialize all four fields. Refusing an omission prevents either loading mode from inventing paying provenance or silently dropping a bought packet's credit.
+	for (const std::string_view field : {"count", "source_type", "source_id", "feeder_share"}) {
+		if (std::ranges::find(desc, field, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native cargo packet quantity/source/credit field");
+	}
+}
+
+/** Original native packet transport with a bounded read-only quantity/provenance view; preview never creates or publishes an inventory owner. */
 struct CAPAChunkHandler : ChunkHandler {
 	/** Register the original physical packet family without issuing a packet, cargo or income receipt. */
 	CAPAChunkHandler() : ChunkHandler("CAPA", ChunkType::Table) {}
@@ -169,6 +185,7 @@ struct CAPAChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(GetCargoPacketDesc(), _cargopacket_sl_compat);
+		CheckCargoPacketSourceFields(slt);
 
 		int index;
 
@@ -176,28 +193,32 @@ struct CAPAChunkHandler : ChunkHandler {
 		while ((index = SlIterateArray()) != -1) {
 			CargoPacket *cp = CargoPacket::CreateAtIndex(CargoPacketID(index));
 			SlObject(cp, slt);
-			const auto source = cp->GetSource();
-			// Asteroid provenance requires its delivered source era and bounded original body identity, preventing ordinary packets from acquiring invented mining receipts.
-			if (to_underlying(source.type) > to_underlying(SourceType::Asteroid) || (source.type == SourceType::Asteroid &&
-				(IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles) || source.id >= MAX_ORBITAL_BODIES))) SlErrorCorrupt("Invalid cargo source type/identity");
+			// The candidate file's own era, provenance and feeder credit decide admission; no live company or cargo lookup can convert bought supplies into paying freight.
+			if (!IsValidCargoPacketSource(cp->GetSource(), cp->GetFeederShare(), _sl_version)) SlErrorCorrupt("Invalid cargo source type/identity/credit");
 		}
 	}
-	/** Copy only this file's actual packet indices/counts needed by current descent admission.
-	 * @param length Framework chunk extent; older sources keep the framework's ordinary skipped preview.
+	/** Copy this file's original packet quantities/purpose/credit without allocating live cargo.
+	 * @param length Framework chunk extent; pre-table sources retain their original skipped preview.
 	 */
 	void LoadCheck(size_t length) const override
 	{
-		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning)) { ChunkHandler::LoadCheck(length); return; }
+		if (IsSavegameVersionBefore(SaveLoadVersion::TableChunks)) { ChunkHandler::LoadCheck(length); return; }
 		if (_load_check_data.native_cargo_packets_present) SlErrorCorrupt("Repeated copied native cargo packet family");
-		static const SaveLoad preview[] = {SaveLoad::Variable<VarFileType::U16>("count", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, quantity))};
+		static const SaveLoad preview[] = {
+			SaveLoad::Variable<VarFileType::U16>("count", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, quantity)),
+			SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.type)),
+			SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.id)),
+			SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, feeder_share)),
+		};
 		const auto desc = SlTableHeader(preview);
-		if (std::ranges::find(desc, "count", &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native cargo packet quantity preview field");
+		CheckCargoPacketSourceFields(desc);
 		auto &rows = _load_check_data.native_cargo_packet_rows;
-		// Native self-describing framing supplies actual sparse/dense indices and skips unrelated provenance fields; copying counts cannot allocate packets, merge them or borrow an open-world container.
+		// Native framing supplies actual indices and original provenance/credit; each detached row must pass the same source predicate as full loading, without allocating or borrowing a live packet.
 		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
 			NativeCargoPacketPreview row; row.packet = CargoPacketID{static_cast<uint32_t>(index)}; SlObject(&row, desc);
 			// Bounded positive original quantities and strictly issued index order prevent an absent, duplicate or weightless fake packet from validating a descent reference.
 			if (row.packet >= CargoPacketID::End() || row.quantity == 0 || rows.size() >= CargoPacketID::End().base() || (!rows.empty() && row.packet <= rows.back().packet)) SlErrorCorrupt("Invalid copied native cargo packet identity/quantity");
+			if (!IsValidCargoPacketSource(row.source, row.feeder_share, _sl_version)) SlErrorCorrupt("Invalid copied cargo source type/identity/credit");
 			rows.push_back(row);
 		}
 		_load_check_data.native_cargo_packets_present = true;

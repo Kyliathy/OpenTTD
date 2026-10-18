@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.2. Untouched ordinary approved E source rectangle for physical model/camera reference only; no bitmap/alpha edits/resampling or new source coverage.",
+  "source": {
+    "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+    "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3"
+  },
+  "source_candidate": "orbital-hauler-empty-n-ne-e-se-v1",
+  "direction": "E",
+  "crop_box": [
+    32,
+    544,
+    736,
+    992
+  ],
+  "output": {
+    "path": "media/multilayer/guides/space/orbital-hauler-e-original-reference.png",
+    "sha256": "2fac10d21e130f57d1c6a959b64a09c2dc43a2e2de5863bdbb9cea17adbe5e71"
+  },
+  "size": [
+    704,
+    448
+  ],
+  "rgba_pixels_identical_to_original_rectangle": true,
+  "purpose": "Single original E side exposes the one actual front head/display, long empty deck/rails and rear engine for genuine opposite W regeneration."
+}

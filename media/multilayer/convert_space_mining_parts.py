@@ -2,7 +2,7 @@
 
 @file convert_space_mining_parts.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BB
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups63.3/63B.2/63C.2
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups63.3/63B.2/63C.2/65.3b/65B.3a/66C.1
 Original tool pixels alone change inside a declared physical mechanism; this source converter owns no mining work, body lease, cargo or runtime sprite.
 """
 import argparse
@@ -46,8 +46,8 @@ def registered_component_source(key, direction, document):
     if instance is None:
         return candidate
     donor = art.source_candidate(instance["candidate"], document)
-    # Only the actual blue gas effect may be registered on the distinct survey/carrier bodies. Each receiver freezes its own original rear-edge contacts; a role mechanism, hatch, bus or another instance cannot masquerade as newly authored hardware.
-    if (candidate["asset_id"] not in ("vehicle.model-19", "vehicle.model-20") or instance["source_asset_id"] != ASSET
+    # Only the actual blue gas effect may be registered on the distinct robot/hauler/survey/carrier/heavy bodies. Each receiver freezes its own original rear-edge contacts; one-nozzle16/17 gain no builder20 work, miner21 hardware or service admission from this source reuse.
+    if (candidate["asset_id"] not in ("vehicle.model-16", "vehicle.model-17", "vehicle.model-19", "vehicle.model-20", "vehicle.model-21") or instance["source_asset_id"] != ASSET
             or donor["asset_id"] != ASSET or donor.get("instance_of") is not None
             or candidate.get("component_kind") != "rear_plume" or donor.get("component_kind") != "rear_plume"
             or candidate.get("phase") != donor.get("phase")):

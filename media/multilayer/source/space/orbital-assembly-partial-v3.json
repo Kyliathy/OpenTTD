@@ -1,0 +1,30 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine thin-rim Assembly partial source trial; native geometry remains authoritative.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-partial-v3",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-assembly-floor-camera-v1.png",
+      "sha256": "dc184a1dc17832e4b20e40dd0077836d3fb9f10e81d870fc5bfe06cea547ac82",
+      "role": "exact2:1 floor/camera guide only"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-partial-v2.png",
+      "sha256": "3cfc7c4c75cdea025743e7be84caeb8fa6aaade4f99f4487e77f8388c3775ab7",
+      "role": "unfinished hardware and missing front plate reference only; no oversized floor reuse"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE genuine orbital Assembly PARTIAL construction model on an exact thin floor.\nImage1 is the EXACT FLOOR PROJECTION GUIDE, highest priority. Image2 is UNFINISHED EQUIPMENT/MATERIAL REFERENCE ONLY; do not copy its oversized deep floor or thick navy foundation. Render a NEW view of the same incomplete machinery on Image1's exact floor camera.\n1402x1122 transparent canvas. Floor corners MUST be rear(701,340), right(1253,616), front(701,892), left(149,616): width1104, height552, true2:1. The floor must be only ONE EXTREMELY THIN METAL PLANE, with a simple fine silver edge no more than3source pixels thick. NO thick dark navy band, bevel stack, foundation, platform below the floor, lower lip or hanging rim. At least100px transparent margin around whole floor. All four vertices visible. This precise shallow2:1thin floor is more important than copying the previous floor.\nFit the SAME ONE compact incomplete gantry safely inside the rear half: TWO short bare open steel-channel posts and ONE straight open-channel beam, one empty tool mount with the actual tool not installed. Keep their complete-model relative positions/camera, with exposed rear floor vertex. Exactly ONE small open plain console enclosure in front, no glass/display, empty interior. Restrained cream/navy/grey metal, upper-left light. No extra rail, post, machine or product.\nThe floor has four diamond tiles at the true grid midpoints. Rear, left and right plates are fitted. The ENTIRE FRONT diamond floor plate is MISSING: retain only its fine outer silver outline at Image1's exact original corners and ONE sparse thin metal X brace in the opening. All broad regions around the X brace are genuinely TRANSPARENT, like the outside background. No opaque black diamond, thick rim, second frame, solid apron or cosmetic small hatch. The remaining3fitted floor plates have subtle grey metal texture. No floor region or brace may extend below or outside the stated thin diamond.\nOne whole isolated complete view of this partial model, no sheet. No coupling, glowing lamp, green/amber/blue status window, loose parts, cargo, robot, hull, product, crate, tank, PV panel, text, label, number, arrow, symbol, ground, backdrop or external shadow. True transparency including the front opening. Use Image1's correct small thin footprint and camera; Image2 only identifies the unfinished equipment.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-partial-v3.png",
+  "original_sha256": "9424c7156ddcc7b033cb5083e2a938a2f2b05d79f69dc47dcb22dc01f3dadcf8",
+  "image_size": [
+    1401,
+    1123
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine corrected shallow thin-frame Assembly partial with actual transparent front opening.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-partial-v4",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-partial-v3.png",
+      "sha256": "9424c7156ddcc7b033cb5083e2a938a2f2b05d79f69dc47dcb22dc01f3dadcf8",
+      "role": "partial model edit target: preserve bare machinery, correct floor projection only"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: original Assembly PARTIAL construction, one precise floor-camera correction.\nImage1 is the edit target. Keep ALL its unfinished machinery exactly unchanged: two open-channel posts, one open-channel crossbeam, the small empty tool mount, one empty open console, same counts/positions/material/light. Keep the genuinely transparent missing FRONT plate and X brace. Keep the very thin floor edge; no thick sidewall.\nCorrect ONLY the FLOOR DIAMOND GEOMETRY. Its current floor is too deep vertically. Keep the same horizontal floor width, but make the whole floor about9percent SHALLOWER vertically. On the1401x1123canvas the target floor corners are: REAR(701,365), RIGHT(1297,665), FRONT(701,965), LEFT(105,665). Therefore width1192px, height600px, almost exact2:1. Move the existing front outer corner UP by about41pixels and rear outer corner DOWN by about18pixels; left/right corners stay at their current height. Rebuild the continuous thin perimeter, its three fitted grey plates, two midpoint-to-midpoint tile seams and the missing front tile's X brace coherently inside this corrected shallow diamond. Do NOT leave the old deeper tip or an extra lower frame behind. All opaque floor/brace/rim pixels must lie within this one corrected thin diamond. This is a newly rendered camera-correct source, not an extra platform.\nThe front opening remains genuinely transparent in broad areas around the X brace. The missing tile is the complete FRONT DIAMOND of the four world tiles, with its two side joins at the new outer-edge MIDPOINTS and its rear join at the new floor centre. All four target corners visible. No rear-to-front or left-to-right extra axis. Machinery stays attached to the fitted plates, and the rear corner stays clear. Preserve every unrelated equipment feature, thin metal materials, blue/cream/navy accents, same fixed orientation, upper-left light, canvas and transparent margins.\nONE isolated whole partial model on true transparent background. No coupling, lit display, glass fill, tool head, robot, product, vehicle, cargo, text, symbol, label, guide marks, arrows, backdrop, ground or outside shadow. Floor SHALLOWING to the four stated corners is the sole required edit.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-partial-v4.png",
+  "original_sha256": "46a2788107823384c73ede539415c43a247e3ec38ba7bf14a25b85071b9e2571",
+  "image_size": [
+    1401,
+    1123
+  ]
+}

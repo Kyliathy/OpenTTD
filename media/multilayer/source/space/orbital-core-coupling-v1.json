@@ -1,0 +1,34 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Exact original isolated coupling prompt and immutable body reference; one physical Core mounting only.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-coupling-v1",
+  "tool": "built-in image_gen",
+  "state": "complete-hardware",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "generated_isolated_source",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "materials/camera reference only; do not output station body"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nInput image is ONLY the approved-looking Core BODY reference for materials, camera and lighting. Generate ONE SEPARATE small docking coupling component on true transparent background. DO NOT output the station, any floor platform, or any other component.\nComponent: one low shallow U-shaped orbital service coupling with exactly TWO short ivory cheeks and one gunmetal/dark navy recessed aperture between them. Muted teal accent matching the reference. Its back meets a station floor edge, its opening points outward DOWN-RIGHT in the picture. View it in the SAME native2:1 dimetric camera as the reference; the aperture runs diagonally from lower-left to upper-right. The back mounting edge is parallel to that aperture, short depth extending down-right. It is a compact piece of low hardware, not a tall gate, building or tunnel. No top bridge or roof across the cheeks, no long ramp or walkway. A shallow dark base between the cheeks makes the recess readable.\nSingle whole original coupling centred in a1024x1024 RGBA image, approximately600pixels wide and350pixels tall, with at least128pixels real transparent margin on every side. Whole component complete, no clipping. Crisp original game-art shading, pale ivory/gunmetal/navy and restrained teal, upper-left light, no glow or exterior shadow. No floor tile, source guide, arrows, labels, letters, ships, people, extra mouth or extra parts. This original will be uniformly reduced to roughly10x6native pixels and registered by its actual back mounting midpoint. Keep the two pale cheeks and dark gap broad and distinct at that size.",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-core-coupling-v1.png",
+    "sha256": "00bfa7ef74e68e740de81f99f81652f01eee76f8d57585436f0798502d2f2073",
+    "image_size": [
+      1254,
+      1254
+    ],
+    "measured_subject_bbox": [
+      308,
+      422,
+      987,
+      885
+    ]
+  }
+}

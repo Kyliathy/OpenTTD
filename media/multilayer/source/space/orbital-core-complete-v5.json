@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Retained rejected primary-template attempt.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v5",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_template_and_berth_mismatch",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-core-floor-template-v1.png",
+      "sha256": "9b910adc3798350d9524d31529cf06c4d25432397ce27b2265a2798594bf93ca",
+      "role": "primary geometry only"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-complete-v1.png",
+      "sha256": "4bbdcb89aa202664dd083009c7732bde28e78e51d7c2c3c2b038130256877021",
+      "role": "hardware/material inspiration only"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nCreate an ORIGINAL OpenTTD orbital Core game sprite on the EXACT2:1 dimetric floor shape in input image1. Image1 is the PRIMARY GEOMETRY TEMPLATE: keep its four corners and entire outline at exactly the same positions, with the same thin flat floor. Image2 is only a MATERIAL/HARDWARE INSPIRATION reference, NOT a camera or layout to copy.\nCanvas1024x1024, real transparent background. Keep the template floor diamond at top(512,256), right(896,448), bottom(512,640), left(128,448). Its floor width768 and depth384 must remain2:1. DO NOT enlarge this outline to fill the canvas. Keep the surrounding empty space. All artwork stays inside the outline or rises vertically over it; the floor has virtually no downward thickness. No projecting corner caps, corner towers, legs or thick underside.\nPaint an original low orbital station on that footprint, as crisp dimetric transport-game sprite art. Use pale ivory metal/ceramic, gunmetal beams, restrained muted teal trim, dark navy solar cells, upper-left lighting. No photographic perspective.\nHardware: exactly one low central octagonal command hub, about1tile wide, with ivory roof and a narrow teal belt/dark glass strip; exactly one pair of rectangular flat navy solar banks occupying the two rear side areas; exactly one shallow supply locker toward the foreground-left; recessed conduits joining them. Keep everything compact and easy to read after uniform reduction to a192x96 native floor. Central hub rises at most80source pixels above its floor.\nExactly one SMALL shallow docking coupling replaces the GREEN DOT on image1. The back floor contact is(832,480), one-sixth of the way from the right floor vertex toward the bottom. A dark open mouth with two low ivory cheeks faces outward down-right. No berth anywhere else. The short coupling stays inside or flush with the floor outline. Preserve that precise contact instead of centring the mouth on the edge.\nRemove the template's green dot, line grid and plain guide paint by rendering actual original textured station floor/materials there; no guide marks survive. Retain its exact footprint geometry. Do not reproduce image2's magenta frame, background, tall corner caps or steeper floor. No words, numbers, labels, glow, shadow outside the floor, spacecraft, robots, cargo, crane or extra props.\nONE single complete fixed view on transparent alpha. Large empty margins are intentional.",
+  "review": "Output retained the original inspiration image's central-edge mouth and corner-cap layout rather than the primary template's native berth/geometry. Unapproved; next attempt excludes all rejected rendered models and uses only the geometry template plus the original textual hardware brief.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v5.png",
+  "original_sha256": "fea21a38f0b1ce1b62e608d47cb9dfdf03bf5d5df969e036083a7df48cc2aca0",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

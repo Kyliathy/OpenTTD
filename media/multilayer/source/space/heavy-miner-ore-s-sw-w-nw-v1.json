@@ -1,0 +1,104 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3c. Exact opposite original full-ore source request; selection requires measured source/native cargo-volume review.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-ore-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "full",
+  "load_state": "ore",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Approved empty original opposite hopper/body and genuine cameras: edit target",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+      "sha256": "e0435128e8e556079212c18b4b9b7ff895387c1cb3b116b03aef6d3788890460"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-21 heavy mining robot, static FULL ORE hopper cue.\nInput image1 is the approved S/SW/W/NW heavy-miner body and original empty hopper EDIT TARGET. Keep the entire model, its proportions, placement, genuine camera views, cutter idle tooth phase, exactly two folded grippers, twin unlit rear thrusters, single flat dark-blue electronics housing, gray/steel/ochre materials and upper-left light unchanged. Change ONLY the contents of the existing integrated rear open hopper: fill its ORIGINAL interior with a compact low heap of irregular freshly mined medium-gray metallic mineral chunks, clearly distinguishable from the dark empty floor. Same ONE hopper, original capacity/geometry, original exposed yellow/gray rim and front wall all fully preserved; ore stays inside its real volume, with a shallow crest just below or barely at the top lip. No cargo on chassis/grippers, no overflowing piles, second bin, crates, text, sparkles, colored status lights, exhaust, dust or mining work effects. Symbolic full hold, no printed tonnage or extra inventory.\nRetain the1536x1024 2x2 source sheet: genuine S top-left (cutter points down), SW top-right (down-left), W bottom-left (left), NW bottom-right (up-left). Keep four opaque pure-magenta #FF00FF6px separator frames approximately at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep each complete subject safely inside source windows[32,32,736,480],[800,32,1504,480],[32,544,736,992],[800,544,1504,992], at least32px truly transparent clearance to every frame. Preserve the reference's original whole-model scale/position; do not enlarge to show the load. Entire background, margins and gutters are actual clean transparent alpha=0. No translucent magenta/purple haze, checkerboard, gray/white fill, cast shadow, halo, labels or watermark. Four independent unchanged heavy miners with only their existing hopper filled by the same honest gray mineral load in genuine perspective.\nThe opposite-view reference's S drill tip already has only16px measured crop clearance. Do NOT enlarge or shift any part toward the border. Preserve exactly that whole-body size/placement, or reduce ALL complete subjects uniformly slightly if needed to retain at least16px true transparent clearance. No magenta/purple background haze; original clean alpha and visible separator outlines only.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-ore-s-sw-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-fbded14f-c4e2-418f-af13-47606e3556ef.png",
+  "sha256": "f441c318bd46d1f9d75938265536480d2b8b03bfeadb218cb60fcbc081b66c92",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          484
+        ],
+        "subject_bbox_in_crop": [
+          193,
+          59,
+          512,
+          433
+        ],
+        "minimum_transparent_clearance": 19,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          134,
+          71,
+          542,
+          401
+        ],
+        "minimum_transparent_clearance": 47,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          63,
+          84,
+          639,
+          336
+        ],
+        "minimum_transparent_clearance": 63,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          136,
+          62,
+          602,
+          358
+        ],
+        "minimum_transparent_clearance": 62,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "measured_window_note": "The actual S frame is farther from the model than the trial crop implies. Measured ordinary crop[32,32,736,484] has19px true transparent clearance and zero separator pixels; the default trial window had15px. No source/alpha pixels or16px converter guard are changed."
+  }
+}

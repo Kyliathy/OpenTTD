@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Geometry-guided correction remains unapproved pending genuine2:1 camera correction.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v3",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "unaccepted_floor_projection",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-complete-v1.png",
+      "sha256": "4bbdcb89aa202664dd083009c7732bde28e78e51d7c2c3c2b038130256877021",
+      "role": "original model edit target"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-berth-geometry-v1.png",
+      "sha256": "f85a6eb51da2b8b60660805b505cbe6aeae7b76b69f9633f3ab09436e83a00ae",
+      "role": "geometry only, never source art"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 is the original Core platform to edit. Image2 is a GEOMETRY REFERENCE ONLY, not artwork and not a style reference. Its diamond is the exact fixed 3x3 2:1 footprint, and its GREEN CIRCLE marks where the ONE coupling must meet the edge. The RED CROSS marks the old wrong mouth location.\nProduce the same single whole Core platform as image1, with these exact correction constraints:\n- Preserve image1's 2:1 footprint and scale. In a1536x1024 canvas, floor vertices remain near top(768,214), right(1440,550), bottom(768,886), left(96,550). Long floor edges have slope1/2. Do not steepen the camera or enlarge the platform. This geometry must match image2.\n- Remove the existing docking mouth at approximately(1110,700), restoring a plain flush rim there.\n- Place exactly ONE small docking mouth at the GREEN circle's edge contact(1328,606). This is very near the rightmost floor vertex, about112pixels LEFT and56pixels BELOW it. Do not put it midway along the edge. The coupler is smaller than the old one, about84pixels wide, with two low pale cheeks, one dark aperture, facing outward DOWN-RIGHT. Align the BACK floor contact at(1328,606); its shallow outward face may project a few pixels farther down-right. Keep it distinct from the corner cap. No second mouth remains.\n- Preserve the low central octagonal ivory/teal hub, the one pair of low navy solar banks, the one foreground-left locker, all four corners, all recessed conduits and upper-left lighting. The corrected mouth may have a short flush conduit to existing structure; no new hardware.\n- Do not copy any circle, cross, line, grid, label, green/red mark or dark backdrop from image2. It specifies placement only.\n- Return a genuinely transparent isolated cutout of the whole model. No ground shadow, no scenery. If retaining the magenta separator rectangle from image1, keep it entirely outside the artwork; all subject pixels stay within(72,72)-(1464,952). Keep every floor corner and enough transparent margin. No text or logos.\nThis is a single fixed original camera. No rotated view, no stretched bitmap, no extra berth, craft, robot, tall mast or other prop.",
+  "review": "Single berth moved toward the correct right-hand end, but output again enlarged the model and steepened the floor compared with the requested2:1 outline. Keep unapproved; obtain a genuine30-degree-elevation orthographic camera rather than stretching its raster.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v3.png",
+  "original_sha256": "9df8a5c8a54c10978f096c220af16c52361cb31211b1c23dfa5a30034ed41693",
+  "image_size": [
+    1536,
+    1024
+  ]
+}

@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file subsidy.cpp Handling of subsidies. */
+/** @file subsidy.cpp Native subsidy handling and source presentation without company-supply aliases.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CB.
+ */
 
 #include "stdafx.h"
 #include "company_func.h"
@@ -46,6 +48,7 @@ NewsReference Source::GetNewsReference() const
 		case SourceType::Industry: return static_cast<IndustryID>(this->id);
 		case SourceType::Town: return static_cast<TownID>(this->id);
 		case SourceType::Asteroid: return std::monostate{}; // No industry/town news-link alias.
+		case SourceType::CompanySupply: return std::monostate{}; // Bought materials cannot advertise a subsidy source.
 		default: NOT_REACHED();
 	}
 }
@@ -60,6 +63,7 @@ StringID Source::GetFormat() const
 		case SourceType::Industry: return STR_INDUSTRY_NAME;
 		case SourceType::Town: return STR_TOWN_NAME;
 		case SourceType::Asteroid: return STR_JUST_COMMA;
+		case SourceType::CompanySupply: return STR_JUST_COMMA; // No company-to-industry name reinterpretation.
 		default: NOT_REACHED();
 	}
 }

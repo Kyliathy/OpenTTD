@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file manufacturing_fixture.h Isolated original native factory, packet and common-grant contracts; no gameplay procurement/construction claim.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups7/8/8B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; isolated default hauler freight dimension.
  */
 #ifndef TESTS_MANUFACTURING_FIXTURE_H
 #define TESTS_MANUFACTURING_FIXTURE_H
@@ -26,6 +27,7 @@
 /** Native company/profile, explicit isolated consumed frames and actual packet objects; never a gameplay predecessor or payment proof. */
 class ManufacturingReservationRig {
 	ExcavationFixture world;
+	AutoRestoreBackup<uint8_t> steel_weight{CargoSpec::Get(GetCargoTypeByLabel(CargoLabel{"STEL"}))->weight, uint8_t{16}}; ///< Explicit one-tonne component cargo dimension; native capacity/admission are still queried, never assigned.
 	AutoRestoreBackup<TimerGameCalendar::Year> year{TimerGameCalendar::year, TimerGameCalendar::Year{1995}};
 	AutoRestoreBackup<uint64_t> tick{TimerGameTick::counter, uint64_t{0}};
 	/** @param kind Exact isolated frame recipe. @param id Fixture pool identity. @param x Layer-local left edge. @param y Layer-local top edge.

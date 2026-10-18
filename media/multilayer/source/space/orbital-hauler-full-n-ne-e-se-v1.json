@@ -1,0 +1,134 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66B.3. Immutable built-in cargo-only original; measured N/NE/SE selected for registration, E excluded for insufficient clearance. No complete-source/packing/runtime claim.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-full-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "full",
+  "requested_directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "directions": [
+    "N",
+    "NE",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_partial_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "geometry/camera/material reference only; no hull pixels selected",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+      "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD orbital cargo hauler17 FULL neutral freight COMPONENTS ONLY, first four genuine directional views. Image1 is GEOMETRY/CAMERA/MATERIAL reference only: the selected empty barge. DO NOT render that barge, its deck, rails, command head, screen or nozzle. Create only the carried cargo cutouts to be assembled later over the immutable existing body.\n\nSubject: exactly THREE identical low sealed industrial freight cassettes arranged END TO END in one straight narrow row, two small gaps, resting on the same imaginary long rectangular floor. Each cassette is a squat rectangular case with pale warm sand/tan solid sides, subtle dark graphite corner bands and one broad muted ochre securing band. Neutral general freight, no commodity symbols or unit labels. Each case about twice as wide across the bay as its short length along the bay; cargo row overall length about twice its width. Height of each case about one third of its width. Exactly three cases, same dimensions in every view, no stacking, supports, loose props, rails, straps dangling outside, extra chassis or shadows. All three turn together as one physical rigid row.\n\nMatch the reference's low elevated ORTHOGRAPHIC 2:1 camera about26.565degrees, upper-left SCREEN lighting, detailed crisp volumetric industrial game art suitable for reducing to indexed64x48 sprites. No perspective convergence. These must be four genuine 3D camera views, no flat rotation or mirroring.\nTOP LEFT N: long row recedes vertically UP screen, near short end at LOWER center, all three top surfaces visible in sequence.\nTOP RIGHT NE: long row from LOWER-LEFT near end to UPPER-RIGHT far end.\nBOTTOM LEFT E: horizontal long row, near/far camera side as reference E, three cases from LEFT to RIGHT; row's front end is RIGHT.\nBOTTOM RIGHT SE: long row from UPPER-LEFT far end to LOWER-RIGHT near end.\nSame physical scale across all four panels: E row roughly560px long by120px high including its low top projection, NE/SE diagonals roughly480px wide by300px high, N row roughly220px wide by350px high. Leave real transparent gaps between the separate cases.\n\nSAFE BORDERED1536x1024 transparent2x2 sheet. Four opaque straight pure-magenta #FF00FF6px exterior separator frames at N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000). Each complete three-case row comfortably inside its own frame with at least40px TRUE TRANSPARENT clearance. Background/margins/gutters alpha0, no magenta haze or colored ground, no checkerboard/white fill/cast shadow. No case or faint edge touches a frame, overlaps another panel or gets clipped. No text, labels, arrows, numbers, logo, watermark. Four separated COMPLETE cargo-only rows, exactly3identical low cases each. NO SPACECRAFT OR PLATFORM anywhere.",
+  "path": "media/multilayer/source/space/raw/orbital-hauler-full-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-1a586657-1ac0-44fd-bf80-6dd2878b7fe7.png",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          254,
+          35,
+          475,
+          431
+        ],
+        "minimum_transparent_clearance": 25,
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          70,
+          45,
+          654,
+          435
+        ],
+        "minimum_transparent_clearance": 21,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          3,
+          158,
+          700,
+          289
+        ],
+        "minimum_transparent_clearance": 3,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          30,
+          19,
+          631,
+          417
+        ],
+        "minimum_transparent_clearance": 19,
+        "opaque_separator_pixels": 0
+      }
+    }
+  },
+  "unaccepted_directions": {
+    "E": "Whole row only3px from safe source window, below16px minimum. Retain immutable original; use a separate safely isolated actual E row."
+  },
+  "actual_camera_mapping": [
+    {
+      "requested": "N",
+      "actual": "N",
+      "evidence": "Three low cases in a vertical row; lower near face, far end up."
+    },
+    {
+      "requested": "NE",
+      "actual": "NE",
+      "evidence": "Three cases run from lower-left near to upper-right far."
+    },
+    {
+      "requested": "E",
+      "actual": "E",
+      "evidence": "Three horizontal cases, genuine side view; unaccepted clearance."
+    },
+    {
+      "requested": "SE",
+      "actual": "SE",
+      "evidence": "Three cases from upper-left far to lower-right near."
+    }
+  ]
+}

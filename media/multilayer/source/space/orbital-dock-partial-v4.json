@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Whole original retained; rejected outer clearance is never repaired by padding.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-partial-v4",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_insufficient_original_clearance",
+  "rejection": "Whole generated floor has only13px outer clearance, below the unchanged16px original gate. Native silhouette is promising but cannot be selected by padding or source repair.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-dock-construction-camera-v1.png",
+      "sha256": "d38a08e357b3532714700d4a58d3511c37cd8669997aa45076666d532c7ee930",
+      "role": "shallow camera guide only"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-partial-v1.png",
+      "sha256": "f450ca2508fd34db3e4a11e76bd5f29b0c2148542564a04e0ab21076f1b9442e",
+      "role": "unfinished hardware/material only; clipped framing excluded"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD fixed orbital Dock, partial construction state.\nImage1 is the mandatory SHALLOW CAMERA/FLOOR GUIDE. Image2 is equipment/material design reference ONLY, not a camera reference.\nCreate one complete isolated model on true transparent background. Use the very shallow diamond silhouette of image1: about 1000px wide and 380px high, upper corner(640,370), right(1140,560), front(640,750), left(140,560) on a1280x1024 canvas. Match that low camera; do not make the floor steeper. Floor geometry in image1 overrides image2. Leave at least100px completely transparent clearance around the whole model, all four corners visible.\nRender one very thin 2x2 square deck divided into four diamond panels. Three fitted slate-grey metal panels; FRONTMOST fourth panel absent, with genuine transparent opening and two narrow graphite X support braces. One SMALL LOW unfinished cream/navy servicing cabinet on the rear panel, centred horizontally. Its lid/front cover absent, dark unfinished interior. Exactly one little cabinet, not a room. Preserve image2's cream/silver thin edge trim, graphite seams and restrained retro game-art materials. Upper-left light. Nothing outside the deck.\nNo berth clamps, craft, Core hub, PV panels, extra machinery, crates, gantry, crane, labels, symbols, axes, magenta, ground or external shadow. Actual transparency in background and missing front panel. ONE full fixed view, no sheet. The extremely shallow diamond projection and complete perimeter are essential.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-partial-v4.png",
+  "original_sha256": "1172b5be1611fa71f690d8aaa1288d3524b919ae452ae808faf15a74282c9b9d",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

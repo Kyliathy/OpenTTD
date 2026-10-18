@@ -1,0 +1,107 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.2; exact built-in corrective opposite-view request; no source/runtime acceptance.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-free-s-sw-w-nw-v2",
+  "tool": "built-in image_gen",
+  "state": "free",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "opposite-view edit target",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v1.png",
+      "sha256": "a2b7fb4d501a2f69a19bea0102f7fd4f5632bf7ef7014de6e0ea9b56469c5b5a"
+    },
+    {
+      "role": "selected original model identity/physical scale reference",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+      "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: SAME heavy mining robot21, free/idle, genuine S/SW/W/NW opposite views.\nImage1 is the opposite-view edit target. Image2 is the already selected N/NE/E/SE original, for exact model identity and physical scale reference only.\nChange ONLY the source layout/clearance in image1: uniformly shrink EACH complete opposite-view machine by20percent and centre it safely in its own frame. Keep the same proportions, natural3D camera, hardware, lighting, materials and existing S top-left / SW top-right / W bottom-left / NW bottom-right headings. Match the smaller physical scale of image2: W should be about510px whole length, S about330px whole height. Every view uses the SAME physical scale, no independent squash/stretch. Never mirror/rotate a flat sprite.\nPreserve exactly one central short industrial mining cutter/drill, TWO folded side gripper arms, ONE integrated EMPTY rear ore hopper, TWO rear thruster bells with natural occlusion, ONE dark-blue top electronics housing. No new rear equipment, central third engine, tools, lettering, work effects, cargo, exhaust or shadows. Do not repaint/redesign equipment beyond uniform smaller size and safe positioning.\n1536x1024 four-cell2x2 transparent sheet. Opaque PURE MAGENTA #FF00FF6px frames outside subjects at S(24,24)-(744,488), SW(792,24)-(1512,488), W(24,536)-(744,1000), NW(792,536)-(1512,1000). Genuine transparent background/margins/gutters. Keep complete subjects inside safe inner rectangles S(56,56)-(712,456), SW(824,56)-(1480,456), W(56,568)-(712,968), NW(824,568)-(1480,968). At least32px real transparent clearance around every subject, especially the S drill tip near the bottom border. No pixel/halo/shadow touches any frame or gutter. No text, numbers, labels, guides, decorative background or extra props. Preserve these genuine opposite views; fix spacing by reducing the complete subjects, never clipping/erasing parts.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-9ab2b327-bbfa-4768-a822-f347a81b46ee.png",
+  "sha256": "e0435128e8e556079212c18b4b9b7ff895387c1cb3b116b03aef6d3788890460",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          193,
+          59,
+          512,
+          432
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          134,
+          71,
+          539,
+          400
+        ],
+        "minimum_transparent_clearance": 48,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          64,
+          84,
+          638,
+          335
+        ],
+        "minimum_transparent_clearance": 64,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          138,
+          63,
+          600,
+          357
+        ],
+        "minimum_transparent_clearance": 63,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0
+  },
+  "selection_decision_owner": "media/multilayer/source/space/space-generation-record.json"
+}

@@ -1,6 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_manufacturing.cpp Paid native requests, whole-recipe reservation, common-grant work and once-only materialization.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups7/8/8BB/8BC
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups7/8/8BB/8BC/13K
  */
 #include "stdafx.h"
 #include "orbital_manufacturing.h"
@@ -258,6 +258,103 @@ public:
 	}
 };
 
+/** Pure original materialization preflight storage; no Engine, hull, packet or unit ID is issued here. */
+struct PreparedManufactureMaterialization {
+	UnitID unit = UINT16_MAX; ///< Existing company's first free unit, not reserved by this quote.
+	std::optional<SpaceCloneProductConfiguration> clone; ///< Independent preflight configuration, never a physical hull.
+	std::optional<PreparedSpaceReplacement> replacement; ///< Original safe retirement/settlement quote, without execution.
+};
+
+/** Prepare the original output admission without registering or consuming anything.
+ * @param site Actual owned native Assembly; current actor must already be that owner.
+ * @param job Its original complete paid-work/input request, not a copied inventory.
+ * @return Exact existing output preflight storage, or unchanged refusal.
+ */
+static std::optional<PreparedManufactureMaterialization> PrepareManufactureMaterialization(const SpaceStructure &site, const OrbitalManufactureJob &job)
+{
+	if (_current_company != site.state.owner) return std::nullopt;
+	const auto *recipe = ManufactureDefinition(job.model);
+	if (recipe == nullptr) return std::nullopt;
+	// A finished receipt is never executable work; all model, material, physical slot and native capacity refusals precede the first mutation.
+	if (job.phase != OrbitalManufacturePhase::AwaitingMaterialization || job.work_ticks != recipe->work_ticks ||
+		job.work_energy_j != uint64_t{job.work_ticks} * GetMultiLayerSpaceBudget().work_j_per_tick ||
+		!ReadyManufactureFacility(site, job) || !HasManufactureInputs(job) ||
+		GetSpaceVehicleCount() >= MAX_SPACE_VEHICLES || GetNextSpaceVehicleGeneration() == UINT64_MAX || !Vehicle::CanAllocateItem()) return std::nullopt;
+	const auto unit = GetFreeUnitNumber(VehicleType::Space);
+	// A missing Engine and an exhausted company unit range retain the same completed job; estimates/preflight never register a replacement definition or temporary hull.
+	if (unit == UINT16_MAX || (!Engine::IsValidID(GetSpaceEngine(job.model)) && !Engine::CanAllocateItem())) return std::nullopt;
+	std::optional<SpaceCloneProductConfiguration> clone;
+	std::optional<PreparedSpaceReplacement> replacement;
+	if (job.replacement) {
+		// Every current original holding/configuration and physical handover right must be safe before consuming the full bill or registering/allocating any new hull.
+		if (job.clone) return std::nullopt;
+		replacement = PrepareSpaceReplacement(*job.replacement, job.model, site.state.owner, {GetSpaceStructureReference(site), job.source, {}});
+		if (!replacement) return std::nullopt;
+	}
+	if (job.clone) {
+		if (!ValidateSpaceCloneIntent(*job.clone, job.model, GetNextSpaceVehicleGeneration(), GetNextSpaceStructureGeneration())) return std::nullopt;
+		// Prepare independent name/instruction storage before even Engine registration or hull allocation. Changed live target rights retain the original full paid batch for retry/cancellation.
+		clone = PrepareSpaceCloneProductConfiguration(*job.clone, site.state.owner);
+		if (!clone) return std::nullopt;
+	}
+	return PreparedManufactureMaterialization{unit, std::move(clone), std::move(replacement)};
+}
+
+/** Query only original native manufacturing admission; inspecting does not reserve or materialize a hull.
+ * @param site Actual Assembly and optional request, under its owner's existing actor context.
+ * @return Actual input, power, output or activation wait; idle and completed requests remain ordinary complete.
+ */
+OrbitalManufactureWait GetOrbitalManufactureWait(const SpaceStructure &site)
+{
+	// A facility with no actual request has no batch to starve or output to block.
+	if (!site.module || !site.module->manufacture) return OrbitalManufactureWait::None;
+	const auto &job = *site.module->manufacture;
+	if (job.phase == OrbitalManufacturePhase::Complete) return OrbitalManufactureWait::None;
+	const auto *definition = ManufactureDefinition(job.model);
+	// Foreign actor queries and unavailable native definitions cannot borrow
+	// another company's unit/stock/technology authority for a presentation quote.
+	if (_current_company != site.state.owner || !IsOrbitalModuleOperational(site) ||
+		definition == nullptr || TimerGameCalendar::year < definition->introduction_year || job.phase >= OrbitalManufacturePhase::End) return OrbitalManufactureWait::Inactive;
+	// The original sole berth and exact adjacent inventory remain physical
+	// admission gates; a rendered gantry cannot clear either owner.
+	if (job.berth != 0 || !IsSpaceStructureManufactureBerthFree(site)) return OrbitalManufactureWait::Output;
+	if (ManufactureSource(site, job) == nullptr) return OrbitalManufactureWait::Materials;
+	// With those definition/berth/stock gates satisfied, the same original
+	// facility predicate resolves its dedicated panel and consumer connection.
+	if (!ReadyManufactureFacility(site, job)) return OrbitalManufactureWait::Power;
+	if (job.phase == OrbitalManufacturePhase::Queued) {
+		if (!ReadyManufactureReservation(site, job)) return OrbitalManufactureWait::Materials;
+	} else if (!HasManufactureInputs(job)) return OrbitalManufactureWait::Materials;
+	if (job.phase == OrbitalManufacturePhase::AwaitingMaterialization) {
+		return PrepareManufactureMaterialization(site, job) ? OrbitalManufactureWait::None : OrbitalManufactureWait::Output;
+	}
+	// A current actual work receipt already spent its grant. A global pause
+	// likewise requests none; neither condition is a new electrical failure.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any() ||
+		(job.last_work_interval != 0 && job.last_work_interval == GetUtilityPowerInterval())) return OrbitalManufactureWait::None;
+	const auto proposal = PrepareUtilityMutation(UtilityMutationKind::Consume,
+		{site.module->consumer, GetUtilityPowerInterval()}, GetMultiLayerSpaceBudget().work_j_per_tick);
+	return proposal.error == UtilityPowerError::None ? OrbitalManufactureWait::None : OrbitalManufactureWait::Power;
+}
+
+/** Read the original current epoch's already-earned work, never a request or GUI clock.
+ * @param site Actual owned Assembly with its original sole job and input/connection owners.
+ * @return Positive real saved work for an admitted current Working receipt, or absence.
+ */
+std::optional<uint32_t> GetOrbitalManufactureVisualWork(const SpaceStructure &site)
+{
+	// Idle, paused, foreign and missing owners cannot inherit a work-looking
+	// phase from another facility's grant or a queued/reserved promise.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any() || _current_company != site.state.owner ||
+		!site.module || !site.module->manufacture) return std::nullopt;
+	const auto &job = *site.module->manufacture;
+	// Revalidate original physical admission after payment without asking for
+	// that already-spent grant again. Awaiting/completed products remain static.
+	if (job.phase != OrbitalManufacturePhase::Working || job.work_ticks == 0 || job.last_work_interval == 0 ||
+		job.last_work_interval != GetUtilityPowerInterval() || !ReadyManufactureFacility(site, job) || !HasManufactureInputs(job)) return std::nullopt;
+	return job.work_ticks;
+}
+
 /** Prepare every real capacity before the sole final material milestone and native-hull commit.
  * @param site Original Assembly whose actual work is already fully paid.
  * @param job Its original complete physical recipe batch; blocked capacity retains work and every input for retry.
@@ -265,31 +362,12 @@ public:
  */
 static bool MaterializeManufacture(SpaceStructure &site, OrbitalManufactureJob &job)
 {
-	const auto *recipe = ManufactureDefinition(job.model);
-	if (recipe == nullptr) return false;
-	// A finished receipt is never executable work; all model, material, physical slot and native capacity refusals precede the first mutation.
-	if (job.phase != OrbitalManufacturePhase::AwaitingMaterialization || job.work_ticks != recipe->work_ticks ||
-		job.work_energy_j != uint64_t{job.work_ticks} * GetMultiLayerSpaceBudget().work_j_per_tick ||
-		!ReadyManufactureFacility(site, job) || !HasManufactureInputs(job) ||
-		GetSpaceVehicleCount() >= MAX_SPACE_VEHICLES || GetNextSpaceVehicleGeneration() == UINT64_MAX || !Vehicle::CanAllocateItem()) return false;
 	AutoRestoreBackup actor(_current_company, site.state.owner);
-	const auto unit = GetFreeUnitNumber(VehicleType::Space);
-	// A missing Engine and an exhausted company unit range retain the same completed job; estimates/preflight never register a replacement definition or temporary hull.
-	if (unit == UINT16_MAX || (!Engine::IsValidID(GetSpaceEngine(job.model)) && !Engine::CanAllocateItem())) return false;
-	std::optional<SpaceCloneProductConfiguration> clone;
-	std::optional<PreparedSpaceReplacement> replacement;
-	if (job.replacement) {
-		// Every current original holding/configuration and physical handover right must be safe before consuming the full bill or registering/allocating any new hull.
-		if (job.clone) return false;
-		replacement = PrepareSpaceReplacement(*job.replacement, job.model, site.state.owner, {GetSpaceStructureReference(site), job.source, {}});
-		if (!replacement) return false;
-	}
-	if (job.clone) {
-		if (!ValidateSpaceCloneIntent(*job.clone, job.model, GetNextSpaceVehicleGeneration(), GetNextSpaceStructureGeneration())) return false;
-		// Prepare independent name/instruction storage before even Engine registration or hull allocation. Changed live target rights retain the original full paid batch for retry/cancellation.
-		clone = PrepareSpaceCloneProductConfiguration(*job.clone, site.state.owner);
-		if (!clone) return false;
-	}
+	auto prepared = PrepareManufactureMaterialization(site, job);
+	if (!prepared) return false;
+	const auto unit = prepared->unit;
+	auto &clone = prepared->clone;
+	auto &replacement = prepared->replacement;
 	if (!EnsureSpaceEngineDefinition(job.model)) return false;
 	const auto &definition = *ManufactureDefinition(job.model);
 	auto *craft = SpaceVehicle::Create(); const bool issued = RegisterSpaceVehicleIdentity(*craft); assert(issued); (void)issued;

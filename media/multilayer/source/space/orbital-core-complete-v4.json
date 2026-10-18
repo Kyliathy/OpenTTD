@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Original fixed Core projection correction; measurement/selection pending.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v4",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "unaccepted_floor_projection",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-complete-v3.png",
+      "sha256": "9df8a5c8a54c10978f096c220af16c52361cb31211b1c23dfa5a30034ed41693",
+      "role": "physical model edit target"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-berth-geometry-v1.png",
+      "sha256": "f85a6eb51da2b8b60660805b505cbe6aeae7b76b69f9633f3ab09436e83a00ae",
+      "role": "geometry only, never source art"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 supplies the exact Core hardware/model. Image2 supplies ONLY the exact footprint projection and berth contact; its lines/text/marks are never artwork.\nRe-render the SAME physical low station with an ORTHOGRAPHIC CAMERA AT EXACTLY30DEGREES ELEVATION AND45DEGREES AZIMUTH. This produces a square floor whose screen diamond has EXACTLY2:1 width:height, with floor edges rising/falling ONE pixel for every TWO horizontal pixels. The supplied model image has too steep a camera; correct that genuine3D projection. Do not stretch a flat bitmap. Keep the hub's vertical walls physically vertical and the machinery's heights consistent with the new true camera.\nThe final image is1536x1024. Floor vertices must lie near top(768,214), right(1440,550), bottom(768,886), left(96,550): WIDTH1344, FLOOR DEPTH672. Match the footprint outline in image2. No enlargement; leave clear transparent margins around every corner. Thin floor rim, no thick foundation, no legs and no protruding corner plates. Slight rounding of the square corners is fine inside that exact outline.\nRetain one central low octagonal ivory/teal command hub, one pair of low navy solar banks toward the back, one shallow supply locker toward the nearer left, and grey recessed connecting conduits. EXACTLY ONE small docking coupling near the RIGHT vertex on the lower-right floor edge, with its back contact at the green guide circle(1328,606), one-sixth of the way from right vertex toward bottom vertex. Point it outward down-right. No mouth in the middle of that edge. Keep two short pale cheeks and one dark aperture; no extra platform. No craft, cargo, people, tall antenna, crane or other prop.\nOriginal compact OpenTTD industrial game sprite style, upper-left light, restrained ivory/gunmetal/muted teal/navy. One fixed view, no labels or additional panels. Transparent isolated cutout with real alpha, no scenery, no ground shadow, no magenta frame needed for this single isolated-view fallback. Do not copy the geometry guide's dark background, lines, circle, arrow, cross, colours or text. The requested result is only the whole faithfully re-projected physical model.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v4.png",
+  "original_sha256": "1ec74df1c81dcf873167a205c553aceeff39e8fb7107f39a0e73061e6a53b269",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "review": "Measured back-edge silhouette sample slope remains about0.54 rather than0.5; true floor registration is not yet accepted. Do not infer approval from repeated image edits. A fresh base request uses the exact geometry template as primary and the old platform only for materials/hardware inspiration."
+}

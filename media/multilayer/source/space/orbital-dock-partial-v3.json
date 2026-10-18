@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Rejected partial camera preserved; the native projection/cell gate is unchanged.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-partial-v3",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "Although complete and readable, the approximately1234px-wide/679px-high floor remains too steep to preserve the actual2x2 projection and existing cell canvases under one uniform reduction.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-dock-floor-camera-v1.png",
+      "sha256": "8f99096feda52991924e876649d29afdd32311f79016c7efa8eebea27488e9be",
+      "role": "initial camera-only guide"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-partial-v1.png",
+      "sha256": "f450ca2508fd34db3e4a11e76bd5f29b0c2148542564a04e0ab21076f1b9442e",
+      "role": "unfinished hardware/material only; rejected clipped framing not copied"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nCreate a FRESH original partially constructed orbital service dock for OpenTTD. Image1 is the EXACT SHALLOW FLOOR/CAMERA GUIDE ONLY. Image2 is unfinished hardware/materials reference only; its framing/clipped corner must NOT be copied.\nRender the floor on image1's diamond: about1000px wide and460px high on a1280x1024 transparent canvas, corners near(640,330),(1140,560),(640,790),(140,560). The floor must stay as shallow as image1, nearly twice as wide as tall. All model pixels remain inside these margins; include the COMPLETE front floor corner and thin entire perimeter, never crop the subject.\nOne very thin2x2 deck frame, three fitted slate-grey steel panels, and the FRONTMOST fourth diamond panel missing, exposing genuine transparent space with two graphite support cross-braces. One SMALL LOW open cream/navy servicing cabinet in the rear third, centred left-to-right, its lid and front cover absent with unfinished dark interior. Keep it a little equipment box, never enlarge it into a room or hub. Preserve the exact hardware counts and relative layout from image2. No clamps, craft, solar panels, Core hub, supplies, robots, gantry, crane or extra equipment. Upper-left light, cream/silver rim, slate deck, graphite utility seams, restrained crisp retro game sprite art. Genuine transparency in background AND missing front plate. At least100px transparent clearance on all image sides, no external floor shadow. No words, symbols, labels, axes, magenta separator or scene. ONE full isolated fixed view, no sheet. Geometry of image1 takes priority over any conflicting image2 camera or framing.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-partial-v3.png",
+  "original_sha256": "abc12908cdee35788f06521f4d5b268e6d53a7ba2c180e2f15bf5ab775c47773",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

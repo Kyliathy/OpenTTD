@@ -1,0 +1,45 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Stronger shallow generator hint only; preserve actual2x2 native floor/cell validation.",
+  "guide": "media/multilayer/guides/space/orbital-dock-construction-camera-v1.png",
+  "sha256": "d38a08e357b3532714700d4a58d3511c37cd8669997aa45076666d532c7ee930",
+  "canvas": [
+    1280,
+    1024
+  ],
+  "floor_corners": [
+    [
+      640,
+      370
+    ],
+    [
+      1140,
+      560
+    ],
+    [
+      640,
+      750
+    ],
+    [
+      140,
+      560
+    ]
+  ],
+  "native_floor_corners": [
+    [
+      96,
+      48
+    ],
+    [
+      160,
+      80
+    ],
+    [
+      96,
+      112
+    ],
+    [
+      32,
+      80
+    ]
+  ]
+}

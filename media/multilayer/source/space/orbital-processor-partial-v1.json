@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.3. Genuine unfinished machine original; no stocked material or earned work.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_edit",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset module.processor PARTIAL CONSTRUCTION, genuine physical unfinished state. Attached image is the exact approved complete machine edit target. Preserve its fixed orthographic camera, thin shallow3x3nine-panel diamond deck, all four visible corners, machinery positions, upper-left light, muted metal and orange accents. Change ONLY construction progress: the ONE horizontal drum has its top curved outer casing missing, exposing two simple incomplete internal ribs and an empty hollow chamber; keep the original front dark round end and support feet. The ONE heat-exchanger block has an unfinished open frame with only half its fins fitted. The short connecting pipe remains unfinished with a small open flange gap; no extra pipe or object. The ONE low console has its blue-glass panel missing, leaving an empty dark rectangular aperture with visible mounting trim, not a powered display. Preserve the entire original thin metal floor and nine panel seams; no missing floor or thick fascia. It must clearly read as the same machine under construction, with empty chamber and incomplete machinery, no cargo or product. No construction robot, worker, tools, crane, gantry, piles, cables spilling off deck, glowing activity, new equipment or warning signs. Keep exactly one view, complete isolated RGBA cutout on genuine transparency, at least64clear pixels around all model pixels. Match the original1536x1024framing and low silhouette; do not steepen/enlarge/thicken the floor or obscure a corner. No text, labels, numbers, symbols, external shadows/glow, magenta frames, background or additional views.",
+  "input_images": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-processor-body-v3.png",
+      "role": "approved_complete_machine_edit_target",
+      "sha256": "6ca6d7d7854913d54bcce1bd07f20dba1ff38aa9ac8e76fd0ca965fc78248ab8"
+    }
+  ],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-dfdccd66-3489-48de-9cbf-326c20cc4d5e.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-partial-v1.png",
+    "sha256": "c87b2867968aa0a73bd1e4a7351ce334b619a3f40d1255e520e4456a8baf52a6"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    63,
+    200,
+    1475,
+    913
+  ],
+  "selection": "selected_stage_pending_full_review"
+}

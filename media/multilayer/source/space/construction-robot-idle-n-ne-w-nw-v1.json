@@ -1,0 +1,35 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Retained immutable failed missing-camera request. Rejected for changing anatomy and swapping ports on an unrotated body; no view is selected or converted.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-n-ne-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "N",
+    "NE",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "rejected_model_continuity",
+  "rejection": "The purported rear views replace the front coupling with a large nozzle while retaining the original rear nozzle and/or add wrists. W leaves the roof display on the original front-right roof despite swapping front/rear ports. These are changed models, not genuine opposite cameras of the frozen original.",
+  "reference_inputs": [
+    {
+      "role": "Approved retained robot model edit/reference target, actual S/SW/E/SE",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+      "sha256": "764a3427d35134aab1b161836e502447548b427cae037910573adb81932e8104"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-16 retained cargo-less heavy construction robot, IDLE, four MISSING GENUINE physical views.\nInput image1 is the SELECTED original model identity reference. It actually shows S/SW/E/SE: the passive front coupling/grippers face down in top-left, down-left in top-right, right in bottom-left, down-right in bottom-right. Preserve this SAME robot, do not redesign it. One closed pentagonal ivory-ceramic/gunmetal hull, two folded articulated side arms with closed two-jaw grippers, restrained burnt-orange joint plates, exactly ONE compact central rear cylindrical maneuvering nozzle, passive circular front coupling, one flat dark-navy unlit diagnostic display on top, one closed structural lower-chassis swivel boss. The lower boss is part of the chassis, NOT an extra engine. No cargo bed/hopper/cradle/materials, cutter/drill, solar wings, antennas, crew, weapons or additional tools. No active work, light, exhaust or moving arms.\nRender the four OTHER cameras as genuine3D views of this exact physical robot, fixed elevated orthographic2:1 and upper-left SCREEN light. A rotated/mirrored flat copy is forbidden. IMPORTANT: the first TWO are REAR VIEWS, showing the actual rear nozzle mouth nearest the camera; do NOT repeat the reference's front-facing S/SW views.\nTOP LEFT N: front coupling and folded wrists point UP/away; single rear nozzle points DOWN toward viewer, with its mouth at the LOWER center. The front coupling is on the far UPPER edge, naturally partly occluded by the closed hull. This is looking at the REAR of the robot.\nTOP RIGHT NE: front coupling/wrists point UP-RIGHT/away; rear nozzle points DOWN-LEFT toward viewer. The actual rear nozzle mouth is on the NEAR LOWER-LEFT corner. Do not show a near lower-left front coupling.\nBOTTOM LEFT W: opposite physical side of the E reference, front coupling and wrists LEFT, one rear nozzle RIGHT. Retain genuine upper-left lighting and correct near/far arm occlusion; do not mirror the flat E image.\nBOTTOM RIGHT NW: front coupling/wrists point UP-LEFT/away, rear nozzle DOWN-RIGHT toward viewer. The nozzle mouth is at the NEAR LOWER-RIGHT corner. This is the opposite rear three-quarter face, not the front-facing SE reference.\nKeep the same equipment counts, proportions, idle arm fold and physical model size across views. Original whole subjects are roughly490-520px wide; target maximum530px width and350px height. Reduce a WHOLE subject uniformly if necessary for safe clearance, never shorten a wrist/nozzle separately. Preserve visible detail and a clean silhouette for64x48 native conversion, anchor(-32,-32). No ground plane or cast shadow.\n1536x1024 true-transparent2x2 sheet. Four straight opaque pure-magenta #FF00FF6px frames at N(24,24)-(744,488), NE(792,24)-(1512,488), W(24,536)-(744,1000), NW(792,536)-(1512,1000). Keep every complete subject inside its own safe inner rectangle N(64,64)-(704,448), NE(832,64)-(1472,448), W(64,576)-(704,960), NW(832,576)-(1472,960), with at least32px true transparent space to all frames. Empty background/margins/gutters are actual clean alpha=0, never translucent purple haze, gray/white fill or checkerboard. All complete silhouettes safely separated, no clipped nozzle/wrist/boss. No labels, letters, numbers, arrows, text, watermark or extra props. Four true missing N/NE/W/NW original views; preserve the selected hardware and its one rear nozzle.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-n-ne-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-81717441-597d-418c-be0c-601916cf9b19.png",
+  "sha256": "7263152eff7fd926e1fdb40151c3254a9894a8dcc691426947199860cc570bea",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "status": "not_used",
+    "reason": "Physical model continuity rejected before native/crop registration; no source coverage claimed."
+  }
+}

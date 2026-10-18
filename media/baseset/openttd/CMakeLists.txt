@@ -1,5 +1,6 @@
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; final Space append.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; separate orbital inputs preserve all prior native sheets.
 # Preserve the immutable M0 source sheet; M1 uses independent offset blocks.
 # In case both NFORenum and GRFCodec are found, generate the GRF.
 # Otherwise, just use them from the cache (read: git).
@@ -22,6 +23,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/space_preview.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/space_final.nfo
+                         ${CMAKE_CURRENT_SOURCE_DIR}/orbital_final.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.nfo
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttd.nfo
@@ -50,6 +52,7 @@ if(GRFCODEC_FOUND)
                          ${CMAKE_CURRENT_SOURCE_DIR}/map_layers_m1.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/space_preview.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/space_final.png
+                         ${CMAKE_CURRENT_SOURCE_DIR}/orbital_final.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/mono.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/oneway.png
                          ${CMAKE_CURRENT_SOURCE_DIR}/openttdgui.png

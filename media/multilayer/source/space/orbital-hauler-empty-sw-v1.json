@@ -1,0 +1,57 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.2. Exact built-in SW background/framing correction from the complete genuine but unsafe-margin original. Newly returned immutable RGBA supplies source; no code alpha/model editing or flat view transform.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-empty-sw-v1",
+  "tool": "built-in image_gen",
+  "state": "empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_model_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Untouched genuine SW geometry edit target only, original3pxmargin source is unaccepted for native assembly",
+      "path": "media/multilayer/guides/space/orbital-hauler-sw-original-reference.png",
+      "sha256": "edacf0b44d35d2e557dad2d7cb0aed3dcace75d64fceb9f4266244e14bbc63c9"
+    }
+  ],
+  "prompt": "Use case: background-extraction.\nAsset: OpenTTD orbital cargo hauler17, the SAME complete EMPTY SW model in the input, safe isolated original source.\nInput1 is an untouched source rectangle of the correct genuine SW physical camera. The front ivory command head with ONE navy display is near LOWER-LEFT, ONE rear cylindrical nozzle is far UPPER-RIGHT. It has the exact approved long bare rectangular dark-steel deck, TWO low fixed teal side rails/end sills, ivory/gunmetal/muted-teal body, original proportions, fixed low elevated orthographic2:1 camera and upper-left SCREEN illumination. Its original framing is unsafe near the bottom edge, but the complete physical barge is visible.\nChange ONLY framing/background: isolate this IDENTICAL entire SW barge and place it centered in generous clean true-transparent margins on1024x1024. Keep exactly the same geometry, viewpoint, deck, paneling/rail/head/nozzle positions, one dark-navy screen, materials, proportions and illumination. Do not redesign, rotate/mirror the bitmap or invent another camera. Do not truncate/shorten a rail/engine/nose. Reduce the WHOLE model uniformly if needed; target complete projected model about560px wide and370px tall. All actual subject pixels at least120px from every canvas edge. Preserve real transparent alpha around the entire object; remove all magenta/purple background/haze/frame remnants, not a painted background or transparency preview.\nExactly ONE complete isolated genuine SW EMPTY cargo barge, no magenta/source frame/colored border, background/ground/castshadow/checkerboard/glow/text/labels/arrows/numbers/watermark/extra views. No cargo/crates/materials/tanks/ore, extra display/windows/engines, arms/cutter/scanner/solarwings/antenna/crew/weapons, exhaust/service lights/work. Same bare original deck and physical model, front head/displayLOWER-LEFT, single rear nozzleUPPER-RIGHT. Crisp volumetric industrial sprite for unchanged64x48native/anchor(-32,-32).",
+  "path": "media/multilayer/source/space/raw/orbital-hauler-empty-sw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-8f26a82b-a641-47fb-b849-79a158f64319.png",
+  "sha256": "72893b20cf7dfe5320882b19bba4cd8c25da13576ca763667ccde8a802d2f94d",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "SW": {
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "subject_bbox_in_crop": [
+          29,
+          295,
+          1231,
+          1104
+        ],
+        "minimum_transparent_clearance": 23,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "camera": "Same genuine SW physical rig: sole front command head/navy display LOWER-LEFT, one rear nozzle UPPER-RIGHT, complete bare deck and2fixed rails. Fixed original lighting/proportions, no additional hardware.",
+    "background": "Actual truealpha/no frames. Output model exceeds requested projected size/margins; measured23px+ source clearance passes the16px native-source guard. One whole-model physical normalization is required."
+  }
+}

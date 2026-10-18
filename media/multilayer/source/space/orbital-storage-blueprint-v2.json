@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13G / r2mlvs14-remaining-assets-and-runtime-integration.md72.3. Genuine corrected four-tile planning grid with two original cabinet contours; no procedural correction.",
+  "asset_id": "module.storage",
+  "candidate": "orbital-storage-blueprint-v2",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_blueprint_pending_full_source_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-storage-blueprint-v1.png",
+      "sha256": "778bfbb2e1159288111f9bceafebbcbc1ae66043ef7f20879153fad1a2af5011",
+      "role": "blueprint edit target; remove only unrequested centre axis"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 is the blueprint edit target. Change ONLY the floor grid: REMOVE the extra straight VERTICAL cyan line that runs through the diamond centre toward the front corner and toward the rear aisle. The floor must have exactly FOUR diamond tiles: keep only the outer diamond and the TWO shallow diagonal grid lines crossing in an X at the centre. There must be NO vertical rear-to-front axis. Restore genuine transparency where that extra line was. Preserve both original low cabinet wire contours, their positions, the outer floor silhouette, all four corners, camera angle, full image framing and strong opaque cyan line thickness. Every interior remains genuinely transparent. Do not add or change other objects. No labels, symbols, text, extra grid lines or shadows. One complete isolated fixed view.",
+  "original": "media/multilayer/source/space/raw/orbital-storage-blueprint-v2.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      48,
+      299,
+      1355,
+      994
+    ],
+    "uniform_scale": [
+      191,
+      2000
+    ],
+    "source_reference": [
+      701,
+      334
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        309
+      ],
+      [
+        1346,
+        646
+      ],
+      [
+        701,
+        985
+      ],
+      [
+        56,
+        646
+      ]
+    ]
+  },
+  "original_sha256": "4dd59c213993424b30b943e6da133f3ea5e8ceccc9ea50499be6105d42d8023b",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Exact camera-correction request; newly rendered N pixels, no code projection/alpha edits. Rejected input1 is a pose/camera correction target only; input2 remains physical model authority.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-n-v2",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "N"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Rejected high-camera N trial as camera-correction target only; not selected source pixels",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-n-v1.png",
+      "sha256": "b933a8cdb0cc0cb0eda46027d1fe18de8ac0699e2ac239446768b8dbd8ad47f3"
+    },
+    {
+      "role": "Approved original E-side physical model/proportion authority",
+      "path": "media/multilayer/guides/space/construction-robot-e-original-reference.png",
+      "sha256": "5fab1d8c60e7a26f0d66ef30fa4c525cf9a8f7d9e0b81343c15de957d3d03edc"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nInput1 is a rear-view attempt of our robot: single rear nozzle near BOTTOM, navy display far TOP, exactly2folded arms. Input2 is the approved actual E-side model/proportions authority. Correct ONLY the rear view's CAMERA ELEVATION and excessive length: it looks too top-down and its rear nozzle too long. Re-render the SAME approved robot in genuine N heading, front UP/away, rear nozzle DOWN/near, at LOW elevated orthographic camera26.565 degrees ABOVE the horizontal, not an overhead view. Broad squat silhouette. At the same physical scale, the whole N robot should have projected width:height about1.4:1, matching the approved front-view/elevated2:1 style; the nozzle is COMPACT, original model proportions, not an elongated engine. We should see a shallower roof depth and more of the original rear gunmetal vertical face. Whole body roughly560px wide and380px tall on a1024square canvas. Do not flatten/stretch the bitmap: genuinely re-render the3D camera at the requested lower elevation, with upper-left SCREEN light unchanged.\nPreserve physical identity of approved input2: closed broad pentagonal ivory-ceramic/gunmetal hull, burnt-orange joints, exactly2articulated arms folded with closed2jawwrists, ONE compact central rear nozzle nearest BOTTOM, passive short front coupling hidden at far TOP, original small flat dark-navy roof display toward FRONT/TOP and integral closed lower chassis boss. No extra engines, wrists, boom, work/cargo/solarwing/antenna. No glow/exhaust/service lights/work. Both arms remain resting, same hardware count and positions. Do not swap a nozzle onto the front of an unrotated E body.\nONE complete isolated genuine N rear view, centered with generous true-transparent alpha=0 margins, no frame/magenta/background/ground/castshadow/checkerboard/text/label/watermark. Crisp isometric original game machinery for unchanged64x48 native cell/anchor(-32,-32). Keep the whole broad shallow rear-facing body comfortably visible and all parts uncut.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-n-v2.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-8d8e02c0-dd85-492e-b152-90fedb5042a4.png",
+  "sha256": "c0377b2873bf4d2f6dcf63b520c405a2a8e670dce6aba083dd45a911e6e7a2dd",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "N": {
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "subject_bbox_in_crop": [
+          167,
+          308,
+          1087,
+          1034
+        ],
+        "minimum_transparent_clearance": 167,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "camera": "One rear nozzle near/down, roof display/front far/up; folded near/far arms remain closed. Broad low rear silhouette fits the frozen native geometry at one uniform physical scale."
+  }
+}

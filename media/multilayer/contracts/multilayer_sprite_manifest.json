@@ -77,7 +77,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 74,
         "sprite_count": 12,
@@ -160,7 +160,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 86,
         "sprite_count": 12,
@@ -242,7 +242,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 98,
         "sprite_count": 3,
@@ -526,7 +526,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 101,
         "sprite_count": 3,
@@ -808,7 +808,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 104,
         "sprite_count": 3,
@@ -1090,7 +1090,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 107,
         "sprite_count": 3,
@@ -1233,7 +1233,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 110,
         "sprite_count": 3,
@@ -1515,7 +1515,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 113,
         "sprite_count": 3,
@@ -1797,7 +1797,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 116,
         "sprite_count": 3,
@@ -1940,7 +1940,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 119,
         "sprite_count": 3,
@@ -2222,7 +2222,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 122,
         "sprite_count": 3,
@@ -2504,7 +2504,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 125,
         "sprite_count": 3,
@@ -2658,7 +2658,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 200,
         "sprite_count": 384,
@@ -2755,7 +2755,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 584,
         "sprite_count": 2,
@@ -2854,7 +2854,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 586,
         "sprite_count": 384,
@@ -2951,7 +2951,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 970,
         "sprite_count": 2,
@@ -3048,7 +3048,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 972,
         "sprite_count": 80,
@@ -3135,7 +3135,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1052,
         "sprite_count": 2,
@@ -3231,7 +3231,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1054,
         "sprite_count": 80,
@@ -3318,7 +3318,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1134,
         "sprite_count": 2,
@@ -3414,7 +3414,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1136,
         "sprite_count": 80,
@@ -3505,7 +3505,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1216,
         "sprite_count": 2,
@@ -6421,15 +6421,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 3599,
         "sprite_count": 128,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/small-miner-blocked-panel-n-ne-e-se-v1.png",
@@ -6458,7 +6459,7 @@
         "staged_pose_count": 128,
         "required_pose_count": 128,
         "missing_pose_count": 0,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true,
         "actual_component_pose_count": 72,
         "explicit_static_alias_count": 32,
@@ -6531,11 +6532,12 @@
         }
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_review",
+        "status": "bound_verified",
         "consumer": {
           "source": "src/space_vehicle.cpp",
           "symbol": "SpaceVehicle::GetImage"
-        }
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -6639,19 +6641,137 @@
       "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+        "sha256": "764a3427d35134aab1b161836e502447548b427cae037910573adb81932e8104",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5295,
+        "sprite_count": 80,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_model_id": 16,
+      "native_role": "retained_heavy_construction_robot",
+      "native_role_owner": "GetSpaceVehicleModel/SpaceBuildKind::HeavyRobot; distinct from heavy miner21 and builder20",
+      "native_work_policy": "Current ReadyProbe admits model20 only. Model16 working source is an explicit idle alias and cannot claim another hull's work.",
+      "source_frame_contract": {
+        "idle": [
+          0,
+          0
+        ],
+        "moving": [
+          0,
+          1
+        ],
+        "working": [
+          0,
+          0
+        ],
+        "service": [
+          0,
+          1
+        ],
+        "blocked": [
+          0,
+          0
+        ]
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/construction-robot-idle-n-v2.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-ne-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-w-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-w-nw-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/retained-robot-eight-view-v1/source-review.json",
+          "sha256": "7e9704ca00dc2d1069dcee91b77642ea6cc7c47f5849143454e08ce5970da524"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/retained-robot-eight-view-v1/native.png",
+        "base_pose_count": 8,
+        "base_heading_count": 8,
+        "required_pose_count": 80,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "travel_review": {
+          "path": "logs/proofs/mlm/native-art/space/retained-robot-travel-v1/travel-source-review.json",
+          "sha256": "9768b0760888da78f87070ab962622e6ded85a786b9320536026e59136a7f3e7"
+        },
+        "travel_pose_count": 16,
+        "status_review": {
+          "path": "logs/proofs/mlm/native-art/space/retained-robot-status-v1/status-source-review.json",
+          "sha256": "6ba8b9525021d7491183038d22b78544a31bf0f7d877e50c112584b9565eeafe"
+        },
+        "status_pose_count": 24,
+        "rejected_originals": [
+          "media/multilayer/source/space/raw/construction-robot-idle-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-n-v1.png"
+        ],
+        "unaccepted_original_views": [
+          {
+            "path": "media/multilayer/source/space/raw/construction-robot-status-n-ne-w-nw-v1.png",
+            "direction": "W",
+            "reason": "Wrong display projection excluded; genuine opposite physical face correction selected separately."
+          },
+          {
+            "path": "media/multilayer/source/space/raw/construction-robot-status-n-ne-w-nw-v1.png",
+            "direction": "NW",
+            "reason": "Wrong display projection excluded; genuine opposite physical face correction selected separately."
+          }
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/retained-robot-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "393a8ad39072488bc9c968bd76d52158c6bc7f522d64c60fef05e9f4b29a1109",
+        "native_atlas": "logs/proofs/mlm/native-art/space/retained-robot-complete-v1/vehicle-model-16-authored.png",
+        "native_sha256": "cad5fa04abfcdbe6992525987209fe1a602b4cdd2347f31b9e8507b773cb2a64",
+        "staged_pose_count": 80,
+        "missing_pose_count": 0,
+        "actual_component_pose_count": 48,
+        "explicit_static_alias_count": 24,
+        "state_policy_sha256": "6cf0a922c34673111ea6503e1e6d93fff92d8bb2f0c53449513942d9eb2098d2",
+        "new_original_source_count": 8,
+        "registered_effect_instance_count": 4,
+        "reused_effect_original_count": 4,
+        "originals": [
+          "media/multilayer/source/space/raw/construction-robot-idle-n-v2.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-ne-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-idle-w-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-n-ne-w-nw-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-s-sw-e-se-v1.png",
+          "media/multilayer/source/space/raw/construction-robot-status-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -6726,9 +6846,13 @@
         "empty",
         "partial",
         "full",
-        "moving",
+        "moving-empty",
+        "moving-partial",
+        "moving-full",
         "service",
-        "blocked"
+        "blocked",
+        "blocked-partial",
+        "blocked-full"
       ],
       "native_size": [
         64,
@@ -6756,19 +6880,168 @@
       "tile_variants": 1,
       "palette": "dos_8bpp",
       "transparent_index": 0,
-      "company_colors": "explicit_mask",
+      "company_colors": "none",
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+        "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5375,
+        "sprite_count": 160,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_model_id": 17,
+      "native_role": "orbital_cargo_hauler",
+      "native_role_owner": "GetSpaceVehicleModel/SpaceBuildKind::Hauler",
+      "native_load_owner": "Original native CargoPacket hold and GetSpaceFreightCapacity for its actual cargo; no painted extra capacity",
+      "native_motion_owner": "Original generation-qualified typed order and outstanding actual movement; stopped/arrived craft use the actual static load pose",
+      "native_service_owner": "GetSpaceServiceTuning excludes17 and Core/Dock ReadyCraft requires that tuning. Service is an unreachable empty-source alias, never a paid repair producer.",
+      "source_frame_contract": {
+        "empty": [
+          0,
+          0
+        ],
+        "partial": [
+          0,
+          0
+        ],
+        "full": [
+          0,
+          0
+        ],
+        "moving-empty": [
+          0,
+          1
+        ],
+        "moving-partial": [
+          0,
+          1
+        ],
+        "moving-full": [
+          0,
+          1
+        ],
+        "service": [
+          0,
+          0
+        ],
+        "blocked": [
+          0,
+          0
+        ],
+        "blocked-partial": [
+          0,
+          0
+        ],
+        "blocked-full": [
+          0,
+          0
+        ]
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-w-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-sw-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/hauler-empty-eight-view-v1/source-review.json",
+          "sha256": "f2810f4e12d6d35fc5a1c7151e758644a4b19edc24fb4f80b02e2d8d7a3a07ff"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/hauler-empty-eight-view-v1/native.png",
+        "base_pose_count": 8,
+        "base_heading_count": 8,
+        "required_pose_count": 160,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "cargo_bay_review": {
+          "path": "logs/proofs/mlm/native-art/space/hauler-bay-review-v1/bay-source-review.json",
+          "sha256": "1eb504691dbea6fdff6e8ff7e35509ed0840ff76c673af8855ba13df9ef50b59"
+        },
+        "load_review": {
+          "path": "logs/proofs/mlm/native-art/space/hauler-load-eight-view-v1/load-source-review.json",
+          "sha256": "f7761ad245446c5e3b8ccc4f6036cdb720c8faf752288e10fe9af93655b07d30"
+        },
+        "load_pose_count": 16,
+        "static_pose_count": 24,
+        "selected_load_originals": [
+          "media/multilayer/source/space/raw/orbital-hauler-full-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-partial-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-full-e-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-full-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-partial-s-sw-w-nw-v1.png"
+        ],
+        "motion_review": {
+          "path": "logs/proofs/mlm/native-art/space/hauler-motion-eight-view-v1/travel-source-review.json",
+          "sha256": "d575be0edfeb6517fc326b8eee059549a7b54b4388304c0a7e32d7f43de8a433"
+        },
+        "motion_pose_count": 48,
+        "registered_gas_instances": 4,
+        "blocked_review": {
+          "path": "logs/proofs/mlm/native-art/space/hauler-blocked-eight-view-v1/blocked-source-review.json",
+          "sha256": "975be4f8187b51c5a6ade7c8b705f592eeb984089227d18e158a952b419fb0d6"
+        },
+        "blocked_pose_count": 24,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/hauler-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "512874a1051fa152e34f966b691ef1c2561e2f87d19cfb03ed6360b3b8f3f820",
+        "native_atlas": "logs/proofs/mlm/native-art/space/hauler-complete-v1/vehicle-model-17-authored.png",
+        "native_sha256": "b21e4b0b00769e1260429cdd0c782251790652d823e847a9b6e5c66ebf0788ba",
+        "staged_pose_count": 160,
+        "missing_pose_count": 0,
+        "actual_component_pose_count": 96,
+        "explicit_static_alias_count": 56,
+        "state_policy_sha256": "f62bfeb489acf3f543d066ed7c0262695a6ab08e5e27d5a718ffc183de5ab8a0",
+        "new_original_source_count": 12,
+        "registered_effect_instance_count": 4,
+        "reused_effect_original_count": 4,
+        "source_state_aliases": {
+          "service": "empty"
+        },
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-hauler-blocked-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-blocked-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-blocked-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-sw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-empty-w-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-full-e-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-full-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-full-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-partial-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/orbital-hauler-partial-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ]
+      },
+      "native_quantity_cue_policy": "Original native CargoPacket count/capacity selects empty/partial/full in static, moving and blocked poses; blocking never erases actual freight.",
+      "source_state_aliases": {
+        "service": "empty"
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -6884,11 +7157,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 3951,
         "sprite_count": 64,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "state_semantics": {
         "packed": "Actual paid shell in original storage/carrier custody",
@@ -6898,7 +7172,7 @@
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/return-pod-packed-direct-n-s-e-w-v1.png",
@@ -6917,7 +7191,7 @@
         "staged_pose_count": 64,
         "required_pose_count": 64,
         "missing_pose_count": 0,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true,
         "actual_component_pose_count": 24,
         "explicit_static_alias_count": 24,
@@ -6960,11 +7234,12 @@
         }
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_passive_pool_render_review",
+        "status": "bound_verified",
         "consumer": {
-          "source": "src/space_pod.h",
-          "symbol": "SpacePod/SpaceDescentJob; actual passive read-only render consumer remains14BG"
-        }
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities/GetSpacePodArtPose"
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -7076,7 +7351,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1218,
         "sprite_count": 48,
@@ -7170,7 +7445,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1266,
         "sprite_count": 48,
@@ -7265,7 +7540,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1314,
         "sprite_count": 128,
@@ -7936,7 +8211,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1442,
         "sprite_count": 128,
@@ -8025,7 +8300,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1570,
         "sprite_count": 128,
@@ -8111,7 +8386,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1698,
         "sprite_count": 192,
@@ -8199,7 +8474,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 1890,
         "sprite_count": 512,
@@ -9688,7 +9963,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 2436,
         "sprite_count": 1152,
@@ -11507,10 +11782,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11524,8 +11796,8 @@
         64
       ],
       "footprint": [
-        2,
-        2
+        3,
+        3
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -11543,22 +11815,95 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 4,
+      "tile_variants": 9,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+        "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5535,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Core"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-coupling-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/core-base-v1/base-source-review.json",
+          "sha256": "8579197b3c9be651ed77a369158e748553ac62abe6b439c1690511f335e667f1"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/core-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 144,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/core-tile-cuts-v1/tile-source-review.json",
+          "sha256": "bdfb23edb0213ef22bdab80d7721febdb3fc3752f72f5c67caf74a1716073364"
+        },
+        "tile_logical_part_count": 18,
+        "tile_nonempty_part_count": 10,
+        "tile_structurally_absent_part_count": 8,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/core-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "eb1f7434f5bc458d43f59f9188de98c0fb3753c6e89b64c0d9880acd892da17c",
+        "native_atlas": "logs/proofs/mlm/native-art/space/core-complete-v1/module-nucleus-authored.png",
+        "native_sha256": "0119e54ec3fa318ca26cc5d037a9272db1a52817aaebfcd07c57b659b8221275",
+        "staged_pose_count": 144,
+        "missing_pose_count": 0,
+        "explicit_static_alias_count": 72,
+        "canonical_part_count": 72,
+        "nonempty_canonical_part_count": 38,
+        "structurally_absent_canonical_part_count": 34,
+        "state_policy_sha256": "3af37b26f8a4a5a3ba455f9d8ce4c5971484b1c66b3392db8ccf8f43d3b1ab57",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-core-blueprint-v2.png",
+          "media/multilayer/source/space/raw/orbital-core-partial-v3.png"
+        ],
+        "selected_status_original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-coupling-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blueprint-v2.png",
+          "media/multilayer/source/space/raw/orbital-core-partial-v3.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11566,10 +11911,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11609,15 +11951,91 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+        "sha256": "6a49ac607f0b4034b654aea0f75c33468daa397d52de4458507a26389787f950",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5679,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Dock"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/dock-base-v1/base-source-review.json",
+          "sha256": "bf5672b64be497bc89a74fa21cd2fc897e639abd3a8112d009b0fae17df6b78f"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/dock-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 64,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/dock-tile-cuts-v1/tile-source-review.json",
+          "sha256": "cf91f806ad1247908df68502107e60da87c8e31b2618c5e8bd649313deceb083"
+        },
+        "tile_logical_part_count": 8,
+        "tile_nonempty_part_count": 6,
+        "tile_structurally_absent_part_count": 2,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/dock-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "b1983e00683f78f7edeb67ab52fd4438371fda17ae2f3dd389f073676b73e7bb",
+        "native_atlas": "logs/proofs/mlm/native-art/space/dock-complete-v1/module-dock-authored.png",
+        "native_sha256": "65ef6cc1c69e4950fc5a762354aa0614211182abfc7df6039eb69f2bebd32b7c",
+        "staged_pose_count": 64,
+        "missing_pose_count": 0,
+        "explicit_static_alias_count": 32,
+        "canonical_part_count": 32,
+        "nonempty_canonical_part_count": 20,
+        "structurally_absent_canonical_part_count": 12,
+        "state_policy_sha256": "1525a81e4fb8ff81e62cec3f274bc624638bb43e2de96baa533a7e96094fd9ed",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-blueprint-v4.png",
+          "media/multilayer/source/space/raw/orbital-dock-partial-v5.png"
+        ],
+        "selected_status_original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-blueprint-v4.png",
+          "media/multilayer/source/space/raw/orbital-dock-partial-v5.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ],
+        "selected_owned_original_count": 4,
+        "explicit_reused_original_count": 1,
+        "shared_status_original_owner": "module.nucleus; unchanged original amber glass only, no shared service or utility ownership"
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11625,10 +12043,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11668,15 +12083,93 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-storage-body-v1.png",
+        "sha256": "216471195950c440e50483aca9fb25a993d0a714aa0e6efb01c841da8033b347",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5743,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Storage"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-18",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-storage-body-v1.png"
+        ],
+        "explicit_reused_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/storage-base-v1/base-source-review.json",
+          "sha256": "cd1fd60fb4b99c95c94e6728202f395a38cc02163a0312d8783bbe792b08b707"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/storage-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 64,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/storage-tile-cuts-v1/tile-source-review.json",
+          "sha256": "68747a86313ebc1ea98539762a5fe4bcf74ef53c34413477ef84815cc36b9c2f"
+        },
+        "tile_logical_part_count": 8,
+        "tile_nonempty_part_count": 5,
+        "tile_structurally_absent_part_count": 3,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/storage-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "f698f0ca8cd570bfee96b164a1094c8003b53a55bee9d0ff281412b40343567a",
+        "native_atlas": "logs/proofs/mlm/native-art/space/storage-complete-v1/module-storage-authored.png",
+        "native_sha256": "6b5a03284614954a085b852d2bc54bf6d387050c9d47e786173cbfcfb61e4e40",
+        "staged_pose_count": 64,
+        "missing_pose_count": 0,
+        "explicit_static_alias_count": 32,
+        "canonical_part_count": 32,
+        "nonempty_canonical_part_count": 18,
+        "structurally_absent_canonical_part_count": 14,
+        "state_policy_sha256": "a6ee915e175c0ca3baec6093445af619e10b1bc98553ec843813e3f9497dd32c",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-storage-blueprint-v2.png",
+          "media/multilayer/source/space/raw/orbital-storage-partial-v1.png"
+        ],
+        "selected_status_original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-storage-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-storage-blueprint-v2.png",
+          "media/multilayer/source/space/raw/orbital-storage-partial-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ],
+        "selected_owned_original_count": 3,
+        "explicit_reused_original_count": 2,
+        "shared_original_roles": "Unchanged Dock metal as one passive freight coupling; unchanged Core amber glass as material only. No Dock/Core service, utility, stock or work controller follows reuse."
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11684,10 +12177,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11727,15 +12217,97 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+        "sha256": "0e6204818ae937c813a8658f4d92e215d2ae44b669761f18cd5b85f1fb16b9b4",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5935,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Assembly"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-18",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-assembly-body-v4.png"
+        ],
+        "explicit_reused_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/assembly-base-v1/base-source-review.json",
+          "sha256": "cd3fdb8f61392d3ba49de94cbcfe9316a67ba1cfbcfe3d7587ccf049e65ff213"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/assembly-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 64,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/assembly-tile-cuts-v1/tile-source-review.json",
+          "sha256": "ef135b0799d9128a76cb02344769259bc8ce394c66137e4f9932b8f7662e2139"
+        },
+        "tile_logical_part_count": 8,
+        "tile_nonempty_part_count": 5,
+        "tile_structurally_absent_part_count": 3,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/assembly-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "51a931e9c3f1c6e4a35b108c59aa64d7ad1d734d233cc715b6c20cfb164b375d",
+        "native_atlas": "logs/proofs/mlm/native-art/space/assembly-complete-v1/module-assembly-authored.png",
+        "native_sha256": "7f4efde8e473e805ed818f62304ad4c4dac9e6ef2cbcd41df603210ae5bb702f",
+        "staged_pose_count": 64,
+        "missing_pose_count": 0,
+        "state_policy_sha256": "c2e1118850a84d5f12ebc9a318c99a9a86570508e982ace1bf351a72e1e1bb6d",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-assembly-blueprint-v1.png",
+          "media/multilayer/source/space/raw/orbital-assembly-partial-v5.png"
+        ],
+        "selected_work_original": "media/multilayer/source/space/raw/orbital-assembly-work-glass-v1.png",
+        "selected_status_original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-assembly-blueprint-v1.png",
+          "media/multilayer/source/space/raw/orbital-assembly-partial-v5.png",
+          "media/multilayer/source/space/raw/orbital-assembly-work-glass-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ],
+        "selected_owned_original_count": 4,
+        "explicit_reused_original_count": 2,
+        "shared_original_roles": "Unchanged Dock metal as one passive original approach coupling; unchanged Core amber material only. New green glass is a genuine imagegen original edited from that material. No Dock/Core service, inventory, consumer or producer owner follows either source ancestry.",
+        "canonical_part_count": 40,
+        "nonempty_canonical_part_count": 23,
+        "structurally_absent_canonical_part_count": 17,
+        "explicit_static_alias_count": 24,
+        "physical_pose_count": 5
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11743,10 +12315,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11760,8 +12329,8 @@
         64
       ],
       "footprint": [
-        2,
-        2
+        3,
+        3
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -11779,22 +12348,68 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 4,
+      "tile_variants": 9,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-processor-body-v3.png",
+        "sha256": "6ca6d7d7854913d54bcce1bd07f20dba1ff38aa9ac8e76fd0ca965fc78248ab8",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5999,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Steelworks",
+        "Goodsworks",
+        "Refinery",
+        "IceProcessor"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-18",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/processor-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "66a84ec43c18590ad7d853cfa62aa4b7e7e13ec893d41c181533cb8e09aca51f",
+        "native_atlas": "logs/proofs/mlm/native-art/space/processor-complete-v1/module-processor-authored.png",
+        "native_sha256": "1bdfbde166dd8590ffc1e4dbc342905f2abf868fd6e0e94ef363d82afadc9689",
+        "required_pose_count": 144,
+        "staged_pose_count": 144,
+        "missing_pose_count": 0,
+        "state_policy_sha256": "cb5625de170db9747f690da7852c5ce3ef766c76276b1faf88d21fcca6f005ec",
+        "selected_owned_original_count": 3,
+        "explicit_reused_original_count": 3,
+        "canonical_part_count": 90,
+        "explicit_static_alias_count": 54
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11802,10 +12417,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11845,15 +12457,94 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-power-body-v1.png",
+        "sha256": "a567676ce564e90617b9ff2d72c135b050f0e7514b7e11e9fc1d0ad3d85d91af",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5807,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "Power"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-18",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-power-body-v1.png"
+        ],
+        "explicit_reused_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/power-base-v1/base-source-review.json",
+          "sha256": "2ca990b428091a513325b59c69f50d7ae5628960455b5dc97f1cfa6d016637e2"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/power-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 64,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/power-tile-cuts-v1/tile-source-review.json",
+          "sha256": "fbc7faf91ddff3bdf3158b7293f5739feff00f3527a3d8db4992ae7156fc0b52"
+        },
+        "tile_logical_part_count": 8,
+        "tile_nonempty_part_count": 5,
+        "tile_structurally_absent_part_count": 3,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/power-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "79da44b1a9e6a7c0a257c2236ca2e17baadb6ce8e5b28f3323ead6379b0277ee",
+        "native_atlas": "logs/proofs/mlm/native-art/space/power-complete-v1/module-power-authored.png",
+        "native_sha256": "0d2116f35d75cc199ef5f967c36ddcb7248d5ca54db0247e0aea0bd3a96ad94d",
+        "staged_pose_count": 64,
+        "missing_pose_count": 0,
+        "state_policy_sha256": "3f4aa2439e57e7bbff097b17e1dce6e8fc43ce6fd8f9e04c23550657fdb3a160",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-power-blueprint-v5.png",
+          "media/multilayer/source/space/raw/orbital-power-partial-v1.png"
+        ],
+        "selected_status_original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-power-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+          "media/multilayer/source/space/raw/orbital-power-blueprint-v5.png",
+          "media/multilayer/source/space/raw/orbital-power-partial-v1.png"
+        ],
+        "selected_owned_original_count": 3,
+        "explicit_reused_original_count": 2,
+        "shared_original_roles": "Unchanged Dock metal as one passive construction coupling; unchanged Core amber glass as material only. No Dock/Core service, stock or utility controller follows reuse.",
+        "canonical_part_count": 32,
+        "nonempty_canonical_part_count": 18,
+        "structurally_absent_canonical_part_count": 14,
+        "explicit_static_alias_count": 32
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11861,10 +12552,7 @@
       "consumer": 11,
       "kind": "building",
       "directions": [
-        "NE",
-        "SE",
-        "SW",
-        "NW"
+        "none"
       ],
       "frames": 2,
       "states": [
@@ -11904,15 +12592,98 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png",
+        "sha256": "a57d1e4d2a65c7b1859899cce7b1c64c96a9cbcd7e652bf680638ec83965813e",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5871,
+        "sprite_count": 64,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_build_kinds": [
+        "FuelStore"
+      ],
+      "variant_semantics": "native_fixed_site_world_tiles",
+      "native_orientation_policy": "fixed_axis_aligned; SpaceStructureState has no saved orientation",
+      "native_layout_owner": "GetSpaceConstructionDefinitions/SpaceStructureState",
+      "native_state_owner": "SpaceStructureState::phase/OrbitalConstructionJob; actual native module utility and work owners",
+      "native_inventory_owner": "OrbitalConstructionJob::inputs and OrbitalModule::stock; original CargoPacket owners",
+      "native_frame_policy": "Actual original construction/service/processing or utility receipt selects an authored phase; paused/missing work stays canonical static. No art-local clock.",
+      "authoring": {
+        "date": "2026-10-18",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png"
+        ],
+        "explicit_reused_originals": [
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png"
+        ],
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/fuel-store-base-v1/base-source-review.json",
+          "sha256": "2b6b8b4c5918d1a592a7c9dabe2612e47e3aac74bb88fefa3d7de3d28be063bc"
+        },
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/fuel-store-base-v1/native.png",
+        "base_pose_count": 1,
+        "base_kind": "whole_fixed_native_model",
+        "required_pose_count": 64,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "native_activation_supported": false,
+        "tile_review": {
+          "path": "logs/proofs/mlm/native-art/space/fuel-store-tile-cuts-v1/tile-source-review.json",
+          "sha256": "843ddd7783ef0af572a777581e36cb95fea4fdf82b2789c15b2130ca5658ba4a"
+        },
+        "tile_logical_part_count": 8,
+        "tile_nonempty_part_count": 5,
+        "tile_structurally_absent_part_count": 3,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/fuel-store-complete-v1/source-manifest.json",
+        "atlas_manifest_sha256": "5d825fcf4d954cb3a746bab5ac1907ab92f4e60ce9f2d3a8312888902c956d4e",
+        "native_atlas": "logs/proofs/mlm/native-art/space/fuel-store-complete-v1/module-fuel-store-authored.png",
+        "native_sha256": "8b0f6896ca8ff3f6ec66a9d7e8078a2308f58d0d4695c7cd3dada34979061972",
+        "staged_pose_count": 64,
+        "missing_pose_count": 0,
+        "state_policy_sha256": "a9dcf28b10cbccde1dd1201e81c15a09c4a9da5fb9b198ec883f0f45a9e2eed9",
+        "selected_construction_originals": [
+          "media/multilayer/source/space/raw/orbital-fuel-store-blueprint-v1.png",
+          "media/multilayer/source/space/raw/orbital-fuel-store-partial-v1.png"
+        ],
+        "originals": [
+          "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png",
+          "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+          "media/multilayer/source/space/raw/orbital-fuel-store-blueprint-v1.png",
+          "media/multilayer/source/space/raw/orbital-fuel-store-partial-v1.png"
+        ],
+        "selected_owned_original_count": 3,
+        "explicit_reused_original_count": 1,
+        "shared_original_roles": "Unchanged Dock metal as one passive construction coupling only; no Dock service, stock or utility owner follows reuse.",
+        "canonical_part_count": 24,
+        "nonempty_canonical_part_count": 13,
+        "structurally_absent_canonical_part_count": 11,
+        "explicit_static_alias_count": 32,
+        "explicit_state_alias_count": 8,
+        "explicit_alias_count": 40,
+        "source_state_aliases": {
+          "blocked": "complete"
+        },
+        "physical_state_count": 3
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
       }
     },
     {
@@ -11975,11 +12746,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 4015,
         "sprite_count": 384,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_saved_asteroid_size_small_medium_large",
       "size_variants": [
@@ -12023,7 +12795,7 @@
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/metallic-asteroid-depleted-n-ne-e-se-v1.png",
@@ -12043,7 +12815,7 @@
         "required_pose_count": 384,
         "missing_pose_count": 0,
         "coverage_complete": true,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "actual_component_pose_count": 96,
         "explicit_source_alias_count": 288,
         "new_original_source_count": 8,
@@ -12051,11 +12823,12 @@
         "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_field_render_review",
+        "status": "bound_verified",
         "consumer": {
-          "source": "src/asteroid.h",
-          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
-        }
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities/GetSpaceAsteroidArtPose"
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -12118,11 +12891,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 4399,
         "sprite_count": 384,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_saved_asteroid_size_small_medium_large",
       "size_variants": [
@@ -12166,7 +12940,7 @@
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/carbonaceous-asteroid-depleted-n-ne-e-se-v1.png",
@@ -12186,7 +12960,7 @@
         "required_pose_count": 384,
         "missing_pose_count": 0,
         "coverage_complete": true,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "actual_component_pose_count": 96,
         "explicit_source_alias_count": 288,
         "new_original_source_count": 8,
@@ -12194,11 +12968,12 @@
         "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_field_render_review",
+        "status": "bound_verified",
         "consumer": {
-          "source": "src/asteroid.h",
-          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
-        }
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities/GetSpaceAsteroidArtPose"
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -12261,11 +13036,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 4783,
         "sprite_count": 384,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_saved_asteroid_size_small_medium_large",
       "size_variants": [
@@ -12309,7 +13085,7 @@
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/rich-asteroid-depleted-n-ne-e-se-v1.png",
@@ -12330,7 +13106,7 @@
         "required_pose_count": 384,
         "missing_pose_count": 0,
         "coverage_complete": true,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "actual_component_pose_count": 96,
         "explicit_source_alias_count": 288,
         "new_original_source_count": 9,
@@ -12338,11 +13114,12 @@
         "size_policy_sha256": "798a9997b3a937e0b5290222be9e0989daa0ed31914292fe71a7e2fbb24f261e"
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_field_render_review",
+        "status": "bound_verified",
         "consumer": {
-          "source": "src/asteroid.h",
-          "symbol": "AsteroidBody/AsteroidSize; read-only field selection14BG"
-        }
+          "source": "src/asteroid_gui.cpp",
+          "symbol": "ViewportAddSpaceEntities/GetSpaceAsteroidArtPose"
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -12457,7 +13234,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 128,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 128,
         "sprite_count": 3,
@@ -12541,7 +13318,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 131,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 131,
         "sprite_count": 3,
@@ -12625,7 +13402,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 134,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 134,
         "sprite_count": 3,
@@ -12709,7 +13486,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 137,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 137,
         "sprite_count": 3,
@@ -12793,7 +13570,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 140,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 140,
         "sprite_count": 3,
@@ -13169,7 +13946,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 158,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 158,
         "sprite_count": 3,
@@ -13253,7 +14030,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 161,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 161,
         "sprite_count": 3,
@@ -13857,7 +14634,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 2402,
         "sprite_count": 1,
@@ -13939,7 +14716,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 2403,
         "sprite_count": 1,
@@ -14504,7 +15281,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 168,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 168,
         "sprite_count": 16,
@@ -14599,7 +15376,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 184,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 184,
         "sprite_count": 16,
@@ -14694,7 +15471,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 2404,
         "sprite_count": 16,
@@ -14791,7 +15568,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "eaf09566e956785b0bd12034777d176ae822c461daebbd6fc18f072169c54a88",
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_action5_1c",
         "native_offset": 2420,
         "sprite_count": 16,
@@ -14885,15 +15662,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 3727,
         "sprite_count": 96,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/survey-probe-blocked-n-ne-e-se-v1.png",
@@ -14920,7 +15698,7 @@
         "staged_pose_count": 96,
         "required_pose_count": 96,
         "missing_pose_count": 0,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true,
         "actual_component_pose_count": 64,
         "explicit_static_alias_count": 16,
@@ -14979,11 +15757,12 @@
         }
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_review",
+        "status": "bound_verified",
         "consumer": {
           "source": "src/space_vehicle.cpp",
           "symbol": "SpaceVehicle::GetImage"
-        }
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
       }
     },
     {
@@ -15050,15 +15829,16 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
         "route": "native_baseset_space",
         "native_offset": 3823,
         "sprite_count": 128,
-        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
+        "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-17",
-        "status": "source_coverage_verified_packing_runtime_pending",
+        "status": "source_packed_runtime_verified",
         "source_record": "media/multilayer/source/space/space-generation-record.json",
         "originals": [
           "media/multilayer/source/space/raw/construction-probe-blocked-n-ne-w-nw-v1.png",
@@ -15089,7 +15869,7 @@
         "staged_pose_count": 128,
         "required_pose_count": 128,
         "missing_pose_count": 0,
-        "runtime_activated": false,
+        "runtime_activated": true,
         "coverage_complete": true,
         "actual_component_pose_count": 80,
         "explicit_static_alias_count": 32,
@@ -15164,11 +15944,224 @@
         }
       },
       "runtime": {
-        "status": "pending_packed_delivery_and_native_review",
+        "status": "bound_verified",
         "consumer": {
           "source": "src/space_vehicle.cpp",
           "symbol": "SpaceVehicle::GetImage"
-        }
+        },
+        "binding_manifest": "logs/space-art-final-verification.json"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-21",
+      "consumer": 11,
+      "kind": "vehicle",
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "frames": 2,
+      "states": [
+        "free",
+        "rendezvous",
+        "attached",
+        "mining",
+        "full",
+        "return",
+        "service",
+        "blocked"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "footprint_semantics": "world_tiles",
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "parts": [
+        "body"
+      ],
+      "geometry": "per_view",
+      "tile_variants": 1,
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "company_colors": "none",
+      "preview": "purchase_family",
+      "animation_colors": "forbidden",
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+        "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      },
+      "packed": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null,
+        "route": "native_baseset_orbital",
+        "native_offset": 5167,
+        "sprite_count": 128,
+        "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+        "native_payload": "media/baseset/openttd.grf",
+        "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+      },
+      "native_model_id": 21,
+      "native_role": "heavy_mining_robot",
+      "native_role_owner": "SPACE_HEAVY_MINER_MODEL/GetSpaceMiningTuning; never model16",
+      "native_state_policy": {
+        "attachment": "Original reciprocal AsteroidBody::mining_slot lease and saved attachment point",
+        "mining": "IsSpaceMiningWorkTick and actual mission work_ticks; no new work or resource clock",
+        "load": "Original native cargo.TotalCount/cargo_cap; no art inventory",
+        "service": "Original onboard manifest or generation-qualified Core/Dock service receipt",
+        "movement": "Original unstopped admitted travel to a real outstanding destination",
+        "blocked": "Original native order/mining/service admission reason"
+      },
+      "source_frame_contract": {
+        "free": [
+          0,
+          0
+        ],
+        "rendezvous": [
+          0,
+          1
+        ],
+        "attached": [
+          0,
+          0
+        ],
+        "mining": [
+          0,
+          1
+        ],
+        "full": [
+          0,
+          0
+        ],
+        "return": [
+          0,
+          1
+        ],
+        "service": [
+          0,
+          1
+        ],
+        "blocked": [
+          0,
+          0
+        ]
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        },
+        "binding_manifest": "logs/orbital-art-ordinary-verification.json"
+      },
+      "authoring": {
+        "date": "2026-10-17",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "selected_originals": [
+          "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+          "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v3.png",
+          "media/multilayer/source/space/raw/heavy-miner-ore-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-ore-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-nw-v1.png"
+        ],
+        "rejected_originals": [
+          "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v2.png"
+        ],
+        "base_native_atlas": "logs/proofs/mlm/native-art/space/heavy-miner-free-eight-v1/native.png",
+        "base_review": {
+          "path": "logs/proofs/mlm/native-art/space/heavy-miner-free-eight-v1/source-review.json",
+          "sha256": "0e38e156839347acda2f37fc87408dc439c181f808757cb0e37a85eb3d6c4fd9"
+        },
+        "base_pose_count": 8,
+        "required_pose_count": 128,
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "base_heading_count": 8,
+        "cutter_review": {
+          "path": "logs/proofs/mlm/native-art/space/heavy-miner-cutter-v1/heavy-cutter-source-review.json",
+          "sha256": "b8892b45bba7587044daf1ceff9e5c4bcbdd90be8b3ed966ece2ac867b91835a"
+        },
+        "cutter_pose_count": 16,
+        "travel_review": {
+          "path": "logs/proofs/mlm/native-art/space/heavy-miner-travel-v1/heavy-travel-source-review.json",
+          "sha256": "066cf390192608f17060b31de3a2b28f9625eaba999a8464f45ccb8ee5088052"
+        },
+        "travel_pose_count": 16,
+        "registered_effect_instance_count": 8,
+        "reused_effect_original_count": 4,
+        "ore_review": {
+          "path": "logs/proofs/mlm/native-art/space/heavy-miner-ore-v1/load-source-review.json",
+          "sha256": "022c3399f8b67f235a8a59448a41e8125113528b5810a1d7dd1254d61a86dee6"
+        },
+        "ore_pose_count": 8,
+        "status_review": {
+          "path": "logs/proofs/mlm/native-art/space/heavy-miner-status-v1/status-source-review.json",
+          "sha256": "fbf5da152b491ad4ae79a500c01658cba5b6437f56a29235e1725cfcaec84f75"
+        },
+        "status_pose_count": 24,
+        "unaccepted_original_views": [
+          {
+            "path": "media/multilayer/source/space/raw/heavy-miner-status-s-sw-w-nw-v1.png",
+            "direction": "NW",
+            "reason": "Incorrect positive-diagonal housing camera; genuine negative-diagonal NW correction selected separately."
+          }
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/heavy-miner-complete-v1/space-source-manifest.json",
+        "atlas_manifest_sha256": "2e4d514c0ad23200427093b8d974724cf9aee630c6f235ca2593d42b768adeb3",
+        "native_atlas": "logs/proofs/mlm/native-art/space/heavy-miner-complete-v1/vehicle-model-21-authored.png",
+        "native_sha256": "8559b1df4e8e3f0297197917c56cbdfe957f78bc316292d054b269595a5259e9",
+        "staged_pose_count": 128,
+        "missing_pose_count": 0,
+        "actual_component_pose_count": 72,
+        "explicit_static_alias_count": 32,
+        "state_policy_sha256": "264cd72c518071fb23f79fdaabe6ed8e3d864e93d82d1c397083c5e91cf3ac8b",
+        "new_original_source_count": 9,
+        "originals": [
+          "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+          "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+          "media/multilayer/source/space/raw/heavy-miner-ore-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-ore-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-status-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-n-ne-e-se-v3.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-a-s-sw-w-nw-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-n-ne-e-se-v1.png",
+          "media/multilayer/source/space/raw/small-miner-thrust-b-s-sw-w-nw-v1.png"
+        ]
       }
     }
   ],

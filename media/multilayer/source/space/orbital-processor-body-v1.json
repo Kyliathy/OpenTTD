@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.1. Immutable built-in ImageGen original; whole-source/native geometry approval is separate.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_generation",
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept. Asset: module.processor, one new original fixed orbital material-conversion machine for OpenTTD; complete static base. Create ONE isolated whole RGBA cutout on genuine transparent background, wide canvas about1536x1024. Fixed orthographic 2:1 isometric camera looking at the two front faces, parallel edges, upper-left light. No perspective convergence. Use a VERY THIN shallow diamond platform with exactly a3x3 grid of nine broad square metal floor panels. Desired deck surface vertices in the requested canvas: rear(768,326), right(1368,620), front(768,914), left(168,620); this deliberately slightly shallow floor must remain flat, wide, symmetric and all four corners visible. Deck rim only about5source pixels thick, no legs or hanging underside. Preserve at least64transparent pixels around every subject pixel. Entire machinery is LOW, squat and positioned on the rear half of the deck: ONE horizontal sealed industrial conversion drum with a dark cylindrical end on the left-rear, ONE compact rectangular finned heat-exchanger block on the right-rear, ONE short fixed connecting pipe between them, and ONE small low rectangular control console near the deck centre/front. The console has a single plain horizontal blue-glass window, surrounded by light-gray metal trim. Keep plenty of empty front deck. Drum and exchanger have short integrated mount brackets, no tall towers. Their highest tops should be no more than about120source pixels above their supporting floor, to survive real64x64 tile sorting. Metal materials: muted gray/blue-gray, cream highlights, restrained rust-orange flange accents, dark navy vents. Crisp chunky transport-tycoon pixel-art-like industrial rendering, readable after reduction to192pixel deck width. Use broad deliberate shapes rather than tiny wires. The lower-right sloping deck edge stays bare for a separately owned passive connector. No connector or clamps in this original. This is one shared sealed machine for Steelworks/Goodsworks/Refinery/IceProcessor; no loose materials or fake inventories. No text, letters, numbers, logos, arrows, guide lines, magenta frames, background, stars, cast shadow outside the deck, cargo piles, products, robot, vehicle, crane, gantry, flames, smoke, solar panels or second drum. Keep all hardware, platform corners and alpha edges entirely inside the image; one view only, no sheet. Safe isolation and thin shallow deck take priority over subject size.",
+  "input_images": [],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-7bca3dc6-c90f-43fb-94ee-be77f7a480a8.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-body-v1.png",
+    "sha256": "9c21368a2a1a73c8df31c8dd090a47454278df7a6ee3fe60f0b93ae9b0a570e6"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    131,
+    280,
+    1406,
+    919
+  ],
+  "selection": "rejected_hidden_rear_corner_and_shallow_floor"
+}

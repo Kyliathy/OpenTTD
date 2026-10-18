@@ -1,0 +1,97 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine shallower-camera Assembly partial source; source pixels/provenance remain original.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-partial-v5",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-partial-v4.png",
+      "sha256": "46a2788107823384c73ede539415c43a247e3ec38ba7bf14a25b85071b9e2571",
+      "role": "thin-frame partial edit target; correct floor camera while retaining unfinished hardware"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: orbital Assembly incomplete construction, shallower isometric floor camera.\nImage1 is the genuine edit target. Its thin-frame partial machinery is correct. KEEP the same TWO open steel-channel posts, ONE crossbeam/empty tool mount and ONE open empty console, with same palette, lighting, counts, horizontal layout and native-scale design. No added tool head or finished covers. Preserve the truly transparent missing front tile and thin X brace.\nThe FLOOR DIAMOND is still TOO DEEP/TALL. Make that diamond conspicuously SHALLOWER vertically, approximately20percent LESS VERTICAL DEPTH, while keeping its current horizontal width approximately the same or slightly wider. In particular pull the front tip strongly UP into the image, by about80source pixels; the finished floor should read as a shallow wide2:1OpenTTD isometric deck, not a steep tall diamond. Draw a new coherent floor plane/camera, without stretching machinery. Suggested corrected floor corners on the1401x1123canvas: rear(701,360), right(1321,655), front(701,950), left(81,655), width1240/height590. This shallow floor correction must be clearly visible compared with Image1, and it takes priority over preserving Image1's old floor shape.\nRebuild three fitted grey metal plates, their native four-diamond grid, continuous very thin silver perimeter, and the missing FRONT plate's thin X brace within that one shallower floor. All four corners visible, rear corner exposed, machinery feet attached inboard. Broad front openings remain genuine transparent background. NO extra lower rim, thick navy sidewall, pedestal or duplicate deeper outline. The entire partial model should be comfortably inside the canvas with clear transparent margins. Keep actual2x2world tile structure with only the front tile absent.\nOne whole isolated incomplete Assembly, no sheet. Same restrained first-party cream/navy/grey metal, upper-left light. No coupling, lit glass, work light, amber warning, product, robot, craft, cargo, loose parts, tank, PV panel, text, label, arrow, symbol, axis, ground, backdrop or external shadow. True transparent background. The required change is a genuinely SHALLOWER, WIDER floor camera around the same incomplete machinery and transparent front opening.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-partial-v5.png",
+  "original_sha256": "b9076a1cff73b28a7ba10b3e1a70a0c9b475218fe9d73b8b6951780bfc56276f",
+  "image_size": [
+    1542,
+    1020
+  ],
+  "measured_alpha16_bbox": [
+    82,
+    141,
+    1461,
+    959
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1542,
+      1020
+    ],
+    "measured_subject_bbox_in_crop": [
+      82,
+      141,
+      1461,
+      959
+    ],
+    "uniform_scale": [
+      927,
+      10000
+    ],
+    "source_reference": [
+      763,
+      276
+    ],
+    "source_floor_corners": [
+      [
+        770,
+        271
+      ],
+      [
+        1456,
+        597
+      ],
+      [
+        770,
+        948
+      ],
+      [
+        85,
+        597
+      ]
+    ]
+  }
+}

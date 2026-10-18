@@ -30,6 +30,18 @@
 /* static */ std::unique_ptr<Tile::TileBase[]> Tile::base_tiles; ///< Base tiles of the map
 /* static */ std::unique_ptr<Tile::TileExtended[]> Tile::extended_tiles; ///< Extended tiles of the map
 
+/** @copydoc Map::DecodeStoredTile */
+std::optional<StoredMapTilePosition> Map::DecodeStoredTile(TileIndex tile, uint32_t width, uint32_t height, uint8_t planes)
+{
+	// Serialized positions require the same bounded power-of-two geometry as native allocation; malformed dimensions cannot wrap an index or borrow coordinates from the running map.
+	if (width < MIN_MAP_SIZE || width > MAX_MAP_SIZE || height < MIN_MAP_SIZE || height > MAX_MAP_SIZE ||
+		(width & (width - 1)) != 0 || (height & (height - 1)) != 0 || planes == 0 || planes > MAX_MAP_LAYERS) return std::nullopt;
+	const uint64_t plane_size = uint64_t{width} * height;
+	if (tile.base() >= plane_size * planes) return std::nullopt;
+	const uint64_t local = tile.base() % plane_size;
+	return StoredMapTilePosition{static_cast<uint16_t>(local % width), static_cast<uint16_t>(local / width), static_cast<uint8_t>(tile.base() / plane_size)};
+}
+
 
 /**
  * (Re)allocates a map with the given dimension.

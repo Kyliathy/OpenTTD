@@ -1,0 +1,97 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Genuine inert Power planning original; no producer or generation follows its visible PV outlines.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-blueprint-v1",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_blueprint_pending_full_source_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-power-blueprint-camera-v1.png",
+      "sha256": "46acf1fc1cdda06188588c632bed45a3e5d8f10959fb4b1dbf1e002f2a324720",
+      "role": "plain shallow floor silhouette only"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-body-v1.png",
+      "sha256": "a567676ce564e90617b9ff2d72c135b050f0e7514b7e11e9fc1d0ad3d85d91af",
+      "role": "actual two-bank/one-control-box hardware and location reference only"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE inert unbuilt BLUEPRINT original for the fixed orbital Power module.\nImage1 is exact FLOOR/CAMERA GUIDE ONLY: trace its1000px-wide/490px-high diamond, corners(640,315),(1140,560),(640,805),(140,560) on1280x1024 transparent canvas. Image2 is the actual Power hardware/location reference only.\nCreate a simple fully opaque bright CYAN wire plan: the outer diamond perimeter and exactly TWO shallow diagonal internal grid lines connecting opposite edge midpoints, making four equal floor diamonds with an X junction. NO extra vertical rear-to-front axis. Add wire contours of exactly TWO low PV banks on their supports, one left and one right in the rear half, and ONE small squat control-box wire contour just in front of them. Preserve image2's hardware counts and relative locations. No solar-cell fill, fine cell grid, finished solid hardware or solid floor.\nBold simple continuous solid cyan strokes about16px wide, no mesh, dithering, glow, shading or haze; they must read at126px floor width. All interiors and background genuinely transparent. Entire subject/all four corners visible with generous100px outer clearance. Keep image1's exact shallow floor proportions, no steeper camera. No clamp, cargo, service equipment, extra panel, fuel tank, craft, text, labels, symbols, axes or shadows. ONE complete isolated fixed view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-power-blueprint-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      122,
+      323,
+      1283,
+      919
+    ],
+    "uniform_scale": [
+      541,
+      5000
+    ],
+    "source_reference": [
+      701,
+      333
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        337
+      ],
+      [
+        1271,
+        626
+      ],
+      [
+        701,
+        905
+      ],
+      [
+        132,
+        626
+      ]
+    ]
+  },
+  "original_sha256": "a70360ef43f95927d2d2fc1e743c222ff15b2f29ded05890e3e9102731dcd431",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

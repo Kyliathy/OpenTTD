@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_dock.cpp Paid-frame Dock activation, explicit original source admission and bounded service transport.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group4C.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K physical Dock/Power presentation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md prerequisite queue.
  */
 #include "../stdafx.h"
@@ -9,6 +10,7 @@
 #include "../space_structure_cmd.h"
 #include "../space_approach.h"
 #include "../orbital_service.h"
+#include "../orbital_sprite.h"
 #include "../core/backup_type.hpp"
 #include "excavation_fixture.h"
 #include "../safeguards.h"
@@ -58,6 +60,35 @@ public:
 		for (uint tick = 0; tick < GetMultiLayerSpaceBudget().core_activation_ticks; ++tick) TickOrbitalConstructionInventory();
 	}
 };
+
+/** Independent panel availability follows original activation/connections, never consumer demand or the adjacent Core's panel switch. */
+TEST_CASE("Orbital Dock artwork follows its explicit independent Power source", "[orbital-art-module]")
+{
+	OrbitalDockRig rig;
+	auto &core = *SpaceStructure::Get(SpaceStructureID{0});
+	auto &dock = *SpaceStructure::Get(SpaceStructureID{1});
+	auto &power = *SpaceStructure::Get(SpaceStructureID{2});
+	REQUIRE(CmdActivateOrbitalCore(DoCommandFlag::Execute, core.index, core.generation).Succeeded()); rig.ActivateCountdown();
+	REQUIRE(CmdActivateOrbitalModule(DoCommandFlag::Execute, power.index, power.generation).Succeeded()); rig.ActivateCountdown();
+	REQUIRE(CmdActivateOrbitalModule(DoCommandFlag::Execute, dock.index, dock.generation).Succeeded()); rig.ActivateCountdown();
+	CHECK(GetOrbitalModuleArtPose(dock, _current_company, 0, 0)->state == 3);
+	REQUIRE(CmdConnectOrbitalServices(DoCommandFlag::Execute, dock.index, dock.generation, power.index, power.generation).Succeeded());
+	CHECK_FALSE(IsOrbitalServiceFacilityBlocked(dock));
+	CHECK(GetOrbitalModuleArtPose(dock, _current_company, 0, 0)->state == 2);
+	REQUIRE(CmdSetOrbitalPanelPaused(DoCommandFlag::Execute, core.index, core.generation, true).Succeeded());
+	CHECK(GetOrbitalModulePanelRate(power) > 0);
+	CHECK(GetOrbitalModuleArtPose(power, _current_company, 0, 0)->state == 2);
+	CHECK(GetOrbitalModuleArtPose(dock, _current_company, 0, 0)->state == 2);
+	// An explicitly declared paused-job component tests source refusal only;
+	// no craft, reserved parts or paid service are fabricated as gameplay proof.
+	auto &job = dock.module->service; job.remaining_ticks = 1; job.paused = true;
+	CHECK_FALSE(IsOrbitalServiceFacilityBlocked(dock));
+	job.paused = false; CHECK(IsOrbitalServiceFacilityBlocked(dock));
+	job.remaining_ticks = 0;
+	REQUIRE(CmdSetOrbitalPanelPaused(DoCommandFlag::Execute, power.index, power.generation, true).Succeeded());
+	CHECK(GetOrbitalModuleArtPose(power, _current_company, 0, 0)->state == 3);
+	CHECK(GetOrbitalModuleArtPose(dock, _current_company, 0, 0)->state == 3);
+}
 
 /** Estimates and completed activation must preserve native receipts and issue no Dock panel or free energy. */
 TEST_CASE("Dock activation grants two bounded physical berths and no electrical source", "[orbital-dock-contract]")

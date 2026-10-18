@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Rejected camera edit preserved unchanged; cannot supply native coverage.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-partial-v2",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "Camera edit retained an approximately0.54-height/width floor. It cannot meet native3x3 floor corners and existing cell bounds under one uniform reduction; retain only as a hardware/style reference.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-partial-v1.png",
+      "sha256": "ac6867ee04a02ae89305e8806cef1c9a1c83af981e2499ab214f68191c97fc19",
+      "role": "partial camera edit target, not an accepted native original"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: fixed Core partial physical construction stage, ONE transparent view.\nInput1 is the partial construction EDIT TARGET. Preserve its exact unfinished hardware: one open octagonal low hub rim/eight uprights/no roof, two partly populated flat solar frames, one open shallow locker, thin deck and no other props. Correct ONLY the camera: the floor is too steep. Genuinely rerender from a lower elevation so the floor diamond is shallower. On the same1388x1133 canvas, target floor corners approximately(694,330),(1320,640),(694,950),(68,640). Diamond width1252, height620; absolutely do not retain the current730px-tall floor. The diamond must be nearly twice as wide as it is tall. Preserve one fixed view, all relative hardware locations, cream/navy materials and upper-left lighting. Keep all subject pixels at least64px inside the image edges, genuine transparent background, no external ground shadow. Do not add a roof, finished windows, coupling, craft, supply crates, robots, text, labels, magenta frames, guide arrows or scene. One complete isolated original, no multi-view sheet. Preserve incomplete construction identity while rendering the shallow camera accurately.",
+  "original": "media/multilayer/source/space/raw/orbital-core-partial-v2.png",
+  "original_sha256": "d06447f953acc607cd654ef86637f941aa736eaa00d6910dbcc08f619d8663a7",
+  "image_size": [
+    1460,
+    1077
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.1. Genuine inboard-gantry body trial; native whole-source geometry remains authoritative.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-body-v3",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v2.png",
+      "sha256": "767b6b377742b66ed023692b9c6f98bf71a4aed02ae3443061fc7a571daa7239",
+      "role": "edit target: same hardware/floor, move gantry inboard to expose rear corner"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: orbital Assembly workshop base, corrected inboard gantry placement.\nImage1 is the genuine Assembly EDIT TARGET. Its corrected shallow2:1camera, thin diamond deck, four diamond floor tiles, cream/navy materials, upper-left light and exact equipment counts must stay the same. Change ONLY hardware placement to expose the rear floor corner: move the ENTIRE gantry assembly (both posts, its ONE straight crossbeam and ONE hanging tool head together) about60source pixels FORWARD/downward into the deck interior. The actual rear floor vertex and both adjoining rear edges must be visibly unobstructed, with an obvious open grey deck gap behind the whole gantry. No part of the beam or posts may cover that rear vertex. Keep the gantry compact and well inboard. Move the ONE small console about30source pixels forward only if necessary to keep it visibly in front of the hanging tool; preserve its plain horizontal BLUE GLASS display. The front apron stays broad and empty.\nDo not move, resize, flatten, thicken, warp or redesign the floor. Keep the current floor corners, whole shallow2:1projection and generous transparent margins. All four floor corners must now be directly visible, including the previously hidden rear one. Keep exactly TWO short uprights, ONE crossbeam, ONE small hanging tool and ONE squat console, no third post or new hardware. Same fixed orientation and low height, no animation pose. This is a genuine corrected source view.\nNo coupling, clamp, robot, vehicle, manufactured product, crates, cargo, fuel tank, PV array, extra gantry, green/amber status cue, text, label, number, arrow, symbol, axis, background, ground or external shadow. ONE isolated complete model on truly transparent canvas. Preserve all unrelated equipment geometry, palette and lighting.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-body-v3.png",
+  "original_sha256": "b100b98ca03614c2282f5f6270588c6a356463d708eaff81b229c00108af0fcf",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

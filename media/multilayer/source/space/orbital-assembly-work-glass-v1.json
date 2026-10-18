@@ -1,0 +1,58 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Newly generated green material for actual paid Assembly work only; no new clock, consumer, job or power.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-work-glass-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "source_frame": 1,
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+      "sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100",
+      "role": "genuine amber material edit target; change glass colour with imagegen, never copy Core gameplay"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE tiny generic GREEN status-glass material pane for a fixed orbital Assembly console.\nImage1 is the genuine amber pane edit target. Change ONLY its glass colour from amber/orange to a clear vivid EMERALD GREEN. Retain the same one horizontal rectangular glass pane, near-front-on geometry, thin graphite rim, subtly chamfered corners, restrained retro game-sprite material, centred position and generous truly transparent square-canvas margins. Make its central glass strongly green, clearly different from cyan/blue and amber even at3x1native pixels; no white centre that erases the green hue. Preserve approximately the same wide3:1pane proportions.\nOne isolated pane only, no machinery, floor, pedestal, wire, building, robot, label, icon, warning symbol, text, arrow, quantity, backdrop or shadow outside the pane. No green glow halo or bloom beyond the genuine glass/rim. True transparent background. Retain1254x1254square framing with the whole pane around the centre and at least200px genuine transparent clearance all around. The pane is a material source only; add no operating scene or extra light fixture. Same physical shape as the amber original, only the glass colour changes.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-work-glass-v1.png",
+  "original_sha256": "4dbd78836ade6c66de92cb4a99579ef11993050cb1e19e4df0892db8bb3d2f3a",
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_registration": {
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      297,
+      516,
+      958,
+      734
+    ],
+    "uniform_scale": [
+      1,
+      192
+    ],
+    "source_reference": [
+      627,
+      624
+    ],
+    "native_contact": [
+      100,
+      65
+    ],
+    "native_bounds": [
+      97,
+      63,
+      104,
+      68
+    ]
+  }
+}

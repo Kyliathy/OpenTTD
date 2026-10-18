@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Rejected clipped construction original retained without padding or pixel repair.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_clipped_front_corner",
+  "rejection": "Original1798x875 alpha16bbox[18,36,1780,875] touches its bottom image edge and clips the front floor corner. Correct hardware is only a new-generation reference; this original cannot supply native source coverage.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+      "sha256": "6a49ac607f0b4034b654aea0f75c33468daa397d52de4458507a26389787f950",
+      "role": "approved complete Dock body edit target"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.dock, ONE genuine PARTIALLY CONSTRUCTED physical Dock original for OpenTTD.\nInput image is the approved complete BODY edit target, without separate clamp hardware. Keep its exact shallow camera, four outer floor corners, thin frame,2x2 grid and one small rear servicing cabinet location. Change ONLY these two construction details: remove the frontmost diamond deck panel entirely, leaving a real transparent opening through that single front tile with its thin perimeter rails and TWO exposed diagonal cross-braces still present; the other THREE deck panels stay fitted solid metal. Open the little rear cabinet by removing its top lid and front cover, exposing a dark unfinished interior and simple frame instead of finished vent panels. Do not move or enlarge the cabinet. This must read as a partly built physical deck, with one clearly missing front plate, not a wire blueprint and not a complete platform. Preserve cream/silver edge trim, graphite utility seams and navy cabinet materials, upper-left light and restrained crisp retro game art. Preserve the target's shallow diamond, roughly1110px wide and540px high, floor corners near(701,365),(1255,630),(701,909),(147,630) on a1402x1122 transparent canvas. No thick foundation, camera steepening or perspective convergence. All outer corners and every bracket remain at least100px inside image edges. Genuine transparent background and true transparency through the missing front plate. No clamps, craft, supply crates, extra props, cranes, robots, labels, arrows, axes, scene, external ground shadow or magenta frames. One complete isolated original view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-partial-v1.png",
+  "original_sha256": "f450ca2508fd34db3e4a11e76bd5f29b0c2148542564a04e0ab21076f1b9442e",
+  "image_size": [
+    1798,
+    875
+  ]
+}

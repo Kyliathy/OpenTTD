@@ -24,6 +24,15 @@
 
 #include "safeguards.h"
 
+/** @copydoc MultiLayerMap::DecodeStoredTile */
+std::optional<StoredLayerTilePosition> MultiLayerMap::DecodeStoredTile(TileIndex tile, uint32_t width, uint32_t height, uint8_t layers)
+{
+	if (!MultiLayerMap::IsStorableLayerCount(layers)) return std::nullopt;
+	const auto position = Map::DecodeStoredTile(tile, width, height, layers);
+	if (!position) return std::nullopt;
+	return StoredLayerTilePosition{position->x, position->y, static_cast<MapLayer>(position->plane)};
+}
+
 static_assert(to_underlying(MapLayerConstruction::End) <= 32);
 
 /**

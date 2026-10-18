@@ -1,0 +1,101 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.2; exact built-in opposite-view source request; full source/runtime remain pending.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-free-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "free",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_rejected_layout",
+  "reference_inputs": [
+    {
+      "role": "selected model identity reference",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+      "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: approved model identity vehicle.model-21 heavy mining robot, EMPTY FREE/IDLE.\nInput image1 is the selected original N/NE/E/SE model reference/edit target. Keep exactly that physical machine, materials, camera, scale and hardware inventory. Produce NEW genuine opposite 3D orientations, replacing the four view headings in the new sheet: S top-left (drill/nose points DOWN the image, true front view), SW top-right (nose DOWN-LEFT, true opposite front quarter), W bottom-left (nose LEFT, true opposite side), NW bottom-right (nose UP-LEFT, true opposite rear quarter). Keep the fixed elevated orthographic2:1 transport-game camera and upper-left screen light. Rotate the real same machine in3D; NEVER mirror/rotate an existing flat image. Use natural occlusion: front-facing S hides the rear thruster bells behind the original hopper/chassis rather than inventing new engines.\n\nPreserve ONE short central industrial mining cutter/drill, TWO matching folded side clamp/gripper arms, ONE integrated EMPTY rear ore hopper, TWO compact rear thruster bells and ONE flat dark-blue top electronics housing. Same angular graphite/cool steel chassis and restrained ochre-yellow machinery edges. Match the approved proportions and low-resolution readable shapes. No cockpit, crew, people, extra hoppers, crates, wheels, panels or tools. Dormant idle machinery, no work glow, drilling debris, service opening, flame, exhaust plume or cast ground shadow.\n\nSAFE BORDERED source sheet, requested1536x1024, four independent cutouts in a2x2 grid. Opaque PURE MAGENTA #FF00FF frames about6px thick outside each subject:\nS(24,24)-(744,488), SW(792,24)-(1512,488), W(24,536)-(744,1000), NW(792,536)-(1512,1000).\nReal alpha transparency throughout the background, gutters and margins, with the magenta frames visible. Complete subjects, including drill tips/grippers/bells, fit inside inner safe rectangles:\nS(56,56)-(712,456), SW(824,56)-(1480,456), W(56,568)-(712,968), NW(824,568)-(1480,968).\nKeep the selected reference's smaller safe subject scale, roughly500px maximum source width and330px maximum source height, with at least32px genuinely clear space between each whole subject and its actual frame. Uniformly reduce every subject together if needed. No subject pixel or halo touches a frame, enters a gutter or overlaps another cell. No labels, text, numbers, guides, backdrop, watermark or extra props. Model identity, genuine opposite cameras and safe complete source separation take priority.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-0dcab701-ca14-4860-a657-4178d92c9cde.png",
+  "sha256": "a2b7fb4d501a2f69a19bea0102f7fd4f5632bf7ef7014de6e0ea9b56469c5b5a",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          172,
+          35,
+          527,
+          448
+        ],
+        "minimum_transparent_clearance": 0,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          76,
+          41,
+          567,
+          428
+        ],
+        "minimum_transparent_clearance": 20,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          29,
+          78,
+          669,
+          359
+        ],
+        "minimum_transparent_clearance": 29,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          94,
+          42,
+          622,
+          386
+        ],
+        "minimum_transparent_clearance": 42,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 138
+  },
+  "rejection": "S drill approaches the lower separator too closely and requires more transparent clearance; preserve original and correct the source image, never mask or relax converter guards."
+}

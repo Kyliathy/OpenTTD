@@ -1,0 +1,30 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine Assembly construction with bare channels/open console/transparent missing front plate.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-partial-v2",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+      "sha256": "0e6204818ae937c813a8658f4d92e215d2ae44b669761f18cd5b85f1fb16b9b4",
+      "role": "approved complete floor/camera edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-partial-v1.png",
+      "sha256": "b193210e5aaaa4df3eac4a1107ba46faa47ed93e06ffeafbb3f170e623d8821d",
+      "role": "unfinished hardware/missing-front-plate reference only; rejected floor not reused"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: fixed orbital Assembly PARTIAL construction, corrected original floor footprint.\nImage1 is the APPROVED COMPLETE BODY EDIT TARGET, especially its exact thin FLOOR OUTLINE and shallow camera. Image2 supplies ONLY the desired unfinished hardware and true missing-front-plate appearance; its outer floor has grown too deep/wide and must not be copied. Rebuild the incomplete state on Image1's actual floor, matching Image1's four corner positions, original floor width/depth, thin rim and camera exactly. Keep the outer frame small and thin, without a thick dark sidewall or foundation hanging below it. Do not enlarge, steepen or extend the front corner.\nKeep exactly the same ONE gantry in Image1's inboard position: TWO short posts and ONE straight crossbeam, now as bare open steel channels with their finished cream covers absent, as Image2. Leave only the empty original tool mount, with the hanging tool NOT installed. One squat console at the original position, now open and unfinished with its glass/top/front cover absent, showing an empty dark cavity. No extra post, rail, tool, part or product.\nRemove ONLY the FRONT diamond floor plate of the four actual world tiles. Keep its continuous thin outer perimeter at Image1's exact original front/side corners and a sparse metal X brace below; broad openings around the brace must be truly TRANSPARENT, never filled black. Keep the original rear/left/right three plates fitted, all four outer floor vertices visible and the rear vertex exposed. No opaque front plate, tiny hatch substitute or new lower platform.\nRetain crisp first-party cream/navy/grey industrial sprite materials and upper-left light. ONE whole isolated model on transparent background,1402x1122 framing with safe margins. No coupling, robot, craft, product, cargo, crates, tank, PV panel, spare machine, lit display, green/amber cue, text, symbols, arrows, labels, backdrop, ground or external shadow. Image1's proven thin footprint/camera always wins over Image2. True transparent background and real transparent front floor opening.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-partial-v2.png",
+  "original_sha256": "3cfc7c4c75cdea025743e7be84caeb8fa6aaade4f99f4487e77f8388c3775ab7",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

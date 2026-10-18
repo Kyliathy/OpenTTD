@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Blueprint-only camera trial retained; too shallow for actual native cells.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-blueprint-v3",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "This blueprint follows the extra-shallow construction guide literally; its1106x426floor is too shallow for native2:1 projection. Use the blueprint-specific .49guide, retaining original native tolerances.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-dock-construction-camera-v1.png",
+      "sha256": "d38a08e357b3532714700d4a58d3511c37cd8669997aa45076666d532c7ee930",
+      "role": "extra-shallow camera guide only"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original cyan construction blueprint sprite for OpenTTD.\nImage1 is the exact SHALLOW FLOOR GEOMETRY GUIDE ONLY. Use its very flat diamond floor angle, about1000px wide and380px high. Trace the same SHALLOW diamond shape in cyan. On a1280x1024 transparent canvas the four corners are around(640,370),(1140,560),(640,750),(140,560). Do not steepen or make a conventional taller isometric diamond.\nProduce a clean bold cyan wire blueprint: just the outer diamond perimeter and two inside grid lines connecting the midpoints of opposite sloping edges, dividing the floor into exactly four equal diamond tiles. One small low rectangular servicing cabinet wire outline in the rear tile, centred horizontally. Cabinet height only50px, width130px, it is a little equipment box. All cyan lines simple continuous fully opaque solid strokes about16px thick, no mesh, noise, thin transparent dithering, glow, fill or shading. All floor/cabinet interiors and the entire background genuinely transparent. At least100px outer transparent clearance. NO grey guide fill in final. No finished hardware, clamps, craft, symbols, words, labels, axes, shadows or extra equipment. ONE complete isolated fixed view. Match the supplied exceptionally shallow floor geometry exactly.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-blueprint-v3.png",
+  "original_sha256": "8f05e7b7544dcfcc74ed85bbdfb99ca72ba7f88140cbd35cc2f2f8218a6bfaf7",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

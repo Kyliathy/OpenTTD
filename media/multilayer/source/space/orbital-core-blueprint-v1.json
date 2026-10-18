@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Rejected construction source retained immutably.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-blueprint-v1",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "Floor vertices approximately(627,385),(1194,678),(627,985),(59,678) are too steep to preserve the accepted native corners and fit all nine64x64 cells under one uniform reduction; no bitmap correction is authorized.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "approved complete Core edit target"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.nucleus, fixed Core blueprint state for OpenTTD.\nInput image is the approved complete Core edit target. Create its INERT BLUEPRINT construction state, one single isolated view only. Keep the exact same shallow isometric camera, diamond footprint and its four corners, image framing, position and overall floor extent. Replace the solid floor with a thin cyan wire planning grid that outlines the same 3x3 diamond. Replace the command hub, both solar banks and front locker with thin cyan wire contours in their exact original locations; no opaque finished hardware, no solid filled floor, no machinery or delivered supplies. The blueprint must read clearly as an unbuilt plan, with broad transparent empty spaces between cyan wires. Modest crisp cyan strokes readable when reduced to a 192px-wide footprint. No glow or atmospheric effects. Keep the original shallow diamond slope, never turn it into a steep square. Use genuine transparent background including the gaps inside the wireframe. All wire corners and subject pixels must have at least 64 pixels of transparent clearance from the image edges. Do not add a docking craft, coupling, extra equipment, scene, words, labels, arrows, axes or separator frame. Preserve one full view as a separate transparent original, no multi-view sheet. Upper-left lighting where applicable; crisp game sprite source, no photorealism.",
+  "original": "media/multilayer/source/space/raw/orbital-core-blueprint-v1.png",
+  "original_sha256": "f77319d6de29f6d7a8afc2b7cefb1dbb393628b45746ce3cad8a8118b332f854",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

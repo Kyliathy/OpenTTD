@@ -5,6 +5,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BB, scoped Space contract validation.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups14BF/14BFB/14BFC, explicit native asteroid size/source policy.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13B, actual fixed orbital sites and distinct model16/17/21 source roles.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups60B-60C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
@@ -28,6 +29,7 @@ from tools.ground_station_contract import station_contract, validate_station_con
 from tools.ground_terminal_contract import terminal_contract, validate_terminal_contract
 from tools.ground_mine_contract import SELECTED as SELECTED_MINES, mine_contract, validate_mine_contract
 from tools.ground_processor_contract import SELECTED as SELECTED_PROCESSORS, processor_contract, validate_processor_contract
+from tools.orbital_art_contract import MODULE_LAYOUTS, module_contract, heavy_miner_contract, retained_robot_contract, hauler_contract, validate_orbital_contract
 ASSETS = ROOT / "media/multilayer/contracts"
 MANIFEST = ASSETS / "multilayer_sprite_manifest.json"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -90,7 +92,7 @@ def build_manifest():
         rows.append(mine)
     # Consumer ordinals follow the split plan index: tubes17 and geothermal18.
     # Native model IDs and all physical/state geometry retain their existing meaning.
-    # The nineteen model IDs match the public content catalogue; purchase previews are separate explicit assets.
+    # Preserve the original nineteen draft identities. The later actual heavy-miner role appends separately instead of repurposing construction robot16.
     for model in range(19):
         owner = 4 if model < 2 else 5 if model < 5 else 7 if model < 9 else 17 if model < 14 else 9 if model in (14, 18) else 10 if model == 15 else 11
         states = ["empty", "partial", "full", "service", "blocked"] if model not in (0, 1, 4, 16) else ["idle", "moving", "working", "blocked"]
@@ -286,6 +288,17 @@ def build_manifest():
                         [f"{material}_{column}" for material in ("soft", "mixed", "hard", "basalt") for column in columns])
         family["packed"]["namespace"] = "native_geology_append"
         rows.append(family)
+    # Native orbital sites have fixed saved footprints, not four invented orientations. Role corrections affect only still-planned source contracts and append21 after every existing reservation.
+    for family in rows:
+        if family["asset_id"] in MODULE_LAYOUTS:
+            family.update(module_contract(family["asset_id"]))
+        elif family["asset_id"] == "vehicle.model-16":
+            family.update(retained_robot_contract())
+        elif family["asset_id"] == "vehicle.model-17":
+            family.update(hauler_contract())
+    heavy = record("vehicle.model-21", 11, "vehicle", [], 2, (0, 0))
+    heavy.update(heavy_miner_contract())
+    rows.append(heavy)
     return {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md; geometry: src/table/sprites.h and docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md",
             "schema_version": 1, "handoff": "M0_contract_only", "direction_convention": "engine_viewport",
             "legacy": {"live_count": 66, "preserved_offsets": [0, 65], "unactivated_reserved_offsets": [66, 73],
@@ -337,6 +350,7 @@ def validate_manifest(document, selected_assets=None):
         mandatory = {"asset_id", "consumer", "directions", "frames", "states", "native_size", "footprint", "anchor", "source", "packed", "tile_variants", "preview"}
         if not mandatory.issubset(row):
             raise ValueError("missing mandatory field")
+        validate_orbital_contract(row)
         if row["asset_id"] in identities:
             raise ValueError("duplicate asset_id")
         identities.add(row["asset_id"])
@@ -505,7 +519,7 @@ def validate_manifest(document, selected_assets=None):
             # retain four real entrances. Saved riser access is not a rotation.
             fixed_layout = (row["asset_id"] in ("facility.earth-receiver", "facility.rock-receiver", "facility.utility-riser")
                             or row["asset_id"] in {f"mine.{resource}" for resource in SELECTED_MINES}
-                            or row["asset_id"] in SELECTED_PROCESSORS)
+                            or row["asset_id"] in SELECTED_PROCESSORS or row["asset_id"] in MODULE_LAYOUTS)
             platform = row["asset_id"] in ("facility.rail-station", "facility.tube-terminal", "facility.tube-interchange")
             # Truck-stop bays retain real entrance directions; through stops
             # add two distinct undirected native layouts rather than four
@@ -524,6 +538,7 @@ def validate_manifest(document, selected_assets=None):
         count += len(row["directions"]) * row["frames"] * len(row["states"]) * len(row["parts"]) * row["tile_variants"]
     required = {f"mine.{label}" for label in ("COAL", "IORE", "CORE", "BAUX", "SALT", "LITH", "NORE", "COBT", "RARE", "URAN")}
     required.update(f"vehicle.model-{model:02}" for model in range(19))
+    required.add("vehicle.model-21")
     required.update(("overlay.orbital-drop", "overlay.surface-collection", "solar.mirror", "facility.vent-powerhouse", "facility.mantle-forge"))
     if not required.issubset(all_ids):
         raise ValueError("missing required functional family")

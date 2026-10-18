@@ -1,0 +1,57 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.3. Explicit unchanged original glass material only; native processing retains its own electrical/unpowered progress and actual wait.",
+  "tool": "original_component_reuse_registration",
+  "asset_id": "module.processor",
+  "candidate": "orbital-processor-status-glass-v1",
+  "state": "blocked",
+  "phase": "blocked",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+    "sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100"
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "original_generation_receipt": {
+    "path": "media/multilayer/source/space/orbital-core-blocked-glass-v1.json",
+    "sha256": "978a56089401ba8e9cb145479b758c7ec2c7f46da6e8c97e77815f50e13004be"
+  },
+  "reused_original_key": "orbital-core-blocked-glass-v1",
+  "native_registration": {
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      299,
+      518,
+      955,
+      731
+    ],
+    "uniform_scale": [
+      1,
+      192
+    ],
+    "source_reference": [
+      627,
+      624
+    ],
+    "native_contact": [
+      125,
+      110
+    ],
+    "native_bounds": [
+      122,
+      108,
+      128,
+      113
+    ]
+  },
+  "native_contact": [
+    125,
+    110
+  ]
+}

@@ -4,6 +4,7 @@
 # Orbital Core activation and sole packet stock: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1.
 # Contained Core service and shared electrical settlement: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B.
 # Native processor work, independent copied records and ordinary files: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
+# Read-only orbital source selection: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
 # Paid processor construction/resource routes: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group11.
 # Explicit paid-hauler packet/refit boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12.
 # Actual processor product returns and linked Surface collection: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12B.
@@ -17,6 +18,11 @@ add_test_files(
     space_preview.cpp
     # Final read-only native Space art: r2mlvs10-asteroids-and-mining-probes.md Group14BG.
     space_sprite.cpp
+    # Original craft work/load/service owner isolation: r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+    orbital_sprite_craft.cpp
+    orbital_sprite_module.cpp
+    # Paid ordinary construction milestones: r2mlvs11-orbital-stations-and-manufacturing.md Group13L.
+    orbital_art_native.cpp
     # Exact native population/body/probe cost boundaries: r2mlvs10-asteroids-and-mining-probes.md Group21.
     asteroid_work_costs-1.cpp
     asteroid_work_costs-2.cpp
@@ -332,6 +338,19 @@ add_test_files(
     mine_fixture.h
     mine_production_fixture.h
     multilayer_bootstrap.cpp
+    # Pure paid Surface order/actual station boundary: r2mlvs6-mines-and-resource-chains.md Group13C.1.
+    surface_supply.cpp
+    # Native non-paying purpose and original packet custody: r2mlvs6-mines-and-resource-chains.md Group13CB.
+    surface_supply_custody.cpp
+    # Detached bounded order/receipt validation: r2mlvs6-mines-and-resource-chains.md Group13CCB.
+    surface_supply_order.cpp
+    # Shared actual command-created component station: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_fixture.h
+    # Actual native restore/codec/copy references, no procurement: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_owner.cpp
+    surface_supply_order_wire.cpp
+    # Complete native file/preview boundaries over retained worlds: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_native.cpp
     multilayer_utility.cpp
     # Canonical tube registry boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
     transport_tube_registry.cpp

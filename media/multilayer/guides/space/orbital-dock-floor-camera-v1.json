@@ -1,0 +1,53 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.1. Plain shallow camera guide only; actual output must satisfy native floor and four cell canvases.",
+  "guide": "media/multilayer/guides/space/orbital-dock-floor-camera-v1.png",
+  "sha256": "8f99096feda52991924e876649d29afdd32311f79016c7efa8eebea27488e9be",
+  "canvas": [
+    1280,
+    1024
+  ],
+  "floor_corners": [
+    [
+      640,
+      330
+    ],
+    [
+      1140,
+      560
+    ],
+    [
+      640,
+      790
+    ],
+    [
+      140,
+      560
+    ]
+  ],
+  "native_floor_corners": [
+    [
+      96,
+      48
+    ],
+    [
+      160,
+      80
+    ],
+    [
+      96,
+      112
+    ],
+    [
+      32,
+      80
+    ]
+  ],
+  "native_canvas": [
+    192,
+    160
+  ],
+  "native_anchor": [
+    -31,
+    -33
+  ]
+}

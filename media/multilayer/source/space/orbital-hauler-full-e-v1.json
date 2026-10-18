@@ -1,0 +1,61 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66B.3. Immutable isolated E cargo-only original replaces the earlier unaccepted3px-clearance sheet view; no source pixel repairs or flat camera transforms.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-full-e-v1",
+  "tool": "built-in image_gen",
+  "state": "full",
+  "directions": [
+    "E"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "exact three-cassette physical design/E camera reference only",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-full-n-ne-e-se-v1.png",
+      "sha256": "febfa166f1034b8a14dd0977da7b6bfe6d6a5cc6e35c27a3be3b711b5cc23a44"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD orbital cargo hauler17 FULL cargo-only E-side component, ONE ISOLATED VIEW.\nImage1 is the approved cargo design/camera reference. Reproduce ONLY its bottom-left E-view row as one isolated complete cutout, with MUCH MORE empty transparent clearance. Exactly THREE identical low sealed sand/tan cassettes in one straight HORIZONTAL row LEFT to RIGHT, no stacking, small true transparent gaps, the same broad muted ochre band, graphite corner caps, small handles/latches. All three cases same physical dimensions and same camera, no perspective size changes. Same low orthographic2:1 elevation26.565degrees, upper-left SCREEN light, original detailed volumetric industrial game art. The row's imaginary forward end points RIGHT. Do not rotate/mirror the old bitmap: draw this genuine side camera of those same3physical cases.\nThe whole row centered in a large landscape TRUE TRANSPARENT canvas, maximum70percent of canvas width and35percent of canvas height. At least100px true transparent margin on every side. Keep the entire row and every faint edge safely inside the image. No magenta frames, checkerboard, colored haze, white/gray backdrop, ground plane, castshadow or glow.\nNO spacecraft, deck, rails, floor, display, nozzle, pallet, chassis, supports, extra cargo, text, labels, logo, watermark or arrows. One original E camera, exactly3identical low cases only; preserve neutral commodity-free cargo identity.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-1c140f81-1251-43d2-96ad-3c7c54eec1ec.png",
+  "actual_camera_mapping": [
+    {
+      "requested": "E",
+      "actual": "E",
+      "evidence": "Three identical low cases horizontal in one E-side row, top surfaces and near long faces visible, uniform physical case size."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-full-e-v1.png",
+  "sha256": "61efacb5bd3aa483fb13dbfda96bd541b42c50e850809276616623555f89c6ff",
+  "actual_size": [
+    1942,
+    809
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "E": {
+        "crop_box": [
+          0,
+          0,
+          1942,
+          809
+        ],
+        "subject_bbox_in_crop": [
+          239,
+          298,
+          1703,
+          575
+        ],
+        "minimum_transparent_clearance": 234,
+        "opaque_separator_pixels": 0
+      }
+    }
+  }
+}

@@ -5,9 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station.cpp Station ownership, catchment and layer-local spread. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
+/** @file station.cpp Station ownership, catchment and layer-local spread. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCD paid pending receiver loss. */
 
 #include "stdafx.h"
+#include "surface_supply_order_runtime.h"
 #include "launch_center.h"
 #include "launch_operations.h"
 #include "core/flatset_type.hpp"
@@ -94,6 +95,7 @@ Station::~Station()
 		}
 		return;
 	}
+	ReconcileSurfaceSupplyStation(this->index, true); // Ordinary deletion refunds only still-unshipped purchases; pool/world cleanup never credits the discarded world.
 
 	while (!this->loading_vehicles.empty()) {
 		this->loading_vehicles.front()->LeaveStation();

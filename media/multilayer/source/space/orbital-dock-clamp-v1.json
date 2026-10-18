@@ -1,0 +1,49 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.1. One genuine original clamp, two fixed physical instances at the actual Dock's existing floor-edge contacts.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-clamp-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_clamp_pending_base_review",
+  "reference_inputs": [],
+  "prompt": "Use case: stylized-concept.\nAsset: module.dock, ONE isolated original small docking clamp component for a fixed OpenTTD orbital platform.\nCreate a compact low U-shaped cream/silver mechanical receiving clamp, in shallow isometric view, with its open dark receiver facing toward the lower-right of the image. A broad dark recessed central cavity, two short chunky cream jaws/cheeks and a very thin graphite base. The near cheek at the lower-left is clearly separate from the far cheek at upper-right; leave the receiver visually open so a later visiting craft can be drawn between back hardware and the near cheek. No enclosed hangar, roof, craft, robot, tall arm, crane or platform. This is just one small piece of mounting hardware, not a vehicle or building. Crisp restrained retro industrial sprite source, cream metal with graphite/navy joints, upper-left light. Entire component roughly700px wide and400px high on a square1254px transparent canvas, centred with at least200px transparent clearance on all sides. Keep the whole clamp, its base and all jaws completely inside the canvas. Real transparent background, no external floor shadow, scene, glow, labels, text, arrows, axes or separator frame. ONE genuine isolated view only.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-clamp-v1.png",
+  "native_registration": {
+    "crop_box": [
+      0,
+      0,
+      1659,
+      948
+    ],
+    "measured_subject_bbox_in_crop": [
+      453,
+      192,
+      1255,
+      754
+    ],
+    "uniform_scale": [
+      1,
+      112
+    ],
+    "source_reference": [
+      1344,
+      784
+    ],
+    "native_relative_bounds": [
+      -8,
+      -6,
+      0,
+      0
+    ],
+    "mount_reference_semantics": "Virtual lower-right floor-edge reference immediately beyond the whole hardware; every physical original pixel stays inboard. Receiver and near cheek are elevated hardware, not new world positions."
+  },
+  "original_sha256": "ecda810a68e43cd1e065b6d5deeb5bdffd88135236e3e9e6b5697700615d2c46",
+  "image_size": [
+    1659,
+    948
+  ]
+}

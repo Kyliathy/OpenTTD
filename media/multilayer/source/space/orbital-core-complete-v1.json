@@ -1,0 +1,21 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Retained first Core generation; source selection and native integration remain pending.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_berth_position",
+  "reference_inputs": [],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD orbital station CORE, module.nucleus, complete static base model. One fixed 2:1 isometric view, not multiple cameras. Transparent isolated game-art cutout, no space backdrop. Original artwork for a 3x3 world-tile station footprint.\nMake one low modular orbital command platform with a square floor seen as a 2:1 diamond, 3 equal tiles along each world edge. Restrained pale ivory ceramic, dark gunmetal structure, muted teal panels and dark navy solar cells, readable at a whole native footprint of 192x96 pixels. Crisp compact transport-game sprite rendering with light from upper-left, no perspective convergence, no cast ground shadow.\nPrecisely one low central octagonal command hub on the middle tile, with an ivory roof, narrow muted teal belt and one dark glass control strip. Height must stay low: at native size no more than 20px vertically above its floor. Exactly one paired solar-panel assembly: two broad flat rectangular navy panel banks lying low on the rear-left and rear-right deck areas, wholly inside the floor boundary. Exactly one shallow integrated supply locker on the nearer left portion of the deck. Simple grey structural beams and recessed conduits tie the one platform together. These are fixed hardware, not carried cargo.\nOne and only one small open service coupling at the FRONT-RIGHT diagonal edge near its rightmost tip, aimed into empty space down-right. It is a shallow dark docking mouth with two short ivory cheeks, not a hangar or extra platform. Its floor contact is one-sixth of the distance from the diamond's rightmost vertex toward its bottom vertex. Keep that approach clear. No spaceship, no contained hull, no robots, no people, no crane, no thrusters, no flame, no extra berth, no tall dish/mast, no floating satellite props. Low recessed capped connection fittings may sit flush along the other floor edges; nothing extends outside the square floor.\nSAFE BORDERED source layout: request1536x1024 RGBA. Exactly one straight opaque pure-magenta #FF00FF rectangular separator frame about6px thick from(24,24) to(1512,1000). It is outside the artwork. Everything outside the model and the frame must be truly transparent. The whole single model stays inside(80,80)-(1456,944), with at least32px transparent clearance to the frame. No subject pixels cross the frame; no labels, numbers, guide marks or text.\nRequested floor registration for this single view: diamond top(768,280), right(1344,568), bottom(768,856), left(192,568). Preserve the 2:1 floor and keep all hardware inside it, with low machinery rising upward from the deck. The entire floor perimeter and all four corners must remain visible. Subtle natural 3x3 deck seams are acceptable, but no drawn grid overlay. Keep the floor edge thin; don't add legs or a deep plinth. Native conversion will be a uniform reduction, so proportions, the one berth and the compact complete silhouette matter more than tiny details.",
+  "rejection": "The single berth sits too far toward the centre of the front-right edge; actual native approach requires it near the right vertex. The requested separator frame is present at measured coordinates rather than the exact requested ones; background RGB is transparent and must not be mistaken for painted opaque haze. Preserve immutable output; obtain a genuine isolated berth correction, never alpha-key or move source pixels in code.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v1.png",
+  "original_sha256": "4bbdcb89aa202664dd083009c7732bde28e78e51d7c2c3c2b038130256877021",
+  "image_size": [
+    1536,
+    1024
+  ]
+}

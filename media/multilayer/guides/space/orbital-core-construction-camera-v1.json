@@ -1,0 +1,28 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Plain camera guide only; never source art or native contract.",
+  "guide": "media/multilayer/guides/space/orbital-core-construction-camera-v1.png",
+  "sha256": "bc06f7220a239e86387974e53696b742e73bb63f632fdc607896edb518d16739",
+  "canvas": [
+    1280,
+    1024
+  ],
+  "floor_corners": [
+    [
+      640,
+      390
+    ],
+    [
+      1140,
+      580
+    ],
+    [
+      640,
+      770
+    ],
+    [
+      140,
+      580
+    ]
+  ],
+  "purpose": "Stronger shallow camera hint for generator after two rejected partial originals. Actual output still needs the original native floor/cell checks."
+}

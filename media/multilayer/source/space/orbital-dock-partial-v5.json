@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Genuine complete partial-construction original; one uniform reduction preserves all native cell bounds and the original2px floor tolerance.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-partial-v5",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_body_pending_full_state_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-partial-v4.png",
+      "sha256": "1172b5be1611fa71f690d8aaa1288d3524b919ae452ae808faf15a74282c9b9d",
+      "role": "partial-construction edit target; enlarge transparent framing only"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nInput is the target original partially constructed orbital service Dock. Change ONLY framing: zoom out uniformly so the exact same complete model occupies only75percent of its present image width and height, centred in a generously enlarged TRANSPARENT margin. Keep the same shallow camera and whole floor proportions, three fitted deck panels, one missing front panel with X braces, single small open rear cabinet, materials and lighting. All four floor corners, all thin perimeter metal and every subject pixel must be visible. Leave at least150px transparent border on left and right and generous top/bottom clearance. Do not let the diamond expand to fill the image. Do not steepen camera or alter the machine. True transparent background AND true transparent front opening. No added objects, shadows, text, labels, guides or background. ONE isolated view.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-partial-v5.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      31,
+      296,
+      1371,
+      1007
+    ],
+    "uniform_scale": [
+      231,
+      2500
+    ],
+    "source_reference": [
+      701,
+      323
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        300
+      ],
+      [
+        1367,
+        647
+      ],
+      [
+        701,
+        1003
+      ],
+      [
+        35,
+        647
+      ]
+    ]
+  },
+  "original_sha256": "907386fe3ecc3f8f7b13bfef607b370e599feab94c99e9373c9eab16e90161cc",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Pure geometric drawing for the native fixed3x3 footprint and original single approach. No sprite pixels or gameplay authority.",
+  "path": "media/multilayer/guides/space/orbital-core-berth-geometry-v1.png",
+  "sha256": "f85a6eb51da2b8b60660805b505cbe6aeae7b76b69f9633f3ab09436e83a00ae",
+  "floor_corners": [
+    [
+      768,
+      214
+    ],
+    [
+      1440,
+      550
+    ],
+    [
+      768,
+      886
+    ],
+    [
+      96,
+      550
+    ]
+  ],
+  "scale_to_native": [
+    1,
+    7
+  ],
+  "floor_origin": [
+    768,
+    214
+  ],
+  "coupling": [
+    1328,
+    606
+  ],
+  "approach": [
+    1440,
+    662
+  ],
+  "original_pixels_used": false
+}

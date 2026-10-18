@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.1. Plain exact2:1 floor/camera guide only, never native sprite artwork.",
+  "image": {
+    "path": "media/multilayer/guides/space/orbital-assembly-floor-camera-v1.png",
+    "sha256": "dc184a1dc17832e4b20e40dd0077836d3fb9f10e81d870fc5bfe06cea547ac82"
+  },
+  "canvas": [
+    1402,
+    1122
+  ],
+  "floor_corners": [
+    [
+      701,
+      340
+    ],
+    [
+      1253,
+      616
+    ],
+    [
+      701,
+      892
+    ],
+    [
+      149,
+      616
+    ]
+  ],
+  "source_floor_ratio": 2,
+  "native_artwork": false
+}

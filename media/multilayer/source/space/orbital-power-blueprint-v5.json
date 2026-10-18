@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Genuine readable four-tile Power planning original with two PV contours and one control box; no art-local alpha or line repair.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-blueprint-v5",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_blueprint_pending_full_source_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-blueprint-v4.png",
+      "sha256": "fefb462ad8a23babf730868c8c2c05ead1ae5522dd5db2c7cfeb7b83c64ff607",
+      "role": "Power planning edit target; remove only unrequested rear axis"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 is the target Power blueprint. Make ONE small correction only: REMOVE THE STRAIGHT VERTICAL CYAN SEGMENT connecting the BACK/TOP floor vertex at approximately(701,344) downward to the top of the small control-box cube at approximately(701,510). That rear-to-front axis segment is not part of this four-tile floor grid. Replace only that segment with genuine transparency. Keep the back outer floor corner and the complete little cube.\nPreserve absolutely everything else: outer shallow diamond, the TWO correct diagonal midpoint-to-midpoint floor lines crossing in X, both left/right panel rectangles, cube, cyan line weight, camera, full framing and all transparent interiors. No vertical central axis above or below the cube. No additional edits, objects, lines, fills, labels, text or shadows. ONE complete isolated fixed view on true transparency.",
+  "original": "media/multilayer/source/space/raw/orbital-power-blueprint-v5.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      148,
+      335,
+      1256,
+      896
+    ],
+    "uniform_scale": [
+      227,
+      2000
+    ],
+    "source_reference": [
+      701,
+      344
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        344
+      ],
+      [
+        1246,
+        615
+      ],
+      [
+        701,
+        889
+      ],
+      [
+        158,
+        615
+      ]
+    ]
+  },
+  "original_sha256": "d2510a608693946b3705cece9e5299be0e0bdb73d76f8f38b3577e743094bc1e",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66B.3. Immutable remaining four original cargo cameras; measured actual frame locations permit complete ordinary rectangular extraction without modifying source alpha.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-full-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "full",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "exact three-cassette physical design and first-camera reference; new physical opposite cameras",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-full-n-ne-e-se-v1.png",
+      "sha256": "febfa166f1034b8a14dd0977da7b6bfe6d6a5cc6e35c27a3be3b711b5cc23a44"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD orbital cargo hauler17 FULL neutral freight COMPONENTS ONLY, remaining four genuine cameras S/SW/W/NW.\nImage1 is the exact approved physical CARGO DESIGN and first-camera reference, not a bitmap to transform. Produce four genuinely new camera views of those same three low sealed cassettes. NO spacecraft, deck, rails, head, screen, nozzle, chassis, pallet or floor.\n\nEach panel: exactly THREE identical pale sand/tan low rectangular cassettes in one straight END-TO-END row with two small transparent gaps, same graphite corner bands, broad muted ochre securing band and small latch details. Cases are equal physical dimensions, no perspective size change, no stacking. Each cassette width across the row about twice its short length along the row; total row length about twice its width, case height about one third of its width. Same original neutral cargo identity, no commodity symbols/units. Orthographic2:1 elevated26.565degrees, fixed upper-left SCREEN light, crisp detailed volumetric industrial game art for native64x48 indexed sprites.\nRequested genuine cameras:\nTOP LEFT S: row recedes vertically UP; its imaginary forward end is LOWER/NEAR, opposite the N reference. Three cases in sequence.\nTOP RIGHT SW: row from LOWER-LEFT forward/NEAR to UPPER-RIGHT rear/FAR, physical opposite of NE.\nBOTTOM LEFT W: HORIZONTAL row LEFT-to-RIGHT, imaginary forward end LEFT, physical opposite E.\nBOTTOM RIGHT NW: row from UPPER-LEFT forward/FAR to LOWER-RIGHT rear/NEAR, physical opposite SE.\nDo not reuse, rotate or mirror a flat picture. Reconstruct these real physical camera views; preserve materials and equipment.\n\nSAFE BORDERED1536x1024 TRUE-TRANSPARENT2x2 source sheet with four straight opaque #FF00FF magenta6px exterior separator frames at S(24,24)-(744,488),SW(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000). Leave generous clearance. Every complete cargo row must remain strictly inside these SAFER subject rectangles: S[112,80,656,416], SW[880,80,1424,416], W[112,592,656,928], NW[880,592,1424,928]. W row maximum544px width, not700px. Use one physical scale across all4panels; shrink all rows uniformly if needed. Same case size as the reference's physical design, safe framing has priority over filling the panel. All faint edges remain40px+ from every frame.\nTrue alpha0 in background/margins/gutters and gaps, no magenta haze, checkerboard, gray/white fill, castshadow, colored fringe, glow, text, numbers, labels, logos, arrows or other props. Cargo-only complete cutouts, exactly3cases each.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-58913d8a-a7e3-4661-b632-0406f81fe282.png",
+  "actual_camera_mapping": [
+    {
+      "requested": "S",
+      "actual": "S",
+      "evidence": "Three low symmetric cases along vertical row, forward end lower/near."
+    },
+    {
+      "requested": "SW",
+      "actual": "SW",
+      "evidence": "Three low cases, axis from lower-left forward to upper-right rear."
+    },
+    {
+      "requested": "W",
+      "actual": "W",
+      "evidence": "Three horizontal cases; forward axis left, body symmetric. Complete row fits the measured frame-free window with16px minimum clearance."
+    },
+    {
+      "requested": "NW",
+      "actual": "NW",
+      "evidence": "Three low cases, upper-left forward to lower-right rear."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-full-s-sw-w-nw-v1.png",
+  "sha256": "12403eb97ebe65c0b5cd07d71988123e53e7e75c649b17fb597e224236454dcf",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          248,
+          32,
+          481,
+          435
+        ],
+        "minimum_transparent_clearance": 21,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          68,
+          39,
+          656,
+          437
+        ],
+        "minimum_transparent_clearance": 19,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          17,
+          536,
+          751,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          16,
+          161,
+          717,
+          301
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          536,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          26,
+          23,
+          637,
+          430
+        ],
+        "minimum_transparent_clearance": 23,
+        "opaque_separator_pixels": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.2. Untouched ordinary SW source rectangle as ImageGen layout-correction target only. Its3pxclearance fails selected-source approval; no pixel/alpha edits/resampling or source coverage.",
+  "source": {
+    "path": "media/multilayer/source/space/raw/orbital-hauler-empty-s-sw-w-nw-v1.png",
+    "sha256": "90f4b061b515942ab50a38ed985a2bb04771144a0df90ac40d073a28fc1a0bce"
+  },
+  "source_candidate": "orbital-hauler-empty-s-sw-w-nw-v1",
+  "direction": "SW",
+  "crop_box": [
+    800,
+    32,
+    1504,
+    500
+  ],
+  "output": {
+    "path": "media/multilayer/guides/space/orbital-hauler-sw-original-reference.png",
+    "sha256": "edacf0b44d35d2e557dad2d7cb0aed3dcace75d64fceb9f4266244e14bbc63c9"
+  },
+  "size": [
+    704,
+    468
+  ],
+  "rgba_pixels_identical_to_original_rectangle": true,
+  "purpose": "Correct physical SW body is complete but unsafe near its frame. Built-in ImageGen must reframe it into truealpha generous margins; these raw pixels never supply selected native source."
+}

@@ -14,6 +14,7 @@
 #include "tile_type.h"
 #include "map_type.h"
 #include "map_layer_type.h"
+#include <optional>
 #include "direction_func.h"
 
 /**
@@ -193,9 +194,13 @@ public:
 	}
 };
 
-/**
- * Size related data of the map.
- */
+/** Explicit packed-storage position decoded from one supplied geometry; it carries no gameplay layer permission. */
+struct StoredMapTilePosition {
+	uint16_t x = 0, y = 0; ///< Local coordinates within the original packed plane.
+	uint8_t plane = 0; ///< Storage plane ordinal; MultiLayerMap owns its gameplay meaning.
+};
+
+/** Native packed map storage and geometry; MultiLayerMap separately owns layer semantics. */
 struct Map {
 private:
 	/**
@@ -242,6 +247,15 @@ public:
 	 * @param layer_count How many layers to store. Live games store MAX_MAP_LAYERS; the default of 1 serves tests.
 	 */
 	static void Allocate(uint size_x, uint size_y, uint layer_count = 1);
+	/** Decode an original packed index against explicit same-file dimensions without consulting or allocating the running map.
+	 * @param tile Original serialized packed index.
+	 * @param width Native plane width supplied by the candidate's map owner.
+	 * @param height Native plane height supplied by the candidate's map owner.
+	 * @param planes Original stored plane count; no current camera/map value is substituted.
+	 * @return Original local coordinates/storage plane, or no value for invalid geometry/index.
+	 * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC.
+	 */
+	static std::optional<StoredMapTilePosition> DecodeStoredTile(TileIndex tile, uint32_t width, uint32_t height, uint8_t planes);
 	static void CountLandTiles();
 
 	/**

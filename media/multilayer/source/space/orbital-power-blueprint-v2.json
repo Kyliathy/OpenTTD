@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Rejected mesh-heavy blueprint edit retained immutably; no alpha repair is allowed.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-blueprint-v2",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_noisy_planning_mesh",
+  "rejection": "The edit adds scattered filled cyan patches and noisy mesh in nominally open planning interiors instead of the requested simple opaque wire contours. Generate a fresh schematic from the floor guide.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-blueprint-v1.png",
+      "sha256": "a70360ef43f95927d2d2fc1e743c222ff15b2f29ded05890e3e9102731dcd431",
+      "role": "wire-readability edit target only"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 is the Power blueprint edit target. Preserve its exact shallow floor camera, footprint, all four floor corners, full image framing, TWO panel-bank locations and ONE little control-box location. Change ONLY cyan wire rendering to survive tiny native scale:\nReplace every fine noisy/dithered contour with CLEAN SIMPLE CONTINUOUS FULLY OPAQUE bright cyan strokes about24source pixels thick. The floor is just one outer diamond and two interior diagonal lines making exactly four tiles, no vertical rear-to-front axis. Each PV bank is a simple bold four-sided rectangular wire outline on simplified low support outlines. The one control box is a simple bold open wire cube. Omit tiny fasteners, inner leg cavities, fine mesh and scratches. Use solid flat cyan at full opacity, crisp edges, no glow, haze, texture, dots or transparency within the strokes.\nInteriors and background stay genuinely transparent with no fills. All whole equipment and corners remain visible inside the current generous margins. Do not steepen the floor, enlarge or add equipment, add finished cells, coupling, cargo, labels, symbols, text or shadows. ONE complete isolated fixed view. Native readability of unbroken physical contours is essential.",
+  "original": "media/multilayer/source/space/raw/orbital-power-blueprint-v2.png",
+  "original_sha256": "386183055cdd2fa723801152398c9451733085538f541a0fbf093a42661dbad6",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

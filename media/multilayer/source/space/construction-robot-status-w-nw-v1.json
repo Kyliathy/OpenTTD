@@ -1,0 +1,95 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.3b. Exact genuine W/NW original-display correction from untouched physical source close-ups. No bitmap rotation/mirroring or source alpha edits.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-status-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "status_components",
+  "directions": [
+    "W",
+    "NW"
+  ],
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "position": "left"
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "position": "middle"
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "position": "right"
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_camera_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Exact original W physical display projection, ordinary untouched source rectangle",
+      "path": "media/multilayer/guides/space/construction-robot-w-display-original-reference.png",
+      "sha256": "c121dbf46c4ea77d1789b7d5388625a45a8279fd9e2656a63213b18dd035e9b8"
+    },
+    {
+      "role": "Exact original NW physical display projection, ordinary untouched source rectangle",
+      "path": "media/multilayer/guides/space/construction-robot-nw-display-original-reference.png",
+      "sha256": "b17aa314c3498bc8fa667a6d865f90ec8e78ad105b1665e8dba57e23352aa04f"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD robot16 ORIGINAL ROOF DISPLAY status components, corrected genuine W and NW.\nInput1 is an EXACT UNTOUCHED close-up of its approved W display. Its long screen edges RISE TO THE RIGHT: lower-left to upper-right, not descending. Navy face is a narrow sloped parallelogram on the original ivory roof. Input2 is an EXACT UNTOUCHED close-up of the approved NW display. Its long face edges also RISE TO THE RIGHT, a broad low diamond/parallelogram in the genuine NW projection. These two close-ups are the physical geometry authority. Keep those real camera projections and upper-left SCREEN illumination. Do not use the wrong clockwise/down-right slope from an E/NE view. Never flat-flip/rotate a bitmap: render the same original physical face from its approved W/NW camera with correct light/edge thickness.\nRender ONLY each original flat navy display and its existing narrow ivory edge, no surrounding roof/hull, extra screws/dots/LEDs/housing or new hardware. Exactly SIX separate cutouts in TWO ROWS of THREE. TOP ROW genuine W geometry from input1, BOTTOM ROW genuine NW geometry from input2. Each row LEFT blocked with one broad short AMBER bar; MIDDLE serviceA with one broad bright CYAN bar at the LOWER-LEFT end of the existing face, other end dark; RIGHT serviceB with CYAN at the OPPOSITE UPPER-RIGHT end, lower-left now dark. Same physical display/frame/aspect/position/projection in all3states of each row. True different source illumination, no work or moving/opened equipment. Bars confined to the existing navy face, crisp about45-60px long and20px thick, no glow/halo/extra indicator dot/text/symbols.\n1536x1024 TRUE-TRANSPARENT sheet. One pure-magenta6px exterior rectangle per row: W(24,24)-(1512,488); NW(24,536)-(1512,1000). Centers top(256,256),(768,256),(1280,256); bottom(256,768),(768,768),(1280,768). Each COMPLETE display max240px wide/160px tall, comfortably within its own safe rectangle x80..432/592..944/1104..1456 with y80..432 forW or592..944 forNW. At least40px true-transparent clearance around each subject and all frames. Small separated complete components, no connected triplets, clipping or overlap.\nEmpty background/interiors/margins/gutters actual alpha=0, no purple haze/checkerboard/gray-white fill/background/castshadow. Magenta ONLY exterior frames. No labels/numbers/arrows/watermark/otherprops. Crucial: correct original W and NW display faces slope from LOWER LEFT TO UPPER RIGHT, keeping original physical proportions, fixed upper-left light and one identical original display per actual state.",
+  "path": "media/multilayer/source/space/raw/construction-robot-status-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-e3388f85-f1cd-4a63-a95f-ce6335a236bb.png",
+  "sha256": "a7aa9a7de12d8a6766d34398d6fb1d8fa9c851206d7972af8a1853ba0047aaf3",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "W": {
+        "crop_box": [
+          48,
+          112,
+          1488,
+          472
+        ],
+        "subject_bbox_in_crop": [
+          69,
+          43,
+          1373,
+          336
+        ],
+        "minimum_transparent_clearance": 24,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          48,
+          552,
+          1488,
+          904
+        ],
+        "subject_bbox_in_crop": [
+          17,
+          44,
+          1423,
+          302
+        ],
+        "minimum_transparent_clearance": 17,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "camera": "Both physical display long edges rise to the right, matching actual W/NW originals; fixed screen upper-left light and original navy-face geometry.",
+    "part_policy": "Ordinary central original navy-face/bar rectangles, uniformly registered to frozen original native screen masks. No source/background repair or original body/opacity edit."
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Genuine blueprint original; one uniform measured native registration.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-blueprint-v2",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "native_geometry_verified_pending_state_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-blueprint-v1.png",
+      "sha256": "f77319d6de29f6d7a8afc2b7cefb1dbb393628b45746ce3cad8a8118b332f854",
+      "role": "rejected steep blueprint edit target; reference ancestry does not approve its original native geometry"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+      "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b",
+      "role": "camera-only shallow generation reference"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.nucleus, ONE isolated Core blueprint original, fixed view.\nInput1 is the rejected cyan wire blueprint EDIT TARGET. Input2 is a SHALLOW DIAMOND CAMERA GUIDE ONLY, not artwork. Correct the blueprint by genuinely rerendering its camera to match the shallower diamond of input2. The current floor is too steep! Target full floor diamond width about960 pixels, total diamond height440 pixels (not600). On a1254 square canvas, floor corners approximately(627,440),(1107,660),(627,880),(147,660). Keep exactly one octagonal hub outline, two flat PV bank outlines and one shallow locker outline, in the same relative locations. All geometry must be uniformly rendered with this shallow camera; retain full3x3 cyan floor planning grid. Only thin crisp cyan wire contours with broad transparent gaps, no filled floor or finished hardware, no glow, no props or coupling. At least100pixels transparent clearance to image edges. Transparent background, including inside the floor and hub wires. No text, labels, separator frame, arrows or axes. This is an inert unbuilt planning overlay, never a finished physical station. Preserve one separate complete view; do not make a sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-core-blueprint-v2.png",
+  "native_registration": {
+    "canvas": [
+      256,
+      192
+    ],
+    "native_reference": [
+      128,
+      64
+    ],
+    "native_floor_corners": [
+      [
+        128,
+        64
+      ],
+      [
+        224,
+        112
+      ],
+      [
+        128,
+        160
+      ],
+      [
+        32,
+        112
+      ]
+    ],
+    "native_approach": [
+      224,
+      128
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      27,
+      393,
+      1228,
+      1013
+    ],
+    "uniform_scale": [
+      393,
+      2500
+    ],
+    "source_reference": [
+      627,
+      404
+    ],
+    "source_floor_corners": [
+      [
+        628,
+        397
+      ],
+      [
+        1222,
+        695
+      ],
+      [
+        622,
+        1009
+      ],
+      [
+        32,
+        694
+      ]
+    ]
+  },
+  "original_sha256": "b31b04cd68bdaa15c5b935917ffd12277a5dd13347172a5cc3b51370205dadf1",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

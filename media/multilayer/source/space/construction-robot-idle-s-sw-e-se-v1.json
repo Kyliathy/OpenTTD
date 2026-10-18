@@ -1,0 +1,138 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.1. Exact new-model built-in request; actual physical output cameras are S/SW/E/SE, retained honestly despite the first two requested headings. Source/native selection remains a separate gate.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-s-sw-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "S",
+    "SW",
+    "E",
+    "SE"
+  ],
+  "requested_directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "actual_camera_mapping": [
+    {
+      "panel": 0,
+      "requested": "N",
+      "actual": "S",
+      "evidence": "Front passive coupling/grippers down, rear central nozzle up"
+    },
+    {
+      "panel": 1,
+      "requested": "NE",
+      "actual": "SW",
+      "evidence": "Front coupling/grippers down-left, rear central nozzle up-right"
+    },
+    {
+      "panel": 2,
+      "requested": "E",
+      "actual": "E",
+      "evidence": "Front coupling/grippers right, rear nozzle left"
+    },
+    {
+      "panel": 3,
+      "requested": "SE",
+      "actual": "SE",
+      "evidence": "Front coupling/grippers down-right, rear nozzle up-left"
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [],
+  "prompt": "Use case: stylized-concept.\nAsset: original OpenTTD vehicle.model-16 RETAINED HEAVY CONSTRUCTION ROBOT, IDLE, source geometry selection. This is a distinct cargo-less engineering robot, not a mining craft and not the material-carrying construction probe. Author a single consistent physical model in four genuine isometric engine views.\nDesign: a compact broad low PENTAGONAL closed central engineering hull with pale ivory ceramic armor over gunmetal steel, small restrained burnt-orange joint plates, exactly TWO sturdy articulated manipulator arms folded close along its left and right sides, each ending in one small closed two-jaw gripper. Arms and wrists are at rest. One short closed blank coupling flange on its front, no drill or cutter. Exactly ONE compact central cylindrical rear maneuvering nozzle, unlit. One small flat dark-navy rectangular diagnostic display on the original upper hull face, unlit and clearly visible in the genuine views. No cargo bed, open cradle, hopper, ore, crates, carried materials, solar wings, extra booms, crew, cockpit, weapons or duplicated tools. The robot has no cargo capacity and no active construction work in this idle source: no welding beam, sparks, work motion or service equipment. Same equipment inventory, proportions and placement in every physical orientation.\nStyle: original crisp detailed volumetric industrial isometric game machinery, orthographic elevated2:1 presentation, upper-left SCREEN lighting fixed across headings, clear metal/ceramic surfaces and coherent native silhouette. Designed to convert cleanly to a64x48 indexed DOS-palette vehicle, public anchor(-32,-32). Native readability takes priority over micro-detail. No company-colored panels or animated palette effects. No ground plane, cast shadow, scene backdrop or environment.\nCreate a SAFE BORDERED1536x1024 TRUE-TRANSPARENT source sheet,2x2 grid with four genuine directional cameras of this SAME robot: TOP LEFT N front/coupling and folded wrists point UP, rear nozzle DOWN; TOP RIGHT NE front UP-RIGHT, nozzle DOWN-LEFT; BOTTOM LEFT E front RIGHT, nozzle LEFT; BOTTOM RIGHT SE front DOWN-RIGHT, nozzle UP-LEFT. Do not rotate or mirror flat artwork. Keep the camera elevation and physical proportions fixed; correctly redraw the visible3D faces. No exhaust, cargo, lights, motion blur, halo or other state variant.\nFour opaque pure-magenta #FF00FF rectangular separator frames about6px thick at N(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000). Magenta is only an exterior source separator. Every complete robot must fit comfortably in its safe inner rectangle N(64,64)-(704,448), NE(832,64)-(1472,448), E(64,576)-(704,960), SE(832,576)-(1472,960), with at least32px fully transparent clearance between ANY actual subject pixel and its frame. Target complete model width around440-480px, maximum height320px; one consistent physical scale across views. Reduce whole subjects uniformly rather than clipping or shortening a tool. Actual clean transparent alpha=0 for all empty panel interiors, margins and gutters; no translucent purple haze or painted checkerboard/white-gray fill. Four isolated complete robots, no overlaps. No text, letters, numbers, labels, arrows, watermark or extra props.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-baf6d458-83bf-4156-b3f7-b4c12925f0ab.png",
+  "sha256": "764a3427d35134aab1b161836e502447548b427cae037910573adb81932e8104",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_color_policy": {
+      "red_min": 180,
+      "green_max": 60,
+      "blue_min": 180,
+      "chroma_min": 128
+    },
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          116,
+          53,
+          614,
+          376
+        ],
+        "minimum_transparent_clearance": 53,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          56,
+          55,
+          572,
+          409
+        ],
+        "minimum_transparent_clearance": 39,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          99,
+          77,
+          588,
+          327
+        ],
+        "minimum_transparent_clearance": 77,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          129,
+          46,
+          649,
+          413
+        ],
+        "minimum_transparent_clearance": 35,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0
+  }
+}

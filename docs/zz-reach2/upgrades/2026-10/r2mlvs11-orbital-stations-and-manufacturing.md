@@ -1,5 +1,7 @@
 # R2MLVS11 - Orbital Stations and Manufacturing
 
+**Current dispatch,2026-10-18 (resumed).** Plan11 Group14/entry audit15B.1 and Plan6 paid bootstrap admission, packet purpose, model and persistence are complete. **Actual paid execution13CCD and aggregate13CC are now complete**: both focused native builds pass32cases/2223assertions each, with20actual native processes covering paid restore/cancel/dispatch/resave and three malformed full/copied pairs per configuration. [Execution proof](../../../../logs/surface-supply-order-execution-verification.json), [build/retention receipt](../../../../logs/surface-supply-order-execution-build-verification.json). **Continue Plan6 Group13CD**, actual four-material carrier/collector/riser delivery and ordinary game-application acceptance, before the genuine Plan11 Surface/launch entry. Physical Surface factory production remains selected as written for final Group15; paid bootstrap supplies cannot replace it. [Current handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-z-g-surface-order-execution.md).13C/13CD,15/15B/16and master closure remain open.
+
 ## Global Mandatory Reading
 
 > **Execution protocol**
@@ -1108,21 +1110,169 @@ Do not bypass this gate by copying private pool/tile state, inventing local IDs 
 ### Group 13 - Presentation and acceptance
 
 {{MEDIUM}}
-- [ ] 13.1 Integrate module construction stages, adjacency connectors, docking foregrounds, heavy robots, haulers and process animations from r2mlvs13. Show required/delivered/consumed inventory and blocked reasons.
-- [ ] 13.2 Test insufficient deliveries, overlapping blueprints, competing jobs reserving the same stock, missing utilities, full buffers, invalid dock references and unsafe removal.
+- [X] 13.1 Integrate module construction stages, adjacency connectors, docking foregrounds, heavy robots, haulers and process animations from r2mlvs13. Show required/delivered/consumed inventory and blocked reasons. Ordinary13L.1 binds42actual processes/98screenshots in both configurations; exact source phases, registered foregrounds and original owned inventory/status disclosures pass.
+- [X] 13.2 Test insufficient deliveries, overlapping blueprints, competing jobs reserving the same stock, missing utilities, full buffers, invalid dock references and unsafe removal. Current focused refusals pass5320assertions/36cases per configuration, joined to the qualified native producer boundaries without replaying their dated executable/source graphs.
+
+**Sequential source split,2026-10-17.** Plan10 final art is complete. This area's actual module/heavy/hauler sources remain planned. The public draft also assigns2x2/four-view geometry to every module, while actual Core/processors are3x3 and native sites save no orientation. Heavy mining uses model21; model16 is the distinct retained construction robot and cannot borrow model20's construction work. Complete the bounded producer/consumer children below in order before checking original13.1/.2. Preserve every existing identity/range and all seven activated Plan10 families; placeholders never count as delivered source.
+
+### Local Mandatory Reading - Actual orbital presentation contract
+
+_Applies to Group13B only._ Read Global/Presentation Area, AD-12, current `SpaceStructureState`, `GetSpaceConstructionDefinitions`, `GetSpaceVehicleModel`, `SPACE_HEAVY_MINER_MODEL`, actual `ReadyProbe` and the selected public module/model16/17 rows. Read Plan13 Public Handoff Contract and only Plan14 Groups65/66/70-75 while reconciling their producer dispatch. Current same-plan construction exports and dated accepted438 producers supply the public entry boundary. This group is source/geometry/identity work: no raster authoring, native range allocation, new gameplay, full regression or historical executable graph replay.
+
+### Group 13B - Publish actual orbital art contracts
+
+{{HARD}}
+- [X] 13B.1 Verify current public exports, actual model/kind/footprint/orientation ownership and every missing source; retain a bounded audit before changing any public draft.
+- [X] 13B.2 Correct only the affected planned source contracts, add the actual model21 heavy-miner family and preserve model16/17 meanings, existing ranges and delivered Space families. Reconcile source-producer locals and separate missing fuel-store/retained-robot ownership.
+- [X] 13B.3 Run focused geometry/identity/refusal fixtures and scoped public-contract checks, prove protected delivered rows/payloads unchanged and publish the source handoff before authoring.
+
+**Native source contract accepted,2026-10-17.** [Bounded verification](../../../../logs/orbital-art-contract-verification.json) binds8 focused drift/refusal cases,10 planned families/944 poses and8 directly protected Space packing cases. Core/processors retain actual3x3 fixed layouts; other sites retain2x2. No saved module rotation is invented. Model21 appends distinctly; model16 cannot borrow builder20 work, and model17 keeps independent stopped/moving load cues. All138 other families, every old packed identity/range, the exact GRF and seven activated Plan10 rows are unchanged. Plan14 now has family-specific Locals and separate retained16/FuelStore producer groups. No raster, native build, sprite allocation, gameplay mutation or new runtime art is claimed. Continue13C/Plan14 Group65 actual heavy-miner source.
+
+### Local Mandatory Reading - Remaining individual orbital sources
+
+_Applies to Groups13C-13J, including13CB/13HB._ Read Global/Presentation Area, completed13B exact native/public contract, and only the executing Plan14 family's Global/Source generation Area and nearest family Local. Source authoring uses that family's actual approved native geometry, immutable originals and framed ImageGen extraction rules. Read the imagegen skill before raster work. Complete each family before the next; defer compiled packing/selection/review to13K/13L.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13C - Deliver heavy mining robot source
+
+- [X] 13C.1 Complete Plan14 Group65 for actual model21 with all required original views/states; retain packing/runtime pending.
+
+**Heavy source accepted,2026-10-17.** [Full source verification](../../../../logs/space-heavy-source-verification.json) binds128reviewed source poses,72actual components/32explicit static frame aliases and byte-identical independent native conversion. All78focused heavy-source cases plus11direct existing-carrier cases pass;147other public rows,7prior source families/98candidate entries and exact GRF remain unchanged. Public21 source is authored; packing/runtime13K/L remain pending. Continue13CB retained16 without borrowing heavy21 or builder20 work/cargo.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13CB - Deliver retained construction robot source
+
+- [X] 13CB.1 Complete the separately reconciled Plan14 retained model16 source owner, preserving its distinct native capability and explicit unreachable-work aliases.
+
+**Retained robot source accepted,2026-10-17.** [Full source verification](../../../../logs/space-robot-source-verification.json) binds80reviewed poses/48actual components/24static frame aliases and byte-identical independent conversion. All53focused cases pass, including2direct prior-role samples. Every working pose is exact idle; native16role/cargo_cap0 grants no builder20work or21mining. All8prior source families/127candidate entries,147other public rows and exact GRF remain unchanged. Public16 source is authored; packing/runtime13K/L remain pending. Continue13D actual hauler17 source.
+
+Context has compacted 2 times while executing this group.
+
+### Group 13D - Deliver orbital cargo hauler source
+
+- [X] 13D.1 Complete Plan14 Group66 and bounded66B-66D for actual model17, using native cargo/capacity, navigation and unsupported-service facts.
+
+**Hauler source accepted,2026-10-17.** [Full source verification](../../../../logs/space-hauler-source-verification.json) binds160reviewed logical poses/96actual compositions/56static aliases,15focused family cases and byte-identical independent conversion. Unsupported service stays exactly empty; every moving/blocked load retains its actual cargo. All9prior source families/147candidate records/147other public rows and exact GRF are unchanged. Public17source is authored; packing/runtime13K/L remain pending. Continue13E actual fixed3x3 Core.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13E - Deliver Core source
+
+- [X] 13E.1 Complete Plan14 Group70 at the actual3x3 fixed layout, with source parts and native connector/berth anchors.70.1/70.2/70.3 are complete; native packing/runtime remain13K/L.
+
+**Core source accepted,2026-10-17.** [Full source verification](../../../../logs/space-core-source-verification.json) binds144logical parts,72explicit static aliases, five selected originals,15new focused cases and exact independent native reconstruction. Complete art/coupling and the previous accepted cuts remain exact; blocked changes eight window pixels only. All ten prior families/163prior candidates/147other public rows and exact GRF remain unchanged. Continue13F actual Dock source; broader13.1/.2 and packing/runtime13K/L remain open.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13F - Deliver Dock source
+
+- [X] 13F.1 Complete Plan14 Group71 at its actual fixed layout, including genuine back/front berth geometry.71.1/71.2/71.3 are complete; native packing/runtime remain13K/L.
+
+**Dock source accepted,2026-10-17.** [Full source verification](../../../../logs/space-dock-source-verification.json) binds64logical parts,32explicit static aliases, four owned originals plus one explicitly reused unchanged amber-glass original and15focused cases/6.500s. Blueprint/partial are genuinely authored; accepted complete pixels/cuts remain exact. Blocked changes only three cabinet pixels and preserves both physical clamps. All11prior families/177prior candidates/147other public rows and exact GRF remain unchanged. Continue13G actual Storage source; broader13.1/.2 and packing/runtime13K/L remain open.
+
+### Group 13G - Deliver Storage source
+
+- [X] 13G.1 Complete Plan14 Group72 at its actual fixed layout and bounded physical stock presentation.72.1/72.2/72.3 are complete; native packing/runtime remain13K/L.
+
+**Storage source accepted,2026-10-18.** [Full source verification](../../../../logs/space-storage-source-verification.json) binds64logical parts,32explicit static aliases, three owned originals plus two explicitly reused unchanged hardware/material originals and15new focused cases/6.468s. Planning and physical construction are genuinely authored; complete preserves every accepted base/cut pixel. Blocked changes only three existing glass pixels and retains both cabinets, passive coupling and original native stock ownership. All12prior families/189prior candidates/147other public rows and exact GRF remain unchanged. Continue13H actual Power, with FuelStore separate13HB. Original13.1/.2, packing/runtime13K/L and14-16 remain open.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13H - Deliver Power source
+
+- [X] 13H.1 Complete Plan14 Group73 for actual Power, using original native panel/service/utility owners.
+
+**Power source accepted,2026-10-18.** [Full source verification](../../../../logs/space-power-source-verification.json) binds64logical parts,32explicit static aliases, three owned originals/two explicitly reused unchanged originals and15focused state cases/6.410s. Blueprint and physical partial are genuinely authored; complete is PNG-byte-identical to accepted base/cuts. Blocked changes only three existing glass pixels, retaining both PV banks and the passive coupling. The one original paid60kW producer, its own availability and shared publication alone own output; no-demand or merely pausing a neighbouring Core panel cannot block it. All13prior families/195prior candidates/147other public rows/exact GRF remain unchanged. Continue13HB actual FuelStore source; packing/runtime13K/L and original13.1/.2/14-16 remain open. [Full handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-p-power-complete-source-notes.md).
+
+### Group 13HB - Deliver Fuel Store source
+
+- [X] 13HB.1 Complete the separately reconciled Plan14 FuelStore source owner without combining it with the Power building.
+
+**FuelStore source accepted,2026-10-18.** [Full source verification](../../../../logs/space-fuel-store-source-verification.json) binds64logical parts,24physical canonical parts,32static-frame aliases and8additional blocked-to-complete aliases. Three own originals plus one explicitly reused unchanged coupling pass15new state cases/5.836s (43focused cases across base/cuts/states). Blueprint shows the correct four-tile grid/two vessel contours; partial has open lower vessel shells, an open manifold and genuinely missing front floor. Complete preserves accepted base/cut PNG pixels exactly; blocked is PNG-byte-identical to complete. Native activation excludes FuelStore, so no operating warning/fuel/stock/service/utility capacity is claimed. All14prior families/204prior candidates/147other public rows/exact GRF remain exact. Continue13I actual Assembly source. Source completion does not close original13.1/.2, packing/runtime13K/L or broader14-16 behavior. [Full handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-r-fuel-store-complete-source-notes.md).
+
+### Group 13I - Deliver Assembly source
+
+- [X] 13I.1 Complete Plan14 Group74 for actual Assembly and its native manufacturing slot.
+
+**Assembly source accepted,2026-10-18.** [Full source verification](../../../../logs/space-assembly-source-verification.json) binds64logical parts/40canonical entries/24static aliases, four own originals plus two explicit unchanged hardware/material reuses and20new state cases/7.574s (49distinct focused cases across base/cuts/states). Blueprint and physical partial are genuinely authored; complete is PNG-byte-identical to accepted base/cuts. Work and blocked each alter only three existing console glass pixels, protecting30,717other canvas pixels and every original jaw foreground. Native paid job/input/berth/panel/dedicated750J consumer owners alone admit work; the graphic creates no job, product, stock or energy. Idle/no-job stays canonical complete. All15prior families/208candidate records/147other public rows/exact GRF stay exact. Continue13J actual shared3x3 processors. Packing/runtime13K/L, original13.1/.2 and broader14-16 remain open. [Full handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-t-assembly-complete-source-notes.md).
+
+### Group 13J - Deliver processor source
+
+- [X] 13J.1 Complete Plan14 Group75 against the actual3x3 fixed processor layouts and explicit Steelworks/Goodsworks/Refinery/IceProcessor mapping; source animation cannot supply work or a new inventory.
+
+**Processor source accepted,2026-10-18.** [Full source verification](../../../../logs/space-processor-source-verification.json) binds144logical parts/90canonical entries/54static aliases and50focused cases. Three own selected originals and three unchanged hardware/material reuses preserve all nine fixed world cells and explicit Steelworks/Goodsworks/Refinery/IceProcessor mapping. OSTL/OGDS each spend55500J over74native opportunities; OREF/PICE use74genuinely unpowered ticks and their shared alternative family. Actual saved choice, packets, work/batch receipt and typed native wait own display; no Assembly manufacture job, art-local clock, free output or hidden utility is introduced. Complete preserves accepted base/cut PNG pixels. Work/blocked each change only three existing glass pixels, preserving49,149others and every original near-jaw foreground pixel. All16prior families/221candidate records/147other public rows/exact GRF remain unchanged. Continue13K packing/native selectors; original13.1/.2, ordinary review13L and14-16 remain open. [Full handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-u-processor-source-notes.md).
+
+### Local Mandatory Reading - Orbital native packing and selection
+
+_Applies to Group13K only._ Read Global/Presentation Area, accepted13B-13J source receipts, Plan14 Remaining conversion and packing Local and only the existing final Space/native pack and actual module/craft draw owners. Preserve every old sprite, protected payload and gameplay field. Require reproducible actual GRF builds, generator-free exact decoded loading and focused original-owner selectors in both configurations before completing original13.1's integration portion.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13K - Pack and bind orbital presentation
+
+- [X] 13K.1 Append the actual delivered module/model16/17/21 families through protected native packing and source owners.
+- [X] 13K.2 Bind pure native stage/connector/foreground/role/load/work selectors and original inventory/blocked disclosures; consolidate both bounded builds and exact packed/native owner checks.
+
+**Orbital packing inputs accepted,2026-10-18; task13K.1 only.** [Source packing verification](../../../../logs/orbital-pack-source-verification.json) binds976logical sprites across ten families at native5167..6142/exclusive6143, two byte-identical clean conversions and16focused source/corruption cases in11.906s. Separate orbital PNG/NFO/header preserve all11protected earlier source outputs,17source families/230candidate records,138other public rows and exact shippedGRF. All976crops/anchors round-trip; genuinely absent fronts retain transparent native cells. Existing native build inputs now include the separate append and range bound; no GRF build, native selector or decoded/runtime acceptance is claimed. Continue13K.2 actual native selectors/disclosures, both bounded builds, reproducible GRF/generator-free exact loading. Group13K/master and original13.1/.2 remain open. [Working handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-v-orbital-packing-notes.md).
+
+**Native integration accepted,2026-10-18; Group13K complete.** [Final verification](../../../../logs/orbital-art-final-verification.json) binds both sequential two-worker game/focused builds,31behavior cases plus3actual decoder processes/118,749assertions per configuration, two byte-identical actual GRF builds and exact generator-disabled packaging. All976appended sprites and5,140protected published sprites decode with exact pixels/anchors. Pure selectors and original factory/processor disclosures preserve actual work, stock, actor and RNG; unsupported16/17service and FuelStore activation stay explicit. All17source families/230candidates/138other public rows remain unchanged, allowing only50proved native whole-container hash refreshes. Original MLVI namespace/offset/hash remain unchanged. Original13.1/.2 and13L/14-16 remain open; continue13Lordinary paid-game presentation/refusal review. [Accepted native handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-w-orbital-selector-notes.md).
+
+### Local Mandatory Reading - Ordinary orbital presentation and refusal review
+
+_Applies to Group13L only._ Read Global/Presentation Area, original13.1/.2, accepted13K packed/native evidence and only the actual paid module/manufacturing/processor/hauler producer saves needed for current views/refusals. No fixture work/cargo/pose grants may count. Preserve dated producer boundaries, current original quantities and all supplied saves. Keep later14-16 acceptance separate.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13L - Review native presentation and blocked boundaries
+
+- [X] 13L.1 Review actual ordinary module construction, connectors, docking foregrounds, heavy/hauler and processing states with final sprites in both configurations; then complete original13.1.
+- [X] 13L.2 Verify original13.2's exact delivery/overlap/reservation/utility/output/dock/removal boundaries in a focused burst, reuse qualified producer evidence and reconcile Group13/master before14.
+
+**Ordinary presentation accepted,2026-10-18; task13L.1/original13.1 complete.** [Ordinary verification](../../../../logs/orbital-art-ordinary-verification.json) binds42actual processes/98screenshots, all ten native families, unique earned heavy/hauler/processor/factory phases and13exact indexed/RGB configuration counterparts. Both actual paid producers pass:11Power/FuelStore milestones/11092assertions and nine paid Assembly/product milestones/6758assertions each, with640cross-configuration owner/metadata comparisons and352earlier Release equivalences. Focused display/runtime checks pass15cases/1127assertions each. Both game links and actual language packs match the [separate correction receipt](../../../../logs/orbital-art-ordinary-binary-verification.json); the dated13K proof and exact GRF remain unchanged. Native outage text now survives global pause; FuelStore explicitly remains a frame. All18Dock foreground indices match, with109covered heavy pixels explained by the nearer original builder. Post-inspector saves preserve all30physical owners/CDIM/SPRC. Runtime metadata changes only the ten reviewed families, preserving138other public rows, original MLVI identities and source pixels. Inherited starting-content procurement and unsupported16/17service/FuelStore functionality retain their explicit boundaries. Continue13L.2/original13.2; Group13L/master and14-16remain open.
+
+**Original refusal boundaries accepted,2026-10-18; Group13L/original13.2 complete.** [Refusal verification](../../../../logs/orbital-art-refusal-verification.json) binds36focused current cases/5320assertions each and the qualified module reservation, manufacturing, processor, Dock and removal/evacuation/lifecycle native boundaries. Component declarations test refusal semantics only and grant no new paid-procurement claim. The22-phase two-configuration construction handoff supersedes the old individual removal/evacuation/lifecycle Debug-pending notes; those dated indexes remain unchanged. All seven original boundary areas are covered. No rebuild, historical source/binary graph replay or full regression was needed. Continue14.1 with the Local below;14-16remain open.
+
+### Local Mandatory Reading - Orbital save boundaries
+
+_Applies to Group14 only._ Read Global/Presentation Area, accepted13L presentation/refusal receipts and only the actual original paid Core/module/manufacturing/processor checkpoints needed for the current task. Inspect current `SpaceStructureRecord`, `OrbitalManufactureRecord`, `OrbitalRecipeRecord`, their native save/full-load and independent copied-preview owners before claiming an unchanged restore. Use genuine original legacy saves and explicit native normalization; never forge an older header or count a declared prefab as paid delivery. Preserve original reserved/consumed packets, inactive/completed functionality, physical hull/berth identity, original utility receipts and exact recipe history. Reuse qualified dated producer boundaries without reopening their historical executable/source graphs. Keep end-to-end/performance16and15 acceptance separate.
 
 ### Group 14 - Verify construction and processing save boundaries
 
 {{HARD}}
-- [ ] 14.1 Round-trip first-core delivery and every module type at a partial milestone, checking reserved versus consumed inventory and inactive/completed functionality.
-- [ ] 14.2 Round-trip robot/hauler materialization boundaries and compare vehicle count/IDs, berth occupancy and recipe ledger.
-- [ ] 14.3 Round-trip processor partial inputs/full outputs and unsafe-removal refusals; reconcile packet ownership, utility grants and consumed totals before the end-to-end acceptance chain.
+- [X] 14.1 Round-trip first-core delivery and every module type at a partial milestone, checking reserved versus consumed inventory and inactive/completed functionality. Both current ordinary products pass20cases each across10kinds; four explicitly declared processor-kind codec cases per build remain separate from paid construction and initial-content procurement.
+- [X] 14.2 Round-trip robot/hauler materialization boundaries and compare vehicle count/IDs, berth occupancy and recipe ledger. Original16/17/21 jobs pass12ordinary and18current native processes,423native assertions per build and exact32-family interrupted/control convergence.
+- [X] 14.3 Round-trip processor partial inputs/full outputs and unsafe-removal refusals; reconcile packet ownership, utility grants and consumed totals before the end-to-end acceptance chain. Both builds pass12ordinary processor cases each/768exact family comparisons, independent packet/material/energy audits and unchanged current refusal contracts. Declared full-buffer fixtures retain their explicit scope.
+
+**Construction persistence accepted,2026-10-18; task14.1 complete.** [Construction save verification](../../../../logs/orbital-construction-save-verification.json) binds40current ordinary load/save processes, original415first-Core delivery, fractional418Storage reservations and all ten module kinds at partial/completed milestones. All original material/work/capital/facility semantics survive; only explicit native empty legacy appends and the exact previously qualified old-Core Engine repair are admitted. Four cases per build are declared current-format processor-kind codec copies: Goodsworks/Refinery partial and IceProcessor partial/frame. They grant no paid role, activation or initial-content procurement claim. Actual paid Goodsworks/Refinery completion and Refinery PICE processing retain their own producer evidence. FuelStore remains a spent inert frame. No rebuild, C++ change or full regression was needed. Continue14.2, then14.3; Group14/master remains open.
+
+**Materialization persistence accepted,2026-10-18; task14.2 complete.** [Materialization save verification](../../../../logs/orbital-materialization-save-verification.json) binds original paid robot16, hauler17 and heavy-miner21 before/complete checkpoints in both current builds. Six ordinary milestone pairs preserve every original paid receipt; each actual resumed final opportunity converges with its current control across all32families, creates exactly one generation-qualified hull at the original berth and consumes the reserved complete bill once. Repeated completion ticks preserve hull count/identity, berth and job ledger. Existing old completed hulls retain content2; new current materialization correctly publishes3. Each repaired legacy Engine row must equal its exact qualified role-specific native migration; initialized history stays exact. All423native assertions per configuration pass. Starting-content procurement remains unclaimed. Continue14.3; Group14/master and15-16remain open.
+
+**Processor persistence accepted,2026-10-18; Group14 complete.** [Processing save verification](../../../../logs/orbital-processing-save-verification.json) binds24current ordinary processes across actual primary/secondary inputs, pending/completed electrical and baseline recipes, original outage and declared full Steel/Goods buffers. All768owner/metadata comparisons are exact; independent same-file CAPA/stock and published recipe bills reconcile consumed/produced/residue counters and paid/pending/discarded energy. Current36-case/5320-assertion refusal receipts per build remain valid against identical binaries/sources, covering full output and unsafe removal/evacuation without granting new paid procurement. [Joined Group14 verification](../../../../logs/orbital-save-boundaries-verification.json) binds all94accepted processes and helper documentation/AST checks. Codec inventories and inherited starting-content limits remain explicit;15/16remain open.
+
+### Local Mandatory Reading - Unassisted orbital acceptance chain
+
+_Applies to Group15 only._ Read Global/Presentation Area, AD-12 and the completed Group14 joined boundary. Read only the actual original Surface production/launch procurement, first-Core delivery, paid Dock/Assembly, heavy-miner21, finite asteroid processing and useful output producers needed for the continuous acceptance chain. Inspect each original input declaration before selecting a predecessor. Declared starting stock, paid-but-prefabricated facilities and codec fixtures cannot count toward15.2; paid activity after an inherited fixture does not prove its procurement. Use actual commands, physical packets and normal work throughout; preserve every original input save. Reuse qualified native behavior without replaying historical executable/source graphs. If an unassisted producer is absent, expose the exact missing prerequisite and split bounded producer work before checking the original15.1/.2. Source ownership/public contracts remain authoritative; do not substitute a second inventory or utility account.
 
 ### Group 15 - Presentation and acceptance
 
 {{MEDIUM}}
 - [ ] 15.1 Demonstrate a complete chain: Surface-made components -> rocket -> Core/Dock/Assembly -> heavy robot -> asteroid -> processor -> useful Surface or orbital output.
 - [ ] 15.2 Use no cheat-built predecessor in the acceptance run.
+
+**Entry prerequisite discovered,2026-10-18.** [Direct current entry audit](../../../../logs/orbital-chain-entry-audit.json) finds that launch/workshop/manufacturing preparations inject declared initial Surface packets, while isolated Surface factories force construction completion. These cannot satisfy original15.2. The canonical external Surface-supply catalogue publishes prices/caps only; no runtime purchase command currently owns that route. Preserve all paid downstream evidence and complete the bounded entry prerequisite below before the continuous chain. The user has been asked whether literal physical Surface factory production remains required or canonical paid external Surface supplies may count; keep the written requirement until clarified. [Entry handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-z-b-orbital-chain-entry-audit.md).
+
+### Local Mandatory Reading - Genuine Surface and launch entry prerequisite
+
+_Applies to Group15B only._ Read Global/Presentation Area, AD-12, original15.1/.2, the completed14 joined boundary and the direct current entry audit. Inspect only `space_logistics.cpp`/`launch_production.cpp` preparation, `manufacturing_reservation_native.cpp`/`PurchaseSurfaceStartingContent`, `ProcessorRig`/`SurfaceManufacturingRig` and `GetMultiLayerSurfaceSupplies` plus the actual selected route's native producers. Definitions, fixture packet appends and force-completed facilities cannot supply procurement. Preserve initial-source limits and resolve any cross-plan producer through its actual owner before runtime claims. Use only public paid commands and ordinary physical work; no private stock/hull/work/utility substitutes. A user route choice may refine the entry; it does not authorize fabricated contents or completing original15 before its chain passes.
+
+### Group 15B - Deliver a genuine Surface and launch entry
+
+{{HARD}}
+- [X] 15B.1 Audit the current candidate Surface/launch predecessors and distinguish declared starting content/prefab facilities from real procurement. The direct source audit identifies the missing entry producer without replaying historical executable graphs.
+- [ ] 15B.2 Deliver the selected legitimate Surface-input route and a fresh actual launch-entry checkpoint, preserving the written Surface-production requirement unless the user chooses the canonical paid external route. Use no injected cargo, prefab facility, synthetic work/hull or fixture cash.
+- [ ] 15B.3 Verify and bind the entry producer's actual quantities, funds/capital, limits and packet ownership in both configurations before handing it to the continuous orbital chain. Keep original15.1/.2 and Group16 unchecked until their own acceptance passes.
 
 ### Group 16 - Presentation and acceptance
 

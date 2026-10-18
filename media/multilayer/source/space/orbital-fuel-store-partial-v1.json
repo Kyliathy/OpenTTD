@@ -1,0 +1,91 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13HB / r2mlvs14-remaining-assets-and-runtime-integration.md73B.3. Genuine two open lower vessel shells/open manifold/missing front floor; no liquid or fuel.",
+  "asset_id": "module.fuel-store",
+  "candidate": "orbital-fuel-store-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png",
+      "sha256": "a57d1e4d2a65c7b1859899cce7b1c64c96a9cbcd7e652bf680638ec83965813e",
+      "role": "approved FuelStore body edit target; exact two vessel/manifold layout and camera"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE fixed orbital Fuel Store PARTIAL CONSTRUCTION source for OpenTTD, transparent isolated native sprite model.\nImage1 is the approved genuine COMPLETE FuelStore edit target. Keep its exact shallow camera, thin2x2diamond floor outline, upper-left light, cream/navy metal palette, TWO horizontal vessel locations, ONE small manifold location, broad open front apron and all four visible floor corners. ONE whole model, no sheet, ample transparent image margins.\nChange only construction: replace BOTH finished closed cylindrical tanks with unfinished OPEN-TOP lower semicylindrical metal trough shells on the same navy saddle supports. Each has only its bottom half and low rim, no upper curved shell or complete rounded end cap; visibly empty dark interiors, exactly two unfinished vessel assemblies, no completed tank. Their original length/direction/positions stay fixed. Show the ONE small central manifold box as an open plain metal enclosure with its lid missing and dark empty interior. No glowing status glass or gauge. No spare detached shells or extra equipment.\nThe complete deck has four diamond floor tiles. Remove ONLY the FRONT diamond floor plate (closest to viewer). Keep its continuous thin outer frame and a sparse real metal X brace below, but the broad opening around that brace MUST BE GENUINELY TRANSPARENT, showing the same transparent background as outside the model. The rear/left/right three floor plates stay fitted. No dark opaque substitute for that missing floor plate, no solid front apron, no tiny cosmetic hatch. All four outer floor vertices remain visible and the footprint/camera is identical.\nRestrained crisp retro first-party game sprite metal materials. No fuel, liquid, cargo, visible fill, output or capacity number, operating machinery, plume, warning light, PV panel, craft, crane, robot or coupling. No new pipe extension outside the floor. No labels, symbols, arrows, text, decorative background or external shadow. True transparent background and actual transparent front floor opening. Preserve every unrelated model feature; exactly TWO bare open lower tank shells and ONE open manifold enclosure.",
+  "original": "media/multilayer/source/space/raw/orbital-fuel-store-partial-v1.png",
+  "original_sha256": "bedf7364982e97bdb29581f5fd1194205017172732968f33c72258619052d33c",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      138,
+      351,
+      1264,
+      904
+    ],
+    "uniform_scale": [
+      113,
+      1000
+    ],
+    "source_reference": [
+      696,
+      350
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        355
+      ],
+      [
+        1261,
+        615
+      ],
+      [
+        701,
+        897
+      ],
+      [
+        139,
+        615
+      ]
+    ]
+  }
+}

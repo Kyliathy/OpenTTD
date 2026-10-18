@@ -1,0 +1,102 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3. Exact corrective transparency request; source measurements separately determine acceptance.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-work-b-s-sw-w-nw-v2",
+  "tool": "built-in image_gen",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "rejected_s_view_clearance",
+  "reference_inputs": [
+    {
+      "role": "Cutter-phase-B edit target; retained failed translucent source",
+      "path": "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v1.png",
+      "sha256": "398df92e966896c305848520343b470ac23ad46c56bb58b769fffefabbbd4344"
+    }
+  ],
+  "prompt": "Use case: background-extraction.\nInput image1 is the four-view heavy mining robot phase-B sheet EDIT TARGET. Its background failed transparency: it contains a translucent purple/magenta haze. Remove ONLY this colored background haze and make ALL background pixels between and around the four isolated machines fully transparent alpha=0, including panel interiors, margins and gutters. Keep every actual opaque heavy-miner pixel, the exact four S/SW/W/NW genuine model views, cutter phase B, camera, original whole-model sizes/positions, shading, empty hopper, two grippers, twin unlit thrusters and electronics panel unchanged. NO checkerboard, white/gray fill, colored glow, halo or shadow. Preserve crisp actual model silhouettes, fine cutter teeth and their natural antialiased edges. Clean alpha must be truly empty, not a painted transparency preview.\nKeep1536x1024 and four opaque PURE magenta #FF00FF rectangular separator outlines about6px thick outside the isolated machines, approximately(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Frames must stay outside safe inner crop rectangles[32,32,736,480],[800,32,1504,480],[32,544,736,992],[800,544,1504,992]. Actual machines must have at least16px truly transparent clearance to the crops; preserve their existing placement. No visible magenta anywhere inside these crop rectangles. Four independent complete original heavy miners, clean true-transparent empty background, opaque frame outlines only. No text, labels, other equipment or other changes.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v2.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-c6b7f3cf-29ab-4501-808f-5ccbce8bf849.png",
+  "sha256": "b12cf56cd16d61aa09f5ac325a47807e835b63755bf96d858f12a92d073d700e",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          161,
+          40,
+          537,
+          448
+        ],
+        "minimum_transparent_clearance": 0,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          127,
+          52,
+          569,
+          429
+        ],
+        "minimum_transparent_clearance": 19,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          32,
+          60,
+          687,
+          346
+        ],
+        "minimum_transparent_clearance": 17,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          104,
+          40,
+          638,
+          373
+        ],
+        "minimum_transparent_clearance": 40,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 297
+  }
+}

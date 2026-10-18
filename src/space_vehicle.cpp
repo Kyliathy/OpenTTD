@@ -4,6 +4,7 @@
  */
 /** @file space_vehicle.cpp Native orbital probe ownership, deterministic pursuit and conserved extraction.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only source-authored probe presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original heavy/retained/hauler art ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20; generation-bound synchronized mission admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md.
@@ -20,6 +21,7 @@
 #include "space_mining_tuning.h"
 #include "space_vehicle.h"
 #include "space_sprite.h"
+#include "orbital_sprite.h"
 #include "space_replacement.h"
 #include "space_approach.h"
 #include "space_manifest.h"
@@ -301,7 +303,11 @@ void SpaceVehicle::GetImage(Direction direction, EngineImageType image_type, Veh
 	if (const auto pose = GetSpaceCraftArtPose(*this, view)) {
 		if (const auto sprite = ResolveSpaceSprite(*pose)) { result->Set(*sprite); return; }
 	}
-	// Original rocket/hauler/heavy roles retain their explicit earlier preview until their separate Plan9/11 family sources and native integration are delivered.
+	if (const auto pose = GetOrbitalCraftArtPose(*this, view)) {
+		if (const auto sprite = ResolveOrbitalSprite(*pose)) { result->Set(*sprite); return; }
+	}
+	// The original rocket retains its separate Plan9 source/integration gate;
+	// unrecognized legacy roles keep the explicit earlier preview without new capability.
 	result->Set(SPR_SPACE_PREVIEW_PROBE + (this->mission.phase == SpaceMissionPhase::Mining ? 1 : 0));
 }
 /** Refresh the existing native sprite bounds for selection and viewport invalidation. */

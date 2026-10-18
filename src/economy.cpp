@@ -13,6 +13,7 @@
  */
 
 #include "stdafx.h"
+#include "surface_supply_order_runtime.h"
 #include "asteroid.h"
 #include "launch_center.h"
 #include "space_pod.h"
@@ -508,6 +509,7 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	ChangeSpacePodOwnership(old_owner, new_owner); // Retain actual paid shells, retiring old company custody before pool/tile reuse.
 	ChangeSpaceStructureOwnership(old_owner, new_owner);
 	ChangeAsteroidKnowledgeOwnership(old_owner, new_owner); // Transfer takeover knowledge, clear removed company bits before CompanyID reuse.
+	if (new_owner == INVALID_OWNER) ChangeSurfaceSupplyOrderCompanyOwnership(old_owner, CompanyID::Invalid()); // Seal company loss before tile/station demolition, so deletion cannot refund a vanished company.
 
 	/*  Change ownership of tiles */
 	{
@@ -546,6 +548,7 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 			st->owner = new_owner == INVALID_OWNER ? OWNER_NONE : new_owner;
 		}
 	}
+	if (new_owner != INVALID_OWNER) ChangeSurfaceSupplyOrderCompanyOwnership(old_owner, new_owner); // Transfer paid rights/caps only after native station ownership settles; intermediate tile updates must not interpret takeover as receiver loss.
 
 	// Both native station and tile ownership have settled; retire only relationships that no longer qualify.
 	RevalidateLaunchHubMemberships();
@@ -1130,7 +1133,7 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
 }
 
 /**
- * Delivers goods to industries/towns and calculates the payment
+ * Deliver exactly accepted material to industries/towns; bought supplies retain zero freight income/subsidies.
  * @param num_pieces amount of cargo delivered
  * @param cargo_type the type of cargo that is delivered
  * @param dest Station the cargo has been unloaded
@@ -1169,11 +1172,15 @@ static std::pair<Money, uint> DeliverGoods(int num_pieces, CargoType cargo_type,
 		st->town->GetOrCreateCargoAccepted(cargo_type).history[THIS_MONTH].accepted += accepted_total - accepted_ind;
 	}
 
-	/* Determine profit */
-	Money profit = GetTransportedGoodsIncome(accepted_total, distance, periods_in_transit, cargo_type);
+	// Bought supplies never invoke freight-income callbacks; ordinary cargo retains its original calculation order before cargo-monitor notification.
+	Money profit = src.IsCompanySupply() ? Money{0} : GetTransportedGoodsIncome(accepted_total, distance, periods_in_transit, cargo_type);
 
 	/* Update the cargo monitor. */
 	AddCargoDelivery(cargo_type, company->index, accepted_total - accepted_ind, src, st);
+
+	// Bought construction/service material still reaches the actual bounded receiver,
+	// but transport cannot refund its purchase through freight callbacks or award a subsidy.
+	if (src.IsCompanySupply()) return {Money{0}, accepted_total};
 
 	/* Modify profit if a subsidy is in effect */
 	if (CheckSubsidised(cargo_type, company->index, src, st))  {
@@ -1285,6 +1292,8 @@ uint CargoPayment::PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint
 {
 	/* Handle end of route payment */
 	const auto [profit, accepted] = DeliverGoods(count, cargo, this->current_station, cp->GetDistance(current_tile), cp->GetPeriodsInTransit(), Company::Get(this->front->owner), cp->GetSource());
+	// Actual intake above remains authoritative; bought packets never book a final profit or settle feeder credits.
+	if (cp->GetSource().IsCompanySupply()) return accepted;
 	this->route_profit += profit;
 
 	/* The vehicle's profit is whatever route profit there is minus feeder shares. */
@@ -1302,6 +1311,9 @@ uint CargoPayment::PayFinalDelivery(CargoType cargo, const CargoPacket *cp, uint
  */
 Money CargoPayment::PayTransfer(CargoType cargo, const CargoPacket *cp, uint count, TileIndex current_tile)
 {
+	// Every intermediate carrier preserves company-supply custody without generating virtual income that a later delivery could collect.
+	if (cp->GetSource().IsCompanySupply()) return Money{0};
+
 	/* Pay transfer vehicle the difference between the payment for the journey from
 	 * the source to the current point, and the sum of the previous transfer payments */
 	Money profit = -cp->GetFeederShare(count) + GetTransportedGoodsIncome(

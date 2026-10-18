@@ -11,12 +11,15 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group 9CD; copied ordinary stock joins the original Space packet owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; independent copied processor metadata cannot inherit another file's paid work or presence.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; copied hauler refits join this file's physical cargo dimensions and quantities.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CB; copied packet source purpose and original feeder credit.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC; independent order/DATE/MAPS/normal-station reference evidence.
  */
 
 #ifndef FIOS_H
 #define FIOS_H
 
 #include "company_base.h"
+#include "station_type.h"
 #include "newgrf_config.h"
 #include "gamelog.h"
 #include "network/core/tcp_content_type.h"
@@ -35,6 +38,7 @@
 #include "space_pod.h"
 #include "space_structure.h"
 #include "orbital_recipe.h"
+#include "surface_supply_order_wire.h"
 #include "space_transition.h"
 #include "asteroid.h"
 
@@ -81,10 +85,12 @@ struct NativeSpaceVehiclePreview {
 	uint16_t freight_capacity = 0; ///< Original common cargo_cap; a reported refit cannot override the physical role/mass bound.
 };
 
-/** Detached same-file physical packet identity/quantity for independent descent checks; this snapshot allocates no native packet or inventory. */
+/** Detached same-file packet quantity/provenance/credit for independent custody checks; this snapshot allocates no native packet or inventory. */
 struct NativeCargoPacketPreview {
 	CargoPacketID packet = CargoPacketID::Invalid(); ///< Actual serialized native CAPA pool index, not a count-only replacement packet.
 	uint16_t quantity = 0; ///< Original positive whole units; native containers retain the sole gameplay ownership.
+	Source source{Source::Invalid, SourceType::Industry}; ///< Candidate file's original provenance/purpose; never inherited from the open world.
+	Money feeder_share{0}; ///< Original virtual transfer credit; bought company supplies must retain zero.
 };
 
 /** Same-file configured cargo dimensions; detached metadata cannot allocate cargo or replace a loaded CargoSpec. */
@@ -100,10 +106,17 @@ struct NativeCargoDimensionPreview {
 struct NativeStationOwnerPreview {
 	StationID station = StationID::Invalid(); ///< Actual same-file native Station index; waypoints are excluded.
 	Owner owner = OWNER_NONE; ///< Saved native authority, never borrowed from a station in the open world.
+	TileIndex tile = INVALID_TILE; ///< Original base.xy for same-file Surface-coordinate/layer joins; no live map substitutes it.
+	StationFacilities facilities{}; ///< Original normal-station facility mask, independent of the waypoint discriminator.
 };
 
 /** Detached whole-file preview transport; copied identities and authority cannot mutate or supply owners from the current playable world. */
 struct LoadCheckData {
+	bool surface_supply_orders_present = false; ///< This exact file supplied the required current order family, including a legitimate empty book.
+	SurfaceSupplyOrderTransport surface_supply_orders; ///< Detached complete commitments/history only; preview never activates refunds, orders or stock.
+	bool native_map_dimensions_present = false; ///< Original MAPS row, never default/previous-file geometry.
+	bool native_economy_date_present = false; ///< Original DATE economy_date field, not calendar/live time.
+	TimerGameEconomy::Date native_economy_date{0}; ///< Same-file native economy day for exact current allowance/reference joins.
 	bool native_cargo_dimensions_present = false; ///< This file supplied its own versioned configured-dimensions family.
 	std::vector<NativeCargoDimensionPreview> native_cargo_dimension_rows; ///< Copied definition metadata, never borrowed from active-world CargoSpec.
 	bool space_structures_present = false;

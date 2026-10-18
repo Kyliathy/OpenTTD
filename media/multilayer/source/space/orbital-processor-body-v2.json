@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.1. Genuine built-in geometry correction; registration approval remains separate.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_edit",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset: module.processor complete fixed3x3 base, geometry correction only. Image1 is the processor machine edit target: preserve its ONE low horizontal sealed drum, ONE finned exchanger, ONE connecting pipe and ONE blue-window console, muted metal/orange materials and chunky industrial style. Image2 is a geometry-only3x3 floor reference, NOT artwork: match its flat diamond proportions and nine-cell grid; do not copy its green dot. Correct Image1's overly shallow floor to a proper2:1 isometric diamond and expose the rear vertex. Produce ONE isolated whole model on genuine transparency, about1536x1024 with at least64transparent pixels around all visible pixels. Deck surface vertices about rear(768,280), right(1368,580), front(768,880), left(168,580), with very thin rim no more than5source pixels deep. All four physical corners must be visibly exposed, especially the rear corner: move the squat drum a little forward-left and the exchanger forward-right so a clear triangle of empty deck surrounds the rear vertex. Keep the machine tops low, around140source pixels above local supports, with all body pixels inside the floor's horizontal silhouette. The console stays near centre/front with ONE small plain horizontal blue window. No extra equipment, no loose cargo, no clamps, no arrows, no words, no green marker, no guide outlines, no second view. Keep the lower-right edge bare for a separately authored coupling. No shadows or glow outside the model; completely transparent margins and background. Orthographic camera, parallel2:1 edges, upper-left light. Do not change equipment counts or invent product, power generation, robotic arms or gantry. The corrected genuine drawing must show the full thin3x3 deck, its nine panels and all corners; do not crop or pad the model.",
+  "input_images": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-processor-body-v1.png",
+      "role": "edit_target",
+      "sha256": "9c21368a2a1a73c8df31c8dd090a47454278df7a6ee3fe60f0b93ae9b0a570e6"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-floor-template-v1.png",
+      "role": "geometry_only_reference",
+      "sha256": "9b910adc3798350d9524d31529cf06c4d25432397ce27b2265a2798594bf93ca"
+    }
+  ],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-fbe9fdb9-b71f-4829-b12d-5cbd443f6c52.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-body-v2.png",
+    "sha256": "52a5c910262790491ecadf36e2deee81766a13f0e8ff2af596e6a7339c6b2b7c"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    62,
+    196,
+    1474,
+    953
+  ],
+  "selection": "rejected_steep_floor_and_native_cell_overflow"
+}

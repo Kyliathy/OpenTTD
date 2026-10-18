@@ -7,6 +7,7 @@
 
 /** @file station_sl.cpp Native station reconstruction and detached saved authority for launch targets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8B; independent service preview reads native STNN authority without constructing a station or borrowing live ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC; candidate-owned original coordinates/facilities qualify pending Surface supply references.
  */
 
 #include "../stdafx.h"
@@ -581,6 +582,17 @@ public:
 	std::vector<RoadStopTileData> &GetVector(BaseStation *bst) const override { return bst->custom_roadstop_tile_data; }
 };
 
+/** Require original current-file station authority fields before either loader can join paid commitments.
+ * @param description Actual decoded base schema; default/native-world owner, position and facilities grant no saved pending right.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC.
+ */
+static void CheckSurfaceSupplyStationBaseFields(SaveLoadTable description)
+{
+	if (IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders)) return;
+	// Every current station must carry its own owner, position and freight shape. A constructor default cannot lend authority that the copied reader correctly refuses.
+	for (const auto field : {"owner", "xy", "facilities"}) if (std::ranges::find(description, field, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing native supply station authority field");
+}
+
 /**
  * SaveLoad handler for the BaseStation, which all other stations / waypoints
  * make use of.
@@ -610,8 +622,10 @@ public:
 		SlObject(bst, this->GetDescription());
 	}
 
+	/** @param bst Original native station being reconstructed; admit actual current-file authority fields before decoding any pending receiver. */
 	void Load(BaseStation *bst) const override
 	{
+		CheckSurfaceSupplyStationBaseFields(this->GetLoadDescription());
 		SlObject(bst, this->GetLoadDescription());
 	}
 
@@ -731,6 +745,8 @@ static const SaveLoad _station_desc[] = {
 struct StationAuthorityPreview {
 	StationFacilities facilities; ///< Original saved normal/waypoint discriminator; a waypoint can never supply a LaunchCenter owner.
 	Owner owner = OWNER_NONE; ///< Same-file native owner read only from the existing base.owner field.
+	TileIndex tile = INVALID_TILE; ///< Original saved base.xy; preview does not project from the active map.
+	StationFacilities base_facilities{}; ///< Actual saved base facilities; cannot be inferred from a normal-station discriminator alone.
 	std::vector<uint32_t> cargo_packet_refs; ///< Unpublished native ID+1 references across this actual station's goods/next-hop buckets.
 };
 
@@ -780,12 +796,15 @@ class SlStationAuthorityBasePreview : public DefaultSaveLoadHandler<SlStationAut
 public:
 	static inline const SaveLoad description[] = {
 		SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(StationAuthorityPreview, owner)),
+		SaveLoad::Variable<VarFileType::U32>("xy", SLE_OBJECT_ADDRESS(StationAuthorityPreview, tile)),
+		SaveLoad::Variable<VarFileType::U8>("facilities", SLE_OBJECT_ADDRESS(StationAuthorityPreview, base_facilities)),
 	};
 	static inline const SaveLoadCompatTable compat_description = {};
 	/** @param row Detached discriminator/authority row; the existing table must contain its actual native owner field. */
 	void LoadCheck(StationAuthorityPreview *row) const override
 	{
 		if (std::ranges::find(this->GetLoadDescription(), "owner", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station owner preview field");
+		CheckSurfaceSupplyStationBaseFields(this->GetLoadDescription());
 		SlObject(row, this->GetLoadDescription());
 	}
 };
@@ -839,6 +858,8 @@ struct STNNChunkHandler : ChunkHandler {
 
 			BaseStation *bst = waypoint ? (BaseStation *)Waypoint::CreateAtIndex(StationID(index)) : Station::CreateAtIndex(StationID(index));
 			SlObject(bst, slt);
+			// Current full/copy readers agree on the original object class; a normal-station body cannot turn into a waypoint after receiving refundable supply rights.
+			if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders) && bst->facilities.Test(StationFacility::Waypoint) != waypoint) SlErrorCorrupt("Changed native station discriminator");
 		}
 	}
 
@@ -873,9 +894,11 @@ struct STNNChunkHandler : ChunkHandler {
 			if (index >= StationID::Invalid().base()) SlErrorCorrupt("Invalid native station authority preview index");
 			StationAuthorityPreview row; row.facilities = static_cast<StationFacilities>(SlReadByte()); SlObject(&row, description);
 			if (row.facilities.Test(StationFacility::Waypoint)) continue;
+			// A normal-station preview must retain the same original class as full reconstruction; a waypoint alias cannot supply a pending freight receiver.
+			if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders) && row.base_facilities.Test(StationFacility::Waypoint)) SlErrorCorrupt("Changed copied normal-station discriminator");
 			const StationID id{static_cast<uint16_t>(index)};
 			if (!rows.empty() && id <= rows.back().station) SlErrorCorrupt("Repeated native station authority preview identity");
-			rows.push_back({id, row.owner});
+			rows.push_back({id, row.owner, row.tile, row.base_facilities});
 			auto &cargo = _load_check_data.native_station_cargo_refs;
 			// The whole copied station family may reference at most the actual packet pool bound; metadata never creates stock for missing native owners.
 			if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - cargo.size()) SlErrorCorrupt("Excessive native station-family cargo preview references");

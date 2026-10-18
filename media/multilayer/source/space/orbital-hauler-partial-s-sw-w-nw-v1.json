@@ -1,0 +1,127 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66B.3. Immutable built-in one-case quantity edit. Returned cases are framed larger than requested; one uniform native scale per original restores physical cassette size, without editing source alpha/geometry or original hull registration.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-partial-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "exact full cargo edit target; retain one middle case, original physical design/cameras",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-full-s-sw-w-nw-v1.png",
+      "sha256": "12403eb97ebe65c0b5cd07d71988123e53e7e75c649b17fb597e224236454dcf"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD orbital cargo hauler17 PARTIAL cargo-only components, remaining S/SW/W/NW cameras.\nImage1 is the exact FULL three-cassette original and edit target. In EACH of its four panels REMOVE the TWO OUTER cases from the row, retaining exactly ONE ORIGINAL MIDDLE CASE with its ORIGINAL SIZE, POSITION, CAMERA, LIGHTING, MATERIALS and details. Removed cases become true transparent background.\nTop-left S: remove upper and lower cases, keep only the center case.\nTop-right SW: remove lower-left and upper-right cases, keep center only.\nBottom-left W: remove left/right cases, keep center only.\nBottom-right NW: remove upper-left/lower-right cases, keep center only.\nDo not enlarge or recenter the surviving case. Same physical sand/tan low cassette with graphite corner caps, broad muted ochre band and small handles/latches, same orthographic2:1 elevated26.565degree camera and upper-left SCREEN light. Exactly one low case per panel, no stacking, loose props or different camera.\nPreserve1536x1024 image and original four magenta exterior separator frames and grid. Keep every surviving case complete with generous32px+ TRUE TRANSPARENT clearance. Panel backgrounds, removed objects, gutters and margins alpha0. No magenta haze, colored fringes, castshadow, background fill, checkerboard, text, labels, arrows, numbers, logos or watermark. NO spacecraft, deck, rail, head, nozzle, floor or chassis. Quantity removal only, preserve the middle case's original physical scale in all4genuine cameras.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-8588e868-dd51-423a-b4af-c7d47956aa4b.png",
+  "actual_camera_mapping": [
+    {
+      "requested": "S",
+      "actual": "S",
+      "evidence": "One original low case, symmetric near-end S view."
+    },
+    {
+      "requested": "SW",
+      "actual": "SW",
+      "evidence": "One case, axis lower-left forward to upper-right rear."
+    },
+    {
+      "requested": "W",
+      "actual": "W",
+      "evidence": "One case, horizontal W-side view, forward left."
+    },
+    {
+      "requested": "NW",
+      "actual": "NW",
+      "evidence": "One case, axis upper-left forward to lower-right rear."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-partial-s-sw-w-nw-v1.png",
+  "sha256": "e7115c14ae48836fbcbb754780b2ed23c4bc93a2faf9a07d8ea13a7ab05ef762",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          192,
+          126,
+          517,
+          345
+        ],
+        "minimum_transparent_clearance": 111,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          488
+        ],
+        "subject_bbox_in_crop": [
+          185,
+          102,
+          546,
+          391
+        ],
+        "minimum_transparent_clearance": 65,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          190,
+          124,
+          518,
+          324
+        ],
+        "minimum_transparent_clearance": 124,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          157,
+          72,
+          514,
+          359
+        ],
+        "minimum_transparent_clearance": 72,
+        "opaque_separator_pixels": 0
+      }
+    }
+  }
+}

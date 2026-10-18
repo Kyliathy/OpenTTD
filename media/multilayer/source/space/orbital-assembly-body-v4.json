@@ -1,0 +1,91 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.1. Genuine corrected Assembly body with exposed rear vertex and original one-gantry/one-console hardware.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-body-v4",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v2.png",
+      "sha256": "767b6b377742b66ed023692b9c6f98bf71a4aed02ae3443061fc7a571daa7239",
+      "role": "edit target: preserve proven floor, move gantry left to expose rear vertex"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: fixed orbital Assembly workshop body, minimal placement correction.\nImage1 is the edit target. KEEP ITS ENTIRE DIAMOND FLOOR EXACTLY AS DRAWN: same four source corner positions, same shallow2:1camera, same floor size/shape, thin rim, floor seams, canvas, alpha and lighting. Its floor has already passed native pixel registration. Do not raise the rear corner, lower the front corner, steepen the camera, resize or re-render the floor shape. No change to the floor at all.\nThe only edit: move the ENTIRE gantry (both posts, ONE straight crossbeam, ONE small hanging tool head) HORIZONTALLY LEFT by approximately120source pixels in this image. ZERO vertical movement. Keep its size, height, orientation, cream/navy materials and equipment exactly unchanged. This moves the crossbeam away from the actual rear floor vertex and makes that rear corner directly visible with a clear grey-deck gap. Both gantry feet remain well inside the existing deck. Exactly two posts/one beam/one hanging tool, never add a third support. Keep the small blue-window console EXACTLY in its present position and size; it must remain separately visible in front. Broad front apron stays empty. All four original floor corners must now be visible.\nPreserve every unrelated pixel relationship and do not use the floor from another trial. Only one isolated complete model on truly transparent background. No product, craft, ghost robot, cargo, tank, PV panel, spare part, extra equipment, text, symbol, glow, coupling, clamp, ground or cast shadow outside the floor. Same safe transparent margins and upper-left light. Source image is1402x1122; retain that framing.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+  "original_sha256": "0e6204818ae937c813a8658f4d92e215d2ae44b669761f18cd5b85f1fb16b9b4",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      71,
+      276,
+      1332,
+      1007
+    ],
+    "uniform_scale": [
+      100,
+      1000
+    ],
+    "source_reference": [
+      701,
+      370
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        355
+      ],
+      [
+        1327,
+        666
+      ],
+      [
+        701,
+        990
+      ],
+      [
+        76,
+        666
+      ]
+    ]
+  }
+}

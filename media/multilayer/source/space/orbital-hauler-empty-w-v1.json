@@ -1,0 +1,57 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.2. Exact single-view W fallback request from the untouched original E reference; genuine opposite geometry retains one display/nozzle and generous original alpha margins.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-empty-w-v1",
+  "tool": "built-in image_gen",
+  "state": "empty",
+  "directions": [
+    "W"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_model_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Exact untouched approved E physical barge reference, ordinary rectangle only",
+      "path": "media/multilayer/guides/space/orbital-hauler-e-original-reference.png",
+      "sha256": "2fac10d21e130f57d1c6a959b64a09c2dc43a2e2de5863bdbb9cea17adbe5e71"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD cargo hauler17, ONE genuine EMPTY W side view.\nInput1 is the exact untouched approved E-side physical model: FRONT command head at RIGHT with ONE navy display on its one sloping upper face; one long bare empty steel deck with2fixed teal side rails; ONE rear engine nozzle at LEFT. Orbit the real3D camera to the OPPOSITE W side. FRONT head and its ONE display now LEFT; ONE rear nozzle RIGHT. Same exact barge geometry/proportions/head/deck/rail inventory and fixed upper-left SCREEN light, actual opposite visible faces and occlusion, never a flat mirror/rotation or ports swapped on an unchanged hull.\nCRITICAL: ONE navy diagnostic display TOTAL, only on its original sloping upper head face. All other faceted head faces are SOLID IVORY/TEAL, NO second navy pane, cockpit/window, dark glazing or extra indicator. Do not duplicate the screen to show it from two angles; natural foreshortening/occlusion is fine. One short front command head, ONE compact cylindrical rear nozzle, exactly2fixed low side rails and original end sills/posts around the same bare recessed rectangular steel cargo deck. Preserve the elongated low ivory/gunmetal/muted-teal body and clean original hardware. No cargo/materials/crates/tanks/ore, arms/grippers/drill/cutter/scanner, solarwings/antenna/crew/weapons/legs/extraengines or service/exhaust/light/work.\nSame LOW elevated orthographic2:1 side camera26.565degrees, calm original native style, projected whole width:height about3.6:1, low shallow deck view, upper-left SCREEN lighting unchanged. Whole body~560px wide/155px tall on a1024x1024 TRUE TRANSPARENT canvas, centered with at least100px clean alpha=0 margin on all sides. Single-view fallback: NO magenta/source frame/colored border, background, ground/castshadow, haze, checkerboard or painted transparency. No text/labels/arrows/numbers/watermark/extra views. Complete uncut original barge, frontLEFT with just ONE navy screen, rear nozzleRIGHT, EMPTY deck. Designed for unchanged64x48native and anchor(-32,-32).",
+  "path": "media/multilayer/source/space/raw/orbital-hauler-empty-w-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-c36de306-079f-47b4-ad36-dc30382f4fca.png",
+  "sha256": "fd30da59a9ade53298633fba690e3b3550b8160d0cb966530d0828d7e3d983cb",
+  "actual_size": [
+    1862,
+    845
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "W": {
+        "crop_box": [
+          0,
+          0,
+          1862,
+          845
+        ],
+        "subject_bbox_in_crop": [
+          84,
+          220,
+          1776,
+          669
+        ],
+        "minimum_transparent_clearance": 84,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "camera": "Front command head LEFT with exactly ONE original navy display; other head faces opaque ivory/teal, one original rear nozzle RIGHT, same long empty deck and2rails. Fixed upper-left screen light; actual opposite physical faces.",
+    "background": "Single-view truealpha source, no frame, no code alpha repair. Actual landscape output differs from requested square; measured source geometry is authoritative."
+  }
+}

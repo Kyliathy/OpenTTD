@@ -1,0 +1,124 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.3b. Exact display-only request and immutable measured original. Native parts may select ordinary central navy-face rectangles only; existing model/opacity/masks remain a separate approval.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-status-s-sw-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "status_components",
+  "directions": [
+    "S",
+    "SW",
+    "E",
+    "SE"
+  ],
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "position": "left"
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "position": "middle"
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "position": "right"
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Approved actual S/SW/E/SE robot and original flat navy roof-display geometry",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+      "sha256": "764a3427d35134aab1b161836e502447548b427cae037910573adb81932e8104"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD model16 retained construction robot, ORIGINAL FLAT NAVY ROOF DISPLAY ONLY, status component originals.\nInput1 is the approved SAME physical robot in actual S(top-left),SW(top-right),E(bottom-left),SE(bottom-right) cameras. Extract/render ONLY its one original SMALL FLAT DARK-NAVY DIAGNOSTIC DISPLAY with its existing narrow pale-ivory beveled surround. The display sits toward the FRONT on the original sloped roof plate. Preserve that exact existing display shape, shallow thickness, ivory edge, navy face, physical orientation/projection and fixed upper-left SCREEN light. Do not include the hull, arms, grippers, coupling, nozzle or lower boss. Do not redesign it into a box, open door, floating hologram, antenna, text or new hardware. This robot has no cargo or admitted building work.\nRender exactly TWELVE isolated copies of this SAME original display,3actual illumination variants per genuine camera. Four outer panels retain actual S/SW/E/SE viewpoints in the same2x2 positions as the reference, with3SEPARATE cutouts side-by-side per panel:\nLEFT BLOCKED: one broad short warm AMBER interlock bar on the existing navy display face.\nMIDDLE SERVICE A: one broad bright CYAN diagnostic bar toward one end of the existing navy face; opposite end stays dark.\nRIGHT SERVICE B: same unchanged display with the CYAN bar at the OPPOSITE END of its same face; A end now dark. Genuine different actual source pixels, same housing/position/proportions. The bar must remain within the original navy face. No glow/halo/exhaust, no moving/opened/new hardware or work.\nCrisp volumetric isometric display surfaces, no letters/numbers/symbols. Bars about35-45source pixels long and15-20px thick, clear enough for a4-8px native display component. All12same physical scale; maximum each complete display140x120px. Fixed low orthographic2:1 camera, upper-left light.\n1536x1024 TRUE-TRANSPARENT sheet. Four opaque pure-magenta #FF00FF6px separator frames at S(24,24)-(744,488),SW(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000). Each outer panel has3isolated displays centered S(148,256),(380,256),(612,256);SW(916,256),(1148,256),(1380,256);E(148,768),(380,768),(612,768);SE(916,768),(1148,768),(1380,768).\nEvery entire cutout must fit its OWN200x352safe rectangle with24px+ TRUE TRANSPARENT clearance on all sides: S x48..248/280..480/512..712 y80..432;SW x816..1016/1048..1248/1280..1480 y80..432; E same Sx y592..944;SE same SWx y592..944. No connected triplets or overlaps. Pure magenta only exterior frames, never model/cutout pixels. Empty background/margins/gutters actual alpha=0, no translucent purple haze/checkerboard/gray-white fill/castshadow. No text/labels/arrows/watermark/otherprops. ONLY the original flat displays, in true original S/SW/E/SE projections, blocked/serviceA/serviceB left-to-right.",
+  "path": "media/multilayer/source/space/raw/construction-robot-status-s-sw-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-26d6b7fe-3a8b-43fd-b092-35c598e8de7c.png",
+  "sha256": "02ea29a6446892e4b1f23ffb988464c7f15ec60097b68f3cbd68ca7324e7e7f2",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          752,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          35,
+          178,
+          693,
+          301
+        ],
+        "minimum_transparent_clearance": 27,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          784,
+          32,
+          1520,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          23,
+          169,
+          703,
+          334
+        ],
+        "minimum_transparent_clearance": 23,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          43,
+          143,
+          665,
+          283
+        ],
+        "minimum_transparent_clearance": 39,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          784,
+          544,
+          1520,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          45,
+          123,
+          720,
+          295
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "measured_layout_note": "Actual cutouts exceed requested140px. Measured frame-free ordinary panel rectangles preserve every original cutout with16px+ clearance; right separator begins1522. No frame/alpha erasure or source resampling.",
+    "part_policy": "Select only central original navy display/bar surfaces by ordinary subrectangle, excluding the unrequested corner dot/bezel. Existing native face masks protect all other original pixels."
+  }
+}

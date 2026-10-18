@@ -1,0 +1,123 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66.1. Exact original new-model request, no image inputs, and actual first4genuine empty-hauler cameras. Source/native selection remains separate from full coverage/packing/runtime.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-empty-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "empty",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [],
+  "prompt": "Use case: stylized-concept.\nAsset: Original OpenTTD vehicle.model-17 ORBITAL CARGO HAULER, EMPTY, first physical model selection. This is an original general freight barge, not a mining craft or a construction robot.\nDesign one compact broad low elongated rectangular cargo-barge hull in pale-ivory ceramic/gunmetal with restrained muted TEAL structural panels. One shallow open recessed RECTANGULAR CARGO DECK in the center, bare dark steel floor EMPTY, with exactly TWO fixed low side cargo-retaining rails and a low front/rear sill. No cargo, crates, ore, tanks or carried materials in this empty pose. Floor must be visible and large enough for later genuine partial/full container loads, about40percent of whole top area, with a continuous simple rectangular interior and clearly readable foreground rail. ONE short solid command head at the FRONT with ONE small flat dark-navy diagnostic display on its upper sloped face, NO cockpit/windows/crew. Exactly ONE compact central cylindrical REAR maneuvering engine nozzle, unlit, behind the rear sill. No auxiliary engine/nozzle pairs, side booms, arms/grippers, cutter/drill/scanner dish, solar wings/antenna, loose hoses, guns/weapons or landing legs. Original broad cargo silhouette, clean simple equipment inventory, no decorative hardware clutter.\nThe front command head/display and rear engine must turn coherently with the actual physical camera. Same rectangular bay/deck, exactly2fixed side rails, one front command head/display, ONE rear nozzle in every view; no swapping a nozzle onto an unchanged nose. No exhaust/light/work/service, motionblur or company-color masking. Color palette avoids bright company-blue: calm ivory/gunmetal and muted teal. Original crisp detailed volumetric industrial isometric game machinery for native64x48 indexed DOS palette, world anchor(-32,-32). One fixed LOW elevated ORTHOGRAPHIC2:1 camera about26.565degrees above horizontal, upper-left SCREEN lighting constant, natural near/far rail occlusion, no flat bitmap rotation/mirroring.\nCreate four GENUINE physical cameras of this same EMPTY barge in a1536x1024 TRUE-TRANSPARENT2x2 sheet:\nTOP LEFT N is a REAR view: front command head/navy display at far UPPER edge facing UP/AWAY, rear nozzle mouth at near LOWER center facing DOWN/TOWARD viewer. Deck lies between head at top and nozzle at bottom. Do not render another front-facing S view here.\nTOP RIGHT NE is REAR-three-quarter: front head/display far UPPER-RIGHT, ONE rear nozzle near LOWER-LEFT. Same bare cargo deck and exactly2rails turn as one3D rig.\nBOTTOM LEFT E side: FRONT command head/display RIGHT, ONE rear nozzle LEFT.\nBOTTOM RIGHT SE front-three-quarter: front head/display near LOWER-RIGHT, rear nozzle far UPPER-LEFT.\nFour opaque straight pure-magenta #FF00FF6px exterior separator rectangles at N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000). Each whole barge maximum520px wide/340px tall, one physical scale across all4views. Keep COMPLETE models safely inside N[64,64,704,448],NE[832,64,1472,448],E[64,576,704,960],SE[832,576,1472,960], with32px+ TRUE TRANSPARENT clearance to every frame. Reduce the whole model uniformly for clearance, never shorten a rail/engine separately. Empty panel interiors/margins/gutters actual alpha=0, no translucent magenta/purple haze, background, checkerboard, gray/white fill, ground plane/castshadow or glow. Do not overlap or clip subjects. No text/numbers/labels/arrows/watermark/otherprops. Same original EMPTY cargo barge, exact four genuine N/NE/E/SE cameras.",
+  "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-bb688c53-5107-411b-82ea-5d22d29ed7aa.png",
+  "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "actual_camera_mapping": [
+    {
+      "requested": "N",
+      "actual": "N",
+      "evidence": "Front command head/display UP/far, rear open nozzle DOWN/near, empty deck between"
+    },
+    {
+      "requested": "NE",
+      "actual": "NE",
+      "evidence": "Front head/display UPPER-RIGHT/far, rear open nozzle LOWER-LEFT/near"
+    },
+    {
+      "requested": "E",
+      "actual": "E",
+      "evidence": "Front head/display RIGHT, single rear nozzle LEFT"
+    },
+    {
+      "requested": "SE",
+      "actual": "SE",
+      "evidence": "Front head/display LOWER-RIGHT/near, rear nozzle UPPER-LEFT/far"
+    }
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          496
+        ],
+        "subject_bbox_in_crop": [
+          199,
+          22,
+          507,
+          444
+        ],
+        "minimum_transparent_clearance": 20,
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          496
+        ],
+        "subject_bbox_in_crop": [
+          62,
+          41,
+          633,
+          437
+        ],
+        "minimum_transparent_clearance": 27,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          22,
+          155,
+          688,
+          336
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          30,
+          20,
+          654,
+          422
+        ],
+        "minimum_transparent_clearance": 20,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "measured_layout_note": "Actual complete models exceed requested520x340. Measured ordinary rectangles retain all original subjects/frame-free16px+ clearance with unchanged original alpha; first-row bottom496 accommodates genuine rear engine safely. Native whole-body uniform reduction remains a separate geometry check."
+  },
+  "model_review": "One broad elongated ivory/gunmetal/muted-teal barge, bare recessed rectangular deck,2fixed side rails/end sills, single front navy-display command head and one compact rear nozzle. No cargo, arms/cutter/work/solarwings/crew or extra engines."
+}

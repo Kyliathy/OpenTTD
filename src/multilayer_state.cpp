@@ -7,6 +7,7 @@
 /** @file multilayer_state.cpp Metadata validation/staging without an alternate profile or feature pool. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md; r2mlvs6-mines-and-resource-chains.md; r2mlvs12-solar-farms-mirrors-and-eti.md */
 
 #include "stdafx.h"
+#include "surface_supply_order_runtime.h"
 #include "asteroid.h"
 #include "launch_center.h"
 #include "multilayer_space_content.h"
@@ -163,6 +164,7 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 /** Clear load transport and feature seed roots during ordinary world initialization. */
 void ResetMultiLayerStateSchema()
 {
+	ResetSurfaceSupplyOrders(); // World replacement discards only commitment/history metadata; old-world cash and physical packets stay with their original world owners.
 	ResetSpaceContentLoadStaging();
 	ResetSpaceProductionLoadStaging();
 	ResetSpaceManifestLoadStaging();

@@ -153,8 +153,15 @@ index once; bucket departure uses constant-work swap/pop. Local queries cost
 their visited buckets and actual sorted candidate output, including all
 14,336 clustered records. Native hull fixtures allocate matching Map geometry,
 but initialize only the measured Space layer and claim no whole-save,
-maximum-map Surface-generation or whole-game FPS acceptance. Final authored
-Space sprites, packed loading and ordinary-game art review remain open.
+maximum-map Surface-generation or whole-game FPS acceptance. Plan10's seven
+final Space sprite families now pass [packed/native/ordinary review](../../../../logs/space-art-final-verification.json):
+stable native3599..5166, two identical actual GRF builds, generator-free exact
+old/new decoding,95,743 assertions per configuration and34 ordinary captures.
+Body/pod rendering reads the original Space spatial index and passive custody;
+craft render caches refresh after all late native load owners are accepted.
+Neither drawing nor paused reload grants gameplay work or changes an attachment
+point. Plan9/11's remaining launch, rocket/hauler/heavy and station art stays
+with its own source gates.
 
 ## Generated graphics and drawing
 

@@ -1,0 +1,102 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. New body-only original, awaiting native fit and one separate genuine coupling.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-body-v1",
+  "tool": "built-in image_gen",
+  "state": "complete-body",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "native_body_geometry_verified",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+      "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b",
+      "role": "generator-facing shallow guide only; actual output must pass native geometry"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nCreate a fresh original low orbital command platform for OpenTTD, using the input shallow diamond as its floor-projection reference. Single isolated1024x1024 RGBA image with real transparency and generous empty margins. Keep the floor thin and broad, close to this shallow outline, with its width a little over twice its projected depth. Do not enlarge or steepen the template.\nDesign: one central LOW OCTAGONAL ivory command hub, a muted teal band and dark glass strip; exactly TWO low flat navy solar-panel banks on the rear-left and rear-right areas as one paired assembly; exactly ONE shallow ivory supply locker in the foreground-left. Simple recessed dark conduits and pale floor plates connect the hardware. Clean crisp dimetric transport-game artwork, gunmetal structure, restrained ivory/teal/navy, upper-left light. Low compact hardware; hub rises no more than70source pixels.\nThe square3x3 floor has plain corners, a paper-thin rim and no legs, tall masts, projecting corner caps, decorative corner discs or deep underside. Every floor corner is complete and visible.\nThis is the BODY SOURCE ONLY: NO DOCKING COUPLING, NO BERTH, NO EDGE APERTURE, NO PROJECTING MOUTH anywhere on the floor. Every outside edge is plain and continuous. A genuine separate original coupling will later be authored and registered at the native contact. Leave the front-right edge clear and undecorated.\nNo vehicles, robots, cargo crates, people, crane, extra hardware, text, symbols, labels, guide lines, green marks, scenery or shadow beyond the floor. Replace the guide grey with actual original station materials; don't copy guide outlines as visible markings. Maintain the large transparent margin. One fixed whole model only.",
+  "original": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+  "original_sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+  "image_size": [
+    1254,
+    1254
+  ],
+  "measured_subject_bbox": [
+    144,
+    432,
+    1110,
+    918
+  ],
+  "native_registration": {
+    "canvas": [
+      256,
+      192
+    ],
+    "native_reference": [
+      128,
+      64
+    ],
+    "native_floor_corners": [
+      [
+        128,
+        64
+      ],
+      [
+        224,
+        112
+      ],
+      [
+        128,
+        160
+      ],
+      [
+        32,
+        112
+      ]
+    ],
+    "native_approach": [
+      224,
+      128
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      144,
+      432,
+      1110,
+      918
+    ],
+    "uniform_scale": [
+      20,
+      101
+    ],
+    "source_reference": [
+      623,
+      439
+    ],
+    "source_floor_corners": [
+      [
+        628,
+        433
+      ],
+      [
+        1109,
+        669
+      ],
+      [
+        628,
+        917
+      ],
+      [
+        144,
+        669
+      ]
+    ]
+  }
+}

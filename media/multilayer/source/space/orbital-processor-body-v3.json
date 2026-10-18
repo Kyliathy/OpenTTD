@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.1. Genuine built-in shallow-deck correction, immutable original.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_edit",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset module.processor, same complete machine. Image1 is the exact machine edit target; Image2 is a shallow floor geometry reference ONLY, not artwork. Keep EXACTLY the same one horizontal sealed drum, one finned exchanger, one short connecting pipe, one blue-window console, same materials and equipment placement. Correct ONLY the deck camera and rim: make its diamond shallower in vertical projection, like Image2. In a1536x1024 canvas the four deck surface vertices should be approximately rear(768,260), right(1368,540), front(768,820), left(168,540): width1200, height560, rather than the current tall diamond. The deck is a paper-thin steel plate with only a dark hairline edge at front, NO thick extruded fascia, no hanging underside. Preserve the visible empty rear triangular corner and full3x3nine-panel floor. Adjust the machinery supports to this corrected flat plane as part of the genuine redraw; keep the hardware low and squat, empty front deck, console near centre/front, lower-right edge clear. Orthographic camera and parallel floor edges, upper-left light. ONE complete isolated cutout with truly transparent background and at least80transparent pixels around every model pixel. All four corners fully visible. No text, no labels, no markers, no guide symbols, no separate shadow/glow, no second view or new equipment. No cargo, products, robot, vehicle, gantry, solar panel, clamps or background. Thin shallow floor silhouette is the only requested correction; preserve model identity.",
+  "input_images": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-processor-body-v2.png",
+      "role": "edit_target",
+      "sha256": "52a5c910262790491ecadf36e2deee81766a13f0e8ff2af596e6a7339c6b2b7c"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+      "role": "geometry_only_reference",
+      "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b"
+    }
+  ],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-8634b3af-de90-4940-97e2-a0887b475114.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-body-v3.png",
+    "sha256": "6ca6d7d7854913d54bcce1bd07f20dba1ff38aa9ac8e76fd0ca965fc78248ab8"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    63,
+    237,
+    1473,
+    943
+  ],
+  "selection": "selected_geometry_pending_base_review"
+}

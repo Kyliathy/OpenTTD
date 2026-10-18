@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_service.cpp Contained Core/Dock berths, actual service packets and atomic shared-power settlement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1B/3/4C/6B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; read-only physical service disclosure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; original contained timers consume complete per-role bills through the same750J owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; the same native connection commands delegate to the distinct processing owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; original countdown queried for presentation only.
@@ -122,6 +123,32 @@ static size_t PacketCount(const StationCargoList &stock)
 	// Saved transport bounds include every next-hop bucket; quantity alone cannot admit a fragmented destination.
 	for (const auto &[hop, packets] : *stock.Packets()) { (void)hop; count += packets.size(); }
 	return count;
+}
+
+/** Query original physical service gates without spending or borrowing a grant.
+ * @param site Actual completed service facility and its contained native jobs.
+ * @return True for an unavailable facility or wholly blocked pending work.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K
+ */
+bool IsOrbitalServiceFacilityBlocked(const SpaceStructure &site)
+{
+	const auto *source = GetOrbitalServicePowerSite(site);
+	// A configured ID alone cannot replace an activated original physical panel.
+	if (source == nullptr || GetOrbitalModulePanelRate(*source) == 0) return true;
+	const auto *consumer = GetUtilityPowerConsumer(site.module->consumer);
+	// Only this installed service identity may use its explicitly connected panel.
+	if (consumer == nullptr || !consumer->active || consumer->owner != site.state.owner ||
+		consumer->linked_producers != std::vector{source->module->producer}) return true;
+	bool blocked = false;
+	// Berths are independent: one paused job cannot paint a ready second berth
+	// as unavailable. Pausing alone is a player choice, not a missing resource.
+	for (const auto *job : site.module->GetServiceJobs()) {
+		if (job->remaining_ticks == 0) continue;
+		if (job->paused) continue;
+		if (ReadyJob(site, *job)) return false;
+		blocked = true;
+	}
+	return blocked;
 }
 
 /** @copydoc HasOrbitalServiceAssignment */

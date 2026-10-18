@@ -52,6 +52,7 @@
 #include "excavation.h"
 #include "station_func.h"
 #include "station_supply.h"
+#include "surface_supply_order_runtime.h"
 #include "multilayer_industry.h"
 #include "layer_industry_baseline.h"
 #include "station_kdtree.h"
@@ -489,6 +490,7 @@ void Station::MoveSign(TileIndex new_xy)
 	_station_kdtree.Remove(this->index);
 
 	this->BaseStation::MoveSign(new_xy);
+	ReconcileSurfaceSupplyStation(this->index); // The synchronized native anchor changed: a saved receiving reservation must not silently follow a different physical station incarnation.
 
 	_station_kdtree.Insert(this->index);
 }
@@ -781,6 +783,7 @@ static void DeleteStationIfEmpty(BaseStation *st)
  */
 void Station::AfterStationTileSetChange(bool adding, StationType type)
 {
+	ReconcileSurfaceSupplyStation(this->index); // Actual topology changes retire unusable unshipped freight receivers; ordinary sign repaint remains free of gameplay/finance mutations.
 	this->UpdateVirtCoord();
 	DirtyCompanyInfrastructureWindows(this->owner);
 
@@ -1858,6 +1861,7 @@ CommandCost RemoveFromRailBaseStation(TileArea ta, std::vector<T *> &affected_st
 		/* if we deleted the whole station, delete the train facility. */
 		if (st->train_station.IsEmpty()) {
 			st->facilities.Reset(StationFacility::Train);
+			ReconcileSurfaceSupplyStation(st->index); // Rail removal bypasses AfterStationTileSetChange; losing the last freight facility must refund pending purchases before the sign's delayed deletion.
 			SetWindowClassesDirty(WindowClass::VehicleOrders);
 			SetWindowWidgetDirty(WindowClass::StationView, st->index, WID_SV_TRAINS);
 			MarkCatchmentTilesDirty();
@@ -4127,7 +4131,14 @@ static void TruncateCargo(const CargoSpec *cs, GoodsEntry *ge, uint amount = UIN
 	if (!ge->HasData()) return;
 
 	StationCargoAmountMap waiting_per_source;
-	ge->GetData().cargo.Truncate(amount, &waiting_per_source);
+	auto &cargo = ge->GetData().cargo;
+	if (cargo.TruncateAbandonedOffers(amount) == 0) return;
+	const auto *packets = cargo.Packets();
+	// Bought material already belongs to its company and cannot abandon an unrated station. Preserve the original ordinary-source feedback from actual surviving packets, excluding protected purchased stock without another inventory or random draw.
+	for (StationCargoList::ConstIterator it(packets->begin()); it != packets->end(); ++it) {
+		if (!(*it)->GetSource().IsCompanySupply()) waiting_per_source[(*it)->GetFirstStation()] += (*it)->Count();
+	}
+	// Actual surviving ordinary offers retain the original source-station congestion feedback; protected owned supplies never masquerade as abandoned customer offers.
 	for (StationCargoAmountMap::iterator i(waiting_per_source.begin()); i != waiting_per_source.end(); ++i) {
 		Station *source_station = Station::GetIfValid(i->first);
 		if (source_station == nullptr) continue;
@@ -4512,9 +4523,20 @@ static void StationHandleSmallTick(BaseStation *st)
 	if (b == 0) UpdateStationRating(Station::From(st));
 }
 
+/** Original native whole-purchase ingress, defined beside UpdateStationWaiting below.
+ * @param station Exact original Surface receiver.
+ * @param cargo Actual resolved label slot.
+ * @param quantity Whole paid units.
+ * @param source Original non-paying buyer provenance.
+ * @return Issued native packet identity or unchanged refusal.
+ */
+static CargoPacketID ReceivePaidSurfaceSupply(StationID station, CargoType cargo, uint16_t quantity, Source source);
+
+/** Run original station service, including bounded paid arrivals at the station acceptance cadence; editor ticks cannot dispatch gameplay stock. */
 void OnTick_Station()
 {
 	if (_game_mode == GameMode::Editor) return;
+	if (TimerGameTick::counter % Ticks::STATION_ACCEPTANCE_TICKS == 0) DispatchPendingSurfaceSupplyOrders(ReceivePaidSurfaceSupply);
 
 	for (BaseStation *st : BaseStation::Iterate()) {
 		StationHandleSmallTick(st);
@@ -4577,9 +4599,10 @@ void ModifyStationRatingAround(TileIndex tile, Owner owner, int amount, uint rad
  * @param cargo Runtime cargo slot.
  * @param amount Offered supply in 1/256 cargo units; exact finite callers offer whole units shifted by eight bits.
  * @param source Existing producer provenance.
+ * @param issued Optional original packet identity captured before native Append may merge/retire the new packet; no live packet ownership is transferred to this receipt.
  * @return Whole units actually placed into accountable packets, or zero without allocation.
  */
-static uint UpdateStationWaiting(Station *st, CargoType cargo, uint amount, Source source)
+static uint UpdateStationWaiting(Station *st, CargoType cargo, uint amount, Source source, CargoPacketID *issued = nullptr)
 {
 	/* We can't allocate a CargoPacket? Then don't do anything
 	 * at all; i.e. just discard the incoming cargo. */
@@ -4594,7 +4617,9 @@ static uint UpdateStationWaiting(Station *st, CargoType cargo, uint amount, Sour
 	if (amount == 0) return 0;
 
 	StationID next = ge.GetVia(st->index);
-	ge.GetOrCreateData().cargo.Append(CargoPacket::Create(st->index, amount, source), next);
+	auto *packet = CargoPacket::Create(st->index, amount, source);
+	if (issued != nullptr) *issued = packet->index;
+	ge.GetOrCreateData().cargo.Append(packet, next);
 	LinkGraph *lg = nullptr;
 	if (ge.link_graph == LinkGraphID::Invalid()) {
 		if (LinkGraph::CanAllocateItem()) {
@@ -4625,6 +4650,18 @@ static uint UpdateStationWaiting(Station *st, CargoType cargo, uint amount, Sour
 	SetWindowDirty(WindowClass::StationView, st->index);
 	st->MarkTilesDirty(true);
 	return amount;
+}
+
+/** @copydoc ReceivePaidSurfaceSupply */
+static CargoPacketID ReceivePaidSurfaceSupply(StationID station, CargoType cargo, uint16_t quantity, Source source)
+{
+	Station *st = Station::GetIfValid(station);
+	// The original ingress independently checks whole native packet/storage room before touching fractions or custody; a failed delivery cannot leave stock behind with an unfulfilled/refundable order.
+	if (st == nullptr || !IsValidCargoType(cargo) || quantity == 0 || st->goods[cargo].TotalCount() > UINT32_MAX - quantity || !CargoPacket::CanAllocateItem()) return CargoPacketID::Invalid();
+	CargoPacketID issued = CargoPacketID::Invalid();
+	const auto received = UpdateStationWaiting(st, cargo, static_cast<uint>(quantity) << 8, source, &issued);
+	assert(received == quantity); // Whole shifted units preserve the station's original fractional credit and cannot partially enter native custody.
+	return issued;
 }
 
 static bool IsUniqueStationName(const std::string &name)

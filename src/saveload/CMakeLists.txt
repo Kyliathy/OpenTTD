@@ -24,6 +24,10 @@ add_files(
     autoreplace_sl.cpp
     cargomonitor_sl.cpp
     cargopacket_sl.cpp
+    # Sole original order-book transport: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_sl.cpp
+    # Original non-paying packet purpose admission: r2mlvs6-mines-and-resource-chains.md Group13CB.
+    cargo_source_sl.h
     cheat_sl.cpp
     company_sl.cpp
     depot_sl.cpp

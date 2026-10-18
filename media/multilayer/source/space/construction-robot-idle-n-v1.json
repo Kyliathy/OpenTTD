@@ -1,0 +1,39 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Immutable single-view trial; reject the high camera/oversized rear projection before native selection.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-n-v1",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "N"
+  ],
+  "transparent_background": true,
+  "status": "rejected_camera_projection",
+  "rejection": "Actual isolated model bounds740x826 cannot match the accepted broad47x31 opposing S silhouette at one uniform physical scale within64x48. Rear nozzle/camera projection too long and roof too exposed; retained as a camera-correction input only, never selected source.",
+  "reference_inputs": [
+    {
+      "role": "Exact approved E-side physical model reference",
+      "path": "media/multilayer/guides/space/construction-robot-e-original-reference.png",
+      "sha256": "5fab1d8c60e7a26f0d66ef30fa4c525cf9a8f7d9e0b81343c15de957d3d03edc"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD model16 retained cargo-less construction robot, one IDLE genuine N REAR view.\nInput image1 is the approved physical robot viewed from its E side: ONE rear nozzle on LEFT, passive front coupling on RIGHT, two folded side arms, navy roof display toward RIGHT/front. Orbit the camera to look directly at its REAR, keeping the exact same hull, proportions and hardware. N means the robot's FRONT points UP/AWAY, its REAR points DOWN/TOWARD viewer. Put the mouth of its ONE central rear engine nozzle at the BOTTOM CENTER nearest camera. The original dark roof display moves to the FAR/UPPER front part of the roof. The passive front flange is far UP and may be hidden by the hull; do NOT put a second nozzle/flange at the opposite upper edge. The two orange shoulder joints are near lower left/right of the hull; their folded forearms and closed wrists point toward the FAR/UPPER front along the hull sides. Exactly2arms and2wrists total; do not add another pair of forward hands. This is a genuine rear view, not another frontal S view with a larger front port.\nPreserve closed broad pentagonal ivory-ceramic/gunmetal body, burnt-orange joint plates, exactly TWO folded articulated side arms, exactly ONE compact central rear nozzle, small front passive blank coupling, one flat dark-navy unlit display toward FRONT, integral closed lower chassis swivel boss. No extra nozzles, drill/cutter/welding, cargo/crates/hopper/open bed, solar wings, antennas, crew or weapons. No active light/exhaust/work. Camera stays elevated orthographic2:1, upper-left SCREEN illumination unchanged; rear gunmetal planes become visible, no flat mirror/rotation.\nONE complete isolated rear-facing N robot on TRUE TRANSPARENT1024x1024. Entire body centered, width about520px and height340px, generous empty alpha=0 margins of at least100px. Single-view fallback: NO magenta source frame or other colored borders, NO background/ground/shadow/haze/checkerboard. Preserve true alpha. Crisp volumetric isometric machinery for native64x48, anchor(-32,-32). No text/labels/arrows/numbers/watermark/extra views. Front and display UP/far; ONE rear nozzle DOWN/near; the same2folded arms only.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-n-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-56b8643a-3c27-405d-8861-840bdaed36aa.png",
+  "sha256": "b933a8cdb0cc0cb0eda46027d1fe18de8ac0699e2ac239446768b8dbd8ad47f3",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      257,
+      214,
+      997,
+      1040
+    ],
+    "status": "not_registered",
+    "reason": "Projection rejected before crop/native registration; no body scale/anchor accepted."
+  }
+}

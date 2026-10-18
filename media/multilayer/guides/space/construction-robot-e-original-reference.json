@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Exact ordinary source rectangle for imagegen camera reference only; no new/generated model art, pixel edits, resampling, masks, alpha repair or native source coverage.",
+  "source": {
+    "path": "media/multilayer/source/space/raw/construction-robot-idle-s-sw-e-se-v1.png",
+    "sha256": "764a3427d35134aab1b161836e502447548b427cae037910573adb81932e8104"
+  },
+  "source_candidate": "construction-robot-idle-s-sw-e-se-v1",
+  "direction": "E",
+  "crop_box": [
+    32,
+    544,
+    736,
+    992
+  ],
+  "output": {
+    "path": "media/multilayer/guides/space/construction-robot-e-original-reference.png",
+    "sha256": "5fab1d8c60e7a26f0d66ef30fa4c525cf9a8f7d9e0b81343c15de957d3d03edc"
+  },
+  "size": [
+    704,
+    448
+  ],
+  "rgba_pixels_identical_to_original_rectangle": true,
+  "purpose": "Single genuine side view avoids unrelated front-camera reference dominance during canonical per-view generation fallback."
+}

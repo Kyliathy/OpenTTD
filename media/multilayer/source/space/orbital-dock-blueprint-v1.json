@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Genuine inert blueprint original registered without bitmap correction.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-blueprint-v1",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_body_pending_full_state_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+      "sha256": "6a49ac607f0b4034b654aea0f75c33468daa397d52de4458507a26389787f950",
+      "role": "approved complete Dock body edit target; footprint and cabinet identity"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.dock, ONE fixed Dock BLUEPRINT original for OpenTTD.\nInput image is the approved complete BODY edit target (it has no clamp components). Create its inert unbuilt planning state. Preserve its exact shallow isometric camera, same image framing, the four diamond floor corners and the little rear servicing-cabinet location. Replace the entire solid2x2 deck with a crisp cyan wire planning outline and the single crossing2x2 grid, with broad transparent empty spaces inside. Replace the one small low rear cabinet with a cyan wire contour in exactly its current position; no opaque finished hardware or solid filled floor. Use bold clean cyan wire strokes about8source pixels wide so they read after reduction to a126px-wide footprint; no glow or hazy bloom. Keep the original very shallow diamond, about1110px wide and540px high, corners around(701,365),(1255,630),(701,909),(147,630) on a1402x1122 canvas. Never steepen it into a square. Genuine transparent background, including gaps inside every outline, with at least100px outer transparent clearance. No clamps, docking craft, crates, extra equipment, robots, labels, words, arrows, axes, scene or magenta separator. One complete isolated original view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-blueprint-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      103,
+      312,
+      1299,
+      941
+    ],
+    "uniform_scale": [
+      519,
+      5000
+    ],
+    "source_reference": [
+      701,
+      326
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        316
+      ],
+      [
+        1294,
+        626
+      ],
+      [
+        701,
+        936
+      ],
+      [
+        108,
+        626
+      ]
+    ]
+  },
+  "original_sha256": "f0fa8dcef7f16d9d98205d317ee4189fa3f12de81ab39d340e2e68850c08f2c7",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

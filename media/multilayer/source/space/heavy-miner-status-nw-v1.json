@@ -1,0 +1,126 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3d. Genuine isolated NW indicator correction; three actual status sources and one unlit geometry reference. All camera/source/native approvals remain separate.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-status-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "indicator-component-matrix",
+  "directions": [
+    "NW"
+  ],
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "panel": 0
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "panel": 1
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "panel": 2
+    },
+    {
+      "state": "unlit-reference",
+      "phase": 0,
+      "panel": 3
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_and_nw_camera_verified",
+  "reference_inputs": [
+    {
+      "role": "Approved actual NW housing/model camera: bottom-right complete miner is geometric authority",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-s-sw-w-nw-v2.png",
+      "sha256": "e0435128e8e556079212c18b4b9b7ff895387c1cb3b116b03aef6d3788890460"
+    },
+    {
+      "role": "Indicator material/illumination style only; other genuine headings are not NW camera substitutes",
+      "path": "media/multilayer/source/space/raw/heavy-miner-status-n-ne-e-se-v1.png",
+      "sha256": "7c8d5a955f04210ea25014c54cdd9f967bcc9686088a2cc492b50064173aef96"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-21 original dark-blue electronics housing, GENUINE NW camera only, four indicator states.\nInput image1 is the approved heavy-miner opposite-view body reference. The BOTTOM-RIGHT original complete miner is the actual NW direction: its cutter points UPPER LEFT. Its blue electronics housing runs diagonally from UPPER LEFT to LOWER RIGHT on screen. This exact housing geometry/orientation is the model/camera authority. Input image2 is an indicator materials/illumination style reference ONLY; none of its other directions may be relabeled NW.\nRender ONLY that original NW housing as four isolated original control-part cutouts. CRITICAL NW CAMERA: long housing axis runs upper-left to lower-right (\\), never lower-left to upper-right (/). Its recessed visible status/connector face is at the LOWER-RIGHT END. Genuine fixed elevated isometric NW view, upper-left screen lighting. Redraw the correct three-dimensional faces; do not rotate or flip a flat cutout. Keep the original low rectangular beveled dark-blue housing, proportions and hardware; no doors, antennas, extra connectors, yellow body mounts, chassis, drill, grippers, hopper or thrusters.\n1536x1024 four-cell source sheet with one complete isolated NW housing per cell: TOP LEFT blocked with one solid crisp amber status bar on its original connector/display face; TOP RIGHT service phase A with one bright crisp cyan indicator at one end of that display and the other end unlit; BOTTOM LEFT service phase B with the cyan indicator at the OPPOSITE END and phase-A position unlit; BOTTOM RIGHT the SAME unchanged housing with all indicator positions unlit, as source registration reference only. All four use exactly the same genuine NW geometry, view, scale and upper-left light. Only actual display illumination changes. No text or labels. Use a clearly readable real display face and broad clean indicator pixels, not tiny glints, no glow/halo.\nFour straight opaque pure-magenta #FF00FF frames about6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Each WHOLE component at most260px wide and200px tall, centered comfortably in its own source rectangle[32,32,736,480],[800,32,1504,480],[32,544,736,992],[800,544,1504,992], with at least40px true transparent clearance to every frame. Safe separation takes priority over large parts.\nBackground, panel interiors, gutters and margins are real clean transparent alpha=0. Keep only the four opaque pure-magenta frame outlines outside the components. No purple haze, checkerboard, gray/white fill, cast shadows, labels, arrows, text, symbols, watermark or other props. Exactly four genuine NW blue-housing parts with the original negative-diagonal axis and three requested status states plus an unlit geometry reference.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-status-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-af673c79-75eb-435d-93ef-67dc4d7ad961.png",
+  "sha256": "e6af6a486a12735a1c18c80e45ecf85b2dd0d5a10383488d331e97b74e986f82",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "panels": {
+      "blocked": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          185,
+          96,
+          557,
+          381
+        ],
+        "minimum_transparent_clearance": 67,
+        "opaque_separator_pixels": 0
+      },
+      "service0": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          176,
+          97,
+          548,
+          384
+        ],
+        "minimum_transparent_clearance": 64,
+        "opaque_separator_pixels": 0
+      },
+      "service1": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          185,
+          80,
+          557,
+          365
+        ],
+        "minimum_transparent_clearance": 80,
+        "opaque_separator_pixels": 0
+      },
+      "unlit-reference": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          170,
+          79,
+          543,
+          364
+        ],
+        "minimum_transparent_clearance": 79,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "physical_direction": "NW in every panel; long axis upper-left to lower-right, connector face at lower-right"
+  }
+}

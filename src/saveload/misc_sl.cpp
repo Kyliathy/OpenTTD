@@ -8,6 +8,7 @@
 /** @file misc_sl.cpp Saving and loading of things that didn't fit anywhere else. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md */
 
 #include "../stdafx.h"
+#include "../surface_supply_order_runtime.h"
 #include "../space_vehicle.h"
 #include "../asteroid.h"
 #include "../map_layer_gui.h"
@@ -129,6 +130,7 @@ static const SaveLoad _date_desc[] = {
 };
 
 static const SaveLoad _date_check_desc[] = {
+	SaveLoad::Variable<VarFileType::I32>("economy_date", SLE_GLOBAL_ADDRESS(_load_check_data.native_economy_date), SaveLoadVersion::EconomyDate),
 	SaveLoad::Variable<VarFileType::U64>("tick_counter", SLE_GLOBAL_ADDRESS(_load_check_data.native_tick_counter), SaveLoadVersion::GeothermalRisers),
 	SaveLoad::Variable<VarFileType::U16>("date", SLE_GLOBAL_ADDRESS(_load_check_data.current_date), SaveLoadVersion::MinVersion, SaveLoadVersion::BigDates),
 	SaveLoad::Variable<VarFileType::I32>("date", SLE_GLOBAL_ADDRESS(_load_check_data.current_date), SaveLoadVersion::BigDates),
@@ -149,14 +151,27 @@ struct DATEChunkHandler : ChunkHandler {
 		SlGlobList(_date_desc);
 	}
 
-	/** @param slt Native or copied-preview field descriptors. @param slct Existing older-format compatibility table. @param preview Select read-only copied native clock presence for version400 construction references. */
+	/** Decode actual original clock fields without borrowing previous-file values.
+	 * @param slt Native or copied-preview field descriptors.
+	 * @param slct Existing older-format compatibility table.
+	 * @param preview Select copied tick/economy-date evidence for construction and version440 paid-order references; full mode observes only the independently decoded native economy date.
+	 */
 	void LoadCommon(const SaveLoadTable &slt, const SaveLoadCompatTable &slct, bool preview = false) const
 	{
 		const std::vector<SaveLoad> oslt = SlCompatTableHeader(slt, slct);
+		const bool economy_present = std::ranges::find(oslt, "economy_date", &SaveLoad::name) != oslt.end();
+		// Current order caps require this candidate's original economy day; missing date fields cannot borrow calendar time or a preceding full/copy reader's value.
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders) && !economy_present) SlErrorCorrupt("Missing native supply economy date field");
 		if (preview) _load_check_data.native_tick_present = std::ranges::find(oslt, "tick_counter", &SaveLoad::name) != oslt.end(); // Exact same-file clock presence, never a live TimerGameTick read.
 
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;
 		SlGlobList(oslt);
+		if (preview) {
+			if (_load_check_data.native_economy_date_present) SlErrorCorrupt("Repeated copied native economy date");
+			_load_check_data.native_economy_date_present = economy_present;
+		} else if (economy_present) {
+			if (!ObserveLoadedSurfaceSupplyEconomyDate(TimerGameEconomy::date)) SlErrorCorrupt("Repeated native supply economy date");
+		}
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() != -1) SlErrorCorrupt("Too many DATE entries");
 	}
 

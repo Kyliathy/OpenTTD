@@ -1,0 +1,114 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.3b. Exact opposite-camera display request; only genuine N/NE parts pass camera/layout approval. W/NW remain explicitly unaccepted and cannot provide native status pixels.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-status-n-ne-w-nw-v1",
+  "tool": "built-in image_gen",
+  "state": "status_components",
+  "directions": [
+    "N",
+    "NE"
+  ],
+  "requested_directions": [
+    "N",
+    "NE",
+    "W",
+    "NW"
+  ],
+  "unaccepted_directions": {
+    "W": "Display long-edge slope repeats E, contrary to the actual approved W face which rises to the right.",
+    "NW": "Display long-edge slope repeats NE instead of the actual NW face rising to the right; canonical crop also has13px clearance."
+  },
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "position": "left"
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "position": "middle"
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "position": "right"
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_partial_layout_camera_verified_native_pending",
+  "reference_inputs": [
+    {
+      "role": "Actual genuine N rear robot/display",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-n-v2.png",
+      "sha256": "c0377b2873bf4d2f6dcf63b520c405a2a8e670dce6aba083dd45a911e6e7a2dd"
+    },
+    {
+      "role": "Actual genuine NE robot/display",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-ne-v1.png",
+      "sha256": "e13b192b6608ff6215c92cf47e8fc29b97fe5ecfcffd37d1b186a9f0a5ffcad1"
+    },
+    {
+      "role": "Actual genuine W robot/display",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-w-v1.png",
+      "sha256": "c5c8537fcc35c8275be2f586b63728e60062316ff563dd3d361aa19f2a9eee69"
+    },
+    {
+      "role": "Actual genuine NW robot/display",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-nw-v1.png",
+      "sha256": "1a7434f45d19940b0436ffe5979e3abcf1f9b5e312b80b14a6e532642eebcbc5"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD retained cargo-less robot16, ORIGINAL FLAT NAVY ROOF DISPLAY ONLY, missing N/NE/W/NW status originals.\nInput1 is the actual approved N rear view (front and display far UP, rear nozzle DOWN), input2 actual NE rear-three-quarter (front/display far UPPER-RIGHT), input3 actual W side (front/display LEFT, rear nozzleRIGHT), input4 actual NW rear-three-quarter (front/display far UPPER-LEFT). Extract/render ONLY each one's SAME original small flat dark-navy diagnostic display with its existing narrow pale-ivory beveled surround. Preserve original shape, shallow thickness, aspect, genuine physical projection and fixed upper-left SCREEN light. No hull/arms/couplings/nozzles, new hardware, open doors, hologram, indicatorbulbs/extra LEDs, text/symbols. A simple illumination pattern on the existing navy face is the whole change.\nExactly TWELVE isolated small original-display cutouts,3variants per physical camera: N TOP-LEFT,NE TOP-RIGHT,W BOTTOM-LEFT,NW BOTTOM-RIGHT. Each outer direction panel contains3separate unchanged displays side-by-side:\nLEFT BLOCKED: broad short warm AMBER bar on the actual existing navy face.\nMIDDLE SERVICE A: broad bright CYAN bar at one end of that face, other end dark.\nRIGHT SERVICE B: CYAN bar at the OPPOSITE END of the exact same navy face, Aend now dark. Actual different source pixels, same housing/face and physical camera. Only the bar lights; no new dot/LED/bulb. No moving hardware/work/glow/halo/exhaust.\nNative output display components4-8px wide; bars about35-45sourcepx long and15-20px thick, crisp and visible. All12one physical scale, maximum each complete display140x120px, low elevated orthographic2:1 camera, upper-left light. N original rear display is near-horizontal; NE has the genuine upper-right-facing roof projection; W has the opposite E-side projection/frontleft, not EfrontRight; NW has original upper-left-facing roof projection. No flat mirrors/rotations or unrotated copied geometry.\n1536x1024 TRUE-TRANSPARENT sheet with four opaque pure-magenta6px exterior frames N(24,24)-(744,488),NE(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000). Each direction has3cutouts centered N(148,256),(380,256),(612,256);NE(916,256),(1148,256),(1380,256);W(148,768),(380,768),(612,768);NW(916,768),(1148,768),(1380,768).\nEvery complete cutout in its own200x352safe rectangle,24px+ truly transparent clearance on all sides: N x48..248/280..480/512..712 y80..432; NE x816..1016/1048..1248/1280..1480 y80..432; W same Nx y592..944; NW same NEx y592..944. Keep actual cutouts small with ample margins; no connected triplets/overlaps/clipped displays. Pure magenta only exterior frames. Empty backgrounds/margins/gutters actual alpha=0, no translucent purple haze/checkerboard/gray-white fill/castshadow. No text/labels/arrows/watermark/extra props. ONLY the same original flat displays in genuine N/NE/W/NW projections, blocked/serviceA/serviceB left-to-right.",
+  "path": "media/multilayer/source/space/raw/construction-robot-status-n-ne-w-nw-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-748ca370-6bec-4a80-a9e0-53a84deae61c.png",
+  "sha256": "22662c9e7a215fb58e510c584839160e67ac997de2bd01838d23f1a74bbbe646",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "N": {
+        "crop_box": [
+          48,
+          64,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          29,
+          167,
+          654,
+          268
+        ],
+        "minimum_transparent_clearance": 29,
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          64,
+          1488,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          16,
+          156,
+          668,
+          286
+        ],
+        "minimum_transparent_clearance": 16,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "part_policy": "Ordinary central navy-face/bar rectangles only; original native face masks protect every ivory bezel/hull/opacity pixel. W/NW parts rejected before native registration."
+  }
+}

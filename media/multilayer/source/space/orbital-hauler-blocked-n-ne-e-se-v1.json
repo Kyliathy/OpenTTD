@@ -1,0 +1,160 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66C.2. Immutable original blocked diagnostic displays. Actual N/NE/E projections admitted for registration; SE excluded because its diagonal screen projection differs from the selected original.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-blocked-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "panel_state": "blocked",
+  "phase": 0,
+  "directions": [
+    "N",
+    "NE",
+    "E"
+  ],
+  "requested_directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_partial_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "actual original four-camera hauler screen geometry/edit target",
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+      "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD orbital cargo hauler17, original diagnostic DISPLAY ONLY, BLOCKED static cue, N/NE/E/SE cameras.\nImage1 is the approved empty hauler with its original four actual cameras and navy command-head display. Render ONLY each camera's SAME original flat rectangular diagnostic display with its thin existing pale-ivory beveled surround. Remove all surrounding spacecraft: NO head housing, deck, rails, nozzle, engine, cargo or other hardware. Preserve each display's genuine physical projected shape, aspect, shallow thickness and fixed upper-left SCREEN lighting.\n\nChange ONLY the navy glass face to a clear warm AMBER illuminated blocked face, with a very thin dark navy edge. Broad simple steady amber area, no text/symbols/pattern/LEDs/buttons or extra fixtures, no glow/halo. Only the original display face illuminates. No service blue/cyan variant, no animation. Cargo/blocking rules remain elsewhere.\n\nFour isolated display cutouts in a1536x1024 transparent2x2 sheet, one actual camera per panel:\nTOP LEFT N: original far command-head display, near-horizontal wide shallow rectangle as in the input N rear view.\nTOP RIGHT NE: actual upper-right facing command-head display, the same sloped face in rear-three-quarter projection.\nBOTTOM LEFT E: actual RIGHT-side command-head display, narrow almost edge-on projected face, faithfully matching the input E-side view. Do not replace with a front-on rectangle.\nBOTTOM RIGHT SE: actual near LOWER-RIGHT command-head display in the input front-three-quarter projection.\nOne physical display in all4views, genuine3D physical camera projections, no flat bitmap mirroring/rotation or duplicated unrotated fronts. Crisp detailed industrial isometric game artwork, low orthographic2:1 camera about26.565degrees elevation, upper-left SCREEN light, pale ivory surround/navy edge/bright warm amber face.\n\nSAFE BORDERED layout: four straight opaque pure-magenta #FF00FF6px separator frames at N(24,24)-(744,488),NE(792,24)-(1512,488),E(24,536)-(744,1000),SE(792,536)-(1512,1000). Each whole display small and centered within its panel, maximum260px wide/180px tall, one uniform physical scale; at least64px TRUE TRANSPARENT clearance on every side. The E view stays physically narrow; do not enlarge it to match front-view width. Entire background, margins and gutters true alpha0. No haze, checkerboard, gray/white backdrop, ground plane, castshadow, labels, arrows, watermark or extra props. Four complete separate original DISPLAY-ONLY cutouts with amber on the existing face.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-b0c8d11a-6a8f-401a-bc3e-9e80c7bf683c.png",
+  "unaccepted_directions": {
+    "SE": "Generated long screen edges slope down-right; actual selected SE screen slopes up-right. Do not repair by rotation/mirroring or reuse it through a new transform."
+  },
+  "actual_camera_mapping": [
+    {
+      "requested": "N",
+      "actual": "N",
+      "evidence": "Wide shallow original rear-facing screen."
+    },
+    {
+      "requested": "NE",
+      "actual": "NE",
+      "evidence": "Screen long edge slopes down-right, matching original NE face."
+    },
+    {
+      "requested": "E",
+      "actual": "E",
+      "evidence": "Narrow steep side projection, original head faces right."
+    },
+    {
+      "requested": "SE",
+      "actual": "unaccepted",
+      "evidence": "Wrong diagonal display projection; independent correction required."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-blocked-n-ne-e-se-v1.png",
+  "sha256": "8446ba567a2d4b9778d6a5d73054e9ae809563604251b259db1cf89ac9255d04",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          164,
+          135,
+          546,
+          293
+        ],
+        "minimum_transparent_clearance": 135,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          241,
+          196,
+          534,
+          287
+        ]
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          203,
+          110,
+          496,
+          350
+        ],
+        "minimum_transparent_clearance": 98,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          1040,
+          175,
+          1230,
+          327
+        ]
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          304,
+          110,
+          410,
+          336
+        ],
+        "minimum_transparent_clearance": 110,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          354,
+          688,
+          390,
+          813
+        ]
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          224,
+          112,
+          479,
+          340
+        ],
+        "minimum_transparent_clearance": 108,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          1055,
+          688,
+          1214,
+          827
+        ]
+      }
+    }
+  }
+}

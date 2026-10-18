@@ -9,6 +9,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; discard detached packet metadata between checked files.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; clear independent processing presence/history before every copied reader.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC; a preceding file cannot lend an order book, economy day or map-presence proof.
  */
 
 #include "stdafx.h"
@@ -75,6 +76,9 @@ bool FiosItemSorter(const FiosItem &a, const FiosItem &b)
  */
 void LoadCheckData::Clear()
 {
+	// Every copied procurement check must supply its own original order family, native economy day and map geometry; stale prior-file evidence grants no new pending/refund rights.
+	this->surface_supply_orders_present = false; this->surface_supply_orders = {};
+	this->native_map_dimensions_present = this->native_economy_date_present = false; this->native_economy_date = TimerGameEconomy::Date{0};
 	// Each preview must supply its own complete processing family and retired history; a valid previous file cannot lend paid work or presence to a missing/malformed next file.
 	this->orbital_recipes_present = false; this->orbital_recipe_rows.clear(); this->orbital_retired_recipe_batches.clear(); this->orbital_retired_discarded_paid_j = 0;
 	this->native_cargo_dimensions_present = false; this->native_cargo_dimension_rows.clear();

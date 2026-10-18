@@ -2,6 +2,7 @@
 /**
  * @file space_sprite.cpp Final Space art reads original mission, resource and passive-shell owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 #include "stdafx.h"
@@ -15,6 +16,7 @@
 #include "orbital_service.h"
 #include "asteroid.h"
 #include "station_base.h"
+#include "openttd.h"
 #include <cstdlib>
 #include "safeguards.h"
 
@@ -39,7 +41,7 @@ Direction GetSpaceCraftArtDirection(const SpaceVehicle &craft)
 	const SpaceOrder *order = queue.cursor < queue.entries.size() ? &queue.entries[queue.cursor] : nullptr;
 	const auto *body = GetMutableAsteroidBody(craft.mission.target);
 	// A physically latched miner faces its original body, independent of body velocity, fixed cosmetic yaw or stopped work. No attachment offset is rotated by artwork.
-	if (craft.mission.phase == SpaceMissionPhase::Mining && body != nullptr) return GetSpaceArtDirection(craft.position, body->motion.position, fallback);
+	if (craft.mission.phase == SpaceMissionPhase::Mining && body != nullptr && body->mining_slot == craft.index) return GetSpaceArtDirection(craft.position, body->motion.position, fallback);
 	// Active survey work uses its current typed body; the unrelated legacy mining target cannot supply a scanner's facing.
 	if (order != nullptr && order->action == SpaceOrderAction::Survey && IsSpaceSurveyWorkTick(craft)) {
 		const auto *surveyed = GetMutableAsteroidBody(OrbitalBodyID{order->target.id});
@@ -101,30 +103,61 @@ static bool HasArtOrderBlock(const SpaceVehicle &craft)
 
 /** Gate authored exhaust through existing actual movement presentation fields.
  * @param craft Original hull; stopped flags override a retained prior cur_speed.
- * @return Phase on the existing native vehicle tick counter, or static0 without current movement.
+ * @return Phase on the existing native vehicle tick counter, or absence when the authored idle pose must replace exhaust entirely.
  */
-static uint8_t TravelArtFrame(const SpaceVehicle &craft)
+static std::optional<uint8_t> TravelArtFrame(const SpaceVehicle &craft)
 {
 	// A stopped, arrived or unstarted hull may retain an earlier speed. Only an outstanding actual destination can animate exhaust, without starting the next instruction or advancing a new clock.
-	if (craft.cur_speed == 0 || craft.vehstatus.Test(VehState::Stopped)) return 0;
+	if (craft.cur_speed == 0 || craft.vehstatus.Test(VehState::Stopped)) return std::nullopt;
 	SpacePoint destination;
 	const auto &queue = craft.space_orders;
 	if (!queue.entries.empty()) {
 		// An unfinished saved instruction and its original admission are required; a completed queue cannot borrow stale movement from the previous action.
-		if (!queue.started || queue.cursor >= queue.entries.size()) return 0;
+		if (!queue.started || queue.cursor >= queue.entries.size()) return std::nullopt;
 		if (queue.approach) {
-			if (GetSpaceApproachDestination(craft, destination) != SpaceOrderBlock::None) return 0;
-		} else if (ResolveSpaceNavigationTarget(craft, queue.entries[queue.cursor].target, destination) != SpaceOrderBlock::None) return 0;
+			if (GetSpaceApproachDestination(craft, destination) != SpaceOrderBlock::None) return std::nullopt;
+		} else if (ResolveSpaceNavigationTarget(craft, queue.entries[queue.cursor].target, destination) != SpaceOrderBlock::None) return std::nullopt;
 	} else if (craft.mission.phase == SpaceMissionPhase::Return) {
 		const auto departure = GetSpaceMiningDepartureDestination(craft, craft.home);
-		if (!departure) return 0;
+		if (!departure) return std::nullopt;
 		destination = *departure;
 	} else if (craft.mission.phase == SpaceMissionPhase::Approach) {
 		const auto *body = GetMutableAsteroidBody(craft.mission.target);
-		if (body == nullptr) return 0;
+		if (body == nullptr) return std::nullopt;
 		destination = {body->motion.position.x + craft.mission.attachment_offset.x, body->motion.position.y + craft.mission.attachment_offset.y};
-	} else return 0;
-	return destination != craft.position ? (craft.tick_counter / 8) % 2 : 0;
+	} else return std::nullopt;
+	if (destination == craft.position) return std::nullopt;
+	return (craft.tick_counter / 8) % 2;
+}
+
+/** Read admitted original movement without adding a counter or changing existing probe selection.
+ * @param craft Actual hull and generation-qualified current destination.
+ * @return Existing movement phase, or absence outside normal unpaused movement.
+ */
+std::optional<uint8_t> GetSpaceCraftTravelArtFrame(const SpaceVehicle &craft)
+{
+	// New orbital art cannot advertise active movement during a global pause
+	// or editor query; the original destination and counter still own the phase.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return std::nullopt;
+	const auto model = GetSpaceVehicleModel(craft);
+	// Retained16 and hauler17 move through original typed orders only; a stale
+	// legacy mining phase/target cannot lend either role an admitted destination.
+	if ((model == 16 || model == 17) && craft.space_orders.entries.empty()) return std::nullopt;
+	return TravelArtFrame(craft);
+}
+
+/** Read an original native probe-service countdown for an appended craft family.
+ * @param craft Actual hull; native service tuning must admit its model.
+ * @return Original service phase, zero while globally paused, or absence without a real job.
+ */
+std::optional<uint8_t> GetSpaceCraftServiceArtFrame(const SpaceVehicle &craft)
+{
+	if (!GetSpaceServiceTuning(GetSpaceVehicleModel(craft))) return std::nullopt;
+	SpaceArtPose pose;
+	if (!SelectServicePose(craft, pose, 0)) return std::nullopt;
+	// Pausing freezes the actual paid job and selects its canonical source phase;
+	// no new service owner or countdown exists in this shared presentation query.
+	return _game_mode != GameMode::Normal || _pause_mode.Any() ? uint8_t{0} : pose.frame;
 }
 
 /** @copydoc GetSpaceCraftArtPose */
@@ -140,15 +173,22 @@ std::optional<SpaceArtPose> GetSpaceCraftArtPose(const SpaceVehicle &craft, Dire
 		if (SelectServicePose(craft, pose, 6)) return pose;
 		// Paid quota/pod/service waits and typed failures remain original owner disclosures; visual selection never clears them or grants a return allowance.
 		if (HasArtOrderBlock(craft) || GetSpaceMiningBlock(craft) != SpaceOrderBlock::None) { pose.state = 7; return pose; }
-		if (craft.mission.phase == SpaceMissionPhase::Return) { pose.state = 5; pose.frame = TravelArtFrame(craft); return pose; }
+		if (craft.mission.phase == SpaceMissionPhase::Return) {
+			if (const auto frame = TravelArtFrame(craft)) { pose.state = 5; pose.frame = *frame; return pose; }
+		}
 		// An admitted full hold can persist for one native opportunity before departure. A zero-capacity or empty hull is never represented as full cargo.
 		if (craft.cargo_cap != 0 && craft.cargo.TotalCount() >= craft.cargo_cap) { pose.state = 4; return pose; }
 		if (craft.mission.phase == SpaceMissionPhase::Mining) {
+			const auto *body = GetMutableAsteroidBody(craft.mission.target);
+			// A retained phase alone cannot attach a hull to a missing body or somebody else's lease. Keep ordinary free art until the native mission owner resolves that physical loss.
+			if (body == nullptr || body->mining_slot != craft.index) return pose;
 			pose.state = IsSpaceMiningWorkTick(craft) ? 3 : 2;
 			pose.frame = pose.state == 3 ? craft.mission.work_ticks % 2 : 0;
 			return pose;
 		}
-		if (craft.mission.phase == SpaceMissionPhase::Approach) { pose.state = 1; pose.frame = TravelArtFrame(craft); }
+		if (craft.mission.phase == SpaceMissionPhase::Approach) {
+			if (const auto frame = TravelArtFrame(craft)) { pose.state = 1; pose.frame = *frame; }
+		}
 		return pose;
 	}
 	if (model == 19) {
@@ -157,8 +197,8 @@ std::optional<SpaceArtPose> GetSpaceCraftArtPose(const SpaceVehicle &craft, Dire
 		if (HasArtOrderBlock(craft)) { pose.state = 5; return pose; }
 		if (IsSpaceSurveyWorkTick(craft)) { pose.state = 2; pose.frame = (queue.work_ticks / 8) % 2; return pose; }
 		if (order != nullptr) {
-			pose.state = order->action == SpaceOrderAction::ReturnService ? 3 : 1;
-			pose.frame = TravelArtFrame(craft);
+			// A saved instruction can remain stopped or already reached; only real travel selects a plume-bearing source pose.
+			if (const auto frame = TravelArtFrame(craft)) { pose.state = order->action == SpaceOrderAction::ReturnService ? 3 : 1; pose.frame = *frame; }
 		}
 		return pose;
 	}
@@ -175,8 +215,8 @@ std::optional<SpaceArtPose> GetSpaceCraftArtPose(const SpaceVehicle &craft, Dire
 			if (label == CargoLabel{"GOOD"}) { pose.state = 3; return pose; }
 		}
 		if (order != nullptr) {
-			pose.state = order->action == SpaceOrderAction::ReturnService ? 5 : 1;
-			pose.frame = TravelArtFrame(craft);
+			// Empty builders retain their folded idle hull while stopped or at the berth; the construction/service owners above exclusively select real work poses.
+			if (const auto frame = TravelArtFrame(craft)) { pose.state = order->action == SpaceOrderAction::ReturnService ? 5 : 1; pose.frame = *frame; }
 		}
 		return pose;
 	}

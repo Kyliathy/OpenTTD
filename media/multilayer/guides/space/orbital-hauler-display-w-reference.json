@@ -1,0 +1,19 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66C.2. Ordinary reference-only rectangle from the immutable selected body; no source pixel/alpha edits and no authored blocked cue.",
+  "asset_id": "vehicle.model-17",
+  "direction": "W",
+  "source": {
+    "path": "media/multilayer/source/space/raw/orbital-hauler-empty-w-v1.png",
+    "sha256": "fd30da59a9ade53298633fba690e3b3550b8160d0cb966530d0828d7e3d983cb"
+  },
+  "crop_box": [
+    134,
+    113,
+    518,
+    433
+  ],
+  "reference": {
+    "path": "media/multilayer/guides/space/orbital-hauler-display-w-reference.png",
+    "sha256": "8cbf615a6dd3557e68436504fa67695ad039102f5abd5b2b79be5634fe729198"
+  }
+}

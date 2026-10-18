@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.1. Genuine fixed2x2 Dock body original; clamp instances are separate originals and cannot grant berths.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-body-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_body_pending_native_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-dock-floor-camera-v1.png",
+      "sha256": "8f99096feda52991924e876649d29afdd32311f79016c7efa8eebea27488e9be",
+      "role": "plain shallow camera/floor guide only; actual native floor/cell gate remains unchanged"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: module.dock, ONE original fixed-view body-only orbital service dock for OpenTTD. Input image is a plain SHALLOW CAMERA/FLOOR GEOMETRY GUIDE ONLY, never artwork to reproduce.\nRender a very thin flat2x2 tiled diamond platform matching the input's shallow isometric floor. On a1280x1024 transparent canvas, target floor corners around(640,330),(1140,560),(640,790),(140,560), roughly1000px wide and460px high. Keep the floor low and nearly twice as wide as tall, no perspective convergence or thick foundation. Four large clear steel deck tiles, fine seams, cream/silver edge trim and graphite recessed utility strips. One small LOW rectangular navy/cream servicing cabinet in the rear third, centred left-to-right, leaving the back floor vertex visible. Cabinet must be much smaller and lower than a command hub: a squat equipment box, not a tower, roof or hangar. Keep the whole front half open and flat; the two coupling clamps will be authored as separate original components later. No coupling mouths, clamps, craft, robots, solar panels, octagonal Core hub, extra lockers, gantries, cranes, props or markings. Upper-left light, crisp restrained retro industrial game-sprite materials, no external ground shadow. Keep every subject pixel at least100px from canvas edges. Genuine transparent background. No scene, words, labels, arrows, axes, magenta frame or other views. One isolated complete body original only.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-body-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      145,
+      362,
+      1257,
+      911
+    ],
+    "uniform_scale": [
+      9,
+      80
+    ],
+    "source_reference": [
+      701,
+      355
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        365
+      ],
+      [
+        1255,
+        630
+      ],
+      [
+        701,
+        909
+      ],
+      [
+        147,
+        630
+      ]
+    ]
+  },
+  "original_sha256": "6a49ac607f0b4034b654aea0f75c33468daa397d52de4458507a26389787f950",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

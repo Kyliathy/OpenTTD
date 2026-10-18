@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.1. Genuine one-gantry Assembly body trial; measurement and native acceptance remain pending.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-body-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-power-floor-camera-v1.png",
+      "sha256": "552643b1d8f89778b4801bafba0200c16cfb4ae03770729489fb4220602b8899",
+      "role": "plain shallow2x2floor/camera hint only; no Power hardware"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original fixed orbital ASSEMBLY WORKSHOP module body for OpenTTD, no coupling component.\nImage1 is plain shallow FLOOR/CAMERA GUIDE ONLY. Render a very thin flat2x2 steel diamond deck following that guide: about1000px wide and460px high, corners(640,330),(1140,560),(640,790),(140,560) on1280x1024 truly transparent canvas. Keep all four floor corners visible and the shallow near2:1 floor; no thick foundation, tall building or perspective convergence.\nEXACT hardware: ONE LOW compact open cream/silver/navy assembly GANTRY in the rear half, exactly TWO SHORT upright posts and ONE horizontal crossbeam joining them, making one open portal frame. The beam runs diagonally across the rear half parallel to a rear deck edge; it is a single straight beam, never a second perpendicular rail. ONE SMALL static dark tool head hangs beneath the middle of that beam. Keep a visible empty space below; NO robot, craft, cargo or manufactured product inside the gantry. One small squat cream/navy control console near the middle in front of the gantry, with a SIMPLE horizontal BLUE GLASS window on its visible front face. No status symbols, green work light or amber warning in this base. Broad empty front apron and unobstructed near/right deck edge for a separately registered physical coupling later. Thin cream/silver perimeter and subtle four grey diamond floor tiles.\nRestrained crisp retro first-party industrial game-sprite materials, upper-left light. All gantry equipment LOW, compact and well inboard, with no tall crane tower. Exactly one two-post gantry, one small hanging tool head, one small console. No third post, extra rail, robotic arm, PV panel, tank, warehouse, crates, pipes outside the deck, service bay, second console, robot or vehicle. No clamp/coupling in this image. No numbers, labels, arrows, symbols, text, axes, decorative background, ground or external shadow. ONE whole isolated fixed model, no sheet. Every subject pixel at least100px clear of all image edges; all equipment and floor vertices inside frame. Image1's shallow floor geometry takes priority over a steeper generic camera.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-body-v1.png",
+  "original_sha256": "e3fc366643d65eadec311f166a08de077db2a53bb14b694e43367c28f06587cb",
+  "image_size": [
+    1849,
+    851
+  ],
+  "measured_alpha16_bbox": [
+    234,
+    98,
+    1610,
+    808
+  ],
+  "status": "genuine_original_pending_native_geometry_review"
+}

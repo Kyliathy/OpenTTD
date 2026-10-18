@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Rejected steep camera edit preserved unchanged; it cannot contribute native source coverage.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-partial-v2",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "Full corners are now visible, but floor bbox[32,329,1223,1085] has approximately0.63 height/width. No uniform reduction can preserve the native2x2 diamond and existing four cell canvases; no stretching or camera correction by code is allowed.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-partial-v1.png",
+      "sha256": "f450ca2508fd34db3e4a11e76bd5f29b0c2148542564a04e0ab21076f1b9442e",
+      "role": "rejected clipped partial edit target"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.dock PARTIAL construction state, ONE corrected isolated original.\nInput image is the previous partial construction EDIT TARGET; it clipped its front corner. RERENDER THE WHOLE MODEL SMALLER, COMPLETELY INSIDE A SQUARE1254x1254 CANVAS. Target model floor diamond about950px wide and460px high, centred around(627,650), with all corners about(627,420),(1102,650),(627,880),(152,650). Every model pixel including the very front corner must have at least150px TRANSPARENT clearance from EVERY image edge. Do not return a tightly cropped wide image. Include the whole original front corner and the complete low perimeter frame.\nKeep precisely the same incomplete hardware: three fitted steel deck panels in the2x2 grid; the frontmost fourth diamond panel is missing with a true transparent opening and two exposed cross-braces; one small low open rear servicing cabinet with its lid/front cover absent and dark unfinished interior. No clamp components. Preserve the shallow nearly2:1 isometric floor, cream/silver rim, slate panels, navy/graphite details and upper-left light. No new equipment, craft, cranes, robots, props, markings, words, labels, arrows, guide symbols, magenta frame, scene or external shadow. Real transparent background, including the opening through the missing panel. The whole complete model must be visible with wide empty margins; redraw missing pixels genuinely rather than conceal the clipped corner.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-partial-v2.png",
+  "original_sha256": "f893b571f381e140ea5991cb50865725647ffa36a6fcdaf4527b3777efab97ba",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

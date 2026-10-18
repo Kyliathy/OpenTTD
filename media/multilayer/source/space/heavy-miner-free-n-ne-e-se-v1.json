@@ -1,0 +1,99 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.1; retained exact built-in generation request; no selected source or native acceptance yet.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-free-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "free",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "prompt": "Use case: stylized-concept.\nAsset: OpenTTD first-party Outer Space HEAVY MINING ROBOT, canonical vehicle.model-21. This is a NEW model, not construction robot16 or the small mining probe. Requested state: EMPTY FREE / IDLE, with dormant tools and no exhaust.\nCreate one SAFE BORDERED original sprite source sheet, requested 1536x1024, of the SAME physical robotic mining machine in four genuine 3D engine-viewport headings in a 2x2 grid: N top-left (nose points UP the image), NE top-right (nose points UP-RIGHT), E bottom-left (nose points RIGHT), SE bottom-right (nose points DOWN-RIGHT). Keep the camera fixed, elevated about30degrees, orthographic2:1 transport-game view; rotate the same actual machine in3D for each view. Do not rotate or mirror a flat sprite.\n\nThe subject is a substantial uncrewed station-built mining machine, designed to remain readable inside a64x48 native sprite. Compact broad armored graphite/steel chassis, ONE central short chunky industrial cutter/drill at the front (clearly mining equipment, not a gun), TWO matching side clamp/gripper arms folded close in the idle pose, ONE integrated large empty ore-hopper housing at the rear, TWO short rear thruster bells, ONE simple flat electronics housing on top. Keep exactly this hardware, its dimensions, count and relative placement in every view, with natural occlusion. A larger more angular industrial silhouette than a light probe. Cool steel/graphite main material, restrained ochre-yellow machinery edges and small dark-blue equipment surfaces. No crew, cockpit, humanoid body, wheels, extra tools, missiles, weapons, loose crates, detached components or floating icons. All tools dormant; no work glow, flames, thrust plume, dust, mining fragments, service panel opening or damage.\n\nStyle: clean shaded classic isometric transport-game sprite artwork, sturdy readable shapes, broad material clusters and crisp silhouette, not a photographic render. Designed to downsample to native64x48; avoid fine noisy texture. Consistent upper-left screen lighting. Floating machine only, with no ground/floor or cast ground shadow. Genuine alpha transparency everywhere outside the subject and separator frames.\n\nKeep four straight opaque PURE MAGENTA #FF00FF rectangular frames about6px thick, outside every model:\nN(24,24)-(744,488), NE(792,24)-(1512,488), E(24,536)-(744,1000), SE(792,536)-(1512,1000).\nEach complete subject must fit comfortably inside its own inner safe rectangle with at least32px transparent clearance:\nN(56,56)-(712,456), NE(824,56)-(1480,456), E(56,568)-(712,968), SE(824,568)-(1480,968).\nKeep one consistent physical model/camera scale across views, approximately500px maximum whole-model width and330px maximum height. Reduce uniformly as needed. No arm, cutter, nozzle, shadow, halo or other subject pixel may touch a magenta frame, enter a gutter, cross a panel or overlap a different view. Real transparent margins and gutters, magenta frames remain visible.\nNo text, labels, numbers, guide marks, watermark, decorative backdrop or extra props. Four independent fully separated cutouts of this one machine; safe separation and exact model consistency take priority over making it large.",
+  "reference_inputs": [],
+  "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a144af-3bb3-7453-a3a0-61a57896cd06\\exec-e460e5c8-2349-4738-a867-f24bfb68786c.png",
+  "sha256": "09e41a99ea79480d3adb80853a865549ecc24b453ead487f2b6a71d679ee69f9",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_counts": {
+    "transparent": 822844,
+    "opaque": 0,
+    "partial": 750020
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          24,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          202,
+          8,
+          517,
+          435
+        ],
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          77,
+          28,
+          569,
+          414
+        ],
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          45,
+          73,
+          678,
+          346
+        ],
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          79,
+          16,
+          613,
+          381
+        ],
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "faint_nonseparator_pixels_outside": 6779,
+    "measured_n_window_reason": "Actual generated top frame is outside the measured y24 crop. This rectangle retains positive visible clearance around the complete N drill; no guessed pixel mask or separator erasure."
+  },
+  "selection_decision_owner": "media/multilayer/source/space/space-generation-record.json"
+}

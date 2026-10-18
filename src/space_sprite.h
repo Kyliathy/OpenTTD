@@ -2,6 +2,7 @@
 /**
  * @file space_sprite.h Read-only final Space presentation from original native owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 #ifndef SPACE_SPRITE_H
@@ -66,6 +67,20 @@ Direction GetSpaceCraftArtDirection(const SpaceVehicle &craft);
  * @return Actual source pose for model15/19/20, or absence for another role's later art gate.
  */
 std::optional<SpaceArtPose> GetSpaceCraftArtPose(const SpaceVehicle &craft, Direction direction);
+
+/**
+ * Read an existing admitted travel phase for another authored native craft family.
+ * @param craft Original hull and outstanding native destination; no movement is granted.
+ * @return Existing vehicle-counter phase, or absence while paused, stopped or arrived.
+ */
+std::optional<uint8_t> GetSpaceCraftTravelArtFrame(const SpaceVehicle &craft);
+
+/**
+ * Read an original positive probe-service job without changing its owner or countdown.
+ * @param craft Actual native service-capable hull with an original manifest/contained job.
+ * @return Saved service-countdown phase, canonical zero while globally paused, or absence.
+ */
+std::optional<uint8_t> GetSpaceCraftServiceArtFrame(const SpaceVehicle &craft);
 
 /**
  * Query an original body's class, saved size and authorized finite-resource appearance.

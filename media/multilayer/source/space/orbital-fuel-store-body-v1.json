@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13HB / r2mlvs14-remaining-assets-and-runtime-integration.md73B.1. Genuine FuelStore closed-tank body; paid hardware grants no unsupported operational storage.",
+  "asset_id": "module.fuel-store",
+  "candidate": "orbital-fuel-store-body-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "genuine_original_measured_for_native_base_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-power-floor-camera-v1.png",
+      "sha256": "552643b1d8f89778b4801bafba0200c16cfb4ae03770729489fb4220602b8899",
+      "role": "plain shallow floor/camera hint only; no Power body or capability follows reuse"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original fixed orbital FUEL STORE module body for OpenTTD, complete physical tank hardware, no coupling component.\nImage1 is plain shallow FLOOR/CAMERA GUIDE ONLY, with no equipment to copy. Render a very thin flat2x2 steel diamond deck following the guide: about1000px wide and460px high, corners(640,330),(1140,560),(640,790),(140,560) on1280x1024 transparent canvas. All four floor corners must remain visible, shallow near2:1floor, no thick foundation or perspective convergence.\nEXACT hardware: TWO LOW CLOSED HORIZONTAL CYLINDRICAL TANK VESSELS of equal size on short navy saddles in the rear half, left and right. Cream/silver rounded metal shells with dark navy straps, rounded closed end caps, subtle metal seams. Their long axes follow the rear deck edges. Compact squat vessels, never tall upright tanks, buildings, cabinets or solar panels. ONE SMALL plain squat cream/navy manifold/valve box near the middle just in front, with simple static mechanical face, NO glowing light, blue glass, warning display or quantity gauge. Permanent unfilled hardware: no visible liquid or fuel. Keep broad open flat front apron, thin cream/silver perimeter, subtle four grey diamond floor tiles. Restrained crisp retro industrial game-sprite materials, upper-left light.\nDo not add a third tank, PV panels, Core command hub, warehouse, cargo, crates, pipes outside the deck, chimney, flame, crane, service machine, craft, robot or any other equipment. No clamp/coupling: one passive construction coupling is a separately registered genuine component later. No output/fill numbers, labels, arrows, symbols, text, axes, ground or external shadow. True transparent background. Every whole subject pixel at least100px clear of all image edges; complete floor corners and both vessels inside frame. ONE complete isolated fixed view, no sheet. Image1's shallow floor geometry takes priority over a steeper generic camera.",
+  "original": "media/multilayer/source/space/raw/orbital-fuel-store-body-v1.png",
+  "original_sha256": "a57d1e4d2a65c7b1859899cce7b1c64c96a9cbcd7e652bf680638ec83965813e",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      152,
+      348,
+      1254,
+      887
+    ],
+    "uniform_scale": [
+      23,
+      200
+    ],
+    "source_reference": [
+      696,
+      337
+    ],
+    "source_floor_corners": [
+      [
+        704,
+        355
+      ],
+      [
+        1253,
+        615
+      ],
+      [
+        704,
+        885
+      ],
+      [
+        152,
+        615
+      ]
+    ]
+  }
+}

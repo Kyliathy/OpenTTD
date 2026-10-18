@@ -1,0 +1,344 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3d. Exact12-component original indicator request. Four validated genuine-view parent rectangles contain three disjoint ordinary hardware subrectangles per view; no source or alpha repair.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-status-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "indicator-component-matrix",
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "variants": [
+    {
+      "state": "blocked",
+      "phase": 0,
+      "column": 0
+    },
+    {
+      "state": "service",
+      "phase": 0,
+      "column": 1
+    },
+    {
+      "state": "service",
+      "phase": 1,
+      "column": 2
+    }
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Approved original heavy electronics housing identity and genuine physical cameras",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+      "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-21 heavy-miner ORIGINAL DARK-BLUE ELECTRONICS HOUSING, status-part source sheet.\nInput image1 is the approved heavy-miner N/NE/E/SE model reference. Extract ONLY its one original small flat dark-blue top electronics housing as an isolated component; do not include or change the cutter, arms, hopper, thrusters, yellow body mounts or chassis. Keep the housing's exact shape, original proportions, materials, beveled edges, small existing recessed display/connector face, genuine view orientation and fixed upper-left light. No new antennas, doors, hardware, text or symbols. This is the SAME housing in three actual status illumination variants per direction, never three different designs.\nCreate EXACTLY TWELVE small isolated component cutouts in a1536x1024 sheet, grouped inside FOUR outer pure-magenta #FF00FF rectangular6px frames: N top-left(24,24)-(744,488); NE top-right(792,24)-(1512,488); E bottom-left(24,536)-(744,1000); SE bottom-right(792,536)-(1512,1000). These are the same genuine physical camera orientations as the reference. Each outer direction panel contains THREE SEPARATE components side-by-side at the SAME scale, not a merged triplet or connected objects:\nLEFT: BLOCKED, one short crisp warm amber interlock bar lit on the existing top display surface.\nMIDDLE: SERVICE phase A, one short crisp bright cyan diagnostic bar lit toward one end of the existing top display surface; the opposite end is dark.\nRIGHT: SERVICE phase B, the SAME unchanged housing with that cyan diagnostic bar lit at the OPPOSITE END of the existing top display surface; phase-A position now dark. Actual visibly different source pixels, no moving or newly opened hardware.\nKeep illumination bars broad/clean enough to read after conversion to a6-8px native component: roughly35-45 source pixels long and15-20px thick on the real display face, with crisp edges and NO glow/halo. Preserve the surrounding original blue housing surface.\nExact desired cutout centers: N(148,256),(380,256),(612,256); NE(916,256),(1148,256),(1380,256); E(148,768),(380,768),(612,768); SE(916,768),(1148,768),(1380,768). MAXIMUM each complete component width140px and height140px. Keep each entire component safely within its OWN transparent200x352 rectangle: N[48,80,248,432],[280,80,480,432],[512,80,712,432]; NE[816,80,1016,432],[1048,80,1248,432],[1280,80,1480,432]; E same x ranges with y592..944; SE same upper-right x ranges with y592..944. At least24px truly transparent clearance on all sides of EVERY component. No cutout may overlap another or touch an outer frame.\nBackground, panel interiors, margins and gutters must be actual clean transparent alpha=0, with ONLY the four opaque pure-magenta outer separator frames outside all twelve safe cutouts. No translucent purple haze, checkerboard, gray/white fill, cast shadows, labels, numbers, arrows, watermark, backdrop or other props. Exactly four genuine original housing orientations, each with blocked/service-A/service-B component originals left-to-right.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-status-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-c659b65e-7975-4e6b-81d8-79278f33096c.png",
+  "sha256": "7c8d5a955f04210ea25014c54cdd9f967bcc9686088a2cc492b50064173aef96",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          83,
+          153,
+          621,
+          304
+        ],
+        "minimum_transparent_clearance": 83,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              115,
+              186,
+              239,
+              336
+            ],
+            "source_part_box": [
+              112,
+              183,
+              242,
+              339
+            ],
+            "source_center": [
+              177,
+              261
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              319,
+              185,
+              445,
+              336
+            ],
+            "source_part_box": [
+              316,
+              182,
+              448,
+              339
+            ],
+            "source_center": [
+              382,
+              260
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              523,
+              185,
+              653,
+              336
+            ],
+            "source_part_box": [
+              520,
+              182,
+              656,
+              339
+            ],
+            "source_center": [
+              588,
+              260
+            ]
+          }
+        ]
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          43,
+          160,
+          678,
+          306
+        ],
+        "minimum_transparent_clearance": 26,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              843,
+              193,
+              1025,
+              338
+            ],
+            "source_part_box": [
+              840,
+              190,
+              1028,
+              341
+            ],
+            "source_center": [
+              934,
+              266
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1064,
+              192,
+              1245,
+              337
+            ],
+            "source_part_box": [
+              1061,
+              189,
+              1248,
+              340
+            ],
+            "source_center": [
+              1154,
+              264
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1296,
+              192,
+              1478,
+              337
+            ],
+            "source_part_box": [
+              1293,
+              189,
+              1481,
+              340
+            ],
+            "source_center": [
+              1387,
+              264
+            ]
+          }
+        ]
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          41,
+          178,
+          686,
+          259
+        ],
+        "minimum_transparent_clearance": 18,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              73,
+              722,
+              269,
+              802
+            ],
+            "source_part_box": [
+              70,
+              719,
+              272,
+              805
+            ],
+            "source_center": [
+              171,
+              762
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              298,
+              723,
+              493,
+              803
+            ],
+            "source_part_box": [
+              295,
+              720,
+              496,
+              806
+            ],
+            "source_center": [
+              396,
+              763
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              522,
+              723,
+              718,
+              802
+            ],
+            "source_part_box": [
+              519,
+              720,
+              721,
+              805
+            ],
+            "source_center": [
+              620,
+              762
+            ]
+          }
+        ]
+      },
+      "SE": {
+        "crop_box": [
+          796,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          18,
+          146,
+          662,
+          293
+        ],
+        "minimum_transparent_clearance": 18,
+        "opaque_separator_pixels": 0,
+        "components": [
+          {
+            "visible_subject_bbox": [
+              814,
+              690,
+              1012,
+              837
+            ],
+            "source_part_box": [
+              811,
+              687,
+              1015,
+              840
+            ],
+            "source_center": [
+              913,
+              764
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1038,
+              690,
+              1236,
+              837
+            ],
+            "source_part_box": [
+              1035,
+              687,
+              1239,
+              840
+            ],
+            "source_center": [
+              1137,
+              764
+            ]
+          },
+          {
+            "visible_subject_bbox": [
+              1260,
+              690,
+              1458,
+              837
+            ],
+            "source_part_box": [
+              1257,
+              687,
+              1461,
+              840
+            ],
+            "source_center": [
+              1359,
+              764
+            ]
+          }
+        ]
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "component_count": 12,
+    "measured_window_note": "Each genuine-view parent crop validates all3complete actual hardware parts before any subpart selection. SE measured frame-free left796 provides18px rather than the trial crop14px. Three component subrectangles per view are disjoint and each encloses its entire visible original housing. No pixel or alpha is edited."
+  }
+}

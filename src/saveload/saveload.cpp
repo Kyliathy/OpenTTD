@@ -62,6 +62,7 @@
 #include "../transport_tube.h"
 #include "../geothermal_collector.h"
 #include "../geothermal_riser.h"
+#include "../surface_supply_order_runtime.h"
 #include "../geothermal_heat.h"
 #include "../error.h"
 #include "../strings_type.h"
@@ -269,6 +270,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _space_pod_chunk_handlers;
 	extern const ChunkHandlerTable _space_structure_chunk_handlers;
 	extern const ChunkHandlerTable _orbital_recipe_chunk_handlers;
+	extern const ChunkHandlerTable _surface_supply_order_chunk_handlers;
 	extern const ChunkHandlerTable _space_transition_chunk_handlers;
 	extern const ChunkHandlerTable _space_descent_chunk_handlers;
 	extern const ChunkHandlerTable _launch_center_chunk_handlers;
@@ -334,6 +336,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_space_pod_chunk_handlers,
 		_space_structure_chunk_handlers,
 		_orbital_recipe_chunk_handlers,
+		_surface_supply_order_chunk_handlers,
 		_space_transition_chunk_handlers,
 		_space_descent_chunk_handlers,
 		_launch_center_chunk_handlers,
@@ -3380,6 +3383,7 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateSpacePodLoadPreview();
 		ValidateSpaceStructureLoadPreview();
 		ValidateOrbitalRecipeLoadPreview(); // Same-file native structures, utility and clock supply processing ownership; the active world grants no work to preview.
+		ValidateSurfaceSupplyOrderLoadPreview(); // Actual same-file native economy day, map/company/station facts validate pending rights; the open world's stock/clock grants none.
 		ValidateSpaceTransitionLoadPreview();
 		ValidateSpaceDescentLoadPreview();
 		// Current files publish actual configured mass separately from job receipts; genuine older saves retain explicitly limited copied admission and their full native dimension checks.

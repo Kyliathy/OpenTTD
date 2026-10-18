@@ -9,6 +9,7 @@
 //
 // @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B
 // @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; final Space append.
+// @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; orbital append after the protected Space prefix.
 // Sources for OpenTTD's required base graphics.
 // Checks whether the correct version of OpenTTD is used before
 // allowing it to be used.
@@ -107,3 +108,4 @@
 #include "map_layers_m1.nfo"
 #include "space_preview.nfo"
 #include "space_final.nfo"
+#include "orbital_final.nfo"

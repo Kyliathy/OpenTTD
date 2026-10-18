@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Rejected targeted berth correction; original output retained.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-complete-v2",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_floor_projection_and_berth_position",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-complete-v1.png",
+      "sha256": "4bbdcb89aa202664dd083009c7732bde28e78e51d7c2c3c2b038130256877021",
+      "role": "original model edit target"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nInput image1 is the actual original Core platform edit target. Preserve this exact station model, complete 2:1 diamond floor, central low octagonal ivory/teal command hub, one pair of low navy solar-panel banks, one shallow locker, all floor corners and upper-left lighting. Same fixed camera, square3x3 footprint, and same1536x1024 layout. Preserve the actual transparency; the magenta rectangle is an outside separator.\nChange ONLY the docking mouth location along the visible lower-right diagonal floor edge. There must be exactly ONE docking mouth. Remove the existing mouth centred approximately at(1110,700) from the middle of that edge, restoring that portion of edge to the same plain flush platform rim as its neighbors. Rebuild that same small mouth much nearer the RIGHTMOST diamond vertex, centred approximately at(1320,607), on that SAME lower-right diagonal edge. In geometric terms the contact is one-sixth of the way from the rightmost floor vertex(1430,548) toward the bottom floor vertex(768,879), NOT halfway. Keep the mouth pointing outward down-right, with its two short pale cheeks and a dark aperture, low and no wider than its original. The top-right solar bank and corner cap remain exactly where they are. There is still only one berth.\nAll other hardware, floor geometry and materials stay the same. No extra dock, craft, cargo, antenna, props or labels. The entire whole model must remain comfortably inside the frame with at least32px transparent clearance. Transparent background and gutters, no opaque scenery or ground shadow. Do not rotate or mirror anything. This is a targeted correction for the actual native approach point; retain the same overall model scale and position.",
+  "rejection": "Output enlarged and steepened the floor instead of retaining the original2:1 layout; the berth is still too far from its required near-right-vertex contact. No nonuniform scaling, geometry repair or moved source pixels allowed.",
+  "original": "media/multilayer/source/space/raw/orbital-core-complete-v2.png",
+  "original_sha256": "ec8cfb7970a0b5ae926d4f472debb6245f4117b30c5b05f4d09de7984f45a798",
+  "image_size": [
+    1536,
+    1024
+  ]
+}

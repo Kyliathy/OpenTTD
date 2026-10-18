@@ -1,4 +1,6 @@
 # First-party content distribution/runtime language pairing: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs6-mines-and-resource-chains.md.
+# Focused actual-engine Space art validation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
+# Original orbital selectors/decoded append: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT BINARY_NAME)
@@ -245,6 +247,33 @@ include(MSVCFilters)
 add_library(openttd_lib OBJECT ${GENERATED_SOURCE_FILES})
 add_executable(openttd WIN32)
 add_executable(openttd_test)
+# Focused native order/persistence tests link the real engine once; shared-header changes must not require unrelated scenario compilation. Owner: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/surface_supply.cpp
+    src/tests/surface_supply_custody.cpp
+    src/tests/surface_supply_order.cpp
+    src/tests/surface_supply_order_owner.cpp
+    src/tests/surface_supply_order_wire.cpp
+    src/tests/surface_supply_order_native.cpp
+)
+# Link the same engine objects for the current Space boundaries without recompiling unrelated test scenarios after a shared sprite-range change. Explicit targeting keeps normal build/test entry points intact.
+add_executable(openttd_space_art_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/space_sprite.cpp
+    # Original orbital source selectors and paid-work owner boundaries: r2mlvs11 Group13K.
+    src/tests/orbital_sprite_craft.cpp
+    src/tests/orbital_sprite_module.cpp
+    src/tests/orbital_recipe_inventory.cpp
+    src/tests/orbital_dock.cpp
+    src/tests/manufacturing_materialization.cpp
+    src/tests/multilayer_packed_load.cpp
+)
 set_target_properties(openttd PROPERTIES OUTPUT_NAME "${BINARY_NAME}")
 # All other files are added via target_sources()
 
@@ -261,6 +290,8 @@ if(MSVC)
         set_property(TARGET openttd_lib PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_surface_supply_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_space_art_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
      endif()
 endif()
 
@@ -292,8 +323,12 @@ target_link_libraries(openttd
 )
 
 target_link_libraries(openttd_test PRIVATE openttd_lib)
+target_link_libraries(openttd_surface_supply_test PRIVATE openttd_lib)
+target_link_libraries(openttd_space_art_test PRIVATE openttd_lib)
 if(ANDROID)
     target_link_libraries(openttd_test PRIVATE log)
+    target_link_libraries(openttd_surface_supply_test PRIVATE log)
+    target_link_libraries(openttd_space_art_test PRIVATE log)
 endif()
 
 include(Catch)

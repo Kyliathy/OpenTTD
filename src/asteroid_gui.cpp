@@ -10,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11; native approach waits.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; retain the actual inspected incarnation across paid replacement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; source-linked heavy mining and original service bills.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original per-world-cell module back/front sources.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group13; shared mining recall admission and cargo return region.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; company-gated composition/motion and original construction/descent progress.
  */
@@ -18,6 +19,7 @@
 #include "asteroid_inspection.h"
 #include "space_vehicle.h"
 #include "space_sprite.h"
+#include "orbital_sprite.h"
 #include "space_vehicle_cmd.h"
 #include "space_manifest.h"
 #include "space_pod.h"
@@ -79,14 +81,27 @@ void ViewportAddSpaceEntities(const DrawPixelInfo &dpi)
 {
 	if (_viewport_draw_layer != MapLayer::Space) return;
 	const auto &field = GetAsteroidField();
-	// Retain visible unfinished/paid footprints; a cancelled empty blueprint has no remaining physical inventory to disclose.
+	// Every source cell belongs to one actual world tile. Original construction
+	// and facility owners select stages; rendering grants no completion or stock.
 	for (const auto *site : SpaceStructure::Iterate()) {
-		if (site->state.phase == SpaceStructurePhase::Cancelled && site->job.inputs[0].TotalCount() == 0 && site->job.inputs[1].TotalCount() == 0) continue;
-		const auto &d = *GetSpaceConstructionDefinition(site->state.kind);
-		// Native wire footprint is a blueprint overlay, not final module art.
-		for (uint y = 0; y <= d.height; ++y) for (uint x = 0; x < (y == d.height ? 1U : d.width); ++x) {
-			const Point p = SpaceWorldPoint({static_cast<int32_t>(site->state.x + x) * SPACE_Q16, static_cast<int32_t>(site->state.y + y) * SPACE_Q16});
-			AddSortableSpriteToDraw(SPR_SELECT_TILE, PAL_NONE, p.x - TILE_SIZE / 2, p.y - TILE_SIZE / 2, 0, {{0, 0, 0}, {16, 16, 1}, {0, 0, 0}});
+		const auto *definition = GetSpaceConstructionDefinition(site->state.kind);
+		if (definition == nullptr) continue;
+		// Quote original stock/work/actor admission once per site for this draw.
+		// Per-cell copies below contain source indices only, not another job owner.
+		const auto selected = GetOrbitalModuleArtPose(*site, _local_company, 0, 0);
+		if (!selected) continue;
+		// Back and genuine near-jaw parts remain independent native parents so a
+		// visiting craft sorts between them. Honest absent fronts are transparent.
+		for (uint8_t tile = 0; tile < definition->width * definition->height; ++tile) for (uint8_t part = 0; part < 2; ++part) {
+			auto pose = *selected; pose.tile = tile; pose.part = part;
+			const auto sprite = ResolveOrbitalSprite(pose);
+			const auto bounds = GetOrbitalModuleArtBounds(*site, tile, part);
+			// Both source resolution and geometry must be declared before drawing;
+			// another family or guessed bounds cannot stand in for missing coverage.
+			if (!sprite || !bounds) continue;
+			const Point p = SpaceWorldPoint({static_cast<int32_t>(site->state.x + tile % definition->width) * SPACE_Q16,
+				static_cast<int32_t>(site->state.y + tile / definition->width) * SPACE_Q16});
+			AddSortableSpriteToDraw(*sprite, PAL_NONE, p.x - TILE_SIZE / 2, p.y - TILE_SIZE / 2, 0, *bounds);
 		}
 	}
 	// Body appearance reads actual saved class/size and this observer's authorized knowledge. Visible-body lookup remains the existing local spatial query, never an all-body scan.

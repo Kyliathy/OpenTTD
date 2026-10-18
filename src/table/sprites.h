@@ -9,6 +9,7 @@
  * @file sprites.h This file contains all sprite-related enums and defines. @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B (native M1 ranges)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG (final Space append)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K (orbital append)
  *
  * These consist mainly of the sprite numbers and a bunch of masks and macros
  * to handle sprites and to get rid of all the magic numbers in the code.
@@ -44,6 +45,7 @@
 #include "../slope_type.h"
 #include "multilayer_sprite_assets.h"
 #include "space_sprite_assets.h"
+#include "orbital_sprite_assets.h"
 
 static const SpriteID SPR_SELECT_TILE  = 752;
 static const SpriteID SPR_DOT          = 774; ///< Corner marker for lower/raise land.
@@ -387,7 +389,7 @@ static const SpriteID SPR_BRIDGE_DECKS_ROAD = SPR_BRIDGE_DECKS_BASE + 18;
  * @see docs/zz-reach2/upgrades/2026-10/r2mlm13-layer-art-review-and-new-sprites.md
  */
 static constexpr SpriteID SPR_MAP_LAYER_BASE = SPR_BRIDGE_DECKS_BASE + BRIDGE_DECKS_SPRITE_COUNT; ///< First Map Layer sprite.
-static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = SPACE_SPRITE_END; ///< Original M0/M1, fixed11 preview slots and final Space append.
+static constexpr uint16_t MAP_LAYER_SPRITE_COUNT = ORBITAL_SPRITE_END; ///< Original M0/M1/preview/Space prefix plus complete orbital source append.
 static constexpr SpriteID SPR_SPACE_PREVIEW_ASTEROID = SPR_MAP_LAYER_BASE + MULTILAYER_M1_SPRITE_COUNT; ///< Three classes by three sizes; final Plan13 families remain pending.
 static constexpr SpriteID SPR_SPACE_PREVIEW_PROBE = SPR_SPACE_PREVIEW_ASTEROID + 9; ///< Travel and attached survey poses.
 static constexpr SpriteID SPR_IMG_MAP_LAYER_SURFACE = SPR_MAP_LAYER_BASE + 0; ///< Surface toolbar icon.

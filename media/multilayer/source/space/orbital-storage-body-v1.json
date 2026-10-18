@@ -1,0 +1,92 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13G / r2mlvs14-remaining-assets-and-runtime-integration.md72.1. Genuine fixed Storage hardware; closed cabinets never represent additional stock or services.",
+  "asset_id": "module.storage",
+  "candidate": "orbital-storage-body-v1",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_body_pending_native_base_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-storage-floor-camera-v1.png",
+      "sha256": "552643b1d8f89778b4801bafba0200c16cfb4ae03770729489fb4220602b8899",
+      "role": "plain shallow floor/camera hint only; native contract remains authoritative"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: ONE original fixed-view orbital STORAGE module body for OpenTTD.\nImage1 is plain shallow FLOOR/CAMERA GUIDE ONLY. Render one very thin flat2x2 diamond platform following this guide's shallow proportions: about1000px wide and460px high, corners(640,330),(1140,560),(640,790),(140,560) on1280x1024 transparent canvas. Floor low and nearly twice as wide as tall, no perspective convergence, all four floor corners visible.\nOn the REAR HALF of the deck place EXACTLY TWO LOW CLOSED rectangular navy/slate-blue storage cabinets with cream/silver trim and ribbed flat roofs. Put them side by side with a narrow central aisle, low and compact, leaving the back vertex visible. Both are permanent closed storage hardware, not stacks of cargo. On the front face of the left cabinet include one small simple horizontal BLUE glass status inset. Keep the entire FRONT HALF open as a flat freight-transfer apron, four floor tile seams clear. Thin cream/silver perimeter, grey steel deck, graphite utility seams. Restrained crisp retro industrial game-sprite materials; upper-left light.\nNo docking clamps in this body: a single passive coupling will be a separate genuine component. No solar panels, Core command hub, service machines, crane, gantry, craft, robots, exposed cargo, crates, tanks, extra equipment, fill gauges, labels, words, numbers, symbols, arrows or axes. No external ground shadow. Real transparent background. Keep EVERY whole subject pixel at least100px from all canvas edges. ONE complete isolated fixed view, no sheet. The shallow floor of image1 takes priority over a more elevated generic isometric camera.",
+  "original": "media/multilayer/source/space/raw/orbital-storage-body-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      142,
+      337,
+      1261,
+      887
+    ],
+    "uniform_scale": [
+      279,
+      2500
+    ],
+    "source_reference": [
+      701,
+      331
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        340
+      ],
+      [
+        1259,
+        615
+      ],
+      [
+        701,
+        885
+      ],
+      [
+        144,
+        615
+      ]
+    ]
+  },
+  "original_sha256": "216471195950c440e50483aca9fb25a993d0a714aa0e6efb01c841da8033b347",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

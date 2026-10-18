@@ -1,0 +1,58 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Explicit unchanged Core amber material reuse only inside existing Assembly console glass; no Core utility/work owner is copied.",
+  "tool": "original_component_reuse_registration",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-status-glass-v1",
+  "state": "blocked",
+  "directions": [
+    "none"
+  ],
+  "original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+  "original_sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100",
+  "image_size": [
+    1254,
+    1254
+  ],
+  "original_generation_receipt": {
+    "path": "media/multilayer/source/space/orbital-core-blocked-glass-v1.json",
+    "sha256": "978a56089401ba8e9cb145479b758c7ec2c7f46da6e8c97e77815f50e13004be"
+  },
+  "reused_original_key": "orbital-core-blocked-glass-v1",
+  "native_registration": {
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      299,
+      518,
+      955,
+      731
+    ],
+    "uniform_scale": [
+      1,
+      192
+    ],
+    "source_reference": [
+      627,
+      624
+    ],
+    "native_contact": [
+      100,
+      65
+    ],
+    "native_bounds": [
+      97,
+      63,
+      104,
+      68
+    ]
+  },
+  "native_contact": [
+    100,
+    65
+  ],
+  "status": "selected_material_pending_state_matrix_review"
+}

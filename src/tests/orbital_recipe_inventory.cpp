@@ -2,11 +2,14 @@
 /** @file orbital_recipe_inventory.cpp Actual module packet/work adapter boundaries in declared isolated consumed-frame fixtures.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C native runtime/record boundary fixtures.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K actual processor receipt/stock presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13L paused native outage presentation.
  * Declared unit frames verify packet/shared-power/runtime boundaries; actual paid processor procurement remains Group11.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../orbital_recipe.h"
+#include "../orbital_sprite.h"
 #include "../space_structure.h"
 #include "../space_structure_cmd.h"
 #include "../hub_cargo.h"
@@ -395,5 +398,85 @@ TEST_CASE("Native orbital processors retain fractional work from their actual sh
 	CHECK(second.module->processing->electrical->Capture().paid_j == 780); CHECK(second.module->processing->electrical->WorkTicks() == 1);
 	CHECK(second.module->processing->electrical->Capture().interval_paid_j == 60); CHECK(GetUtilityPowerProducer(core.module->producer)->consumed_lifetime_j == 10530);
 	CHECK(second.module->stock[cargo].TotalCount() == 4); CHECK(ValidateOrbitalRecipes()); ResetTubePowerState();
+}
+
+/** Actual paid processing remains active after its current grant is spent, without drawing issuing work. */
+TEST_CASE("Orbital processor artwork reads current committed electrical receipts", "[orbital-art-module]")
+{
+	OrbitalRecipeRig rig; rig.Add(CargoLabel{"NORE"}, 4); ResetTubePowerState();
+	AutoRestoreBackup pause(_pause_mode, PauseModes{}); AutoRestoreBackup tick(TimerGameTick::counter, uint64_t{0});
+	auto &site = rig.Site(); auto &core = rig.Core(); auto &state = *site.module->processing;
+	REQUIRE(CmdConnectOrbitalServices(DoCommandFlag::Execute, site.index, site.generation, core.index, core.generation).Succeeded());
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 2);
+	REQUIRE(CmdControlOrbitalRecipe(DoCommandFlag::Execute, site.index, site.generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Start)).Succeeded());
+	RunNativeRecipeTicks(1); REQUIRE(state.paid_lifetime_j == 750);
+	REQUIRE(GetOrbitalRecipeVisualFrame(site)); CHECK(*GetOrbitalRecipeVisualFrame(site) == 1);
+	CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Work);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 2);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->frame == 1);
+	const auto records = CaptureOrbitalRecipes(); const auto physical = ComputeSpaceStructureDigest();
+	const auto power = ComputeUtilityPowerDigest(); const auto actor = _current_company;
+	// Read every native processor cell/part repeatedly through the actual public
+	// selectors; work, original packets, private receipts and actor must be stable.
+	for (uint i = 0; i < 36; ++i) {
+		const auto pose = GetOrbitalModuleArtPose(site, _current_company, i % 9, i % 2);
+		REQUIRE(pose); CHECK(pose->frame == 1); CHECK(ResolveOrbitalSprite(*pose));
+	}
+	CHECK(CaptureOrbitalRecipes() == records); CHECK(ComputeSpaceStructureDigest() == physical);
+	CHECK(ComputeUtilityPowerDigest() == power); CHECK(_current_company == actor);
+	const auto foreign = GetOrbitalModuleArtPose(site, CompanyID::Invalid(), 0, 0);
+	REQUIRE(foreign); CHECK(foreign->state == 2); CHECK(foreign->frame == 0);
+	{
+		AutoRestoreBackup observer(_current_company, CompanyID::Invalid());
+		CHECK_FALSE(GetOrbitalRecipeVisualFrame(site));
+		CHECK(GetOrbitalModuleArtPose(site, actor, 0, 0)->frame == 0);
+		CHECK(_current_company == CompanyID::Invalid());
+	}
+	_pause_mode.Set(PauseMode::Normal);
+	CHECK_FALSE(GetOrbitalRecipeVisualFrame(site)); CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Work);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->frame == 0);
+	// Global pause suppresses transient next-grant absence, but an explicitly
+	// switched-off original panel must still disclose a real physical outage.
+	REQUIRE(CmdSetOrbitalPanelPaused(DoCommandFlag::Execute, core.index, core.generation, true).Succeeded());
+	CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Power);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 3);
+	CHECK(CaptureOrbitalRecipes() == records);
+	REQUIRE(CmdSetOrbitalPanelPaused(DoCommandFlag::Execute, core.index, core.generation, false).Succeeded());
+	CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Work);
+	CHECK(ComputeUtilityPowerDigest() == power);
+	_pause_mode.Reset(PauseMode::Normal);
+	++TimerGameTick::counter; CHECK_FALSE(GetOrbitalRecipeVisualFrame(site)); // No current prepared opportunity.
+	CHECK(CaptureOrbitalRecipes() == records); ResetTubePowerState();
+}
+
+/** Baseline recipes use their own real work and never acquire an electrical capability from the artwork. */
+TEST_CASE("Orbital unpowered source activity follows original baseline work and material waits", "[orbital-art-module]")
+{
+	OrbitalRecipeRig rig(SpaceBuildKind::Refinery); rig.Add(CargoLabel{"NORE"}, 4); ResetTubePowerState();
+	AutoRestoreBackup pause(_pause_mode, PauseModes{}); AutoRestoreBackup tick(TimerGameTick::counter, uint64_t{0});
+	auto &site = rig.Site(); auto &state = *site.module->processing;
+	REQUIRE(CmdControlOrbitalRecipe(DoCommandFlag::Execute, site.index, site.generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Start)).Succeeded());
+	RunNativeRecipeTicks(1); REQUIRE(state.unpowered_work_ticks == 1);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->frame == 1);
+	CHECK_FALSE(state.electrical); CHECK(state.consumer == UtilityConsumerID{UINT32_MAX}); CHECK(state.paid_lifetime_j == 0);
+	RunNativeRecipeTicks(73); REQUIRE(state.batches.at(MultiLayerRecipeID{"OREF"}) == 1);
+	CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Input);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 3);
+	REQUIRE(CmdControlOrbitalRecipe(DoCommandFlag::Execute, site.index, site.generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Pause)).Succeeded());
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 2);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->frame == 0);
+	ResetTubePowerState();
+}
+
+/** Output admission is original physical buffer capacity, never an invented electrical requirement. */
+TEST_CASE("Orbital processor source reports the original full output buffer", "[orbital-art-module]")
+{
+	OrbitalRecipeRig rig(SpaceBuildKind::Refinery); rig.Add(CargoLabel{"NORE"}, 4);
+	rig.Add(CargoLabel{"RFMT"}, GetOrbitalRecipeCargoCapacity(SpaceBuildKind::Refinery, CargoLabel{"RFMT"}));
+	auto &site = rig.Site();
+	REQUIRE(CmdControlOrbitalRecipe(DoCommandFlag::Execute, site.index, site.generation, 0, static_cast<uint8_t>(OrbitalRecipeControl::Start)).Succeeded());
+	CHECK(GetOrbitalRecipeWait(site) == OrbitalRecipeWait::Output);
+	CHECK(GetOrbitalModuleArtPose(site, _current_company, 0, 0)->state == 3);
+	CHECK_FALSE(site.module->processing->electrical);
 }
 

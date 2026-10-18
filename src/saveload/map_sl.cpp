@@ -15,6 +15,7 @@
 
 #include "../map_func.h"
 #include "../map_layer.h"
+#include "../surface_supply_order_runtime.h"
 #include "../core/bitmath_func.hpp"
 #include "../fios.h"
 
@@ -33,6 +34,16 @@ static const SaveLoad _map_desc[] = {
 	SaveLoad::Variable<VarFileType::U8>("layers", SLE_GLOBAL_ADDRESS(_map_layers), SaveLoadVersion::MapLayers),
 };
 
+/** Require original current-era geometry fields before either mode can use a MAPS row.
+ * @param description Candidate's actual decoded MAPS schema; previous/default dimensions grant no order-reference permission.
+ */
+static void CheckSurfaceSupplyMapFields(const std::vector<SaveLoad> &description)
+{
+	if (IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders)) return;
+	// Each current file must carry its own complete packed geometry; omitting a dimension/layer field cannot borrow a preceding file's static parser value.
+	for (const auto field : {"dim_x", "dim_y", "layers"}) if (std::ranges::find(description, field, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing native supply map geometry field");
+}
+
 /**
  * Tiles the open file stored.
  * A RIFF length is 28 bits. A 4096 by 4096 map of four layers still fits.
@@ -43,6 +54,7 @@ static uint MapFileTileCount()
 	return Map::PlaneSize() * _map_file_layers;
 }
 
+/** Original native map geometry; current paid-order references require explicit same-file dimensions in full/copied modes. */
 struct MAPSChunkHandler : ChunkHandler {
 	MAPSChunkHandler() : ChunkHandler("MAPS", ChunkType::Table) {}
 
@@ -58,9 +70,11 @@ struct MAPSChunkHandler : ChunkHandler {
 		SlGlobList(_map_desc);
 	}
 
+	/** Decode original geometry and retain independent order-reference evidence before allocating the native map. */
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_map_desc, _map_sl_compat);
+		CheckSurfaceSupplyMapFields(slt);
 
 		//Files written before MapLayers have no layers field, so they are one surface plane.
 		_map_layers = 1;
@@ -74,13 +88,19 @@ struct MAPSChunkHandler : ChunkHandler {
 		//Before Deep Underground a file holds at most Surface, Underground and Space.
 		if (IsSavegameVersionBefore(SaveLoadVersion::DeepUnderground) && _map_layers > 3) SlErrorCorrupt("Invalid map layer count");
 		_map_file_layers = _map_layers;
+		// Observe only actual bounded original MAPS fields; independent supply adoption cannot borrow initialized/live geometry, and malformed dimensions fail before allocation.
+		if (!ObserveLoadedSurfaceSupplyMap(_map_dim_x, _map_dim_y, _map_layers)) SlErrorCorrupt("Invalid/repeated native supply map geometry");
 		//The live world always has every layer. Missing planes are filled in AfterLoadGame.
 		Map::Allocate(_map_dim_x, _map_dim_y, MAX_MAP_LAYERS);
 	}
 
-	void LoadCheck(size_t) const override
+	/** Copy only this file's original bounded geometry; no current map supplies absent order-reference fields.
+	 * @param length Framework-owned chunk extent; native table framing supplies the actual field bounds.
+	 */
+	void LoadCheck([[maybe_unused]] size_t length) const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_map_desc, _map_sl_compat);
+		CheckSurfaceSupplyMapFields(slt);
 
 		_map_layers = 1;
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;
@@ -94,6 +114,9 @@ struct MAPSChunkHandler : ChunkHandler {
 		_load_check_data.map_size_x = _map_dim_x;
 		_load_check_data.map_size_y = _map_dim_y;
 		_load_check_data.map_layers = _map_layers;
+		if (!Map::DecodeStoredTile(TileIndex{0}, _map_dim_x, _map_dim_y, _map_layers)) SlErrorCorrupt("Invalid copied native map dimensions");
+		if (_load_check_data.native_map_dimensions_present) SlErrorCorrupt("Repeated copied native map dimensions");
+		_load_check_data.native_map_dimensions_present = true;
 	}
 };
 

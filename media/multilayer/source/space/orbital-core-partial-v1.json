@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Rejected physical construction original retained unchanged.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "The1333px-wide floor is roughly730px high; it cannot meet native3x3 floor corners and cell bounds through uniform reduction. Equipment identity and actual incomplete hardware are suitable, camera requires a genuine correction.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "approved complete Core edit target"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+      "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b",
+      "role": "camera-only shallow guide"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: module.nucleus, fixed Core PARTIALLY CONSTRUCTED physical stage, one isolated transparent original.\nInput1 is the approved complete station EDIT TARGET. Input2 is a shallow diamond CAMERA GUIDE only; it contains no usable station artwork. Rerender this same exact model partway through physical assembly. Keep the very thin diamond3x3 deck, floor corner positions, shallow camera, relative equipment locations, upper-left lighting and cream/navy material identity. Keep one central low octagonal hub, exactly two flat solar-bank frames at the back-left and back-right, and one shallow front-left locker. Change only their incomplete construction: the hub is an open octagonal low rim with eight short uprights and exposed dark floor, NO roof and NO finished window belt; both PV banks have unfinished navy panel sections with open support ribs visible; the locker is an open shallow casing with no lid. No cranes, robots, people, crates, supply piles, coupling or other props. The whole site must remain low and sparse, visibly incomplete with transparent open spaces through missing roofs. Match the guide's shallow floor projection: floor diamond roughly960px wide,440px high on a square1254px canvas, corners around(627,440),(1107,660),(627,880),(147,660). Render genuinely from that shallow camera; do not rotate or steepen into a square. Entire view with at least100px transparent outer clearance. Preserve real transparency in background, no cast shadow outside the thin platform, no scene, labels, words, arrows, axes or magenta frame. One separate complete view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-core-partial-v1.png",
+  "original_sha256": "ac6867ee04a02ae89305e8806cef1c9a1c83af981e2499ab214f68191c97fc19",
+  "image_size": [
+    1388,
+    1133
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Bold blueprint trial retained but its steeper projection cannot replace native geometry.",
+  "asset_id": "module.dock",
+  "candidate": "orbital-dock-blueprint-v2",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_native_floor_projection",
+  "rejection": "Bold continuous grid is readable, but the regenerated floor is too steep for the original four cell canvases and unchanged2px floor tolerance.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-blueprint-v1.png",
+      "sha256": "f0fa8dcef7f16d9d98205d317ee4189fa3f12de81ab39d340e2e68850c08f2c7",
+      "role": "blueprint edit target; line readability only"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: inert unbuilt planning blueprint for the same fixed2x2 orbital Dock.\nImage1 is the blueprint edit target. Preserve its camera, all four floor corners, exact2x2 footprint and the single SMALL rear cabinet outline. Change only line rendering for tiny native-size readability: replace the fine noisy mesh with SIMPLE BOLD SOLID FULLY OPAQUE bright cyan strokes, about20source pixels thick. Exactly the outer diamond perimeter, the two internal diagonals dividing it into four equal diamond tiles, and the simple open wire contour of the one little low rear cabinet. All lines continuous and fully opaque with crisp edges, no glow or dotted/dithered mesh. The floor interiors and cabinet interior remain genuinely transparent: no solid floor, shaded plates or finished hardware. Keep this shallow floor about twice as wide as tall. Whole subject visible with generous transparent outer clearance. No clamps, craft, extra equipment, labels, text, arrows, axes, magenta, background or external shadows. ONE complete isolated fixed view.",
+  "original": "media/multilayer/source/space/raw/orbital-dock-blueprint-v2.png",
+  "original_sha256": "ad86544718d0bedf0c094946097b18a0dc9678e172e433972773fcdf0dffd4b2",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

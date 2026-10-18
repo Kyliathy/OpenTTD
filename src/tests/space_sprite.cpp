@@ -22,7 +22,7 @@ public:
 	/** Release the declared component owners before the base fixture restores the original world. */
 	~SpaceArtRig() { _space_pod_pool.CleanPool(); _space_structure_pool.CleanPool(); }
 	/** Select a delivered role on one isolated native hull, without claiming its paid assembly.
-	 * @param model Existing canonical model15,19 or20.
+	 * @param model Existing canonical model14,15,19 or20;14 is an unsupported-art control.
 	 * @return Actual component hull with original native queue and containers.
 	 */
 	SpaceVehicle &Craft(uint16_t model)
@@ -38,6 +38,7 @@ public:
 	 */
 	SpaceStructure &Site()
 	{
+		REQUIRE(SpaceStructure::CanAllocateItem());
 		auto *site = SpaceStructure::Create(); site->generation = 1;
 		site->state.owner = _current_company; site->state.x = 4; site->state.y = 4;
 		return *site;
@@ -89,6 +90,9 @@ TEST_CASE("Miner and body art follow the exact native lease without progressing 
 	const auto position = craft.position; const auto cargo = craft.cargo.TotalCount();
 	REQUIRE(IsSpaceMiningWorkTick(craft));
 	const auto miner = GetSpaceCraftArtPose(craft, Direction::SW); REQUIRE(miner); CHECK(miner->state == 3); CHECK(miner->frame == 1);
+	VehicleSpriteSeq sequence; craft.GetImage(Direction::N, EngineImageType::OnMap, &sequence);
+	const auto native_pose = GetSpaceCraftArtPose(craft, GetSpaceCraftArtDirection(craft)); REQUIRE(native_pose);
+	REQUIRE(sequence.count == 1); CHECK(sequence.seq[0].sprite == *ResolveSpaceSprite(*native_pose));
 	const auto asteroid = GetSpaceAsteroidArtPose(body.id, _current_company); REQUIRE(asteroid); CHECK(asteroid->state == 2); CHECK(asteroid->frame == 1);
 	CHECK(GetSpaceCraftArtDirection(craft) == GetSpaceArtDirection(craft.position, body.motion.position, craft.direction));
 	CHECK(ComputeAsteroidFieldDigest(GetAsteroidField()) == field); CHECK(ComputeSpaceOrdersDigest() == orders);
@@ -98,12 +102,18 @@ TEST_CASE("Miner and body art follow the exact native lease without progressing 
 	craft.vehstatus.Set(VehState::Stopped);
 	CHECK(GetSpaceCraftArtPose(craft, Direction::N)->state == 2); CHECK(GetSpaceAsteroidArtPose(body.id, _current_company)->state == 1);
 	body.mining_slot = VehicleID::Invalid(); CHECK(GetSpaceAsteroidArtPose(body.id, _current_company)->state == 0);
+	CHECK(GetSpaceCraftArtPose(craft, Direction::N)->state == 0);
+	craft.mission.target = INVALID_ORBITAL_BODY; CHECK(GetSpaceCraftArtPose(craft, Direction::N)->state == 0);
+	CHECK(GetSpaceCraftArtDirection(craft) == craft.direction);
+	craft.mission.phase = SpaceMissionPhase::Return; CHECK(GetSpaceCraftArtPose(craft, Direction::N)->state == 0);
+	craft.mission.phase = SpaceMissionPhase::Approach; CHECK(GetSpaceCraftArtPose(craft, Direction::N)->state == 0);
 }
 
 /** Company-authorized zero is visible only through the original survey owner; velocity reflection cannot rotate a body or its attachment geometry. */
 TEST_CASE("Asteroid art preserves saved sizes and company survey isolation", "[space-art]")
 {
 	SpaceArtRig rig; auto &body = *GetMutableAsteroidBody(OrbitalBodyID{0}); body.remaining_reserve = 0;
+	REQUIRE(Company::CanAllocateItem());
 	std::unique_ptr<Company> foreign{Company::Create()}; REQUIRE(foreign->index != _current_company);
 	REQUIRE(InstallLoadedAsteroidKnowledge(std::array{AsteroidKnowledgeRecord{body.id, uint64_t{1} << _current_company.base()}}));
 	const auto field = ComputeAsteroidFieldDigest(GetAsteroidField());
@@ -142,27 +152,53 @@ TEST_CASE("Probe art uses original orders cargo and movement admission", "[space
 	SpaceArtRig rig; auto &survey = rig.Craft(19); survey.cur_speed = 4; survey.tick_counter = 8;
 	survey.space_orders.entries.push_back({SpaceOrderAction::Visit, {SpaceOrderTargetKind::Body, 0, 0}});
 	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->frame == 0);
+	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 0);
 	survey.space_orders.started = true; CHECK(GetSpaceCraftArtPose(survey, Direction::N)->frame == 1);
+	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 1);
 	survey.vehstatus.Set(VehState::Stopped); CHECK(GetSpaceCraftArtPose(survey, Direction::N)->frame == 0);
+	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 0);
 	survey.vehstatus.Reset(VehState::Stopped);
 	REQUIRE(ResolveSpaceNavigationTarget(survey, survey.space_orders.entries[0].target, survey.position) == SpaceOrderBlock::None);
 	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->frame == 0);
+	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 0);
 	survey.space_orders.blocked = SpaceOrderBlock::Timeout; CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 5);
 	survey.space_orders.cursor = 1; survey.space_orders.blocked = SpaceOrderBlock::Completed;
 	CHECK(GetSpaceCraftArtPose(survey, Direction::N)->state == 0);
 	auto &builder = rig.Craft(20); builder.cargo_type = GetCargoTypeByLabel(CargoLabel{"STEL"});
 	CHECK(GetSpaceCraftArtPose(builder, Direction::N)->state == 0);
+	REQUIRE(CargoPacket::CanAllocateItem());
 	builder.cargo.Append(CargoPacket::Create(uint16_t{2}, uint16_t{0}, StationID::Invalid(), builder.tile, Money{0}));
 	const auto count = builder.cargo.TotalCount(); CHECK(GetSpaceCraftArtPose(builder, Direction::N)->state == 2);
-	builder.cargo_type = GetCargoTypeByLabel(CargoLabel{"GOOD"}); CHECK(GetSpaceCraftArtPose(builder, Direction::N)->state == 3);
+	auto &goods = rig.Craft(20); goods.cargo_type = GetCargoTypeByLabel(CargoLabel{"GOOD"});
+	REQUIRE(CargoPacket::CanAllocateItem());
+	goods.cargo.Append(CargoPacket::Create(uint16_t{2}, uint16_t{0}, StationID::Invalid(), goods.tile, Money{0}));
+	CHECK(GetSpaceCraftArtPose(goods, Direction::N)->state == 3);
 	CHECK(builder.cargo.TotalCount() == count);
-	REQUIRE(EnsureSpaceEngineDefinition(14)); builder.engine_type = GetSpaceEngine(14); CHECK_FALSE(GetSpaceCraftArtPose(builder, Direction::N));
+	auto &rocket = rig.Craft(14); CHECK_FALSE(GetSpaceCraftArtPose(rocket, Direction::N));
+}
+
+/** Original survey admission supplies scanning art at an explicitly declared component arrival; presentation grants no survey receipt or elapsed work. */
+TEST_CASE("Scanner art follows original admitted survey work without advancing it", "[space-art]")
+{
+	SpaceArtRig rig; auto &survey = rig.Craft(19);
+	const SpaceOrderTarget target{SpaceOrderTargetKind::Body, 0, 0};
+	survey.space_orders.entries.push_back({SpaceOrderAction::Survey, target});
+	REQUIRE(RequestSpaceApproach(survey, target, true)); PrepareSpaceApproachTick();
+	REQUIRE(GetSpaceApproachDestination(survey, survey.position) == SpaceOrderBlock::None);
+	survey.space_orders.started = true; survey.space_orders.timer_ticks = 100; survey.space_orders.work_ticks = 8;
+	REQUIRE(IsSpaceSurveyWorkTick(survey));
+	const auto field = ComputeAsteroidFieldDigest(GetAsteroidField()), orders = ComputeSpaceOrdersDigest();
+	const auto pose = GetSpaceCraftArtPose(survey, Direction::NE); REQUIRE(pose); CHECK(pose->state == 2); CHECK(pose->frame == 1);
+	CHECK(ComputeAsteroidFieldDigest(GetAsteroidField()) == field); CHECK(ComputeSpaceOrdersDigest() == orders);
+	survey.vehstatus.Set(VehState::Stopped); CHECK(GetSpaceCraftArtPose(survey, Direction::NE)->state == 0);
+	CHECK(survey.space_orders.timer_ticks == 100); CHECK(survey.space_orders.work_ticks == 8);
 }
 
 /** A passive pod has one original custody and countdown; success-ready art never creates a second shell, packet owner or persistent recovery marker. */
 TEST_CASE("Passive pod art hides carried custody and reads only its live descent", "[space-art]")
 {
-	SpaceArtRig rig; auto *pod = SpacePod::Create(); pod->state.custody = SpacePodCustody::Craft;
+	SpaceArtRig rig; REQUIRE(SpacePod::CanAllocateItem());
+	auto *pod = SpacePod::Create(); pod->state.custody = SpacePodCustody::Craft;
 	CHECK_FALSE(GetSpacePodArtPose(*pod)); pod->state.custody = SpacePodCustody::CenterStored; CHECK_FALSE(GetSpacePodArtPose(*pod));
 	pod->state.custody = SpacePodCustody::Drifting; CHECK(GetSpacePodArtPose(*pod)->state == 3);
 	pod->state.custody = SpacePodCustody::Descent; pod->descent = std::make_unique<SpaceDescentJob>();
@@ -189,7 +225,8 @@ TEST_CASE("Construction art retains committed work only for its actual native wo
 	const auto *definition = GetSpaceConstructionDefinition(site.state.kind); REQUIRE(definition);
 	// Explicit original native material containers exercise presentation admission only; these supplied packets are never counted as paid construction evidence.
 	for (uint i = 0; i < site.job.inputs.size(); ++i) {
-		site.job.inputs[i].Append(CargoPacket::Create(static_cast<uint16_t>(definition->inputs[i].quantity), uint16_t{0}, StationID::Invalid(), builder.tile, Money{0}));
+		REQUIRE(CargoPacket::CanAllocateItem());
+		site.job.inputs[i].Append(CargoPacket::Create(static_cast<uint16_t>(definition->inputs[i].quantity), uint16_t{0}, StationID::Invalid(), builder.tile, Money{0}), StationID::Invalid());
 	}
 	REQUIRE(HasOrbitalConstructionInputs(site));
 	TimerGameTick::counter = 0; site.job.last_work_tick = 0; CHECK_FALSE(GetSpaceConstructionVisualWork(builder));

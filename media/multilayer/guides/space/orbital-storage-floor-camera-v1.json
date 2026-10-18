@@ -1,0 +1,47 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13G / r2mlvs14-remaining-assets-and-runtime-integration.md72.1. Plain shallow floor/camera hint only; native fixed2x2 geometry and all source/cell gates remain authoritative.",
+  "guide": {
+    "path": "media/multilayer/guides/space/orbital-storage-floor-camera-v1.png",
+    "sha256": "552643b1d8f89778b4801bafba0200c16cfb4ae03770729489fb4220602b8899"
+  },
+  "canvas": [
+    1280,
+    1024
+  ],
+  "floor_corners": [
+    [
+      640,
+      330
+    ],
+    [
+      1140,
+      560
+    ],
+    [
+      640,
+      790
+    ],
+    [
+      140,
+      560
+    ]
+  ],
+  "native_floor_corners": [
+    [
+      96,
+      48
+    ],
+    [
+      160,
+      80
+    ],
+    [
+      96,
+      112
+    ],
+    [
+      32,
+      80
+    ]
+  ]
+}

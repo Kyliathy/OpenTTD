@@ -1,0 +1,94 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13G / r2mlvs14-remaining-assets-and-runtime-integration.md72.3. Genuine unfinished two-cabinet hardware with an open front floor plate; native work alone selects the stage.",
+  "asset_id": "module.storage",
+  "candidate": "orbital-storage-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_partial_pending_full_source_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-storage-body-v1.png",
+      "sha256": "216471195950c440e50483aca9fb25a993d0a714aa0e6efb01c841da8033b347",
+      "role": "accepted complete Storage body edit target; floor and exact two-cabinet identity"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE partially constructed original of this exact fixed orbital Storage module for OpenTTD.\nImage1 is the accepted complete BODY edit target, with two closed cabinets and no coupling. Preserve its exact floor camera, all four floor corners, framing, tiny thin perimeter,2x2 tile layout, two cabinet locations/sizes and cream/navy materials. Change ONLY the declared construction stage:\nRemove the ribbed roof and front cover panels from BOTH original low cabinets, leaving exactly TWO little open empty skeletal cabinet frames with cream corner posts and unfinished graphite interiors. No additional frame, room or cargo. Keep three fitted steel deck tiles; remove only the FRONTMOST fourth floor plate, leaving a genuine transparent diamond opening and two narrow graphite X support braces inside its original perimeter. No opaque black fake hole: the front opening must be truly transparent between braces.\nKeep all original outer floor trim and corners complete. Same shallow isometric projection and upper-left light. Whole subject safely inside generous transparent original margins; never crop the front vertex. No completed coupling, cargo crates, goods, service machinery, PV panels, craft, crane, extra equipment, labels, text, symbols, axes, background or external shadow. ONE complete isolated fixed view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-storage-partial-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      109,
+      333,
+      1294,
+      969
+    ],
+    "uniform_scale": [
+      209,
+      2000
+    ],
+    "source_reference": [
+      701,
+      362
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        341
+      ],
+      [
+        1291,
+        647
+      ],
+      [
+        701,
+        957
+      ],
+      [
+        111,
+        647
+      ]
+    ]
+  },
+  "original_sha256": "8bdb0e1f0f12a7e7605fc1d9fa6dddfe4bbd4c803ed2aed0313c1b3229aaa571",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "observed_stage": "Exactly two empty roofless cabinets with original front wall panels already fitted, three fitted floor plates, and genuinely transparent missing front plate around two support braces. No coupling or cargo.",
+  "review_refinement": "The generated partial retains the existing front wall panels while omitting both roofs. This is a coherent coarse positive-work construction stage; actual native work saves no finer cabinet-panel installation order. Preserve that observed source rather than claim front covers absent or procedurally remove them."
+}

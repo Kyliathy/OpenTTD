@@ -61,6 +61,7 @@ Delivered public owner: [`src/multilayer_industry.h`](../../../../src/multilayer
 | Baseline Steel reuse | [`layer_industry_baseline.h`](../../../../src/layer_industry_baseline.h) identifies the compatible original one-to-one Iron Ore/Steel receiver and bounds conversion/supply without duplicate cargo/industry/recipe IDs. Coal identity characterization grants no useful-power implementation. |
 | Shared complete batch commit | `LayerRecipeInventoryView` and `LayerRecipeCommitParticipant` expose one real stock owner. Proposals bind immutable definition, owner and saved revision; foreign/stale/repeated or partial commits refuse unchanged. `GetElectricalGrant` joins the actual whole participant to the delivered [utility ledger](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-x-useful-power-handoff.md). Scalar-only commitments refuse; direct heat still requires Plan18's actual participant. |
 | Save/preview/activation | Version 379 `LMNH`/`LMNR` and version 380 `LPCH`/`LPCR`/`LPCC` transport bindings/choices/work/history only. Metadata bits 256/512 advertise actual owners. After final industry/geology rebuild, complete reference/role/stock validation precedes activation; claims/reserves are never recreated. Existing industry/station/vehicle/packet formats own cargo and provenance. Transient supply/batch proposals are never saved. |
+| Paid Surface orders | [`surface_supply_order_runtime.h`](../../../../src/surface_supply_order_runtime.h) publishes the sole bounded commitment/history owner, monotonic intents, shared economy-day usage and original station/company lifecycle. [`surface_supply_cmd.h`](../../../../src/surface_supply_cmd.h) uses native Property charge/refund settlement; exact saved retries cannot buy/refund twice. Whole paid arrivals use original station packets and retain non-paying purpose through rating loss and buyer retirement. Version440 `SSOR` restores complete original DATE/MAPS/PLYR/STNN/profile joins; copied validation uses only that candidate and genuine older absence creates empty metadata. Driven delivery/ordinary game-application acceptance stays13CD; final Surface factory production remains a separate requirement. |
 
 Keep one authority for these fields and commands. Later r2mlvs11/18 inventory owners consume the exported batch interface, and r2mlvs7/8/12/13 supply their own still-pending fleet/tube/grid/art implementations; this producer does not emulate them.
 
@@ -302,15 +303,117 @@ _Applies to Group13C, staged by master10.6 before actual first-plant acceptance;
 
 Read Global/Resource production Area, Plan1's Group10 paid Surface seed contract in `../../../zz-rhr/upgrades/2026-10/r2mlvs1-d-recipes-and-bootstrap.md`, `GetMultiLayerSurfaceSupplies`, the native station/cargo/payment owner and actual construction receipt boundaries. Read only the first four construction labels and the [first-plant bootstrap specification](../../../zz-rhr/upgrades/2026-10/r2mlvs18-e-first-plant-bootstrap.md). Seed definitions and explicit manufacturing-fixture raw receipts are delivered; a runtime paid-order command is absent. Preserve one physical packet/inventory/payment owner, per-company caps and non-paying company-supply purpose. No thermal recipes or future orbital procurement are required for this group.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 13C - Supply paid Surface bootstrap cargo
 
 Added2026-10-10 from Plan18 Group6's dependency audit. Execute this producer at master10.6 before claiming conventionally delivered first-plant materials. Existing material/electrical manufacturing acceptance remains complete; these new runtime procurement tasks are unchecked.
 
 {{HARD}}
-- [ ] 13C.1 Publish/test pure complete paid-order admission for actual owned Surface stations, current STEL/RFMT/ELEC/BATY seed dates/prices, per-company economy-day caps, bounded station space and real available funds. Estimate allocates no cargo/order identity, cap reservation or expense.
+- [X] 13C.1 Publish/test pure complete paid-order admission for actual owned Surface stations, current STEL/RFMT/ELEC/BATY seed dates/prices, per-company economy-day caps, bounded station space and real available funds. Estimate allocates no cargo/order identity, cap reservation or expense. Both actual test builds pass724assertions/four focused cases, including exact introduction dates, native Q16 inflation, money/cap/stock boundaries and unchanged owners/RNG.
 - [ ] 13C.2 Implement ordinary native paid-order settlement and actual company-supply packet custody once through station/carrier/construction owners. Drive conventional delivery into the remaining actual construction bill; bought supplies earn no ordinary freight income/subsidy, and no paid order teleports stock to a hidden layer.
 - [ ] 13C.3 Persist actual order/cap/reservation/cargo references and integrate cancellation, station/company loss and takeover. Preserve shipped/consumed stock and paid history; a refunded order cannot retain usable cargo or recover a consumed bill, and reload/retry cannot buy or reserve twice.
 - [ ] 13C.4 Verify focused date/funds/cap/stock/refusal/retry/lifecycle/native/ordinary-loader cases and actual four-material delivery into the already implemented collector/riser receipt owners. Publish exact original inputs/receipts before Plan18 Group8; full powerhouse-bill delivery returns in master10.6 after that actual definition exists, avoiding a producer/recipient scheduling cycle.
+
+**Pure paid-order admission delivered,2026-10-18;13C.1 complete.** [Admission verification](../../../../logs/surface-supply-admission-verification.json) and [build/retention receipt](../../../../logs/surface-supply-admission-build-verification.json) bind both independently linked test builds, four focused cases/724assertions each and all actual sources. [surface_supply.h](../../../../src/surface_supply.h) exports `SurfaceSupplyOrderRequest`, `SurfaceSupplyOrderView`, `SurfaceSupplyOrderQuote`, `PrepareSurfaceSupplyOrder` and `CaptureSurfaceSupplyOrderView`. The native adapter reads actual station/company/profile/registry/calendar/economy owners; the pure complete quote validates only the scheduled four-material seed and returns no spending authority. It preserves liquid cash, quota input, stock, packet count and RNG. Native32-bit stock headroom and packet capacity refuse before an expense; inflation uses the existing Q16 economy owner with checked arithmetic. Actual command-created station and detached limit faults are declared component inputs, not procurement. The sole runtime quota/order owner, settlement/non-paying purpose, persistence/lifecycle and driven delivery remain13C.2-.4. Game binaries are unchanged; original dated test executables are retained. No full regression or Git write was run.
+
+**Execution refinement,2026-10-18.** Execute the following bounded children in order. Original13C.2-.4 remain aggregate obligations:13CB supplies packet purpose,13CC supplies paid settlement/persistence/lifecycle, and13CD supplies driven delivery/loader acceptance. A component packet fixture is not a purchased or unassisted gameplay predecessor.
+
+### Local Mandatory Reading - Non-paying company-supply packets
+
+_Applies to Group13CB only._
+
+Read relevant Global/Resource production Area ownership rules, Plan1 Group10's purpose/conservation contract, `src/source_type.h`, `CargoPacket` split/merge/invalidation, `CargoPayment::PayFinalDelivery`/`PayTransfer`, `DeliverGoods`, `Source::GetNewsReference`/`GetFormat` and native/copied CAPA admission. Preserve existing Industry/Town/Headquarters/Asteroid meanings. No order/quota owner or paid command is implemented in this child. Copied checks must use only the candidate file's purpose/feeder data; actual loader round trips remain13CD.
+
+### Group 13CB - Retain non-paying purpose in original packets
+
+{{HARD}}
+- [X] 13CB.1 Append a distinct company-supply source purpose; preserve it through native split/merge, station/carrier transfer and source invalidation. Actual accepted material remains deliverable while final/transfer income and subsidies remain zero.
+- [X] 13CB.2 Gate the new saved purpose by its own schema era and validate bounded company provenance and zero feeder share identically in full/copied CAPA admission. Legacy packet meanings remain unchanged; detached preview creates no native stock.
+- [X] 13CB.3 Verify focused native custody/payment/control and shared admission boundaries in both test builds. Preserve the original admission test binaries before replacement. Runtime procurement and actual ordinary-loader acceptance remain unchecked.
+
+**Packet-purpose prerequisite delivered,2026-10-18.** [Focused proof](../../../../logs/surface-supply-custody-verification.json) binds11cases/600assertions in each actual native test build; [build/retention receipt](../../../../logs/surface-supply-custody-build-verification.json) verifies both unchanged game executables and retained admission test products. [Source](../../../../src/source_type.h) appends `CompanySupply=4` without changing0Industry/1Town/2Headquarters/3Asteroid. Original packet splitting/merging and native station/carrier custody retain purpose/buyer; buyer invalidation retains non-paying purpose. Real bounded final intake still accepts exactly fitting units, while bought final/transfer income and subsidies stay zero. Positive ordinary final/feeder controls and both mixed-packet orders preserve ordinary earnings. Schema439's [shared source predicate](../../../../src/saveload/cargo_source_sl.h) validates candidate-era/company-domain/zero-credit in full and copied CAPA; table-era fields are required in both modes. Pre-table copied preview retains its historical skipped framework path. Declared stock/factory/carrier/tariff are component inputs. Actual ordinary load/resave/continue and malformed-file execution remain13CD; actual orders/quotas/expenses/lifecycle remain13CC. No runtime procurement, driven construction, full regression or Git write is claimed.
+
+### Local Mandatory Reading - Paid Surface order authority
+
+_Applies to Group13CC only._
+
+Read relevant Global/Resource production Area rules, the Paid Surface bootstrap cargo Local above13C, delivered13C.1/13CB APIs, native command settlement/company economy-day timers, native station/company lifecycle and save transport. Recapture real admission at execution; one order/quota owner must reconcile stored charge, reserved/day allowance and original packet references. No second cargo stock registry, packet refund after shipping or hidden-layer delivery is permitted.
+
+### Group 13CC - Settle and persist actual paid orders
+
+{{HARD}}
+- [X] 13CC.1 Implement the sole bounded order/quota owner and native save/preview schema, including monotonic identities and shared per-company economy-day reservations. Completed by13CCB/13CCC; purchasing and dispatch remain13CCD.
+- [X] 13CC.2 Implement ordinary synchronized order/cancel commands and once-only native expense/refund settlement; estimate remains pure and the actual Surface station receives the original non-paying packet. Delivered and verified by13CCD.
+- [X] 13CC.3 Integrate pending/shipped/consumed distinctions, station/company loss, takeover and saved retry. Refunded pending orders cannot retain usable cargo; shipped/consumed history cannot refund or reserve twice. Delivered and verified by13CCD; physical custody irreversibly ends the refund right.
+- [X] 13CC.4 Verify focused command/cap/refund/retry/lifecycle boundaries in both configurations before enabling driven procurement acceptance. Delivered by13CCD's32focused cases/2223assertions per build and20actual native file/component processes.
+
+**Execution refinement,2026-10-18.** Keep original13CC.1-.4 as aggregate obligations. Execute13CCB's detached canonical model first,13CCC's sole native owner/save/preview next, then13CCD's actual commands, dispatch and lifecycle. This separates candidate-file admission from paid mutations and avoids one state/save/command/lifecycle group spanning many compactions.
+
+### Local Mandatory Reading - Surface order records and day allowance
+
+_Applies to Group13CCB only._
+
+Read relevant Global/Resource production Area rules, Plan1 Group10's four scheduled construction labels and shared caps, delivered `surface_supply.h/.cpp`, `multilayer_bootstrap.h/.cpp` supply definitions, and `TimerGameEconomy::date`. Read only native station/company reference shapes needed by the detached admission context. This child publishes a model and pure validation, not live orders, purchases, refunds, stock or save activation. Canonical prices/scope must be shared with13C.1; no duplicate cargo registry or second stock owner.
+
+### Group 13CCB - Define bounded paid-order metadata
+
+{{HARD}}
+- [X] 13CCB.1 Define bounded monotonic order identities, pending/fulfilled/cancelled/lost receipts and original station/company/date/price references. Share canonical four-label scope and checked frozen pricing with existing pure admission.
+- [X] 13CCB.2 Validate complete detached records against candidate-owned profile/company/Surface-station views and derive shared per-company/economy-day used/reserved allowance across all origins. Historical shipment references grant no packet/refund authority.
+- [X] 13CCB.3 Verify focused canonical-price, identity, state, provenance, day/cap, unchanged-input and missing/foreign-reference boundaries in both native test builds. Declared record/view inputs provide no procurement acceptance;13CC.1 remains open until13CCC.
+
+**Detached model delivered,2026-10-18.** [Focused proof](../../../../logs/surface-supply-order-model-verification.json) binds9cases/932assertions per native build, including the unchanged complete admission/bootstrap selection; [build/retention receipt](../../../../logs/surface-supply-order-model-build-verification.json) retains completed13CB test products and verifies unchanged game applications. [surface_supply_order.h](../../../../src/surface_supply_order.h) publishes bounded monotonic snapshots, complete explicit-candidate validation and read-only shared day usage. Existing admission and frozen records now share `GetSurfaceSupplyDefinition`/`CalculateSurfaceSupplyCost`; no second price/cargo registry exists. Pending rights require this candidate's exact owned Surface freight station/company, while terminal references preserve issuance/payment history without granting stock/refunds. Acquired usage stays conservatively exhausted even above a cap. All record/view inputs are declared component metadata; no runtime order owner, native expense/refund, save activation, stock or procurement is implemented. Continue13CCC before actual commands.
+
+### Local Mandatory Reading - Native paid-order save owner
+
+_Applies to Group13CCC only._
+
+Read relevant Global/Resource production Area rules, delivered13CCB model/validator, native DATE/PLYR/STNN/CAPA full/copied transport, `multilayer_state.cpp` reset, native afterload installation and chunk registration. Use this file's economy day, company and station views for copied checks; the active world cannot fill a missing owner. No mutable paid command is enabled before complete native persistence/reference admission exists.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13CCC - Persist the sole native order authority
+
+{{HARD}}
+- [X] 13CCC.1 Install the single private native order owner and reset/capture/stage/accept boundaries; it owns commitments/history, while native packets own all physical stock. Reserve dormant synchronized command signatures and the original packet owner's bought-stock retention primitive with this shared-header change; command modes refuse and the rating hook stays inactive until13CCD supplies actual finance/dispatch/lifecycle.
+- [X] 13CCC.2 Implement bounded versioned native/copy transport and candidate-owned company/station/economy-day joins. Genuine older worlds migrate to empty orders/allowance only; load never creates paid stock or an expense.
+- [X] 13CCC.3 Verify focused native/copy transport and empty/unfinished/history restore boundaries in both builds; publish the actual persistence API before13CCD. Close original13CC.1 only after its full owner/save obligations pass.
+
+**Verification build refinement,2026-10-18.** Shared map/command/schema headers require rebuilding the real engine, but should not also require every unrelated test scenario. Use explicit `openttd_surface_supply_test` in both configurations: it links the original `openttd_lib` engine objects with only admission/bootstrap/custody/order/restore cases and common test support. The target is excluded from default builds; original game/test entry points remain available. Dated complete test applications are retained. This changes build scope only, and grants no procurement or ordinary game-application acceptance.
+
+**Native order persistence delivered,2026-10-18.** [Both-build proof](../../../../logs/surface-supply-order-persistence-verification.json) binds94actual native processes:23focused cases/1951assertions per configuration, four genuine older-empty/four-state/own-resave file operations and21malformed full/copied pairs each. [Build/retention receipt](../../../../logs/surface-supply-order-persistence-build-verification.json) verifies retained completed-model test products and unchanged complete test/game applications. Schema440's bounded original `SSOR` joins actual original economy date, map geometry, company and Surface freight-station authority before adoption; missing/default/foreign data and duplicate transport refuse. Current full/copied station schemas require owner/position/facilities identically. Independent wire decoding and physical/company chunk comparisons preserve original records, stocks and money; older absence grants no order, expense or import. Pending/fulfilled/cancelled/lost receipts are explicitly declared persistence fixtures, never paid procurement predecessors. Original packet retention is tested; its station-rating hook and reserved commands remain inactive. Continue13CCD actual finance/dispatch/lifecycle, then13CD driven materials and ordinary game-application acceptance. [Handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-z-f-surface-order-persistence.md).
+
+### Local Mandatory Reading - Actual paid Surface commands and lifecycle
+
+_Applies to Group13CCD only._
+
+Read relevant Global/Resource production Area rules, the Paid Surface order authority Local above13CC, delivered13CCB/13CCC APIs, native command finance settlement, station ticks/destruction/rating and company loss/takeover. Preserve original canonical stock/payment owners, unshipped-only refunds, per-day commitments and saved retry. Audit owned bought stock against station rating/decay before claiming its actual custody.
+
+Context has compacted 1 times while executing this group.
+
+### Group 13CCD - Execute and reconcile paid orders
+
+{{HARD}}
+- [X] 13CCD.1 Implement synchronized place/cancel commands with pure estimates, execution recapture, once-only native charge/refund and saved monotonic retry identity. Both focused native builds pass15cases/1327assertions; actual command kernel settles Property expenses/refunds and identical paid retries return zero.
+- [X] 13CCD.2 Dispatch paid pending orders once into original Surface station packets, releasing only their receiving reservation. Fulfilled custody and later native consumption remain permanently non-refundable; no hidden-layer stock is created. Original station-tick ingress passes focused release cases;13CCD.4 retains both-build aggregate verification.
+- [X] 13CCD.3 Integrate station loss, company loss/takeover and native bought-stock retention. Refunded pending orders have no usable packet; shipped/consumed stock and paid history cannot be bought/refunded twice. Focused native release lifecycle/custody checks pass;13CCD.4 retains both-build aggregate verification.
+- [X] 13CCD.4 Verify focused command/cap/stock/refund/retry/lifecycle boundaries in both configurations; close13CC.2-.4 only after their aggregate obligations pass, then continue13CD driven construction/ordinary-loader acceptance.
+
+**Actual paid execution delivered,2026-10-18.** [Focused proof](../../../../logs/surface-supply-order-execution-verification.json) binds32cases/2223assertions per native build and20actual native processes, including three paid file operations and three malformed full/copied pairs per configuration. Original command finance charges/refunds once; saved exact intents retain zero-cost retry, cross-origin/day caps, frozen cancellation and bounded receiving commitments. Original station arrival creates each whole non-paying packet once; facility/anchor loss refunds only unshipped rights, company loss seals them before demolition, takeover preserves conservative cap/history and retires buyer provenance, and native rating decay preserves owned material. Actual paid native restore/cancel/dispatch/resave proves1590charged/350refunded with exact unchanged paused custody/accounting; malformed charge, pending packet and missing station authority refuse in both loaders. [Build/retention receipt](../../../../logs/surface-supply-order-execution-build-verification.json) retains completed persistence products and verifies unchanged complete test/game applications. This closes13CC.2-.4;13C.2-.4/13CD and final Surface factory/unassisted acceptance remain open. [Handoff](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-z-z-g-surface-order-execution.md).
+
+### Local Mandatory Reading - Driven purchased construction cargo
+
+_Applies to Group13CD only._
+
+Read relevant Global/Resource production Area rules, delivered13CB/13CC contracts, Plan1 Group10's four scheduled labels, the first-plant bootstrap specification's carrier/collector/riser bill and actual native construction receipts. Reuse genuine own inputs and conventional fleet/portal owners. Read only actual save/preview APIs needed by these states; no art/history replay is required.
+
+### Group 13CD - Drive bought cargo into actual construction
+
+{{HARD}}
+- [ ] 13CD.1 Drive actual four-material purchases from original owned Surface stations through conventional native carriers into remaining collector/riser bills; preserve payment, partial/full receiver, non-paying purpose and explicit layer travel.
+- [ ] 13CD.2 Verify ordinary load/resave/continue, full/copied malformed refusal, dates/funds/room/caps/cancellation/loss/takeover and no duplicate stock/expense across both configurations.
+- [ ] 13CD.3 Publish exact original native input/receipt evidence and close13C.2-.4 only when their full aggregate obligations pass. Leave later powerhouse/Plan11 unassisted chains open until their own runtime proof.
 
 ### Group 14 - Resource production and consumers
 

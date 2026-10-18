@@ -3,6 +3,8 @@
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B; native electrical riser machinery.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1; native orbital module selector and Core activation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; actual per-model and immutable saved service bills.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original processor quantities and typed admission reasons.
+# @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13L; completed physical frames do not promise unsupported activation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; native composition/trajectory and retained descent presentation.
 ##ownname English (UK)
 ##isocode en_GB
@@ -6039,7 +6041,7 @@ STR_SPACE_CONSTRUCTION_PLACE                                    :Place blueprint
 STR_SPACE_CONSTRUCTION_COST                                     :{STRING}: {CURRENCY_LONG}; {COMMA} tonnes Steel + {COMMA} crates Goods; {COMMA} work ticks
 STR_SPACE_CONSTRUCTION_SITE                                     :{COMMA}. {STRING} at ({COMMA}, {COMMA}): {STRING}
 STR_SPACE_CONSTRUCTION_BLUEPRINT                                :Awaiting deliveries / construction
-STR_SPACE_CONSTRUCTION_FRAME                                    :Frame finished; awaiting activation
+STR_SPACE_CONSTRUCTION_FRAME                                    :Frame construction complete
 STR_SPACE_CONSTRUCTION_CANCELLED                                :Cancelled; collect remaining inputs here
 STR_SPACE_CONSTRUCTION_STOCK                                    :Delivered: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
 STR_SPACE_CONSTRUCTION_CONSUMED                                 :Consumed: {COMMA} Steel tonnes, {COMMA} Goods crates
@@ -6063,7 +6065,7 @@ STR_SPACE_MODULE_ASSEMBLY                                       :Assembly
 STR_SPACE_MODULE_STEELWORKS                                     :Steelworks
 STR_SPACE_MODULE_GOODSWORKS                                     :Goodsworks
 STR_SPACE_MODULE_POWER                                          :Power / utility
-STR_SPACE_MODULE_FUEL                                           :Fuel store
+STR_SPACE_MODULE_FUEL                                           :Fuel store (frame only)
 STR_SPACE_MODULE_REFINERY                                       :Refinery
 STR_SPACE_MODULE_ICE                                            :Ice processor
 STR_SPACE_CONSTRUCTION_CASH                                     :Available funds: {CURRENCY_LONG}
@@ -6751,3 +6753,18 @@ STR_SPACE_MANUFACTURE_COMPLETE                                :Vehicle {COMMA} c
 
 # Distinct Assembly-only miner21: r2mlvs11-orbital-stations-and-manufacturing.md Group9B; append to preserve all existing saved/native string identities.
 STR_SPACE_MANUFACTURE_HEAVY_MINING                             :Heavy mining robot
+
+# Original orbital recipe/factory disclosure: r2mlvs11 Group13K; append to retain earlier string identities.
+STR_SPACE_PROCESS_RECIPE                                       :Processor recipe: {RAW_STRING}
+STR_SPACE_PROCESS_PROGRESS                                     :Work: {COMMA}/{COMMA} ticks; lifetime electricity spent: {COMMA} J
+STR_SPACE_PROCESS_INPUT_STOCK                                  :Input {STRING}: {COMMA} held, {COMMA} per batch; consumed: {COMMA}
+STR_SPACE_PROCESS_OUTPUT_STOCK                                 :Output {STRING}: {COMMA}/{COMMA} held; produced: {COMMA}
+STR_SPACE_PROCESS_READY                                        :Ready.
+STR_SPACE_PROCESS_DISABLED                                     :Processing paused by player.
+STR_SPACE_PROCESS_INACTIVE                                     :Waiting for activation, Core dependency or an available recipe.
+STR_SPACE_PROCESS_INPUT                                        :Waiting for the complete original material batch.
+STR_SPACE_PROCESS_OUTPUT                                       :Waiting for output or berth capacity.
+STR_SPACE_PROCESS_WORK                                         :Processing work remains; original inputs are retained.
+STR_SPACE_PROCESS_POWER                                        :Waiting for the connected panel and useful electricity.
+STR_SPACE_PROCESS_ALLOCATION                                   :Waiting for room to create the complete output batch.
+STR_SPACE_PROCESS_LIMIT                                        :Processing has reached its current capacity.

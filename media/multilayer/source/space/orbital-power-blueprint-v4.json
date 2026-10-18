@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Rejected extra rear-axis planning trial preserved; native four-tile meaning remains unchanged.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-blueprint-v4",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "rejected_extra_rear_floor_axis",
+  "rejection": "The required shallow-X grid is corrected, but an unrequested straight rear-vertex-to-control-box axis remains. It splits the rear planning region beyond the actual four diamond tiles.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-blueprint-v3.png",
+      "sha256": "446ddcec389f5b0588a3c07c84a9c8aadacdeef81282d995d2b729464f1548be",
+      "role": "Power blueprint grid edit target"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-dock-blueprint-v4.png",
+      "sha256": "9e6e37db33f22827145818779341850ad881c231de479316d2e276eeb4d346c8",
+      "role": "correct four-tile floor grid only; no Dock hardware or capability"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nImage1 is the Power blueprint edit target. Image2 is ONLY a reference for the correct FOUR-TILE FLOOR GRID; do not copy its cabinet or other equipment.\nChange ONLY image1's two internal floor lines. Delete its horizontal left-corner-to-right-corner axis and vertical back-corner-to-front-corner axis. Replace them with the SAME TWO DIAGONAL MIDPOINT-TO-MIDPOINT lines visible in image2: each parallel to one pair of the outer diamond edges, crossing in a shallow X at the floor centre and dividing the floor into FOUR EQUAL DIAMOND TILES. Absolutely no corner-to-corner axes or triangular floor regions.\nPreserve image1's exact outer floor silhouette, camera, whole framing, TWO simple panel rectangle outlines and ONE little control-box wire cube. Do not adopt image2's hardware or move/add/remove equipment. Retain strong solid fully opaque cyan contours and true transparent background/interiors. No texture, noise, glow, dither, fills, labels, text, symbols or shadows. One complete isolated fixed view. The only intended change is correcting the interior floor grid using image2.",
+  "original": "media/multilayer/source/space/raw/orbital-power-blueprint-v4.png",
+  "original_sha256": "fefb462ad8a23babf730868c8c2c05ead1ae5522dd5db2c7cfeb7b83c64ff607",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

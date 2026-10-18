@@ -1,0 +1,52 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.3. Genuine Core amber status pane; no blink clock or utility grant.",
+  "asset_id": "module.nucleus",
+  "candidate": "orbital-core-blocked-glass-v1",
+  "tool": "built-in image_gen",
+  "state": "blocked",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_original_pending_full_matrix_review",
+  "reference_inputs": [],
+  "prompt": "Use case: stylized-concept.\nAsset: module.nucleus original amber warning-window component for a tiny OpenTTD Core status cue.\nCreate ONLY one isolated small physical glass indicator pane on a transparent square canvas. A squat wide rectangular amber/orange illuminated glass lens, width about640px and height320px, with a very thin dark graphite metal rim and subtly chamfered corners. Almost front-on, horizontal long edges, no perspective convergence; it mounts flush inside the middle front window belt of a low isometric station. Restrained crisp retro game-sprite source materials, bright warm amber centre so it remains clearly amber when reduced to6x3 pixels. No bloom, glow halo, cast shadow outside the glass, arrows, text, icons, warning symbol, numerals, pedestal, wires, building, spacecraft, floor or scene. Centre the complete single pane on a1254x1254 transparent canvas with at least200px true transparent clearance on every side. Keep all surroundings fully transparent. One genuine isolated glass component only, no sheet or separators.",
+  "original": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+  "native_registration": {
+    "native_contact": [
+      128,
+      108
+    ],
+    "native_bounds": [
+      125,
+      105,
+      132,
+      111
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      299,
+      518,
+      955,
+      731
+    ],
+    "uniform_scale": [
+      1,
+      128
+    ],
+    "source_reference": [
+      627,
+      624
+    ]
+  },
+  "original_sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100",
+  "image_size": [
+    1254,
+    1254
+  ]
+}

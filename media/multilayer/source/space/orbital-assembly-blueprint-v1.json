@@ -1,0 +1,96 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine Assembly planning wire original; no built hardware, product or work.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-blueprint-v1",
+  "tool": "built-in image_gen",
+  "state": "blueprint",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+      "sha256": "0e6204818ae937c813a8658f4d92e215d2ae44b669761f18cd5b85f1fb16b9b4",
+      "role": "approved Assembly body edit target: one gantry, tool and console at fixed world layout"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-blueprint-v5.png",
+      "sha256": "d2510a608693946b3705cece9e5299be0e0bdb73d76f8f38b3577e743094bc1e",
+      "role": "four-diamond floor grid and cyan line-weight reference only; no Power hardware"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE fixed orbital ASSEMBLY workshop BLUEPRINT source for OpenTTD, isolated transparent model.\nImage1 is the approved genuine Assembly edit target: exact floor camera and ONE gantry with TWO posts/ONE beam/ONE hanging tool, ONE small console, all in their current positions. Image2 supplies ONLY the simple correct four-diamond FLOOR GRID and bold cyan LINE WEIGHT. Never copy Image2's solar panels or Power hardware.\nConvert Image1 into a sparse pure CYAN planning wire outline on true transparency. Keep a single simple contour of each of the TWO gantry posts, the ONE straight crossbeam, the ONE small hanging tool and the ONE squat console. No filled metal, walls or floor. Keep the gantry inboard and all four floor corners visibly clear, especially the rear corner. This is an unbuilt plan, not a solid working machine. No coupling.\nFloor grid EXACTLY as Image2: one outer diamond plus TWO straight lines joining MIDPOINTS of opposite outer edges, crossing at the centre, making FOUR DIAMOND world tiles. No line from rear outer corner to front outer corner, no left-corner-to-right-corner axis, no triangular fan, no extra floor regions or technical mesh. Floor edges and centre junction stay continuously visible under/around equipment contours.\nClean opaque cyan strokes about14-18source pixels wide on1402x1122 canvas, as Image2: strongly visible after roughly10x uniform reduction, with transparent interiors and few simple outlines. No tiny wiring/hatching or noisy filled patches. Preserve Image1's shallow near2:1floor, one fixed camera, equipment counts/positions and complete isolated footprint. At least70px transparent clearance around every whole subject edge; all corners and equipment inside the frame. No metal shading, status lights, glass fill, cargo, robot, product, symbols, arrows, labels, text, axes, backdrop, shadow, border or separators. ONE isolated whole wire model, no sheet. Genuine transparent background.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-blueprint-v1.png",
+  "original_sha256": "498923c242fbaadfeeac7fb4e4f0ad6d196439f7ea9ee65ed0240e2178a07660",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      67,
+      261,
+      1335,
+      1019
+    ],
+    "uniform_scale": [
+      100,
+      1000
+    ],
+    "source_reference": [
+      701,
+      375
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        350
+      ],
+      [
+        1327,
+        676
+      ],
+      [
+        701,
+        1014
+      ],
+      [
+        75,
+        676
+      ]
+    ]
+  }
+}

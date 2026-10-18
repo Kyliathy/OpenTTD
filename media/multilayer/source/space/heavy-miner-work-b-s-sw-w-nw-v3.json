@@ -1,0 +1,103 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3. Exact corrective source-clearance request; complete measured original is immutable after source binding.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-work-b-s-sw-w-nw-v3",
+  "tool": "built-in image_gen",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Actual transparency-correct phase-B edit target; retained failed S clearance. Repository copy is byte-identical to the actual cached input.",
+      "path": "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v2.png",
+      "actual_input_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-c6b7f3cf-29ab-4501-808f-5ccbce8bf849.png",
+      "sha256": "b12cf56cd16d61aa09f5ac325a47807e835b63755bf96d858f12a92d073d700e"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nInput image1 is the heavy-miner cutter-phase-B four-view source EDIT TARGET. Its transparent alpha is correct; PRESERVE this clean actual transparency. Correct ONLY spacing/size: uniformly shrink EACH ENTIRE MACHINE by20percent inside its own existing panel, including drill, hopper, thrusters, grippers and electronics together, and center it comfortably. Preserve exactly the same four genuine S/SW/W/NW camera views and the same cutter tooth phase B, all equipment counts, proportions, materials, upper-left light, empty hopper and unlit thrusters. No other art changes. Do not independently resize the drill or individual parts. All four subjects must share the same physical scale. Maximum complete-machine width500px and height330px. This reduction is mandatory: the S drill tip in the input is too near its bottom separator.\n1536x1024 transparent2x2 sheet. Keep four straight opaque PURE MAGENTA #FF00FF frames about6px thick outside subjects at S(24,24)-(744,488), SW(792,24)-(1512,488), W(24,536)-(744,1000), NW(792,536)-(1512,1000). Every visible subject pixel must stay inside S(64,64)-(704,448), SW(832,64)-(1472,448), W(64,576)-(704,960), NW(832,576)-(1472,960). At least32px fully transparent clearance to its frame, no clipping, overlapping or faint shadows. All margins, gutters and panel interiors outside the machines must remain truly transparent alpha=0, never translucent purple haze, gray/white fill or checkerboard. Visible pure-magenta frame outlines only outside the subject windows, never inside them. No text, labels, other props or watermark. Smaller safely separated source subjects take priority.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-work-b-s-sw-w-nw-v3.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-0857ec74-2b42-4284-8bf6-218fffabdc99.png",
+  "sha256": "8429fb5885009534bea99a17785b4aaa7b5b9e4696ff704c06d6a15c32acdacf",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "S": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          184,
+          65,
+          498,
+          416
+        ],
+        "minimum_transparent_clearance": 32,
+        "opaque_separator_pixels": 0
+      },
+      "SW": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          204,
+          104,
+          518,
+          387
+        ],
+        "minimum_transparent_clearance": 61,
+        "opaque_separator_pixels": 0
+      },
+      "W": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          96,
+          111,
+          606,
+          335
+        ],
+        "minimum_transparent_clearance": 96,
+        "opaque_separator_pixels": 0
+      },
+      "NW": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          189,
+          99,
+          592,
+          355
+        ],
+        "minimum_transparent_clearance": 93,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0
+  }
+}

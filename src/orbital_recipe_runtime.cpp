@@ -1,6 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_recipe_runtime.cpp Native processor controls and one common utility phase.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups10C/13K/13L
  * Shared participants alone authorize consumption/output; the actual module owns all metadata and packets.
  */
 #include "stdafx.h"
@@ -161,6 +161,40 @@ void TickOrbitalRecipes()
 	}
 }
 
+/** Read actual committed work without requesting its already-spent electricity again.
+ * @param site Original owned processor; querying never impersonates another company.
+ * @return Original receipt phase for this synchronized opportunity, otherwise absence.
+ */
+std::optional<uint8_t> GetOrbitalRecipeVisualFrame(const SpaceStructure &site)
+{
+	// A retained receipt cannot animate an idle, paused, foreign or removed facility.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any() || _current_company != site.state.owner ||
+		!site.module || !site.module->processing) return std::nullopt;
+	auto &state = *site.module->processing;
+	const auto prepared = GetTubePowerPreparedTick();
+	// The original allocator prepares exactly the native tick which commits tick+1.
+	// An old saved receipt or an unprepared tick supplies no new display opportunity.
+	if (!state.enabled || prepared != TimerGameTick::counter || prepared >= UINT64_MAX - 1 ||
+		state.last_native_tick != prepared + 1) return std::nullopt;
+	const auto *definition = GetOrbitalRecipeDefinition(site.state.kind, state.choice);
+	OrbitalRecipeInventory inventory(state);
+	// The same native stock/profile/history admission remains mandatory after work.
+	if (definition == nullptr || !inventory.Capture().active) return std::nullopt;
+	if (definition->recipe.power_j_per_batch != 0) {
+		if (!IsOrbitalRecipePowerConnectionValid(site, state)) return std::nullopt;
+		return static_cast<uint8_t>((state.paid_lifetime_j / GetMultiLayerSpaceBudget().work_j_per_tick) % 2);
+	}
+	uint8_t phase = state.unpowered_work_ticks % 2;
+	// Completed baseline batches remain in the sole historical owner. Combining
+	// parity avoids overflow and keeps a batch boundary from inventing a new clock.
+	for (const auto &[choice, count] : state.batches) {
+		const auto *completed = GetOrbitalRecipeDefinition(site.state.kind, choice);
+		if (completed == nullptr) return std::nullopt;
+		phase ^= static_cast<uint8_t>((count % 2) * (completed->recipe.work_economy_ticks % 2));
+	}
+	return phase;
+}
+
 /** @copydoc GetOrbitalRecipeWait */
 OrbitalRecipeWait GetOrbitalRecipeWait(const SpaceStructure &site)
 {
@@ -181,7 +215,16 @@ OrbitalRecipeWait GetOrbitalRecipeWait(const SpaceStructure &site)
 	}
 	if (!inventory.CanRecordWork(0)) return OrbitalRecipeWait::Limit;
 	if (definition->recipe.power_j_per_batch == 0) return OrbitalRecipeWait::Work;
-	if (!state.electrical) return OrbitalRecipeWait::Power;
+	// A saved disabled/lost panel or invalid original connection is a physical
+	// outage even while the game is paused. Only missing transient next-tick
+	// allocation may be suppressed by a global pause; retained work stays owned.
+	if (!state.electrical || !IsOrbitalRecipePowerConnectionValid(site, state)) return OrbitalRecipeWait::Power;
+	// A global pause requests no next grant. Retained paid work must not become
+	// an electrical outage merely because its previous grant was already spent.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return OrbitalRecipeWait::Work;
+	// The current committed step consumed its grant. Reporting the next step's
+	// missing electricity here would falsely mark just-earned work as an outage.
+	if (GetOrbitalRecipeVisualFrame(site).has_value()) return OrbitalRecipeWait::Work;
 	const auto work = PrepareLayerRecipeWork(definition->recipe, inventory, inventory, GetMultiLayerSpaceBudget().work_j_per_tick);
 	// A valid electrical quote can still be unrecordable in the actual native material/history owner; report that bound before advertising useful work.
 	if (work.error == LayerRecipeCommitError::None && !inventory.ValidateWork(work)) return OrbitalRecipeWait::Limit;

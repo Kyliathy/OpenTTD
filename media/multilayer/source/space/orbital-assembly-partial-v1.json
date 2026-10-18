@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.3. Genuine bare Assembly gantry/open console/missing front plate; no installed tool, product or work cue.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v4.png",
+      "sha256": "0e6204818ae937c813a8658f4d92e215d2ae44b669761f18cd5b85f1fb16b9b4",
+      "role": "approved Assembly complete body edit target; retain floor/camera and one-gantry layout"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE original fixed orbital Assembly workshop PARTIAL CONSTRUCTION model for OpenTTD.\nImage1 is the approved COMPLETE Assembly body edit target. Preserve its exact shallow2:1camera, thin diamond floor outline, all four floor corner positions, cream/navy palette, upper-left light and one-gantry/one-console layout. The rear floor corner stays visibly exposed. ONE whole isolated model on transparent background, no sheet.\nChange only physical construction: BOTH gantry posts are unfinished open steel CHANNEL FRAMES with their outer cream cladding panels missing. The same ONE straight crossbeam remains as a bare open metal structural beam, without its finished outer cover. Keep exactly TWO posts and ONE beam in the same original positions; no extra rail, crane or third support. The small hanging tool head is NOT INSTALLED YET: leave its original mount empty, no separate spare tool or fabricated robot. The ONE small console becomes an OPEN plain enclosure with its top/front cover and blue display not installed, showing a dark empty interior, no lit glass.\nThe actual floor is FOUR DIAMOND WORLD TILES. Remove ONLY the FRONT diamond plate closest to the viewer. Retain the continuous thin outer floor frame and a sparse original metal X brace underneath, with broad genuinely TRANSPARENT openings around that brace. Those openings must reveal the same actual transparency as outside the entire model, NEVER a dark opaque painted diamond. The rear/left/right three metal plates remain fitted. Preserve all four outer floor vertices and the original footprint and shallow camera exactly. Keep the gantry and console well attached to the unchanged fitted floor.\nCrisp restrained retro first-party industrial sprite metal materials. Partial source has no passive coupling, operating display, green/amber light, robot, vehicle, product, cargo, crate, fuel, PV panel, extra machine, loose parts, text, label, symbols, arrows, axes, ground, backdrop or outside shadow. One actual incomplete two-post gantry, one unfinished open console, one clearly missing front floor plate. True transparent background and true transparent front opening. Preserve every unrelated model feature and safe clear image margins.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-partial-v1.png",
+  "original_sha256": "b193210e5aaaa4df3eac4a1107ba46faa47ed93e06ffeafbb3f170e623d8821d",
+  "image_size": [
+    1402,
+    1122
+  ]
+}

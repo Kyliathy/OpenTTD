@@ -785,15 +785,39 @@ uint StationCargoList::ShiftCargo(Taction action, std::span<const StationID> nex
  */
 uint StationCargoList::Truncate(uint max_move, StationCargoAmountMap *cargo_per_source)
 {
-	max_move = std::min(max_move, this->count);
-	uint prev_count = this->count;
+	return this->TruncateImpl(max_move, cargo_per_source, false);
+}
+
+/** @copydoc StationCargoList::TruncateAbandonedOffers */
+uint StationCargoList::TruncateAbandonedOffers(uint max_move)
+{
+	return this->TruncateImpl(max_move, nullptr, true);
+}
+
+/** @copydoc StationCargoList::TruncateImpl */
+uint StationCargoList::TruncateImpl(uint max_move, StationCargoAmountMap *cargo_per_source, bool protect_company_supplies)
+{
+	uint protected_count = 0;
+	if (protect_company_supplies) {
+		// Bought material is already company-owned, not a customer offer that can abandon an unrated station. Count it in place so neither stock nor native reservation ownership moves to another list.
+		for (Iterator it(this->packets.begin()); it != this->packets.end(); ++it) {
+			if ((*it)->source.IsCompanySupply()) protected_count += (*it)->count;
+		}
+	}
+	max_move = std::min(max_move, this->count - protected_count);
+	uint prev_count = this->count - protected_count;
 	uint moved = 0;
 	uint loop = 0;
 	bool do_count = cargo_per_source != nullptr;
+	// Apply the original fair per-destination discard lottery only to removable offers. The unrestricted path retains its exact original counts/RNG and explicit destruction behavior.
 	while (max_move > moved) {
 		for (Iterator it(this->packets.begin()); it != this->packets.end();) {
 			CargoPacket *cp = *it;
+			// Company-supply purpose survives invalidated buyers and intermediate transfer; waiting owned material never becomes an abandoned offer merely because its origin disappears.
+			if (protect_company_supplies && cp->source.IsCompanySupply()) { ++it; continue; }
+			// Random skipping spreads ordinary offer losses across destinations without weighting or discarding protected purchased stock.
 			if (prev_count > max_move && RandomRange(prev_count) < prev_count - max_move) {
+				// Only the first accounting pass reports retained source offers; retries cannot report the same survivors twice.
 				if (do_count && loop == 0) {
 					(*cargo_per_source)[cp->first_station] += cp->count;
 				}
@@ -816,6 +840,7 @@ uint StationCargoList::Truncate(uint max_move, StationCargoAmountMap *cargo_per_
 				}
 			} else {
 				it = this->packets.erase(it);
+				// Later lottery passes remove units already included in first-pass source totals, preserving exact ordinary origin accounting.
 				if (do_count && loop > 0) {
 					(*cargo_per_source)[cp->first_station] -= cp->count;
 				}

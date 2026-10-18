@@ -1,0 +1,31 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13J / r2mlvs14-remaining-assets-and-runtime-integration.md75.3. Genuine blueprint original; conversion approval is separate.",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in_edit",
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset module.processor, BLUEPRINT physical construction state. The attached image is the exact approved complete machine edit target. Preserve its camera, floor diamond corners, nine3x3 panels, positions and proportions of ONE horizontal drum, ONE finned heat exchanger, ONE connecting pipe and ONE low console. Change the entire site into a readable transparent cyan planning hologram: thin cyan silhouette outlines and sparse translucent blue faces, showing exactly this equipment before physical construction. Floor stays an exact thin flat nine-panel diamond with all four corners visible, matching the original footprint and shallow camera. Equipment outlines reveal original drum rings/supports, exchanger frame/fins, connecting pipe and console; no duplicated parts. The scene is a build plan, not a working machine: no glowing production, no material piles, no vehicle, no warning signs. ONE isolated whole cutout on genuine transparency with at least64transparent pixels around every model pixel. Keep the same1536x1024 composition and original low height; do not crop, enlarge, steepen or thicken the floor. All cyan hardware must fit inside the original floor's horizontal bounds. No text, labels, numbers, symbols, external glow, stars, cast shadows, magenta frames, extra props or additional views. This is a genuine authored planning state; preserve the machine identity and every visible floor corner.",
+  "input_images": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-processor-body-v3.png",
+      "role": "approved_complete_machine_edit_target",
+      "sha256": "6ca6d7d7854913d54bcce1bd07f20dba1ff38aa9ac8e76fd0ca965fc78248ab8"
+    }
+  ],
+  "original_generated_path": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-e2cd33d7-ad10-47fe-a608-f4bda4cd43bf.png",
+  "original": {
+    "path": "media/multilayer/source/space/raw/orbital-processor-blueprint-v1.png",
+    "sha256": "23ca72dca26938c005bd033058226deeefa191589e52285008188b89e86e1aa1"
+  },
+  "image_size": [
+    1536,
+    1024
+  ],
+  "source_alpha_threshold": 16,
+  "measured_subject_bbox": [
+    49,
+    217,
+    1487,
+    960
+  ],
+  "selection": "rejected_floor_rim_native_cell_overflow"
+}

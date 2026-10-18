@@ -1,0 +1,45 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13F / r2mlvs14-remaining-assets-and-runtime-integration.md71.3. Plain camera hint only; native2x2 geometry and whole-original checks stay unchanged.",
+  "guide": "media/multilayer/guides/space/orbital-dock-blueprint-camera-v1.png",
+  "sha256": "46acf1fc1cdda06188588c632bed45a3e5d8f10959fb4b1dbf1e002f2a324720",
+  "canvas": [
+    1280,
+    1024
+  ],
+  "floor_corners": [
+    [
+      640,
+      315
+    ],
+    [
+      1140,
+      560
+    ],
+    [
+      640,
+      805
+    ],
+    [
+      140,
+      560
+    ]
+  ],
+  "native_floor_corners": [
+    [
+      96,
+      48
+    ],
+    [
+      160,
+      80
+    ],
+    [
+      96,
+      112
+    ],
+    [
+      32,
+      80
+    ]
+  ]
+}

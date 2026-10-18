@@ -8,9 +8,11 @@
 /** @file company_cmd.cpp Handling of companies.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group15; liquidation must not discard unsettled Space custody/work.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; enabled/unfinished processing remains accountable even with empty input stock.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCD; retired companies cannot leave pending paid rights or reusable buyer provenance.
  */
 
 #include "stdafx.h"
+#include "surface_supply_order_runtime.h"
 #include "company_base.h"
 #include "company_func.h"
 #include "company_gui.h"
@@ -93,10 +95,11 @@ Company::Company(CompanyID index, StringID name_1, bool is_ai) : CompanyPool::Po
 	InvalidateWindowData(WindowClass::PerformanceDetail, 0, CompanyID::Invalid());
 }
 
-/** Close the associated company windows. */
+/** Seal this retiring company's remaining pending supply rights and buyer provenance, then close its windows; pool/world cleanup never refunds or transfers rights. */
 Company::~Company()
 {
 	if (CleaningPool()) return;
+	ChangeSurfaceSupplyOrderCompanyOwnership(this->index, CompanyID::Invalid()); // Direct native retirement also seals pending rights and buyer provenance before pool-slot reuse; settled takeover rights have already moved.
 
 	CloseCompanyWindows(this->index);
 }

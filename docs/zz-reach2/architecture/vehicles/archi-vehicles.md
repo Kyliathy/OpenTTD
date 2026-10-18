@@ -88,8 +88,8 @@ body initializes its saved round-trip duration, including wagons without
 orders.26 owner families match current ordinary/replayed saves in both builds.
 That423 handoff is a dated producer boundary. The later438 runtime below
 records delivered mining, manufacturing/hauler consumers and joined mining
-socket replay; final authored/packed artwork and Plan11's broader acceptance
-remain open under their own source tasks.
+socket replay. Plan10's final authored/packed Space families are now verified
+below; Plan11's broader presentation and acceptance remain separate.
 
 ## Native moving-target mining and runtime evidence
 
@@ -103,6 +103,18 @@ craft decisions. `CommitSpaceMiningExtraction` emits a whole admitted native
 CargoPacket batch and debits only its finite body; refusal keeps the last
 partial interval and all material. Model15 earns two units per74 working
 opportunities into its20-unit hold. Rendering earns no opportunities.
+
+Final Space art,2026-10-17: [Plan10's accepted runtime review](../../../../logs/space-art-final-verification.json)
+binds seven original-derived families at native3599..5166, both actual decoded
+payload boundaries,95,743 focused assertions per configuration and34 ordinary
+game captures. `space_sprite.h/.cpp` reads existing role/work/cargo/custody;
+`SpaceVehicle::GetImage` uses physical facing without changing saved headings.
+Afterload refreshes only sprite sequences and viewport bounds after native
+orders, manifests, leases and sites restore, so paused hulls show the correct
+saved state. Paused construction grants no new work; its constructing pose is
+verified after genuine ordinary-loop progress. All originals and native
+attachment offsets remain unchanged. Rocket/hauler/heavy and launch-facility
+art retain their later Plan9/11 owners.
 
 `CmdSetSpaceMissionChecked` binds assignment/Recall to the player's selected
 generation at agreed execution; old generation-free arguments/IDs remain

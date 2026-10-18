@@ -51,7 +51,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/vehicle_func.h](../../../../src/vehicle_func.h) | 192-204 | `VehicleServiceInDepot`, `CallVehicleTicks`, `ResetVehicleHash`, `ViewportAddVehicles` are public tick/service/spatial-render boundaries for orbital vehicles. |
 
-Status: resumed at user request; Groups1-18, including8B/8C/12B and their Plan11 runtime prerequisites, are complete in both438 configurations,2026-10-17. Continue sequentially at19 linked Surface collection/useful delivery; original14 final art remains pending14B after22. Later presentation/art, save/network and full-plan gates remain open. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
+Status: complete,2026-10-17. All source groups and Completion Conditions are accepted: dated438 gameplay/runtime evidence plus final authored/packed/native/ordinary-game Space art in `logs/space-art-final-verification.json`. Plan11's broader presentation/save/network/end-to-end and Plan9's deferred launch/fleet art remain separate. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on r2mlvs9.
 
 ## Current dispatch - Full-plan completion, 2026-10-12
 
@@ -1142,10 +1142,10 @@ _Applies to Group14B only._ Read Global and UI/art/acceptance Area, the public S
 ### Group 14B - Bind and review final inspector and mission art
 
 {{HARD}}
-- [ ] 14B.1 Complete original14.1's final r2mlvs13-art integration using delivered asteroid, mining/survey/construction probe and return-pod family sprites through their packed loading owners, with the existing native state/quantity queries.
-- [ ] 14B.2 Review actual ordinary-game selection/scan/construction/attachment/mining/return-pod captures with those final sprites; retain source/packed/runtime evidence and keep this group pending until all required families pass.
+- [X] 14B.1 Complete original14.1's final r2mlvs13-art integration using delivered asteroid, mining/survey/construction probe and return-pod family sprites through their packed loading owners, with the existing native state/quantity queries.
+- [X] 14B.2 Review actual ordinary-game selection/scan/construction/attachment/mining/return-pod captures with those final sprites; retain source/packed/runtime evidence and keep this group pending until all required families pass.
 
-**Execution split,2026-10-17.** Final producers are still absent. Execute the bounded children below sequentially, preserving original14B.1/.2 as aggregate obligations. Each child consumes the existing public manifest and its corresponding Plan14 source tasks; no unrelated Underground queue is reopened. Source delivery cannot close packing/runtime acceptance.
+**Execution split,2026-10-17, retained history.** Final producers were absent when this split began; all seven sources, packed/native binding and ordinary-game review are now complete in the children below. Execute the bounded children below sequentially, preserving original14B.1/.2 as aggregate obligations. Each child consumes the existing public manifest and its corresponding Plan14 source tasks; no unrelated Underground queue is reopened. Source delivery cannot close packing/runtime acceptance.
 
 ### Local Mandatory Reading - Small mining probe original and Space source gate
 
@@ -1241,17 +1241,21 @@ Context has compacted 1 times while executing this group.
 
 _Applies to Group14BG only._ Read Global/UI Area, completed14BB-14BFC source receipts, Plan14 Remaining conversion and packing Local, existing quantize/GRF/fallback/runtime range owners and actual Space draw/selection boundaries. Append stable native ranges without moving old sprites, compile actual state/role/size selectors and preserve original gameplay fields/RNG/quantities. Require decoded packed loading and checked-in generator-free payload proof before closing original14B.1.
 
-Context has compacted 1 times while executing this group.
+Context has compacted 2 times while executing this group.
 
 ### Group 14BG - Pack and bind final Space sprites
 
 {{HARD}}
 - [X] 14BG.1 Convert and validate all required source packing inputs through existing palette/anchor/provenance owners, append protected native ranges and prepare exact actual-loader expectations.
-- [ ] 14BG.2 Bind actual native read-only state/role/size selectors; consolidate both configuration builds, two reproducible actual GRF builds, generator-free packaging and decoded loading proofs with focused selection/owner-isolation checks; then complete original14B.1.
+- [X] 14BG.2 Bind actual native read-only state/role/size selectors; consolidate both configuration builds, two reproducible actual GRF builds, generator-free packaging and decoded loading proofs with focused selection/owner-isolation checks; then complete original14B.1.
+
+**Packing/native selection accepted,2026-10-17.** [Current verification index](../../../../logs/space-art-packed-verification.json) binds both ordinary application/focused target builds and95,743 assertions per configuration:6,736 across nine selectors,28,448 for1,579 final/preview sprites and60,559 for3,561 original M0/M1 sprites. Eight source-packing cases pass after binding. Two actual GRF builds and generator-disabled cached packaging use identical SHA256`021baffd5857e892cc7d91af939bfe36b50a96bf2cc901ab282458ab09e0e51f`; final native3599..5166 and all prior IDs/pixels remain fixed. Seven final public families are bound and43 protected families retain their original source/offset ownership with the updated whole-container hash. Read-only native selectors preserve original work/cargo/custody/RNG; idle craft use authored idle poses.14BG and original14B.1 are complete. Runtime activation, original14B.2, aggregate14B and source-plan closure remain pending ordinary-game14BH. Earlier checkpoint paragraphs below are historical.
 
 **Shared-build alignment,2026-10-17.** Original14BG.1 actual decoded/fallback proof obligation moves intact to14BG.2 beside the required compiled selectors, avoiding a full native rebuild solely for the loader followed by another rebuild for selectors.14BG.1 now certifies packing INPUTS only:8 focused cases/7.2s,1568 exact crop/anchor round trips, native3599..5166, protected seven old source/header hashes unchanged. Exact fixture expects1568 final +11 unchanged previews. No actual GRF generation, decoding, fallback or runtime acceptance claimed yet. Master14BG/original14B remain unchecked.
 
 **Checkpoint disposition,2026-10-17.** Read-only native selectors, eight focused C++ cases and the separate bounded actual-build/load runner are implemented. The first consolidated RelWithDebInfo build generated the appended GRF, then exposed a missing direct `direction_type.h` include in `space_sprite.h`. The include is corrected. The user explicitly instructed stopping compilation and deferring the rebuild; the active build tree was stopped and no replacement build or native tests were run.14BG.2, original14B.1 and master14BG remain unchecked: both configuration builds, selector checks, two byte-identical actual GRF builds, generator-free packaging and both actual decoded prefix/final loading proofs remain required. See [bounded packing handover](../../../zz-rhr/upgrades/2026-10/r2mlsp-z-z-w-space-packing-notes.md). This checkpoint creates no native or runtime acceptance claim.
+
+**Focused build scope on resumption,2026-10-17.** `openttd_space_art_test` links the actual unchanged `openttd_lib` engine objects, the same standard Catch/diagnostic/runtime helpers, all nine current selector cases and both existing actual decoder cases. It is explicitly targeted and excluded from the default build. This avoids recompiling hundreds of unrelated test cases after the shared sprite-range header changes. Build the ordinary `openttd` application and this focused target in both configurations; exact source/owner/decoder obligations remain unchanged. The full `openttd_test` target remains available for its own later scenarios and regression gates. Native acceptance remains pending until the focused modes actually pass.
 
 ### Local Mandatory Reading - Ordinary-game final Space art review
 
@@ -1260,8 +1264,10 @@ _Applies to Group14BH only._ Read Global/UI Area, original14B requirements and d
 ### Group 14BH - Review final native Space art
 
 {{HARD}}
-- [ ] 14BH.1 Capture and review actual selection/scan/construction/attachment/mining/return-pod states using final packed sprites in both configurations, retaining original native/pixel/owner evidence.
-- [ ] 14BH.2 Complete original14B.2 and reconcile Plan10/master/parent only after all required art/runtime and Completion Conditions pass; then resume the master's next source group.
+- [X] 14BH.1 Capture and review actual selection/scan/construction/attachment/mining/return-pod states using final packed sprites in both configurations, retaining original native/pixel/owner evidence.
+- [X] 14BH.2 Complete original14B.2 and reconcile Plan10/master/parent only after all required art/runtime and Completion Conditions pass; then resume the master's next source group.
+
+**Final Space art/source completion accepted,2026-10-17.** [Final verification](../../../../logs/space-art-final-verification.json) binds all seven source families, stable1568 final sprites, both current application/focused builds and95,743 native assertions each. Thirty-two paused ordinary field/inspector captures preserve30 physical plus2 metadata families and match all16 pixel pairs between configurations. Two further ordinary live construction captures earn actual native progress, then pause/save/screenshot through view-only console input; no work/cargo/pose is assigned. Exact final source pixels qualify scanning, constructing, attached/mining, full hold, all three asteroid classes and passive descent. Native contacts, original relative attachment geometry and current quantities/construction/descent widgets are reviewed; all supplied originals remain unchanged. Late-load presentation refresh fixes stale idle hulls after native owners restore. Eight packing cases and the scoped7-family/1568-pose public contract pass after activation. The final index maps every Completion Condition to its dated accepted runtime producer; no full regression or broader Plan11/personal review is claimed.14BH, original14B and Plan10 are complete; continue Plan11 Group13 via the Space master.
 
 ## Consult on Demand
 

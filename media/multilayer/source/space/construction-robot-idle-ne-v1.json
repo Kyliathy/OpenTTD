@@ -1,0 +1,61 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.2. Exact genuine NE single-view request, measured immutable alpha/layout; no synthetic heading or native image edits.",
+  "asset_id": "vehicle.model-16",
+  "candidate": "construction-robot-idle-ne-v1",
+  "tool": "built-in image_gen",
+  "state": "idle",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Approved original E-side physical model authority",
+      "path": "media/multilayer/guides/space/construction-robot-e-original-reference.png",
+      "sha256": "5fab1d8c60e7a26f0d66ef30fa4c525cf9a8f7d9e0b81343c15de957d3d03edc"
+    },
+    {
+      "role": "Accepted genuine N rear camera/original hardware reference",
+      "path": "media/multilayer/source/space/raw/construction-robot-idle-n-v2.png",
+      "sha256": "c0377b2873bf4d2f6dcf63b520c405a2a8e670dce6aba083dd45a911e6e7a2dd"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE genuine NE directional IDLE source view of the SAME retained construction robot model16.\nInput1 is the approved exact E-side model: front RIGHT, one rear nozzle LEFT. Input2 is the corrected genuine N rear view: front and navy display UP/far, single rear nozzle DOWN/near. Orbit this one physical rig to the intermediate NE camera, halfway between those two. The robot FRONT points UP-RIGHT/away; its ONE rear nozzle points DOWN-LEFT toward camera, with its open mouth at the NEAR LOWER-LEFT. The original flat navy roof display is toward the FAR UPPER-RIGHT/FRONT. Both folded arms turn with the hull; closed wrists near the FAR front/upper-right, shoulders toward rear/lower-left. Exactly2arms,2closed two-jaw wrists total, naturally occluded, never a second pair. The small passive front coupling is far upper-right and may be partially hidden. No extra nozzle/stub at the far front.\nPreserve the exact broad closed pentagonal ivory-ceramic/gunmetal hull and orange joints, one small dark-navy display, compact single rear engine, integral closed lower chassis boss, original arm lengths/idle fold. This is the same cargo-less engineer: no drill/cutter, cargo bed/hopper/crates/materials, working beam, service equipment, lights/exhaust, solar wings, antennas, crew or weapons. Keep ONE rear nozzle only. Show the real rear three-quarter gunmetal faces and changed occlusion. No flat mirror or rotated E artwork.\nFixed LOW elevated ORTHOGRAPHIC camera about26.565degrees above horizontal, upper-left SCREEN light unchanged. Broad squat silhouette with complete projected width:height roughly1.4:1; avoid an overhead elongated roof. Native target64x48, world anchor(-32,-32), same physical scale as accepted views. Crisp detailed volumetric isometric sprite render.\nONE entire complete robot centered on TRUE-TRANSPARENT1024x1024 canvas, target whole body about560x380px, ample clear alpha=0 margins. Single-view fallback NO frames/magenta/colored borders, background, ground plane, cast shadow, haze, checkerboard, text, labels, arrows, watermark or extra views. True NE rear-three-quarter camera: nozzle near LOWER-LEFT, front coupling and dark roof display FAR UPPER-RIGHT.",
+  "path": "media/multilayer/source/space/raw/construction-robot-idle-ne-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-976ce820-4f62-4f37-b771-7ead7ddb500c.png",
+  "sha256": "e13b192b6608ff6215c92cf47e8fc29b97fe5ecfcffd37d1b186a9f0a5ffcad1",
+  "actual_size": [
+    1522,
+    1033
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "NE": {
+        "crop_box": [
+          0,
+          0,
+          1522,
+          1033
+        ],
+        "subject_bbox_in_crop": [
+          210,
+          155,
+          1448,
+          919
+        ],
+        "minimum_transparent_clearance": 74,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0,
+    "camera": "Single rear nozzle near/lower-left, passive front coupling/roof display far/upper-right. Exactly2folded arms, correct rear three-quarter physical side and screen-fixed light."
+  }
+}

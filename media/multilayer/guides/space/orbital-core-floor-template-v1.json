@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Geometry-only fixed3x3 Core floor template, not artwork.",
+  "path": "media/multilayer/guides/space/orbital-core-floor-template-v1.png",
+  "sha256": "9b910adc3798350d9524d31529cf06c4d25432397ce27b2265a2798594bf93ca",
+  "floor_corners": [
+    [
+      512,
+      256
+    ],
+    [
+      896,
+      448
+    ],
+    [
+      512,
+      640
+    ],
+    [
+      128,
+      448
+    ]
+  ],
+  "native_scale": [
+    1,
+    4
+  ],
+  "source_floor_origin": [
+    512,
+    256
+  ],
+  "source_coupling": [
+    832,
+    480
+  ],
+  "original_pixels_used": false
+}

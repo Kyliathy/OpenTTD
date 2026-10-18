@@ -1,0 +1,78 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66C.2. Immutable isolated SE correction from the exact original display reference; long edges rise rightward. Only an ordinary glass rectangle supplies the native status part.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-blocked-se-v1",
+  "tool": "built-in image_gen",
+  "panel_state": "blocked",
+  "phase": 0,
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD orbital cargo hauler17, one isolated original SE diagnostic display, static BLOCKED amber.\nImage1 is an exact ordinary crop of the selected SE command head and its original navy display. It is the EDIT TARGET and exact physical projection reference.\nKeep ONLY that same flat rectangular display face with its existing very thin ivory surround. Remove the rest of the head/hull/deck. Change the navy glass to a broad steady warm AMBER illuminated face, thin navy edge retained. No symbols, text, LEDs, extra lamps, buttons, glow or animation.\nCRITICAL: preserve the input's SE projection exactly. Its two LONG screen edges RISE toward the RIGHT, running LOWER-LEFT to UPPER-RIGHT. The short edges run UPPER-LEFT to LOWER-RIGHT. The visible screen is the same skewed parallelogram as the input, on the same sloped command-head surface. Do not reverse that diagonal, make an upright/front-on screen, stand it on a pedestal, or copy the previous NE projection. Preserve original aspect, flatness and tiny bezel; no extra housing.\nOne complete isolated cutout centered on a genuinely transparent canvas, with at least100px true transparent margin around every faint edge, at most60percent canvas width/height. No magenta frames, castshadow, checkerboard, haze, ground plane, background fill or other props. Upper-left SCREEN light, same low orthographic2:1 industrial game-art camera/materials. Genuine source edit of the original SE face, no mirrored/rotated bitmap. ONLY the original screen and thin surround, amber instead of navy.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-6024e1e7-fbdf-46a1-88ad-cea06e772e7e.png",
+  "actual_camera_mapping": [
+    {
+      "requested": "SE",
+      "actual": "SE",
+      "evidence": "Original lower-left to upper-right long screen edges, matching exact selected head; true generated edit, no bitmap transform."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-blocked-se-v1.png",
+  "sha256": "41d9b4aeda24714e5ab847e88163791d7a2350aa003babb8ee17758012a86b81",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "windows": {
+      "SE": {
+        "crop_box": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "subject_bbox_in_crop": [
+          475,
+          209,
+          1194,
+          813
+        ],
+        "minimum_transparent_clearance": 209,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          517,
+          257,
+          1149,
+          767
+        ]
+      }
+    }
+  },
+  "reference_inputs": [
+    {
+      "role": "exact selected SE display projection edit target",
+      "path": "media/multilayer/guides/space/orbital-hauler-display-se-reference.png",
+      "sha256": "00b0d18fd162ad4e22e72c050a1afecc837ee93624e39e7aecbfb2fe56cfcead"
+    }
+  ],
+  "reference_provenance": [
+    {
+      "path": "media/multilayer/guides/space/orbital-hauler-display-se-reference.json",
+      "sha256": "2e4ad6125d70634b0ce71d64aafb56993f4a53998f0f9912479fdeeeaf11413c"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-n-ne-e-se-v1.png",
+      "sha256": "5904894dcd1afe3bc360fd4ec2257c24e893f4a3ca58be9d5a3fdb79b1aa7ce3"
+    }
+  ]
+}

@@ -5,11 +5,14 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BH: final render caches resolve only after the native gameplay owners finish restoring.
+ */
 
 #include "../stdafx.h"
 #include "space_cargo_preview.h"
 #include "../orbital_recipe.h"
+#include "../surface_supply_order_runtime.h"
 #include "../space_vehicle.h"
 #include "../space_approach.h"
 #include "../space_manifest.h"
@@ -3525,11 +3528,18 @@ bool AfterLoadGame()
 	if (!AcceptLoadedUtilityPowerState()) SlErrorCorrupt("Invalid utility power authority");
 	// Restore the sole private processing owners only after their exact native module and original utility identities have both admitted this same file.
 	if (!AcceptLoadedOrbitalRecipes()) SlErrorCorrupt("Invalid native orbital processing authority");
+	// Adopt only complete original order history/commitments after native profile, geometry, companies, stations and economy date agree; load issues no shipment or expense.
+	if (!AcceptLoadedSurfaceSupplyOrders(!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders))) SlErrorCorrupt("Invalid native Surface supply order authority");
 	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
 	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
 	// Saved approach claims resolve only after native hulls, owned sites and body leases have all installed their original identities.
 	if (!ValidateNativeSpaceApproaches()) SlErrorCorrupt("Invalid native Space approach ownership");
 	if (!ValidateSpaceVehicles()) SlErrorCorrupt("Invalid native Space fleet");
+	// Earlier vehicle load fixups cache art before orders, manifests, leases and construction owners are accepted. Rebuild only presentation now so a paused reload shows its actual saved work/custody without requiring a gameplay tick or moving any craft, pod or packet.
+	for (auto *craft : SpaceVehicle::Iterate()) {
+		craft->GetImage(craft->direction, EngineImageType::OnMap, &craft->sprite_cache.sprite_seq);
+		craft->UpdatePositionAndViewport();
+	}
 	// Paid physical inlets resolve after their actual portal, geology and ledger owners; load never fabricates a replacement contract.
 	if (!AcceptLoadedTubePowerConnections()) SlErrorCorrupt("Invalid tube power authority");
 	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority"); // Actual saved vehicles and paid sources resolve before native ticks.

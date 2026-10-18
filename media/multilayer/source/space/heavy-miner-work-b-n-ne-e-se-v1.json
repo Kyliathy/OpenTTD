@@ -1,0 +1,102 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group13C / r2mlvs14-remaining-assets-and-runtime-integration.md65.3. Exact built-in cutter phase B request; selection requires separate measured source/native review.",
+  "asset_id": "vehicle.model-21",
+  "candidate": "heavy-miner-work-b-n-ne-e-se-v1",
+  "tool": "built-in image_gen",
+  "state": "mining",
+  "phase": 1,
+  "directions": [
+    "N",
+    "NE",
+    "E",
+    "SE"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "reference_inputs": [
+    {
+      "role": "Approved heavy-miner body and original fixed cutter axis: edit target",
+      "path": "media/multilayer/source/space/raw/heavy-miner-free-n-ne-e-se-v2.png",
+      "sha256": "2df58c2ab49a811ab1d0652c393433b4fc31a6d0286d4afb514f8dfe495e0a92"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD vehicle.model-21 heavy mining robot, actual cutter rotation phase B.\nInput image1 is the approved N/NE/E/SE empty idle heavy-miner model and exact four-cell layout EDIT TARGET. Preserve the four original genuine engine headings (N top-left points up, NE top-right points up-right, E bottom-left points right, SE bottom-right points down-right), camera, placement, scale, whole body silhouette, clean true-alpha background and magenta frames.\nChange ONLY the conical central drilling cutter's rotating toothed head into a visibly different angular phase: rotate the toothed cone around its OWN longitudinal mechanical axis by about45degrees so its dark/bright cutting teeth and helical ridges visibly move. Retain the same cone length, thickness, tip location, mounting axis, shaft, yellow collar and mounting point. No axial extension, translation, motion blur, glow, debris or effect. Keep exactly one drill, two original folded side grippers, one integrated EMPTY rear ore hopper, twin unlit rear thruster bells, one flat dark-blue top electronics housing. All chassis, hopper, grippers, yellow collar, nozzles, panel and lighting remain identical. No load, exhaust, crew, weapons or additional hardware.\nUse the same1536x1024 sheet, 2x2 genuine views and opaque pure magenta #FF00FF frames approximately6px thick at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). All complete subjects stay safely inside source crops[32,32,736,480],[800,32,1504,480],[32,544,736,992],[800,544,1504,992], with at least32px true transparent clearance between every visible model pixel and its frame. Keep reference subject sizes and original placements; if necessary reduce each complete subject uniformly a little for safety, never shorten the cutter separately. Real transparent margins/gutters, no checkerboard/white-gray fill, no cast shadow or halo. Match crisp steel/graphite/ochre/blue original sprite render and upper-left lighting. No text, labels, symbols, watermark or other props. Four complete unchanged heavy miners with ONLY a genuine second rotational tooth phase on their existing cutter heads.",
+  "path": "media/multilayer/source/space/raw/heavy-miner-work-b-n-ne-e-se-v1.png",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-44e29d60-73f6-40aa-9019-0bbd0d9fb1a8.png",
+  "sha256": "cc22ffff97b7337d7970a35c9c9dcddd7a36a30dd0e1f87580cbae74e6aefe58",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "separator_rgb_test": "red>=220 green<=60 blue>=220",
+    "windows": {
+      "N": {
+        "crop_box": [
+          32,
+          32,
+          736,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          221,
+          47,
+          484,
+          405
+        ],
+        "minimum_transparent_clearance": 43,
+        "opaque_separator_pixels": 0
+      },
+      "NE": {
+        "crop_box": [
+          800,
+          32,
+          1504,
+          480
+        ],
+        "subject_bbox_in_crop": [
+          138,
+          83,
+          528,
+          391
+        ],
+        "minimum_transparent_clearance": 57,
+        "opaque_separator_pixels": 0
+      },
+      "E": {
+        "crop_box": [
+          32,
+          544,
+          736,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          106,
+          115,
+          624,
+          338
+        ],
+        "minimum_transparent_clearance": 80,
+        "opaque_separator_pixels": 0
+      },
+      "SE": {
+        "crop_box": [
+          800,
+          544,
+          1504,
+          992
+        ],
+        "subject_bbox_in_crop": [
+          139,
+          57,
+          571,
+          360
+        ],
+        "minimum_transparent_clearance": 57,
+        "opaque_separator_pixels": 0
+      }
+    },
+    "visible_nonseparator_pixels_outside": 0
+  }
+}

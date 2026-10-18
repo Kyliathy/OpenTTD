@@ -2,6 +2,7 @@
 /** @file orbital_recipe.h Canonical orbital recipe buffers over the native module's sole packet stock.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C native metadata, scheduling and independently admitted persistence.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K original paid-work presentation.
  * The shared executor plans every material delta. This participant owns no replacement cargo registry or electrical account.
  */
 #ifndef ORBITAL_RECIPE_H
@@ -100,6 +101,11 @@ void AppendOrbitalRecipeRequests(std::vector<UtilityPowerRequest> &requests);
 void TickOrbitalRecipes();
 /** @param site Actual processor incarnation. @return Pure current limiting reason, without issuing work, stock or reservations. */
 OrbitalRecipeWait GetOrbitalRecipeWait(const SpaceStructure &site);
+/** Inspect this original processor's already committed current native opportunity.
+ * @param site Actual processor; the current actor must already own its stock query.
+ * @return Existing paid/baseline work parity, or absence while idle, paused, stale or unavailable.
+ */
+std::optional<uint8_t> GetOrbitalRecipeVisualFrame(const SpaceStructure &site);
 /** Connect the original typed native processing consumer, with no work or energy grant.
  * @param flags Estimate/execute; QueryCost is pure. @param site Actual owned operational processor. @param source Actual owned adjacent native panel.
  * @return Whole connection admission or unchanged refusal.

@@ -1,0 +1,199 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13D / r2mlvs14-remaining-assets-and-runtime-integration.md66C.2. Immutable remaining four original blocked displays. Requested separator frames were not returned; independent complete transparent cutouts pass measured clearance and zero outside pixels. Ordinary glass rectangles only; no alpha/source edits.",
+  "asset_id": "vehicle.model-17",
+  "candidate": "orbital-hauler-blocked-s-sw-w-nw-v1",
+  "tool": "built-in image_gen",
+  "panel_state": "blocked",
+  "phase": 0,
+  "directions": [
+    "S",
+    "SW",
+    "W",
+    "NW"
+  ],
+  "transparent_background": true,
+  "status": "generated_layout_verified",
+  "prompt": "Use case: precise-object-edit.\nAsset: OpenTTD orbital cargo hauler17 ORIGINAL DISPLAY ONLY, static BLOCKED amber, genuine S/SW/W/NW projections.\nInput1 is the exact selected S screen/head crop; input2 exact selected SW; input3 exact selected W; input4 exact selected NW. These are the edit targets and authoritative physical projection references. Their reference crop magnifications differ; preserve one physical screen design, not their arbitrary input pixel sizes.\nExtract/render ONLY the same original rectangular navy-glass diagnostic face and its existing very thin ivory surround from each target. Remove the rest of each head, hull, deck, rail or nozzle. Illuminate that existing glass with a simple broad steady warm AMBER face, very thin navy edge. No text, symbols, patterns, extra lights, LEDs, buttons, new hardware, blue service variants, glow or animation.\n\n1536x1024 four isolated display cutouts in a2x2 true-transparent sheet:\nTOP LEFT S from INPUT1: wide almost horizontal face, exact original S near command-head projection.\nTOP RIGHT SW from INPUT2: original screen long edges slope DOWN to the RIGHT, exact SW face.\nBOTTOM LEFT W from INPUT3: original steep narrow side face, nearly upright with slight rightward sloping upper edge, preserving its actual tilted plane. Do not flatten it into a horizontal/front-on screen.\nBOTTOM RIGHT NW from INPUT4: original screen LONG edges slope UP to the RIGHT, lower-left to upper-right, matching input4 precisely. Do not reverse this diagonal.\nFour genuinely different physical cameras of the same flat screen. No flat bitmap flipping/rotation or copied unrotated fronts. Match the reference aspect, plane, thin bezel and upper-left SCREEN light. Crisp detailed industrial game art, low orthographic2:1 camera about26.565degrees.\n\nSAFE BORDERED source layout, opaque pure-magenta #FF00FF6px exterior frames at S(24,24)-(744,488),SW(792,24)-(1512,488),W(24,536)-(744,1000),NW(792,536)-(1512,1000). Each entire small display centered within its panel with64px+ true transparent clearance on every side, at most300px wide/220px high. Keep physical side-view narrowing; do not enlarge W to equal S width. Background/margins/gutters alpha0, no haze, checkerboard, gray/white fill, ground plane, castshadow, colored fringe, labels, arrows, watermark or extra props. Four independent complete original flat displays with amber on the existing face ONLY.",
+  "cached_source": "C:/Users/Axonn/.codex/generated_images/01a144af-3bb3-7453-a3a0-61a57896cd06/exec-62aa12ab-237f-43db-a5a1-a525af97971e.png",
+  "actual_camera_mapping": [
+    {
+      "requested": "S",
+      "actual": "S",
+      "evidence": "Wide horizontal screen matching original S."
+    },
+    {
+      "requested": "SW",
+      "actual": "SW",
+      "evidence": "Long edges slope down-right, matching original SW."
+    },
+    {
+      "requested": "W",
+      "actual": "W",
+      "evidence": "Steep side face with rightward sloping upper edge, matching selected W."
+    },
+    {
+      "requested": "NW",
+      "actual": "NW",
+      "evidence": "Long screen edges rise rightward, matching selected NW."
+    }
+  ],
+  "path": "media/multilayer/source/space/raw/orbital-hauler-blocked-s-sw-w-nw-v1.png",
+  "sha256": "8ca35ff6b61fe2b0951a2c0c73153ad0e58f5b6aca5d3b5758e74a247cb8c2ec",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "separator_color_policy": {
+    "red_min": 180,
+    "green_max": 60,
+    "blue_min": 180,
+    "chroma_min": 128
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "requested_magenta_frames_returned": false,
+    "visible_pixels_outside_windows": 0,
+    "windows": {
+      "S": {
+        "crop_box": [
+          16,
+          16,
+          752,
+          528
+        ],
+        "subject_bbox_in_crop": [
+          63,
+          144,
+          673,
+          376
+        ],
+        "minimum_transparent_clearance": 63,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          96,
+          211,
+          623,
+          372
+        ]
+      },
+      "SW": {
+        "crop_box": [
+          784,
+          16,
+          1520,
+          528
+        ],
+        "subject_bbox_in_crop": [
+          83,
+          64,
+          662,
+          482
+        ],
+        "minimum_transparent_clearance": 30,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          909,
+          145,
+          1416,
+          420
+        ]
+      },
+      "W": {
+        "crop_box": [
+          16,
+          536,
+          752,
+          1008
+        ],
+        "subject_bbox_in_crop": [
+          246,
+          23,
+          495,
+          417
+        ],
+        "minimum_transparent_clearance": 23,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          285,
+          578,
+          468,
+          869
+        ]
+      },
+      "NW": {
+        "crop_box": [
+          784,
+          536,
+          1520,
+          1008
+        ],
+        "subject_bbox_in_crop": [
+          107,
+          26,
+          653,
+          431
+        ],
+        "minimum_transparent_clearance": 26,
+        "opaque_separator_pixels": 0,
+        "amber_glass_rectangle": [
+          928,
+          619,
+          1389,
+          893
+        ]
+      }
+    }
+  },
+  "reference_inputs": [
+    {
+      "role": "exact selected S screen projection edit target",
+      "path": "media/multilayer/guides/space/orbital-hauler-display-s-reference.png",
+      "sha256": "3c145b1765a6371d5b4abded444a8dec42bb3020adda07a419ca8600e1074cb1"
+    },
+    {
+      "role": "exact selected SW screen projection edit target",
+      "path": "media/multilayer/guides/space/orbital-hauler-display-sw-reference.png",
+      "sha256": "53ac1a9ccc2c88859470f519400656be067f4dbc784b5ae42e5e3a7a37933246"
+    },
+    {
+      "role": "exact selected W screen projection edit target",
+      "path": "media/multilayer/guides/space/orbital-hauler-display-w-reference.png",
+      "sha256": "8cbf615a6dd3557e68436504fa67695ad039102f5abd5b2b79be5634fe729198"
+    },
+    {
+      "role": "exact selected NW screen projection edit target",
+      "path": "media/multilayer/guides/space/orbital-hauler-display-nw-reference.png",
+      "sha256": "5a531a902275a939c3bc1836d32e931edd6d21c17628801c7205fdecb65f9c11"
+    }
+  ],
+  "reference_provenance": [
+    {
+      "path": "media/multilayer/guides/space/orbital-hauler-display-s-reference.json",
+      "sha256": "42f3b193708c013e8ad505c8d43bce8a88f6b2a39d388f23a1573330b8445975"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-s-sw-w-nw-v1.png",
+      "sha256": "90f4b061b515942ab50a38ed985a2bb04771144a0df90ac40d073a28fc1a0bce"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-hauler-display-sw-reference.json",
+      "sha256": "c165744f87a7a3edb41c94914c6afecb02defdeb2a10f9deb64e9ac50fcdf924"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-sw-v1.png",
+      "sha256": "72893b20cf7dfe5320882b19bba4cd8c25da13576ca763667ccde8a802d2f94d"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-hauler-display-w-reference.json",
+      "sha256": "b54942f641e10c2d976d40304d8192366a80afb0ac7c55315b296df8aaea955f"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-hauler-empty-w-v1.png",
+      "sha256": "fd30da59a9ade53298633fba690e3b3550b8160d0cb966530d0828d7e3d983cb"
+    },
+    {
+      "path": "media/multilayer/guides/space/orbital-hauler-display-nw-reference.json",
+      "sha256": "698099bff10725e00a92c37147bd1b9a940c9acd0c28cc13caf35ef74371cfd5"
+    }
+  ]
+}

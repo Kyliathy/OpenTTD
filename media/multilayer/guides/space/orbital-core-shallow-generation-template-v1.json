@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13E / r2mlvs14-remaining-assets-and-runtime-integration.md70.1. Generator-facing shallow floor reference compensating repeated steepened outputs; NOT the native2:1 contract, NOT artwork. Generated original must independently pass actual native projection.",
+  "path": "media/multilayer/guides/space/orbital-core-shallow-generation-template-v1.png",
+  "sha256": "369472f0db2a2365d185906d7f47f44a65453f0d9d5e1466761b813279c2929b",
+  "generator_floor_corners": [
+    [
+      512,
+      256
+    ],
+    [
+      896,
+      434
+    ],
+    [
+      512,
+      612
+    ],
+    [
+      128,
+      434
+    ]
+  ],
+  "native_contract_changed": false,
+  "original_pixels_used": false
+}

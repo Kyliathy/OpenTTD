@@ -499,6 +499,8 @@ enum class SaveLoadVersion : uint16_t {
 	SpaceHeavyMinerContainedServices, ///< Saveload version: 436\n Original contained Core/Dock jobs append immutable service role, retaining genuine old unknown one-part receipts and real heavy two-part/296-opportunity work. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC.
 	SpaceCargoDimensions, ///< Saveload version: 437\n Same-file configured cargo dimensions join copied descent mass admission; genuine older receipts keep their original native checks. See r2mlvs11-orbital-stations-and-manufacturing.md Group9CD.
 	OrbitalRecipeProcessing, ///< Saveload version: 438\n Native module recipe/work/material/residue metadata and bounded retired history join original SPST stocks and utility authority. See r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
+	CompanySupplyPackets, ///< Saveload version: 439\n Appended non-paying CompanySupply source meaning in original CAPA packets; r2mlvs6-mines-and-resource-chains.md Group13CB. No order/quota inventory is introduced.
+	SurfaceSupplyOrders, ///< Saveload version: 440\n Sole bounded paid-order commitment/history family with same-file economy-day/company/Surface-station admission; r2mlvs6-mines-and-resource-chains.md Group13CCC. Native packets remain the physical stock owner.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

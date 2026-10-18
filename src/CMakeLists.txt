@@ -1,5 +1,6 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 # Final Space presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
+# Native orbital presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
 # Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
@@ -293,6 +294,9 @@ add_files(
     space.cpp
     space_vehicle.cpp
     space_sprite.cpp
+    # Original orbital hull/work/load owners: r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+    orbital_sprite.cpp
+    orbital_sprite.h
     # Atomic original finite extraction: r2mlvs10-asteroids-and-mining-probes.md Group10.
     space_mining_inventory.cpp
     space_mining_inventory.h
@@ -494,6 +498,20 @@ add_files(
     layer_industry_baseline.h
     layer_industry_baseline.cpp
     station_supply.h
+    # Pure actual-owner paid seed admission: r2mlvs6-mines-and-resource-chains.md Group13C.1.
+    surface_supply.cpp
+    surface_supply.h
+    # Detached original-owner order metadata: r2mlvs6-mines-and-resource-chains.md Group13CCB.
+    surface_supply_order.cpp
+    surface_supply_order.h
+    # Sole private native commitment owner: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_runtime.cpp
+    surface_supply_order_runtime.h
+    # Dormant synchronized ABI reserved with persistence: r2mlvs6-mines-and-resource-chains.md Groups13CCC/13CCD.
+    surface_supply_cmd.h
+    # Bounded native/full/copied original transport: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_wire.cpp
+    surface_supply_order_wire.h
     multilayer_recipe.h
     multilayer_bootstrap.cpp
     multilayer_bootstrap.h

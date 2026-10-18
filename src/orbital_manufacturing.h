@@ -1,12 +1,28 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_manufacturing.h Paid reservations, common-grant work and once-only native hull materialization.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups7/8/8BC
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; read-only original manufacturing admission/receipt disclosure.
  */
 #ifndef ORBITAL_MANUFACTURING_H
 #define ORBITAL_MANUFACTURING_H
 #include "orbital_station.h"
 
 struct SpaceStructureRecord; ///< Existing native snapshot owner, defined in space_structure.h.
+
+/** Transient original factory admission result; never saved work or permission to commit. */
+enum class OrbitalManufactureWait : uint8_t { None, Inactive, Materials, Power, Output };
+
+/** Query an existing request through the original facility/input/output preflight.
+ * @param site Actual Assembly; the current actor must own any inspected pending job.
+ * @return Actual limiting family, or None for idle/completed/admitted work; no owner is changed.
+ */
+OrbitalManufactureWait GetOrbitalManufactureWait(const SpaceStructure &site);
+
+/** Read only this actual job's current paid-work receipt for its authored display.
+ * @param site Original owned Assembly and its sole native manufacturing job.
+ * @return Actual positive saved work when this normal unpaused epoch earned it, otherwise absence.
+ */
+std::optional<uint32_t> GetOrbitalManufactureVisualWork(const SpaceStructure &site);
 
 /** Admit replacement through the original complete physical manufacturing gate, optionally superseding this exact old product's empty completed receipt.
  * @param flags Native estimate/execution; QueryCost remains pure.

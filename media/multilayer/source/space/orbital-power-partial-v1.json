@@ -1,0 +1,93 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13H / r2mlvs14-remaining-assets-and-runtime-integration.md73.3. Genuine unfinished Power hardware; bare PV frames and open casing supply no producer or generation.",
+  "asset_id": "module.power",
+  "candidate": "orbital-power-partial-v1",
+  "tool": "built-in image_gen",
+  "state": "partial",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "status": "selected_partial_pending_full_source_review",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/orbital-power-body-v1.png",
+      "sha256": "a567676ce564e90617b9ff2d72c135b050f0e7514b7e11e9fc1d0ad3d85d91af",
+      "role": "accepted complete Power body edit target; exact floor/two-bank/one-box identity"
+    }
+  ],
+  "prompt": "Use case: precise-object-edit.\nAsset: ONE partially constructed original of this exact fixed orbital Power module.\nImage1 is the accepted complete BODY edit target, no coupling. Preserve its exact shallow floor camera, framing, all four floor corners, thin perimeter,2x2 floor layout, TWO PV-bank positions/supports and ONE small control-box position. Change ONLY the unfinished physical stage:\nRemove the blue photovoltaic CELL FACES from BOTH banks, leaving exactly TWO EMPTY low rectangular graphite/cream support FRAMES in the same positions, with open interiors and narrow structural braces but NO blue completed cell surfaces. Do not remove the two physical support structures or add a third bank. Open the single small control box by omitting its roof/front cover, leaving its unfinished empty casing.\nKeep three fitted grey floor plates; remove ONLY the FRONTMOST fourth floor plate, revealing genuine transparent space with two narrow graphite X braces inside the complete original floor perimeter. The floor opening must be truly transparent between braces, not a painted black surface.\nKeep cream/silver trim, navy/graphite unfinished hardware, upper-left light and the EXACT original shallow floor projection. Entire subject, every corner and all frames remain within the generous original transparent margins. No completed coupling, cargo, fuel tank, Core hub, service machinery, craft, crane, extra equipment, text, labels, symbols, axes, ground or external shadow. ONE complete isolated fixed view, no sheet.",
+  "original": "media/multilayer/source/space/raw/orbital-power-partial-v1.png",
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      68,
+      312,
+      1333,
+      966
+    ],
+    "uniform_scale": [
+      123,
+      1250
+    ],
+    "source_reference": [
+      701,
+      329
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        316
+      ],
+      [
+        1330,
+        629
+      ],
+      [
+        701,
+        961
+      ],
+      [
+        71,
+        629
+      ]
+    ]
+  },
+  "original_sha256": "13c5dfc79946125fbc47270e08063d714abdc4d51562f81ba5c17e1297a98bfa",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "observed_stage": "Exactly two low empty PV support frames without completed blue cell faces, one open unfinished control box, three fitted floor plates and a genuinely transparent missing front plate around X braces. No coupling or extra equipment."
+}

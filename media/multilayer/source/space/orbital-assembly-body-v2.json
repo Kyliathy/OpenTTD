@@ -1,0 +1,96 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13I / r2mlvs14-remaining-assets-and-runtime-integration.md74.1. Genuine one-gantry Assembly base with corrected floor camera; source grants no stock, hull or work.",
+  "asset_id": "module.workshop",
+  "candidate": "orbital-assembly-body-v2",
+  "tool": "built-in image_gen",
+  "state": "complete",
+  "directions": [
+    "none"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/guides/space/orbital-assembly-floor-camera-v1.png",
+      "sha256": "dc184a1dc17832e4b20e40dd0077836d3fb9f10e81d870fc5bfe06cea547ac82",
+      "role": "exact2:1 floor/camera guide only; never sprite pixels"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-assembly-body-v1.png",
+      "sha256": "e3fc366643d65eadec311f166a08de077db2a53bb14b694e43367c28f06587cb",
+      "role": "same one-gantry hardware/material reference only; rejected shallow floor is not reused"
+    }
+  ],
+  "prompt": "Use case: stylized-concept.\nAsset: one corrected genuine fixed orbital ASSEMBLY WORKSHOP body for OpenTTD.\nImage1 is the EXACT FLOOR/CAMERA GUIDE and highest-priority projection. Image2 is EQUIPMENT IDENTITY AND MATERIAL REFERENCE ONLY: its floor is too shallow and its wide framing must NOT be copied. Draw a NEW view of that same equipment at Image1's correct camera.\nUse a1402x1122 transparent portrait-ish canvas as Image1. The thin floor diamond must follow Image1 EXACTLY: rear corner(701,340), right(1253,616), front(701,892), left(149,616). Width1104px, height552px, TRUE2:1 isometric floor. This floor must be substantially deeper vertically than Image2's flattened deck. Keep all four corners visible with at least100px transparent clearance; no wide letterbox canvas, no perspective convergence, no thick foundation. No pixel-stretch or flattened camera look.\nOn the rear half put the same ONE compact LOW open cream/navy GANTRY as Image2: exactly two short uprights, one single straight diagonal horizontal crossbeam parallel to a rear floor edge, and one small static dark tool head hanging below its centre. Do not duplicate rails/posts or change equipment count. Same ONE squat control console in front of it, with a simple horizontal BLUE GLASS window on its visible front face. Keep the entire front half of floor a broad open EMPTY apron. One thin silver/cream rim and subtle seams dividing the floor into four diamond world tiles. Correct2:1 floor geometry takes priority over copying Image2's placement/camera. Gantry stays compact and well inboard, no equipment over a corner.\nRestrained crisp retro first-party game sprite materials, cream/navy/grey, upper-left light. Same two posts/one beam/one hanging tool/one blue console only. No manufactured product, ghost robot, vehicle, cargo, crates, crane tower, tank, PV bank, pipe extension, additional console, second bay, coupling or clamp. No lit work or warning cue in this canonical base. No labels, text, arrows, numbers, symbols, axes, decorative backdrop, ground or external shadow. True transparent background, ONE isolated whole model, no sheet. Render the whole hardware genuinely from the corrected floor camera, with safe transparent margins.",
+  "original": "media/multilayer/source/space/raw/orbital-assembly-body-v2.png",
+  "original_sha256": "767b6b377742b66ed023692b9c6f98bf71a4aed02ae3443061fc7a571daa7239",
+  "image_size": [
+    1402,
+    1122
+  ],
+  "native_registration": {
+    "canvas": [
+      192,
+      160
+    ],
+    "native_reference": [
+      96,
+      48
+    ],
+    "native_floor_corners": [
+      [
+        96,
+        48
+      ],
+      [
+        160,
+        80
+      ],
+      [
+        96,
+        112
+      ],
+      [
+        32,
+        80
+      ]
+    ],
+    "crop_box": [
+      0,
+      0,
+      1402,
+      1122
+    ],
+    "measured_subject_bbox_in_crop": [
+      71,
+      278,
+      1331,
+      998
+    ],
+    "uniform_scale": [
+      100,
+      1000
+    ],
+    "source_reference": [
+      701,
+      365
+    ],
+    "source_floor_corners": [
+      [
+        701,
+        350
+      ],
+      [
+        1327,
+        666
+      ],
+      [
+        701,
+        984
+      ],
+      [
+        76,
+        666
+      ]
+    ]
+  }
+}

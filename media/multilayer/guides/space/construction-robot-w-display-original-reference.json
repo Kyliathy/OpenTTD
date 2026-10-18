@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md13CB / r2mlvs14-remaining-assets-and-runtime-integration.md65B.3b. Untouched ordinary original-display rectangle; no pixel/alpha/color edits, resampling or source coverage.",
+  "source": {
+    "path": "media/multilayer/source/space/raw/construction-robot-idle-w-v1.png",
+    "sha256": "c5c8537fcc35c8275be2f586b63728e60062316ff563dd3d361aa19f2a9eee69"
+  },
+  "source_candidate": "construction-robot-idle-w-v1",
+  "direction": "W",
+  "crop_box": [
+    330,
+    430,
+    480,
+    565
+  ],
+  "output": {
+    "path": "media/multilayer/guides/space/construction-robot-w-display-original-reference.png",
+    "sha256": "c121dbf46c4ea77d1789b7d5388625a45a8279fd9e2656a63213b18dd035e9b8"
+  },
+  "size": [
+    150,
+    135
+  ],
+  "rgba_pixels_identical_to_original_rectangle": true,
+  "purpose": "Physical original roof-display projection reference for correcting the isolated status source; original native body/mask/anchor remain frozen."
+}

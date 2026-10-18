@@ -2,6 +2,7 @@
 /** @file space_structure_gui.cpp Native module selection, paid activation and precise Core/Dock service controls.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-4C/6B/7.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; shared heavy selection and immutable original reserved bills.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original recipe/input/output/work and blocked disclosures.
  */
 #include "stdafx.h"
 #include "space_mining_tuning.h"
@@ -11,6 +12,8 @@
 #include "space_vehicle.h"
 #include "space_vehicle_cmd.h"
 #include "space_manifest.h"
+#include "orbital_manufacturing.h"
+#include "orbital_recipe.h"
 #include "company_func.h"
 #include "company_base.h"
 #include "core/backup_type.hpp"
@@ -406,9 +409,12 @@ struct SpaceConstructionWindow : Window {
 					else draw(GetString(STR_SPACE_DOCK_SOURCE_MISSING));
 					const auto *source = GetOrbitalServicePowerSite(*site);
 					draw(GetString(STR_SPACE_CONSTRUCTION_PANEL_OUTPUT, source == nullptr ? 0 : GetOrbitalModulePanelRate(*source) / 1000));
-					const auto &recipe = *GetSpaceVehicleConstruction(this->manufacture_model);
-					draw(GetString(STR_SPACE_MANUFACTURE_RECIPE, ManufactureModelName(this->manufacture_model), recipe.capital));
-					const auto *inventory = ResolveSpaceStructure(this->manufacture_source);
+					// A retained request owns its immutable recipe/source. Changing a UI
+					// proposal must not relabel its actual reserved bill or work target.
+					const auto model = module.manufacture ? module.manufacture->model : this->manufacture_model;
+					const auto &recipe = *GetSpaceVehicleConstruction(model);
+					draw(GetString(STR_SPACE_MANUFACTURE_RECIPE, ManufactureModelName(model), recipe.capital));
+					const auto *inventory = ResolveSpaceStructure(module.manufacture ? module.manufacture->source : this->manufacture_source);
 					if (inventory != nullptr) draw(GetString(STR_SPACE_MANUFACTURE_SOURCE, inventory->index.base() + 1));
 					else draw(GetString(STR_SPACE_MANUFACTURE_SOURCE_MISSING));
 					if (module.manufacture) {
@@ -418,6 +424,13 @@ struct SpaceConstructionWindow : Window {
 						else if (job.phase == OrbitalManufacturePhase::Complete) draw(GetString(STR_SPACE_MANUFACTURE_COMPLETE, job.product.vehicle.base() + 1));
 						else if (job.phase == OrbitalManufacturePhase::AwaitingMaterialization) draw(GetString(STR_SPACE_MANUFACTURE_CAPACITY_WAIT));
 						else draw(GetString(STR_SPACE_MANUFACTURE_PROGRESS, job.work_ticks, recipe.work_ticks));
+						// Owner-only admission quotes keep the original current company;
+						// drawing never borrows another actor's unit/stock permissions.
+						if (_current_company == site->state.owner) {
+							static constexpr StringID reasons[] = {STR_SPACE_PROCESS_READY, STR_SPACE_PROCESS_INACTIVE,
+								STR_SPACE_PROCESS_INPUT, STR_SPACE_PROCESS_POWER, STR_SPACE_PROCESS_OUTPUT};
+							draw(GetString(reasons[to_underlying(GetOrbitalManufactureWait(*site))]));
+						}
 					}
 					// Display every declared extra/common input from the canonical recipe; no local two-label table may hide heavy components or imply free output.
 					for (size_t input = 0; input < recipe.inputs.size(); ++input) {
@@ -426,6 +439,41 @@ struct SpaceConstructionWindow : Window {
 						const uint available = module.manufacture ? module.manufacture->inputs[input].TotalCount() + module.manufacture->consumed[input] :
 							(inventory != nullptr && inventory->module ? inventory->module->stock[cargo].TotalCount() : 0);
 						draw(GetString(STR_SPACE_MANUFACTURE_INPUT, CargoSpec::Get(cargo)->name, available, required.quantity));
+					}
+				}
+				if (module.processing) {
+					const auto &state = *module.processing;
+					const auto *definition = GetOrbitalRecipeDefinition(site->state.kind, state.choice);
+					// Use the saved content choice and its sole original packet/history
+					// owners; no local recipe list or displayed quantity authorizes work.
+					if (definition != nullptr) {
+						const auto &recipe = definition->recipe;
+						draw(GetString(STR_SPACE_PROCESS_RECIPE, std::string(state.choice.begin(), state.choice.end())));
+						if (_current_company == site->state.owner) {
+							static constexpr StringID reasons[] = {STR_SPACE_PROCESS_READY, STR_SPACE_PROCESS_DISABLED,
+								STR_SPACE_PROCESS_INACTIVE, STR_SPACE_PROCESS_INPUT, STR_SPACE_PROCESS_OUTPUT,
+								STR_SPACE_PROCESS_WORK, STR_SPACE_PROCESS_POWER, STR_SPACE_PROCESS_ALLOCATION, STR_SPACE_PROCESS_LIMIT};
+							draw(GetString(reasons[to_underlying(GetOrbitalRecipeWait(*site))]));
+						}
+						const auto ticks = state.electrical ? state.electrical->WorkTicks() : state.unpowered_work_ticks;
+						draw(GetString(STR_SPACE_PROCESS_PROGRESS, ticks, recipe.work_economy_ticks, state.paid_lifetime_j));
+						// Each canonical input/output is disclosed even when empty. Missing
+						// extra materials or full products cannot disappear behind Steel/Goods.
+						for (const auto &input : recipe.inputs) {
+							const auto cargo = GetCargoTypeByLabel(input.label);
+							if (!IsValidCargoType(cargo)) continue;
+							const auto consumed = state.consumed.find(input.label);
+							draw(GetString(STR_SPACE_PROCESS_INPUT_STOCK, CargoSpec::Get(cargo)->name,
+								module.stock[cargo].TotalCount(), input.quantity, consumed == state.consumed.end() ? 0 : consumed->second));
+						}
+						for (const auto &output : recipe.outputs) {
+							const auto cargo = GetCargoTypeByLabel(output.label);
+							if (!IsValidCargoType(cargo)) continue;
+							const auto produced = state.produced.find(output.label);
+							draw(GetString(STR_SPACE_PROCESS_OUTPUT_STOCK, CargoSpec::Get(cargo)->name,
+								module.stock[cargo].TotalCount(), GetOrbitalRecipeCargoCapacity(site->state.kind, output.label),
+								produced == state.produced.end() ? 0 : produced->second));
+						}
 					}
 				}
 				if (GetOrbitalModuleServiceCapacity(site->state.kind) != 0) {
