@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-18",
+  "guide": "docs/zz-reach2/upgrades/2026-10/d2sa-space-adventures.md",
+  "prepared_conditions": "Inherited Surface starting stock and terrain remain prepared. Native paid construction, manufacture, mining, freight, processing and return are retained. This is not an unassisted factory-to-orbit bootstrap.",
+  "checkpoints": [
+    {
+      "menu_number": 31,
+      "name": "space-factory",
+      "description": "Paid construction probe assembly at 74/148 ticks; finish the same native hull",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-factory-440.sav",
+        "sha256": "e063202b825bf16d7fa0b536b482740e1201e0ef29050bc957fbf3301da9a53e"
+      },
+      "source": {
+        "path": "mlm/reviews/orbital-art/paid-construction/20261018-024638-656bbfa8f9/saves/art-manufacture-partial-438.sav",
+        "sha256": "ccc50f547e8cb0371808778873ecb1a75895efb7deaedf1fefaac7bab21ad617"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-art-manufacture-release-1.json",
+          "sha256": "38b9e6ba1ef55390595cfab6e46fb2a9fbd7a4ed74505bb488ba2d0c8c09ea39"
+        },
+        {
+          "path": "mlm/reviews/orbital-art/paid-construction/20261018-024638-656bbfa8f9/reports/paid-construction.json",
+          "sha256": "23a78054b8164bc0f0fb35d4292189ea0505035d559dc32495de395ebed5cb83"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-factory-prepare.sav",
+        "sha256": "e063202b825bf16d7fa0b536b482740e1201e0ef29050bc957fbf3301da9a53e"
+      }
+    },
+    {
+      "menu_number": 32,
+      "name": "space-heavy",
+      "description": "Paid heavy mining robot pursuing finite ore; watch its larger hold fill",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-heavy-440.sav",
+        "sha256": "0c858ed753a847cc98c449f47ecbdc0efa4627f995d0dbde7227c4b230887028"
+      },
+      "source": {
+        "path": "mlm/reviews/space/heavy-network-mining-local/20261016-164811-64bb936e8f/saves/heavy-network-mining-initial-local-437.sav",
+        "sha256": "eb5c2e386d4edf732180804a5782fed6268a7b1856af737d6af9e654ae706d68"
+      },
+      "producers": [
+        {
+          "path": "logs/heavy-network-verification.json",
+          "sha256": "e2587e78690a8e31643e17cdf92e4e6f38c53efff02c4e716dab4c17a1d15d03"
+        },
+        {
+          "path": "mlm/reviews/space/heavy-network-mining-local/20261016-164811-64bb936e8f/reports/heavy-network.json",
+          "sha256": "51e1a00bd5eb0a72c3b0eec7848f9522d93c6c4601f01c9b75aa525a67fff804"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-heavy-prepare.sav",
+        "sha256": "0c858ed753a847cc98c449f47ecbdc0efa4627f995d0dbde7227c4b230887028"
+      }
+    },
+    {
+      "menu_number": 33,
+      "name": "space-hauler",
+      "description": "Paid orbital hauler travelling with 2 actual Steel units; follow its transfer",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-hauler-440.sav",
+        "sha256": "778abdfc5a4c002f1acee720429feacc01d099c5311f5829bc57994e51c90310"
+      },
+      "source": {
+        "path": "mlm/reviews/space/processor-freight-native/20261016-232019-fe4ded9328/saves/freight-travelling-438.sav",
+        "sha256": "c2327c2eece2d8fef17f6b10b7547d7f0adc8bbc722ace5dd84c5f199a39bbbd"
+      },
+      "producers": [
+        {
+          "path": "logs/processor-freight-verification.json",
+          "sha256": "6b6479c4e5ee1c8ba31b3329253c67fc487bc56036171229e793efb95c5a9fc0"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-hauler-prepare.sav",
+        "sha256": "778abdfc5a4c002f1acee720429feacc01d099c5311f5829bc57994e51c90310"
+      }
+    },
+    {
+      "menu_number": 34,
+      "name": "space-steel",
+      "description": "Steelworks partway through a powered batch from actual mined Nickel Ore",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-steel-440.sav",
+        "sha256": "1314216fe2fddb8323eb9b8e0cf54dbea29ba6d47093062ec0d06cc891fdca54"
+      },
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222317-bea6d6b2d4/saves/processor-steel-partial-438.sav",
+        "sha256": "dc15f7bc69af34fa62a383fcee766e7dcbeeb2849de21c2fc070647f9d876cff"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-processor-verification.json",
+          "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-steel-prepare.sav",
+        "sha256": "1314216fe2fddb8323eb9b8e0cf54dbea29ba6d47093062ec0d06cc891fdca54"
+      }
+    },
+    {
+      "menu_number": 35,
+      "name": "space-goods",
+      "description": "Goodsworks consuming transported Steel and Rare Earth in a paid batch",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-goods-440.sav",
+        "sha256": "53388824c97407f0e9bdd827576c21666008f814373eab6ea5d8fdd8d3a0ad1d"
+      },
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222339-3b73a948bf/saves/processor-goods-partial-438.sav",
+        "sha256": "0d6a637b989f3acfaef5c0189f5fd7ad1a27f578deb2fe3739f23f71c5d43bf9"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-processor-verification.json",
+          "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-goods-prepare.sav",
+        "sha256": "53388824c97407f0e9bdd827576c21666008f814373eab6ea5d8fdd8d3a0ad1d"
+      }
+    },
+    {
+      "menu_number": 36,
+      "name": "space-refinery",
+      "description": "Refinery partway through Nickel Ore conversion to Refined Metal",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-refinery-440.sav",
+        "sha256": "ce0ee2040665136bf2c2db284d9248b4e3792194732ecc9036ec086495b4d4bd"
+      },
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222404-3d53fe811b/saves/processor-refinery-partial-438.sav",
+        "sha256": "81af95deb9cac60cf4bdac0755ea93ea3b89c5b839c090174360994bc9aa7e6b"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-processor-verification.json",
+          "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-refinery-prepare.sav",
+        "sha256": "ce0ee2040665136bf2c2db284d9248b4e3792194732ecc9036ec086495b4d4bd"
+      }
+    },
+    {
+      "menu_number": 37,
+      "name": "space-ice",
+      "description": "Refinery using the alternative Water Ice recipe; inspect real input/output history",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-ice-440.sav",
+        "sha256": "588b3943a732682b436884a1956627ee837ce656a9f7fac22244a9fd7fb441c2"
+      },
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222514-7b0bf5ad89/saves/processor-ice-partial-438.sav",
+        "sha256": "afe12b6076fe6af08e6c63e4f5f4d9a748a3146dd5bdfb402d4a610a97916e85"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-processor-verification.json",
+          "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-ice-prepare.sav",
+        "sha256": "588b3943a732682b436884a1956627ee837ce656a9f7fac22244a9fd7fb441c2"
+      }
+    },
+    {
+      "menu_number": 38,
+      "name": "space-power",
+      "description": "Paid Power module construction at 222/444 ticks; complete then activate",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-power-440.sav",
+        "sha256": "cbed957c9073e4d8c00108cb404849ad6c4fa0ad6047afdc2ec36d5bfad09443"
+      },
+      "source": {
+        "path": "mlm/reviews/orbital-art/paid-construction/20261018-024714-06b268217b/saves/art-power-partial-438.sav",
+        "sha256": "300bb232be86e88df563e9e2e2909d0da8af9691d2f2904c4cf05f99699ca97e"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-art-paid-release-2.json",
+          "sha256": "748f25b93343b14c0feb01a632d33c5635dc2c0932f68a66edf7ebc70845248a"
+        },
+        {
+          "path": "mlm/reviews/orbital-art/paid-construction/20261018-024714-06b268217b/reports/paid-construction.json",
+          "sha256": "09fd8075495400dbdd08d587c4cf745584a70b58eb92b13e91c8f340d52cc885"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-power-prepare.sav",
+        "sha256": "cbed957c9073e4d8c00108cb404849ad6c4fa0ad6047afdc2ec36d5bfad09443"
+      }
+    },
+    {
+      "menu_number": 39,
+      "name": "space-fuel-store",
+      "description": "Finished Fuel store frame with final art; activation remains unsupported",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-fuel-store-440.sav",
+        "sha256": "db10cb423f07239e97d344ad26c1a42ab68c04f7ea893ce46e65652364f7f4ec"
+      },
+      "source": {
+        "path": "mlm/reviews/orbital-art/paid-construction/20261018-024714-06b268217b/saves/art-fuel-frame-438.sav",
+        "sha256": "318267941e137f65048b58e3798799e0f8d3534315d3a62510bc4416b2b11e19"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-art-paid-release-2.json",
+          "sha256": "748f25b93343b14c0feb01a632d33c5635dc2c0932f68a66edf7ebc70845248a"
+        },
+        {
+          "path": "mlm/reviews/orbital-art/paid-construction/20261018-024714-06b268217b/reports/paid-construction.json",
+          "sha256": "09fd8075495400dbdd08d587c4cf745584a70b58eb92b13e91c8f340d52cc885"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-fuel-store-prepare.sav",
+        "sha256": "db10cb423f07239e97d344ad26c1a42ab68c04f7ea893ce46e65652364f7f4ec"
+      }
+    },
+    {
+      "menu_number": 40,
+      "name": "space-heavy-service",
+      "description": "Paid heavy service in a two-berth Dock; pause, resume or interrupt its power",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-heavy-service-440.sav",
+        "sha256": "5a565cab3a6f68b51214a7de13958788d3f7fac59de932206c68df94712dd4cb"
+      },
+      "source": {
+        "path": "mlm/reviews/space/heavy-dock-heavy-partial/20261016-133507-1e29788056/saves/heavy-dock-heavy-partial-436.sav",
+        "sha256": "21dfb4f26d4c55e675c9d51267dd41bfaea9bc0f9486a1175bafb322dc4ccf7e"
+      },
+      "producers": [
+        {
+          "path": "logs/heavy-dock-service-verification.json",
+          "sha256": "2b70758f523be0bbdbdb825f4b392ab22f3e9e07c894764968df213dc4a31d3a"
+        },
+        {
+          "path": "mlm/reviews/space/heavy-dock-heavy-partial/20261016-133507-1e29788056/reports/heavy-dock.json",
+          "sha256": "dc7a3a51610a2519c3bc21e9eae32266de00586ec1fb43079adcfb25660ddb1c"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-heavy-service-prepare.sav",
+        "sha256": "5a565cab3a6f68b51214a7de13958788d3f7fac59de932206c68df94712dd4cb"
+      }
+    },
+    {
+      "menu_number": 41,
+      "name": "space-missions",
+      "description": "Real Visit then Mine queue; inspect saved typed actions and survey knowledge",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-missions-440.sav",
+        "sha256": "7513080263bc28953c956471e4a9880f286c320185736478a3f94774c7d07e51"
+      },
+      "source": {
+        "path": "mlm/reviews/space/probe-mission-local-visit-mine-partial/20261016-040635-ac9e4d63f9/saves/probe-mission-visit-mine-partial-430.sav",
+        "sha256": "f03a7f10659990f323d81aac9a92a2c78e956606150c185fa1d232fd65757216"
+      },
+      "producers": [
+        {
+          "path": "logs/probe-mission-verification.json",
+          "sha256": "b5c1086261f032fd93a2e8de658ea7020bb2b8b2f116b5f93a9c8fcae20b4936"
+        },
+        {
+          "path": "mlm/reviews/space/probe-mission-local-visit-mine-partial/20261016-040635-ac9e4d63f9/reports/probe-mission.json",
+          "sha256": "92c8398fb86c7b943ada6f65acb2f7ce46f14c757b58b7974bb4f2c041506606"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-missions-prepare.sav",
+        "sha256": "7513080263bc28953c956471e4a9880f286c320185736478a3f94774c7d07e51"
+      }
+    },
+    {
+      "menu_number": 42,
+      "name": "space-products",
+      "description": "Orbital Steel and Goods descending to Earth; inspect Surface receipt and collection links",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-products-440.sav",
+        "sha256": "71f70549638af237d2ab0c31549c12f976d58c5e0a2a1377e684fe58861c4e5e"
+      },
+      "source": {
+        "path": "mlm/reviews/space/processor-returns-native/20261016-235853-d6e6c61752/saves/products-released-438.sav",
+        "sha256": "0f40ebce63a85a65472ab11d398c1aefb904b735f46476a26778ed359fd45158"
+      },
+      "producers": [
+        {
+          "path": "logs/processor-returns-verification.json",
+          "sha256": "0a2006417589f3b28cd5149ee1cbad417aa0a15f2104cb95d48c77bf5f45c6d2"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-products-prepare.sav",
+        "sha256": "71f70549638af237d2ab0c31549c12f976d58c5e0a2a1377e684fe58861c4e5e"
+      }
+    },
+    {
+      "menu_number": 43,
+      "name": "space-steel-outage",
+      "description": "Steelworks retains paid partial work while its panel is disabled; restore power",
+      "snapshot": {
+        "path": "src/tests/fixtures/demos/space/space-steel-outage-440.sav",
+        "sha256": "0c4ea52882b59e66ed78848d95a2e5d59fd91ae8024aed9285d927e81276b8a5"
+      },
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222519-915d03c19a/saves/processor-steel-outage-438.sav",
+        "sha256": "26e2221b823a9037681fa31df98b74afa1d3be989f986a98ec75cde8176b17e1"
+      },
+      "producers": [
+        {
+          "path": "logs/orbital-processor-verification.json",
+          "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747"
+        }
+      ],
+      "save_version": 440,
+      "preparation": {
+        "path": "mlm/reviews/space-demo/prepare-relwithdebinfo/20261018-085045-e52cc43a5c/saves/space-steel-outage-prepare.sav",
+        "sha256": "0c4ea52882b59e66ed78848d95a2e5d59fd91ae8024aed9285d927e81276b8a5"
+      }
+    }
+  ]
+}

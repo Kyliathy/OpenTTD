@@ -1,4 +1,4 @@
-<#
+﻿<#
 Start this branch's game in a new game or in one of the saves we have, picked by number.
 Written for the player guide docs/zz-reach2/upgrades/2026-10/r2mlvs-how-to.md (1. Start the game).
 @file play.ps1 Player launcher and named demo navigation.
@@ -60,27 +60,27 @@ $demoSaves = @(
     @{ Name = 'space'; SaveName = 'space-mining-approach-1990-405';
         Snapshot = 'src\tests\fixtures\demos\space\space-mining-approach-1990-405.sav';
         Text = 'Space mining: three purchased company probes pursue finite moving asteroids; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-mining'; SaveName = 'space-mining-working-1990-405';
         Snapshot = 'src\tests\fixtures\demos\space\space-mining-working-1990-405.sav';
         Text = 'Space mining: extraction underway; watch reserves fall and real cargo holds fill';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-holds'; SaveName = 'space-mining-holds-1990-405';
         Snapshot = 'src\tests\fixtures\demos\space\space-mining-holds-1990-405.sav';
         Text = 'Space mining: three full20-tonne holds at orbital staging; Surface descent pending';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-hub'; SaveName = 'space-launch-hub-1990-408';
         Snapshot = 'src\tests\fixtures\demos\space\space-launch-hub-1990-408.sav';
         Text = 'Surface launch center: joined rail, linked train/lorry stations and collection overlay; no cargo transfer yet';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-survey'; SaveName = 'space-survey-approach-1990-404';
         Snapshot = 'src\tests\fixtures\demos\space\space-survey-approach-1990-404.sav';
         Text = 'Space preview: three probes pursue drifting asteroids; opens on Outer Space, paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-attached'; SaveName = 'space-survey-attached-1990-404';
         Snapshot = 'src\tests\fixtures\demos\space\space-survey-attached-1990-404.sav';
         Text = 'Space preview: attachment and survey already underway; finite reserves untouched';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'underground-mines'; SaveName = 'mine-haulage-403';
         Snapshot = 'src\tests\fixtures\demos\underground\mine-haulage-403.sav';
         Text = 'Start here: finite Coal mine, mineral train and Surface delivery, paused';
@@ -124,55 +124,111 @@ $demoSaves += @(
     @{ Name = 'space-workshop'; SaveName = 'space-workshop-415';
         Snapshot = 'src\tests\fixtures\demos\space\space-workshop-415.sav';
         Text = 'Paid hull assembly underway; inspect recipes and pause/resume the workshop; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-launch'; SaveName = 'space-launch-414';
         Snapshot = 'src\tests\fixtures\demos\space\space-launch-414.sav';
         Text = 'Reusable rocket preparing a paid launch; follow deployment, return and turnaround; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-descent'; SaveName = 'space-descent-414';
         Snapshot = 'src\tests\fixtures\demos\space\space-descent-414.sav';
         Text = 'Actual mined cargo descending in a paid pod to the Surface launch center; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-survey-live'; SaveName = 'space-survey-live-414';
         Snapshot = 'src\tests\fixtures\demos\space\space-survey-live-414.sav';
         Text = 'Owned survey probe at37/148 work; complete company-private resource knowledge; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-resupply'; SaveName = 'space-resupply-414';
         Snapshot = 'src\tests\fixtures\demos\space\space-resupply-414.sav';
         Text = 'Cargo-only rocket flight supplying the same orbital probe with paid parts and pods; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-core-build'; SaveName = 'space-core-build-415';
         Snapshot = 'src\tests\fixtures\demos\space\space-core-build-415.sav';
         Text = 'Two real builders and delivered Core materials; construction at37/740 work; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-core'; SaveName = 'space-core-417';
         Snapshot = 'src\tests\fixtures\demos\space\space-core-417.sav';
         Text = 'Operational paid Core, original panel and inventory; a completed service receipt; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-core-service'; SaveName = 'space-core-service-417';
         Snapshot = 'src\tests\fixtures\demos\space\space-core-service-417.sav';
         Text = 'Actual Core service in progress; pause, cancel or disable its real panel; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-module-reserved'; SaveName = 'space-module-reserved-418';
         Snapshot = 'src\tests\fixtures\demos\space\space-module-reserved-418.sav';
         Text = 'Storage holds exclusive Steel8/Goods8; competing blueprint remains empty; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-module-work'; SaveName = 'space-module-work-418';
         Snapshot = 'src\tests\fixtures\demos\space\space-module-work-418.sav';
         Text = 'Fractional Storage work and paused competing service; resume either physical job; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-module-power'; SaveName = 'space-module-power-418';
         Snapshot = 'src\tests\fixtures\demos\space\space-module-power-418.sav';
         Text = 'Same partial module with Core panel disabled; work waits without losing material; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-module-frame'; SaveName = 'space-module-frame-418';
         Snapshot = 'src\tests\fixtures\demos\space\space-module-frame-418.sav';
         Text = 'Steel/Goods consumed once; completed Storage frame remains inert pending activation; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
     @{ Name = 'space-module-cancelled'; SaveName = 'space-module-cancelled-418';
         Snapshot = 'src\tests\fixtures\demos\space\space-module-cancelled-418.sav';
         Text = 'Cancelled inputs returned physically; fresh replacement blueprint paid separately; paused';
-        Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+)
+
+# Current orbital tours append entries 31-43 without renumbering earlier demos.
+$demoSaves += @(
+    @{ Name = 'space-factory'; SaveName = 'space-factory-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-factory-440.sav';
+        Text = 'Paid construction probe assembly at 74/148 ticks; finish the same native hull; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-heavy'; SaveName = 'space-heavy-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-heavy-440.sav';
+        Text = 'Paid heavy mining robot pursuing finite ore; watch its larger hold fill; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-hauler'; SaveName = 'space-hauler-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-hauler-440.sav';
+        Text = 'Paid orbital hauler travelling with 2 actual Steel units; follow its transfer; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-steel'; SaveName = 'space-steel-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-steel-440.sav';
+        Text = 'Steelworks partway through a powered batch from actual mined Nickel Ore; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-goods'; SaveName = 'space-goods-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-goods-440.sav';
+        Text = 'Goodsworks consuming transported Steel and Rare Earth in a paid batch; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-refinery'; SaveName = 'space-refinery-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-refinery-440.sav';
+        Text = 'Refinery partway through Nickel Ore conversion to Refined Metal; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-ice'; SaveName = 'space-ice-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-ice-440.sav';
+        Text = 'Refinery using the alternative Water Ice recipe; inspect real input/output history; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-power'; SaveName = 'space-power-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-power-440.sav';
+        Text = 'Paid Power module construction at 222/444 ticks; complete then activate; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-fuel-store'; SaveName = 'space-fuel-store-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-fuel-store-440.sav';
+        Text = 'Finished Fuel store frame with final art; activation remains unsupported; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-heavy-service'; SaveName = 'space-heavy-service-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-heavy-service-440.sav';
+        Text = 'Paid heavy service in a two-berth Dock; pause, resume or interrupt its power; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-missions'; SaveName = 'space-missions-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-missions-440.sav';
+        Text = 'Real Visit then Mine queue; inspect saved typed actions and survey knowledge; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-products'; SaveName = 'space-products-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-products-440.sav';
+        Text = 'Orbital Steel and Goods descending to Earth; inspect Surface receipt and collection links; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
+    @{ Name = 'space-steel-outage'; SaveName = 'space-steel-outage-440';
+        Snapshot = 'src\tests\fixtures\demos\space\space-steel-outage-440.sav';
+        Text = 'Steelworks retains paid partial work while its panel is disabled; restore power; paused';
+        Guide = 'docs\zz-reach2\upgrades\2026-10\d2sa-space-adventures.md' }
 )
 
 #The saves we have, with what each holds. They predate the gameplay profiles, so they load as Classic games.
@@ -565,11 +621,13 @@ $commandLine = (@($arguments) | ForEach-Object { ConvertTo-NativeArgument $_ }) 
 if ($choice.Guide -ne '') {
 	Write-Host "Demo guide: $($choice.Guide)" -ForegroundColor Cyan
 	if ($choice.Name -in 'space', 'space-mining', 'space-holds') {
-		Write-Host 'Opens paused on Outer Space. Click a body or native mining probe to inspect its mission and hold; unpause to continue. Full holds stay in orbit; Surface delivery is pending. Save experiments under a new name.'
+		Write-Host 'Opens paused on Outer Space. Click a body or native mining probe to inspect its mission and hold; unpause to continue. These older worlds have no prepared return pods; use space-descent or space-products for Surface delivery. Save experiments under a new name.'
 	} elseif ($choice.Name -in 'space-survey', 'space-attached') {
 		Write-Host 'Opens paused on Outer Space. Unpause to watch the older ownerless survey preview; click a body or probe for live status. These probes do not extract cargo. Save experiments under a new name.'
 	} elseif ($choice.Name -eq 'space-hub') {
-		Write-Host 'Opens paused on Outer Space. Select Surface and find the launch center at (16,4). Open nearby freight station windows to inspect Launch hub links and Collection area. Cargo handling is pending. Save experiments under a new name.'
+		Write-Host 'Opens paused on Outer Space. Select Surface and find the launch center at (16,4). Open nearby freight station windows to inspect Launch hub links and Collection area. Use space-descent or space-products for actual cargo handling. Save experiments under a new name.'
+	} elseif ($choice.Name -like 'space-*') {
+		Write-Host 'Starts paused. Alt+4 shows Outer Space; Alt+1 shows Surface. Open Fund new industry on Outer Space for modules, or the launch center Workshop on Surface. Save experiments under a new name.'
 	} else {
 		Write-Host 'Starts paused. Follow the guide for this checkpoint and switch to its Underground or Deep layer. Save your experiments under a new name.'
 	}

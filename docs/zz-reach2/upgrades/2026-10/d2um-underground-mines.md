@@ -97,6 +97,19 @@ The default executable is the rebuilt **RelWithDebInfo** game. `-Config Debug` s
 | 28 | `space-module-power` | Same partial work with panel disabled. Unpause to see it wait; toggle the Core panel to resume. |
 | 29 | `space-module-frame` | Finished Storage frame: inputs consumed once; functional activation still pending. Inspect the inert result. |
 | 30 | `space-module-cancelled` | Cancelled materials physically returned; replacement blueprint separately paid. Compare old and fresh job progress. |
+| **31** | **`space-factory`** | Operational paid Assembly, actual construction probe at 74/148 work ticks. Unpause to finish the same new hull. | Space |
+| 32 | `space-heavy` | Actual paid heavy mining robot approaching finite ore. Follow its work, cargo and return. | Space |
+| 33 | `space-hauler` | Paid orbital hauler already travelling with 2 Steel units. Watch transfer to its destination. | Space |
+| 34 | `space-steel` | Steelworks midway through a powered Nickel Ore batch. Inspect input, output and electricity totals. | Space |
+| 35 | `space-goods` | Goodsworks midway through a batch from Steel and Rare Earth. | Space |
+| 36 | `space-refinery` | Refinery working on Nickel Ore -> Refined Metal. | Space |
+| 37 | `space-ice` | Refinery using its alternative Water Ice recipe. Compare the selected recipe and output history. | Space |
+| 38 | `space-power` | Power module at 222/444 construction ticks. Finish its frame, then explicitly activate it. | Space |
+| 39 | `space-fuel-store` | Completed Fuel store frame. Inspect final artwork and the explicit unavailable activation. | Space |
+| 40 | `space-heavy-service` | Heavy robot service underway at a two-berth powered Dock. | Space |
+| 41 | `space-missions` | Saved Visit/Mine queue in progress, using actual company probes. | Space |
+| 42 | `space-products` | Manufactured Steel/Goods already released toward the Surface. Follow descent and inspect 2 Steel/4 Goods received. | Space |
+| 43 | `space-steel-outage` | Partially paid Steelworks batch held by a disabled panel. Restore its actual source to continue. | Space |
 
 For example, `.\play.ps1 space-module-power` is the stable named equivalent
 of `.\play.ps1 28`. The eight refreshed underground snapshots retain format403
