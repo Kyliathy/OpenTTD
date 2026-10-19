@@ -9,6 +9,7 @@
  * with actual pool-owned parts. These are fixture constructions, not a normal-game first cut or disposal claim;
  * the portal entry without wagons is a portal-only quote (CommissionLayerPortalTBM reports ControllerUnavailable).
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2B
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BE: capacity refusal uses measured current geology, not a stale fixed Rock yield.
  */
 
 #include "../stdafx.h"
@@ -50,9 +51,11 @@ TEST_CASE("Whole-consist preparation binds the actual consist without changing t
 	CHECK(plan.job.pass_terms->rock_capacity_t == 256);
 	CHECK(plan.job.pass_terms->exchange_after == std::vector<uint16_t>{1});
 	CHECK(plan.prospective_job == ExcavationJobID{GetGeologyWorldState().next_job_id});
-	// The first cut needs more Rock than one hopper holds, but fits the two requested hoppers of each kind.
+	// Actual current geology owns demand. Two requested native hoppers cover
+	// this fixture's first cut; the separate refusal case calibrates a smaller
+	// fixture hopper to that measured demand without changing gameplay tuning.
 	const auto quote = QuoteExcavationCells(plan.job.route[0].swept_tiles, 0);
-	CHECK(quote.rock_t > 128);
+	CHECK(quote.rock_t > 0);
 	CHECK(quote.earth_t <= plan.earth_capacity_t);
 	CHECK(quote.rock_t <= plan.rock_capacity_t);
 	CHECK(PrepareTBMAcquisition(request, {2, 2}) == plan);
@@ -174,7 +177,14 @@ TEST_CASE("Acquisition refuses each preflight boundary and stale plans without a
 		CHECK(refuse({0, 2}).error == TBMAcquisitionError::InvalidConsist);
 		CHECK(refuse({2, 0}).error == TBMAcquisitionError::InvalidConsist);
 	}
-	SECTION("one Rock hopper cannot hold the pocket's rock") {
+	SECTION("a Rock hopper below the current first-cut demand refuses") {
+		const auto demand = QuoteExcavationCells(request.proposal.route[0].swept_tiles, 0);
+		REQUIRE(demand.error == ExcavationError::None); REQUIRE(demand.rock_t > 1);
+		// Legacy fixture Soft rock currently yields72t here, below the native
+		// hopper's128t. A deliberately smaller fixture definition exercises the
+		// exact insufficient-capacity boundary; RAII restores the real catalogue.
+		auto &hopper = Engine::Get(GetTBMEngine(3))->VehInfo<RailVehicleInfo>();
+		AutoRestoreBackup capacity(hopper.capacity, static_cast<decltype(hopper.capacity)>(demand.rock_t - 1));
 		const auto plan = refuse({2, 1});
 		CHECK(plan.error == TBMAcquisitionError::Geology);
 		CHECK(plan.geology_error == ExcavationError::InsufficientCapacity);

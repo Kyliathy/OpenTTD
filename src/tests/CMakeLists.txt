@@ -351,6 +351,45 @@ add_test_files(
     surface_supply_order_wire.cpp
     # Complete native file/preview boundaries over retained worlds: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_order_native.cpp
+    # Paid conventional carrier/collector/riser receipts: r2mlvs6 Group13CD.
+    surface_supply_delivery.cpp
+    # Real new-game company/factory/launch entry: r2mlvs11 Group15BB.
+    surface_entry_native.cpp
+    # Actual native borrowing, no fixture balance: r2mlvs11 Group15BC.
+    surface_entry_credit.cpp
+    # Original paid factory construction: r2mlvs11 Group15BC.
+    surface_entry_factories.cpp
+    # Genuine Surface freight infrastructure: r2mlvs11 Group15BD.
+    surface_entry_roads.cpp
+    # Actual conventional empty purchases/orders: r2mlvs11 Group15BD.
+    surface_entry_fleet.cpp
+    # Exact native game-tick replay of actual products: r2mlvs11 Group15BD.
+    surface_entry_production.cpp
+    # Pure genuine Salt/portal/spoil characterization: r2mlvs11 Group15BE.
+    surface_entry_salt.cpp
+    # Actual joint Surface spoil/rail/portal access: r2mlvs11 Group15BE.
+    surface_entry_access.cpp
+    # Genuine whole Salt mine site and retained cutter: r2mlvs11 Group15BF.
+    surface_entry_mine.cpp
+    # Genuine Salt mine capital and matching bank debt: r2mlvs11 Group15BG.
+    surface_entry_salt_mine.cpp
+    surface_entry_chemical.cpp
+    surface_entry_fuel.cpp
+    surface_entry_income.cpp
+    # Genuine second Chemical works and physical Propellant: r2mlvs11 Group15BID.
+    surface_entry_propellant.cpp
+    # Actual paid launch-site/material/capital query: r2mlvs11 Group15BIE.
+    surface_entry_launch.cpp
+    # Original continuing freight replacement: r2mlvs11 Group15BIEE.
+    surface_entry_renewal.cpp
+    surface_entry_goods.cpp
+    surface_entry_resupply.cpp
+    surface_entry_fuel_refill.cpp
+    surface_entry_gateway.cpp
+    surface_entry_bus_renewal.cpp
+    surface_entry_road_renewal.cpp
+    # Actual regional catchments/paid roads/passenger profits: r2mlvs11 Group15BIEQA.
+    surface_entry_regional.cpp
     multilayer_utility.cpp
     # Canonical tube registry boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
     transport_tube_registry.cpp

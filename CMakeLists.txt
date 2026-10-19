@@ -259,6 +259,66 @@ add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     src/tests/surface_supply_order_owner.cpp
     src/tests/surface_supply_order_wire.cpp
     src/tests/surface_supply_order_native.cpp
+    # Actual conventional three-plane bought-material transport: r2mlvs6 Group13CD.
+    src/tests/surface_supply_delivery.cpp
+    # Authentic ordinary Surface starting-world contracts: r2mlvs11 Group15BB.
+    src/tests/surface_entry_native.cpp
+    # Native bank cash/debt for genuine factory funding: r2mlvs11 Group15BC.
+    src/tests/surface_entry_credit.cpp
+    # Paid original factories and read-only readiness: r2mlvs11 Group15BC.
+    src/tests/surface_entry_factories.cpp
+    # Genuine Surface freight infrastructure: r2mlvs11 Group15BD.
+    src/tests/surface_entry_roads.cpp
+    # Actual conventional empty purchases/orders: r2mlvs11 Group15BD.
+    src/tests/surface_entry_fleet.cpp
+    # Exact native game-tick replay of actual products: r2mlvs11 Group15BD.
+    src/tests/surface_entry_production.cpp
+    # Pure genuine Salt/portal/spoil characterization: r2mlvs11 Group15BE.
+    src/tests/surface_entry_salt.cpp
+    # Actual joint Surface spoil/rail/portal access: r2mlvs11 Group15BE.
+    src/tests/surface_entry_access.cpp
+    # Genuine whole Salt mine site and retained cutter: r2mlvs11 Group15BF.
+    src/tests/surface_entry_mine.cpp
+    # Genuine Salt mine capital and matching bank debt: r2mlvs11 Group15BG.
+    src/tests/surface_entry_salt_mine.cpp
+    # Pure genuine chemical production/transport/capital terms: r2mlvs11 Group15BH.
+    src/tests/surface_entry_chemical.cpp
+    # Genuine Propellant capital and original freight income: r2mlvs11 Group15BI.
+    src/tests/surface_entry_fuel.cpp
+    src/tests/surface_entry_income.cpp
+    # Genuine second Chemical works and physical Propellant: r2mlvs11 Group15BID.
+    src/tests/surface_entry_propellant.cpp
+    # Actual paid launch-site/material/capital query: r2mlvs11 Group15BIE.
+    src/tests/surface_entry_launch.cpp
+    # Original continuing freight replacement: r2mlvs11 Group15BIEE.
+    src/tests/surface_entry_renewal.cpp
+    src/tests/surface_entry_goods.cpp
+    src/tests/surface_entry_resupply.cpp
+    src/tests/surface_entry_fuel_refill.cpp
+    src/tests/surface_entry_gateway.cpp
+    src/tests/surface_entry_bus_renewal.cpp
+    src/tests/surface_entry_road_renewal.cpp
+    # Actual regional catchments/paid roads/passenger profits: r2mlvs11 Group15BIEQA.
+    src/tests/surface_entry_regional.cpp
+    # Actual Salt access producer boundaries: r2mlvs11 Group15BE.
+    src/tests/tbm_acquisition.cpp
+    src/tests/portal_bootstrap.cpp
+    src/tests/tbm_commission.cpp
+    src/tests/spoil_receiver_definition.cpp
+    src/tests/spoil_receiver_intake.cpp
+    src/tests/spoil_receiver_delivery.cpp
+    src/tests/spoil_receiver_accounting.cpp
+    src/tests/spoil_receiver_leg.cpp
+    # Actual mine admission and paid cutter reuse gates: r2mlvs11 Group15BF.
+    src/tests/layer_industry_admission.cpp
+    src/tests/layer_mine_definition.cpp
+    src/tests/layer_mine_production.cpp
+    src/tests/layer_mine_dispatch.cpp
+    src/tests/tbm_depot_workflow.cpp
+    # The reuse gate drives the shared original workflow owner, not a copied rig.
+    src/tests/underground_workflow.cpp
+    # Variable native Underground station admission: r2mlvs11 Group15BF.3.
+    src/tests/conventional_station_art.cpp
 )
 # Link the same engine objects for the current Space boundaries without recompiling unrelated test scenarios after a shared sprite-range change. Explicit targeting keeps normal build/test entry points intact.
 add_executable(openttd_space_art_test EXCLUDE_FROM_ALL

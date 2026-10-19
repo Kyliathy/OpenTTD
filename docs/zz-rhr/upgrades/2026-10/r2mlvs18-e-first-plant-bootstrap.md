@@ -30,7 +30,7 @@ The [ground producer handoff](portal-tbm/r2mlvs3mp-y-ground-producer-handoff.md)
 
 `CHEM` Surface chemical works supplies the battery chain from Salt/Oil. The actual first-milestone manufacturing fixture supplies24 Steel,16 Refined Metals,8 Electronics and4 Batteries, with48 Copper Ore/12 Coal producing24 Refined Metals before8 goes into Electronics;24 Iron Ore;4 Rare Earth concentrate;4 Lithium;2 Cobalt;2 Salt/2 Oil. Extending to the second riser requires the extra four-material bill through the same owners. A first build may instead buy the bounded seed; both branches preserve native stock and carrier custody.
 
-Model5's catalogue introduction is1950; its Deep use unlocks with actual1980 layer/portal access. The old shorthand that the wagon itself unlocks in1980 is stale. Its64-unit selected-cargo hold supports all four bill labels. Different labels occupy separate actual loads/refits; the locomotive or an empty output account provides no extra cargo capacity. Spoil remains in its separate64-t Earth and128-t Rock wagons.
+Model5's catalogue introduction is1950; its Deep use unlocks with actual1980 layer/portal access. The old shorthand that the wagon itself unlocks in1980 is stale. Its actual native60-unit selected-cargo hold (`src/underground_vehicle.cpp`) supports all four bill labels; the earlier64-unit planning shorthand was incorrect. Different labels occupy separate actual wagons/loads/refits; the locomotive or an empty output account provides no extra cargo capacity. Spoil remains in its separate64-t Earth and128-t Rock wagons.
 
 ## Commissioning work and money
 

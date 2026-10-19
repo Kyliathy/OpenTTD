@@ -11,6 +11,7 @@
  * remainder stays aboard or, on an unload order, goes onto the platform for onward transfer.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 8-9
  * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md, Bounded intake
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BE: measured finite loads and retained incomplete receiver batches, never a genuine-world predecessor.
  */
 
 #include "../stdafx.h"
@@ -38,8 +39,14 @@ TEST_CASE("Unloading at the origin delivers only the receivers' room and keeps t
 	SpoilReceiverRig::RunIntervals(*world.earth, 1);
 	SpoilReceiverRig::RunIntervals(*world.rock, 1);
 	world.Unload(OrderUnloadType::UnloadIfPossible);
-	CHECK(SpoilReceiverRig::Cash() == cash - 2 * (32 * 2 + 64 * 3));
-	CHECK(world.Aboard() == world.cut.earth_t + world.cut.rock_t - 192);
+	const auto &earth = GetSpoilReceiverRecipe(SpoilReceiverKind::Earth), &rock = GetSpoilReceiverRecipe(SpoilReceiverKind::Rock);
+	// Current cut yields need not fill two complete intake intervals. Charge
+	// exactly the actual finite load admitted, independently for both materials;
+	// unused receiver room is neither another delivery nor unsigned cargo debt.
+	const uint64_t earth_received = std::min<uint64_t>(world.cut.earth_t, 2 * earth.interval_intake_t);
+	const uint64_t rock_received = std::min<uint64_t>(world.cut.rock_t, 2 * rock.interval_intake_t);
+	CHECK(SpoilReceiverRig::Cash() == cash - earth.fee_per_t * static_cast<int64_t>(earth_received) - rock.fee_per_t * static_cast<int64_t>(rock_received));
+	CHECK(world.Aboard() == world.cut.earth_t + world.cut.rock_t - earth_received - rock_received);
 }
 
 /** On an unload order the refused remainder goes onto the platform, keeping its packets, and the set is empty. */
@@ -72,23 +79,29 @@ TEST_CASE("A released loaded set does not unload at the origin", "[spoil-receive
 	CHECK(SpoilReceiverRig::Cash() == cash);
 }
 
-/** The whole cycle with real disposal (Plan 5 6.3): visits repeat until the receivers have taken every tonne. */
-TEST_CASE("A hauler completes its cycle once real receivers have disposed of its whole load", "[spoil-receiver-delivery]")
+/** Real intake settles wagon custody (Plan5 6.3); incomplete processing batches remain owned by the receivers. */
+TEST_CASE("A hauler completes its cycle once real receivers have accepted its whole load", "[spoil-receiver-delivery]")
 {
 	LoadedAtOrigin world;
 	const uint64_t total = world.Aboard();
-	uint64_t disposed = 0;
-	// Each visit delivers one interval of intake per receiver; the receivers process it before the next visit.
+	uint64_t accepted = 0;
+	// Repeat actual bounded intake and processing until wagons are empty. The
+	// receiver keeps any incomplete final batch; the hauler's custody settles
+	// once every tonne was admitted, without waiting for unrelated future spoil.
 	for (int visit = 0; visit < 6 && world.Aboard() != 0; ++visit) {
 		world.Unload(OrderUnloadType::UnloadIfPossible);
-		disposed = total - world.Aboard();
+		accepted = total - world.Aboard();
 		SpoilReceiverRig::RunIntervals(*world.earth, 1);
 		SpoilReceiverRig::RunIntervals(*world.rock, 1);
 	}
 	CHECK(world.Aboard() == 0);
-	CHECK(disposed == total);
-	CHECK(GetSpoilReceiver(world.earth->index)->disposed_t == world.cut.earth_t);
-	CHECK(GetSpoilReceiver(world.rock->index)->crushed_t == world.cut.rock_t);
+	CHECK(accepted == total);
+	const auto earth_disposed = GetSpoilReceiver(world.earth->index)->disposed_t;
+	const auto rock_crushed = GetSpoilReceiver(world.rock->index)->crushed_t;
+	CHECK(earth_disposed + SpoilReceiverRig::Stock(*world.earth) == world.cut.earth_t);
+	CHECK(rock_crushed + SpoilReceiverRig::Stock(*world.rock) == world.cut.rock_t);
+	CHECK(SpoilReceiverRig::Stock(*world.earth) < GetSpoilReceiverRecipe(SpoilReceiverKind::Earth).batch_t);
+	CHECK(SpoilReceiverRig::Stock(*world.rock) < GetSpoilReceiverRecipe(SpoilReceiverKind::Rock).batch_t);
 	const auto emptied = world.rig.StepHauler();
 	CHECK(emptied.phase == TBMHaulerPhase::ReturnEmpties);
 	CHECK(GetTBMWagonSet(emptied.set)->state == TBMWagonSetState::ReturningEmpty);
