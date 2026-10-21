@@ -1,0 +1,240 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62E; immutable read-only source-state/part contract for original paid model14. This does not implement a runtime selector or qualify missing authored engine parts.",
+  "asset_id": "vehicle.model-14",
+  "native_model": 14,
+  "status": "qualified_native_phase_contract_engine_originals_pending",
+  "public_geometry": {
+    "consumer": 9,
+    "kind": "vehicle",
+    "directions": [
+      "N",
+      "NE",
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW"
+    ],
+    "frames": 2,
+    "states": [
+      "ready",
+      "preparing",
+      "ascent",
+      "orbit",
+      "recovery",
+      "blocked",
+      "service"
+    ],
+    "native_size": [
+      64,
+      48
+    ],
+    "anchor": [
+      -32,
+      -32
+    ],
+    "bounds": [
+      0,
+      0,
+      64,
+      48
+    ],
+    "parts": [
+      "body"
+    ],
+    "geometry": "per_view",
+    "tile_variants": 1,
+    "palette": "dos_8bpp",
+    "transparent_index": 0
+  },
+  "required_logical_poses": 112,
+  "ready_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-qualification-v1.json",
+    "sha256": "2a3e8a9b21ef4ed5547437caff1c9b17ec92ec0eb8ba72b490a8d1c9c99e9127"
+  },
+  "native_proofs": {
+    "Debug": {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-state-v1/native-Debug.json",
+      "sha256": "41d8fff8dd15dc83d42ac0cbd062f131ec906af116df003280fa7ae90dafe86b"
+    },
+    "RelWithDebInfo": {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-state-v1/native-RelWithDebInfo.json",
+      "sha256": "d26dba9eef6686304bec7f48503a9ecc509e19a7600210758cc049296af53742"
+    }
+  },
+  "native_inputs": [
+    {
+      "path": "src/launch_operations.h",
+      "sha256": "de25f8ba3a5d0be9ffa726ea1d448dcba343b0940cafef38a3efca9f904dbaed"
+    },
+    {
+      "path": "src/launch_operations.cpp",
+      "sha256": "acbbc6cd66d095c414613bb4363985fd6b8ee3bfa07ab5b2b09bdfbf96fbc28f"
+    },
+    {
+      "path": "src/space_production.h",
+      "sha256": "7026f1ebfbfaf955a66364986834c9f4c29033d1a02b2fca8ee36256d4cc785f"
+    },
+    {
+      "path": "src/space_production.cpp",
+      "sha256": "55c9a004f3f2f9a253fe677fd419fdca78f62db98499c3b7ac560367a7739ac7"
+    },
+    {
+      "path": "src/space_manifest.h",
+      "sha256": "808dfa9b1fff98e4752130ddfecfd858c1dc2883f45bda711bab3c8c554cb57b"
+    },
+    {
+      "path": "src/space_manifest.cpp",
+      "sha256": "0a51de69788de4b07f4d5160822615801cdb3757925cd6714993c2f36a2c3b68"
+    },
+    {
+      "path": "src/space_pod.h",
+      "sha256": "fa4062920d146ab92b3842b2c28e57ff887387e767c93afbccd1d71e4af80a63"
+    },
+    {
+      "path": "src/space_pod.cpp",
+      "sha256": "ce597f468829f162bc0a824a6b89b60d0bdc48402bb90b8dae766812fd70fd45"
+    },
+    {
+      "path": "src/space_transition.h",
+      "sha256": "7551c3eedd4abbcd30832a371667bac72e32be921da5f6f1e2cebb99736f0856"
+    },
+    {
+      "path": "src/space_transition.cpp",
+      "sha256": "3326f5c41b54803e126de1675b26720b310ab60ca4dbc9264298a765c4f78679"
+    },
+    {
+      "path": "src/launch_center.h",
+      "sha256": "81772b23e6e3252cc9b697280d704a49826e9ba06c1ef330a072db9c6a046d75"
+    },
+    {
+      "path": "src/launch_center.cpp",
+      "sha256": "633fa519a9d539f81e0afeab1a4a9a9775017584439391b474b245cc6ff6b0ad"
+    },
+    {
+      "path": "src/station_cmd.cpp",
+      "sha256": "e591015da517188d1e6f4f122b23050daeaa17046f8b721203d102ac3c6c05bd"
+    },
+    {
+      "path": "src/space_vehicle.cpp",
+      "sha256": "eb6f1556d2f5cf9865b669b160a7c926543090e857421e43e4bd14577496eeb2"
+    },
+    {
+      "path": "src/space_sprite.cpp",
+      "sha256": "0a93d2241d1b0ecc86d31ada9eb0df0be838ce2ad11f818c52ecc89054f3b6a5"
+    },
+    {
+      "path": "src/space_replacement.h",
+      "sha256": "adaeb6363d10711a34c7950eba9bc19f7ce050acd5d3a33ee79ad09d6affe080"
+    },
+    {
+      "path": "src/space_replacement.cpp",
+      "sha256": "a67280aec05f8601f612140ee0be059d52aa2dd1d46692ce1593c4c1c1f03fb3"
+    },
+    {
+      "path": "src/tests/space_logistics.cpp",
+      "sha256": "0918691d6c7ecf2ca13293d575bc8ca10bb75af9ad043b29df17bdb0432570ea"
+    },
+    {
+      "path": "src/tests/launch_flight.cpp",
+      "sha256": "45d8946ba4addcd7223b8b94233b4845d8136389f35c909b90a9fe6fac95a1af"
+    },
+    {
+      "path": "src/tests/space_descent.cpp",
+      "sha256": "8580d86014c261b0f2ee79c81bc2fbbe7f8904f1e9c0018e7916a6a877d09a28"
+    },
+    {
+      "path": "src/multilayer_space_content.h",
+      "sha256": "d05105e48b8ca162b5965a6d7949b92a10391f779acdcf81bb18e67d195eab70"
+    },
+    {
+      "path": "src/multilayer_space_content.cpp",
+      "sha256": "e97819be1065c3426f848e1f0e13ca3889484563563f68cf8093d248e0fe39c0"
+    }
+  ],
+  "phases": [
+    "GroundLoading",
+    "Preparing",
+    "Ascent",
+    "OrbitalDelivery",
+    "ReturnRecovery",
+    "Turnaround",
+    "Holding"
+  ],
+  "blocks": [
+    "None",
+    "TargetLost",
+    "HomeLost",
+    "PadBusy",
+    "ReceiverBusy",
+    "ReceiverFull",
+    "Approach"
+  ],
+  "native_budget": {
+    "flight_ticks": 222,
+    "prepare_ticks": 148,
+    "turnaround_ticks": 74,
+    "outbound_fuel": 10,
+    "recovery_fuel": 5
+  },
+  "presentation_only": "Source choices read already native-validated phases/receipts. No cargo, inventory, entity, native timer, payment, work, movement, layer or Hidden owner is added or changed.",
+  "precedence": [
+    "GroundLoading/no transition: ready outer hull",
+    "Funded Ascent with positive native remaining_ticks: ascent even if target/home metadata is lost; native controller still progresses",
+    "Funded ReturnRecovery with positive native remaining_ticks: recovery even if target/home metadata is lost; native controller still moves",
+    "Holding or actual non-Approach wait block: blocked, no engine effect",
+    "Preparing: preparing; OrbitalDelivery including actual Approach: orbit; Turnaround: service; all unchanged closed outer hull"
+  ],
+  "static_alias_states": [
+    "ready",
+    "preparing",
+    "orbit",
+    "blocked",
+    "service"
+  ],
+  "static_alias": "Exact immutable ready/{heading}/frame0 body for both logical frames. Loading/internal cargo, paid preparation, coasting/approach, waiting and74tick Turnaround introduce no visible hull movement. No painted cargo or invented probe-service activity.",
+  "active_states": [
+    "ascent",
+    "recovery"
+  ],
+  "frame_rule": {
+    "owner": "SpaceTransition.remaining_ticks after actual once-only leg burn",
+    "formula": "((flight_ticks - remaining_ticks) // 8) % 2",
+    "opportunities_per_frame": 8,
+    "query_ticks": 0,
+    "query_fuel": 0
+  },
+  "effect_part": {
+    "kind": "genuinely_authored_axially_symmetric_engine_plume",
+    "frames": [
+      0,
+      1
+    ],
+    "reuse": "Same funded engine operation for actual Ascent and ReturnRecovery; same rotationally symmetric physical nozzle part across eight separately genuine hull views.",
+    "native_mount": [
+      32,
+      34
+    ],
+    "native_envelope": [
+      27,
+      32,
+      38,
+      46
+    ],
+    "composite_order": "genuine engine part behind exact immutable whole ready hull; original nozzle/feet naturally occlude alpha overlap",
+    "full_native_art_envelope": [
+      2,
+      2,
+      62,
+      46
+    ],
+    "fixed_body": true,
+    "fixed_four_passive_feet": true,
+    "selected_originals": {},
+    "source_complete": false
+  },
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

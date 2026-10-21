@@ -18,6 +18,14 @@ add_test_files(
     space_preview.cpp
     # Final read-only native Space art: r2mlvs10-asteroids-and-mining-probes.md Group14BG.
     space_sprite.cpp
+    # Original rocket source/flight selection: r2mlvs14 Group62J.
+    launch_fleet_sprite.cpp
+    # Original station zones, work admission and foreground scopes: r2mlvs14 Group62JB.
+    launch_facility_sprite.cpp
+    launch_facility_render.cpp
+    launch_fleet_paid_review.cpp
+    launch_craft_window.cpp
+    launch_pod_review.cpp
     # Original craft work/load/service owner isolation: r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
     orbital_sprite_craft.cpp
     orbital_sprite_module.cpp
@@ -410,6 +418,10 @@ add_test_files(
     transport_tube_readiness.cpp
     # Native interchange source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48D.
     transport_tube_interchange_geometry.cpp
+    # Bounded native packet/feeder transfer, not a second inventory: r2mlvs17 Group9.
+    transport_tube_freight_fixture.h
+    transport_tube_interchange.cpp
+    transport_tube_interchange_delivery.cpp
     # Actual cold site admission: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
     geothermal_site.cpp
     geothermal_site_load.cpp

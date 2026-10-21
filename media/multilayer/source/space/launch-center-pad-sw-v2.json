@@ -1,0 +1,125 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.2; geometry correction retains unchanged80px model width/native SW zone.",
+  "key": "launch-center-pad-sw-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED genuine SW launch plate edit target. Keep the same physical half-turn: long axis down-right, one circle LOWER-RIGHT, exactly one low folded arm and one cream motor at UPPER-LEFT. Preserve original hardware/material identity and upper-left screen light.\n\nCorrect only the plate's shallow geometry: CUT its SHORT physical world-axis depth by25percent and HALVE the visible front-rim thickness. Make the hardware near-flush thin metal, with no deep vertical foundation or projecting ochre corner feet. Retain two-cell long direction, original arm/circle ends and all complete physical corners. The new plate must visibly be narrower across its SHORT dimension than the edit target, leaving a clear handling margin inside the same native1x2zone.\n\nSTRICT2:1 dimetric26.565degree camera, horizontal run twice vertical rise on BOTH world axes. Current long edge is too steep; fix its floor slopes to exact2:1 orthographic. No30degree isometric or perspective. At1024guide scale target physical base NORTH(422.4,362.8), EAST(678.4,490.8), SOUTH(601.6,529.2), WEST(345.6,401.2); long edge256right128down, short edge76.8left38.4down, rim2px high. Low folded arm remains over upper-left end without increasing its height. All other physical hardware must remain unchanged.\n\nONE isolated whole source on square1024x1024 genuine transparent canvas, at least80px transparent clearance on EVERY side. No additional arm, motor, marking, actor, cargo, pod, rocket, probe, craft, person, machinery, ground, apron, outside shadow, scenery, text, labels, dots, frame, magenta, road, track, water or extra views. Same gray/charcoal/ochre M1 plate, one circle lower-right and one folded arm/motor upper-left; only make short depth narrower, rim thinner and floor camera exact2:1.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v1.png",
+      "sha256": "47b063285d64ee910c4fb2e40b04603014fe0169a1efb100fd5d837c05eb32f7",
+      "role": "unapproved genuine SW edit target; narrow short depth/thin rim/correct floor slope without changing original machinery/end identity"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-0a6dc290-28b2-4a68-948c-475420d6355b.png",
+  "sha256": "ac1e7c8c26ee8534ed9cf4880c61f842d0af664c4cbb1af8fd2ac8cea5f1f83f",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      465.5,
+      355
+    ],
+    [
+      1061,
+      774
+    ],
+    [
+      773.5,
+      956
+    ],
+    [
+      178,
+      537
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      177,
+      339,
+      1063,
+      958
+    ],
+    "minimum_clearance": 177
+  },
+  "contact_review": {
+    "source_reference": [
+      619.5,
+      655.5
+    ],
+    "definition": "Midpoint of lateral physical thin launch-plate feet; maps to actual SW pad-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      152
+    ],
+    "native_zone_corners": [
+      [
+        112,
+        128
+      ],
+      [
+        176,
+        160
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        80,
+        144
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      619.5,
+      655.5
+    ],
+    "uniform_scale": [
+      40,
+      443
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      177,
+      339,
+      1063,
+      958
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 137,175"
+  }
+}

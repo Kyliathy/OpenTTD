@@ -1,7 +1,7 @@
 """Conserve the genuine first Core's Goods through the same rocket's second flight.
 
 @file surface_gateway_resupply_ledger.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CC.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups15CC/15CIE/15CK/15CL/15CM/15CN/15CP/15CSGB.
 The job retains16Steel exclusively; actual24Goods change native station/rocket/
 constructor owners once. Thirty burned fuel plus twelve remaining conserve42.
 """
@@ -12,38 +12,63 @@ from surface_gateway_core_ledger import orders
 from surface_gateway_material_ledger import observe as material
 
 
-def observe(path, allow_construction=False, allow_components=False, allow_component_delivery=False, allow_component_abandonment=False):
+def observe(path, allow_construction=False, allow_components=False, allow_component_delivery=False, allow_component_abandonment=False, allow_salt_delivery=False, allow_chemical_pickup=False, allow_chemical_delivery=False, allow_propellant_pickup=False, allow_propellant_delivery=False, allow_capital_service=False, allow_goods_income=False, allow_farm_road=False, allow_factory_goods=False, allow_capital_return=False, allow_retired_refill=False, allow_farm_backhaul=False, allow_constructor_home=False, allow_constructor_retirement=False):
     """@param path Actual original Goods resupply checkpoint. @param allow_construction Explicit later real Core delivery/work/activation consumer; the default stays unworked.
     @param allow_components Explicit later factory collection on original bounded carriers; requires completed construction.
     @param allow_component_delivery Explicit delivery of the already acquired fixed36/50; earlier collection remains based on current actual holds.
     @param allow_component_abandonment Explicit actual ordinary-offer loss after its native transport boundary. @return Sole packet/craft/job owners and exact native second-flight receipts.
+    @param allow_salt_delivery Explicit subsequent original finite-Salt chemical delivery; default retains historical factory counters.
+    @param allow_chemical_pickup Explicit actual renewed Source15CHEM pickup without any new PCHM/fuel production.
+    @param allow_chemical_delivery Explicit actual later27CHEMdelivery/PCHMproduction, retaining original first-Core/launch fuel receipts.
+    @param allow_propellant_pickup Explicit actual Source6pickup on original reserve2, adding only current real packet custody to acquired PROP.
+    @param allow_propellant_delivery Explicit subsequent transport of the completed fixed26PROPacquisition; historical first-Core fuel receipts stay unchanged.
+    @param allow_capital_service Explicit later single paid Town0PASSbus; every historical default keeps its exact original roles.
+    @param allow_goods_income Explicit later reuse of only real empty140/cap18reserves3/25; new Source11trade stays outside original fiftyGoods and old defaults remain strict.
+    @param allow_farm_road Explicit later sole named137/cap18Roadbody with only real Industry7Livestock; all original role/material defaults stay strict.
+    @param allow_factory_goods Explicit later actual3/25native Source5Goods picked up at realStation13/paid2572; all historical source defaults and original fiftyGoods remain strict.
+    @param allow_capital_return Explicit later extra9/owner0/model119/cap40 Town1return packets first20; default and original local sources remain strict.
+    @param allow_retired_refill Explicit later native retirement of only empty duplicate vehicle 39 after completed fuel delivery; retained carrier 2 and all historical defaults remain strict.
+    @param allow_farm_backhaul Explicit Group15CSGZVD actual paid Goods reuse of retired39slot; historical defaults remain unchanged.
+    @param allow_constructor_home Explicit Group15CSGZVEC original38/gen2Visit21/gen1only; historical queue defaults remain strict.
+    @param allow_constructor_retirement Explicit Group15CSGZVED actual original38/gen2retirement only; no recovered components or changed historical default.
     """
     assert not (allow_components and allow_component_delivery)
     assert not (allow_components or allow_component_delivery) or allow_construction
     phase = "component-delivery" if allow_component_delivery else "components" if allow_components else "construction" if allow_construction else "resupply"
-    result = material(path, phase=phase, allow_component_abandonment=allow_component_abandonment); queues = orders(path, allow_construction=allow_construction)
+    result = material(path, phase=phase, allow_component_abandonment=allow_component_abandonment, allow_salt_delivery=allow_salt_delivery, allow_chemical_pickup=allow_chemical_pickup, allow_chemical_delivery=allow_chemical_delivery, allow_propellant_pickup=allow_propellant_pickup, allow_propellant_delivery=allow_propellant_delivery, allow_capital_service=allow_capital_service, allow_goods_income=allow_goods_income, allow_farm_road=allow_farm_road, allow_factory_goods=allow_factory_goods, allow_capital_return=allow_capital_return, allow_retired_refill=allow_retired_refill, allow_farm_backhaul=allow_farm_backhaul, allow_constructor_home=allow_constructor_home, allow_constructor_retirement=allow_constructor_retirement); queues = orders(path, allow_construction=allow_construction, allow_constructor_home=allow_constructor_home, allow_constructor_retirement=allow_constructor_retirement)
     core = result["core"]; assert core is not None
     assert core["row"]["inputs"][0]["quantity"] + core["row"]["consumed"][0] == 16
     rocket, = [craft for craft in result["paid_craft"] if craft["model"] == 14]
-    constructor, = [craft for craft in result["paid_craft"] if craft["model"] == 20]
-    assert (rocket["vehicle"], rocket["generation"]) == (54, 1) and (constructor["vehicle"], constructor["generation"]) == (38, 2)
-    assert constructor["placement"] == 0 and constructor["deployed"]
+    constructors = [craft for craft in result["paid_craft"] if craft["model"] == 20]
+    retired = result.get("constructor_retired", False)
+    assert (rocket["vehicle"], rocket["generation"]) == (54, 1)
+    if retired:
+        assert allow_constructor_retirement and not constructors
+    else:
+        constructor, = constructors
+        assert (constructor["vehicle"], constructor["generation"]) == (38, 2)
+        assert constructor["placement"] == 0 and constructor["deployed"]
     holds = {}
-    for craft in (rocket, constructor):
+    # Current holds belong only to live paid bodies. A retired empty builder
+    # remains historical consumption, never a phantom zero-held cargo owner.
+    for craft in result["paid_craft"]:
         freight = [packet for packet in result["cohort"] if tuple(packet["owner"]) == ("vehicle", craft["vehicle"])]
         assert all(packet["label"] == "GOOD" for packet in freight)
         holds[craft["vehicle"]] = sum(packet["count"] for packet in freight)
     assert sum(holds.values()) in (0, 24)
-    assert result["embodied_inputs"] == {"STEL": 16, "GOOD": 24, "PROP": 0}
+    retired_inputs = result.get("retired_embodied_inputs", {"STEL": 0, "GOOD": 0, "PROP": 0})
+    assert {label: result["embodied_inputs"][label]+retired_inputs[label] for label in retired_inputs} == {"STEL": 16, "GOOD": 24, "PROP": 0}
     manifest = result["manifests"][54]; burned = manifest["fuel_burned"]
     acquired = result.get("additional_collected", {"STEL": 0, "GOOD": 0, "PROP": 0})
     abandoned = result.get("cargo_abandoned", {"STEL": 0, "GOOD": 0, "PROP": 0})
-    assert result["totals"] == {"STEL": 20 - core["row"]["consumed"][0] + acquired["STEL"] - abandoned["STEL"], "GOOD": 26 - core["row"]["consumed"][1] + acquired["GOOD"] - abandoned["GOOD"], "PROP": 42 - burned}
+    assert result["totals"] == {"STEL": 20 - core["row"]["consumed"][0] + acquired["STEL"] - abandoned["STEL"], "GOOD": 26 - core["row"]["consumed"][1] + acquired["GOOD"] - abandoned["GOOD"], "PROP": 42 - burned + acquired["PROP"]}
     raw = chunks(path)[1][b"SPFL"][3:]; assert len(raw) == 85 and raw[0] == 1
     values = struct.unpack_from(">IQBBBHQHQBIQiiHBBQQQ", raw, 1)
     vehicle, generation, phase, blocked, layer, source, source_generation, recovery, recovery_generation, kind, target, target_generation, x, y, remaining, remainder, flags, started, completed, canceled = values
     assert (vehicle, generation) == (54, 1) and phase in range(6) and blocked == canceled == 0 and remainder < 74
     assert started in (1, 2) and completed == (started if phase == 0 else 1)
+    if retired:
+        assert phase == 0 and started == completed == 2
     if phase == 0:
         assert (source, source_generation, recovery, recovery_generation) == (65535, 0, 65535, 0)
         assert kind == 0 and target == 0xFFFFFFFF and target_generation == x == y == remaining == flags == 0
@@ -60,7 +85,10 @@ def observe(path, allow_construction=False, allow_components=False, allow_compon
         if not allow_construction:
             assert not queues["queues"][38]["entries"]
     if completed == 2:
-        assert holds[38] + core["row"]["inputs"][1]["quantity"] + core["row"]["consumed"][1] == 24 and holds[54] == 0
+        if retired:
+            assert holds == {54: 0} and core["row"]["inputs"][1]["quantity"] == 0 and core["row"]["consumed"][1] == 24
+        else:
+            assert holds[38] + core["row"]["inputs"][1]["quantity"] + core["row"]["consumed"][1] == 24 and holds[54] == 0
     result["space_orders"] = queues; result["fuel_burned"] = burned
     result["flight"] = dict(vehicle=vehicle, generation=generation, phase=phase, blocked=blocked, layer=layer,
                             source=(source, source_generation), recovery=(recovery, recovery_generation), destination=(kind, target, target_generation),

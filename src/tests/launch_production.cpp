@@ -2,11 +2,13 @@
 /** @file launch_production.cpp Actual packets, rotated zones, receipts and native paid assembly/save.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups2B/8B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md task8C.4; future-version refusal follows current content.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group61B; native art placement contract.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../launch_operations.h"
 #include "../launch_center_cmd.h"
+#include "../landscape.h"
 #include "../space_vehicle.h"
 #include "../asteroid.h"
 #include "../space_vehicle_cmd.h"
@@ -50,6 +52,22 @@ TEST_CASE("Launch zones partition each rotated native footprint and consumption 
 {
 	MockEnvironment::Instance(); ExcavationFixture world;
 	const auto anchor = TileXYL(20, 20, MapLayer::Surface);
+	// Artwork uses the actual viewport basis: world X runs southwest and Y
+	// southeast. Reversing them mirrors the paid work areas on the screen.
+	const auto x_step = RemapCoords(TILE_SIZE, 0, 0), y_step = RemapCoords(0, TILE_SIZE, 0);
+	constexpr int zoom = static_cast<int>(ZOOM_BASE);
+	CHECK(x_step.x == -32 * zoom); CHECK(x_step.y == 16 * zoom);
+	CHECK(y_step.x == 32 * zoom); CHECK(y_step.y == 16 * zoom);
+	fmt::print("LAUNCH_ART_PROJECTION {{\"x_step\":[{},{}],\"y_step\":[{},{}]}}\n",
+		x_step.x / zoom, x_step.y / zoom, y_step.x / zoom, y_step.y / zoom);
+	// Art must preserve the actual pad/workshop/recovery/storage locations,
+	// not merely any twelve-cell partition that happens to fit the footprint.
+	constexpr uint expected[4][4][4] = {
+		{{0, 0, 1, 2}, {1, 0, 2, 2}, {3, 0, 1, 2}, {0, 2, 4, 1}},
+		{{1, 0, 2, 1}, {1, 1, 2, 2}, {1, 3, 2, 1}, {0, 0, 1, 4}},
+		{{3, 1, 1, 2}, {1, 1, 2, 2}, {0, 1, 1, 2}, {0, 0, 4, 1}},
+		{{0, 3, 2, 1}, {0, 1, 2, 2}, {0, 0, 2, 1}, {2, 0, 1, 4}},
+	};
 	// Every supported orientation must expose the same twelve exclusive native facility tiles and actual service approach.
 	for (uint8_t rotation = 0; rotation < 4; ++rotation) {
 		std::set<TileIndex> all;
@@ -58,11 +76,21 @@ TEST_CASE("Launch zones partition each rotated native footprint and consumption 
 		station->owner = _current_company;
 		station->launch_center = std::make_unique<LaunchCenterAnchor>(anchor, 1, rotation);
 		const auto footprint = GetLaunchCenterFootprint(anchor, rotation);
+		REQUIRE(footprint);
+		CHECK(footprint->w == (rotation % 2 == 0 ? 4 : 3));
+		CHECK(footprint->h == (rotation % 2 == 0 ? 3 : 4));
+		fmt::print("LAUNCH_ART_LAYOUT {{\"rotation\":{},\"footprint\":[{},{}],\"zones\":[", rotation, footprint->w, footprint->h);
 		// Native pad, workshop, recovery and storage partition the footprint; overlapping work areas would authorize conflicting facility use.
 		for (const auto zone : {LaunchFacilityZone::Pad, LaunchFacilityZone::Workshop, LaunchFacilityZone::Recovery, LaunchFacilityZone::Storage}) {
 			const auto area = GetLaunchFacilityZone(anchor, rotation, zone); REQUIRE(area);
+			const auto index = static_cast<size_t>(zone);
+			const uint x = TileX(area->tile) - TileX(anchor), y = TilePlaneY(area->tile) - TilePlaneY(anchor);
+			CHECK(x == expected[rotation][index][0]); CHECK(y == expected[rotation][index][1]);
+			CHECK(area->w == expected[rotation][index][2]); CHECK(area->h == expected[rotation][index][3]);
+			fmt::print("{}[{},{},{},{}]", index == 0 ? "" : ",", x, y, area->w, area->h);
 			for (auto tile : *area) { CHECK(footprint->Contains(tile)); CHECK(all.insert(tile).second); }
 		}
+		fmt::print("]}}\n");
 		CHECK(all.size() == 12);
 		const auto approach = *GetLaunchServiceApproach(*station); CHECK(IsAtLaunchServiceApproach(approach, *station));
 		CHECK(IsAtLaunchServiceApproach({approach.x + SPACE_Q16 / 4, approach.y}, *station));

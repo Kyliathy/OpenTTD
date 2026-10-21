@@ -1,0 +1,130 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DB.2; physical marking/arm ends in launch-center-rotation-model-v1.json.",
+  "key": "launch-center-pad-se-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED NE empty launch-plate model. Image2 is the actual quarter-turned SE native two-cell low-box geometry reference only. Create ONE genuine physical SE view of the SAME plate and SAME single folded service arm, from a new3D orientation; never rotate/mirror a flat picture.\n\nThe plate is now TWO cells along screen DOWN-LEFT (world X), ONE cell along screen DOWN-RIGHT (world Y). This is the quarter turn of Image1's long down-right axis. Keep the same thin gray metal plate, charcoal rim, ochre corner fittings, ONE white circular launch marking on the LOWER-LEFT end cell, and exactly ONE low charcoal folded arm plus ONE cream motor housing on the UPPER-RIGHT end cell. The arm remains folded low over its own cell, pointing toward the circle/lower-left end, never deployed or duplicated. Preserve all selected hardware/material identity.\n\nPhysical placement: at1024guide scale base points NORTH(576,350), EAST(704,414), SOUTH(448,542), WEST(320,478). Long edges run256px left128px down; short edges128px right64px down. Strict2:1 DIMETRIC orthographic camera26.565degrees on BOTH axes, fixed upper-left screen light, no perspective or30degree isometric. Plate rim is extremely shallow (4guide pixels), no thick foundation or projecting feet; original low folded arm sits only on its own end cell. All whole visible base corners must fit this2x1 reserved area, with no apron or extra slab.\n\nONE complete isolated SE original on square1024x1024 real transparent canvas, at least80px genuine transparent margin on EVERY side. No labels, text, frame, dots, template colours, magenta, ground/apron/yard, shadows outside hardware, second circle, second arm, second motor, cargo, person, craft, rocket, pod, probe, vehicle, building, road, track, water, scenery or extra views. Same crisp chunky M1 game material and original details, but genuine quarter-turn: CIRCLE LOWER-LEFT and FOLDED ARM/MOTOR UPPER-RIGHT on the plate's long down-left axis.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+      "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375",
+      "role": "selected physical plate/one arm/one motor model; create genuine quarter-turn, not flat rotation"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-SE-template.png",
+      "sha256": "78c36da31f2befedad8c513a3ace67b0be31d075271c6ab2abd7deda5669738c",
+      "role": "actual SE native two-cell orientation/contact reference only"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-0dc2b7a6-ba3f-48a7-9f06-b917418d341a.png",
+  "sha256": "52683ad95a58e8cdf57b0e80e29d21799b7a9eaf83d330ecf4254691263ab1d3",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      870.0,
+      336
+    ],
+    [
+      1162,
+      571
+    ],
+    [
+      443.0,
+      980
+    ],
+    [
+      151,
+      745
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      150,
+      354,
+      1164,
+      982
+    ],
+    "minimum_clearance": 90
+  },
+  "contact_review": {
+    "source_reference": [
+      656.5,
+      658.0
+    ],
+    "definition": "Midpoint of visible lateral plate feet; maps to actual SE two-cell pad centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      96,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        112,
+        80
+      ],
+      [
+        144,
+        96
+      ],
+      [
+        80,
+        128
+      ],
+      [
+        48,
+        112
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      656.5,
+      658.0
+    ],
+    "uniform_scale": [
+      40,
+      507
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      150,
+      354,
+      1164,
+      982
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 76,127"
+  }
+}

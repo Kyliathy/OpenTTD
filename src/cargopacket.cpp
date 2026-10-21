@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargopacket.cpp Implementation of the cargo packets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, accepted-count unloading */
+/**
+ * @file cargopacket.cpp Native packets, accepted-count unloading and bounded tube transfers.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md accepted-count unloading.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
+ */
 
 #include "stdafx.h"
 #include "station_base.h"
@@ -14,6 +18,7 @@
 #include "economy_base.h"
 #include "cargoaction.h"
 #include "order_type.h"
+#include "transport_tube_cargo.h"
 
 #include "safeguards.h"
 
@@ -460,6 +465,7 @@ bool VehicleCargoList::Stage(bool accepted, StationID current_station, std::span
 	Iterator deliver = this->packets.end();
 	Iterator it = this->packets.begin();
 	uint sum = 0;
+	uint transfer_room = GetTubeStationTransferRoom(current_station, cargo);
 
 	static const FlowStatMap EMPTY_FLOW_STAT_MAP = {};
 	const FlowStatMap &flows = ge->HasData() ? ge->GetData().flows : EMPTY_FLOW_STAT_MAP;
@@ -519,6 +525,19 @@ bool VehicleCargoList::Stage(bool accepted, StationID current_station, std::span
 				action = VehicleCargoList::ChooseAction(cp, cargo_next, current_station, accepted, next_station);
 			}
 		}
+		// Tube interchanges share one finite native stock across all modes.
+		// Split only the admitted portion before feeder accounting; the exact
+		// remainder stays in this vehicle with its original provenance/share.
+		// Packet-pool exhaustion keeps the complete packet rather than losing it.
+		if (action == MoveToAction::Transfer && cp->count > transfer_room) {
+			CargoPacket *admitted = transfer_room == 0 ? nullptr : cp->Split(transfer_room);
+			if (admitted == nullptr) {
+				action = MoveToAction::Keep;
+			} else {
+				it = this->packets.insert(it, cp);
+				cp = admitted;
+			}
+		}
 		Money share;
 		switch (action) {
 			case MoveToAction::Keep:
@@ -529,6 +548,7 @@ bool VehicleCargoList::Stage(bool accepted, StationID current_station, std::span
 				this->packets.insert(deliver, cp);
 				break;
 			case MoveToAction::Transfer:
+				transfer_room -= cp->count;
 				this->packets.push_front(cp);
 				/* Add feeder share here to allow reusing field for next station. */
 				share = payment->PayTransfer(cargo, cp, cp->count, current_tile);
@@ -649,6 +669,10 @@ uint VehicleCargoList::Unload(uint max_move, StationCargoList *dest, CargoType c
 	uint moved = 0;
 	if (this->action_counts[MoveToAction::Transfer] > 0) {
 		uint move = std::min(this->action_counts[MoveToAction::Transfer], max_move);
+		// A producer or earlier unload may fill the shared buffer after staging.
+		// Revalidate actual physical room at the move; pending packets are not
+		// subtracted again here, and a refused remainder stays aboard unchanged.
+		if (payment != nullptr) move = std::min(move, GetTubeStationTransferRoom(payment->current_station, cargo, false));
 		this->ShiftCargo(CargoTransfer(this, dest, move, current_tile));
 		moved += move;
 	}

@@ -11,13 +11,16 @@ from space_preview_checks import chunks
 from surface_regional_ledger import TABLE
 
 
-def supplies(path, craft, allow_mission=False, allow_resupply=False):
+def supplies(path, craft, allow_mission=False, allow_resupply=False, allow_constructor_retirement=False):
     """@param path Complete actual original ground-payload save. @param craft Independently decoded paid native hull receipts.
     @return Bounded native compartment/carry records, cross-checked against their actual generation-qualified paid bodies.
     @param allow_mission Explicit first mission consumer; default refuses every fuel burn and deployed placement.
     @param allow_resupply Explicit later Core Goods consumer; alone admits the real second burn and24Goodsfreight.
+    @param allow_constructor_retirement Explicit Group15CSGZVED actual original38/gen2retirement only; no recovered components or changed historical default.
     """
-    models = {row["model"]: row for row in craft}; assert models.keys() == {14, 20}
+    models = {row["model"]: row for row in craft}
+    retired = allow_constructor_retirement and 20 not in models
+    assert models.keys() == ({14} if retired else {14, 20})
     by_id = {row["vehicle"]: row for row in craft}; data = chunks(path)[1][b"SPSU"][3:]
     count, offset, records = data[0], 1, {}; assert count in (1, 2)
     # Decode each actual manifest's original variable packet references.
@@ -39,8 +42,21 @@ def supplies(path, craft, allow_mission=False, allow_resupply=False):
             compartments.append(references)
         records[vehicle] = dict(generation=generation, passenger=(passenger, passenger_generation), carrier=(carrier, carrier_generation),
                                 age=age, returns=returns, fuel_burned=burned, supplies=compartments)
-    assert offset == len(data) and models[20]["vehicle"] in records
-    vehicles, packets = TABLE(path, b"VEHS"), TABLE(path, b"CAPA"); rocket, constructor = models[14], models[20]
+    assert offset == len(data)
+    vehicles, packets = TABLE(path, b"VEHS"), TABLE(path, b"CAPA"); rocket = models[14]
+    # A retired empty constructor leaves no manifest or transferred return
+    # quota. Only the real remaining54/gen1rocket owns its spent30fuel history.
+    if retired:
+        assert allow_mission and allow_resupply and records.keys() == {54}
+        assert rocket["vehicle"] == 54 and rocket["generation"] == 1 and rocket["placement"] == 2
+        remaining = records[54]
+        assert remaining["passenger"] == remaining["carrier"] == (0xFFFFF, 0)
+        assert remaining["returns"] == 0 and remaining["fuel_burned"] == 30
+        assert all(not slot for slot in remaining["supplies"])
+        assert not vehicles[54]["space[0].common[0].cargo.packets"]
+        return records
+    constructor = models[20]
+    assert constructor["vehicle"] in records
     assert rocket["placement"] in ((2, 5) if allow_mission else (2,))
     assert constructor["placement"] in ((0, 4) if allow_mission else (2, 4))
     empty = (0xFFFFF, 0); rocket_manifest = records.get(rocket["vehicle"])

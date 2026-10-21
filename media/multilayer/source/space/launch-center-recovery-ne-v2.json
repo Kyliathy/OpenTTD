@@ -1,0 +1,208 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.3; original-correction attempt preserves actual native-zone guards.",
+  "key": "launch-center-recovery-ne-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED empty recovery-plate edit target; Image2 is the exact1x2 geometry reference. Create one corrected complete NE recovery plate in the same cream/gray/charcoal/ochre M1 materials.\n\nCorrect TWO issues: make the plate rim HALF as thick, and flatten the ground-plane projection to exact2:1 dimetric camera,26.565 degrees rather than30-degree isometric. The plate's total projected floor width must be exactly TWICE its projected floor depth. Both world axes have horizontal run twice vertical rise; keep two identical cells down-right and one identical cell down-left.\n\nAt1024-square guide scale the physical BASE corners are NORTH(448,350), EAST(704,478), SOUTH(576,542), WEST(320,414). Preserve this exact equal-cell1x2 shape. The metal plate is only8px thick above these contacts, a very thin shallow frame, no thick foundation extrusion or flared feet. No surrounding floor/apron.\n\nKeep the pale broken rectangular recovery outline in the first cell, a clean empty second cell, small flush ochre corner fittings, coherent gray panels and upper-left light. No service arm, motor housing, tower, cargo, pod, vehicle or extra hardware. One EMPTY recovery plate only.\n\nSquare1024x1024canvas, object centred with wide real transparent margins on every side, complete unclipped corners. No guide colours, labels, text, numbers, border, magenta, ground shadow, scenery, road, water, extra plate or other view. Generate a new corrected original; no masks or painted-out clipping.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v1.png",
+      "sha256": "7a7097a471dd7c60a3de20a1f1fe80b015c51f13b4ee2b4e9e9a8e05281050fd",
+      "role": "unapproved recovery edit target; reduce rim height and correct the plane camera without changing material identity"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-NE-template.png",
+      "sha256": "63609ee796a2719a5d6b6f3e22781f531e2395bf95b63b5feb412cd44f61016c",
+      "role": "actual native1x2 contact/projection target, not artwork"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-2c4f31ec-d158-44c7-b449-b7811d9f9809.png",
+  "sha256": "6c6517ed01046dd6b115441020ae3a39dd4a1756bacf6432bd91cd063293d751",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      495.0,
+      391
+    ],
+    [
+      1123,
+      732
+    ],
+    [
+      788.0,
+      914
+    ],
+    [
+      160,
+      573
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      159,
+      397,
+      1125,
+      915
+    ],
+    "minimum_clearance": 129
+  },
+  "contact_review": {
+    "source_reference": [
+      641.5,
+      652.5
+    ],
+    "definition": "Midpoint of the lateral physical plate feet at ground level; maps to actual recovery-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      96,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        80,
+        112
+      ],
+      [
+        144,
+        144
+      ],
+      [
+        112,
+        160
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      641.5,
+      652.5
+    ],
+    "uniform_scale": [
+      40,
+      483
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      159,
+      397,
+      1125,
+      915
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-recovery-ne-v2",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v2.png",
+        "sha256": "6c6517ed01046dd6b115441020ae3a39dd4a1756bacf6432bd91cd063293d751"
+      },
+      "signature": "dc2d3dfc5901fdcf532faa1bc0515f2c9a17ab1b178d031b3c1103e2d5068244",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          96,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            80,
+            112
+          ],
+          [
+            144,
+            144
+          ],
+          [
+            112,
+            160
+          ],
+          [
+            48,
+            128
+          ]
+        ],
+        "component": "recovery",
+        "source_reference": [
+          641.5,
+          652.5
+        ],
+        "uniform_scale": [
+          40,
+          483
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          159,
+          397,
+          1125,
+          915
+        ]
+      },
+      "native_subject_bounds": [
+        56,
+        115,
+        137,
+        158
+      ],
+      "covered_pixels_per_cell": [
+        1023,
+        1253
+      ],
+      "native_sha256": "c4652cb7ee18db26cdca6c2f7feec37d8eea971057530db157c3f60c27e022bd"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-ne-v2-native.png"
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-ne-v2-native-review.png",
+    "findings": [
+      "One distinct empty1x2recovery plate, without service arm, pod, vehicle or cargo.",
+      "Thinner gray/charcoal frame and ochre corner fittings match the selected pad/workshop material model; broken rectangular receiving outline remains readable.",
+      "All indexed pixels fit the actual recovery cells3,0 and3,1 at reference96,136; the failed predecessor is retained and excluded.",
+      "Complete original alpha16 clearance is129px; no source pixels were erased, masked, cropped or warped."
+    ]
+  }
+}

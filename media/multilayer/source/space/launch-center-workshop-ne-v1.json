@@ -1,0 +1,252 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.1; actual native workshop zone from Group61B/Plan9Group2B.",
+  "key": "launch-center-workshop-ne-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "workshop",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nImage1 is the exact geometry target: a LOW2x2 isometric workshop box with marked physical base contacts. Image2 is an unapproved full-facility style reference; use ONLY its cream/charcoal/dark-blue hangar identity and materials.\n\nGenerate ONE isolated workshop building, ready and EMPTY, on a SQUARE1024x1024 canvas with wide genuine transparent margins. No surrounding floor slab, apron, yard, pad, storage strip, gantry, people, vehicle or scenery.\n\nMatch the geometry target's SAME physical box and camera. It is TWO world-X cells down-left by TWO world-Y cells down-right, equally scaled in2:1 isometric projection. The building's BASE contacts are EAST(768,478), SOUTH(512,606), WEST(256,478), and the hidden NORTH foot(512,350). The roof is96px vertically above the base: roof tips NORTH(512,254), EAST(768,382), SOUTH(512,510), WEST(256,382). Keep both side-wall ground edges at exact2:1 slopes. No perspective, unequal axis scale, wider roof overhang or thick separate foundation slab. Make the bottom ground-contact corners clearly visible.\n\nONE low practical assembly/service hangar with pale cream panels, dark-blue horizontal glazing and chunky charcoal corner framing. Large empty open service bay on the RIGHT/southeast-facing wall; small plain access hatch on the LEFT/southwest-facing wall. Four low dark roof grilles, restrained ochre safety accents, upper-left screen light. Crisp chunky M1 transport-management-game machinery, readable after native downsampling.\n\nReplace all guide colours, contact dots, wire lines and text with original painted building pixels. Preserve the low box, exact footprint, base contacts and fully isolated silhouette. No text, letters, numbers, labels, logos, border, magenta, extra buildings, solar panels, tower, tall roof machinery, cargo or crate. No cast shadow outside the building's own ground-contact footprint. All background must be genuinely transparent alpha. ONE complete workshop original, no extra views.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-NE-template.png",
+      "sha256": "3133134619fbd5ef49837cbb46b27ad745cdc441f564cf252d1e0cbdea7c24da",
+      "role": "exact low2x2 geometry/contact target; guide pixels are not artwork"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-base-ne-v6.png",
+      "sha256": "4f27b88e0de113a1559724c8912d1ed370dcea6addeacd09a62a13596aaa0639",
+      "role": "unapproved assembly scene: workshop materials/hardware only, no surrounding facility copied"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-4f2b3064-f7e7-48fc-bcd8-1b8dd96a78fb.png",
+  "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      686.0,
+      527
+    ],
+    [
+      1108,
+      763
+    ],
+    [
+      572.0,
+      1003
+    ],
+    [
+      150,
+      767
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      149,
+      307,
+      1110,
+      1004
+    ],
+    "minimum_clearance": 144
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      144,
+      112
+    ],
+    "native_zone_corners": [
+      [
+        144,
+        80
+      ],
+      [
+        208,
+        112
+      ],
+      [
+        144,
+        144
+      ],
+      [
+        80,
+        112
+      ]
+    ],
+    "component": "workshop",
+    "source_reference": [
+      629.0,
+      765.0
+    ],
+    "uniform_scale": [
+      108,
+      961
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      149,
+      307,
+      1110,
+      1004
+    ]
+  },
+  "diagnostic_full_zone_corner_fit": {
+    "actual_native_corners": [
+      [
+        152,
+        81
+      ],
+      [
+        208,
+        112
+      ],
+      [
+        137,
+        144
+      ],
+      [
+        81,
+        112
+      ]
+    ],
+    "expected_native_corners": [
+      [
+        144,
+        80
+      ],
+      [
+        208,
+        112
+      ],
+      [
+        144,
+        144
+      ],
+      [
+        80,
+        112
+      ]
+    ],
+    "maximum_corner_error": 8,
+    "permitted_corner_error": 2,
+    "meaning": "A flared hardware body has no authored zone-floor corners; these proposed outer-foot extrema are diagnostic, not a whole-floor registration."
+  },
+  "contact_review": {
+    "source_reference": [
+      629.0,
+      765.0
+    ],
+    "definition": "Midpoint of the two lateral physical feet at ground level; mapped to the actual workshop zone centre.",
+    "status": "approved"
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 108,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-workshop-ne-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+        "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3"
+      },
+      "signature": "441a822f2e52c6daa9b53f00c79316bf247c7770dd7dbeae01c3a000ceb4a867",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          144,
+          112
+        ],
+        "native_zone_corners": [
+          [
+            144,
+            80
+          ],
+          [
+            208,
+            112
+          ],
+          [
+            144,
+            144
+          ],
+          [
+            80,
+            112
+          ]
+        ],
+        "component": "workshop",
+        "source_reference": [
+          629.0,
+          765.0
+        ],
+        "uniform_scale": [
+          108,
+          961
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          149,
+          307,
+          1110,
+          1004
+        ]
+      },
+      "native_subject_bounds": [
+        89,
+        60,
+        198,
+        139
+      ],
+      "covered_pixels_per_cell": [
+        2676,
+        2600,
+        2426,
+        3339
+      ],
+      "native_sha256": "4af50283214b5d011cc0aa036f9126c363594a068d243e07d52c783cf340a688"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-ne-v1-native.png"
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-ne-v1-native-review.png",
+    "findings": [
+      "One low cream/charcoal workshop with one empty southeast service bay and one southwest access hatch.",
+      "Four roof grilles remain readable after the existing DOS palette reduction.",
+      "Physical ground reference is frozen at the actual workshop-zone centre; original hardware is uniformly reduced to108 native pixels wide inside the reserved2x2 cells.",
+      "All original indexed pixels fit the native sorting canvases; all four actual workshop cells have positive coverage.",
+      "Native ground remains the existing renderer input; the source contains no surrounding apron, cargo, vehicles or new ground ownership."
+    ]
+  }
+}

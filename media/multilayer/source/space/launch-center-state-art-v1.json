@@ -1,0 +1,125 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61E.2; whole-original green/amber material reuse in existing glass only. No new generation request, physical actuator, actor, cargo or work clock.",
+  "asset_id": "facility.launch-center",
+  "state_mapping": {
+    "path": "media/multilayer/source/space/launch-center-state-model-v1.json",
+    "sha256": "90ac0978a39b2e27991a9bd5e3dd3d3ccc10f656527ea95d7f55adc3fc4a6f7c"
+  },
+  "materials": {
+    "working": {
+      "original_key": "orbital-assembly-work-glass-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/orbital-assembly-work-glass-v1.png",
+        "sha256": "4dbd78836ade6c66de92cb4a99579ef11993050cb1e19e4df0892db8bb3d2f3a"
+      },
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/orbital-assembly-work-glass-v1.json",
+        "sha256": "3f99583c70079338e454c59a643206906e39419121413a46a9c1732c74e31db1"
+      },
+      "references": [
+        {
+          "path": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+          "sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100"
+        }
+      ],
+      "uniform_scale": [
+        1,
+        192
+      ],
+      "source_reference": [
+        627,
+        624
+      ],
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        297,
+        516,
+        958,
+        734
+      ],
+      "role": "unchanged material reuse only; original source family keeps its own gameplay and work owners"
+    },
+    "blocked": {
+      "original_key": "orbital-core-blocked-glass-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/orbital-core-blocked-glass-v1.png",
+        "sha256": "1ba2ce525e98d15172b94f900ac85fcdca7ae18fd335d72affdbf4f347f3a100"
+      },
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/orbital-core-blocked-glass-v1.json",
+        "sha256": "978a56089401ba8e9cb145479b758c7ec2c7f46da6e8c97e77815f50e13004be"
+      },
+      "references": [],
+      "uniform_scale": [
+        1,
+        192
+      ],
+      "source_reference": [
+        627,
+        624
+      ],
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        299,
+        518,
+        955,
+        731
+      ],
+      "role": "unchanged material reuse only; original source family keeps its own gameplay and work owners"
+    }
+  },
+  "glass_contacts": {
+    "NE": [
+      120,
+      103
+    ],
+    "SE": [
+      124,
+      123
+    ],
+    "SW": [
+      158,
+      125
+    ],
+    "NW": [
+      158,
+      109
+    ]
+  },
+  "permitted_underlay": [
+    128,
+    129,
+    130,
+    131,
+    132
+  ],
+  "expected_changed_pixels": 3,
+  "frame_aliases": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "construction_alias": "ready",
+  "foreground_policy": "structurally_absent_for_current_native_hidden_Surface_custody; later visible Surface actor renderers require new acceptance",
+  "native_selection_policy": "Existing workshop window carries green only for its own actually admitted unpaused native job and amber for its own actual retained pause/refusal. No other zone changes its hardware for that job. Pad/recovery/storage phase aliases remain fixed; separate rocket/probe/pod owners supply their own phase art. No work earning, blinking or artificial clock.",
+  "status": "selected_state_parts",
+  "state_art_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "model_review": {
+    "status": "approved_native_state_parts",
+    "review": "Four genuine physical views retain their full selected hardware and alpha. Green/amber genuine material replaces exactly three existing blue workshop-glass pixels; native work/refusal owners remain separate from hue. Placement aliases the complete ready base; all four frames are still aliases. Fixed pad/recovery/storage hardware has no native actuator pose. Current Surface hulls are Hidden and stored/carried pods have no scene sprite; explicit absent fronts introduce no extra actor and do not approve any later visible Surface renderer."
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.2; camera/thin-plate correction preserves unchanged80px model width and actual NW zone.",
+  "key": "launch-center-pad-nw-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the UNAPPROVED genuine NW launch-plate edit target. Preserve original hardware count and end roles: ONE white circle UPPER-RIGHT, exactly ONE folded charcoal arm and ONE cream motor LOWER-LEFT, arm pointing toward upper-right. Preserve all equipment, upper-left screen light and gray/charcoal/cream/ochre material identity.\n\nCorrect the floor camera and thin plate body ONLY. Lower the camera elevation until the TOP-FACE ground diamond is25percent LESS tall vertically at the SAME horizontal width. Both ground axes must use exact2:1 dimetric,26.565degrees:0.50vertical pixels per horizontal pixel, no steeper slope or30degree/perspective. A256px horizontal long run falls128px, not160px. Re-render the3D floor camera; do not stretch a flat image. Retain actual arm/motor vertical height and genuine opposite physical surfaces.\n\nMake SHORT physical plate depth15percent narrower while keeping the two-cell LONG direction and original circle/arm end roles. Make front rim FLUSH, at mostONE guide pixel high, no deep vertical slab or projecting corner toes. A modest clear handling margin remains inside the same reserved2x1 native zone. The plate's whole floor contacts/corners remain visible, no apron/ground or external shadows. Same panel seams, original singlecircle, original folded arm and motor unchanged.\n\nONE whole isolated source on square1024x1024 real transparent canvas with at least80px transparent clearance on EVERY side. No extra marking, arm, motor, machinery, actor, pod, rocket, probe, vehicle, cargo, people, labels, text, dots, frame, magenta, ground, floor beyond plate, apron, scenery, water, road, track or extra views. Main correction: FLATTER EXACT2:1 FLOOR, flush rim and slightly narrower short depth. Genuine NW end roles stay CIRCLE UPPER-RIGHT and FOLDED ARM/MOTOR LOWER-LEFT.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v1.png",
+      "sha256": "d611952145e30831afd2471531b62d2484a52d50145fa9cbb8ca87b8c8a367b3",
+      "role": "unapproved genuine NW source edit target; correct floor camera/short depth/flush rim while retaining original arm/motor/end roles"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-41109171-4eca-44ff-b220-a7f872145a4f.png",
+  "sha256": "24d321f3b52001acbfb26d3f46377d172e8b9cc0fa8c57b4a00443f2aac8dadd",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      849.0,
+      360
+    ],
+    [
+      1145,
+      554
+    ],
+    [
+      466.0,
+      971
+    ],
+    [
+      170,
+      777
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      169,
+      358,
+      1147,
+      973
+    ],
+    "minimum_clearance": 107
+  },
+  "contact_review": {
+    "source_reference": [
+      657.5,
+      665.5
+    ],
+    "definition": "Midpoint of lateral physical thin plate feet; maps to actual NW pad-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      224,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        112
+      ],
+      [
+        272,
+        128
+      ],
+      [
+        208,
+        160
+      ],
+      [
+        176,
+        144
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      657.5,
+      665.5
+    ],
+    "uniform_scale": [
+      40,
+      489
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      169,
+      358,
+      1147,
+      973
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 204,159"
+  }
+}

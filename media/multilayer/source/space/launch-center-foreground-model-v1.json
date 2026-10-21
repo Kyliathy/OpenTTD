@@ -1,0 +1,1171 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61EA; reviewed native custody versus physical source contacts and exact original occupied foreground cuts. Source-only geometry, never runtime positioning or paid-world acceptance.",
+  "asset_id": "facility.launch-center",
+  "selected_bases": {
+    "path": "media/multilayer/source/space/launch-center-base-views-v1.json",
+    "sha256": "96496af684dd76736905624e28771266ef8c097afd06e6b28efa8a3fc4fed634"
+  },
+  "state_mapping": {
+    "path": "media/multilayer/source/space/launch-center-state-model-v1.json",
+    "sha256": "90ac0978a39b2e27991a9bd5e3dd3d3ccc10f656527ea95d7f55adc3fc4a6f7c"
+  },
+  "status_art_checkpoint": {
+    "path": "media/multilayer/source/space/launch-center-state-art-v1.json",
+    "sha256": "1eb3df38c9389b12d8db858c6e6f10bf0f74dcbf74e605b090fc3edf4243733e"
+  },
+  "separate_actor_canvases": {
+    "vehicle.model-14": {
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ]
+    },
+    "vehicle.model-15": {
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ]
+    },
+    "vehicle.model-18": {
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ]
+    }
+  },
+  "views": {
+    "NE": {
+      "native_rotation": 0,
+      "contacts": {
+        "pad": {
+          "native_custody_world_cell": [
+            0,
+            0
+          ],
+          "native_custody_contact": [
+            176,
+            80
+          ],
+          "physical_marked_cell": [
+            0,
+            0
+          ],
+          "physical_display_contact": [
+            176,
+            80
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            144,
+            48,
+            208,
+            96
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "workshop": {
+          "native_custody_world_cell": [
+            1,
+            0
+          ],
+          "native_custody_contact": [
+            144,
+            96
+          ],
+          "physical_marked_cell": null,
+          "physical_display_contact": [
+            144,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            112,
+            80,
+            176,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "recovery": {
+          "native_custody_world_cell": [
+            3,
+            0
+          ],
+          "native_custody_contact": [
+            80,
+            128
+          ],
+          "physical_marked_cell": [
+            3,
+            0
+          ],
+          "physical_display_contact": [
+            80,
+            128
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            48,
+            96,
+            112,
+            144
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "storage": {
+          "native_custody_world_cell": [
+            0,
+            2
+          ],
+          "native_custody_contact": [
+            240,
+            112
+          ],
+          "physical_marked_cell": [
+            0,
+            2
+          ],
+          "physical_display_contact": [
+            240,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            208,
+            80,
+            272,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        }
+      },
+      "foreground_regions": {
+        "workshop": {
+          "selection": "structural_shell",
+          "interior_polygons": [
+            [
+              [
+                153,
+                115
+              ],
+              [
+                187,
+                99
+              ],
+              [
+                187,
+                115
+              ],
+              [
+                153,
+                132
+              ]
+            ]
+          ],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original opaque roof and visible wall/jamb shell occlude the workshop visitor. Only the actual open doorway interior/floor remains behind it; closed rear views retain the whole visible shell."
+        },
+        "storage": {
+          "selection": "structural_shell",
+          "interior_polygons": [
+            [
+              [
+                136,
+                152
+              ],
+              [
+                158,
+                141
+              ],
+              [
+                158,
+                152
+              ],
+              [
+                136,
+                163
+              ]
+            ],
+            [
+              [
+                168,
+                139
+              ],
+              [
+                190,
+                128
+              ],
+              [
+                190,
+                139
+              ],
+              [
+                168,
+                150
+              ]
+            ],
+            [
+              [
+                200,
+                126
+              ],
+              [
+                222,
+                115
+              ],
+              [
+                222,
+                126
+              ],
+              [
+                200,
+                137
+              ]
+            ],
+            [
+              [
+                232,
+                113
+              ],
+              [
+                254,
+                102
+              ],
+              [
+                254,
+                113
+              ],
+              [
+                232,
+                124
+              ]
+            ]
+          ],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original canopy/closed end/posts occlude stored visitors; actual open-bay gray interiors and floor remain behind. Rear wall views have no visible bay opening."
+        },
+        "pad": {
+          "selection": "near_arm",
+          "polygon": [
+            [
+              194,
+              83
+            ],
+            [
+              197,
+              82
+            ],
+            [
+              202,
+              85
+            ],
+            [
+              211,
+              90
+            ],
+            [
+              216,
+              88
+            ],
+            [
+              222,
+              91
+            ],
+            [
+              222,
+              95
+            ],
+            [
+              217,
+              99
+            ],
+            [
+              211,
+              98
+            ],
+            [
+              204,
+              94
+            ],
+            [
+              198,
+              92
+            ],
+            [
+              193,
+              89
+            ],
+            [
+              192,
+              86
+            ]
+          ],
+          "reason": "Only original folded arm/motor on the near side of the marked launch cell is foreground; the plate/circle remains back and SE/SW far arm stays behind the rocket."
+        },
+        "recovery": {
+          "selection": "absent_flat_plate",
+          "reason": "The receiving plate/marking has no raised near hardware; its actual visiting rocket/pod remains separate and no foreground is invented."
+        }
+      },
+      "regions_status": "approved_original_physical_partition",
+      "approved_foreground_sha256": "90b15eda96d85563f3a7a9048b87aa9d601c3ebe486e32d530ea5b27b52a73c7",
+      "approved_foreground_pixels": {
+        "pad": 259,
+        "workshop": 4893,
+        "recovery": 0,
+        "storage": 2842
+      },
+      "approved_retained_interiors": {
+        "pad": 0,
+        "workshop": 429,
+        "recovery": 0,
+        "storage": 714
+      }
+    },
+    "SE": {
+      "native_rotation": 1,
+      "contacts": {
+        "pad": {
+          "native_custody_world_cell": [
+            1,
+            0
+          ],
+          "native_custody_contact": [
+            112,
+            96
+          ],
+          "physical_marked_cell": [
+            2,
+            0
+          ],
+          "physical_display_contact": [
+            80,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            -32,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            48,
+            80,
+            112,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "workshop": {
+          "native_custody_world_cell": [
+            1,
+            1
+          ],
+          "native_custody_contact": [
+            144,
+            112
+          ],
+          "physical_marked_cell": null,
+          "physical_display_contact": [
+            144,
+            128
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            112,
+            96,
+            176,
+            144
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "recovery": {
+          "native_custody_world_cell": [
+            1,
+            3
+          ],
+          "native_custody_contact": [
+            208,
+            144
+          ],
+          "physical_marked_cell": [
+            2,
+            3
+          ],
+          "physical_display_contact": [
+            176,
+            160
+          ],
+          "display_offset_from_native_custody": [
+            -32,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            144,
+            128,
+            208,
+            176
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "storage": {
+          "native_custody_world_cell": [
+            0,
+            0
+          ],
+          "native_custody_contact": [
+            144,
+            80
+          ],
+          "physical_marked_cell": [
+            0,
+            0
+          ],
+          "physical_display_contact": [
+            144,
+            80
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            112,
+            48,
+            176,
+            96
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        }
+      },
+      "foreground_regions": {
+        "workshop": {
+          "selection": "structural_shell",
+          "interior_polygons": [],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original opaque roof and visible wall/jamb shell occlude the workshop visitor. Only the actual open doorway interior/floor remains behind it; closed rear views retain the whole visible shell."
+        },
+        "storage": {
+          "selection": "structural_shell",
+          "interior_polygons": [],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original canopy/closed end/posts occlude stored visitors; actual open-bay gray interiors and floor remain behind. Rear wall views have no visible bay opening."
+        },
+        "pad": {
+          "selection": "absent_far_arm",
+          "polygon": [],
+          "reason": "Only original folded arm/motor on the near side of the marked launch cell is foreground; the plate/circle remains back and SE/SW far arm stays behind the rocket."
+        },
+        "recovery": {
+          "selection": "absent_flat_plate",
+          "reason": "The receiving plate/marking has no raised near hardware; its actual visiting rocket/pod remains separate and no foreground is invented."
+        }
+      },
+      "regions_status": "approved_original_physical_partition",
+      "approved_foreground_sha256": "e8dbc4203ec88fbdcce9a017f1d7350e070b841318aca22786488e14e57d83d5",
+      "approved_foreground_pixels": {
+        "pad": 0,
+        "workshop": 5524,
+        "recovery": 0,
+        "storage": 3351
+      },
+      "approved_retained_interiors": {
+        "pad": 0,
+        "workshop": 0,
+        "recovery": 0,
+        "storage": 0
+      }
+    },
+    "SW": {
+      "native_rotation": 2,
+      "contacts": {
+        "pad": {
+          "native_custody_world_cell": [
+            3,
+            1
+          ],
+          "native_custody_contact": [
+            112,
+            144
+          ],
+          "physical_marked_cell": [
+            3,
+            2
+          ],
+          "physical_display_contact": [
+            144,
+            160
+          ],
+          "display_offset_from_native_custody": [
+            32,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            112,
+            128,
+            176,
+            176
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "workshop": {
+          "native_custody_world_cell": [
+            1,
+            1
+          ],
+          "native_custody_contact": [
+            176,
+            112
+          ],
+          "physical_marked_cell": null,
+          "physical_display_contact": [
+            176,
+            128
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            144,
+            96,
+            208,
+            144
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "recovery": {
+          "native_custody_world_cell": [
+            0,
+            1
+          ],
+          "native_custody_contact": [
+            208,
+            96
+          ],
+          "physical_marked_cell": [
+            0,
+            2
+          ],
+          "physical_display_contact": [
+            240,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            32,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            208,
+            80,
+            272,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "storage": {
+          "native_custody_world_cell": [
+            0,
+            0
+          ],
+          "native_custody_contact": [
+            176,
+            80
+          ],
+          "physical_marked_cell": [
+            0,
+            0
+          ],
+          "physical_display_contact": [
+            176,
+            80
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            144,
+            48,
+            208,
+            96
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        }
+      },
+      "foreground_regions": {
+        "workshop": {
+          "selection": "structural_shell",
+          "interior_polygons": [],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original opaque roof and visible wall/jamb shell occlude the workshop visitor. Only the actual open doorway interior/floor remains behind it; closed rear views retain the whole visible shell."
+        },
+        "storage": {
+          "selection": "structural_shell",
+          "interior_polygons": [],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original canopy/closed end/posts occlude stored visitors; actual open-bay gray interiors and floor remain behind. Rear wall views have no visible bay opening."
+        },
+        "pad": {
+          "selection": "absent_far_arm",
+          "polygon": [],
+          "reason": "Only original folded arm/motor on the near side of the marked launch cell is foreground; the plate/circle remains back and SE/SW far arm stays behind the rocket."
+        },
+        "recovery": {
+          "selection": "absent_flat_plate",
+          "reason": "The receiving plate/marking has no raised near hardware; its actual visiting rocket/pod remains separate and no foreground is invented."
+        }
+      },
+      "regions_status": "approved_original_physical_partition",
+      "approved_foreground_sha256": "1e249891cf6a92968565a74f6432a79987f32cf3635272f71b9383b3cf099d22",
+      "approved_foreground_pixels": {
+        "pad": 0,
+        "workshop": 5458,
+        "recovery": 0,
+        "storage": 4080
+      },
+      "approved_retained_interiors": {
+        "pad": 0,
+        "workshop": 0,
+        "recovery": 0,
+        "storage": 0
+      }
+    },
+    "NW": {
+      "native_rotation": 3,
+      "contacts": {
+        "pad": {
+          "native_custody_world_cell": [
+            0,
+            3
+          ],
+          "native_custody_contact": [
+            240,
+            128
+          ],
+          "physical_marked_cell": [
+            0,
+            3
+          ],
+          "physical_display_contact": [
+            240,
+            128
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            208,
+            96,
+            272,
+            144
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "workshop": {
+          "native_custody_world_cell": [
+            0,
+            1
+          ],
+          "native_custody_contact": [
+            176,
+            96
+          ],
+          "physical_marked_cell": null,
+          "physical_display_contact": [
+            176,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            16
+          ],
+          "declared_actor_canvas_box": [
+            144,
+            80,
+            208,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "recovery": {
+          "native_custody_world_cell": [
+            0,
+            0
+          ],
+          "native_custody_contact": [
+            144,
+            80
+          ],
+          "physical_marked_cell": [
+            0,
+            0
+          ],
+          "physical_display_contact": [
+            144,
+            80
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            112,
+            48,
+            176,
+            96
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        },
+        "storage": {
+          "native_custody_world_cell": [
+            2,
+            0
+          ],
+          "native_custody_contact": [
+            80,
+            112
+          ],
+          "physical_marked_cell": [
+            2,
+            0
+          ],
+          "physical_display_contact": [
+            80,
+            112
+          ],
+          "display_offset_from_native_custody": [
+            0,
+            0
+          ],
+          "declared_actor_canvas_box": [
+            48,
+            80,
+            112,
+            128
+          ],
+          "policy": "Diagnostic source mounting only; never move actual Surface tile, world/Q16 position, orbital/drop reference, queue or cargo. A future renderer must bind visual offsets to the exact original owner."
+        }
+      },
+      "foreground_regions": {
+        "workshop": {
+          "selection": "structural_shell",
+          "interior_polygons": [
+            [
+              [
+                135,
+                100
+              ],
+              [
+                170,
+                118
+              ],
+              [
+                170,
+                134
+              ],
+              [
+                135,
+                116
+              ]
+            ]
+          ],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original opaque roof and visible wall/jamb shell occlude the workshop visitor. Only the actual open doorway interior/floor remains behind it; closed rear views retain the whole visible shell."
+        },
+        "storage": {
+          "selection": "structural_shell",
+          "interior_polygons": [
+            [
+              [
+                68,
+                99
+              ],
+              [
+                85,
+                108
+              ],
+              [
+                85,
+                119
+              ],
+              [
+                68,
+                110
+              ]
+            ],
+            [
+              [
+                97,
+                113
+              ],
+              [
+                115,
+                122
+              ],
+              [
+                115,
+                134
+              ],
+              [
+                97,
+                125
+              ]
+            ],
+            [
+              [
+                128,
+                129
+              ],
+              [
+                146,
+                138
+              ],
+              [
+                146,
+                150
+              ],
+              [
+                128,
+                141
+              ]
+            ],
+            [
+              [
+                159,
+                145
+              ],
+              [
+                180,
+                155
+              ],
+              [
+                180,
+                167
+              ],
+              [
+                159,
+                157
+              ]
+            ]
+          ],
+          "interior_palette": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "reason": "Original canopy/closed end/posts occlude stored visitors; actual open-bay gray interiors and floor remain behind. Rear wall views have no visible bay opening."
+        },
+        "pad": {
+          "selection": "near_arm",
+          "polygon": [
+            [
+              194,
+              139
+            ],
+            [
+              198,
+              137
+            ],
+            [
+              203,
+              138
+            ],
+            [
+              211,
+              134
+            ],
+            [
+              214,
+              132
+            ],
+            [
+              218,
+              133
+            ],
+            [
+              221,
+              136
+            ],
+            [
+              220,
+              140
+            ],
+            [
+              216,
+              142
+            ],
+            [
+              209,
+              145
+            ],
+            [
+              207,
+              148
+            ],
+            [
+              202,
+              152
+            ],
+            [
+              197,
+              151
+            ],
+            [
+              192,
+              148
+            ],
+            [
+              190,
+              144
+            ],
+            [
+              190,
+              142
+            ]
+          ],
+          "reason": "Only original folded arm/motor on the near side of the marked launch cell is foreground; the plate/circle remains back and SE/SW far arm stays behind the rocket."
+        },
+        "recovery": {
+          "selection": "absent_flat_plate",
+          "reason": "The receiving plate/marking has no raised near hardware; its actual visiting rocket/pod remains separate and no foreground is invented."
+        }
+      },
+      "regions_status": "approved_original_physical_partition",
+      "approved_foreground_sha256": "31f56011f8b7df5102fe642d068442bd946e828cef84201fadbaacb980ef9e20",
+      "approved_foreground_pixels": {
+        "pad": 333,
+        "workshop": 4895,
+        "recovery": 0,
+        "storage": 3480
+      },
+      "approved_retained_interiors": {
+        "pad": 0,
+        "workshop": 462,
+        "recovery": 0,
+        "storage": 736
+      }
+    }
+  },
+  "physical_depth_policy": "Original folded arm is on the near side of the launch circle in NE/NW, far side in SE/SW. Workshop doors and storage openings require cavity/background pixels to remain behind the visitor; near eaves/posts/fascia are physical occluders. Derive reviewed cuts from original component pixels, not diagnostic rectangle fills.",
+  "rebuild_command": "python -m tools.launch_facility_foreground_guides (working directory media/multilayer)",
+  "proof_directory": "logs/proofs/mlm/native-art/space/launch-center-foreground-v1",
+  "occupied_foregrounds_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "status": "selected_occupied_foregrounds",
+  "foreground_policy": "original_structural_shells_and_near_arm_with_actual_open_cavities_back; per_native_zone_visitor_scope",
+  "scope_policy": "Front pixels occlude the visiting actor belonging to their own actual native zone. Cross-zone scene ordering remains native; this is not a global paint-over pass and never changes world custody or visibility.",
+  "interior_partition_policy": "Only indexed grayscale within reviewed open doorway/bay polygons moves to back. Roof, glazing and ochre/cream structural material stay front. Every excluded interior pixel remains unchanged in back; no original crop, alpha repair or clipping.",
+  "diagnostic_actor_reference": {
+    "asset_id": "vehicle.model-15",
+    "source_manifest": {
+      "path": "logs/proofs/mlm/native-art/space/small-miner-complete-v1/space-source-manifest.json",
+      "sha256": "a47a8e73e08a5bf40d17f3498d9f785b2bdc07569690672b6ded189b0e17c3e6"
+    },
+    "atlas": {
+      "path": "logs/proofs/mlm/native-art/space/small-miner-complete-v1/vehicle-model-15-authored.png",
+      "sha256": "c16b6c81c5eef327245f918df0226745ae6dd62fd0a51072bc86f23b41f09a55"
+    },
+    "state": "service",
+    "frame": 0,
+    "role": "Existing genuine model15 service silhouette for source-only occlusion diagrams. It is never facility art, a paid-world actor, a new source candidate, cargo or rocket14 acceptance."
+  },
+  "model_review": {
+    "status": "approved_occupied_source_partitions",
+    "review": "All four genuine views preserve original shell/roof/post hardware in front and visible gray doorway/bay interiors behind. NE/NW near folded arm/motor is isolated from the flat plate; SE/SW far arm and all flat recovery markings stay back. All16 accepted whole-state hashes are unchanged. Existing model15 service silhouettes are diagnostic references only; full occlusion inside closed/roofed workshop is expected. Cross-zone depth follows accepted component order; no global front overlay, changed native custody, extra actor, cargo or work. Actual rocket14/runtime scenes remain separate gates."
+  }
+}

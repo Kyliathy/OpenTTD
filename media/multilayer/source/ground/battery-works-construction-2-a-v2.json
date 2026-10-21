@@ -1,0 +1,284 @@
+{
+  "id": "battery-works-construction-2-a-v2",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-2-a-v2.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-1d324640-dab0-4a53-bd53-6b4987f787f6.png",
+  "prompt": "Use case: precise-object-edit. Image1 is Battery Works finishing-stage machinery edit target. Keep exact same four finished-assembly models, counts, floors/camera/materials, BUT make the following small UNFINISHED differences unmistakable. These are construction stage2, not operating states.\nTOP LEFT calender: exactly TWO rollers, closed coatingbox and motor installed. REMOVE the BACK/upper-left yellow safety HANDRAIL completely, leaving its small empty rail mounting sockets. Keep FRONT/lower-right yellow rail. This single final safety rail is not yet fitted. All other hardware unchanged.\nTOP RIGHT winding: same short drum with EMPTY front circular throat and side motor. REMOVE ONLY the REAR/upper-right yellow curved drum retaining STRAP. Keep the FRONT yellow drum strap. Rear drum surface is bare slate/olive steel with empty strap mounts; no loose removed part.\nBOTTOM LEFT squat C-frame press: keep installed short piston and empty lower bed. REMOVE the top yellow lifting HANDLE completely, leaving two empty bolt holes. No loose handle, upper tool or workpiece.\nBOTTOM RIGHT formation cabinet: keep exactly THREE closed doors, all vents and covered ports. Rightmost yellow door HANDLE remains MISSING as currently shown, its socket empty; first two handles installed. No batteries, status, lights, displays or charge.\nUniformly REDUCE every WHOLE model INCLUDING entire concrete floor to60percent of current sheet display size and recenter within its SAME panel. About330pxwide/max260pxtall, at least80px alpha-transparent clearance to EVERY frame. Keep low20-high canonical profile and TRUE2:1 isometric square floor/centered south tip. No overhang or floor-camera skew.\nSame1536x1024 PUREMAGENTA #FF00FF6px frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Real alpha transparent background/margins/gutters, no haze. No text, labels, props, loose hardware, inventory, extra equipment, clipping or stretching. Preserve distinct selected machinery identity; change only specified final safety/handle omissions and whole-subject source layout.",
+  "construction_stage": 2,
+  "variants": [
+    7,
+    8,
+    9,
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "75e2838260322a2c23d49463be3d51bec84a5ad67a7f6672b762ccc7e80f663f",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-construction-2-a-v1.png",
+      "sha256": "9ee687e5fd08661aae143b9005d66d553c48d8217f8f6492e18f994fd8e21d65",
+      "role": "finishing_model_specific_omissions_and_layout_edit"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        147,
+        88,
+        529,
+        369
+      ],
+      "native_box": [
+        1,
+        18,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        138,
+        110,
+        519,
+        370
+      ],
+      "native_box": [
+        1,
+        22,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-9",
+      "variant": 9,
+      "world_cell": [
+        1,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        164,
+        67,
+        511,
+        363
+      ],
+      "native_box": [
+        1,
+        11,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        135,
+        74,
+        510,
+        364
+      ],
+      "native_box": [
+        1,
+        16,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        147,
+        88,
+        529,
+        369
+      ],
+      "minimum_alpha16_clearance": 47,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        138,
+        110,
+        519,
+        370
+      ],
+      "minimum_alpha16_clearance": 46,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 9,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        164,
+        67,
+        511,
+        363
+      ],
+      "minimum_alpha16_clearance": 53,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 10,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        135,
+        74,
+        510,
+        364
+      ],
+      "minimum_alpha16_clearance": 52,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      7,
+      8
+    ],
+    "refused_variants": {
+      "9": "mine cell9 leaves its actual20-high sorting envelope",
+      "10": "mine cell10 misses actual floor contact(1,48)"
+    },
+    "model_review": {
+      "7": "Both rollers/closed coating box/motor installed; back yellow safety handrail absent, front rail installed; no material.",
+      "8": "Same short drum/empty throat/motor; rear yellow retaining strap absent, front strap installed; no stock.",
+      "9": "Same squat press/piston/empty bed; final top yellow handle absent, no workpiece.",
+      "10": "Three closed doors and ports/vents; only rightmost yellow handle absent."
+    }
+  },
+  "excluded_variants": [
+    9,
+    10
+  ]
+}

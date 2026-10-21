@@ -1,0 +1,130 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.4; native storage row: Group61B/Plan9Group2B.",
+  "key": "launch-center-storage-ne-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nImage1 is the exact native4x1 low-strip geometry target. Image2 is the SELECTED workshop material/style reference only. Create ONE isolated low EMPTY covered storage strip in the same NE-view M1 industrial model.\n\nThe reserved area is FOUR equal cells down-left along world X and ONE cell down-right along world Y, strict2:1 dimetric projection (26.565degrees, horizontal run twice vertical rise on BOTH axes). At1024-square guide scale, BASE contacts are NORTH(704,350), EAST(832,414), SOUTH(320,670), WEST(192,606). Roof is only40px above those contacts. This is a very LOW SHALLOW strip, not a tall garage or building.\n\nMake ONE continuous cream roof with FOUR equal panels and charcoal support posts, forming FOUR empty open storage bays along the LONG right/southeast-facing facade from EAST towards SOUTH. Grey metal interiors, restrained ochre edge details, upper-left light. The four bays are permanent empty hardware, never cargo quantities or vehicles. Leave a clear rear handling lane within the reserved row; keep the canopy shallow and low so it does not hide the neighboring workshop entrance. No extra apron, yard, surrounding floor, annex, tower, door building or machinery. No objects in the bays.\n\nMatch the selected workshop's pale cream/charcoal/gray material language and crisp chunky native-game readability; do not copy its square footprint, open service door, blue glazing or roof grilles. Preserve the exact four-by-one row orientation and its visible ground-contact corners. No perspective, unequal tile scale, steep receding axis, roof overhang outside the row, or taller replacement structure.\n\nONE complete source cutout centred on a SQUARE1024x1024 canvas with at least80px of genuine transparent margin on every side. No guide colours, contact dots, labels, text, numbers, logos, frame, magenta, outside shadow, cargo, crates, tanks, vehicle, rocket, probe, pod, people, road, track, water, scenery, extra strip or extra views. Real transparent alpha. Four shallow empty bays in one coherent low strip only.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NE-template.png",
+      "sha256": "9e1d84a83faf9fc940cc011cc1e84c614a05af20871ec64cadad10d178081d0e",
+      "role": "actual native4x1 row/contact geometry target; not source art"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+      "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+      "role": "selected material/light model only; no workshop body or machinery copied"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-dcbd4df4-91e8-4725-9f50-948b1ce12ca7.png",
+  "sha256": "117099da646450776dd7bf5472ab10c6006942db992e78aa227a94f8e3dfaf25",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      907.5,
+      456
+    ],
+    [
+      1125,
+      590
+    ],
+    [
+      355.5,
+      949
+    ],
+    [
+      138,
+      815
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      137,
+      358,
+      1127,
+      951
+    ],
+    "minimum_clearance": 127
+  },
+  "contact_review": {
+    "source_reference": [
+      631.5,
+      702.5
+    ],
+    "definition": "Midpoint of the lateral physical storage-strip feet; maps to the actual native four-cell row centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        96
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        112,
+        160
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      631.5,
+      702.5
+    ],
+    "uniform_scale": [
+      8,
+      55
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      137,
+      358,
+      1127,
+      951
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "Indexed source pixel241,127 leaves every actual storage-zone sorting canvas. No masking, erasure or clipping is admitted."
+  }
+}

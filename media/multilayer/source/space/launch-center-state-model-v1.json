@@ -1,0 +1,644 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61E.1; source-state/occupant mapping from original native owners. This document allocates no station, actor, packet, work clock or SpriteID.",
+  "asset_id": "facility.launch-center",
+  "selected_bases": {
+    "path": "media/multilayer/source/space/launch-center-base-views-v1.json",
+    "sha256": "96496af684dd76736905624e28771266ef8c097afd06e6b28efa8a3fc4fed634"
+  },
+  "native_contract": {
+    "path": "media/multilayer/source/space/launch-center-source-contract.json",
+    "sha256": "010ebe9c704b056a9b8c0cb6d5bffbf597d82cf745533f050559abb739c2dff9"
+  },
+  "native_inputs": [
+    {
+      "path": "src/launch_operations.h",
+      "sha256": "de25f8ba3a5d0be9ffa726ea1d448dcba343b0940cafef38a3efca9f904dbaed"
+    },
+    {
+      "path": "src/launch_operations.cpp",
+      "sha256": "acbbc6cd66d095c414613bb4363985fd6b8ee3bfa07ab5b2b09bdfbf96fbc28f"
+    },
+    {
+      "path": "src/space_production.h",
+      "sha256": "7026f1ebfbfaf955a66364986834c9f4c29033d1a02b2fca8ee36256d4cc785f"
+    },
+    {
+      "path": "src/space_production.cpp",
+      "sha256": "55c9a004f3f2f9a253fe677fd419fdca78f62db98499c3b7ac560367a7739ac7"
+    },
+    {
+      "path": "src/space_manifest.h",
+      "sha256": "808dfa9b1fff98e4752130ddfecfd858c1dc2883f45bda711bab3c8c554cb57b"
+    },
+    {
+      "path": "src/space_manifest.cpp",
+      "sha256": "0a51de69788de4b07f4d5160822615801cdb3757925cd6714993c2f36a2c3b68"
+    },
+    {
+      "path": "src/space_pod.h",
+      "sha256": "fa4062920d146ab92b3842b2c28e57ff887387e767c93afbccd1d71e4af80a63"
+    },
+    {
+      "path": "src/space_pod.cpp",
+      "sha256": "ce597f468829f162bc0a824a6b89b60d0bdc48402bb90b8dae766812fd70fd45"
+    },
+    {
+      "path": "src/space_transition.h",
+      "sha256": "7551c3eedd4abbcd30832a371667bac72e32be921da5f6f1e2cebb99736f0856"
+    },
+    {
+      "path": "src/space_transition.cpp",
+      "sha256": "3326f5c41b54803e126de1675b26720b310ab60ca4dbc9264298a765c4f78679"
+    },
+    {
+      "path": "src/launch_center.h",
+      "sha256": "81772b23e6e3252cc9b697280d704a49826e9ba06c1ef330a072db9c6a046d75"
+    },
+    {
+      "path": "src/launch_center.cpp",
+      "sha256": "633fa519a9d539f81e0afeab1a4a9a9775017584439391b474b245cc6ff6b0ad"
+    },
+    {
+      "path": "src/station_cmd.cpp",
+      "sha256": "e591015da517188d1e6f4f122b23050daeaa17046f8b721203d102ac3c6c05bd"
+    },
+    {
+      "path": "src/space_vehicle.cpp",
+      "sha256": "eb6f1556d2f5cf9865b669b160a7c926543090e857421e43e4bd14577496eeb2"
+    },
+    {
+      "path": "src/space_sprite.cpp",
+      "sha256": "0a93d2241d1b0ecc86d31ada9eb0df0be838ce2ad11f818c52ecc89054f3b6a5"
+    },
+    {
+      "path": "src/space_replacement.h",
+      "sha256": "adaeb6363d10711a34c7950eba9bc19f7ce050acd5d3a33ee79ad09d6affe080"
+    },
+    {
+      "path": "src/space_replacement.cpp",
+      "sha256": "a67280aec05f8601f612140ee0be059d52aa2dd1d46692ce1593c4c1c1f03fb3"
+    },
+    {
+      "path": "src/tests/space_logistics.cpp",
+      "sha256": "0918691d6c7ecf2ca13293d575bc8ca10bb75af9ad043b29df17bdb0432570ea"
+    },
+    {
+      "path": "src/tests/launch_flight.cpp",
+      "sha256": "45d8946ba4addcd7223b8b94233b4845d8136389f35c909b90a9fe6fac95a1af"
+    },
+    {
+      "path": "src/tests/space_descent.cpp",
+      "sha256": "8580d86014c261b0f2ee79c81bc2fbbe7f8904f1e9c0018e7916a6a877d09a28"
+    }
+  ],
+  "states": [
+    "construction",
+    "ready",
+    "working",
+    "blocked"
+  ],
+  "frames": 4,
+  "native_views": {
+    "NE": {
+      "native_rotation": 0,
+      "footprint": [
+        4,
+        3
+      ],
+      "zones": {
+        "pad": {
+          "rect": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "custody_world_cell": [
+            0,
+            0
+          ],
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        "workshop": {
+          "rect": [
+            1,
+            0,
+            2,
+            2
+          ],
+          "custody_world_cell": [
+            1,
+            0
+          ],
+          "world_cells": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        "recovery": {
+          "rect": [
+            3,
+            0,
+            1,
+            2
+          ],
+          "custody_world_cell": [
+            3,
+            0
+          ],
+          "world_cells": [
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        "storage": {
+          "rect": [
+            0,
+            2,
+            4,
+            1
+          ],
+          "custody_world_cell": [
+            0,
+            2
+          ],
+          "world_cells": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ]
+        }
+      }
+    },
+    "SE": {
+      "native_rotation": 1,
+      "footprint": [
+        3,
+        4
+      ],
+      "zones": {
+        "pad": {
+          "rect": [
+            1,
+            0,
+            2,
+            1
+          ],
+          "custody_world_cell": [
+            1,
+            0
+          ],
+          "world_cells": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        "workshop": {
+          "rect": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "custody_world_cell": [
+            1,
+            1
+          ],
+          "world_cells": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        "recovery": {
+          "rect": [
+            1,
+            3,
+            2,
+            1
+          ],
+          "custody_world_cell": [
+            1,
+            3
+          ],
+          "world_cells": [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        "storage": {
+          "rect": [
+            0,
+            0,
+            1,
+            4
+          ],
+          "custody_world_cell": [
+            0,
+            0
+          ],
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ]
+          ]
+        }
+      }
+    },
+    "SW": {
+      "native_rotation": 2,
+      "footprint": [
+        4,
+        3
+      ],
+      "zones": {
+        "pad": {
+          "rect": [
+            3,
+            1,
+            1,
+            2
+          ],
+          "custody_world_cell": [
+            3,
+            1
+          ],
+          "world_cells": [
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        "workshop": {
+          "rect": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "custody_world_cell": [
+            1,
+            1
+          ],
+          "world_cells": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        "recovery": {
+          "rect": [
+            0,
+            1,
+            1,
+            2
+          ],
+          "custody_world_cell": [
+            0,
+            1
+          ],
+          "world_cells": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        "storage": {
+          "rect": [
+            0,
+            0,
+            4,
+            1
+          ],
+          "custody_world_cell": [
+            0,
+            0
+          ],
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "NW": {
+      "native_rotation": 3,
+      "footprint": [
+        3,
+        4
+      ],
+      "zones": {
+        "pad": {
+          "rect": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "custody_world_cell": [
+            0,
+            3
+          ],
+          "world_cells": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        "workshop": {
+          "rect": [
+            0,
+            1,
+            2,
+            2
+          ],
+          "custody_world_cell": [
+            0,
+            1
+          ],
+          "world_cells": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "recovery": {
+          "rect": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "custody_world_cell": [
+            0,
+            0
+          ],
+          "world_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "storage": {
+          "rect": [
+            2,
+            0,
+            1,
+            4
+          ],
+          "custody_world_cell": [
+            2,
+            0
+          ],
+          "world_cells": [
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "construction": {
+    "owner": "CmdBuildLaunchCenter / InstallNewLaunchCenter",
+    "scope": "placement_preview_only",
+    "source": "ready_empty selected base",
+    "facility_timer": false,
+    "policy": "Successful native build installs the whole twelve-cell facility atomically. Placement palette/validity belongs to the native preview; no fictional blueprint, partial building or construction progress."
+  },
+  "frame_policy": {
+    "owner": "actual native owners below; no facility animation counter",
+    "canonical_frame": 0,
+    "aliases": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "policy": "All logical frames are still aliases within their own state. Retained countdowns choose state only; no GUI time, wall time, frame modulo or artificial earned work."
+  },
+  "workshop": {
+    "owner": "Station::launch_operations workshop/service/pod_workshop; one exclusive actual slot",
+    "hull_assembly": {
+      "work_owner": "SpaceConstructionState",
+      "work": "Assembling, exact current owned workshop/home/incarnation, remaining_ticks positive and not paused",
+      "wait": "Paused retains the paid unfinished body. Final replacement tick additionally requires original PrepareSpaceReplacement admission; a held handover is not earned work.",
+      "completion": "Native remaining_ticks reaches zero once; original hull moves to SurfaceStored, rocket FIFO pad or other craft storage."
+    },
+    "probe_service": {
+      "work_owner": "SpaceManifest / IsSpaceServiceWorkTick",
+      "work": "EarthWorkshop location only; exact owned service slot, SurfaceStored, positive valid service_ticks, unpaused and actual role inputs. Orbital Onboard service never operates this Surface workshop.",
+      "wait": "service_paused or actual service admission/input refusal retains original paid countdown and packets; cancellation releases service slot and stores the same hull.",
+      "completion": "Original parts consumed once on final earned native opportunity; original owner grants allowance and releases slot."
+    },
+    "pod_assembly": {
+      "work_owner": "SpacePodState / TickSpacePods",
+      "work": "Assembling custody, exact original pod_workshop/home/incarnation and owner, remaining_ticks positive and not paused",
+      "wait": "Paused or missing current slot preserves shell and remaining work; no second visible shell is authored.",
+      "completion": "Original shell enters CenterStored and clears the same exclusive workshop."
+    },
+    "source_parts": "Selected workshop geometry; existing window may carry a symbolic admitted-work/wait material in61E.2. No new machinery, hull or cargo."
+  },
+  "pad": {
+    "owner": "LaunchOperations::pad_active/pad_queue and SpaceTransition",
+    "loading": "FIFO head occupies actual Pad only while pad_active is empty; later queue entries occupy Storage. Mere queue membership earns no work.",
+    "preparing": "Original active rocket, Preparing Surface phase and positive remaining_ticks; native target failure at zero is TargetLost, not extra preparation work.",
+    "ascent": "Same original rocket owns Ascent and outbound burn receipt. Facility plate/arm have no native actuator pose; source hardware stays fixed.",
+    "away": "OrbitalDelivery and ReturnRecovery retain reservation without painting a second Surface rocket or a working pad. Actual rocket/payload belong to separate native owners.",
+    "wait": "Use original SpaceFlightBlock and phase/layer. Holding/HomeLost/PadBusy/TargetLost never advance or recolor an unrelated pad/center.",
+    "source_parts": "Selected fixed plate/folded arm; preparation/ascent phase differences are separate rocket-source responsibilities, not invented facility motion."
+  },
+  "recovery": {
+    "owner": "SpaceTransition::Turnaround; SpacePod::descent / SpaceDescentJob",
+    "rocket": "ReturnRecovery remains in Space until exact original pad reservation admits Surface Turnaround. Actual Surface custody cell is Recovery, not Pad.",
+    "pod": "Actual Descent/Drifting pod and remaining_ticks/blocked stay with its separate shell and native descent job; no facility-owned pod or permanent recovered marker.",
+    "wait": "SpaceDescentBlock::TargetLost/StorageFull/CompanyRemoved and original rocket recovery block retain sole cargo/hull ownership.",
+    "source_parts": "Selected fixed receiving plate; no native mechanical pose or independent recovery clock. Static aliases preserve the receiving-end marking."
+  },
+  "storage": {
+    "owner": "Native station/hub/Vehicle CargoPackets and actual craft/pod custody",
+    "source_parts": "Selected empty four-bay hardware; static aliases for all facility states. No decorative cargo quantity, second shell or invented loading clock.",
+    "policy": "Pad FIFO tail, completed craft and stored pods keep their actual native identity/custody. Loading, handling and capacity reasons remain original inventory owners; an empty drawing creates no cargo."
+  },
+  "occupant_visibility": {
+    "surface_hulls": "Existing SpaceProduction::Physical requires Hidden for non-InTransit Surface hulls; actual launch transitions retain Hidden through Surface preparation/ascent/turnaround and reveal the same hull in Space.",
+    "stored_pods": "GetSpacePodArtPose returns no scene pose for Assembling/CenterStored/Carried custody; only Drifting/Descent draws the original shell.",
+    "foreground": "Ready/empty source fronts prove only that base.61E.2 must record actual visible-hardware separation or explicit absence against these existing visibility rules. A later Surface actor renderer needs its own foreground acceptance.",
+    "separate_assets": [
+      "vehicle.model-14",
+      "vehicle.model-15",
+      "vehicle.model-18",
+      "vehicle.model-19",
+      "vehicle.model-20"
+    ],
+    "forbidden_baked_pixels": [
+      "rocket",
+      "probe",
+      "pod",
+      "cargo",
+      "people",
+      "road",
+      "track",
+      "water"
+    ]
+  },
+  "selection_boundary": "Source mapping only. Future native per-cell selection must resolve exact current owner/incarnation, actual zone and earned/admitted state; a global facility status cannot make unrelated workshop/pad/recovery/storage cells work. Existing GUI owns detailed reasons. No art-local queue, cargo registry or work producer.",
+  "state_mapping_complete": true,
+  "state_art_complete": false,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

@@ -1,0 +1,46 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DE; source-only four-view selection, never a second public sprite manifest or runtime authority.",
+  "asset_id": "facility.launch-center",
+  "status": "base_views_selected_states_pending",
+  "selected_views": {
+    "NE": {
+      "path": "media/multilayer/source/space/launch-center-composed-base-ne-v1.json",
+      "sha256": "024f025b64fc2714feb20b07e6485ee7a45638e0aa350c60aff2e2697b9e0706"
+    },
+    "SE": {
+      "path": "media/multilayer/source/space/launch-center-composed-base-se-v1.json",
+      "sha256": "34262254ad75134c2c1f8f2066beb69e6975c6f4b80b6cbf77b9bef125c98301"
+    },
+    "SW": {
+      "path": "media/multilayer/source/space/launch-center-composed-base-sw-v1.json",
+      "sha256": "49cce56538e21f5cb13698e73494514cd16ea45aefdd795c6869c155dfcaa2fe"
+    },
+    "NW": {
+      "path": "media/multilayer/source/space/launch-center-composed-base-nw-v1.json",
+      "sha256": "271e39a56feb3d9924b69602437d1c9be8f96dae40767a37938c8adab3156fd1"
+    }
+  },
+  "component_models": [
+    {
+      "path": "media/multilayer/source/space/launch-center-component-model-v1.json",
+      "sha256": "572fa7106b1750ee4e6b0f09b3a27598065a53da4c731550e7f6dbb4452d4859"
+    },
+    {
+      "path": "media/multilayer/source/space/launch-center-rotation-model-v1.json",
+      "sha256": "73074b9ffb150297869d376bd00e300b5acee15763341d884a1c9ac8ecd74d52"
+    }
+  ],
+  "native_geometry_owner": "GetLaunchCenterFootprint/GetLaunchFacilityZone and RemapCoords; actual twelve cells per rotation, existing SPR_CONCRETE_GROUND",
+  "source_positions_per_view": 24,
+  "foreground_policy": "ready_empty_base_only; actual occupant foregrounds remain Group61E",
+  "model_review": {
+    "status": "approved_neighboring_views",
+    "review": "All four genuine physical views retain the same workshop doors/four roof grilles, folded arm/motor, receiving-end marking and shallow four-panel storage canopy. Native upper-left screen lighting remains consistent; complete component planes and ordinary depth overlaps are retained."
+  },
+  "rebuild_command": "python src/tests/multilayer/launch_facility_view_checks.py",
+  "proof_directory": "logs/proofs/mlm/native-art/space/launch-center-views-v1",
+  "base_views_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

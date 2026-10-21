@@ -1,0 +1,184 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; verified native world/viewport source contract: Group61B/r2mlvs9-launch-centers-and-rockets.md.",
+  "key": "launch-center-base-ne-v5",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nInput Image 1 is an UNAPPROVED launch-center model edit target. Input Image 2 is the exact native 4x3 floor geometry reference. Produce ONE corrected original ready/empty NE model.\n\nFirst, ZOOM OUT A LOT. Use a SQUARE 1024x1024 canvas. Put the complete facility SMALL in its centre, with its floor no more than 504px wide and252px high, and at least200px of genuinely transparent empty margin on EVERY side, especially below the bottom floor corner. No model edge, faint shadow or floor corner may reach the canvas boundary. Render the whole object; do not crop it. No border or magenta frame.\n\nSecond, redraw the base as exactly TWELVE EQUAL diamond-shaped floor cells: FOUR equal cells along world X toward lower-left, THREE equal cells along world Y toward lower-right. Each +X step is (-72,+36), each +Y step is (+72,+36), at the requested scale. Suggested floor corners: NORTH(548,353), WEST(260,497), EAST(764,461), SOUTH(476,605). Both axes use IDENTICAL cell size and a strict 2:1 isometric camera. The four-cell long side must be exactly4/3 the length of the three-cell short side. No extra apron, border cells, uneven tile scale or perspective. Image2 fixes the twelve physical cell positions.\n\nPreserve this equipment identity and cream/charcoal/dark-blue/ochre M1 industrial materials, upper-left light and empty hardware:\n- Pad upper-right, x0/y0..1: one empty1x2 launch plate with one low horizontal folded service arm, no tall mast.\n- Workshop centre-left, x1..2/y0..1: one LOW2x2 assembly hangar, large open service door on its southeast face towards storage.\n- Recovery lower-left, x3/y0..1: one separate empty1x2 recovery plate.\n- Storage at y2/x0..3 on the near-right diagonal edge: one continuous low strip spanning all FOUR cells, with FOUR equal empty open storage bays, including its fourth bay near the SOUTH corner. No extra unused front row.\nKeep each component on its own cells. Hangar roof no more than52px above floor at this smaller scale, storage canopy about23px; keep the service arm folded low.\n\nNo rocket, probe, pod, cargo, people, crate, tank, container, road, track, water, scenery, text, labels, numbers, logos, extra buildings, extra views, magenta pixels or painted checkerboard. Preserve real transparent alpha throughout the wide margins. Geometry, four empty storage bays and full-object clearance take priority over decorative details.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-base-ne-v4.png",
+      "sha256": "e7efb2de311c0093e5dc4777b881df7d7d03a84728ca6a2a4aa8e8a3ffce2e03",
+      "role": "unapproved model edit target; preserve hardware/materials while redrawing native geometry and increasing margins"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v2/launch-center-NE-layout.png",
+      "sha256": "18db93ad2b218563d197836409b2f718bda411051a1cf6c8a54fe790361e3fe9",
+      "role": "exact native twelve-cell geometry reference; no guide colours/labels/frame in source"
+    }
+  ],
+  "status": "rejected_nonuniform_tile_scale",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v5.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-c5ecf5be-2d3b-42ac-944d-851c18c3b44a.png",
+  "sha256": "2b35e49437989a4bfbc276800ddacc84cbc53de687cd976b8fcd0b28ce2a86b2",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_floor_corners": [
+    [
+      682.0,
+      449
+    ],
+    [
+      1097,
+      670.0
+    ],
+    [
+      604.0,
+      930
+    ],
+    [
+      179,
+      708.5
+    ]
+  ],
+  "layout_review": {
+    "status": "alpha_clearance_passed",
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      179,
+      449,
+      1099,
+      932
+    ],
+    "minimum_clearance": 155
+  },
+  "geometry_review": {
+    "status": "rejected",
+    "measurement": "Four visible floor extrema at alpha128; whole model kept unmodified.",
+    "uniform_scale": 0.24278049937765864,
+    "offset": [
+      4.499090148609639,
+      -47.366806758473416
+    ],
+    "native_corners": [
+      [
+        170,
+        62
+      ],
+      [
+        271,
+        115
+      ],
+      [
+        151,
+        178
+      ],
+      [
+        48,
+        125
+      ]
+    ],
+    "expected_native_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "maximum_corner_error": 7,
+    "actual_native_corners": [
+      [
+        170,
+        62
+      ],
+      [
+        270,
+        116
+      ],
+      [
+        151,
+        179
+      ],
+      [
+        47,
+        125
+      ]
+    ],
+    "permitted_corner_error": 2,
+    "reason": "Best uniform registration misses actual native corners by more than2px; unequal tile scale cannot be repaired by a source shear or warp."
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      176,
+      64
+    ],
+    "native_floor_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "uniform_scale": [
+      5204,
+      21435
+    ],
+    "source_reference": [
+      708.4588777863182,
+      457.2031129900077
+    ],
+    "source_floor_corners": [
+      [
+        682.0,
+        449
+      ],
+      [
+        1097,
+        670.0
+      ],
+      [
+        604.0,
+        930
+      ],
+      [
+        179,
+        708.5
+      ]
+    ]
+  }
+}

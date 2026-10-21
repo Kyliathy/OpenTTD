@@ -160,12 +160,21 @@ old/new decoding,95,743 assertions per configuration and34 ordinary captures.
 Body/pod rendering reads the original Space spatial index and passive custody;
 craft render caches refresh after all late native load owners are accepted.
 Neither drawing nor paused reload grants gameplay work or changes an attachment
-point. Plan9/11's remaining launch, rocket/hauler/heavy and station art stays
-with its own source gates.
+point. Plan9/11's launch, rocket/hauler/heavy and station source/packed/ordinary presentation now pass their scoped receipts below; broader continuous-chain/user acceptance remains separate.
+
+## Delivered orbital and launch presentation boundaries
+
+[Plan11's current handoff](../../upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md#current-runtime-handoff---2026-10-20) records native contained module construction, manufacturing and shared recipe/utility ownership through438. Actual generation-qualified site/Vehicle/packet state owns work and transfers. Ordinary reloads and copied validation use their own saved owners; camera layer, drawings and GUI queries cannot issue resources, shift a gameplay position or commission a facility.
+
+The [current scoped launch gate](../../../../logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json) qualifies all7,764distributed decoded sprites, preserving6,116old sprites and adding1,648facility/rocket parts. Offsets6143..7678 own the four-view/twelve-cell launch facility;7679..7790 own112rocket poses; exclusive bound7791 preserves earlier reserved/unactivated gaps. Ten orbital families occupy5167..6142; earlier Space and M0/M1 content retain their fixed bounds and exact pixels/anchors.
+
+Surface facility drawing uses actual per-zone ground/front pieces and native sort boxes. The near-side foreground cut stays with its own occupied cell, and original role/queue/pad state alone decides which exact Surface hull may draw and be picked. Space free bodies/pods draw only on Space; deployed Orbital selection and non-orbital active-flight selection use their actual typed GUI owner. Ordinary occupied/phase/FIFO/window/deployment/pod captures pass in both configurations. Passive shells stay at their original release point, with no camera-defined descent path; successful native packet recovery consumes the exact shell. Stored shells have no duplicate visible object.
+
+These presentation/save boundaries do not complete Plan11's continuous genuine Surface-funded chain, its network/payment convergence or final personal review. Its latest whole-interval funding refusal and all original inputs remain binding; source-plan/parent completion stays open.
 
 ## Generated graphics and drawing
 
-OpenTTD's extra GRF contains an Action 5 type `0x1C` block beginning at `SPR_MAP_LAYER_BASE`. `MAP_LAYER_SPRITE_COUNT` now follows `MULTILAYER_M1_SPRITE_COUNT` (2,404); `SPR_NEWGRFS_BASE` follows the published bound. Original offsets0..65 remain immutable and66..73 stay reserved/unactivated. Selected delivered core segments preserve planned74..199; vehicle/portal/facility/UI/cargo families append after199 in stable manifest order. The original sheet is retained separately from selected M1 PNG/NFO. [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) retains the DOS palette/native anchor contract and original44 recipe; [M1 packing and technical review](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-t-gallery-acceptance.md) verifies forty selected families/2,311 sprites,2,377 actually loaded sprites and the checked-in generator-free payload.
+OpenTTD's extra GRF contains an Action 5 type `0x1C` block beginning at `SPR_MAP_LAYER_BASE`. `MAP_LAYER_SPRITE_COUNT` now follows `LAUNCH_FLEET_SPRITE_END` (7,791); the historical M1 boundary remains2,404; `SPR_NEWGRFS_BASE` follows the published bound. Original offsets0..65 remain immutable and66..73 stay reserved/unactivated. Selected delivered core segments preserve planned74..199; vehicle/portal/facility/UI/cargo families append after199 in stable manifest order. The original sheet is retained separately from selected M1 PNG/NFO. [media/multilayer/tools/sprite_quantize.py](../../../../media/multilayer/tools/sprite_quantize.py) retains the DOS palette/native anchor contract and original44 recipe; [M1 packing and technical review](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-t-gallery-acceptance.md) verifies forty selected families/2,311 sprites,2,377 actually loaded sprites and the checked-in generator-free payload.
 
 | Block offsets | Contents |
 | --- | --- |

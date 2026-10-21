@@ -77,7 +77,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 74,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 74,
         "sprite_count": 12,
@@ -160,7 +160,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 86,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 86,
         "sprite_count": 12,
@@ -242,7 +242,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 98,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 98,
         "sprite_count": 3,
@@ -328,7 +328,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 7791,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -526,7 +531,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 101,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 101,
         "sprite_count": 3,
@@ -612,7 +617,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 8079,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -808,7 +818,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 104,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 104,
         "sprite_count": 3,
@@ -894,7 +904,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 8367,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -1090,7 +1105,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 107,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 107,
         "sprite_count": 3,
@@ -1233,7 +1248,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 110,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 110,
         "sprite_count": 3,
@@ -1319,7 +1334,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 8655,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -1515,7 +1535,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 113,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 113,
         "sprite_count": 3,
@@ -1601,7 +1621,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 8943,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -1797,7 +1822,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 116,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 116,
         "sprite_count": 3,
@@ -1940,7 +1965,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 119,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 119,
         "sprite_count": 3,
@@ -2026,7 +2051,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 9231,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -2222,7 +2252,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 122,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 122,
         "sprite_count": 3,
@@ -2308,7 +2338,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 9519,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies one canonical source view without a user-selectable mine rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -2504,7 +2539,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 125,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 125,
         "sprite_count": 3,
@@ -2658,7 +2693,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 200,
         "sprite_count": 384,
@@ -2755,7 +2790,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 584,
         "sprite_count": 2,
@@ -2854,7 +2889,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 586,
         "sprite_count": 384,
@@ -2951,7 +2986,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 970,
         "sprite_count": 2,
@@ -3048,7 +3083,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 972,
         "sprite_count": 80,
@@ -3135,7 +3170,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1052,
         "sprite_count": 2,
@@ -3231,7 +3266,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1054,
         "sprite_count": 80,
@@ -3318,7 +3353,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1134,
         "sprite_count": 2,
@@ -3414,7 +3449,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1136,
         "sprite_count": 80,
@@ -3505,7 +3540,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1216,
         "sprite_count": 2,
@@ -3601,7 +3636,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 11855,
+        "sprite_count": 1360,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_vehicle_cargo_label",
       "native_cargo_labels": [
@@ -4334,7 +4374,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 13215,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-11",
@@ -4424,7 +4469,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 13217,
+        "sprite_count": 80,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "sealed_native_cargo_exterior",
       "native_cargo_labels": [
@@ -4524,7 +4574,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 13297,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-11",
@@ -4610,7 +4665,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 13299,
+        "sprite_count": 800,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_vehicle_cargo_label",
       "native_cargo_labels": [
@@ -5117,7 +5177,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14099,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-11",
@@ -5206,7 +5271,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14101,
+        "sprite_count": 80,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "sealed_native_cargo_exterior",
       "native_cargo_labels": [
@@ -5306,7 +5376,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14181,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-11",
@@ -5396,7 +5471,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14183,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "Actual native Train cargo/capacity and TubePowerVehicle wait / GetTubePowerPhase, source contract Plan13 Group49.3.",
@@ -5522,7 +5602,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14327,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-10",
@@ -5609,7 +5694,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14329,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
@@ -5692,7 +5782,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14473,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-10",
@@ -5779,7 +5874,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14475,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
@@ -5877,7 +5977,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14619,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-10",
@@ -5964,7 +6069,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14621,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
@@ -6047,7 +6157,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14765,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-10",
@@ -6133,7 +6248,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14767,
+        "sprite_count": 144,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "GetTubeVehicleGeometry / canonical catalogue; Plan17 staged10B producer checked in both configurations.",
@@ -6217,7 +6337,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14911,
+        "sprite_count": 2,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "authoring": {
         "date": "2026-10-10",
@@ -6293,15 +6418,64 @@
       "preview": "purchase_family",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+        "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original",
+        "composition": "whole_genuine_ready_hulls_with_qualified_axial_engine_parts",
+        "composition_recipe": {
+          "path": "media/multilayer/source/space/cargo-rocket-state-art-v1.json",
+          "sha256": "436bfc1960219de58bc5f0a0423c9cd01a772c10bf2b1aede8d1d2e6515049b0"
+        }
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_launch",
+        "native_offset": 7679,
+        "sprite_count": 112,
+        "source_payload": "logs/proofs/mlm/native-art/space/launch-fleet-packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "authoring": {
+        "date": "2026-10-20",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/source-manifest.json",
+        "atlas_manifest_sha256": "80b21c00d0628d785110016e0f423a972e423eb15c397a57c2c33c964bc2ff40",
+        "native_atlas": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/cargo-rocket-authored.png",
+        "native_sha256": "61facc5c7bf2052ba2f33fd7d53ae6781abed1912756b5ed78f3c3902cddf560",
+        "required_pose_count": 112,
+        "staged_pose_count": 112,
+        "missing_pose_count": 0,
+        "actual_component_pose_count": 24,
+        "canonical_part_count": 24,
+        "explicit_alias_count": 88,
+        "explicit_static_alias_count": 72,
+        "equivalent_state_alias_count": 16,
+        "selected_owned_original_count": 10,
+        "company_mask": {
+          "kind": "explicit_empty",
+          "pixels": 0,
+          "image": {
+            "path": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/company-mask.png",
+            "sha256": "bda727247d76b04490875792dbba563ac5ff898b0e207bb7eede75ad87750495"
+          }
+        }
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/space_vehicle.cpp",
+          "symbol": "SpaceVehicle::GetImage"
+        },
+        "binding_manifest": "logs/proofs/mlm/native-art/space/launch-craft-window-v1/runtime-manifest.json",
+        "ordinary_game_reviewed": true,
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -6421,7 +6595,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 3599,
         "sprite_count": 128,
@@ -6654,7 +6828,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5295,
         "sprite_count": 80,
@@ -6893,7 +7067,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5375,
         "sprite_count": 160,
@@ -7157,7 +7331,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 3951,
         "sprite_count": 64,
@@ -7351,7 +7525,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1218,
         "sprite_count": 48,
@@ -7445,7 +7619,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1266,
         "sprite_count": 48,
@@ -7540,7 +7714,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1314,
         "sprite_count": 128,
@@ -7630,7 +7804,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 14913,
+        "sprite_count": 512,
+        "source_payload": "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_station_graphics_role",
       "native_graphics": {
@@ -7970,7 +8149,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 15425,
+        "sprite_count": 288,
+        "source_payload": "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "native_bay_entrance_or_drive_through_axis",
       "variant_semantics": "single_native_stop_cell",
@@ -8211,7 +8395,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1442,
         "sprite_count": 128,
@@ -8300,7 +8484,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1570,
         "sprite_count": 128,
@@ -8386,7 +8570,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1698,
         "sprite_count": 192,
@@ -8474,7 +8658,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 1890,
         "sprite_count": 512,
@@ -8562,7 +8746,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 9807,
+        "sprite_count": 512,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -8779,7 +8968,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 10319,
+        "sprite_count": 512,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -8996,15 +9190,21 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+        "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 10831,
+        "sprite_count": 512,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -9121,13 +9321,59 @@
         }
       },
       "authoring": {
-        "date": "2026-10-12",
-        "status": "native_geometry_verified_originals_pending",
+        "date": "2026-10-21",
+        "status": "complete_native_processor_source_runtime_pending",
         "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
         "source_slots_required": 512,
-        "coverage_complete": false,
+        "coverage_complete": true,
         "runtime_activated": false,
-        "remaining": "Actual selected sixteen-cell originals and native construction/ready/working/blocked poses; selected packing/native rendering remains master10.4D"
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "source_record": "media/multilayer/source/ground/processor-generation-record.json",
+        "base_coverage_complete": true,
+        "selected_base_nonempty_parts": 32,
+        "base_native_atlas": "logs/proofs/mlm/native-art/ground/battery-works-base-atlas.png",
+        "base_native_sha256": "6aee58390e8ad6fce1d1e84fe7dae306d93f9f40293d13e004208389dfc50953",
+        "base_atlas_manifest": "logs/proofs/mlm/native-art/ground/battery-works-base-manifest.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/battery-works-construction-1-a-v2.png",
+          "media/multilayer/source/ground/raw/battery-works-construction-1-cabinet-v1.png",
+          "media/multilayer/source/ground/raw/battery-works-construction-2-a-v2.png",
+          "media/multilayer/source/ground/raw/battery-works-construction-2-cabinet-v2.png",
+          "media/multilayer/source/ground/raw/battery-works-construction-2-press-v1.png",
+          "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+          "media/multilayer/source/ground/raw/battery-works-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+          "media/multilayer/source/ground/raw/chemical-works-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/chemical-works-construction-1-a-v2.png",
+          "media/multilayer/source/ground/raw/chemical-works-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/chemical-works-construction-2-reactor-v1.png",
+          "media/multilayer/source/ground/raw/chemical-works-construction-2-tank-v1.png",
+          "media/multilayer/source/ground/raw/chemical-works-day-tank-v1.png",
+          "media/multilayer/source/ground/raw/chemical-works-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/chemical-works-machinery-c-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-final-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-ledge-v3.png",
+          "media/multilayer/source/ground/raw/metal-refinery-dispatch-ledge-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-b-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-c-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/battery-works-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/battery-works-source-authored.png",
+        "native_sha256": "abc45b977dfb94ff7f0981a6985eb02c974a4b5f40b5c871f1cc013f141c6b64",
+        "staged_pose_count": 512,
+        "nonempty_source_parts": 512,
+        "structurally_absent_parts": 0
       }
     },
     {
@@ -9175,15 +9421,21 @@
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+        "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 11343,
+        "sprite_count": 512,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
       "variant_semantics": "actual_native_machinery_cell_row_major",
@@ -9300,13 +9552,51 @@
         }
       },
       "authoring": {
-        "date": "2026-10-12",
-        "status": "native_geometry_verified_originals_pending",
+        "date": "2026-10-21",
+        "status": "complete_native_processor_source_runtime_pending",
         "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
         "source_slots_required": 512,
-        "coverage_complete": false,
+        "coverage_complete": true,
         "runtime_activated": false,
-        "remaining": "Actual selected sixteen-cell originals and native construction/ready/working/blocked poses; selected packing/native rendering remains master10.4D"
+        "remaining": "Master10.4D selected packing/native binding/decoded pixels/ordinary game proof",
+        "source_record": "media/multilayer/source/ground/processor-generation-record.json",
+        "base_coverage_complete": true,
+        "selected_base_nonempty_parts": 32,
+        "base_native_atlas": "logs/proofs/mlm/native-art/ground/electronics-works-base-atlas.png",
+        "base_native_sha256": "e467535207591afed07071fed101a9f893d1c8837e0aab5c7d7e79f6f2d433a2",
+        "base_atlas_manifest": "logs/proofs/mlm/native-art/ground/electronics-works-base-manifest.json",
+        "originals": [
+          "media/multilayer/source/ground/raw/coal-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/coal-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-1-a-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-1-a-v2.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-1-bridge-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-1-wire-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-2-a-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-construction-2-press-v1.png",
+          "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/electronics-works-machinery-a-v3.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-1-floor-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-b-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-c-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-final-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-construction-2-ledge-v3.png",
+          "media/multilayer/source/ground/raw/metal-refinery-dispatch-ledge-v1.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-a-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-b-v2.png",
+          "media/multilayer/source/ground/raw/metal-refinery-machinery-c-v1.png",
+          "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+          "media/multilayer/source/m1/raw/facility-status-phases-v1.png"
+        ],
+        "atlas_manifest": "logs/proofs/mlm/native-art/ground/electronics-works-source-manifest.json",
+        "native_atlas": "logs/proofs/mlm/native-art/ground/electronics-works-source-authored.png",
+        "native_sha256": "5daac79feae055e67b487dc8ed731174217deea8368ba142954b47c459bb0b27",
+        "staged_pose_count": 512,
+        "nonempty_source_parts": 512,
+        "structurally_absent_parts": 0
       }
     },
     {
@@ -9659,7 +9949,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 15713,
+        "sprite_count": 256,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_station_graphics_role",
       "native_graphics": {
@@ -9771,7 +10066,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 15969,
+        "sprite_count": 128,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "CmdBuildTrainDepot / GetRailDepotDirection / GetTubeTerminal; Plan13 Group48B",
@@ -9852,7 +10152,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 16097,
+        "sprite_count": 256,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_station_graphics_role",
       "native_graphics": {
@@ -9963,7 +10268,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 2436,
         "sprite_count": 1152,
@@ -10096,7 +10401,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 16353,
+        "sprite_count": 2560,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "native_generator_geometry": {
@@ -10286,7 +10596,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 18913,
+        "sprite_count": 2560,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "native_generator_geometry": {
@@ -10662,7 +10977,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21473,
+        "sprite_count": 128,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "state_owner": "GeothermalRiserState paid construction, IsGeothermalRiserOperational and actual original electrical link readiness; no Heat consumer",
       "frame_owner": {
@@ -10784,7 +11104,7 @@
       ],
       "footprint": [
         4,
-        4
+        3
       ],
       "footprint_semantics": "world_tiles",
       "anchor": [
@@ -10802,22 +11122,222 @@
         "front"
       ],
       "geometry": "per_tile",
-      "tile_variants": 16,
+      "tile_variants": 12,
       "palette": "dos_8bpp",
       "transparent_index": 0,
       "company_colors": "none",
       "preview": "native_build_pose",
       "animation_colors": "forbidden",
       "source": {
-        "status": "planned",
-        "path": null,
-        "provenance": "first_party_original",
-        "rights": "original_to_be_authored"
+        "status": "authored",
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+        "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original",
+        "composition": "whole_selected_component_originals_and_explicit_material_reuse",
+        "composition_recipe": {
+          "path": "media/multilayer/source/space/launch-center-state-art-v2.json",
+          "sha256": "ccb3decb879794b30f3b04d13bd95b0ba2d6a7b70d5a6b756892a2340cfe4de8"
+        }
       },
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_launch",
+        "native_offset": 6143,
+        "sprite_count": 1536,
+        "source_payload": "logs/proofs/mlm/native-art/space/launch-fleet-packed-manifest.json",
+        "payload": "media/baseset/openttd.grf"
+      },
+      "native_rotations": {
+        "NE": {
+          "rotation": 0,
+          "footprint": [
+            4,
+            3
+          ],
+          "zones": {
+            "pad": [
+              0,
+              0,
+              1,
+              2
+            ],
+            "workshop": [
+              1,
+              0,
+              2,
+              2
+            ],
+            "recovery": [
+              3,
+              0,
+              1,
+              2
+            ],
+            "storage": [
+              0,
+              2,
+              4,
+              1
+            ]
+          }
+        },
+        "SE": {
+          "rotation": 1,
+          "footprint": [
+            3,
+            4
+          ],
+          "zones": {
+            "pad": [
+              1,
+              0,
+              2,
+              1
+            ],
+            "workshop": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "recovery": [
+              1,
+              3,
+              2,
+              1
+            ],
+            "storage": [
+              0,
+              0,
+              1,
+              4
+            ]
+          }
+        },
+        "SW": {
+          "rotation": 2,
+          "footprint": [
+            4,
+            3
+          ],
+          "zones": {
+            "pad": [
+              3,
+              1,
+              1,
+              2
+            ],
+            "workshop": [
+              1,
+              1,
+              2,
+              2
+            ],
+            "recovery": [
+              0,
+              1,
+              1,
+              2
+            ],
+            "storage": [
+              0,
+              0,
+              4,
+              1
+            ]
+          }
+        },
+        "NW": {
+          "rotation": 3,
+          "footprint": [
+            3,
+            4
+          ],
+          "zones": {
+            "pad": [
+              0,
+              3,
+              2,
+              1
+            ],
+            "workshop": [
+              0,
+              1,
+              2,
+              2
+            ],
+            "recovery": [
+              0,
+              0,
+              2,
+              1
+            ],
+            "storage": [
+              2,
+              0,
+              1,
+              4
+            ]
+          }
+        }
+      },
+      "variant_semantics": "row_major_world_cells_within_each_rotated_footprint",
+      "native_layout_owner": "LAUNCH_CENTER_LONG_EDGE/LAUNCH_CENTER_SHORT_EDGE; GetLaunchCenterFootprint/GetLaunchFacilityZone",
+      "native_state_owner": "Station::launch_operations; SpaceConstructionState::remaining_ticks/paused; SpaceManifest::service_ticks/service_paused; SpacePodState::remaining_ticks/paused; SpaceTransition::phase/blocked/remaining_ticks",
+      "native_frame_policy": {
+        "construction": "placement_preview_only; CmdBuildLaunchCenter installs a complete facility, no facility construction clock",
+        "ready": "static empty facility; logical frames alias the same selected hardware",
+        "working": "only actual workshop/service/pod work or SpaceTransition preparation/turnaround selects declared equipment parts",
+        "blocked": "static hardware/status from actual native admission/wait reason; no work or queue advancement"
+      },
+      "native_occupant_policy": "LaunchOperations workshop/service/pod_workshop/pad_active/pad_queue reference existing paid actors; rocket/probe/pod art stays separate",
+      "native_inventory_policy": "Original station/hub/vehicle CargoPackets only; storage art creates no stock or freight delivery",
+      "native_water_policy": "At least one actual orthogonal navigable Surface water edge; source art fixes no water side and contains no decorative water",
+      "native_freight_policy": "Joined or explicitly linked same-company Surface rail/lorry members retain their own footprints; no baked track, road, vehicle or station extension",
+      "native_projection": {
+        "owner": "RemapCoords in src/landscape.h; native pixels before ZOOM_BASE scaling",
+        "x_step": [
+          -32,
+          16
+        ],
+        "y_step": [
+          32,
+          16
+        ]
+      },
+      "authoring": {
+        "date": "2026-10-20",
+        "status": "source_packed_runtime_verified",
+        "source_record": "media/multilayer/source/space/space-generation-record.json",
+        "coverage_complete": true,
+        "runtime_activated": true,
+        "atlas_manifest": "logs/proofs/mlm/native-art/space/launch-center-source-v1/source-manifest.json",
+        "atlas_manifest_sha256": "9a9a692dc756421b8f47fc116877219c46eab7c3cc275a713186b3483727db39",
+        "native_atlas": "logs/proofs/mlm/native-art/space/launch-center-source-v1/launch-center-authored.png",
+        "native_sha256": "86ba1ab985d04fba1157534030e6d471f93a8afb3917a5b94ad012b02003e71b",
+        "required_pose_count": 1536,
+        "staged_pose_count": 1536,
+        "missing_pose_count": 0,
+        "canonical_part_count": 104,
+        "explicit_static_alias_count": 1432,
+        "selected_owned_original_count": 16,
+        "explicit_reused_original_count": 2,
+        "foreground_policy": "original_structural_shells_and_near_arm_with_actual_open_cavities_back; per_native_zone_visitor_scope",
+        "occupied_foregrounds_complete": true
+      },
+      "runtime": {
+        "status": "bound_verified",
+        "consumer": {
+          "source": "src/station_cmd.cpp",
+          "symbol": "DrawTile_Station",
+          "call": "DrawLaunchFacilityTile"
+        },
+        "binding_manifest": "logs/proofs/mlm/native-art/space/launch-craft-window-v1/runtime-manifest.json",
+        "ordinary_game_reviewed": true,
+        "user_review": "deferred_until_integration"
       }
     },
     {
@@ -10874,7 +11394,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21637,
+        "sprite_count": 12,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "Plan13 Group47B; native Track::X/Y and RemapCoords",
@@ -10982,7 +11507,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21649,
+        "sprite_count": 24,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "Plan13 Group47C; native Track::Upper/Lower/Left/Right, VehicleEnterTileCoordinates and RemapCoords",
@@ -11131,7 +11661,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21673,
+        "sprite_count": 324,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_trackbits_topology",
       "native_layouts": [
@@ -11302,7 +11837,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21997,
+        "sprite_count": 24,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "Plan13 Group47E; GetTubeGuidewayEnds / native TrackdirToExitdir and adjacent entry-side track status",
@@ -11403,7 +11943,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 22021,
+        "sprite_count": 6,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "Native TRACK_BIT_CROSS / DrawTrackBitsOverlay; Plan13 Group47F",
@@ -11489,7 +12034,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 22027,
+        "sprite_count": 12,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "owner": "TubePowerConnection::utility_path / CaptureTubePowerConnections; Plan13 Group47G",
@@ -11585,7 +12135,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21601,
+        "sprite_count": 12,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "frame_owner": "original_thermal_detail_phase_0_to_3_visual_only",
       "state_owner": "GeothermalVentField membership, active same-layer/date-valid public survey and canonical paid ExcavationState; no thermal demand or copied source balance",
@@ -11674,7 +12229,12 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 21613,
+        "sprite_count": 24,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "variant_semantics": "native_utility_energy_domain",
       "native_domains": [
@@ -11831,7 +12391,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5535,
         "sprite_count": 144,
@@ -11960,7 +12520,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5679,
         "sprite_count": 64,
@@ -12092,7 +12652,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5743,
         "sprite_count": 64,
@@ -12226,7 +12786,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5935,
         "sprite_count": 64,
@@ -12364,7 +12924,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5999,
         "sprite_count": 144,
@@ -12466,7 +13026,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5807,
         "sprite_count": 64,
@@ -12601,7 +13161,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5871,
         "sprite_count": 64,
@@ -12746,7 +13306,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 4015,
         "sprite_count": 384,
@@ -12891,7 +13451,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 4399,
         "sprite_count": 384,
@@ -13036,7 +13596,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 4783,
         "sprite_count": 384,
@@ -13234,7 +13794,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 128,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 128,
         "sprite_count": 3,
@@ -13318,7 +13878,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 131,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 131,
         "sprite_count": 3,
@@ -13402,7 +13962,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 134,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 134,
         "sprite_count": 3,
@@ -13486,7 +14046,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 137,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 137,
         "sprite_count": 3,
@@ -13570,7 +14130,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 140,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 140,
         "sprite_count": 3,
@@ -13819,7 +14379,12 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 152,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 22039,
+        "sprite_count": 3,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "approved_control_registrations": {
@@ -13884,7 +14449,12 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 155,
-        "sha256": null
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
+        "route": "native_baseset_ground",
+        "native_offset": 22042,
+        "sprite_count": 3,
+        "source_payload": "logs/proofs/mlm/native-art/ground/packed-ground-payload.json",
+        "payload": "media/baseset/openttd.grf"
       },
       "geometry_notes": {
         "approved_control_registrations": {
@@ -13946,7 +14516,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 158,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 158,
         "sprite_count": 3,
@@ -14030,7 +14600,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 161,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 161,
         "sprite_count": 3,
@@ -14634,7 +15204,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 2402,
         "sprite_count": 1,
@@ -14716,7 +15286,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 2403,
         "sprite_count": 1,
@@ -15281,7 +15851,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 168,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 168,
         "sprite_count": 16,
@@ -15376,7 +15946,7 @@
       "packed": {
         "namespace": "native_map_layer_extension",
         "offset": 184,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 184,
         "sprite_count": 16,
@@ -15471,7 +16041,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 2404,
         "sprite_count": 16,
@@ -15568,7 +16138,7 @@
       "packed": {
         "namespace": "native_geology_append",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_action5_1c",
         "native_offset": 2420,
         "sprite_count": 16,
@@ -15662,7 +16232,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 3727,
         "sprite_count": 96,
@@ -15829,7 +16399,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_space",
         "native_offset": 3823,
         "sprite_count": 128,
@@ -16016,7 +16586,7 @@
       "packed": {
         "namespace": "MLVI",
         "offset": null,
-        "sha256": null,
+        "sha256": "c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744",
         "route": "native_baseset_orbital",
         "native_offset": 5167,
         "sprite_count": 128,

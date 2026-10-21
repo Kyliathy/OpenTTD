@@ -1,0 +1,150 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.1; original cargo-rocket source model/brief from public/native model14, no source selection or runtime authority.",
+  "asset_id": "vehicle.model-14",
+  "native_model": 14,
+  "status": "selected_ready_ne_base_directions_pending",
+  "public_geometry": {
+    "consumer": 9,
+    "kind": "vehicle",
+    "directions": [
+      "N",
+      "NE",
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW"
+    ],
+    "frames": 2,
+    "states": [
+      "ready",
+      "preparing",
+      "ascent",
+      "orbit",
+      "recovery",
+      "blocked",
+      "service"
+    ],
+    "native_size": [
+      64,
+      48
+    ],
+    "anchor": [
+      -32,
+      -32
+    ],
+    "bounds": [
+      0,
+      0,
+      64,
+      48
+    ],
+    "parts": [
+      "body"
+    ],
+    "geometry": "per_view",
+    "tile_variants": 1,
+    "palette": "dos_8bpp",
+    "transparent_index": 0
+  },
+  "required_logical_poses": 112,
+  "native_inputs": [
+    {
+      "path": "src/multilayer_space_content.h",
+      "sha256": "d05105e48b8ca162b5965a6d7949b92a10391f779acdcf81bb18e67d195eab70"
+    },
+    {
+      "path": "src/multilayer_space_content.cpp",
+      "sha256": "e97819be1065c3426f848e1f0e13ca3889484563563f68cf8093d248e0fe39c0"
+    },
+    {
+      "path": "src/space_production.h",
+      "sha256": "7026f1ebfbfaf955a66364986834c9f4c29033d1a02b2fca8ee36256d4cc785f"
+    },
+    {
+      "path": "src/space_production.cpp",
+      "sha256": "55c9a004f3f2f9a253fe677fd419fdca78f62db98499c3b7ac560367a7739ac7"
+    },
+    {
+      "path": "src/space_transition.h",
+      "sha256": "7551c3eedd4abbcd30832a371667bac72e32be921da5f6f1e2cebb99736f0856"
+    },
+    {
+      "path": "src/space_transition.cpp",
+      "sha256": "3326f5c41b54803e126de1675b26720b310ab60ca4dbc9264298a765c4f78679"
+    },
+    {
+      "path": "src/space_manifest.h",
+      "sha256": "808dfa9b1fff98e4752130ddfecfd858c1dc2883f45bda711bab3c8c554cb57b"
+    },
+    {
+      "path": "src/space_manifest.cpp",
+      "sha256": "0a51de69788de4b07f4d5160822615801cdb3757925cd6714993c2f36a2c3b68"
+    },
+    {
+      "path": "src/space_sprite.cpp",
+      "sha256": "0a93d2241d1b0ecc86d31ada9eb0df0be838ce2ad11f818c52ecc89054f3b6a5"
+    },
+    {
+      "path": "src/space_vehicle.cpp",
+      "sha256": "eb6f1556d2f5cf9865b669b160a7c926543090e857421e43e4bd14577496eeb2"
+    }
+  ],
+  "native_roles": {
+    "construction": "Original LaunchCenter-only paid hull; SpaceBuildKind::Rocket/model14,12Steel+16Goods/capital400000/work148ticks/dry_mass320sixteenths. Art creates none of these assets.",
+    "payload": "Original rocket_payload_sixteenths=30*16; real passenger/probe or actual refitted freight and separate propellant/service compartments stay with SpaceManifest/Vehicle CargoPackets.",
+    "flight": "Same original SpaceTransition hull: GroundLoading, Preparing, Ascent, OrbitalDelivery, ReturnRecovery, Turnaround, Holding. Real outbound/recovery burn receipts and current block own all phase selection.",
+    "service": "Rocket14 has no probe-service countdown. Published service source is actual native postflight Turnaround/handling presentation, never an invented SpaceManifest service job.",
+    "direction": "Existing native engine-viewport N/NE/E/SE/S/SW/W/NW views; author genuine model yaw views, never rotate/mirror a flat sprite."
+  },
+  "model": {
+    "form": "One compact upright reusable unmanned cargo rocket, squat ogive payload capsule above one cylindrical main tank/booster; one integrated graphite base engine bell, exactly four short landing/stabilizer feet in a fixed square arrangement.",
+    "identity": "One recessed dark-blue rectangular control/service plate on physical local+Y face, one closed charcoal payload-access seam on that same face, a single thin ochre waist band; no second booster, external payload or extra antenna.",
+    "style": "Existing M1 chunky low-detail machinery; matte warm cream/pale gray hull, charcoal base/feet/nozzle, dark-blue control plate, restrained ochre band, upper-left SCREEN light. No text/logos/numbers.",
+    "ready": "Whole sealed empty-looking outer hull, all four short feet deployed, no exhaust, hatch opening, people, cargo, probe/pod, platform, water, road, track, labels or backdrop.",
+    "physical_contact": "Fixed native source reference[32,32] at center of landing-foot ground plane. Target ready body envelope[16,2,48,38], within unchanged full native art envelope[2,2,62,46]; preserve room below main nozzle for genuine later phase effects.",
+    "camera": "Orthographic native2:1 ground basis; camera elevation30degrees and azimuth45degrees, upper-left screen light; upright body yaw creates genuine headings. NE base shows local+Y control/access face on the screen-right visible hull surface."
+  },
+  "body_native_envelope": [
+    16,
+    2,
+    48,
+    38
+  ],
+  "native_art_envelope": [
+    2,
+    2,
+    62,
+    46
+  ],
+  "native_contact": [
+    32,
+    32
+  ],
+  "phase_policy": "Ready/loading retain sealed hull; Preparing from actual paid preparation; Ascent and ReturnRecovery may use genuinely authored effect phases only under native flight/burn owners; Orbit is actual Space delivery/coast; Blocked follows actual original SpaceFlightBlock; Service maps actual Turnaround. Static aliases wherever native/art body is unchanged; no frame/request/wall-time clock, free fuel or painted payload quantity.",
+  "launch_fit_reference": {
+    "path": "media/multilayer/source/space/launch-center-foreground-model-v1.json",
+    "sha256": "f88ba6912e5344f6a827634809a6e38ef0c01f4024e6049fc5e0da665029623f"
+  },
+  "source_predecessor_fixture": {
+    "path": "src/tests/multilayer/cargo-rocket-source-fixture.json",
+    "sha256": "ab46d5adf68b1ae946c9ded0244af28faf4e1629f12f729b8d8a9509f6fe9944"
+  },
+  "selected_base": {
+    "candidate": "cargo-rocket-ready-ne-v1",
+    "generation_receipt": {
+      "path": "media/multilayer/source/space/cargo-rocket-ready-ne-v1.json",
+      "sha256": "7eff913707847454a66a07b10ebca16192435d387fc3c394ca5320f141b7bbbf"
+    },
+    "registration_sha256": "cfc4705739dbf8249e220ba7e715ecae351daa5d9f44c172d1652f1d7128d342",
+    "native_pixels_sha256": "8cb8ce0cc6484b61d5465548d4cc848729f3f7d06413273e9929aa7c7d27ed7d",
+    "source_review": "logs/proofs/mlm/native-art/space/cargo-rocket-base-v1/source-review.json"
+  },
+  "selected_directions": {
+    "NE": "cargo-rocket-ready-ne-v1"
+  },
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

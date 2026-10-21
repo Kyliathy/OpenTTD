@@ -1,0 +1,113 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62C.4; exact built-in genuine NW quarter-turn request/input roles.",
+  "key": "cargo-rocket-ready-nw-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset vehicle.model-14 cargo rocket, ONE genuine NW engine-yaw READY view.\nImage1 is the SELECTED original NE whole physical model edit target. Image2 is SELECTED N front view, panel identity/four-foot continuity reference. Image3 is labelled NW engine/contact geometry ONLY, never source artwork.\n\nCreate a GENUINE PHYSICAL -90degree quarter turn from NE (equivalently+270degrees), around the upright VERTICAL axis. The SAME ONE blue rectangular service plate and SAME ONE solid CLOSED charcoal access panel above it are now on the SCREEN-LEFT VISIBLE hull face. Show them as broad visible panels on the left-facing three-quarter capsule/tank surface, with PLAIN warm cream on the screen-right hull. Same panel dimensions/spacing/height as NE; do not center them on the front or leave them on the right. They are solid CLOSED access/service hardware, not a cockpit/window or open hatch. Physical new yaw, never a mirrored flat image: upper-left SCREEN lighting stays fixed, freshly render correct cream light/shadow on the new view.\n\nPreserve the exact compact joined rounded-ogive cream capsule above ONE cylindrical cream tank, ONE thin muted ochre waist band and ONE integrated graphite base engine bell. Exactly FOUR original short graphite landing feet in a square/cardinal pattern, same pivots/struts/full pads and leg lengths. The fourfold-symmetric feet after a90degree physical yaw have the SAME PROJECTION as Image1 NE: three complete original long visible feet LEFT, near FRONT-RIGHT and FAR RIGHT, plus ONE short far-foot pad tucked under the left hull. FOUR TOTAL visible pads, not five; no additional mirrored tiny rear pad on the other side of the bell. Do not mirror the foot assembly or lighting. Same hull diameter/height/profile, bell and waist proportions; no added hardware, second band, booster, fin, antenna or extra plate.\n\nFixed ORTHOGRAPHIC45degree azimuth and30degree CAMERA ELEVATION/native2:1 ground projection, upright hull never tilted. Same chunky low-detail M1 classic transport game materials: warm cream/pale gray, graphite bell/feet/access panel, dark blue service plate and restrained ochre band, broad native64x48-readable regions. Foot ground-plane center directly beneath hull axis remains native32,32 in fixed64x48/(-32,-32).\n\nONE WHOLE isolated NW rocket centered on square1024x1024 truly TRANSPARENT RGBA with minimum120px true alpha clearance on EVERY SIDE around every foot, bell and faint edge. Include the complete model; uniformly reduce if needed for clearance. No other model/view, scenery/backdrop/floor/ground patch/external cast shadow, platform/stand/frame/magenta/colored guide/box/cross/arrow, text/label/number/logo, people, exhaust/smoke/glow, cargo/probe/pod, road/rail/water. READY with original feet deployed. Final NW: original closed charcoal/blue panels broad on SCREEN-LEFT, plain right hull, original FOUR feet only, light fixed upper-left.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "role": "selected original NE physical model edit target; genuine-90degree yaw moves original panels to visible left, fixed screen light",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "role": "selected front-panel identity/four-foot continuity reference; no duplicated hardware",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/nw-isolated-template.png",
+      "role": "labelled NW engine/contact geometry only; not source artwork",
+      "sha256": "d90799fdd1a3d2358d5ba837f0f2e1854c716d31d66a6c2155ec7d4e9edb93fc"
+    }
+  ],
+  "status": "selected_direction",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-nw-v1.png",
+  "sha256": "e413d026ffbcbd33bd692c4dbdf6ea5363d9ef8bde7708ca4dba68e5d22813f9",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/nw-isolated-template.png",
+      "sha256": "d90799fdd1a3d2358d5ba837f0f2e1854c716d31d66a6c2155ec7d4e9edb93fc"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      276,
+      155,
+      1033,
+      1105
+    ],
+    "minimum_clearance": 149
+  },
+  "native_transforms": {
+    "NW": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        276,
+        155,
+        1033,
+        1105
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        625,
+        957
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "source_reference": [
+      625,
+      957
+    ],
+    "definition": "Center of original four-pad ground-plane contacts under hull axis, same near/far physical lane as selected NE after a genuine quarter turn. Same1/29scale and fixed native32,32."
+  },
+  "physical_view": {
+    "direction": "NW",
+    "yaw_from_ne": 270,
+    "service_face": "same service/access face on screen-left visible hull"
+  },
+  "model_review": {
+    "status": "approved_genuine_direction",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/selected-ready-contact.png",
+    "findings": [
+      "Genuine NW physical-90/+270degree yaw from NE puts the same original closed charcoal access panel and blue service plate on screen-left visible face, plain cream screen-right. Fixed upper-left screen light is preserved with new physical shading, no flat mirror/rotation.",
+      "Exactly four original short square-arranged feet: three complete long feet plus one actual far pad under left hull. Original joined capsule/tank, one graphite bell and ochre waist band retain physical proportions; W/N/NE/NW native neighbor contact reviewed.",
+      "Whole1254RGBA/alpha16clearance149px; same uniform1/29physical scale, fixed32,32/64x48/(-32,-32). Native430pixels/bounds19,4,46,37 retain one-pixel genuine-source apex variation; all pixels fit unchanged body envelope. No clipping/erasure/mask/warp or changed native/facility guard."
+    ]
+  }
+}

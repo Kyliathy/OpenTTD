@@ -1,0 +1,54 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.1; immutable reviewed original NE base and source-only fit. Do not regenerate expected values to bless drift.",
+  "candidate": "cargo-rocket-ready-ne-v1",
+  "generation_receipt": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-ne-v1.json",
+    "sha256": "7eff913707847454a66a07b10ebca16192435d387fc3c394ca5320f141b7bbbf"
+  },
+  "original": {
+    "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+    "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+  },
+  "registration_sha256": "cfc4705739dbf8249e220ba7e715ecae351daa5d9f44c172d1652f1d7128d342",
+  "native_pixels_sha256": "8cb8ce0cc6484b61d5465548d4cc848729f3f7d06413273e9929aa7c7d27ed7d",
+  "native_subject_bounds": [
+    19,
+    3,
+    46,
+    37
+  ],
+  "nontransparent_pixels": 423,
+  "fixed_model_sha256": "3367b51d2f77a7e39ceeb79aeb42d219566500e18f22f733748d114fb6c78f0f",
+  "fit": [
+    {
+      "component": "pad",
+      "physical_contact": [
+        176,
+        80
+      ],
+      "source_pixels": 423,
+      "visible_pixels": 369,
+      "occluded_pixels": 54
+    },
+    {
+      "component": "workshop",
+      "physical_contact": [
+        144,
+        112
+      ],
+      "source_pixels": 423,
+      "visible_pixels": 0,
+      "occluded_pixels": 423
+    },
+    {
+      "component": "recovery",
+      "physical_contact": [
+        80,
+        128
+      ],
+      "source_pixels": 423,
+      "visible_pixels": 423,
+      "occluded_pixels": 0
+    }
+  ]
+}

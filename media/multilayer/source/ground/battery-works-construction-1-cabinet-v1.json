@@ -1,0 +1,103 @@
+{
+  "id": "battery-works-construction-1-cabinet-v1",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-1-cabinet-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-190f73f0-cd44-44af-81df-92f6c1313812.png",
+  "prompt": "Use case: precise-object-edit. Image1 is the approved completed Battery formation cabinet edit target, already registered against native game geometry. Produce its genuine CONSTRUCTION STAGE1 as ONE isolated object. Preserve EXACT original concrete square floor, whole left/right/south floor contacts, floor silhouette, camera, lighting, model scale/placement and low cabinet proportions. Same1536x1024 canvas with generous true alpha-transparent margins. DO NOT change floor/camera/geometry or enlarge the object.\nChange ONLY assembly completeness: retain the same low cabinet framework, covered base cable ports and fixed side vents. Remove the top casing so the empty structural crossbars are visible. Keep exactly THREE front door BAYS, but install only the LEFT door with its yellow handle. The middle and right front doors are NOT YET INSTALLED, showing EMPTY dark bays inside. No contents, batteries, liquid, electrical charge, racks of stock or controls. No detached doors, loose parts, props, tools, text, labels, lights or status displays. It must visibly be the SAME three-bay cabinet under assembly, not an operating full cabinet with open doors. Preserve the approved square floor with centered south tip and entire plinth; all fittings stay inside it. Keep slate/silver/yellow/olive materials, fixed2:1 isometric camera, upper-left light. Real alpha transparency in background, no colored haze or source frames.",
+  "construction_stage": 1,
+  "variants": [
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "9d421770669af1a4a07f09e36dd331a2a5eaee044cf85c4bfa8f749536666d8a",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+      "sha256": "48947662c5702c2f79a0f8a70233695c7c5e91dce295ea5772a7871bee11dd70",
+      "role": "exact_completed_cabinet_and_qualified_square_floor"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        259,
+        174,
+        1279,
+        917
+      ],
+      "native_box": [
+        1,
+        19,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 10,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        259,
+        174,
+        1279,
+        917
+      ],
+      "minimum_alpha16_clearance": 107,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      10
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "10": "Same low three-bay frame with only left door installed; middle/right front doors and top casing absent, all interiors empty. Original side vents and covered ports remain."
+    }
+  },
+  "excluded_variants": []
+}

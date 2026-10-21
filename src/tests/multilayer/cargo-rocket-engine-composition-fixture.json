@@ -1,0 +1,205 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.3; immutable visually reviewed16genuine-heading/two-engine-frame compositions. Never regenerate expected body/part pixels to bless drift.",
+  "engine_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-engine-model-v1.json",
+    "sha256": "48703267928d12b9e4a78b1d048bfd8250e313c0bb74bf72d1b7c7437ce4e48b"
+  },
+  "policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "poses": {
+    "N/0": {
+      "whole_pixels_sha256": "ee0c14f3ecdc4f5c443a7901798e40800b8a19d8d266d31aa44747427bc40a34",
+      "unchanged_body_pixels": 436,
+      "visible_effect_pixels": 38,
+      "occluded_effect_pixels": 12,
+      "whole_bounds": [
+        18,
+        3,
+        45,
+        44
+      ]
+    },
+    "NE/0": {
+      "whole_pixels_sha256": "a3f426ce87179de2a9d25c58989d1c4d0a568e8ad5312db96947837415f157a6",
+      "unchanged_body_pixels": 423,
+      "visible_effect_pixels": 46,
+      "occluded_effect_pixels": 4,
+      "whole_bounds": [
+        20,
+        4,
+        46,
+        44
+      ]
+    },
+    "E/0": {
+      "whole_pixels_sha256": "2085796708868a05802f916798044824126fbb7bcc9b3e5b7c5eb1691e658eb2",
+      "unchanged_body_pixels": 444,
+      "visible_effect_pixels": 36,
+      "occluded_effect_pixels": 14,
+      "whole_bounds": [
+        18,
+        3,
+        45,
+        44
+      ]
+    },
+    "SE/0": {
+      "whole_pixels_sha256": "a7cbd664584f3d326e1f881f17afa6dbe41fd4bbeb1990576cd036a29d7ee0e2",
+      "unchanged_body_pixels": 421,
+      "visible_effect_pixels": 42,
+      "occluded_effect_pixels": 8,
+      "whole_bounds": [
+        19,
+        5,
+        46,
+        44
+      ]
+    },
+    "S/0": {
+      "whole_pixels_sha256": "519d1f467a152359791c8f6c4e713515ab8eb2317383da1ea0f74b5f46d59e00",
+      "unchanged_body_pixels": 424,
+      "visible_effect_pixels": 40,
+      "occluded_effect_pixels": 10,
+      "whole_bounds": [
+        18,
+        4,
+        45,
+        44
+      ]
+    },
+    "SW/0": {
+      "whole_pixels_sha256": "ae3101ead6ff629722e3e9026a2037d7482e5aaac2fc6bd16c9475f743925186",
+      "unchanged_body_pixels": 431,
+      "visible_effect_pixels": 42,
+      "occluded_effect_pixels": 8,
+      "whole_bounds": [
+        19,
+        5,
+        46,
+        44
+      ]
+    },
+    "W/0": {
+      "whole_pixels_sha256": "e05ecaec75bafaded1fa3e5eaff51fca77dd0ed20dcaae9283e0f4bb861fd8f8",
+      "unchanged_body_pixels": 454,
+      "visible_effect_pixels": 37,
+      "occluded_effect_pixels": 13,
+      "whole_bounds": [
+        17,
+        3,
+        46,
+        44
+      ]
+    },
+    "NW/0": {
+      "whole_pixels_sha256": "2fa8280a866282500acbe8a9d01ff33e2bfd076e204285c4ea10e820eee724d6",
+      "unchanged_body_pixels": 430,
+      "visible_effect_pixels": 41,
+      "occluded_effect_pixels": 9,
+      "whole_bounds": [
+        20,
+        4,
+        45,
+        44
+      ]
+    },
+    "N/1": {
+      "whole_pixels_sha256": "d5e206e6716cd98750a5f3b936d061285215f112f3ae726b474b9a1c3d87b0a1",
+      "unchanged_body_pixels": 436,
+      "visible_effect_pixels": 28,
+      "occluded_effect_pixels": 12,
+      "whole_bounds": [
+        18,
+        3,
+        45,
+        41
+      ]
+    },
+    "NE/1": {
+      "whole_pixels_sha256": "136a81267812ccfe893922d7cae35744e2e9a9b871cb0a5dbda4cb836cee268e",
+      "unchanged_body_pixels": 423,
+      "visible_effect_pixels": 37,
+      "occluded_effect_pixels": 3,
+      "whole_bounds": [
+        20,
+        4,
+        46,
+        41
+      ]
+    },
+    "E/1": {
+      "whole_pixels_sha256": "b01786b52b92a0069d976db9c78204d5783e42f33a225ba0b9d9e81cd7e17b8d",
+      "unchanged_body_pixels": 444,
+      "visible_effect_pixels": 26,
+      "occluded_effect_pixels": 14,
+      "whole_bounds": [
+        18,
+        3,
+        45,
+        41
+      ]
+    },
+    "SE/1": {
+      "whole_pixels_sha256": "4ee277f306439188053e2fa63f55b9e46dc5f1ed8bb3939788bed1536db53721",
+      "unchanged_body_pixels": 421,
+      "visible_effect_pixels": 33,
+      "occluded_effect_pixels": 7,
+      "whole_bounds": [
+        19,
+        5,
+        46,
+        41
+      ]
+    },
+    "S/1": {
+      "whole_pixels_sha256": "a0243a707a127be7be565072b2d9f1d0beb7b59b78506e7b99757909c3dfb21a",
+      "unchanged_body_pixels": 424,
+      "visible_effect_pixels": 30,
+      "occluded_effect_pixels": 10,
+      "whole_bounds": [
+        18,
+        4,
+        45,
+        41
+      ]
+    },
+    "SW/1": {
+      "whole_pixels_sha256": "5612b899890f141f3a21c136ca85417857d9d00d9a01c540d0c4487f0ae68453",
+      "unchanged_body_pixels": 431,
+      "visible_effect_pixels": 33,
+      "occluded_effect_pixels": 7,
+      "whole_bounds": [
+        19,
+        5,
+        46,
+        41
+      ]
+    },
+    "W/1": {
+      "whole_pixels_sha256": "52abb6299cf870d2529222cbad049d5ba67886d4c4bb6de5a09eda93b69f8348",
+      "unchanged_body_pixels": 454,
+      "visible_effect_pixels": 27,
+      "occluded_effect_pixels": 13,
+      "whole_bounds": [
+        17,
+        3,
+        46,
+        41
+      ]
+    },
+    "NW/1": {
+      "whole_pixels_sha256": "af98a8948cda81663c95728a764eb61478103850725136fa6f4cd44169d3c0ba",
+      "unchanged_body_pixels": 430,
+      "visible_effect_pixels": 32,
+      "occluded_effect_pixels": 8,
+      "whole_bounds": [
+        20,
+        4,
+        45,
+        41
+      ]
+    }
+  }
+}

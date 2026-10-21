@@ -1,0 +1,1930 @@
+{
+  "_documentation": "@file ground-consumer-dispatch.json. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79F. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md. Read-only dispatch inventory; source shapes and native producer behavior are qualified by their owning implementation groups, not this catalogue.",
+  "schema_version": 1,
+  "source_scope": {
+    "path": "media/multilayer/ground-pack-scope.json",
+    "sha256": "06e8e705b0efe233f79537d95d905c06dba5337d84f05435ae339c17285af4ac"
+  },
+  "packed_handoff": {
+    "path": "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/packed-ground-payload.json",
+    "sha256": "8fc6140c69e800d681e233ee877fd67ec9b583893c629b861d62587eab9f0a61"
+  },
+  "proposed_pose_api": {
+    "group": "79FB",
+    "header": "src/ground_sprite.h",
+    "symbols": [
+      "GetGroundSprite"
+    ],
+    "implemented": true,
+    "qualification": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/pose-contract.json"
+  },
+  "families": [
+    {
+      "asset_id": "mine.COAL",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 7791,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.IORE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 8079,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.CORE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 8367,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.SALT",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 8655,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.LITH",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 8943,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.COBT",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 9231,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "mine.RARE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 9519,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FC",
+      "master": "10.4D",
+      "owner": "src/multilayer_industry.h",
+      "symbols": [
+        "GetLayerIndustryCapability",
+        "GetLayerMineState",
+        "GetLayerMineOperationalStatus"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-mine-art-geometry]",
+        "[layer-mine-presentation]"
+      ],
+      "binding_header": "src/ground_mine_sprite.h",
+      "binding_symbol": "GetGroundMineSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/mine-selection.json",
+        "sha256": "a1559afc704be1ca003233d0e9383dc6dc83ff9b7731241ecf765386eb9ce3e5"
+      }
+    },
+    {
+      "asset_id": "facility.metal-refinery",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 9807,
+      "sprite_count": 512,
+      "dispatch": "current_bound",
+      "group": "79FD",
+      "master": "10.4D",
+      "owner": "src/layer_processor_presentation.h",
+      "symbols": [
+        "GetLayerProcessorOperationalStatus",
+        "CaptureLayerProcessorInventory"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-processor-definition]",
+        "[layer-processor-presentation]"
+      ],
+      "binding_header": "src/ground_processor_sprite.h",
+      "binding_symbol": "GetGroundProcessorSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/processor-selection.json",
+        "sha256": "cd1e0d3fcccbc64fd7bf9bc9ea2f0c5d8669ade95e20aef8d6a2a86d335d38fe"
+      }
+    },
+    {
+      "asset_id": "facility.chemical-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 10319,
+      "sprite_count": 512,
+      "dispatch": "current_bound",
+      "group": "79FD",
+      "master": "10.4D",
+      "owner": "src/layer_processor_presentation.h",
+      "symbols": [
+        "GetLayerProcessorOperationalStatus",
+        "CaptureLayerProcessorInventory"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-processor-definition]",
+        "[layer-processor-presentation]"
+      ],
+      "binding_header": "src/ground_processor_sprite.h",
+      "binding_symbol": "GetGroundProcessorSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/processor-selection.json",
+        "sha256": "cd1e0d3fcccbc64fd7bf9bc9ea2f0c5d8669ade95e20aef8d6a2a86d335d38fe"
+      }
+    },
+    {
+      "asset_id": "facility.battery-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 10831,
+      "sprite_count": 512,
+      "dispatch": "current_bound",
+      "group": "79FD",
+      "master": "10.4D",
+      "owner": "src/layer_processor_presentation.h",
+      "symbols": [
+        "GetLayerProcessorOperationalStatus",
+        "CaptureLayerProcessorInventory"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-processor-definition]",
+        "[layer-processor-presentation]"
+      ],
+      "binding_header": "src/ground_processor_sprite.h",
+      "binding_symbol": "GetGroundProcessorSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/processor-selection.json",
+        "sha256": "cd1e0d3fcccbc64fd7bf9bc9ea2f0c5d8669ade95e20aef8d6a2a86d335d38fe"
+      }
+    },
+    {
+      "asset_id": "facility.electronics-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 11343,
+      "sprite_count": 512,
+      "dispatch": "current_bound",
+      "group": "79FD",
+      "master": "10.4D",
+      "owner": "src/layer_processor_presentation.h",
+      "symbols": [
+        "GetLayerProcessorOperationalStatus",
+        "CaptureLayerProcessorInventory"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "selector": "GetMultiLayerIndustrySprite",
+      "producer_tests": [
+        "[layer-processor-definition]",
+        "[layer-processor-presentation]"
+      ],
+      "binding_header": "src/ground_processor_sprite.h",
+      "binding_symbol": "GetGroundProcessorSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/processor-selection.json",
+        "sha256": "cd1e0d3fcccbc64fd7bf9bc9ea2f0c5d8669ade95e20aef8d6a2a86d335d38fe"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-04",
+      "consumer": 5,
+      "states": [
+        "idle",
+        "moving",
+        "working",
+        "blocked",
+        "service"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 1136,
+      "sprite_count": 80,
+      "dispatch": "current_existing",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "selector": "GetMultiLayerTrainSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ]
+    },
+    {
+      "asset_id": "purchase.model-04",
+      "consumer": 5,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 1216,
+      "sprite_count": 2,
+      "dispatch": "current_existing",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "GetRailIcon",
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ]
+    },
+    {
+      "asset_id": "vehicle.model-05",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 17,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 11855,
+      "sprite_count": 1360,
+      "dispatch": "current_bound",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "selector": "GetMultiLayerTrainSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_train_sprite.h",
+      "binding_symbol": "GetGroundTrainSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/rail-selection.json",
+        "sha256": "f5c3cf3d073af3e009fcc926adca43d30fcb0a77f1c2f4eacea76f28b83ddf7a"
+      }
+    },
+    {
+      "asset_id": "purchase.model-05",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 13215,
+      "sprite_count": 2,
+      "dispatch": "current_bound",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "GetRailIcon",
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_train_sprite.h",
+      "binding_symbol": "GetGroundRailPurchaseSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/rail-selection.json",
+        "sha256": "f5c3cf3d073af3e009fcc926adca43d30fcb0a77f1c2f4eacea76f28b83ddf7a"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-06",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 13217,
+      "sprite_count": 80,
+      "dispatch": "current_bound",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "selector": "GetMultiLayerTrainSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_train_sprite.h",
+      "binding_symbol": "GetGroundTrainSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/rail-selection.json",
+        "sha256": "f5c3cf3d073af3e009fcc926adca43d30fcb0a77f1c2f4eacea76f28b83ddf7a"
+      }
+    },
+    {
+      "asset_id": "purchase.model-06",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 13297,
+      "sprite_count": 2,
+      "dispatch": "current_bound",
+      "group": "79FE",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "GetRailIcon",
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_train_sprite.h",
+      "binding_symbol": "GetGroundRailPurchaseSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/rail-selection.json",
+        "sha256": "f5c3cf3d073af3e009fcc926adca43d30fcb0a77f1c2f4eacea76f28b83ddf7a"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-07",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 10,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 13299,
+      "sprite_count": 800,
+      "dispatch": "current_bound",
+      "group": "79FF",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/roadveh_cmd.cpp",
+      "draw_symbol": "RoadVehicle::GetImage",
+      "selector": null,
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_road_sprite.h",
+      "binding_symbol": "GetGroundRoadSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/road-selection.json",
+        "sha256": "ec3c082c6db0e802d0834542cf98d09f0977d0163750551b32846c09b73306df"
+      }
+    },
+    {
+      "asset_id": "purchase.model-07",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14099,
+      "sprite_count": 2,
+      "dispatch": "current_bound",
+      "group": "79FF",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/roadveh_cmd.cpp",
+      "draw_symbol": "GetRoadVehIcon",
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_road_sprite.h",
+      "binding_symbol": "GetGroundRoadPurchaseSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/road-selection.json",
+        "sha256": "ec3c082c6db0e802d0834542cf98d09f0977d0163750551b32846c09b73306df"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-08",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14101,
+      "sprite_count": 80,
+      "dispatch": "current_bound",
+      "group": "79FF",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/roadveh_cmd.cpp",
+      "draw_symbol": "RoadVehicle::GetImage",
+      "selector": null,
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_road_sprite.h",
+      "binding_symbol": "GetGroundRoadSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/road-selection.json",
+        "sha256": "ec3c082c6db0e802d0834542cf98d09f0977d0163750551b32846c09b73306df"
+      }
+    },
+    {
+      "asset_id": "purchase.model-08",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14181,
+      "sprite_count": 2,
+      "dispatch": "current_bound",
+      "group": "79FF",
+      "master": "10.4D",
+      "owner": "src/underground_vehicle.h",
+      "symbols": [
+        "GetUndergroundEngine",
+        "GetUndergroundEngineCapability",
+        "CheckUndergroundVehicleCapability"
+      ],
+      "draw_owner": "src/roadveh_cmd.cpp",
+      "draw_symbol": "GetRoadVehIcon",
+      "selector": "GetMultiLayerEnginePurchaseSprite",
+      "producer_tests": [
+        "[underground-engine]",
+        "[underground-filter]"
+      ],
+      "binding_header": "src/ground_road_sprite.h",
+      "binding_symbol": "GetGroundRoadPurchaseSprite",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/road-selection.json",
+        "sha256": "ec3c082c6db0e802d0834542cf98d09f0977d0163750551b32846c09b73306df"
+      }
+    },
+    {
+      "asset_id": "vehicle.model-09",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14183,
+      "sprite_count": 144,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "purchase.model-09",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14327,
+      "sprite_count": 2,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "vehicle.model-10",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14329,
+      "sprite_count": 144,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "purchase.model-10",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14473,
+      "sprite_count": 2,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "vehicle.model-11",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14475,
+      "sprite_count": 144,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "purchase.model-11",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14619,
+      "sprite_count": 2,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "vehicle.model-12",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14621,
+      "sprite_count": 144,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "purchase.model-12",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14765,
+      "sprite_count": 2,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "vehicle.model-13",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14767,
+      "sprite_count": 144,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "purchase.model-13",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 14911,
+      "sprite_count": 2,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeVehicleCapability",
+        "GetTubeEngine"
+      ],
+      "draw_owner": "src/train_cmd.cpp",
+      "draw_symbol": "Train::GetImage",
+      "producer_tests": [
+        "[transport-tube-model]"
+      ],
+      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+    },
+    {
+      "asset_id": "facility.rail-station",
+      "consumer": 7,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front",
+        "roof",
+        "glass"
+      ],
+      "native_offset": 14913,
+      "sprite_count": 512,
+      "dispatch": "current_bound",
+      "group": "79FG",
+      "master": "10.4D",
+      "owner": "src/conventional_station_art.h",
+      "symbols": [
+        "GetConventionalRailStationArtGeometry",
+        "GetConventionalRailStationTileArtGeometry"
+      ],
+      "draw_owner": "src/station_cmd.cpp",
+      "draw_symbol": "DrawTile_Station",
+      "producer_tests": [
+        "[conventional-station-art]"
+      ],
+      "binding_header": "src/ground_station_sprite.h",
+      "binding_symbol": "GetGroundStationTileLayout",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/station-selection.json",
+        "sha256": "c50e73a88a697dd03145c8ea974f30f8436759c602bdb79fbe3a0228a0fb4ec3"
+      }
+    },
+    {
+      "asset_id": "facility.road-terminal",
+      "consumer": 7,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW",
+        "X",
+        "Y"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "parent-0",
+        "parent-1",
+        "parent-2"
+      ],
+      "native_offset": 15425,
+      "sprite_count": 288,
+      "dispatch": "current_bound",
+      "group": "79FG",
+      "master": "10.4D",
+      "owner": "src/conventional_terminal_art.h",
+      "symbols": [
+        "GetConventionalRoadTerminalArtGeometry",
+        "GetConventionalRoadTerminalTileArtGeometry"
+      ],
+      "draw_owner": "src/station_cmd.cpp",
+      "draw_symbol": "DrawTile_Station",
+      "producer_tests": [
+        "[conventional-terminal-art]"
+      ],
+      "binding_header": "src/ground_station_sprite.h",
+      "binding_symbol": "GetGroundStationTileLayout",
+      "binding_qualification": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-consumers-v1/station-selection.json",
+        "sha256": "c50e73a88a697dd03145c8ea974f30f8436759c602bdb79fbe3a0228a0fb4ec3"
+      }
+    },
+    {
+      "asset_id": "facility.tube-terminal",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 15713,
+      "sprite_count": 256,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "facility.tube-service",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 15969,
+      "sprite_count": 128,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "facility.tube-interchange",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 16097,
+      "sprite_count": 256,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "facility.vent-collector",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 2436,
+      "sprite_count": 1152,
+      "dispatch": "current_existing",
+      "group": "79FH preserved display",
+      "master": "10.4B complete; lifecycle10.7",
+      "owner": "src/multilayer_sprite.h",
+      "symbols": [
+        "GetMultiLayerCollectorSprite"
+      ],
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "producer_tests": [
+        "[collector-art-selection]"
+      ]
+    },
+    {
+      "asset_id": "facility.vent-powerhouse",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked",
+        "heat_starved"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 16353,
+      "sprite_count": 2560,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    },
+    {
+      "asset_id": "facility.magma-powerhouse",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked",
+        "heat_starved"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 18913,
+      "sprite_count": 2560,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    },
+    {
+      "asset_id": "facility.utility-riser",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 21473,
+      "sprite_count": 128,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    },
+    {
+      "asset_id": "geothermal.vent",
+      "consumer": 18,
+      "states": [
+        "hidden",
+        "surveyed",
+        "excavated"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 21601,
+      "sprite_count": 12,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    },
+    {
+      "asset_id": "geothermal.conduit",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "connected",
+        "unconnected"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 2,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 21613,
+      "sprite_count": 24,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    },
+    {
+      "asset_id": "tube.straight",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 21637,
+      "sprite_count": 12,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "tube.bend45",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "N",
+        "S",
+        "W",
+        "E"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 21649,
+      "sprite_count": 24,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "tube.junction",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 54,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 21673,
+      "sprite_count": 324,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "tube.end",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 21997,
+      "sprite_count": 24,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "tube.crossing",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_offset": 22021,
+      "sprite_count": 6,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "tube.conduit",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 22027,
+      "sprite_count": 12,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "control.tube",
+      "consumer": 7,
+      "states": [
+        "enabled",
+        "disabled",
+        "pressed"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 22039,
+      "sprite_count": 3,
+      "dispatch": "later_owner",
+      "group": "Plan17 Groups9-15",
+      "master": "10.5-10.7",
+      "owner": "src/transport_tube.h",
+      "symbols": [
+        "GetTubeGuidewayEnds",
+        "GetTubeRailType",
+        "CheckTubeConstruction"
+      ],
+      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+    },
+    {
+      "asset_id": "control.geothermal",
+      "consumer": 7,
+      "states": [
+        "enabled",
+        "disabled",
+        "pressed"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_offset": 22042,
+      "sprite_count": 3,
+      "dispatch": "later_owner",
+      "group": "Plan18 Groups8/13-17; related Plan7 tools",
+      "master": "10.6-10.8",
+      "owner": "src/geothermal.h",
+      "symbols": [],
+      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+    }
+  ],
+  "behavior_verified": false,
+  "runtime_activated": false
+}

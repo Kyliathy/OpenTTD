@@ -1,0 +1,427 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group42B/42C",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Model brief and exact empty compatible apparatus ancestry; no new selected pixels, source coverage or runtime claim"
+  },
+  "asset_id": "facility.electronics-works",
+  "status": "model_brief",
+  "native": {
+    "directions": [
+      "none"
+    ],
+    "frames": 4,
+    "states": [
+      "construction",
+      "ready",
+      "working",
+      "blocked"
+    ],
+    "footprint": [
+      4,
+      4
+    ],
+    "tile_variants": 16,
+    "parts": [
+      "back",
+      "front"
+    ],
+    "geometry": "per_tile",
+    "native_size": [
+      64,
+      64
+    ],
+    "anchor": [
+      -31,
+      -33
+    ],
+    "bounds": [
+      0,
+      0,
+      64,
+      64
+    ],
+    "direction_semantics": "fixed_native_layout; none identifies the installed canonical source view without a user-selectable processor rotation",
+    "variant_semantics": "actual_native_machinery_cell_row_major",
+    "native_layout": 0,
+    "native_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "geometry_descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+    "layout_owner": "InstallLayerProcessorDefinition/GetLayerProcessorIndustryType exact IIDS/TIDS; one fixed4x4 layout",
+    "source_part_policy": "Existing DrawTile_Industry selected branch: original back at ground origin; front origin(0,0,0), extent(16,16,20), offset(0,0,0); native processor binding remains master10.4D",
+    "source_height_limit": 20,
+    "native_state_policy": {
+      "eligibility": "Actual selected first-party processor, valid native LayerProcessorState and supported recipe; MissingState/InvalidState grant no authored pose authority",
+      "construction": "Each actual owned tile GetIndustryConstructionStage selects0..3; already complete cells stay3 while IsLayerIndustryComplete waits for the whole industry",
+      "ready": "GetLayerProcessorOperationalStatus::Idle: actual required input cannot supply a complete batch, independently of banked work; final output remains physical",
+      "working": "GetLayerProcessorOperationalStatus::Working: shared CaptureLayerProcessorInventory/common PlanMultiLayerRecipeBatches admit one batch's actual all-input/output prerequisites; presentation earns no work",
+      "blocked": "Actual OutputFull/Paused/Stopped/Unavailable; Industry input/output and existing recipe/work/history remain unchanged",
+      "quantity_owner": "Existing Industry accepted/produced slots and common native atomic recipe commit; no source-state cargo inventory",
+      "world_states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frame_owner": "construction actual GetIndustryConstructionStage; working existing synchronized TimerGameTick::counter presentation only; ready/blocked static phase0 aliases",
+      "frame_aliases": {
+        "construction": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "ready": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "working": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "blocked": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "roles": [
+    "empty-refined-metal-feed-hopper",
+    "empty-world-X-refined-metal-feed-belt",
+    "empty-rare-concentrate-feed-hopper",
+    "empty-world-X-rare-concentrate-feed-belt",
+    "low-precision-stamping-press",
+    "low-component-placement-bridge",
+    "low-closed-controlled-heating-oven",
+    "low-wire-bonding-head",
+    "low-closed-electronics-test-cabinet",
+    "low-two-roll-finishing-press",
+    "empty-two-fixture-assembly-bed",
+    "m1-control-hut",
+    "low-controlled-cooling-cabinet",
+    "low-forced-air-blower",
+    "empty-dispatch-ledge",
+    "low-tool-store"
+  ],
+  "materials": "Gray concrete, slate steel, silver closed panels, yellow safety fittings; muted copper-brown accent only on new precision equipment. Fixed2:1 isometric camera and upper-left light.",
+  "model": "One low fixed4x4 Electronics campus: two empty RFMT/RARE feed lines, precision stamping/placement/wire-bonding/closed testing machinery and compatible empty heat/forming/fixture/control/cooling/service apparatus. One physical view; no raw Silicon/Copper cargo or stock is invented.",
+  "inventory_policy": "Empty beds/feed fittings and closed testing/thermal equipment depict installed machinery only. Actual RFMT/RARE accepted slots, ELEC output, work and common atomic batch planning stay with Industry. No pictured product, signal-owned inventory or art-owned power.",
+  "recipe_ownership": {
+    "primary": "ELEC",
+    "calendar_year": 1980,
+    "inputs": {
+      "RFMT": 2,
+      "RARE": 1
+    },
+    "outputs": {
+      "ELEC": 2
+    },
+    "work_ticks": 74,
+    "max_batches": 4,
+    "input_output_capacity": 1024,
+    "owner": "GetLayerProcessorRecipe/CaptureLayerProcessorInventory/PlanMultiLayerRecipeBatches; source metadata is descriptive only"
+  },
+  "reuse_graph": [
+    {
+      "variant": 0,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 0,
+        "source": "metal-refinery-machinery-a-v2",
+        "component": "cell-0"
+      },
+      "source_sha256": "f648af11666b862a3f98c9857b3327afa731f3fd8e82a15c76c729f928fd8537",
+      "component_geometry_sha256": "07c3466e6dcb886bc6b169b3e47de09f8cbcdc48e5f71ee0e90bfb1903bafd98",
+      "physical_role": "empty-refined-metal-feed-hopper",
+      "source_physical_role": "empty-ore-hopper-four-legs",
+      "target_world_cell": [
+        0,
+        0
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 1,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 1,
+        "source": "metal-refinery-machinery-a-v2",
+        "component": "cell-1"
+      },
+      "source_sha256": "f648af11666b862a3f98c9857b3327afa731f3fd8e82a15c76c729f928fd8537",
+      "component_geometry_sha256": "933a95da79ef863fde3156c7fac7450246d2d75363317134c48a66ff377f3a82",
+      "physical_role": "empty-world-X-refined-metal-feed-belt",
+      "source_physical_role": "empty-world-X-ore-feed-belt",
+      "target_world_cell": [
+        1,
+        0
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 2,
+      "kind": "local_original",
+      "source_variant": 0,
+      "physical_role": "Same empty hopper in its distinct paid Rare concentrate cell; no visible mineral stock"
+    },
+    {
+      "variant": 3,
+      "kind": "local_original",
+      "source_variant": 1,
+      "physical_role": "Same empty world-X belt in its distinct paid Rare concentrate cell"
+    },
+    {
+      "variant": 6,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 6,
+        "source": "metal-refinery-machinery-b-v2",
+        "component": "cell-6"
+      },
+      "source_sha256": "c1e115f59f1baf9f4fc3c5cb17767521e2ea249395e5beb75356c3a58e2b0b0d",
+      "component_geometry_sha256": "b3b933df90ae27be7d576ffde6654347d04a431a3ca7f4c0d082f9ec8942e1dc",
+      "physical_role": "low-closed-controlled-heating-oven",
+      "source_physical_role": "low-reduction-furnace",
+      "target_world_cell": [
+        2,
+        1
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 9,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 9,
+        "source": "metal-refinery-machinery-b-v2",
+        "component": "cell-9"
+      },
+      "source_sha256": "c1e115f59f1baf9f4fc3c5cb17767521e2ea249395e5beb75356c3a58e2b0b0d",
+      "component_geometry_sha256": "9d6f6be63a205494f9f43f6581ff4ecdbcdcb62dabf36b31362afc9b792b9145",
+      "physical_role": "low-two-roll-finishing-press",
+      "source_physical_role": "two-roll-finishing-press",
+      "target_world_cell": [
+        1,
+        2
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 10,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 7,
+        "source": "metal-refinery-machinery-b-v2",
+        "component": "cell-7"
+      },
+      "source_sha256": "c1e115f59f1baf9f4fc3c5cb17767521e2ea249395e5beb75356c3a58e2b0b0d",
+      "component_geometry_sha256": "737c33c198903f1fe9d5eab5794ea9705282806ede5c2bf4f5a95fe5dfe2ccd7",
+      "physical_role": "empty-two-fixture-assembly-bed",
+      "source_physical_role": "empty-two-mould-casting-bed",
+      "target_world_cell": [
+        2,
+        2
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 11,
+      "kind": "m1_control",
+      "donor_control_reuse": {
+        "source_record": "media/multilayer/source/m1/facility-generation-record.json",
+        "source_family": "facility.earth-receiver",
+        "source_variant": 5,
+        "source_state": "ready",
+        "source_frame": 0,
+        "source_path": "media/multilayer/source/m1/raw/earth-receiver-cells-v1.png",
+        "source_sha256": "60676db7ef226f705f826ddc52dc71fcc9f5eed7ca9e87dc5065dded184c94fa",
+        "source_native_atlas": "logs/proofs/mlm/native-art/derived/earth-receiver-authored.png",
+        "source_native_sha256": "b7c862edabba8151aa940ffa474e4adbb788c658d54c06c6cf4d6e47583456b5",
+        "source_native_canvas": [
+          64,
+          64
+        ],
+        "source_anchor": [
+          -31,
+          -33
+        ],
+        "target_variant": 7,
+        "target_world_cell": [
+          1,
+          2
+        ],
+        "phase_component": "facility-status",
+        "reuse_policy": "Exact original one-tile control hut and original inset status material, same fixed native camera/canvas/anchor and existing16x16x20 selected-industry drawing; no rotation, stretch, repaint or whole foreign industry copy"
+      },
+      "physical_role": "Exact original one-tile M1 control hut/floor/3x3 status fitting; no new stock/work/energy owner"
+    },
+    {
+      "variant": 12,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 10,
+        "source": "metal-refinery-machinery-b-v2",
+        "component": "cell-10"
+      },
+      "source_sha256": "c1e115f59f1baf9f4fc3c5cb17767521e2ea249395e5beb75356c3a58e2b0b0d",
+      "component_geometry_sha256": "d6f35ac483041a7c57dc84d77788b2e5b66425277d4b7b34f7b6d874f5b386fc",
+      "physical_role": "low-controlled-cooling-cabinet",
+      "source_physical_role": "low-cooling-cabinet",
+      "target_world_cell": [
+        0,
+        3
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 13,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 13,
+        "source": "metal-refinery-machinery-c-v1",
+        "component": "cell-13"
+      },
+      "source_sha256": "ddf646ee8c61f8899eabc2a2c6072740ee8d437cc0cac62330c860006b6e99f4",
+      "component_geometry_sha256": "419fbfaf43ce9f1619a225899fbdb67f2bc1239f0bb2e0398d090167f9b014de",
+      "physical_role": "low-forced-air-blower",
+      "source_physical_role": "low-forced-air-blower",
+      "target_world_cell": [
+        1,
+        3
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 14,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 14,
+        "source": "metal-refinery-dispatch-ledge-v1",
+        "component": "cell-14"
+      },
+      "source_sha256": "c271fef4f4d093d536b2e8cffdd2254c5a906443f99738f36534c49f7999407d",
+      "component_geometry_sha256": "2cd6ab9dfe2a7216b67043894b6e0e485e5bec42e02fb1f1306a7b6e022a2770",
+      "physical_role": "empty-dispatch-ledge",
+      "source_physical_role": "empty-dispatch-ledge",
+      "target_world_cell": [
+        2,
+        3
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    },
+    {
+      "variant": 15,
+      "kind": "compatible_processor_original",
+      "source_family": "facility.metal-refinery",
+      "source_selection": {
+        "variant": 15,
+        "source": "metal-refinery-machinery-c-v1",
+        "component": "cell-15"
+      },
+      "source_sha256": "ddf646ee8c61f8899eabc2a2c6072740ee8d437cc0cac62330c860006b6e99f4",
+      "component_geometry_sha256": "5e4e22959a210448fcafbbabf3e95e1fe9c593d0a514c593fd7d02fce99a26b3",
+      "physical_role": "low-tool-store",
+      "source_physical_role": "low-tool-store",
+      "target_world_cell": [
+        3,
+        3
+      ],
+      "inventory": "Exact EMPTY/CLOSED individual apparatus and original floor; no metal stock, recipe, work, family identity or whole campus is copied"
+    }
+  ],
+  "new_variants": [
+    4,
+    5,
+    7,
+    8
+  ],
+  "new_model_inventory": {
+    "4": "One low precision C-frame stamping press, one short square upper die, one EMPTY lower bed and one closed base/side drive.",
+    "5": "One low two-post placement bridge with one short central placement head, one EMPTY flat fixture table and one covered side controller.",
+    "7": "One low wire-bonding head with one short articulated two-segment covered arm, one covered wire-feed box and one EMPTY square fixture bed; no loose wire or stock.",
+    "8": "One low closed Electronics test cabinet with exactly TWO closed front doors, one small covered side service port and fixed vents. No display, lights, status meters or visible circuits."
+  },
+  "verification_baseline": "logs/graphics/electronics-works/20261021-base-01/before.json",
+  "base_coverage_complete": false,
+  "source_coverage_complete": false,
+  "runtime_activated": false
+}

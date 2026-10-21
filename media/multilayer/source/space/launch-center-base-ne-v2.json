@@ -1,0 +1,72 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; geometry: Group61B/r2mlvs9-launch-centers-and-rockets.md Group2B.",
+  "key": "launch-center-base-ne-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset: facility.launch-center, ONE ready/empty NE view, native rotation 0.\nInput images: Image 1 is the unapproved v1 model edit target, for equipment identity and materials. Image 2 is the verified 4x3 native floor layout reference, for geometry only. Its coloured cells, labels and magenta frame are guide markings, never part of the artwork.\n\nCorrect this single model. Keep ONE pale cream rectangular assembly hangar, ONE empty left launch plate, ONE empty right recovery plate and the continuous low four-bay storage strip along the front. Preserve its practical cream/charcoal/dark-blue/ochre M1 industrial style, large readable shapes, upper-left light and empty plates/bays. Keep genuine transparent alpha.\n\nRemove the magenta frame and ALL magenta marks by generating a clean new isolated view. No separator, border, guide colour, text, labels, background, extra view or contact sheet. This is the canonical single-view fallback after a framed source failed safe extraction. Leave at least 80px of fully transparent margin around the complete model, including faint edges and shadows.\n\nMatch the exact 2:1 isometric twelve-cell floor in Image 2. The floor is FOUR cells along +X and THREE along +Y. At 1024-square source size its corners are NORTH(464,300), EAST(848,492), SOUTH(560,636), WEST(176,444). Every +X cell step is (+96,+48), every +Y step is (-96,+48). Keep all floor corners complete and the exact 4x3 outline. Do not square, shear, stretch one axis, add perimeter cells or use perspective. The model may be smaller if safe margins need it.\n\nExact equipment cells: pad x0/y0..1, workshop x1..2/y0..1, recovery x3/y0..1, storage x0..3/y2. One physical model, exactly these zones. Use the guide positions, not its printed colours or words. The four empty storage bays run continuously along the near +X edge and remain low, with a clear handling lane and a visible hangar door.\n\nMake the model LOW. At this source scale (672px total floor width), the hangar roof is at most 80px vertically above its supporting floor point; the single gantry is a short folded service mast at most 75px above its pad, and storage canopy is about 36px above its floor. Shorten the tall v1 gantry substantially. Keep all equipment within its own footprint; the whole design must fit native 64x64 tile sprites with a maximum 33px above-floor allowance. Do not add taller machinery to compensate.\n\nNo rocket, probe, pod, train, truck, people, cargo, crates, tanks, containers, road, track, water, scenery, solar panels, extra buildings, dome, logos, numbers, text or magenta pixels. No painted checkerboard: the background and outside margins must be real transparent alpha. One clean whole isolated cutout.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-base-ne-v1.png",
+      "sha256": "506ab49981e2f10d2185a43808322ebca9fa7235089a428a79175dce13a27fc0",
+      "role": "unapproved model edit target; preserve equipment identity/materials while correcting geometry and height"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v1/launch-center-NE-layout.png",
+      "sha256": "755d3f9b4e5dbca985e841a23b768f4c9224993c18b4329f9e7bf688b5438ebb",
+      "role": "layout-only geometry reference; remove guide frame/colours/labels from generated art"
+    }
+  ],
+  "status": "rejected_mirrored_world_projection",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "alpha_bbox": [
+    0,
+    48,
+    1204,
+    1230
+  ],
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-6452fea4-d513-4fc1-8b0f-93f05fe3bf5e.png",
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v2.png",
+  "sha256": "44f5475c5063ecd527695bffa71ba257d353b76ef9d1ddbb25f87277c8df8c24",
+  "model_review": {
+    "status": "rejected",
+    "measured_visible_floor_corners": {
+      "west": [
+        59,
+        693
+      ],
+      "east": [
+        1175,
+        710
+      ],
+      "south": [
+        789,
+        1063
+      ]
+    },
+    "x_edge": [
+      730,
+      370
+    ],
+    "y_edge": [
+      -386,
+      353
+    ],
+    "x_vertical_per_horizontal": 0.5068493150684932,
+    "y_vertical_per_horizontal": 0.9145077720207254,
+    "required_vertical_per_horizontal": 0.5,
+    "reason": "Visible right ground edge is approximately 0.914 vertical/horizontal rather than the required 0.5; uniform scaling cannot correct this projection. No affine shear/warp or source mask is permitted.",
+    "measurement_method": "Approximate visual floor-corner picks in original 1254px source, after accounting for the displayed preview scale."
+  },
+  "projection_disposition": "The consulted v1 guide reversed native world X/Y screen steps. Preserve this original unmodified but never select it as native NE source. Existing rejection details remain diagnostic."
+}

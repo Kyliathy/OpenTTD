@@ -1,0 +1,24 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62B.3; immutable selected genuine SE original/native pixels. Never regenerate accepted expectations.",
+  "candidate": "cargo-rocket-ready-se-v1",
+  "direction": "SE",
+  "generation_receipt": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-se-v1.json",
+    "sha256": "30b3f85533709fbf64f6b3407fddf53ff1723b9b8c0637bbda80d0a5e2be0023"
+  },
+  "original": {
+    "path": "media/multilayer/source/space/raw/cargo-rocket-ready-se-v1.png",
+    "sha256": "17d68ef5868989a41bbd7d527599eb3ffc74cc36d3085e92168fd407867294c3"
+  },
+  "registration_sha256": "cdf0566562a11116bf005f79c9f58f39b97b241e4970e12da0beae7fc17b4951",
+  "native_pixels_sha256": "b0bf33dfabbc812e0d002fa685f27ed7271de4503aef6b62495c0637b5e37221",
+  "native_subject_bounds": [
+    18,
+    4,
+    46,
+    37
+  ],
+  "nontransparent_pixels": 421,
+  "yaw_from_ne": 90,
+  "service_face": "service/access face hidden on rear-right; visible hull plain"
+}

@@ -8,9 +8,13 @@
 /** @file vehicle_gui.cpp Vehicle controls and shared native freight refit restrictions.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8B; queued purchase callback presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JDB; exact picked native craft context.
  */
 
 #include "stdafx.h"
+#include "launch_assembly_gui.h"
+#include "space_vehicle.h"
+#include "error.h"
 #include "asteroid.h"
 #include "space_purchase.h"
 #include "space_structure.h"
@@ -3563,7 +3567,19 @@ static WindowDesc _train_view_desc(
  */
 void ShowVehicleViewWindow(const Vehicle *v)
 {
-	if (v->type == VehicleType::Space) { ShowSpaceSurveyWindow(); return; }
+    if (v->type == VehicleType::Space) {
+        const auto &craft = *SpaceVehicle::From(v);
+        const auto ref = GetSpaceCraftReference(craft);
+        if (craft.construction.placement == SpacePlacement::Orbital) {
+            ShowSpaceSurveyWindow(ref); // Preserve the actual picked orbital incarnation.
+        } else if (!ShowLaunchCraftWindow(ref)) {
+            // Transit/Surface roles belong to their exact real home workshop.
+            // A lost home must be disclosed instead of opening another probe's
+            // inspector or inventing a replacement recovery/selection identity.
+            ShowErrorMessage(GetEncodedString(STR_LAUNCH_RESUPPLY_HOME_LOST), {}, WarningLevel::Info);
+        }
+        return;
+    }
 	AllocateWindowDescFront<VehicleViewWindow>((v->type == VehicleType::Train) ? _train_view_desc : _vehicle_view_desc, v->index);
 }
 

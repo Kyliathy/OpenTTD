@@ -1,0 +1,93 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.1; exact built-in frame0 original from physical geometry sketch only. Prior wrong plume shapes are not inputs.",
+  "key": "cargo-rocket-engine-frame-0-v3",
+  "asset_id": "vehicle.model-14",
+  "component": "engine_effect",
+  "component_frame": 0,
+  "tool": "built-in image_gen",
+  "state": "funded_flight_engine_part",
+  "directions": [
+    "AXIAL"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nAsset: vehicle.model-14 isolated engine-effect FRAME0 for a chunky classic Tycoon game.\nInput Image1 is ONLY a physical geometry sketch, not prior flame artwork. Create a NEW ORIGINAL FLAME from its geometry. Do not copy any cyan/orange wires, gray bounding box, pink cross, text or labels into the result. They all disappear into genuine transparent background; only the newly rendered actual flame remains.\n\nThe sketch's TOP OVAL is the actual visible luminous circular emission plane, with WIDTH exactly TWICE its HEIGHT. It is a BROAD DEEP OVAL, not a thin narrow lip. Match its silhouette: source reference oval spans x320..704 and y224..416, center(512,320). That means384wide,192tall, aspect2:1. Both the back rim at y224 and FRONT RIM at y416 are visible as ONE broad glowing filled oval. Do not squash it into a4:1 or5:1 ellipse. A circular horizontal emitter at orthographic30degree camera elevation has exactly this2:1 projected plane. No metal ring, nozzle, bell or hardware: the whole oval is filled luminous pale flame/gas.\n\nBelow the oval one compact filled flame tapers along the sketch's side rays to its single lower tip at(512,800). No hollow opening or vase: it is hot pale-yellow/cream gas with golden-orange outer flow. Top-plane center to tip is480pixels,1.25times the mouth WIDTH, not a long thin trail. Keep axial symmetry and the upright VERTICAL screen centerline. The gas body is mostly a simple smooth tapered cone with a slight rounded bulge, no smoke, multiple tails, sparks, separate droplets or shock diamonds. Native mouth later8pixels wide/4pixels deep, tail about10pixels below its center; the whole part fits one unchanged fixed sprite envelope.\n\nRender a chunky low-detail stylized3D game effect using broad opaque pale-YELLOW/CREAM core and muted GOLDEN-ORANGE outside with restrained dark-orange edge. Controlled simple material shading, no photoreal micro-detail. Luminous colors confined INSIDE physical alpha, no surrounding halo/bloom/fog or colored background. Emitter plane remains physically broad2:1, outer body tapered, lower tip complete. ORTHOGRAPHIC30degree CAMERA ELEVATION, no perspective/horizon, same axially symmetric part can serve any yaw of an upright rocket.\n\nONE entire isolated flame on square1024x1024 TRUE TRANSPARENT RGBA. Follow the sketch's actual source placement/geometry, leaving>=120pixels genuine alpha-clear margin on every side. No guide wires/cross/box/text/label/number/logo, no magenta/frame, no rocket hull/metal nozzle/legs/feet/platform/stand/ground/floor/external cast shadow/scenery/backdrop, no people/cargo/probe/pod/road/rail/water, no other object/view. Only one original warm compact downward engine plume. FINAL GEOMETRY CHECK: top luminous oval twice as wide as tall, visibly DEEP not flat; mouth plane and full tail rendered inside clear alpha, all sketch annotations absent.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame0-template.png",
+      "role": "physical2:1 circular emitter/mouth/tail/contact geometry sketch only, no source flame pixels; annotations are not artwork",
+      "sha256": "31054322817a6d4df6b56fd370e82970ae380dd7b2df2d35859600bee0766a67"
+    }
+  ],
+  "status": "selected_engine_part",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v3.png",
+  "sha256": "7eff0b53ac9dd8f12f7363585492eb6f93c61e59b52ee156f42e868b2a0d37f8",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame0-template.png",
+      "sha256": "31054322817a6d4df6b56fd370e82970ae380dd7b2df2d35859600bee0766a67"
+    }
+  ],
+  "native_transforms": {
+    "AXIAL": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        330,
+        231,
+        932,
+        1020
+      ],
+      "uniform_scale": [
+        1,
+        75
+      ],
+      "source_reference": [
+        628,
+        331
+      ],
+      "native_reference": [
+        32,
+        34
+      ]
+    }
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      330,
+      231,
+      932,
+      1020
+    ],
+    "minimum_clearance": 231
+  },
+  "contact_review": {
+    "status": "approved_native_part",
+    "source_reference": [
+      628,
+      331
+    ],
+    "definition": "Center of original luminous emitter oval, not whole-part alpha bbox center; fixed native nozzle mount32,34 at uniform1/75scale."
+  },
+  "model_review": {
+    "status": "approved_native_engine_part",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/frame0-v3-review.png",
+    "findings": [
+      "One genuinely authored complete axial warm engine plume with deeper emission head and compact single tail; no nozzle/hull/feet/hardware, external halo, labels or geometry-guide pixels.",
+      "Native-scale review is authoritative for this soft gas surface: emission head9x3pixels versus construction guide8x4, within one indexed pixel in each dimension; prior roughly5:1/4:1 source caps were too flat and remain rejected. This is not a rigid replacement nozzle plane or changed camera/body geometry.",
+      "Whole1254RGBA, alpha16clearance231px, full original crop/uniform1/75 reduction only at actual source emitter center628,331 -> native32,34. Native50indexed pixels/bounds28,33,37,44 fit unchanged27,32,38,46 effect envelope. No mask/erasure/warp/clipping or shifted guard.",
+      "Exact original ready body/four passive feet overdraw the genuine effect, preserving all existing body colors/alpha. Native N/NE/NW source previews reviewed; all-eight/frame continuity remains62F.3, and no complete112-position or runtime claim."
+    ]
+  }
+}

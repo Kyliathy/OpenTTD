@@ -1,0 +1,218 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DB.2; source correction retains unchanged80px model width/native SE zone.",
+  "key": "launch-center-pad-se-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED SE launch-plate edit target. Preserve the genuine quarter-turn: long plate axis DOWN-LEFT, one circle LOWER-LEFT, exactly one folded charcoal arm and one cream motor at UPPER-RIGHT. Preserve the original machinery/material identity and upper-left lighting.\n\nCorrect ONLY the plate geometry. Make the base a near-FLUSH thin metal plate: halve the front-rim vertical thickness and remove deep recessed vertical sides. Reduce SHORT world-axis physical depth by20percent, retaining its two-cell long direction and arm/circle placement. This leaves a modest clear handling margin within the same reserved2x1 native zone. No taller foundation, flared feet, projecting corner blocks or exterior apron.\n\nUse STRICT2:1 dimetric camera26.565degrees on BOTH world axes; long-axis edges slope exactly one vertical pixel per TWO horizontal pixels. Current target long edge is too steep; correct it to that2:1 ratio. No perspective/30degree camera. In1024guide coordinates, physical base NORTH(588.8,356.4), EAST(691.2,407.6), SOUTH(435.2,535.6), WEST(332.8,484.4); rim is only3px high. Arm remains low folded machinery at upper-right, with original short height. All whole base contacts visible.\n\nONE complete isolated original on square1024x1024 canvas, at least80px real transparent clearance on EVERY side. Keep same gray/charcoal/ochre plate details and white circle; no extra motor/arm/circle, craft, cargo, pod, rocket, probe, person, vehicle, machinery, floor/apron, ground, external shadows, labels, text, dots, frames, magenta, scenery, track, road, water or extra views. Genuine transparent alpha. The only correction is thinner rim, slightly narrower short depth and exact2:1 floor camera.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-se-v1.png",
+      "sha256": "52683ad95a58e8cdf57b0e80e29d21799b7a9eaf83d330ecf4254691263ab1d3",
+      "role": "unapproved genuine SE plate edit target; correct camera/thin rim/short depth while retaining circle and arm ends"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-se-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-2d8be647-d810-4c03-92f1-e7e4e7c0f0ef.png",
+  "sha256": "91d4a404d2fb80903a1e958fc8aafa2dff1d89dfb04d47ae2357d65dcaea0286",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      874.0,
+      412
+    ],
+    [
+      1147,
+      591
+    ],
+    [
+      460.0,
+      953
+    ],
+    [
+      187,
+      774
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      186,
+      394,
+      1149,
+      955
+    ],
+    "minimum_clearance": 105
+  },
+  "contact_review": {
+    "source_reference": [
+      667.0,
+      682.5
+    ],
+    "definition": "Midpoint of lateral physical thin-plate feet; maps to actual SE pad-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      96,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        112,
+        80
+      ],
+      [
+        144,
+        96
+      ],
+      [
+        80,
+        128
+      ],
+      [
+        48,
+        112
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      667.0,
+      682.5
+    ],
+    "uniform_scale": [
+      80,
+      963
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      186,
+      394,
+      1149,
+      955
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-pad-se-v2",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-pad-se-v2.png",
+        "sha256": "91d4a404d2fb80903a1e958fc8aafa2dff1d89dfb04d47ae2357d65dcaea0286"
+      },
+      "signature": "2e64380b3631ba229ead05538b9434cd037de2a003630dbc41ed832945f549bd",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          96,
+          104
+        ],
+        "native_zone_corners": [
+          [
+            112,
+            80
+          ],
+          [
+            144,
+            96
+          ],
+          [
+            80,
+            128
+          ],
+          [
+            48,
+            112
+          ]
+        ],
+        "component": "pad",
+        "source_reference": [
+          667.0,
+          682.5
+        ],
+        "uniform_scale": [
+          80,
+          963
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          186,
+          394,
+          1149,
+          955
+        ]
+      },
+      "native_subject_bounds": [
+        56,
+        79,
+        137,
+        127
+      ],
+      "covered_pixels_per_cell": [
+        1107,
+        1343
+      ],
+      "native_sha256": "2770d16f1dee54034acc8bfe690c0352ef33056aa55d57205233368dff00be59"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-se-v2-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 1,
+    "visible_facades": [
+      "local_-Y",
+      "local_+X"
+    ],
+    "marking_world_cell": [
+      2,
+      0
+    ],
+    "arm_world_cell": [
+      1,
+      0
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-se-v2-native-review.png",
+    "findings": [
+      "Genuine quarter-turn: long plate axis down-left, one circle on lower-left cell2,0, one low folded arm and cream motor on upper-right cell1,0.",
+      "Original gray/charcoal plate, ochre corner fittings and white circular outline remain coherent/readable at native scale.",
+      "Corrected thin rim fits both actual native SE pad canvases at reference96,104 and unchanged80px width; original alpha16 clearance105px. The first SE draft stays excluded.",
+      "No masked/erased/clipped/warped source pixels, baked craft/cargo or added machinery."
+    ]
+  }
+}

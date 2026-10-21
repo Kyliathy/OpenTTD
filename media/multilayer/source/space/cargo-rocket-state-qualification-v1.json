@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62E; qualified actual native/source phase contract only. Genuine engine originals, full112-position source, packing/native renderer and game evidence remain subsequent gates.",
+  "asset_id": "vehicle.model-14",
+  "status": "qualified_native_phase_source_contract",
+  "policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "fixture": {
+    "path": "src/tests/multilayer/cargo-rocket-state-fixture.json",
+    "sha256": "158c667921e1a073e9b3f9f0e55b4dea33d1694aad5508aecb367bf9e6994086"
+  },
+  "proof": {
+    "path": "logs/proofs/mlm/native-art/space/cargo-rocket-state-v1/verification.json",
+    "sha256": "a2f1ceeb3ff9dfdd96784cf3a2d6a143bc65cfc6e339e11649d6cec43da76b5f"
+  },
+  "native_proofs": {
+    "Debug": {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-state-v1/native-Debug.json",
+      "sha256": "41d8fff8dd15dc83d42ac0cbd062f131ec906af116df003280fa7ae90dafe86b"
+    },
+    "RelWithDebInfo": {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-state-v1/native-RelWithDebInfo.json",
+      "sha256": "d26dba9eef6686304bec7f48503a9ecc509e19a7600210758cc049296af53742"
+    }
+  },
+  "ready_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-qualification-v1.json",
+    "sha256": "2a3e8a9b21ef4ed5547437caff1c9b17ec92ec0eb8ba72b490a8d1c9c99e9127"
+  },
+  "source_mapping_qualified": true,
+  "engine_parts_complete": false,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

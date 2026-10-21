@@ -1,0 +1,183 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62D; immutable visually reviewed eight-heading/four-view12-zone source-fit expectations. No native custody/game claim. Never regenerate accepted expectations.",
+  "direction_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-directions-v1.json",
+    "sha256": "83c8e6d3092f2c1c10990910e001072f18419e5b6df16c10eb0757cf8bd7f8a8"
+  },
+  "facility_model": {
+    "path": "media/multilayer/source/space/launch-center-foreground-model-v1.json",
+    "sha256": "f88ba6912e5344f6a827634809a6e38ef0c01f4024e6049fc5e0da665029623f"
+  },
+  "observations": {
+    "NE": {
+      "rocket_heading": "NE",
+      "native_pixels_sha256": "8cb8ce0cc6484b61d5465548d4cc848729f3f7d06413273e9929aa7c7d27ed7d",
+      "foreground_sha256": "90b15eda96d85563f3a7a9048b87aa9d601c3ebe486e32d530ea5b27b52a73c7",
+      "whole_ready_sha256": "97e9133e82feaa1b7e75723a2f61fbb74d9a7c2354790df4e17455619473c772",
+      "zones": [
+        {
+          "component": "pad",
+          "physical_contact": [
+            176,
+            80
+          ],
+          "source_pixels": 423,
+          "visible_pixels": 369,
+          "occluded_pixels": 54
+        },
+        {
+          "component": "workshop",
+          "physical_contact": [
+            144,
+            112
+          ],
+          "source_pixels": 423,
+          "visible_pixels": 0,
+          "occluded_pixels": 423
+        },
+        {
+          "component": "recovery",
+          "physical_contact": [
+            80,
+            128
+          ],
+          "source_pixels": 423,
+          "visible_pixels": 423,
+          "occluded_pixels": 0
+        }
+      ]
+    },
+    "SE": {
+      "rocket_heading": "SE",
+      "native_pixels_sha256": "b0bf33dfabbc812e0d002fa685f27ed7271de4503aef6b62495c0637b5e37221",
+      "foreground_sha256": "e8dbc4203ec88fbdcce9a017f1d7350e070b841318aca22786488e14e57d83d5",
+      "whole_ready_sha256": "2dbb49421dc78f550e037e63ee4baeb021043472c1706fa5066ff89fbbce6529",
+      "zones": [
+        {
+          "component": "pad",
+          "physical_contact": [
+            80,
+            112
+          ],
+          "source_pixels": 421,
+          "visible_pixels": 421,
+          "occluded_pixels": 0
+        },
+        {
+          "component": "workshop",
+          "physical_contact": [
+            144,
+            128
+          ],
+          "source_pixels": 421,
+          "visible_pixels": 0,
+          "occluded_pixels": 421
+        },
+        {
+          "component": "recovery",
+          "physical_contact": [
+            176,
+            160
+          ],
+          "source_pixels": 421,
+          "visible_pixels": 421,
+          "occluded_pixels": 0
+        }
+      ]
+    },
+    "SW": {
+      "rocket_heading": "SW",
+      "native_pixels_sha256": "be6b598e17a2c8d8c2b3c65e7f11e490a6e3c22212b93936d446460c07d69122",
+      "foreground_sha256": "1e249891cf6a92968565a74f6432a79987f32cf3635272f71b9383b3cf099d22",
+      "whole_ready_sha256": "6fc7ea47aae790dd094514b507bd379b3fa31d13591732f77826440cd142a39e",
+      "zones": [
+        {
+          "component": "pad",
+          "physical_contact": [
+            144,
+            160
+          ],
+          "source_pixels": 431,
+          "visible_pixels": 431,
+          "occluded_pixels": 0
+        },
+        {
+          "component": "workshop",
+          "physical_contact": [
+            176,
+            128
+          ],
+          "source_pixels": 431,
+          "visible_pixels": 0,
+          "occluded_pixels": 431
+        },
+        {
+          "component": "recovery",
+          "physical_contact": [
+            240,
+            112
+          ],
+          "source_pixels": 431,
+          "visible_pixels": 431,
+          "occluded_pixels": 0
+        }
+      ]
+    },
+    "NW": {
+      "rocket_heading": "NW",
+      "native_pixels_sha256": "bf38a6071a9cd8fb1fffad1707fbdb5d80b71eba0d3dd66790f79b6f0cb9d6d5",
+      "foreground_sha256": "31f56011f8b7df5102fe642d068442bd946e828cef84201fadbaacb980ef9e20",
+      "whole_ready_sha256": "9cf4203ae7c924b7c873788744187b110fd2b5612219e21fcc573a6d0da9c5d5",
+      "zones": [
+        {
+          "component": "pad",
+          "physical_contact": [
+            240,
+            128
+          ],
+          "source_pixels": 430,
+          "visible_pixels": 430,
+          "occluded_pixels": 0
+        },
+        {
+          "component": "workshop",
+          "physical_contact": [
+            176,
+            112
+          ],
+          "source_pixels": 430,
+          "visible_pixels": 0,
+          "occluded_pixels": 430
+        },
+        {
+          "component": "recovery",
+          "physical_contact": [
+            144,
+            80
+          ],
+          "source_pixels": 430,
+          "visible_pixels": 380,
+          "occluded_pixels": 50
+        }
+      ]
+    }
+  },
+  "images": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/ready-fit/ne-source-fit.png",
+      "sha256": "5e61bd6ac715c55bd5416cde92da71cc3476014e83e8f64ce6498fd1a553ac0e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/ready-fit/se-source-fit.png",
+      "sha256": "f1783a8a4e091afd3b3d93224889da5f78419e3f006615d8dc41f2812813125f"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/ready-fit/sw-source-fit.png",
+      "sha256": "53e38716483a24c070355630023d8e01d8044c91d7e85980d702e8afbc5bf543"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/ready-fit/nw-source-fit.png",
+      "sha256": "ded9285e345d2450909b1218fd5806da0fc132ae52a8698c8963810b66535950"
+    }
+  ]
+}

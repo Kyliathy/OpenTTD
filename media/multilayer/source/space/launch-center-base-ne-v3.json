@@ -1,0 +1,62 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; geometry: Group61B/r2mlvs9-launch-centers-and-rockets.md Group2B.",
+  "key": "launch-center-base-ne-v3",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nInput Image 1 is the EXACT GEOMETRY edit target: a labelled four-by-three tile isometric floor guide. Input Image 2 is STYLE ONLY: cream/charcoal/dark-blue industrial game machinery. Do not copy its round Core building, solar panels or square footprint.\n\nTurn the floor guide into ONE ready/empty industrial Space Launch Center. The geometry in Image 1 is mandatory. Keep its complete 4x3 PARALLELOGRAM floor outline and tile positions exactly. Use fixed 2:1 isometric orthographic projection: BOTH world axes have identical scale, and every floor edge has horizontal run exactly twice its vertical rise. No perspective or steeper receding axis. At 1024-square size the floor corners stay NORTH(464,300), EAST(848,492), SOUTH(560,636), WEST(176,444). The right floor edge goes from EAST to SOUTH by (-288,+144), never a steep diagonal. The near long edge goes WEST to SOUTH by (+384,+192). The two floor axes are equally scaled 2:1 isometric.\n\nReplace the guide markings with actual original game art, retaining these exact zones:\n- The two upper-left pad cells x0/y0..1: one EMPTY launch plate with a single SHORT folded service mast, at most 60px above its floor at this source scale.\n- Four middle workshop cells x1..2/y0..1: ONE LOW rectangular 2x2 assembly hangar, at most 75px above its floor, cream housing, dark-blue glazing, charcoal frame, large open service door towards the near storage row.\n- Two right cells x3/y0..1: one separate EMPTY recovery plate, without any vehicle.\n- Four near-row cells x0..3/y2: ONE low continuous covered storage strip with four empty bays, about 30px above its floor, a clear handling lane and visible workshop door.\nKeep the hangar and mast low and entirely on their own cells. Do not add buildings or equipment. Preserve every floor corner clearly. Practical crisp chunky M1 isometric game shapes, cream/gray/charcoal/dark-blue palette with restrained ochre safety markings, subtle concrete panels, upper-left screen light.\n\nNo magenta frame, border, coloured guide cells, text or coordinate labels survive. No rocket, probe, pod, cargo, crates, tank, container, people, road, track, water, scenery, solar panels, second building or extra view. ONE isolated complete NE native-rotation-0 model on genuine transparent alpha with at least 80px clear margin. No background checkerboard or cast shadow outside its floor. Keep the exact floor geometry from Image 1 even if that requires simpler details.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v1/launch-center-NE-layout.png",
+      "sha256": "755d3f9b4e5dbca985e841a23b768f4c9224993c18b4329f9e7bf688b5438ebb",
+      "role": "exact geometry edit target; replace only guide markings with source model preserving the floor projection"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "M1 materials/camera style only; no Core equipment or square footprint"
+    }
+  ],
+  "status": "rejected_mirrored_world_projection",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v3.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-a6ab3d26-aeab-4e01-be41-c3570049f590.png",
+  "sha256": "358b505bb43cda81bfb64a9f3397976d9898d22793f68285faf2ac3889532476",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "alpha_bounds": {
+    "1": [
+      0,
+      77,
+      1208,
+      1224
+    ],
+    "16": [
+      61,
+      341,
+      1194,
+      1033
+    ],
+    "128": [
+      61,
+      342,
+      1193,
+      1032
+    ],
+    "250": [
+      63,
+      354,
+      1192,
+      1030
+    ]
+  },
+  "projection_disposition": "The consulted v1 guide reversed native world X/Y screen steps. Preserve this original unmodified but never select it as native NE source. Existing rejection details remain diagnostic."
+}

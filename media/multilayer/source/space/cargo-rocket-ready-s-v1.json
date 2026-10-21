@@ -1,0 +1,113 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62C.1; exact built-in S source request and actual input roles.",
+  "key": "cargo-rocket-ready-s-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "S"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset vehicle.model-14 reusable cargo rocket, ONE genuine S yaw, READY.\nImage1 is SELECTED SE whole model edit target. Image2 is SELECTED N body/four-foot projection reference. Image3 is S engine-view/contact guide ONLY; no guides enter art.\n\nCreate genuine physical yaw +45degrees from SE, +135degrees from original NE, around the upright vertical axis. The original single blue service plate and solid closed charcoal access panel are now FULLY HIDDEN on the REAR. Visible capsule/tank is PLAIN warm cream/pale gray with ONE muted ochre waist band. No visible panel/window/door/label or new rear hardware. Keep the equipment physically on its original hidden side; do not relocate it onto the front.\n\nSame selected joined short rounded-ogive cream capsule above one cylindrical tank, ONE integrated graphite engine bell and EXACTLY FOUR short landing feet in square/cardinal arrangement. S is180degree physical yaw from N, so fourfold-symmetric feet have the SAME projection as Image2 N: exactly THREE COMPLETE VISIBLE long legs/pads LEFT, FRONT-CENTER and RIGHT; ONE fourth far leg is physically hidden behind hull/bell. No extra little rear pad sticking out on either side of the bell. Do not show five feet or change the actual four-foot model. Preserve hull height/diameter/profile, waist/bell proportions, foot pivots/pads and leg lengths. Rocket stays upright vertical, never tilts toward a heading arrow.\n\nFixed orthographic45degree azimuth/30degree CAMERA ELEVATION; native2:1 ground projection. Same upper-left SCREEN light independent of body yaw, chunky low-detail M1 classic Tycoon machinery with broad cream/gray/graphite/ochre regions readable at64x48. Same landing-foot ground-plane center/native32,32, fixed64x48/(-32,-32). No mirroring/flat-image rotation.\n\nONE WHOLE isolated S ready rocket on square1024x1024 genuine transparent RGBA, at least120px TRUE TRANSPARENT clearance on ALL FOUR SIDES around every complete foot/bell/edge. No floor/ground patch/external cast shadow, backdrop, stand/platform, frame/magenta, guide/colored boxes/crosses/arrows, text/labels/numbers/logos, other view/model, booster/antenna/fin, people, exhaust/smoke/glow, cargo/probe/pod or road/rail/water. Final: plain cream visible hull with one ochre band, one bell and exactly THREE visible long feet; original fourth rear foot physically hidden.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-se-v1.png",
+      "role": "selected SE physical model edit target; genuine45degree yaw moves hidden panels to actual rear",
+      "sha256": "17d68ef5868989a41bbd7d527599eb3ffc74cc36d3085e92168fd407867294c3"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "role": "selected N physical four-foot projection reference; S180degree yaw has same fourfold assembly projection",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/s-isolated-template.png",
+      "role": "labelled S native/contact guide only; not source artwork",
+      "sha256": "7e0e2b2db8e713bdaab92dea00a1585ad376d7855e4ca81a44e7bcdb6d70e68f"
+    }
+  ],
+  "status": "selected_direction",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-s-v1.png",
+  "sha256": "0136b560f3566804f3ad7569ff719c76f00e320fd1d30b18a1c34e0946412f21",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-se-v1.png",
+      "sha256": "17d68ef5868989a41bbd7d527599eb3ffc74cc36d3085e92168fd407867294c3"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/s-isolated-template.png",
+      "sha256": "7e0e2b2db8e713bdaab92dea00a1585ad376d7855e4ca81a44e7bcdb6d70e68f"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      221,
+      175,
+      1031,
+      1120
+    ],
+    "minimum_clearance": 134
+  },
+  "native_transforms": {
+    "S": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        221,
+        175,
+        1031,
+        1120
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        625,
+        985
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "source_reference": [
+      625,
+      985
+    ],
+    "definition": "Center of original lateral landing-pad ground plane below cylinder axis, with near front and hidden far foot on its opposite axis. Same uniform1/29physical height scale and fixed native32,32 as selected N/NE/E/SE."
+  },
+  "physical_view": {
+    "direction": "S",
+    "yaw_from_ne": 135,
+    "service_face": "service/access face hidden on rear; visible hull plain"
+  },
+  "model_review": {
+    "status": "approved_genuine_direction",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/selected-ready-contact.png",
+    "findings": [
+      "Genuine S physical yaw+135from NE/+45from SE places original access/service face hidden on rear. Visible hull is plain cream with single ochre band, same capsule/tank and graphite bell; no substituted visible panel or rear hardware.",
+      "Exactly three complete long visible left/front/right foot pads and physically hidden fourth rear cardinal leg; same four-foot original model, fixed screen light and native camera. Native N/SE/S contact reviewed.",
+      "Whole1254RGBA/alpha16clearance134px; uniform1/29/fixed32,32/64x48/(-32,-32), native424pixels/bounds17,4,46,37. One-pixel native apex raster difference stays original; no mask/erasure/clipping/warp or changed contact/envelope."
+    ]
+  }
+}

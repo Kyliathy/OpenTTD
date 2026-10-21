@@ -11,6 +11,7 @@
 #include "launch_center.h"
 #include "launch_site.h"
 #include "launch_operations.h"
+#include "launch_facility_sprite.h"
 #include "space_pod.h"
 #include "launch_center_cmd.h"
 #include "core/flatset_type.hpp"
@@ -92,6 +93,7 @@
 
 #include "table/strings.h"
 #include "table/station_land.h"
+#include "ground_station_sprite.h"
 
 #include <bitset>
 
@@ -3436,7 +3438,7 @@ static bool DrawCustomStationFoundations(const StationSpec *statspec, BaseStatio
 static void DrawTile_Station(TileInfo *ti)
 {
 	if (GetStationType(ti->tile) == StationType::LaunchCenter) {
-		DrawGroundSprite(SPR_CONCRETE_GROUND, PAL_NONE); // Temporary native pad; final building family remains Plan14.
+		DrawLaunchFacilityTile(*ti);
 		return;
 	}
 	const NewGRFSpriteLayout *layout = nullptr;
@@ -3683,6 +3685,17 @@ static void DrawTile_Station(TileInfo *ti)
 		total_offset = 0;
 	}
 
+	// Plan14 Group79FG: native default rock-layer parents keep their exact
+	// bounds/order/roof glass. Ground, overlays and custom/Space/tube layouts
+	// above retain their existing drawing and admission owners.
+	const auto native_ground_layout = GetGroundStationTileLayout(ti->tile, TimerGameTick::counter);
+	DrawTileSpriteSpan native_ground_view;
+	if (native_ground_layout) {
+		native_ground_view = native_ground_layout->View();
+		t = &native_ground_view;
+		total_offset = 0; // Selected source IDs are absolute after native ground/overlay drawing.
+		relocation = 0;
+	}
 	DrawRailTileSeq(ti, t, TransparencyOption::Buildings, total_offset, relocation, palette);
 	DrawBridgeMiddle(ti, GetStationBlockedPillars(bridgeable_info, GetStationGfx(ti->tile)));
 }

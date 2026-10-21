@@ -1,0 +1,59 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.2; exact built-in isolated N fallback request/input provenance.",
+  "key": "cargo-rocket-ready-n-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "N"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset vehicle.model-14 reusable cargo rocket. Image1 is the SELECTED NE original physical model edit target. Image2 is the N engine-view/contact geometry guide ONLY; output no guide boxes, crosses, colors or text. Produce ONE NEW GENUINE N 3D YAW view of the SAME physical ready rocket, isolated on a 1024x1024 truly transparent RGBA square.\n\nROTATE THE PHYSICAL HULL 45 DEGREES TOWARD THE CAMERA relative to Image1, around its upright vertical axis. Its ONE dark-blue rectangular service plate and ONE CLOSED CHARCOAL payload-access panel above it must now be CENTERED on the FRONT visible cream hull, symmetrically around the rocket's vertical centerline. The panels are solid CLOSED service/access hardware, NOT cockpit/windows. Do not retain their original screen-right NE position. The four landing feet also turn with the real hull, while screen lighting remains fixed. This is a genuine new physical yaw, never a flat-image rotation or mirror; keep the rocket upright, no tilt.\n\nExactly the selected short joined ogive cream payload capsule over one cylindrical cream tank, one muted ochre waist band, one integrated graphite engine bell and EXACTLY FOUR short graphite landing feet in the original square arrangement. Far foot may be physically hidden behind hull/nozzle; never invent a fifth foot. Preserve hull height/diameter, capsule profile, panel size and spacing, bell size, foot pivots/pads and sturdy leg lengths from Image1. No second band/booster, added hardware/panel, antenna, fin, hatch opening, cargo, pod, probe, exhaust, smoke, glow, floor, stand or people.\n\nFixed ORTHOGRAPHIC camera,45degree azimuth,30degree CAMERA ELEVATION, native2:1 ground projection. Same chunky low-detail M1 transport game materials: matte warm cream/pale gray, graphite feet/bell/access panel, dark blue service plate, restrained ochre band, upper-left SCREEN light, broad readable simple regions at final64x48. Native ground-contact center stays beneath hull center at32,32; do not align by opaque-bbox center.\n\nOne complete isolated N rocket centered on square1024 canvas, every physical foot and bell fully included with minimum120px truly transparent clearance on ALL FOUR SIDES. Whole subject approximately260..764 horizontally,160..860 vertically. Size can be reduced uniformly for safe separation. Absolutely no frame, magenta, guide, label, text, number, logo, background, external cast shadow, ground patch, road, track, water or other view. Output the complete physical model and genuine clean transparent alpha only. The only state is READY with all four original short feet deployed, no paid/flight/load effect.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "role": "selected original NE whole model edit target; genuine physical yaw moves original service/access face to centered front",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-isolated-template.png",
+      "role": "N engine-view and unchanged64x48/contact32,32 geometry only; not source artwork",
+      "sha256": "7181041246e01563c47ffa474aac367b81d9aa4737ebb0529b034f2cb38a2eea"
+    }
+  ],
+  "status": "rejected_extra_landing_feet",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v1.png",
+  "sha256": "875a13143de11f27be7c6d7cad9d2dc67854899cac7b1839ce8990fc894d626e",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-isolated-template.png",
+      "sha256": "7181041246e01563c47ffa474aac367b81d9aa4737ebb0529b034f2cb38a2eea"
+    }
+  ],
+  "native_transforms": {},
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      231,
+      163,
+      1022,
+      1128
+    ],
+    "minimum_clearance": 126
+  },
+  "model_review": {
+    "status": "rejected_hardware_count",
+    "reason": "N service/access face is correctly centered, but five separate feet are visible: three long front/left/right legs plus two short rear pads. Original model has exactly four feet. Genuine alpha/cropping cannot qualify changed hardware."
+  }
+}

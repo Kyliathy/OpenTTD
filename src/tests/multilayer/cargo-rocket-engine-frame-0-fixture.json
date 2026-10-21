@@ -1,0 +1,32 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.1; immutable first reviewed genuine engine part/native pixels. Never regenerate expectations to bless drift.",
+  "candidate": "cargo-rocket-engine-frame-0-v3",
+  "component_frame": 0,
+  "generation_receipt": {
+    "path": "media/multilayer/source/space/cargo-rocket-engine-frame-0-v3.json",
+    "sha256": "08b935c44777673a4ff69932e1b2f15294f3190e2c16c830daf9e62c1fd62ad6"
+  },
+  "original": {
+    "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v3.png",
+    "sha256": "7eff0b53ac9dd8f12f7363585492eb6f93c61e59b52ee156f42e868b2a0d37f8"
+  },
+  "registration_sha256": "669eb2031738035ba9be864bb400710f7cbb238765703acc19d5b1dfee16ee05",
+  "native_pixels_sha256": "265e5b2686e28574a2c1bb02ab57c347d7fc8cea2c5ae78f383ee7b684519945",
+  "native_subject_bounds": [
+    28,
+    33,
+    37,
+    44
+  ],
+  "nontransparent_pixels": 50,
+  "native_mount": [
+    32,
+    34
+  ],
+  "native_envelope": [
+    27,
+    32,
+    38,
+    46
+  ]
+}

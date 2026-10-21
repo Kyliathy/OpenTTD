@@ -1,0 +1,12 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62J. Immutable source-era native-owner fixture, derived once from the exact policy-bound original SpaceVehicle source before changing its image dispatch. Excludes only GetImage body and the new launch graphics include/documentation. Never regenerate to accept simulation drift.",
+  "source_era_policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "source_era_vehicle": {
+    "path": "src/space_vehicle.cpp",
+    "sha256": "eb6f1556d2f5cf9865b669b160a7c926543090e857421e43e4bd14577496eeb2"
+  },
+  "vehicle_outside_get_image_lf_sha256": "3e836b70e3800523205ab1d0f16558316dbe68b7d6669420b7cc1d19704312ac"
+}

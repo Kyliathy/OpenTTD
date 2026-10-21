@@ -1,0 +1,218 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.2; actual camera correction retains80px width/fixed native zone and contacts.",
+  "key": "launch-center-pad-sw-v3",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED SW plate camera edit target. Re-render the same physical plate/arm model with a LOWER camera elevation so its floor receding edges are less steep. Keep whole subject horizontal span unchanged, but make the TOP PLATE's projected vertical diamond span30percent LESS than Image1. This is a new3D camera render, never a stretched flat image. Preserve the vertical height of the motor housing and folded arm, same real physical equipment and upper-left lighting.\n\nCAMERA CORRECTION is essential: Image1's long floor edge falls roughly0.68vertical pixels per horizontal pixel. New long floor edges must fall EXACTLY0.50vertical pixels per horizontal pixel, and short floor edges also0.50. Strict2:1 dimetric orthographic ground, no perspective or30/35degree world-axis slope. A256px horizontal long run falls128px, not174px. Physically lower the camera until that floor relationship is met. Make the diamond visibly FLATTER vertically than the edit target. Base rim remains near-flush only2guide pixels high.\n\nPreserve ONE white CIRCLE at LOWER-RIGHT end and ONE low FOLDED charcoal service arm plus ONE cream motor at UPPER-LEFT end. Long plate direction down-right. Do not change the two physical end roles, add hardware, deploy the arm or alter arm height. Same thin gray metal panels, charcoal rim, ochre corner fittings and native-game chunky material identity. No apron or projecting corner feet.\n\nONE complete isolated original on square1024x1024 real transparent canvas, at least80px transparent margin on EVERY side. All complete physical base corners visible. No extra arm/motor/circle, cargo, person, vehicle, pod, probe, rocket, craft, labels, text, dots, frame, magenta, background, ground, apron, external shadows, scenery, water, road, track or extra views. Main change: LOWER CAMERA and FLATTER2:1 ground diamond while retaining the actual original hardware and its height.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v2.png",
+      "sha256": "ac1e7c8c26ee8534ed9cf4880c61f842d0af664c4cbb1af8fd2ac8cea5f1f83f",
+      "role": "unapproved SW camera edit target; lower camera to exact2:1 ground projection while retaining original equipment/ends/height"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v3.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-8c3e7c6d-bd1b-4b3b-860e-04684609df74.png",
+  "sha256": "c879761fa9b9b8811d9180f969c8527641cd24587ccec4852fa9b1d8d5eee19e",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      457.0,
+      413
+    ],
+    [
+      1128,
+      783
+    ],
+    [
+      804.0,
+      973
+    ],
+    [
+      133,
+      603
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      132,
+      411,
+      1130,
+      975
+    ],
+    "minimum_clearance": 124
+  },
+  "contact_review": {
+    "source_reference": [
+      630.5,
+      693.0
+    ],
+    "definition": "Midpoint of lateral physical thin plate feet; maps to actual SW pad-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      152
+    ],
+    "native_zone_corners": [
+      [
+        112,
+        128
+      ],
+      [
+        176,
+        160
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        80,
+        144
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      630.5,
+      693.0
+    ],
+    "uniform_scale": [
+      40,
+      499
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      132,
+      411,
+      1130,
+      975
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-pad-sw-v3",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v3.png",
+        "sha256": "c879761fa9b9b8811d9180f969c8527641cd24587ccec4852fa9b1d8d5eee19e"
+      },
+      "signature": "88df80431019b18a965ca41f0bef45793606e57c25d2f441187808d5929a4a20",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          128,
+          152
+        ],
+        "native_zone_corners": [
+          [
+            112,
+            128
+          ],
+          [
+            176,
+            160
+          ],
+          [
+            144,
+            176
+          ],
+          [
+            80,
+            144
+          ]
+        ],
+        "component": "pad",
+        "source_reference": [
+          630.5,
+          693.0
+        ],
+        "uniform_scale": [
+          40,
+          499
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          132,
+          411,
+          1130,
+          975
+        ]
+      },
+      "native_subject_bounds": [
+        87,
+        129,
+        168,
+        175
+      ],
+      "covered_pixels_per_cell": [
+        1074,
+        1237
+      ],
+      "native_sha256": "ca8ed1b312c911e041b6be9a991de354625a09dbda3714c98e07f833e246971b"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-sw-v3-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 2,
+    "visible_facades": [
+      "local_-X",
+      "local_-Y"
+    ],
+    "marking_world_cell": [
+      3,
+      2
+    ],
+    "arm_world_cell": [
+      3,
+      1
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-sw-v3-native-review.png",
+    "findings": [
+      "Genuine half-turn of original pad: one circle at lower-right world3,2 and original folded arm/motor at upper-left world3,1, with opposite physical motor surfaces visible.",
+      "Corrected shallower camera retains gray/charcoal/ochre plate, one cream motor and one low dark arm; native circle and hardware remain readable.",
+      "Every indexed pixel fits the two actual SW pad canvases at reference128,152 and unchanged80px width; original alpha16 clearance124px. Two failed predecessors remain excluded.",
+      "Whole original preserved, without clipping/masking/erasure/warp or additional actors/cargo/machinery."
+    ]
+  }
+}

@@ -8,12 +8,19 @@
  * @file multilayer_sprite.cpp Read-only bindings from native terrain/portal owners to packed M1 art.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups82/83/79C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FC (selected finite mines)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FD (selected Surface processors)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FE (conventional rail freight)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 
 #include "stdafx.h"
 #include "multilayer_sprite.h"
+#include "ground_mine_sprite.h"
+#include "ground_processor_sprite.h"
+#include "ground_train_sprite.h"
+#include "ground_road_sprite.h"
 #include "excavation.h"
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
@@ -49,6 +56,8 @@ std::optional<SpriteID> GetMultiLayerControlSprite(MultiLayerSpriteAsset asset, 
 /** @copydoc GetMultiLayerPurchaseSprite */
 std::optional<SpriteID> GetMultiLayerPurchaseSprite(uint16_t model, bool available)
 {
+	if (const auto sprite = GetGroundRailPurchaseSprite(model, available)) return sprite;
+	if (const auto sprite = GetGroundRoadPurchaseSprite(model, available)) return sprite;
 	static constexpr std::array assets{MultiLayerSpriteAsset::PurchaseModel00, MultiLayerSpriteAsset::PurchaseModel01,
 		MultiLayerSpriteAsset::PurchaseModel02, MultiLayerSpriteAsset::PurchaseModel03, MultiLayerSpriteAsset::PurchaseModel04};
 	// The published five-model purchase slice does not provide art or permission
@@ -179,9 +188,9 @@ std::optional<SpriteID> GetMultiLayerTrainSprite(const Train &train, Direction d
 	uint16_t model = GetTBMEngineModel(train.engine_type);
 	if (model == UINT16_MAX) {
 		const auto *capability = GetUndergroundEngineCapability(train.engine_type);
-		// The selected hauler is actual conventional model4. Other delivered or
-		// future conventional designs retain their own later art integration.
-		if (capability == nullptr || capability->model_id != 4) return std::nullopt;
+		// Keep the exact M1 model4 owner below; selected model5/6 wagons use their
+		// independently qualified source/cargo binding, and other designs refuse.
+		if (capability == nullptr || capability->model_id != 4) return GetGroundTrainSprite(train, direction, visual_ticks);
 		model = 4;
 	}
 	const Train *head = train.First();
@@ -417,7 +426,11 @@ std::optional<SpriteID> GetMultiLayerCollectorSprite(TileIndex tile, bool front,
 std::optional<SpriteID> GetMultiLayerIndustrySprite(TileIndex tile, bool front, uint64_t visual_ticks)
 {
 	const auto receiver = GetMultiLayerReceiverSprite(tile, front, visual_ticks);
-	return receiver.has_value() ? receiver : GetMultiLayerCollectorSprite(tile, front, visual_ticks);
+	if (receiver) return receiver;
+	const auto collector = GetMultiLayerCollectorSprite(tile, front, visual_ticks);
+	if (collector) return collector;
+	const auto mine = GetGroundMineSprite(tile, front, visual_ticks);
+	return mine.has_value() ? mine : GetGroundProcessorSprite(tile, front, visual_ticks);
 }
 
 /** @copydoc GetMultiLayerDepotFrontBounds */

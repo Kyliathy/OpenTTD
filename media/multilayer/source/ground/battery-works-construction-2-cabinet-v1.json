@@ -1,0 +1,105 @@
+{
+  "id": "battery-works-construction-2-cabinet-v1",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-2-cabinet-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-05b02e3f-3bbe-4695-9539-3609702c9e34.png",
+  "prompt": "Use case: precise-object-edit. Image1 is the approved complete Battery formation cabinet edit target. Produce genuine CONSTRUCTION STAGE2 FINISHING as ONE isolated cutout. Change ONLY ONE DETAIL: the RIGHTMOST FRONT DOOR'S yellow handle is not yet fitted. Remove that ONE yellow handle, leaving its small empty dark attachment socket. Left and middle yellow handles stay installed. All THREE front doors remain CLOSED. Top and all side vent panels stay installed, ports remain covered; no contents, batteries, charge, displays or lights.\nPreserve EXACT low cabinet, body, whole concrete square floor, camera, lighting, scale/placement and native floor contacts. Same1536x1024 canvas and generous true alpha margins. Do NOT enlarge, reframe, skew or change floor silhouette/centered south tip. This is the same fixed2:1 isometric model and upper-left light, not another design or operating state. No source frames, text, labels, props, loose handle, workers, tools, stock or opaque background haze. Final handle visibly absent; no other physical changes.",
+  "construction_stage": 2,
+  "variants": [
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "3fd8e419a63dc90a7e5feb9bb9a101dda72126a92c24ffbbb6a22d308fac99f0",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+      "sha256": "48947662c5702c2f79a0f8a70233695c7c5e91dce295ea5772a7871bee11dd70",
+      "role": "exact_completed_cabinet_and_qualified_square_floor"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "native_box": [
+        1,
+        23,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 10,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "minimum_alpha16_clearance": 0,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "rejected",
+    "approved_variants": [],
+    "refused_variants": {
+      "10": "mine original has insufficient transparent clearance"
+    },
+    "model_review": {
+      "10": "All three doors closed and top/vents/ports installed; two yellow handles installed, rightmost final handle absent with only its attachment socket remaining. No stock or operating cues."
+    }
+  },
+  "excluded_variants": [
+    10
+  ]
+}

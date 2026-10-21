@@ -1,0 +1,208 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.2; native pad zone: Group61B/Plan9Group2B.",
+  "key": "launch-center-pad-ne-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nImage1 is the exact1x2 native launch-plate geometry target. Image2 is the SELECTED workshop material/style reference only; do not draw its building, roof, grilles, doors or windows.\n\nCreate ONE isolated EMPTY launch plate with ONE low horizontal folded service arm, ready state, NE view. Crisp chunky M1 transport-game hardware: concrete-gray metal deck, charcoal perimeter frame, pale cream small mechanism housing and restrained ochre safety accents, upper-left light.\n\nMatch Image1's equal-scale2:1 isometric footprint: ONE cell down-left, TWO cells down-right. Ground contacts at1024-square source size: NORTH(448,350), EAST(704,478), SOUTH(576,542), WEST(320,414). Plate thickness16px above these contacts; no separate apron or surrounding floor. Both world axes have exact2:1 slope. Keep the complete plate's physical base edges clearly visible.\n\nThe first/upper-left cell is an unobstructed launch area with one simple unlabelled pale circular landing outline, approximately centred at(448,414). Put ONE short jointed service arm folded HORIZONTALLY at the far/right end, approximately(640,478), entirely inside the second cell. A small cream motor housing and charcoal folded beam form ONE mechanism, not a vehicle. Arm height no more than48px above the plate. No tall mast, vertical tower, crane boom or equipment outside the plate.\n\nONE complete cutout in the centre of a SQUARE1024x1024 canvas, with at least100px of real transparent margin on every side. No guide colours, contact dots, labels, text, numbers, logos, frame, magenta, cast shadow outside the plate, cargo, crates, rocket, probe, pod, people, vehicle, tanks, road, track, water, scenery, second plate, extra machinery or extra views. Preserve true alpha. The whole empty plate and its single folded arm must fit safely within the one-by-two native area.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-NE-template.png",
+      "sha256": "448816c69f46548cc7e0e90114fbb714a1aa09a9b163e99e14294ebe7f99a81a",
+      "role": "actual native1x2 low-plate geometry/contact target; no guide markings in source"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+      "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+      "role": "selected coherent M1 materials/light only; no workshop building or equipment copied"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-38157861-fbb3-4328-a2a6-2d253876cf5d.png",
+  "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      506.5,
+      405
+    ],
+    [
+      1065,
+      735
+    ],
+    [
+      748.5,
+      914
+    ],
+    [
+      190,
+      584
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      190,
+      377,
+      1067,
+      916
+    ],
+    "minimum_clearance": 187
+  },
+  "contact_review": {
+    "source_reference": [
+      627.5,
+      659.5
+    ],
+    "definition": "Midpoint of the lateral physical plate feet at ground level; maps to the actual pad-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      88
+    ],
+    "native_zone_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        240,
+        96
+      ],
+      [
+        208,
+        112
+      ],
+      [
+        144,
+        80
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      627.5,
+      659.5
+    ],
+    "uniform_scale": [
+      80,
+      877
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      190,
+      377,
+      1067,
+      916
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-pad-ne-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+        "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375"
+      },
+      "signature": "944b6bda37b61734ad9aeddd81f1b601be84eed5ba14c01f8a76cd8ca220e7cd",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          192,
+          88
+        ],
+        "native_zone_corners": [
+          [
+            176,
+            64
+          ],
+          [
+            240,
+            96
+          ],
+          [
+            208,
+            112
+          ],
+          [
+            144,
+            80
+          ]
+        ],
+        "component": "pad",
+        "source_reference": [
+          627.5,
+          659.5
+        ],
+        "uniform_scale": [
+          80,
+          877
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          190,
+          377,
+          1067,
+          916
+        ]
+      },
+      "native_subject_bounds": [
+        152,
+        62,
+        232,
+        112
+      ],
+      "covered_pixels_per_cell": [
+        1227,
+        1480
+      ],
+      "native_sha256": "f9353eb0ddcf293b4ce3c1e249dc19d7c701ff99618539f1637c2f8f13353f5d"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-ne-v1-native.png"
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-ne-v1-native-review.png",
+    "findings": [
+      "One complete empty1x2 metal launch plate with an unlabelled landing outline and one low folded service arm.",
+      "Cream/charcoal/ochre mechanism matches the selected workshop material/light model; no tall gantry or baked actor/cargo.",
+      "Physical plate-foot reference is frozen at the actual pad-zone centre; every original indexed pixel fits the two real native cell canvases.",
+      "Original alpha16 clearance is187px; complete original retained without crop, mask, warp or paint."
+    ]
+  }
+}

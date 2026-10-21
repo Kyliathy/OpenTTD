@@ -1,0 +1,43 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Groups61CC/61C; source composition only, real native ground stays with station renderer.",
+  "key": "launch-center-composed-base-ne-v1",
+  "asset_id": "facility.launch-center",
+  "directions": [
+    "NE"
+  ],
+  "state": "ready_empty",
+  "frame": 0,
+  "component_model": {
+    "path": "media/multilayer/source/space/launch-center-component-model-v1.json",
+    "sha256": "572fa7106b1750ee4e6b0f09b3a27598065a53da4c731550e7f6dbb4452d4859"
+  },
+  "composition_order": [
+    "pad",
+    "workshop",
+    "recovery",
+    "storage"
+  ],
+  "depth_policy": "Pad lies behind the taller workshop; near-side recovery and storage cover ordinary overlapping pixels. Complete component planes remain immutable. No alpha repair, painting or geometry rescue.",
+  "foreground_policy": "ready_empty_base_only; actual occupant foregrounds remain Group61E",
+  "native_ground": {
+    "owner": "DrawTile_Station",
+    "sprite": "SPR_CONCRETE_GROUND",
+    "cells": 12
+  },
+  "status": "selected_base",
+  "base_selected": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "model_review": {
+    "status": "approved_complete_base",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/base-ne-geometry-review.png",
+    "findings": [
+      "One complete coherent twelve-cell ready/empty facility: low2x2workshop with one open service bay, one rear1x2launch plate with folded arm, separate1x2recovery plate and four empty storage bays.",
+      "All fixed native references and actual actor/service zones are preserved; workshop roof naturally occludes631 pad pixels and the near storage hides20 workshop plus65 recovery pixels, while all12 real cells retain visible source hardware.",
+      "Workshop open bay, four roof grilles, folded launch arm, receiving outline and four storage openings remain readable at native scale. No actor, cargo, water, track or road is baked into source.",
+      "Reviewed floor outlines are geometry-only guides; existing native concrete ground belongs to DrawTile_Station. Complete component source planes and exact depth ownership remain retained.",
+      "24 source positions reassemble exactly to11670 visible indexed hardware pixels. Empty fronts describe this ready/empty base only; actual occupant foregrounds, other rotations/states, packed payload and game review remain open."
+    ]
+  }
+}

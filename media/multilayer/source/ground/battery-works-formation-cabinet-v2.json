@@ -1,0 +1,104 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Immutable isolated cabinet original; actual alpha and native placement review"
+  },
+  "id": "battery-works-formation-cabinet-v2",
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-10995a45-0c57-4f4d-8426-7b5570571d6e.png",
+  "sha256": "48947662c5702c2f79a0f8a70233695c7c5e91dce295ea5772a7871bee11dd70",
+  "prompt": "Use case: precise-object-edit. Image1 is the edit target: ONE completed three-door Battery formation cabinet. Image2 is a CODE-NATIVE PLACEMENT GUIDE ONLY, a symmetric2:1 square ground diamond on1536x1024. Do not ship the cyan lines; replace the guide plane with real textured concrete.\nKEEP image1's exact low cabinet identity: ONE steel body, exactly THREE closed front doors and yellow handles, muted olive band, left/right vents and covered bottom cable ports; no stock, batteries, lights, displays or lettering. Keep upper-left lighting and slate/silver/yellow materials. Make cabinet squat as needed to sit completely inside the guide square.\nREPLACE ONLY FLOOR AND ITS PHYSICAL CAMERA GEOMETRY using image2's EXACT footprint. Canvas1536x1024, one centered subject. Concrete SQUARE slab corners: left(408,640), north(768,460), right(1128,640), south(768,820). Equal two world edges, symmetric2:1 diamond. North and south tips atx768; left and right tips aty640. The slab's full left/right width is720pixels. Keep the concrete slab bottom tip centered exactly at(768,820), not shifted right; floor bottom is y820, left/right extremities are y640. Thin10px slab, no thick pedestal. Cabinet and all fittings strictly inside the square, no exterior overhang. Whole machinery top approximatelyy300, maximum body height310px. Floor slab is square in world space, NOT a long rectangular strip. Keep this exact view and dimensions, no perspective tilt.\nOne complete isolated cutout with TRUE alpha transparency everywhere outside the cabinet and slab. No source frame, guide/cyan markings, text, other machines, background, props, inventory, status or cast shadow outside floor. Preserve all three doors closed. A correctly centered2:1 square ground footprint is the critical change.",
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v1.png",
+      "sha256": "a8b7e57806c8a957174483cce0a8582cb310fa090124222b69d2c9e8a437764e",
+      "role": "cabinet_edit_target"
+    },
+    {
+      "path": "media/multilayer/guides/ground/battery-formation-square-floor-template-v1.png",
+      "sha256": "aa63a21fdb6d8eb9a7404ab3b7414076fc419ed8bf84f656096af34d8a9e2177",
+      "role": "native_placement_only"
+    }
+  ],
+  "image_size": [
+    1536,
+    1024
+  ],
+  "variants": [
+    10
+  ],
+  "alpha_measure_threshold": 16,
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      10
+    ],
+    "reason": "Exact three closed doors/vents/covered ports; actual whole uniform native contacts and20-high sorting pass."
+  },
+  "components": [
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        259,
+        191,
+        1279,
+        917
+      ],
+      "native_box": [
+        1,
+        20,
+        63,
+        64
+      ]
+    }
+  ],
+  "excluded_variants": [],
+  "processor_asset_id": "facility.battery-works",
+  "construction_stage": 3,
+  "completed_empty": true,
+  "measurements": [
+    {
+      "variant": 10,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        259,
+        191,
+        1279,
+        917
+      ],
+      "minimum_alpha16_clearance": 107,
+      "opaque_magenta_pixels": 0
+    }
+  ]
+}

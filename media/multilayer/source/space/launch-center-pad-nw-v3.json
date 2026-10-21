@@ -1,0 +1,218 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.2; distinguish native projected-axis26.565deg from orthographic camera elevation30deg at azimuth45deg.",
+  "key": "launch-center-pad-nw-v3",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the UNAPPROVED NW launch plate camera edit target. Preserve physical hardware exactly: one circle UPPER-RIGHT, one low folded charcoal arm and one cream motor LOWER-LEFT, same gray/charcoal/ochre plate and all original seams/fittings. Generate ONE corrected3D camera view, never warp a flat picture.\n\nEXACT CAMERA: ORTHOGRAPHIC, AZIMUTH45DEGREES, CAMERA ELEVATION30DEGREES ABOVE THE GROUND. This produces2:1 dimetric ground projection. The SCREEN SLOPE of each world-axis ground edge is26.565degrees, because sin(camera elevation30)=0.5. Do not confuse ground-edge slope with camera elevation. Do NOT use true isometric camera elevation35.264degrees, which makes the floor too steep. Image1 is too steep: re-render with30degree elevation and45degree azimuth so the complete ground diamond's horizontal width is exactlyTWICE its vertical height. A256px horizontal ground run drops128px. Show a visibly flatter floor than Image1.\n\nKeep actual arm/motor height and physical opposite surfaces, fixed upper-left SCREEN lighting, same near-flush thin plate and shallow physical short depth. No thick vertical foundation, projecting corner toes or apron. Full plate hardware uses original two-cell long axis DOWN-LEFT, all complete ground corners visible. The circle remains UPPER-RIGHT; folded arm/motor remain LOWER-LEFT and point toward circle. Do not rotate the actual model again or alter original machinery count/end roles.\n\nONE whole isolated original on square1024x1024 genuine transparent canvas with at least80px margin on EVERY side. No additional circle, arm, motor, actor, cargo, pod, rocket, probe, vehicle, people, machinery, ground/apron, outside shadows, labels, text, dots, frame, magenta, scenery, road, track, water or extra views. Chunky M1 native-game materials. Main correction is the ACTUAL CAMERA ELEVATION30degrees at45degree azimuth, resulting in2:1ground, not true isometric35.264degree elevation.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v2.png",
+      "sha256": "24d321f3b52001acbfb26d3f46377d172e8b9cc0fa8c57b4a00443f2aac8dadd",
+      "role": "unapproved genuine NW physical model edit target; correct actual3D camera elevation, retain hardware/end identity"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v3.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-b1835146-ff7a-4cbc-ba97-cb8a945d7889.png",
+  "sha256": "299ff212e63868658e621ee006ae048aac7720ccc5ef1ac924c4b0e4fdd46bd4",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      851.5,
+      401
+    ],
+    [
+      1151,
+      576
+    ],
+    [
+      466.5,
+      955
+    ],
+    [
+      167,
+      780
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      166,
+      393,
+      1153,
+      957
+    ],
+    "minimum_clearance": 101
+  },
+  "contact_review": {
+    "source_reference": [
+      659.0,
+      678.0
+    ],
+    "definition": "Midpoint of lateral physical flush plate feet; maps to actual NW pad-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      224,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        112
+      ],
+      [
+        272,
+        128
+      ],
+      [
+        208,
+        160
+      ],
+      [
+        176,
+        144
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      659.0,
+      678.0
+    ],
+    "uniform_scale": [
+      80,
+      987
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      166,
+      393,
+      1153,
+      957
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-pad-nw-v3",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v3.png",
+        "sha256": "299ff212e63868658e621ee006ae048aac7720ccc5ef1ac924c4b0e4fdd46bd4"
+      },
+      "signature": "d34b89e080169878232c6aedb98c876e9301f30c3eaabbd96aee5655ff4b6e22",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          224,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            240,
+            112
+          ],
+          [
+            272,
+            128
+          ],
+          [
+            208,
+            160
+          ],
+          [
+            176,
+            144
+          ]
+        ],
+        "component": "pad",
+        "source_reference": [
+          659.0,
+          678.0
+        ],
+        "uniform_scale": [
+          80,
+          987
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          166,
+          393,
+          1153,
+          957
+        ]
+      },
+      "native_subject_bounds": [
+        184,
+        113,
+        265,
+        159
+      ],
+      "covered_pixels_per_cell": [
+        1047,
+        1293
+      ],
+      "native_sha256": "01863a73511afd62a13057ceb9dc073bc875044449f08fd703a9e9feb2287d47"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-nw-v3-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 3,
+    "visible_facades": [
+      "local_+Y",
+      "local_-X"
+    ],
+    "marking_world_cell": [
+      0,
+      3
+    ],
+    "arm_world_cell": [
+      1,
+      3
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-nw-v3-native-review.png",
+    "findings": [
+      "Genuine three-quarter turn: circle upper-right in actual0,3, original folded arm/motor lower-left in1,3, correctly showing opposite physical motor surfaces.",
+      "Same thin gray/charcoal plate, cream housing and ochre details. Explicit camera-elevation correction preserves fixed upper-left screen light and low original machinery.",
+      "All indexed pixels fit actual NW pad cells at reference224,136 and unchanged80px width; original alpha16 clearance101px. Two failed predecessors remain excluded.",
+      "Original circle/arm readable at native scale; no pixel clipping, masking, erasure, source crop, warp or changed guard."
+    ]
+  }
+}

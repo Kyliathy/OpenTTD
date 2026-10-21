@@ -1,0 +1,121 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Groups62B/62C/62D; genuine ready-yaw selection only, not phase coverage or native rendering.",
+  "asset_id": "vehicle.model-14",
+  "status": "selected_genuine_ready_originals",
+  "source_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-model-v1.json",
+    "sha256": "d57c85d44cb70007b167eb235201aad43f0f6f0795e668da997199da4a5a077a"
+  },
+  "base_fixture": {
+    "path": "src/tests/multilayer/cargo-rocket-base-fixture.json",
+    "sha256": "bf83134aeee252ec99d32d8551269cce0bd986cedaff1125fea3857c6352782c"
+  },
+  "native_size": [
+    64,
+    48
+  ],
+  "anchor": [
+    -32,
+    -32
+  ],
+  "native_contact": [
+    32,
+    32
+  ],
+  "views": {
+    "N": {
+      "yaw_from_ne": -45,
+      "service_face": "service/access face centered on front visible hull"
+    },
+    "NE": {
+      "yaw_from_ne": 0,
+      "service_face": "original service/access face on screen-right visible hull"
+    },
+    "E": {
+      "yaw_from_ne": 45,
+      "service_face": "service/access face at right tangent, nearly edge-on"
+    },
+    "SE": {
+      "yaw_from_ne": 90,
+      "service_face": "service/access face hidden on rear-right; visible hull plain"
+    },
+    "S": {
+      "yaw_from_ne": 135,
+      "service_face": "service/access face hidden on rear; visible hull plain"
+    },
+    "SW": {
+      "yaw_from_ne": 180,
+      "service_face": "service/access face hidden on rear-left; visible hull plain"
+    },
+    "W": {
+      "yaw_from_ne": 225,
+      "service_face": "service/access face at left tangent, nearly edge-on"
+    },
+    "NW": {
+      "yaw_from_ne": 270,
+      "service_face": "same service/access face on screen-left visible hull"
+    }
+  },
+  "selected": {
+    "NE": {
+      "candidate": "cargo-rocket-ready-ne-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-base-fixture.json",
+        "sha256": "bf83134aeee252ec99d32d8551269cce0bd986cedaff1125fea3857c6352782c"
+      }
+    },
+    "N": {
+      "candidate": "cargo-rocket-ready-n-v2",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-n-fixture.json",
+        "sha256": "f9443bb9948c3bd86d68bd8d69cac0cd22ea3894b59e3be696cc582dbc0a5dd5"
+      }
+    },
+    "E": {
+      "candidate": "cargo-rocket-ready-e-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-e-fixture.json",
+        "sha256": "230c826f1e2c780b3e361b8b9e3d3e9f6cd2f9c282b09e78da5c94e364a50877"
+      }
+    },
+    "SE": {
+      "candidate": "cargo-rocket-ready-se-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-se-fixture.json",
+        "sha256": "fa5edc46cc5f405c168e56ca852ae7275af84ec2cef2ec8265b6035eb79b1d76"
+      }
+    },
+    "S": {
+      "candidate": "cargo-rocket-ready-s-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-s-fixture.json",
+        "sha256": "778bf31c6ce2e41a826ec5bdfe4ac101ba6c1a15606e08178fbb6a8f12714ec6"
+      }
+    },
+    "SW": {
+      "candidate": "cargo-rocket-ready-sw-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-sw-fixture.json",
+        "sha256": "9288c634b0f080a5eb621328883d5aef1124c1f36735f2f5bb7f8a953e9f16f6"
+      }
+    },
+    "W": {
+      "candidate": "cargo-rocket-ready-w-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-w-fixture.json",
+        "sha256": "683709d9e8e24d2d3726f4a75737bf71cf87f6443cbef43ccf80a3eede4401f4"
+      }
+    },
+    "NW": {
+      "candidate": "cargo-rocket-ready-nw-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-nw-fixture.json",
+        "sha256": "4be2888e51b107aeca0776473d791ba58934a2cabefd75533f11dcb817e64e14"
+      }
+    }
+  },
+  "genuine_ready_views_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

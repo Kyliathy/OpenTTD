@@ -1,0 +1,160 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; native world/viewport producer: Group61B/r2mlvs9-launch-centers-and-rockets.md.",
+  "key": "launch-center-base-ne-v6",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nInput Image 1 is the unapproved but safely isolated v5 launch-center model; Image 2 is its exact native floor layout reference. Render ONE corrected NE view with true alpha. Keep the model SMALL on a SQUARE canvas, with the current wide transparent margins on every side. Preserve the entire floor, all corners, upper-left light and cream/charcoal/dark-blue/ochre M1 materials.\n\nCORRECT THE FLOOR PROPORTIONS by redrawing the geometry. In Image1 the southwest long side is too short relative to the southeast short side. Increase the WORLD-X/southwest length by about12%, keeping the WORLD-Y/southeast length fixed. There must be exactly FOUR equal tile steps down-left and THREE equal tile steps down-right, using the SAME tile size. Both world axes remain exact2:1 isometric, no perspective or shear.\n\nAt the input's1254-square size, target these floor tips: NORTH(682,449), EAST(1097,656.5), SOUTH(543.7,933.2), WEST(128.7,725.7). Every +Y tile is (+138.3,+69.2), every +X tile is (-138.3,+69.2). The long side is4/3 the short side. Keep this exact non-square 4x3 parallelogram; do not retain the old South/West positions. Repaint the 3D model on the corrected tile layout, with no extra apron row.\n\nNative zones stay exact:\nPad upper-right x0/y0..1: one EMPTY1x2 launch plate, one short horizontal folded service arm.\nWorkshop centre-left x1..2/y0..1: ONE LOW2x2 assembly hangar, open southeast-facing door towards storage.\nRecovery lower-left x3/y0..1: one EMPTY separate1x2 recovery plate.\nStorage y2/x0..3 along the near-right diagonal: ONE continuous low FOUR-cell strip with FOUR empty open bays. The fourth bay continues towards the SOUTH corner; Image1 currently shows only three. No unused extra row outside the twelve cells.\n\nPreserve low hardware heights and all equipment counts except the explicitly required fourth storage bay. No tall gantry, extra buildings, cargo, rocket, probe, pod, people, road, track, water, scenery, labels, text, numbers, logo, border or magenta. Do not crop anything. One genuine complete original with wide fully transparent margins. Exact equal-cell native proportions and four storage bays take priority over decorative detail.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-base-ne-v5.png",
+      "sha256": "2b35e49437989a4bfbc276800ddacc84cbc53de687cd976b8fcd0b28ce2a86b2",
+      "role": "unapproved model edit target; preserve materials/margins while correcting the equal-cell world-X extent"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v2/launch-center-NE-layout.png",
+      "sha256": "18db93ad2b218563d197836409b2f718bda411051a1cf6c8a54fe790361e3fe9",
+      "role": "verified native twelve-cell geometry reference; no guide marks in artwork"
+    }
+  ],
+  "status": "rejected_nonuniform_tile_scale",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v6.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-8e70b90d-c913-4054-809b-1e081209ca61.png",
+  "sha256": "4f27b88e0de113a1559724c8912d1ed370dcea6addeacd09a62a13596aaa0639",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_floor_corners": [
+    [
+      685.5,
+      459
+    ],
+    [
+      1138,
+      695.0
+    ],
+    [
+      593.0,
+      995
+    ],
+    [
+      146,
+      741.5
+    ]
+  ],
+  "layout_review": {
+    "status": "alpha_clearance_passed",
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      145,
+      458,
+      1140,
+      996
+    ],
+    "minimum_clearance": 114
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      176,
+      64
+    ],
+    "native_floor_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "uniform_scale": [
+      21821,
+      97851
+    ],
+    "source_reference": [
+      712.9970670455067,
+      470.8471197470327
+    ],
+    "source_floor_corners": [
+      [
+        685.5,
+        459
+      ],
+      [
+        1138,
+        695.0
+      ],
+      [
+        593.0,
+        995
+      ],
+      [
+        146,
+        741.5
+      ]
+    ]
+  },
+  "geometry_review": {
+    "actual_native_corners": [
+      [
+        170,
+        61
+      ],
+      [
+        271,
+        114
+      ],
+      [
+        149,
+        181
+      ],
+      [
+        50,
+        124
+      ]
+    ],
+    "expected_native_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "maximum_corner_error": 6,
+    "permitted_corner_error": 2,
+    "status": "rejected",
+    "reason": "Best uniform reduction/translation misses native floor corners by6px; maximum permitted2px. Original pixels remain unmodified."
+  }
+}

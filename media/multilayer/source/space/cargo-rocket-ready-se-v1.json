@@ -1,0 +1,113 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62B.3; exact isolated SE built-in request/input roles.",
+  "key": "cargo-rocket-ready-se-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset vehicle.model-14 cargo rocket, ONE genuine SE engine-yaw READY view. Image1 is SELECTED NE original physical model. Image2 is SELECTED neighboring E view. Image3 is labelled SE native/contact geometry ONLY, no guides become art.\n\nMake a GENUINE PHYSICAL +90degree yaw from Image1 NE, or +45degrees from Image2 E, around the upright vertical axis. Its SINGLE blue service plate and SINGLE closed charcoal payload-access panel above it have moved completely around the REAR-RIGHT side and are now FULLY HIDDEN by the physical hull. All visible capsule/tank surfaces are PLAIN warm cream and pale gray, except for the ONE thin muted-ochre waist band. Do not move, duplicate, redraw or show any inspection plate on the visible front or sides. Do not add an access seam, window, door, label or extra rear hardware to compensate. This is SE, not a copied NE/E view. Same original hidden equipment still exists on the far side.\n\nKeep exactly the original compact joined ogive capsule and cylindrical tank, ONE graphite base engine bell, FOUR short graphite landing feet in a square/cardinal pattern and the same pivots/pads/strut lengths. Because the foot assembly has fourfold physical symmetry, a90degree turn from NE has the SAME FOOT ASSEMBLY PROJECTION as Image1 NE: three original long visible legs/pads at LEFT, near FRONT-RIGHT and far RIGHT, plus ONE small far-foot pad tucked at left below the hull. Exactly FOUR total, not five. Do not add a second little mirrored pad on the opposite side of the bell. Keep original feet full and complete, no merged, shortened or extra feet. Hull, bell and waist proportions match Image1; do not stretch or fatten body.\n\nUse fixed ORTHOGRAPHIC45degree azimuth/30degree CAMERA ELEVATION, native2:1 ground projection. Hull stays upright vertical, not tilted toward the heading. Fixed upper-left SCREEN light independent of body yaw. Same chunky M1 classic Tycoon machinery, broad matte cream/gray/graphite regions and ochre band for native64x48 readability. Ground-plane center of landing feet under hull axis is the fixed native32,32 reference; unchanged64x48/(-32,-32).\n\nONE whole isolated complete SE rocket centered on a square1024x1024 genuine TRANSPARENT RGBA canvas, minimum120pixels clear transparent space on EVERY side around every original foot/bell/edge. Uniformly reduce the whole model if needed. No background/floor/ground patch, cast external shadow, stand/platform, frame/magenta, colored guide/crosses/boxes, text/label/number/logo, other view/model, people, exhaust/smoke/glow, booster, antenna, fin, hose, cargo, pod, probe, road/track/water. Only READY state, feet deployed. Final check: PLAIN CREAM visible hull, ONE OCHRE BAND, ONE BELL, EXACTLY FOUR original landing feet, original panels fully physically hidden around rear-right.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "role": "selected physical model and fourfold foot assembly edit target; genuine90degree yaw hides original panels",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-e-v1.png",
+      "role": "selected neighboring E genuine direction; original tangent panels become fully hidden after45degree yaw",
+      "sha256": "57856b5e042e418f795cc0aaff68322734dc0848bed9c97f0fbf77e4d5fdddd8"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/se-isolated-template.png",
+      "role": "SE labelled engine/contact geometry only; not source artwork",
+      "sha256": "0315ba0186cb697b29ccc9a143c1074f792c201d9b35da142509e1545cb5e889"
+    }
+  ],
+  "status": "selected_direction",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-se-v1.png",
+  "sha256": "17d68ef5868989a41bbd7d527599eb3ffc74cc36d3085e92168fd407867294c3",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-e-v1.png",
+      "sha256": "57856b5e042e418f795cc0aaff68322734dc0848bed9c97f0fbf77e4d5fdddd8"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/se-isolated-template.png",
+      "sha256": "0315ba0186cb697b29ccc9a143c1074f792c201d9b35da142509e1545cb5e889"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      225,
+      169,
+      1021,
+      1112
+    ],
+    "minimum_clearance": 142
+  },
+  "native_transforms": {
+    "SE": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        225,
+        169,
+        1021,
+        1112
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        613,
+        957
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "source_reference": [
+      613,
+      957
+    ],
+    "definition": "Original four-foot ground-plane center below hull axis. The fourfold physical foot assembly after90degree yaw uses the same native center and1/29physical height registration as selected NE."
+  },
+  "physical_view": {
+    "direction": "SE",
+    "yaw_from_ne": 90,
+    "service_face": "service/access face hidden on rear-right; visible hull plain"
+  },
+  "model_review": {
+    "status": "approved_genuine_direction",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-ne-e-se-contact.png",
+    "findings": [
+      "Genuine+90degree yaw from NE/+45from E moves both original panels physically behind rear-right; visible hull is plain cream with one ochre band. No panels were moved to a different visible face.",
+      "Original fourfold foot assembly projects like NE after90degree physical yaw: three long visible feet plus one actual far foot pad under left hull, four total. One joined cream capsule/tank, one graphite bell, same fixed screen light.",
+      "Whole1254RGBA retained/alpha16clearance142px, uniform1/29, fixed32,32/64x48/(-32,-32). Native421pixels/bounds18,4,46,37; one-pixel apex/band raster difference from N/NE/E accepted at unchanged physical scale/contact. Native neighboring contact reviewed; no mask/erasure/clipping/warp."
+    ]
+  }
+}

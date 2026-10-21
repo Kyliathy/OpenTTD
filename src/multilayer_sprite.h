@@ -7,6 +7,8 @@
 /**
  * @file multilayer_sprite.h Pure native M1 presentation selectors; gameplay remains with the existing feature owners.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups81B/82/83/79C
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FC (selected finite mine binding)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FD (selected processor binding)
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  */
 
@@ -112,7 +114,7 @@ std::array<std::optional<SpriteID>, 4> GetMultiLayerTerrainEdgeSprites(TileIndex
 std::optional<SpriteID> GetMultiLayerPortalSprite(TileIndex tile, bool front);
 
 /**
- * Query a real native cutter/support, hopper or hauler pose.
+ * Query a real native cutter/support, hopper, hauler or selected mineral wagon pose.
  * @param train Actual physical part; role and cargo remain with the saved train/controller owners.
  * @param direction Body view supplied by the existing train renderer, including its flip policy.
  * @param visual_ticks Read-only phase clock, or zero for static GUI previews.
@@ -166,7 +168,7 @@ std::optional<SpriteID> GetMultiLayerReceiverSprite(TileIndex tile, bool front, 
 std::optional<SpriteID> GetMultiLayerCollectorSprite(TileIndex tile, bool front, uint64_t visual_ticks);
 
 /**
- * Resolve an actual selected industry through its existing receiver or collector owner.
+ * Resolve a selected industry through its existing receiver, collector, finite-mine or Surface processor owner.
  * @param tile Native industry cell; other industry families keep their usual resolver.
  * @param front True for its aligned foreground part, false for its back/floor.
  * @param visual_ticks Read-only equipment clock shared by both parts of one draw.
@@ -192,7 +194,7 @@ std::optional<SpriteID> GetMultiLayerControlSprite(MultiLayerSpriteAsset asset, 
 
 /**
  * Select a static purchase preview without changing the model's calendar or capability gates.
- * @param model Catalogue model zero through four: two cutters, two spoil hoppers and the actual hauler.
+ * @param model Catalogue model zero through eight: cutters, spoil hoppers, hauler, selected wagons and road carriers.
  * @param available Availability supplied by the existing purchase/commissioning owner.
  * @return Available/locked UI sprite, or no selected-family override.
  */

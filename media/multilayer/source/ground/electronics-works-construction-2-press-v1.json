@@ -1,0 +1,103 @@
+{
+  "id": "electronics-works-construction-2-press-v1",
+  "path": "media/multilayer/source/ground/raw/electronics-works-construction-2-press-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-c64d007b-3517-4e9a-9098-45a58e75a84f.png",
+  "prompt": "Use case: precise-object-edit. Image1 is a four-panel source; ONLY its TOPLEFT selected completed Electronics precision stamping press is the edit target. Ignore other three machines. Extract the EXACT same squat press as ONE complete isolated RGBA cutout, centered with generous alpha margins on1536x1024. Keep one low C-frame, one short installed piston/upper die, ONE EMPTY flat lower bed, one closedbase and one covered side motor with yellow safety guard.\nGenuine CONSTRUCTIONSTAGE2 FINISHING: ONLY the small YELLOW lifting LUG at the TOP RIGHT of its upper housing is not yet installed. Remove that entire yellow top fitting, exposing only its two small empty fixing holes/flat mounting surface. Do not remove the yellow side-drive guard, motor, die or lower bed. The final small lifting fitting is absent, all functional hardware installed; no loose lug nearby.\nPreserve exact selected LOW WIDE proportions and floor: square concrete diamond at true2:1 isometric angle, equal world edges, centered south tip, complete left/right corners/native ground contacts. Do NOT make the upper housing taller/wider or motor overhang floor. Entire apparatus/floor must fit native64x64/20-high envelope. All hardware inside square floor; whole object about500pxwide/max340pxtall, upper-left light/slate/silver/yellow/mutedcopper-brown materials. No source frames, background haze, text, loose props, workpiece, product, stock, charge, display or state cue. Only the one declared final top fitting differs from the selected complete model.",
+  "construction_stage": 2,
+  "variants": [
+    4
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "9613cbd3ac82cfd057cd61a8f80a2c6fa40a7f110ecc78474a9cc1debb67f26a",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+      "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+      "role": "selected_completed_top_left_precision_press_only"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-4",
+      "variant": 4,
+      "world_cell": [
+        0,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        291,
+        167,
+        1267,
+        934
+      ],
+      "native_box": [
+        1,
+        15,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 4,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        291,
+        167,
+        1267,
+        934
+      ],
+      "minimum_alpha16_clearance": 90,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      4
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "4": "Original low C-frame/piston/upper die/empty lower bed/closed base/covered motor and yellow side guard. Final top yellow lifting fitting absent; two empty mounting holes remain. No workpiece."
+    }
+  },
+  "excluded_variants": [],
+  "unfinished_empty": true
+}

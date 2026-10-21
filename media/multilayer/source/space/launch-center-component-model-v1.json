@@ -1,0 +1,273 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Groups61CB/61CC; complete twelve-cell model, source art distinct from native ground/runtime acceptance.",
+  "asset_id": "facility.launch-center",
+  "model": "one low cream/charcoal/dark-blue/ochre facility; workshop2x2, pad1x2 with one folded arm, recovery1x2, empty storage4x1",
+  "ground": {
+    "owner": "DrawTile_Station",
+    "sprite": "SPR_CONCRETE_GROUND",
+    "source": "existing native game baseset",
+    "policy": "Native ground supplies the actual twelve station cells beneath original hardware; source components contain no surrounding apron."
+  },
+  "producer_inputs": [
+    {
+      "path": "media/multilayer/source/space/launch-center-source-contract.json",
+      "sha256": "010ebe9c704b056a9b8c0cb6d5bffbf597d82cf745533f050559abb739c2dff9"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v2/verification.json",
+      "sha256": "6b196ae0489b20b6641b0a391b02c3a0da6b2ebe788e30f8ad730de444203a57"
+    }
+  ],
+  "selected_components": {
+    "workshop": {
+      "key": "launch-center-workshop-ne-v1",
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/launch-center-workshop-ne-v1.json",
+        "sha256": "c7c964252fbc52297c4eb9088a5fbcda03b7ef76f5c77cc6bc2be1d3cb5d2526"
+      },
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+        "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3"
+      },
+      "native_transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          144,
+          112
+        ],
+        "native_zone_corners": [
+          [
+            144,
+            80
+          ],
+          [
+            208,
+            112
+          ],
+          [
+            144,
+            144
+          ],
+          [
+            80,
+            112
+          ]
+        ],
+        "component": "workshop",
+        "source_reference": [
+          629.0,
+          765.0
+        ],
+        "uniform_scale": [
+          108,
+          961
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          149,
+          307,
+          1110,
+          1004
+        ]
+      }
+    },
+    "pad": {
+      "key": "launch-center-pad-ne-v1",
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/launch-center-pad-ne-v1.json",
+        "sha256": "90addbb5c8f55cda6207a9b2abbfbbc010cc1263b33b53564273767b07b6ddde"
+      },
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+        "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375"
+      },
+      "native_transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          192,
+          88
+        ],
+        "native_zone_corners": [
+          [
+            176,
+            64
+          ],
+          [
+            240,
+            96
+          ],
+          [
+            208,
+            112
+          ],
+          [
+            144,
+            80
+          ]
+        ],
+        "component": "pad",
+        "source_reference": [
+          627.5,
+          659.5
+        ],
+        "uniform_scale": [
+          80,
+          877
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          190,
+          377,
+          1067,
+          916
+        ]
+      }
+    },
+    "recovery": {
+      "key": "launch-center-recovery-ne-v2",
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/launch-center-recovery-ne-v2.json",
+        "sha256": "07ca6c313c3e834381e90a0a60b0195c62195df731247744581658611c8acbad"
+      },
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v2.png",
+        "sha256": "6c6517ed01046dd6b115441020ae3a39dd4a1756bacf6432bd91cd063293d751"
+      },
+      "native_transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          96,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            80,
+            112
+          ],
+          [
+            144,
+            144
+          ],
+          [
+            112,
+            160
+          ],
+          [
+            48,
+            128
+          ]
+        ],
+        "component": "recovery",
+        "source_reference": [
+          641.5,
+          652.5
+        ],
+        "uniform_scale": [
+          40,
+          483
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          159,
+          397,
+          1125,
+          915
+        ]
+      }
+    },
+    "storage": {
+      "key": "launch-center-storage-ne-v4",
+      "generation_receipt": {
+        "path": "media/multilayer/source/space/launch-center-storage-ne-v4.json",
+        "sha256": "de1455bf2ad9b863f9bb30145271728892835aef6a663c10faac6f828f740cea"
+      },
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+        "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283"
+      },
+      "native_transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          192,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            240,
+            96
+          ],
+          [
+            272,
+            112
+          ],
+          [
+            144,
+            176
+          ],
+          [
+            112,
+            160
+          ]
+        ],
+        "component": "storage",
+        "source_reference": [
+          658.0,
+          736.5
+        ],
+        "uniform_scale": [
+          144,
+          899
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          209,
+          461,
+          1108,
+          932
+        ]
+      }
+    }
+  },
+  "base_selected": false,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "native_component_widths": {
+    "workshop": 108,
+    "pad": 80,
+    "recovery": 80,
+    "storage": 144
+  }
+}

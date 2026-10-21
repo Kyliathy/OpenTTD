@@ -10,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; independent final Space append.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; separate orbital append retains this earlier prefix proof.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62I; actual launch/fleet append preserves all prior decoded source expectations.
  */
 
 #include "../stdafx.h"
@@ -24,6 +25,7 @@
 #include "../timer/timer_game_tick.h"
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 #include "../safeguards.h"
 
@@ -281,7 +283,7 @@ TEST_CASE("Actual native loader loads every appended orbital sprite exactly", "[
 			CHECK(start == ORBITAL_SPRITE_START); // Earlier final Space poses remain a separately decoded prefix.
 			CHECK(bound == ORBITAL_SPRITE_END);
 			CHECK(SPACE_SPRITE_END == start);
-			CHECK(MAP_LAYER_SPRITE_COUNT == ORBITAL_SPRITE_END);
+			CHECK(MAP_LAYER_SPRITE_COUNT >= ORBITAL_SPRITE_END); // This retained fixture owns the orbital prefix; later appends keep its exact pixels and native IDs.
 			// Every new native pose and protected preview is decoded by the application's actual GRF/cache owner; source parsers or mocks cannot satisfy pixel/anchor equality.
 			for (uint i = 0; i < count; ++i) {
 				const uint16_t offset = ReadArtWord(input);
@@ -320,6 +322,106 @@ TEST_CASE("Actual native loader loads every appended orbital sprite exactly", "[
 	});
 	const std::string config_string = config.string();
 	std::array<std::string_view, 15> arguments = {"Debug/openttd_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
+		"-s", "null", "-m", "null", "-x", "-X", "-c", config_string};
+	CHECK(openttd_main(arguments) == 0);
+	if (failure) std::rethrow_exception(failure);
+	CHECK(observed);
+}
+
+/** Hidden isolated process proves every qualified launch/fleet slot through the real GRF/cache owner, without loading any paid world. */
+TEST_CASE("Actual native loader loads every appended launch and rocket sprite exactly", "[.launch-fleet-packed-art-load]")
+{
+	const auto root = FindTestRepositoryRoot();
+	const auto fixture = root / "logs/proofs/mlm/native-art/expected/launch-fleet-packed-sprites.bin";
+	const auto config = GetTestRuntimeConfig();
+	REQUIRE(std::filesystem::exists(fixture));
+	REQUIRE(std::filesystem::exists(config));
+	// Native startup must find actual original base graphics and the new shared
+	// payload before a headless observation can claim any decoded sprite coverage.
+	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
+		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+	}
+	bool observed = false;
+	std::exception_ptr failure;
+	/** @param elapsed Native startup frames only; no mission, resource, paid-world or work owner is advanced by this observer. */
+	const IntervalTimer<TimerGameTick> timer({TimerGameTick::Priority::None, 1}, [&observed, &fixture, &failure](uint elapsed) {
+		if (observed) return;
+		try {
+			REQUIRE(elapsed > 0);
+			NativeArtEncoder encoder;
+			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			REQUIRE(origin != nullptr);
+			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			std::ifstream input(fixture, std::ios::binary);
+			REQUIRE(input.good());
+			std::array<char, 8> magic{};
+			input.read(magic.data(), magic.size());
+			REQUIRE(std::string_view(magic.data(), magic.size()) == std::string_view{"LNFART2\0", 8});
+			const uint16_t count = ReadArtWord(input);
+			const uint16_t bound = ReadArtWord(input);
+			const uint16_t start = ReadArtWord(input);
+			const uint16_t new_count = ReadArtWord(input);
+			CHECK(count == 7764); // All6116previous native sprites plus1536facility/112rocket positions, with original physical absence and aliases.
+			CHECK(new_count == 1648);
+			CHECK(start == LAUNCH_FLEET_SPRITE_START);
+			CHECK(bound == LAUNCH_FLEET_SPRITE_END);
+			CHECK(ORBITAL_SPRITE_END == start);
+			CHECK(MAP_LAYER_SPRITE_COUNT == LAUNCH_FLEET_SPRITE_END);
+			uint prior_seen = 0;
+			uint new_seen = 0;
+			uint16_t previous_offset = 0;
+			// Decode every protected and new logical identity, including invisible
+			// physical parts. Compare full source bytes in addition to the retained
+			// portable hash; metadata, previews and hash collisions cannot stand in
+			// for the application's actual complete pixel/anchor equality.
+			for (uint i = 0; i < count; ++i) {
+				const uint16_t offset = ReadArtWord(input);
+				const uint16_t width = ReadArtWord(input);
+				const uint16_t height = ReadArtWord(input);
+				const int16_t x = static_cast<int16_t>(ReadArtWord(input));
+				const int16_t y = static_cast<int16_t>(ReadArtWord(input));
+				const uint32_t low = ReadArtWord(input);
+				const uint32_t expected = low | static_cast<uint32_t>(ReadArtWord(input)) << 16;
+				std::vector<uint8_t> expected_pixels(static_cast<size_t>(width) * height);
+				input.read(reinterpret_cast<char *>(expected_pixels.data()), expected_pixels.size());
+				REQUIRE(input.good());
+				INFO("native launch/fleet offset " << offset);
+				REQUIRE(offset < bound);
+				if (i != 0) REQUIRE(offset > previous_offset);
+				previous_offset = offset;
+				if (offset < start) ++prior_seen;
+				else ++new_seen;
+				const SpriteID id = SPR_MAP_LAYER_BASE + offset;
+				REQUIRE(SpriteExists(id));
+				REQUIRE(GetSpriteType(id) == SpriteType::Normal);
+				REQUIRE(GetOriginFile(id) == origin);
+				UniquePtrSpriteAllocator allocator;
+				const auto *sprite = static_cast<const Sprite *>(GetRawSprite(id, SpriteType::Normal, &allocator, &encoder));
+				REQUIRE(sprite != nullptr);
+				REQUIRE(sprite->width == width);
+				REQUIRE(sprite->height == height);
+				REQUIRE(sprite->x_offs == x);
+				REQUIRE(sprite->y_offs == y);
+				REQUIRE(HashArtPixels(*sprite) == expected);
+				REQUIRE(std::equal(expected_pixels.begin(), expected_pixels.end(), reinterpret_cast<const uint8_t *>(sprite->data)));
+			}
+			CHECK(input.peek() == std::ifstream::traits_type::eof());
+			CHECK(prior_seen == 6116);
+			CHECK(new_seen == new_count);
+			REQUIRE(GetSpriteCountForFile(origin->GetFilename(), SPR_MAP_LAYER_BASE, SPR_MAP_LAYER_BASE + bound) == count);
+			observed = true;
+			_exit_game = true;
+			fmt::print("LAUNCH_FLEET_PACKED_ART_LOADED sprites={} protected={} new={} families=2 native_start={} native_bound={} full_pixel_bytes=exact\n", count, prior_seen, new_seen, start, bound);
+		} catch (...) {
+			// Preserve a loader/assertion failure while allowing ordinary native
+			// startup shutdown to release its fonts/windows and finish the process.
+			failure = std::current_exception();
+			observed = true;
+			_exit_game = true;
+		}
+	});
+	const std::string config_string = config.string();
+	std::array<std::string_view, 15> arguments = {"Debug/openttd_space_art_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple", "-I", "original_dos",
 		"-s", "null", "-m", "null", "-x", "-X", "-c", config_string};
 	CHECK(openttd_main(arguments) == 0);
 	if (failure) std::rethrow_exception(failure);

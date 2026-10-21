@@ -1,0 +1,103 @@
+{
+  "id": "battery-works-construction-2-press-v1",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-2-press-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-cf886c54-22e2-4adc-9d9f-acb36acc4925.png",
+  "prompt": "Use case: precise-object-edit. Image1 is a source sheet; ONLY its BOTTOM LEFT completed squat C-frame sealing press is the edit target. Ignore other three machines. Extract this SAME low press as ONE isolated complete cutout on transparent1536x1024 canvas, centered with generous margins. Produce its genuine CONSTRUCTION STAGE2 FINISHING: change ONLY its final top yellow lifting handle, which is NOT YET INSTALLED. Remove the top yellow handle completely, leaving two small attachment holes; no loose handle. All other original hardware stays: ONE low C-frame, ONE short installed piston/upper tool, ONE EMPTY lower square bed, ONE closed base, ONE covered side drive with yellow guard. No workpiece or product.\nPreserve the exact completed model's LOW wide proportions, square diamond concrete floor, centered south tip, full four ground contacts, native2:1 isometric camera and upper-left light. Whole object approximately500pxwide, max350pxtall, low one-tile64x64/20-high sorting volume. All machinery strictly inside its square floor. Do not stretch the press taller. Floor is the full left/right width and must remain complete and symmetric; no rectangular long slab. Same slate/silver/yellow/mutedolive materials. Real alpha transparency outside the complete model. No frames, other machines, labels, text, props, loose hardware, stock, lights, charge or status cues.",
+  "construction_stage": 2,
+  "variants": [
+    9
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "01bbd90f27b52896e37a83bb2d2da9184fb7964be0a43d3925170c643de43406",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+      "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+      "role": "selected_completed_bottom_left_sealing_press_only"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-9",
+      "variant": 9,
+      "world_cell": [
+        1,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        269,
+        159,
+        1268,
+        952
+      ],
+      "native_box": [
+        1,
+        15,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 9,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        269,
+        159,
+        1268,
+        952
+      ],
+      "minimum_alpha16_clearance": 72,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      9
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "9": "Same squat C-frame/installed piston/empty lower bed/closed base and side guard; final yellow top lifting handle absent, attachment bore visible."
+    }
+  },
+  "excluded_variants": []
+}

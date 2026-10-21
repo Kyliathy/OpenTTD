@@ -15,6 +15,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; company-gated composition/motion and original construction/descent progress.
  */
 #include "stdafx.h"
+#include "space_survey_gui.h"
 #include "asteroid.h"
 #include "asteroid_inspection.h"
 #include "space_vehicle.h"
@@ -443,4 +444,13 @@ bool HandleSpaceEntityClick(const Viewport &vp, int x, int y)
 		_inspected_asteroid = id; ShowSpaceSurveyWindow(); return true;
 	}
 	return false;
+}
+
+/** @copydoc GetSpaceSurveySelection */
+SpaceCraftRef GetSpaceSurveySelection()
+{
+    const auto *vehicle = ResolveSpaceCraft(_inspected_probe);
+    // A GUI query reports only its surviving actual deployed hull; a reused
+    // pool ID or a stored/passenger role cannot become an orbital selection.
+    return vehicle != nullptr && vehicle->construction.placement == SpacePlacement::Orbital ? _inspected_probe : SpaceCraftRef{};
 }

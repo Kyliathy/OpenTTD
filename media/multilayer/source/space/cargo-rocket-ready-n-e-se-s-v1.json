@@ -1,0 +1,79 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.2; exact four-view built-in request and actual input roles before generation.",
+  "key": "cargo-rocket-ready-n-e-se-s-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "N",
+    "E",
+    "SE",
+    "S"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset: vehicle.model-14 reusable cargo rocket, READY, four NEW GENUINE 3D YAW VIEWS of the SAME selected physical model.\nInput Image1 is the SELECTED NE rocket original: exact hull identity, materials, equipment and proportions. Input Image2 is a labelled engine-view/registration and four-frame LAYOUT REFERENCE ONLY. Cyan boxes, pink crosses, arrows, labels and text are guides and MUST NOT appear in the output.\n\nCreate a SAFE BORDERED transparent source sheet, 1536x1024, four separated complete upright rockets in a 2x2 grid: N TOP-LEFT, E TOP-RIGHT, SE BOTTOM-LEFT, S BOTTOM-RIGHT. Keep four straight opaque PURE MAGENTA #FF00FF frames, about6px thick: N(24,24)-(744,488), E(792,24)-(1512,488), SE(24,536)-(744,1000), S(792,536)-(1512,1000). Frames are source separators outside all rockets. Each WHOLE rocket fits comfortably inside its panel with >=40px TRUE TRANSPARENT clearance from the frame: approximately280px wide and330px tall, top around80/592 and ground-contact center around360/872. Every foot, bell, faint edge and subject pixel remains isolated inside its rectangle. Background, gutters and margins are genuinely transparent; retain the magenta frames. No frame, cyan/pink guide, text, label, number or arrow inside the extracted rocket views.\n\nExact selected model from Image1: ONE upright joined rounded-ogive cream payload capsule over ONE cream cylindrical tank, ONE integrated graphite engine bell, EXACTLY FOUR short graphite landing feet in a fixed square arrangement, ONE thin muted-ochre waist band. A SINGLE dark-blue rectangular service plate and SINGLE CLOSED CHARCOAL PAYLOAD-ACCESS PANEL ABOVE IT are on the SAME physical face. The upper dark shape is a closed solid access panel, NOT a window/cockpit. Other faces are plain cream. Keep all proportions and exact hardware counts from Image1, including original sturdy feet/pivots. Rear feet may physically occlude; never duplicate a leg to show four feet. No added hatch, second band, extra panel, booster, fin, antenna, hose, cargo or payload. No exhaust or glow. This is the same empty-looking sealed reusable hull in READY state.\n\nPHYSICAL YAW around the upright VERTICAL axis relative to selected NE Image1; the rocket NEVER tilts along heading arrows. N=-45degrees from NE: original blue service/closed access face is CENTERED on front visible hull. E=+45degrees from NE: that face is at the extreme SCREEN-RIGHT tangent and nearly edge-on, with plain cream dominating the visible hull. SE=+90degrees from NE: original service/access face is HIDDEN around REAR-RIGHT, so visible hull is PLAIN cream with ochre band. S=+135degrees from NE: original service/access face is HIDDEN on REAR, so visible hull is PLAIN cream with ochre band. The four original feet rotate with the real body. These must be distinct genuine physical yaw views, not copied NE pictures, mirrored flat sprites or a tilted rocket. Do not move a hidden panel onto the visible side.\n\nFixed ORTHOGRAPHIC camera at45degree azimuth/30degree CAMERA ELEVATION, native2:1 ground projection; fixed upper-left SCREEN lighting throughout every body turn. Preserve the same physical hull height, diameter and landing-foot center; the center of its ground-contact plane is the fixed registration point, NOT the opaque bounding-box center. Same chunky low-detail M1 game style, broad cream/gray/graphite/blue/ochre regions readable at64x48 native. No scenery, ground/floor patch, cast ground shadow, backdrop, platform, people, window, road, rail, water, separate engine, cargo, probe, pod, extra model or view. Four independent fully separated COMPLETE cutouts, safe margins more important than size.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "role": "selected original NE whole model edit target; same actual hull, hardware, materials and foot center across genuine yaw views",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-e-se-s-template.png",
+      "role": "labelled engine headings, fixed contact/body envelope and canonical frame layout only; cyan/pink guides, labels/arrows are not source artwork",
+      "sha256": "f1f04adbe97c701a918fe2ac0ced2a02ec214c46722d427085483392b79ce349"
+    }
+  ],
+  "status": "rejected_separator_intrusion_and_clearance",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-e-se-s-v1.png",
+  "sha256": "dff8cc569dcf9c0c537674dece1c3394c65164a02bdfca9fef84083902a46df6",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-e-se-s-template.png",
+      "sha256": "f1f04adbe97c701a918fe2ac0ced2a02ec214c46722d427085483392b79ce349"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "hidden_magenta_rgb_is_transparent": true,
+    "requested_crop_observations": [
+      {
+        "direction": "N",
+        "alpha_clearance": 0,
+        "visible_magenta_pixels": 545
+      },
+      {
+        "direction": "E",
+        "alpha_clearance": 0,
+        "visible_magenta_pixels": 61
+      },
+      {
+        "direction": "SE",
+        "alpha_clearance": 0,
+        "visible_magenta_pixels": 567
+      },
+      {
+        "direction": "S",
+        "alpha_clearance": 0,
+        "visible_magenta_pixels": 181
+      }
+    ],
+    "reason": "Actual frames/subject edges intrude into all requested crops: visible alpha>=16 magenta545/61/567/181pixels and zero alpha clearance in N/E/SE/S. Background sample alpha0 is genuinely transparent despite hidden magenta RGB; rejection concerns visible separators/crowding, not hidden RGB. N also retains the original right-face panel rather than requested centered front. No erasure/colour-key/guessed mask permitted."
+  },
+  "native_transforms": {}
+}

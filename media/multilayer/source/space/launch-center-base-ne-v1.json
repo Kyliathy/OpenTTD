@@ -1,0 +1,63 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; actual twelve-cell source contract: Group61B / r2mlvs9-launch-centers-and-rockets.md Group2B.",
+  "key": "launch-center-base-ne-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "reference_inputs": [],
+  "status": "rejected_mirrored_world_projection",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "prompt": "Use case: stylized-concept.\nAsset type: original isometric game-building source, facility.launch-center, ready/empty state, NE native rotation 0 only.\nCreate ONE complete small industrial Space Launch Center on an exactly FOUR-by-THREE tile rectangular floor, fixed 2:1 orthographic isometric camera and upper-left screen light. One isolated whole model on genuine transparent alpha. This is a new model, with no attached image inputs.\n\nCanvas/framing: square 1024x1024. Keep one straight opaque PURE MAGENTA #FF00FF rectangular separator frame from (24,24) to (1000,1000), about 6px thick. Background, margins and all spaces between frame and subject must be genuinely transparent. The entire model, floor corners and faint shadows must remain at least 32px inside the frame. No model pixel touches or crosses it. Do not place labels or text anywhere. The magenta frame is outside the model, never a painted part of it.\n\nThe twelve-cell floor is a non-square 4x3 parallelogram. Its projected NORTH corner is approximately (464,300), EAST corner (848,492), SOUTH corner (560,636), WEST corner (176,444). From the NORTH corner, one +X tile step is (+96,+48); one +Y tile step is (-96,+48). Preserve this precise 2:1 projection and complete unbroken floor outline. Do not square the footprint or add perimeter tiles. Building height must be low: about 80px above the workshop floor at this source scale, so it remains readable in a native cell with only 33px above-floor allowance.\n\nEXACT equipment inventory and positions in that native floor coordinate system:\n- PAD: x=0, y=0..1, a single empty 1x2 launch plate along the upper-left side. One slim short folded service gantry wholly within the pad. No rocket.\n- WORKSHOP: x=1..2, y=0..1, ONE low rectangular 2x2 assembly/service hangar in the middle, with a large readable service-bay doorway and restrained dark-blue glazing. No second hangar, tower, dome or solar panels. Its visible front faces the storage strip.\n- RECOVERY: x=3, y=0..1, ONE separate empty 1x2 recovery plate along the right side, visibly distinct from the launch plate but containing no pod or vehicle.\n- STORAGE: x=0..3, y=2, ONE continuous low 4x1 covered freight/storage strip along the near diagonal edge, with empty open storage bays and a clear cargo-handling lane. Keep this strip low enough that the hangar doorway stays visible. No cargo, crates, tanks or containers.\nThese are the entire facility. Preserve their counts and relative placement. Floor panels can indicate the grid, but never draw coordinate labels or guide colours.\n\nStyle: classic transport-management game M1 machinery, crisp chunky isometric painted forms that will remain clear after downsampling and DOS-palette conversion. Pale gray/cream housing, charcoal structural frames, dark-blue windows, a few restrained ochre safety accents; subtle concrete floor panels. One coherent practical model with readable large shapes, not glossy concept painting. Short gantry, low hangar and low storage canopy; no tall scenery or invented equipment.\n\nNo rocket, probe, pod, truck, train, people, cargo, road, track, water, terrain background, scenery, text, labels, logos, numbers or watermark. Do not draw a decorative harbor or fixed water side: real water is separate game terrain and can touch any outer edge. Preserve all twelve floor cells and the entire silhouette with ample transparent clearance. Produce only this genuine NE view; do not make a contact sheet or extra views.",
+  "consulted_inputs": [
+    {
+      "path": "media/multilayer/source/space/launch-center-source-contract.json",
+      "sha256": "2ed092935efc20d011988a9b8e18121938dde5b9527ed40e7e441341f5dae955",
+      "role": "verified source brief, supplied as prompt text"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v1/verification.json",
+      "sha256": "53c900b2a265c2f6e7d5a82ab1d093c322bc3e53dca776be0d768a02dad2ecde",
+      "role": "compiled producer contract"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v1/launch-center-NE-layout.png",
+      "sha256": "755d3f9b4e5dbca985e841a23b768f4c9224993c18b4329f9e7bf688b5438ebb",
+      "role": "inspected geometry guide; not attached to imagegen"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "inspected M1 style only; not attached to imagegen"
+    }
+  ],
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-a04b1938-dc80-49c7-a58b-a09657bed0df.png",
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v1.png",
+  "sha256": "506ab49981e2f10d2185a43808322ebca9fa7235089a428a79175dce13a27fc0",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "layout_review": {
+    "status": "rejected",
+    "measured_window": [
+      80,
+      280,
+      1175,
+      1020
+    ],
+    "separator_threshold": "alpha>0, red>=220, green<=60, blue>=220",
+    "separator_pixels_in_window": 402,
+    "reason": "402 separator-colour pixels occur inside the rectangular model window; no masking or colour erasure is admitted."
+  },
+  "model_review": {
+    "status": "rejected",
+    "reason": "Gantry is visibly too tall for the low native-cell height policy; floor projection also needs registration against the exact layout guide before selection."
+  },
+  "projection_disposition": "The consulted v1 guide reversed native world X/Y screen steps. Preserve this original unmodified but never select it as native NE source. Existing rejection details remain diagnostic."
+}

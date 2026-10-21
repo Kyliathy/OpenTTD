@@ -1,0 +1,130 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.3; actual native recovery zone: Group61B/Plan9Group2B.",
+  "key": "launch-center-recovery-ne-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED empty launch-plate model edit target. Image2 is the actual1x2 recovery-zone geometry reference. Create ONE distinct EMPTY RECOVERY PLATE in the same NE view and coherent M1 material model.\n\nRemove the folded service arm, its cream motor housing and every arm attachment. Reconstruct the second half as a clean empty metal deck. Preserve ONE complete1x2 plate, charcoal perimeter frame, concrete-gray metal panels, pale cream/ochre corner details, upper-left light and the same2:1 isometric camera. No building or surrounding floor/apron.\n\nChange the first cell's circle marking to a simple broken rectangular recovery outline in pale cream, with no letters or numbers. Keep both cells empty and unobstructed. The fixed frame/corner fittings are permanent hardware, not cargo, a vehicle or a pod. Add no equipment beyond those frame details.\n\nUse Image2's one-by-two contact shape, not its colours, dots or labels. At1024-square guide scale, physical base tips are NORTH(448,350), EAST(704,478), SOUTH(576,542), WEST(320,414), and the plate is16px thick. One equal native world-X cell down-left, two world-Y cells down-right. Do not rotate/mirror a flat picture or alter the body into a square.\n\nONE isolated complete cutout centred on a SQUARE1024x1024 canvas, wide real transparent margins at least100px on all sides. No arm, mast, gantry, rocket, probe, pod, cargo, crates, people, tanks, vehicle, road, track, water, scenery, text, logos, frame, magenta, extra plate, extra view or outside cast shadow. Preserve genuine alpha, complete corners and readable empty recovery hardware.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+      "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375",
+      "role": "selected plate edit target; remove service mechanism and change recovery marking while preserving coherent hardware"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-NE-template.png",
+      "sha256": "63609ee796a2719a5d6b6f3e22781f531e2395bf95b63b5feb412cd44f61016c",
+      "role": "actual native1x2 recovery geometry reference; no guide markings in original"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-3d83def7-e387-4aa2-b456-38994a657ac2.png",
+  "sha256": "7a7097a471dd7c60a3de20a1f1fe80b015c51f13b4ee2b4e9e9a8e05281050fd",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      511.5,
+      379
+    ],
+    [
+      1156,
+      770
+    ],
+    [
+      785.5,
+      982
+    ],
+    [
+      141,
+      591
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      140,
+      346,
+      1157,
+      984
+    ],
+    "minimum_clearance": 97
+  },
+  "contact_review": {
+    "source_reference": [
+      648.5,
+      680.5
+    ],
+    "definition": "Midpoint of the lateral physical recovery-plate feet; maps to the actual recovery-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      96,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        80,
+        112
+      ],
+      [
+        144,
+        144
+      ],
+      [
+        112,
+        160
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      648.5,
+      680.5
+    ],
+    "uniform_scale": [
+      80,
+      1017
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      140,
+      346,
+      1157,
+      984
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "An indexed original pixel at107,159 leaves the two actual recovery sorting canvases; no pixel erasure/mask/crop is admitted."
+  }
+}

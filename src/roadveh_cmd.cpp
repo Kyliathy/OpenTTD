@@ -6,10 +6,13 @@
  */
 
 /** @file roadveh_cmd.cpp Handling of road vehicles. @see docs/zz-reach2/architecture/vehicles/road-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FF, selected conventional road presentation. */
 
 #include "stdafx.h"
 #include "bridge.h"
 #include "roadveh.h"
+#include "ground_road_sprite.h"
+#include "engine_func.h"
 #include "command_func.h"
 #include "error_func.h"
 #include "news_func.h"
@@ -25,6 +28,7 @@
 #include "script/api/script_event_types.hpp"
 #include "timer/timer_game_calendar.h"
 #include "timer/timer_game_economy.h"
+#include "timer/timer_game_tick.h"
 #include "vehicle_func.h"
 #include "sound_func.h"
 #include "ai/ai.hpp"
@@ -107,9 +111,22 @@ int RoadVehicle::GetDisplayImageWidth(Point *offset) const
 	return ScaleSpriteTrad(this->gcache.cached_veh_length * reference_width / VEHICLE_LENGTH);
 }
 
+/**
+ * Resolve an engine preview through existing company purchase admission before ordinary custom art.
+ * @param engine Actual engine identity; native mappings alone select a carrier family.
+ * @param image_type Existing list/purchase rendering context.
+ * @param result Destination sequence; no availability or cargo state is changed.
+ */
 static void GetRoadVehIcon(EngineID engine, EngineImageType image_type, VehicleSpriteSeq *result)
 {
 	const Engine *e = Engine::Get(engine);
+	// The ordinary engine/company owner supplies the visible purchase lock;
+	// native art cannot authorize an unavailable date, profile or company.
+	const bool available = Company::IsValidID(_local_company) && IsEngineBuildable(engine, VehicleType::Road, _local_company);
+	if (const auto native = GetMultiLayerEnginePurchaseSprite(engine, available)) {
+		result->Set(*native);
+		return;
+	}
 	uint8_t spritenum = e->VehInfo<RoadVehicleInfo>().image_index;
 
 	if (IsCustomVehicleSpriteNum(spritenum)) {
@@ -123,8 +140,18 @@ static void GetRoadVehIcon(EngineID engine, EngineImageType image_type, VehicleS
 	result->Set(to_underlying(Direction::W) + _roadveh_images[spritenum]);
 }
 
+/**
+ * Resolve this physical road part's body, retaining native packet and custom-vehicle ownership.
+ * @param direction Existing renderer's body view.
+ * @param image_type Existing map or static GUI drawing context.
+ * @param result Destination sequence; normal drawing still owns company remapping.
+ */
 void RoadVehicle::GetImage(Direction direction, EngineImageType image_type, VehicleSpriteSeq *result) const
 {
+	if (const auto native = GetGroundRoadSprite(*this, direction, image_type == EngineImageType::OnMap ? TimerGameTick::counter : 0)) {
+		result->Set(*native);
+		return;
+	}
 	uint8_t spritenum = this->spritenum;
 
 	if (IsCustomVehicleSpriteNum(spritenum)) {
@@ -1735,6 +1762,10 @@ Money RoadVehicle::GetRunningCost() const
 	return GetPrice(e->VehInfo<RoadVehicleInfo>().running_cost_class, cost_factor, e->GetGRF());
 }
 
+/**
+ * Advance the ordinary road vehicle tick with one derived art refresh on its existing head.
+ * @return True while the physical vehicle remains alive, as decided by its sole road controller.
+ */
 bool RoadVehicle::Tick()
 {
 	PerformanceAccumulator framerate(PerformanceElement::GameLoopRoadVehicles);
@@ -1742,6 +1773,7 @@ bool RoadVehicle::Tick()
 	this->tick_counter++;
 
 	if (this->IsFrontEngine()) {
+		RefreshGroundRoadArt(*this, TimerGameTick::counter);
 		if (!this->vehstatus.Test(VehState::Stopped)) this->running_ticks++;
 		return RoadVehController(this);
 	}

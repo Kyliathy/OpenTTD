@@ -1,0 +1,131 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.4; unchanged144px native model width and actual row ownership.",
+  "key": "launch-center-storage-ne-v3",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the UNAPPROVED storage-strip edit target. Image2 is the native row orientation/camera reference, never artwork. Generate ONE corrected, much shallower and lower four-bay empty storage canopy. Retain cream panel roofing, charcoal straight supports, gray empty interiors and restrained ochre edges.\n\nCORRECTION: Image1 uses a long edge too flat (about22degrees) and a short edge too steep. Change the camera to EXACT2:1 DIMETRIC,26.565degrees on BOTH world axes. Every receding long edge must go512px LEFT and256px DOWN in the guide, and every short edge must go48px RIGHT and24px DOWN. Parallel orthographic edges, no perspective or30degree camera.\n\nThis is a THIN covered freight shelf, not four garages. Physical depth only0.375 of one cell and roof height only20guide pixels, both aboutHALF the edit target. FOUR empty shallow openings across the long right-facing facade, five THIN straight posts with NO thick collars, feet or projecting toes. One continuous flat cream canopy divided into four panels. No side wall blocking the front, no second roof, no floor outside the hardware. Keep entire hardware inside the thin physical base.\n\nEXACT physical base points at1024guide scale: NORTH(760,378), EAST(808,402), SOUTH(296,658), WEST(248,634). Roof points are20px vertically above each base point. Thus the long edges run at26.565degrees, roof depth is less than one-tenth its long length, and the low strip has four open EMPTY bays. Centre whole subject with transparent margins at least80px on EVERY side. The reserved native4x1row remains unchanged; this thin hardware leaves room for the handling lane.\n\nMatch the crisp chunky M1 game materials and upper-left light. No cargo, crates, tanks, vehicle, pod, rocket, probe, people, tall building, annex, machinery, blue glazing, extra floor/apron, ground, scenery, water, road, track, labels, text, dots, template colours, frame, magenta or shadows beyond hardware. ONE complete isolated NE-view original on a square1024x1024 transparent canvas. Keep every whole corner visible.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v2.png",
+      "sha256": "dc23d9ea7524e158817845e2cecea3a2000052ebe1c807721b2c99d69aa38503",
+      "role": "unapproved geometry edit target; correct camera, halve depth and height, retain four empty bays/materials"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NE-template.png",
+      "sha256": "9e1d84a83faf9fc940cc011cc1e84c614a05af20871ec64cadad10d178081d0e",
+      "role": "native4x1 reserved row and exact2:1 camera reference only; shallow hardware uses an interior portion"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v3.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-0ce42102-2bf2-4af5-8f69-ad8973698316.png",
+  "sha256": "a960f243ea3256cb1b791b1c70963172d62e287a6f7e626e1fbb447fb046479a",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      936.0,
+      494
+    ],
+    [
+      1066,
+      581
+    ],
+    [
+      376.0,
+      914
+    ],
+    [
+      246,
+      827
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      245,
+      451,
+      1068,
+      916
+    ],
+    "minimum_clearance": 186
+  },
+  "contact_review": {
+    "source_reference": [
+      656.0,
+      704.0
+    ],
+    "definition": "Midpoint of the lateral physical shallow-storage feet; maps to the native storage-row centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        96
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        112,
+        160
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      656.0,
+      704.0
+    ],
+    "uniform_scale": [
+      144,
+      823
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      245,
+      451,
+      1068,
+      916
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 241,127",
+    "outside_indexed_pixels": 9
+  }
+}

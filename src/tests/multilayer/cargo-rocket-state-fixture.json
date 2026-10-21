@@ -1,0 +1,12 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62E; immutable reviewed native/source policy before any effect generation. Never regenerate expectations to bless drift.",
+  "policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "policy_semantic_sha256": "749edda2f63999817dc2a06cd341f735f3f1ea2d59f1fb9e28c2514ff1ec2144",
+  "ready_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-qualification-v1.json",
+    "sha256": "2a3e8a9b21ef4ed5547437caff1c9b17ec92ec0eb8ba72b490a8d1c9c99e9127"
+  }
+}

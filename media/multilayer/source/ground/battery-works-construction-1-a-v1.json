@@ -1,0 +1,295 @@
+{
+  "id": "battery-works-construction-1-a-v1",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-1-a-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-f75fb1dd-f69e-42b8-909d-99133d2b4fe9.png",
+  "prompt": "Use case: precise-object-edit. Battery Works CONSTRUCTION STAGE1, genuine partly assembled machinery, not completed art. Input1 is approved completed calender TOP LEFT and sealing press BOTTOM LEFT ONLY; ignore its other panels. Input2 is approved winding machine TOP RIGHT ONLY; ignore its other panels. Input3 is approved isolated three-door formation cabinet. Keep these four specific models/camera and concrete square floors. Create ONE four-panel stage1 source sheet, four DIFFERENT machines, same fixed2:1 native isometric camera/upper-left light. Top-left calender7, top-right winding8, bottom-left sealing9, bottom-right cabinet10.\nTOP LEFT: same low calender FRAME, only ONE of the final TWO rollers installed; the other roller bay is visibly EMPTY. Closed coating box and covered motor are NOT YET installed; their low mounting brackets remain. Preserve four short feet and low frame, no loose parts or tools.\nTOP RIGHT: same winding machine low base and two empty drum support brackets. Drum and side motor are NOT YET installed; both mounting sites EMPTY. An unambiguous partly assembled version of the selected winding apparatus, no new cylinders.\nBOTTOM LEFT: same low sealing press closed base, flat EMPTY lower bed and unfinished C-frame. Piston and upper sealing tool NOT YET installed, upper attachment recess empty. Lower the proportions to the selected squat press; never a tall tower.\nBOTTOM RIGHT: same low cabinet frame and inner empty enclosure, exactly THREE front door bays but only the LEFT door installed; two bare EMPTY front openings with NO batteries or electrical stock. Top and right casing partly absent, no glowing parts; same short base cable ports. This is incomplete cabinet assembly, not an operating cabinet with open doors.\nNo inventory, product, charge, fluid, loose props, machinery beyond these final models, workers, text or symbols. Keep gray/slate/silver/yellow/olive materials, low20-high native volume, complete centered2:1 diamond concrete floor under every model. Machinery fits inside its one-tile floor.\nSAFE1536x1024 source sheet. Four opaque PURE MAGENTA #FF00FF6px frames (24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Each WHOLE model/floor/shadow only about330pxwide/max260pxtall, centered with at least80px TRUE alpha-transparent clearance from every frame. Inner safe areas(56,56)-(712,456),(824,56)-(1480,456),(56,568)-(712,968),(824,568)-(1480,968). Real alpha backgrounds/gutters, no colored haze. No cropping, silhouette overlap, stretching, extra directions or perspective.",
+  "construction_stage": 1,
+  "variants": [
+    7,
+    8,
+    9,
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "bcd806f26d8a65cbebfbed876e8068761660ecdbb52a19843e5f1a7b341fd105",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+      "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+      "role": "calender_7_and_press_9_only"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v2.png",
+      "sha256": "1a278ed971db6e5ee33cab793ce71aec6c31a082a5280867a30a17b81716f011",
+      "role": "winding_8_only"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+      "sha256": "48947662c5702c2f79a0f8a70233695c7c5e91dce295ea5772a7871bee11dd70",
+      "role": "formation_cabinet_10"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        77,
+        56,
+        598,
+        416
+      ],
+      "native_box": [
+        1,
+        21,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        73,
+        67,
+        606,
+        413
+      ],
+      "native_box": [
+        1,
+        24,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-9",
+      "variant": 9,
+      "world_cell": [
+        1,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        79,
+        16,
+        588,
+        410
+      ],
+      "native_box": [
+        1,
+        16,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        65,
+        11,
+        626,
+        411
+      ],
+      "native_box": [
+        1,
+        20,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        77,
+        56,
+        598,
+        416
+      ],
+      "minimum_alpha16_clearance": 0,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        73,
+        67,
+        606,
+        413
+      ],
+      "minimum_alpha16_clearance": 3,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 9,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        79,
+        16,
+        588,
+        410
+      ],
+      "minimum_alpha16_clearance": 6,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 10,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        65,
+        11,
+        626,
+        411
+      ],
+      "minimum_alpha16_clearance": 5,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "rejected",
+    "approved_variants": [],
+    "refused_variants": {
+      "7": "mine original has insufficient transparent clearance",
+      "8": "mine original has insufficient transparent clearance",
+      "9": "mine original has insufficient transparent clearance",
+      "10": "mine original has insufficient transparent clearance"
+    },
+    "model_review": {
+      "7": "One of two rollers installed; second roller bay empty; coating box absent, drive upper motor not installed.",
+      "8": "Drum and motor absent; two low open circular support brackets and covered low drive mount remain.",
+      "9": "Same squat C-frame/closed base/empty bed; piston/tool absent and upper attachment bore empty.",
+      "10": "Three front bays, left door installed, other two bays empty, top casing absent; no batteries or stock."
+    }
+  },
+  "excluded_variants": [
+    7,
+    8,
+    9,
+    10
+  ]
+}

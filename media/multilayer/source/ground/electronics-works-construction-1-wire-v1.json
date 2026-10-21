@@ -1,0 +1,103 @@
+{
+  "id": "electronics-works-construction-1-wire-v1",
+  "path": "media/multilayer/source/ground/raw/electronics-works-construction-1-wire-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-43441a7c-558c-43b7-b9bb-97ca86408f01.png",
+  "prompt": "Use case: precise-object-edit. Image1 is a four-panel source; ONLY BOTTOM LEFT completed Electronics wire-bonding machine is the edit target. Ignore other three machines. Produce its genuine CONSTRUCTIONSTAGE1 as ONE isolated complete cutout. Keep original TWO-SEGMENT low articulated arm, base pivot, CLOSED feed box and EMPTY square fixture bed. Same low body/floor/camera and upper-left light.\nChange ONLY TWO unfinished parts: (1) the small downward bonding NOZZLE at the left/front arm tip is NOT YET installed; leave its empty round attachment bore; (2) the YELLOW TOP COVER on the FRONT/LEFT horizontal arm segment is NOT YET installed; reveal the DARK GRAY inner structural link beneath it. The front/left arm segment remains installed, but its large top surface is uncovered dark gray steel, NOT yellow. Keep the rear/base-mounted yellow arm segment and elbow unchanged. No removed cover/nozzle placed nearby. This gives an unambiguous unfinished version of the same TWO-link arm; do not create a different robot or delete the whole arm.\nPreserve source's LOW squat proportions, complete concrete SQUARE floor/centered south tip, exact ground contacts, true2:1 isometric camera and upper-left light/slate/silver/yellow/copperbrown. Whole single machine about500pxwide/max340pxtall, generous alpha-transparent margins on1536x1024. All machinery inside floor, no enlarged tall robot. Real alpha transparency outside whole model, no frames/haze/background/text/props. No wire, spool, chip, board, workpiece, stock, power or status cue.",
+  "construction_stage": 1,
+  "variants": [
+    7
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "f679e758f71ecbd9b4010cc5c800c11610cdd5a1e9d49549fa01c9bc7b820e07",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+      "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+      "role": "selected_completed_bottom_left_two_link_wire_bonding_machine_only"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        240,
+        177,
+        1277,
+        982
+      ],
+      "native_box": [
+        1,
+        16,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 7,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        240,
+        177,
+        1277,
+        982
+      ],
+      "minimum_alpha16_clearance": 42,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      7
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "7": "Same two-link covered arm/base/closed feed box/empty bed; front-link top cover absent, gray inner structure exposed; small final downward bonding nozzle absent, bare attachment stub. No wire or product."
+    }
+  },
+  "excluded_variants": [],
+  "unfinished_empty": true
+}

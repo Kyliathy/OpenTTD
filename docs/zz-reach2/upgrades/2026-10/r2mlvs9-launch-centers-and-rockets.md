@@ -51,7 +51,7 @@
 | [src/map_layer.h](../../../../src/map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
 | [src/station_cmd.h](../../../../src/station_cmd.h) | 29-47 | Station construction declarations/traits own IDs, joining and facility mutation; specialized launch and underground handling reuse this public command boundary. |
 
-Status: Groups11/11C/12/13/14/15/17/18/19/20/21 and tasks16.1/16.3 are verified in RelWithDebInfo/Debug with schema423; all independent runtime/handoff groups are complete; the next independent master queue is Plan10 task1.4. Groups19/20 are frozen by `logs/surface-collection-verification.json` and `logs/hub-circulation-verification.json`. Group18 proofs are `logs/commodity-loop-verification.json` and `logs/release-geometry-verification.json`. Task16.2 remains open under the scoped graphics gate: the public launch-center manifest has no delivered source/packed hash, and Plan14 Groups61-64 remain unfinished. Latest phase/ledger proof: `logs/phase-ledger-verification.json` (567 focused assertions/13 cases and10,913 new native assertions/15 cases each,23 pairs per configuration/26 exact owners,77 reports/136 artifacts/60 accepted processes). Retirement proof remains `logs/launch-retirement-verification.json`. Prior phase/cargo-return, release/descent and direct module/failure proofs remain immutable. Plan11 prerequisite proof remains `logs/orbital-handoff-debug-verification.json`. Final art/network and completion conditions remain open.
+Status: Groups11/11C/12/13/14/15/17/18/19/20/21 and tasks16.1/16.3 are verified in RelWithDebInfo/Debug with schema423; all independent runtime/handoff groups are complete; the next independent master queue is Plan10 task1.4. Groups19/20 are frozen by `logs/surface-collection-verification.json` and `logs/hub-circulation-verification.json`. Group18 proofs are `logs/commodity-loop-verification.json` and `logs/release-geometry-verification.json`. Task16.2 is complete as of2026-10-20: Plan14 Groups61-62JDD now verify actual source/packed native loading and ordinary layer/occlusion/selection/disclosure/deployment/passive recovery; see `logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json`. Latest phase/ledger proof: `logs/phase-ledger-verification.json` (567 focused assertions/13 cases and10,913 new native assertions/15 cases each,23 pairs per configuration/26 exact owners,77 reports/136 artifacts/60 accepted processes). Retirement proof remains `logs/launch-retirement-verification.json`. Prior phase/cargo-return, release/descent and direct module/failure proofs remain immutable. Plan11 prerequisite proof remains `logs/orbital-handoff-debug-verification.json`. Final art/network and completion conditions remain open.
 
 The latest Plan8/10/11 batch consumes the existing paid launch producer for two
 real construction-probe deliveries. RelWithDebInfo paid resupply, survey and
@@ -1038,10 +1038,13 @@ and Group15's actual pad/custody proof. A stand-alone recovery facility with
 returned stock has no surviving loading point after removal; refuse before
 clearing tiles. Joined ordinary freight keeps its actual station/inventory.
 For16.2 inspect only the public Sprite Contract and matching manifest entries
-plus their actual source/packed loading proof. Current `facility.launch-center`
-is planned with null source/offset/hash; Plan14 Groups61-64 own remaining Space
-art. Missing delivered art blocks16.2 alone, with no placeholder completion;
-continue independent state/placement and later ordered acceptance. Do not
+plus their actual source/packed loading proof. Plan14 Groups61-62I now qualify
+the actual four-view/twelve-cell facility and112rocket poses, with packed ranges
+6143..7790 and actual complete-byte native loading in both configurations.
+62J-62JDD now qualify native rocket/facility selection, current compatibility, actual
+paid-game occupied/FIFO/window/deployment/passive recovery evidence and scoped
+16.2closure. The final receipt is `logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json`. Earlier null-source descriptors are
+historical; existing probe/deployment/pod owners remain protected. Do not
 preload the asset producer's unrelated mandatory queues._
 
 Context has compacted 1 times while executing this group.
@@ -1050,7 +1053,7 @@ Context has compacted 1 times while executing this group.
 
 {{MEDIUM}}
 - [X] 16.1 Refuse center demolition while cargo/vehicles/jobs would be orphaned, or complete an explicit evacuation transaction. A station ID later reused by the pool must not become an old mission's new home accidentally.
-- [ ] 16.2 Integrate launch-center, rocket, probe deployment and return-pod graphics with correct layer filtering, occlusion and vehicle selection. Show payload, phase, fuel/service and queue reasons.
+- [X] 16.2 Integrate launch-center, rocket, probe deployment and return-pod graphics with correct layer filtering, occlusion and vehicle selection. Show payload, phase, fuel/service and queue reasons.
 - [X] 16.3 Test water predicates/orientations, all placement entry points, two launches contending for a pad and rocket ordinary-airport refusal.
 
 Verified2026-10-14 in both423 configurations: the actual paid alternate recovery
@@ -1068,8 +1071,7 @@ paused resaves each preserve26 owner families. Actual two-paid-rocket pad
 ordering is reused from immutable Group15 evidence. Proof:
 `logs/launch-retirement-verification.json`,14 reports/25 artifacts/12 accepted
 processes; [retirement/art notes](../../../zz-rhr/upgrades/2026-10/r2mlsp-k-retirement-and-art-notes.md).
-Task16.2 stays open: logical manifest/template and preview captures do not
-supply the missing authored/packed launch-center and fleet families.
+Task16.2 complete,2026-10-20: Plan14 Groups61-62JDD supply actual four-view/twelve-cell source,112rocket poses, reproducible packed/native loading, correct per-layer occupied rendering and physical picking, exact generic selected-craft windows, actual paid payload/phase/fuel/service/FIFO disclosures, same-incarnation probe deployment and passive packet recovery. Both current native builds pass14,943producer/selector assertions in20cases and163,073complete-byte decoder assertions inonecase; accepted actual paid physical/window/pod corpora remain bound to their original saves and retained apps. [Scoped final receipt](../../../../logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json). No simulation, source pose, cargo or capital was granted. Stored shells have no free sprite; spent shells are deleted atomically. Public ordinary runtime status is verified for the two own families,146other rows stay unchanged, and broader final-gallery/user/manufacturing acceptance remains separate. Original runtime/save/retirement evidence above is unchanged.
 
 ### Local Mandatory Reading - Phase pairs and normalized custody ledgers
 

@@ -1,6 +1,12 @@
 # First-party content distribution/runtime language pairing: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md and r2mlvs6-mines-and-resource-chains.md.
 # Focused actual-engine Space art validation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
 # Original orbital selectors/decoded append: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+# Native rocket source/phase selectors: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J.
+# Isolated genuine productive recovery admission: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZU.
+# Current underground processor source qualification: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group41B.
+# Selected underground complete native loading: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79E.
+# Current selected-ground typed/consumer boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups79FB-H.
+# Focused tube terminal/cargo producers: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT BINARY_NAME)
@@ -320,13 +326,116 @@ add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     # Variable native Underground station admission: r2mlvs11 Group15BF.3.
     src/tests/conventional_station_art.cpp
 )
+# The current original financial applications remain immutable; this separate
+# admission executable queries the same real engine without relinking them.
+add_executable(openttd_surface_capital_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/surface_entry_productive_admission.cpp
+)
+# Requalify actual command-funded processor geometry/status without relinking
+# existing applications or compiling unrelated scenario fixtures. Plan14 Group41B.
+add_executable(openttd_processor_contract_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/layer_processor_definition.cpp
+    src/tests/layer_processor_presentation.cpp
+    src/tests/layer_processor.cpp
+)
 # Link the same engine objects for the current Space boundaries without recompiling unrelated test scenarios after a shared sprite-range change. Explicit targeting keeps normal build/test entry points intact.
+add_executable(openttd_ground_art_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/ground_packed_load.cpp
+)
+# Keep completed packing observers immutable while current consumer cases
+# compile against the same actual engine and source-backed typed pose handoff.
+add_executable(openttd_ground_consumer_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/ground_sprite_selection.cpp
+    # Current actual mine geometry/status owners qualify selected source binding first: Plan14 Group79FC.
+    src/tests/layer_mine_definition.cpp
+    src/tests/layer_mine_presentation.cpp
+    src/tests/ground_mine_selection.cpp
+    # Requalify actual four-processor geometry/status before selected binding: Plan14 Group79FD.
+    src/tests/layer_processor_definition.cpp
+    src/tests/layer_processor_presentation.cpp
+    src/tests/layer_processor.cpp
+    src/tests/ground_processor_selection.cpp
+    # Qualify current conventional EIDS/capability ownership before rail art: Plan14 Group79FE.
+    src/tests/underground_engine.cpp
+    src/tests/underground_filter.cpp
+    src/tests/ground_train_selection.cpp
+    src/tests/multilayer_train_art.cpp
+    # Actual conventional road source and phase/custody boundaries: Plan14 Group79FF.
+    src/tests/ground_road_selection.cpp
+    # Requalify native station/terminal parent geometry before dependent source binding: Plan14 Group79FG.
+    src/tests/conventional_station_art.cpp
+    src/tests/conventional_terminal_art.cpp
+    src/tests/ground_station_selection.cpp
+)
+# Existing applications remain untouched; this separate target observes the
+# same actual engine/GRF cache after the selected underground range append.
+# Actual application/viewports remain separate from retained source-selection
+# images and original games: Plan14 Group79FHB and its following bounded proofs.
+add_executable(openttd_ground_viewport_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/ground_industry_runtime.cpp
+    # Actual conventional map/list/purchase and native station viewports: Plan14 Group79FHC.
+    src/tests/ground_transport_runtime.cpp
+    # Separate station/terminal foreground observer preserves completed transport source epochs: Plan14 Group79FHCC.
+    src/tests/ground_station_runtime.cpp
+    # Corrected facility packing proves the complete source/prefix through a fresh actual loader: Plan14 Group79FHCCB.
+    src/tests/ground_station_offset_load.cpp
+)
+# Reuse the real native engine while retaining every completed application image.
+# Provider checks run before adding operating terminal/interchange consumers.
+add_executable(openttd_tube_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/tube_test_environment.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/transport_tube_model.cpp
+    src/tests/transport_tube_construction.cpp
+    src/tests/transport_tube_readiness.cpp
+    src/tests/transport_tube_meter.cpp
+    src/tests/transport_tube_interchange_geometry.cpp
+    src/tests/transport_tube_interchange.cpp
+    src/tests/transport_tube_interchange_delivery.cpp
+)
 add_executable(openttd_space_art_test EXCLUDE_FROM_ALL
     src/tests/test_main.cpp
     src/tests/test_artifact_paths.cpp
     src/tests/mock_spritecache.cpp
     src/tests/space_sprite.cpp
     # Original orbital source selectors and paid-work owner boundaries: r2mlvs11 Group13K.
+    src/tests/launch_fleet_sprite.cpp
+    # Physical per-cell facility source/owner bounds: r2mlvs14 Group62JB.
+    src/tests/launch_facility_sprite.cpp
+    src/tests/launch_facility_render.cpp
+    # Actual retained paid-world review, without component poses: r2mlvs14 Group62JD.
+    src/tests/launch_fleet_paid_review.cpp
+    # Exact actual map/list window dispatch: r2mlvs14 Group62JDB.
+    src/tests/launch_craft_window.cpp
+    # Passive shell/packet recovery and real UI selection: r2mlvs14 Group62JDC.
+    src/tests/launch_pod_review.cpp
+    # Current original geometry, phase and custody producers: r2mlvs14 Group62JC.
+    src/tests/launch_site.cpp
+    src/tests/launch_production.cpp
+    src/tests/space_logistics.cpp
+    src/tests/launch_flight.cpp
+    src/tests/space_descent.cpp
     src/tests/orbital_sprite_craft.cpp
     src/tests/orbital_sprite_module.cpp
     src/tests/orbital_recipe_inventory.cpp
@@ -351,6 +460,12 @@ if(MSVC)
         set_property(TARGET openttd PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_surface_supply_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_surface_capital_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_processor_contract_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_ground_art_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_ground_consumer_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_ground_viewport_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_tube_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_space_art_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
      endif()
 endif()
@@ -384,10 +499,24 @@ target_link_libraries(openttd
 
 target_link_libraries(openttd_test PRIVATE openttd_lib)
 target_link_libraries(openttd_surface_supply_test PRIVATE openttd_lib)
+target_link_libraries(openttd_surface_capital_test PRIVATE openttd_lib)
+target_link_libraries(openttd_processor_contract_test PRIVATE openttd_lib)
+
+target_link_libraries(openttd_ground_art_test PRIVATE openttd_lib)
+
+target_link_libraries(openttd_ground_consumer_test PRIVATE openttd_lib)
+target_link_libraries(openttd_ground_viewport_test PRIVATE openttd_lib)
+target_link_libraries(openttd_tube_test PRIVATE openttd_lib)
 target_link_libraries(openttd_space_art_test PRIVATE openttd_lib)
 if(ANDROID)
     target_link_libraries(openttd_test PRIVATE log)
     target_link_libraries(openttd_surface_supply_test PRIVATE log)
+    target_link_libraries(openttd_surface_capital_test PRIVATE log)
+    target_link_libraries(openttd_processor_contract_test PRIVATE log)
+    target_link_libraries(openttd_ground_art_test PRIVATE log)
+    target_link_libraries(openttd_ground_consumer_test PRIVATE log)
+    target_link_libraries(openttd_ground_viewport_test PRIVATE log)
+    target_link_libraries(openttd_tube_test PRIVATE log)
     target_link_libraries(openttd_space_art_test PRIVATE log)
 endif()
 

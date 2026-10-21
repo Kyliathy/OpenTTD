@@ -1,0 +1,280 @@
+{
+  "id": "electronics-works-machinery-a-v3",
+  "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v3.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-f0abc285-9687-44d1-9ff1-f0d896ce0335.png",
+  "prompt": "Use case: precise-object-edit. Image1 is the Electronics completed source edit target. Preserve exact four selected machine identities, safe source panel positions/scale, floors, camera, light and materials. Geometry correction ONLY for TOP RIGHT cell5 and BOTTOM RIGHT cell8; do not change other panels.\nTOP RIGHT placement bridge: LOWER BOTH POSTS and their single CROSSBEAM by25percent in physical machine height while leaving the whole concrete floor unchanged. ONE central placement head remains attached under the low beam above ONE EMPTY table; ONE covered side controller becomes correspondingly low. Keep exactly TWO posts, ONE beam, ONE head, ONE table/controller. Low wide bridge, no tall gantry. The highest points must fit a native20-high one-tile sorting volume, not rise like a tower at the left/right edge.\nBOTTOM RIGHT two-door test cabinet: REDUCE CABINET BODY HEIGHT by25percent, making a LOW WIDE squat box. Keep exactly TWO CLOSED front doors, yellow handles, ONE covered side service port and vents. Lower the side controller/port housing with the main body. Do not narrow the floor or add another door. Same square floor, no body outside its diamond.\nTOP LEFT precision press and BOTTOM LEFT wire-bonding arm remain exactly the selected models; do not redesign their hardware or add stock.\nDo NOT enlarge ANY whole subject. Keep current small approximately330px whole width/max260px height and generous80px transparent clearance from every frame. Same1536x1024 four PUREMAGENTA #FF00FF6px frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Preserve fixed true2:1 isometric square floors, centered south floor tips, entire plinth/corners, upper-left light/slate/silver/yellow/copper-brown. Real alpha transparency in backgrounds/margins/gutters; no haze. No inventory, text, loose props, state/charge/power cues, clipping, perspective skew or source overlap. Change physical hardware height only where specified, never squeeze the whole model/floor.",
+  "construction_stage": 3,
+  "variants": [
+    4,
+    5,
+    7,
+    8
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "3077de59fb1ca42ce98ec300afb15cb21c76a27c9bfd99f9d7f2eb488d6b512a",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+      "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+      "role": "completed_placement_bridge_and_test_cabinet_low_geometry_edit"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-4",
+      "variant": 4,
+      "world_cell": [
+        0,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        149,
+        69,
+        547,
+        388
+      ],
+      "native_box": [
+        1,
+        14,
+        63,
+        64
+      ],
+      "construction_stage": 3
+    },
+    {
+      "id": "cell-5",
+      "variant": 5,
+      "world_cell": [
+        1,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        121,
+        116,
+        534,
+        389
+      ],
+      "native_box": [
+        1,
+        23,
+        63,
+        64
+      ],
+      "construction_stage": 3
+    },
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        144,
+        59,
+        532,
+        359
+      ],
+      "native_box": [
+        1,
+        16,
+        63,
+        64
+      ],
+      "construction_stage": 3
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        125,
+        81,
+        539,
+        363
+      ],
+      "native_box": [
+        1,
+        22,
+        63,
+        64
+      ],
+      "construction_stage": 3
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 4,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        149,
+        69,
+        547,
+        388
+      ],
+      "minimum_alpha16_clearance": 28,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 5,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        121,
+        116,
+        534,
+        389
+      ],
+      "minimum_alpha16_clearance": 27,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        144,
+        59,
+        532,
+        359
+      ],
+      "minimum_alpha16_clearance": 57,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        125,
+        81,
+        539,
+        363
+      ],
+      "minimum_alpha16_clearance": 53,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      4,
+      5,
+      7,
+      8
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "4": "One precision C-frame/piston/upper die, one empty bed, one closed base with covered motor; no workpiece.",
+      "5": "Two posts/one low crossbeam/one central placement head/empty fixture table/one covered side controller.",
+      "7": "One short two-segment covered articulated arm over an empty bed with one closed feed box; no wire or stock.",
+      "8": "One low two-door closed test cabinet, one covered side service port and vents; no stock, display or state lights."
+    }
+  },
+  "excluded_variants": [],
+  "completed_empty": true
+}

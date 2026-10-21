@@ -1,0 +1,289 @@
+{
+  "id": "electronics-works-construction-2-a-v1",
+  "path": "media/multilayer/source/ground/raw/electronics-works-construction-2-a-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-c5e0195a-e468-495c-a651-8f43ee7be66b.png",
+  "prompt": "Use case: precise-object-edit. Electronics Works genuine CONSTRUCTIONSTAGE2 FINISHING. Input1 is selected completed TOPLEFTprecisionpress4/BOTTOMLEFTwirebondmachine7 ONLY. Input2 is selected completed TOPRIGHT LOW placementbridge5/BOTTOMRIGHT LOW TWO-door testcabinet8 ONLY. Use the EXACT four selected models/low proportions/square floors/canonical2:1 camera/upper-left light. Four DIFFERENT machines, not orientations. All assembly is finished except the following explicit final fittings; no work, inventory or electricity is depicted.\nTOPLEFT cell4 press: piston/upperdie installed above EMPTYlowerbed, closedbase andcoveredmotor. ONLY the small YELLOW lifting LUG on TOP RIGHT of the upper housing is NOT YET INSTALLED. Leave its empty attachment holes. Keep yellow side-drive safety guard. Same squat physical model, no raised mounting ring on lowerbed.\nTOPRIGHT cell5 bridge: exactly TWO LOWposts/ONELOWcrossbeam, ONE central placement head INSTALLED, EMPTY square fixture TABLE installed, side controller's vent cover INSTALLED. ONLY the yellow rectangular TOP CAP on the REAR/LEFT post is NOT YET FITTED; its mounting face is bare gray steel with attachment holes. Keep FRONT/RIGHT yellow postcap. No taller gantry or omitted table.\nBOTTOMLEFT cell7 wirebondmachine: same TWOshort articulated links, closedfeedbox and EMPTYfixturebed. Small downward bonding NOZZLE is now INSTALLED. ONLY the large YELLOW TOP COVER on FRONT/LEFT horizontal arm link is STILL MISSING, showing DARKGRAY inner structure; the other arm segment/ends retain yellow covers. Exactly same two-link selected machine, no loose cover, wire, stock or boards.\nBOTTOMRIGHT cell8 cabinet: same LOWcompact closedbody, exactly TWO CLOSED frontdoors, all vent covers and side service port installed. ONLY RIGHT frontdoor's yellow HANDLE is NOT YET FITTED, leaving a small empty attachment socket. Left handle installed. No third door, lights, displays, status or contents.\nPreserve small original source scale/placement. Each WHOLE model/floor onlyabout330pxwide/max260pxtall, at least80px TRUEtransparent clearance to EVERY frame. Fixed20-high native machinery, no overhang, rectangular slab or floor/contact changes. Square2:1 floor diamond has centered southtip and complete corners.\nSAFE1536x1024 four opaque PUREMAGENTA #FF00FF6px separator frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). REALalpha backgrounds/margins/gutters, no haze. Same gray/slate/silver/yellow/copperbrown materials. No text, numbers, frames inside crops, props, detachedparts, stock, cuttingwire, chips or working cues. Final missingfittings must remain visibly absent; do NOT just copy completed machinery.",
+  "construction_stage": 2,
+  "variants": [
+    4,
+    5,
+    7,
+    8
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "b256911651b0cd3d9dd4308de331bfd360d438c6ea8cd95b756b8c2070325111",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+      "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+      "role": "selected_completed_precision_press_4_and_wire_arm_7_only"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v3.png",
+      "sha256": "3077de59fb1ca42ce98ec300afb15cb21c76a27c9bfd99f9d7f2eb488d6b512a",
+      "role": "selected_completed_low_bridge_5_and_two_door_cabinet_8_only"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-4",
+      "variant": 4,
+      "world_cell": [
+        0,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        132,
+        54,
+        560,
+        405
+      ],
+      "native_box": [
+        1,
+        13,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-5",
+      "variant": 5,
+      "world_cell": [
+        1,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        105,
+        74,
+        547,
+        408
+      ],
+      "native_box": [
+        1,
+        17,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        128,
+        41,
+        557,
+        386
+      ],
+      "native_box": [
+        1,
+        14,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        95,
+        60,
+        548,
+        389
+      ],
+      "native_box": [
+        1,
+        19,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 4,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        132,
+        54,
+        560,
+        405
+      ],
+      "minimum_alpha16_clearance": 11,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 5,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        105,
+        74,
+        547,
+        408
+      ],
+      "minimum_alpha16_clearance": 8,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        128,
+        41,
+        557,
+        386
+      ],
+      "minimum_alpha16_clearance": 30,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        95,
+        60,
+        548,
+        389
+      ],
+      "minimum_alpha16_clearance": 27,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      7,
+      8
+    ],
+    "refused_variants": {
+      "4": "mine original has insufficient transparent clearance",
+      "5": "mine original has insufficient transparent clearance"
+    },
+    "model_review": {
+      "4": "Piston/die installed above empty bed; final yellow upper lifting fitting absent, only flat gray attachment base/holes remain. Original side guard installed.",
+      "5": "Two low posts/beam/head/empty fixture table/controller vent present; rear-left yellow post cap absent, gray attachment face exposed; front-right cap installed.",
+      "7": "Two-link arm/nozzle installed over empty bed; large front-link yellow top cover absent, gray internal link exposed; other covers and closed feed box installed.",
+      "8": "Two closed doors/installed top/vents/service fitting; left yellow pull handle installed, right full yellow pull handle absent, attachment socket/stub visible. No stock or operating lights."
+    }
+  },
+  "excluded_variants": [
+    4,
+    5
+  ],
+  "unfinished_empty": true
+}

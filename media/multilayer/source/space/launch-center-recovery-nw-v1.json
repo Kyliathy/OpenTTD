@@ -1,0 +1,228 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.3; native rotation3 recovery receiving-end identity with explicit30deg camera elevation.",
+  "key": "launch-center-recovery-nw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is SELECTED genuine NW launch plate, the exact thin-body/camera edit target. Image2 is SELECTED genuine SW recovery plate, the physical receiving-outline/material identity reference. Image3 is actual NW recovery native two-cell geometry guide only. Create ONE genuine NW EMPTY RECOVERY PLATE.\n\nPreserve Image1's exact thin plate body/camera and long axis DOWN-LEFT. Remove folded arm and cream motor COMPLETELY from LOWER-LEFT end, leaving that end plain. Replace the circular launch marking with exactly ONE WHITE BROKEN RECTANGULAR receiving outline on the UPPER-RIGHT end cell, matching Image2's physical outline. This is a genuine further quarter turn of the recovery model: receiving outline UPPER-RIGHT, lower-left end PLAIN. No circle, arm, motor, cargo, pod or equipment on top. Keep same panel seams, four ochre corners, gray metal and charcoal rim.\n\nEXACT CAMERA: orthographic at45degree azimuth and30degree ELEVATION ABOVE GROUND. This yields native2:1 dimetric projection,26.565degree SCREEN slopes on both ground axes (sin30=0.5). Preserve Image1's corrected camera, not true-isometric35.264degree elevation. Whole floor diamond width is twice its height; no perspective. Fixed upper-left SCREEN light. Near-flush thin rim, no deep slab, projecting corner toes, apron or outside shadows. Do not increase plate depth/height. All whole physical base corners visible inside native reserved2x1 area with existing clear handling margin.\n\nONE isolated whole NW original on square1024x1024 real transparent canvas, at least80px transparent clearance on EVERY side. No extra marking/circle, arm, motor, machinery, actor, cargo, pod, rocket, probe, craft, vehicle, people, ground/apron, floor beyond plate, labels, text, guide dots/colours, frame, magenta, scenery, road, track, water or extra views. Same chunky M1 physical plate. Final view: long DOWN-LEFT plate, one BROKEN RECTANGULAR OUTLINE UPPER-RIGHT, PLAIN LOWER-LEFT. Preserve the exact selected NW thin-body camera.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v3.png",
+      "sha256": "299ff212e63868658e621ee006ae048aac7720ccc5ef1ac924c4b0e4fdd46bd4",
+      "role": "selected genuine NW camera/thin plate edit target; remove arm/motor and replace circle with receiving outline"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v3.png",
+      "sha256": "448727cf72250767187b072bb7b22abc81494c5a179a4fda5ea40b1f4d963316",
+      "role": "selected genuine recovery marking/material identity; further quarter turn moves receiving end to upper-right"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-NW-template.png",
+      "sha256": "1ad3d1dccbb5b4e4e814f2e699279a5514fea2088fe2ef6a6350388a79fc9d08",
+      "role": "actual NW native2x1 recovery geometry/contact guide only"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-01950881-d54d-457b-82fd-eec1cb08fe94.png",
+  "sha256": "0035130da24ba48a9aedb4731fc7ef65351561e5d1ea35c6f28602e20627fabb",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      851.0,
+      396
+    ],
+    [
+      1152,
+      577
+    ],
+    [
+      467.0,
+      963
+    ],
+    [
+      166,
+      782
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      165,
+      391,
+      1154,
+      965
+    ],
+    "minimum_clearance": 100
+  },
+  "contact_review": {
+    "source_reference": [
+      659.0,
+      679.5
+    ],
+    "definition": "Midpoint of lateral physical recovery-plate feet; maps to actual NW recovery-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      88
+    ],
+    "native_zone_corners": [
+      [
+        144,
+        64
+      ],
+      [
+        176,
+        80
+      ],
+      [
+        112,
+        112
+      ],
+      [
+        80,
+        96
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      659.0,
+      679.5
+    ],
+    "uniform_scale": [
+      80,
+      989
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      165,
+      391,
+      1154,
+      965
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-recovery-nw-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-recovery-nw-v1.png",
+        "sha256": "0035130da24ba48a9aedb4731fc7ef65351561e5d1ea35c6f28602e20627fabb"
+      },
+      "signature": "b92db5bddf7e4256f9bfe81fcf5416e53b07dae230afdbef710fc44e9c2f7cbc",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          128,
+          88
+        ],
+        "native_zone_corners": [
+          [
+            144,
+            64
+          ],
+          [
+            176,
+            80
+          ],
+          [
+            112,
+            112
+          ],
+          [
+            80,
+            96
+          ]
+        ],
+        "component": "recovery",
+        "source_reference": [
+          659.0,
+          679.5
+        ],
+        "uniform_scale": [
+          80,
+          989
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          165,
+          391,
+          1154,
+          965
+        ]
+      },
+      "native_subject_bounds": [
+        88,
+        64,
+        168,
+        111
+      ],
+      "covered_pixels_per_cell": [
+        1039,
+        1302
+      ],
+      "native_sha256": "063c799901f5734004a9929a017403bcfbba288c38a012fc04542100763f68b3"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-nw-v1-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 3,
+    "visible_facades": [
+      "local_+Y",
+      "local_-X"
+    ],
+    "marking_world_cell": [
+      0,
+      0
+    ],
+    "plain_world_cell": [
+      1,
+      0
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-nw-v1-native-review.png",
+    "findings": [
+      "Genuine three-quarter turn: broken receiving outline upper-right in actual0,0, plain lower-left end1,0, long axis down-left; no circle/arm/motor/actor/pod/cargo.",
+      "Same thin gray/charcoal/ochre plate and original outline, fixed upper-left screen light; native marking remains readable.",
+      "All indexed pixels fit actual NW recovery canvases at reference128,88 and unchanged80px width; original alpha16 clearance100px.",
+      "Complete original retained without masks, erasure, source crop, clipping, warp or guard changes."
+    ]
+  }
+}

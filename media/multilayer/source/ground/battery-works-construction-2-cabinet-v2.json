@@ -1,0 +1,103 @@
+{
+  "id": "battery-works-construction-2-cabinet-v2",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-2-cabinet-v2.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-a721b8c5-e19c-47e7-9c66-830425be893f.png",
+  "prompt": "Use case: background-extraction. Image1 is the edit target: Battery Works constructionSTAGE2 formation cabinet, THREE closed doors, left/middle yellow handles present, RIGHTMOST yellow handle absent leaving an attachment socket. Keep the exact cabinet, finish, fixed native2:1 isometric camera, upper-left light, whole concrete square floor and all complete floor corners. Change ONLY background to REAL TRANSPARENT ALPHA: remove the black background and every surrounding haze/halo outside the complete concrete plinth/cabinet. Background pixels must have alpha0, not opaque black or painted checkerboard. Preserve genuine object/floor antialiased edges and its centered floor tip; no shadows outside floor. Same1536x1024 composition and generous transparent margins. Do not enlarge, recrop, shift native geometry, alter doors/handles, add text/frames, stock, lights or props. A proper RGBA cutout with genuinely transparent background is mandatory.",
+  "construction_stage": 2,
+  "variants": [
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "2fbab9833f533ed061097fe643b8c70722ddddcc0f4913dd68d338d08539f8ef",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-construction-2-cabinet-v1.png",
+      "sha256": "3fd8e419a63dc90a7e5feb9bb9a101dda72126a92c24ffbbb6a22d308fac99f0",
+      "role": "finishing_cabinet_background_extraction_target"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        218,
+        135,
+        1325,
+        938
+      ],
+      "native_box": [
+        1,
+        19,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 10,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        218,
+        135,
+        1325,
+        938
+      ],
+      "minimum_alpha16_clearance": 86,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      10
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "10": "Same three closed doors, two installed yellow handles and unfinished right handle attachment; no contents or status. Real alpha and native geometry require actual checks."
+    }
+  },
+  "excluded_variants": []
+}

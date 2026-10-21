@@ -1,0 +1,289 @@
+{
+  "id": "electronics-works-construction-1-a-v1",
+  "path": "media/multilayer/source/ground/raw/electronics-works-construction-1-a-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-d96c886d-035a-4631-9bc2-1df4253b1777.png",
+  "prompt": "Use case: precise-object-edit. Electronics Works genuine CONSTRUCTION STAGE1. Image1 is the completed edit target for TOP LEFT precision press4 and BOTTOM LEFT wire-bonding arm7 ONLY. Image2 is the completed edit target for TOP RIGHT LOW placement bridge5 and BOTTOM RIGHT LOW TWO-door test cabinet8 ONLY. Preserve these exact selected models, low physical height, square concrete floors/native contacts, safe panel positions, camera and materials. Four DIFFERENT machines in one fixed2:1 isometric view, upper-left light. No physical stock, working status or electricity is pictured.\nTOP LEFT cell4 precision press: same squat C-frame/closed base/empty lower bed/covered side drive. Piston and upper stamping DIE are NOT YET INSTALLED; upper attachment bore EMPTY. No workpiece or tools.\nTOP RIGHT cell5 placement bridge: exactly TWO LOW POSTS and ONE LOW CROSSBEAM installed above the EMPTY table. Central placement HEAD not yet installed, leaving empty underside mount; side controller's outer cover missing, empty mounting frame. Keep the selected lowered short posts and low beam, never a taller gantry.\nBOTTOM LEFT cell7 wire-bonding machine: same low closed feed box/base and EMPTY square fixture bed. Only FIRST short ARM SEGMENT installed at its base pivot. The final SECOND arm segment and bonding NOZZLE are NOT YET INSTALLED; empty elbow mount. No loose arm piece, wire, spool, chip or board. Same model under assembly, not another robot.\nBOTTOM RIGHT cell8 low test cabinet: same compact TWO-BAY frame/covered side service port/vents. Only LEFT front door installed with yellow handle; RIGHT door and TOP casing NOT YET INSTALLED, showing one EMPTY dark front bay and empty structural top. Exactly TWO front bays, no third door, stock, racks or battery.\nKeep low one-tile20-high native profiles. Do not enlarge or alter source scale. Every WHOLE model/floor/shadow about330pxwide/max260pxtall and at least80px TRUE alpha-transparent clearance to every frame. Concrete floor is a complete square seen as true2:1 diamond, south tip centered between left/right corners; no overhang, rectangular slab, crop or camera skew.\nSame1536x1024 safe four opaque PUREMAGENTA #FF00FF6px frames at(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Background/margins/gutters REAL alpha transparency, no colored haze/opaque backdrop. Preserve slate/silver/yellow/mutedcopper-brown materials. No text, numbers, labels, props, loose hardware, inventory, product, charge, lights, displays, state cues or perspective.",
+  "construction_stage": 1,
+  "variants": [
+    4,
+    5,
+    7,
+    8
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "9d3ff055756d433565a83968b2e89410811701b75038e543fb57e3edc52f0647",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+      "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+      "role": "completed_precision_press_4_and_wire_arm_7_only"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v3.png",
+      "sha256": "3077de59fb1ca42ce98ec300afb15cb21c76a27c9bfd99f9d7f2eb488d6b512a",
+      "role": "completed_low_bridge_5_and_two_door_cabinet_8_only"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-4",
+      "variant": 4,
+      "world_cell": [
+        0,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        122,
+        41,
+        589,
+        415
+      ],
+      "native_box": [
+        1,
+        14,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-5",
+      "variant": 5,
+      "world_cell": [
+        1,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        85,
+        52,
+        569,
+        414
+      ],
+      "native_box": [
+        1,
+        18,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        119,
+        33,
+        577,
+        383
+      ],
+      "native_box": [
+        1,
+        17,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        94,
+        24,
+        573,
+        385
+      ],
+      "native_box": [
+        1,
+        17,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 4,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        122,
+        41,
+        589,
+        415
+      ],
+      "minimum_alpha16_clearance": 1,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 5,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        85,
+        52,
+        569,
+        414
+      ],
+      "minimum_alpha16_clearance": 2,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        119,
+        33,
+        577,
+        383
+      ],
+      "minimum_alpha16_clearance": 33,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        94,
+        24,
+        573,
+        385
+      ],
+      "minimum_alpha16_clearance": 24,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      8
+    ],
+    "refused_variants": {
+      "4": "mine original has insufficient transparent clearance",
+      "5": "mine original has insufficient transparent clearance",
+      "7": "no explicit model inventory review"
+    },
+    "model_review": {
+      "4": "Piston/die absent; empty bed and original C-frame remain. Lower bed has an extra exposed mounting ring needing correction.",
+      "5": "Two-post bridge with empty head mount and uncovered empty controller; source bridge appears taller than selected low model.",
+      "8": "Two cabinet bays, only left door installed; top casing absent, right bay empty."
+    }
+  },
+  "excluded_variants": [
+    4,
+    5,
+    7
+  ],
+  "unfinished_empty": true
+}

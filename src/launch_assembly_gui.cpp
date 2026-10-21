@@ -1,10 +1,12 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file launch_assembly_gui.cpp Native material-paid Surface workshop and explicit orbital freight controls.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups8B/11.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JD; actual FIFO wait disclosure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; explicit paid Earth replacement cancellation.
  */
 #include "stdafx.h"
 #include "launch_operations.h"
+#include "launch_assembly_gui.h"
 #include "launch_center_cmd.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
@@ -91,6 +93,23 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 	EndContainer(),
 };
 static WindowDesc desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::LaunchAssembly, WindowClass::StationView, {}, widgets);
+/** Explain actual FIFO storage without creating another pad or admission rule.
+ * @param center Existing native facility displayed by this inventory window.
+ * @param craft Actual paid hull whose current source row is being drawn.
+ * @return Whether its real queue entry waits behind another entry or an occupied pad.
+ */
+static bool IsLaunchQueueWaiting(const Station &center, const SpaceVehicle &craft)
+{
+    // Only an owned stored rocket in this exact center's native FIFO can wait
+    // for its launch pad. Other stored roles and historical homes keep their
+    // existing custody labels instead of acquiring imaginary launch authority.
+    if (!center.launch_operations || GetSpaceVehicleModel(craft) != 14 || craft.owner != center.owner ||
+        craft.construction.home != GetLaunchCenterReference(center) || craft.construction.placement != SpacePlacement::SurfaceStored) return false;
+    const auto &operations = *center.launch_operations;
+    const auto position = std::ranges::find(operations.pad_queue, GetSpaceCraftReference(craft));
+    return position != operations.pad_queue.end() && (position != operations.pad_queue.begin() || ResolveSpaceCraft(operations.pad_active) != nullptr);
+}
+
 /** Workshop view posts synchronized commands against actual paid hulls, packets and exact facility incarnations. */
 struct LaunchAssemblyWindow : Window {
 	LaunchCenterRef center;
@@ -185,6 +204,12 @@ struct LaunchAssemblyWindow : Window {
 				v->manifest ? v->manifest->pods.size() : 0, v->manifest ? v->manifest->service_ticks : 0));
 			draw(GetString(STR_LAUNCH_LOGISTICS_FREIGHT, v->cargo_type, v->cargo.TotalCount()));
 		}
+        // A live passive descent owns its actual packet list until atomic
+        // recovery. Show that original cargo while this exact shell is selected;
+        // a stored empty shell or a spent/reused ID cannot invent freight.
+        if (const auto *pod = ResolveSpacePod(selected_pod); pod != nullptr && pod->descent) {
+            draw(GetString(STR_LAUNCH_LOGISTICS_FREIGHT, pod->descent->cargo, pod->descent->packets.AvailableCount()));
+        }
 		if (ResolveSpaceCraft(carrier) != nullptr) draw(GetString(STR_LAUNCH_LOGISTICS_CARRIER, carrier.vehicle.base()));
 		if (ResolveSpaceCraft(receiver) != nullptr) draw(GetString(STR_LAUNCH_RESUPPLY_RECEIVER, receiver.vehicle));
 		else if (receiver != SpaceCraftRef{}) draw(GetString(STR_SPACE_ORDER_TARGET_LOST));
@@ -218,7 +243,8 @@ struct LaunchAssemblyWindow : Window {
 			const StringID status = v->construction.placement == SpacePlacement::Unhomed ? STR_LAUNCH_ASSEMBLY_UNHOMED :
 				IsSpaceFlightActive(*v) ? flight_names[to_underlying(v->transition->phase)] : v->construction.placement == SpacePlacement::Orbital ? STR_LAUNCH_FLIGHT_ORBITAL :
 				v->construction.placement == SpacePlacement::Carried ? STR_LAUNCH_LOGISTICS_CARRIED :
-				v->construction.placement == SpacePlacement::SurfaceStored ? STR_LAUNCH_ASSEMBLY_STORED : v->construction.paused ? STR_LAUNCH_ASSEMBLY_PAUSED : STR_LAUNCH_ASSEMBLY_WORKING;
+				v->construction.placement == SpacePlacement::SurfaceStored ? (IsLaunchQueueWaiting(*s, *v) ? STR_LAUNCH_RESUPPLY_BUSY : STR_LAUNCH_ASSEMBLY_STORED) :
+                v->construction.paused ? STR_LAUNCH_ASSEMBLY_PAUSED : STR_LAUNCH_ASSEMBLY_WORKING;
 			const auto ref = GetSpaceCraftReference(*v); const int top = y;
 			draw(GetString(STR_LAUNCH_ASSEMBLY_HULL, names[i], v->index.base(), status, IsSpaceFlightActive(*v) ? v->transition->remaining_ticks : v->construction.remaining_ticks), ref == selected ? TextColour::Yellow : TextColour::White);
 			rows.push_back({ref, {r.left, top, r.right, y - 1}});
@@ -299,4 +325,52 @@ struct LaunchAssemblyWindow : Window {
 void ShowLaunchAssemblyWindow(LaunchCenterRef center)
 {
 	if (ResolveLaunchCenter(center) != nullptr) AllocateWindowDescFront<LaunchAssemblyWindow>(desc, center.station.base(), center);
+}
+
+/** @copydoc ShowLaunchCraftWindow */
+bool ShowLaunchCraftWindow(SpaceCraftRef craft)
+{
+    const auto *vehicle = ResolveSpaceCraft(craft);
+    // The orbital inspector owns deployed roles. This native workshop can
+    // disclose only its actual supported Earth/stored/carried/flight hulls;
+    // a stale incarnation never changes the surviving current GUI selection.
+    if (vehicle == nullptr || vehicle->construction.placement == SpacePlacement::Orbital ||
+        std::ranges::find(models, GetSpaceVehicleModel(*vehicle)) == std::end(models)) return false;
+    const auto home = vehicle->construction.home;
+    const auto *center = ResolveLaunchCenter(home);
+    // A reused station ID or another company's home is not this original
+    // hull's workshop. Opening a window must never silently retarget recovery.
+    if (center == nullptr || center->owner != vehicle->owner) return false;
+    auto *window = static_cast<LaunchAssemblyWindow *>(FindWindowById(WindowClass::LaunchAssembly, home.station.base()));
+    // Window numbers use station IDs, whereas native homes include generations.
+    // Replace only an obsolete GUI incarnation before selecting the real home;
+    // no facility, inventory, craft or reservation is created by this refresh.
+    if (window != nullptr && window->center != home) { window->Close(); window = nullptr; }
+    ShowLaunchAssemblyWindow(home);
+    window = static_cast<LaunchAssemblyWindow *>(FindWindowById(WindowClass::LaunchAssembly, home.station.base()));
+    if (window == nullptr) return false;
+    window->selected = craft; window->selected_pod = {};
+    if (GetSpaceVehicleModel(*vehicle) == 14) window->carrier = craft;
+    window->SetDirty();
+    return true;
+}
+
+/** @copydoc GetLaunchCraftWindowSelection */
+SpaceCraftRef GetLaunchCraftWindowSelection(LaunchCenterRef center)
+{
+    const auto *window = static_cast<const LaunchAssemblyWindow *>(FindWindowById(WindowClass::LaunchAssembly, center.station.base()));
+    // GUI window numbers omit generations. Only the actual surviving center's
+    // current native selection may answer a cross-window presentation query.
+    if (ResolveLaunchCenter(center) == nullptr || window == nullptr || window->center != center) return {};
+    return ResolveSpaceCraft(window->selected) != nullptr ? window->selected : SpaceCraftRef{};
+}
+
+/** @copydoc GetLaunchPodWindowSelection */
+SpacePodRef GetLaunchPodWindowSelection(LaunchCenterRef center)
+{
+    const auto *window = static_cast<const LaunchAssemblyWindow *>(FindWindowById(WindowClass::LaunchAssembly, center.station.base()));
+    // A recycled station/window number never answers for another incarnation;
+    // successful recovery has already consumed the exact selected live shell.
+    if (ResolveLaunchCenter(center) == nullptr || window == nullptr || window->center != center) return {};
+    return ResolveSpacePod(window->selected_pod) != nullptr ? window->selected_pod : SpacePodRef{};
 }

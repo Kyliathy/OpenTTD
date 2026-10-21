@@ -1,0 +1,381 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DE; exact accepted NE base before shared four-view converter extension. Rebuild these artifacts from the immutable selected NE recipe; expected hashes must not be regenerated to bless drift.",
+  "recipe": {
+    "path": "media/multilayer/source/space/launch-center-composed-base-ne-v1.json",
+    "sha256": "024f025b64fc2714feb20b07e6485ee7a45638e0aa350c60aff2e2697b9e0706"
+  },
+  "component_model": {
+    "path": "media/multilayer/source/space/launch-center-component-model-v1.json",
+    "sha256": "572fa7106b1750ee4e6b0f09b3a27598065a53da4c731550e7f6dbb4452d4859"
+  },
+  "rotation_model": {
+    "path": "media/multilayer/source/space/launch-center-rotation-model-v1.json",
+    "sha256": "73074b9ffb150297869d376bd00e300b5acee15763341d884a1c9ac8ecd74d52"
+  },
+  "evidence": {
+    "components": {
+      "pad": {
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-pad-ne-v1.json",
+          "sha256": "90addbb5c8f55cda6207a9b2abbfbbc010cc1263b33b53564273767b07b6ddde"
+        },
+        "registration": {
+          "candidate": "launch-center-pad-ne-v1",
+          "original": {
+            "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+            "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375"
+          },
+          "signature": "944b6bda37b61734ad9aeddd81f1b601be84eed5ba14c01f8a76cd8ca220e7cd",
+          "transform": {
+            "canvas": [
+              320,
+              224
+            ],
+            "native_reference": [
+              192,
+              88
+            ],
+            "native_zone_corners": [
+              [
+                176,
+                64
+              ],
+              [
+                240,
+                96
+              ],
+              [
+                208,
+                112
+              ],
+              [
+                144,
+                80
+              ]
+            ],
+            "component": "pad",
+            "source_reference": [
+              627.5,
+              659.5
+            ],
+            "uniform_scale": [
+              80,
+              877
+            ],
+            "crop_box": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "measured_subject_bbox_in_crop": [
+              190,
+              377,
+              1067,
+              916
+            ]
+          },
+          "native_subject_bounds": [
+            152,
+            62,
+            232,
+            112
+          ],
+          "covered_pixels_per_cell": [
+            1227,
+            1480
+          ],
+          "native_sha256": "f9353eb0ddcf293b4ce3c1e249dc19d7c701ff99618539f1637c2f8f13353f5d"
+        }
+      },
+      "workshop": {
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-workshop-ne-v1.json",
+          "sha256": "c7c964252fbc52297c4eb9088a5fbcda03b7ef76f5c77cc6bc2be1d3cb5d2526"
+        },
+        "registration": {
+          "candidate": "launch-center-workshop-ne-v1",
+          "original": {
+            "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+            "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3"
+          },
+          "signature": "441a822f2e52c6daa9b53f00c79316bf247c7770dd7dbeae01c3a000ceb4a867",
+          "transform": {
+            "canvas": [
+              320,
+              224
+            ],
+            "native_reference": [
+              144,
+              112
+            ],
+            "native_zone_corners": [
+              [
+                144,
+                80
+              ],
+              [
+                208,
+                112
+              ],
+              [
+                144,
+                144
+              ],
+              [
+                80,
+                112
+              ]
+            ],
+            "component": "workshop",
+            "source_reference": [
+              629.0,
+              765.0
+            ],
+            "uniform_scale": [
+              108,
+              961
+            ],
+            "crop_box": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "measured_subject_bbox_in_crop": [
+              149,
+              307,
+              1110,
+              1004
+            ]
+          },
+          "native_subject_bounds": [
+            89,
+            60,
+            198,
+            139
+          ],
+          "covered_pixels_per_cell": [
+            2676,
+            2600,
+            2426,
+            3339
+          ],
+          "native_sha256": "4af50283214b5d011cc0aa036f9126c363594a068d243e07d52c783cf340a688"
+        }
+      },
+      "recovery": {
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-recovery-ne-v2.json",
+          "sha256": "07ca6c313c3e834381e90a0a60b0195c62195df731247744581658611c8acbad"
+        },
+        "registration": {
+          "candidate": "launch-center-recovery-ne-v2",
+          "original": {
+            "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v2.png",
+            "sha256": "6c6517ed01046dd6b115441020ae3a39dd4a1756bacf6432bd91cd063293d751"
+          },
+          "signature": "dc2d3dfc5901fdcf532faa1bc0515f2c9a17ab1b178d031b3c1103e2d5068244",
+          "transform": {
+            "canvas": [
+              320,
+              224
+            ],
+            "native_reference": [
+              96,
+              136
+            ],
+            "native_zone_corners": [
+              [
+                80,
+                112
+              ],
+              [
+                144,
+                144
+              ],
+              [
+                112,
+                160
+              ],
+              [
+                48,
+                128
+              ]
+            ],
+            "component": "recovery",
+            "source_reference": [
+              641.5,
+              652.5
+            ],
+            "uniform_scale": [
+              40,
+              483
+            ],
+            "crop_box": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "measured_subject_bbox_in_crop": [
+              159,
+              397,
+              1125,
+              915
+            ]
+          },
+          "native_subject_bounds": [
+            56,
+            115,
+            137,
+            158
+          ],
+          "covered_pixels_per_cell": [
+            1023,
+            1253
+          ],
+          "native_sha256": "c4652cb7ee18db26cdca6c2f7feec37d8eea971057530db157c3f60c27e022bd"
+        }
+      },
+      "storage": {
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-storage-ne-v4.json",
+          "sha256": "de1455bf2ad9b863f9bb30145271728892835aef6a663c10faac6f828f740cea"
+        },
+        "registration": {
+          "candidate": "launch-center-storage-ne-v4",
+          "original": {
+            "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+            "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283"
+          },
+          "signature": "8dab10414d015328b5aef6d9c1ea88fe165807c0969b735829d98daf0ecd3ea9",
+          "transform": {
+            "canvas": [
+              320,
+              224
+            ],
+            "native_reference": [
+              192,
+              136
+            ],
+            "native_zone_corners": [
+              [
+                240,
+                96
+              ],
+              [
+                272,
+                112
+              ],
+              [
+                144,
+                176
+              ],
+              [
+                112,
+                160
+              ]
+            ],
+            "component": "storage",
+            "source_reference": [
+              658.0,
+              736.5
+            ],
+            "uniform_scale": [
+              144,
+              899
+            ],
+            "crop_box": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "measured_subject_bbox_in_crop": [
+              209,
+              461,
+              1108,
+              932
+            ]
+          },
+          "native_subject_bounds": [
+            120,
+            92,
+            265,
+            167
+          ],
+          "covered_pixels_per_cell": [
+            1252,
+            1616,
+            1648,
+            1364
+          ],
+          "native_sha256": "f95ec72cc32b2cb2e6bd1d0379ae31649eefa70cd7640adb7daee43ecfdad766"
+        }
+      }
+    },
+    "occlusions": {
+      "pad_behind_workshop": 631,
+      "workshop_behind_storage": 20,
+      "recovery_behind_storage": 65
+    },
+    "source_pixels": {
+      "pad": 1887,
+      "workshop": 5342,
+      "recovery": 1601,
+      "storage": 3556
+    },
+    "visible_pixels": {
+      "pad": 1256,
+      "workshop": 5322,
+      "recovery": 1536,
+      "storage": 3556
+    },
+    "native_sha256": "97e9133e82feaa1b7e75723a2f61fbb74d9a7c2354790df4e17455619473c772",
+    "component_ownership_sha256": "b571d10c823b939d2a1772fe623bc3bd89c31c1acd8a803b61dced20ea6004fc",
+    "cell_ownership_sha256": "ce89d769101225e4cac06210717368d5f962e5717eb63242d960288a81fd3e3d",
+    "pixels_per_cell": [
+      530,
+      2211,
+      1236,
+      785,
+      726,
+      1138,
+      737,
+      751,
+      1052,
+      905,
+      892,
+      707
+    ],
+    "native_ground": {
+      "owner": "DrawTile_Station",
+      "sprite": "SPR_CONCRETE_GROUND",
+      "cells": 12
+    },
+    "foreground_policy": "ready_empty_base_only; actual occupant foregrounds remain Group61E"
+  },
+  "artifacts": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/base-ne-native.png",
+      "sha256": "c98ed91ba5d83b7a5f738d9e7eb90d027ee165c8857f7b12dfb8323b5db287bb"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/base-ne-geometry-review.png",
+      "sha256": "7cecc93215cd2a77a5c10798bf2ad43af8a0a5cb9d1574529292739674d24ee3"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/component-ownership.bin",
+      "sha256": "b571d10c823b939d2a1772fe623bc3bd89c31c1acd8a803b61dced20ea6004fc"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/cell-ownership.bin",
+      "sha256": "ce89d769101225e4cac06210717368d5f962e5717eb63242d960288a81fd3e3d"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-composed-base-v1/parts.json",
+      "sha256": "5a192870dd0ecfdee5aea08555393116a08712a94d073a2bd9c1386ce1861526"
+    }
+  ]
+}

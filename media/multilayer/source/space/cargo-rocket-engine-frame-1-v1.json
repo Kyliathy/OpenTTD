@@ -1,0 +1,102 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.1; exact built-in genuine engine-frame1 pulse request with selected frame0 edit target and physical geometry reference.",
+  "key": "cargo-rocket-engine-frame-1-v1",
+  "asset_id": "vehicle.model-14",
+  "component": "engine_effect",
+  "component_frame": 1,
+  "tool": "built-in image_gen",
+  "state": "funded_flight_engine_part",
+  "directions": [
+    "AXIAL"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset vehicle.model-14 isolated engine-effect FRAME1, second cosmetic pulse of the SAME funded-flight engine.\nImage1 is the SELECTED genuine FRAME0 original edit target: same physical axially symmetric emitter, camera, material colors, mouth size and upper-root position. Image2 is FRAME1 shorter-tail geometry reference ONLY; no cyan/orange wires, gray box, pink cross, text or label becomes art.\n\nCreate ONE genuine new FRAME1 original. Preserve Image1's broad luminous emission head/mouth, its physical width/depth, center and orientation, same pale-YELLOW/CREAM core and golden-orange exterior, same upright vertical axis. Change ONLY the gas pulse shape BELOW that same emitter: make the single flame taper SHORTER by about25percent from mouth center to tail tip, and a little FULLER/ROUNDER through its upper-middle body, retaining one complete small rounded lower tip. Do not scale or shrink the whole emitter, move its mouth to fit the canvas, add a second tail, split it into separate sparks or change to another engine.\n\nUse the SAME original source scale and camera as Image1. On Image1's approximately1254square source, the original mouth center is around(628,331), and the same mouth width around600pixels; FRAME1 tip should now end around y845 rather than FRAME0's y1020. A1024-equivalent guide uses mouth-center512,320 and shorter tail tip512,704. Exact source dimensions are not guaranteed; the essential physical requirements are SAME mouth size/center, unchanged orthographic upright projection and shorter single gas pulse. Source will be measured and UNIFORMLY reduced, with no warping/erasure/crop repair. Native target is same fixed nozzle mount32,34 within unchanged64x48/envelope27,32,38,46, and no change to any rocket hull.\n\nSame chunky low-detail M1 classic Tycoon game effect with broad opaque warm cream/yellow core and muted golden-orange boundary, controlled soft material shading. Preserve an emission head deep enough to remain a roughly8wide/4deep oval at native resolution, allowing normal one-pixel soft-gas raster rounding. Do NOT flatten the mouth into a skinny4:1/5:1 lip. Luminous color is inside actual physical flame alpha only, no external bloom/halo/fog, photoreal microfire texture, smoke, flying sparks, droplets, shock diamonds or multiple flames.\n\nONE whole complete isolated frame1 on square1024x1024 genuine transparent RGBA, with minimum120px true transparent clearance from EVERY side beyond every faint edge. Complete original mouth and shorter tail; no guide marks, box/cross/arrow/label/text/number/logo/frame/magenta, no hull/metal nozzle/bell/feet/legs/platform/stand/ground/floor/external cast shadow/scenery/backdrop, no people/cargo/probe/pod/road/rail/water or other view. Final: SAME physical mouth/camera/warm colors, one SHORTER slightly broader gas pulse, clean complete alpha, no added hardware.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v3.png",
+      "role": "selected genuine frame0 physical emitter/camera/material edit target; only gas pulse below same mouth changes",
+      "sha256": "7eff0b53ac9dd8f12f7363585492eb6f93c61e59b52ee156f42e868b2a0d37f8"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame1-template.png",
+      "role": "shorter-pulse physical mounting/camera guide only; no annotations are source art",
+      "sha256": "b5081396e3327b27db05da32b4eb129032d1e89280c6d077360fa0a0995038eb"
+    }
+  ],
+  "status": "selected_engine_part",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-1-v1.png",
+  "sha256": "efa5519233dff35dc0d09f0e4403ef7c1fb3bca2199c858f49e07e01827b3d8a",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v3.png",
+      "sha256": "7eff0b53ac9dd8f12f7363585492eb6f93c61e59b52ee156f42e868b2a0d37f8"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame1-template.png",
+      "sha256": "b5081396e3327b27db05da32b4eb129032d1e89280c6d077360fa0a0995038eb"
+    }
+  ],
+  "native_transforms": {
+    "AXIAL": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        286,
+        263,
+        972,
+        947
+      ],
+      "uniform_scale": [
+        1,
+        85
+      ],
+      "source_reference": [
+        628,
+        382
+      ],
+      "native_reference": [
+        32,
+        34
+      ]
+    }
+  },
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      286,
+      263,
+      972,
+      947
+    ],
+    "minimum_clearance": 263
+  },
+  "contact_review": {
+    "status": "approved_native_part",
+    "source_reference": [
+      628,
+      382
+    ],
+    "definition": "Actual original luminous-emitter oval center, not whole flame bbox center. Uniform1/85 normalizes the approximately680px mouth to the same8px physical native nozzle as frame0; anchor remains32,34."
+  },
+  "model_review": {
+    "status": "approved_native_engine_part",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/two-frame-candidate-review.png",
+    "findings": [
+      "Same genuine axial emitter/warm core-orange materials as selected frame0, with a shorter fuller single gas pulse; no nozzle/hull/feet/hardware, labels/guides, outside halo, extra tail or detached spark.",
+      "Whole1254RGBA/alpha16clearance263px. The larger raster emitter normalizes through ordinary uniform1/85 scaling at actual mouth-center628,382 -> fixed native32,34; no nonuniform scaling/crop repair. Native emission head matches selected frame0 within normal one-pixel soft gas rounding.",
+      "Native40pixels/bounds28,33,37,42 versus frame0 50/bounds28,33,37,44. Same mouth mounting/width and two-pixel shorter tail remain visibly distinct at native/x8 scale, inside unchanged part envelope27,32,38,46.",
+      "Exact original ready NE hull/four feet overdraw the part without changing any hull pixel. Both isolated source frames and NE pair reviewed; all-eight/frame source qualification remains62F.3/.4."
+    ]
+  }
+}

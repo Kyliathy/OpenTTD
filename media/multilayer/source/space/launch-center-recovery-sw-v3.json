@@ -1,0 +1,223 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.3; fresh geometry-first camera render retains unchanged native zone and80px width.",
+  "key": "launch-center-recovery-sw-v3",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nImage1 is the EXACT2:1 dimetric SW recovery-plate GEOMETRY reference. FOLLOW IMAGE1'S FLAT DIAMOND GEOMETRY. Image2 is an UNAPPROVED appearance reference ONLY for gray metal, charcoal rim, ochre fittings and white broken receiving outline. DO NOT COPY IMAGE2'S CAMERA, SHAPE OR STEEP FLOOR; it is geometrically wrong.\n\nCreate ONE complete empty SW recovery plate directly from Image1's flat1x2 rectangular top-face outline. The plate's projected floor DIAMOND WIDTH must be exactlyTWICE its projected DIAMOND HEIGHT. E.g. floor horizontal bounding extent640pixels and vertical extent320pixels. Both receding world-axis edges slope exactly0.50vertical pixels for each1.00horizontal pixel, strict2:1 dimetric orthographic26.565degrees. It must be visibly flatter vertically than Image2. No perspective,30degree/35degree view or steep receding axis.\n\nOne flush very thin gray metal plate, charcoal rim only2guide pixels high, four restrained ochre corner fittings and same original panel seams. No projecting feet, deep vertical side, foundation, surrounding slab or apron. Long axis runs DOWN-RIGHT. Place ONE white broken RECTANGULAR receiving outline on LOWER-RIGHT end cell, UPPER-LEFT end cell plain. No circle or machinery. Same physical half-turned recovery model and upper-left screen lighting. Native-game chunky pixels/details. Follow the geometry reference rather than the wrong appearance-reference projection.\n\nAt1024guide scale the full floor contacts may be NORTH(448,350), EAST(704,478), SOUTH(576,542), WEST(320,414). These form a384px wide192px tall2:1ground diamond, long edge256right128down and short edge128left64down. Keep complete physical contacts visible. The hardware may have narrow interior margins within that reserved floor, with the same2:1camera.\n\nONE whole isolated source on square1024x1024 real transparent canvas, at least80px transparent clearance on EVERY side. No guide colours/dots/labels, text, frame, magenta, outside shadows, ground, apron, scenery, road, track, water, arm, motor, pod, cargo, rocket, probe, vehicle, people, extra hardware, extra markings or extra views. Final subject is an empty thin plate with broken receiving rectangle LOWER-RIGHT. Geometry must follow Image1's EXACT2:1 flatter diamond, NOT Image2's steeper floor.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-SW-template.png",
+      "sha256": "5eaf717f9c025c32b6b2dcbe0ccbdc0b7014fb0fac7c4b32a888a4a961c70c08",
+      "role": "primary actual nativeSW1x2 contact/camera geometry target; exact2:1 floor shape"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v2.png",
+      "sha256": "52462ef06e185691c00130c3fdae594c12879f6ecbb64153bccc99513eba7b05",
+      "role": "unapproved appearance/material/marking reference only; wrong camera/shape must not be copied"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v3.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-2263bc49-5149-4960-a5da-188ddf61ddc7.png",
+  "sha256": "448727cf72250767187b072bb7b22abc81494c5a179a4fda5ea40b1f4d963316",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      481.5,
+      444
+    ],
+    [
+      1027,
+      774
+    ],
+    [
+      801.5,
+      902
+    ],
+    [
+      256,
+      572
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      255,
+      441,
+      1028,
+      904
+    ],
+    "minimum_clearance": 226
+  },
+  "contact_review": {
+    "source_reference": [
+      641.5,
+      673.0
+    ],
+    "definition": "Midpoint of lateral physical flush recovery-plate feet; maps to actual SW recovery-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      224,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        208,
+        80
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        240,
+        128
+      ],
+      [
+        176,
+        96
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      641.5,
+      673.0
+    ],
+    "uniform_scale": [
+      80,
+      773
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      255,
+      441,
+      1028,
+      904
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-recovery-sw-v3",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v3.png",
+        "sha256": "448727cf72250767187b072bb7b22abc81494c5a179a4fda5ea40b1f4d963316"
+      },
+      "signature": "419ddd84adfbde4645eb59d85eaa140d5794afd16a5d3f94bc66a90e1a971859",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          224,
+          104
+        ],
+        "native_zone_corners": [
+          [
+            208,
+            80
+          ],
+          [
+            272,
+            112
+          ],
+          [
+            240,
+            128
+          ],
+          [
+            176,
+            96
+          ]
+        ],
+        "component": "recovery",
+        "source_reference": [
+          641.5,
+          673.0
+        ],
+        "uniform_scale": [
+          80,
+          773
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          255,
+          441,
+          1028,
+          904
+        ]
+      },
+      "native_subject_bounds": [
+        184,
+        79,
+        265,
+        128
+      ],
+      "covered_pixels_per_cell": [
+        1021,
+        1217
+      ],
+      "native_sha256": "57e43680621c3c14d6cf471e256bb14e29aa337610a0afaa2bd31ecfca170580"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-sw-v3-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 2,
+    "visible_facades": [
+      "local_-X",
+      "local_-Y"
+    ],
+    "marking_world_cell": [
+      0,
+      2
+    ],
+    "plain_world_cell": [
+      0,
+      1
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-sw-v3-native-review.png",
+    "findings": [
+      "Genuine half-turn: long axis down-right, broken rectangular receiving outline in actual world0,2, plain upper-left end0,1, with no arm/motor/circle/pod/cargo.",
+      "Same thin gray metal panels, charcoal rim and restrained ochre corners; receiving outline remains readable at native scale.",
+      "Every indexed pixel fits actual SW recovery canvases at reference224,104 and unchanged80px width; original alpha16 clearance226px. Two failed predecessors remain excluded.",
+      "Geometry-first original retains whole generated pixels; no clipping, masking, erasure, source crop or warp was used."
+    ]
+  }
+}

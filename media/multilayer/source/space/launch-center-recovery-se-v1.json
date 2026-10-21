@@ -1,0 +1,228 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DB.3; recovery receiving-end identity in launch-center-rotation-model-v1.json.",
+  "key": "launch-center-recovery-se-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED SE launch plate, used as the exact genuine-camera/thin-plate edit target. Image2 is the SELECTED NE empty recovery plate, used for physical receiving-marking/material identity only. Image3 is the actual SE native two-cell recovery geometry reference, not art. Produce ONE physically quarter-turned SE EMPTY RECOVERY PLATE.\n\nKeep Image1's exact low thin plate body, shallow charcoal rim, gray metal panels, ochre corner fittings, long axis DOWN-LEFT, strict2:1 dimetric camera and upper-left light. Remove the arm and cream motor COMPLETELY, leaving a plain upper-right end cell. Remove the circular launch marking. On the LOWER-LEFT end cell put exactly ONE white broken RECTANGULAR receiving outline matching Image2's marking. This is the genuine quarter-turn of Image2: broken outline on lower-left cell, upper-right cell plain. No circle, no machinery, no arm, no motor, no pod/cargo. Nothing on top except that one painted receiving outline and original panel seams/edge details.\n\nDo not increase plate thickness or depth. Preserve the selected SE plate's corrected near-flush metal rim and shallow short-axis depth. Exact orthographic2:1 dimetric26.565degrees on BOTH world axes, never30degrees/perspective. Physical base at1024guide scale NORTH(588.8,356.4), EAST(691.2,407.6), SOUTH(435.2,535.6), WEST(332.8,484.4); rim only3px high. Reserved2x1area remains fixed; plate has clear handling margin. Every whole physical corner must remain visible.\n\nONE complete isolated original on square1024x1024 real transparent canvas, minimum80px transparent clearance on EVERY side. No text, labels, guide dots, template colours, frame, magenta, outside shadow, apron, ground, floor beyond plate, extra markings, extra props, machinery, cargo, rocket, craft, probe, pod, person, vehicle, building, road, track, water, scenery or extra views. Same crisp chunky M1 material identity. Exact new view: long plate down-left, BROKEN RECTANGLE LOWER-LEFT, PLAIN UPPER-RIGHT.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-se-v2.png",
+      "sha256": "91d4a404d2fb80903a1e958fc8aafa2dff1d89dfb04d47ae2357d65dcaea0286",
+      "role": "selected genuine SE camera/thin plate body edit target; remove arm/motor/circle to form empty recovery hardware"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-ne-v2.png",
+      "sha256": "6c6517ed01046dd6b115441020ae3a39dd4a1756bacf6432bd91cd063293d751",
+      "role": "selected original recovery marking/material identity; genuine SE receiving end must match its native quarter turn"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-SE-template.png",
+      "sha256": "715e5b8cdefc393cd9046b0e9158139f25c897fdbb3564bd94a60b059305dec3",
+      "role": "actual native SE two-cell recovery geometry reference only"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-f1934db4-8dfe-4eca-ae0c-6f0279b5e0cb.png",
+  "sha256": "088c0fcb03de7f1c470783b29cc9df90c942f7c33f22b91689b1a48430e7985f",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      875.0,
+      409
+    ],
+    [
+      1151,
+      597
+    ],
+    [
+      460.0,
+      960
+    ],
+    [
+      184,
+      772
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      183,
+      389,
+      1153,
+      962
+    ],
+    "minimum_clearance": 101
+  },
+  "contact_review": {
+    "source_reference": [
+      667.5,
+      684.5
+    ],
+    "definition": "Midpoint of lateral physical recovery-plate feet; maps to actual SE recovery-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      152
+    ],
+    "native_zone_corners": [
+      [
+        208,
+        128
+      ],
+      [
+        240,
+        144
+      ],
+      [
+        176,
+        176
+      ],
+      [
+        144,
+        160
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      667.5,
+      684.5
+    ],
+    "uniform_scale": [
+      8,
+      97
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      183,
+      389,
+      1153,
+      962
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-recovery-se-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-recovery-se-v1.png",
+        "sha256": "088c0fcb03de7f1c470783b29cc9df90c942f7c33f22b91689b1a48430e7985f"
+      },
+      "signature": "6661d3663ddfb9b38e3ede2493f4702b4fe009be3c2f09f3a0e1ce07b836ac2e",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          192,
+          152
+        ],
+        "native_zone_corners": [
+          [
+            208,
+            128
+          ],
+          [
+            240,
+            144
+          ],
+          [
+            176,
+            176
+          ],
+          [
+            144,
+            160
+          ]
+        ],
+        "component": "recovery",
+        "source_reference": [
+          667.5,
+          684.5
+        ],
+        "uniform_scale": [
+          8,
+          97
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          183,
+          389,
+          1153,
+          962
+        ]
+      },
+      "native_subject_bounds": [
+        152,
+        128,
+        232,
+        175
+      ],
+      "covered_pixels_per_cell": [
+        1080,
+        1363
+      ],
+      "native_sha256": "673939f87c838d1ffb2ba6f9c7ed4b75c8747dfd64ac8dd518c6aada212f9ed4"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-se-v1-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 1,
+    "visible_facades": [
+      "local_-Y",
+      "local_+X"
+    ],
+    "marking_world_cell": [
+      2,
+      3
+    ],
+    "plain_world_cell": [
+      1,
+      3
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-se-v1-native-review.png",
+    "findings": [
+      "Genuine quarter-turn: down-left long plate axis, broken rectangular receiving outline at world2,3 and plain upper-right end at1,3.",
+      "Same thin gray/charcoal plate and ochre fittings; no circle, arm, motor, actor, cargo or pod.",
+      "All indexed source pixels fit the actual SE recovery canvases at reference192,152 and unchanged80px width; original alpha16 clearance101px.",
+      "Native receiving outline remains readable; no source pixels erased, masked, cropped or warped."
+    ]
+  }
+}

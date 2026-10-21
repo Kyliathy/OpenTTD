@@ -1,0 +1,125 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.3; physical thin-plate correction retains unchanged80px model width/native zone guards.",
+  "key": "launch-center-recovery-sw-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the UNAPPROVED SW empty recovery plate edit target. Keep the exact genuine half-turn: long plate axis down-right, ONE broken rectangular receiving outline at LOWER-RIGHT, upper-left end PLAIN, no circle or machinery. Preserve gray/charcoal/ochre materials, original panel seams, four corner fittings and upper-left lighting.\n\nMake a targeted physical correction: reduce the SHORT world-axis depth of the plate by20percent, retaining its full two-cell LONG direction. Make the front rim FLUSH and at mostONE guide pixel high. No vertical foundation or projecting corner toes. This thin hardware leaves a clear handling margin within the same reserved native1x2zone. Keep all whole physical base corners visible; do not crop or hide them.\n\nUse exact2:1 DIMETRIC orthographic ground projection,26.565degrees. Current floor long edge is slightly too steep; render it with exactly256px horizontal run and128px vertical drop, not a larger vertical drop. The short world axis follows the same2:1 rule. Example physical base at1024guide scale NORTH(422.4,362.8), EAST(678.4,490.8), SOUTH(601.6,529.2), WEST(345.6,401.2). Long edge256right128down; short edge76.8left38.4down. No perspective/30degree/unequal axis scales. Preserve low camera and the same empty original model, narrowed only in short physical depth and rim thickness.\n\nONE complete isolated original on square1024x1024 genuine transparent canvas, at least80px transparent margin on EVERY side. Same receiving outline on lower-right and plain upper-left, no added mark, circle, arm, motor, cargo, pod, probe, rocket, craft, vehicle, people, machinery, floor beyond plate, ground, apron, shadows outside hardware, labels, text, dots, frame, magenta, guide colours, scenery, road, track, water or additional views. Crisp chunky M1 native-game plate with the same physical identity.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v1.png",
+      "sha256": "fd2f8574baa9cb1cefdf92420b357845c998456169cc3a858d2f2be244fdf6b1",
+      "role": "unapproved genuine SW empty plate edit target; correct short depth/flush rim and exact2:1 camera with receiving end preserved"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-1396a62c-0cbd-43e1-bf1a-1ce83581c4e3.png",
+  "sha256": "52462ef06e185691c00130c3fdae594c12879f6ecbb64153bccc99513eba7b05",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      468.5,
+      438
+    ],
+    [
+      1038,
+      782
+    ],
+    [
+      803.5,
+      920
+    ],
+    [
+      234,
+      576
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      234,
+      435,
+      1040,
+      922
+    ],
+    "minimum_clearance": 214
+  },
+  "contact_review": {
+    "source_reference": [
+      636.0,
+      679.0
+    ],
+    "definition": "Midpoint of lateral physical flush recovery-plate feet; maps to actual SW recovery-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      224,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        208,
+        80
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        240,
+        128
+      ],
+      [
+        176,
+        96
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      636.0,
+      679.0
+    ],
+    "uniform_scale": [
+      40,
+      403
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      234,
+      435,
+      1040,
+      922
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 239,127"
+  }
+}

@@ -12,6 +12,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group61B, native twelve-cell launch-center contract.
 @see docs/zz-rhr/upgrades/2026-10/graphics/r2mlvs13-b-m1-authoring.md (measured native consumer geometry)
 """
 
@@ -30,6 +31,7 @@ from tools.ground_terminal_contract import terminal_contract, validate_terminal_
 from tools.ground_mine_contract import SELECTED as SELECTED_MINES, mine_contract, validate_mine_contract
 from tools.ground_processor_contract import SELECTED as SELECTED_PROCESSORS, processor_contract, validate_processor_contract
 from tools.orbital_art_contract import MODULE_LAYOUTS, module_contract, heavy_miner_contract, retained_robot_contract, hauler_contract, validate_orbital_contract
+from tools.launch_facility_art_contract import launch_facility_contract, validate_launch_facility_contract
 ASSETS = ROOT / "media/multilayer/contracts"
 MANIFEST = ASSETS / "multilayer_sprite_manifest.json"
 DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
@@ -70,6 +72,17 @@ def record(asset_id, consumer, kind, states, frames=1, footprint=(1, 1), directi
             "animation_colors": "forbidden", "source": {"status": "planned", "path": None,
             "provenance": "first_party_original", "rights": "original_to_be_authored"},
             "packed": {"namespace": "MLVI", "offset": None, "sha256": None}}
+
+
+def launch_center_record():
+    """Build the actual launch-center draft without unrelated family producers.
+
+    @return Planned twelve-cell/four-rotation public family with native owners.
+    """
+    row = record("facility.launch-center", 9, "building", ["construction", "ready", "working", "blocked"],
+                 frames=4, footprint=(4, 3), directions=DOORS)
+    row.update(launch_facility_contract())
+    return row
 
 
 def build_manifest():
@@ -145,7 +158,7 @@ def build_manifest():
                   ("vent-collector", 18, (3, 3)), ("vent-powerhouse", 18, (4, 4)),
                   ("magma-powerhouse", 18, (4, 4)), ("heat-smelter", 18, (4, 4)),
                   ("heat-battery-works", 18, (4, 4)), ("mantle-forge", 18, (4, 4)),
-                  ("utility-riser", 18, (2, 2)), ("launch-center", 9, (4, 4))]
+                  ("utility-riser", 18, (2, 2)), ("launch-center", 9, (4, 3))]
     for name, owner, footprint in facilities:
         # A portal's real owner has exactly three saved work phases. Its housing
         # is static within each phase; controller waits have separate UI cues and
@@ -169,6 +182,10 @@ def build_manifest():
         # Native sixteen-cell/state ownership replaces only these draft views.
         if row["asset_id"] in SELECTED_PROCESSORS:
             row.update(processor_contract(row["asset_id"]))
+        if name == "launch-center":
+            # Native pad/workshop/recovery/storage occupy twelve cells. All
+            # four source views follow those actual rotated station zones.
+            row = launch_center_record()
         if name == "rail-station":
             # Ordinary stations select modular native roles on two axes. The
             # compiled descriptor preserves actual elevated roof sorting and
@@ -351,6 +368,7 @@ def validate_manifest(document, selected_assets=None):
         if not mandatory.issubset(row):
             raise ValueError("missing mandatory field")
         validate_orbital_contract(row)
+        validate_launch_facility_contract(row)
         if row["asset_id"] in identities:
             raise ValueError("duplicate asset_id")
         identities.add(row["asset_id"])

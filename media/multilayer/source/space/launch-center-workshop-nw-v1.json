@@ -1,0 +1,208 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.1; native rotation3 physical workshop bay/rear facade identity.",
+  "key": "launch-center-workshop-nw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "workshop",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED original NE workshop physical model; Image2 is the SELECTED SW half-turn with plain rear faces; Image3 is actual NW2x2 low-box/contact geometry only. Create ONE genuine NW3D physical view: a quarter turn from SW, three-quarter turn from NE. Never mirror or rotate a flat image.\n\nCRITICAL VISIBLE FACES: The original single LARGE EMPTY SERVICE BAY is now on the LEFT-facing visible wall. It is the SAME bay from Image1, with same opening/interior/ochre threshold and same dark-blue upper glazing band. The RIGHT-facing visible wall is the plain cream REAR face from Image2, under the SAME continuous dark-blue upper glazing; NO hatch, doorway or additional opening there. The original small personnel hatch is on the FAR HIDDEN face. One large bay only, not two. Preserve real physical workshop identity.\n\nSame LOW square2x2 cream/charcoal workshop, exact FOUR dark rectangular roof grilles, same four-panel flat cream roof, four corner supports, restrained ochre accents. Grilles now have their long axes DOWN-LEFT as required by this quarter turn from SW (SW grille axes were down-right). Maintain actual grille placements/count and physical dimensions. Fixed upper-left SCREEN light is unchanged as the3D building turns; do not mirror lighting.\n\nSTRICT2:1 dimetric orthographic26.565degree camera on BOTH world axes, no perspective or30degree camera. Physical low-box base contacts at1024guide scale NORTH(512,350), EAST(768,478), SOUTH(512,606), WEST(256,478); roof rises96guide pixels. Whole hardware fits native2x2 zone without projecting/flared feet, external roof overhang, extra apron, slab or foundation. Every whole base corner/contact visible.\n\nONE complete isolated NW original on square1024x1024 real transparent canvas with at least80px clearance on EVERY side. No guide colours/dots/text, labels, frame, magenta, outside shadow, ground/apron, scenery, annex, tower, extra machinery, cargo, rocket, pod, probe, craft, vehicle, people, road, track, water or additional views. Same chunky M1 pale cream/charcoal/dark-blue/ochre model. Final view: LARGE OPEN BAY LEFT, PLAIN REAR RIGHT, small hatch hidden, FOUR roof grilles aligned down-left, upper-left screen light.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+      "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+      "role": "selected original physical workshop/bay identity edit target; three-quarter turn moves existing large bay to visible left"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-sw-v1.png",
+      "sha256": "e1879784786a211ce4d619dddfef6e31be65b8c75289f966b7c89e7431ec3adf",
+      "role": "selected genuine rear-wall/material reference; further quarter turn reveals one plain right rear facade"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-NW-template.png",
+      "sha256": "a57e18a7021f8bf7fc3f32168d3d17ac0d3443278dbe48b10eebf779186a0b04",
+      "role": "actual NW native2x2 low-box/contact geometry reference only"
+    }
+  ],
+  "status": "rejected_physical_view",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-334fde6f-03c4-4e0f-bb44-3b0be9290a16.png",
+  "sha256": "ad94a31e7a0ea3728bc0ef11fc334047dbce10ffc124abe68a8470d1dc15da08",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      636.6153846153846,
+      455
+    ],
+    [
+      1201,
+      780
+    ],
+    [
+      631.3846153846154,
+      1088
+    ],
+    [
+      67,
+      763
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      66,
+      222,
+      1203,
+      1090
+    ],
+    "minimum_clearance": 51
+  },
+  "contact_review": {
+    "source_reference": [
+      634.0,
+      771.5
+    ],
+    "definition": "Midpoint of visible lateral workshop feet; proposal only, source is not selected.",
+    "status": "not_approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      176,
+      112
+    ],
+    "native_zone_corners": [
+      [
+        176,
+        80
+      ],
+      [
+        240,
+        112
+      ],
+      [
+        176,
+        144
+      ],
+      [
+        112,
+        112
+      ]
+    ],
+    "component": "workshop",
+    "source_reference": [
+      634.0,
+      771.5
+    ],
+    "uniform_scale": [
+      36,
+      379
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      66,
+      222,
+      1203,
+      1090
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 108,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-workshop-nw-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v1.png",
+        "sha256": "ad94a31e7a0ea3728bc0ef11fc334047dbce10ffc124abe68a8470d1dc15da08"
+      },
+      "signature": "4df7796f74f3197d236afdd221980b644dd9f425dcedba21c1bb9de5cf618d43",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          176,
+          112
+        ],
+        "native_zone_corners": [
+          [
+            176,
+            80
+          ],
+          [
+            240,
+            112
+          ],
+          [
+            176,
+            144
+          ],
+          [
+            112,
+            112
+          ]
+        ],
+        "component": "workshop",
+        "source_reference": [
+          634.0,
+          771.5
+        ],
+        "uniform_scale": [
+          36,
+          379
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          66,
+          222,
+          1203,
+          1090
+        ]
+      },
+      "native_subject_bounds": [
+        122,
+        60,
+        231,
+        143
+      ],
+      "covered_pixels_per_cell": [
+        2664,
+        2564,
+        2470,
+        3542
+      ],
+      "native_sha256": "f354d60d95b54a826d2964c82cf54d2e9d387a0106fbb78b8d17374f04f561d7"
+    }
+  },
+  "model_review": {
+    "status": "rejected",
+    "reason": "Large bay left/plain wall right are correct, but all four roof grilles retain SW down-right long axes instead of NW quarter-turned down-left axes."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F/original62.3; complete selected genuine state-art materials/explicit static aliases only. Group62G must still derive/decode/publish all112logical source positions.",
+  "asset_id": "vehicle.model-14",
+  "status": "qualified_original_state_art_complete_handoff_pending",
+  "state_policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "state_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-qualification-v1.json",
+    "sha256": "01e0414247f6af78fb0154351cc74e5a012030b248dc30f8d22cdd37d9c4bd0b"
+  },
+  "ready_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-qualification-v1.json",
+    "sha256": "2a3e8a9b21ef4ed5547437caff1c9b17ec92ec0eb8ba72b490a8d1c9c99e9127"
+  },
+  "direction_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-directions-v1.json",
+    "sha256": "83c8e6d3092f2c1c10990910e001072f18419e5b6df16c10eb0757cf8bd7f8a8"
+  },
+  "engine_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-engine-model-v1.json",
+    "sha256": "48703267928d12b9e4a78b1d048bfd8250e313c0bb74bf72d1b7c7437ce4e48b"
+  },
+  "engine_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-engine-qualification-v1.json",
+    "sha256": "93970948240179caba05f9b8634267592a5e65722b96948b1e831011f2821128"
+  },
+  "static_alias_states": [
+    "ready",
+    "preparing",
+    "orbit",
+    "blocked",
+    "service"
+  ],
+  "active_states": [
+    "ascent",
+    "recovery"
+  ],
+  "state_art_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

@@ -1,0 +1,113 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62C.3; exact built-in W physical-yaw request and actual input roles.",
+  "key": "cargo-rocket-ready-w-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "W"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit. Asset vehicle.model-14 cargo rocket, ONE GENUINE W yaw, READY.\nImage1 is SELECTED E model edit target. Image2 is SELECTED N four-foot/body continuity reference. Image3 is W engine/contact guide ONLY; guides are not source artwork.\n\nCreate a genuine PHYSICAL HALF TURN +180degrees from Image1 E, +225degrees from selected original NE, around the vertical hull axis. The SINGLE dark-blue service plate and SINGLE solid CLOSED charcoal access panel above it now sit on the extreme SCREEN-LEFT TANGENT, visible only as NARROW strongly foreshortened LEFT-EDGE SLIVERS. Keep visible front/other side plain warm cream with one thin muted ochre waist band. Do NOT show broad front-facing panels, add duplicate right panels, move hidden hardware onto the front or invent a window/cockpit. This is a physical new W view, NOT a flat mirrored E picture: upper-left SCREEN lighting remains in the same screen position, hull shading is freshly rendered for W.\n\nSame selected compact joined rounded-ogive capsule/one cylindrical cream tank, ONE integrated graphite engine bell and FOUR physical short graphite landing feet in cardinal square arrangement. W is a180degree turn from E and270from N: fourfold-symmetric feet keep the SAME projection as Images1/2: exactly THREE COMPLETE VISIBLE long legs/pads LEFT, FRONT-CENTER and RIGHT, fourth rear leg physically hidden behind hull/bell. No tiny rear-side duplicate pads, fifth leg, skid or extra support. Preserve hull diameter/height/profile and all feet/pivots/pads/strut lengths, bell and waist proportions. Upright vertical rocket, no tilt.\n\nFixed ORTHOGRAPHIC45degree azimuth/30degree CAMERA ELEVATION, native2:1 ground projection, fixed upper-left screen light. Same chunky low-detail M1 classic transport game materials: warm cream/pale gray, graphite bell/legs, muted ochre band; original blue/charcoal panels only as LEFT tangent slivers. Large readable regions for native64x48. Center of landing-foot ground plane remains native32,32 in fixed64x48/(-32,-32); no bbox-fitting shift or flat-image rotation/mirror.\n\nONE whole isolated W rocket centered on square1024x1024 genuinely TRANSPARENT RGBA, at least120px true transparent clearance on ALL sides around every complete foot, bell and faint edge. No other model/view, floor/ground patch/external cast shadow/backdrop/platform/stand, frame/magenta, colored guides/boxes/crosses/arrows, text/label/number/logo, people, exhaust/smoke/glow, booster/antenna/fin, cargo/probe/pod, road/rail/water. READY, original feet deployed. Final W: original panels are NARROW LEFT-EDGE TANGENT slivers, THREE visible long feet and fourth physically hidden; same physical model and screen light.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-e-v1.png",
+      "role": "selected E whole physical-model edit target; genuine180degree body turn moves panels to left tangent, fixed screen light",
+      "sha256": "57856b5e042e418f795cc0aaff68322734dc0848bed9c97f0fbf77e4d5fdddd8"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "role": "selected four-foot/body projection reference, three full visible feet and fourth rear physically hidden",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/w-isolated-template.png",
+      "role": "labelled W engine/contact geometry only; not source artwork",
+      "sha256": "19896321bd88c87befc511dd902100a85b8c9693d5c929e9dd7b69dc154d044f"
+    }
+  ],
+  "status": "selected_direction",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-w-v1.png",
+  "sha256": "7e0862efa5e54e493ba20b66bdab289e4085f36337b4f04fcf4faa97a20af1b9",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-e-v1.png",
+      "sha256": "57856b5e042e418f795cc0aaff68322734dc0848bed9c97f0fbf77e4d5fdddd8"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+      "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/w-isolated-template.png",
+      "sha256": "19896321bd88c87befc511dd902100a85b8c9693d5c929e9dd7b69dc154d044f"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      209,
+      172,
+      1046,
+      1142
+    ],
+    "minimum_clearance": 112
+  },
+  "native_transforms": {
+    "W": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        209,
+        172,
+        1046,
+        1142
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        625,
+        1005
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "source_reference": [
+      625,
+      1005
+    ],
+    "definition": "Center of actual lateral landing-pad ground plane below cylinder centerline. Physical180degree yaw from E preserves the original fourfold feet, same1/29scale and native32,32."
+  },
+  "physical_view": {
+    "direction": "W",
+    "yaw_from_ne": 225,
+    "service_face": "service/access face at left tangent, nearly edge-on"
+  },
+  "model_review": {
+    "status": "approved_genuine_direction",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/selected-ready-contact.png",
+    "findings": [
+      "Genuine W physical+225from NE/+180from E places original solid charcoal/blue panels at narrow screen-left tangent. Visible front plain cream; fixed upper-left screen lighting is freshly rendered, not a mirrored flat E image.",
+      "Same four physical feet: three complete left/front/right long visible pads, fourth far leg hidden. One original joined capsule/tank, one graphite bell and ochre band, unchanged hardware proportions. E/SW/W native contact reviewed.",
+      "Whole1254RGBA, alpha16clearance112px, same uniform1/29/fixed32,32/64x48/(-32,-32). Native454pixels/bounds17,2,46,37 preserve original one-pixel higher apex raster within unchanged body envelope. No mask/erasure/warp/clipping or expanded guard."
+    ]
+  }
+}

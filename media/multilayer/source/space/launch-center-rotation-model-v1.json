@@ -1,0 +1,764 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Groups61DB-61DE; physical source-face identity, actual native quarter turns, no gameplay authority.",
+  "asset_id": "facility.launch-center",
+  "selected_ne_base": {
+    "path": "media/multilayer/source/space/launch-center-composed-base-ne-v1.json",
+    "sha256": "024f025b64fc2714feb20b07e6485ee7a45638e0aa350c60aff2e2697b9e0706"
+  },
+  "native_rotation": "GetLaunchFacilityZone: r1(x,y)=(2-y,x), r2=(3-x,2-y), r3=(y,3-x); fixed viewport worldX down-left/worldY down-right.",
+  "physical_facades": {
+    "workshop": {
+      "local_+X": "one small personnel access hatch beneath continuous dark-blue upper glazing",
+      "local_+Y": "one large empty assembly/service bay beneath continuous dark-blue upper glazing",
+      "local_-X": "plain cream wall beneath same upper glazing; no additional opening or machinery",
+      "local_-Y": "plain cream wall beneath same upper glazing; no additional opening or machinery",
+      "roof": "same four dark rectangular grilles, cream panel roof and ochre corner details"
+    },
+    "storage": {
+      "local_+Y": "four shallow empty bay openings along the long row",
+      "local_-Y": "plain low cream rear of the same thin canopy; no additional bay/door/machinery",
+      "ends": "same low cream/charcoal thin end supports",
+      "roof": "one continuous shallow cream roof divided into four equal panels"
+    },
+    "pad": {
+      "receiving_end": "original local0,0 cell has one white circular marking",
+      "arm_end": "original local0,1 cell has exactly one low folded arm and one cream motor housing"
+    },
+    "recovery": {
+      "receiving_end": "original local3,0 cell has broken rectangular receiving outline",
+      "plain_end": "original local3,1 cell is empty plain plate"
+    }
+  },
+  "selected_components": {
+    "SE": {
+      "workshop": {
+        "key": "launch-center-workshop-se-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-workshop-se-v1.json",
+          "sha256": "1d92b5a08880a1df6dfb10ed2014a52a6663665e8bf2226e0cbbc9681b10e882"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-workshop-se-v1.png",
+          "sha256": "4d65b6f31abeec3ade3ac76f913d3a610fb290745b960e44b008a36a955b6ed0"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            144,
+            128
+          ],
+          "native_zone_corners": [
+            [
+              144,
+              96
+            ],
+            [
+              208,
+              128
+            ],
+            [
+              144,
+              160
+            ],
+            [
+              80,
+              128
+            ]
+          ],
+          "component": "workshop",
+          "source_reference": [
+            630.0,
+            760.0
+          ],
+          "uniform_scale": [
+            4,
+            37
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            131,
+            275,
+            1130,
+            1030
+          ]
+        }
+      },
+      "pad": {
+        "key": "launch-center-pad-se-v2",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-pad-se-v2.json",
+          "sha256": "aabcff2c64614e551e71f00929145f858ef93127053449e97b2570f49a2e5f87"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-pad-se-v2.png",
+          "sha256": "91d4a404d2fb80903a1e958fc8aafa2dff1d89dfb04d47ae2357d65dcaea0286"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            96,
+            104
+          ],
+          "native_zone_corners": [
+            [
+              112,
+              80
+            ],
+            [
+              144,
+              96
+            ],
+            [
+              80,
+              128
+            ],
+            [
+              48,
+              112
+            ]
+          ],
+          "component": "pad",
+          "source_reference": [
+            667.0,
+            682.5
+          ],
+          "uniform_scale": [
+            80,
+            963
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            186,
+            394,
+            1149,
+            955
+          ]
+        }
+      },
+      "recovery": {
+        "key": "launch-center-recovery-se-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-recovery-se-v1.json",
+          "sha256": "4474f42ce7ad5d76349e027ad0e90d21bbd2407cb929255e83cd2188c509b813"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-recovery-se-v1.png",
+          "sha256": "088c0fcb03de7f1c470783b29cc9df90c942f7c33f22b91689b1a48430e7985f"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            192,
+            152
+          ],
+          "native_zone_corners": [
+            [
+              208,
+              128
+            ],
+            [
+              240,
+              144
+            ],
+            [
+              176,
+              176
+            ],
+            [
+              144,
+              160
+            ]
+          ],
+          "component": "recovery",
+          "source_reference": [
+            667.5,
+            684.5
+          ],
+          "uniform_scale": [
+            8,
+            97
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            183,
+            389,
+            1153,
+            962
+          ]
+        }
+      },
+      "storage": {
+        "key": "launch-center-storage-se-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-storage-se-v1.json",
+          "sha256": "064b2b4148b0b99183f978c893ce8750938409eb39efa3412e83db5c07f7a0f1"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-storage-se-v1.png",
+          "sha256": "435b936e00ed71f5fe6207e6685835ee96a39fbae00790a824e2f4d314d4f5d5"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            192,
+            104
+          ],
+          "native_zone_corners": [
+            [
+              144,
+              64
+            ],
+            [
+              272,
+              128
+            ],
+            [
+              240,
+              144
+            ],
+            [
+              112,
+              80
+            ]
+          ],
+          "component": "storage",
+          "source_reference": [
+            630.5,
+            691.0
+          ],
+          "uniform_scale": [
+            24,
+            163
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            142,
+            356,
+            1120,
+            938
+          ]
+        }
+      }
+    },
+    "SW": {
+      "workshop": {
+        "key": "launch-center-workshop-sw-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-workshop-sw-v1.json",
+          "sha256": "d3acf20aca112cd08fa47a275e2dad5aa8c3a600d2db0853da17d62dcd274af6"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-workshop-sw-v1.png",
+          "sha256": "e1879784786a211ce4d619dddfef6e31be65b8c75289f966b7c89e7431ec3adf"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            176,
+            128
+          ],
+          "native_zone_corners": [
+            [
+              176,
+              96
+            ],
+            [
+              240,
+              128
+            ],
+            [
+              176,
+              160
+            ],
+            [
+              112,
+              128
+            ]
+          ],
+          "component": "workshop",
+          "source_reference": [
+            626.5,
+            747.5
+          ],
+          "uniform_scale": [
+            27,
+            247
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            133,
+            274,
+            1121,
+            1034
+          ]
+        }
+      },
+      "pad": {
+        "key": "launch-center-pad-sw-v3",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-pad-sw-v3.json",
+          "sha256": "7eb7587c309612f7573adc0b5ace3a66e82c0c52adb0b69f334dc4599000685a"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v3.png",
+          "sha256": "c879761fa9b9b8811d9180f969c8527641cd24587ccec4852fa9b1d8d5eee19e"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            128,
+            152
+          ],
+          "native_zone_corners": [
+            [
+              112,
+              128
+            ],
+            [
+              176,
+              160
+            ],
+            [
+              144,
+              176
+            ],
+            [
+              80,
+              144
+            ]
+          ],
+          "component": "pad",
+          "source_reference": [
+            630.5,
+            693.0
+          ],
+          "uniform_scale": [
+            40,
+            499
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            132,
+            411,
+            1130,
+            975
+          ]
+        }
+      },
+      "recovery": {
+        "key": "launch-center-recovery-sw-v3",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-recovery-sw-v3.json",
+          "sha256": "01d049866b83f58e8ca71783a39b98872dcb7e109029b5063e218494f564fc15"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v3.png",
+          "sha256": "448727cf72250767187b072bb7b22abc81494c5a179a4fda5ea40b1f4d963316"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            224,
+            104
+          ],
+          "native_zone_corners": [
+            [
+              208,
+              80
+            ],
+            [
+              272,
+              112
+            ],
+            [
+              240,
+              128
+            ],
+            [
+              176,
+              96
+            ]
+          ],
+          "component": "recovery",
+          "source_reference": [
+            641.5,
+            673.0
+          ],
+          "uniform_scale": [
+            80,
+            773
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            255,
+            441,
+            1028,
+            904
+          ]
+        }
+      },
+      "storage": {
+        "key": "launch-center-storage-sw-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-storage-sw-v1.json",
+          "sha256": "929854e538c8c31f245f55042c454a1b84aa7effb11af9b0343ad8d5710bb8fd"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-storage-sw-v1.png",
+          "sha256": "c32aaf4c102779b5b3cc76b250a6605f8ef999259628b1e1cf7e8924e265315a"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            128,
+            104
+          ],
+          "native_zone_corners": [
+            [
+              176,
+              64
+            ],
+            [
+              208,
+              80
+            ],
+            [
+              80,
+              144
+            ],
+            [
+              48,
+              128
+            ]
+          ],
+          "component": "storage",
+          "source_reference": [
+            658.5,
+            716.5
+          ],
+          "uniform_scale": [
+            72,
+            497
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            162,
+            343,
+            1156,
+            982
+          ]
+        }
+      }
+    },
+    "NW": {
+      "workshop": {
+        "key": "launch-center-workshop-nw-v2",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-workshop-nw-v2.json",
+          "sha256": "f025d6c1d464446ae1c45e156f94a5f3c9b14e8541b6083055ac22d6b7e8ac76"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v2.png",
+          "sha256": "cb997949c0023552eeac0ea515799b1dec0d79dfbd7ef372cc036b03806a3908"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            176,
+            112
+          ],
+          "native_zone_corners": [
+            [
+              176,
+              80
+            ],
+            [
+              240,
+              112
+            ],
+            [
+              176,
+              144
+            ],
+            [
+              112,
+              112
+            ]
+          ],
+          "component": "workshop",
+          "source_reference": [
+            634.5,
+            770.5
+          ],
+          "uniform_scale": [
+            36,
+            379
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            66,
+            222,
+            1203,
+            1091
+          ]
+        }
+      },
+      "pad": {
+        "key": "launch-center-pad-nw-v3",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-pad-nw-v3.json",
+          "sha256": "4764c851c39bd93b853665615485e207a35331047719a8300515501cd76a0d56"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-pad-nw-v3.png",
+          "sha256": "299ff212e63868658e621ee006ae048aac7720ccc5ef1ac924c4b0e4fdd46bd4"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            224,
+            136
+          ],
+          "native_zone_corners": [
+            [
+              240,
+              112
+            ],
+            [
+              272,
+              128
+            ],
+            [
+              208,
+              160
+            ],
+            [
+              176,
+              144
+            ]
+          ],
+          "component": "pad",
+          "source_reference": [
+            659.0,
+            678.0
+          ],
+          "uniform_scale": [
+            80,
+            987
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            166,
+            393,
+            1153,
+            957
+          ]
+        }
+      },
+      "recovery": {
+        "key": "launch-center-recovery-nw-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-recovery-nw-v1.json",
+          "sha256": "140229022341a46bae037d84019be22785df1b800799e8179f1c70b9bc71916e"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-recovery-nw-v1.png",
+          "sha256": "0035130da24ba48a9aedb4731fc7ef65351561e5d1ea35c6f28602e20627fabb"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            128,
+            88
+          ],
+          "native_zone_corners": [
+            [
+              144,
+              64
+            ],
+            [
+              176,
+              80
+            ],
+            [
+              112,
+              112
+            ],
+            [
+              80,
+              96
+            ]
+          ],
+          "component": "recovery",
+          "source_reference": [
+            659.0,
+            679.5
+          ],
+          "uniform_scale": [
+            80,
+            989
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            165,
+            391,
+            1154,
+            965
+          ]
+        }
+      },
+      "storage": {
+        "key": "launch-center-storage-nw-v1",
+        "generation_receipt": {
+          "path": "media/multilayer/source/space/launch-center-storage-nw-v1.json",
+          "sha256": "83b4e3d21291a10c3f24f497aad4202315eed78b4fa9caa8159911ecb4079928"
+        },
+        "original": {
+          "path": "media/multilayer/source/space/raw/launch-center-storage-nw-v1.png",
+          "sha256": "e501b2103e140a3e823a439b3100eb07a241cb1bca11e5f8d740f9a455b70765"
+        },
+        "native_transform": {
+          "canvas": [
+            320,
+            224
+          ],
+          "native_reference": [
+            128,
+            136
+          ],
+          "native_zone_corners": [
+            [
+              80,
+              96
+            ],
+            [
+              208,
+              160
+            ],
+            [
+              176,
+              176
+            ],
+            [
+              48,
+              112
+            ]
+          ],
+          "component": "storage",
+          "source_reference": [
+            616.0,
+            712.0
+          ],
+          "uniform_scale": [
+            48,
+            341
+          ],
+          "crop_box": [
+            0,
+            0,
+            1254,
+            1254
+          ],
+          "measured_subject_bbox_in_crop": [
+            105,
+            340,
+            1128,
+            989
+          ]
+        }
+      }
+    }
+  },
+  "base_views_complete": false,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

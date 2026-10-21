@@ -1,0 +1,54 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F; original axial engine part selections only. Immutable ready hulls and source-state/native owners remain separate.",
+  "asset_id": "vehicle.model-14",
+  "status": "selected_complete_original_engine_parts_matrix_qualification_pending",
+  "state_policy": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-model-v1.json",
+    "sha256": "4ad8f87efc5ad380244a322ec59845425e948760030c94a2c9460ec5852c7102"
+  },
+  "state_qualification": {
+    "path": "media/multilayer/source/space/cargo-rocket-state-qualification-v1.json",
+    "sha256": "01e0414247f6af78fb0154351cc74e5a012030b248dc30f8d22cdd37d9c4bd0b"
+  },
+  "frames": 2,
+  "part_kind": "genuinely_authored_axially_symmetric_engine_plume",
+  "native_size": [
+    64,
+    48
+  ],
+  "anchor": [
+    -32,
+    -32
+  ],
+  "native_mount": [
+    32,
+    34
+  ],
+  "native_envelope": [
+    27,
+    32,
+    38,
+    46
+  ],
+  "composite_order": "exact original whole ready hull over genuine axial engine part",
+  "selected": {
+    "0": {
+      "candidate": "cargo-rocket-engine-frame-0-v3",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-engine-frame-0-fixture.json",
+        "sha256": "8c5860d8e064c55a9b2e17dc81abccab2b934ceac87cd4f3419e5536072412de"
+      }
+    },
+    "1": {
+      "candidate": "cargo-rocket-engine-frame-1-v1",
+      "fixture": {
+        "path": "src/tests/multilayer/cargo-rocket-engine-frame-1-fixture.json",
+        "sha256": "b9ac687296a8bcfc78b63f1a855c6325de5055562b122697e5d71e034c137558"
+      }
+    }
+  },
+  "engine_parts_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

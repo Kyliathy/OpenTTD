@@ -1,0 +1,48 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61C; corrected RemapCoords/zone producer: Group61B/r2mlvs9-launch-centers-and-rockets.md.",
+  "key": "launch-center-base-ne-v4",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: sketch-to-render.\nImage 1 is the exact native geometry edit target, a 4x3 launch-center floor guide. Image 2 is M1 game-art materials/camera style only. Render ONE original ready/empty NE launch-center model on this exact floor, with genuine transparent alpha.\n\nPreserve Image 1's floor outline and tile positions. This is OpenTTD's actual viewport: world +X runs down-LEFT, world +Y down-RIGHT. Both floor axes have the same scale and an exact 2:1 slope (96px horizontal,48px vertical per tile). The four-by-three floor is 672px wide and336px high at1024-square size. Its corners are NORTH(560,300), EAST(848,444), SOUTH(464,636), WEST(176,492). Match this parallelogram exactly; no perspective, steeper receding axis or perimeter tiles.\n\nExact equipment in the guide cells:\nPAD upper-right: native x0/y0..1, one empty 1x2 launch plate. One LOW HORIZONTAL folded service gantry/arm; no tall mast or tower.\nWORKSHOP middle-left: native x1..2/y0..1, ONE low2x2 cream assembly/service hangar, dark-blue glazing and charcoal framing. Large open service door on its southeast face towards the storage row. Roof at most70px above its floor at the guide's source scale.\nRECOVERY lower-left: native x3/y0..1, one separate empty1x2 recovery plate without pod or vehicle.\nSTORAGE near-right diagonal edge: native y2/x0..3, ONE continuous low covered storage strip with four empty open bays, running from near the EAST corner towards SOUTH. Canopy about30px high, clear handling lane. It does not run along the left front edge.\nKeep all hardware inside those cells. Preserve the whole floor outline and all corners.\n\nCrisp chunky classic transport-game isometric machinery matching the style reference's cream/gray/charcoal/dark-blue palette, restrained ochre accents, upper-left light and low practical forms. Do not copy the Core's round building, solar arrays or square footprint. No extra equipment.\n\nRemove ALL guide colours, labels, coordinates and magenta frame. No text, border, separator, logos, numbers, rocket, probe, pod, people, cargo, crates, tank, container, road, track, water, scenery or extra views. No tall gantry. ONE complete isolated cutout, true transparent alpha with ample clear margins, no outside cast shadow. Exact native footprint and camera take priority over decorative detail.",
+  "reference_inputs": [
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-contract-v2/launch-center-NE-layout.png",
+      "sha256": "18db93ad2b218563d197836409b2f718bda411051a1cf6c8a54fe790361e3fe9",
+      "role": "corrected actual native floor geometry edit target; no guide markings in source art"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/orbital-core-body-v1.png",
+      "sha256": "9d324da4b0b160a3e0ebd6aeb47660f6fcd2170d3f56aebf776093f8dca7d4d4",
+      "role": "M1 materials and camera style only"
+    }
+  ],
+  "status": "rejected_alpha_clearance",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "actual_size": [
+    1774,
+    887
+  ],
+  "layout_review": {
+    "status": "rejected",
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      124,
+      94,
+      1707,
+      887
+    ],
+    "minimum_clearance": 0,
+    "required_minimum_clearance": 16,
+    "reason": "The complete model lacks the established16px source margin; reject before native registration, never crop/pad/repair it."
+  },
+  "path": "media/multilayer/source/space/raw/launch-center-base-ne-v4.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-766dec37-3be7-4b6d-8eb6-e1bd0bc27c0b.png",
+  "sha256": "e7efb2de311c0093e5dc4777b881df7d7d03a84728ca6a2a4aa8e8a3ffce2e03"
+}

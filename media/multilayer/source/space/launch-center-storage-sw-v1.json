@@ -1,0 +1,222 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.4; genuine half-turn rear/opposite-end source identity.",
+  "key": "launch-center-storage-sw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is SELECTED SE storage-strip physical model, with plain rear wall visible. Image2 is SELECTED NE storage-strip model, used for exact thin silhouette/material identity only. Image3 is actual native SW4x1 row geometry. Generate ONE genuine SW physical HALF-TURN from the NE model, one further quarter turn from SE; never rotate/mirror a flat image.\n\nThe very thin low strip now runs LONG DOWN-LEFT. Its long RIGHT-facing visible wall is the same PLAIN CREAM REAR as Image1, with thin straight charcoal supports dividing exactly FOUR original bay sections. The small LEFT-facing end is closed cream/charcoal. The original four EMPTY BAY OPENINGS face FAR HIDDEN side; NO visible doorway or opening on this rear view. Keep one continuous cream canopy divided into FOUR equal roof panels, same five original thin support positions, gray edges and restrained ochre accents. Same physical shallow depth and low height as selected originals, no added hardware or taller warehouse.\n\nSTRICT2:1 dimetric orthographic26.565degree camera on BOTH world axes: long edge512px LEFT256px DOWN, short edge24px RIGHT12px DOWN at1024guide scale. Physical shallow base NORTH(772,384), EAST(796,396), SOUTH(284,652), WEST(260,640). Roof is only20guide pixels above base; short roof edge at mostONE TWENTIETH of long edge. Keep all whole physical contacts visible, no projecting feet/collars, overhang, deep foundation or apron. Fixed upper-left SCREEN light remains unchanged through the half turn. Native reserved row is4x1cells, but same thin canopy occupies an interior handling lane.\n\nONE complete isolated original on square1024x1024 real transparent canvas, at least80px transparent clearance on EVERY side. No cargo, crate, tank, vehicle, person, pod, rocket, probe, craft, extra bay/door, machinery, annex, floor/apron, ground, external shadows, labels, text, dots, template colours, frame, magenta, scenery, track, road, water or extra views. Same chunky M1 cream/charcoal/ochre industrial model. Final genuine SW view: four roof sections DOWN-LEFT, PLAIN LOW REAR on visible long RIGHT wall, CLOSED small LEFT END, four bay openings hidden.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-se-v1.png",
+      "sha256": "435b936e00ed71f5fe6207e6685835ee96a39fbae00790a824e2f4d314d4f5d5",
+      "role": "selected genuine rear/end physical model edit target; further quarter turn moves rear to visible right wall"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+      "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283",
+      "role": "selected original thin silhouette/material identity only; half turn hides its four open bays"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-SW-template.png",
+      "sha256": "80978490b39db3c7320b03078d803456c0affcc850e058d1e5a7a8a0a9c5bb22",
+      "role": "actual SW4x1 native row/contact geometry reference only; thin hardware uses an interior lane"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-sw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-fcea160e-2988-41e8-b7df-5372649d568a.png",
+  "sha256": "c32aaf4c102779b5b3cc76b250a6605f8ef999259628b1e1cf7e8924e265315a",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      1027.3,
+      453
+    ],
+    [
+      1154,
+      528
+    ],
+    [
+      289.7,
+      980
+    ],
+    [
+      163,
+      905
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      162,
+      343,
+      1156,
+      982
+    ],
+    "minimum_clearance": 98
+  },
+  "contact_review": {
+    "source_reference": [
+      658.5,
+      716.5
+    ],
+    "definition": "Midpoint of visible lateral storage-strip feet; maps to actual SW four-cell storage-row centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        176,
+        64
+      ],
+      [
+        208,
+        80
+      ],
+      [
+        80,
+        144
+      ],
+      [
+        48,
+        128
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      658.5,
+      716.5
+    ],
+    "uniform_scale": [
+      72,
+      497
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      162,
+      343,
+      1156,
+      982
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-storage-sw-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-storage-sw-v1.png",
+        "sha256": "c32aaf4c102779b5b3cc76b250a6605f8ef999259628b1e1cf7e8924e265315a"
+      },
+      "signature": "5ab7e63c3d1f360b9b1cb816f4deff3349eb5205a28989ed40d9996b9deaa4c4",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          128,
+          104
+        ],
+        "native_zone_corners": [
+          [
+            176,
+            64
+          ],
+          [
+            208,
+            80
+          ],
+          [
+            80,
+            144
+          ],
+          [
+            48,
+            128
+          ]
+        ],
+        "component": "storage",
+        "source_reference": [
+          658.5,
+          716.5
+        ],
+        "uniform_scale": [
+          72,
+          497
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          162,
+          343,
+          1156,
+          982
+        ]
+      },
+      "native_subject_bounds": [
+        56,
+        49,
+        201,
+        143
+      ],
+      "covered_pixels_per_cell": [
+        1701,
+        2128,
+        2119,
+        1795
+      ],
+      "native_sha256": "183cae805e9f4b01f8e852f11f9ba1e6c5ef79267335470ce717a35a3b35b555"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-sw-v1-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 2,
+    "visible_facades": [
+      "local_-X",
+      "local_-Y"
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-sw-v1-native-review.png",
+    "findings": [
+      "Genuine half-turn: long strip down-left, visible long right wall is plain low cream rear with four divisions, small left end closed; original four openings are hidden.",
+      "Same continuous four-panel roof, five thin front support positions, charcoal/cream/ochre material and fixed upper-left light; no added bay/door/hardware/cargo.",
+      "All indexed pixels fit actual four SW storage cells at reference128,104, unchanged144px width and98px alpha16 clearance.",
+      "Original source alpha and pixels stay intact; no mask, erasure, crop, warp or altered native guard."
+    ]
+  }
+}

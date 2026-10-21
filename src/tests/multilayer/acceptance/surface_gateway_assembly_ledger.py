@@ -11,7 +11,7 @@ from space_preview_checks import chunks
 from surface_regional_ledger import TABLE
 
 
-def production(path, center, allow_payload=False, allow_mission=False, allow_core=False, allow_resupply=False, allow_construction=False):
+def production(path, center, allow_payload=False, allow_mission=False, allow_core=False, allow_resupply=False, allow_construction=False, allow_constructor_home=False, allow_constructor_retirement=False):
     """@param path Actual native paid assembly checkpoint. @param center Independently decoded actual center/slot references.
     @param allow_payload Explicit ground payload consumer; default keeps original stored/assembling empty-hold assembly constraints.
     @param allow_mission Explicit first mission consumer; admits only original in-transit rocket/orbital constructor receipts.
@@ -19,6 +19,8 @@ def production(path, center, allow_payload=False, allow_mission=False, allow_cor
     @param allow_resupply Explicit later Core Goods resupply; default still requires empty rocket freight and initial constructor freight bounds.
     @param allow_construction Explicit actual Core work/activation consumer; alone admits completed native constructor orders.
     @return Existing original Earth Rocket14/Constructor20paid receipts, cross-checked with real Vehicle and issued SPOR generations.
+    @param allow_constructor_home Explicit Group15CSGZVEC original38/gen2Visit21/gen1only; historical queue defaults remain strict.
+    @param allow_constructor_retirement Explicit Group15CSGZVED actual original38/gen2retirement only; no recovered components or changed historical default.
     """
     data = chunks(path)[1]; raw = data[b"SVST"][3:]; count = raw[0]; assert count <= 2 and len(raw) == 1 + 68 * count
     issued = data[b"SPOR"][3:]; next_generation, orders = struct.unpack_from(">QB", issued)
@@ -26,7 +28,7 @@ def production(path, center, allow_payload=False, allow_mission=False, allow_cor
     generations = {}
     if allow_core:
         from surface_gateway_core_ledger import orders as core_orders
-        generations = core_orders(path, allow_construction=allow_construction)["generations"]
+        generations = core_orders(path, allow_construction=allow_construction, allow_constructor_home=allow_constructor_home, allow_constructor_retirement=allow_constructor_retirement)["generations"]
     else:
         assert len(issued) == 9 + 23 * count
         for index in range(count):
@@ -75,7 +77,7 @@ def production(path, center, allow_payload=False, allow_mission=False, allow_cor
     # receive only the actual once-issued initial return allowance.
     if allow_payload or allow_mission:  # Explicit payload/mission consumers validate their actual native compartments; the default assembly branch stays empty.
         from surface_gateway_payload_ledger import supplies
-        supplies(path, result, allow_mission=allow_mission, allow_resupply=allow_resupply)
+        supplies(path, result, allow_mission=allow_mission, allow_resupply=allow_resupply, allow_constructor_retirement=allow_constructor_retirement)
         return result
     supply = data[b"SPSU"][3:]; expected = [craft for craft in result if craft["model"] == 20]
     assert supply[0] == len(expected)

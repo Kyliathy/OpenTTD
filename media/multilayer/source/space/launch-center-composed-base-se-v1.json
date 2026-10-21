@@ -1,0 +1,37 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DE; genuine selected view source composition only, no actor/state/packed/runtime acceptance.",
+  "key": "launch-center-composed-base-se-v1",
+  "asset_id": "facility.launch-center",
+  "directions": [
+    "SE"
+  ],
+  "state": "ready_empty",
+  "frame": 0,
+  "component_model": {
+    "path": "media/multilayer/source/space/launch-center-rotation-model-v1.json",
+    "sha256": "73074b9ffb150297869d376bd00e300b5acee15763341d884a1c9ac8ecd74d52"
+  },
+  "composition_order": [
+    "storage",
+    "pad",
+    "workshop",
+    "recovery"
+  ],
+  "depth_policy": "Actual quarter-turn places original component areas on their native near/far sides; all complete original planes retained, with explicit ordinary occlusion counts and zone-specific pixel ownership.",
+  "foreground_policy": "ready_empty_base_only; actual occupant foregrounds remain Group61E",
+  "native_ground": {
+    "owner": "DrawTile_Station",
+    "sprite": "SPR_CONCRETE_GROUND",
+    "cells": 12
+  },
+  "status": "selected_base",
+  "base_selected": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "model_review": {
+    "status": "approved_complete_base",
+    "review": "Plain rear left, personnel hatch right, large bay hidden; four roof grilles down-left. Storage rear behind workshop; pad circle left and recovery receiving outline near right.",
+    "contact": "logs/proofs/mlm/native-art/space/launch-center-views-v1/four-view-contact.png"
+  }
+}

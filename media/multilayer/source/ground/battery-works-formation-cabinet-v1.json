@@ -1,0 +1,79 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Immutable isolated cabinet original; actual alpha and native placement review"
+  },
+  "id": "battery-works-formation-cabinet-v1",
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-7dc8df0b-4c55-4554-81d2-9bdae2d049a9.png",
+  "sha256": "a8b7e57806c8a957174483cce0a8582cb310fa090124222b69d2c9e8a437764e",
+  "prompt": "Use case: precise-object-edit. Image1 is the Battery Works machinery edit target. Extract ONLY its bottom-right formation cabinet as ONE isolated complete cutout on a transparent1024x1024 canvas, centered with at least160px transparent margin. No source frames needed for this single object.\nPreserve the SAME cabinet: ONE low wide steel body, exactly THREE CLOSED front doors with yellow handles, one muted olive band, fixed left/right vents and covered cable ports at its base. No displays, lights, status glass, batteries, charge levels, text or inventory. Same slate/silver/yellow materials, upper-left lighting, fixed true2:1 isometric camera.\nCorrect its FLOOR GEOMETRY ONLY: a SQUARE ground slab viewed as an exact symmetric2:1 diamond, equal world-X and world-Y floor edges. The foremost south diamond corner must be exactly halfway between the leftmost and rightmost floor corners. North/south tips aligned vertically; left/right tips aligned horizontally; 2:1 whole slab width:ground-depth. ALL cabinet parts entirely inside the square floor; floor sets full left/right width, no machine overhang. The current south tip is slightly right of center; center it physically by correcting the floor square, not cropping or moving pixels sideways. Shorten body as necessary while retaining all three doors; low squat body, no taller than the source model. Whole object approximately500pxwide/max360pxtall. Preserve whole floor including centered bottom tip and both corner edges. Real alpha transparency throughout background; no haze, frames, decorative props, other three machines, extra hardware, text or shadow rectangle.",
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+      "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+      "role": "completed_formation_cabinet_edit_target"
+    }
+  ],
+  "image_size": [
+    1536,
+    1024
+  ],
+  "variants": [
+    10
+  ],
+  "alpha_measure_threshold": 16,
+  "selection": {
+    "status": "rejected",
+    "reason": "mine cell10 misses actual floor contact(1,48)"
+  },
+  "components": [
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "measured_alpha16_bbox": [
+        273,
+        192,
+        1266,
+        934
+      ],
+      "native_box": [
+        1,
+        18,
+        63,
+        64
+      ]
+    }
+  ],
+  "excluded_variants": [
+    10
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "construction_stage": 3,
+  "completed_empty": true
+}

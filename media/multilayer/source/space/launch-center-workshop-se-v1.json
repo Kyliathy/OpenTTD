@@ -1,0 +1,216 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DB.1; physical facade identities in launch-center-rotation-model-v1.json.",
+  "key": "launch-center-workshop-se-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "workshop",
+  "state": "ready_empty",
+  "directions": [
+    "SE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED original NE workshop model. Image2 is the actual native2x2 SE-view box/contact geometry reference, not art. Create ONE genuinely quarter-turned physical SE view of the SAME workshop, not a mirrored or rotated flat picture.\n\nKeep one LOW square2x2 cream/charcoal workshop, dark-blue upper glazing band, restrained ochre corner details, exactly FOUR dark rectangular roof grilles, same flat four-panel cream roof, four corner supports and upper-left screen light. Same physical dimensions, fixed2:1 dimetric orthographic camera with26.565degree world axes; every world-axis horizontal run is twice vertical rise. No perspective or30degree camera. No extra floor/apron.\n\nCRITICAL PHYSICAL QUARTER TURN: In Image1 the small personnel hatch is on the LEFT-facing visible wall and the large open service bay is on the RIGHT-facing visible wall. Rotate the THREE-DIMENSIONAL building one quarter turn so that the SMALL personnel hatch is now on the RIGHT-facing visible wall. The LEFT-facing visible wall is now the plain REAR wall: cream panels below the same dark-blue upper glazing, NO doorway or opening. The sole LARGE OPEN SERVICE BAY is on the FAR HIDDEN face and must NOT be visible from this camera. Do not invent a second bay. Thus this view shows one small hatch on the RIGHT, plain cream LEFT wall, same continuous upper glazing and same four roof grilles. Preserve that physical identity even if the hidden bay is absent from this view.\n\nKeep the low box height shown by the geometry reference: physical base contacts NORTH(512,350), EAST(768,478), SOUTH(512,606), WEST(256,478) at1024guide scale; roof rises96pixels. Whole hardware must fit these2x2 contacts without projecting feet, flared corner supports or roof overhang beyond the base. All whole ground-contact feet must be visible.\n\nONE complete isolated SE original on a square1024x1024 canvas with at least80px genuine transparent clearance on EVERY side. No labels, text, dots, template colours, frames, magenta, outside cast shadow, apron, yard, ground, annex, tower, extra machinery, vehicle, actor, cargo, rocket, pod, probe, people, road, track, water or scenery. Real transparent alpha. Keep chunky M1 native-game readability and the selected model materials. This is the same physical workshop from a new quarter-turn view, showing its small hatch on the RIGHT and plain wall on the LEFT.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+      "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+      "role": "selected original physical model/material edit target; create real quarter-turn with hatch now right and large bay hidden"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-SE-template.png",
+      "sha256": "e1ff30d407617af43c42e59740b30fe591bf25418e38901bbbdeb14d38861556",
+      "role": "actual nativeSE2x2 low-box geometry/contact reference only"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-workshop-se-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-b761450f-4a0b-429b-a558-b374fb85a2c3.png",
+  "sha256": "4d65b6f31abeec3ade3ac76f913d3a610fb290745b960e44b008a36a955b6ed0",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      645.0,
+      491
+    ],
+    [
+      1128,
+      770
+    ],
+    [
+      615.0,
+      1029
+    ],
+    [
+      132,
+      750
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      131,
+      275,
+      1130,
+      1030
+    ],
+    "minimum_clearance": 124
+  },
+  "contact_review": {
+    "source_reference": [
+      630.0,
+      760.0
+    ],
+    "definition": "Midpoint of visible lateral workshop ground feet; maps to actual SE workshop-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      144,
+      128
+    ],
+    "native_zone_corners": [
+      [
+        144,
+        96
+      ],
+      [
+        208,
+        128
+      ],
+      [
+        144,
+        160
+      ],
+      [
+        80,
+        128
+      ]
+    ],
+    "component": "workshop",
+    "source_reference": [
+      630.0,
+      760.0
+    ],
+    "uniform_scale": [
+      4,
+      37
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      131,
+      275,
+      1130,
+      1030
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 108,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-workshop-se-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-se-v1.png",
+        "sha256": "4d65b6f31abeec3ade3ac76f913d3a610fb290745b960e44b008a36a955b6ed0"
+      },
+      "signature": "85f992217e28fef0850a87af5b9cefaf73faa08b4d44403cfb8cc26557c994a3",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          144,
+          128
+        ],
+        "native_zone_corners": [
+          [
+            144,
+            96
+          ],
+          [
+            208,
+            128
+          ],
+          [
+            144,
+            160
+          ],
+          [
+            80,
+            128
+          ]
+        ],
+        "component": "workshop",
+        "source_reference": [
+          630.0,
+          760.0
+        ],
+        "uniform_scale": [
+          4,
+          37
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          131,
+          275,
+          1130,
+          1030
+        ]
+      },
+      "native_subject_bounds": [
+        90,
+        75,
+        199,
+        158
+      ],
+      "covered_pixels_per_cell": [
+        2692,
+        2537,
+        2534,
+        3491
+      ],
+      "native_sha256": "169ad4aae22ba15eab4f82fdee4539b39f19fe3d13d0823714fdb983e9cda598"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-se-v1-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 1,
+    "visible_facades": [
+      "local_-Y",
+      "local_+X"
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-se-v1-native-review.png",
+    "findings": [
+      "Genuine quarter-turn: small hatch on right visible wall; left wall is plain cream, and sole large service bay is hidden on the far face.",
+      "Same four roof grilles, pale cream panels, continuous dark-blue upper glazing, charcoal supports and restrained ochre hardware; fixed screen upper-left lighting.",
+      "Complete native indexed hardware fits actual SE workshop cells and unchanged108px width at reference144,128. Original alpha16 clearance124px; no source crop, erasure, mask or warp."
+    ]
+  }
+}

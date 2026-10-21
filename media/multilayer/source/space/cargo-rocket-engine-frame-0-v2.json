@@ -1,0 +1,61 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.1; exact built-in genuine frame0 emitter-geometry correction. Rejected v1 is a material reference/edit target only, not accepted source.",
+  "key": "cargo-rocket-engine-frame-0-v2",
+  "asset_id": "vehicle.model-14",
+  "component": "engine_effect",
+  "component_frame": 0,
+  "tool": "built-in image_gen",
+  "state": "funded_flight_engine_part",
+  "directions": [
+    "AXIAL"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nAsset vehicle.model-14 isolated engine-effect FRAME0. Image1 is an UNSELECTED original flame candidate: retain its warm pale-yellow/cream core and golden-orange material style only, but CORRECT its physical projection and tail proportions. Image2 is the EXACT FRAME0 CAMERA/MOUTH/TAIL GEOMETRY REFERENCE ONLY. Its cyan ellipse, orange wires, gray box, pink cross, text and labels are guides, NEVER artwork.\n\nGenerate ONE corrected genuine3D axially symmetric downward engine flame. Follow Image2's physical shape and scale: TOP CIRCULAR EMISSION PLANE projects to a broad oval with EXACT2:1 WIDTH:HEIGHT. On a1024square reference it has mouth-center(512,320), ellipse bounds[320,224]-[704,416] (384wide,192high). This is a circular horizontal plane at ORTHOGRAPHIC30degree CAMERA ELEVATION. NOT Image1's very flat5:1 ellipse. No perspective/horizon. Keep the curved top oval fully luminous pale flame/gas, not a metal rim/nozzle/bell or hollow vase. Beneath it, one compact filled warm flame body tapers continuously to one small lower tip around(512,800). Mouth-center-to-tip480pixels, about1.25times the mouth width. Overall flame is COMPACT, not Image1's long tail. The three-dimensional flow stays symmetric around its vertical centerline, with only very slight bulging and no additional tails.\n\nKeep broad simple cream/pale-yellow core and muted golden-orange outside, clean chunky low-detail stylized M1 classic Tycoon game material shading. Luminous color stays INSIDE the physical flame alpha: NO surrounding bloom/halo/fog, sparks, separate droplets, smoke or shock-diamond chain. Opaque enough through the main body for eventual8pixel-wide mouth and10pixel mouth-to-tip native sprite. This will be composited behind an unchanged rocket nozzle/feet; output NO hull, metal hardware, legs, feet or nozzle. Preserve a clear actual emitter-plane center for uniform physical registration. Do not draw any reference marker.\n\nONE whole isolated effect on a genuine transparent RGBA square1024x1024, complete top oval and tail, at least120px true transparent clearance from ALL FOUR image edges. Approximate whole source bounds[300,210]-[724,820]. No ground/floor/external cast shadow, backdrop/platform/stand, frame/magenta, guides/colored box/cross/arrow, text/label/number/logo, additional model/view, people/cargo/pod/probe/rocket, road/rail/water. Use Image2 only as physical geometry; render ORIGINAL actual flame pixels and retain true clean alpha. No erasing/masking/warping the old flat mouth: re-render the correct3D circular mouth and compact plume. Final FRAME0 check: broad2:1 emitter ellipse, compact1.25width mouth-to-tip, one filled pale-yellow/orange taper, no hardware/guides.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v1.png",
+      "role": "unselected frame0 edit target/material reference; correct rejected flat emitter projection and tail geometry through genuine rerender",
+      "sha256": "b751495c409067b5824e5e9ccf61d5d1f161c85b289f4dae1117aa0fc94bd653"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame0-template.png",
+      "role": "exact physical2:1 emitter/mount/compact pulse geometry only; no wire/text/guide color is source artwork",
+      "sha256": "31054322817a6d4df6b56fd370e82970ae380dd7b2df2d35859600bee0766a67"
+    }
+  ],
+  "status": "rejected_emitter_projection",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v2.png",
+  "sha256": "89e1d3b2276b215fc18e5cc7af6a01573b20556524c013c4a3e2284789e62c8e",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v1.png",
+      "sha256": "b751495c409067b5824e5e9ccf61d5d1f161c85b289f4dae1117aa0fc94bd653"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame0-template.png",
+      "sha256": "31054322817a6d4df6b56fd370e82970ae380dd7b2df2d35859600bee0766a67"
+    }
+  ],
+  "native_transforms": {},
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      320,
+      146,
+      934,
+      1115
+    ],
+    "minimum_clearance": 139
+  },
+  "model_review": {
+    "status": "rejected_projection",
+    "reason": "Edit retains the original roughly4:1 flat luminous emitter instead of the actual2:1 geometry guide. Shorter tail helps but does not qualify camera/physical circular-emitter identity. Preserve whole alpha/output; next use only the exact geometry sketch as input rather than carrying forward this incorrect shape."
+  }
+}

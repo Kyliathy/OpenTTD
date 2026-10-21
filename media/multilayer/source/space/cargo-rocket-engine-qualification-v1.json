@@ -1,0 +1,43 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F; qualified two genuine engine originals and16exact-body native compositions. Full112-position publication and native/game rendering remain later gates.",
+  "asset_id": "vehicle.model-14",
+  "status": "qualified_genuine_engine_parts_and_body_compositions",
+  "engine_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-engine-model-v1.json",
+    "sha256": "48703267928d12b9e4a78b1d048bfd8250e313c0bb74bf72d1b7c7437ce4e48b"
+  },
+  "proof": {
+    "path": "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/verification.json",
+    "sha256": "c5a2bbaef8e18d7b17bf2c429528e334547c0dca99a5952600be43bfe0292fd3"
+  },
+  "composition_fixture": {
+    "path": "src/tests/multilayer/cargo-rocket-engine-composition-fixture.json",
+    "sha256": "4bb21b136637ecc83796257c69004b16c1ccb0b70761711ad2d063e33c709bdb"
+  },
+  "indexed_parts": {
+    "0": {
+      "opaque_bbox": [
+        29,
+        33,
+        37,
+        44
+      ],
+      "pixels": 50
+    },
+    "1": {
+      "opaque_bbox": [
+        29,
+        33,
+        36,
+        41
+      ],
+      "pixels": 40
+    }
+  },
+  "source_bounds_note": "Registration/native_subject_bounds fields retain all alpha>=16 original edges. The canonical DOS quantizer retains alpha>=128: actual opaque PNG bounds are indexed_parts above. Earlier9px/two-pixel-tail review wording describes alpha16 source envelopes; indexed widths are8/7 and the shorter indexed tail ends3rows earlier. Immutable source/registration/pixel expectations are unchanged.",
+  "engine_parts_qualified": true,
+  "body_compositions_qualified": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

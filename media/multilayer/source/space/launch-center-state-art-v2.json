@@ -1,0 +1,39 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Groups61EA/61F; complete original state parts with qualified occupied foregrounds. Version1 remains the immutable material-only checkpoint.",
+  "asset_id": "facility.launch-center",
+  "state_mapping": {
+    "path": "media/multilayer/source/space/launch-center-state-model-v1.json",
+    "sha256": "90ac0978a39b2e27991a9bd5e3dd3d3ccc10f656527ea95d7f55adc3fc4a6f7c"
+  },
+  "status_art_checkpoint": {
+    "path": "media/multilayer/source/space/launch-center-state-art-v1.json",
+    "sha256": "1eb3df38c9389b12d8db858c6e6f10bf0f74dcbf74e605b090fc3edf4243733e"
+  },
+  "foreground_model": {
+    "path": "media/multilayer/source/space/launch-center-foreground-model-v1.json",
+    "sha256": "f88ba6912e5344f6a827634809a6e38ef0c01f4024e6049fc5e0da665029623f"
+  },
+  "foreground_fixture": {
+    "path": "src/tests/multilayer/launch-center-foreground-fixture.json",
+    "sha256": "0d368930220db965a2e6b030ebd536ca2861420c35f2021f3cd4f75b9d5a4f0e"
+  },
+  "foreground_verification": {
+    "path": "logs/proofs/mlm/native-art/space/launch-center-foreground-v1/cuts/verification.json",
+    "sha256": "d2581d298642c79cf78e3bab2f4ff5d6a7ab1dbadb453de1a843762ccd44ad29"
+  },
+  "foreground_policy": "original_structural_shells_and_near_arm_with_actual_open_cavities_back; per_native_zone_visitor_scope",
+  "native_selection_policy": "Existing workshop window carries green only for its own actually admitted unpaused native job and amber for its own actual retained pause/refusal. No other zone changes its hardware for that job. Pad/recovery/storage phase aliases remain fixed; separate rocket/probe/pod owners supply their own phase art. No work earning, blinking or artificial clock.",
+  "construction_alias": "ready",
+  "frame_aliases": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "status": "selected_occupied_state_parts",
+  "state_art_complete": true,
+  "occupied_foregrounds_complete": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

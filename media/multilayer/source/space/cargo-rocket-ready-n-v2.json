@@ -1,0 +1,113 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.2; exact isolated N hardware-count correction and actual input roles.",
+  "key": "cargo-rocket-ready-n-v2",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "N"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNSELECTED N-view candidate to correct. Image2 is the SELECTED original NE physical-model reference. Image3 is the N engine/contact template, geometry only.\n\nCorrect ONLY the landing-feet count of Image1, retaining its genuine upright N camera/yaw, front-centered closed charcoal access panel and blue service plate, cream capsule/tank, one ochre band, graphite bell, material style and upper-left SCREEN light. Image1 wrongly shows FIVE feet: three long legs at LEFT, FRONT CENTER and RIGHT, PLUS TWO EXTRA SHORT PADS tucked behind the bell at lower-left and lower-right. Those TWO SHORT SIDE-BY-SIDE PADS are erroneous duplicates and must be ABSENT. The actual rocket from Image2 has EXACTLY FOUR feet arranged at cardinal quarter turns around its vertical axis. In this N orientation, retain the three COMPLETE LONG LEFT/FRONT/RIGHT legs and their pads; the FOURTH rear leg is ONE single central rear leg entirely PHYSICALLY OCCLUDED by the hull/bell. Therefore show EXACTLY THREE VISIBLE FOOT PADS, left, front-center and right, with NO visible tiny fourth/fifth pads beside the bell. No new strut, skid or support. Do not change to three physical legs: there are four physical cardinal legs, with the far one hidden.\n\nPreserve same single solid CLOSED access panel (not a window), blue plate, compact rounded cream capsule and single cylindrical tank, ONE integrated graphite bell, ONE muted ochre waist band. Keep original hull height/diameter and leg lengths; do not trim, mirror or tilt the rocket or alter the panels. Orthographic30degree CAMERA ELEVATION/45degree azimuth, native2:1 ground projection, fixed upper-left screen lighting. Center of the landing-foot plane remains directly beneath hull centerline, maps to native32,32 in fixed64x48/(-32,-32).\n\nONE whole isolated N READY rocket on square1024x1024 genuinely transparent RGBA, generous minimum120pixel TRUE TRANSPARENT clearance on every side; include all three visible complete long foot pads and bell. No exhaust, glow, smoke, people, scenery, floor, shadow on an external ground surface, backdrop, platform, frames, magenta, colored guides, text, labels, number, logo, cargo, pod, probe or extra views. Preserve clean original alpha. Final count check: THREE VISIBLE long foot pads ONLY; one additional far leg hidden behind the hull, not two short pads peeking at both sides of the bell.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v1.png",
+      "role": "unselected N camera/panel edit target; fix explicitly rejected five-foot hardware count",
+      "sha256": "875a13143de11f27be7c6d7cad9d2dc67854899cac7b1839ce8990fc894d626e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "role": "selected physical four-foot model reference; preserve actual hull/equipment/material identity",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-isolated-template.png",
+      "role": "N fixed geometry/contact reference only; not source artwork",
+      "sha256": "7181041246e01563c47ffa474aac367b81d9aa4737ebb0529b034f2cb38a2eea"
+    }
+  ],
+  "status": "selected_direction",
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v2.png",
+  "sha256": "de015bd6cf7b8e611dab84f773bf2737b7b2dc0df521fa39e601f1253e66cdd6",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-n-v1.png",
+      "sha256": "875a13143de11f27be7c6d7cad9d2dc67854899cac7b1839ce8990fc894d626e"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+      "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-isolated-template.png",
+      "sha256": "7181041246e01563c47ffa474aac367b81d9aa4737ebb0529b034f2cb38a2eea"
+    }
+  ],
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      223,
+      187,
+      1031,
+      1143
+    ],
+    "minimum_clearance": 111
+  },
+  "native_transforms": {
+    "N": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        223,
+        187,
+        1031,
+        1143
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        627,
+        1005
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "source_reference": [
+      627,
+      1005
+    ],
+    "definition": "Center of original left/right foot ground contacts and front/opposite hidden rear foot axis, not silhouette bbox center. Same physical height scale1/29 as selected NE."
+  },
+  "physical_view": {
+    "direction": "N",
+    "yaw_from_ne": -45,
+    "service_face": "service/access face centered on front visible hull"
+  },
+  "model_review": {
+    "status": "approved_genuine_direction",
+    "reviewed_contact": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-ne-contact.png",
+    "findings": [
+      "Genuine N yaw places both original closed charcoal access panel and blue service plate at center front; original NE screen-right face was not copied/mirrored.",
+      "Exactly three visible long left/front/right foot pads; the fourth cardinal rear foot is physically hidden. Erroneous two rear-side pad stubs from rejected N-v1 are absent. Same original cream capsule/tank, one bell/band and fixed screen lighting.",
+      "Whole alpha16 source clearance111px; uniform1/29, same physical height as NE; bounds17,3,46,37 at32,32,436indexed pixels. Native neighboring N/NE review accepted; no alpha masks/erasure/warp/clipping or changed facility cut."
+    ]
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61B; geometry: r2mlvs9-launch-centers-and-rockets.md Group2B.",
+  "asset_id": "facility.launch-center",
+  "contract": {
+    "consumer": 9,
+    "kind": "building",
+    "footprint": [
+      4,
+      3
+    ],
+    "tile_variants": 12,
+    "directions": [
+      "NE",
+      "SE",
+      "SW",
+      "NW"
+    ],
+    "native_rotations": {
+      "NE": {
+        "rotation": 0,
+        "footprint": [
+          4,
+          3
+        ],
+        "zones": {
+          "pad": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "workshop": [
+            1,
+            0,
+            2,
+            2
+          ],
+          "recovery": [
+            3,
+            0,
+            1,
+            2
+          ],
+          "storage": [
+            0,
+            2,
+            4,
+            1
+          ]
+        }
+      },
+      "SE": {
+        "rotation": 1,
+        "footprint": [
+          3,
+          4
+        ],
+        "zones": {
+          "pad": [
+            1,
+            0,
+            2,
+            1
+          ],
+          "workshop": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            1,
+            3,
+            2,
+            1
+          ],
+          "storage": [
+            0,
+            0,
+            1,
+            4
+          ]
+        }
+      },
+      "SW": {
+        "rotation": 2,
+        "footprint": [
+          4,
+          3
+        ],
+        "zones": {
+          "pad": [
+            3,
+            1,
+            1,
+            2
+          ],
+          "workshop": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            0,
+            1,
+            1,
+            2
+          ],
+          "storage": [
+            0,
+            0,
+            4,
+            1
+          ]
+        }
+      },
+      "NW": {
+        "rotation": 3,
+        "footprint": [
+          3,
+          4
+        ],
+        "zones": {
+          "pad": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "workshop": [
+            0,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "storage": [
+            2,
+            0,
+            1,
+            4
+          ]
+        }
+      }
+    },
+    "native_projection": {
+      "owner": "RemapCoords in src/landscape.h; native pixels before ZOOM_BASE scaling",
+      "x_step": [
+        -32,
+        16
+      ],
+      "y_step": [
+        32,
+        16
+      ]
+    },
+    "variant_semantics": "row_major_world_cells_within_each_rotated_footprint",
+    "native_layout_owner": "LAUNCH_CENTER_LONG_EDGE/LAUNCH_CENTER_SHORT_EDGE; GetLaunchCenterFootprint/GetLaunchFacilityZone",
+    "native_state_owner": "Station::launch_operations; SpaceConstructionState::remaining_ticks/paused; SpaceManifest::service_ticks/service_paused; SpacePodState::remaining_ticks/paused; SpaceTransition::phase/blocked/remaining_ticks",
+    "native_frame_policy": {
+      "construction": "placement_preview_only; CmdBuildLaunchCenter installs a complete facility, no facility construction clock",
+      "ready": "static empty facility; logical frames alias the same selected hardware",
+      "working": "only actual workshop/service/pod work or SpaceTransition preparation/turnaround selects declared equipment parts",
+      "blocked": "static hardware/status from actual native admission/wait reason; no work or queue advancement"
+    },
+    "native_occupant_policy": "LaunchOperations workshop/service/pod_workshop/pad_active/pad_queue reference existing paid actors; rocket/probe/pod art stays separate",
+    "native_inventory_policy": "Original station/hub/vehicle CargoPackets only; storage art creates no stock or freight delivery",
+    "native_water_policy": "At least one actual orthogonal navigable Surface water edge; source art fixes no water side and contains no decorative water",
+    "native_freight_policy": "Joined or explicitly linked same-company Surface rail/lorry members retain their own footprints; no baked track, road, vehicle or station extension"
+  },
+  "model": {
+    "pad": "One empty 1x2 launch plate with a slim service gantry",
+    "workshop": "One low 2x2 assembly/service hangar, no second building",
+    "recovery": "One separate empty 1x2 recovery plate",
+    "storage": "One low 4x1 covered freight/storage strip, empty of cargo",
+    "height_policy": "Keep each cell's registered pixels inside its native 64x64 canvas; validate the selected original before approving height",
+    "style": "Existing M1 chunky isometric machinery; pale gray/cream, charcoal, dark blue glazing, restrained ochre hardware; upper-left light",
+    "exclusions": [
+      "rocket",
+      "probe",
+      "pod",
+      "cargo",
+      "people",
+      "road",
+      "track",
+      "water",
+      "labels",
+      "invented equipment"
+    ]
+  },
+  "native_cell": {
+    "size": [
+      64,
+      64
+    ],
+    "anchor": [
+      -31,
+      -33
+    ],
+    "floor_steps": [
+      [
+        -32,
+        16
+      ],
+      [
+        32,
+        16
+      ]
+    ]
+  },
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

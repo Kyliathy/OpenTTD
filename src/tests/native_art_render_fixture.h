@@ -33,9 +33,10 @@
  * @param tile Actual world tile at the center; its layer supplies filtering independently of the main viewport.
  * @param zoom Native scale or another supported actual viewport zoom level.
  * @param path Repository-owned review PPM output; conversion to PNG preserves the rendered RGB pixels.
+ * @param indexed_path Optional exact palette-index output for source-byte qualification.
  * @return None; require a complete raster and successful output rather than queued screenshot intent.
  */
-static void CaptureNativeArtViewport(TileIndex tile, ZoomLevel zoom, const std::filesystem::path &path)
+static void CaptureNativeArtViewport(TileIndex tile, ZoomLevel zoom, const std::filesystem::path &path, const std::filesystem::path &indexed_path = {})
 {
 	constexpr int width = 640;
 	constexpr int height = 360;
@@ -72,6 +73,15 @@ static void CaptureNativeArtViewport(TileIndex tile, ZoomLevel zoom, const std::
 	REQUIRE(output.good());
 	output.flush();
 	RecordNativeTestArtifact(capture_path, __func__);
+    // Indexed source qualification must compare original pixel identities,
+    // independent of the native display palette's current RGB presentation.
+    if (!indexed_path.empty()) {
+        const auto indexed_capture = RequireTestArtifactWithin(indexed_path, FindTestRepositoryRoot() / "mlm/reviews");
+        std::ofstream indexed(indexed_capture, std::ios::binary);
+        indexed.write(reinterpret_cast<const char *>(pixels.data()), pixels.size());
+        REQUIRE(indexed.good()); indexed.flush();
+        RecordNativeTestArtifact(indexed_capture, __func__);
+    }
 }
 
 /**

@@ -1,0 +1,30 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62D/original62.2; complete genuine ready-source qualification only. Plan9task16.2 still requires phase source, packing/native selection and game evidence.",
+  "asset_id": "vehicle.model-14",
+  "status": "qualified_complete_genuine_ready_views",
+  "direction_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-directions-v1.json",
+    "sha256": "83c8e6d3092f2c1c10990910e001072f18419e5b6df16c10eb0757cf8bd7f8a8"
+  },
+  "source_model": {
+    "path": "media/multilayer/source/space/cargo-rocket-model-v1.json",
+    "sha256": "d57c85d44cb70007b167eb235201aad43f0f6f0795e668da997199da4a5a077a"
+  },
+  "heading_proof": {
+    "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/verification.json",
+    "sha256": "cb854bfecb38563bf02e5f753cddf212a646792b55bb12f7def2b926611f7bfa"
+  },
+  "fit_proof": {
+    "path": "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/ready-fit/verification.json",
+    "sha256": "bdc986c2fdf8ef77463d54f7d9d409dae70ca26779e83b58a515f9c0b4d0df6a"
+  },
+  "fit_fixture": {
+    "path": "src/tests/multilayer/cargo-rocket-ready-fit-fixture.json",
+    "sha256": "dca9e6e4ddf3915a3718c2bdb3f0e047ddb59538af51d8777321cd4741823c3c"
+  },
+  "ready_views_qualified": true,
+  "ready_fit_qualified": true,
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false
+}

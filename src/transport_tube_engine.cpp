@@ -5,15 +5,18 @@
  */
 
 /**
- * @file transport_tube_engine.cpp Native capsule prototype and exclusive physical movement domain.
+ * @file transport_tube_engine.cpp Native capsule definitions, complete fleet preflight and exclusive movement domain.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md canonical catalogue
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10B physical source geometry
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10 original fleet definitions
  */
 
 #include "stdafx.h"
 #include "transport_tube.h"
 #include "transport_tube_model.h"
+#include "transport_tube_fleet.h"
+#include "multilayer_bootstrap.h"
 #include "engine_base.h"
 #include "rail.h"
 #include "train.h"
@@ -22,8 +25,8 @@
 
 #include "safeguards.h"
 
-static constexpr uint16_t TUBE_PROTOTYPE_MODEL = 9; ///< First delivered capsule; later models require their own producer groups.
-static constexpr uint16_t TUBE_ENGINE_LOCAL = 0x8000 + TUBE_PROTOTYPE_MODEL; ///< Extend the native EIDS namespace after conventional models4..8.
+static constexpr uint16_t TUBE_PROTOTYPE_MODEL = 9; ///< Retained single-model producer entry point; the full fleet uses the same installer.
+static constexpr uint16_t TUBE_ENGINE_LOCAL_BASE = 0x8000; ///< Existing append-only native EIDS namespace shared with canonical ground model identities.
 
 /** @copydoc GetTubeVehicleGeometry */
 std::optional<TubeVehicleGeometry> GetTubeVehicleGeometry(uint16_t model_id)
@@ -37,25 +40,17 @@ std::optional<TubeVehicleGeometry> GetTubeVehicleGeometry(uint16_t model_id)
 	return TubeVehicleGeometry{&*found, VEHICLE_LENGTH, 1};
 }
 
-/** @return The immutable first capsule's shared profile capability; no duplicate model/cargo registry is created. */
-static const LayerVehicleCapability &GetPrototypeCatalogue()
-{
-	const auto catalogue = GetMultiLayerVehicleCapabilities();
-	const auto found = std::ranges::find(catalogue, TUBE_PROTOTYPE_MODEL, &LayerVehicleCapability::model_id);
-	assert(found != catalogue.end());
-	return *found;
-}
-
 /** @copydoc GetTubeEngine */
 EngineID GetTubeEngine(uint16_t model_id)
 {
-	if (model_id != TUBE_PROTOTYPE_MODEL) return EngineID::Invalid();
+	if (!GetTubeVehicleGeometry(model_id).has_value()) return EngineID::Invalid();
+	const uint16_t local = TUBE_ENGINE_LOCAL_BASE + model_id;
 	const auto &package = GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content->package;
-	const auto id = _engine_mngr.GetID(VehicleType::Train, TUBE_ENGINE_LOCAL, package.grfid);
+	const auto id = _engine_mngr.GetID(VehicleType::Train, local, package.grfid);
 	const auto *engine = Engine::GetIfValid(id);
 	// Only the actual native EIDS row can identify a capsule. Foreign definitions
 	// and stale mappings cannot acquire this domain from broad railtype masks.
-	if (engine == nullptr || engine->type != VehicleType::Train || engine->grf_prop.local_id != TUBE_ENGINE_LOCAL) return EngineID::Invalid();
+	if (engine == nullptr || engine->type != VehicleType::Train || engine->grf_prop.local_id != local) return EngineID::Invalid();
 	return id;
 }
 
@@ -65,85 +60,152 @@ std::optional<TubeVehicleCapability> GetTubeVehicleCapability(EngineID engine)
 	const auto *definition = Engine::GetIfValid(engine);
 	// Ordinary engines avoid a mapping lookup on the movement hot path. A copied
 	// package-local number alone still cannot impersonate the native definition.
-	if (definition == nullptr || definition->type != VehicleType::Train || definition->grf_prop.local_id != TUBE_ENGINE_LOCAL) return std::nullopt;
-	if (GetTubeEngine(TUBE_PROTOTYPE_MODEL) != engine) return std::nullopt;
-	return TubeVehicleCapability{engine, &GetPrototypeCatalogue(), GetTubeRailType()};
+	if (definition == nullptr || definition->type != VehicleType::Train || definition->grf_prop.local_id < TUBE_ENGINE_LOCAL_BASE) return std::nullopt;
+	const uint16_t model = definition->grf_prop.local_id - TUBE_ENGINE_LOCAL_BASE;
+	const auto geometry = GetTubeVehicleGeometry(model);
+	// An ordinary native model in the same namespace still has no tube movement
+	// domain. Resolve the actual package mapping before borrowing its capability.
+	if (!geometry.has_value() || GetTubeEngine(model) != engine) return std::nullopt;
+	return TubeVehicleCapability{engine, geometry->catalogue, GetTubeRailType()};
+}
+
+/**
+ * Apply already admitted native coefficients to the actual EIDS definition.
+ * @param engine Existing or newly allocated real definition, exclusively owned by this model's native mapping.
+ * @param geometry Borrowed canonical capability and native physical-part contract.
+ * @param tuning Frozen original per-model coefficients; labels/dates/energy retain their original owners.
+ * @param tube Previously admitted dedicated native railtype.
+ */
+static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geometry, const TubeVehicleTuning &tuning, RailType tube)
+{
+	const auto &capability = *geometry.catalogue;
+	engine.info.base_intro = TimerGameCalendar::ConvertYMDToDate(capability.introduction_year, 0, 1);
+	engine.info.lifelength = TimerGameCalendar::Year{30};
+	engine.info.base_life = TimerGameCalendar::Year{0xFF};
+	engine.info.climates = {LandscapeType::Temperate};
+	engine.info.cargo_type = GetCargoTypeByLabel(capability.cargo_labels.front());
+	engine.info.cargo_label = capability.cargo_labels.front();
+	engine.info.refit_mask = {};
+	// Exact cargo labels retain the mandatory physical TBM spoil leg; broad
+	// classes are not an alternate commissioning or disposal route.
+	for (const auto label : capability.cargo_labels) engine.info.refit_mask.Set(GetCargoTypeByLabel(label));
+	engine.info.load_amount = tuning.load_amount;
+	engine.info.refit_cost = tuning.refit_cost;
+	engine.info.misc_flags.Set(EngineMiscFlag::NoDefaultCargoMultiplier);
+	engine.info.extra_flags.Set({ExtraEngineFlag::NoNews, ExtraEngineFlag::NoPreview});
+	engine.info.string_id = STR_JUST_RAW_STRING;
+	engine.name = std::string{capability.name};
+	engine.intro_date = engine.info.base_intro;
+	engine.reliability = 0xFFFF;
+	engine.reliability_spd_dec = 16;
+	auto &rail = engine.VehInfo<RailVehicleInfo>();
+	// Native spacing comes from the same physical source contract used by
+	// authoring. All five original hulls are one full native self-propelled part.
+	assert(geometry.native_parts == 1);
+	rail.railveh_type = RailVehicleType::Singlehead;
+	rail.shorten_factor = VEHICLE_LENGTH - geometry.vehicle_length_units;
+	rail.railtypes = {tube};
+	rail.intended_railtypes = rail.railtypes;
+	rail.engclass = EngineClass::Maglev;
+	// Distinct payload/speed/mass/handling coefficients use native acceleration
+	// and economy. Electrical work still requires its independent paid grant.
+	rail.max_speed = tuning.max_speed;
+	rail.power = tuning.power_hp;
+	rail.weight = tuning.weight_t;
+	rail.capacity = static_cast<uint8_t>(tuning.capacity);
+	rail.tractive_effort = tuning.tractive_effort;
+	rail.air_drag = 8;
+	rail.running_cost = tuning.running_factor;
+	rail.running_cost_class = Price::RunningTrainElectric;
+	rail.cost_factor = tuning.price_factor;
+	rail.image_index = 0;
+	engine.original_image_index = rail.image_index;
+}
+
+/** A completely preflighted native model; this temporary plan owns no saved identity, cargo or utility quantity. */
+struct TubeDefinitionPlan {
+	TubeVehicleGeometry geometry; ///< Borrowed canonical model and physical-part contract.
+	const TubeVehicleTuning *tuning; ///< Borrowed immutable native coefficients.
+	EngineID id; ///< Existing persisted EIDS slot, or Invalid until the ordinary engine pool allocates one.
+	Engine *engine; ///< Actual existing/new definition, never a private replacement pool.
+};
+
+/**
+ * Preflight the entire requested native definition set before its first publication.
+ * @param activated Exact current native content/cargo package.
+ * @param models Bounded canonical logical models, either the retained prototype or the full five-design fleet.
+ * @return Complete installation or unchanged prerequisite/collision/capacity refusal.
+ */
+static bool InitialiseTubeModels(const GRFConfigList &activated, std::span<const uint16_t> models)
+{
+	const auto &required = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content;
+	const auto tube = GetTubeRailType();
+	// Neither a foreign package nor an unbounded/empty request can publish a
+	// partial native fleet or create its own semantic guideway identity.
+	if (tube == INVALID_RAILTYPE || models.empty() || models.size() > 5 ||
+		CheckMultiLayerContentIdentity(required, activated) != MultiLayerContentIdentityError::None) return false;
+	std::vector<TubeDefinitionPlan> plans;
+	std::set<EngineID> fixed_ids;
+	size_t missing = 0;
+	// Validate the complete future fleet first. A missing final heavy/liquid
+	// cargo or foreign persisted slot must not leave earlier models installed.
+	for (const uint16_t model : models) {
+		const auto geometry = GetTubeVehicleGeometry(model);
+		const auto *tuning = GetTubeVehicleTuning(model);
+		if (!geometry.has_value() || tuning == nullptr || tuning->capacity > UINT8_MAX) return false; // Native part capacity and canonical domain must fit before publication.
+		const auto energy = GetMultiLayerTubeEnergyModels();
+		if (std::ranges::find(energy, model, &MultiLayerTubeEnergyModel::model_id) == energy.end()) return false;
+		// The canonical model owns every exact physical cargo form. Resolving all
+		// labels here prevents a late model from broadening a previously installed refit.
+		for (const CargoLabel label : geometry->catalogue->cargo_labels) {
+			if (!IsValidCargoType(GetCargoTypeByLabel(label))) return false;
+		}
+		const uint16_t local = TUBE_ENGINE_LOCAL_BASE + model;
+		const auto id = _engine_mngr.GetID(VehicleType::Train, local, required.package.grfid);
+		// Persisted references must be bounded and uniquely assigned before any
+		// missing slot is reconstructed; two models cannot own the same engine.
+		if (id != EngineID::Invalid() && (id >= EngineID::End() || !fixed_ids.insert(id).second)) return false;
+		Engine *engine = Engine::GetIfValid(id);
+		if (engine != nullptr && (engine->type != VehicleType::Train || engine->grf_prop.local_id != local)) return false; // Never overwrite an original/foreign definition through a forged mapping.
+		if (engine == nullptr) ++missing;
+		plans.push_back({*geometry, tuning, id, engine});
+	}
+	if (missing > 0 && !Engine::CanAllocateItem(missing)) return false; // The whole missing set must fit; an exhausted pool cannot publish only its earlier models.
+	// Restore fixed persisted slots before allocating fresh ones. Otherwise the
+	// ordinary first-free allocator could claim a later model's reserved EIDS slot.
+	for (auto &plan : plans) {
+		if (plan.engine != nullptr || plan.id == EngineID::Invalid()) continue; // Existing definitions and genuinely fresh mappings need no fixed-slot reconstruction.
+		plan.engine = Engine::CreateAtIndex(plan.id, VehicleType::Train, TUBE_ENGINE_LOCAL_BASE + plan.geometry.catalogue->model_id);
+	}
+	// Every fallible semantic/capacity check has completed. Materialize remaining
+	// fresh definitions, then apply their original coefficients in catalogue order.
+	for (auto &plan : plans) {
+		const uint16_t local = TUBE_ENGINE_LOCAL_BASE + plan.geometry.catalogue->model_id;
+		if (plan.engine == nullptr) {
+			plan.engine = Engine::Create(VehicleType::Train, local);
+			_engine_mngr.SetID(VehicleType::Train, local, required.package.grfid, 0, plan.engine->index);
+		}
+		ApplyTubeDefinition(*plan.engine, plan.geometry, *plan.tuning, tube);
+	}
+	return true;
 }
 
 /** @copydoc InitialiseTubeEngineDefinitions */
 bool InitialiseTubeEngineDefinitions(const GRFConfigList &activated)
 {
-	const auto &required = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content;
-	const auto tube = GetTubeRailType();
-	// Definition installation requires both prior canonical rail admission and
-	// exact content. This prototype cannot activate itself through a foreign GRF.
-	if (tube == INVALID_RAILTYPE || CheckMultiLayerContentIdentity(required, activated) != MultiLayerContentIdentityError::None) return false;
-	const auto geometry = GetTubeVehicleGeometry(TUBE_PROTOTYPE_MODEL);
-	if (!geometry) return false;
-	const auto &capability = *geometry->catalogue;
-	// Resolve every allowed cargo before allocating a definition. Missing inputs
-	// refuse unchanged rather than partially publishing a refit policy.
-	for (const auto label : capability.cargo_labels) {
-		if (!IsValidCargoType(GetCargoTypeByLabel(label))) return false;
+	return InitialiseTubeModels(activated, std::array<uint16_t, 1>{TUBE_PROTOTYPE_MODEL});
+}
+
+/** @copydoc InitialiseTubeFleetDefinitions */
+bool InitialiseTubeFleetDefinitions(const GRFConfigList &activated)
+{
+	std::vector<uint16_t> models;
+	// Borrow the sole logical catalogue's model set/order. Native coefficients
+	// cannot accidentally install an ordinary/Space design or invent a sixth role.
+	for (const auto &capability : GetMultiLayerVehicleCapabilities()) {
+		if (capability.transport == MultiLayerVehicleTransport::Tube) models.push_back(capability.model_id);
 	}
-	auto id = _engine_mngr.GetID(VehicleType::Train, TUBE_ENGINE_LOCAL, required.package.grfid);
-	Engine *engine = Engine::GetIfValid(id);
-	// A persisted mapping may reconstruct an absent slot, but cannot overwrite a
-	// live original/foreign/type-mismatched definition.
-	if (engine != nullptr && (engine->type != VehicleType::Train || engine->grf_prop.local_id != TUBE_ENGINE_LOCAL)) return false;
-	if (engine == nullptr) {
-		if (!Engine::CanAllocateItem()) return false;
-		if (id == EngineID::Invalid()) {
-			engine = Engine::Create(VehicleType::Train, TUBE_ENGINE_LOCAL);
-			id = engine->index;
-			_engine_mngr.SetID(VehicleType::Train, TUBE_ENGINE_LOCAL, required.package.grfid, 0, id);
-		} else {
-			engine = Engine::CreateAtIndex(id, VehicleType::Train, TUBE_ENGINE_LOCAL);
-		}
-	}
-	engine->info.base_intro = TimerGameCalendar::ConvertYMDToDate(capability.introduction_year, 0, 1);
-	engine->info.lifelength = TimerGameCalendar::Year{30};
-	engine->info.base_life = TimerGameCalendar::Year{0xFF};
-	engine->info.climates = {LandscapeType::Temperate};
-	engine->info.cargo_type = GetCargoTypeByLabel(capability.cargo_labels.front());
-	engine->info.cargo_label = capability.cargo_labels.front();
-	engine->info.refit_mask = {};
-	// Exact cargo labels retain the mandatory physical TBM spoil leg; broad
-	// classes are not an alternate commissioning or disposal route.
-	for (const auto label : capability.cargo_labels) engine->info.refit_mask.Set(GetCargoTypeByLabel(label));
-	engine->info.load_amount = 8;
-	engine->info.refit_cost = 10;
-	engine->info.misc_flags.Set(EngineMiscFlag::NoDefaultCargoMultiplier);
-	engine->info.extra_flags.Set({ExtraEngineFlag::NoNews, ExtraEngineFlag::NoPreview});
-	engine->info.string_id = STR_JUST_RAW_STRING;
-	engine->name = std::string{capability.name};
-	engine->intro_date = engine->info.base_intro;
-	engine->reliability = 0xFFFF;
-	engine->reliability_spd_dec = 16;
-	auto &rail = engine->VehInfo<RailVehicleInfo>();
-	// Native spacing comes from the same physical source contract used by
-	// authoring. The delivered single-headed prototype still has one actual part;
-	// publishing geometry for later designs does not install their definitions.
-	assert(geometry->native_parts == 1);
-	rail.railveh_type = RailVehicleType::Singlehead;
-	rail.shorten_factor = VEHICLE_LENGTH - geometry->vehicle_length_units;
-	rail.railtypes = {tube};
-	rail.intended_railtypes = rail.railtypes;
-	rail.engclass = EngineClass::Maglev;
-	// Bounded prototype physics reuse the existing train owner. Full five-model
-	// balance, metered propulsion and final art remain with their later groups.
-	rail.max_speed = 100;
-	rail.power = 1000;
-	rail.weight = 20;
-	rail.capacity = 60;
-	rail.tractive_effort = 0x80;
-	rail.air_drag = 8;
-	rail.running_cost = 100;
-	rail.running_cost_class = Price::RunningTrainElectric;
-	rail.cost_factor = 120;
-	rail.image_index = 0;
-	engine->original_image_index = rail.image_index;
-	return true;
+	return InitialiseTubeModels(activated, models);
 }
 
 /** @copydoc CanTubeTrainEnterTile */

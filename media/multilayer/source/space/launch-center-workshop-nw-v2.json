@@ -1,0 +1,217 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.1; correct physical quarter-turn roof-grille orientation only.",
+  "key": "launch-center-workshop-nw-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "workshop",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the UNAPPROVED NW workshop edit target. Its LARGE OPEN BAY LEFT and PLAIN REAR RIGHT are correct. Image2 is the SELECTED SE workshop, used ONLY to show the correct roof-grille long-axis direction for this NW view. Preserve Image1's building/body/facades/camera/light completely.\n\nCHANGE ONLY THE FOUR ROOF GRILLES: keep each grille's same centre, size, shape, color and count, but rotate each RECTANGULAR grille90degrees IN THE ROOF PLANE around its own centre. Their LONG axes must run screen DOWN-LEFT (top-right to bottom-left), parallel to Image1's roof upper-left edge, exactly like Image2's grille alignment. Image1 currently has all four grille long axes DOWN-RIGHT, which is wrong for this physical quarter turn. Do NOT rotate the whole building, camera, roof or grille centres. Exactly four original dark rectangular grilles, each turned90degrees within the same roof plane. Do not add new grilles or leave any old-direction grille.\n\nEverything else remains the same: single large empty bay on LEFT wall, plain cream RIGHT wall with NO hatch, original small hatch hidden, continuous upper dark-blue glazing, same cream roof panels, charcoal corner supports, ochre details, dimensions/ground contacts, strict2:1 dimetric camera and fixed upper-left screen light. No change to wall/window/bay geometry or source alpha edges. Preserve all complete feet/corners. No apron or additional machinery.\n\nONE isolated whole NW original on square1024x1024 genuine transparent canvas, at least80px transparent clearance on every side. No labels, text, guide markings, frame, magenta, shadows outside hardware, ground, apron, cargo, actor, person, vehicle, pod, rocket, probe, scenery, road, track, water or extra views. The sole edit is FOUR existing rectangular roof grilles individually turned90degrees so their long axes point DOWN-LEFT, with their CENTRES UNCHANGED.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v1.png",
+      "sha256": "ad94a31e7a0ea3728bc0ef11fc334047dbce10ffc124abe68a8470d1dc15da08",
+      "role": "unapproved NW edit target; preserve correct bay/rear physical view, correct only grille axes"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-workshop-se-v1.png",
+      "sha256": "4d65b6f31abeec3ade3ac76f913d3a610fb290745b960e44b008a36a955b6ed0",
+      "role": "selected grille long-axis alignment reference only; do not copy its hatch/plain facades"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-b40dc939-a6f3-44c6-98d3-dac93a045a40.png",
+  "sha256": "cb997949c0023552eeac0ea515799b1dec0d79dfbd7ef372cc036b03806a3908",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      632.375,
+      452
+    ],
+    [
+      1202,
+      779
+    ],
+    [
+      636.625,
+      1089
+    ],
+    [
+      67,
+      762
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      66,
+      222,
+      1203,
+      1091
+    ],
+    "minimum_clearance": 51
+  },
+  "contact_review": {
+    "source_reference": [
+      634.5,
+      770.5
+    ],
+    "definition": "Midpoint of visible lateral workshop feet; maps to actual NW workshop-zone centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      176,
+      112
+    ],
+    "native_zone_corners": [
+      [
+        176,
+        80
+      ],
+      [
+        240,
+        112
+      ],
+      [
+        176,
+        144
+      ],
+      [
+        112,
+        112
+      ]
+    ],
+    "component": "workshop",
+    "source_reference": [
+      634.5,
+      770.5
+    ],
+    "uniform_scale": [
+      36,
+      379
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      66,
+      222,
+      1203,
+      1091
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 108,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-workshop-nw-v2",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-workshop-nw-v2.png",
+        "sha256": "cb997949c0023552eeac0ea515799b1dec0d79dfbd7ef372cc036b03806a3908"
+      },
+      "signature": "914d5c82199d6024234cd5a43a403227a6a48d722eef653ba7a8f4f6a2302561",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          176,
+          112
+        ],
+        "native_zone_corners": [
+          [
+            176,
+            80
+          ],
+          [
+            240,
+            112
+          ],
+          [
+            176,
+            144
+          ],
+          [
+            112,
+            112
+          ]
+        ],
+        "component": "workshop",
+        "source_reference": [
+          634.5,
+          770.5
+        ],
+        "uniform_scale": [
+          36,
+          379
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          66,
+          222,
+          1203,
+          1091
+        ]
+      },
+      "native_subject_bounds": [
+        122,
+        60,
+        231,
+        143
+      ],
+      "covered_pixels_per_cell": [
+        2663,
+        2568,
+        2467,
+        3550
+      ],
+      "native_sha256": "b8710f4bb2b2c0d500af5b0780c027e200a8e5fa81eab890c278a971a617905a"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-nw-v2-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 3,
+    "visible_facades": [
+      "local_+Y",
+      "local_-X"
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-nw-v2-native-review.png",
+    "findings": [
+      "Genuine three-quarter turn: single original large empty service bay on left, plain cream rear right, original personnel hatch hidden, same upper dark-blue glazing.",
+      "Four original roof grilles now correctly align down-left; first NW draft with down-right axes remains retained/excluded. Same corner supports/cream roof/ochre hardware and upper-left screen light.",
+      "All indexed pixels fit actual NW workshop cells at reference176,112 and unchanged108px width. Original alpha16 clearance51px; whole source corners remain isolated.",
+      "No source masking, clipping, erasure, crop, warp or weakened native guard."
+    ]
+  }
+}

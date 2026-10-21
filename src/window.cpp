@@ -5,9 +5,12 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window.cpp Windowing system, widgets and events. */
+/** @file window.cpp Windowing system, widgets and events.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB; disposable native facility cue observations invalidate actual map cells.
+ */
 
 #include "stdafx.h"
+#include "launch_facility_sprite.h"
 #include "company_func.h"
 #include "gfx_func.h"
 #include "console_func.h"
@@ -3174,6 +3177,9 @@ void UpdateWindows()
 
 	TimerManager<TimerWindow>::Elapsed(delta_ms);
 	CallWindowRealtimeTickEvent(delta_ms.count());
+	// Observe native launch work after GUI events, including paused commands.
+	// Only changed cues dirty the existing cells; this grants no simulation time.
+	RefreshLaunchFacilityArt();
 
 	/* Process invalidations before anything else. */
 	for (Window *w : Window::Iterate()) {

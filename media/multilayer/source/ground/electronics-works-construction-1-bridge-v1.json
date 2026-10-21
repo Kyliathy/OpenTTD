@@ -1,0 +1,103 @@
+{
+  "id": "electronics-works-construction-1-bridge-v1",
+  "path": "media/multilayer/source/ground/raw/electronics-works-construction-1-bridge-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-986cfc9d-77ac-4024-84a9-20bdedf3b1e6.png",
+  "prompt": "Use case: precise-object-edit. Image1 is a four-panel source; ONLY its TOP RIGHT LOW Electronics placement bridge is the edit target. Ignore other three machines. Extract this EXACT LOW TWO-post bridge as one isolated whole cutout, centered on transparent1536x1024 canvas with generous margins. Keep source's low hardware proportions, concrete square floor and fixed2:1 camera/native20-high envelope/upper-left light/materials.\nProduce genuine CONSTRUCTION STAGE1 by changing ONLY assembly completeness: remove the central downward placement HEAD from beneath the crossbeam, leaving its small empty head attachment recess. Remove the side controller's front ventilation cover, leaving an EMPTY small mounting enclosure. Keep EXACTLY TWO short posts and ONE LOW crossbeam. Keep the original EMPTY square fixture TABLE beneath the bridge ABSOLUTELY INSTALLED and UNCHANGED, including its short feet; DO NOT omit the table or replace it with bare floor. The two-post bridge, empty square fixture table and side controller are all indispensable original components. No removed head/cover placed nearby.\nPreserve whole square floor and centered south tip, floor contact locations, complete left/right corners, body scale, slate/silver/yellow/copper-brown palette. Do not make posts taller or increase source zoom. All hardware inside square floor. One complete apparatus including ENTIRE plinth, roughly500px whole width/max330px height. Real alpha transparency outside whole floor, no frames, background haze, text, props, inventory, boards, loose tools, power/status displays or other three machines.",
+  "construction_stage": 1,
+  "variants": [
+    5
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Groups42B/42C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "13fd7cec67a6dd0c2f4d95e1ce4f0120e9fe0d51e3f65dede21f75507baafc52",
+  "image_size": [
+    1774,
+    887
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v3.png",
+      "sha256": "3077de59fb1ca42ce98ec300afb15cb21c76a27c9bfd99f9d7f2eb488d6b512a",
+      "role": "selected_completed_low_top_right_placement_bridge_only"
+    }
+  ],
+  "processor_asset_id": "facility.electronics-works",
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-5",
+      "variant": 5,
+      "world_cell": [
+        1,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "measured_alpha16_bbox": [
+        366,
+        128,
+        1398,
+        814
+      ],
+      "native_box": [
+        1,
+        23,
+        63,
+        64
+      ],
+      "construction_stage": 1
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 5,
+      "source_window": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "measured_alpha16_bbox": [
+        366,
+        128,
+        1398,
+        814
+      ],
+      "minimum_alpha16_clearance": 73,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "approved_native_components",
+    "approved_variants": [
+      5
+    ],
+    "refused_variants": {},
+    "model_review": {
+      "5": "Exact two low posts/crossbeam/installed empty square fixture table/side controller; central head and controller front cover absent, empty mounts and cavity. Whole source/native qualification remains required."
+    }
+  },
+  "excluded_variants": [],
+  "unfinished_empty": true
+}

@@ -2,6 +2,7 @@
 
 @file ground_processor_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B/39-42.
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group41B current native qualification.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Industry owns physical stock; existing native recipe/control/work own production.
 This contract allocates neither a sprite range nor runtime rendering authority.
@@ -41,9 +42,13 @@ def validate_geometry(document):
             or document.get("native_source_hash_policy") != "utf8_lf"
             or set(document.get("native_source_sha256", {})) != set(OWNERS)):
         raise ValueError("native processor ownership/schema mismatch")
-    for name in OWNERS:
-        if document["native_source_sha256"][name] != source_digest(ROOT / name):
-            raise ValueError("native processor owner changed: " + name)
+    changed = [name for name in OWNERS if document["native_source_sha256"][name] != source_digest(ROOT / name)]
+    if changed:
+        # Later shared-code changes need a separate current compiled proof of
+        # this exact original geometry. Keep all historical source hashes and
+        # completed artwork intact rather than rebasing their old descriptor.
+        from tools.ground_processor_qualification import validate_qualification
+        validate_qualification(document, OWNERS)
     proof = document.get("native_proof", {})
     # Cold source checkouts may omit ignored native artifacts, but the public
     # handoff must still identify one complete seven-case compiled success.

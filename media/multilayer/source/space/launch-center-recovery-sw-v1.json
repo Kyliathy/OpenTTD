@@ -1,0 +1,135 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.3; genuine native half-turn recovery outline/end identity.",
+  "key": "launch-center-recovery-sw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "recovery",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED genuine SW launch plate, the exact thin-body/camera edit target. Image2 is the SELECTED genuine SE recovery plate, physical receiving-outline/material reference only. Image3 is the actual SW native recovery geometry guide, not artwork. Create ONE genuine SW EMPTY RECOVERY PLATE, the half-turned physical recovery model.\n\nKeep Image1's corrected shallow2:1 camera, exact thin gray metal plate, near-flush charcoal rim, ochre corner fittings, panel seams and long axis DOWN-RIGHT. Remove the folded arm and cream motor COMPLETELY, leaving its UPPER-LEFT end cell plain. Remove the circular launch marking. At the LOWER-RIGHT end put exactly ONE white BROKEN RECTANGULAR receiving outline, matching Image2's physical marking. This is a real quarter-turn from Image2: receiving outline now LOWER-RIGHT and plain end UPPER-LEFT. No circle, arm, motor, hardware, actor, cargo or pod on top.\n\nRetain Image1's camera and dimensions without increasing depth, height or rim thickness. Strict2:1 dimetric26.565degree orthographic floor, horizontal run exactly twice vertical rise on BOTH world axes, fixed upper-left screen light. No perspective/30degree/steeper floor. Whole physical contacts visible, no projecting corner feet or exterior apron. The same plate occupies two cells down-right and one cell down-left; hardware stays inside its native reserved area with the selected thin-body margin.\n\nONE whole isolated SW original on square1024x1024 genuine transparent canvas, at least80px transparent clearance on EVERY side. No extra receiving marks, circle, machinery, arm, motor, crate, cargo, pod, probe, rocket, craft, vehicle, people, annex, ground, apron, floor outside the plate, exterior shadows, text, labels, guide dots/colours, frame, magenta, scenery, road, track, water or extra views. Same chunky M1 material identity. Final view: empty thin plate long DOWN-RIGHT, one BROKEN RECTANGLE LOWER-RIGHT, upper-left half PLAIN.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v3.png",
+      "sha256": "c879761fa9b9b8811d9180f969c8527641cd24587ccec4852fa9b1d8d5eee19e",
+      "role": "selected genuine SW thin-plate/camera edit target; remove arm/motor/circle to create empty recovery hardware"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-recovery-se-v1.png",
+      "sha256": "088c0fcb03de7f1c470783b29cc9df90c942f7c33f22b91689b1a48430e7985f",
+      "role": "selected physical receiving-outline/material reference; genuine further quarter turn places outline at lower-right"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-SW-template.png",
+      "sha256": "5eaf717f9c025c32b6b2dcbe0ccbdc0b7014fb0fac7c4b32a888a4a961c70c08",
+      "role": "actual SW native1x2 recovery geometry/contact reference only"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-recovery-sw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-e7d74118-9d30-46bc-b6b0-afa0b183fb95.png",
+  "sha256": "fd2f8574baa9cb1cefdf92420b357845c998456169cc3a858d2f2be244fdf6b1",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      457.5,
+      408
+    ],
+    [
+      1122,
+      792
+    ],
+    [
+      795.5,
+      989
+    ],
+    [
+      131,
+      605
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      130,
+      411,
+      1124,
+      990
+    ],
+    "minimum_clearance": 130
+  },
+  "contact_review": {
+    "source_reference": [
+      626.5,
+      698.5
+    ],
+    "definition": "Midpoint of lateral physical thin recovery-plate feet; maps to actual SW recovery-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      224,
+      104
+    ],
+    "native_zone_corners": [
+      [
+        208,
+        80
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        240,
+        128
+      ],
+      [
+        176,
+        96
+      ]
+    ],
+    "component": "recovery",
+    "source_reference": [
+      626.5,
+      698.5
+    ],
+    "uniform_scale": [
+      40,
+      497
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      130,
+      411,
+      1124,
+      990
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 238,127"
+  }
+}

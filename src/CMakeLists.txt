@@ -1,9 +1,16 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
 # Final Space presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
 # Native orbital presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+# Native cargo-rocket presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J.
+# Native launch-center cells/occupants: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB.
 # Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
+# Selected finite-mine source presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FC.
+# Selected Surface processor source presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FD.
+# Selected conventional rail freight presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FE.
+# Selected conventional road carrier presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FF.
+# Selected conventional station/terminal images over native bounds: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FG.
 # Shared native approach admission: docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
 # Native bounded orbital recipe runtime/history: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
@@ -294,6 +301,10 @@ add_files(
     space.cpp
     space_vehicle.cpp
     space_sprite.cpp
+    launch_sprite.cpp
+    launch_sprite.h
+    launch_facility_sprite.cpp
+    launch_facility_sprite.h
     # Original orbital hull/work/load owners: r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
     orbital_sprite.cpp
     orbital_sprite.h
@@ -318,6 +329,7 @@ add_files(
     launch_site.h
     launch_operations.cpp
     launch_assembly_gui.cpp
+    launch_assembly_gui.h
     space_manifest.cpp
     space_manifest.h
     space_pod.cpp
@@ -361,6 +373,7 @@ add_files(
     launch_center.h
     asteroid.h
     asteroid_gui.cpp
+    space_survey_gui.h
     # Company-gated native inspector/motion disclosure: r2mlvs10-asteroids-and-mining-probes.md Group14.
     asteroid_inspection.cpp
     asteroid_inspection.h
@@ -399,6 +412,12 @@ add_files(
     transport_tube_runtime.cpp
     transport_tube_topology.cpp
     transport_tube_readiness.cpp
+    # One native station packet owner and bounded transfers: r2mlvs17 Group9.
+    transport_tube_cargo.h
+    transport_tube_cargo.cpp
+    # Five original native capsule coefficients: r2mlvs17 Group10.
+    transport_tube_fleet.h
+    transport_tube_fleet.cpp
     # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
     geothermal.h
     geothermal_type.h
@@ -456,6 +475,17 @@ add_files(
     excavation_state.h
     multilayer_content.cpp
     multilayer_sprite.cpp
+    ground_mine_sprite.cpp
+    ground_mine_sprite.h
+    ground_processor_sprite.cpp
+    ground_processor_sprite.h
+    ground_train_sprite.cpp
+    ground_train_sprite.h
+    ground_road_sprite.cpp
+    ground_road_sprite.h
+    ground_station_sprite.cpp
+    ground_station_sprite.h
+    ground_sprite.h
     multilayer_sound.cpp
     multilayer_sound.h
     multilayer_sprite.h

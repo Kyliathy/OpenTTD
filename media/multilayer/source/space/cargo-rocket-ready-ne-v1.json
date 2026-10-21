@@ -1,0 +1,99 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62.1; genuine whole ready NE rocket original. Review/selection remains separate from coverage.",
+  "key": "cargo-rocket-ready-ne-v1",
+  "asset_id": "vehicle.model-14",
+  "tool": "built-in image_gen",
+  "state": "ready",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept.\nAsset: vehicle.model-14, original reusable cargo rocket for a classic isometric transport game. Requested view NE, ready/landed, a single whole isolated model. This is new original artwork, no input images.\n\nCreate ONE compact upright unmanned reusable cargo rocket. Physical model: a squat rounded ogive payload capsule on top of ONE cylindrical main tank/booster, ONE integrated dark graphite base engine bell, and EXACTLY FOUR short landing/stabilizer feet in a square arrangement around the base. Rear feet may be physically occluded; do not add feet to make all four visible. The capsule and tank form one joined short hull, not a tall thin launch stack. Upper hull width approximately half the overall model height; deployed feet span approximately the overall model height. Keep the top gently rounded, the shoulders and waist clean, feet simple and sturdy.\n\nIdentity: ONE recessed DARK-BLUE rectangular control/service plate on the physical local+Y face, ONE CLOSED charcoal payload-access seam on the SAME face, and ONE thin muted OCHRE waist band around the hull. NE view shows that service face on the SCREEN-RIGHT visible side of the hull; its opposite side is plain warm cream. No windows/cockpit/people, extra tanks, second booster, antenna, external payload, cargo, pod, probe, gantry, hoses or platform. All four short feet are deployed; no exhaust, smoke, glow or open hatch.\n\nStyle: chunky low-detail M1 classic Tycoon game machinery, a carefully shaped stylized 3D sprite source with broad readable flat material regions and restrained edge shading. Matte WARM CREAM and pale-gray main hull; charcoal feet, bell and payload seam; dark desaturated blue plate; muted ochre waist band. One fixed upper-left SCREEN light. No photoreal texture, micro-panels, outlines, weathering, text, logos or numbers.\n\nCamera: ORTHOGRAPHIC, 45 degree azimuth and 30 degree camera ELEVATION above the ground plane. Ground-plane diagonals therefore have native 2:1 projection, 26.565 degree SCREEN slopes. This is not true-isometric 35.264 degree elevation. Upright vertical rocket axis stays vertical on screen. Show the complete physical feet and nozzle, with a sensible center of their ground-contact plane directly beneath the hull centerline. NE three-quarter view, service plate on SCREEN-RIGHT.\n\nComposition: ONE isolated complete rocket centered on a square 1024x1024 TRANSPARENT RGBA canvas. Whole rocket including every foot fits inside roughly [230,160]-[790,850], with at least 120 pixels truly transparent clearance on EVERY side. Generous separation matters more than filling the image. No ground/floor patch, cast shadow on an external surface, background, scenery, water, road, track, stand, frame, magenta separator, guides, labels or extra views. Preserve genuine clean alpha around the whole object. This will be uniformly reduced into a fixed 64x48 native sprite; large simple silhouette and distinct cream/graphite/blue/ochre regions must survive that reduction.",
+  "reference_inputs": [],
+  "references": [],
+  "status": "selected_base",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+  "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      239,
+      142,
+      1019,
+      1104
+    ],
+    "minimum_clearance": 142
+  },
+  "native_transforms": {
+    "NE": {
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "measured_subject_bbox_in_crop": [
+        239,
+        142,
+        1019,
+        1104
+      ],
+      "uniform_scale": [
+        1,
+        29
+      ],
+      "source_reference": [
+        613,
+        957
+      ],
+      "native_reference": [
+        32,
+        32
+      ]
+    }
+  },
+  "contact_review": {
+    "status": "approved",
+    "physical_foot_centers": [
+      [
+        309,
+        966
+      ],
+      [
+        742,
+        1073
+      ],
+      [
+        946,
+        940
+      ],
+      [
+        455,
+        850
+      ]
+    ],
+    "source_reference": [
+      613,
+      957
+    ],
+    "definition": "Approximate center of the four original landing-foot contacts; opposite-foot midpoint averages at source613,957. Fixed to native32,32, never a bbox-center or crop-fit shift."
+  },
+  "model_review": {
+    "status": "approved_base_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/cargo-rocket-base-v1/contact.png",
+    "reviewed_fit": "logs/proofs/mlm/native-art/space/cargo-rocket-base-v1/launch-fit.png",
+    "findings": [
+      "One genuine upright joined cream capsule/tank, one graphite bell, four original short square-arranged feet, single ochre waist band and blue closed service plate on screen-right physical face. Upper charcoal shape is a closed payload access panel, not a cockpit/window or open hatch.",
+      "Whole original RGBA retained; alpha16 minimum clearance142px. Uniform1/29 reduction only: native bounds19,3,46,37 at fixed32,32 contact, unchanged64x48/(-32,-32). No masking, erasure, warp, fitting shift or clipped art.",
+      "Native423indexed pixels retain distinct hull/band/plate/feet. Source-only NE pad exposes369pixels with54actually occluded by original near arm; recovery exposes423/423. Original workshop roof/shell fully occludes the stored hull; no facility cut was changed to reveal it.",
+      "Source-only single ready NE base. Seven genuine headings and actual phase parts remain absent; no complete112-pose, packed or game-rendering claim."
+    ]
+  }
+}

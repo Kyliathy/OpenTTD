@@ -1,0 +1,297 @@
+{
+  "id": "battery-works-construction-2-a-v1",
+  "path": "media/multilayer/source/ground/raw/battery-works-construction-2-a-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-54047aec-8edc-4607-b471-901b3d8a21e0.png",
+  "prompt": "Use case: precise-object-edit. Battery Works genuine CONSTRUCTION STAGE2 FINISHING, no inventory or operating status. Image1 is the unfinished four-panel STAGE1 edit target and exact safe source layout. Input2 is the completed reference for TOP LEFT calender7 and BOTTOM LEFT press9 ONLY; input3 is completed TOP RIGHT winding8 ONLY; input4 is completed cabinet10. Advance the same four actual machines to the finishing stage, using final references for exact installed hardware. Preserve their fixed2:1 isometric camera, concrete square floors/centered south tips, upper-left light, materials and source framing/clearance. Four DIFFERENT machines, not rotations.\nTOP LEFT calender7: install BOTH final parallel rollers, the closed coating box and complete side motor. The yellow side-drive coupling GUARD is still missing, coupling unfinished but no loose part. Exactly TWO rollers, ONE box, ONE motor, otherwise selected completed model.\nTOP RIGHT winding8: install the selected ONE short winding-drum housing between its two supports and ONE complete side motor. Preserve ONE EMPTY front circular mandrel/throat. Final yellow drive coupling guard still missing. No spool, cell or stock. It must match the selected low completed winding machine, not a larger new machine.\nBOTTOM LEFT sealing9: selected squat closed base/C-frame/EMPTY bed. Install its ONE short piston but final square upper sealing TOOL is still absent. Show unfinished attachment stub; no workpiece. Exact final low silhouette, not a taller press.\nBOTTOM RIGHT formation10: install the selected closed top and all THREE closed front doors, vents and covered cable ports. Only the RIGHTMOST yellow door handle is not yet fitted; other two installed. No open stock/batteries, extra doors, lights, displays, charge or state cues. Keep the final model's compact square floor footprint rather than a long thin slab.\nOnly these declared finishing omissions distinguish stage2 from the complete model. No decorative construction props, scaffolding, workers, loose hardware, text, numbers, guide marks or inventory.\nSame safe1536x1024 framed sheet: PUREMAGENTA #FF00FF6px rectangles(24,24)-(744,488),(792,24)-(1512,488),(24,536)-(744,1000),(792,536)-(1512,1000). Keep each entire model/floor about330pxwide, max260pxtall, at least80px alpha-transparent clearance from EVERY frame. Use real alpha-transparent backgrounds and gutters, no opaque haze. Do NOT enlarge, crop, stretch, skew, overlap or rotate the models. Native64x64 and20-high sorting envelope remain fixed.",
+  "construction_stage": 2,
+  "variants": [
+    7,
+    8,
+    9,
+    10
+  ],
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41D",
+    "architecture": "archi-map-layers.md",
+    "scope": "Actual built-in construction output and per-component native/model review; no coverage/runtime claim"
+  },
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "sha256": "9ee687e5fd08661aae143b9005d66d553c48d8217f8f6492e18f994fd8e21d65",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-construction-1-a-v2.png",
+      "sha256": "703f85bb6fbe07a3bbd1036f9e46e795dddc94fee4c9b59e67c8b2cb0bcae8a0",
+      "role": "unfinished_layout_edit_target"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+      "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+      "role": "completed_calender_and_press"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v2.png",
+      "sha256": "1a278ed971db6e5ee33cab793ce71aec6c31a082a5280867a30a17b81716f011",
+      "role": "completed_winding"
+    },
+    {
+      "path": "media/multilayer/source/ground/raw/battery-works-formation-cabinet-v2.png",
+      "sha256": "48947662c5702c2f79a0f8a70233695c7c5e91dce295ea5772a7871bee11dd70",
+      "role": "completed_cabinet"
+    }
+  ],
+  "processor_asset_id": "facility.battery-works",
+  "unfinished_empty": true,
+  "alpha_measure_threshold": 16,
+  "components": [
+    {
+      "id": "cell-7",
+      "variant": 7,
+      "world_cell": [
+        3,
+        1
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        95,
+        56,
+        594,
+        416
+      ],
+      "native_box": [
+        1,
+        19,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-8",
+      "variant": 8,
+      "world_cell": [
+        0,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        101,
+        96,
+        576,
+        415
+      ],
+      "native_box": [
+        1,
+        22,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-9",
+      "variant": 9,
+      "world_cell": [
+        1,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        116,
+        2,
+        572,
+        395
+      ],
+      "native_box": [
+        1,
+        11,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    },
+    {
+      "id": "cell-10",
+      "variant": 10,
+      "world_cell": [
+        2,
+        2
+      ],
+      "direction": "none",
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "resampling": "BOX",
+      "alpha_crop_threshold": 16,
+      "whole_original_uniform_scale": true,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        79,
+        53,
+        583,
+        412
+      ],
+      "native_box": [
+        1,
+        20,
+        63,
+        64
+      ],
+      "construction_stage": 2
+    }
+  ],
+  "measurements": [
+    {
+      "variant": 7,
+      "source_window": [
+        48,
+        48,
+        720,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        95,
+        56,
+        594,
+        416
+      ],
+      "minimum_alpha16_clearance": 0,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 8,
+      "source_window": [
+        816,
+        48,
+        1488,
+        464
+      ],
+      "measured_alpha16_bbox": [
+        101,
+        96,
+        576,
+        415
+      ],
+      "minimum_alpha16_clearance": 1,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 9,
+      "source_window": [
+        48,
+        560,
+        720,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        116,
+        2,
+        572,
+        395
+      ],
+      "minimum_alpha16_clearance": 2,
+      "opaque_magenta_pixels": 0
+    },
+    {
+      "variant": 10,
+      "source_window": [
+        816,
+        560,
+        1488,
+        976
+      ],
+      "measured_alpha16_bbox": [
+        79,
+        53,
+        583,
+        412
+      ],
+      "minimum_alpha16_clearance": 4,
+      "opaque_magenta_pixels": 0
+    }
+  ],
+  "selection": {
+    "status": "rejected",
+    "approved_variants": [],
+    "refused_variants": {
+      "7": "mine original has insufficient transparent clearance",
+      "8": "mine original has insufficient transparent clearance",
+      "9": "mine original has insufficient transparent clearance",
+      "10": "mine original has insufficient transparent clearance"
+    },
+    "model_review": {
+      "10": "All three doors closed; rightmost final yellow handle visibly absent, retaining an empty mounting hole. No stock or status."
+    }
+  },
+  "excluded_variants": [
+    7,
+    8,
+    9,
+    10
+  ]
+}

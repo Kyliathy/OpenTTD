@@ -1,0 +1,646 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group41B",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Current native command-body funding quotes/geometry and injected status boundaries; no paid procurement, runtime art or transported bootstrap claim"
+  },
+  "schema_version": 1,
+  "complete": true,
+  "historical_descriptor": {
+    "path": "media/multilayer/contracts/native-processor-geometry.json",
+    "sha256": "23563f329d13cb8c03f2d1d50a382f54a1146f496e83f2d1daebe3666f740097"
+  },
+  "native_source_sha256": {
+    "src/layer_industry_definitions.cpp": "6861c02e352928d4a7d725b445823d58a2e0e1366e71d7af9e86c18c53cb19f5",
+    "src/layer_industry_policy.cpp": "f0f8904d04aaad52072f03c2ed0d2f60f83ce28070faac535e0e9cf6e0c3ee83",
+    "src/layer_industry_processor.cpp": "07a864c21425af7c5f601421ee9e684c32b7763ba0fa73eb47ccdaf53e753c0a",
+    "src/layer_industry_processor.h": "0c7237267d6d0f424755234ec2d05c0aad208e26a267e3a8dc2bd26c8b0f466b",
+    "src/layer_processor_presentation.cpp": "ce08686327bedd5be6878e85b8e9c6dc0da8396476e0c47e1f030e5d785cb6b0",
+    "src/layer_processor_presentation.h": "678ebc9dd5f36b072069dca078707a91647ad53f849e6f456dd1d468dc140978",
+    "src/multilayer_recipe.cpp": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57",
+    "src/multilayer_recipe.h": "2e7b74de6dabbd948f74072c2eb7ab64f96cb6c052e0f7ee8a35d11810f2fb4d",
+    "src/multilayer_industry.h": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+    "src/industry_map.h": "a4799cdc7f7135c9d76a0352b0df358bbd7fc3670344291a3c5f1bbc7d415264",
+    "src/industry_cmd.cpp": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+    "src/multilayer_sprite.cpp": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+    "src/CMakeLists.txt": "82a08f3575065f121fd7e1ffd39d162e01c219209d3ea0785ce499e68f01503e",
+    "src/tests/CMakeLists.txt": "8ccc64499a941537e45c80855d216b49bc19a3009dd4f7e3a789b36a786d9718",
+    "src/tests/layer_processor_definition.cpp": "5ca7a3d8695a662115a46655aed4ce8b87fb570b592cd15abc909e313bacc621",
+    "src/tests/layer_processor_presentation.cpp": "e5d02779e8b60dc5cadbae7452a2e43528bdfd8cbe52e5d807bef2b8574a5893",
+    "src/tests/layer_processor.cpp": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+  },
+  "build_source_sha256": {
+    "CMakeLists.txt": "7f6c2ee952ffa999d063dee58c9d72031cab4fde767c4957a3257017b1715431",
+    "src/tests/test_main.cpp": "2140d0f8ded1c872ccb921c351797e4553798817d77144dbe0270e6bd30cd29e",
+    "src/tests/test_artifact_paths.cpp": "af499007adaa632bba3c2c4ec1d5c93a9263c39e072c3056db3f3b35b6558f96",
+    "src/tests/mock_spritecache.cpp": "248afbd64f304c8151ba3095fcf6bbe3b7a84f83e7fb12e6638a23b94e390e95",
+    "src/tests/multilayer_bootstrap.cpp": "1a69d7c8ff4758dcdd3eafc8aa0f361bd06b61248a14d974d1920faaf77f284f",
+    "src/tests/processor_fixture.h": "fffba7a6fbfd38f3ba8923103adc55720b156960d2c9a675ada86ed755585b52",
+    "src/tests/mine_fixture.h": "1ba25fbf4575b59a6b278d246b252d30440dc2bb629c3a43d7f9c30e09d959ef",
+    "src/tests/excavation_fixture.h": "81dce977b8de95370fa05987fc2c06223c9fd2a4157fb7756e0e177e5d3a89b0"
+  },
+  "families": [
+    {
+      "asset_id": "facility.metal-refinery",
+      "primary_recipe": "CFMT",
+      "industry_local_id": 33280,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33280,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33281,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33282,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33283,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33284,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33285,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33286,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33287,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33288,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33289,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33290,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33291,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33292,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33293,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33294,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33295,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.chemical-works",
+      "primary_recipe": "CHEM",
+      "industry_local_id": 33281,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33296,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33297,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33298,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33299,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33300,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33301,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33302,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33303,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33304,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33305,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33306,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33307,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33308,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33309,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33310,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33311,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.battery-works",
+      "primary_recipe": "BATT",
+      "industry_local_id": 33282,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33312,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33313,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33314,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33315,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33316,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33317,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33318,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33319,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33320,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33321,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33322,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33323,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33324,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33325,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33326,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33327,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.electronics-works",
+      "primary_recipe": "ELEC",
+      "industry_local_id": 33283,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33328,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33329,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33330,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33331,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33332,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33333,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33334,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33335,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33336,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33337,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33338,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33339,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33340,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33341,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33342,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33343,
+          "substitute_graphics": 42
+        }
+      ]
+    }
+  ],
+  "native_proof": {
+    "binary": {
+      "path": "logs/graphics/processor-source/20261021-requalification-01/bin/Debug/openttd_processor_contract_test.exe",
+      "sha256": "96d7016bd81c78f1de76b35ba86395109d7e4837c6ded58508971ce40e7dfef7"
+    },
+    "executed_binary": {
+      "path": "build/Debug/openttd_processor_contract_test.exe",
+      "sha256": "96d7016bd81c78f1de76b35ba86395109d7e4837c6ded58508971ce40e7dfef7"
+    },
+    "process_executable": {
+      "path": "build/Debug/openttd_processor_contract_test.exe",
+      "sha256": "96d7016bd81c78f1de76b35ba86395109d7e4837c6ded58508971ce40e7dfef7"
+    },
+    "log": {
+      "path": "logs/graphics/processor-contract-current/20261020-222843-aabf12c499/native.log",
+      "sha256": "59ed2cd12316299975955aa75985adaf6cbf9729c4669ced0770c41696d45ad9"
+    },
+    "process": {
+      "path": "mlm/reviews/graphics/processor-contract-current/20261020-222843-aabf12c499/reports/native-6667a7e9fd614f03967fd16c64a38786.json",
+      "sha256": "420f104856c89e8849df4e432e30f34c2d4d5521e6337bb7d7fce74202106342"
+    },
+    "exit_code": 0,
+    "assertions": 1907,
+    "test_cases": 7
+  },
+  "preservation": {
+    "before": {
+      "path": "logs/graphics/processor-source/20261021-requalification-01/before.json",
+      "sha256": "919584f367e1049378bc3d68038b50d9fd6bf9cefd81efe6fc5c6fae653bcbf2"
+    },
+    "artifacts": 1196,
+    "helper_transition": {
+      "original": {
+        "path": "media/multilayer/tools/ground_processor_contract.py",
+        "sha256": "569058f1f0076f70fafb567890f35903d2eccf2212c853f871d7a7c082836648"
+      },
+      "retained": {
+        "path": "test-cache/processor-source/20261021-requalification-before-edit/media/multilayer/tools/ground_processor_contract.py",
+        "sha256": "569058f1f0076f70fafb567890f35903d2eccf2212c853f871d7a7c082836648"
+      },
+      "current": {
+        "path": "media/multilayer/tools/ground_processor_contract.py",
+        "sha256": "21aab2814fe92c18b48b328310bb1bf130d1012c929f50de983c69f15c299310"
+      }
+    }
+  },
+  "build_log": {
+    "path": "logs/graphics/processor-source/20261021-requalification-01/build-Debug.log",
+    "sha256": "512b4d5302836aa3bee27be7c255bb6b4fcf6f0d92acce19ba0c082a7034fa4c"
+  },
+  "caller": {
+    "path": "src/tests/multilayer/processor_contract_refresh_checks-1.py",
+    "sha256": "5a4cf4d144e2b5d765b13031ef096aa1e739599c2cfc176441dcce6e66d61b24"
+  }
+}

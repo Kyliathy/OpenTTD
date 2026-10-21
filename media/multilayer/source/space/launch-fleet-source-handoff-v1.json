@@ -1,0 +1,2127 @@
+{
+  "_documentation": "Freeze qualified launch/fleet source art for append-only native packing.\n\n@file launch_fleet_handoff.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups62H-62J.\n@see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.\nSource-era native receipts remain historical authoring evidence after native\nowners change. This adapter preserves accepted original pixels/physical cuts;\nit neither grants native compatibility nor publishes a packed payload.\n",
+  "schema_version": 1,
+  "asset_order": [
+    "facility.launch-center",
+    "vehicle.model-14"
+  ],
+  "native_start": 6143,
+  "native_end_exclusive": 7791,
+  "native_route": "native_baseset_launch",
+  "sources": {
+    "facility.launch-center": {
+      "report": {
+        "path": "logs/proofs/mlm/native-art/space/launch-center-source-v1/source-manifest.json",
+        "sha256": "9a9a692dc756421b8f47fc116877219c46eab7c3cc275a713186b3483727db39"
+      },
+      "qualification": {
+        "path": "logs/proofs/mlm/native-art/space/launch-center-source-v1/verification.json",
+        "sha256": "46c3004eab9d88c25c4dbfbb100f71b695387a29f9dd79e26109faa347d1de7c"
+      },
+      "atlas": {
+        "path": "logs/proofs/mlm/native-art/space/launch-center-source-v1/launch-center-authored.png",
+        "sha256": "86ba1ab985d04fba1157534030e6d471f93a8afb3917a5b94ad012b02003e71b"
+      },
+      "source_contract": {
+        "asset_id": "facility.launch-center",
+        "consumer": 9,
+        "kind": "building",
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "frames": 4,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "footprint": [
+          4,
+          3
+        ],
+        "footprint_semantics": "world_tiles",
+        "anchor": [
+          -31,
+          -33
+        ],
+        "bounds": [
+          0,
+          0,
+          64,
+          64
+        ],
+        "parts": [
+          "back",
+          "front"
+        ],
+        "geometry": "per_tile",
+        "tile_variants": 12,
+        "palette": "dos_8bpp",
+        "transparent_index": 0,
+        "company_colors": "none",
+        "preview": "native_build_pose",
+        "animation_colors": "forbidden",
+        "source": {
+          "status": "authored",
+          "path": "media/multilayer/source/space/raw/launch-center-workshop-ne-v1.png",
+          "sha256": "fb9f29c58301461974ab14344abea161e2844debac729c12e765d04581f4f9b3",
+          "provenance": "first_party_original_builtin_image_gen",
+          "rights": "first_party_generated_original",
+          "composition": "whole_selected_component_originals_and_explicit_material_reuse",
+          "composition_recipe": {
+            "path": "media/multilayer/source/space/launch-center-state-art-v2.json",
+            "sha256": "ccb3decb879794b30f3b04d13bd95b0ba2d6a7b70d5a6b756892a2340cfe4de8"
+          }
+        },
+        "native_rotations": {
+          "NE": {
+            "rotation": 0,
+            "footprint": [
+              4,
+              3
+            ],
+            "zones": {
+              "pad": [
+                0,
+                0,
+                1,
+                2
+              ],
+              "workshop": [
+                1,
+                0,
+                2,
+                2
+              ],
+              "recovery": [
+                3,
+                0,
+                1,
+                2
+              ],
+              "storage": [
+                0,
+                2,
+                4,
+                1
+              ]
+            }
+          },
+          "SE": {
+            "rotation": 1,
+            "footprint": [
+              3,
+              4
+            ],
+            "zones": {
+              "pad": [
+                1,
+                0,
+                2,
+                1
+              ],
+              "workshop": [
+                1,
+                1,
+                2,
+                2
+              ],
+              "recovery": [
+                1,
+                3,
+                2,
+                1
+              ],
+              "storage": [
+                0,
+                0,
+                1,
+                4
+              ]
+            }
+          },
+          "SW": {
+            "rotation": 2,
+            "footprint": [
+              4,
+              3
+            ],
+            "zones": {
+              "pad": [
+                3,
+                1,
+                1,
+                2
+              ],
+              "workshop": [
+                1,
+                1,
+                2,
+                2
+              ],
+              "recovery": [
+                0,
+                1,
+                1,
+                2
+              ],
+              "storage": [
+                0,
+                0,
+                4,
+                1
+              ]
+            }
+          },
+          "NW": {
+            "rotation": 3,
+            "footprint": [
+              3,
+              4
+            ],
+            "zones": {
+              "pad": [
+                0,
+                3,
+                2,
+                1
+              ],
+              "workshop": [
+                0,
+                1,
+                2,
+                2
+              ],
+              "recovery": [
+                0,
+                0,
+                2,
+                1
+              ],
+              "storage": [
+                2,
+                0,
+                1,
+                4
+              ]
+            }
+          }
+        },
+        "variant_semantics": "row_major_world_cells_within_each_rotated_footprint",
+        "native_layout_owner": "LAUNCH_CENTER_LONG_EDGE/LAUNCH_CENTER_SHORT_EDGE; GetLaunchCenterFootprint/GetLaunchFacilityZone",
+        "native_state_owner": "Station::launch_operations; SpaceConstructionState::remaining_ticks/paused; SpaceManifest::service_ticks/service_paused; SpacePodState::remaining_ticks/paused; SpaceTransition::phase/blocked/remaining_ticks",
+        "native_frame_policy": {
+          "construction": "placement_preview_only; CmdBuildLaunchCenter installs a complete facility, no facility construction clock",
+          "ready": "static empty facility; logical frames alias the same selected hardware",
+          "working": "only actual workshop/service/pod work or SpaceTransition preparation/turnaround selects declared equipment parts",
+          "blocked": "static hardware/status from actual native admission/wait reason; no work or queue advancement"
+        },
+        "native_occupant_policy": "LaunchOperations workshop/service/pod_workshop/pad_active/pad_queue reference existing paid actors; rocket/probe/pod art stays separate",
+        "native_inventory_policy": "Original station/hub/vehicle CargoPackets only; storage art creates no stock or freight delivery",
+        "native_water_policy": "At least one actual orthogonal navigable Surface water edge; source art fixes no water side and contains no decorative water",
+        "native_freight_policy": "Joined or explicitly linked same-company Surface rail/lorry members retain their own footprints; no baked track, road, vehicle or station extension",
+        "native_projection": {
+          "owner": "RemapCoords in src/landscape.h; native pixels before ZOOM_BASE scaling",
+          "x_step": [
+            -32,
+            16
+          ],
+          "y_step": [
+            32,
+            16
+          ]
+        }
+      },
+      "definition_binding": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null
+      },
+      "report_sha256": "145643112b03594ca6aadd4acddfc984b75ec283f90f7108f0a9558a59979292",
+      "canonical": {
+        "[\"ready\",0,\"NE\",0,\"back\"]": {
+          "row_sha256": "534001cd8869940e8790b9c488a7886c3a32a0979a3adfeb3a60d49ae0c36539",
+          "native_sha256": "3e4ea4b2e5c933a9c2bc962f07faaa4e4845d0e9471971daa4eb2f2282554ef9"
+        },
+        "[\"ready\",0,\"NE\",0,\"front\"]": {
+          "row_sha256": "eb6bd0b57c5fb2de2641e78543189f77271731cf1bbcff15245ed62d1ec1880a",
+          "native_sha256": "b685f422c036e5b2eabd3f1b7bae89c28a29a53b83907c9425d6e0e0283023af"
+        },
+        "[\"ready\",0,\"NE\",1,\"back\"]": {
+          "row_sha256": "910e611032fcc72d383ea7ae281fde7360c080da503d3fd36b2e4ce6fd988929",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NE\",1,\"front\"]": {
+          "row_sha256": "7f2856b3f8706fcefc3efe791a60eee0658979a3a2b371805c3d8c7eac534b5a",
+          "native_sha256": "f5bf502d46d389aa0e84d52879a1274049014f029b2b08c1a1148f5b8bf613db"
+        },
+        "[\"ready\",0,\"NE\",2,\"back\"]": {
+          "row_sha256": "4f70f43456b056c6b0ec0f9dae629b7b67f54bfcd4b11622720fe0961ff1e4ab",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NE\",2,\"front\"]": {
+          "row_sha256": "12f7563a5b9c7092c22391b766d5967a0479eb07cd5ad6e93096c5c11721e71e",
+          "native_sha256": "b2bf40c5e166736d5840d8406716a5f1d5100440614672b560ba484c0f953e96"
+        },
+        "[\"ready\",0,\"NE\",3,\"back\"]": {
+          "row_sha256": "51092ec487c6cffd80df303e1a9876d6b49423d4ab01d1b9cf22f32d2f75b2d9",
+          "native_sha256": "672384f154d0fbf8fc17d8038c538e566380ac4ab2604b6a1c302ef3efb5c773"
+        },
+        "[\"ready\",0,\"NE\",3,\"front\"]": {
+          "row_sha256": "3708c9b484582a6e3cb8f1e9af4739915c5a9a277d15edfb2ad4809f41244c4e",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NE\",4,\"back\"]": {
+          "row_sha256": "c13f4bef806a03761be5ab5e790b3ed5960ab566abb22ccce40d5a41215eb3f3",
+          "native_sha256": "4254bbc72d207271fc2a0ebdb7c6640d948d45edc6a938dd86d4276fe61ad376"
+        },
+        "[\"ready\",0,\"NE\",4,\"front\"]": {
+          "row_sha256": "8197e5c481988dc93f3c9d5b2e49d53e74bc804b4e33ce2c89c10883b977438f",
+          "native_sha256": "1ba808b603e5dc4b17388e7908031188ff9ed6b3a15388843f0ac78d8d3a78a8"
+        },
+        "[\"ready\",0,\"NE\",5,\"back\"]": {
+          "row_sha256": "a6e66148d71e5278372d9a8eda899f4779563e36f8e86cc5f877466e1ccba6de",
+          "native_sha256": "3f9c87c4cb20a2968cd2d916ab2789c0c9d7c65a608dfe931b628f0bef9e8f6e"
+        },
+        "[\"ready\",0,\"NE\",5,\"front\"]": {
+          "row_sha256": "e111b0582512a683005e4f87d1a8615740059bfc45be890bb315be6a3c6a38af",
+          "native_sha256": "a8ee3e33c2bacc8ca2158791e1d834a066df2bbfa1dec29360c5d42194185c15"
+        },
+        "[\"ready\",0,\"NE\",6,\"back\"]": {
+          "row_sha256": "da491cf42e57c6ae8b14369d9654b9816b30feff963715ce307d7cee7d057bdc",
+          "native_sha256": "f77211735e43c451f03f2f7bde3bf431905b4fc1d88b6f0d09d06afffe4a8556"
+        },
+        "[\"ready\",0,\"NE\",6,\"front\"]": {
+          "row_sha256": "5e322da6d82c13d067c15170113b3c86d3d15ac8f09c72fc125e13f9ab2f32e6",
+          "native_sha256": "1df5fc3f676ec24616e7bdb42892552657d73daa8036edcfa6e1d97738ad8586"
+        },
+        "[\"ready\",0,\"NE\",7,\"back\"]": {
+          "row_sha256": "c486ae2338896c6799dc3512712021f591a10c5e8dc2bb120ab4df59b816c744",
+          "native_sha256": "ffeeb3d340c22812e6c9e9424986f5bcf581bd637cd7698e709da8044ddff1e3"
+        },
+        "[\"ready\",0,\"NE\",7,\"front\"]": {
+          "row_sha256": "8b2a922efc514f9c13fcf0d14215855edb57fd0385082277085d91ab7b3a7626",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NE\",8,\"back\"]": {
+          "row_sha256": "366d22609c4afb0ade0ea97825708d360ca1df205d248c6e25d64d65d4fa137b",
+          "native_sha256": "336b6dce1d31d994453649aeeadbd38af932c5644bbe685d3881c4424a170925"
+        },
+        "[\"ready\",0,\"NE\",8,\"front\"]": {
+          "row_sha256": "2c9304c90c3648e6c36a0919c61e9e012d9839f7e7c476b27dcfcd757a41137a",
+          "native_sha256": "85562de6fd0c763a491c0a30984d655f4cfb9b361b402ecc52ca3db95e618375"
+        },
+        "[\"ready\",0,\"NE\",9,\"back\"]": {
+          "row_sha256": "300caba23e0fc78200cbff6cc6a5680b0e9ad8374c19404128f9733bb91207d3",
+          "native_sha256": "39e40892624eefc5b342ed45a280d64a24f84014e8b178c345a82f7290880e6a"
+        },
+        "[\"ready\",0,\"NE\",9,\"front\"]": {
+          "row_sha256": "ccfb1d4f6bbe55f8c683e67016e8c2a9850fb8edab11b4c1d3c15b7b5e5f3c39",
+          "native_sha256": "2caf06452278875a2da54fdfcefc6f772f255194ae5d080ab4d96a4e6120c47b"
+        },
+        "[\"ready\",0,\"NE\",10,\"back\"]": {
+          "row_sha256": "f00a30eedb2e2d695afe05c4ef936f8aaa723d234836778c63cee5dea2d58b88",
+          "native_sha256": "277696416652a7fbe6da5f49b33bf24896e89ae83c32714a3f34877e282e0312"
+        },
+        "[\"ready\",0,\"NE\",10,\"front\"]": {
+          "row_sha256": "7c5a12192ef149ce79fe010545c04e3d8c8f078267204cce0e0d830f1558b2b3",
+          "native_sha256": "625e0ee2a084c88edd9079ccc38a89d7c8171a78c5447ed9014e7a37a2651137"
+        },
+        "[\"ready\",0,\"NE\",11,\"back\"]": {
+          "row_sha256": "5fa29bbe495deadf1a3779047ce1db76104a4fefbdab1ccf39af87f5015f1a93",
+          "native_sha256": "6035c00a04587a5e074035eebc30279ec87613cf790917bae55ff1a058ac5bb4"
+        },
+        "[\"ready\",0,\"NE\",11,\"front\"]": {
+          "row_sha256": "c3af21abbd2357ee1bde52860ff1d1f970206a6a7d93cc8f18c72c3b4330c578",
+          "native_sha256": "d4bd420fe8295efdecc72cc789ec041f469a0491505eb0bc9984943084373c43"
+        },
+        "[\"working\",0,\"NE\",2,\"front\"]": {
+          "row_sha256": "d5c2c45887a54290469c395df138f4233acad735016c3a9932172820cbdd7e72",
+          "native_sha256": "95857b525b676e7964e81588eb194ef0d54b0d55881701dc4f03c30e0e0383ea"
+        },
+        "[\"blocked\",0,\"NE\",2,\"front\"]": {
+          "row_sha256": "895957a36e2795e166b8a927c01aa41c9e73930d266a218cf4d3de51b5e11cba",
+          "native_sha256": "349ee4ec60700da685a9e2b8a16bb019a14710bfa486b83e84a6759b0977ce33"
+        },
+        "[\"ready\",0,\"SE\",0,\"back\"]": {
+          "row_sha256": "d6c38076aab442644536cd8d69b957fe88d44d349d05a07a73d578feed1d2b56",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",0,\"front\"]": {
+          "row_sha256": "e17cc3399dd0a70ab77d875446ffabee9477a0a2932f028bf2d7a9e18a33e5ff",
+          "native_sha256": "e7b357e1906629e77cd59e3ccc07c292c866e7fd1f4a1f614da13ef4a08b054f"
+        },
+        "[\"ready\",0,\"SE\",1,\"back\"]": {
+          "row_sha256": "34afff44d5d94dbf50be944b1e01c76e08a0afbef3393a0e78a22c1ac76b03df",
+          "native_sha256": "08350407c76e576ecfba7ed12b7aff0b8151d9eeb40f35cb9f8df8973826e355"
+        },
+        "[\"ready\",0,\"SE\",1,\"front\"]": {
+          "row_sha256": "1b2aeb5fd1722b8d666c87556e30ecd64a109389c5385774aa224ddda36080f2",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",2,\"back\"]": {
+          "row_sha256": "69cc93b24e4d1dfe5720ab758ca5c3b7db3fd059fda6226cf344ae2f6180d0b0",
+          "native_sha256": "645aa473a501e0fd4f83d5a5324ca7484653dd328f998b0365a5efc9671dad4e"
+        },
+        "[\"ready\",0,\"SE\",2,\"front\"]": {
+          "row_sha256": "1f1eb7a40b321144f0084fb02da0a4465e53d8fa2d62158b5e9ad633e98b9456",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",3,\"back\"]": {
+          "row_sha256": "a2b23e39a21bc4c82c0b90c8b2235d9ca1b179db2a02b722ed670bc26db68de7",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",3,\"front\"]": {
+          "row_sha256": "4fb4fdcf9c573e7ed6ef1744561e57f0fc0674cbd7be37fabd37a5fe616c58f0",
+          "native_sha256": "bf24b4ae5f67819686efe234282dde69a6183d9717080e9acc1bacdf4b675694"
+        },
+        "[\"ready\",0,\"SE\",4,\"back\"]": {
+          "row_sha256": "fb15ac12db0c05966e2c9e43430469828d29db2acbf4237c0e5b186e86082b64",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",4,\"front\"]": {
+          "row_sha256": "02c8548b65ad4177ff76fa744f49604f3107e137a0d80ce276dbe2aa944d7b43",
+          "native_sha256": "ee8a3980b79bded31a4950642cf601478fd8d3d591942068bbab65cda6381093"
+        },
+        "[\"ready\",0,\"SE\",5,\"back\"]": {
+          "row_sha256": "80b3aa05f7424d668a540f378d8a5ab526a9da8134bfb612bff23aa2a25162e4",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",5,\"front\"]": {
+          "row_sha256": "1a0aa4ff5f37891b36dbae5ee832ab79a86703f97ee4f423ead3c505b9ed2b2d",
+          "native_sha256": "46c4f13acf050e374a786721d549814719bd8c754f4374ba618a08b80ec6f6d4"
+        },
+        "[\"ready\",0,\"SE\",6,\"back\"]": {
+          "row_sha256": "f1ed8dd36966b802c4a92defbc41eabf154d7d6ebcefadb569eecb7b9f17da6a",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",6,\"front\"]": {
+          "row_sha256": "46b148be963336b243df41ab22e6ca3fbd438d4c21ed4c3e63d5acd6bcd72453",
+          "native_sha256": "39594f6b5158751e43b4b1ba68717f868b1235425fc084765840714c5997d03b"
+        },
+        "[\"ready\",0,\"SE\",7,\"back\"]": {
+          "row_sha256": "0806fe3003b2f456f015e56d4f1f16f3dd155b6e98275ed8fe14f805f6e087d1",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",7,\"front\"]": {
+          "row_sha256": "e7375024eadf734aa7bdfa95eac94a65bc91677eeab383a8fb2c072223c07f6b",
+          "native_sha256": "31b7e23a4cd86fdc89015c1a2d6651b95b4813f6b9a80c3a9ef58014e151db17"
+        },
+        "[\"ready\",0,\"SE\",8,\"back\"]": {
+          "row_sha256": "9f98ca8568ea6c22f03e4cc0741618f016ec44153ebe8eed931635590f7a63cf",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",8,\"front\"]": {
+          "row_sha256": "47345789d05e86cb426fcf51bd0f5b772d6d40b9fb724f48788a59de4b6d9e67",
+          "native_sha256": "eb123981e05518741b10ceee87dbc8f995d0b7fdcd2eae2585c0fad41fa0537f"
+        },
+        "[\"ready\",0,\"SE\",9,\"back\"]": {
+          "row_sha256": "91f40c02856e450fd3c48dd2a16340e4c8dd1a771faa52a7b4e91a642bba092e",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",9,\"front\"]": {
+          "row_sha256": "82dbe4782dae1f68bffce55613d3d7c35c3d2b8a5788b1054b1e62afbca5a14e",
+          "native_sha256": "f64e7cba44a11ef7d068f78bb0ff5ef08590eb690489e7a1abd6e4f406d22026"
+        },
+        "[\"ready\",0,\"SE\",10,\"back\"]": {
+          "row_sha256": "30ad88fc4b4a738fa3488c523b9c1ecd4df0f613d78cf8e7f652bbd88696d11e",
+          "native_sha256": "d60da4059d7ced1cfe0d3163a7db1a21dc415d23475c25d5d218023eace4a489"
+        },
+        "[\"ready\",0,\"SE\",10,\"front\"]": {
+          "row_sha256": "f35262170f4113d87d98f33101751f73431999f463ffe5b48f9edfa1f20f9e0d",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SE\",11,\"back\"]": {
+          "row_sha256": "dbd70284e4faeb8548d8001a28012e4f8c55c41bb16896e510986895dbbe3b48",
+          "native_sha256": "44513c37cc4437c830770a605590ec7eeb26dd257462dbc94e1aacf2b4e0721f"
+        },
+        "[\"ready\",0,\"SE\",11,\"front\"]": {
+          "row_sha256": "f8aaab369444fd112dc314e0c7bd5bfd9a700b54104be368acce2e6f367dd3d0",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"working\",0,\"SE\",5,\"front\"]": {
+          "row_sha256": "69e169fbf9c6868505ec920f55d76f30f9d9176c9fcba89768306c42abbd5ccf",
+          "native_sha256": "e862f40cdf86c5cc1463d879c68a2f2040434ae4c6e2a83a569fd24c65206967"
+        },
+        "[\"blocked\",0,\"SE\",5,\"front\"]": {
+          "row_sha256": "e3847b474f76231bc4055f95c8d73a20e6e5f020da2c7a3a668c55281b91c0ef",
+          "native_sha256": "f03cd7a847c3104079e6c3849267a426838ad6adc9672acc9e15364c5a62090a"
+        },
+        "[\"ready\",0,\"SW\",0,\"back\"]": {
+          "row_sha256": "b74b3448c6f10280e85bf416511b8ea8ff9ebb2367ec68b6c05698116d8fdbd3",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",0,\"front\"]": {
+          "row_sha256": "8d51154e415b3af04e866a687b5e3efd426ec27d86044252d6f0286ba734136f",
+          "native_sha256": "8a885c16d360a9b6a5ee4c19b806b7515b8b3d7025c1c5439dc4c20d74127f0b"
+        },
+        "[\"ready\",0,\"SW\",1,\"back\"]": {
+          "row_sha256": "1a95bff3cce3438dc5b8b76fedbecd2ae2483dc8dd59a606c465d29d1466a149",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",1,\"front\"]": {
+          "row_sha256": "a080d6659e5e5c81dcca48e7fb689f70cecd07ac75931c89267a77970fa02403",
+          "native_sha256": "bf96fce855854a4d5820c86591fd2d5e42c97511c45e79af818abe340d0ed682"
+        },
+        "[\"ready\",0,\"SW\",2,\"back\"]": {
+          "row_sha256": "6d7ff8ec1698cc7308e23a28785717ffce4e56bfd340cee40a5b13840d8c40be",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",2,\"front\"]": {
+          "row_sha256": "dd72b0ff4cfec5c66563c43f75d5ddc670701a7f50b0af7b120194f70d706a9a",
+          "native_sha256": "d1cb38344a082b0f05f2077d8d84c1cd853499541eccb5d97ceb833803225083"
+        },
+        "[\"ready\",0,\"SW\",3,\"back\"]": {
+          "row_sha256": "fd70f972838c414a076809a4b91943fdfc07a9f687743d1bd1be916dfd87ef5f",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",3,\"front\"]": {
+          "row_sha256": "e1edee9aab4d32d311904fc402fca3f4a6ab3a3966309e48d2e72f09d92077b3",
+          "native_sha256": "6cb3f2556aa770753c465795d425418acfc9a60df5d315aa697f705d21321bdb"
+        },
+        "[\"ready\",0,\"SW\",4,\"back\"]": {
+          "row_sha256": "2823713e036968a189282a8dae15d41f4eca99f4417d6143376f9979f02c120d",
+          "native_sha256": "c593763b9cfaaac5ecd07f9ffbc1c5395ddbfcc60869c5298d1970aa7d5bf409"
+        },
+        "[\"ready\",0,\"SW\",4,\"front\"]": {
+          "row_sha256": "631fcce8c1227b2d9465af3f740f75576902dabc3539785005982f4c3d9ce33d",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",5,\"back\"]": {
+          "row_sha256": "a5f890fbf457d544371a0272eaa603da4b1bbb9637ae5e5a96fae6b17d9d56e5",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",5,\"front\"]": {
+          "row_sha256": "9f05983b17d5fe56c5ec66113635f6880922116c7eb02479e4bfe78ed5832586",
+          "native_sha256": "f42ae339c787b4fc7b9e756d8eaabecd3eecef4f67dd86c84a2451eab4e8ed03"
+        },
+        "[\"ready\",0,\"SW\",6,\"back\"]": {
+          "row_sha256": "ad32e56be34ec92dcbb716bc8b38a4e6e5117a23424b41ef9ee1af9cd2d9b13c",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",6,\"front\"]": {
+          "row_sha256": "5f066ae818afe83af2f2e469dec0d5fdbe564fae8cc17c16f36d048db9030ebc",
+          "native_sha256": "2538d1d50b328ee0a76e8ab28d5533961499584684fe508bc6e88b26e3d4214f"
+        },
+        "[\"ready\",0,\"SW\",7,\"back\"]": {
+          "row_sha256": "5b53c26daa8dd5b7227cab324cdb5a5d9e73be19825b9b94fe1fab1fdf57cc3d",
+          "native_sha256": "d2bcaadaf61cd06fa07cebc5e858802a1b3c14b9994abf557a388277e19007c4"
+        },
+        "[\"ready\",0,\"SW\",7,\"front\"]": {
+          "row_sha256": "1f395b0e76772b4973ae049d89bdb737f4e4e5a8d40169a75cfba5492dbfccdb",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",8,\"back\"]": {
+          "row_sha256": "5e02d5522a79f15a87b6dc059adf8bdd045d7a315c4f5e6c5cdd479b1feaa0ad",
+          "native_sha256": "ef6513aacc4d988fbd8b15bd77dee714395b6b7f732bbbaff78293dfc3c87bf1"
+        },
+        "[\"ready\",0,\"SW\",8,\"front\"]": {
+          "row_sha256": "d2b137052751aa63210dfd74fa136125210115c89a42b730ce97a9091e489af1",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",9,\"back\"]": {
+          "row_sha256": "660e4aa865b2c457c60fc1171d305f96586d9638807c97b6fa75f2f8a0f4df7a",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",9,\"front\"]": {
+          "row_sha256": "43f313e037ca72c9e2561052965c98e8e943ab039404cf3302057e1512568bff",
+          "native_sha256": "36939ced4834325ee3b4312e343430a8ebf5ed9c430cfa40127e2308788c2124"
+        },
+        "[\"ready\",0,\"SW\",10,\"back\"]": {
+          "row_sha256": "ccacd32f76ca5f02252a0258bc7fa1627b94343e5855dc90b59f107a79beae0f",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"SW\",10,\"front\"]": {
+          "row_sha256": "d35d29aa46a9d59bbfc8ba0907c5da3e482c64be84c59a73b1f13c225b2d9771",
+          "native_sha256": "62fb8799575d2201579024fe27803b2f70c9db59cf9a28302523243691c05154"
+        },
+        "[\"ready\",0,\"SW\",11,\"back\"]": {
+          "row_sha256": "580230dad41f37a1393cbbdaf152327ddeefe54a0d5aa70a10c545d920bca5f5",
+          "native_sha256": "eeb03b233980d740aa87b03f8e399ffb12805c7ee6917bdef1503fa70040dbf7"
+        },
+        "[\"ready\",0,\"SW\",11,\"front\"]": {
+          "row_sha256": "155df706356d62c530252dddf2cf5eb97e6987797e86824969f8ed5b4985ef32",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"working\",0,\"SW\",6,\"front\"]": {
+          "row_sha256": "9fed443f578c7a1c0e5d669f32a8d008e894acef24e7e3064a037d57728edc5a",
+          "native_sha256": "0e74d0d928804efbb68190943352b2570bcf2a29d275ea542a27aa53bba88940"
+        },
+        "[\"blocked\",0,\"SW\",6,\"front\"]": {
+          "row_sha256": "e813a39ec1da12ad277de391d111d4b2cb217046e7850ad5cd454ec19cbb2fc3",
+          "native_sha256": "5d72eedbb8437a30a3cac73035b5a94c806a310ec4609cbf7d80aab67444a296"
+        },
+        "[\"ready\",0,\"NW\",0,\"back\"]": {
+          "row_sha256": "ed045762418c78a68ba12a8637a30964510a2ee2730ce98023e968b8ddc2cac7",
+          "native_sha256": "a6dd209c38d382efba15f7776fff7d3f15dd3c841d944063e6117c0cc756bd33"
+        },
+        "[\"ready\",0,\"NW\",0,\"front\"]": {
+          "row_sha256": "4f78b6f013218caefd26a64409a4a3588932d2a9b36985032d770ceb8dbf8985",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NW\",1,\"back\"]": {
+          "row_sha256": "3677343d3ed756d3602e065860614ae170eab48edf9a55e95b49495c674dc1fd",
+          "native_sha256": "868276f4713cdfed626d41a7f84ef5863046b28415b24fac4f82ee3c6b1db63a"
+        },
+        "[\"ready\",0,\"NW\",1,\"front\"]": {
+          "row_sha256": "dc2c26834390dc862702bf1ffe84e42e7e7f2afe62e6c1759d5708e7017102c0",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NW\",2,\"back\"]": {
+          "row_sha256": "4abf5834a28a245f912b7f87085247d2a9b1b2e5a8d2a78e1182cd266b2668e1",
+          "native_sha256": "9c8d1d434880712cfd7d1b11ffa0ecd5e994f36f0461deb11a2329323be08b5e"
+        },
+        "[\"ready\",0,\"NW\",2,\"front\"]": {
+          "row_sha256": "09ca10dc149f397a75f28343d1be1e4d02a4cb4fa8ff762e1d2d86043541beda",
+          "native_sha256": "f70fc400032541fa390a8e978e9d9f5c29e49cf8c266d02a7f463365dc36d81b"
+        },
+        "[\"ready\",0,\"NW\",3,\"back\"]": {
+          "row_sha256": "58bf839502ba3e7b5f28617b98b0fbaa09e338143202ce00057579325ec0f20b",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NW\",3,\"front\"]": {
+          "row_sha256": "dd3659d2b98062454f011b6b8ffaa6d6ec93ce1a1174ac04c37ef587d122bb7b",
+          "native_sha256": "f5e0b7b33c87c7f268f56446ffdc63f44179c7854eb6793d0aef42e558d69276"
+        },
+        "[\"ready\",0,\"NW\",4,\"back\"]": {
+          "row_sha256": "4765975a27898c2cca4b79954cabf580dbdb895ddab8dfebe21ada629a8aadca",
+          "native_sha256": "5573cbd732d800f5175824eaef1ebf9b1feb2db624d83b0fbc26b3c47bb3f049"
+        },
+        "[\"ready\",0,\"NW\",4,\"front\"]": {
+          "row_sha256": "7d10eafb7b3ea44c406367ebb575bf8e8fcc8ad457390e44122cfec6becc72bf",
+          "native_sha256": "a4adc105ab9e188850b5ccd6c721d79fbd8a26317be293db240b970f2f8a2026"
+        },
+        "[\"ready\",0,\"NW\",5,\"back\"]": {
+          "row_sha256": "4567739133ccaf45cf75a633317a0a75f95e3b9c768d5a05ee20d8728bca75fc",
+          "native_sha256": "a31258dadd26acf091ed2e0dbaa19e7fc80612ec234c47ab414e990b0ef10e10"
+        },
+        "[\"ready\",0,\"NW\",5,\"front\"]": {
+          "row_sha256": "5a8632a711bb8b29dfa4cfb5076d71fb0b2b7e0f716b21cf8dad6fd6fab484ea",
+          "native_sha256": "0d8f579c5935660fd0f185522cd12fd1a7ce871cc8c3c00d1d3409818953004a"
+        },
+        "[\"ready\",0,\"NW\",6,\"back\"]": {
+          "row_sha256": "f79d4480f72f4c88cdee56d915cf8623632789efea6d2471bcedf4ddea4c1f3f",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NW\",6,\"front\"]": {
+          "row_sha256": "fec0b1277c2304f3845add9469e17f1d2848b9e6c29bb58983083ad3c6b4d264",
+          "native_sha256": "3f9c91fbf495a89c748125fec8e6c920aa2277b02a44e4f6a5eebf8d196159c9"
+        },
+        "[\"ready\",0,\"NW\",7,\"back\"]": {
+          "row_sha256": "6dadf38040bc876fc561f36e7a8bcabde94f34b9052977dfefd9180cc9e367df",
+          "native_sha256": "9a4bc83cfab839d0d159cbe07d2a958edc5f733d722e9c5dccd6d267a86a5987"
+        },
+        "[\"ready\",0,\"NW\",7,\"front\"]": {
+          "row_sha256": "3a72ebc9d28e876b66769ace0c99253e240a88b97970d2562d056cfc05216bd0",
+          "native_sha256": "57093b5923ae38213473e89f40f6ace2af6537180a454ab46a93c343d1922197"
+        },
+        "[\"ready\",0,\"NW\",8,\"back\"]": {
+          "row_sha256": "ff56f7c38ac9ae558edf9d445a355aaacd23d8b7b9bfda259bed16fb784eaae4",
+          "native_sha256": "e86b24f5e181618c2b16ac8db79c3406f2591848ab4b5c1fd3e523d593e4363e"
+        },
+        "[\"ready\",0,\"NW\",8,\"front\"]": {
+          "row_sha256": "66b7014731171a7952e2fb66016ed9c674f8c9925705030f1a842907fd1e294b",
+          "native_sha256": "2fa1b23dfcc98e2186c60b7c4cfb1061641e99cf518a340d6699f0712c44bf88"
+        },
+        "[\"ready\",0,\"NW\",9,\"back\"]": {
+          "row_sha256": "a7927eb78b3922804ee335b4b3f031a3b2ec009f26d6e8d416e93dcf91fdb4ad",
+          "native_sha256": "c89da56ebacd209f4f05ddcd478cee340687e5542057276637bc874e3bb98cef"
+        },
+        "[\"ready\",0,\"NW\",9,\"front\"]": {
+          "row_sha256": "136323131e3394374f92f2ad69a810cb97f21e89ce413dbe0c13922ed11804dd",
+          "native_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+        },
+        "[\"ready\",0,\"NW\",10,\"back\"]": {
+          "row_sha256": "902be046c09707810b33d6f1dffe32547447f97dc1b89f001473ee1de0564d45",
+          "native_sha256": "74cac5ed04a80a42ff556f7400107c881b01fe2e4bfae39af5e80c99f9993e84"
+        },
+        "[\"ready\",0,\"NW\",10,\"front\"]": {
+          "row_sha256": "591f686cb1349a3cb12b10919881a09d47f863634396182e3ac6d3829be07d80",
+          "native_sha256": "48e9d934205bd29fec02bb4ae47c2b5751854c19ad2d095abc49e543234eb74a"
+        },
+        "[\"ready\",0,\"NW\",11,\"back\"]": {
+          "row_sha256": "f298a2c721fc66a47bd3085eed87751bd0809d1aa4a6850bd30e3c7e010694de",
+          "native_sha256": "8ed54b3d2d34be7d980f978d9f7ff79498173ff1be90b336d50151c63cb40ac7"
+        },
+        "[\"ready\",0,\"NW\",11,\"front\"]": {
+          "row_sha256": "ae01ba2a77eba51b0ef8bc12d767bcf2b6cb3eb7e3357265583a3ae080be9668",
+          "native_sha256": "8dc04207f92c62c66fea00b0e2f075c56022c551f8eca0a69af74e97c1e48814"
+        },
+        "[\"working\",0,\"NW\",4,\"front\"]": {
+          "row_sha256": "5b315f9fc0309e32012bb73b573348904ec18ad95ba4a7417f19572355a6867a",
+          "native_sha256": "f7225a0be90f44c48d2ac04128721b8d360a29ab2fd00af2b632e2f9ff9d53ee"
+        },
+        "[\"blocked\",0,\"NW\",4,\"front\"]": {
+          "row_sha256": "ef9790e8a4ed562e1550f5821308c10f3599e52d379062954657d1aa38f0a2f7",
+          "native_sha256": "f7b1021a9df7214b93a6fc4af69bdb424f4384076b55d86385eba8f4d346307b"
+        }
+      },
+      "logical_poses": 1536,
+      "canonical_images": 104,
+      "absent_logical_parts": 528
+    },
+    "vehicle.model-14": {
+      "report": {
+        "path": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/source-manifest.json",
+        "sha256": "80b21c00d0628d785110016e0f423a972e423eb15c397a57c2c33c964bc2ff40"
+      },
+      "qualification": {
+        "path": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/verification.json",
+        "sha256": "2be297ae69cafe8d5ded047cae44fbdf68df570da9462e4ab3fef22d7e482c11"
+      },
+      "atlas": {
+        "path": "logs/proofs/mlm/native-art/space/cargo-rocket-source-v1/cargo-rocket-authored.png",
+        "sha256": "61facc5c7bf2052ba2f33fd7d53ae6781abed1912756b5ed78f3c3902cddf560"
+      },
+      "source_contract": {
+        "asset_id": "vehicle.model-14",
+        "consumer": 9,
+        "kind": "vehicle",
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "frames": 2,
+        "states": [
+          "ready",
+          "preparing",
+          "ascent",
+          "orbit",
+          "recovery",
+          "blocked",
+          "service"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "footprint_semantics": "world_tiles",
+        "anchor": [
+          -32,
+          -32
+        ],
+        "bounds": [
+          0,
+          0,
+          64,
+          48
+        ],
+        "parts": [
+          "body"
+        ],
+        "geometry": "per_view",
+        "tile_variants": 1,
+        "palette": "dos_8bpp",
+        "transparent_index": 0,
+        "company_colors": "explicit_mask",
+        "preview": "purchase_family",
+        "animation_colors": "forbidden",
+        "source": {
+          "status": "authored",
+          "path": "media/multilayer/source/space/raw/cargo-rocket-ready-ne-v1.png",
+          "sha256": "05c8fe994bbeaff04f3ecd0c8a691dac60fff6d76c605e00a53ba5c6383ae04e",
+          "provenance": "first_party_original_builtin_image_gen",
+          "rights": "first_party_generated_original",
+          "composition": "whole_genuine_ready_hulls_with_qualified_axial_engine_parts",
+          "composition_recipe": {
+            "path": "media/multilayer/source/space/cargo-rocket-state-art-v1.json",
+            "sha256": "436bfc1960219de58bc5f0a0423c9cd01a772c10bf2b1aede8d1d2e6515049b0"
+          }
+        }
+      },
+      "definition_binding": {
+        "namespace": "MLVI",
+        "offset": null,
+        "sha256": null
+      },
+      "report_sha256": "ed5f25ddf951ded6df6634329b25dcac28474ccff0876ed220d945abea0ff05a",
+      "canonical": {
+        "[\"ready\",0,\"N\",0,\"body\"]": {
+          "row_sha256": "31b35c776685734428ba793b537a8f42060ee5da68cc447349c7b29a2a24585d",
+          "native_sha256": "cb4a35efe525992a7093fb7f20d245f021ff6700b9696bd79616ab069681b41a"
+        },
+        "[\"ready\",0,\"NE\",0,\"body\"]": {
+          "row_sha256": "2b830e62e8014545c596d6dccac9ad04caa1e434ed77a5caead0e37f70028bbf",
+          "native_sha256": "8cb8ce0cc6484b61d5465548d4cc848729f3f7d06413273e9929aa7c7d27ed7d"
+        },
+        "[\"ready\",0,\"E\",0,\"body\"]": {
+          "row_sha256": "a4bb5ab37433bdcece053c6dcb970c8deb960964d9c55d7b114dcecb6aa82137",
+          "native_sha256": "03ac216ece6bf83903a5bcc75b27c4d7ccd3c862f42bf761f63d88a2b559a0e4"
+        },
+        "[\"ready\",0,\"SE\",0,\"body\"]": {
+          "row_sha256": "c656bd89d6fa7546907c46804bcbd410ff7c5ee7d54fa558d4713ea763d45bc3",
+          "native_sha256": "b0bf33dfabbc812e0d002fa685f27ed7271de4503aef6b62495c0637b5e37221"
+        },
+        "[\"ready\",0,\"S\",0,\"body\"]": {
+          "row_sha256": "4b6633534fe07c04a874c0e50639d36a824be055e96ddcdc9d9fef7d4c139c16",
+          "native_sha256": "b16381cc01b116470655138456c4617256952543bbcc9342d3e90156c6854e68"
+        },
+        "[\"ready\",0,\"SW\",0,\"body\"]": {
+          "row_sha256": "d5c056cfeb189138bb1bed6983cab6e1b39516e252797a777b3b4a8e0906ed94",
+          "native_sha256": "be6b598e17a2c8d8c2b3c65e7f11e490a6e3c22212b93936d446460c07d69122"
+        },
+        "[\"ready\",0,\"W\",0,\"body\"]": {
+          "row_sha256": "870a7342ce6c14aabf2d886ffd3069fbff92e5ea80872efb762841ba36032687",
+          "native_sha256": "4e441f557f727febe3fbadf3744eada0376cc3c6837d1aa586b2bf5c5aef50ec"
+        },
+        "[\"ready\",0,\"NW\",0,\"body\"]": {
+          "row_sha256": "58db33608d6d0e47167062f6fc53cabb81477b386f13082ea2d87a069a48a605",
+          "native_sha256": "bf38a6071a9cd8fb1fffad1707fbdb5d80b71eba0d3dd66790f79b6f0cb9d6d5"
+        },
+        "[\"ascent\",0,\"N\",0,\"body\"]": {
+          "row_sha256": "72c4e4419d28cfd8902d7bdb2c54fe1325d4922c91876c5d02715245fc01c4a5",
+          "native_sha256": "ee0c14f3ecdc4f5c443a7901798e40800b8a19d8d266d31aa44747427bc40a34"
+        },
+        "[\"ascent\",0,\"NE\",0,\"body\"]": {
+          "row_sha256": "9eb8581b2d6ca5e7826dc7bc0c258640c9eb8566ece43303caab2bbd1f89e737",
+          "native_sha256": "a3f426ce87179de2a9d25c58989d1c4d0a568e8ad5312db96947837415f157a6"
+        },
+        "[\"ascent\",0,\"E\",0,\"body\"]": {
+          "row_sha256": "0b726765c51996c5dc3d50cc1adf970c7244ebc649622aeef334af49f40ee1dd",
+          "native_sha256": "2085796708868a05802f916798044824126fbb7bcc9b3e5b7c5eb1691e658eb2"
+        },
+        "[\"ascent\",0,\"SE\",0,\"body\"]": {
+          "row_sha256": "52532c0ff6ced52ab07839af22a0ad5af0c232bdf30a54a505286e0ce37b70a7",
+          "native_sha256": "a7cbd664584f3d326e1f881f17afa6dbe41fd4bbeb1990576cd036a29d7ee0e2"
+        },
+        "[\"ascent\",0,\"S\",0,\"body\"]": {
+          "row_sha256": "775dd76dbfb2e26c1ad9a603f36eb8a058915ffabc9d495c9462daedb77dc696",
+          "native_sha256": "519d1f467a152359791c8f6c4e713515ab8eb2317383da1ea0f74b5f46d59e00"
+        },
+        "[\"ascent\",0,\"SW\",0,\"body\"]": {
+          "row_sha256": "0481cabd78e58aaafbe111571fcad8bc750975a3ab7a8f7d617524944d48095e",
+          "native_sha256": "ae3101ead6ff629722e3e9026a2037d7482e5aaac2fc6bd16c9475f743925186"
+        },
+        "[\"ascent\",0,\"W\",0,\"body\"]": {
+          "row_sha256": "b66fb6e6e8970f889fe5f7404e69d3b0984b7ffff0863edf56293e69bc2af3b4",
+          "native_sha256": "e05ecaec75bafaded1fa3e5eaff51fca77dd0ed20dcaae9283e0f4bb861fd8f8"
+        },
+        "[\"ascent\",0,\"NW\",0,\"body\"]": {
+          "row_sha256": "fdd68f7db06f93288543666c2ecbd80765c7ca6b7ac89485f3280fee457700ca",
+          "native_sha256": "2fa8280a866282500acbe8a9d01ff33e2bfd076e204285c4ea10e820eee724d6"
+        },
+        "[\"ascent\",1,\"N\",0,\"body\"]": {
+          "row_sha256": "8821d86b5be643f8f8a3008f4ef6191310080ea9c90e743511fb7f2e6611db8b",
+          "native_sha256": "d5e206e6716cd98750a5f3b936d061285215f112f3ae726b474b9a1c3d87b0a1"
+        },
+        "[\"ascent\",1,\"NE\",0,\"body\"]": {
+          "row_sha256": "a08bc316da2b2bbdfcfa87e06d2b6b526767519756733aee544470cd38b140f8",
+          "native_sha256": "136a81267812ccfe893922d7cae35744e2e9a9b871cb0a5dbda4cb836cee268e"
+        },
+        "[\"ascent\",1,\"E\",0,\"body\"]": {
+          "row_sha256": "4df7a2e093d9b91b3f242b15fc1ee430a15842f80074740b973d89057604220b",
+          "native_sha256": "b01786b52b92a0069d976db9c78204d5783e42f33a225ba0b9d9e81cd7e17b8d"
+        },
+        "[\"ascent\",1,\"SE\",0,\"body\"]": {
+          "row_sha256": "30a8f611358b61629a33877a2059b7fdb9e6af9fe532ebe4fe3af76599e068c0",
+          "native_sha256": "4ee277f306439188053e2fa63f55b9e46dc5f1ed8bb3939788bed1536db53721"
+        },
+        "[\"ascent\",1,\"S\",0,\"body\"]": {
+          "row_sha256": "735c0cd3e06c6cf27faee7dcce6cd57297a7f1dbdff916020465f6ee90c62c6b",
+          "native_sha256": "a0243a707a127be7be565072b2d9f1d0beb7b59b78506e7b99757909c3dfb21a"
+        },
+        "[\"ascent\",1,\"SW\",0,\"body\"]": {
+          "row_sha256": "9c6d972ad51b4b05a90528a2b78eda46a4a93b65875a9341157dd83a9a1d9e5b",
+          "native_sha256": "5612b899890f141f3a21c136ca85417857d9d00d9a01c540d0c4487f0ae68453"
+        },
+        "[\"ascent\",1,\"W\",0,\"body\"]": {
+          "row_sha256": "d173d56f6d7b922673f5d2c30094fc980075cd696c26e90da72d6528e620a6f4",
+          "native_sha256": "52abb6299cf870d2529222cbad049d5ba67886d4c4bb6de5a09eda93b69f8348"
+        },
+        "[\"ascent\",1,\"NW\",0,\"body\"]": {
+          "row_sha256": "814cfccca3a371dc338f88e5d64d8b15418b34017aaea8f7babb85ecb0b1641f",
+          "native_sha256": "af98a8948cda81663c95728a764eb61478103850725136fa6f4cd44169d3c0ba"
+        }
+      },
+      "logical_poses": 112,
+      "canonical_images": 24,
+      "absent_logical_parts": 0
+    }
+  },
+  "protected_outputs": [
+    {
+      "path": "media/baseset/openttd/map_layers.png",
+      "sha256": "d3a93082ea33dda5759319a3833f86deca1fcf9119fcf2e6543d424f1420a4f1"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers.nfo",
+      "sha256": "d63a614b9c95412d218be6da253efe7dfbd35940f1e197d8ed069eb3bd38f5db"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.png",
+      "sha256": "5bb1311f5c4940eb4718aebcc496122bf3251aba38d46b1f4796a2a60a00c974"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.nfo",
+      "sha256": "47022818191e223e042c7893ca90cf17894dbb84b04ed2261c5d01194e554057"
+    },
+    {
+      "path": "media/baseset/openttd/space_preview.png",
+      "sha256": "913b6ab7e2b24f693b7974c6de10b9b1b390052d2fd6efc7a00358d64cc177af"
+    },
+    {
+      "path": "media/baseset/openttd/space_preview.nfo",
+      "sha256": "2f4b5c9b0ffe3f5954bd730e49c6e2060d556b6e008e27a382ac6fa5b0b3a472"
+    },
+    {
+      "path": "src/table/multilayer_sprite_assets.h",
+      "sha256": "fa96e23b1facf8221817bf1ee7f2ae58fa51ec2664ef13fba225132a68613a71"
+    },
+    {
+      "path": "media/baseset/openttd/space_final.png",
+      "sha256": "9cc86a28374e0cdfcb1d32cb758956bd53e05dc44cec4d7b407bc6b208f7ef96"
+    },
+    {
+      "path": "media/baseset/openttd/space_final.nfo",
+      "sha256": "2b54ca81a26eaccfb2ad4f4460f1624d58a45dd78a5d72499e5d59b006885284"
+    },
+    {
+      "path": "src/table/space_sprite_assets.h",
+      "sha256": "aaf332cf387c23bb74ac9f19a6373b2fde7d6ae95391ac4468d93e4e005a08a9"
+    },
+    {
+      "path": "media/multilayer/space-pack-scope.json",
+      "sha256": "4d94a6bf79e5e99fb8ee02167278f5ceb7601f8dcc69f9516fe2934c29ad2f36"
+    },
+    {
+      "path": "media/baseset/openttd/orbital_final.png",
+      "sha256": "d30c29e1b783c1753e35d4f2ac74a6928ace0f7b1b269f001219f79203cd6415"
+    },
+    {
+      "path": "media/baseset/openttd/orbital_final.nfo",
+      "sha256": "dd2a47b8e220ec09efffe60b24445d099cb7138ef25b1079e6fda5f89bf50876"
+    },
+    {
+      "path": "src/table/orbital_sprite_assets.h",
+      "sha256": "c57afb9a939deafbc54230c176f9b5a91e65e78028bcacca1fc8d2d30e964cad"
+    },
+    {
+      "path": "media/multilayer/orbital-pack-scope.json",
+      "sha256": "3c98e6a205bb2a85b88d69ad2a7767d31ffd58947b28923ad8e9b53a53dabe8a"
+    }
+  ],
+  "predecessor_payload": {
+    "path": "logs/proofs/mlm/native-art/space/launch-fleet-handoff-v1/predecessor-openttd.grf",
+    "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+  },
+  "predecessor_payload_original": {
+    "path": "media/baseset/openttd.grf",
+    "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+  },
+  "prior_public_ranges": {
+    "terrain.underground": {
+      "namespace": "native_map_layer_extension",
+      "offset": 74,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 74,
+      "sprite_count": 12,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "terrain.deep": {
+      "namespace": "native_map_layer_extension",
+      "offset": 86,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 86,
+      "sprite_count": 12,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "survey.COAL": {
+      "namespace": "native_map_layer_extension",
+      "offset": 98,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 98,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.COAL": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.IORE": {
+      "namespace": "native_map_layer_extension",
+      "offset": 101,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 101,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.IORE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.CORE": {
+      "namespace": "native_map_layer_extension",
+      "offset": 104,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 104,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.CORE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.BAUX": {
+      "namespace": "native_map_layer_extension",
+      "offset": 107,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 107,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.BAUX": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.SALT": {
+      "namespace": "native_map_layer_extension",
+      "offset": 110,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 110,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.SALT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.LITH": {
+      "namespace": "native_map_layer_extension",
+      "offset": 113,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 113,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.LITH": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.NORE": {
+      "namespace": "native_map_layer_extension",
+      "offset": 116,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 116,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.NORE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.COBT": {
+      "namespace": "native_map_layer_extension",
+      "offset": 119,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 119,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.COBT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.RARE": {
+      "namespace": "native_map_layer_extension",
+      "offset": 122,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 122,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.RARE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "survey.URAN": {
+      "namespace": "native_map_layer_extension",
+      "offset": 125,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 125,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "mine.URAN": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-00": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 200,
+      "sprite_count": 384,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-00": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 584,
+      "sprite_count": 2,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-01": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 586,
+      "sprite_count": 384,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-01": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 970,
+      "sprite_count": 2,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-02": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 972,
+      "sprite_count": 80,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-02": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1052,
+      "sprite_count": 2,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-03": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1054,
+      "sprite_count": 80,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-03": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1134,
+      "sprite_count": 2,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-04": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1136,
+      "sprite_count": 80,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-04": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1216,
+      "sprite_count": 2,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-05": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-05": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-06": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-06": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-07": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-07": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-08": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-08": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-09": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-09": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-10": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-10": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-11": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-11": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-12": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-12": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-13": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-13": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "purchase.model-14": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-15": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 3599,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-15": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-16": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5295,
+      "sprite_count": 80,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "purchase.model-16": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-17": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5375,
+      "sprite_count": 160,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "purchase.model-17": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "vehicle.model-18": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 3951,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "purchase.model-18": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.portal.sealed": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1218,
+      "sprite_count": 48,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.portal.deep-rail": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1266,
+      "sprite_count": 48,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.exchange": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1314,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.rail-station": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.road-terminal": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.rail-service": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1442,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.road-service": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1570,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.earth-receiver": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1698,
+      "sprite_count": 192,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.rock-receiver": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 1890,
+      "sprite_count": 512,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.metal-refinery": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.chemical-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.battery-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.electronics-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.component-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.robotics-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.mirror-kit-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.solar-farm": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.nuclear-plant": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.tube-terminal": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.tube-service": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.tube-interchange": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.vent-collector": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 2436,
+      "sprite_count": 1152,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "facility.vent-powerhouse": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.magma-powerhouse": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.heat-smelter": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.heat-battery-works": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.mantle-forge": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "facility.utility-riser": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.straight": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.bend45": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.junction": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.end": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.crossing": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "tube.conduit": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "geothermal.vent": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "geothermal.conduit": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "module.nucleus": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5535,
+      "sprite_count": 144,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.dock": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5679,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.storage": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5743,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.workshop": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5935,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.processor": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5999,
+      "sprite_count": 144,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.power": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5807,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "module.fuel-store": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5871,
+      "sprite_count": 64,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    },
+    "asteroid.nickel": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 4015,
+      "sprite_count": 384,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "asteroid.ice": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 4399,
+      "sprite_count": 384,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "asteroid.rare-earth": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 4783,
+      "sprite_count": 384,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "solar.mirror": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "control.survey": {
+      "namespace": "native_map_layer_extension",
+      "offset": 128,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 128,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.excavation": {
+      "namespace": "native_map_layer_extension",
+      "offset": 131,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 131,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.tbm-area": {
+      "namespace": "native_map_layer_extension",
+      "offset": 134,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 134,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.tbm-turn45": {
+      "namespace": "native_map_layer_extension",
+      "offset": 137,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 137,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.exchange": {
+      "namespace": "native_map_layer_extension",
+      "offset": 140,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 140,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.mine": {
+      "namespace": "native_map_layer_extension",
+      "offset": 143,
+      "sha256": null
+    },
+    "control.space-build": {
+      "namespace": "native_map_layer_extension",
+      "offset": 146,
+      "sha256": null
+    },
+    "control.launch": {
+      "namespace": "native_map_layer_extension",
+      "offset": 149,
+      "sha256": null
+    },
+    "control.tube": {
+      "namespace": "native_map_layer_extension",
+      "offset": 152,
+      "sha256": null
+    },
+    "control.geothermal": {
+      "namespace": "native_map_layer_extension",
+      "offset": 155,
+      "sha256": null
+    },
+    "control.deep-lock": {
+      "namespace": "native_map_layer_extension",
+      "offset": 158,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 158,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "control.future-lock": {
+      "namespace": "native_map_layer_extension",
+      "offset": 161,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 161,
+      "sprite_count": 3,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "overlay.orbital-drop": {
+      "namespace": "native_map_layer_extension",
+      "offset": 164,
+      "sha256": null
+    },
+    "overlay.surface-collection": {
+      "namespace": "native_map_layer_extension",
+      "offset": 166,
+      "sha256": null
+    },
+    "cargo.CORE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.BAUX": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.SALT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.LITH": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.NORE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.COBT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.RARE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.URAN": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.ERTH": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 2402,
+      "sprite_count": 1,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "cargo.ROCK": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 2403,
+      "sprite_count": 1,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "cargo.RFMT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.CHEM": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.BATY": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.ELEC": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.PROP": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.SCMP": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.RBPT": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.SMIK": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "cargo.WICE": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "terrain.edges.underground": {
+      "namespace": "native_map_layer_extension",
+      "offset": 168,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 168,
+      "sprite_count": 16,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "terrain.edges.deep": {
+      "namespace": "native_map_layer_extension",
+      "offset": 184,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 184,
+      "sprite_count": 16,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "terrain.hardness": {
+      "namespace": "native_geology_append",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 2404,
+      "sprite_count": 16,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "terrain.hardness-edges": {
+      "namespace": "native_geology_append",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_action5_1c",
+      "native_offset": 2420,
+      "sprite_count": 16,
+      "source_payload": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-19": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 3727,
+      "sprite_count": 96,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-20": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+      "route": "native_baseset_space",
+      "native_offset": 3823,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/space/packed-space-manifest.json",
+      "payload": "media/baseset/openttd.grf"
+    },
+    "vehicle.model-21": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null,
+      "route": "native_baseset_orbital",
+      "native_offset": 5167,
+      "sprite_count": 128,
+      "source_payload": "logs/proofs/mlm/native-art/space/orbital-packed-manifest.json",
+      "native_payload": "media/baseset/openttd.grf",
+      "native_sha256": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6"
+    }
+  },
+  "prior_public_rows": {
+    "terrain.underground": "ca80c41c0fb6c004d72cddbe5b8aa70ca89f43f0b44d5f9b26fa9ef29f8cda3f",
+    "terrain.deep": "16d65300f5240bbfcf6dbabaeac6b1cbf590647f26863da14e4e34c9603d6646",
+    "survey.COAL": "c32f5fc656c1c8186d1214e5c2bb97b9497a4177465bafbd73ef2041cb057214",
+    "mine.COAL": "17fb3306f05f1d00cf3c98e8f6e1990539ec6597ae4757705068b31e59b91c27",
+    "survey.IORE": "01761742edacfc679ca9eedfc7c3dbf90af5a1c48954fea5cc7bbd41fb44ac36",
+    "mine.IORE": "2fd21c20ee97d1f812a5f48c4a34397cd5a60263f6f076e02eb20e278239dec1",
+    "survey.CORE": "d3bfefd4d3c2d39bfde2c982bb0699ea133aa27c07f733cdbbafd30df8558c74",
+    "mine.CORE": "5b51ac4232792b18d375c231b9a5e167112e4c2cb15c7a451dd91ecb45a834f7",
+    "survey.BAUX": "9845faedebc08ee3eca6e810968a7d773fe73c3c10f44d61ba76d19c57114f89",
+    "mine.BAUX": "5936996944f201e772ba4126c67fdfe055179e06baa8336eb232729c432ad76f",
+    "survey.SALT": "90e358ad6d97da97e5631754e106c482a870f32b14098fbaa50ec606fc660d4c",
+    "mine.SALT": "34189be3f9b4b3236261ed90451424c1d278debcf6b81e49c075d5ae4e5af2e4",
+    "survey.LITH": "5154859e60aa667bcbd429a711afe04f51465218ab9fe1e7efa1a97cf46e5fd1",
+    "mine.LITH": "b53863e58d7ccce4561ae6e02469417edd6a9dba5917a39848c18287fe52ce2e",
+    "survey.NORE": "3708ccb45b7ef5e55363c542476f063402fcb7635ed9f403c93ca1fed46e4ced",
+    "mine.NORE": "ba3afb386014927ac8e16e5fb4cf56671a676eb0d98dcf7891564f3c3026f1ee",
+    "survey.COBT": "49243c738738c83ab7a7207c75135b62e298dd86bd0f672caf541f37273f14af",
+    "mine.COBT": "ad36d88218e5935e28ca7e9fae545bb4e2221dd6200092f497ab52bf15bbb8de",
+    "survey.RARE": "35f9b2003d7f6e3d899f212e9c7e7b20b66b649745c25c1542764fcc421345a0",
+    "mine.RARE": "339bc1ee69674aa34ab1892193adbb2b97fe27a027ebe4e4c86a58b408f2829c",
+    "survey.URAN": "aedc4406e0f2d7a0c22be736ccb9aec7f49fd5a4d6ca914bc45d00c9cfb8c435",
+    "mine.URAN": "91bb1dcd1c1b70497222c4ef967b1d4f1dbe99bc02c432cd3dbf0287c7b80873",
+    "vehicle.model-00": "5910df1c9c18e3bef8faceab9b539652170a787fa37d749784a0c9d85b1c0ccf",
+    "purchase.model-00": "0fe59115aba96aa0110ae7402a826e0b56b821c8d2f78f32c85f1237af5272b5",
+    "vehicle.model-01": "955d6560352b5afefa5838289e2b1a65403c75beaf829e92334850b795e84465",
+    "purchase.model-01": "3211e54596302ec9389a8f719362abdfcc4d751321371686a5ff57c834c296eb",
+    "vehicle.model-02": "20f39a3c035cb8d81131794eee35f80d17934449d460b77e0f4766256ec3fd7c",
+    "purchase.model-02": "28fed705ca61fc74b0f197c7bd8091b812453d827e068db9fa86038d4e4379ef",
+    "vehicle.model-03": "c801a75f554ce885ba5f07e3c82db1b7a8f329c6441cf75b2826fed78c98f4f9",
+    "purchase.model-03": "6a9ca3690c36354a85863bcadb924db33d47ad7045ffe9edf18648ec5edb1f55",
+    "vehicle.model-04": "845dd6780bcf5f3ad587dc67c3b4666c7f3224b026262642069b94990e76df87",
+    "purchase.model-04": "f0e766254f7613287663c6baeabb5baea57c39f699b8c0b3af1d3d34afabce8c",
+    "vehicle.model-05": "89e5f31263324844373c538d8a9a1afa5195ae1c5d9f0d212ebdd06cd5f49540",
+    "purchase.model-05": "03bccfa67f1451d4da54f6973b2079e2cc281a0c0f47243a28bb8358113a4804",
+    "vehicle.model-06": "0d5d7d973f108309d20e942c99609c36fd740cc36f6147941d7f2cc34a150318",
+    "purchase.model-06": "d4192961e88a3c4f21a7fdd46fe246d4fd0d624fa428612b5167ccdd68b54a60",
+    "vehicle.model-07": "0a935b8f55b2b41ec507250d2c6a5b744d79d1ffbc54562434356b31a21eea31",
+    "purchase.model-07": "3a003ae9b36918dab9a2912b4f2e0fbc1625280f643bdf211017f1b9cabdd8b3",
+    "vehicle.model-08": "442d049209c5fa29f5f396073ff84be4323abbee8c2c2a5daf6d371e7a089c18",
+    "purchase.model-08": "4b0e08058bf9857ad750c96159ef678cd59e26efe63863cc13d220cd1a756ff8",
+    "vehicle.model-09": "eee45bfc680b0da31b52a8eb7f541aa35f77329994bf9bbf4cbc75f1a4ee0103",
+    "purchase.model-09": "d69f421cace21346ce2b19c6c73baf00dd32317bcb0a233d6dc24328dcaf7c4b",
+    "vehicle.model-10": "7fe724758ff0c38685405dbe0dc9bcdadf3e6e75a6c6c6ab2d9999056481bb93",
+    "purchase.model-10": "c4e7bc610e7159a2da6fb8141058ee613716ce69ac33c4fa459276316e279909",
+    "vehicle.model-11": "bd12509b157d2a885caca35b5fb25a0c214c75f024542ecb139e9847e2381340",
+    "purchase.model-11": "24f5f4db8a8468033f4b879edeb77e4676236de1488d72fa8fe507a709488601",
+    "vehicle.model-12": "368f72b9a4ec3484fec6c3ba2fbed04cb80b80b357fa59ef7241c6061508a636",
+    "purchase.model-12": "25bdfe291cad239ac26d7d1a1bfce41ac4f1a45e0c5e7c08ed235c45bcaf63a6",
+    "vehicle.model-13": "e2521940cfa96bc50ee935e4f414518df9b196c65481cea38f8c707f84fb2367",
+    "purchase.model-13": "e26f2e8b0afa9f88598d2c6d2535b7198387e4c4cbc7c95258ab5a73c5224f50",
+    "purchase.model-14": "4cb4e45309b795ab1372b1864934387759f23fb894829d5dbc03744d6cc5f61b",
+    "vehicle.model-15": "d957b8982057dc8ef276150c74504de65eb1617d81fd2e3d2862c934f7338969",
+    "purchase.model-15": "68c4d4f7a22ea835580b6fb3fc98f291389427c5a9f7d2c11d91b9594b7bd3e0",
+    "vehicle.model-16": "b564ef54fe76e26d4dd38792ace019981f82343a0821fda67e25602b7f581099",
+    "purchase.model-16": "06692d62ea009595e0a7f13d1bff1dac62a743b8babd5f403465f70b44f2e82a",
+    "vehicle.model-17": "dcc5de1f433fad4f29f6b90d7bf2ff954c71f4ab8b23b669b0ab9656d5fbd0a1",
+    "purchase.model-17": "91ac1020170f43233e3e87fed66ab44c4a872e67610412cc18602dd2efe3e516",
+    "vehicle.model-18": "135c2e8c80ff097b13e9984ef8c3036a4c5b897ba7feead36804d9cdecc9dd57",
+    "purchase.model-18": "eaa7c82598275d7d1d4ae2a5f70c158e5cfe2a461ba47a0fd2b97ea2e218dd64",
+    "facility.portal.sealed": "87c6e95d01a8f15fad56fbb546344d6b21d0e60389683eb0b1243838aa2f5a40",
+    "facility.portal.deep-rail": "ef4e6a8bc2b8983e1a1b2c75a7151ae41221208b24fb9ae9ffdac946e1541140",
+    "facility.exchange": "aa3a620639c0baf7eba7df4a3f2e2443ec3795b591cf81e5ca9f11e19970d092",
+    "facility.rail-station": "34c59efc95268ed17f057288c96fa1e18c18b820ae7570f25c42a065f972ad9e",
+    "facility.road-terminal": "20c7974886305e8b27dedbd7dce2a80111330dc76abf6f0001ca697e271914bf",
+    "facility.rail-service": "e6c06e08d7e63f7044305964536c1e02c269bfcc73945c52041e8fae95a0bb05",
+    "facility.road-service": "58b8ea429b5d4f0df79c7f5c1ea1cdf64841dfae58110a4058b1972bde3b7579",
+    "facility.earth-receiver": "7a677edfe988a1a60d437b62b77422438c73a180c1d0089eaf72d8af09621bc5",
+    "facility.rock-receiver": "462863f1e7290f5b1df355f2c8aeb1e1ce30522606e2f39277a3a90a118c64c9",
+    "facility.metal-refinery": "86e9f6cbaa3cca18434c7ea99c45d8630c4a185450493dc3726cf9d20d36783c",
+    "facility.chemical-works": "bdcd1ce6327c525947d3506b6e655ef3edd48ffe65a4bcdf6621dee7732b0111",
+    "facility.battery-works": "1531324a7b5d195db20a019c44682344b25b5562941c9a5b790556a88e82d9b9",
+    "facility.electronics-works": "871cfe3bf00d6e2cb91225e6985d21da6c588cdd538fc30c2ef61d47b70a07a0",
+    "facility.component-works": "95fe3e7aab4d73f14827b3c3651eb61ea229de9dd4885d1e5f97b1b03af4c96d",
+    "facility.robotics-works": "46267385dc9a66b347411b366c34661373e5a1f78fa9b909eea4bf250d4b74be",
+    "facility.mirror-kit-works": "96af877a8abf63d2515629e4afcb812a80f9c894372430098f321fab9692381e",
+    "facility.solar-farm": "8b19dbbebe351a29326cf7736dd9e6d88f6f547dbfcf06d46a9dac8dcf57e738",
+    "facility.nuclear-plant": "eaf8bda85a07debd64ec7cf9e8bf42fa43cd8211dcc6ae1992b6a9f5b3747a9a",
+    "facility.tube-terminal": "54564f79e3f82e16d95332ba74e60e2a0262bd4158f60a32f17b6b524f858ff5",
+    "facility.tube-service": "e087f1f5b0f3b8a1c19c7a1093381c7655d7f8ad8ca32013d39aa2aa57c8db34",
+    "facility.tube-interchange": "383101d41afe9acff9aec0f433c79a05e973567f87ebacce0462ba9d96d5014f",
+    "facility.vent-collector": "21caaa70fd207d9a2a14fdd8d5b60022825c8312ef053a9b1058eb5c3b9feff4",
+    "facility.vent-powerhouse": "3c0871ab65cbef2b68c6c30e4e4c8be5d2ff11a9d60610fd1994bc4b6e0d1857",
+    "facility.magma-powerhouse": "18bea8c706f449c28ba9585c0e67422a24d14558d9557c01db2501704d3163ce",
+    "facility.heat-smelter": "6e2b2e319afbc8a9377313552a3d04616dd2fa37e4a758f99ff7d545e41edef0",
+    "facility.heat-battery-works": "7618ec02245f38928ffe01b022d89818aa4c47694925d5c72f8d2ef8c1e78ab9",
+    "facility.mantle-forge": "e026bfe5a8fe0f1945368e6bd577eb8d584e590ae239c6d5380a92bfb3cacec8",
+    "facility.utility-riser": "1c767908b5a7966f5138b02ba653bcfc6a702a0133dba33e5276c1b6392f8e09",
+    "tube.straight": "a47629b8c06b47752f7f740c9acded53173b084aec3a4fe7b66b622409ce6a7f",
+    "tube.bend45": "c611b3eaa23c533b3729950074233f95f1f619f63f6b7b30f678b16b56695541",
+    "tube.junction": "68f2b618bf6e726aff1c20e5879a8bf61c0115d0a8db186b7322f5e5c820ce91",
+    "tube.end": "5ad193de12ae33a2f3e04edb76f31e83c1b51e4220087a08524163490d9450db",
+    "tube.crossing": "16be6ebf7e765f64c7fdf4682deba2dcde095617a563315a5f582213792a1ae1",
+    "tube.conduit": "7b7b1ff5887671feab10b90dc400de86691c56860b017886a7406688404fd4a7",
+    "geothermal.vent": "1f1718a439f99a6ce2687cb718d3875339ccad13e231d15be75cbba703ec3fd2",
+    "geothermal.conduit": "c8d7cf8e346215d528901dcc7e2a22265fd55310cd8715ef8abc9889da98a0ba",
+    "module.nucleus": "c7fd0676e4a8f9be223e735957d35f2ae40728f76099f0e551ec1dcf5c5c6d89",
+    "module.dock": "cb891380304537e926665ef614043c6a9c5d125e1bfb646f981c7133153f82ae",
+    "module.storage": "7567653a9f61476ccf4101a72f4f37317bf7a7d62614f6102bebec1dafc95c04",
+    "module.workshop": "47d84aa647246108529e72848cfa67929565478275348c55dfd2b465c77eac24",
+    "module.processor": "e5402a2c48ac488407833ff19e2003cfe633854f71d1bdcc550583f21e9d5a62",
+    "module.power": "50dbe20d3432fcba29fc52ca3e0b036ec91d342399ba06109b38038244fa3965",
+    "module.fuel-store": "bfc40a499eed4d8ab6f28ea3107c746af0b6b7e168e5488b937b63e28acf1bb8",
+    "asteroid.nickel": "8565bb5e602d92d2b36629b05dbbfacd5b1380ad1bb79e01afedb0bad8693d59",
+    "asteroid.ice": "b97d6878ad59f18c1de6aa9d23856d8a52c4725355b60fe1ee3451fa22690ae6",
+    "asteroid.rare-earth": "1f5518489c76c695c551e2b3e4961739a082b1a962a5dbf7cecb39c311cbcda2",
+    "solar.mirror": "2277091efbdb4d846753f80ddba23dce46c5d789032da3602142c6bc1c1e3b89",
+    "control.survey": "1fb3d963827ba2bdc2bf6fdbf6df1945a553a806d173e5d577875250ddcacfaa",
+    "control.excavation": "8e72920e94296db16ccede89f0240dbed618e8b430738b4b9ec99c6aa6185085",
+    "control.tbm-area": "0ba1dc71d12e31eb01774d9ccad99c8cbb4e103820eadefb68cb716ec157683b",
+    "control.tbm-turn45": "acdf7bc642247e311d21651f067395ea7cad1ec89cc54c888b3bb6e8d9f6f5c1",
+    "control.exchange": "f16c9246fac8634f32bfe4fadc0c1dc9a654eaef62d7eb860d372058a548ea00",
+    "control.mine": "8eacec1225d5cbed774e227b36c1d5aa0a8ef4d12121f82bf9bb6eecb32b67f2",
+    "control.space-build": "72659da019ac6cfe856f0c01698f493e706cb88fa201ab63672eab550253941d",
+    "control.launch": "60f3dfc39b4b0ddbddf42cc2ebe8d447152c72158470772416c4c0833918bb39",
+    "control.tube": "81b3a8d7215b73c9543641f828b5595b465da4d7f55d7ff26d431119599cbdc8",
+    "control.geothermal": "89f934c9e69e7b0921abce6392de1aa0d3458091ab60c16f7d804c754ed28f07",
+    "control.deep-lock": "0e261e2781b898ebb79a5db1ee18193c639299ed1015a25c508a275bc5496a7d",
+    "control.future-lock": "1df17fd1b7eec0a29df75c80d2a5d8f8fea093a09ce5e95b1180a2200ba99eac",
+    "overlay.orbital-drop": "da1e8c996b23bb66dcf123ac0853b83246a1f62eb01f404338cd4c279f7cb780",
+    "overlay.surface-collection": "eaa39c7c57e478ab8b6404b1bbe06e03ca4cca62d71f4894f3bd37e94c5dc024",
+    "cargo.CORE": "acddf4b9d14c4010c20f4c60ffdebcf1f0141b13fb948ce2996eb55bb02eb8a6",
+    "cargo.BAUX": "d1643ce46e0de7c7d18081e57efa0a56748eda074e58f4e71f12986f38ab726c",
+    "cargo.SALT": "fdcdf78d9069a7e5cca096c6180621d3595c1aa30aaff95b3f6cabc7a6ae4235",
+    "cargo.LITH": "1906ab04153bcce823d236fbcde704fec8853180c07792af6dcc64d34848eeb5",
+    "cargo.NORE": "cad08ffe8d7b12deacf010088a2f32d2908baffb0ee0de2c909d5e1cdf6a5668",
+    "cargo.COBT": "a41327f8aeb60fc2286745ed8fd18d84fabf9e2e6dffadd21643a5a375695f8e",
+    "cargo.RARE": "93d4e8222cb4ba466370052d2ee54928cffb244dd82e88a7da4e404f3dbaef57",
+    "cargo.URAN": "3c1bb768a6b7faba3e6c0042722aa937ef2e6e3f23eb30af096d341e81672891",
+    "cargo.ERTH": "d0976a22e514064d8d379736ef1118088635705fc0b261cc90ea97eabfc13ed6",
+    "cargo.ROCK": "89556d913102d4a1fbcd5fa989689df11925370058c0d511f5ca9d35d1605868",
+    "cargo.RFMT": "9058ac468232fbe0001e597d626f14c5f43e52fc19bdd651f3e4686341bfc22f",
+    "cargo.CHEM": "cbd9a28d6a5007ff00149a2adec617748471521fe8b919da107c5714366e52d5",
+    "cargo.BATY": "f2375e9b45383a697088bd9d5cd42ca8eb8eb88c452686e7fcb2a8f8534d9df6",
+    "cargo.ELEC": "c6b02d576d1a99985444826b2cf02305fcc8d2a18a7b68a3fd2c7f0845256087",
+    "cargo.PROP": "ca309fff95e4148a07483fca8d06d7e1a743157ac18b01bae9670ba4133148d2",
+    "cargo.SCMP": "464b22e74d79e2aaa5bba53c696374fe7342b5ecd6491429272de8264f19f074",
+    "cargo.RBPT": "bd2d0e7d65a7d0f866d679d3db14e9ee5678c6185f46aefab75de0ead9fa4aa9",
+    "cargo.SMIK": "075abf17456a4c8a44e0c97d24a3510c622544e543957edf6c86cb67c58b6e0b",
+    "cargo.WICE": "99e33334e24f8800d6b616e5d973179f069ea024c85141602505c676c68a5be7",
+    "terrain.edges.underground": "eec32fe7f6d65981ef9faf15dcb2cdd699ba2f2d6d8fcdac06e0291e36621cd2",
+    "terrain.edges.deep": "d741d9331ce88ab9814bba43bf08a576f8c8037f9ac9d1db0fa040fec939ecc1",
+    "terrain.hardness": "d8a8997b2e70b0a48eba2386f8502089868fd044d4d256df76d581d26bbbfb60",
+    "terrain.hardness-edges": "0ecbffb072040e2e6cd7bd3415f06ef641c2a1034ef45af8a8f01011d752cda8",
+    "vehicle.model-19": "6d2af29bdf2f0d4e9d422f22bb3114032d5ce955831ebc19cb9a2d68bf7cac6b",
+    "vehicle.model-20": "f8cc7f01ae24fdd5719398136eed76880ea9960b42222b347bbf4b28f3f44d03",
+    "vehicle.model-21": "82f78c283779ed2d186b8d3dc07d0b62f285acc9d01318b0908e4869ccff460f"
+  },
+  "public_envelope_sha256": "299c313ad8539c55ae6c10f510a84e76ceb9b9845116df7a73c00c7693ee523d",
+  "candidate_count": 278,
+  "candidate_prefix_sha256": "d4374b3052305db23d7d8091b39c95b655ca48d57766fa86e668a2e61e8a0de3",
+  "exclusion_count": 30,
+  "exclusion_prefix_sha256": "998f6ebad00f314ab6e8964f58d53b78175d60af3838b319019e957c8c415e15",
+  "authoring_native_evidence": "historical_qualified_before_runtime_changes; current_native_compatibility_required_separately",
+  "packed": false,
+  "runtime": false
+}

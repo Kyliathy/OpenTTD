@@ -1,0 +1,24 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62C.3; immutable selected genuine W original/native pixels. Never regenerate accepted expectations.",
+  "candidate": "cargo-rocket-ready-w-v1",
+  "direction": "W",
+  "generation_receipt": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-w-v1.json",
+    "sha256": "75d0b4b8be99687eccc20b95d8a5cad516f0fd8d995a006fe9642531c3eecb53"
+  },
+  "original": {
+    "path": "media/multilayer/source/space/raw/cargo-rocket-ready-w-v1.png",
+    "sha256": "7e0862efa5e54e493ba20b66bdab289e4085f36337b4f04fcf4faa97a20af1b9"
+  },
+  "registration_sha256": "139302ac1dc0de0a5ffe00898c0a2d0898f8bd12602b1e8b7cd1eefc7f2f5c00",
+  "native_pixels_sha256": "4e441f557f727febe3fbadf3744eada0376cc3c6837d1aa586b2bf5c5aef50ec",
+  "native_subject_bounds": [
+    17,
+    2,
+    46,
+    37
+  ],
+  "nontransparent_pixels": 454,
+  "yaw_from_ne": 225,
+  "service_face": "service/access face at left tangent, nearly edge-on"
+}

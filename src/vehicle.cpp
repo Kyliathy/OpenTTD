@@ -5,12 +5,17 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file vehicle.cpp Base implementations of all vehicles. @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file vehicle.cpp Base implementations of all vehicles.
+ * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB; read-only Surface rocket presentation and selection.
+ */
 
 #include "stdafx.h"
 #include "space_vehicle.h"
 #include "space_approach.h"
 #include "space_transition.h"
+#include "launch_facility_sprite.h"
 #include "transport_tube.h"
 #include "error.h"
 #include "roadveh.h"
@@ -855,6 +860,10 @@ void Vehicle::PreDestructor()
 	// pool identity can be reused by a newly purchased/replaced vehicle.
 	if (this->type == VehicleType::Train) RetireTubePowerVehicle(this->index);
 	if (CleaningPool()) return;
+	// Surface rocket art can remain visible while the native controller keeps
+	// Hidden custody. Invalidate its old screen rectangle before destruction;
+	// base fields suffice after a derived owner has released operational slots.
+	if (this->type == VehicleType::Space && this->vehstatus.Test(VehState::Hidden)) this->MarkAllViewportsDirty();
 
 	/* A deleted train part leaves the TBM stores at once, so a reused ID never joins a set, assignment, project or pair. */
 	if (this->type == VehicleType::Train) OnTBMTrainPartDeleted(*Train::From(this));
@@ -1172,11 +1181,12 @@ static void DoDrawVehicle(const Vehicle *v)
 		if (to != TransparencyOption::Invalid && (IsTransparencySet(to) || IsInvisibilitySet(to))) return;
 	}
 
+	const auto art_bounds = GetLaunchCraftArtBounds(*v); // Qualified rocket contact; original sorting extents remain unchanged.
 	StartSpriteCombine();
 	for (uint i = 0; i < v->sprite_cache.sprite_seq.count; ++i) {
 		PaletteID pal2 = v->sprite_cache.sprite_seq.seq[i].pal;
 		if (!pal2 || v->vehstatus.Test(VehState::Crashed)) pal2 = pal;
-		AddSortableSpriteToDraw(v->sprite_cache.sprite_seq.seq[i].sprite, pal2, v->x_pos, v->y_pos, v->z_pos, v->bounds, shadowed);
+		AddSortableSpriteToDraw(v->sprite_cache.sprite_seq.seq[i].sprite, pal2, v->x_pos, v->y_pos, v->z_pos, art_bounds, shadowed);
 	}
 	EndSpriteCombine();
 }
@@ -1229,7 +1239,10 @@ void ViewportAddVehicles(DrawPixelInfo *dpi)
 					continue;
 				}
 
-				if (!v->vehstatus.Test(VehState::Hidden) &&
+				// Exact admitted Surface rockets share the ordinary native viewport
+				// path while retaining Hidden for simulation/custody. All other
+				// hidden vehicles keep their existing presentation behavior.
+				if ((!v->vehstatus.Test(VehState::Hidden) || IsLaunchSurfaceCraftArtVisible(*v)) &&
 					l <= v->coord.right + xb &&
 					t <= v->coord.bottom + yb &&
 					r >= v->coord.left - xb &&
@@ -1316,7 +1329,10 @@ Vehicle *CheckClickOnVehicle(const Viewport &vp, int x, int y)
 					v = v->hash_viewport_next;
 					continue;
 				}
-				if (!v->vehstatus.Any({VehState::Hidden, VehState::Unclickable}) &&
+				// Picking uses the same Surface admission as drawing, plus the
+				// original Unclickable and layer/rectangle rules. No second actor
+				// or cross-layer selectable identity is introduced for a rocket.
+				if (!v->vehstatus.Test(VehState::Unclickable) && (!v->vehstatus.Test(VehState::Hidden) || IsLaunchSurfaceCraftArtVisible(*v)) &&
 					x >= v->coord.left && x <= v->coord.right &&
 					y >= v->coord.top && y <= v->coord.bottom) {
 
@@ -1773,7 +1789,8 @@ void Vehicle::UpdateBoundingBoxCoordinates(bool update_cache) const
 	this->sprite_cache.sprite_seq.GetBounds(&new_coord);
 
 	/* z-bounds are not used. */
-	Point pt = RemapCoords(this->x_pos + this->bounds.origin.x + this->bounds.offset.x, this->y_pos + this->bounds.origin.y + this->bounds.offset.y, this->z_pos);
+	const auto art_bounds = GetLaunchCraftArtBounds(*this); // Match the real draw contact for native picking and dirty rectangles.
+	Point pt = RemapCoords(this->x_pos + art_bounds.origin.x + art_bounds.offset.x, this->y_pos + art_bounds.origin.y + art_bounds.offset.y, this->z_pos);
 	new_coord.left   += pt.x;
 	new_coord.top    += pt.y;
 	new_coord.right  += pt.x + 2 * ZOOM_BASE;

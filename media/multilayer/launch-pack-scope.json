@@ -1,0 +1,33 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62I; append qualified launch/fleet art through the existing native base-set route, preserving all prior decoded pixels/anchors and saved MLVI definitions. Native compatibility and actual game review remain separate62J gates.",
+  "schema_version": 1,
+  "asset_ids": [
+    "facility.launch-center",
+    "vehicle.model-14"
+  ],
+  "native_route": "native_baseset_launch",
+  "native_start": 6143,
+  "native_end_exclusive": 7791,
+  "source_handoff": {
+    "path": "media/multilayer/source/space/launch-fleet-source-handoff-v1.json",
+    "sha256": "0c57c404169fb45a627c8dbbceabfc5fd44bc2cc361a4aa790467dbf37b97c67"
+  },
+  "source_qualification": {
+    "path": "logs/proofs/mlm/native-art/space/launch-fleet-handoff-v1/verification.json",
+    "sha256": "9ad38458393c22610131b501f1cfee0ae455e521a8cf215f06df53a1e1c7b964"
+  },
+  "toolchain": {
+    "python": "3.10.0",
+    "pillow": "12.3.0",
+    "grfcodec": "6.2.0",
+    "nforenum": "6.2.0"
+  },
+  "sheet_width": 2048,
+  "sprite_gap": 2,
+  "png": "media/baseset/openttd/launch_final.png",
+  "nfo": "media/baseset/openttd/launch_final.nfo",
+  "header": "src/table/launch_fleet_sprite_assets.h",
+  "report": "logs/proofs/mlm/native-art/space/launch-fleet-packed-manifest.json",
+  "qualification": "logs/proofs/mlm/native-art/space/launch-fleet-packing-v1/verification.json",
+  "definition_policy": "Keep existing definition-local namespace/offset and every prior native route/range. Only new route/native_offset/sprite_count/source_payload fields stage this append. Actual GRF decoding qualifies checksum publication separately."
+}

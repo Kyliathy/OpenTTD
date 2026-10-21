@@ -1,0 +1,157 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61EA; immutable visually reviewed original foreground masks and separate diagnostic visibility counts. Never regenerate expected values to bless cut drift.",
+  "model": {
+    "path": "media/multilayer/source/space/launch-center-foreground-model-v1.json",
+    "sha256": "f88ba6912e5344f6a827634809a6e38ef0c01f4024e6049fc5e0da665029623f"
+  },
+  "views": {
+    "NE": {
+      "foreground_sha256": "90b15eda96d85563f3a7a9048b87aa9d601c3ebe486e32d530ea5b27b52a73c7",
+      "foreground_pixels": {
+        "pad": 259,
+        "workshop": 4893,
+        "recovery": 0,
+        "storage": 2842
+      },
+      "retained_interiors": {
+        "pad": 0,
+        "workshop": 429,
+        "recovery": 0,
+        "storage": 714
+      },
+      "reference_reviews": {
+        "pad": {
+          "reference_pixels": 337,
+          "visible_pixels": 125,
+          "occluded_pixels": 212
+        },
+        "workshop": {
+          "reference_pixels": 337,
+          "visible_pixels": 0,
+          "occluded_pixels": 337
+        },
+        "recovery": {
+          "reference_pixels": 337,
+          "visible_pixels": 337,
+          "occluded_pixels": 0
+        },
+        "storage": {
+          "reference_pixels": 337,
+          "visible_pixels": 162,
+          "occluded_pixels": 175
+        }
+      }
+    },
+    "SE": {
+      "foreground_sha256": "e8dbc4203ec88fbdcce9a017f1d7350e070b841318aca22786488e14e57d83d5",
+      "foreground_pixels": {
+        "pad": 0,
+        "workshop": 5524,
+        "recovery": 0,
+        "storage": 3351
+      },
+      "retained_interiors": {
+        "pad": 0,
+        "workshop": 0,
+        "recovery": 0,
+        "storage": 0
+      },
+      "reference_reviews": {
+        "pad": {
+          "reference_pixels": 338,
+          "visible_pixels": 316,
+          "occluded_pixels": 22
+        },
+        "workshop": {
+          "reference_pixels": 338,
+          "visible_pixels": 0,
+          "occluded_pixels": 338
+        },
+        "recovery": {
+          "reference_pixels": 338,
+          "visible_pixels": 338,
+          "occluded_pixels": 0
+        },
+        "storage": {
+          "reference_pixels": 338,
+          "visible_pixels": 3,
+          "occluded_pixels": 335
+        }
+      }
+    },
+    "SW": {
+      "foreground_sha256": "1e249891cf6a92968565a74f6432a79987f32cf3635272f71b9383b3cf099d22",
+      "foreground_pixels": {
+        "pad": 0,
+        "workshop": 5458,
+        "recovery": 0,
+        "storage": 4080
+      },
+      "retained_interiors": {
+        "pad": 0,
+        "workshop": 0,
+        "recovery": 0,
+        "storage": 0
+      },
+      "reference_reviews": {
+        "pad": {
+          "reference_pixels": 362,
+          "visible_pixels": 362,
+          "occluded_pixels": 0
+        },
+        "workshop": {
+          "reference_pixels": 362,
+          "visible_pixels": 0,
+          "occluded_pixels": 362
+        },
+        "recovery": {
+          "reference_pixels": 362,
+          "visible_pixels": 326,
+          "occluded_pixels": 36
+        },
+        "storage": {
+          "reference_pixels": 362,
+          "visible_pixels": 0,
+          "occluded_pixels": 362
+        }
+      }
+    },
+    "NW": {
+      "foreground_sha256": "31f56011f8b7df5102fe642d068442bd946e828cef84201fadbaacb980ef9e20",
+      "foreground_pixels": {
+        "pad": 333,
+        "workshop": 4895,
+        "recovery": 0,
+        "storage": 3480
+      },
+      "retained_interiors": {
+        "pad": 0,
+        "workshop": 462,
+        "recovery": 0,
+        "storage": 736
+      },
+      "reference_reviews": {
+        "pad": {
+          "reference_pixels": 368,
+          "visible_pixels": 368,
+          "occluded_pixels": 0
+        },
+        "workshop": {
+          "reference_pixels": 368,
+          "visible_pixels": 2,
+          "occluded_pixels": 366
+        },
+        "recovery": {
+          "reference_pixels": 368,
+          "visible_pixels": 147,
+          "occluded_pixels": 221
+        },
+        "storage": {
+          "reference_pixels": 368,
+          "visible_pixels": 200,
+          "occluded_pixels": 168
+        }
+      }
+    }
+  }
+}

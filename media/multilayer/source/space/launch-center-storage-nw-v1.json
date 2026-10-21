@@ -1,0 +1,222 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DD.4; genuine native rotation3 visible original bay openings and opposite end.",
+  "key": "launch-center-storage-nw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "NW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is SELECTED original NE four-bay storage model. Image2 is SELECTED SE rear view, used only for its thin1x4 body/camera orientation. Image3 is actual NW native1x4 row geometry only. Generate ONE genuine NW3D view, a THREE-QUARTER TURN from NE and HALF TURN from SE. Never mirror/rotate a flat picture.\n\nThe same very thin low storage strip runs LONG DOWN-RIGHT. Its original FOUR EMPTY BAY OPENINGS are NOW VISIBLE along the long LEFT-facing facade. The small RIGHT-facing near end is closed cream/charcoal. Keep exactlyFOUR shallow empty bay openings, FIVE thin straight charcoal support positions, one continuous cream canopy divided intoFOUR equal roof panels, gray empty interiors and restrained ochre edges. Same physical model as Image1 from the opposite side; do not show Image2's plain rear wall on this visible left facade. No cargo or new door/extra bay/hardware. Keep original very shallow roof depth and low vertical height, not a tall four-garage warehouse.\n\nEXACT CAMERA: ORTHOGRAPHIC,45degree AZIMUTH,30degree ELEVATION above ground. This produces native2:1 dimetric ground edges at26.565degree SCREEN slopes. Do not use true-isometric35.264degree elevation. Fixed upper-left SCREEN light throughout the turn. At1024guide scale physical shallow base NORTH(260,384), EAST(772,640), SOUTH(748,652), WEST(236,396); long edge512right256down, short edge24left12down, roof20guide pixels above base. Short roof edge at mostONE TWENTIETH its long length. Preserve every complete physical foot/corner, thin straight posts without flared feet/collars, no overhang outside base, foundation, apron or surrounding floor. Native reserved row1x4cells remains unchanged; original shallow hardware occupies an interior handling lane.\n\nONE complete isolated NW source on square1024x1024 genuine transparent canvas, minimum80px transparent clearance on EVERY side. No crate, cargo, tank, pod, rocket, probe, craft, actor, vehicle, people, additional machinery, extra strip, annex, floor beyond hardware, ground, outside shadows, labels, text, guide dots/colours, frame, magenta, scenery, road, track, water or extra views. Same chunky M1 cream/charcoal/gray/ochre model. Final NW view: LONG DOWN-RIGHT, FOUR EMPTY OPEN BAYS on visible LEFT facade, CLOSED small RIGHT END, FOUR shallow roof panels.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+      "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283",
+      "role": "selected original four empty bay physical model edit target; genuine three-quarter turn moves openings to visible left facade"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-se-v1.png",
+      "sha256": "435b936e00ed71f5fe6207e6685835ee96a39fbae00790a824e2f4d314d4f5d5",
+      "role": "selected1x4 thin body/camera orientation reference only; its rear facade is hidden in new NW physical view"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NW-template.png",
+      "sha256": "ab0373a912cb57b9551edcd4b2c36436628992628c4f4aa1bf0dbed8d4196c25",
+      "role": "actual NW native1x4 row/camera/contact guide only; same shallow hardware uses an interior lane"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-nw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-bcfca29d-bf79-4aad-8e88-dae9c224f876.png",
+  "sha256": "e501b2103e140a3e823a439b3100eb07a241cb1bca11e5f8d740f9a455b70765",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      218.0,
+      437
+    ],
+    [
+      1126,
+      915
+    ],
+    [
+      1014.0,
+      987
+    ],
+    [
+      106,
+      509
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      105,
+      340,
+      1128,
+      989
+    ],
+    "minimum_clearance": 105
+  },
+  "contact_review": {
+    "source_reference": [
+      616.0,
+      712.0
+    ],
+    "definition": "Midpoint of visible lateral storage-strip feet; maps to actual NW four-cell storage-row centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        80,
+        96
+      ],
+      [
+        208,
+        160
+      ],
+      [
+        176,
+        176
+      ],
+      [
+        48,
+        112
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      616.0,
+      712.0
+    ],
+    "uniform_scale": [
+      48,
+      341
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      105,
+      340,
+      1128,
+      989
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-storage-nw-v1",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-storage-nw-v1.png",
+        "sha256": "e501b2103e140a3e823a439b3100eb07a241cb1bca11e5f8d740f9a455b70765"
+      },
+      "signature": "67872bb7b1e07ac8e5cabc8c8de42c35c122d41b3c059aca9d5bab05f073e6de",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          128,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            80,
+            96
+          ],
+          [
+            208,
+            160
+          ],
+          [
+            176,
+            176
+          ],
+          [
+            48,
+            112
+          ]
+        ],
+        "component": "storage",
+        "source_reference": [
+          616.0,
+          712.0
+        ],
+        "uniform_scale": [
+          48,
+          341
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          105,
+          340,
+          1128,
+          989
+        ]
+      },
+      "native_subject_bounds": [
+        56,
+        84,
+        201,
+        176
+      ],
+      "covered_pixels_per_cell": [
+        1542,
+        1885,
+        1865,
+        1577
+      ],
+      "native_sha256": "0b4d3a298d020f210bf6044c81748f61077cb06ab99b2d186c2b58bbf5dc8f65"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-nw-v1-native-review.png"
+  },
+  "physical_view": {
+    "native_rotation": 3,
+    "visible_facades": [
+      "local_+Y",
+      "local_-X"
+    ]
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-nw-v1-native-review.png",
+    "findings": [
+      "Genuine three-quarter turn: long strip down-right, four original empty bay openings visible on long left face, low closed right end.",
+      "Same one continuous four-panel cream canopy, five thin charcoal support positions and gray/ochre empty interiors; no extra door/hardware/cargo.",
+      "All indexed pixels fit actual four NW storage cells at reference128,136 and unchanged144px width. Original alpha16 clearance105px.",
+      "Native four-bay silhouette remains readable with fixed upper-left screen light, complete source/alpha unchanged by masking, clipping, erasure, source crop or warp."
+    ]
+  }
+}

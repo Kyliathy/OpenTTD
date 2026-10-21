@@ -47,12 +47,14 @@ def blueprint(path, allow_construction=False):
     return dict(site=site, row=row)
 
 
-def orders(path, allow_construction=False):
+def orders(path, allow_construction=False, allow_constructor_home=False, allow_constructor_retirement=False):
     """@param path Actual native Core consumer checkpoint. @param allow_construction Explicit real work/completed-order consumer; earlier defaults retain their initial queue bounds.
     @return Complete issued original queues/approaches and paid craft generations.
+    @param allow_constructor_home Explicit Group15CSGZVEC original38/gen2Visit21/gen1only; historical queue defaults remain strict.
+    @param allow_constructor_retirement Explicit Group15CSGZVED actual original38/gen2retirement only; no recovered components or changed historical default.
     """
     raw = chunks(path)[1][b"SPOR"][3:]; next_generation, count = struct.unpack_from(">QB", raw)
-    assert count == 2; offset, rows, generations = 9, {}, {}
+    assert count in ((1, 2) if allow_constructor_retirement else (2,)); offset, rows, generations = 9, {}, {}
     core = blueprint(path, allow_construction=allow_construction)
     # Each saved native queue belongs to one original paid hull. Walk actual
     # variable entries and optional approaches, rejecting unrelated targets or
@@ -73,14 +75,26 @@ def orders(path, allow_construction=False):
         else:
             assert cursor == 0 and blocked in (0, 9)
         if entries:
-            assert vehicle == 38 and core is not None and entries == [(3, 2, core["site"], core["row"]["generation"])]
-            if approach is not None:
-                assert approach[:3] == (1, core["site"], core["row"]["generation"]) and approach[4] == 0
+            # Only the explicit later home consumer may replace the exhausted
+            # original builder's Construct instruction. Its finished Core and
+            # once-consumed materials remain real; a Visit grants no build work.
+            if allow_constructor_home and vehicle == 38 and entries == [(0, 3, 21, 1)]:
+                assert allow_construction and generation == 2 and core is not None
+                assert core["row"]["phase"] == 1 and core["row"]["consumed"] == [16, 24]
+                assert approach is None and blocked in (0, 1)
+            else:
+                assert vehicle == 38 and core is not None and entries == [(3, 2, core["site"], core["row"]["generation"])]
+                if approach is not None:
+                    assert approach[:3] == (1, core["site"], core["row"]["generation"]) and approach[4] == 0
         else:
             assert started == blocked == timer == 0 and approach is None
         rows[vehicle] = dict(generation=generation, cursor=cursor, started=started, blocked=blocked, timer=timer, work=work, entries=entries, approach=approach)
         generations[vehicle] = generation
     assert offset == len(raw)
+    if count == 1:
+        assert allow_constructor_retirement and allow_construction and core is not None
+        assert core["row"]["phase"] == 1 and core["row"]["consumed"] == [16, 24]
+        assert generations == {54: 1} and next_generation == 3
     return dict(next=next_generation, generations=generations, queues=rows)
 
 

@@ -1,0 +1,135 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61DC.2; genuine native half-turn of original plate/arm.",
+  "key": "launch-center-pad-sw-v1",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "pad",
+  "state": "ready_empty",
+  "directions": [
+    "SW"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is the SELECTED SE launch plate/one folded arm model. Image2 is the SELECTED NE plate as a second physical model reference. Image3 is the actual native SW plate geometry reference only. Generate ONE genuine SW3D view: a further quarter turn from SE and HALF TURN from NE. Never rotate or mirror a flat raster.\n\nThe same thin rectangular plate now has its long axis DOWN-RIGHT (worldY). In this HALF-TURN view the original single CIRCLE is on the LOWER-RIGHT end cell, while the same single folded CHARCOAL ARM and CREAM MOTOR HOUSING occupy the UPPER-LEFT end cell. Keep the arm low and folded over its own cell, pointing toward lower-right/circle. No deployed arm, duplicates or invented hardware. Show the genuine opposite physical surfaces of the original motor/arm after a half turn; preserve one cream housing, one low dark beam, one pivot and original ochre accents.\n\nSame near-flush gray metal plate, shallow charcoal rim, original ochre corner fittings, panel seams and exactly one white circular launch marking. Strict2:1 DIMETRIC orthographic26.565degree camera on BOTH world axes, fixed upper-left SCREEN light, no perspective/30degree camera. Preserve selected corrected shallow hardware and thin rim; no projecting base toes or apron. At1024guide scale physical base NORTH(435.2,356.4), EAST(691.2,484.4), SOUTH(588.8,535.6), WEST(332.8,407.6); rim only3px high. Long edge256right128down; short edge102.4left51.2down. The reserved native area remains1x2cells, slightly shallow hardware has a modest clear margin. Keep every whole physical base contact visible.\n\nONE whole isolated original on square1024x1024 real transparent canvas, minimum80px genuine transparent clearance on EVERY side. No extra circle, arm, motor, cargo, actor, pod, rocket, probe, craft, vehicle, person, additional machinery, building, ground, outside shadows, apron, floor beyond plate, labels, text, dots, guide colours, frame, magenta, scenery, road, track, water or other views. Same chunky M1 model. Genuine HALF TURN with CIRCLE LOWER-RIGHT and FOLDED ARM/MOTOR UPPER-LEFT, long axis down-right.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-se-v2.png",
+      "sha256": "91d4a404d2fb80903a1e958fc8aafa2dff1d89dfb04d47ae2357d65dcaea0286",
+      "role": "selected genuine SE plate/arm model edit target; further physical quarter turn reveals opposite arm surfaces"
+    },
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-pad-ne-v1.png",
+      "sha256": "1d5a49b4e5c9dedfec249f2d4c4caae25d055c4736d51b318539b63be6081375",
+      "role": "selected original NE physical identity reference; half turn reverses circle/arm ends"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-SW-template.png",
+      "sha256": "688b1d3353714c2146b07ec07b0cb09e5346626347a31c41abd7909f133d2404",
+      "role": "actual SW native1x2 plate contact/orientation reference only"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-pad-sw-v1.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-cbbcace4-853c-4237-93be-a1848072ff25.png",
+  "sha256": "47b063285d64ee910c4fb2e40b04603014fe0169a1efb100fd5d837c05eb32f7",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      465.5,
+      299
+    ],
+    [
+      1137,
+      779
+    ],
+    [
+      793.5,
+      1000
+    ],
+    [
+      122,
+      520
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      121,
+      295,
+      1139,
+      1002
+    ],
+    "minimum_clearance": 115
+  },
+  "contact_review": {
+    "source_reference": [
+      629.5,
+      649.5
+    ],
+    "definition": "Midpoint of lateral physical launch-plate feet; maps to actual SW pad-zone centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      128,
+      152
+    ],
+    "native_zone_corners": [
+      [
+        112,
+        128
+      ],
+      [
+        176,
+        160
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        80,
+        144
+      ]
+    ],
+    "component": "pad",
+    "source_reference": [
+      629.5,
+      649.5
+    ],
+    "uniform_scale": [
+      40,
+      509
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      121,
+      295,
+      1139,
+      1002
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 80,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 135,175"
+  }
+}

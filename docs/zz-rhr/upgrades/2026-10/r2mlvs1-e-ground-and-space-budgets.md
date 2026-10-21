@@ -31,6 +31,16 @@ Money below means the game's internal pre-inflation unit. One economy day is 74 
 | Mine bulk truck | 25,000 | 24 t selected bulk cargo |
 | Sealed mineral carrier | 35,000 | 16 t sealed URAN/RARE |
 
+**Capsule tuning,2026-10-21 (Plan17 Group10).** Native physical/economy coefficients live in `transport_tube_fleet.cpp`; logical identities/dates/forms remain the existing vehicle catalogue and motoring electricity remains `GetMultiLayerTubeEnergyModels`. Each capsule is one full native8-unit part. Capacity is whole units of the selected canonical cargo: tonnes for solid resources/products, crates for Goods/Mirror Kits and kilolitres for Chemicals/Propellant. Price/running/refit factors use the existing native economy and inflation; they are not new fixed cash prices. Model9 preserves every prototype coefficient. These initial relative choices require the later Plan17/16 measured throughput/balance review.
+
+| Model / date | Capacity | Native max speed / power hp / empty t | Purchase / electric running factors | Load units / refit factor / tractive coefficient | Empty / full motoring kW |
+| --- | --- | --- | --- | --- | --- |
+| Mole-70 /1970 | 60 | 100 /1000 /20 | 120 /100 | 8 /10 /128 | 10 /20 |
+| Crate-75 /1975 | 40 | 140 /1200 /18 | 150 /110 | 12 /10 /128 | 12 /18 |
+| Cistern-80 /1980 | 40 | 100 /1000 /25 | 180 /130 | 6 /15 /128 | 12 /24 |
+| Shield-85 /1985 | 24 | 110 /1000 /35 | 220 /180 | 4 /20 /128 | 10 /20 |
+| Forge-05 /2005 | 96 | 80 /900 /60 | 250 /220 | 4 /20 /96 | 20 /50 |
+
 TBM uses the same 64/128 t spoil wagons on both rock layers; it can couple additional explicit wagons rather than receive an invisible hold upgrade. A cut/advancing segment refuses unless **all** its resulting Earth/Rock fit the attached permitted wagons. Earth/Rock capacities are independent; free Earth space cannot absorb Rock. One shared set of two wagons is assumed in the worked scenarios, so the TBM waits for their actual empty return. Spare sets can improve utilization only through paid, real wagons and atomic exchange.
 
 | Hardness | Earth / Rock per newly cleared cell | Standard work days | Deep work days | Support/cell |

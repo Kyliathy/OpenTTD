@@ -113,8 +113,7 @@ Afterload refreshes only sprite sequences and viewport bounds after native
 orders, manifests, leases and sites restore, so paused hulls show the correct
 saved state. Paused construction grants no new work; its constructing pose is
 verified after genuine ordinary-loop progress. All originals and native
-attachment offsets remain unchanged. Rocket/hauler/heavy and launch-facility
-art retain their later Plan9/11 owners.
+attachment offsets remain unchanged. Later Plan9/11 rocket/hauler/heavy/facility append and ordinary review are now delivered as described below.
 
 `CmdSetSpaceMissionChecked` binds assignment/Recall to the player's selected
 generation at agreed execution; old generation-free arguments/IDs remain
@@ -139,8 +138,19 @@ opportunity; target lookup is direct. Existing shared arbitration is bounded
 by64 hulls and probe/slot pairs. Local bucket queries copy and sort their real
 candidates, including the entire14,336-body cluster. Opt-in thread-local
 work counters have no persistent or command authority; their timings do not
-claim whole-game FPS or paid performance-world commissioning. Final Space
-family sources, packed loading and ordinary-game art review remain pending.
+claim whole-game FPS or paid performance-world commissioning. Final selected Space/orbital/launch sources, packed loading and ordinary-game art review now pass their scoped receipts below; personal/gallery and continuous end-to-end acceptance remain separate.
+
+## Native orbital manufacturing and current presentation
+
+[Plan11's current public handoff](../../upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md#current-runtime-handoff---2026-10-20) records delivered438 construction, manufacturing, processing, freight and persistence. `SpaceStructure` owns each original generation-qualified module; its contained `OrbitalManufactureJob` owns paid reservations/work and its `stock` lists own actual packets. `TickOrbitalManufacturingWork` creates one original Vehicle-pool product only after complete material, paid work, pool, Engine, unit and berth admission. Saved paid serial/product links prevent repeated completion from materializing another hull. Legacy content2 keeps existing roles; current content3 appends heavy miner21. Robot16 retains its separate construction/support role.
+
+`OrbitalRecipeInventory` implements the common recipe inventory/electrical work interfaces over that same module stock. Native recipe metadata retains partial work and exact original utility references; no renderer or copied loader owns another inventory, work clock or energy account. Explicit hauler/refit/berth commands move whole packets, and original passive-pod/descent/linked Surface handling supplies useful returned products. Construction, materialization and processing reload matrices are accepted independently of initial-content procurement; declared codec/full-buffer fixtures stay labelled.
+
+[Current launch presentation](../../../../logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json) verifies native model14 phase/heading/frame selection, twelve-cell facility foregrounds, actual Surface occupants and real generic map/list selection. `ShowVehicleViewWindow` routes active non-orbital craft to `ShowLaunchCraftWindow` using the exact hull incarnation/home; deployed Orbital roles retain the typed Space inspector. `GetLaunchCraftWindowSelection` and `GetSpaceSurveySelection` read the actual GUI owners. Stale homes/hulls refuse instead of selecting another craft. Surface drawing/picking shares a read-only native-role gate and preserves original Hidden/custody flags; stored/workshop roles gain no second visible identity.
+
+A passive pod remains a separate `SpacePod` pool object. Its source reads actual descent work at the fixed native release point. Stored/carried shells have no free sprite; the last live recovery-ready pose still owns the original packets. Atomic recovery delivers the whole batch and deletes that exact shell. The actual workshop discloses selected descent-job freight and `GetLaunchPodWindowSelection` returns empty after consumption. Actual one-tick settlement, exact generations and cross-build viewports are qualified without pose/work/cargo grants. [Ordinary orbital presentation](../../../../logs/orbital-art-ordinary-verification.json) separately binds42native processes/98screenshots and original inventory/blocked-reason disclosures.
+
+The genuine continuous Surface-made factory/rocket/Core-Dock-Assembly/heavy-miner/processor/output chain is still unfinished. Its closed financial admission refuses further work; no later saving or liquidation is authorized by these graphics/documentation receipts. Native heavy network-command/replay and Plan10 joined mining TCP evidence do not establish multiplayer acceptance of that unfinished chain. [Plan11 remaining acceptance](../../upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md#group-15---presentation-and-acceptance) and broader personal/gallery requirements remain open.
 
 ## Pool and chain
 

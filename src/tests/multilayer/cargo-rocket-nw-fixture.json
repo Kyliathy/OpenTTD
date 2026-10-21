@@ -1,0 +1,24 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62C.4; immutable selected genuine NW original/native pixels. Never regenerate accepted expectations.",
+  "candidate": "cargo-rocket-ready-nw-v1",
+  "direction": "NW",
+  "generation_receipt": {
+    "path": "media/multilayer/source/space/cargo-rocket-ready-nw-v1.json",
+    "sha256": "1b382adfe6afe105cca04ea4cd94eaf204c6b03e182b32f3d282f4b056d933e8"
+  },
+  "original": {
+    "path": "media/multilayer/source/space/raw/cargo-rocket-ready-nw-v1.png",
+    "sha256": "e413d026ffbcbd33bd692c4dbdf6ea5363d9ef8bde7708ca4dba68e5d22813f9"
+  },
+  "registration_sha256": "0f9ab8f814d71290dbf9586edf6388236b326363bfe2783f0ebf57f978cf7a58",
+  "native_pixels_sha256": "bf38a6071a9cd8fb1fffad1707fbdb5d80b71eba0d3dd66790f79b6f0cb9d6d5",
+  "native_subject_bounds": [
+    19,
+    4,
+    46,
+    37
+  ],
+  "nontransparent_pixels": 430,
+  "yaw_from_ne": 270,
+  "service_face": "same service/access face on screen-left visible hull"
+}

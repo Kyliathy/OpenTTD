@@ -1,0 +1,41 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group62F.1; exact built-in isolated engine-part frame0 request, no input images. This is an effect component, never a hull heading or native fuel source.",
+  "key": "cargo-rocket-engine-frame-0-v1",
+  "asset_id": "vehicle.model-14",
+  "component": "engine_effect",
+  "component_frame": 0,
+  "tool": "built-in image_gen",
+  "state": "funded_flight_engine_part",
+  "directions": [
+    "AXIAL"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept.\nAsset: vehicle.model-14 reusable cargo rocket, isolated axially symmetric ENGINE EXHAUST EFFECT, animation FRAME0. Brand new original effect artwork, no input images. This is a genuine original raster part for a chunky classic isometric Tycoon transport-game sprite, later composited BEHIND an already approved unchanged rocket hull.\n\nCreate ONE compact vertical rocket-engine flame plume, downward on screen. The TOP emission plane is a clean horizontal oval/ellipse, WIDTH TO HEIGHT2:1, viewed with ORTHOGRAPHIC camera30degree ELEVATION above the horizontal plane. This top oval is pure luminous flame/gas, NOT a metal ring/nozzle/engine or separate object. Below this one elliptical mouth, the flame swells very slightly then tapers to ONE rounded/tiny pointed lower tip. Axially symmetric physical emitter: same cylindrical nozzle part can be used under any genuine yaw of an upright rocket. Vertical centerline fixed. No thrust angled left/right. Mouth-to-tip length approximately1.25times the mouth WIDTH, compact and sturdy rather than a very long missile trail. Whole silhouette width roughly the mouth width, with at most a small central bulge. Frame0 is the longer/narrower pulse of a later two-frame engine animation.\n\nMaterials/style: broad SIMPLE readable warm pale-YELLOW/cream core, muted golden-orange outer flame, restrained dark-orange thin perimeter where useful. Rounded chunky low-detail stylized3D game effect, matte-like simple material regions and controlled soft shading; avoid photoreal fire detail. The emission itself is luminous, with color contained INSIDE the physical flame alpha, no surrounding bloom/halo/fog. Keep high enough alpha through the main body to survive reduction to about8pixels mouth width and11pixels mouth-to-tip length in a fixed64x48 sprite. No thin flying sparks, separate droplets, smoke, shock-diamond chain, multiple tails, debris, purple/magenta, labels or decorative filigree. A small amount of clean anti-aliasing is fine; no vast faint halo. Fixed screen lighting appropriate for an upright orthographic2:1 game view; emission planes and curved gas have consistent3D form.\n\nComposition: ONE WHOLE complete effect centered on a square1024x1024 genuinely TRANSPARENT RGBA canvas. Top emission-mouth center about(512,300); mouth width roughly400pixels, ellipse height200pixels, lower tip near y800. Every visible/faint flame edge remains within approximately[260,170]-[770,850], with at least140pixels TRUE TRANSPARENT clearance on EVERY side. The exact requested canvas is only a source layout; generous complete-alpha clearance matters more than size. Keep the actual mouth center and complete tip easy to identify for uniform scaling/registration. Do not draw a marker or reference dot.\n\nNO rocket hull, metal nozzle/bell/rim, landing legs/feet, platform, ground/floor/road/rail/water, cast ground shadow, backdrop, extra model/view/frame, scenery, person, cargo/probe/pod, text/label/number/logo/arrow/guide/cross/colored bounding box/magenta separator. Output only the single physical downward engine flame with clean real alpha, no external background. Native part envelope and unchanged hull will be validated later; do not add hardware.",
+  "reference_inputs": [],
+  "status": "rejected_emitter_projection",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/cargo-rocket-engine-frame-0-v1.png",
+  "sha256": "b751495c409067b5824e5e9ccf61d5d1f161c85b289f4dae1117aa0fc94bd653",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "references": [],
+  "native_transforms": {},
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      329,
+      98,
+      925,
+      1154
+    ],
+    "minimum_clearance": 98
+  },
+  "model_review": {
+    "status": "rejected_projection",
+    "reason": "Visible luminous emitter ellipse is approximately5:1 rather than the declared2:1 horizontal circular plane at30degree camera elevation. Tail is also longer than the requested compact pulse. Whole alpha is retained; no flattening/warp/crop rescue. Correct through a genuine new ImageGen edit with explicit geometry reference."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.4; correction retains unchanged native-zone and144px model-width guards.",
+  "key": "launch-center-storage-ne-v2",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED four-bay storage-strip edit target. Image2 shows its reserved native4x1 row. Create ONE corrected NE original preserving four EMPTY bays and the selected cream/charcoal/gray/ochre M1 materials.\n\nMake the hardware SHALLOWER and LOWER. The reserved site remains4x1cells, but the canopy/base occupies only HALF of that row's depth, leaving a clear rear handling lane. Keep FOUR bays across the full long direction. Reduce the wall/post height by one-third and remove all flared feet or projecting base toes: thin straight posts entirely inside the physical base. No roof overhang outside that shallow base and no extra floor/apron.\n\nUse exact2:1 dimetric camera,26.565degrees; each world-axis horizontal run is twice its vertical rise. No30-degree isometric or perspective. In the1024 guide, long +X step is(-128,+64), short +Y step(+128,+64). The reserved row begins at(704,350). The SHALLOW physical base tips may be NORTH(748.8,372.4), EAST(812.8,404.4), SOUTH(300.8,660.4), WEST(236.8,628.4). That leaves the rear portion of the one-cell-deep reserved row clear. Hardware roof rises at most28px above its base at this guide scale. Preserve all four visible empty bay openings, one continuous four-panel cream canopy and thin charcoal posts.\n\nThe four bays are fixed empty housing, not cargo slots or vehicles. No crates, tanks, people, equipment, labels, cargo or pod. Keep upper-left light and coherent game readability; no blue glazing, tall garage, workshop, annex or machinery.\n\nONE whole isolated original on a square1024x1024canvas, wide real transparent margins at least80px on every side. No guide text, colours, dots, border, magenta, cast shadow outside the hardware, ground slab, scenery, extra strip or additional views. Keep all complete corners and physical base contacts visible.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v1.png",
+      "sha256": "117099da646450776dd7bf5472ab10c6006942db992e78aa227a94f8e3dfaf25",
+      "role": "unapproved four-bay edit target; reduce depth/height and projecting feet while preserving material identity"
+    },
+    {
+      "path": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NE-template.png",
+      "sha256": "9e1d84a83faf9fc940cc011cc1e84c614a05af20871ec64cadad10d178081d0e",
+      "role": "actual reserved4x1 row/contact geometry; hardware uses a shallow interior footprint with a clear rear lane"
+    }
+  ],
+  "status": "rejected_native_cell_ownership",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v2.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-c0ef20e0-92c1-4f1e-b4b1-7dca2569be3e.png",
+  "sha256": "dc23d9ea7524e158817845e2cecea3a2000052ebe1c807721b2c99d69aa38503",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      921.0,
+      559
+    ],
+    [
+      1093,
+      670
+    ],
+    [
+      382.0,
+      964
+    ],
+    [
+      210,
+      853
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      209,
+      450,
+      1095,
+      965
+    ],
+    "minimum_clearance": 159
+  },
+  "contact_review": {
+    "source_reference": [
+      651.5,
+      761.5
+    ],
+    "definition": "Midpoint of lateral physical shallow-strip feet; maps to the actual storage-row centre.",
+    "status": "native_preview_pending"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        96
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        112,
+        160
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      651.5,
+      761.5
+    ],
+    "uniform_scale": [
+      72,
+      443
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      209,
+      450,
+      1095,
+      965
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "rejected",
+    "reason": "site original pixel leaves actual tile canvases: 241,127"
+  }
+}

@@ -4,6 +4,7 @@
  */
 /** @file space_vehicle.cpp Native orbital probe ownership, deterministic pursuit and conserved extraction.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only source-authored probe presentation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J; original cargo-rocket flight graphics.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original heavy/retained/hauler art ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20; generation-bound synchronized mission admission.
@@ -21,6 +22,7 @@
 #include "space_mining_tuning.h"
 #include "space_vehicle.h"
 #include "space_sprite.h"
+#include "launch_sprite.h"
 #include "orbital_sprite.h"
 #include "space_replacement.h"
 #include "space_approach.h"
@@ -299,6 +301,12 @@ CommandCost CmdSetSpaceMissionChecked(DoCommandFlags flags, VehicleID id, uint64
 /** @param direction Native presentation direction. @param image_type Native sprite use. @param result Receives the existing role/phase sprite sequence. */
 void SpaceVehicle::GetImage(Direction direction, EngineImageType image_type, VehicleSpriteSeq *result) const
 {
+	if (GetSpaceVehicleModel(*this) == 14) {
+		const auto view = image_type == EngineImageType::OnMap ? GetLaunchRocketArtDirection(*this) : direction;
+		if (const auto pose = GetLaunchRocketArtPose(*this, view)) {
+			if (const auto sprite = ResolveLaunchSprite(*pose)) { result->Set(*sprite); return; }
+		}
+	}
 	const auto view = image_type == EngineImageType::OnMap ? GetSpaceCraftArtDirection(*this) : direction;
 	if (const auto pose = GetSpaceCraftArtPose(*this, view)) {
 		if (const auto sprite = ResolveSpaceSprite(*pose)) { result->Set(*sprite); return; }
@@ -306,8 +314,8 @@ void SpaceVehicle::GetImage(Direction direction, EngineImageType image_type, Veh
 	if (const auto pose = GetOrbitalCraftArtPose(*this, view)) {
 		if (const auto sprite = ResolveOrbitalSprite(*pose)) { result->Set(*sprite); return; }
 	}
-	// The original rocket retains its separate Plan9 source/integration gate;
-	// unrecognized legacy roles keep the explicit earlier preview without new capability.
+	// Undeclared legacy roles or invalid source poses retain the earlier preview
+	// without granting a role, movement, work or custody capability.
 	result->Set(SPR_SPACE_PREVIEW_PROBE + (this->mission.phase == SpaceMissionPhase::Mining ? 1 : 0));
 }
 /** Refresh the existing native sprite bounds for selection and viewport invalidation. */

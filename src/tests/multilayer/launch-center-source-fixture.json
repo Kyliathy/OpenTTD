@@ -1,0 +1,403 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61F; immutable pre-publication family/payload and accepted state-pixel preservation. Never regenerate expected values to bless drift.",
+  "public_envelope_sha256": "299c313ad8539c55ae6c10f510a84e76ceb9b9845116df7a73c00c7693ee523d",
+  "other_public_rows": {
+    "terrain.underground": "ca80c41c0fb6c004d72cddbe5b8aa70ca89f43f0b44d5f9b26fa9ef29f8cda3f",
+    "terrain.deep": "16d65300f5240bbfcf6dbabaeac6b1cbf590647f26863da14e4e34c9603d6646",
+    "survey.COAL": "c32f5fc656c1c8186d1214e5c2bb97b9497a4177465bafbd73ef2041cb057214",
+    "mine.COAL": "17fb3306f05f1d00cf3c98e8f6e1990539ec6597ae4757705068b31e59b91c27",
+    "survey.IORE": "01761742edacfc679ca9eedfc7c3dbf90af5a1c48954fea5cc7bbd41fb44ac36",
+    "mine.IORE": "2fd21c20ee97d1f812a5f48c4a34397cd5a60263f6f076e02eb20e278239dec1",
+    "survey.CORE": "d3bfefd4d3c2d39bfde2c982bb0699ea133aa27c07f733cdbbafd30df8558c74",
+    "mine.CORE": "5b51ac4232792b18d375c231b9a5e167112e4c2cb15c7a451dd91ecb45a834f7",
+    "survey.BAUX": "9845faedebc08ee3eca6e810968a7d773fe73c3c10f44d61ba76d19c57114f89",
+    "mine.BAUX": "5936996944f201e772ba4126c67fdfe055179e06baa8336eb232729c432ad76f",
+    "survey.SALT": "90e358ad6d97da97e5631754e106c482a870f32b14098fbaa50ec606fc660d4c",
+    "mine.SALT": "34189be3f9b4b3236261ed90451424c1d278debcf6b81e49c075d5ae4e5af2e4",
+    "survey.LITH": "5154859e60aa667bcbd429a711afe04f51465218ab9fe1e7efa1a97cf46e5fd1",
+    "mine.LITH": "b53863e58d7ccce4561ae6e02469417edd6a9dba5917a39848c18287fe52ce2e",
+    "survey.NORE": "3708ccb45b7ef5e55363c542476f063402fcb7635ed9f403c93ca1fed46e4ced",
+    "mine.NORE": "ba3afb386014927ac8e16e5fb4cf56671a676eb0d98dcf7891564f3c3026f1ee",
+    "survey.COBT": "49243c738738c83ab7a7207c75135b62e298dd86bd0f672caf541f37273f14af",
+    "mine.COBT": "ad36d88218e5935e28ca7e9fae545bb4e2221dd6200092f497ab52bf15bbb8de",
+    "survey.RARE": "35f9b2003d7f6e3d899f212e9c7e7b20b66b649745c25c1542764fcc421345a0",
+    "mine.RARE": "339bc1ee69674aa34ab1892193adbb2b97fe27a027ebe4e4c86a58b408f2829c",
+    "survey.URAN": "aedc4406e0f2d7a0c22be736ccb9aec7f49fd5a4d6ca914bc45d00c9cfb8c435",
+    "mine.URAN": "91bb1dcd1c1b70497222c4ef967b1d4f1dbe99bc02c432cd3dbf0287c7b80873",
+    "vehicle.model-00": "5910df1c9c18e3bef8faceab9b539652170a787fa37d749784a0c9d85b1c0ccf",
+    "purchase.model-00": "0fe59115aba96aa0110ae7402a826e0b56b821c8d2f78f32c85f1237af5272b5",
+    "vehicle.model-01": "955d6560352b5afefa5838289e2b1a65403c75beaf829e92334850b795e84465",
+    "purchase.model-01": "3211e54596302ec9389a8f719362abdfcc4d751321371686a5ff57c834c296eb",
+    "vehicle.model-02": "20f39a3c035cb8d81131794eee35f80d17934449d460b77e0f4766256ec3fd7c",
+    "purchase.model-02": "28fed705ca61fc74b0f197c7bd8091b812453d827e068db9fa86038d4e4379ef",
+    "vehicle.model-03": "c801a75f554ce885ba5f07e3c82db1b7a8f329c6441cf75b2826fed78c98f4f9",
+    "purchase.model-03": "6a9ca3690c36354a85863bcadb924db33d47ad7045ffe9edf18648ec5edb1f55",
+    "vehicle.model-04": "845dd6780bcf5f3ad587dc67c3b4666c7f3224b026262642069b94990e76df87",
+    "purchase.model-04": "f0e766254f7613287663c6baeabb5baea57c39f699b8c0b3af1d3d34afabce8c",
+    "vehicle.model-05": "89e5f31263324844373c538d8a9a1afa5195ae1c5d9f0d212ebdd06cd5f49540",
+    "purchase.model-05": "03bccfa67f1451d4da54f6973b2079e2cc281a0c0f47243a28bb8358113a4804",
+    "vehicle.model-06": "0d5d7d973f108309d20e942c99609c36fd740cc36f6147941d7f2cc34a150318",
+    "purchase.model-06": "d4192961e88a3c4f21a7fdd46fe246d4fd0d624fa428612b5167ccdd68b54a60",
+    "vehicle.model-07": "0a935b8f55b2b41ec507250d2c6a5b744d79d1ffbc54562434356b31a21eea31",
+    "purchase.model-07": "3a003ae9b36918dab9a2912b4f2e0fbc1625280f643bdf211017f1b9cabdd8b3",
+    "vehicle.model-08": "442d049209c5fa29f5f396073ff84be4323abbee8c2c2a5daf6d371e7a089c18",
+    "purchase.model-08": "4b0e08058bf9857ad750c96159ef678cd59e26efe63863cc13d220cd1a756ff8",
+    "vehicle.model-09": "eee45bfc680b0da31b52a8eb7f541aa35f77329994bf9bbf4cbc75f1a4ee0103",
+    "purchase.model-09": "d69f421cace21346ce2b19c6c73baf00dd32317bcb0a233d6dc24328dcaf7c4b",
+    "vehicle.model-10": "7fe724758ff0c38685405dbe0dc9bcdadf3e6e75a6c6c6ab2d9999056481bb93",
+    "purchase.model-10": "c4e7bc610e7159a2da6fb8141058ee613716ce69ac33c4fa459276316e279909",
+    "vehicle.model-11": "bd12509b157d2a885caca35b5fb25a0c214c75f024542ecb139e9847e2381340",
+    "purchase.model-11": "24f5f4db8a8468033f4b879edeb77e4676236de1488d72fa8fe507a709488601",
+    "vehicle.model-12": "368f72b9a4ec3484fec6c3ba2fbed04cb80b80b357fa59ef7241c6061508a636",
+    "purchase.model-12": "25bdfe291cad239ac26d7d1a1bfce41ac4f1a45e0c5e7c08ed235c45bcaf63a6",
+    "vehicle.model-13": "e2521940cfa96bc50ee935e4f414518df9b196c65481cea38f8c707f84fb2367",
+    "purchase.model-13": "e26f2e8b0afa9f88598d2c6d2535b7198387e4c4cbc7c95258ab5a73c5224f50",
+    "vehicle.model-14": "35d8c1964ff599bec950d95868047a1b35022c16609f0938c7f9f32f0f53f3e5",
+    "purchase.model-14": "4cb4e45309b795ab1372b1864934387759f23fb894829d5dbc03744d6cc5f61b",
+    "vehicle.model-15": "d957b8982057dc8ef276150c74504de65eb1617d81fd2e3d2862c934f7338969",
+    "purchase.model-15": "68c4d4f7a22ea835580b6fb3fc98f291389427c5a9f7d2c11d91b9594b7bd3e0",
+    "vehicle.model-16": "b564ef54fe76e26d4dd38792ace019981f82343a0821fda67e25602b7f581099",
+    "purchase.model-16": "06692d62ea009595e0a7f13d1bff1dac62a743b8babd5f403465f70b44f2e82a",
+    "vehicle.model-17": "dcc5de1f433fad4f29f6b90d7bf2ff954c71f4ab8b23b669b0ab9656d5fbd0a1",
+    "purchase.model-17": "91ac1020170f43233e3e87fed66ab44c4a872e67610412cc18602dd2efe3e516",
+    "vehicle.model-18": "135c2e8c80ff097b13e9984ef8c3036a4c5b897ba7feead36804d9cdecc9dd57",
+    "purchase.model-18": "eaa7c82598275d7d1d4ae2a5f70c158e5cfe2a461ba47a0fd2b97ea2e218dd64",
+    "facility.portal.sealed": "87c6e95d01a8f15fad56fbb546344d6b21d0e60389683eb0b1243838aa2f5a40",
+    "facility.portal.deep-rail": "ef4e6a8bc2b8983e1a1b2c75a7151ae41221208b24fb9ae9ffdac946e1541140",
+    "facility.exchange": "aa3a620639c0baf7eba7df4a3f2e2443ec3795b591cf81e5ca9f11e19970d092",
+    "facility.rail-station": "34c59efc95268ed17f057288c96fa1e18c18b820ae7570f25c42a065f972ad9e",
+    "facility.road-terminal": "20c7974886305e8b27dedbd7dce2a80111330dc76abf6f0001ca697e271914bf",
+    "facility.rail-service": "e6c06e08d7e63f7044305964536c1e02c269bfcc73945c52041e8fae95a0bb05",
+    "facility.road-service": "58b8ea429b5d4f0df79c7f5c1ea1cdf64841dfae58110a4058b1972bde3b7579",
+    "facility.earth-receiver": "7a677edfe988a1a60d437b62b77422438c73a180c1d0089eaf72d8af09621bc5",
+    "facility.rock-receiver": "462863f1e7290f5b1df355f2c8aeb1e1ce30522606e2f39277a3a90a118c64c9",
+    "facility.metal-refinery": "86e9f6cbaa3cca18434c7ea99c45d8630c4a185450493dc3726cf9d20d36783c",
+    "facility.chemical-works": "bdcd1ce6327c525947d3506b6e655ef3edd48ffe65a4bcdf6621dee7732b0111",
+    "facility.battery-works": "1531324a7b5d195db20a019c44682344b25b5562941c9a5b790556a88e82d9b9",
+    "facility.electronics-works": "871cfe3bf00d6e2cb91225e6985d21da6c588cdd538fc30c2ef61d47b70a07a0",
+    "facility.component-works": "95fe3e7aab4d73f14827b3c3651eb61ea229de9dd4885d1e5f97b1b03af4c96d",
+    "facility.robotics-works": "46267385dc9a66b347411b366c34661373e5a1f78fa9b909eea4bf250d4b74be",
+    "facility.mirror-kit-works": "96af877a8abf63d2515629e4afcb812a80f9c894372430098f321fab9692381e",
+    "facility.solar-farm": "8b19dbbebe351a29326cf7736dd9e6d88f6f547dbfcf06d46a9dac8dcf57e738",
+    "facility.nuclear-plant": "eaf8bda85a07debd64ec7cf9e8bf42fa43cd8211dcc6ae1992b6a9f5b3747a9a",
+    "facility.tube-terminal": "54564f79e3f82e16d95332ba74e60e2a0262bd4158f60a32f17b6b524f858ff5",
+    "facility.tube-service": "e087f1f5b0f3b8a1c19c7a1093381c7655d7f8ad8ca32013d39aa2aa57c8db34",
+    "facility.tube-interchange": "383101d41afe9acff9aec0f433c79a05e973567f87ebacce0462ba9d96d5014f",
+    "facility.vent-collector": "21caaa70fd207d9a2a14fdd8d5b60022825c8312ef053a9b1058eb5c3b9feff4",
+    "facility.vent-powerhouse": "3c0871ab65cbef2b68c6c30e4e4c8be5d2ff11a9d60610fd1994bc4b6e0d1857",
+    "facility.magma-powerhouse": "18bea8c706f449c28ba9585c0e67422a24d14558d9557c01db2501704d3163ce",
+    "facility.heat-smelter": "6e2b2e319afbc8a9377313552a3d04616dd2fa37e4a758f99ff7d545e41edef0",
+    "facility.heat-battery-works": "7618ec02245f38928ffe01b022d89818aa4c47694925d5c72f8d2ef8c1e78ab9",
+    "facility.mantle-forge": "e026bfe5a8fe0f1945368e6bd577eb8d584e590ae239c6d5380a92bfb3cacec8",
+    "facility.utility-riser": "1c767908b5a7966f5138b02ba653bcfc6a702a0133dba33e5276c1b6392f8e09",
+    "tube.straight": "a47629b8c06b47752f7f740c9acded53173b084aec3a4fe7b66b622409ce6a7f",
+    "tube.bend45": "c611b3eaa23c533b3729950074233f95f1f619f63f6b7b30f678b16b56695541",
+    "tube.junction": "68f2b618bf6e726aff1c20e5879a8bf61c0115d0a8db186b7322f5e5c820ce91",
+    "tube.end": "5ad193de12ae33a2f3e04edb76f31e83c1b51e4220087a08524163490d9450db",
+    "tube.crossing": "16be6ebf7e765f64c7fdf4682deba2dcde095617a563315a5f582213792a1ae1",
+    "tube.conduit": "7b7b1ff5887671feab10b90dc400de86691c56860b017886a7406688404fd4a7",
+    "geothermal.vent": "1f1718a439f99a6ce2687cb718d3875339ccad13e231d15be75cbba703ec3fd2",
+    "geothermal.conduit": "c8d7cf8e346215d528901dcc7e2a22265fd55310cd8715ef8abc9889da98a0ba",
+    "module.nucleus": "c7fd0676e4a8f9be223e735957d35f2ae40728f76099f0e551ec1dcf5c5c6d89",
+    "module.dock": "cb891380304537e926665ef614043c6a9c5d125e1bfb646f981c7133153f82ae",
+    "module.storage": "7567653a9f61476ccf4101a72f4f37317bf7a7d62614f6102bebec1dafc95c04",
+    "module.workshop": "47d84aa647246108529e72848cfa67929565478275348c55dfd2b465c77eac24",
+    "module.processor": "e5402a2c48ac488407833ff19e2003cfe633854f71d1bdcc550583f21e9d5a62",
+    "module.power": "50dbe20d3432fcba29fc52ca3e0b036ec91d342399ba06109b38038244fa3965",
+    "module.fuel-store": "bfc40a499eed4d8ab6f28ea3107c746af0b6b7e168e5488b937b63e28acf1bb8",
+    "asteroid.nickel": "8565bb5e602d92d2b36629b05dbbfacd5b1380ad1bb79e01afedb0bad8693d59",
+    "asteroid.ice": "b97d6878ad59f18c1de6aa9d23856d8a52c4725355b60fe1ee3451fa22690ae6",
+    "asteroid.rare-earth": "1f5518489c76c695c551e2b3e4961739a082b1a962a5dbf7cecb39c311cbcda2",
+    "solar.mirror": "2277091efbdb4d846753f80ddba23dce46c5d789032da3602142c6bc1c1e3b89",
+    "control.survey": "1fb3d963827ba2bdc2bf6fdbf6df1945a553a806d173e5d577875250ddcacfaa",
+    "control.excavation": "8e72920e94296db16ccede89f0240dbed618e8b430738b4b9ec99c6aa6185085",
+    "control.tbm-area": "0ba1dc71d12e31eb01774d9ccad99c8cbb4e103820eadefb68cb716ec157683b",
+    "control.tbm-turn45": "acdf7bc642247e311d21651f067395ea7cad1ec89cc54c888b3bb6e8d9f6f5c1",
+    "control.exchange": "f16c9246fac8634f32bfe4fadc0c1dc9a654eaef62d7eb860d372058a548ea00",
+    "control.mine": "8eacec1225d5cbed774e227b36c1d5aa0a8ef4d12121f82bf9bb6eecb32b67f2",
+    "control.space-build": "72659da019ac6cfe856f0c01698f493e706cb88fa201ab63672eab550253941d",
+    "control.launch": "60f3dfc39b4b0ddbddf42cc2ebe8d447152c72158470772416c4c0833918bb39",
+    "control.tube": "81b3a8d7215b73c9543641f828b5595b465da4d7f55d7ff26d431119599cbdc8",
+    "control.geothermal": "89f934c9e69e7b0921abce6392de1aa0d3458091ab60c16f7d804c754ed28f07",
+    "control.deep-lock": "0e261e2781b898ebb79a5db1ee18193c639299ed1015a25c508a275bc5496a7d",
+    "control.future-lock": "1df17fd1b7eec0a29df75c80d2a5d8f8fea093a09ce5e95b1180a2200ba99eac",
+    "overlay.orbital-drop": "da1e8c996b23bb66dcf123ac0853b83246a1f62eb01f404338cd4c279f7cb780",
+    "overlay.surface-collection": "eaa39c7c57e478ab8b6404b1bbe06e03ca4cca62d71f4894f3bd37e94c5dc024",
+    "cargo.CORE": "acddf4b9d14c4010c20f4c60ffdebcf1f0141b13fb948ce2996eb55bb02eb8a6",
+    "cargo.BAUX": "d1643ce46e0de7c7d18081e57efa0a56748eda074e58f4e71f12986f38ab726c",
+    "cargo.SALT": "fdcdf78d9069a7e5cca096c6180621d3595c1aa30aaff95b3f6cabc7a6ae4235",
+    "cargo.LITH": "1906ab04153bcce823d236fbcde704fec8853180c07792af6dcc64d34848eeb5",
+    "cargo.NORE": "cad08ffe8d7b12deacf010088a2f32d2908baffb0ee0de2c909d5e1cdf6a5668",
+    "cargo.COBT": "a41327f8aeb60fc2286745ed8fd18d84fabf9e2e6dffadd21643a5a375695f8e",
+    "cargo.RARE": "93d4e8222cb4ba466370052d2ee54928cffb244dd82e88a7da4e404f3dbaef57",
+    "cargo.URAN": "3c1bb768a6b7faba3e6c0042722aa937ef2e6e3f23eb30af096d341e81672891",
+    "cargo.ERTH": "d0976a22e514064d8d379736ef1118088635705fc0b261cc90ea97eabfc13ed6",
+    "cargo.ROCK": "89556d913102d4a1fbcd5fa989689df11925370058c0d511f5ca9d35d1605868",
+    "cargo.RFMT": "9058ac468232fbe0001e597d626f14c5f43e52fc19bdd651f3e4686341bfc22f",
+    "cargo.CHEM": "cbd9a28d6a5007ff00149a2adec617748471521fe8b919da107c5714366e52d5",
+    "cargo.BATY": "f2375e9b45383a697088bd9d5cd42ca8eb8eb88c452686e7fcb2a8f8534d9df6",
+    "cargo.ELEC": "c6b02d576d1a99985444826b2cf02305fcc8d2a18a7b68a3fd2c7f0845256087",
+    "cargo.PROP": "ca309fff95e4148a07483fca8d06d7e1a743157ac18b01bae9670ba4133148d2",
+    "cargo.SCMP": "464b22e74d79e2aaa5bba53c696374fe7342b5ecd6491429272de8264f19f074",
+    "cargo.RBPT": "bd2d0e7d65a7d0f866d679d3db14e9ee5678c6185f46aefab75de0ead9fa4aa9",
+    "cargo.SMIK": "075abf17456a4c8a44e0c97d24a3510c622544e543957edf6c86cb67c58b6e0b",
+    "cargo.WICE": "99e33334e24f8800d6b616e5d973179f069ea024c85141602505c676c68a5be7",
+    "terrain.edges.underground": "eec32fe7f6d65981ef9faf15dcb2cdd699ba2f2d6d8fcdac06e0291e36621cd2",
+    "terrain.edges.deep": "d741d9331ce88ab9814bba43bf08a576f8c8037f9ac9d1db0fa040fec939ecc1",
+    "terrain.hardness": "d8a8997b2e70b0a48eba2386f8502089868fd044d4d256df76d581d26bbbfb60",
+    "terrain.hardness-edges": "0ecbffb072040e2e6cd7bd3415f06ef641c2a1034ef45af8a8f01011d752cda8",
+    "vehicle.model-19": "6d2af29bdf2f0d4e9d422f22bb3114032d5ce955831ebc19cb9a2d68bf7cac6b",
+    "vehicle.model-20": "f8cc7f01ae24fdd5719398136eed76880ea9960b42222b347bbf4b28f3f44d03",
+    "vehicle.model-21": "82f78c283779ed2d186b8d3dc07d0b62f285acc9d01318b0908e4869ccff460f"
+  },
+  "launch_before": {
+    "asset_id": "facility.launch-center",
+    "consumer": 9,
+    "kind": "building",
+    "directions": [
+      "NE",
+      "SE",
+      "SW",
+      "NW"
+    ],
+    "frames": 4,
+    "states": [
+      "construction",
+      "ready",
+      "working",
+      "blocked"
+    ],
+    "native_size": [
+      64,
+      64
+    ],
+    "footprint": [
+      4,
+      3
+    ],
+    "footprint_semantics": "world_tiles",
+    "anchor": [
+      -31,
+      -33
+    ],
+    "bounds": [
+      0,
+      0,
+      64,
+      64
+    ],
+    "parts": [
+      "back",
+      "front"
+    ],
+    "geometry": "per_tile",
+    "tile_variants": 12,
+    "palette": "dos_8bpp",
+    "transparent_index": 0,
+    "company_colors": "none",
+    "preview": "native_build_pose",
+    "animation_colors": "forbidden",
+    "source": {
+      "status": "planned",
+      "path": null,
+      "provenance": "first_party_original",
+      "rights": "original_to_be_authored"
+    },
+    "packed": {
+      "namespace": "MLVI",
+      "offset": null,
+      "sha256": null
+    },
+    "native_rotations": {
+      "NE": {
+        "rotation": 0,
+        "footprint": [
+          4,
+          3
+        ],
+        "zones": {
+          "pad": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "workshop": [
+            1,
+            0,
+            2,
+            2
+          ],
+          "recovery": [
+            3,
+            0,
+            1,
+            2
+          ],
+          "storage": [
+            0,
+            2,
+            4,
+            1
+          ]
+        }
+      },
+      "SE": {
+        "rotation": 1,
+        "footprint": [
+          3,
+          4
+        ],
+        "zones": {
+          "pad": [
+            1,
+            0,
+            2,
+            1
+          ],
+          "workshop": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            1,
+            3,
+            2,
+            1
+          ],
+          "storage": [
+            0,
+            0,
+            1,
+            4
+          ]
+        }
+      },
+      "SW": {
+        "rotation": 2,
+        "footprint": [
+          4,
+          3
+        ],
+        "zones": {
+          "pad": [
+            3,
+            1,
+            1,
+            2
+          ],
+          "workshop": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            0,
+            1,
+            1,
+            2
+          ],
+          "storage": [
+            0,
+            0,
+            4,
+            1
+          ]
+        }
+      },
+      "NW": {
+        "rotation": 3,
+        "footprint": [
+          3,
+          4
+        ],
+        "zones": {
+          "pad": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "workshop": [
+            0,
+            1,
+            2,
+            2
+          ],
+          "recovery": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "storage": [
+            2,
+            0,
+            1,
+            4
+          ]
+        }
+      }
+    },
+    "variant_semantics": "row_major_world_cells_within_each_rotated_footprint",
+    "native_layout_owner": "LAUNCH_CENTER_LONG_EDGE/LAUNCH_CENTER_SHORT_EDGE; GetLaunchCenterFootprint/GetLaunchFacilityZone",
+    "native_state_owner": "Station::launch_operations; SpaceConstructionState::remaining_ticks/paused; SpaceManifest::service_ticks/service_paused; SpacePodState::remaining_ticks/paused; SpaceTransition::phase/blocked/remaining_ticks",
+    "native_frame_policy": {
+      "construction": "placement_preview_only; CmdBuildLaunchCenter installs a complete facility, no facility construction clock",
+      "ready": "static empty facility; logical frames alias the same selected hardware",
+      "working": "only actual workshop/service/pod work or SpaceTransition preparation/turnaround selects declared equipment parts",
+      "blocked": "static hardware/status from actual native admission/wait reason; no work or queue advancement"
+    },
+    "native_occupant_policy": "LaunchOperations workshop/service/pod_workshop/pad_active/pad_queue reference existing paid actors; rocket/probe/pod art stays separate",
+    "native_inventory_policy": "Original station/hub/vehicle CargoPackets only; storage art creates no stock or freight delivery",
+    "native_water_policy": "At least one actual orthogonal navigable Surface water edge; source art fixes no water side and contains no decorative water",
+    "native_freight_policy": "Joined or explicitly linked same-company Surface rail/lorry members retain their own footprints; no baked track, road, vehicle or station extension",
+    "native_projection": {
+      "owner": "RemapCoords in src/landscape.h; native pixels before ZOOM_BASE scaling",
+      "x_step": [
+        -32,
+        16
+      ],
+      "y_step": [
+        32,
+        16
+      ]
+    }
+  },
+  "approved_whole_pixels": {
+    "NE": {
+      "ready": "97e9133e82feaa1b7e75723a2f61fbb74d9a7c2354790df4e17455619473c772",
+      "construction": "97e9133e82feaa1b7e75723a2f61fbb74d9a7c2354790df4e17455619473c772",
+      "working": "164551f4187400e782dffd7cddfd9d3eec3d62be923619fb716c25cf14687f25",
+      "blocked": "63ffe4e0eb949db4127cf2c09b852a230c0b72fb0e9018d4d576683b5efed1da"
+    },
+    "SE": {
+      "ready": "2dbb49421dc78f550e037e63ee4baeb021043472c1706fa5066ff89fbbce6529",
+      "construction": "2dbb49421dc78f550e037e63ee4baeb021043472c1706fa5066ff89fbbce6529",
+      "working": "b5f18e05b199cb5daeea2b22922c4ca71f84bbb6a2c8dce8adfa065c750abb97",
+      "blocked": "6ed98c26364cb2a328efca16e8930e875bd5b0f20b7b17d44cb28b5140717c6c"
+    },
+    "SW": {
+      "ready": "6fc7ea47aae790dd094514b507bd379b3fa31d13591732f77826440cd142a39e",
+      "construction": "6fc7ea47aae790dd094514b507bd379b3fa31d13591732f77826440cd142a39e",
+      "working": "be38a3b42389d5fc78475538a4f8c52fe1fa4c906590bdfaac214b96b0ce4bba",
+      "blocked": "050b565b41e3fb5845fb1507a3c21b3dde773542b8cf84b831fcfbe4be73c8d5"
+    },
+    "NW": {
+      "ready": "9cf4203ae7c924b7c873788744187b110fd2b5612219e21fcc573a6d0da9c5d5",
+      "construction": "9cf4203ae7c924b7c873788744187b110fd2b5612219e21fcc573a6d0da9c5d5",
+      "working": "f7927ecf05ac158bded34a84433a993b28cea34bdbdbc797257a39ea94379d98",
+      "blocked": "c27c36c4838dd9ef398461c52c6ba14d8f9e7a096e2a5c49255903c28073cdb2"
+    }
+  },
+  "protected_payload": {
+    "media/baseset/openttd.grf": "4f46d9863982e3c5302e814ca53120816e08153ac4f911eb72caf6ef551a1dd6",
+    "media/multilayer/source/space/space-generation-record.json": "8afc57b181a34f85c274dac0196a7a80e649dda1506fe5c54d76c8cfd9ed80bc",
+    "media/baseset/openttd/space_final.nfo": "2b54ca81a26eaccfb2ad4f4460f1624d58a45dd78a5d72499e5d59b006885284",
+    "media/baseset/openttd/orbital_final.nfo": "dd2a47b8e220ec09efffe60b24445d099cb7138ef25b1079e6fda5f89bf50876",
+    "media/multilayer/contracts/multilayer_geometry_templates.svg": "708db02f34a1adbc714130a76234ae600228906a782cea24cf29f3de35d5bf21"
+  }
+}

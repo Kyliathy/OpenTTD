@@ -1,0 +1,44 @@
+{
+  "_documentation": {
+    "owner": "r2mlvs14-remaining-assets-and-runtime-integration.md Group41C",
+    "architecture": "archi-map-layers.md",
+    "scope": "Immutable built-in generation provenance; rejected layout, no selected native component"
+  },
+  "id": "battery-works-machinery-a-v1",
+  "date": "2026-10-21",
+  "tool": "image_gen.imagegen",
+  "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v1.png",
+  "cache_path": "C:/Users/Axonn/.codex/generated_images/01a1539b-3c72-76a1-a978-a6d73d6162f2/exec-3991c3f7-9ddc-4f47-a549-3eb0083691d0.png",
+  "sha256": "aa8b1923585c5a619f5bbda1e5aa2765bd1b8d483a10d286b9842647abf48dd8",
+  "prompt": "Use case: precise-object-edit. Asset: facility.battery-works, completed empty machinery, fixed native single view.\nImage 1 is the edit target: a four-panel chemical-machinery source sheet. Replace ALL FOUR chemical machines with the four battery-production machines specified below. Retain its low gray concrete plinths, slate/silver steel, yellow safety fittings, crisp hand-painted game-asset finish, upper-left lighting, exact fixed 2:1 isometric camera and safe framed layout.\nImage 2 is a STYLE/CAMERA reference only: authentic low steel apparatus. Do not copy its crusher or turn it into another machine.\n\nCreate a SAFE BORDERED transparent source sheet, 1536x1024, four isolated apparatus cutouts in a 2x2 grid. All four use the SAME canonical isometric camera; they are four DIFFERENT machines, NOT four orientations. No perspective, ground scenery or human figures.\nKeep four straight opaque PURE MAGENTA #FF00FF rectangular frames approximately 6px thick, at (24,24)-(744,488), (792,24)-(1512,488), (24,536)-(744,1000), (792,536)-(1512,1000). Frames separate source images and must stay outside every model.\nEach whole apparatus including its complete small diamond plinth, shadows and every fitting must fit inside its own inner rectangle with at least 32px of genuinely transparent clearance: (56,56)-(712,456), (824,56)-(1480,456), (56,568)-(712,968), (824,568)-(1480,968).\nUniformly reduce models as needed, approximately 500-550px whole width, maximum 350px whole height. These are LOW one-tile machines for a native 64x64 sprite with a 20-high sorting volume, never tall factory buildings. Concrete ground diamonds must have true 2:1 isometric axes. Preserve the entire plinth including its bottom corner.\nUse REAL ALPHA transparency in all panel backgrounds, margins and gutters; no magenta haze, colored backdrop, cast-ground rectangle, vignette or opaque background inside the frames.\n\nTOP LEFT, new cell 7: one low electrode coating/calender line. Exactly TWO parallel silver steel rollers inside a compact slate frame, ONE small CLOSED coating feed box, ONE covered side motor/drive with yellow coupling guard. Empty material path: no foil roll, slurry, liquids or visible inventory. Muted olive accent on the closed box.\nTOP RIGHT, new cell 8: one low cell-winding machine. ONE short horizontal guarded winding-drum housing with ONE visible EMPTY circular front mandrel/throat, ONE covered side drive, compact low slab body. No wound cell, spool inventory, loose material or extra rollers. Muted olive body band.\nBOTTOM LEFT, new cell 9: one low wide C-frame cell-sealing press. ONE short vertical piston/upper square tool, ONE EMPTY flat lower bed and ONE closed sturdy base. Compact stout proportions, low enough to share the same height limit. No batteries, scrap, product or workpiece.\nBOTTOM RIGHT, new cell 10: one low wide CLOSED battery-formation cabinet. ONE flat slate/silver body, exactly THREE closed front doors, fixed vents and covered cable ports near its base. Small muted olive strip, yellow handles. NO open doors, visible batteries, cables floating in space, charge levels, displays, glowing lights, symbols or status meters.\n\nThe four machines must remain distinct physical models. Do not add equipment beyond each inventory. Every fixture is finished, intact and EMPTY/CLOSED; their imagery grants no product stock, work, electricity or charge state. No text, labels, letters, numbers, logos, watermarks, decorative props or duplicated machines. Safe separation and low readable silhouettes take priority over large size.",
+  "references": [
+    {
+      "path": "media/multilayer/source/ground/raw/chemical-works-machinery-a-v2.png",
+      "sha256": "e2109e5355918337fa0b330d0b9d4e79db7513c65e03b9b6414b324a7b3c6296",
+      "role": "edit_target"
+    },
+    {
+      "path": "media/multilayer/guides/ground/metal-refinery-completed-steel-reference-v1.png",
+      "sha256": "1734d59fe3ac43c8b3620ec923cb9e7c7f5085edd20cf1b0f46b2b35d2323c0b",
+      "role": "style_camera_only"
+    }
+  ],
+  "image_size": [
+    1536,
+    1024
+  ],
+  "variants": [
+    7,
+    8,
+    9,
+    10
+  ],
+  "alpha_measure_threshold": 16,
+  "selection": {
+    "status": "rejected",
+    "reason": "Completed apparatus inventory is coherent but requested safe inner rectangles/clearance fail: top models reach below y464, sealing press begins above y560, cabinet reaches below y976. No guessed masks or clipping permitted."
+  },
+  "processor_asset_id": "facility.battery-works",
+  "construction_stage": 3,
+  "completed_empty": true
+}

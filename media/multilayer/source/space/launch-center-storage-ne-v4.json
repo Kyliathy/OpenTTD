@@ -1,0 +1,205 @@
+{
+  "_documentation": "Owner: r2mlvs14-remaining-assets-and-runtime-integration.md Group61CB.4; source correction preserves144px width and every actual native cell guard.",
+  "key": "launch-center-storage-ne-v4",
+  "tool": "built-in image_gen",
+  "asset_id": "facility.launch-center",
+  "component": "storage",
+  "state": "ready_empty",
+  "directions": [
+    "NE"
+  ],
+  "transparent_background": true,
+  "prompt": "Use case: precise-object-edit.\nImage1 is an UNAPPROVED NE-view four-bay empty storage canopy. Preserve its FOUR bays, one continuous four-panel cream roof, thin charcoal supports, gray empty interior, ochre edging, upper-left light, long-axis direction and exact same material identity.\n\nMake ONE targeted structural correction: cut the SHORT physical depth of the entire roof, bay floors and side walls by HALF again, WITHOUT shortening its long direction. This must become a very THIN open covered handling shelf, rather than four deep garage bays. Roof/short side width at most ONE TWENTIETH of its long edge. Keep supports thin straight posts, no flared feet, collar, overhanging front lip or projecting base. Keep existing low vertical height. All four openings remain visibly EMPTY and coherent.\n\nSTRICT orthographic2:1 dimetric camera. Both world axes use26.565degrees with horizontal run twice vertical rise. At a1024square guide scale, the physical base contacts are NORTH(772,384), EAST(796,396), SOUTH(284,652), WEST(260,640). The long edges are512px horizontal and256px vertical; short edges ONLY24px horizontal and12px vertical. Roof is20px above base. These coordinates describe one long shallow strip; do not paint guides or labels. Source model must be noticeably less deep than the edit target.\n\nONE complete isolated original on a square1024x1024 canvas, all whole physical contacts visible, at least80px genuine transparent margin on EVERY side. No cargo, crates, pod, vehicle, rocket, probe, person, labels, extra hardware, annex, machinery, tall building, ground, apron, surrounding floor, shadow outside hardware, scenery, water, text, frame, magenta or extra views. Real transparent alpha. Same four empty bays; only correct the short depth and any front-lip projection.",
+  "reference_inputs": [
+    {
+      "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v3.png",
+      "sha256": "a960f243ea3256cb1b791b1c70963172d62e287a6f7e626e1fbb447fb046479a",
+      "role": "unapproved original edit target; halve physical short depth without shortening four-bay length"
+    }
+  ],
+  "status": "selected_component",
+  "source_coverage": false,
+  "packed": false,
+  "runtime": false,
+  "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+  "cached_source": "C:\\Users\\Axonn\\.codex\\generated_images\\01a1539b-3c72-76a1-a978-a6d73d6162f2\\exec-bdee7c37-a052-4599-9395-be5169bea146.png",
+  "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283",
+  "actual_size": [
+    1254,
+    1254
+  ],
+  "measured_physical_contacts": [
+    [
+      1011.5,
+      543
+    ],
+    [
+      1106,
+      598
+    ],
+    [
+      304.5,
+      930
+    ],
+    [
+      210,
+      875
+    ]
+  ],
+  "layout_review": {
+    "alpha_threshold": 16,
+    "subject_bbox": [
+      209,
+      461,
+      1108,
+      932
+    ],
+    "minimum_clearance": 146
+  },
+  "contact_review": {
+    "source_reference": [
+      658.0,
+      736.5
+    ],
+    "definition": "Midpoint of the lateral physical shallow-storage feet; maps to actual native storage-row centre.",
+    "status": "approved"
+  },
+  "native_transform": {
+    "canvas": [
+      320,
+      224
+    ],
+    "native_reference": [
+      192,
+      136
+    ],
+    "native_zone_corners": [
+      [
+        240,
+        96
+      ],
+      [
+        272,
+        112
+      ],
+      [
+        144,
+        176
+      ],
+      [
+        112,
+        160
+      ]
+    ],
+    "component": "storage",
+    "source_reference": [
+      658.0,
+      736.5
+    ],
+    "uniform_scale": [
+      144,
+      899
+    ],
+    "crop_box": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "measured_subject_bbox_in_crop": [
+      209,
+      461,
+      1108,
+      932
+    ]
+  },
+  "image_size": [
+    1254,
+    1254
+  ],
+  "native_width_target": 144,
+  "registration_review": {
+    "status": "native_pixel_ownership_passed",
+    "evidence": {
+      "candidate": "launch-center-storage-ne-v4",
+      "original": {
+        "path": "media/multilayer/source/space/raw/launch-center-storage-ne-v4.png",
+        "sha256": "6ab5b6ed22322748ad0079d199598132607913950c1b58e69ba78ba0f1b20283"
+      },
+      "signature": "8dab10414d015328b5aef6d9c1ea88fe165807c0969b735829d98daf0ecd3ea9",
+      "transform": {
+        "canvas": [
+          320,
+          224
+        ],
+        "native_reference": [
+          192,
+          136
+        ],
+        "native_zone_corners": [
+          [
+            240,
+            96
+          ],
+          [
+            272,
+            112
+          ],
+          [
+            144,
+            176
+          ],
+          [
+            112,
+            160
+          ]
+        ],
+        "component": "storage",
+        "source_reference": [
+          658.0,
+          736.5
+        ],
+        "uniform_scale": [
+          144,
+          899
+        ],
+        "crop_box": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "measured_subject_bbox_in_crop": [
+          209,
+          461,
+          1108,
+          932
+        ]
+      },
+      "native_subject_bounds": [
+        120,
+        92,
+        265,
+        167
+      ],
+      "covered_pixels_per_cell": [
+        1252,
+        1616,
+        1648,
+        1364
+      ],
+      "native_sha256": "f95ec72cc32b2cb2e6bd1d0379ae31649eefa70cd7640adb7daee43ecfdad766"
+    },
+    "preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-ne-v4-native-review.png"
+  },
+  "model_review": {
+    "status": "approved_component_model",
+    "reviewed_native_preview": "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-ne-v4-native-review.png",
+    "findings": [
+      "One continuous low cream/charcoal canopy covers four empty shallow bays, with no cargo, actor, apron or extra machinery.",
+      "The corrected shallow roof, thin straight posts and gray/ochre empty interiors retain the selected workshop material identity.",
+      "Reviewed lateral physical feet define the native storage reference192,136; all indexed pixels fit the actual four row cells at unchanged144px model width.",
+      "Complete1254square original retains146px minimum alpha16 clearance; no source pixel masking, erasure, crop or warp was used."
+    ]
+  }
+}
